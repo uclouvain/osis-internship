@@ -1,21 +1,69 @@
 = Processus de developpement
 
+:sectnums!:
+
 == Vue d'ensemble
 
-image::images/overview.png[Overview]
+image::images/overview.png[Vue d'ensemble]
+
+:sectnums:
 
 == Analyse
 
 image::images/analysis.png[Analyse]
 
+=== Signaler un besoin métier
+=== Créer demande de besoin
+=== Vérifier les impacts sur les processus d'affaires
+=== Modifier le processus d'affaires impacté
+=== Demander la création d'un nouveau processus d'affaires
+=== Créer un nouveau processus d'affaires
+=== Évaluer le processus d'affaires
+=== Décrire l'exécution du processus
+=== Évaluer l'exécution du processus
+=== Évaluer la faisabilité technique
+:sectnums!:
+=== Les artefacts
+==== Modèle de processus d'affaires
+==== Mode d'emploi
+:sectnums:
+
 == Developpement
 
 image::images/development.png[Developpement]
+
+=== Créer la structure de répartition du travail
+=== Créer les demandes de changement
+=== Demander les estimations du travail à faire
+=== Estimer le travail à faire
+=== Distribuer les demandes dans les prochaines itérations
+=== Informer les utilisateurs
+=== Lancer la prochaine itération
+=== Développer les demandes de changement
+=== Créer des tests automatisés pour le changement
+=== Release version en QA
 
 == Test
 
 image::images/test.png[Test]
 
+=== Exécuter tous les tests
+=== Créer demande de correctif
+=== Corriger sur base en le test défaillant
+=== Autoriser la mise en production
+=== Mise en production
+=== Informer les utilisateurs
+
 == Support
 
 image::images/support.png[Support]
+
+=== Signaler problème
+=== Créer script pour reproduir le problème
+=== Créer demande de correctif
+=== Prioriser et demander du temps pour la demande
+=== Corriger sur base en le test défaillant
+=== Exécuter tous les tests
+=== Autoriser la mise en production
+=== Mise en production
+=== Informer les utilisateurs
