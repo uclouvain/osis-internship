@@ -1,69 +1,76 @@
-= Processus de developpement
+= Software Methodology
 
 :sectnums!:
 
-== Vue d'ensemble
+== Overview
+
+Our software methodology is composed of 4 macro-processes:
+
+- *Analysis*: Iterative requirements gathering, analysis and documentation
+- *Development*:
+- *Test*:
+- *Support*:
 
 image::images/overview.png[Vue d'ensemble]
 
 :sectnums:
 
-== Analyse
+== Analysis
 
 image::images/analysis.png[Analyse]
 
-=== Signaler un besoin métier
-=== Créer demande de besoin
-=== Vérifier les impacts sur les processus d'affaires
-=== Modifier le processus d'affaires impacté
-=== Demander la création d'un nouveau processus d'affaires
-=== Créer un nouveau processus d'affaires
-=== Évaluer le processus d'affaires
-=== Décrire l'exécution du processus
-=== Évaluer l'exécution du processus
-=== Évaluer la faisabilité technique
-:sectnums!:
-=== Les artefacts
-==== Modèle de processus d'affaires
-==== Mode d'emploi
-:sectnums:
+=== Report a business need
+=== Create request of need
+=== Verify the impact on existing business processes
+=== Modify the impacted business processes
+=== Request the creation of a new business process
+=== Create a new business process
+=== Review business process
+=== Describe the execution of the process
 
-== Developpement
+During this activity, analysts are actually writing the user manual.
 
-image::images/development.png[Developpement]
+=== Review the execution of the process
+=== Verify technical feasibility
 
-=== Créer la structure de répartition du travail
-=== Créer les demandes de changement
-=== Demander les estimations du travail à faire
-=== Estimer le travail à faire
-=== Distribuer les demandes dans les prochaines itérations
-=== Informer les utilisateurs
-=== Lancer la prochaine itération
-=== Développer les demandes de changement
-=== Créer des tests automatisés pour le changement
-=== Release version en QA
+== Development
+
+image::images/development.png[Development]
+
+=== Create work breakdown structure
+=== Create requests for change
+=== Demand developers estimations
+=== Estimate requests
+=== Distribute requests in upcoming iterations
+=== Review project schedule
+=== Inform user
+=== Start upcoming iteration
+=== Develop requests for change
+=== Create automated tests for change
+=== Release QA version
 
 == Test
 
 image::images/test.png[Test]
 
-=== Exécuter tous les tests
-=== Créer demande de correctif
-=== Corriger sur base en le test défaillant
-=== Autoriser la mise en production
-=== Mise en production
-=== Informer les utilisateurs
+=== Execute all tests
+=== Create request for fix
+=== Fix based on failing test
+=== Update user manual
+=== Authorize release in production
+=== Release in production
+=== Inform user
 
 == Support
 
 image::images/support.png[Support]
 
-=== Signaler problème
-=== Créer script pour reproduir le problème
-=== Créer demande de correctif
-=== Prioriser et demander du temps pour la demande
-=== Corriger sur base en le test défaillant
-=== Exécuter tous les tests
-=== Autoriser la mise en production
-=== Mise en production
-=== Informer les utilisateurs
+=== Report application issue
+=== Create reproduction test script
+=== Create request for fix
+=== Prioritize and allocate request
+=== Fix based on failing test
+=== Execute all tests
+=== Authorize release on production
+=== Release in production
+=== Inform user
