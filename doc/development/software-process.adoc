@@ -1,4 +1,6 @@
-= Software Methodology
+= Software Process at UCLouvain
+Hildeberto Mendonça, PhD
+:toc: right
 
 :sectnums!:
 
@@ -74,3 +76,11 @@ image::images/support.png[Support]
 === Authorize release on production
 === Release in production
 === Inform user
+
+:sectnums!:
+
+[glossary]
+== Glossary
+
+[bibliography]
+== Bibliography
