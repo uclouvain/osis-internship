@@ -4,11 +4,33 @@ Hildeberto Mendonça, PhD
 
 :sectnums!:
 
-== Overview
+== Introduction
+
+=== Communication
+
+OSIS is funded by UCLouvain, but it has an international visibility. The communication should consider not only the participation of the internal team, but also developers and users all around the world. The following channels were created to put the community in contact, preserving the history of communication.
+
+The team that maintains the context-free module communicates through the chat: +
+https://gitter.im/uclouvain/OSIS
+
+The team that discusses the context-expecific module communicates through the chat: +
+https://gitter.im/uclouvain/OSIS-Louvain
+
+The development community communicates through the group: +
+https://groups.google.com/d/forum/osis-dev
+
+The users community communicates through the group: +
+https://groups.google.com/d/forum/osis-user
+
+Development statistics about the project can be found at: +
+https://www.openhub.net/p/OSIS
+
+=== Overview
 
 Our software methodology is composed of 4 macro-processes:
 
-- *Analysis*: Iterative requirements gathering, analysis and documentation
+- *Analysis*: Iterative requirements gathering, analysis and documentation. The work of analysis is in itself iterative. The detachment from the rest of the process allows a level of freedom to run faster than the development process
+
 - *Development*:
 - *Test*:
 - *Support*:
