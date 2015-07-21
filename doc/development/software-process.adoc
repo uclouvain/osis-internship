@@ -31,6 +31,8 @@ https://groups.google.com/d/forum/osis-dev in English only.
 The users community communicates through the group
 https://groups.google.com/d/forum/osis-user in English or in French.
 
+News about the project can be found at: http://uclouvain.github.io/OSIS/.
+
 Development statistics about the project can be found at
 https://www.openhub.net/p/OSIS.
 
@@ -122,7 +124,7 @@ Context-free module:: A module that unifies the domain of higher education but d
 Context-specific module:: A module that inherits the domain from the context-free module and implement context's needs based on the local culture, law enforcements, integration with local systems and so on.
 
 Git:: A distributed version control system.
-GitHub:: 
+GitHub::
 Odoo::
 Planner::
 Python::
