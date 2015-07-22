@@ -40,15 +40,17 @@ Organizations that support the development of OSIS through a context-specific mo
 
 === Macro-processes
 
-Our software methodology is composed of 4 macro-processes:
+Our software methodology is composed of 4 processes: *Analysis*, *Development*, *Test*, and *Support*. These processes run in two parallel iterations and one on-demand execution.
 
-- *Analysis*: Iterative requirements gathering, analysis and documentation. The work of analysis is in itself iterative. The detachment from the rest of the process allows a level of freedom to run faster than the development process
+image::images/overview.png[Overview]
 
-- *Development*:
-- *Test*:
-- *Support*:
+The iteration of the analysis lasts for 2 weeks. This iteration is independent from the development, so analysts do not have to wait for the outcome of the development to advance with their analysis. It also means that we expect a release coming out from each iteration, just like application releases. Therefore, the analysis should be planned, executed, integrated, tested and released, as traditionally done with code.
 
-image::images/overview.png[Vue d'ensemble]
+Development and test are in the same iteration because everything that is developed should be tested before going into production. The tests should be done by someone else not directly involved on the development of the ongoing version. This iteration also lasts from 2 weeks and occurs in the same time frame of the analysis. The output of the analysis serves as input for the development and test. However, the output is accumulated in a backlog before being allocated in the upcoming development iterations.
+
+The support is an on-demand process, executed only when an issue in production is reported. Every issue starts an independent instance of the process. There is no fixed duration of the execution, but it has higher priority than other processes and the minimal waiting time is 12 working hours.
+
+More details about each one of these processes are described in the following sections.
 
 :sectnums:
 
@@ -66,6 +68,8 @@ image::images/analysis.png[Analyse]
 === Describe the execution of the process
 
 During this activity, analysts are actually writing the user manual.
+
+For the purpose of traceability, every new section or modification in an existing section should have a dedicated branch.
 
 === Review the execution of the process
 === Verify technical feasibility
