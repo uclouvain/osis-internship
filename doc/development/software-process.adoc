@@ -13,7 +13,7 @@ OSIS is an open source software sponsored by Université catholique de Louvain. 
  1. Communication directed to the local community can be done in English or in the native language.
  2. Communication directed to the global community should be done in English only.
  3. The code should be written in English only.
- 4. The user interface is multilingual but it will initially support English and French only. The support for additional languages depends on the adoption of the software and the contributions from the community.
+ 4. The user interface is multilingual but it will initially support English and French. The support for additional languages depends on the adoption of the software and the contributions from the community.
  5. Since there is not private source, all the communication is done using public channels such as mailing lists, chats, wikis and others.
  6. To be taken into account, a communication should be registered textually and preserved historically. Direct email communication between two or a subset of the team is not considered valid because all stakeholders should be equally informed.
 
