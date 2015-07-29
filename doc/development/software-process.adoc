@@ -38,7 +38,7 @@ https://www.openhub.net/p/OSIS.
 
 Organizations that support the development of OSIS through a context-specific module can follow their own internal rules of communication.
 
-=== Macro-processes
+=== Processes
 
 Our software methodology is composed of 4 processes: *Analysis*, *Development*, *Test*, and *Support*. These processes run in two parallel iterations and one on-demand execution.
 
