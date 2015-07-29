@@ -82,11 +82,24 @@ image::images/development.png[Development]
 === Create requests for change
 === Demand developers estimations
 === Estimate requests
+
+These are the types of effort:
+
+- *Unknown*: the team does not have the necessary knowledge to address the issue. Therefore, an investigation should be carried out and no extimation can be done.
+- *Complex*: the team has the necessary knowledge to address the issue but cannot estimate when the work will be finished.
+- *Heavy*: the team has the necessary knowledge to address the issue and estimate the work but the issue cannot be solved in less than 5 working days.
+- *Regular*: the team has the neccessary knowledge to address the issue and estimate the work but the issue cannot be solved in less than 2 days.
+- *Easy*: the team has the necessary knowledge to address the issue, estimate the work and finish it in less than 2 days.
+- *Flash*: the issue can be solved in a couple of hours.
+
 === Distribute requests in upcoming iterations
 === Review project schedule
 === Inform user
 === Start upcoming iteration
 === Develop requests for change
+
+The last person allocated in a ticket is the only one authorized to close that ticket.
+
 === Create automated tests for change
 === Release QA version
 
