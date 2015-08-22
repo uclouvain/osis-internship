@@ -6,9 +6,11 @@ Hildeberto Mendonça, PhD
 
 == Introduction
 
+OSIS is an open source software sponsored by Université catholique de Louvain.
+
 === Communication
 
-OSIS is an open source software sponsored by Université catholique de Louvain. For being open source, the communication strategy changes from the traditional internal communication to a global and transparent one. People should consider not only the participation of the internal team, but also developers and users all around the world. Therefore, to allow global and transparent communication, we have to comply with the following rules:
+For being open source, the communication strategy changes from the traditional internal communication to a global and transparent one. People should consider not only the participation of the internal team, but also developers and users all around the world. Therefore, to allow global and transparent communication, we have to comply with the following rules:
 
  1. Communication directed to the local community can be done in English or in the native language.
  2. Communication directed to the global community should be done in English only.
@@ -52,6 +54,10 @@ The support is an on-demand process, executed only when an issue in production i
 
 More details about each one of these processes are described in the following sections.
 
+=== Roles
+
+User:: all those who use the application or lead other users. They can also be representatives of a larger group of users.
+
 :sectnums:
 
 == Analysis
@@ -59,8 +65,17 @@ More details about each one of these processes are described in the following se
 image::images/analysis.png[Analyse]
 
 === Report a business need
-=== Create request of need
-=== Verify the impact on existing business processes
+
+The user can request new features or modifications in the application. It can be done in many different ways because it is not formalized. Users and analysts are free to decide how they will communicate.
+
+=== Verify the impact on business processes
+
+Requests for changes should be aligned with what already exists in terms of processes. They should contribute to improve existing processes or add new processes connected to existing ones. Changes that are not aligned with existing processes or propose isolated processes must be rejected until the application evolves to a point that those changes make sense. In summary, changes should be contextualized.
+
+=== Create request for change
+
+Ia a context is found for the change then a ticket is created to track the changes. This ticket is also called RFC (Request For Change) and is allocated to an analyst who will proceed with the analysis.
+
 === Modify the impacted business processes
 === Request the creation of a new business process
 === Create a new business process
