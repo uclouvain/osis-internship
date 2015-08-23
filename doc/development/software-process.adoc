@@ -6,6 +6,12 @@ Hildeberto Mendonça, PhD
 
 == Introduction
 
+This document describes the development process of the application OSIS-Louvain.
+
+OSIS stands for Open Student Information System. It's an application designed to manage the core business of higher education institutions, such as universities, faculties, institutes and professional schools. The core business involves the administration of students, teachers, courses, programs and so on.
+
+This application is designed as a module of Odoo, a modular ERP framework written in Python. It can be extended to accommodate your specific needs, which is the case of OSIS-Louvain.
+
 OSIS is an open source software sponsored by Université catholique de Louvain.
 
 === Communication
@@ -58,6 +64,16 @@ More details about each one of these processes are described in the following se
 
 User:: all those who use the application or lead other users. They can also be representatives of a larger group of users.
 
+Analyst:: 
+
+Technical Leader::
+
+Developer::
+
+Tester::
+
+Supporter::
+
 :sectnums:
 
 == Analysis
@@ -76,10 +92,29 @@ Requests for changes should be aligned with what already exists in terms of proc
 
 Ia a context is found for the change then a ticket is created to track the changes. This ticket is also called RFC (Request For Change) and is allocated to an analyst who will proceed with the analysis.
 
+RFCs are managed in the repository https://github.com/uclouvain/osis-louvain-documentation.
+
+A RFC must contain:
+
+- A *title* that summarizes in one sentence the content of the change;
+- A detailed *description* of the change;
+- The *analyst* responsible for the analysis of the change;
+- The *full path to the process element* that is impacted by the change.
+
 === Modify the impacted business processes
-=== Request the creation of a new business process
+
+A RFC allows the analyst to modify artifacts, such as the business process model.
+
+Modifications in the processes do not necessarily imply on modifications in the application. Some activities are automated in the application and others are manual. Therefore, a change may modify the process and the application, only the process or only the application. If the processes don't change, then this activity is irrelevant.
+
 === Create a new business process
+
+The criteria to create a new process are extensive and sometimes subjective. In general, if the business need does not fit in an existing process or it requires substantial amount of work then it is a potential candidate for a new process. In any case, it is not a simple decision and it needs to be extensively discussed with users.
+
 === Review business process
+
+The user should review the process and approve it in order to move forward. Otherwise, analysts and users keep adjusting the process until it is in condition to be approved.
+
 === Describe the execution of the process
 
 During this activity, analysts are actually writing the user manual.
