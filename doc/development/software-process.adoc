@@ -64,7 +64,7 @@ More details about each one of these processes are described in the following se
 
 User:: all those who use the application or lead other users. They can also be representatives of a larger group of users.
 
-Analyst:: 
+Analyst::
 
 Technical Leader::
 
@@ -99,6 +99,7 @@ A RFC must contain:
 - A *title* that summarizes in one sentence the content of the change;
 - A detailed *description* of the change;
 - The *analyst* responsible for the analysis of the change;
+- The *user* who requested the change;
 - The *full path to the process element* that is impacted by the change.
 
 === Modify the impacted business processes
