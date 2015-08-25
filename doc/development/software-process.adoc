@@ -62,17 +62,17 @@ More details about each one of these processes are described in the following se
 
 === Roles
 
-User:: all those who use the application or lead other users. They can also be representatives of a larger group of users.
+User:: All those who use the application or lead other users. They can also be representatives of a larger group of users. They should transmit to analysts the maximum amount of information possible about the need they have and be available for questions and meetings as demanded by analysts once a RFC is created, in order to minimize the impact on the schedule. Users can only contact analysts. If they contact anybody else in the team, they risk to have their demand ignored.
 
-Analyst:: 
+Analyst:: Responsible for documenting how the business works and translating the documentation into application functionalities. They produce the business process models and the user manual. The analysts are the only ones authorized to contact the users. If anybody else contact the user directly they risk to break the chain of traceability.
 
-Technical Leader::
+Technical Leader:: Responsible for the leadership of the development team. It's the leader who create the tickets based on the RFCs, plan the releases and distribute the work among developers. The leader should also monitor the project to detect and fix non-conformities, identify deficiencies that impact the team's productivity and act to overcome those deficiencies. The technical leader can only talk to a user if followed by an analyst.
 
-Developer::
+Developer:: Responsible for developing the application according to the instructions in the user manual. They have the technical knowledge to transform business needs into application features, but they do not necessarily have business knowledge because they should always rely on the user manual. It makes possible that any developer is capable of developing any part of the application even if s/he know nothing about it.
 
-Tester::
+Tester:: Responsible for making sure the application behaves exactly as foreseen in the user manual. They have the technical knowledge to create test scripts to automate tests, checking whether everything works fine after every introduced change.
 
-Supporter::
+Supporter:: Responsible for the support for users, explaining them how to use the application if the user manual is not sufficiently clear. In the case the application  is not behaving as expected, the supporter is responsible for reproducing the problem and create a high priority issue to be addressed by developers.
 
 :sectnums:
 
@@ -195,6 +195,7 @@ GitHub::
 Odoo::
 Planner::
 Python::
+RFC:: Request For Change
 Runbot::
 Selenium::
 Visual Paradigm::
