@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "osis-louvain",
+    'name': "osis_louvain",
 
     'summary': """
         Extension of the module OSIS to accommodate specific needs of UCLouvain.
@@ -20,7 +20,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','osis-core'],
+    'depends': ['base','osis_core'],
 
     # always loaded
     'data': [
