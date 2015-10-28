@@ -7,4 +7,3 @@ class Exam(models.Model):
     _description = "Exam"
 
     learning_unit_year_id = fields.Many2one('osis.learning_unit_year', string='Learning unit year')
-    exam_enrollment_ids = fields.One2many('osis.exam_enrollment', 'exam_id')

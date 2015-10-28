@@ -7,6 +7,6 @@ class Learning_unit_year(models.Model):
     _description = "Learning unit year"
 
     academic_year_id = fields.Many2one('osis.academic_year', string='Academic year')
-    structure_id = fields.Many2one('osis.structure', string='Structure')
     learning_unit_id = fields.Many2one('osis.learning_unit', string='Learning unit')
-    exam_ids = fields.One2many('osis.exam', 'learning_unit_year_id')
+    attribution_entity_id = fields.Many2one('osis.structure', string='Attribution entity')
+    specifications_responsible_id = fields.Many2one('osis.structure', string='Specifications responsible entity')
