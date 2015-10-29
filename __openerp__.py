@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "osis_louvain",
+    'name': "osis-louvain",
 
     'summary': """
-        Extension of the module OSIS to accommodate specific needs of UCLouvain.
+        Extension of the module OSIS to accommodate specific needs of the Université catholique de Louvain.
     """,
 
     'description': """
@@ -13,22 +13,18 @@
     'author': "Université catholique de Louvain",
     'website': "http://www.uclouvain.be",
 
-    # Categories can be used to filter modules in modules listing
-    # Check https://github.com/odoo/odoo/blob/master/openerp/addons/base/module/module_data.xml
-    # for the full list
     'category': 'Education',
-    'version': '0.1',
+    'version': '15.11.1.0',
 
-    # any module necessary for this one to work correctly
-    'depends': ['base','osis_core'],
+    'depends': ['base','osis-core'],
 
-    # always loaded
     'data': [
         # 'security/ir.model.access.csv',
         'templates.xml',
-        'views/menu.xml'
+        'views/menu.xml',
+        "views/institution.xml",
     ],
-    # only loaded in demonstration mode
+
     'demo': [
         'demo.xml',
     ],

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+  <data>
+  	<record id="base.main_company" model="res.company">
+  	    <field name="name">Université catholique de Louvain</field>
+  	    <field name="rml_header1"></field>
+  	    <field name="currency_id" ref="base.EUR"/>
+  	    <field name="street">1, Place de l'Université</field>
+  	    <field name="zip">B-1348</field>
+  	    <field name="city">Louvain-la-Neuve</field>
+  	    <field name="country_id" ref="base.be"/>
+  	    <field name="email">service-desk@uclouvain.be</field>
+  	    <field name="phone">+32 (0)10/47.21.11</field>
+  	    <field name="fax">+32 (0)10/47.29.99</field>
+  	    <field name="website">www.uclouvain.be</field>
+  	    <field name="vat"></field>
+  	    <field name="company_registry"></field>
+  	</record>
+  </data>
+</openerp>
