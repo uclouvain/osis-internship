@@ -84,7 +84,7 @@
         </record>
         <record model="ir.actions.act_window" id="student_list_action">
             <field name="name">Students</field>
-            <field name="res_model">osis.student</field>
+            <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>

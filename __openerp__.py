@@ -23,6 +23,8 @@
         'templates.xml',
         'views/menu.xml',
         "views/institution.xml",
+        "views/student.xml",
+        # "views/partner.xml",
     ],
 
     'demo': [
