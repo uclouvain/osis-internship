@@ -21,24 +21,21 @@
  *   at the root of the source code of this program.  If not,
  *   see http://www.gnu.org/licenses/. -->
 <openerp>
-    <data>
-        <!-- <template id="listing"> -->
-        <!--   <ul> -->
-        <!--     <li t-foreach="objects" t-as="object"> -->
-        <!--       <a t-attf-href="#{ root }/objects/#{ object.id }"> -->
-        <!--         <t t-esc="object.display_name"/> -->
-        <!--       </a> -->
-        <!--     </li> -->
-        <!--   </ul> -->
-        <!-- </template> -->
-        <!-- <template id="object"> -->
-        <!--   <h1><t t-esc="object.display_name"/></h1> -->
-        <!--   <dl> -->
-        <!--     <t t-foreach="object._fields" t-as="field"> -->
-        <!--       <dt><t t-esc="field"/></dt> -->
-        <!--       <dd><t t-esc="object[field]"/></dd> -->
-        <!--     </t> -->
-        <!--   </dl> -->
-        <!-- </template> -->
-    </data>
+  <data>
+  	<record id="base.main_company" model="res.company">
+  	    <field name="name">Université catholique de Louvain</field>
+  	    <field name="rml_header1"></field>
+  	    <field name="currency_id" ref="base.EUR"/>
+  	    <field name="street">1, Place de l'Université</field>
+  	    <field name="zip">B-1348</field>
+  	    <field name="city">Louvain-la-Neuve</field>
+  	    <field name="country_id" ref="base.be"/>
+  	    <field name="email">service-desk@uclouvain.be</field>
+  	    <field name="phone">+32 (0)10/47.21.11</field>
+  	    <field name="fax">+32 (0)10/47.29.99</field>
+  	    <field name="website">www.uclouvain.be</field>
+  	    <field name="vat"></field>
+  	    <field name="company_registry"></field>
+  	</record>
+  </data>
 </openerp>

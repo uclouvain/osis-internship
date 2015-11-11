@@ -25,6 +25,8 @@
 #
 ##############################################################################
 
-import controllers
-import models
-import institution
+from openerp import models, fields, api
+
+class Academic_year(models.Model):
+    _name = "osis.academic_year"
+    _description = "Academic year"
