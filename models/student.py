@@ -25,6 +25,8 @@
 #
 ##############################################################################
 
-import controllers
-import models
-import institution
+from openerp import models, fields, api
+
+class Student(models.Model):
+    _name = 'osis.student'
+    _description = "Student"

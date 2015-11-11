@@ -1,33 +1,55 @@
 # -*- coding: utf-8 -*-
+##############################################################################
+#
+#    OSIS stands for Open Student Information System. It's an application
+#    designed to manage the core business of higher education institutions,
+#    such as universities, faculties, institutes and professional schools.
+#    The core business involves the administration of students, teachers,
+#    courses, programs and so on.
+#
+#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    A copy of this license - GNU Affero General Public License - is available
+#    at the root of the source code of this program.  If not,
+#    see http://www.gnu.org/licenses/.
+#
+##############################################################################
 {
-    'name': "osis_louvain",
+    'name': "osis-louvain",
 
     'summary': """
-        Extension of the module OSIS to accommodate specific needs of UCLouvain.
+        Extension of the module OSIS to accommodate specific needs of the Université catholique de Louvain.
     """,
 
     'description': """
-        OSIS-Louvain is an extension of OSIS customized for the needs of the Université catholique de Louvain.
+        OSIS Louvain is an extension of OSIS customized for the needs of the Université catholique de Louvain.
     """,
 
     'author': "Université catholique de Louvain",
     'website': "http://www.uclouvain.be",
 
-    # Categories can be used to filter modules in modules listing
-    # Check https://github.com/odoo/odoo/blob/master/openerp/addons/base/module/module_data.xml
-    # for the full list
     'category': 'Education',
-    'version': '0.1',
+    'version': '15.11.1.0',
 
-    # any module necessary for this one to work correctly
-    'depends': ['base','osis_core'],
+    'depends': ['base','osis-core'],
 
-    # always loaded
     'data': [
         # 'security/ir.model.access.csv',
         'templates.xml',
+        'views/menu.xml',
+        "views/institution.xml",
     ],
-    # only loaded in demonstration mode
+
     'demo': [
         'demo.xml',
     ],

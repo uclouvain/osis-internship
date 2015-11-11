@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
+######################################################################
 #
 #    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
@@ -25,6 +25,11 @@
 #
 ##############################################################################
 
-import controllers
-import models
-import institution
+from openerp import models, fields, api
+
+class Attribution(models.Model):
+    _name = 'osis.attribution'
+    _description = "Attribution"
+
+    learning_unit_id = fields.Many2one('osis.learning_unit', string='Learning unit')
+    tutor_id = fields.Many2one('osis.tutor', string='Tutor')

@@ -25,6 +25,8 @@
 #
 ##############################################################################
 
-import controllers
-import models
-import institution
+from openerp import models, fields, api
+
+class Tutor(models.Model):
+    _name = 'osis.tutor'
+    _description = "Tutor"
