@@ -22,10 +22,10 @@
         # 'security/ir.model.access.csv',
         'templates.xml',
         'views/menu.xml',
+        'views/person.xml',
         'views/student.xml',
-        "views/tutor.xml",
-        "views/person.xml",
-        "views/offer.xml",
+        'views/tutor.xml',
+        'views/offer.xml',
     ],
 
     'demo': [
