@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from openerp import models, fields, api
+from openerp import models, fields
 
 
 class Student(models.Model):
     _name = 'osis.student'
-    # _inherits = {'osis.person' : 'person_id'}
-    #
+    _inherits = {'osis.person' : 'person_id'}
+
     registration_number = fields.Char('Registration number')
     sexe = fields.Selection([('F','Female'),('M','Male'),('U','Unknown')], default= 'U')
     civil_status = fields.Selection([('MARRIED','Married'),('SINGLE','Single'),('WIDOWED','Widowed'),('DIVORCED','Divorced'),('SEPARATED','Separated'),('CONCUBIN','Concubin')])

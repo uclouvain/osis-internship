@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from openerp import models, fields, api
+from openerp import models, fields
 
 class Tutor(models.Model):
     _name = 'osis.tutor'
-    
+    _inherits = {'osis.person' : 'person_id'}

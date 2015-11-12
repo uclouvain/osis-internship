@@ -1,73 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
  <openerp>
     <data>
-      <!--Filter-->
-      <record id="base_view_res_partner_filter" model="ir.ui.view">
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.view_res_partner_filter"/>
-        <field name="arch" type="xml">
-          <filter string="Salesperson" position="after">
-            <filter string="Company" name="company" domain="[('is_company', '=', False)]"/>
-          </filter>
-        </field>
-    </record>
+      <!-- Tree -->
+      <record model="ir.ui.view" id="tutor_tree_view">
+          <field name="name">tutor.tree</field>
+          <field name="model">osis.tutor</field>
+          <field eval="16" name="priority"/>
+          <field name="arch" type="xml">
+              <tree>
+                  <field name="person_id" string="Name"/>
+              </tree>
+          </field>
+      </record>
+      <!-- Form -->
+      <record model="ir.ui.view" id="osis_tutor_form">
+          <field name="name">osis.view.tutorform</field>
+          <field name="model">osis.tutor</field>
+          <field name="mode">primary</field>
+          <field name="priority" eval="16"/>
+          <field name="inherit_id" ref="osis_person_form"/>
+          <field name="arch" type="xml">
+            <label>lkdsflsjf</label>
+           <!-- <xpath expr="//notebook" position="before">
+              <group col="4">
+                <field name="registration_number" string="Registration number"/>
+                <field name="sexe" string="Sexe"/>
+                <field name="civil_status" string="Civil status"/>
+                <field name="national_number" string="National number"/>
+              </group>
+            </xpath> -->
 
-      <!--Form-->
-        <record model="ir.ui.view" id="tutor_form_view">
-            <field name="name">partner.tutor</field>
-            <field name="model">osis.tutor</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
-
-            <field name="arch" type="xml">
-              <xpath expr="//field[@name='image']" position="attributes">
-                <attribute name="invisible">True</attribute>
-              </xpath>
-              <xpath expr="//field[@name='is_company']" position="attributes">
-                <attribute name="invisible">True</attribute>
-              </xpath>
-              <xpath expr="//label[@for='is_company']" position="attributes">
-                <attribute name="invisible">True</attribute>
-              </xpath>
-              <xpath expr="//field[@name='parent_id']" position="attributes">
-                <attribute name="invisible">True</attribute>
-              </xpath>
-              <xpath expr="//field[@name='category_id']" position="attributes">
-                <attribute name="invisible">True</attribute>
-              </xpath>
-              <xpath expr="//field[@name='state_id']" position="attributes">
-                <attribute name="invisible">True</attribute>
-              </xpath>
-              <xpath expr="//field[@name='function']" position="attributes">
-                <attribute name="invisible">True</attribute>
-              </xpath>
-              <xpath expr="//field[@name='phone']" position="attributes">
-                <attribute name="invisible">True</attribute>
-              </xpath>
-              <xpath expr="//field[@name='fax']" position="attributes">
-                <attribute name="invisible">True</attribute>
-              </xpath>
-              <xpath expr="//field[@name='website']" position="attributes">
-                <attribute name="invisible">True</attribute>
-              </xpath>
-              <xpath expr="//field[@name='title']" position="attributes">
-                    <attribute name="invisible">True</attribute>
-              </xpath>
-              <xpath expr="//field[@name='email']" position="after">
-                <field name="identification_number"/>
-              </xpath>
-
-              <xpath expr="//notebook/page[@string='Contacts']" position="attributes">
-                  <attribute name="invisible">True</attribute>
-                </xpath>
-                <xpath expr="//notebook/page[@name='internal_notes']" position="attributes">
-                  <attribute name="invisible">True</attribute>
-              </xpath>
-              <xpath expr="//notebook/page[@name='sales_purchases']" position="attributes">
-                <attribute name="invisible">True</attribute>
-              </xpath>
-
-            </field>
-        </record>
+          </field>
+      </record>
 
     </data>
 </openerp>

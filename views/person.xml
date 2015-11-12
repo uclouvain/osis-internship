@@ -22,6 +22,9 @@
           <!-- <field name="model">res.partner</field> -->
           <field name="inherit_id" ref="base.view_partner_form"/>
           <field name="arch" type="xml">
+            <xpath expr="//field[@name='category_id']" position="after">
+              <field name="identification_number" string="Identification number"/>
+            </xpath>
             <xpath expr="//field[@name='image']" position="attributes">
               <attribute name="invisible">True</attribute>
             </xpath>
@@ -55,9 +58,7 @@
             <xpath expr="//field[@name='title']" position="attributes">
                   <attribute name="invisible">True</attribute>
             </xpath>
-            <xpath expr="//field[@name='email']" position="after">
-              <field name="identification_number"/>
-            </xpath>
+
 
             <xpath expr="//notebook/page[@string='Contacts']" position="attributes">
                 <attribute name="invisible">True</attribute>
