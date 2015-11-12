@@ -10,6 +10,7 @@
               <tree>
                   <field name="partner_id" string="Name"/>
                   <field name="identification_number" />
+                    <!-- <field name="student" /> -->
               </tree>
           </field>
       </record>

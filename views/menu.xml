@@ -46,6 +46,15 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
+        <record model="ir.actions.act_window" id="person_list_action">
+            <field name="name">Persons partner</field>
+            <field name="res_model">osis.person</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">Create the first person</p>
+            </field>
+        </record>
         <record model="ir.actions.act_window" id="learning_unit_list_action">
             <field name="name">Learning units</field>
             <field name="res_model">osis.learning_unit</field>
@@ -82,12 +91,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <record model="ir.actions.act_window" id="person_list_action">
-            <field name="name">Persons partner</field>
-            <field name="res_model">osis.person</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
         <record model="ir.actions.act_window" id="student_list_action">
             <field name="name">Student</field>
             <field name="res_model">osis.student</field>
@@ -110,7 +113,7 @@
         <menuitem id="exam_enrollment_menu" name="Exams" parent="enrollment_menu" action="exam_enrollment_list_action"/>
         <menuitem id="registrations_menu" name="Registrations" parent="students_main_menu"/>
 
-        <menuitem id="persons_menu" name="Persons" parent="registrations_menu" action="person_list_action"/>
+
         <menuitem id="students_menu" name="Students" parent="registrations_menu" action="student_list_action"/>
         <!-- <menuitem id="persons_menu4" name="Partners" parent="registrations_menu" action="person_list_action_partner"/> -->
         <menuitem id="program_main_menu" name="Program"/>
@@ -131,6 +134,7 @@
         <menuitem id="academic_year_menu" name="Academic years" parent="academic_year_main_menu" action="academic_year_list_action"/>
         <menuitem id="structure_main_menu" parent="institution_main_menu" name="Structure"/>
         <menuitem id="structure_menu" parent="structure_main_menu" name="Structure" action="structure_list_action"/>
+        <menuitem id="persons_menu" parent="structure_main_menu" name="Persons" action="person_list_action"/>
 
     </data>
 </openerp>

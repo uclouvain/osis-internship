@@ -25,6 +25,7 @@
         'views/student.xml',
         "views/tutor.xml",
         "views/person.xml",
+        "views/offer.xml",
     ],
 
     'demo': [
