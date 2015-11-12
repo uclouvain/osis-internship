@@ -54,7 +54,7 @@
         </record>
         <record model="ir.actions.act_window" id="tutor_list_action">
             <field name="name">Tutors</field>
-            <field name="res_model">osis.tutor</field>
+            <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
@@ -82,13 +82,18 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <record model="ir.actions.act_window" id="student_list_action">
-            <field name="name">Students</field>
+        <record model="ir.actions.act_window" id="person_list_action">
+            <field name="name">Persons partner</field>
+            <field name="res_model">osis.person</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <!-- <record model="ir.actions.act_window" id="person_list_action_partner">
+            <field name="name">Partners</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_company':1}</field>
-        </record>
+        </record> -->
         <menuitem id="students_main_menu" name="Students"/>
         <menuitem id="routes_menu" name="Routes" parent="students_main_menu"/>
         <menuitem id="learning_assessments_menu" name="Learning Assessments" parent="routes_menu"/>
@@ -98,8 +103,9 @@
         <menuitem id="learning_unit_enrollment_menu" name="Learning units" parent="enrollment_menu" action="learning_unit_enrollment_list_action"/>
         <menuitem id="exam_enrollment_menu" name="Exams" parent="enrollment_menu" action="exam_enrollment_list_action"/>
         <menuitem id="registrations_menu" name="Registrations" parent="students_main_menu"/>
-        <menuitem id="students_menu" name="Students" parent="registrations_menu" action="student_list_action"/>
 
+        <menuitem id="persons_menu" name="Persons" parent="registrations_menu" action="person_list_action"/>
+        <!-- <menuitem id="persons_menu4" name="Partners" parent="registrations_menu" action="person_list_action_partner"/> -->
         <menuitem id="program_main_menu" name="Program"/>
         <menuitem id="program_sub_menu" name="Program" parent="program_main_menu"/>
         <menuitem id="offers_menu" name="Offers" parent="program_sub_menu" action="offer_list_action"/>

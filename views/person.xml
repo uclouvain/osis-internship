@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <openerp>
+    <data>
+      <!-- Tree -->
+      <record model="ir.ui.view" id="person_tree_view">
+          <field name="name">person.tree</field>
+          <field name="model">osis.person</field>
+          <field eval="16" name="priority"/>
+          <field name="arch" type="xml">
+              <tree>
+                  <field name="partner_id" string="Name"/>
+                  <field name="identification_number" />
+              </tree>
+          </field>
+      </record>
+      <!-- Form -->
+      <record model="ir.ui.view" id="osis_person_form">
+          <field name="name">osis.view.personform</field>
+          <field name="model">osis.person</field>
+          <field name="mode">primary</field>
+          <field name="priority" eval="16"/>
+          <!-- <field name="model">res.partner</field> -->
+          <field name="inherit_id" ref="base.view_partner_form"/>
+          <field name="arch" type="xml">
+            <xpath expr="//field[@name='image']" position="attributes">
+              <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='is_company']" position="attributes">
+              <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//label[@for='is_company']" position="attributes">
+              <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='parent_id']" position="attributes">
+              <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='category_id']" position="attributes">
+              <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='state_id']" position="attributes">
+              <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='function']" position="attributes">
+              <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='phone']" position="attributes">
+              <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='fax']" position="attributes">
+              <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='website']" position="attributes">
+              <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='title']" position="attributes">
+                  <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='email']" position="after">
+              <field name="identification_number"/>
+            </xpath>
+
+            <xpath expr="//notebook/page[@string='Contacts']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//notebook/page[@name='internal_notes']" position="attributes">
+              <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//notebook/page[@name='sales_purchases']" position="attributes">
+              <attribute name="invisible">True</attribute>
+            </xpath>
+
+
+
+          </field>
+      </record>
+
+
+    </data>
+</openerp>

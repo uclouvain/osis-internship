@@ -22,9 +22,9 @@
         # 'security/ir.model.access.csv',
         'templates.xml',
         'views/menu.xml',
-        "views/institution.xml",
-        "views/student.xml",
-        # "views/partner.xml",
+        # 'views/student.xml',
+        # "views/tutor.xml",
+        "views/person.xml",
     ],
 
     'demo': [
