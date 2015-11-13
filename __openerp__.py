@@ -26,6 +26,10 @@
         'views/student.xml',
         'views/tutor.xml',
         'views/offer.xml',
+        'views/attribution.xml',
+        'views/academic_year.xml',
+        'views/learning_unit.xml',
+        # 'reports/student.xml',
     ],
 
     'demo': [

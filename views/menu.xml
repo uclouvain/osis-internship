@@ -61,6 +61,9 @@
             <field name="res_model">osis.learning_unit</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">Create the first learning unit</p>
+            </field>
         </record>
         <record model="ir.actions.act_window" id="tutor_list_action">
             <field name="name">Tutors</field>

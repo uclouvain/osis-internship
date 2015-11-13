@@ -8,7 +8,7 @@
       <field eval="16" name="priority"/>
       <field name="arch" type="xml">
         <tree>
-          <field name="person_id"/>
+          <field name="person_id" string="Name"/>
         </tree>
       </field>
 

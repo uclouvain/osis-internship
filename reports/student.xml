@@ -1,0 +1,47 @@
+<openerp>
+    <data>
+        <!-- <report
+            id="report_student"
+            model="epc.student"
+            string="Info Report"
+            name="epc.report_info_view"
+            file="epc.report_student"
+            report_type="qweb-pdf" /> -->
+
+        <report
+            id="report_student_html"
+            model="osis.student"
+            string="Student Report HTML"
+            name="osis-louvain.report_student_view_simple"
+            file="osis-louvain.report_student"
+            report_type="qweb-html" />
+
+          <template id="report_student_view_simple">
+            <t t-call="report.html_container">
+
+              <t t-call="report.external_layout">
+                <div class="page">
+                  <table>
+                    <thead>
+                    <tr>
+                      <th>Registration Number</th>
+                      <th>Name</th>
+                    </tr>
+                  </thead>
+                      <t t-as="doc" t-foreach="docs">
+                        <tr>
+                        <td><span t-field="doc.registration_number"/></td>
+                        <td><span t-field="doc.person_id"/></td>
+                        </tr>
+                      </t>
+                    </table>
+                  </div>
+                </t>
+
+
+            </t>
+          </template>
+
+
+    </data>
+</openerp>
