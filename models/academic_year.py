@@ -10,7 +10,7 @@ class Academic_year(models.Model):
 
     year = fields.Integer('Year', required = True)
     start_date = fields.Date('Start date')
-    end_date = fields.Date('Start date')
+    end_date = fields.Date('End date')
 
     @api.constrains('start_date','end_date')
     def _check_dates(self):
