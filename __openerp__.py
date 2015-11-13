@@ -29,6 +29,13 @@
         'views/attribution.xml',
         'views/academic_year.xml',
         'views/learning_unit.xml',
+        'views/exam.xml',
+        # 'views/structure.xml',
+        'views/offer_year.xml',
+        'views/offer_enrollment.xml',
+        'views/learning_unit_year.xml',
+        'views/learning_unit_enrollment.xml',
+        'views/exam_enrollment.xml',
         # 'reports/student.xml',
     ],
 

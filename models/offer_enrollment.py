@@ -8,3 +8,5 @@ class Offer_enrollment(models.Model):
 
     offer_year_id = fields.Many2one('osis.offer_year', string='Offer year')
     student_id = fields.Many2one('osis.student', string='Student')
+
+    date_enrollment = fields.Date('Enrollment date')

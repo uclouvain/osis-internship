@@ -14,7 +14,6 @@ class Attribution(models.Model):
     end_date = fields.Date('End date')
     function = fields.Selection([('UNKNOWN','Unknown'),('PROFESSOR','Professor'),('COORDINATOR','Coordinator')])
 
-
     @api.constrains('start_date','end_date')
     def _check_dates(self):
         for record in self:

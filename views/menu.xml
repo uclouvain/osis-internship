@@ -27,6 +27,7 @@
             <field name="res_model">osis.offer_year</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="help" type="html"><p class="oe_view_nocontent_create">Create the first offer year</p></field>
         </record>
         <record model="ir.actions.act_window" id="learning_unit_year_list_action">
             <field name="name">Learning unit year</field>
@@ -79,12 +80,18 @@
             <field name="res_model">osis.exam</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">Create the first exam</p>
+            </field>
         </record>
         <record model="ir.actions.act_window" id="offer_enrollment_list_action">
             <field name="name">Offer enrollments</field>
             <field name="res_model">osis.offer_enrollment</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">Create the first offer enrollment</p>
+            </field>
         </record>
         <record model="ir.actions.act_window" id="learning_unit_enrollment_list_action">
             <field name="name">Learning unit enrollments</field>
@@ -97,6 +104,9 @@
             <field name="res_model">osis.exam_enrollment</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">Create the first exam enrollment</p>
+            </field>
         </record>
         <record model="ir.actions.act_window" id="student_list_action">
             <field name="name">Student</field>
