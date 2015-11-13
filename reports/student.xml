@@ -1,12 +1,12 @@
 <openerp>
     <data>
-        <!-- <report
+      <report
             id="report_student"
-            model="epc.student"
-            string="Info Report"
+            model="osis.student"
+            string="Info Report pdf"
             name="epc.report_info_view"
             file="epc.report_student"
-            report_type="qweb-pdf" /> -->
+            report_type="qweb-pdf" />
 
         <report
             id="report_student_html"

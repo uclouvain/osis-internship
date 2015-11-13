@@ -36,7 +36,8 @@
         'views/learning_unit_year.xml',
         'views/learning_unit_enrollment.xml',
         'views/exam_enrollment.xml',
-        # 'reports/student.xml',
+        'reports/student.xml',
+        'reports/learning_unit_enrollment.xml',
     ],
 
     'demo': [
