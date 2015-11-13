@@ -47,10 +47,11 @@
             <field name="view_mode">tree,form</field>
         </record>
         <record model="ir.actions.act_window" id="person_list_action">
-            <field name="name">Persons partner</field>
+            <field name="name">Persons</field>
             <field name="res_model">osis.person</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">Create the first person</p>
             </field>
@@ -66,6 +67,9 @@
             <field name="res_model">osis.tutor</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">Create the first tutor</p>
+            </field>
         </record>
         <record model="ir.actions.act_window" id="exam_list_action">
             <field name="name">Exams</field>
@@ -96,13 +100,11 @@
             <field name="res_model">osis.student</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">Create the first studet</p>
+            </field>
         </record>
-        <!-- <record model="ir.actions.act_window" id="person_list_action_partner">
-            <field name="name">Partners</field>
-            <field name="res_model">res.partner</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record> -->
+
         <menuitem id="students_main_menu" name="Students"/>
         <menuitem id="routes_menu" name="Routes" parent="students_main_menu"/>
         <menuitem id="learning_assessments_menu" name="Learning Assessments" parent="routes_menu"/>
@@ -115,7 +117,6 @@
 
 
         <menuitem id="students_menu" name="Students" parent="registrations_menu" action="student_list_action"/>
-        <!-- <menuitem id="persons_menu4" name="Partners" parent="registrations_menu" action="person_list_action_partner"/> -->
         <menuitem id="program_main_menu" name="Program"/>
         <menuitem id="program_sub_menu" name="Program" parent="program_main_menu"/>
         <menuitem id="offers_menu" name="Offers" parent="program_sub_menu" action="offer_list_action"/>

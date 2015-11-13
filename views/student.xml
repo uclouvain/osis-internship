@@ -1,114 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
- <openerp>
-    <data>
-      <!-- Tree -->
-      <record model="ir.ui.view" id="student_tree_view">
-          <field name="name">student.tree</field>
-          <field name="model">osis.student</field>
-          <field eval="16" name="priority"/>
-          <field name="arch" type="xml">
-              <tree>
-                  <field name="person_id" string="Name"/>
-                  <field name="national_number" />
-              </tree>
-          </field>
-      </record>
-      <!-- Form -->
-      <!--toute simple et fonctionne-->
-      <!-- <record model="ir.ui.view" id="osis_student_formm">
-          <field name="name">osis.view.studentform</field>
-          <field name="model">osis.student</field>
-          <field name="mode">primary</field>
-          <field name="priority" eval="16"/>
+<openerp>
+  <data>
+    <!-- Tree -->
+    <record id="student_tree_view" model="ir.ui.view">
+      <field name="name">student.tree.view</field>
+      <field name="model">osis.student</field>
+      <field eval="16" name="priority"/>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="person_id"/>
+          <field name="registration_number"/>
+        </tree>
+      </field>
 
-          <field name="arch" type="xml">
-            <form string="Activity Form">
-              <sheet>
-                <group col="4">
-                  <field name="national_number"/>
-                  <field name="person_id"/>
-                </group>
-              </sheet>
-            </form>
-          </field>
-      </record> -->
-      <record model="ir.ui.view" id="osis_student_formmm">
-          <field name="name">osis.view.studentform</field>
-          <field name="model">osis.student</field>
-          <field name="mode">primary</field>
-          <field name="priority" eval="16"/>
-          <field name="inherit_id" ref="osis_person_form"/>
-          <field name="arch" type="xml">
-            <xpath expr="//notebook" position="before">
-              <group col="4">
-                <field name="registration_number" string="Registration number"/>
-                <field name="sexe" string="Sexe"/>
-                <field name="civil_status" string="Civil status"/>
-                <field name="national_number" string="National number"/>
-              </group>
-            </xpath>
+    </record>
+    <!-- Form -->
+    <record id="student_simple_form" model="ir.ui.view">
+      <field name="name">osis.view.studentform</field>
+      <field name="model">osis.student</field>
 
-          </field>
-      </record>
-      <!-- <record model="ir.ui.view" id="osis_student_form">
-          <field name="name">osis.view.studentform</field>
-          <field name="model">osis.student</field>
-          <field name="mode">primary</field>
-          <field name="priority" eval="16"/>
-          <field name="inherit_id" ref="osis_person_form"/>
-          <field name="arch" type="xml">
-            <xpath expr="//field[@name='image']" position="attributes">
-              <attribute name="invisible">True</attribute>
-            </xpath>
-            <xpath expr="//field[@name='is_company']" position="attributes">
-              <attribute name="invisible">True</attribute>
-            </xpath>
-            <xpath expr="//label[@for='is_company']" position="attributes">
-              <attribute name="invisible">True</attribute>
-            </xpath>
-            <xpath expr="//field[@name='parent_id']" position="attributes">
-              <attribute name="invisible">True</attribute>
-            </xpath>
-            <xpath expr="//field[@name='category_id']" position="attributes">
-              <attribute name="invisible">True</attribute>
-            </xpath>
-            <xpath expr="//field[@name='state_id']" position="attributes">
-              <attribute name="invisible">True</attribute>
-            </xpath>
-            <xpath expr="//field[@name='function']" position="attributes">
-              <attribute name="invisible">True</attribute>
-            </xpath>
-            <xpath expr="//field[@name='phone']" position="attributes">
-              <attribute name="invisible">True</attribute>
-            </xpath>
-            <xpath expr="//field[@name='fax']" position="attributes">
-              <attribute name="invisible">True</attribute>
-            </xpath>
-            <xpath expr="//field[@name='website']" position="attributes">
-              <attribute name="invisible">True</attribute>
-            </xpath>
-            <xpath expr="//field[@name='title']" position="attributes">
-                  <attribute name="invisible">True</attribute>
-            </xpath>
-            <xpath expr="//field[@name='email']" position="after">
-              <field name="national_number"/>
-            </xpath>
+      <field name="arch" type="xml">
+        <form string="Student simple Form">
+          <group col="4">
+            <field name="registration_number"/>
+            <field name="person_id"/>
+          </group>
+        </form>
+      </field>
+    </record>
 
-            <xpath expr="//notebook/page[@string='Contacts']" position="attributes">
-                <attribute name="invisible">True</attribute>
-            </xpath>
-            <xpath expr="//notebook/page[@name='internal_notes']" position="attributes">
-              <attribute name="invisible">True</attribute>
-            </xpath>
-            <xpath expr="//notebook/page[@name='sales_purchases']" position="attributes">
-              <attribute name="invisible">True</attribute>
-            </xpath>
-
-
-
-          </field>
-      </record> -->
-
-
-    </data>
+  </data>
 </openerp>

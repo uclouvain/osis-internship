@@ -5,10 +5,8 @@ from openerp import models, fields
 
 class Student(models.Model):
     _name = 'osis.student'
-    _inherits = {'osis.person' : 'person_id'}
+    _rec_name = 'registration_number'
 
     registration_number = fields.Char('Registration number')
-    sexe = fields.Selection([('F','Female'),('M','Male'),('U','Unknown')], default= 'U')
-    civil_status = fields.Selection([('MARRIED','Married'),('SINGLE','Single'),('WIDOWED','Widowed'),('DIVORCED','Divorced'),('SEPARATED','Separated'),('CONCUBIN','Concubin')])
-    national_number = fields.Char('National registration number')
-    person_id = fields.Many2one('osis.person')
+
+    person_id = fields.Many2one('osis.person', string="Person", required=True)
