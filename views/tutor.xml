@@ -15,7 +15,7 @@
     </record>
     <!-- Form -->
     <record id="osis_tutor_form" model="ir.ui.view">
-      <field name="name">osis.view.tutorform</field>
+      <field name="name">osis.view.tutor.form</field>
       <field name="model">osis.tutor</field>
       <field name="arch" type="xml">
         <form string="Tutor simple Form">

@@ -18,13 +18,28 @@
     </record>
     <!-- Form -->
     <record id="osis_person_form" model="ir.ui.view">
-      <field name="name">osis.view.personform</field>
+      <field name="name">osis.view.person.form</field>
       <field name="model">osis.person</field>
       <field name="mode">primary</field>
       <field eval="16" name="priority"/>
       <field name="inherit_id" ref="base.view_partner_form"/>
       <field name="arch" type="xml">
+        <xpath expr="//field[@name='name']" position="attributes">
+          <attribute name="invisible">True</attribute>
+        </xpath>
+        <xpath expr="//field[@name='name']" position="after">
+         <group col="4">
 
+            <field name="last_name" string="Last name"/>
+
+
+            <field name="first_name" string="First name"/>
+
+
+            <field name="middle_name" string="Middel name"/>
+
+          </group>
+          </xpath>
           <xpath expr="//div[@class='oe_edit_only']" position="attributes">
             <attribute name="invisible">True</attribute>
           </xpath>
@@ -71,8 +86,7 @@
         </xpath>
         <xpath expr="//notebook" position="before">
           <group col="4">
-            <field name="sexe" string="Sexe"/>
-            <field name="civil_status" string="Civil Status"/>
+            <field name="gender" string="Gender"/>
             <field name="national_number" string="National number"/>
           </group>
         </xpath>

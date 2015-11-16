@@ -10,7 +10,6 @@
 
     <template id="report_learning_unit_enrollment_view_simple">
       <t t-call="report.html_container">
-
         <t t-call="report.external_layout">
           <div class="page">
             <h1>Learning Unit Enrollment - Report</h1>

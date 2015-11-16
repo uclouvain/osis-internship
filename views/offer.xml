@@ -13,14 +13,17 @@
         </tree>
       </field>
     </record>
+    
     <!-- Form -->
     <record id="osis_offer_form" model="ir.ui.view">
-      <field name="name">osis.view.offerform</field>
+      <field name="name">osis.view.offer.form</field>
       <field name="model">osis.offer</field>
       <field name="arch" type="xml">
         <form string="Offer Form">
           <group col="4">
             <field name="acronym"/>
+          </group>
+          <group col="4">
             <field name="title"/>
           </group>
         </form>

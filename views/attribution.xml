@@ -18,7 +18,7 @@
     </record>
     <!-- Form -->
     <record id="attribution_simple_form" model="ir.ui.view">
-      <field name="name">osis.view.attributionform</field>
+      <field name="name">osis.view.attribution.form</field>
       <field name="model">osis.attribution</field>
 
       <field name="arch" type="xml">

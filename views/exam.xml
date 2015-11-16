@@ -12,6 +12,7 @@
           <field name="date_session" string="Session date"/>
           <field name="closed" string="Closed"/>
           <field name="status" string="Status"/>
+          <field name="session_name" string="Session"/>
         </tree>
       </field>
 

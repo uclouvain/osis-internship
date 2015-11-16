@@ -8,7 +8,7 @@ class Offer(models.Model):
     _rec_name = "acronym"
 
     acronym  = fields.Char('Acronym', required = True)
-    title = fields.Char('Title')
+    title = fields.Text('Title')
 
     @api.onchange('acronym')
     def _upper_acronym(self):
