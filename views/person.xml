@@ -12,7 +12,6 @@
           <field name="global_id" string="Global ID"/>
           <field name="birthdate" string="Birthdate"/>
           <field name="email" string="Email"/>
-
         </tree>
       </field>
     </record>
@@ -28,17 +27,8 @@
           <attribute name="invisible">True</attribute>
         </xpath>
         <xpath expr="//field[@name='name']" position="after">
-         <group col="4">
-
-            <field name="last_name" string="Last name"/>
 
 
-            <field name="first_name" string="First name"/>
-
-
-            <field name="middle_name" string="Middel name"/>
-
-          </group>
           </xpath>
           <xpath expr="//div[@class='oe_edit_only']" position="attributes">
             <attribute name="invisible">True</attribute>
@@ -47,6 +37,12 @@
           <attribute name="invisible">True</attribute>
         </xpath>
         <xpath expr="//div[@name='buttons']" position="after">
+          <group col="4">
+             <field name="last_name" string="Last name"/>
+           
+             <field name="first_name" string="First name"/>
+             <field name="middle_name" string="Middle name"/>
+           </group>
           <group>
           <field name="global_id" string="Global ID"/>
         </group>
