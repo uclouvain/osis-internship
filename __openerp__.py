@@ -20,6 +20,7 @@
 
     'data': [
         # 'security/ir.model.access.csv',
+        'demo.xml',
         'templates.xml',
         'views/menu.xml',
         'views/person.xml',
