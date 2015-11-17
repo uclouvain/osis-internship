@@ -1,13 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
+
         <record model="ir.actions.act_window" id="encoding_notes_list_action">
             <field name="name">Encoding notes</field>
-            <field name="res_model">osis.exam_enrollment</field>
+            <field name="res_model">osis.learning_unit</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="learning_unit_by_tutor"/>
+            <!-- <field name="view_id" eval="False"/> -->
             <field name="help" type="html"><p class="oe_view_nocontent_create">Create the first note</p></field>
         </record>
+        <record model="ir.actions.act_window" id="exam_enrollment_encoding_id">
+            <field name="name">Exam enrollment encoding</field>
+            <field name="res_model">osis.exam_enrollment</field>
+            <field name="type">ir.actions.act_window</field>
+                <field name="view_type">form</field>
+                <field name="view_mode">tree,form</field>
+<!--
+            <field name="code">
+              return {
+  'name': _('Entry Lines'),
+  'context': context,
+  'view_type': 'form',
+  'view_mode': 'form',
+  'res_model': 'osis.exam.enrollment',
+  'views': [(resource_id,'form')],
+  'type': 'ir.actions.act_window',
+  'target': 'new',
+}
+            </field> -->
+        </record>
+        <record model="ir.actions.act_window" id="encoding_notes_status_list_action">
+            <field name="name">Encoding notes2</field>
+            <field name="res_model">osis.status</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="act_window_id" ref="exam_enrollment_encoding_id"/>
+            <!-- <field name="code">
+              return {
+  'name': _('Entry Lines'),
+  'context': context,
+  'view_type': 'form',
+  'view_mode': 'form',
+  'res_model': 'osis.exam.enrollment',
+  'views': [(resource_id,'form')],
+  'type': 'ir.actions.act_window',
+  'target': 'new',
+}
+            </field> -->
+            <field name="sequence">8</field>
+        </record>
+
         <record model="ir.actions.act_window" id="offer_list_action">
             <field name="name">Offers</field>
             <field name="res_model">osis.offer</field>
@@ -92,6 +136,8 @@
         <menuitem id="routes_menu" name="Routes" parent="students_main_menu"/>
         <menuitem id="learning_assessments_menu" name="Learning Assessments" parent="routes_menu"/>
         <menuitem id="encoding_notes_menu" name="Encoding notes" parent="learning_assessments_menu" action="encoding_notes_list_action"/>
+        <menuitem id="encoding_notes_menu" name="Encoding notes2" parent="learning_assessments_menu" action="encoding_notes_status_list_action"/>
+
         <menuitem id="enrollment_menu" name="Enrollments" parent="students_main_menu"/>
         <menuitem id="offer_enrollment_menu" name="Offers" parent="enrollment_menu" action="offer_enrollment_list_action"/>
         <menuitem id="learning_unit_enrollment_menu" name="Learning units" parent="enrollment_menu" action="learning_unit_enrollment_list_action"/>

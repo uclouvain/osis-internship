@@ -11,3 +11,4 @@ import offer_year
 import structure
 import student
 import tutor
+import learning_unit_status
