@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from openerp import models, fields, api
+from openerp import models, fields, api, _
 import datetime
 
 
@@ -11,9 +11,9 @@ class Exam(models.Model):
 
     learning_unit_year_id = fields.Many2one('osis.learning_unit_year', string='Learning unit year')
     date_session = fields.Date('Session date')
-    status = fields.Selection([('COMPLETE','Complete'),('PARTIAL','Partial'),('MISSING','Missing')])
+    status = fields.Selection([('COMPLETE',_('Complete')),('PARTIAL',_('Partial')),('MISSING',_('Missing'))])
     closed = fields.Boolean(default = False)
-    session_name = fields.Char('Session Name',compute='_get_session_name', store=False)
+    session_name = fields.Char('Session Name',compute='_get_session_name', store=True)
 
     @api.depends('date_session')
     def _get_session_name(self):

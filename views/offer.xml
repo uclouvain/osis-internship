@@ -13,7 +13,7 @@
         </tree>
       </field>
     </record>
-    
+
     <!-- Form -->
     <record id="osis_offer_form" model="ir.ui.view">
       <field name="name">osis.view.offer.form</field>

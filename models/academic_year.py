@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from openerp import models, fields, api, exceptions
+from openerp import models, fields, api, exceptions, _
 import datetime
 
 class Academic_year(models.Model):
@@ -18,4 +18,4 @@ class Academic_year(models.Model):
             if record.start_date:
                 if record.end_date:
                     if fields.Datetime.from_string(record.start_date) > fields.Datetime.from_string(record.end_date):
-                        raise exceptions.ValidationError("End date must be greater or equal than start year")
+                        raise exceptions.ValidationError(_("End date must be greater or equal than start year"))
