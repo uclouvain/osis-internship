@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+  <data>
+    <!-- Tree -->
+    <record id="academic_year_tree_view" model="ir.ui.view">
+      <field name="name">academic_year.tree.view</field>
+      <field name="model">osis.academic_year</field>
+      <field eval="16" name="priority"/>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="year"/>
+          <field name="start_date"/>
+          <field name="end_date"/>
+        </tree>
+      </field>
+
+    </record>
+    <!-- Form -->
+    <record id="academic_year_simple_form" model="ir.ui.view">
+      <field name="name">osis.view.academic_year.form</field>
+      <field name="model">osis.academic_year</field>
+
+      <field name="arch" type="xml">
+        <form string="Academic Year Form">
+          <group col="4">
+            <field name="year"/>
+            <field name="start_date"/>
+            <field name="end_date"/>
+          </group>
+        </form>
+      </field>
+    </record>
+
+  </data>
+</openerp>

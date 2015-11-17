@@ -25,8 +25,19 @@
 #
 ##############################################################################
 
-from openerp import models, fields, api
+from openerp import models, fields
 
 class Tutor(models.Model):
     _name = 'osis.tutor'
     _description = "Tutor"
+
+    person_id = fields.Many2one('osis.person', string="Person", required=True)
+
+
+    #Pour voir le nom du tutor dans la liste des attributions notamment
+    def name_get(self,cr,uid,ids,context=None):
+        result={}
+        for record in self.browse(cr,uid,ids,context=context):
+            result[record.id]  = record.person_id.name
+        return result.items()
+

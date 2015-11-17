@@ -43,5 +43,190 @@
         <!--     <field name="name">Object 4</field> -->
         <!--   </record> -->
         <!--  -->
+<!-- PROGRAM -->
+        <record id="learning_unit_math" model="osis.learning_unit">
+          <field name="title">Mathématiques générales 1</field>
+        </record>
+        <record id="learning_unit_programmation" model="osis.learning_unit">
+          <field name="title">Introduction à la programmation</field>
+        </record>
+        <record id="learning_unit_anglais" model="osis.learning_unit">
+          <field name="title">Anglais : compréhension à la lecture</field>
+        </record>
+        <record id="offer_info" model="osis.offer">
+          <field name="acronym">SINF1BA</field>
+          <field name="title">Bachelier en sciences informatiques</field>
+        </record>
+        <record id="offer_math" model="osis.offer">
+          <field name="acronym">MATH1BA</field>
+          <field name="title">Bachelier en sciences mathématiques</field>
+        </record>
+        <record id="offer_phys" model="osis.offer">
+          <field name="acronym">PHYS1BA</field>
+          <field name="title">Bachelier en sciences physiques</field>
+        </record>
+        <record id="offer_ling" model="osis.offer">
+          <field name="acronym">LING2M</field>
+          <field name="title">Master [120] en linguistique</field>
+        </record>
+<!-- INSTITUTION -->
+        <record id="person_gran" model="osis.person">
+          <field name="last_name">Gran</field>
+          <field name="first_name">Marino</field>
+          <field name="gender">M</field>
+        </record>
+        <record id="person_ponce" model="osis.person">
+          <field name="last_name">Ponce</field>
+          <field name="first_name">Augusto</field>
+          <field name="gender">M</field>
+        </record>
+        <record id="person_bonaventure" model="osis.person">
+          <field name="last_name">Bonaventure</field>
+          <field name="first_name">Olivier</field>
+          <field name="gender">M</field>
+        </record>
+        <record id="person_pecheur" model="osis.person">
+          <field name="last_name">Pecheur</field>
+          <field name="first_name">Charles</field>
+          <field name="gender">M</field>
+        </record>
+        <record id="person_gouverneur" model="osis.person">
+          <field name="last_name">Gouverneur</field>
+          <field name="first_name">Celine</field>
+          <field name="gender">F</field>
+        </record>
+        <record id="person_francois" model="osis.person">
+          <field name="last_name">Francois</field>
+          <field name="first_name">Dominique</field>
+          <field name="gender">M</field>
+        </record>
+        <record id="academic_year_2014" model="osis.academic_year">
+          <field name="year">2014</field>
+          <field name="start_date">01/09/2014</field>
+          <field name="end_date">31/08/2015</field>
+        </record>
+        <record id="academic_year_2015" model="osis.academic_year">
+          <field name="year">2015</field>
+          <field name="start_date">01/09/2015</field>
+          <field name="end_date">31/08/2016</field>
+        </record>
+        <record id="academic_year_2016" model="osis.academic_year">
+          <field name="year">2016</field>
+          <field name="start_date">01/09/2016</field>
+          <field name="end_date">31/08/2017</field>
+        </record>
+        <record id="structure_sst" model="osis.structure">
+          <field name="title">Secteur des sciences et technologies</field>
+        </record>
+        <record id="structure_ssh" model="osis.structure">
+          <field name="title">Secteur des sciences humaines</field>
+        </record>
+        <record id="structure_sc" model="osis.structure">
+          <field name="title">Faculté des sciences</field>
+        </record>
+        <record id="structure_epl" model="osis.structure">
+          <field name="title">École Polytechnique de Louvain</field>
+        </record>
+        <record id="structure_math" model="osis.structure">
+          <field name="title">École de mathématiques</field>
+        </record>
+        <record id="structure_fial" model="osis.structure">
+          <field name="title">Faculté de philosophie, arts et lettres</field>
+        </record>
+        <record id="learning_unit_year_math_2014" model="osis.learning_unit_year">
+          <field name="academic_year_id" ref="academic_year_2014"></field>
+          <field name="learning_unit_id" ref="learning_unit_math"></field>
+          <field name="attribution_entity_id" ref="structure_sst"></field>
+          <field name="specifications_responsible_id" ref="structure_math"></field>
+          <field name="credits">7.0</field>
+        </record>
+        <record id="learning_unit_year_math_2015" model="osis.learning_unit_year">
+          <field name="academic_year_id" ref="academic_year_2015"></field>
+          <field name="learning_unit_id" ref="learning_unit_math"></field>
+          <field name="attribution_entity_id" ref="structure_sst"></field>
+          <field name="specifications_responsible_id" ref="structure_math"></field>
+          <field name="credits">7.0</field>
+        </record>
+        <record id="learning_unit_year_programmation_2015" model="osis.learning_unit_year">
+          <field name="academic_year_id" ref="academic_year_2015"></field>
+          <field name="learning_unit_id" ref="learning_unit_programmation"></field>
+          <field name="attribution_entity_id" ref="structure_sst"></field>
+          <field name="specifications_responsible_id" ref="structure_epl"></field>
+          <field name="credits">6.0</field>
+        </record>
+        <record id="learning_unit_year_anglais_2015" model="osis.learning_unit_year">
+          <field name="academic_year_id" ref="academic_year_2015"></field>
+          <field name="learning_unit_id" ref="learning_unit_anglais"></field>
+          <field name="attribution_entity_id" ref="structure_ssh"></field>
+          <field name="specifications_responsible_id" ref="structure_fial"></field>
+          <field name="credits">3.0</field>
+        </record>
+        <record id="offer_year_info_2015" model="osis.offer_year">
+          <field name="offer_id" ref="offer_info"/>
+          <field name="structure_id" ref="structure_epl"/>
+          <field name="academic_year_id" ref="academic_year_2015"/>
+        </record>
+        <record id="offer_year_math_2015" model="osis.offer_year">
+          <field name="offer_id" ref="offer_math"/>
+          <field name="structure_id" ref="structure_sc"/>
+          <field name="academic_year_id" ref="academic_year_2015"/>
+        </record>
+        <record id="offer_year_phys_2015" model="osis.offer_year">
+          <field name="offer_id" ref="offer_phys"/>
+          <field name="structure_id" ref="structure_sc"/>
+          <field name="academic_year_id" ref="academic_year_2015"/>
+        </record>
+        <record id="exam_math_2014_jan" model="osis.exam">
+          <field name="learning_unit_year_id" ref="learning_unit_year_math_2014"/>
+          <field name="date_session">12/01/2015</field>
+          <field name="closed" eval="True"/>
+        </record>
+        <record id="exam_math_2015_jan" model="osis.exam">
+          <field name="learning_unit_year_id" ref="learning_unit_year_math_2015"/>
+          <field name="date_session">12/01/2016</field>
+          <field name="closed" eval="False"/>
+        </record>
+        <record id="exam_math_2015_aout" model="osis.exam">
+          <field name="learning_unit_year_id" ref="learning_unit_year_math_2015"/>
+          <field name="date_session">12/08/2016</field>
+          <field name="closed" eval="False"/>
+        </record>
+        <record id="exam_programmation_2015_juin" model="osis.exam">
+          <field name="learning_unit_year_id" ref="learning_unit_year_programmation_2015"/>
+          <field name="date_session">15/06/2016</field>
+          <field name="closed" eval="False"/>
+        </record>
+        <record id="exam_programmation_2015_aout" model="osis.exam">
+          <field name="learning_unit_year_id" ref="learning_unit_year_programmation_2015"/>
+          <field name="date_session">15/08/2016</field>
+          <field name="closed" eval="False"/>
+        </record>
+<!--
+<record id="tutor_gran" model="osis.person">
+  <field name="person_id" ref="person_gran"/>
+</record>
+        <record id="tutor_ponce" model="osis.person">
+          <field name="person_id" ref="person_ponce"/>
+        </record>
+        <record id="tutor_bonaventure" model="osis.person">
+          <field name="person_id" ref="person_bonaventure"/>
+        </record>
+        <record id="tutor_pecheur" model="osis.person">
+          <field name="person_id" ref="person_pecheur"/>
+        </record>
+        <record id="tutor_gouverneur" model="osis.person">
+          <field name="person_id" ref="person_gouverneur"/>
+        </record>
+        <record id="tutor_francois" model="osis.person">
+          <field name="person_id" ref="person_francois"/>
+        </record>
+-->
+<!-- ACADEMY -->
+<!--
+        <record id="attribution_" model="osis.attribution">
+          <field name="learning_unit_id" ref="learning_unit_math"/>
+          <field name="tutor_id" ref=
+        </record>
+      -->
     </data>
 </openerp>

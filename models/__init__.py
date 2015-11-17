@@ -36,5 +36,6 @@ import offer
 import offer_enrollment
 import offer_year
 import structure
+import person
 import student
 import tutor

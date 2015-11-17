@@ -33,3 +33,10 @@ class Learning_unit_enrollment(models.Model):
 
     student_id = fields.Many2one('osis.student', string='Student')
     learning_unit_year_id = fields.Many2one('osis.learning_unit_year', string='Learning unit year')
+    date_enrollment = fields.Date('Enrollment date')
+
+    def name_get(self,cr,uid,ids,context=None):
+        result={}
+        for record in self.browse(cr,uid,ids,context=context):
+            result[record.id]  = str(record.learning_unit_year_id.academic_year_id.year) + "-" + str(record.learning_unit_year_id.learning_unit_id.title)
+        return result.items()
