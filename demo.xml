@@ -71,31 +71,37 @@
         </record>
 <!-- INSTITUTION -->
         <record id="person_gran" model="osis.person">
+          <field name="name">Gran Marino</field>
           <field name="last_name">Gran</field>
           <field name="first_name">Marino</field>
           <field name="gender">M</field>
         </record>
         <record id="person_ponce" model="osis.person">
+          <field name="name">Ponce Augusto</field>
           <field name="last_name">Ponce</field>
           <field name="first_name">Augusto</field>
           <field name="gender">M</field>
         </record>
         <record id="person_bonaventure" model="osis.person">
+          <field name="name">Bonaventure Olivier</field>
           <field name="last_name">Bonaventure</field>
           <field name="first_name">Olivier</field>
           <field name="gender">M</field>
         </record>
         <record id="person_pecheur" model="osis.person">
+          <field name="name">Pecheur Charles</field>
           <field name="last_name">Pecheur</field>
           <field name="first_name">Charles</field>
           <field name="gender">M</field>
         </record>
         <record id="person_gouverneur" model="osis.person">
+          <field name="name">Gouverneur Celine</field>
           <field name="last_name">Gouverneur</field>
           <field name="first_name">Celine</field>
           <field name="gender">F</field>
         </record>
         <record id="person_francois" model="osis.person">
+          <field name="name">Francois Dominique</field>
           <field name="last_name">Francois</field>
           <field name="first_name">Dominique</field>
           <field name="gender">M</field>
