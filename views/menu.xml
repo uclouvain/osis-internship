@@ -1,4 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- OSIS stands for Open Student Information System. It's an application
+ *   designed to manage the core business of higher education institutions,
+ *   such as universities, faculties, institutes and professional schools.
+ *   The core business involves the administration of students, teachers,
+ *   courses, programs and so on.
+ *
+ *   Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU Affero General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU Affero General Public License for more details.
+ *
+ *   A copy of this license - GNU Affero General Public License - is available
+ *   at the root of the source code of this program.  If not,
+ *   see http://www.gnu.org/licenses/. -->
 <openerp>
     <data>
 
@@ -57,6 +78,7 @@
             <field name="res_model">osis.offer</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
             <field name="help" type="html"><p class="oe_view_nocontent_create">Create the first offer</p></field>
         </record>
         <record model="ir.actions.act_window" id="attribution_list_action">
@@ -64,6 +86,7 @@
             <field name="res_model">osis.attribution</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
             <field name="help" type="html"><p class="oe_view_nocontent_create">Create the first attribution</p></field>
         </record>
         <record model="ir.actions.act_window" id="offer_year_list_action">
@@ -71,67 +94,108 @@
             <field name="res_model">osis.offer_year</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="help" type="html"><p class="oe_view_nocontent_create">Create the first offer year</p></field>
         </record>
         <record model="ir.actions.act_window" id="learning_unit_year_list_action">
             <field name="name">Learning unit year</field>
             <field name="res_model">osis.learning_unit_year</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
         </record>
         <record model="ir.actions.act_window" id="academic_year_list_action">
             <field name="name">Academic year</field>
             <field name="res_model">osis.academic_year</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
         </record>
         <record model="ir.actions.act_window" id="structure_list_action">
             <field name="name">Structure</field>
             <field name="res_model">osis.structure</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
+        </record>
+        <record model="ir.actions.act_window" id="person_list_action">
+            <field name="name">Persons</field>
+            <field name="res_model">osis.person</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">Create the first person</p>
+            </field>
         </record>
         <record model="ir.actions.act_window" id="learning_unit_list_action">
             <field name="name">Learning units</field>
             <field name="res_model">osis.learning_unit</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">Create the first learning unit</p>
+            </field>
         </record>
         <record model="ir.actions.act_window" id="tutor_list_action">
             <field name="name">Tutors</field>
             <field name="res_model">osis.tutor</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">Create the first tutor</p>
+            </field>
         </record>
         <record model="ir.actions.act_window" id="exam_list_action">
             <field name="name">Exams</field>
             <field name="res_model">osis.exam</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">Create the first exam</p>
+            </field>
         </record>
         <record model="ir.actions.act_window" id="offer_enrollment_list_action">
             <field name="name">Offer enrollments</field>
             <field name="res_model">osis.offer_enrollment</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">Create the first offer enrollment</p>
+            </field>
         </record>
         <record model="ir.actions.act_window" id="learning_unit_enrollment_list_action">
             <field name="name">Learning unit enrollments</field>
             <field name="res_model">osis.learning_unit_enrollment</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
         </record>
         <record model="ir.actions.act_window" id="exam_enrollment_list_action">
             <field name="name">Exam enrollments</field>
             <field name="res_model">osis.exam_enrollment</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">Create the first exam enrollment</p>
+            </field>
         </record>
         <record model="ir.actions.act_window" id="student_list_action">
-            <field name="name">Students</field>
+            <field name="name">Student</field>
             <field name="res_model">osis.student</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">Create the first studet</p>
+            </field>
         </record>
+
         <menuitem id="students_main_menu" name="Students"/>
         <menuitem id="routes_menu" name="Routes" parent="students_main_menu"/>
         <menuitem id="learning_assessments_menu" name="Learning Assessments" parent="routes_menu"/>
@@ -143,8 +207,9 @@
         <menuitem id="learning_unit_enrollment_menu" name="Learning units" parent="enrollment_menu" action="learning_unit_enrollment_list_action"/>
         <menuitem id="exam_enrollment_menu" name="Exams" parent="enrollment_menu" action="exam_enrollment_list_action"/>
         <menuitem id="registrations_menu" name="Registrations" parent="students_main_menu"/>
-        <menuitem id="students_menu" name="Students" parent="registrations_menu" action="student_list_action"/>
 
+
+        <menuitem id="students_menu" name="Students" parent="registrations_menu" action="student_list_action"/>
         <menuitem id="program_main_menu" name="Program"/>
         <menuitem id="program_sub_menu" name="Program" parent="program_main_menu"/>
         <menuitem id="offers_menu" name="Offers" parent="program_sub_menu" action="offer_list_action"/>
@@ -163,6 +228,7 @@
         <menuitem id="academic_year_menu" name="Academic years" parent="academic_year_main_menu" action="academic_year_list_action"/>
         <menuitem id="structure_main_menu" parent="institution_main_menu" name="Structure"/>
         <menuitem id="structure_menu" parent="structure_main_menu" name="Structure" action="structure_list_action"/>
+        <menuitem id="persons_menu" parent="structure_main_menu" name="Persons" action="person_list_action"/>
 
     </data>
 </openerp>

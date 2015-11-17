@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+  <data>
+    <!-- Tree -->
+    <record id="exam_tree_view" model="ir.ui.view">
+      <field name="name">exam.tree.view</field>
+      <field name="model">osis.exam</field>
+      <field eval="16" name="priority"/>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="learning_unit_year_id" string="Learning unit year"/>
+          <field name="date_session" string="Session date"/>
+          <field name="closed" string="Closed"/>
+          <field name="status" string="Status"/>
+          <field name="session_name" string="Session"/>
+        </tree>
+      </field>
+
+    </record>
+    <!-- Form -->
+    <record id="exam_form" model="ir.ui.view">
+      <field name="name">osis.view.exam.form</field>
+      <field name="model">osis.exam</field>
+
+      <field name="arch" type="xml">
+        <form string="Exam Form">
+          <group col="4">
+            <field name="learning_unit_year_id" string="Learning unit year"/>
+            <field name="date_session" string="Session date"/>
+            <field name="closed" string="Closed"/>
+            <field name="status" string="Status"/>
+          </group>
+        </form>
+      </field>
+    </record>
+
+  </data>
+</openerp>

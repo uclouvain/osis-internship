@@ -5,13 +5,13 @@
     <record id="learning_unit_tree_view" model="ir.ui.view">
       <field name="name">learning_unit.tree.view</field>
       <field name="model">osis.learning_unit</field>
+
       <field eval="8" name="priority"/>
       <field name="arch" type="xml">
         <tree>
           <field name="title"/>
         </tree>
       </field>
-
     </record>
     <record id="learning_unit_by_tutor" model="ir.ui.view">
       <field name="name">learning_unit_by_tutor</field>
@@ -24,7 +24,6 @@
           <field name="learning_unit_year_id"/>
         </tree>
       </field>
-
     </record>
     <!-- Form -->
     <record id="learning_unit_simple_form" model="ir.ui.view">
@@ -42,11 +41,8 @@
           <group>
             <field name="learning_unit_year_id"/>
           </group>
-
-
         </form>
       </field>
     </record>
-
   </data>
 </openerp>
