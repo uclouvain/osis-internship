@@ -41,5 +41,7 @@ class Learning_unit_year(models.Model):
     def name_get(self,cr,uid,ids,context=None):
         result={}
         for record in self.browse(cr,uid,ids,context=context):
-            result[record.id]  = str(record.academic_year_id.year) + " - " + record.learning_unit_id.title
+            year = u"%s" % record.academic_year_id.year
+            title = u"%s" % record.learning_unit_id.title
+            result[record.id] = u"%s - %s" % (year,title)
         return result.items()

@@ -40,6 +40,7 @@ class Student(models.Model):
     def name_get(self,cr,uid,ids,context=None):
         result={}
         for record in self.browse(cr,uid,ids,context=context):
-            result[record.id]  = record.person_id.name + " (" +str(record.registration_number) + ")"
+            name = u"%s" % record.person_id.name
+            registration_number = u"%s" % record.registration_number
+            result[record.id] = u"%s (%s)" % (name,registration_number)
         return result.items()
-

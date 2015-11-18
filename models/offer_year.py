@@ -38,5 +38,7 @@ class Offer_year(models.Model):
     def name_get(self,cr,uid,ids,context=None):
         result={}
         for record in self.browse(cr,uid,ids,context=context):
-            result[record.id]  = record.offer_id.acronym + "( " + str(record.academic_year_id.year) + ")"
+            acronym = u"%s" % record.offer_id.acronym
+            year = u"%s" % record.academic_year_id.year
+            result[record.id] = u"%s ()%s)" % (acronym,year)
         return result.items()
