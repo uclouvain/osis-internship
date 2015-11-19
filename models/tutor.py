@@ -40,4 +40,3 @@ class Tutor(models.Model):
         for record in self.browse(cr,uid,ids,context=context):
             result[record.id]  = record.person_id.name
         return result.items()
-

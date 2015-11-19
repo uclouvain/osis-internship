@@ -40,3 +40,6 @@ import person
 import student
 import tutor
 import learning_unit_status
+import student_notes_reading
+import resultsWizard
+import student_notes_display

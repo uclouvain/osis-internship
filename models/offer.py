@@ -39,4 +39,3 @@ class Offer(models.Model):
     def _upper_acronym(self):
         if self.acronym:
             self.acronym = self.acronym.upper()
-

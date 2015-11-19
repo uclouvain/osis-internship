@@ -53,4 +53,3 @@ class Attribution(models.Model):
         for record in self.browse(cr,uid,ids,context=context):
             result[record.id]  = str(record.learning_unit_id.title) + " - " + record.tutor_id.person_id.name
         return result.items()
-

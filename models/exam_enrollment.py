@@ -35,3 +35,30 @@ class Exam_enrollment(models.Model):
     learning_unit_enrollment_id = fields.Many2one('osis.learning_unit_enrollment', string='Learning unit enrollment')
     score = fields.Float('Score')
 
+
+#     @api.multi
+#     def wizard_encode_results(self):
+#
+#         lue_id = self.learning_unit_enrollment_id.id
+#         lue = self.env['osis.learning_unit_enrollment'].search([('id','=',lue_id)])
+#         students = self.env['osis.student'].search([('learning_unit_enrollment_id','=',lue.id)])
+#
+#         wiz_id = self.env['osis.wizard.result'].create({
+#             'exam_enrollment_id': self.id,
+#             'line_ids':[(0,0,{'student_id': student.id}) for student in students],
+#         })
+#         return {
+#             'type': 'ir.actions.act_window',
+#             'view_type': 'form',
+#             'view_mode': 'form',
+#             'res_model': 'osis.wizard.result',
+#             'res_id': wiz_id.id,
+#             'target': 'new',
+#         }
+#
+# class ExamResults(models.Model):
+#     _name = 'epc.exam.result'
+#
+#     exam_enrollment_id = fields.Many2one('epc.exam_enrollment', string='Exam')
+#     student_id = fields.Many2one('osis.student', string='Student', required=True)
+#     result = fields.Float('Result')

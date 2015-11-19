@@ -2,6 +2,7 @@
 <openerp>
   <data>
     <!-- Tree -->
+    <!-- Simple -->
     <record id="exam_enrollment_tree_view" model="ir.ui.view">
       <field name="name">exam_enrollment.tree.view</field>
       <field name="model">osis.exam_enrollment</field>
@@ -10,6 +11,25 @@
         <tree>
           <field name="exam_id"/>
           <field name="learning_unit_enrollment_id" />
+          <field name="score" />
+
+        </tree>
+      </field>
+
+    </record>
+    <!-- Avec notion d'étudiant -->
+    <record id="exam_enrollment_with_student_tree_view" model="ir.ui.view">
+      <field name="name">exam_enrollment_with_student.tree.view</field>
+      <field name="model">osis.exam_enrollment</field>
+      <field eval="8" name="priority"/>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="exam_id"/>
+          <field name="learning_unit_enrollment_id" />
+          <field name="score" />
+
+          <!-- <field name="student_ids" /> -->
+
         </tree>
       </field>
 
@@ -24,6 +44,7 @@
           <group col="4">
             <field name="exam_id"/>
             <field name="learning_unit_enrollment_id" />
+            <field name="score" />
           </group>
         </form>
       </field>

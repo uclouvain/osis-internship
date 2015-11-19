@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+  <data>
+
+    <!-- Tree -->
+    <record id="student_notes_tree_view" model="ir.ui.view">
+      <field name="name">student_notes.tree.view</field>
+      <field name="model">osis.student_notes</field>
+      <field eval="16" name="priority"/>
+      <field name="arch" type="xml">
+
+        <tree colors="green:status=='COMPLETE';red:status=='MISSING';orange:status=='PARTIAL'">
+           <button name="display_students_notes" string="Create Invoice" type="object"
+     class="oe_highlight"/>
+          <field name="status"/>
+          <field name="title"/>
+          <field name="year"/>
+          <field name="session_name"/>
+        </tree>
+      </field>
+    </record>
+
+  </data>
+</openerp>
