@@ -32,13 +32,30 @@ import datetime
 class Exam(models.Model):
     _name = 'osis.exam'
     _description = "Exam"
-    _rec_name = "session_name"
 
     learning_unit_year_id = fields.Many2one('osis.learning_unit_year', string='Learning unit year')
+    exam_enrollment_ids = fields.One2many('osis.exam_enrollment','exam_id', string='Exam enrollment')
+
     date_session = fields.Date('Session date')
-    status = fields.Selection([('COMPLETE',_('Complete')),('PARTIAL',_('Partial')),('MISSING',_('Missing'))])
+    status = fields.Selection([('COMPLETE',_('Complete')),('PARTIAL',_('Partial')),('MISSING',_('Missing'))],default = 'MISSING')
     closed = fields.Boolean(default = False)
     session_name = fields.Char('Session Name',compute='_get_session_name', store=True)
+
+    def name_get(self,cr,uid,ids,context=None):
+        result={}
+        for record in self.browse(cr,uid,ids,context=context):
+            name_build = ''
+            if record.learning_unit_year_id:
+                name_build += str(record.learning_unit_year_id.academic_year_id.year)
+                if record.learning_unit_year_id.learning_unit_id.title:
+                    name_build+= ' - '
+                    name_build += record.learning_unit_year_id.learning_unit_id.title
+            if record.session_name:
+                if record.session_name:
+                    name_build+= ' - '
+                name_build += record.session_name
+            result[record.id]  = name_build
+        return result.items()
 
     @api.depends('date_session')
     def _get_session_name(self):

@@ -51,8 +51,8 @@ class Learning_unit_status(models.Model):
         }
 
 class ExamResults(models.Model):
-    _name = 'epc.exam.result'
+    _name = 'osis.exam.result'
 
-    exam_enrollment_id = fields.Many2one('epc.exam_enrollment', string='Exam')
+    exam_enrollment_id = fields.Many2one('osis.exam_enrollment', string='Exam')
     student_id = fields.Many2one('osis.student', string='Student', required=True)
     result = fields.Float('Result')

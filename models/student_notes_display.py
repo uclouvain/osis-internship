@@ -13,24 +13,30 @@ class Student_notes_display(models.Model):
     year = fields.Integer('Year')
     status = fields.Char('Status')
     session_name = fields.Char('Session name')
-    exam_id = fields.Char('Exam id')
+    exam_ref = fields.Char('Exam id')
     student_name = fields.Char('Student name')
     score = fields.Char('Score')
-    student_id  = fields.Integer('Student Id')
-    learning_unit_id = fields.Integer('Learning unit  id')
+    student_ref  = fields.Integer('Student ref')
+    learning_unit_ref = fields.Integer('Learning unit  id')
 
 
     def init(self, cr):
+        print 'init notes display'
         tools.sql.drop_view_if_exists(cr, 'osis_student_notes_display')
         cr.execute('''CREATE OR REPLACE VIEW osis_student_notes_display AS (
-            select status,  osis_learning_unit.title as title_learning_unit, osis_offer.title as title_offer, year, session_name, osis_exam.id as exam_id, osis_person.name as student_name , osis_exam_enrollment.score as score, osis_exam.learning_unit_year_id as id, osis_student.id as student_id, osis_learning_unit.id as learning_unit_id
-            from osis_exam , osis_learning_unit, osis_academic_year, osis_exam_enrollment, osis_offer_year, osis_offer ,
-                 osis_learning_unit_enrollment, osis_student, osis_person, osis_offer_enrollment
-            where osis_offer_year.academic_year_id = osis_academic_year.id
-            and osis_exam_enrollment.exam_id=osis_exam.id
-            and osis_offer_year.offer_id = osis_offer.id
-            and osis_offer_enrollment.offer_year_id = osis_offer_year.id
-            and osis_exam_enrollment.learning_unit_enrollment_id = osis_learning_unit_enrollment.id
-            and osis_learning_unit_enrollment.student_id = osis_student.id
-            and osis_student.person_id = osis_person.id
-            and osis_student.id = osis_offer_enrollment.student_id)''')
+            select e.status as status, o.title as title_offer ,
+                   ay.year as year, e.session_name as session_name, e.id as exam_ref,
+                   p.name as student_name , ee.score as score,
+                   e.learning_unit_year_id as learning_unit_year_id,
+                   lue.student_id as student_ref,
+                   ee.id as id, lu.title as title_learning_unit
+            from osis_exam e join osis_exam_enrollment ee on ee.exam_id = e.id
+                 join osis_learning_unit_year luy on e.learning_unit_year_id = luy.id
+                 join osis_academic_year ay on luy.academic_year_id = ay.id
+                 join osis_offer_year oy on oy.academic_year_id = ay.id
+                 join osis_offer o on oy.offer_id = o.id
+                 join osis_learning_unit_enrollment lue on lue.id = ee.learning_unit_enrollment_id
+                 join osis_student s on s.id = lue.student_id
+                 join osis_person p on s.person_id = p.id
+                 join osis_learning_unit lu on luy.learning_unit_id = lu.id
+            )''')

@@ -8,6 +8,7 @@
       <field eval="16" name="priority"/>
       <field name="arch" type="xml">
         <tree>
+          <field name="acronym"/>
           <field name="title"/>
         </tree>
       </field>
@@ -21,6 +22,7 @@
       <field name="arch" type="xml">
         <form string="Learning Unit Form">
           <group col="4">
+            <field name="acronym"/>
             <field name="title"/>
           </group>
         </form>

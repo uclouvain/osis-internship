@@ -30,10 +30,10 @@ from openerp import models, fields, api
 class Learning_unit(models.Model):
     _name = 'osis.learning_unit'
     _description = 'title'
-    _rec_name='title'
+    _rec_name='acronym'
 
     title = fields.Char('Title')
+    acronym = fields.Char('Acronym')
 
-    title = fields.Char('Title')
     attribution_id = fields.One2many('osis.attribution', 'learning_unit_id', string='Attribution')
     learning_unit_year_id = fields.One2many('osis.learning_unit_year', 'learning_unit_id' ,string='Learning Unit Year')

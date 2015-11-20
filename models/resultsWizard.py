@@ -3,7 +3,7 @@ from openerp import models, fields, api
 class ResultsWizard(models.TransientModel):
     _name = 'osis.wizard.result'
 
-    exam_enrollment_id = fields.Many2one('epc.exam_enrollment', string='Exam enrollement')
+    exam_enrollment_id = fields.Many2one('osis.exam_enrollment', string='Exam enrollement')
     line_ids = fields.One2many('osis.wizard.result.line', 'result_id')
 
     @api.one

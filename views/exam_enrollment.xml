@@ -28,8 +28,6 @@
           <field name="learning_unit_enrollment_id" />
           <field name="score" />
 
-          <!-- <field name="student_ids" /> -->
-
         </tree>
       </field>
 

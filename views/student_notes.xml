@@ -1,17 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
   <data>
-
+    <!-- Search -->
+      <record model="ir.ui.view" id="student_notes_view">
+          <field name="name">student_notes.search</field>
+          <field name="model">osis.student.notes</field>
+          <field name="arch" type="xml">
+              <search>
+                <field name="status"/>
+                <field name="title"/>
+                <field name="year"/>
+                <field name="session_name"/>
+                <filter name="by_student" domain="[('student_ref', '=', '1')]" string="By student"/>
+              </search>
+          </field>
+      </record>
     <!-- Tree -->
     <record id="student_notes_tree_view" model="ir.ui.view">
       <field name="name">student_notes.tree.view</field>
-      <field name="model">osis.student_notes</field>
+      <field name="model">osis.student.notes</field>
       <field eval="16" name="priority"/>
       <field name="arch" type="xml">
-
-        <tree colors="green:status=='COMPLETE';red:status=='MISSING';orange:status=='PARTIAL'">
-           <button name="display_students_notes" string="Create Invoice" type="object"
-     class="oe_highlight"/>
+        <tree colors="green:status=='COMPLETE';red:status=='MISSING';orange:status=='PARTIAL'" create="false" delete="false" editable="false">
+          <button name="display_students_notes" string="View notes" type="object" class="oe_highlight"/>
           <field name="status"/>
           <field name="title"/>
           <field name="year"/>

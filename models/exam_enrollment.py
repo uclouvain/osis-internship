@@ -34,6 +34,7 @@ class Exam_enrollment(models.Model):
     exam_id = fields.Many2one('osis.exam', string='Exam')
     learning_unit_enrollment_id = fields.Many2one('osis.learning_unit_enrollment', string='Learning unit enrollment')
     score = fields.Float('Score')
+    # justification = fields.Selection([('ILL',_('Ill')),('PARTIAL',_('Partial')),('MISSING',_('Missing'))],default = 'MISSING')
 
 
 #     @api.multi

@@ -29,6 +29,8 @@
             <field name="date_session" string="Session date"/>
             <field name="closed" string="Closed"/>
             <field name="status" string="Status"/>
+            <field name="exam_enrollment_ids" string="Exam enrollments"/>
+
           </group>
         </form>
       </field>
