@@ -9,27 +9,54 @@ class Student_notes_display(models.Model):
 
 
     title_learning_unit = fields.Char('Title learning unit')
-    title_offer = fields.Char('Title offer')
+    # title_offer = fields.Char('Title offer')
     year = fields.Integer('Year')
-    status = fields.Char('Status')
     session_name = fields.Char('Session name')
-    exam_ref = fields.Char('Exam id')
+    exam_id = fields.Char('Exam id')
     student_name = fields.Char('Student name')
     score = fields.Char('Score')
     student_ref  = fields.Integer('Student ref')
-    learning_unit_ref = fields.Integer('Learning unit  id')
+    learning_unit_ref = fields.Integer('Learning unit id')
 
 
     def init(self, cr):
         print 'init notes display'
         tools.sql.drop_view_if_exists(cr, 'osis_student_notes_display')
         cr.execute('''CREATE OR REPLACE VIEW osis_student_notes_display AS (
-            select e.status as status, o.title as title_offer ,
-                   ay.year as year, e.session_name as session_name, e.id as exam_ref,
-                   p.name as student_name , ee.score as score,
-                   e.learning_unit_year_id as learning_unit_year_id,
+            select ay.year as year,
+                   e.session_name as session_name,
+                   ee.exam_id as exam_id,
+                   p.name as student_name,
+                   ee.score as score,
+                   luy.learning_unit_id as learning_unit_ref,
                    lue.student_id as student_ref,
-                   ee.id as id, lu.title as title_learning_unit
+                   ee.id as id,
+                   lu.title as title_learning_unit
+            from osis_exam e join osis_exam_enrollment ee on ee.exam_id = e.id
+                 join osis_learning_unit_year luy on e.learning_unit_year_id = luy.id
+                 join osis_academic_year ay on luy.academic_year_id = ay.id
+                 join osis_learning_unit_enrollment lue on lue.id = ee.learning_unit_enrollment_id
+                 join osis_student s on s.id = lue.student_id
+                 join osis_person p on s.person_id = p.id
+                 join osis_learning_unit lu on luy.learning_unit_id = lu.id
+            )''')
+
+
+
+    def init_old(self, cr):
+        print 'init notes display'
+        tools.sql.drop_view_if_exists(cr, 'osis_student_notes_display')
+        cr.execute('''CREATE OR REPLACE VIEW osis_student_notes_display AS (
+            select o.title as title_offer,
+                   ay.year as year,
+                   e.session_name as session_name,
+                   ee.exam_id as exam_id,
+                   p.name as student_name,
+                   ee.score as score,
+                   luy.learning_unit_id as learning_unit_ref,
+                   lue.student_id as student_ref,
+                   e.id ,
+                   lu.title as title_learning_unit
             from osis_exam e join osis_exam_enrollment ee on ee.exam_id = e.id
                  join osis_learning_unit_year luy on e.learning_unit_year_id = luy.id
                  join osis_academic_year ay on luy.academic_year_id = ay.id

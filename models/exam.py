@@ -37,7 +37,7 @@ class Exam(models.Model):
     exam_enrollment_ids = fields.One2many('osis.exam_enrollment','exam_id', string='Exam enrollment')
 
     date_session = fields.Date('Session date')
-    status = fields.Selection([('COMPLETE',_('Complete')),('PARTIAL',_('Partial')),('MISSING',_('Missing'))],default = 'MISSING')
+    status = fields.Selection([('COMPLETE',_('Complete')),('PARTIAL',_('Partial')),('MISSING',_('Missing'))],default = 'MISSING', required = True)
     closed = fields.Boolean(default = False)
     session_name = fields.Char('Session Name',compute='_get_session_name', store=True)
 

@@ -7,11 +7,14 @@
           <field name="model">osis.student.notes</field>
           <field name="arch" type="xml">
               <search>
-                <field name="status"/>
-                <field name="title"/>
-                <field name="year"/>
-                <field name="session_name"/>
-                <filter name="by_student" domain="[('student_ref', '=', '1')]" string="By student"/>
+                <field name="year" string="Year"/>
+                <field name="session_name" string="Session"/>
+                <filter name="by_januari_session" domain="[('session_name', '=', 'janvier')]" string="January session"/>
+                <filter name="by_june_session" domain="[('session_name', '=', 'juin')]" string="June session"/>
+                <filter name="by_september_session" domain="[('session_name', '=', 'september')]" string="September session"/>
+                <group string="Group By">
+                      <filter name="group_by_session" string="Session" context="{'group_by': 'session_name'}"/>
+                </group>
               </search>
           </field>
       </record>
@@ -22,14 +25,24 @@
       <field eval="16" name="priority"/>
       <field name="arch" type="xml">
         <tree colors="green:status=='COMPLETE';red:status=='MISSING';orange:status=='PARTIAL'" create="false" delete="false" editable="false">
-          <button name="display_students_notes" string="View notes" type="object" class="oe_highlight"/>
+          <!-- <button name="display_students_notes" string="View notes" type="object" class="oe_highlight"/> -->
           <field name="status"/>
-          <field name="title"/>
+          <field name="acronym" string="Acronym"/>
+          <field name="title" string="Learning unit"/>
           <field name="year"/>
-          <field name="session_name"/>
+          <field name="session_name" string="Session"/>
+          <!-- <field name="tutor_name" string="Tutor"/> -->
         </tree>
       </field>
     </record>
+
+    <act_window
+        id="action_account_items"
+        name="View student notes"
+        key2="client_action_multi"
+        res_model="osis.student_notes_display"
+        domain="[('exam_id', '=', active_id)]"
+        />
 
   </data>
 </openerp>

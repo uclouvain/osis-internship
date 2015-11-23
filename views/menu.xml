@@ -14,6 +14,12 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" eval="False"/>
         </record>
+        <record model="ir.actions.act_window" id="reading_student_notes_display_list_action">
+            <field name="name">Reading student notes display</field>
+            <field name="res_model">osis.student_notes_display</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
         <record model="ir.actions.act_window" id="offer_list_action">
             <field name="name">Offers</field>
             <field name="res_model">osis.offer</field>
@@ -142,6 +148,7 @@
         <menuitem id="learning_assessments_menu" name="Learning Assessments" parent="routes_menu"/>
         <menuitem id="encoding_notes_menu" name="Encoding notes" parent="learning_assessments_menu" action="encoding_notes_status_list_action"/>
         <menuitem id="encoding_student_notes_menu" name="Reading student notes" parent="learning_assessments_menu" action="reading_student_notes_list_action"/>
+        <menuitem id="encoding_student_notes_display_menu" name="Reading student notes display" parent="learning_assessments_menu" action="reading_student_notes_display_list_action"/>
 
         <menuitem id="enrollment_menu" name="Enrollments" parent="students_main_menu"/>
         <menuitem id="offer_enrollment_menu" name="Offers" parent="enrollment_menu" action="offer_enrollment_list_action"/>
