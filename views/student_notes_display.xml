@@ -8,7 +8,7 @@
       <field eval="16" name="priority"/>
       <field name="arch" type="xml">
         <tree  create="false" delete="false" editable="false">
-          <!-- <field name="title_offer" string="Offer"/> -->
+          <button name="wizard_encode_results" string="Encode notes" type="object" class="oe_highlight"/>
           <field name="title_learning_unit" string="Learning unit"/>
           <field name="year"/>
           <field name="session_name" string="Session"/>
@@ -17,12 +17,7 @@
         </tree>
       </field>
     </record>
-    <!-- <act_window name="Encode notes"
-        res_model="osis.wizard.result"
-        src_model="osis.student_notes_display"
-        key2="client_action_multi"
-        view_mode="tree,form" target="current"
-        view_type="form"
-        id="act_new_sub_menu"/> -->
+
+
   </data>
 </openerp>

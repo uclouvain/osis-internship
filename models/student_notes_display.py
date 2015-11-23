@@ -17,6 +17,8 @@ class Student_notes_display(models.Model):
     score = fields.Char('Score')
     student_ref  = fields.Integer('Student ref')
     learning_unit_ref = fields.Integer('Learning unit id')
+    learning_unit_enrollment_id = fields.Integer('Learning unit enrollment id')
+    exam_enrollment_id = fields.Integer('Exam enrollment id')
 
 
     def init(self, cr):
@@ -31,7 +33,9 @@ class Student_notes_display(models.Model):
                    luy.learning_unit_id as learning_unit_ref,
                    lue.student_id as student_ref,
                    ee.id as id,
-                   lu.title as title_learning_unit
+                   lu.title as title_learning_unit,
+                   ee.learning_unit_enrollment_id as learning_unit_enrollment_id,
+                   ee.id as exam_enrollment_id
             from osis_exam e join osis_exam_enrollment ee on ee.exam_id = e.id
                  join osis_learning_unit_year luy on e.learning_unit_year_id = luy.id
                  join osis_academic_year ay on luy.academic_year_id = ay.id
@@ -67,3 +71,31 @@ class Student_notes_display(models.Model):
                  join osis_person p on s.person_id = p.id
                  join osis_learning_unit lu on luy.learning_unit_id = lu.id
             )''')
+
+
+    @api.multi
+    def wizard_encode_results(self):
+
+        ee = self.env['osis.exam_enrollment'].search([('id','=',self.exam_enrollment_id)])
+        lue = self.env['osis.learning_unit_enrollment'].search([('id','=',self.learning_unit_enrollment_id)])
+        students = self.env['osis.student'].search([('learning_unit_enrollment_id','=',lue.id)])
+# exam_enrollment_ids
+        wiz_id = self.env['osis.wizard.result'].create({
+            'exam_enrollment_id': self.id,
+            'line_ids':[(0,0,{'student_id': student.id,'result': ee.score}) for student in students],
+        })
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'osis.wizard.result',
+            'res_id': wiz_id.id,
+            'target': 'new',
+        }
+
+class ExamResults(models.Model):
+    _name = 'osis.exam.result'
+
+    exam_enrollment_id = fields.Many2one('osis.exam_enrollment', string='Exam')
+    student_id = fields.Many2one('osis.student', string='Student', required=True)
+    result = fields.Float('Result')

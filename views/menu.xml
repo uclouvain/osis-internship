@@ -20,14 +20,14 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <record model="ir.values" id="the_id">
+        <!-- <record model="ir.values" id="the_id">
             <field name="name">The label</field>
             <field name="model" eval="'osis.student_notes_display'"/>
             <field name="key" >action</field>
             <field name="key2">client_action_multi</field>
             <field name="value" eval="'ir.actions.act_window,%d'%reading_student_notes_display_list_action"/>
             <field name="object" eval="True"/>
-        </record>
+        </record> -->
         <record model="ir.actions.act_window" id="offer_list_action">
             <field name="name">Offers</field>
             <field name="res_model">osis.offer</field>

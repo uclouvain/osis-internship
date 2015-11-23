@@ -9,13 +9,16 @@ class ResultsWizard(models.TransientModel):
 
     @api.one
     def validate_results(self):
+        print 'validate_results'
         res_model = self.env['osis.exam.result']
+        res_model_ee = self.env['osis.exam_enrollment']
         for result in self.line_ids:
+            print result.result
             res_ids = res_model.search([('exam_enrollment_id', '=', self.exam_enrollment_id.id), ('student_id', '=', result.student_id.id)])
-            if res_ids:
-                res_ids.write({'result': result.result})
-            else:
-                res_model.create({'exam_enrollment_id': self.exam_enrollment_id.id, 'student_id': result.student_id.id,'result': result.result})
+            res_ee_ids = res_model_ee.search([('id', '=', self.exam_enrollment_id.id)])
+            if res_ee_ids:
+                res_ee_ids.write({'score': result.result})
+
 
         return True
 
