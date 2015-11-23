@@ -35,14 +35,21 @@
         </tree>
       </field>
     </record>
-
     <act_window
-        id="action_account_items"
+        id="action_notes_items"
         name="View student notes"
         key2="client_action_multi"
         res_model="osis.student_notes_display"
         domain="[('exam_id', '=', active_id)]"
         />
+    <act_window name="Student notes"
+        res_model="osis.student_notes_display"
+        src_model="osis.student.notes"
+        key2="client_action_multi"
+        view_mode="tree,form" target="current"
+        view_type="form"
+        id="act_new_sub_menu"
+        domain="[('exam_id', '=', active_id)]" />
 
   </data>
 </openerp>

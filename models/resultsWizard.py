@@ -6,9 +6,10 @@ class ResultsWizard(models.TransientModel):
     exam_enrollment_id = fields.Many2one('osis.exam_enrollment', string='Exam enrollement')
     line_ids = fields.One2many('osis.wizard.result.line', 'result_id')
 
+
     @api.one
     def validate_results(self):
-        res_model = self.env['epc.exam.result']
+        res_model = self.env['osis.exam.result']
         for result in self.line_ids:
             res_ids = res_model.search([('exam_enrollment_id', '=', self.exam_enrollment_id.id), ('student_id', '=', result.student_id.id)])
             if res_ids:
