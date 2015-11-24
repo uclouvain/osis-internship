@@ -30,5 +30,19 @@
         <field name="name">Test Item</field>
         <field eval="'ir.actions.server,%d'%encoding_notes_more_item_action" name="value"/>
     </record>
+
+    <record id="submitting_notes_more_item_action" model="ir.actions.server">
+      <field name="name">Submitting notes</field>
+      <field name="model_id" ref="model_osis_student_notes_display"/>
+      <field name="state">code</field>
+      <field name="code">action = self.submit_results(cr, uid, context.get('active_ids', []), context=context)</field>
+    </record>
+
+    <record id="test_more_item" model="ir.values">
+        <field eval="'client_action_multi'" name="key2"/>
+        <field eval="'osis.student_notes_display'" name="model"/>
+        <field name="name">Submitting notes</field>
+        <field eval="'ir.actions.server,%d'%submitting_notes_more_item_action" name="value"/>
+    </record>
   </data>
 </openerp>

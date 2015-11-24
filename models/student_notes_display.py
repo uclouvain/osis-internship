@@ -43,7 +43,16 @@ class Student_notes_display(models.Model):
                  join osis_student s on s.id = lue.student_id
                  join osis_person p on s.person_id = p.id
                  join osis_learning_unit lu on luy.learning_unit_id = lu.id
+                 where ee.encoding_status != 'SUBMITTED'
             )''')
+
+
+    def submit_results(self, cr, uid, ids, context=None) :
+        for rec in self.pool.get('osis.exam_enrollment').browse(cr, uid, ids, context=context):
+
+            if rec.score is not None:
+                ids_update = [rec.id]
+                self.pool.get('osis.exam_enrollment').write(cr, uid, ids_update, {'encoding_status': 'SUBMITTED'})
 
 
     def wizard_encode_results(self, cr, uid, ids, context=None) :
@@ -82,53 +91,6 @@ class Student_notes_display(models.Model):
             'target': 'new',
         }
 
-
-
-    def init_old(self, cr):
-        print 'init notes display'
-        tools.sql.drop_view_if_exists(cr, 'osis_student_notes_display')
-        cr.execute('''CREATE OR REPLACE VIEW osis_student_notes_display AS (
-            select o.title as title_offer,
-                   ay.year as year,
-                   e.session_name as session_name,
-                   ee.exam_id as exam_id,
-                   p.name as student_name,
-                   ee.score as score,
-                   luy.learning_unit_id as learning_unit_ref,
-                   lue.student_id as student_ref,
-                   e.id ,
-                   lu.title as title_learning_unit
-            from osis_exam e join osis_exam_enrollment ee on ee.exam_id = e.id
-                 join osis_learning_unit_year luy on e.learning_unit_year_id = luy.id
-                 join osis_academic_year ay on luy.academic_year_id = ay.id
-                 join osis_offer_year oy on oy.academic_year_id = ay.id
-                 join osis_offer o on oy.offer_id = o.id
-                 join osis_learning_unit_enrollment lue on lue.id = ee.learning_unit_enrollment_id
-                 join osis_student s on s.id = lue.student_id
-                 join osis_person p on s.person_id = p.id
-                 join osis_learning_unit lu on luy.learning_unit_id = lu.id
-            )''')
-
-
-#     @api.multi
-#     def wizard_encode_results(self):
-#
-#         ee = self.env['osis.exam_enrollment'].search([('id','=',self.exam_enrollment_id)])
-#         lue = self.env['osis.learning_unit_enrollment'].search([('id','=',self.learning_unit_enrollment_id)])
-#         students = self.env['osis.student'].search([('learning_unit_enrollment_id','=',lue.id)])
-# # exam_enrollment_ids
-#         wiz_id = self.env['osis.wizard.result'].create({
-#             'exam_enrollment_id': self.id,
-#             'line_ids':[(0,0,{'student_id': student.id,'result': ee.score}) for student in students],
-#         })
-#         return {
-#             'type': 'ir.actions.act_window',
-#             'view_type': 'form',
-#             'view_mode': 'form',
-#             'res_model': 'osis.wizard.result',
-#             'res_id': wiz_id.id,
-#             'target': 'new',
-#         }
 
 class ExamResults(models.Model):
     _name = 'osis.exam.result'

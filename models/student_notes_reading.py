@@ -18,43 +18,6 @@ class Student_notes_reading(models.Model):
     tutor_name = fields.Char('Tutor name', readonly=True)
 
 
-    # def init_old(self, cr):
-    #     print 'init'
-    #     cr.execute('select distinct(exam_id) from osis_exam_enrollment')
-    #     res_exam_ids = cr.fetchall()
-    #
-    #     ids = []
-    #     cpt=0
-    #     for identifiant in res_exam_ids:
-    #         ids.append(identifiant[0])
-    #
-    #     print ids
-    #     # tools.sql.drop_view_if_exists(cr, 'osis_student_notes')
-    #
-    #     cr.execute('''CREATE OR REPLACE VIEW osis_student_notes AS (
-    #         select e.status as status,
-    #                lu.title as title,
-    #                ay.year as year,
-    #                e.session_name as session_name,
-    #                e.id as exam_id,
-    #                e.learning_unit_year_id as learning_unit_year_id,
-    #                e.id as id,
-    #                p.name as tutor_name,
-    #                lu.acronym as acronym
-    #         from osis_exam e
-    #              join osis_learning_unit_year luy on e.learning_unit_year_id = luy.id
-    #              join osis_academic_year ay on luy.academic_year_id = ay.id
-    #              join osis_learning_unit lu on luy.learning_unit_id = lu.id
-    #              left join osis_attribution at  on at.learning_unit_id = lu.id
-    #              join osis_tutor t  on at.tutor_id = t.id
-    #              join osis_person p  on t.person_id = p.id
-    #              where e.id in %s
-    #
-    #     )''',(tuple(ids),))
-
-
-
-
     def init(self, cr):
 
         tools.sql.drop_view_if_exists(cr, 'osis_student_notes')
@@ -76,9 +39,6 @@ class Student_notes_reading(models.Model):
 
         )''',)
 
-
-
-
     @api.multi
     def display_students_notes(self):
        print 'methode display_students_notes'
@@ -94,11 +54,6 @@ class Student_notes_reading(models.Model):
            'view_id': view_id,
            'target': 'current',
            'domain':[['exam_ref','=',self.exam_id]]
-
        }
 
        return res
-
-
-    def wizard_encode_resultss(self, cr, uid, ids, context=None) :
-        print 'test'
