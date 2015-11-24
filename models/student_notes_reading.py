@@ -98,3 +98,7 @@ class Student_notes_reading(models.Model):
        }
 
        return res
+
+
+    def wizard_encode_resultss(self, cr, uid, ids, context=None) :
+        print 'test'

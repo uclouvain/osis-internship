@@ -23,7 +23,6 @@ class Student_notes_display(models.Model):
 
 
     def init(self, cr):
-        print 'init notes display'
         tools.sql.drop_view_if_exists(cr, 'osis_student_notes_display')
         cr.execute('''CREATE OR REPLACE VIEW osis_student_notes_display AS (
             select ay.year as year,
@@ -55,18 +54,17 @@ class Student_notes_display(models.Model):
         for exam_enrollment_id in ids:
             recs_ee = model_exam_enrollment.search(cr,uid,[('id','=',exam_enrollment_id)])
             for rec_ee in model_exam_enrollment.browse(cr, uid, recs_ee, context=context):
-                print 'score : ' + str(rec_ee.score) + ','  + str(rec_ee.learning_unit_enrollment_id.id)
+
                 exam_id = rec_ee.exam_id
                 recs_lue = model_learning_unit_enrollment.search(cr,uid,[('id','=',rec_ee.learning_unit_enrollment_id.id)])
                 for rec_lue in model_learning_unit_enrollment.browse(cr, uid, recs_lue, context=context):
-                    print 'etudiant' + str(rec_lue.student_id.id)
                     recs_s = model_student.search(cr,uid,[('id','=',rec_lue.student_id.id)])
                     for rec_s in model_student.browse(cr, uid, recs_s, context=context):
                         score_line = Line(rec_lue.student_id.id,rec_ee.score,exam_enrollment_id)
                         student_score_list.append(score_line)
         wiz_id = self.pool.get('osis.wizard.result').create(cr, uid,{
             'exam_enrollment_id': exam_enrollment_id,
-            'line_ids':[(0,0,{'student_id': student.student_id,'result': student.score}) for student in student_score_list],
+            'line_ids':[(0,0,{'student_id': student.student_id,'result': student.score,'exam_enrollment_id':student.exam_enrollment_id}) for student in student_score_list],
         })
 
 

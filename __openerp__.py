@@ -37,7 +37,6 @@
         'views/learning_unit_enrollment.xml',
         'views/exam_enrollment.xml',
         'reports/student.xml',
-        'views/learning_unit_status.xml',
         'views/student_notes.xml',
         'views/resultWizard.xml',
         'views/student_notes_display.xml',

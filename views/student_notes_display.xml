@@ -7,39 +7,28 @@
       <field name="model">osis.student_notes_display</field>
       <field eval="16" name="priority"/>
       <field name="arch" type="xml">
-        <tree  create="false" delete="false" editable="false">
-          <!-- <button name="wizard_encode_results" string="Encode notes" type="object" class="oe_highlight"/> -->
-          <field name="title_learning_unit" string="Learning unit"/>
-          <field name="year"/>
-          <field name="session_name" string="Session"/>
-          <field name="student_name" string="Student"/>
-          <field name="score"/>
+        <tree create="false" delete="false" editable="false">
+          <field name="title_learning_unit" string="Learning unit" attrs="{'readonly':True}"/>
+          <field name="year" attrs="{'readonly':True}"/>
+          <field name="session_name" string="Session" attrs="{'readonly':True}"/>
+          <field name="student_name" string="Student" attrs="{'readonly':True}"/>
+          <field name="score" attrs="{'readonly':True}"/>
         </tree>
       </field>
     </record>
 
-    <!-- <act_window name="Student notes3"
-        res_model="osis.wizard.result"
-        model_id="osis_student_notes_display"
-        key2="client_action_multi"
-        view_mode="tree,form" target="new"
-        view_type="form"
-        id="act_new_sub_menu3" /> -->
+    <record id="encoding_notes_more_item_action" model="ir.actions.server">
+      <field name="name">Encoding notes</field>
+      <field name="model_id" ref="model_osis_student_notes_display"/>
+      <field name="state">code</field>
+      <field name="code">action = self.wizard_encode_results(cr, uid, context.get('active_ids', []), context=context)</field>
+    </record>
 
-        <record id="sale_license_more_item_action" model="ir.actions.server">
-
-                     <field name="name">Erics More Item</field>
-
-                    <field name="model_id" ref="model_osis_student_notes_display"/>
-                    <field name="state">code</field>
-                    <field name="code">action = self.wizard_encode_results(cr, uid, context.get('active_ids', []), context=context)</field>
-                </record>
-
-                <record id="test_more_item" model="ir.values">
-                    <field eval="'client_action_multi'" name="key2"/>
-                    <field eval="'osis.student_notes_display'" name="model"/>
-                    <field name="name">Test Item</field>
-                    <field eval="'ir.actions.server,%d'%sale_license_more_item_action" name="value"/>
-                </record>
+    <record id="test_more_item" model="ir.values">
+        <field eval="'client_action_multi'" name="key2"/>
+        <field eval="'osis.student_notes_display'" name="model"/>
+        <field name="name">Test Item</field>
+        <field eval="'ir.actions.server,%d'%encoding_notes_more_item_action" name="value"/>
+    </record>
   </data>
 </openerp>
