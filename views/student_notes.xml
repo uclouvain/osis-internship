@@ -49,7 +49,8 @@
         view_mode="tree,form" target="current"
         view_type="form"
         id="act_new_sub_menu"
-        domain="[('exam_id', '=', active_id)]" />
+        domain="[('exam_id', '=', active_id)]"
+        multi="False"/>
 
 
   </data>

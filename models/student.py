@@ -25,7 +25,7 @@
 #
 ##############################################################################
 
-from openerp import models, fields
+from openerp import models, fields, api
 
 
 class Student(models.Model):
@@ -43,3 +43,10 @@ class Student(models.Model):
         for record in self.browse(cr,uid,ids,context=context):
             result[record.id]  = record.person_id.name + " (" +str(record.registration_number) + ")"
         return result.items()
+
+
+
+    @api.multi
+    def wizard_encode_results(self):
+
+        print 'student'

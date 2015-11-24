@@ -1,5 +1,6 @@
 <openerp>
     <data>
+      <!-- form -->
         <record model="ir.ui.view" id="resultswizard_form_view">
             <field name="name">osis.wizard.result.form</field>
             <field name="model">osis.wizard.result</field>
