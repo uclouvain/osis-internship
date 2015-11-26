@@ -244,7 +244,7 @@
           <field name="learning_unit_id" ref="learning_unit_programmation"/>
           <field name="tutor_id" ref="tutor_pecheur"/>
           <field name="function">PROFESSOR</field>
-          <field name="start_date">2015-0915</field>
+          <field name="start_date">2015-09-15</field>
           <field name="start_date">2015-12-15</field>
         </record>
 <!-- STUDENTS -->
