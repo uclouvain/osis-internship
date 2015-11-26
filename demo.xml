@@ -22,27 +22,6 @@
  *   see http://www.gnu.org/licenses/. -->
 <openerp>
     <data>
-        <!--  -->
-        <!--   <record id="object0" model="osis-louvain.osis-louvain"> -->
-        <!--     <field name="name">Object 0</field> -->
-        <!--   </record> -->
-        <!--  -->
-        <!--   <record id="object1" model="osis-louvain.osis-louvain"> -->
-        <!--     <field name="name">Object 1</field> -->
-        <!--   </record> -->
-        <!--  -->
-        <!--   <record id="object2" model="osis-louvain.osis-louvain"> -->
-        <!--     <field name="name">Object 2</field> -->
-        <!--   </record> -->
-        <!--  -->
-        <!--   <record id="object3" model="osis-louvain.osis-louvain"> -->
-        <!--     <field name="name">Object 3</field> -->
-        <!--   </record> -->
-        <!--  -->
-        <!--   <record id="object4" model="osis-louvain.osis-louvain"> -->
-        <!--     <field name="name">Object 4</field> -->
-        <!--   </record> -->
-        <!--  -->
 <!-- PROGRAM -->
         <record id="learning_unit_math" model="osis.learning_unit">
           <field name="title">Mathématiques générales 1</field>
@@ -108,18 +87,18 @@
         </record>
         <record id="academic_year_2014" model="osis.academic_year">
           <field name="year">2014</field>
-          <field name="start_date">01/09/2014</field>
-          <field name="end_date">31/08/2015</field>
+          <field name="start_date">2014-09-01</field>
+          <field name="end_date">2015-10-31</field>
         </record>
         <record id="academic_year_2015" model="osis.academic_year">
           <field name="year">2015</field>
-          <field name="start_date">01/09/2015</field>
-          <field name="end_date">31/08/2016</field>
+          <field name="start_date">2015-09-01</field>
+          <field name="end_date">2016-10-31</field>
         </record>
         <record id="academic_year_2016" model="osis.academic_year">
           <field name="year">2016</field>
-          <field name="start_date">01/09/2016</field>
-          <field name="end_date">31/08/2017</field>
+          <field name="start_date">2016-09-01</field>
+          <field name="end_date">2017-10-31</field>
         </record>
         <record id="structure_sst" model="osis.structure">
           <field name="title">Secteur des sciences et technologies</field>
@@ -334,6 +313,16 @@
           <field name="student_id" ref="student_sophie"/>
           <field name="date_enrollment">10/10/2015</field>
         </record>
+        <record id="learning_unit_math_2015_vincent" model="osis.learning_unit_enrollment">
+          <field name="learning_unit_year_id" ref="learning_unit_year_math_2015"/>
+          <field name="student_id" ref="student_vincent"/>
+          <field name="date_enrollment">10/10/2015</field>
+        </record>
+        <record id="learning_unit_math_2015_jane" model="osis.learning_unit_enrollment">
+          <field name="learning_unit_year_id" ref="learning_unit_year_math_2015"/>
+          <field name="student_id" ref="student_jane"/>
+          <field name="date_enrollment">10/10/2015</field>
+        </record>
         <record id="learning_unit_programmation_2015_sophie" model="osis.learning_unit_enrollment">
           <field name="learning_unit_year_id" ref="learning_unit_year_programmation_2015"/>
           <field name="student_id" ref="student_sophie"/>
@@ -351,6 +340,14 @@
         <record id="exam_sophie_programmation" model="osis.exam_enrollment">
           <field name="exam_id" ref="exam_programmation_2015_juin"/>
           <field name="learning_unit_enrollment_id" ref="learning_unit_programmation_2015_sophie"/>
+        </record>
+        <record id="exam_sophie_math" model="osis.exam_enrollment">
+          <field name="exam_id" ref="exam_math_2015_jan"/>
+          <field name="learning_unit_enrollment_id" ref="learning_unit_math_2015_vincent"/>
+        </record>
+        <record id="exam_jane_math" model="osis.exam_enrollment">
+          <field name="exam_id" ref="exam_math_2015_jan"/>
+          <field name="learning_unit_enrollment_id" ref="learning_unit_math_2015_jane"/>
         </record>
     </data>
 </openerp>
