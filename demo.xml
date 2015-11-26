@@ -74,36 +74,42 @@
           <field name="name">Gran Marino</field>
           <field name="last_name">Gran</field>
           <field name="first_name">Marino</field>
+          <field name="name">Gran Marino</field>
           <field name="gender">M</field>
         </record>
         <record id="person_ponce" model="osis.person">
           <field name="name">Ponce Augusto</field>
           <field name="last_name">Ponce</field>
           <field name="first_name">Augusto</field>
+          <field name="name">Ponce Augusto</field>
           <field name="gender">M</field>
         </record>
         <record id="person_bonaventure" model="osis.person">
           <field name="name">Bonaventure Olivier</field>
           <field name="last_name">Bonaventure</field>
           <field name="first_name">Olivier</field>
+          <field name="name">Bonaventure Olivier</field>
           <field name="gender">M</field>
         </record>
         <record id="person_pecheur" model="osis.person">
           <field name="name">Pecheur Charles</field>
           <field name="last_name">Pecheur</field>
           <field name="first_name">Charles</field>
+          <field name="name"> Pecheur Charles</field>
           <field name="gender">M</field>
         </record>
         <record id="person_gouverneur" model="osis.person">
           <field name="name">Gouverneur Celine</field>
           <field name="last_name">Gouverneur</field>
           <field name="first_name">Celine</field>
+          <field name="name">Gouverneur Céline</field>
           <field name="gender">F</field>
         </record>
         <record id="person_francois" model="osis.person">
           <field name="name">Francois Dominique</field>
           <field name="last_name">Francois</field>
           <field name="first_name">Dominique</field>
+          <field name="name">François Dominique</field>
           <field name="gender">M</field>
         </record>
         <record id="academic_year_2014" model="osis.academic_year">
@@ -207,32 +213,150 @@
           <field name="date_session">15/08/2016</field>
           <field name="closed" eval="False"/>
         </record>
-<!--
-<record id="tutor_gran" model="osis.person">
-  <field name="person_id" ref="person_gran"/>
-</record>
-        <record id="tutor_ponce" model="osis.person">
+<!-- ACADEMY -->
+        <record id="tutor_gran" model="osis.tutor">
+          <field name="person_id" ref="person_gran"/>
+        </record>
+        <record id="tutor_ponce" model="osis.tutor">
           <field name="person_id" ref="person_ponce"/>
         </record>
-        <record id="tutor_bonaventure" model="osis.person">
+        <record id="tutor_bonaventure" model="osis.tutor">
           <field name="person_id" ref="person_bonaventure"/>
         </record>
-        <record id="tutor_pecheur" model="osis.person">
+        <record id="tutor_pecheur" model="osis.tutor">
           <field name="person_id" ref="person_pecheur"/>
         </record>
-        <record id="tutor_gouverneur" model="osis.person">
+        <record id="tutor_gouverneur" model="osis.tutor">
           <field name="person_id" ref="person_gouverneur"/>
         </record>
-        <record id="tutor_francois" model="osis.person">
+        <record id="tutor_francois" model="osis.tutor">
           <field name="person_id" ref="person_francois"/>
         </record>
--->
-<!-- ACADEMY -->
-<!--
-        <record id="attribution_" model="osis.attribution">
+        <record id="attribution_math_gran" model="osis.attribution">
           <field name="learning_unit_id" ref="learning_unit_math"/>
-          <field name="tutor_id" ref=
+          <field name="tutor_id" ref="tutor_gran"/>
+          <field name="function">PROFESSOR</field>
+          <field name="start_date">15/09/2015</field>
+          <field name="start_date">15/12/2015</field>
         </record>
-      -->
+        <record id="attribution_math_ponce" model="osis.attribution">
+          <field name="learning_unit_id" ref="learning_unit_math"/>
+          <field name="tutor_id" ref="tutor_ponce"/>
+          <field name="function">PROFESSOR</field>
+          <field name="start_date">15/09/2015</field>
+          <field name="start_date">15/12/2015</field>
+        </record>
+        <record id="attribution_anglais_gouverneur" model="osis.attribution">
+          <field name="learning_unit_id" ref="learning_unit_anglais"/>
+          <field name="tutor_id" ref="tutor_gouverneur"/>
+          <field name="function">COORDINATOR</field>
+          <field name="start_date">15/01/2016</field>
+          <field name="start_date">15/06/2016</field>
+        </record>
+        <record id="attribution_anglais_francois" model="osis.attribution">
+          <field name="learning_unit_id" ref="learning_unit_anglais"/>
+          <field name="tutor_id" ref="tutor_francois"/>
+          <field name="function">PROFESSOR</field>
+          <field name="start_date">15/01/2016</field>
+          <field name="start_date">15/06/2016</field>
+        </record>
+        <record id="attribution_programmation_bonaventure" model="osis.attribution">
+          <field name="learning_unit_id" ref="learning_unit_programmation"/>
+          <field name="tutor_id" ref="tutor_bonaventure"/>
+          <field name="function">PROFESSOR</field>
+          <field name="start_date">15/09/2015</field>
+          <field name="start_date">15/12/2015</field>
+        </record>
+        <record id="attribution_programmation_pecheur" model="osis.attribution">
+          <field name="learning_unit_id" ref="learning_unit_programmation"/>
+          <field name="tutor_id" ref="tutor_pecheur"/>
+          <field name="function">PROFESSOR</field>
+          <field name="start_date">15/09/2015</field>
+          <field name="start_date">15/12/2015</field>
+        </record>
+<!-- STUDENTS -->
+        <record id="person_student_sophie" model="osis.person">
+          <field name="last_name">Segers</field>
+          <field name="first_name">Sophie</field>
+          <field name="name">Segers Sophie</field>
+          <field name="gender">F</field>
+        </record>
+        <record id="person_student_jane" model="osis.person">
+          <field name="last_name">Simon</field>
+          <field name="first_name">Jane</field>
+          <field name="name">Simon Jane</field>
+          <field name="gender">F</field>
+        </record>
+        <record id="person_student_bertrand" model="osis.person">
+          <field name="last_name">Roux</field>
+          <field name="first_name">Bertrand</field>
+          <field name="name">Roux Bertrand</field>
+          <field name="gender">M</field>
+        </record>
+        <record id="person_student_vincent" model="osis.person">
+          <field name="last_name">Dumont</field>
+          <field name="first_name">Vincent</field>
+          <field name="name">Dumont Vincent</field>
+          <field name="gender">M</field>
+        </record>
+        <record id="student_sophie" model="osis.student">
+          <field name="person_id" ref="person_student_sophie"/>
+          <field name="registration_number">564879</field>
+        </record>
+        <record id="student_jane" model="osis.student">
+          <field name="person_id" ref="person_student_jane"/>
+          <field name="registration_number">578126</field>
+        </record>
+        <record id="student_bertrand" model="osis.student">
+          <field name="person_id" ref="person_student_bertrand"/>
+          <field name="registration_number">984165</field>
+        </record>
+        <record id="student_vincent" model="osis.student">
+          <field name="person_id" ref="person_student_vincent"/>
+          <field name="registration_number">129854</field>
+        </record>
+        <record id="offer_sophie" model="osis.offer_enrollment">
+          <field name="offer_year_id" ref="offer_year_info_2015"/>
+          <field name="student_id" ref="student_sophie"/>
+          <field name="date_enrollment">20/08/2015</field>
+        </record>
+        <record id="offer_jane" model="osis.offer_enrollment">
+          <field name="offer_year_id" ref="offer_year_info_2015"/>
+          <field name="student_id" ref="student_jane"/>
+          <field name="date_enrollment">30/06/2015</field>
+        </record>
+        <record id="offer_bertrand" model="osis.offer_enrollment">
+          <field name="offer_year_id" ref="offer_year_math_2015"/>
+          <field name="student_id" ref="student_bertrand"/>
+          <field name="date_enrollment">12/07/2015</field>
+        </record>
+        <record id="offer_vincent" model="osis.offer_enrollment">
+          <field name="offer_year_id" ref="offer_year_phys_2015"/>
+          <field name="student_id" ref="student_vincent"/>
+          <field name="date_enrollment">28/09/2015</field>
+        </record>
+        <record id="learning_unit_math_2015_sophie" model="osis.learning_unit_enrollment">
+          <field name="learning_unit_year_id" ref="learning_unit_year_math_2015"/>
+          <field name="student_id" ref="student_sophie"/>
+          <field name="date_enrollment">10/10/2015</field>
+        </record>
+        <record id="learning_unit_programmation_2015_sophie" model="osis.learning_unit_enrollment">
+          <field name="learning_unit_year_id" ref="learning_unit_year_programmation_2015"/>
+          <field name="student_id" ref="student_sophie"/>
+          <field name="date_enrollment">10/10/2015</field>
+        </record>
+        <record id="learning_unit_anglais_2015_sophie" model="osis.learning_unit_enrollment">
+          <field name="learning_unit_year_id" ref="learning_unit_year_anglais_2015"/>
+          <field name="student_id" ref="student_sophie"/>
+          <field name="date_enrollment">10/10/2015</field>
+        </record>
+        <record id="exam_sophie_math" model="osis.exam_enrollment">
+          <field name="exam_id" ref="exam_math_2015_jan"/>
+          <field name="learning_unit_enrollment_id" ref="learning_unit_math_2015_sophie"/>
+        </record>
+        <record id="exam_sophie_programmation" model="osis.exam_enrollment">
+          <field name="exam_id" ref="exam_programmation_2015_juin"/>
+          <field name="learning_unit_enrollment_id" ref="learning_unit_programmation_2015_sophie"/>
+        </record>
     </data>
 </openerp>

@@ -3,20 +3,20 @@
     'name': "osis-louvain",
 
     'summary': """
-        Extension of the module OSIS to accommodate specific needs of the Université catholique de Louvain.
+        OSIS is an application designed to manage the core business of higher education institutions, such as universities, faculties, institutes and professional schools.
     """,
 
     'description': """
-        OSIS Louvain is an extension of OSIS customized for the needs of the Université catholique de Louvain.
+        The core business involves the administration of students, teachers, courses, programs and so on.
     """,
 
     'author': "Université catholique de Louvain",
     'website': "http://www.uclouvain.be",
 
     'category': 'Education',
-    'version': '15.11.1.0',
+    'version': '15.11.2.0',
 
-    'depends': ['base','osis-core'],
+    'depends': ['base'],
 
     'data': [
         # 'security/ir.model.access.csv',

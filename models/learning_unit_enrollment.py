@@ -40,14 +40,8 @@ class Learning_unit_enrollment(models.Model):
     def name_get(self,cr,uid,ids,context=None):
         result={}
         for record in self.browse(cr,uid,ids,context=context):
-            name_build = ''
-            if record.learning_unit_year_id.academic_year_id.year:
-                name_build += str(record.learning_unit_year_id.academic_year_id.year)
-            if record.learning_unit_year_id.learning_unit_id.title:
-                if record.learning_unit_year_id.academic_year_id.year:
-                    name_build+= ' - '
-                name_build += str(record.learning_unit_year_id.learning_unit_id.title)
-            if record.student_id:
-                name_build += str(record.student_id.person_id.name)
-            result[record.id]  = name_build
+            year = u"%s" % record.learning_unit_year_id.academic_year_id.year
+            title = u"%s" % record.learning_unit_year_id.learning_unit_id.title
+            name = u"%s" % record.student_id.person_id.name
+            result[record.id] = u"%s - %s - %s" % (year,title,name)
         return result.items()
