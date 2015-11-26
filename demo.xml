@@ -316,12 +316,12 @@
         <record id="learning_unit_math_2015_vincent" model="osis.learning_unit_enrollment">
           <field name="learning_unit_year_id" ref="learning_unit_year_math_2015"/>
           <field name="student_id" ref="student_vincent"/>
-          <field name="date_enrollment">10/10/2015</field>
+          <field name="date_enrollment">2015-10-10</field>
         </record>
         <record id="learning_unit_math_2015_jane" model="osis.learning_unit_enrollment">
           <field name="learning_unit_year_id" ref="learning_unit_year_math_2015"/>
           <field name="student_id" ref="student_jane"/>
-          <field name="date_enrollment">10/10/2015</field>
+          <field name="date_enrollment">2015-10-10</field>
         </record>
         <record id="learning_unit_programmation_2015_sophie" model="osis.learning_unit_enrollment">
           <field name="learning_unit_year_id" ref="learning_unit_year_programmation_2015"/>
