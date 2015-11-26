@@ -22,27 +22,6 @@
  *   see http://www.gnu.org/licenses/. -->
 <openerp>
     <data>
-        <!--  -->
-        <!--   <record id="object0" model="osis-louvain.osis-louvain"> -->
-        <!--     <field name="name">Object 0</field> -->
-        <!--   </record> -->
-        <!--  -->
-        <!--   <record id="object1" model="osis-louvain.osis-louvain"> -->
-        <!--     <field name="name">Object 1</field> -->
-        <!--   </record> -->
-        <!--  -->
-        <!--   <record id="object2" model="osis-louvain.osis-louvain"> -->
-        <!--     <field name="name">Object 2</field> -->
-        <!--   </record> -->
-        <!--  -->
-        <!--   <record id="object3" model="osis-louvain.osis-louvain"> -->
-        <!--     <field name="name">Object 3</field> -->
-        <!--   </record> -->
-        <!--  -->
-        <!--   <record id="object4" model="osis-louvain.osis-louvain"> -->
-        <!--     <field name="name">Object 4</field> -->
-        <!--   </record> -->
-        <!--  -->
 <!-- PROGRAM -->
         <record id="learning_unit_math" model="osis.learning_unit">
           <field name="title">Mathématiques générales 1</field>
@@ -184,27 +163,27 @@
         </record>
         <record id="exam_math_2014_jan" model="osis.exam">
           <field name="learning_unit_year_id" ref="learning_unit_year_math_2014"/>
-          <field name="date_session">12/01/2015</field>
+          <field name="date_session">2015-01-12</field>
           <field name="closed" eval="True"/>
         </record>
         <record id="exam_math_2015_jan" model="osis.exam">
           <field name="learning_unit_year_id" ref="learning_unit_year_math_2015"/>
-          <field name="date_session">12/01/2016</field>
+          <field name="date_session">2016-01-12</field>
           <field name="closed" eval="False"/>
         </record>
         <record id="exam_math_2015_aout" model="osis.exam">
           <field name="learning_unit_year_id" ref="learning_unit_year_math_2015"/>
-          <field name="date_session">12/08/2016</field>
+          <field name="date_session">2016-08-12</field>
           <field name="closed" eval="False"/>
         </record>
         <record id="exam_programmation_2015_juin" model="osis.exam">
           <field name="learning_unit_year_id" ref="learning_unit_year_programmation_2015"/>
-          <field name="date_session">15/06/2016</field>
+          <field name="date_session">2016-06-15</field>
           <field name="closed" eval="False"/>
         </record>
         <record id="exam_programmation_2015_aout" model="osis.exam">
           <field name="learning_unit_year_id" ref="learning_unit_year_programmation_2015"/>
-          <field name="date_session">15/08/2016</field>
+          <field name="date_session">2016-08-15</field>
           <field name="closed" eval="False"/>
         </record>
 <!-- ACADEMY -->
@@ -230,43 +209,43 @@
           <field name="learning_unit_id" ref="learning_unit_math"/>
           <field name="tutor_id" ref="tutor_gran"/>
           <field name="function">PROFESSOR</field>
-          <field name="start_date">15/09/2015</field>
-          <field name="start_date">15/12/2015</field>
+          <field name="start_date">2015-09-15</field>
+          <field name="start_date">2015-12-15</field>
         </record>
         <record id="attribution_math_ponce" model="osis.attribution">
           <field name="learning_unit_id" ref="learning_unit_math"/>
           <field name="tutor_id" ref="tutor_ponce"/>
           <field name="function">PROFESSOR</field>
-          <field name="start_date">15/09/2015</field>
-          <field name="start_date">15/12/2015</field>
+          <field name="start_date">2015-09-15</field>
+          <field name="start_date">2015-12-15</field>
         </record>
         <record id="attribution_anglais_gouverneur" model="osis.attribution">
           <field name="learning_unit_id" ref="learning_unit_anglais"/>
           <field name="tutor_id" ref="tutor_gouverneur"/>
           <field name="function">COORDINATOR</field>
-          <field name="start_date">15/01/2016</field>
-          <field name="start_date">15/06/2016</field>
+          <field name="start_date">2016-01-15</field>
+          <field name="start_date">2016-06-15</field>
         </record>
         <record id="attribution_anglais_francois" model="osis.attribution">
           <field name="learning_unit_id" ref="learning_unit_anglais"/>
           <field name="tutor_id" ref="tutor_francois"/>
           <field name="function">PROFESSOR</field>
-          <field name="start_date">15/01/2016</field>
-          <field name="start_date">15/06/2016</field>
+          <field name="start_date">2016-01-15</field>
+          <field name="start_date">2016-06-15</field>
         </record>
         <record id="attribution_programmation_bonaventure" model="osis.attribution">
           <field name="learning_unit_id" ref="learning_unit_programmation"/>
           <field name="tutor_id" ref="tutor_bonaventure"/>
           <field name="function">PROFESSOR</field>
-          <field name="start_date">15/09/2015</field>
-          <field name="start_date">15/12/2015</field>
+          <field name="start_date">2015-09-15</field>
+          <field name="start_date">2015-12-15</field>
         </record>
         <record id="attribution_programmation_pecheur" model="osis.attribution">
           <field name="learning_unit_id" ref="learning_unit_programmation"/>
           <field name="tutor_id" ref="tutor_pecheur"/>
           <field name="function">PROFESSOR</field>
-          <field name="start_date">15/09/2015</field>
-          <field name="start_date">15/12/2015</field>
+          <field name="start_date">2015-0915</field>
+          <field name="start_date">2015-12-15</field>
         </record>
 <!-- STUDENTS -->
         <record id="person_student_sophie" model="osis.person">
@@ -312,37 +291,37 @@
         <record id="offer_sophie" model="osis.offer_enrollment">
           <field name="offer_year_id" ref="offer_year_info_2015"/>
           <field name="student_id" ref="student_sophie"/>
-          <field name="date_enrollment">20/08/2015</field>
+          <field name="date_enrollment">2015-08-20</field>
         </record>
         <record id="offer_jane" model="osis.offer_enrollment">
           <field name="offer_year_id" ref="offer_year_info_2015"/>
           <field name="student_id" ref="student_jane"/>
-          <field name="date_enrollment">30/06/2015</field>
+          <field name="date_enrollment">2015-06-30</field>
         </record>
         <record id="offer_bertrand" model="osis.offer_enrollment">
           <field name="offer_year_id" ref="offer_year_math_2015"/>
           <field name="student_id" ref="student_bertrand"/>
-          <field name="date_enrollment">12/07/2015</field>
+          <field name="date_enrollment">2015-07-12</field>
         </record>
         <record id="offer_vincent" model="osis.offer_enrollment">
           <field name="offer_year_id" ref="offer_year_phys_2015"/>
           <field name="student_id" ref="student_vincent"/>
-          <field name="date_enrollment">28/09/2015</field>
+          <field name="date_enrollment">2015-09-28</field>
         </record>
         <record id="learning_unit_math_2015_sophie" model="osis.learning_unit_enrollment">
           <field name="learning_unit_year_id" ref="learning_unit_year_math_2015"/>
           <field name="student_id" ref="student_sophie"/>
-          <field name="date_enrollment">10/10/2015</field>
+          <field name="date_enrollment">2015-09-09</field>
         </record>
         <record id="learning_unit_programmation_2015_sophie" model="osis.learning_unit_enrollment">
           <field name="learning_unit_year_id" ref="learning_unit_year_programmation_2015"/>
           <field name="student_id" ref="student_sophie"/>
-          <field name="date_enrollment">10/10/2015</field>
+          <field name="date_enrollment"2015-10-10</field>
         </record>
         <record id="learning_unit_anglais_2015_sophie" model="osis.learning_unit_enrollment">
           <field name="learning_unit_year_id" ref="learning_unit_year_anglais_2015"/>
           <field name="student_id" ref="student_sophie"/>
-          <field name="date_enrollment">10/10/2015</field>
+          <field name="date_enrollment">2015-10-10</field>
         </record>
         <record id="exam_sophie_math" model="osis.exam_enrollment">
           <field name="exam_id" ref="exam_math_2015_jan"/>
