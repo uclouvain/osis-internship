@@ -64,6 +64,7 @@
         'views/exam_enrollment.xml',
         'reports/student.xml',
         'reports/learning_unit_enrollment.xml',
+        'reports/scores_sheet.xml',
     ],
 
     'demo': [
