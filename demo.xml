@@ -108,18 +108,18 @@
         </record>
         <record id="academic_year_2014" model="osis.academic_year">
           <field name="year">2014</field>
-          <field name="start_date">01/09/2014</field>
-          <field name="end_date">31/08/2015</field>
+          <field name="start_date">2014-09-01</field>
+          <field name="end_date">2015-10-31</field>
         </record>
         <record id="academic_year_2015" model="osis.academic_year">
           <field name="year">2015</field>
-          <field name="start_date">01/09/2015</field>
-          <field name="end_date">31/08/2016</field>
+          <field name="start_date">2014-09-01</field>
+          <field name="end_date">2015-10-31</field>
         </record>
         <record id="academic_year_2016" model="osis.academic_year">
           <field name="year">2016</field>
-          <field name="start_date">01/09/2016</field>
-          <field name="end_date">31/08/2017</field>
+          <field name="start_date">2014-09-01</field>
+          <field name="end_date">2015-10-31</field>
         </record>
         <record id="structure_sst" model="osis.structure">
           <field name="title">Secteur des sciences et technologies</field>
