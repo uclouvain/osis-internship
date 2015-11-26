@@ -39,7 +39,7 @@
         <xpath expr="//div[@name='buttons']" position="after">
           <group col="4">
              <field name="last_name" string="Last name"/>
-           
+
              <field name="first_name" string="First name"/>
              <field name="middle_name" string="Middle name"/>
            </group>

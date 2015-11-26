@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+  <data>
+    <!-- Search -->
+      <record model="ir.ui.view" id="student_notes_view">
+          <field name="name">student_notes.search</field>
+          <field name="model">osis.student.notes</field>
+          <field name="arch" type="xml">
+              <search>
+                <field name="year" string="Year"/>
+                <field name="session_name" string="Session"/>
+                <filter name="by_januari_session" domain="[('session_name', '=', 'janvier')]" string="January session"/>
+                <filter name="by_june_session" domain="[('session_name', '=', 'juin')]" string="June session"/>
+                <filter name="by_september_session" domain="[('session_name', '=', 'september')]" string="September session"/>
+                <group string="Group By">
+                      <filter name="group_by_session" string="Session" context="{'group_by': 'session_name'}"/>
+                </group>
+              </search>
+          </field>
+      </record>
+    <!-- Tree -->
+    <record id="student_notes_tree_view" model="ir.ui.view">
+      <field name="name">student_notes.tree.view</field>
+      <field name="model">osis.student.notes</field>
+      <field eval="16" name="priority"/>
+      <field name="arch" type="xml">
+        <tree colors="green:status=='COMPLETE';red:status=='MISSING';orange:status=='PARTIAL'" create="false" delete="false" editable="false">
+          <!-- <button name="display_students_notes" string="View notes" type="object" class="oe_highlight"/> -->
+          <field name="status"/>
+          <field name="acronym" string="Acronym"/>
+          <field name="title" string="Learning unit"/>
+          <field name="year"/>
+          <field name="session_name" string="Session"/>
+          <!-- <field name="tutor_name" string="Tutor"/> -->
+        </tree>
+      </field>
+    </record>
+
+    <act_window name="Student notes"
+        res_model="osis.student_notes_display"
+        src_model="osis.student.notes"
+        key2="client_action_multi"
+        view_mode="tree,form" target="current"
+        view_type="form"
+        id="act_new_sub_menu"
+        domain="[('exam_id', '=', active_id)]"
+        multi="False"/>
+
+  </data>
+</openerp>

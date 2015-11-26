@@ -27,6 +27,9 @@
             <field name="student_id"/>
             <field name="date_enrollment"/>
           </group>
+          <!-- <group col="4">
+            <field name="exam_enrollment_ids"/>
+          </group> -->
         </form>
       </field>
     </record>

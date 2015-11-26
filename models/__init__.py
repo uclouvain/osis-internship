@@ -39,3 +39,6 @@ import structure
 import person
 import student
 import tutor
+import student_notes_reading
+import resultsWizard
+import student_notes_display

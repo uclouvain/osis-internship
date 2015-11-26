@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
   <data>
+    <!-- Search -->
+      <record model="ir.ui.view" id="exam_view_search">
+          <field name="name">exam.search</field>
+          <field name="model">osis.exam</field>
+          <field name="arch" type="xml">
+              <search>
+                <group string="Group By">
+                      <filter name="group_by_session" string="Exam" context="{'group_by': 'session_name'}"/>
+                </group>
+              </search>
+          </field>
+      </record>
+
     <!-- Tree -->
     <record id="exam_tree_view" model="ir.ui.view">
       <field name="name">exam.tree.view</field>
@@ -29,6 +42,8 @@
             <field name="date_session" string="Session date"/>
             <field name="closed" string="Closed"/>
             <field name="status" string="Status"/>
+            <field name="exam_enrollment_ids" string="Exam enrollments"/>
+
           </group>
         </form>
       </field>

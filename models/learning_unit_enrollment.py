@@ -34,6 +34,8 @@ class Learning_unit_enrollment(models.Model):
     student_id = fields.Many2one('osis.student', string='Student')
     learning_unit_year_id = fields.Many2one('osis.learning_unit_year', string='Learning unit year')
     date_enrollment = fields.Date('Enrollment date')
+    exam_enrollment_ids = fields.One2many('osis.exam_enrollment', 'learning_unit_enrollment_id', string='Learning unit enrollment')
+
 
     def name_get(self,cr,uid,ids,context=None):
         result={}

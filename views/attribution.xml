@@ -10,11 +10,22 @@
         <tree>
           <field name="learning_unit_id" string="Learning unit title"/>
           <field name="tutor_id" string="Name"/>
+          <field name="function" string="Function"/>
           <field name="start_date" string="Start year"/>
           <field name="end_date" string="End year"/>
         </tree>
       </field>
+    </record>
+    <record id="attribution_by_tutor" model="ir.ui.view">
+      <field name="name">attribution.by.tutor</field>
+      <field name="model">osis.attribution</field>
+      <field eval="16" name="priority"/>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="learning_unit_id" string="Learning unit title"/>
 
+        </tree>
+      </field>
     </record>
     <!-- Form -->
     <record id="attribution_simple_form" model="ir.ui.view">
@@ -35,6 +46,5 @@
         </form>
       </field>
     </record>
-
   </data>
 </openerp>
