@@ -36,7 +36,7 @@ class Student(models.Model):
     registration_number = fields.Char('Registration number')
 
     person_id = fields.Many2one('osis.person', string="Person", required=True)
-    learning_unit_enrollment_id = fields.One2many('osis.learning_unit_enrollment', 'student_id', string='Learning unit enrollment')
+    # offer_enrollment_id = fields.One2many('osis.offer_enrollment', 'offer_enrollment_id', string='Offer enrollment')
 
     def name_get(self,cr,uid,ids,context=None):
         result={}

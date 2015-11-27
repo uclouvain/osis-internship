@@ -51,7 +51,6 @@ class Attribution(models.Model):
     def name_get(self,cr,uid,ids,context=None):
         result={}
         for record in self.browse(cr,uid,ids,context=context):
-            title = u"%s" % record.learning_unit_id.title
             name = u"%s" % record.tutor_id.person_id.name
-            result[record.id] = u"%s - %s" % (title,name)
+            result[record.id] = u" %s" % (name)
         return result.items()

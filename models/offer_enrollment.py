@@ -29,8 +29,18 @@ from openerp import models, fields, api
 
 class Offer_enrollment(models.Model):
     _name = 'osis.offer_enrollment'
-    _description = "Offer enrollment"
+    _description = 'Offer enrollment'
+    _order = 'offer_year_id'
 
     offer_year_id = fields.Many2one('osis.offer_year', string='Offer year')
     student_id = fields.Many2one('osis.student', string='Student')
     date_enrollment = fields.Date('Enrollment date')
+    learning_unit_enrollment_ids = fields.One2many('osis.learning_unit_enrollment', 'offer_enrollment_id', string='Learning unit enrollment')
+
+    def name_get(self,cr,uid,ids,context=None):
+        result={}
+        for record in self.browse(cr,uid,ids,context=context):
+            offer_acronym = u"%s" % record.offer_year_id.offer_id.acronym
+            offer_title = u"%s" % record.offer_year_id.offer_id.acronym
+            result[record.id] = u"%s - %s" % (offer_acronym,offer_title)
+        return result.items()

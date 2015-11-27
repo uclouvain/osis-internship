@@ -8,6 +8,8 @@
       <field eval="16" name="priority"/>
       <field name="arch" type="xml">
         <tree>
+          <field name="acronym"/>
+          <field name="title"/>
           <field name="academic_year_id"/>
           <field name="learning_unit_id"/>
           <field name="attribution_entity_id"/>
@@ -25,6 +27,8 @@
       <field name="arch" type="xml">
         <form string="Learning Unit Year Form">
           <group col="4">
+            <field name="acronym"/>
+            <field name="title"/>
             <field name="academic_year_id"/>
             <field name="learning_unit_id"/>
             <field name="attribution_entity_id"/>

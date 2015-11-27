@@ -16,33 +16,37 @@
         </tree>
       </field>
     </record>
-
-    <record id="encoding_notes_more_item_action" model="ir.actions.server">
-      <field name="name">Encoding notes</field>
-      <field name="model_id" ref="model_osis_student_notes_display"/>
-      <field name="state">code</field>
-      <field name="code">action = self.wizard_encode_results(cr, uid, context.get('active_ids', []), context=context)</field>
-    </record>
-
-    <record id="test_more_item" model="ir.values">
-        <field eval="'client_action_multi'" name="key2"/>
-        <field eval="'osis.student_notes_display'" name="model"/>
-        <field name="name">Test Item</field>
-        <field eval="'ir.actions.server,%d'%encoding_notes_more_item_action" name="value"/>
-    </record>
-
+    <!-- ATTENTION Actuellement seul 2ième bouton apparait-->
+    <!-- 1ier Bouton -->
     <record id="submitting_notes_more_item_action" model="ir.actions.server">
       <field name="name">Submitting notes</field>
       <field name="model_id" ref="model_osis_student_notes_display"/>
-      <field name="state">code</field>
       <field name="code">action = self.submit_results(cr, uid, context.get('active_ids', []), context=context)</field>
     </record>
 
     <record id="test_more_item" model="ir.values">
-        <field eval="'client_action_multi'" name="key2"/>
-        <field eval="'osis.student_notes_display'" name="model"/>
+        <field name="key2">client_action_multi</field>
+        <field name="model">osis.student_notes_display</field>
         <field name="name">Submitting notes</field>
         <field eval="'ir.actions.server,%d'%submitting_notes_more_item_action" name="value"/>
     </record>
+    <!-- 2ieme Bouton -->
+    <record id="encoding_notes_more_item_action" model="ir.actions.server">
+          <field name="name">Encoding notes</field>
+          <field name="model_id" ref="model_osis_student_notes_display"/>
+
+          <field name="code">action = self.wizard_encode_results(cr, uid, context.get('active_ids', []), context=context)</field>
+        </record>
+
+        <record id="test_more_item" model="ir.values">
+            <field name="key2">client_action_multi</field>
+            <field name="model">osis.student_notes_display</field>
+            <field name="name">Encoding notes</field>
+            <field eval="'ir.actions.server,%d'%encoding_notes_more_item_action" name="value"/>
+
+        </record>
+
+
+
   </data>
 </openerp>

@@ -45,13 +45,19 @@
         <!--  -->
 <!-- PROGRAM -->
         <record id="learning_unit_math" model="osis.learning_unit">
-          <field name="title">Mathématiques générales 1</field>
+
+          <field name="start_year">2015</field>
+          <field name="end_year">2016</field>
         </record>
         <record id="learning_unit_programmation" model="osis.learning_unit">
-          <field name="title">Introduction à la programmation</field>
+
+          <field name="start_year">2015</field>
+          <field name="end_year">2016</field>
         </record>
         <record id="learning_unit_anglais" model="osis.learning_unit">
-          <field name="title">Anglais : compréhension à la lecture</field>
+
+          <field name="start_year">2015</field>
+          <field name="end_year">2016</field>
         </record>
         <record id="offer_info" model="osis.offer">
           <field name="acronym">SINF1BA</field>
@@ -146,6 +152,8 @@
           <field name="title">Faculté de philosophie, arts et lettres</field>
         </record>
         <record id="learning_unit_year_math_2014" model="osis.learning_unit_year">
+          <field name="title">Mathématiques générales 1 2014</field>
+          <field name="acronym">MATH 2014</field>
           <field name="academic_year_id" ref="academic_year_2014"></field>
           <field name="learning_unit_id" ref="learning_unit_math"></field>
           <field name="attribution_entity_id" ref="structure_sst"></field>
@@ -153,6 +161,8 @@
           <field name="credits">7.0</field>
         </record>
         <record id="learning_unit_year_math_2015" model="osis.learning_unit_year">
+          <field name="title">Mathématiques générales 1 2015</field>
+          <field name="acronym">MATH 2015</field>
           <field name="academic_year_id" ref="academic_year_2015"></field>
           <field name="learning_unit_id" ref="learning_unit_math"></field>
           <field name="attribution_entity_id" ref="structure_sst"></field>
@@ -160,6 +170,8 @@
           <field name="credits">7.0</field>
         </record>
         <record id="learning_unit_year_programmation_2015" model="osis.learning_unit_year">
+          <field name="title">Introduction à la programmation</field>
+          <field name="acronym">prgo 2015</field>
           <field name="academic_year_id" ref="academic_year_2015"></field>
           <field name="learning_unit_id" ref="learning_unit_programmation"></field>
           <field name="attribution_entity_id" ref="structure_sst"></field>
@@ -167,6 +179,8 @@
           <field name="credits">6.0</field>
         </record>
         <record id="learning_unit_year_anglais_2015" model="osis.learning_unit_year">
+          <field name="acronym">ANG 2015</field>
+          <field name="title">Anglais : compréhension à la lecture</field>
           <field name="academic_year_id" ref="academic_year_2015"></field>
           <field name="learning_unit_id" ref="learning_unit_anglais"></field>
           <field name="attribution_entity_id" ref="structure_ssh"></field>
@@ -188,27 +202,27 @@
           <field name="structure_id" ref="structure_sc"/>
           <field name="academic_year_id" ref="academic_year_2015"/>
         </record>
-        <record id="exam_math_2014_jan" model="osis.exam">
+        <record id="exam_math_2014_jan" model="osis.session_exam">
           <field name="learning_unit_year_id" ref="learning_unit_year_math_2014"/>
           <field name="date_session">12/01/2015</field>
           <field name="closed" eval="True"/>
         </record>
-        <record id="exam_math_2015_jan" model="osis.exam">
+        <record id="exam_math_2015_jan" model="osis.session_exam">
           <field name="learning_unit_year_id" ref="learning_unit_year_math_2015"/>
           <field name="date_session">12/01/2016</field>
           <field name="closed" eval="False"/>
         </record>
-        <record id="exam_math_2015_aout" model="osis.exam">
+        <record id="exam_math_2015_aout" model="osis.session_exam">
           <field name="learning_unit_year_id" ref="learning_unit_year_math_2015"/>
           <field name="date_session">12/08/2016</field>
           <field name="closed" eval="False"/>
         </record>
-        <record id="exam_programmation_2015_juin" model="osis.exam">
+        <record id="exam_programmation_2015_juin" model="osis.session_exam">
           <field name="learning_unit_year_id" ref="learning_unit_year_programmation_2015"/>
           <field name="date_session">15/06/2016</field>
           <field name="closed" eval="False"/>
         </record>
-        <record id="exam_programmation_2015_aout" model="osis.exam">
+        <record id="exam_programmation_2015_aout" model="osis.session_exam">
           <field name="learning_unit_year_id" ref="learning_unit_year_programmation_2015"/>
           <field name="date_session">15/08/2016</field>
           <field name="closed" eval="False"/>

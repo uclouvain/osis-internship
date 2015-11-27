@@ -24,8 +24,7 @@
       <field name="model">osis.student.notes</field>
       <field eval="16" name="priority"/>
       <field name="arch" type="xml">
-        <tree colors="green:status=='COMPLETE';red:status=='MISSING';orange:status=='PARTIAL'" create="false" delete="false" editable="false">
-          <!-- <button name="display_students_notes" string="View notes" type="object" class="oe_highlight"/> -->
+        <tree colors="green:status=='True';red:status!='True'" create="false" delete="false" editable="false">
           <field name="status"/>
           <field name="acronym" string="Acronym"/>
           <field name="title" string="Learning unit"/>
@@ -35,16 +34,13 @@
         </tree>
       </field>
     </record>
-
-    <act_window name="Student notes"
-        res_model="osis.student_notes_display"
-        src_model="osis.student.notes"
-        key2="client_action_multi"
-        view_mode="tree,form" target="current"
-        view_type="form"
-        id="act_new_sub_menu"
-        domain="[('exam_id', '=', active_id)]"
-        multi="False"/>
-
+    <record model="ir.actions.act_window" id="act_new_sub_menu">
+        <field name="name">Student notes</field>
+        <field name="res_model">osis.student_notes_display</field>
+        <field name="src_model">osis.student.notes</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_type">form</field>
+        <field name="domain">[('session_exam_id', '=', active_id)]</field>
+    </record>
   </data>
 </openerp>
