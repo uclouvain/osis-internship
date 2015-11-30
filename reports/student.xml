@@ -3,45 +3,27 @@
       <report
             id="report_student"
             model="osis.student"
-            string="Info Report pdf"
-            name="epc.report_info_view"
-            file="epc.report_student"
+            string="Student Report pdf"
+            name="osis-louvain.report_info_view"
+            file="osis-louvain.report_student"
             report_type="qweb-pdf" />
 
-        <report
-            id="report_student_html"
-            model="osis.student"
-            string="Student Report HTML"
-            name="osis-louvain.report_student_view_simple"
-            file="osis-louvain.report_student"
-            report_type="qweb-html" />
 
-          <template id="report_student_view_simple">
-            <t t-call="report.html_container">
-
-              <t t-call="report.external_layout">
-                <div class="page">
-                  <table>
-                    <thead>
-                    <tr>
-                      <th>Registration Number</th>
-                      <th>Name</th>
-                    </tr>
-                  </thead>
-                      <t t-as="doc" t-foreach="docs">
-                        <tr>
-                        <td><span t-field="doc.registration_number"/></td>
-                        <td><span t-field="doc.person_id"/></td>
-                        </tr>
-                      </t>
-                    </table>
-                  </div>
-                </t>
+            <template id="report_info_view">
+              <t t-call="report.html_container">
 
 
-            </t>
-          </template>
+           <t t-call="report.external_layout">
+               <div class="page">
+                   <h2>Report title</h2>
+                   <t t-foreach="docs" t-as="o">
+                   <p>This object's name is <span t-field="o.registration_number"/></p>
+                    </t>
+               </div>
+           </t>
 
+              </t>
+            </template>
 
     </data>
 </openerp>

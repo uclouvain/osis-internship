@@ -29,11 +29,28 @@ from openerp import models, fields, api
 
 class Learning_unit(models.Model):
     _name = 'osis.learning_unit'
-    _description = 'title'
-    _rec_name='acronym'
+    _description = 'Learning unit'
 
-    title = fields.Char('Title')
-    acronym = fields.Char('Acronym')
-
+    start_year = fields.Integer('Start year', required = True)
+    end_year = fields.Integer('End year', required = True)
     attribution_id = fields.One2many('osis.attribution', 'learning_unit_id', string='Attribution')
     learning_unit_year_id = fields.One2many('osis.learning_unit_year', 'learning_unit_id' ,string='Learning Unit Year')
+
+    def name_get(self,cr,uid,ids,context=None):
+        result={}
+        for record in self.browse(cr,uid,ids,context=context):
+            result[record.id] = u"%s - %s" % (record.start_year,record.end_year)
+        return result.items()
+
+
+    @api.constrains('start_year','end_year')
+    def _check_dates(self):
+        for record in self:
+            if record.start_year:
+                if record.start_year < 1000 or record.start_year > 9999:
+                    raise exceptions.ValidationError(_("Start year must be on 4 digits"))
+                if record.end_year:
+                    if record.end_year < 1000 or record.end_year > 9999:
+                        raise exceptions.ValidationError(_("End year must be on 4 digits"))
+                    if record.start_year > record.end_year:
+                        raise exceptions.ValidationError(_("End year must be greater or equal than start year"))

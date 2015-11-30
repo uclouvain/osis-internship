@@ -31,6 +31,9 @@ class Learning_unit_year(models.Model):
     _name = 'osis.learning_unit_year'
     _description = "Learning unit year"
 
+    title = fields.Char('Title', required = True)
+    acronym = fields.Char('Acronym', required = True)
+
     academic_year_id = fields.Many2one('osis.academic_year', string='Academic year')
     learning_unit_id = fields.Many2one('osis.learning_unit', string='Learning unit')
     attribution_entity_id = fields.Many2one('osis.structure', string='Attribution entity')
@@ -41,7 +44,7 @@ class Learning_unit_year(models.Model):
     def name_get(self,cr,uid,ids,context=None):
         result={}
         for record in self.browse(cr,uid,ids,context=context):
-            year = u"%s" % record.academic_year_id.year
-            title = u"%s" % record.learning_unit_id.title
-            result[record.id] = u"%s - %s" % (year,title)
+            title = u"%s" % record.title
+            acronym = u"%s" % record.acronym
+            result[record.id] = u"%s - %s" % (acronym,title)
         return result.items()

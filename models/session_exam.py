@@ -29,15 +29,14 @@ from openerp import models, fields, api, _
 import datetime
 
 
-class Exam(models.Model):
-    _name = 'osis.exam'
-    _description = "Exam"
+class SessionExam(models.Model):
+    _name = 'osis.session_exam'
+    _description = "Session Exam"
 
     learning_unit_year_id = fields.Many2one('osis.learning_unit_year', string='Learning unit year')
-    exam_enrollment_ids = fields.One2many('osis.exam_enrollment','exam_id', string='Exam enrollment')
+    exam_enrollment_ids = fields.One2many('osis.exam_enrollment','session_exam_id', string='Exam enrollment')
 
     date_session = fields.Date('Session date')
-    status = fields.Selection([('COMPLETE',_('Complete')),('PARTIAL',_('Partial')),('MISSING',_('Missing'))],default = 'MISSING', required = True)
     closed = fields.Boolean(default = False)
     session_name = fields.Char('Session Name',compute='_get_session_name', store=True)
 
@@ -47,9 +46,9 @@ class Exam(models.Model):
             name_build = ''
             if record.learning_unit_year_id:
                 name_build += str(record.learning_unit_year_id.academic_year_id.year)
-                if record.learning_unit_year_id.learning_unit_id.title:
+                if record.learning_unit_year_id.title:
                     name_build+= ' - '
-                    name_build += record.learning_unit_year_id.learning_unit_id.title
+                    name_build += record.learning_unit_year_id.title
             if record.session_name:
                 if record.session_name:
                     name_build+= ' - '
