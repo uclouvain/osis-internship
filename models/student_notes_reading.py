@@ -10,7 +10,7 @@ class Student_notes_reading(models.Model):
     acronym = fields.Char('Acronym', readonly=True)
     title = fields.Char('Title', readonly=True)
     year = fields.Integer('Year', readonly=True)
-    status = fields.Char('Status', readonly=True)
+    status = fields.Boolean('Status', readonly=True)
     session_name = fields.Char('Session name', readonly=True)
     session_exam_id = fields.Char('Exam id', readonly=True)
     learning_unit_year_id = fields.Integer('Learning Unit Year Id', readonly=True)
