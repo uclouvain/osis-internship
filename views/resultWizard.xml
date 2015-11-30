@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <form string="New results">
                     <group col="1">
-                        <field name="exam_enrollment_id" readonly="1" nolabel="1"/>
+                        <!-- <field name="exam_enrollment_id" readonly="1" nolabel="1"/> -->
                         <field name="line_ids" nolabel="1">
                             <tree editable="bottom" create="false" delete="false" >
                                 <field name="student_id" readonly="1"/>

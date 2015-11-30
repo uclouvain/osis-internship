@@ -27,7 +27,7 @@
 
 import academic_year
 import attribution
-import exam
+import session_exam
 import exam_enrollment
 import learning_unit
 import learning_unit_enrollment

@@ -23,7 +23,10 @@
       <field name="arch" type="xml">
         <tree>
           <field name="learning_unit_id" string="Learning unit title"/>
-
+          <field name="tutor_id"/>
+          <field name="start_date"/>
+          <field name="end_date"/>
+          <field name="function"/>
         </tree>
       </field>
     </record>

@@ -40,5 +40,5 @@ class Offer_year(models.Model):
         for record in self.browse(cr,uid,ids,context=context):
             acronym = u"%s" % record.offer_id.acronym
             year = u"%s" % record.academic_year_id.year
-            result[record.id] = u"%s ()%s)" % (acronym,year)
+            result[record.id] = u"%s - %s" % (acronym,year)
         return result.items()

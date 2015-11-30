@@ -3,7 +3,7 @@
     <data>
         <record model="ir.actions.act_window" id="reading_student_notes_list_action">
             <field name="name">Encoding notes</field>
-            <field name="res_model">osis.student.notes</field>
+            <field name="res_model">osis.student_notes</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" eval="False"/>
@@ -85,12 +85,12 @@
         </record>
         <record model="ir.actions.act_window" id="exam_list_action">
             <field name="name">Exams</field>
-            <field name="res_model">osis.exam</field>
+            <field name="res_model">osis.session_exam</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" eval="False"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">Create the first exam</p>
+              <p class="oe_view_nocontent_create">Create the first session exam</p>
             </field>
         </record>
         <record model="ir.actions.act_window" id="offer_enrollment_list_action">
@@ -108,7 +108,7 @@
             <field name="res_model">osis.learning_unit_enrollment</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" eval="False"/>
+            <field name="view_id" ref="learning_unit_enrollment_tree_view"/>
         </record>
         <record model="ir.actions.act_window" id="exam_enrollment_list_action">
             <field name="name">Exam enrollments</field>
