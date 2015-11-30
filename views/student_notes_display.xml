@@ -34,11 +34,10 @@
     <record id="encoding_notes_more_item_action" model="ir.actions.server">
           <field name="name">Encoding notes</field>
           <field name="model_id" ref="model_osis_student_notes_display"/>
-
           <field name="code">action = self.wizard_encode_results(cr, uid, context.get('active_ids', []), context=context)</field>
         </record>
 
-        <record id="test_more_item" model="ir.values">
+        <record id="encoding_notes_more_item" model="ir.values">
             <field name="key2">client_action_multi</field>
             <field name="model">osis.student_notes_display</field>
             <field name="name">Encoding notes</field>
