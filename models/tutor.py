@@ -32,6 +32,7 @@ class Tutor(models.Model):
     _description = "Tutor"
 
     person_id = fields.Many2one('osis.person', string="Person", required=True)
+    attribution_ids = fields.One2many('osis.attribution', 'tutor_id', string='Attribution')
 
 
     #Pour voir le nom du tutor dans la liste des attributions notamment
