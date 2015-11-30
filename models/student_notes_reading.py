@@ -2,7 +2,7 @@
 from openerp import models, fields, api, tools, _
 
 class Student_notes_reading(models.Model):
-    _name = 'osis.student.notes'
+    _name = 'osis.student_notes'
     _description = 'Student notes'
     _auto = False
     _order = 'acronym'
