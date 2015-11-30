@@ -7,9 +7,25 @@
       <field name="model">osis.exam_enrollment</field>
       <field eval="16" name="priority"/>
       <field name="arch" type="xml">
-        <tree>
+        <tree colors="green:encoding_status=='SUBMITTED'" >
           <field name="exam_id"/>
           <field name="learning_unit_enrollment_id" />
+          <field name="score" />
+          <field name="encoding_status" readonly="1"/>
+        </tree>
+      </field>
+    </record>
+    <!-- Avec notion d'étudiant -->
+    <record id="exam_enrollment_with_student_tree_view" model="ir.ui.view">
+      <field name="name">exam_enrollment_with_student.tree.view</field>
+      <field name="model">osis.exam_enrollment</field>
+      <field eval="8" name="priority"/>
+      <field name="arch" type="xml">
+        <tree colors="green:encoding_status=='SUBMITTED'" >
+          <field name="exam_id"/>
+          <field name="learning_unit_enrollment_id" />
+          <field name="score" />
+          <field name="encoding_status" readonly="1"/>
         </tree>
       </field>
 
@@ -24,6 +40,8 @@
           <group col="4">
             <field name="exam_id"/>
             <field name="learning_unit_enrollment_id" />
+            <field name="score" />
+            <field name="encoding_status"/>
           </group>
         </form>
       </field>

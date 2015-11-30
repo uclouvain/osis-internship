@@ -33,4 +33,3 @@ class Structure(models.Model):
     _rec_name='title'
 
     title = fields.Char('Title')
-
