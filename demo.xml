@@ -524,37 +524,36 @@
         </record>
         <record id="exam_sakina_ethique" model="osis.exam_enrollment">
           <field name="session_exam_id" ref="exam_ethique_2015_aout"/>
-          <field name="learning_unit_enrollment_id" ref="learning_unit_year_ethique_2015"/>
+          <field name="learning_unit_enrollment_id" ref="learning_unit_ethique_2015_sakina"/>
         </record>
         <record id="exam_fanny_ethique" model="osis.exam_enrollment">
           <field name="session_exam_id" ref="exam_ethique_2015_aout"/>
-          <field name="learning_unit_enrollment_id" ref="learning_unit_year_ethique_2015"/>
+          <field name="learning_unit_enrollment_id" ref="learning_unit_ethique_2015_fanny"/>
         </record>
         <record id="exam_pauline_ethique" model="osis.exam_enrollment">
           <field name="session_exam_id" ref="exam_ethique_2015_aout"/>
-          <field name="learning_unit_enrollment_id" ref="learning_unit_year_ethique_2015"/>
+          <field name="learning_unit_enrollment_id" ref="learning_unit_ethique_2015_pauline"/>
         </record>
         <record id="exam_elodie_ethique" model="osis.exam_enrollment">
           <field name="session_exam_id" ref="exam_ethique_2015_aout"/>
-          <field name="learning_unit_enrollment_id" ref="learning_unit_year_ethique_2015"/>
+          <field name="learning_unit_enrollment_id" ref="learning_unit_ethique_2015_elodie"/>
         </record>
         <record id="exam_sebastien_ethique" model="osis.exam_enrollment">
           <field name="session_exam_id" ref="exam_ethique_2015_aout"/>
-          <field name="learning_unit_enrollment_id" ref="learning_unit_year_ethique_2015"/>
+          <field name="learning_unit_enrollment_id" ref="learning_unit_ethique_2015_sebastien"/>
         </record>
         <record id="exam_nestor_ethique" model="osis.exam_enrollment">
           <field name="session_exam_id" ref="exam_ethique_2015_aout"/>
-          <field name="learning_unit_enrollment_id" ref="learning_unit_year_ethique_2015"/>
+          <field name="learning_unit_enrollment_id" ref="learning_unit_ethique_2015_nestor"/>
         </record>
         <record id="exam_tasnim_ethique" model="osis.exam_enrollment">
           <field name="session_exam_id" ref="exam_ethique_2015_aout"/>
-          <field name="learning_unit_enrollment_id" ref="learning_unit_year_ethique_2015"/>
+          <field name="learning_unit_enrollment_id" ref="learning_unit_ethique_2015_tasnim"/>
         </record>
         <record id="exam_robin_ethique" model="osis.exam_enrollment">
           <field name="session_exam_id" ref="exam_ethique_2015_aout"/>
-          <field name="learning_unit_enrollment_id" ref="learning_unit_year_ethique_2015"/>
+          <field name="learning_unit_enrollment_id" ref="learning_unit_ethique_2015_robin"/>
         </record>
-
 
 <!-- ATTRIBUTION -->
         <record id="attribution_math_gran" model="osis.attribution">
