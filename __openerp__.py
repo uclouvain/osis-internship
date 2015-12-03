@@ -21,7 +21,6 @@
     'data': [
         # 'security/ir.model.access.csv',
         'templates.xml',
-        'views/menu.xml',
         'views/person.xml',
         'views/student.xml',
         'views/tutor.xml',
@@ -43,6 +42,7 @@
         'reports/learning_unit_enrollment.xml',
         'reports/scores_sheet.xml',
         'reports/student_notes.xml',
+        'views/menu.xml',
     ],
 
     'demo': [
