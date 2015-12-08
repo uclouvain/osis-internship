@@ -1,0 +1,20 @@
+[
+  {
+    "model": "osis_backend.academicYear",
+    "pk": 1,
+    "fields": {
+      "year": "2014",
+      "start_date": "2014-01-01",
+      "end_date": "2014-12-31"
+    }
+  },
+  {
+    "model": "osis_backend.academicYear",
+    "pk": 2,
+    "fields": {
+      "year": "2015",
+      "start_date": "2015-01-01",
+      "end_date": "2015-12-31"
+    }
+  }
+]
