@@ -1,0 +1,37 @@
+<openerp>
+  <data>
+    <report
+      id="report_scores_sheet_pdf"
+      model="osis.session_exam"
+      string="Scores sheet pdf"
+      name="osis-louvain.report_scores_sheet"
+      file="osis-louvain.report_scores_sheet"
+      report_type="qweb-pdf"/>
+
+      <report
+        id="report_scores_sheet_html"
+        model="osis.session_exam"
+        string="Scores sheet html"
+        name="osis-louvain.report_scores_sheet"
+        file="osis-louvain.report_scores_sheet"
+        report_type="qweb-html" />
+
+      <template id="report_scores_sheet">
+        <t t-call="report.html_container">
+          <div class="page">
+            <t t-foreach="docs" t-as="doc">
+              <div class="row">
+                <span t-field="doc.date_session"/>
+                <span t-esc="get_academic_year"/>
+              </div>
+              <div id="bloc_signature">
+                <div class="row mb8">Fait à ........................................</div>
+                <div class="row mb8">le ........../........../..........</div>
+                <div class="row">Signature</div>
+              </div>
+            </t>
+          </div>
+        </t>
+      </template>
+    </data>
+  </openerp>
