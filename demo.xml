@@ -472,6 +472,26 @@
           <field name="offer_enrollment_id" ref="offer_robin"/>
           <field name="date_enrollment">2015-10-05</field>
         </record>
+        <record id="learning_unit_ethique_2015_sophie" model="osis.learning_unit_enrollment">
+          <field name="learning_unit_year_id" ref="learning_unit_year_ethique_2015"/>
+          <field name="offer_enrollment_id" ref="offer_sophie"/>
+          <field name="date_enrollment">2015-10-05</field>
+        </record>
+        <record id="learning_unit_ethique_2015_jane" model="osis.learning_unit_enrollment">
+          <field name="learning_unit_year_id" ref="learning_unit_year_ethique_2015"/>
+          <field name="offer_enrollment_id" ref="offer_jane"/>
+          <field name="date_enrollment">2015-10-05</field>
+        </record>
+        <record id="learning_unit_ethique_2015_bertrand" model="osis.learning_unit_enrollment">
+          <field name="learning_unit_year_id" ref="learning_unit_year_ethique_2015"/>
+          <field name="offer_enrollment_id" ref="offer_bertrand"/>
+          <field name="date_enrollment">2015-10-05</field>
+        </record>
+        <record id="learning_unit_ethique_2015_vincent" model="osis.learning_unit_enrollment">
+          <field name="learning_unit_year_id" ref="learning_unit_year_ethique_2015"/>
+          <field name="offer_enrollment_id" ref="offer_vincent"/>
+          <field name="date_enrollment">2015-10-05</field>
+        </record>
 
 <!-- SESSION EXAM -->
         <record id="exam_math_2014_jan" model="osis.session_exam">
@@ -553,6 +573,22 @@
         <record id="exam_robin_ethique" model="osis.exam_enrollment">
           <field name="session_exam_id" ref="exam_ethique_2015_aout"/>
           <field name="learning_unit_enrollment_id" ref="learning_unit_ethique_2015_robin"/>
+        </record>
+        <record id="exam_sophie_ethique" model="osis.exam_enrollment">
+          <field name="session_exam_id" ref="exam_ethique_2015_aout"/>
+          <field name="learning_unit_enrollment_id" ref="learning_unit_ethique_2015_sophie"/>
+        </record>
+        <record id="exam_jane_ethique" model="osis.exam_enrollment">
+          <field name="session_exam_id" ref="exam_ethique_2015_aout"/>
+          <field name="learning_unit_enrollment_id" ref="learning_unit_ethique_2015_jane"/>
+        </record>
+        <record id="exam_bertrand_ethique" model="osis.exam_enrollment">
+          <field name="session_exam_id" ref="exam_ethique_2015_aout"/>
+          <field name="learning_unit_enrollment_id" ref="learning_unit_ethique_2015_bertrand"/>
+        </record>
+        <record id="exam_vincent_ethique" model="osis.exam_enrollment">
+          <field name="session_exam_id" ref="exam_ethique_2015_aout"/>
+          <field name="learning_unit_enrollment_id" ref="learning_unit_ethique_2015_vincent"/>
         </record>
 
 <!-- ATTRIBUTION -->

@@ -34,7 +34,7 @@
                 </div>
               </div><!-- bloc_entete -->
               <div class="row mt32 mb16">
-                <b><span t-field="doc.learning_unit_year_id.title"/></b>
+                <b><span t-field="doc.learning_unit_year_id.acronym"/> - <span t-field="doc.learning_unit_year_id.title"/></b>
               </div>
               <div id="bloc_signature">
                 <div class="row mb8">Fait à ........................................</div>
@@ -54,13 +54,15 @@
                     </tr>
                   </thead>
                   <t t-foreach="doc.exam_enrollment_ids" t-as="exam">
-                    <t t-set="student" t-value="exam.learning_unit_enrollment_id.offer_enrollment_id.student_id"/>
+                    <t t-set="offer_enrollment" t-value="exam.learning_unit_enrollment_id.offer_enrollment_id"/>
+                    <t t-set="student" t-value="offer_enrollment.student_id"/>
                     <tr>
+                      <td><span t-field="offer_enrollment.offer_year_id.offer_id.acronym"/></td>
                       <td><span t-field="student.person_id.name"/></td>
                       <td><span t-field="student.registration_number"/></td>
                       <td></td>
                       <td></td>
-                      <td></td>
+                      <td><span t-esc="exam_index + 1"/></td>
                     </tr>
                   </t>
                 </table>
