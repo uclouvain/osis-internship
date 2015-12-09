@@ -6,6 +6,10 @@ This application is designed as a module of [Odoo](https://www.odoo.com), a modu
 
 [![Join the chat at https://gitter.im/uclouvain/OSIS-Louvain](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/uclouvain/OSIS-Louvain?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+## Documentation
+
+The whole documentation of the project is published at: http://uclouvain.github.io/osis-louvain-documentation. Read it to understand how the business works and all the technical installation and configuration.
+
 ## Contributing to the Project
 
 If you wish to point out an issue in the application or propose a new feature, you can do so by filing a GitHub issue at https://github.com/uclouvain/osis-louvain/issues.
