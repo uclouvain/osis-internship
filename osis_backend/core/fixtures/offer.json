@@ -1,0 +1,35 @@
+[
+  {
+    "model": "osis_backend.offer",
+    "pk": 1,
+    "fields": {
+      "acronym": "SINF1BA",
+      "title": "Bachelier en sciences informatiques"
+    }
+  },
+  {
+    "model": "osis_backend.offer",
+    "pk": 2,
+    "fields": {
+      "acronym": "MATH1BA",
+      "title": "Bachelier en sciences mathématiques"
+    }
+  },
+  {
+    "model": "osis_backend.offer",
+    "pk": 3,
+    "fields": {
+      "acronym": "PHYS1BA",
+      "title": "Bachelier en sciences physiques"
+    }
+  },
+  {
+    "model": "osis_backend.offer",
+    "pk": 4,
+    "fields": {
+      "acronym": "LING2M",
+      "title": "Master [120] en linguistique"
+    }
+  }
+]
+      
