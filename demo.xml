@@ -77,6 +77,30 @@
         <field name="name">Roux Bertrand</field>
         <field name="gender">M</field>
       </record>
+      <record id="person_student_sebastien" model="osis.person">
+        <field name="last_name">Demel</field>
+        <field name="first_name">Sébastien</field>
+        <field name="name">Demel Sébastien</field>
+        <field name="gender">M</field>
+      </record>
+      <record id="person_student_nestor" model="osis.person">
+        <field name="last_name">Djessa Djombo</field>
+        <field name="first_name">Nestor</field>
+        <field name="name">Djessa Djombo Nestor</field>
+        <field name="gender">M</field>
+      </record>
+      <record id="person_student_tasnim" model="osis.person">
+        <field name="last_name">Ghazi</field>
+        <field name="first_name">Tasnim</field>
+        <field name="name">Ghazi Tasnim</field>
+        <field name="gender">M</field>
+      </record>
+      <record id="person_student_robin" model="osis.person">
+        <field name="last_name">Peirolo</field>
+        <field name="first_name">Robin</field>
+        <field name="name">Peirolo Robin</field>
+        <field name="gender">M</field>
+      </record>
       <record id="person_student_vincent" model="osis.person">
         <field name="last_name">Dumont</field>
         <field name="first_name">Vincent</field>
@@ -107,30 +131,6 @@
         <field name="name">Culot Elodie</field>
         <field name="gender">F</field>
       </record>
-      <record id="person_student_sebastien" model="osis.person">
-        <field name="last_name">Demel</field>
-        <field name="first_name">Sébastien</field>
-        <field name="name">Demel Sébastien</field>
-        <field name="gender">M</field>
-      </record>
-      <record id="person_student_nestor" model="osis.person">
-        <field name="last_name">Djessa Djombo</field>
-        <field name="first_name">Nestor</field>
-        <field name="name">Djessa Djombo Nestor</field>
-        <field name="gender">M</field>
-      </record>
-      <record id="person_student_tasnim" model="osis.person">
-        <field name="last_name">Ghazi</field>
-        <field name="first_name">Tasnim</field>
-        <field name="name">Ghazi Tasnim</field>
-        <field name="gender">M</field>
-      </record>
-      <record id="person_student_robin" model="osis.person">
-        <field name="last_name">Peirolo</field>
-        <field name="first_name">Robin</field>
-        <field name="name">Peirolo Robin</field>
-        <field name="gender">M</field>
-      </record>
 <!-- STUDENT -->
       <record id="student_sophie" model="osis.student">
         <field name="person_id" ref="person_student_sophie"/>
@@ -148,25 +148,29 @@
         <field name="person_id" ref="person_student_vincent"/>
         <field name="registration_number">129854</field>
       </record>
-      <record id="student_sakina" model="osis.student">
-        <field name="person_id" ref="person_student_sakina"/>
-        <field name="registration_number">24321000</field>
-      </record>
       <record id="student_fanny" model="osis.student">
         <field name="person_id" ref="person_student_fanny"/>
         <field name="registration_number">85991100</field>
-      </record>
-      <record id="student_pauline" model="osis.student">
-        <field name="person_id" ref="person_student_pauline"/>
-        <field name="registration_number">81420700</field>
       </record>
       <record id="student_elodie" model="osis.student">
         <field name="person_id" ref="person_student_elodie"/>
         <field name="registration_number">77821100</field>
       </record>
+      <record id="student_robin" model="osis.student">
+        <field name="person_id" ref="person_student_robin"/>
+        <field name="registration_number">25050700</field>
+      </record>
       <record id="student_sebastien" model="osis.student">
         <field name="person_id" ref="person_student_sebastien"/>
         <field name="registration_number">85791100</field>
+      </record>
+      <record id="student_sakina" model="osis.student">
+        <field name="person_id" ref="person_student_sakina"/>
+        <field name="registration_number">24321000</field>
+      </record>
+      <record id="student_pauline" model="osis.student">
+        <field name="person_id" ref="person_student_pauline"/>
+        <field name="registration_number">81420700</field>
       </record>
       <record id="student_nestor" model="osis.student">
         <field name="person_id" ref="person_student_nestor"/>
@@ -175,10 +179,6 @@
       <record id="student_tasnim" model="osis.student">
         <field name="person_id" ref="person_student_tasnim"/>
         <field name="registration_number">85971000</field>
-      </record>
-      <record id="student_robin" model="osis.student">
-        <field name="person_id" ref="person_student_robin"/>
-        <field name="registration_number">25050700</field>
       </record>
 <!-- TUTOR -->
       <record id="tutor_gran" model="osis.tutor">
@@ -597,42 +597,42 @@
           <field name="tutor_id" ref="tutor_gran"/>
           <field name="function">PROFESSOR</field>
           <field name="start_date">2015-09-15</field>
-          <field name="start_date">2015-12-15</field>
+          <field name="end_date">2017-12-15</field>
         </record>
         <record id="attribution_math_ponce" model="osis.attribution">
           <field name="learning_unit_id" ref="learning_unit_math"/>
           <field name="tutor_id" ref="tutor_ponce"/>
           <field name="function">PROFESSOR</field>
           <field name="start_date">2015-09-15</field>
-          <field name="start_date">2015-12-15</field>
+          <field name="end_date">2015-12-15</field>
         </record>
         <record id="attribution_anglais_gouverneur" model="osis.attribution">
           <field name="learning_unit_id" ref="learning_unit_anglais"/>
           <field name="tutor_id" ref="tutor_gouverneur"/>
           <field name="function">COORDINATOR</field>
           <field name="start_date">2016-01-15</field>
-          <field name="start_date">2016-06-15</field>
+          <field name="end_date">2020-06-15</field>
         </record>
         <record id="attribution_anglais_francois" model="osis.attribution">
           <field name="learning_unit_id" ref="learning_unit_anglais"/>
           <field name="tutor_id" ref="tutor_francois"/>
           <field name="function">PROFESSOR</field>
           <field name="start_date">2016-01-15</field>
-          <field name="start_date">2016-06-15</field>
+          <field name="end_date">2018-06-15</field>
         </record>
         <record id="attribution_programmation_bonaventure" model="osis.attribution">
           <field name="learning_unit_id" ref="learning_unit_programmation"/>
           <field name="tutor_id" ref="tutor_bonaventure"/>
           <field name="function">PROFESSOR</field>
           <field name="start_date">2015-09-15</field>
-          <field name="start_date">2015-12-15</field>
+          <field name="end_date">2022-12-15</field>
         </record>
         <record id="attribution_programmation_pecheur" model="osis.attribution">
           <field name="learning_unit_id" ref="learning_unit_programmation"/>
           <field name="tutor_id" ref="tutor_pecheur"/>
           <field name="function">PROFESSOR</field>
           <field name="start_date">2015-09-15</field>
-          <field name="start_date">2015-12-15</field>
+          <field name="end_date">2015-12-15</field>
         </record>
     </data>
 </openerp>

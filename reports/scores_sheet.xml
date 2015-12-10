@@ -20,19 +20,28 @@
         <t t-call="report.html_container">
           <div class="page">
             <t t-foreach="docs" t-as="doc">
+              <!--
               <div id="bloc_entete" style="margin-left: 13.5cm">
+              -->
                 <div class="row">
-                  <span>Academic year </span>
-                  <span t-field="doc.learning_unit_year_id.academic_year_id"></span>
+                  <div class="col-md-4 col-md-offset-8">
+                    <span>Academic year </span>
+                    <span t-field="doc.learning_unit_year_id.academic_year_id"></span>
+                  </div>
                 </div>
                 <div class="row">
-                  <span>Session : </span>
-                  <span t-field="doc.session_name"></span>
+                  <div class="col-md-4 col-md-offset-8">
+                    <span>Session : </span>
+                    <span t-field="doc.session_name"></span>
+                  </div>
                 </div>
                 <div class="row mt16">
-                  <span><b>Scores sheet</b></span>
+                  <div class="col-md-4 col-md-offset-8">
+                    <span><b>Scores sheet</b></span>
+                  </div>
                 </div>
-              </div><!-- bloc_entete -->
+                <!--
+              </div>bloc_entete -->
               <div class="row mt32 mb16">
                 <b><span t-field="doc.learning_unit_year_id.acronym"/> - <span t-field="doc.learning_unit_year_id.title"/></b>
               </div>
@@ -40,7 +49,7 @@
                 <div class="row mb8">Fait à ........................................</div>
                 <div class="row mb8">le ........../........../..........</div>
                 <div class="row">Signature</div>
-              </div>
+              </div><!-- bloc_signature -->
               <div class="row mt48" id="tableau">
                 <table class="table table-bordered table-striped">
                   <thead>
@@ -53,18 +62,8 @@
                       <th>N° ordre</th>
                     </tr>
                   </thead>
-                  <t t-foreach="doc.exam_enrollment_ids" t-as="exam">
-                    <t t-set="offer_enrollment" t-value="exam.learning_unit_enrollment_id.offer_enrollment_id"/>
-                    <t t-set="student" t-value="offer_enrollment.student_id"/>
-                    <tr>
-                      <td><span t-field="offer_enrollment.offer_year_id.offer_id.acronym"/></td>
-                      <td><span t-field="student.person_id.name"/></td>
-                      <td><span t-field="student.registration_number"/></td>
-                      <td></td>
-                      <td></td>
-                      <td><span t-esc="exam_index + 1"/></td>
-                    </tr>
-                  </t>
+                  <tbody>
+                </tbody>
                 </table>
               </div> <!-- tableau -->
             </t>

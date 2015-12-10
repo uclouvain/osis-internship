@@ -6,6 +6,7 @@ from openerp import models, fields, api, _
 class Person(models.Model):
     _name = 'osis.person'
     _inherit = 'res.partner'
+    _order = 'name'
 
     last_name = fields.Char(_('Last name'))
     first_name = fields.Char(_('First name'))

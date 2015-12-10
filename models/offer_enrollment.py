@@ -40,7 +40,8 @@ class Offer_enrollment(models.Model):
     def name_get(self,cr,uid,ids,context=None):
         result={}
         for record in self.browse(cr,uid,ids,context=context):
-            offer_acronym = u"%s" % record.offer_year_id.offer_id.acronym
-            offer_title = u"%s" % record.offer_year_id.offer_id.acronym
-            result[record.id] = u"%s - %s" % (offer_acronym,offer_title)
+            offer_acronym = record.offer_year_id.offer_id.acronym
+            offer_title = record.offer_year_id.offer_id.acronym
+            student = record.student_id.person_id.name
+            result[record.id] = u"%s - %s - %s" % (offer_acronym,offer_title,student)
         return result.items()

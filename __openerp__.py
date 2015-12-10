@@ -16,7 +16,7 @@
     'category': 'Education',
     'version': '15.11.2.0',
 
-    'depends': ['base'],
+    'depends': ['base', 'report'],
 
     'data': [
         # 'security/ir.model.access.csv',
@@ -40,8 +40,7 @@
         'views/resultWizard.xml',
         'views/student_notes_display.xml',
         'reports/learning_unit_enrollment.xml',
-        #'reports/scores_sheet.xml',
-        'reports/report_scores_sheet.xml',
+        'reports/scores_sheet.xml',
         'reports/student_notes.xml',
         'views/menu.xml',
     ],

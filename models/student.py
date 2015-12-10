@@ -32,6 +32,7 @@ class Student(models.Model):
     _name = 'osis.student'
     _description = "Student"
     _rec_name = 'registration_number'
+    _order = 'person_id'
 
     registration_number = fields.Char('Registration number')
 
