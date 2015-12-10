@@ -31,6 +31,7 @@ class Offer(models.Model):
     _name = "osis.offer"
     _description = "Offer"
     _rec_name = "acronym"
+    _order = "acronym asc"
 
     acronym  = fields.Char('Acronym', required = True)
     title = fields.Text('Title')

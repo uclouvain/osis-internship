@@ -37,6 +37,8 @@ class Academic_year(models.Model):
     start_date = fields.Date('Start date')
     end_date = fields.Date('End date')
 
+    complete_year = fields.Char(compute='_compute_complete_year')
+
     @api.constrains('start_date','end_date')
     def _check_dates(self):
         for record in self:
@@ -44,3 +46,8 @@ class Academic_year(models.Model):
                 if record.end_date:
                     if fields.Datetime.from_string(record.start_date) > fields.Datetime.from_string(record.end_date):
                         raise exceptions.ValidationError(_("End date must be greater or equal than start year"))
+
+    @api.one
+    @api.depends('year')
+    def _compute_complete_year(self):
+        self.complete_year = u"%s - %s" % (self.year, self.year+1)

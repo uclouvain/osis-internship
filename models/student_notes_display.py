@@ -33,7 +33,7 @@ class Student_notes_display(models.Model):
                    p.name as student_name,
                    ee.score as score,
                    luy.learning_unit_id as learning_unit_ref,
-                   lue.student_id as student_ref,
+                   oo.student_id as student_ref,
                    ee.id as id,
                    luy.title as title_learning_unit,
                    ee.learning_unit_enrollment_id as learning_unit_enrollment_id,
