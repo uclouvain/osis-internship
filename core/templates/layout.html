@@ -8,7 +8,7 @@
         <meta name="apple-mobile-web-app-capable" content="yes" />
 		    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 		    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-
+        <link rel="icon" href="{% static 'images/favicon.ico' %}" />
         <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
         <link rel="stylesheet" href="{% static "css/bootstrap-theme.min.css" %}">
         <link rel="stylesheet" href="{% static "css/custom.css" %}">
@@ -26,7 +26,7 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{% url 'home' %}">OSIS Louvain</a>
+            <a class="navbar-brand" href="{% url 'home' %}"><img src="{% static 'images/logo_osis.png' %}" style="margin-top: -10px;"></a>
           </div>
 
           <!-- Collect the nav links, forms, and other content for toggling -->
