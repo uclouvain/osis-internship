@@ -117,41 +117,29 @@ class LearningUnitEnrollment(models.Model):
     learning_unit_year = models.ForeignKey(LearningUnitYear, null = False)
     offer_enrollment   = models.ForeignKey(OfferEnrollment, null = False)
 
+    def student(self):
+        return self.offer_enrollment.student
+
     def __str__(self):
-        return u"%s - %s - %s - %s" % (self.learning_unit_year.academic_year.year,
-                                       self.learning_unit_year.title,
-                                       self.offer_enrollment.offer_year.offer.acronym,
-                                       self.offer_enrollment.student.person.last_name)
+        return u"%s - %s" % (self.learning_unit_year, self.offer_enrollment.student)
 
 
 class SessionExam(models.Model):
-    GENDER_CHOICES = (
-        ('CLS','Closed'),
+    SESSION_STATUS = (
+        ('IDE','Idle'),
         ('OPN','Open'),
-        ('U','Unknown'))
+        ('CLS','Closed'))
 
-    date_session       = models.DateField(auto_now = False, blank = False, null = False, auto_now_add = False)
-    status             = models.BooleanField(default = False)
+    start_session      = models.DateField(auto_now = False, blank = False, null = False, auto_now_add = False)
+    end_session        = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
+    status             = models.CharField(max_length = 3, blank = False, null = False,choices = SESSION_STATUS)
     learning_unit_year = models.ForeignKey(LearningUnitYear, null = False)
 
-    @property
-    def session_name(self):
-        if self.date_session:
-            return self.date_session.strftime("%B")
-        return ""
-
+    def name(self):
+        return self.start_session.strftime("%B")
 
     def __str__(self):
-        name_build = ''
-        if self.learning_unit_year:
-            name_build += str(self.learning_unit_year.academic_year.year)
-            if self.learning_unit_year.title:
-                name_build+= ' - '
-                name_build += self.learning_unit_year.title
-            if self.session_name:
-                name_build+= ' - '
-                name_build += self.session_name
-        return name_build
+        return u"%s - %s" % (self.learning_unit_year, self.start_session.strftime("%B"))
 
 
 class ExamEnrollment(models.Model):

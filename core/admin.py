@@ -39,6 +39,15 @@ class LearningUnitAdmin(admin.ModelAdmin):
 class LearningUnitYearAdmin(admin.ModelAdmin):
     list_display = ('acronym', 'title', 'academic_year', 'credits')
 
+class LearningUnitEnrollmentAdmin(admin.ModelAdmin):
+    list_display = ('student', 'learning_unit_year', 'date_enrollment')
+
+class SessionExamAdmin(admin.ModelAdmin):
+    list_display = ('learning_unit_year', 'name', 'start_session', 'end_session', 'status')
+
+class ExamEnrollmentAdmin(admin.ModelAdmin):
+    list_display = ('learning_unit_enrollment', 'session_exam', 'score', 'justification', 'encoding_status')
+
 admin.site.register(Structure)
 admin.site.register(AcademicYear, AcademicYearAdmin)
 admin.site.register(Offer, OfferAdmin)
@@ -50,6 +59,6 @@ admin.site.register(Student)
 admin.site.register(OfferEnrollment, OfferEnrollmentAdmin)
 admin.site.register(Tutor)
 admin.site.register(Attribution, AttributionAdmin)
-admin.site.register(SessionExam)
-admin.site.register(ExamEnrollment)
-admin.site.register(LearningUnitEnrollment)
+admin.site.register(SessionExam, SessionExamAdmin)
+admin.site.register(ExamEnrollment, ExamEnrollmentAdmin)
+admin.site.register(LearningUnitEnrollment, LearningUnitEnrollmentAdmin)
