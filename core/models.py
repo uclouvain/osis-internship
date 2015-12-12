@@ -1,6 +1,47 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.contrib.auth.models import User
 import datetime
+
+class Person(models.Model):
+    GENDER_CHOICES = (
+        ('F','Female'),
+        ('M','Male'),
+        ('U','Unknown'))
+
+    user            = models.OneToOneField(User, on_delete=models.CASCADE)
+    middle_name     = models.CharField(max_length = 50,blank = True, null = True)
+    global_id       = models.CharField(max_length = 10,blank = True, null = True)
+    gender          = models.CharField(max_length = 1, blank = True, null = True, choices = GENDER_CHOICES, default = 'U')
+    national_number = models.CharField(max_length = 25,blank = True, null = True)
+
+    def first_name(self):
+        return self.user.first_name
+
+    def last_name(self):
+        return self.user.last_name
+
+    def username(self):
+        return self.user.username
+
+    def __str__(self):
+        return u"%s %s %s" % (self.middle_name.upper(), self.user.last_name.upper(),self.user.first_name)
+
+
+class Tutor(models.Model):
+    person = models.ForeignKey(Person, null = False)
+
+    def __str__(self):
+        return u"%s" % (self.person)
+
+
+class Student(models.Model):
+    registration_number = models.CharField(max_length = 10, null = False)
+    person              = models.ForeignKey(Person, null = False)
+
+    def __str__(self):
+        return u"%s (%s)" % (self.person, self.registration_number)
+
 
 class Structure(models.Model):
     title = models.TextField(blank = False, null = False)
@@ -15,7 +56,7 @@ class AcademicYear(models.Model):
     end_date   = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
 
     def __str__(self):
-        return str(self.year)
+        return u"%s-%s" % (self.year, self.year + 1)
 
 
 class Offer(models.Model):
@@ -38,7 +79,7 @@ class LearningUnit(models.Model):
     end_year    = models.IntegerField(blank = True, null = True)
 
     def __str__(self):
-        return u"%s - %s" % (str(self.start_year), str(self.end_year))
+        return u"%s - %s" % (self.acronym, self.title)
 
 
 class LearningUnitYear(models.Model):
@@ -50,7 +91,7 @@ class LearningUnitYear(models.Model):
     learning_unit = models.ForeignKey(LearningUnit, null = True)
 
     def __str__(self):
-        return u"%s - %s" % (self.acronym,self.title)
+        return u"%s - %s" % (self.academic_year,self.learning_unit)
 
 
 class OfferYear(models.Model):
@@ -59,39 +100,7 @@ class OfferYear(models.Model):
     structure      = models.ForeignKey(Structure, null = True, blank = True)
 
     def __str__(self):
-        return u"%s - %s" % (self.offer.acronym, self.academic_year.year)
-
-
-class Person(models.Model):
-    GENDER_CHOICES = (
-        ('F','Female'),
-        ('M','Male'),
-        ('U','Unknown'))
-
-    first_name      = models.CharField(max_length = 50,blank = False, null = False)
-    middle_name     = models.CharField(max_length = 50,blank = True, null = True)
-    last_name       = models.CharField(max_length = 50,blank = False, null = False)
-    global_id       = models.CharField(max_length = 10,blank = True, null = True)
-    gender          = models.CharField(max_length = 1, blank = True, null = True, choices = GENDER_CHOICES, default = 'U')
-    national_number = models.CharField(max_length = 25,blank = True, null = True)
-
-    def __str__(self):
-        return u"%s %s %s" % (self.middle_name.upper(), self.last_name.upper(),self.first_name)
-
-
-class Tutor(models.Model):
-    person = models.ForeignKey(Person, null = False)
-
-    def __str__(self):
-        return u"%s" % (self.person)
-
-
-class Student(models.Model):
-    registration_number = models.CharField(max_length = 10, null = False)
-    person              = models.ForeignKey(Person, null = False)
-
-    def __str__(self):
-        return u"%s (%s)" % (self.person, self.registration_number)
+        return u"%s - %s" % (self.academic_year, self.offer.acronym)
 
 
 class OfferEnrollment(models.Model):
@@ -100,10 +109,7 @@ class OfferEnrollment(models.Model):
     student         = models.ForeignKey(Student, null = False)
 
     def __str__(self):
-        return u"%s - %s - %s - %s" % (self.offer_year.offer.acronym,
-                                       self.offer_year.offer.title,
-                                       self.offer_year.academic_year.year,
-                                       self.student.person.last_name)
+        return u"%s - %s" % (self.offer_year, self.student)
 
 
 class LearningUnitEnrollment(models.Model):
@@ -119,8 +125,13 @@ class LearningUnitEnrollment(models.Model):
 
 
 class SessionExam(models.Model):
+    GENDER_CHOICES = (
+        ('CLS','Closed'),
+        ('OPN','Open'),
+        ('U','Unknown'))
+
     date_session       = models.DateField(auto_now = False, blank = False, null = False, auto_now_add = False)
-    closed             = models.BooleanField(default = False)
+    status             = models.BooleanField(default = False)
     learning_unit_year = models.ForeignKey(LearningUnitYear, null = False)
 
     @property
@@ -167,8 +178,7 @@ class ExamEnrollment(models.Model):
 class Attribution(models.Model):
     FUNCTION_CHOICES = (
         ('COORDINATOR','Coordinator'),
-        ('PROFESSOR','Professor'),
-        ('UNKNOWN','Unknown'))
+        ('PROFESSOR','Professor'))
 
     start_date    = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
     end_date      = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
