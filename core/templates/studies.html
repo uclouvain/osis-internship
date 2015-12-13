@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% block breadcrumb %}
+  <li class="active">Les études</li>
+{% endblock %}
+{% block content %}
+  <h2>Les études</h2>
+  <br>
+  <ul class="media-list">
+    <li class="media">
+      <div class="media-left">
+        <a href="{% url 'assessements' %}">
+          <img class="media-object" src="{% static 'images/icon_assessements.png' %}">
+        </a>
+      </div>
+      <div class="media-body">
+        <h4 class="media-heading"><a href="{% url 'assessements' %}">Évaluations</a></h4>
+        Ce processus aide les enseignants à coder leurs notes pour chaque session d'examens.
+      </div>
+    </li>
+  </ul>
+{% endblock %}

@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import User
+from django.utils import timezone
 import datetime
 
 class Person(models.Model):
@@ -25,11 +26,15 @@ class Person(models.Model):
         return self.user.username
 
     def __str__(self):
-        return u"%s %s %s" % (self.middle_name.upper(), self.user.last_name.upper(),self.user.first_name)
+        return u"%s %s, %s" % (self.middle_name.upper(), self.user.last_name.upper(),self.user.first_name)
 
 
 class Tutor(models.Model):
     person = models.ForeignKey(Person, null = False)
+
+    def find_by_user(user):
+        person = Person.objects.filter(user = user)
+        return Tutor.objects.get(person = person)
 
     def __str__(self):
         return u"%s" % (self.person)
@@ -54,6 +59,9 @@ class AcademicYear(models.Model):
     year       = models.IntegerField(blank = False, null = False)
     start_date = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
     end_date   = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
+
+    def current_year():
+        return AcademicYear.objects.filter(start_date__lte=timezone.now()).filter(end_date__gte=timezone.now()).first()
 
     def __str__(self):
         return u"%s-%s" % (self.year, self.year + 1)
@@ -126,17 +134,24 @@ class LearningUnitEnrollment(models.Model):
 
 class SessionExam(models.Model):
     SESSION_STATUS = (
-        ('IDE','Idle'),
-        ('OPN','Open'),
-        ('CLS','Closed'))
+        ('IDLE','Idle'),
+        ('OPEN','Open'),
+        ('CLOSED','Closed'))
 
     start_session      = models.DateField(auto_now = False, blank = False, null = False, auto_now_add = False)
     end_session        = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
-    status             = models.CharField(max_length = 3, blank = False, null = False,choices = SESSION_STATUS)
+    status             = models.CharField(max_length = 10, blank = False, null = False,choices = SESSION_STATUS)
     learning_unit_year = models.ForeignKey(LearningUnitYear, null = False)
 
+    @property
     def name(self):
         return self.start_session.strftime("%B")
+
+    def upcomming_session():
+        return SessionExam.objects.filter(start_session__gte=timezone.now()).order_by('start_session').first()
+
+    def sessions():
+        return SessionExam.objects.all()
 
     def __str__(self):
         return u"%s - %s" % (self.learning_unit_year, self.start_session.strftime("%B"))
