@@ -10,11 +10,11 @@ def home(request):
 
 @login_required
 def studies(request):
-    return render(request, "studies.html", {})
+    return render(request, "studies.html", {'section': 'studies'})
 
 @login_required
 def assessements(request):
-    return render(request, "assessements.html", {})
+    return render(request, "assessements.html", {'section': 'assessements'})
 
 @login_required
 def scores_encoding(request):
@@ -23,7 +23,7 @@ def scores_encoding(request):
     upcomming_session = SessionExam.upcomming_session()
     sessions = SessionExam.sessions()
     return render(request, "scores_encoding.html",
-                  {'section': 'assessements',
+                  {'section': 'scores_encoding',
                    'tutor': tutor,
                    'academic_year': academic_year,
                    'session': upcomming_session,
