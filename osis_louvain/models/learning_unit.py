@@ -33,13 +33,18 @@ class Learning_unit(models.Model):
 
     start_year = fields.Integer('Start year', required = True)
     end_year = fields.Integer('End year', required = True)
+
     attribution_ids = fields.One2many('osis.attribution', 'learning_unit_id', string='Attribution')
     learning_unit_year_ids = fields.One2many('osis.learning_unit_year', 'learning_unit_id' ,string='Learning Unit Year')
 
     def name_get(self,cr,uid,ids,context=None):
         result={}
         for record in self.browse(cr,uid,ids,context=context):
-            result[record.id] = u"%s - %s" % (record.start_year,record.end_year)
+            acronym=""
+            if record.learning_unit_year_ids:
+                acronym=record.learning_unit_year_ids[0].acronym
+
+            result[record.id] = u"%s - %s (%s)" % (record.start_year,record.end_year,acronym)
         return result.items()
 
 

@@ -1,9 +1,9 @@
 <openerp>
   <data>
-    <report file="osis-louvain.report_student_notes"
+    <report file="osis_louvain.report_student_notes"
             id="report_student_notes_pdf"
             model="osis.student_notes_display"
-            name="osis-louvain.report_student_notes"
+            name="osis_louvain.report_student_notes"
             report_type="qweb-pdf"
             string="Student notes report (pdf)"/>
 

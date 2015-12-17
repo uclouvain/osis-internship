@@ -32,12 +32,11 @@ class Student(models.Model):
     _name = 'osis.student'
     _description = "Student"
     _rec_name = 'registration_number'
-    _order = 'person_id'
 
     registration_number = fields.Char('Registration number')
 
     person_id = fields.Many2one('osis.person', string="Person", required=True)
-    # offer_enrollment_ids = fields.One2many('osis.offer_enrollment', 'offer_enrollment_id', string='Offer enrollment')
+    offer_enrollment_ids = fields.One2many('osis.offer_enrollment', 'student_id', string='Offer enrollment')
 
     def name_get(self,cr,uid,ids,context=None):
         result={}

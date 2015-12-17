@@ -39,6 +39,6 @@ import structure
 import person
 import student
 import tutor
-import student_notes_reading
-import resultsWizard
-import student_notes_display
+import session_exam_encoding
+import notes_encoding
+import notesWizard

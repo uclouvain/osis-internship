@@ -31,6 +31,7 @@ class Offer_enrollment(models.Model):
     _name = 'osis.offer_enrollment'
     _description = 'Offer enrollment'
     _order = 'offer_year_id'
+    _sql_constraints = [('offer_enrollment','unique(offer_year_id,student_id)','An offer enrollment must be unique on offer year/student')]
 
     offer_year_id = fields.Many2one('osis.offer_year', string='Offer year')
     student_id = fields.Many2one('osis.student', string='Student')
@@ -40,8 +41,9 @@ class Offer_enrollment(models.Model):
     def name_get(self,cr,uid,ids,context=None):
         result={}
         for record in self.browse(cr,uid,ids,context=context):
-            offer_acronym = record.offer_year_id.offer_id.acronym
-            offer_title = record.offer_year_id.offer_id.acronym
-            student = record.student_id.person_id.name
-            result[record.id] = u"%s - %s - %s" % (offer_acronym,offer_title,student)
+            offer_acronym = u"%s" % record.offer_year_id.offer_id.acronym
+            offer_title = u"%s" % record.offer_year_id.offer_id.title
+            offer_year = u"%s" % record.offer_year_id.academic_year_id.year
+            student = u"%s" % record.student_id.person_id.name
+            result[record.id] = u"%s - %s - %s - %s" % (offer_acronym,offer_title,offer_year,student)
         return result.items()

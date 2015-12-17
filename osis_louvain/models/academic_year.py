@@ -32,12 +32,15 @@ class Academic_year(models.Model):
     _name = "osis.academic_year"
     _description = "Academic year"
     _rec_name = "year"
+    _order = "start_date desc"
+    _sql_constraints = [('academic_year','unique(year)','An academic year must be unique on year')]
+
 
     year = fields.Integer('Year', required = True)
     start_date = fields.Date('Start date')
     end_date = fields.Date('End date')
-
-    complete_year = fields.Char(compute='_compute_complete_year')
+    offer_year_ids = fields.One2many('osis.offer_year', 'academic_year_id', string='Offer year')
+    learning_unit_year_ids = fields.One2many('osis.learning_unit_year', 'academic_year_id', string='Learnint unit year')
 
     @api.constrains('start_date','end_date')
     def _check_dates(self):
@@ -46,8 +49,3 @@ class Academic_year(models.Model):
                 if record.end_date:
                     if fields.Datetime.from_string(record.start_date) > fields.Datetime.from_string(record.end_date):
                         raise exceptions.ValidationError(_("End date must be greater or equal than start year"))
-
-    @api.one
-    @api.depends('year')
-    def _compute_complete_year(self):
-        self.complete_year = u"%s - %s" % (self.year, self.year+1)

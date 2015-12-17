@@ -4,8 +4,8 @@
             id="report_student"
             model="osis.student"
             string="Student Report pdf"
-            name="osis-louvain.report_info_view"
-            file="osis-louvain.report_student"
+            name="osis_louvain.report_info_view"
+            file="osis_louvain.report_student"
             report_type="qweb-pdf" />
 
 

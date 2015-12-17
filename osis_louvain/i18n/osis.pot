@@ -3,7 +3,7 @@
 #	* im_odoo_support
 #	* web_diagram
 #	* im_chat
-#	* osis-louvain
+#	* osis_louvain
 #	* auth_crypt
 #	* base_import
 #	* web_view_editor
@@ -160,14 +160,14 @@ msgid "\n"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,summary:base.module_osis-louvain
+#: model:ir.module.module,summary:base.module_osis_louvain
 msgid "\n"
 "        Extension of the module OSIS to accommodate specific needs of the Université catholique de Louvain.\n"
 "    "
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_osis-louvain
+#: model:ir.module.module,description:base.module_osis_louvain
 msgid "\n"
 "        OSIS Louvain is an extension of OSIS customized for the needs of the Université catholique de Louvain.\n"
 "    "
@@ -4384,64 +4384,64 @@ msgstr ""
 msgid "<p class=\"oe_view_nocontent_create\">Click here to create a customized view</p><p>Customized views are used when users reorganize the content of their dashboard views (via web client)</p>"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.actions.act_window,help:osis-louvain.attribution_list_action
+#. module: osis_louvain
+#: model:ir.actions.act_window,help:osis_louvain.attribution_list_action
 msgid "<p class=\"oe_view_nocontent_create\">Create the first attribution</p>"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.actions.act_window,help:osis-louvain.exam_enrollment_list_action
+#. module: osis_louvain
+#: model:ir.actions.act_window,help:osis_louvain.exam_enrollment_list_action
 msgid "<p class=\"oe_view_nocontent_create\">Create the first exam enrollment</p>\n"
 "            "
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.actions.act_window,help:osis-louvain.exam_list_action
+#. module: osis_louvain
+#: model:ir.actions.act_window,help:osis_louvain.exam_list_action
 msgid "<p class=\"oe_view_nocontent_create\">Create the first exam</p>\n"
 "            "
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.actions.act_window,help:osis-louvain.learning_unit_list_action
+#. module: osis_louvain
+#: model:ir.actions.act_window,help:osis_louvain.learning_unit_list_action
 msgid "<p class=\"oe_view_nocontent_create\">Create the first learning unit</p>\n"
 "            "
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.actions.act_window,help:osis-louvain.encoding_notes_list_action
+#. module: osis_louvain
+#: model:ir.actions.act_window,help:osis_louvain.encoding_notes_list_action
 msgid "<p class=\"oe_view_nocontent_create\">Create the first note</p>"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.actions.act_window,help:osis-louvain.offer_enrollment_list_action
+#. module: osis_louvain
+#: model:ir.actions.act_window,help:osis_louvain.offer_enrollment_list_action
 msgid "<p class=\"oe_view_nocontent_create\">Create the first offer enrollment</p>\n"
 "            "
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.actions.act_window,help:osis-louvain.offer_year_list_action
+#. module: osis_louvain
+#: model:ir.actions.act_window,help:osis_louvain.offer_year_list_action
 msgid "<p class=\"oe_view_nocontent_create\">Create the first offer year</p>"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.actions.act_window,help:osis-louvain.offer_list_action
+#. module: osis_louvain
+#: model:ir.actions.act_window,help:osis_louvain.offer_list_action
 msgid "<p class=\"oe_view_nocontent_create\">Create the first offer</p>"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.actions.act_window,help:osis-louvain.person_list_action
+#. module: osis_louvain
+#: model:ir.actions.act_window,help:osis_louvain.person_list_action
 msgid "<p class=\"oe_view_nocontent_create\">Create the first person</p>\n"
 "            "
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.actions.act_window,help:osis-louvain.student_list_action
+#. module: osis_louvain
+#: model:ir.actions.act_window,help:osis_louvain.student_list_action
 msgid "<p class=\"oe_view_nocontent_create\">Create the first studet</p>\n"
 "            "
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.actions.act_window,help:osis-louvain.tutor_list_action
+#. module: osis_louvain
+#: model:ir.actions.act_window,help:osis_louvain.tutor_list_action
 msgid "<p class=\"oe_view_nocontent_create\">Create the first tutor</p>\n"
 "            "
 msgstr ""
@@ -4606,32 +4606,32 @@ msgstr ""
 msgid "About Odoo"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.ui.menu,name:osis-louvain.academic_year_main_menu
+#. module: osis_louvain
+#: model:ir.ui.menu,name:osis_louvain.academic_year_main_menu
 #: field:osis.offer_year,academic_year_id:0
 msgid "Academic Year"
 msgstr ""
 
-#. module: osis-louvain
-#: view:osis.academic_year:osis-louvain.academic_year_simple_form
+#. module: osis_louvain
+#: view:osis.academic_year:osis_louvain.academic_year_simple_form
 msgid "Academic Year Form"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.actions.act_window,name:osis-louvain.academic_year_list_action
-#: model:ir.model,name:osis-louvain.model_osis_academic_year
+#. module: osis_louvain
+#: model:ir.actions.act_window,name:osis_louvain.academic_year_list_action
+#: model:ir.model,name:osis_louvain.model_osis_academic_year
 #: field:osis.learning_unit_year,academic_year_id:0
 msgid "Academic year"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.ui.menu,name:osis-louvain.academic_year_menu
+#. module: osis_louvain
+#: model:ir.ui.menu,name:osis_louvain.academic_year_menu
 msgid "Academic years"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.ui.menu,name:osis-louvain.academy_main_menu
-#: model:ir.ui.menu,name:osis-louvain.academy_sub_menu
+#. module: osis_louvain
+#: model:ir.ui.menu,name:osis_louvain.academy_main_menu
+#: model:ir.ui.menu,name:osis_louvain.academy_sub_menu
 msgid "Academy"
 msgstr ""
 
@@ -4770,8 +4770,8 @@ msgstr ""
 msgid "Accounting and Finance"
 msgstr ""
 
-#. module: osis-louvain
-#: view:osis.offer:osis-louvain.offer_tree_view
+#. module: osis_louvain
+#: view:osis.offer:osis_louvain.offer_tree_view
 #: field:osis.offer,acronym:0
 msgid "Acronym"
 msgstr ""
@@ -4907,7 +4907,7 @@ msgstr ""
 msgid "Activate the developer mode"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: field:ir.cron,active:0
 #: field:ir.mail_server,active:0
 #: field:ir.model.access,active:0
@@ -5055,7 +5055,7 @@ msgstr ""
 msgid "Address Format"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: field:res.partner,type:0
 #: field:osis.person,type:0
 msgid "Address Type"
@@ -5581,25 +5581,25 @@ msgstr ""
 msgid "Attendances"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.model,name:osis-louvain.model_attribution
-#: model:ir.model,name:osis-louvain.model_osis_attribution
+#. module: osis_louvain
+#: model:ir.model,name:osis_louvain.model_attribution
+#: model:ir.model,name:osis_louvain.model_osis_attribution
 msgid "Attribution"
 msgstr ""
 
-#. module: osis-louvain
+#. module: osis_louvain
 #: field:osis.learning_unit_year,attribution_entity_id:0
 msgid "Attribution entity"
 msgstr ""
 
-#. module: osis-louvain
-#: view:osis.attribution:osis-louvain.attribution_simple_form
+#. module: osis_louvain
+#: view:osis.attribution:osis_louvain.attribution_simple_form
 msgid "Attribution simple Form"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.actions.act_window,name:osis-louvain.attribution_list_action
-#: model:ir.ui.menu,name:osis-louvain.attributions_menu
+#. module: osis_louvain
+#: model:ir.actions.act_window,name:osis_louvain.attribution_list_action
+#: model:ir.ui.menu,name:osis_louvain.attributions_menu
 msgid "Attributions"
 msgstr ""
 
@@ -5908,7 +5908,7 @@ msgstr ""
 msgid "Bank type fields"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: model:ir.actions.act_window,name:base.action_res_bank_form
 #: model:ir.ui.menu,name:base.menu_action_res_bank_form
 #: view:res.bank:base.view_res_bank_tree
@@ -6091,9 +6091,9 @@ msgstr ""
 msgid "Binary file"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: field:res.partner,birthdate:0
-#: view:osis.person:osis-louvain.person_tree_view
+#: view:osis.person:osis_louvain.person_tree_view
 #: field:osis.person,birthdate:0
 msgid "Birthdate"
 msgstr ""
@@ -6630,25 +6630,25 @@ msgstr ""
 msgid "Check Writing"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: help:res.partner,is_company:0
 #: help:osis.person,is_company:0
 msgid "Check if the contact is a company, otherwise it is a person"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: help:res.partner,customer:0
 #: help:osis.person,customer:0
 msgid "Check this box if this contact is a customer."
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: help:res.partner,supplier:0
 #: help:osis.person,supplier:0
 msgid "Check this box if this contact is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: help:res.partner,employee:0
 #: help:osis.person,employee:0
 msgid "Check this box if this contact is an Employee."
@@ -6778,7 +6778,7 @@ msgstr ""
 msgid "Christmas Island"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: code:addons/base/res/res_partner.py:69
 #: view:res.bank:base.view_res_bank_form
 #: field:res.bank,city:0
@@ -6889,10 +6889,10 @@ msgstr ""
 msgid "Close without change"
 msgstr ""
 
-#. modules: im_chat, osis-louvain
+#. modules: im_chat, osis_louvain
 #: selection:im_chat.conversation_state,state:0
-#: view:osis.exam:osis-louvain.exam_form
-#: view:osis.exam:osis-louvain.exam_tree_view
+#: view:osis.exam:osis_louvain.exam_form
+#: view:osis.exam:osis_louvain.exam_tree_view
 #: field:osis.exam,closed:0
 msgid "Closed"
 msgstr ""
@@ -6930,7 +6930,7 @@ msgstr ""
 msgid "Colombian Accounting and Tax Preconfiguration"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: field:res.partner,color:0
 #: field:osis.person,color:0
 msgid "Color Index"
@@ -6964,7 +6964,7 @@ msgstr ""
 msgid "Comments"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: field:res.partner,commercial_partner_id:0
 #: field:osis.person,commercial_partner_id:0
 msgid "Commercial Entity"
@@ -6980,7 +6980,7 @@ msgstr ""
 msgid "Comoros"
 msgstr ""
 
-#. modules: report, base, osis-louvain
+#. modules: report, base, osis_louvain
 #: model:ir.actions.act_window,name:base.action_res_company_form
 #: model:ir.actions.act_window,name:base.company_normal_action_tree
 #: model:ir.model,name:base.model_res_company
@@ -6989,12 +6989,12 @@ msgstr ""
 #: view:res.company:base.view_company_tree
 #: view:res.partner:base.view_res_partner_filter
 #: field:res.users,company_ids:0
-#: model:ir.model,name:osis-louvain.model_res_company
+#: model:ir.model,name:osis_louvain.model_res_company
 #: model:ir.model,name:report.model_res_company
 msgid "Companies"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: view:ir.attachment:base.view_attachment_search
 #: field:ir.attachment,company_id:0
 #: field:ir.default,company_id:0
@@ -7062,12 +7062,12 @@ msgstr ""
 msgid "Company's Structure"
 msgstr ""
 
-#. module: osis-louvain
+#. module: osis_louvain
 #: selection:osis.exam,status:0
 msgid "Complete"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: field:res.partner,contact_address:0
 #: field:osis.person,contact_address:0
 msgid "Complete Address"
@@ -7232,7 +7232,7 @@ msgstr ""
 msgid "Constraints with the same name are unique per module."
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: view:res.partner:base.view_partner_form
 #: view:res.partner:base.view_partner_simple_form
 #: selection:res.partner,type:0
@@ -7251,7 +7251,7 @@ msgstr ""
 msgid "Contact Form"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: field:res.partner,ref:0
 #: field:osis.person,ref:0
 msgid "Contact Reference"
@@ -7263,7 +7263,7 @@ msgstr ""
 msgid "Contact Titles"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: view:res.partner:base.view_partner_form
 #: view:res.partner:base.view_partner_tree
 #: field:res.partner,child_ids:0
@@ -7325,7 +7325,7 @@ msgstr ""
 msgid "Cook Islands"
 msgstr ""
 
-#. module: osis-louvain
+#. module: osis_louvain
 #: selection:osis.attribution,function:0
 msgid "Coordinator"
 msgstr ""
@@ -7433,7 +7433,7 @@ msgstr ""
 msgid "Countries"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: model:ir.model,name:base.model_res_country
 #: view:res.bank:base.view_res_bank_form
 #: field:res.bank,country:0
@@ -7713,7 +7713,7 @@ msgstr ""
 msgid "Created Views"
 msgstr ""
 
-#. modules: im_chat, osis-louvain, bus, base_import, base, report
+#. modules: im_chat, osis_louvain, bus, base_import, base, report
 #: field:base.language.export,create_uid:0
 #: field:base.language.import,create_uid:0
 #: field:base.language.install,create_uid:0
@@ -7830,7 +7830,7 @@ msgstr ""
 msgid "Created by :"
 msgstr ""
 
-#. modules: report, base_import, base, im_chat, osis-louvain
+#. modules: report, base_import, base, im_chat, osis_louvain
 #: field:base.language.export,create_date:0
 #: field:base.language.import,create_date:0
 #: field:base.language.install,create_date:0
@@ -7966,13 +7966,13 @@ msgstr ""
 msgid "Creation User:"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: field:res.partner,credit_limit:0
 #: field:osis.person,credit_limit:0
 msgid "Credit Limit"
 msgstr ""
 
-#. module: osis-louvain
+#. module: osis_louvain
 #: field:osis.learning_unit_year,credits:0
 msgid "Credits"
 msgstr ""
@@ -8103,7 +8103,7 @@ msgstr ""
 msgid "Custom fields must have a name that starts with 'x_' !"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: field:res.partner,customer:0
 #: field:osis.person,customer:0
 msgid "Customer"
@@ -8279,7 +8279,7 @@ msgstr ""
 msgid "Dataset for type '%s' is not defined."
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: selection:ir.property,type:0
 #: field:res.currency.rate,name:0
 #: field:res.partner,date:0
@@ -8358,7 +8358,7 @@ msgstr ""
 msgid "Decimal Separator"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: selection:ir.values,key:0
 #: selection:res.partner,type:0
 #: selection:osis.person,type:0
@@ -8927,7 +8927,7 @@ msgstr ""
 msgid "E-mail Error"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: field:res.partner,ean13:0
 #: field:osis.person,ean13:0
 msgid "EAN13"
@@ -9041,13 +9041,13 @@ msgstr ""
 msgid "Element '%s' cannot be located in parent view"
 msgstr ""
 
-#. modules: web, base, osis-louvain
+#. modules: web, base, osis_louvain
 #: code:addons/base/res/res_company.py:165
 #: model:ir.ui.menu,name:base.menu_email
 #: field:res.bank,email:0
 #: field:res.company,email:0
 #: field:res.partner,email:0
-#: view:osis.person:osis-louvain.person_tree_view
+#: view:osis.person:osis_louvain.person_tree_view
 #: field:osis.person,email:0
 #: view:website:web.login
 #, python-format
@@ -9080,7 +9080,7 @@ msgstr ""
 msgid "Email:"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: model:res.groups,name:base.group_user
 #: field:res.partner,employee:0
 #: field:osis.person,employee:0
@@ -9107,9 +9107,9 @@ msgstr ""
 msgid "Employees"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.actions.act_window,name:osis-louvain.encoding_notes_list_action
-#: model:ir.ui.menu,name:osis-louvain.encoding_notes_menu
+#. module: osis_louvain
+#: model:ir.actions.act_window,name:osis_louvain.encoding_notes_list_action
+#: model:ir.ui.menu,name:osis_louvain.encoding_notes_menu
 msgid "Encoding notes"
 msgstr ""
 
@@ -9133,14 +9133,14 @@ msgstr ""
 msgid "End This Tutorial"
 msgstr ""
 
-#. module: osis-louvain
+#. module: osis_louvain
 #: field:osis.academic_year,end_date:0
 #: field:osis.attribution,end_date:0
 msgid "End date"
 msgstr ""
 
-#. module: osis-louvain
-#: view:osis.attribution:osis-louvain.attribution_tree_view
+#. module: osis_louvain
+#: view:osis.attribution:osis_louvain.attribution_tree_view
 msgid "End year"
 msgstr ""
 
@@ -9159,15 +9159,15 @@ msgstr ""
 msgid "English (US)"
 msgstr ""
 
-#. module: osis-louvain
+#. module: osis_louvain
 #: field:osis.learning_unit_enrollment,date_enrollment:0
 #: field:osis.offer_enrollment,date_enrollment:0
-#: view:website:osis-louvain.report_learning_unit_enrollment_view_simple
+#: view:website:osis_louvain.report_learning_unit_enrollment_view_simple
 msgid "Enrollment date"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.ui.menu,name:osis-louvain.enrollment_menu
+#. module: osis_louvain
+#: model:ir.ui.menu,name:osis_louvain.enrollment_menu
 msgid "Enrollments"
 msgstr ""
 
@@ -9345,29 +9345,29 @@ msgstr ""
 msgid "Everything seems valid."
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.model,name:osis-louvain.model_osis_exam
+#. module: osis_louvain
+#: model:ir.model,name:osis_louvain.model_osis_exam
 #: field:osis.exam_enrollment,exam_id:0
 msgid "Exam"
 msgstr ""
 
-#. module: osis-louvain
-#: view:osis.exam_enrollment:osis-louvain.exam_enrollment_form
+#. module: osis_louvain
+#: view:osis.exam_enrollment:osis_louvain.exam_enrollment_form
 msgid "Exam Enrollment Form"
 msgstr ""
 
-#. module: osis-louvain
-#: view:osis.exam:osis-louvain.exam_form
+#. module: osis_louvain
+#: view:osis.exam:osis_louvain.exam_form
 msgid "Exam Form"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.model,name:osis-louvain.model_osis_exam_enrollment
+#. module: osis_louvain
+#: model:ir.model,name:osis_louvain.model_osis_exam_enrollment
 msgid "Exam enrollment"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.actions.act_window,name:osis-louvain.exam_enrollment_list_action
+#. module: osis_louvain
+#: model:ir.actions.act_window,name:osis_louvain.exam_enrollment_list_action
 msgid "Exam enrollments"
 msgstr ""
 
@@ -9396,10 +9396,10 @@ msgstr ""
 msgid "Examples"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.actions.act_window,name:osis-louvain.exam_list_action
-#: model:ir.ui.menu,name:osis-louvain.exam_enrollment_menu
-#: model:ir.ui.menu,name:osis-louvain.exams_menu
+#. module: osis_louvain
+#: model:ir.actions.act_window,name:osis_louvain.exam_list_action
+#: model:ir.ui.menu,name:osis_louvain.exam_enrollment_menu
+#: model:ir.ui.menu,name:osis_louvain.exams_menu
 msgid "Exams"
 msgstr ""
 
@@ -9627,7 +9627,7 @@ msgstr ""
 msgid "Favorites"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: code:addons/base/res/res_company.py:164
 #: field:res.bank,fax:0
 #: field:res.company,fax:0
@@ -9656,7 +9656,7 @@ msgstr ""
 msgid "Fed. States"
 msgstr ""
 
-#. module: osis-louvain
+#. module: osis_louvain
 #: selection:osis.person,gender:0
 msgid "Female"
 msgstr ""
@@ -9951,8 +9951,8 @@ msgstr ""
 msgid "Finnish / Suomi"
 msgstr ""
 
-#. module: osis-louvain
-#: view:osis.person:osis-louvain.osis_person_form
+#. module: osis_louvain
+#: view:osis.person:osis_louvain.osis_person_form
 #: field:osis.person,first_name:0
 msgid "First name"
 msgstr ""
@@ -10231,7 +10231,7 @@ msgstr ""
 msgid "Full Path"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: field:ir.logging,func:0
 #: selection:workflow.activity,kind:0
 #: field:osis.attribution,function:0
@@ -10299,8 +10299,8 @@ msgstr ""
 msgid "Gauge Widget for Kanban"
 msgstr ""
 
-#. module: osis-louvain
-#: view:osis.person:osis-louvain.osis_person_form
+#. module: osis_louvain
+#: view:osis.person:osis_louvain.osis_person_form
 #: field:osis.person,gender:0
 msgid "Gender"
 msgstr ""
@@ -10374,9 +10374,9 @@ msgstr ""
 msgid "Global"
 msgstr ""
 
-#. module: osis-louvain
-#: view:osis.person:osis-louvain.osis_person_form
-#: view:osis.person:osis-louvain.person_tree_view
+#. module: osis_louvain
+#: view:osis.person:osis_louvain.osis_person_form
+#: view:osis.person:osis_louvain.person_tree_view
 #: field:osis.person,global_id:0
 msgid "Global ID"
 msgstr ""
@@ -10909,7 +10909,7 @@ msgstr ""
 msgid "IBAN Bank Accounts"
 msgstr ""
 
-#. modules: im_chat, osis-louvain, bus, base_import, base, report
+#. modules: im_chat, osis_louvain, bus, base_import, base, report
 #. openerp-web
 #: field:_unknown,id:0
 #: field:base.language.export,id:0
@@ -11204,7 +11204,7 @@ msgstr ""
 msgid "If the model uses openchatter, history tracking                             will set up subscriptions and send notifications                             during the import, but lead to a slower import."
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: help:res.partner,lang:0
 #: help:osis.person,lang:0
 msgid "If the selected language is loaded in the system, all documents related to this contact will be printed in this language. If not, it will be English."
@@ -11327,7 +11327,7 @@ msgstr ""
 msgid "If you wish to cancel the process, press the cancel button below"
 msgstr ""
 
-#. modules: web, base, osis-louvain
+#. modules: web, base, osis_louvain
 #. openerp-web
 #: field:res.country,image:0
 #: field:res.partner,image:0
@@ -11479,8 +11479,8 @@ msgstr ""
 msgid "Indonesian / Bahasa Indonesia"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.actions.report.xml,name:osis-louvain.report_student
+#. module: osis_louvain
+#: model:ir.actions.report.xml,name:osis_louvain.report_student
 msgid "Info Report pdf"
 msgstr ""
 
@@ -11616,8 +11616,8 @@ msgstr ""
 msgid "Instant Messaging Bus allow you to send messages to users, in live."
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.ui.menu,name:osis-louvain.institution_main_menu
+#. module: osis_louvain
+#: model:ir.ui.menu,name:osis_louvain.institution_main_menu
 msgid "Institution"
 msgstr ""
 
@@ -11804,7 +11804,7 @@ msgstr ""
 msgid "Inventory, Logistic, Valuation, Accounting"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: selection:res.partner,type:0
 #: selection:osis.person,type:0
 msgid "Invoice"
@@ -11845,7 +11845,7 @@ msgstr ""
 msgid "Ireland"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: field:res.partner,is_company:0
 #: field:osis.person,is_company:0
 msgid "Is a Company"
@@ -11937,7 +11937,7 @@ msgstr ""
 msgid "Job Descriptions And Application Forms"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: field:res.partner,function:0
 #: field:osis.person,function:0
 msgid "Job Position"
@@ -12084,7 +12084,7 @@ msgstr ""
 msgid "Landscape"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: field:base.language.export,lang:0
 #: field:base.language.install,lang:0
 #: field:base.update.translations,lang:0
@@ -12159,7 +12159,7 @@ msgstr ""
 msgid "Last Presence"
 msgstr ""
 
-#. modules: im_chat, osis-louvain, bus, base_import, base, report
+#. modules: im_chat, osis_louvain, bus, base_import, base, report
 #: field:base.language.export,write_uid:0
 #: field:base.language.import,write_uid:0
 #: field:base.language.install,write_uid:0
@@ -12271,7 +12271,7 @@ msgstr ""
 msgid "Last Updated by"
 msgstr ""
 
-#. modules: im_chat, osis-louvain, bus, base_import, base, report
+#. modules: im_chat, osis_louvain, bus, base_import, base, report
 #: field:base.language.export,write_date:0
 #: field:base.language.import,write_date:0
 #: field:base.language.install,write_date:0
@@ -12382,8 +12382,8 @@ msgstr ""
 msgid "Last Updated on"
 msgstr ""
 
-#. module: osis-louvain
-#: view:osis.person:osis-louvain.osis_person_form
+#. module: osis_louvain
+#: view:osis.person:osis_louvain.osis_person_form
 #: field:osis.person,last_name:0
 msgid "Last name"
 msgstr ""
@@ -12471,75 +12471,75 @@ msgstr ""
 msgid "Leads, Opportunities, Phone Calls"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.ui.menu,name:osis-louvain.learning_assessments_menu
+#. module: osis_louvain
+#: model:ir.ui.menu,name:osis_louvain.learning_assessments_menu
 msgid "Learning Assessments"
 msgstr ""
 
-#. module: osis-louvain
-#: view:website:osis-louvain.report_learning_unit_enrollment_view_simple
+#. module: osis_louvain
+#: view:website:osis_louvain.report_learning_unit_enrollment_view_simple
 msgid "Learning Unit Enrollment - Report"
 msgstr ""
 
-#. module: osis-louvain
-#: view:osis.learning_unit_enrollment:osis-louvain.learning_unit_enrollment_form
+#. module: osis_louvain
+#: view:osis.learning_unit_enrollment:osis_louvain.learning_unit_enrollment_form
 msgid "Learning Unit Enrollment Form"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.actions.report.xml,name:osis-louvain.report_learning_unit_enrollment_html
+#. module: osis_louvain
+#: model:ir.actions.report.xml,name:osis_louvain.report_learning_unit_enrollment_html
 msgid "Learning Unit Enrollment Report HTML"
 msgstr ""
 
-#. module: osis-louvain
-#: view:osis.learning_unit:osis-louvain.learning_unit_simple_form
+#. module: osis_louvain
+#: view:osis.learning_unit:osis_louvain.learning_unit_simple_form
 msgid "Learning Unit Form"
 msgstr ""
 
-#. module: osis-louvain
-#: view:osis.learning_unit_year:osis-louvain.learning_unit_year_form
+#. module: osis_louvain
+#: view:osis.learning_unit_year:osis_louvain.learning_unit_year_form
 msgid "Learning Unit Year Form"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.model,name:osis-louvain.model_osis_learning_unit
+#. module: osis_louvain
+#: model:ir.model,name:osis_louvain.model_osis_learning_unit
 #: field:osis.attribution,learning_unit_id:0
 #: field:osis.learning_unit_year,learning_unit_id:0
 msgid "Learning unit"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.model,name:osis-louvain.model_osis_learning_unit_enrollment
+#. module: osis_louvain
+#: model:ir.model,name:osis_louvain.model_osis_learning_unit_enrollment
 #: field:osis.exam_enrollment,learning_unit_enrollment_id:0
 msgid "Learning unit enrollment"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.actions.act_window,name:osis-louvain.learning_unit_enrollment_list_action
+#. module: osis_louvain
+#: model:ir.actions.act_window,name:osis_louvain.learning_unit_enrollment_list_action
 msgid "Learning unit enrollments"
 msgstr ""
 
-#. module: osis-louvain
-#: view:osis.attribution:osis-louvain.attribution_tree_view
+#. module: osis_louvain
+#: view:osis.attribution:osis_louvain.attribution_tree_view
 msgid "Learning unit title"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.actions.act_window,name:osis-louvain.learning_unit_year_list_action
-#: model:ir.model,name:osis-louvain.model_osis_learning_unit_year
-#: view:osis.exam:osis-louvain.exam_form
-#: view:osis.exam:osis-louvain.exam_tree_view
+#. module: osis_louvain
+#: model:ir.actions.act_window,name:osis_louvain.learning_unit_year_list_action
+#: model:ir.model,name:osis_louvain.model_osis_learning_unit_year
+#: view:osis.exam:osis_louvain.exam_form
+#: view:osis.exam:osis_louvain.exam_tree_view
 #: field:osis.exam,learning_unit_year_id:0
 #: field:osis.learning_unit_enrollment,learning_unit_year_id:0
-#: view:website:osis-louvain.report_learning_unit_enrollment_view_simple
+#: view:website:osis_louvain.report_learning_unit_enrollment_view_simple
 msgid "Learning unit year"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.actions.act_window,name:osis-louvain.learning_unit_list_action
-#: model:ir.ui.menu,name:osis-louvain.learning_unit_enrollment_menu
-#: model:ir.ui.menu,name:osis-louvain.learning_unit_year_menu
-#: model:ir.ui.menu,name:osis-louvain.learning_units_menu
+#. module: osis_louvain
+#: model:ir.actions.act_window,name:osis_louvain.learning_unit_list_action
+#: model:ir.ui.menu,name:osis_louvain.learning_unit_enrollment_menu
+#: model:ir.ui.menu,name:osis_louvain.learning_unit_year_menu
+#: model:ir.ui.menu,name:osis_louvain.learning_units_menu
 msgid "Learning units"
 msgstr ""
 
@@ -12951,7 +12951,7 @@ msgstr ""
 msgid "Maldives"
 msgstr ""
 
-#. module: osis-louvain
+#. module: osis_louvain
 #: selection:osis.person,gender:0
 msgid "Male"
 msgstr ""
@@ -13169,13 +13169,13 @@ msgstr ""
 msgid "Measures"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: field:res.partner,image_medium:0
 #: field:osis.person,image_medium:0
 msgid "Medium-sized image"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: help:res.partner,image_medium:0
 #: help:osis.person,image_medium:0
 msgid "Medium-sized image of this contact. It is automatically resized as a 128x128px image, with aspect ratio preserved. Use this field in form views or some kanban views."
@@ -13294,12 +13294,12 @@ msgid "Microsoft Excel will allow \n"
 "                        list > Encoding tab)."
 msgstr ""
 
-#. module: osis-louvain
-#: view:osis.person:osis-louvain.osis_person_form
+#. module: osis_louvain
+#: view:osis.person:osis_louvain.osis_person_form
 msgid "Middel name"
 msgstr ""
 
-#. module: osis-louvain
+#. module: osis_louvain
 #: field:osis.person,middle_name:0
 msgid "Middle name"
 msgstr ""
@@ -13332,7 +13332,7 @@ msgstr ""
 msgid "Miss"
 msgstr ""
 
-#. module: osis-louvain
+#. module: osis_louvain
 #: selection:osis.exam,status:0
 msgid "Missing"
 msgstr ""
@@ -13367,7 +13367,7 @@ msgstr ""
 msgid "Mister"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: field:res.partner,mobile:0
 #: field:osis.person,mobile:0
 msgid "Mobile"
@@ -13758,7 +13758,7 @@ msgstr ""
 msgid "Myanmar"
 msgstr ""
 
-#. modules: report, web, base_import, base, osis-louvain
+#. modules: report, web, base_import, base, osis_louvain
 #. openerp-web
 #: field:ir.actions.act_window_close,name:0
 #: field:ir.actions.actions,name:0
@@ -13793,12 +13793,12 @@ msgstr ""
 #: field:workflow,name:0
 #: field:workflow.activity,name:0
 #: field:base_import.tests.models.preview,name:0
-#: view:osis.attribution:osis-louvain.attribution_tree_view
-#: view:osis.person:osis-louvain.person_tree_view
+#: view:osis.attribution:osis_louvain.attribution_tree_view
+#: view:osis.person:osis_louvain.person_tree_view
 #: field:osis.person,display_name:0
 #: field:osis.person,name:0
-#: view:osis.tutor:osis-louvain.tutor_tree_view
-#: view:website:osis-louvain.report_student_view_simple
+#: view:osis.tutor:osis_louvain.tutor_tree_view
+#: view:website:osis_louvain.report_student_view_simple
 #: field:report.paperformat,name:0
 #: code:addons/web/static/src/xml/base.xml:1872
 #, python-format
@@ -13827,8 +13827,8 @@ msgstr ""
 msgid "Namibia"
 msgstr ""
 
-#. module: osis-louvain
-#: view:osis.person:osis-louvain.osis_person_form
+#. module: osis_louvain
+#: view:osis.person:osis_louvain.osis_person_form
 #: field:osis.person,national_number:0
 msgid "National number"
 msgstr ""
@@ -14183,7 +14183,7 @@ msgid "Note that if your CSV file \n"
 "                        See the following question."
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: view:ir.model:base.view_model_form
 #: model:ir.module.module,shortdesc:base.module_note
 #: view:res.groups:base.view_groups_form
@@ -14339,53 +14339,53 @@ msgstr ""
 msgid "Odoo.com"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.model,name:osis-louvain.model_osis_offer
+#. module: osis_louvain
+#: model:ir.model,name:osis_louvain.model_osis_offer
 #: field:osis.offer_year,offer_id:0
 msgid "Offer"
 msgstr ""
 
-#. module: osis-louvain
-#: view:osis.offer_enrollment:osis-louvain.offer_enrollment_form
+#. module: osis_louvain
+#: view:osis.offer_enrollment:osis_louvain.offer_enrollment_form
 msgid "Offer Enrollment Form"
 msgstr ""
 
-#. module: osis-louvain
-#: view:osis.offer:osis-louvain.osis_offer_form
+#. module: osis_louvain
+#: view:osis.offer:osis_louvain.osis_offer_form
 msgid "Offer Form"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.actions.act_window,name:osis-louvain.offer_year_list_action
+#. module: osis_louvain
+#: model:ir.actions.act_window,name:osis_louvain.offer_year_list_action
 msgid "Offer Year"
 msgstr ""
 
-#. module: osis-louvain
-#: view:osis.offer_year:osis-louvain.offer_year_form
+#. module: osis_louvain
+#: view:osis.offer_year:osis_louvain.offer_year_form
 msgid "Offer Year Form"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.model,name:osis-louvain.model_osis_offer_enrollment
+#. module: osis_louvain
+#: model:ir.model,name:osis_louvain.model_osis_offer_enrollment
 msgid "Offer enrollment"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.actions.act_window,name:osis-louvain.offer_enrollment_list_action
+#. module: osis_louvain
+#: model:ir.actions.act_window,name:osis_louvain.offer_enrollment_list_action
 msgid "Offer enrollments"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.model,name:osis-louvain.model_osis_offer_year
+#. module: osis_louvain
+#: model:ir.model,name:osis_louvain.model_osis_offer_year
 #: field:osis.offer_enrollment,offer_year_id:0
 msgid "Offer year"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.actions.act_window,name:osis-louvain.offer_list_action
-#: model:ir.ui.menu,name:osis-louvain.offer_enrollment_menu
-#: model:ir.ui.menu,name:osis-louvain.offer_year_menu
-#: model:ir.ui.menu,name:osis-louvain.offers_menu
+#. module: osis_louvain
+#: model:ir.actions.act_window,name:osis_louvain.offer_list_action
+#: model:ir.ui.menu,name:osis_louvain.offer_enrollment_menu
+#: model:ir.ui.menu,name:osis_louvain.offer_year_menu
+#: model:ir.ui.menu,name:osis_louvain.offers_menu
 msgid "Offers"
 msgstr ""
 
@@ -14702,7 +14702,7 @@ msgstr ""
 msgid "Original database name:"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: code:addons/base/res/res_users.py:774
 #: code:addons/base/res/res_users.py:928
 #: selection:res.partner,type:0
@@ -14935,7 +14935,7 @@ msgstr ""
 msgid "Parent Right"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: field:res.partner,parent_name:0
 #: field:osis.person,parent_name:0
 msgid "Parent name"
@@ -14946,17 +14946,17 @@ msgstr ""
 msgid "Parser Class"
 msgstr ""
 
-#. module: osis-louvain
+#. module: osis_louvain
 #: selection:osis.exam,status:0
 msgid "Partial"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: model:ir.model,name:base.model_res_partner
 #: field:res.company,partner_id:0
 #: selection:res.partner.title,domain:0
 #: model:res.request.link,name:base.req_link_partner
-#: model:ir.model,name:osis-louvain.model_osis_person
+#: model:ir.model,name:osis_louvain.model_osis_person
 msgid "Partner"
 msgstr ""
 
@@ -15128,7 +15128,7 @@ msgstr ""
 msgid "Persian / فارس"
 msgstr ""
 
-#. module: osis-louvain
+#. module: osis_louvain
 #: field:osis.student,person_id:0
 #: field:osis.tutor,person_id:0
 msgid "Person"
@@ -15139,10 +15139,10 @@ msgstr ""
 msgid "Personal & Shared Calendar"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: view:res.partner:base.view_res_partner_filter
-#: model:ir.actions.act_window,name:osis-louvain.person_list_action
-#: model:ir.ui.menu,name:osis-louvain.persons_menu
+#: model:ir.actions.act_window,name:osis_louvain.person_list_action
+#: model:ir.ui.menu,name:osis_louvain.persons_menu
 msgid "Persons"
 msgstr ""
 
@@ -15161,7 +15161,7 @@ msgstr ""
 msgid "Philippines"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: code:addons/base/res/res_company.py:163
 #: field:res.bank,phone:0
 #: field:res.company,phone:0
@@ -15533,15 +15533,15 @@ msgstr ""
 msgid "Prof."
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: model:res.partner.title,name:base.res_partner_title_prof
 #: selection:osis.attribution,function:0
 msgid "Professor"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.ui.menu,name:osis-louvain.program_main_menu
-#: model:ir.ui.menu,name:osis-louvain.program_sub_menu
+#. module: osis_louvain
+#: model:ir.ui.menu,name:osis_louvain.program_main_menu
+#: model:ir.ui.menu,name:osis_louvain.program_sub_menu
 msgid "Program"
 msgstr ""
 
@@ -15906,22 +15906,22 @@ msgstr ""
 msgid "Reg"
 msgstr ""
 
-#. module: osis-louvain
-#: view:website:osis-louvain.report_student_view_simple
+#. module: osis_louvain
+#: view:website:osis_louvain.report_student_view_simple
 msgid "Registration Number"
 msgstr ""
 
-#. module: osis-louvain
+#. module: osis_louvain
 #: field:osis.student,registration_number:0
 msgid "Registration number"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.ui.menu,name:osis-louvain.registrations_menu
+#. module: osis_louvain
+#: model:ir.ui.menu,name:osis_louvain.registrations_menu
 msgid "Registrations"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: field:res.partner,parent_id:0
 #: field:osis.person,parent_id:0
 msgid "Related Company"
@@ -16268,8 +16268,8 @@ msgstr ""
 msgid "Rounding Factor"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.ui.menu,name:osis-louvain.routes_menu
+#. module: osis_louvain
+#: model:ir.ui.menu,name:osis_louvain.routes_menu
 msgid "Routes"
 msgstr ""
 
@@ -16464,7 +16464,7 @@ msgstr ""
 msgid "Sales and Warehouse Management"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: view:res.partner:base.view_res_partner_filter
 #: field:res.partner,user_id:0
 #: field:osis.person,user_id:0
@@ -16819,7 +16819,7 @@ msgstr ""
 msgid "Select the workflow signal to trigger."
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: help:res.partner,use_parent_address:0
 #: help:osis.person,use_parent_address:0
 msgid "Select this if you want to set company's address information  for this contact"
@@ -16995,9 +16995,9 @@ msgstr ""
 msgid "Server Actions"
 msgstr ""
 
-#. modules: im_chat, osis-louvain
+#. modules: im_chat, osis_louvain
 #: field:im_chat.conversation_state,session_id:0
-#: view:osis.exam:osis-louvain.exam_tree_view
+#: view:osis.exam:osis_louvain.exam_tree_view
 msgid "Session"
 msgstr ""
 
@@ -17011,9 +17011,9 @@ msgstr ""
 msgid "Session Users"
 msgstr ""
 
-#. module: osis-louvain
-#: view:osis.exam:osis-louvain.exam_form
-#: view:osis.exam:osis-louvain.exam_tree_view
+#. module: osis_louvain
+#: view:osis.exam:osis_louvain.exam_form
+#: view:osis.exam:osis_louvain.exam_tree_view
 #: field:osis.exam,date_session:0
 msgid "Session date"
 msgstr ""
@@ -17101,7 +17101,7 @@ msgstr ""
 msgid "Shared"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: selection:res.partner,type:0
 #: selection:osis.person,type:0
 msgid "Shipping"
@@ -17260,13 +17260,13 @@ msgstr ""
 msgid "Slovenian / slovenščina"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: field:res.partner,image_small:0
 #: field:osis.person,image_small:0
 msgid "Small-sized image"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: help:res.partner,image_small:0
 #: help:osis.person,image_small:0
 msgid "Small-sized image of this contact. It is automatically resized as a 64x64px image, with aspect ratio preserved. Use this field anywhere a small image is required."
@@ -17502,7 +17502,7 @@ msgstr ""
 msgid "Specific Industry Applications"
 msgstr ""
 
-#. module: osis-louvain
+#. module: osis_louvain
 #: field:osis.learning_unit_year,specifications_responsible_id:0
 msgid "Specifications responsible entity"
 msgstr ""
@@ -17542,18 +17542,18 @@ msgstr ""
 msgid "Start configuration"
 msgstr ""
 
-#. module: osis-louvain
+#. module: osis_louvain
 #: field:osis.academic_year,start_date:0
 #: field:osis.attribution,start_date:0
 msgid "Start date"
 msgstr ""
 
-#. module: osis-louvain
-#: view:osis.attribution:osis-louvain.attribution_tree_view
+#. module: osis_louvain
+#: view:osis.attribution:osis_louvain.attribution_tree_view
 msgid "Start year"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: code:addons/base/res/res_partner.py:69
 #: view:res.bank:base.view_res_bank_form
 #: view:res.company:base.view_company_form
@@ -17577,7 +17577,7 @@ msgstr ""
 msgid "State Name"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: field:base.language.install,state:0
 #: field:base.module.update,state:0
 #: field:ir.actions.todo,state:0
@@ -17586,8 +17586,8 @@ msgstr ""
 #: field:workflow.instance,state:0
 #: view:workflow.workitem:base.view_workflow_workitem_search
 #: field:workflow.workitem,state:0
-#: view:osis.exam:osis-louvain.exam_form
-#: view:osis.exam:osis-louvain.exam_tree_view
+#: view:osis.exam:osis_louvain.exam_form
+#: view:osis.exam:osis_louvain.exam_tree_view
 #: field:osis.exam,status:0
 msgid "Status"
 msgstr ""
@@ -17631,7 +17631,7 @@ msgstr ""
 msgid "Stored Filename"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: field:res.bank,street:0
 #: field:res.company,street:0
 #: field:res.partner,street:0
@@ -17648,7 +17648,7 @@ msgstr ""
 msgid "Street..."
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: field:res.bank,street2:0
 #: field:res.company,street2:0
 #: field:res.partner,street2:0
@@ -17656,36 +17656,36 @@ msgstr ""
 msgid "Street2"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.actions.act_window,name:osis-louvain.structure_list_action
-#: model:ir.model,name:osis-louvain.model_osis_structure
-#: model:ir.ui.menu,name:osis-louvain.structure_main_menu
-#: model:ir.ui.menu,name:osis-louvain.structure_menu
+#. module: osis_louvain
+#: model:ir.actions.act_window,name:osis_louvain.structure_list_action
+#: model:ir.model,name:osis_louvain.model_osis_structure
+#: model:ir.ui.menu,name:osis_louvain.structure_main_menu
+#: model:ir.ui.menu,name:osis_louvain.structure_menu
 #: field:osis.offer_year,structure_id:0
 msgid "Structure"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.actions.act_window,name:osis-louvain.student_list_action
+#. module: osis_louvain
+#: model:ir.actions.act_window,name:osis_louvain.student_list_action
 #: field:osis.learning_unit_enrollment,student_id:0
 #: field:osis.offer_enrollment,student_id:0
-#: view:website:osis-louvain.report_learning_unit_enrollment_view_simple
+#: view:website:osis_louvain.report_learning_unit_enrollment_view_simple
 msgid "Student"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.actions.report.xml,name:osis-louvain.report_student_html
+#. module: osis_louvain
+#: model:ir.actions.report.xml,name:osis_louvain.report_student_html
 msgid "Student Report HTML"
 msgstr ""
 
-#. module: osis-louvain
-#: view:osis.student:osis-louvain.student_simple_form
+#. module: osis_louvain
+#: view:osis.student:osis_louvain.student_simple_form
 msgid "Student simple Form"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.ui.menu,name:osis-louvain.students_main_menu
-#: model:ir.ui.menu,name:osis-louvain.students_menu
+#. module: osis_louvain
+#: model:ir.ui.menu,name:osis_louvain.students_main_menu
+#: model:ir.ui.menu,name:osis_louvain.students_menu
 msgid "Students"
 msgstr ""
 
@@ -17742,7 +17742,7 @@ msgstr ""
 msgid "Supplementary arguments"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: field:res.partner,supplier:0
 #: field:osis.person,supplier:0
 msgid "Supplier"
@@ -17888,7 +17888,7 @@ msgid "TGZ format: this is a compressed archive containing a PO file, directly s
 "                                for uploading to Odoo's translation platform,"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: code:addons/base/res/res_company.py:167
 #: field:res.partner,vat:0
 #: field:osis.person,vat:0
@@ -17930,7 +17930,7 @@ msgstr ""
 msgid "Tag"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: field:res.partner,category_id:0
 #: field:osis.person,category_id:0
 msgid "Tags"
@@ -17991,7 +17991,7 @@ msgstr ""
 msgid "Tax ID"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: help:res.partner,vat:0
 #: help:osis.person,vat:0
 msgid "Tax Identification Number. Check the box if this contact is subjected to taxes. Used by the some of the legal statements."
@@ -18310,7 +18310,7 @@ msgstr ""
 msgid "The import failed due to:"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: help:res.partner,user_id:0
 #: help:osis.person,user_id:0
 msgid "The internal user that is in charge of communicating with this contact if any."
@@ -18411,7 +18411,7 @@ msgstr ""
 msgid "The osv_memory field can only be compared with = and != operator."
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: help:res.partner,tz:0
 #: help:osis.person,tz:0
 msgid "The partner's timezone, used to output proper date and time values inside printed reports. It is important to set a value for this field. You should use the same timezone that is otherwise used to pick and render date and time values: your computer's timezone."
@@ -18602,7 +18602,7 @@ msgid "This feature \n"
 "                        application."
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: help:res.partner,image:0
 #: help:osis.person,image:0
 msgid "This field holds the image used as avatar for this contact, limited to 1024x1024px"
@@ -18724,7 +18724,7 @@ msgstr ""
 msgid "Timesheets, Attendances, Activities"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: field:res.partner,tz:0
 #: field:osis.person,tz:0
 msgid "Timezone"
@@ -18744,17 +18744,17 @@ msgstr ""
 msgid "Timezone mismatch"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: field:res.partner,tz_offset:0
 #: field:osis.person,tz_offset:0
 msgid "Timezone offset"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: field:res.partner,title:0
 #: field:res.partner.title,name:0
 #: field:osis.learning_unit,title:0
-#: view:osis.offer:osis-louvain.offer_tree_view
+#: view:osis.offer:osis_louvain.offer_tree_view
 #: field:osis.offer,title:0
 #: field:osis.person,title:0
 msgid "Title"
@@ -19011,8 +19011,8 @@ msgstr ""
 msgid "Trinidad and Tobago"
 msgstr ""
 
-#. module: osis-louvain
-#: view:osis.person:osis-louvain.osis_person_form
+#. module: osis_louvain
+#: view:osis.person:osis_louvain.osis_person_form
 msgid "True"
 msgstr ""
 
@@ -19046,19 +19046,19 @@ msgstr ""
 msgid "Turks and Caicos Islands"
 msgstr ""
 
-#. module: osis-louvain
+#. module: osis_louvain
 #: field:osis.attribution,tutor_id:0
 msgid "Tutor"
 msgstr ""
 
-#. module: osis-louvain
-#: view:osis.tutor:osis-louvain.osis_tutor_form
+#. module: osis_louvain
+#: view:osis.tutor:osis_louvain.osis_tutor_form
 msgid "Tutor simple Form"
 msgstr ""
 
-#. module: osis-louvain
-#: model:ir.actions.act_window,name:osis-louvain.tutor_list_action
-#: model:ir.ui.menu,name:osis-louvain.tutors_menu
+#. module: osis_louvain
+#: model:ir.actions.act_window,name:osis_louvain.tutor_list_action
+#: model:ir.ui.menu,name:osis_louvain.tutors_menu
 msgid "Tutors"
 msgstr ""
 
@@ -19291,7 +19291,7 @@ msgstr ""
 msgid "United States - Chart of accounts"
 msgstr ""
 
-#. modules: web, osis-louvain
+#. modules: web, osis_louvain
 #. openerp-web
 #: selection:osis.attribution,function:0
 #: selection:osis.person,gender:0
@@ -19533,7 +19533,7 @@ msgstr ""
 msgid "Use '1' for yes and '0' for no"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: field:res.partner,use_parent_address:0
 #: field:osis.person,use_parent_address:0
 msgid "Use Company Address"
@@ -19592,7 +19592,7 @@ msgstr ""
 msgid "Used to log into the system"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: help:res.partner,type:0
 #: help:osis.person,type:0
 msgid "Used to select automatically the right address according to the context in sales and purchases documents."
@@ -19661,7 +19661,7 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
-#. modules: auth_crypt, base, im_chat, osis-louvain
+#. modules: auth_crypt, base, im_chat, osis_louvain
 #: model:ir.model,name:auth_crypt.model_res_users
 #: view:change.password.user:base.change_password_wizard_user_tree_view
 #: field:change.password.wizard,user_ids:0
@@ -20064,7 +20064,7 @@ msgstr ""
 msgid "Webkit Report Engine"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: code:addons/base/res/res_company.py:166
 #: model:ir.module.category,name:base.module_category_website
 #: field:ir.module.module,website:0
@@ -20125,7 +20125,7 @@ msgstr ""
 msgid "Website Report"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: help:res.partner,website:0
 #: help:osis.person,website:0
 msgid "Website of Partner or Company"
@@ -20456,7 +20456,7 @@ msgstr ""
 msgid "Xor"
 msgstr ""
 
-#. modules: web_graph, osis-louvain
+#. modules: web_graph, osis_louvain
 #. openerp-web
 #: field:osis.academic_year,year:0
 #: code:addons/web_graph/static/src/xml/web_graph.xml:74
@@ -20681,7 +20681,7 @@ msgstr ""
 msgid "Zimbabwe"
 msgstr ""
 
-#. modules: base, osis-louvain
+#. modules: base, osis_louvain
 #: field:res.bank,zip:0
 #: field:res.company,zip:0
 #: field:res.partner,zip:0
@@ -21238,8 +21238,8 @@ msgid "or"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_osis-louvain
-msgid "osis-louvain"
+#: model:ir.module.module,shortdesc:base.module_osis_louvain
+msgid "osis_louvain"
 msgstr ""
 
 #. module: base
@@ -21412,7 +21412,7 @@ msgstr ""
 msgid "undefined get method !"
 msgstr ""
 
-#. modules: base_import, base, im_chat, osis-louvain
+#. modules: base_import, base, im_chat, osis_louvain
 #: field:base.language.export,state:0
 #: field:ir.ui.menu,icon_pict:0
 #: field:ir.ui.view,model_ids:0

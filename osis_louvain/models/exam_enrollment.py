@@ -30,13 +30,12 @@ from openerp import models, fields, api, _
 class Exam_enrollment(models.Model):
     _name = 'osis.exam_enrollment'
     _description = "Exam enrollment"
-    _order = 'offer_id asc, student_id asc'
+    _sql_constraints = [('exam_enrollment_unique','unique(learning_unit_enrollment_id,session_exam_id)','An exam enrollment must be unique on learning_unit_enrollment/session_exam')]
 
 
     session_exam_id = fields.Many2one('osis.session_exam', string='Session exam')
     learning_unit_enrollment_id = fields.Many2one('osis.learning_unit_enrollment', string='Learning unit enrollment')
-    offer_id = fields.Many2one(related="learning_unit_enrollment_id.offer_enrollment_id.offer_year_id.offer_id", string="Offer", store=True)
+
     score = fields.Float('Score')
     justification = fields.Selection([('ILL',_('Ill')),('ABSENT',_('Absent')),('JUSTIFIED_ABSENCE',_('Justified absence')),('CHEATING',_('Cheating')),('SCORE_MISSING',_('Score missing'))])
     encoding_status = fields.Selection([('SAVED','Saved'),('SUBMITTED','Submitted')])
-    student_id = fields.Many2one(related="learning_unit_enrollment_id.offer_enrollment_id.student_id", string="Student", store=True)
