@@ -20,10 +20,10 @@ class AcademicYearAdmin(admin.ModelAdmin):
 
 admin.site.register(AcademicYear, AcademicYearAdmin)
 
-class AttributionAdmin(admin.ModelAdmin):
-    list_display = ('tutor','function','learning_unit','start_date', 'end_date')
+class AcademicCalendarAdmin(admin.ModelAdmin):
+    list_display = ('title', 'event_type', 'academic_year', 'start_date', 'end_date')
 
-admin.site.register(Attribution, AttributionAdmin)
+admin.site.register(AcademicCalendar, AcademicCalendarAdmin)
 
 class OfferAdmin(admin.ModelAdmin):
     list_display = ('acronym','title')
@@ -34,6 +34,11 @@ class OfferYearAdmin(admin.ModelAdmin):
     list_display = ('offer','academic_year')
 
 admin.site.register(OfferYear, OfferYearAdmin)
+
+class OfferCalendarAdmin(admin.ModelAdmin):
+    list_display = ('academic_calendar', 'event_type', 'start_date', 'end_date')
+
+admin.site.register(OfferCalendar, OfferCalendarAdmin)
 
 class OfferEnrollmentAdmin(admin.ModelAdmin):
     list_display = ('offer_year','student', 'date_enrollment')
@@ -73,3 +78,9 @@ admin.site.register(ExamEnrollment, ExamEnrollmentAdmin)
 admin.site.register(Structure)
 admin.site.register(Student)
 admin.site.register(Tutor)
+
+
+class AttributionAdmin(admin.ModelAdmin):
+    list_display = ('tutor','function','learning_unit','start_date', 'end_date')
+
+admin.site.register(Attribution, AttributionAdmin)

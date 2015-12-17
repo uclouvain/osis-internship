@@ -14,7 +14,7 @@ class Person(models.Model):
     middle_name     = models.CharField(max_length = 50,blank = True, null = True)
     global_id       = models.CharField(max_length = 10,blank = True, null = True)
     gender          = models.CharField(max_length = 1, blank = True, null = True, choices = GENDER_CHOICES, default = 'U')
-    national_number = models.CharField(max_length = 25,blank = True, null = True)
+    national_id     = models.CharField(max_length = 25,blank = True, null = True)
 
     def first_name(self):
         return self.user.first_name
@@ -41,42 +41,101 @@ class Tutor(models.Model):
 
 
 class Student(models.Model):
-    registration_number = models.CharField(max_length = 10, null = False)
-    person              = models.ForeignKey(Person, null = False)
+    registration_id = models.CharField(max_length = 10, null = False)
+    person          = models.ForeignKey(Person, null = False)
 
     def __str__(self):
         return u"%s (%s)" % (self.person, self.registration_number)
 
 
 class Structure(models.Model):
+    acronym = models.CharField(max_length = 10, blank = False, null = False)
     title = models.TextField(blank = False, null = False)
+    part_of = models.ForeignKey(Structure, blank = True, null = True)
 
     def __str__(self):
-        return str(self.title)
+        return u"%s - %s" % (self.acronym, self.title)
 
 
 class AcademicYear(models.Model):
-    year       = models.IntegerField(blank = False, null = False)
-    start_date = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
-    end_date   = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
-
-    def current_year():
-        return AcademicYear.objects.filter(start_date__lte=timezone.now()).filter(end_date__gte=timezone.now()).first()
+    year = models.IntegerField(blank = False, null = False)
 
     def __str__(self):
         return u"%s-%s" % (self.year, self.year + 1)
+
+
+class AcademicCalendar(models.Model):
+    EVENT_TYPE = (
+        ('academic_year','Academic Year'),
+        ('session_exam_1','Session Exams 1'),
+        ('session_exam_2','Session Exams 2'),
+        ('session_exam_3','Session Exams 3'))
+
+    academic_year = models.ForeignKey(AcademicYear, null = False)
+    event_type    = models.CharField(max_length = 50, blank = False, null = False, choices = EVENT_TYPE)
+    title         = models.CharField(max_length = 50, blank = True, null = True)
+    description   = models.TextField(blank = True, null = True)
+    start_date    = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
+    end_date      = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
+
+    def current_year():
+        return AcademicYear.objects.filter(event_type='academic_year').filter(start_date__lte=timezone.now()).filter(end_date__gte=timezone.now()).first()
+
+    def __str__(self):
+        return self.title
 
 
 class Offer(models.Model):
     acronym = models.CharField(max_length = 10,blank = False, null = False)
     title   = models.CharField(max_length = 255, blank = False, null = False)
 
-    def __str__(self):
-        return self.acronym.upper()
-
     def save(self, *args, **kwargs):
         self.acronym = self.acronym.upper()
         super(Offer, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.acronym
+
+
+class OfferYear(models.Model):
+    offer         = models.ForeignKey(Offer, null = False)
+    academic_year = models.ForeignKey(AcademicYear, null = False)
+    acronym       = models.CharField(max_length = 10,blank = False, null = False)
+    title         = models.CharField(max_length = 255, blank = False, null = False)
+    structure     = models.ForeignKey(Structure, null = True, blank = True)
+
+    def __str__(self):
+        return u"%s - %s" % (self.academic_year, self.offer.acronym)
+
+
+class OfferEnrollment(models.Model):
+    date_enrollment = models.DateField(auto_now = False, blank = False, null = False, auto_now_add = False)
+    offer_year      = models.ForeignKey(OfferYear, null = False)
+    student         = models.ForeignKey(Student, null = False)
+
+    def __str__(self):
+        return u"%s - %s" % (self.offer_year, self.student)
+
+
+class OfferCalendar(models.Model):
+    EVENT_TYPE = (
+        ('session_exam_1','Session Exams 1'),
+        ('session_exam_2','Session Exams 2'),
+        ('session_exam_3','Session Exams 3'))
+
+    academic_calendar = models.ForeignKey(AcademicCalendar, null = False)
+    event_type        = models.CharField(max_length = 50, blank = False, null = False, choices = EVENT_TYPE)
+    start_date        = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
+    end_date          = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
+
+    def current_session_exam():
+        return OfferCalendar.objects.filter(
+                                       event_type__startswith='session_exam'
+                                   ).filter(
+                                       start_date__gte=timezone.now()
+                                   ).filter(
+                                       end_date__lte=timezone.now()
+                                   ).first()
 
 
 class LearningUnit(models.Model):
@@ -93,31 +152,12 @@ class LearningUnit(models.Model):
 class LearningUnitYear(models.Model):
     acronym       = models.CharField(max_length = 10,blank = False, null = False)
     title         = models.CharField(max_length = 255, blank = False, null = False)
-    description   = models.TextField(blank = True, null = True)
     credits       = models.DecimalField(max_digits = 4, decimal_places = 2, blank = True, null = True)
     academic_year = models.ForeignKey(AcademicYear, null = True)
     learning_unit = models.ForeignKey(LearningUnit, null = True)
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year,self.learning_unit)
-
-
-class OfferYear(models.Model):
-    offer          = models.ForeignKey(Offer, null = False)
-    academic_year  = models.ForeignKey(AcademicYear, null = False)
-    structure      = models.ForeignKey(Structure, null = True, blank = True)
-
-    def __str__(self):
-        return u"%s - %s" % (self.academic_year, self.offer.acronym)
-
-
-class OfferEnrollment(models.Model):
-    date_enrollment = models.DateField(auto_now = False, blank = False, null = False, auto_now_add = False)
-    offer_year      = models.ForeignKey(OfferYear, null = False)
-    student         = models.ForeignKey(Student, null = False)
-
-    def __str__(self):
-        return u"%s - %s" % (self.offer_year, self.student)
 
 
 class LearningUnitEnrollment(models.Model):
@@ -138,20 +178,17 @@ class SessionExam(models.Model):
         ('OPEN','Open'),
         ('CLOSED','Closed'))
 
-    start_session      = models.DateField(auto_now = False, blank = False, null = False, auto_now_add = False)
-    end_session        = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
+    number_session     = models.IntegerField(auto_now = False, blank = False, null = False, auto_now_add = False)
     status             = models.CharField(max_length = 10, blank = False, null = False,choices = SESSION_STATUS)
     learning_unit_year = models.ForeignKey(LearningUnitYear, null = False)
+    offer_calendar     = models.ForeignKey(OfferCalendar, blank = False, null = True)
 
-    @property
     def name(self):
         return self.start_session.strftime("%B")
 
-    def upcomming_session():
-        return SessionExam.objects.filter(start_session__gte=timezone.now()).order_by('start_session').first()
-
-    def sessions():
-        return SessionExam.objects.all()
+    def current_session_exam():
+        offer_calendar = OfferCalendar.current_session_exam()
+        return SessionExam.objects.filter(offer_calendar=offer_calendar).first().number_session
 
     def __str__(self):
         return u"%s - %s" % (self.learning_unit_year, self.start_session.strftime("%B"))
@@ -169,9 +206,7 @@ class ExamEnrollment(models.Model):
         ('SAVED','Saved'),
         ('SUBMITTED','Submitted'))
 
-    score                    = models.DecimalField(max_digits = 4, decimal_places = 2, blank = True, null = True, validators=[
-                                        MaxValueValidator(20),
-                                        MinValueValidator(0)])
+    score                    = models.DecimalField(max_digits = 4, decimal_places = 2, blank = True, null = True, validators=[MaxValueValidator(20), MinValueValidator(0)])
     justification            = models.CharField(max_length = 17, blank = True, null = True,choices = JUSTIFICATION_CHOICES)
     encoding_status          = models.CharField(max_length = 9, blank = True, null = True,choices = ENCODING_STATUS_CHOICES)
     session_exam             = models.ForeignKey(SessionExam, null = False)
