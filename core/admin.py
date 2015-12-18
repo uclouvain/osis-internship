@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from .models import AcademicYear
+from .models import AcademicCalendar
 from .models import Attribution
 from .models import SessionExam
 from .models import ExamEnrollment
@@ -10,13 +11,14 @@ from .models import LearningUnitYear
 from .models import Offer
 from .models import OfferEnrollment
 from .models import OfferYear
+from .models import OfferYearCalendar
 from .models import Structure
 from .models import Person
 from .models import Student
 from .models import Tutor
 
 class AcademicYearAdmin(admin.ModelAdmin):
-    list_display = ('year', 'start_date', 'end_date')
+    list_display = ('year')
 
 admin.site.register(AcademicYear, AcademicYearAdmin)
 
@@ -38,7 +40,7 @@ admin.site.register(OfferYear, OfferYearAdmin)
 class OfferCalendarAdmin(admin.ModelAdmin):
     list_display = ('academic_calendar', 'event_type', 'start_date', 'end_date')
 
-admin.site.register(OfferCalendar, OfferCalendarAdmin)
+admin.site.register(OfferYearCalendar, OfferCalendarAdmin)
 
 class OfferEnrollmentAdmin(admin.ModelAdmin):
     list_display = ('offer_year','student', 'date_enrollment')
@@ -66,7 +68,7 @@ class LearningUnitEnrollmentAdmin(admin.ModelAdmin):
 admin.site.register(LearningUnitEnrollment, LearningUnitEnrollmentAdmin)
 
 class SessionExamAdmin(admin.ModelAdmin):
-    list_display = ('learning_unit_year', 'name', 'start_session', 'end_session', 'status')
+    list_display = ('learning_unit_year', 'number_session', 'status')
 
 admin.site.register(SessionExam, SessionExamAdmin)
 

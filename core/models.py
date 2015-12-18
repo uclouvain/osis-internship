@@ -51,7 +51,7 @@ class Student(models.Model):
 class Structure(models.Model):
     acronym = models.CharField(max_length = 10, blank = False, null = False)
     title = models.TextField(blank = False, null = False)
-    part_of = models.ForeignKey(Structure, blank = True, null = True)
+    part_of = models.ForeignKey('self', blank = True, null = True)
 
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)
@@ -117,7 +117,7 @@ class OfferEnrollment(models.Model):
         return u"%s - %s" % (self.offer_year, self.student)
 
 
-class OfferCalendar(models.Model):
+class OfferYearCalendar(models.Model):
     EVENT_TYPE = (
         ('session_exam_1','Session Exams 1'),
         ('session_exam_2','Session Exams 2'),
@@ -178,13 +178,10 @@ class SessionExam(models.Model):
         ('OPEN','Open'),
         ('CLOSED','Closed'))
 
-    number_session     = models.IntegerField(auto_now = False, blank = False, null = False, auto_now_add = False)
-    status             = models.CharField(max_length = 10, blank = False, null = False,choices = SESSION_STATUS)
-    learning_unit_year = models.ForeignKey(LearningUnitYear, null = False)
-    offer_calendar     = models.ForeignKey(OfferCalendar, blank = False, null = True)
-
-    def name(self):
-        return self.start_session.strftime("%B")
+    number_session      = models.IntegerField(blank = False, null = False)
+    status              = models.CharField(max_length = 10, blank = False, null = False,choices = SESSION_STATUS)
+    learning_unit_year  = models.ForeignKey(LearningUnitYear, null = False)
+    offer_year_calendar = models.ForeignKey(OfferYearCalendar, blank = False, null = True)
 
     def current_session_exam():
         offer_calendar = OfferCalendar.current_session_exam()
