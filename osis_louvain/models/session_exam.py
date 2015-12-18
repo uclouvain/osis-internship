@@ -33,17 +33,14 @@ import xlsxwriter, StringIO, base64
 class SessionExam(models.Model):
     _name = 'osis.session_exam'
     _description = "Session Exam"
-    _sql_constraints = [('session_exam_unique','unique(learning_unit_year_id,session_name)','A session must be unique on month/learning unit year')]
+    _sql_constraints = [('session_exam_unique','unique(learning_unit_year_id,number_session)','A session must be unique on number session/learning unit year')]
 
     learning_unit_year_id = fields.Many2one('osis.learning_unit_year', string='Learning unit year')
     exam_enrollment_ids = fields.One2many('osis.exam_enrollment','session_exam_id', string='Exam enrollment')
 
-    date_session = fields.Date('Session date')
     encoding_status = fields.Selection([('COMPLETE','Complete'),('PARTIAL','Partial'),('MISSING','Missing')])
-    # encoding_status = fields.Char()
-    session_name = fields.Char('Session Name',compute='_get_session_name', store=True)
 
-    session_month = fields.Char('Session month',compute='_get_session_month', store=True)#Utiliser dans le filtre pour l'encodage des notes
+    number_session = fields.Selection([(1,'Session 1'),(2,'Session 2'),(3,'Session 3')])
 
     academic_year_id = fields.Many2one('osis.academic_year', related="learning_unit_year_id.academic_year_id")
 
@@ -61,9 +58,20 @@ class SessionExam(models.Model):
 
     notes_count = fields.Integer(compute='_get_notes_count')
 
-    registered_student_count = fields.Integer()
+    registered_student_count = fields.Integer(compute='_get_registered_student_count')
+
+    notes_encoding_filter_ids = fields.One2many('osis.notes_encoding','session_exam_id', compute='_get_encoding_filter', inverse='_set_encoding', string='Notes encoding')
 
 
+    @api.depends('offer_filter_id', 'notes_encoding_ids')
+    def _get_encoding_filter(self):
+        if not self.offer_filter_id:
+            self.notes_encoding_filter_ids = self.notes_encoding_ids
+        else:
+            self.notes_encoding_filter_ids = self.notes_encoding_ids.filtered(lambda record: record.offer_id == self.offer_filter_id)
+
+    def _set_encoding(self):
+        pass #DO nothing since we do not want to change the list of ids we just want to write on osis.notes_encoding which is done automaticaly
 
     def _get_notes_count(self):
         self.notes_count = self.notes_encoding_ids.search_count([])
@@ -77,30 +85,13 @@ class SessionExam(models.Model):
                 if record.learning_unit_year_id.title:
                     name_build+= ' - '
                     name_build += record.learning_unit_year_id.title
-            if record.session_name:
-                if record.session_name:
+            if record.number_session:
+                if record.number_session:
                     name_build+= ' - '
-                name_build += record.session_name
+                name_build += str(record.number_session)
             result[record.id]  = name_build
         return result.items()
 
-
-    @api.depends('date_session')
-    def _get_session_name(self):
-        for r in self:
-            r.session_name=''
-            if r.date_session:
-                session_date = fields.Datetime.from_string(r.date_session)
-                r.session_name = session_date.strftime("%B")
-
-
-    @api.depends('date_session')
-    def _get_session_month(self):
-        for r in self:
-            r.session_month=''
-            if r.date_session:
-                session_date = fields.Datetime.from_string(r.date_session)
-                r.session_month = session_date.strftime("%m")
 
     @api.multi
     def open_view_encode_session_notes(self):
@@ -119,31 +110,18 @@ class SessionExam(models.Model):
             'view_mode': 'form',
             'res_model': 'osis.session_exam',
             'res_id': self.id,
-            'target': 'current',
+            'target': 'inline',
             'view_id' : self.env.ref('osis_louvain.encoding2_notes_session_form_primherit_view').id
         }
 
     @api.multi
     def encode_session_notes(self):
-        wiz_id = self.env['osis.notes_wizard'].create({
-            'acronym': self.learning_unit_acronym,
-
-            'line_ids':[(0,0,{'notes_encoding_id': rec_notes_encoding.id,
-                              'encoding_stage' : 1,
-                              'student_name': rec_notes_encoding.student_name,
-                              'score_1': rec_notes_encoding.score_1,
-                              'justification_1':rec_notes_encoding.justification_1,
-                              'score_2': rec_notes_encoding.score_2,
-                              'justification_2':rec_notes_encoding.justification_2
-                              }) for rec_notes_encoding in self.notes_encoding_ids],
-        })
-
         return {
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
-            'res_model': 'osis.notes_wizard',
-            'res_id': wiz_id.id,
+            'res_model': 'osis.session_exam',
+            'res_id': self.id,
             'view_id' : self.env.ref('osis_louvain.resultswizard_form_view').id,
             'target': 'new',
         }
@@ -151,38 +129,17 @@ class SessionExam(models.Model):
 
     @api.multi
     def double_encode_session_notes(self):
-        encoding_stage_1_done = False
-        for rec_notes_encoding in self.notes_encoding_ids:
-            if rec_notes_encoding.encoding_stage_1_done:
-                encoding_stage_1_done=True
-                break
 
-        if encoding_stage_1_done:
-            print 'double_encode_session_notes'
-            wiz_id = self.env['osis.notes_wizard'].create({
-                'acronym': self.learning_unit_acronym,
-
-                'line_ids':[(0,0,{'notes_encoding_id': rec_notes_encoding.id,
-                                  'encoding_stage' : 2,
-                                  'student_name': rec_notes_encoding.student_name,
-                                  'score_1': rec_notes_encoding.score_1,
-                                  'justification_1':rec_notes_encoding.justification_1,
-                                  'score_2': rec_notes_encoding.score_2,
-                                  'justification_2':rec_notes_encoding.justification_2
-                                  }) for rec_notes_encoding in self.notes_encoding_ids],
-            })
-            print wiz_id.id
             return {
                 'type': 'ir.actions.act_window',
                 'view_type': 'form',
                 'view_mode': 'form',
-                'res_model': 'osis.notes_wizard',
-                'res_id': wiz_id.id,
+                'res_model': 'osis.session_exam',
+                'res_id': self.id,
                 'view_id' : self.env.ref('osis_louvain.double_resultswizard_form_view').id,
                 'target': 'new',
             }
-        else:
-            raise exceptions.ValidationError(_("Encode notes before double encoding"))
+
 
 
     @api.multi
@@ -232,7 +189,6 @@ class SessionExam(models.Model):
         print 'open_session_notes'
         self.ensure_one()
         for rec in self.exam_enrollment_ids:
-            print 'for open_session_notes'
             rec_notes_encoding =  self.env['osis.notes_encoding'].search([('exam_enrollment_id' ,'=', rec.id)])
             if rec_notes_encoding:
                 print 'kk'
@@ -245,7 +201,7 @@ class SessionExam(models.Model):
             'view_mode': 'form',
             'res_model': 'osis.session_exam',
             'res_id': self.id,
-            'target': 'current',
+            'target': 'inline',
             'view_id' : self.env.ref('osis_louvain.consulting_notes_session_form_primherit_view').id
         }
 
@@ -263,29 +219,21 @@ class SessionExam(models.Model):
             'report_name' : 'osis_louvain.report_session_exam_notes',
             'datas' : datas,
             }
+
+
     @api.depends('offer_filter_id')
     def _get_registered_student_count(self):
-        print 'zut _get_registered_student_count'
-        if offer_filter_id:
-            self.registered_student_count = self.env['osis.offer_enrollment'].search_count([('offer_year_id.offer_id', '=', self.offer_filter_id.id)])
-        else:
-            self.registered_student_count = -1
+        self.registered_student_count = len(self.exam_enrollment_ids)
+
 
     @api.depends('learning_unit_year_id')
     def _get_all_offer(self):
-        print "compute offer_ids"
         enrollement_ids = self.env['osis.learning_unit_enrollment'].search([('learning_unit_year_id', '=', self.learning_unit_year_id.id)])
         enrol_ids = []
         for enrol in enrollement_ids:
-            # if self.offer_filter_id:
             enrol_ids.append(enrol.offer_enrollment_id.offer_year_id.offer_id.id)
             self.offer_ids |= enrol.offer_enrollment_id.offer_year_id.offer_id
-
             self.registered_student_count = enrol.offer_enrollment_id.student_id
-            # else:
-            #     if self.offer_filter_id == enrol.offer_enrollment_id.offer_year_id.offer_id:
-            #         enrol_ids.append(enrol.offer_enrollment_id.offer_year_id.offer_id.id)
-            #         self.offer_ids |= enrol.offer_enrollment_id.offer_year_id.offer_id
 
     @api.depends('learning_unit_year_id')
     def _get_all_tutor(self):
@@ -311,26 +259,20 @@ class SessionExam(models.Model):
 
     @api.multi
     def xls_export_session_notes(self):
-    #    @api.multi
-    #
-    #         :param fields_to_export: list of fields
-    #         :param raw_data: True to return value in native Python type
-    #         :rtype: dictionary with a *datas* matrix
-    # def export_data(self, fields_to_export, raw_data=False):
-        Model = self.env['osis.session_exam']
 
-        ids =[]
-        ids.append(self.id)
-
+        # field_names=['score_1',
+        # 'justification_1',
+        # 'student_name' ,
+        # 'student_registration_number',
+        # 'offer']
         field_names=['score_1',
-        'justification_1',
-        'student_name' ,
-        'student_registration_number',
-        'offer']
+                     'student_registration_number',
+                     '.id']
 
         read = self.notes_encoding_ids.export_data(field_names)
-        body = [['Session Juin', '', ''],
-                ['', 'Line2']]
+        # body = [['Session Juin', '', ''],
+        #         ['', 'Line2']]
+        body = [['Score_1', 'Registration_number','encoding_notes_id']]
         body += read['datas']
 
         import pprint; pprint.pprint(body)
@@ -343,4 +285,46 @@ class SessionExam(models.Model):
             'res_id': rec_xls.id,
             'target': 'new'
 
+        }
+
+
+    @api.multi
+    def load_xls_session_notes(self):
+        rec_xls = self.env['osis.xls_load'].create({})
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'osis.xls_load',
+            'res_id': rec_xls.id,
+            'target': 'new'
+
+        }
+
+    @api.one
+    def validate_results(self):
+        return True
+
+    @api.one
+    def submit_results(self):
+        #ici on va sauver dans exam_enrollment et changer le status
+        for rec in self.notes_encoding_ids:
+            for rec_note in rec.notes_encoding_id:
+                print 'zut '+str(rec_note.score_1)
+                rec_note.exam_enrollment_id.write({'score': rec_note.score_1,'justification': rec_note.justification_1,'encoding_status':'SUBMITTED'})
+                #ici il faut supprimer l'enregistrement notes_encoding
+                rec_note.unlink()
+        return True
+
+
+    @api.multi
+    def double_encoding(self):
+
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'osis.session_exam',
+            'res_id': self.id,
+            'view_id' : self.env.ref('osis_louvain.double_resultswizard_form_view').id,
+            'target' : 'new'
         }

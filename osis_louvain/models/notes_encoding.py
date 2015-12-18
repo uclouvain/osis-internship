@@ -37,7 +37,7 @@ class Notes_encoding(models.Model):
         justification_2 = fields.Selection([('ILL',_('Ill')),('ABSENT',_('Absent')),('JUSTIFIED_ABSENCE',_('Justified absence')),('CHEATING',_('Cheating')),('SCORE_MISSING',_('Score missing'))])
         notes_status = fields.Char(compute = '_get_notes_status')
         session_exam_id = fields.Many2one('osis.session_exam', string='Session exam')
-        exam_enrollment_id =fields.Many2one('osis.exam_enrollment', string='Exam enrollment')
+        exam_enrollment_id =fields.Many2one('osis.exam_enrollment', string='Exam enrollment', ondelete='cascade')
 
         student_name = fields.Char(related="exam_enrollment_id.learning_unit_enrollment_id.offer_enrollment_id.student_id.person_id.last_name")
         student_first_name = fields.Char(related="exam_enrollment_id.learning_unit_enrollment_id.offer_enrollment_id.student_id.person_id.first_name")

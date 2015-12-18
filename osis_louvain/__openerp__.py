@@ -24,7 +24,6 @@
         # 'security/ir.model.access.csv',
         'views/osis_louvain.xml',
         'templates.xml',
-
         'views/person.xml',
         'views/student.xml',
         'views/tutor.xml',
@@ -48,13 +47,14 @@
         'reports/session_exam.xml',
         'templates.xml',
         'views/menu.xml',
-        'wizard/xls_print.xml'
+        'wizard/xls_print.xml',
+        'wizard/xls_load.xml',
 
 
     ],
 
     'demo': [
-        # 'demo.xml',
+        'demo.xml',
     ],
     'css': ['static/src/css/osis_louvain.css'],
     # 'js': ['static/src/js/resource.js'],

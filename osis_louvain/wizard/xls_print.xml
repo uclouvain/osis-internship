@@ -9,14 +9,11 @@
 
       <field name="arch" type="xml">
         <form string="Xls print form">
-
             <field name="content" filename="file_name" readonly="1"/>
             <field name="file_name" invisible="1"/>
             <footer>
               <button string="Close" special="cancel"/>
             </footer>
-
-
         </form>
       </field>
     </record>

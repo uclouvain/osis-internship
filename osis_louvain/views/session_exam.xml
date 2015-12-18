@@ -8,7 +8,7 @@
           <field name="arch" type="xml">
               <search>
                 <group string="Group By">
-                      <filter name="group_by_session" string="Exam" context="{'group_by': 'session_name'}"/>
+                      <filter name="group_by_session" string="Exam" context="{'group_by': 'number_session'}"/>
                 </group>
               </search>
           </field>
@@ -22,9 +22,8 @@
       <field name="arch" type="xml">
         <tree>
           <field name="learning_unit_year_id" string="Learning unit year"/>
-          <field name="date_session" string="Session date"/>
           <field name="encoding_status" string="Encoding Status"/>
-          <field name="session_name" string="Session"/>
+          <field name="number_session" string="Session"/>
         </tree>
       </field>
 
@@ -38,8 +37,8 @@
         <form string="Session Exam Form">
           <group col="4">
             <field name="learning_unit_year_id" string="Learning unit year"/>
-            <field name="date_session" string="Session date"/>
             <field name="encoding_status"/>
+            <field name="number_session" string="Session"/>
             <!-- <field name="exam_enrollment_ids" string="Exam enrollments"/> -->
           </group>
           <!-- <group col="4">
@@ -48,6 +47,62 @@
         </form>
       </field>
     </record>
+    <!-- form encoding -->
+    <record model="ir.ui.view" id="resultswizard_form_view">
+        <field name="name">osis.wizard.notes.form</field>
+        <field name="model">osis.session_exam</field>
+        <field name="arch" type="xml">
+            <form string="Encode notes">
+              <field name="learning_unit_acronym" readonly="1"/>
+
+                <group col="1">
+                    <field name="notes_encoding_filter_ids" nolabel="1">
+                        <tree editable="bottom" create="false" delete="false" >
+                            <field name="student_name" readonly="1"/>
+                            <field name="score_1"  />
+                            <field name="justification_1"/>
+                        </tree>
+                    </field>
+                </group>
+                <footer>
+                    <button name="validate_results" type="object"
+                            string="Validate" class="oe_highlight"/>
+                    or
+                    <button name="submit_results" type="object"
+                            string="Submit" />
+                    or
+                    <button name="double_encoding" type="object"
+                            string="Double encoding" />
+                    or
+                    <button special="cancel" string="Cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <!-- form -->
+      <record model="ir.ui.view" id="double_resultswizard_form_view">
+          <field name="name">osis.wizard.double.notes.form</field>
+          <field name="model">osis.session_exam</field>
+          <field name="arch" type="xml">
+              <form string="Double Encode notes">
+                <field name="learning_unit_acronym" readonly="1"/>
+                  <group col="1">
+                      <field name="notes_encoding_filter_ids" nolabel="1">
+                          <tree editable="bottom" create="false" delete="false" >
+                              <field name="student_name" readonly="1"/>
+                              <field name="score_2"  />
+                              <field name="justification_2"/>
+                          </tree>
+                      </field>
+                  </group>
+                  <footer>
+                      <button name="validate_results" type="object"
+                              string="Validate" class="oe_highlight"/>
+                      <button special="cancel" string="Cancel"/>
+                  </footer>
+              </form>
+          </field>
+      </record>
 
   </data>
 </openerp>

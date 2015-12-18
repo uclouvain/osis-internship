@@ -12,27 +12,37 @@
         </header>
         <group>
             <field name="learning_unit_acronym" readonly="1" string="Learning unit"/>
-            <field name="learning_unit_title" attrs="{'readonly':True}" />
-            <field name="session_name"/>
-            <field name="offer_filter_id" />
+            <field name="learning_unit_title" readonly="1"  />
+            <field name="number_session" readonly="1" />
+            <field name="offer_filter_id" options="{'no_create': true,'no_open' : true}"  />
             <field name="offer_ids" invisible="1" />
             <field name="notes_count" invisible='1'/>
             <field name="registered_student_count" string="Number of registered student" invisible='1'/>
           </group>
         <separator string="Notes"/>
         <group>
-          <field name="notes_encoding_ids" attrs="{'readonly':True}" nolabel="1">
-            <tree colors="green:notes_status=='EQUAL';red:notes_status=='DIFFERENT'">
+          <field name="notes_encoding_ids" attrs="{'readonly':True}" invisible="1">
+            <tree>
               <field name="offer"/>
               <field name="student_registration_number"/>
               <field name="student_name"/>
               <field name="student_first_name"/>
+              <field name="score_1" />
             </tree>
           </field>
+           <field name="notes_encoding_filter_ids" readonly="1" nolabel="1" >
+             <tree editable="bottom">
+               <field name="offer"/>
+               <field name="student_registration_number"/>
+               <field name="student_name"/>
+               <field name="student_first_name"/>
+               <field name="score_1" />
+             </tree>
+           </field>
         </group>
         <div style="font-size:10pt;">
           <div style="visibility:hidden">
-          <table cellspacing="2" cellpadding="2" style="margin : 10px;">
+          <!--<table cellspacing="2" cellpadding="2" style="margin : 10px;">
             <tr>
               <td>Only one note encoded</td>
             </tr>
@@ -42,7 +52,7 @@
             <tr>
               <td class="different">2 notes different</td>
             </tr>
-          </table>
+          </table>-->
 </div>
           <table style="margin : 10px;">
             <tr>
@@ -95,7 +105,8 @@
               <button name="open_view_encode_session_notes" string="Encoding" type="object" invisible='1'/>
               <button name="encode_session_notes" string="Encoding" type="object" attrs="{'invisible': [('notes_count','=', 0)]}" />
               <button name="xls_export_session_notes" string="Export xls" type="object" attrs="{'invisible': [('notes_count','=', 0)]}"/>
-      
+              <button name="load_xls_session_notes" string="Load xls" type="object" attrs="{'invisible': [('notes_count','=', 0)]}"/>
+
           </header>
         </xpath>
         <xpath expr="//field[@name='student_first_name']" position="after">

@@ -25,22 +25,14 @@
 #
 ##############################################################################
 
-import academic_year
-import attribution
-import session_exam
-import exam_enrollment
-import learning_unit
-import learning_unit_enrollment
-import learning_unit_year
-import offer
-import offer_enrollment
-import offer_year
-import structure
-import person
-import student
-import tutor
-import session_exam_encoding
-import notes_encoding
-import notesWizard
-import academic_calendar
-import offer_year_calendar
+from openerp import models, fields, api
+
+class Academic_calendar(models.Model):
+    _name = "osis.academic_calendar"
+    _description = "Academic calendar"
+
+    event = fields.Selection([(1,'Session 1'),(2,'Session 2'),(3,'Session 3')])
+    start_date = fields.Date('Start date')
+    end_date = fields.Date('End date')
+    description = fields.Text('Description')
+    academic_year_id = fields.Many2one('osis.academic_year', string='Academic year')

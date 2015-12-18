@@ -27,7 +27,7 @@
               <tr>
                 <td><span t-field="doc.title_learning_unit"/></td>
                 <td><span t-field="doc.year"/></td>
-                <td><span t-field="doc.session_name"/></td>
+                <td><span t-field="doc.session_number"/></td>
                 <td><span t-field="doc.student_name"/></td>
                 <td><span t-field="doc.score"/></td>
               </tr>

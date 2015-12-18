@@ -53,7 +53,7 @@
                 <td><t t-esc="notes.acronym"/></td>
                 <td><t t-esc="notes.title"/></td>
                 <td><t t-esc="notes.year"/></td>
-                <td><t t-esc="notes.session_name"/></td>
+                <td><t t-esc="notes.session_number"/></td>
                 <td><t t-esc="notes.tutor_name"/></td>
 
               </tr>
