@@ -36,3 +36,9 @@ class Academic_calendar(models.Model):
     end_date = fields.Date('End date')
     description = fields.Text('Description')
     academic_year_id = fields.Many2one('osis.academic_year', string='Academic year')
+
+    def name_get(self,cr,uid,ids,context=None):
+        result={}
+        for record in self.browse(cr,uid,ids,context=context):
+            result[record.id] = u"Session %s - %s - %s" % (record.event,record.start_date,record.end_date)
+        return result.items()

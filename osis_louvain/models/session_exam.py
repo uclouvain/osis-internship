@@ -1,29 +1,4 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OSIS stands for Open Student Information System. It's an application
-#    designed to manage the core business of higher education institutions,
-#    such as universities, faculties, institutes and professional schools.
-#    The core business involves the administration of students, teachers,
-#    courses, programs and so on.
-#
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    A copy of this license - GNU Affero General Public License - is available
-#    at the root of the source code of this program.  If not,
-#    see http://www.gnu.org/licenses/.
-#
-##############################################################################
 
 from openerp import models, fields, api, _, exceptions
 import datetime
@@ -35,32 +10,34 @@ class SessionExam(models.Model):
     _description = "Session Exam"
     _sql_constraints = [('session_exam_unique','unique(learning_unit_year_id,number_session)','A session must be unique on number session/learning unit year')]
 
-    learning_unit_year_id = fields.Many2one('osis.learning_unit_year', string='Learning unit year')
-    exam_enrollment_ids = fields.One2many('osis.exam_enrollment','session_exam_id', string='Exam enrollment')
-
     encoding_status = fields.Selection([('COMPLETE','Complete'),('PARTIAL','Partial'),('MISSING','Missing')])
-
-    number_session = fields.Selection([(1,'Session 1'),(2,'Session 2'),(3,'Session 3')])
-
-    academic_year_id = fields.Many2one('osis.academic_year', related="learning_unit_year_id.academic_year_id")
+    number_session = fields.Selection([(1,'1'),(2,'2'),(3,'3')])
+    comment = fields.Text('Comment')
 
     learning_unit_acronym = fields.Char(related="learning_unit_year_id.acronym")
-
     learning_unit_title = fields.Char(related="learning_unit_year_id.title")
-
-    notes_encoding_ids = fields.One2many('osis.notes_encoding','session_exam_id', string='Notes encoding')
-
-    offer_filter_id = fields.Many2one('osis.offer', domain="[('id', 'in', offer_ids[0][2])]")
-
-    offer_ids = fields.Many2many('osis.offer', compute='_get_all_offer')
-
-    tutor_ids = fields.Many2many('osis.tutor', compute='_get_all_tutor')
-
     notes_count = fields.Integer(compute='_get_notes_count')
-
     registered_student_count = fields.Integer(compute='_get_registered_student_count')
 
-    notes_encoding_filter_ids = fields.One2many('osis.notes_encoding','session_exam_id', compute='_get_encoding_filter', inverse='_set_encoding', string='Notes encoding')
+    learning_unit_year_id = fields.Many2one('osis.learning_unit_year', string='Learning unit year')
+    academic_year_id = fields.Many2one('osis.academic_year', related="learning_unit_year_id.academic_year_id")
+    offer_filter_id = fields.Many2one('osis.offer', domain="[('id', 'in', offer_ids[0][2])]")
+
+    exam_enrollment_ids = fields.One2many('osis.exam_enrollment','session_exam_id', string='Exam enrollment')
+    notes_encoding_ids = fields.One2many('osis.notes_encoding','session_exam_id', string='Notes encoding')
+    notes_encoding_filter_ids = fields.One2many('osis.notes_encoding','session_exam_id', compute='_get_encoding_filter',                                                                                         inverse='_set_encoding', string='Notes encoding')
+    notes_encoding_compare_filter_ids = fields.One2many('osis.notes_encoding','session_exam_id', compute='_get_encoding_compare_filter', inverse='_set_encoding', string='Notes encoding')
+
+    offer_ids = fields.Many2many('osis.offer', compute='_get_all_offer')
+    tutor_ids = fields.Many2many('osis.tutor', compute='_get_all_tutor')
+
+
+    @api.depends('offer_filter_id', 'notes_encoding_ids')
+    def _get_encoding_compare_filter(self):
+        # get_encoding_filter(self) #todo je sais pas si c'est nécessaire
+        for rec in self.notes_encoding_filter_ids:
+            if (rec.score_1 != rec.score_2) or rec.justification_1 != rec.justification_2:
+                self.notes_encoding_compare_filter_ids |= rec
 
 
     @api.depends('offer_filter_id', 'notes_encoding_ids')
@@ -94,27 +71,6 @@ class SessionExam(models.Model):
 
 
     @api.multi
-    def open_view_encode_session_notes(self):
-        print 'ici open_view_encode_session_notes'
-        self.ensure_one()
-        for rec in self.exam_enrollment_ids:
-            rec_notes_encoding =  self.env['osis.notes_encoding'].search([('exam_enrollment_id' ,'=', rec.id)])
-            if rec_notes_encoding:
-                print 'kk'
-            else:
-                if rec.encoding_status != 'SUBMITTED':
-                    self.env['osis.notes_encoding'].create({'session_exam_id':self.id,'exam_enrollment_id':rec.id})
-        print 'ici avant vue'
-        return {
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'res_model': 'osis.session_exam',
-            'res_id': self.id,
-            'target': 'inline',
-            'view_id' : self.env.ref('osis_louvain.encoding2_notes_session_form_primherit_view').id
-        }
-
-    @api.multi
     def encode_session_notes(self):
         return {
             'type': 'ir.actions.act_window',
@@ -129,72 +85,90 @@ class SessionExam(models.Model):
 
     @api.multi
     def double_encode_session_notes(self):
-
-            return {
-                'type': 'ir.actions.act_window',
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'osis.session_exam',
-                'res_id': self.id,
-                'view_id' : self.env.ref('osis_louvain.double_resultswizard_form_view').id,
-                'target': 'new',
-            }
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'osis.session_exam',
+            'res_id': self.id,
+            'view_id' : self.env.ref('osis_louvain.double_resultswizard_form_view').id,
+            'target': 'new',
+        }
 
 
 
     @api.multi
     def compare_session_notes(self):
-        double_encoding_done = False
-        for rec_notes_encoding in self.notes_encoding_ids:
-            if rec_notes_encoding.double_encoding_done:
-                double_encoding_done=True
-                break
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'osis.session_exam',
+            'res_id': self.id,
+            'view_id' : self.env.ref('osis_louvain.compare_resultswizard_form_view').id,
+            'target': 'new',
+        }
 
-        if double_encoding_done:
-            notes_encoding_ids=[]
-            for rec in self.notes_encoding_ids:
-                if rec.score_1 != rec.score_2 or rec.justification_1  != rec.justification_2:
-                    notes_encoding_ids.append(rec)
-
-            if notes_encoding_ids:
-                wiz_id = self.env['osis.notes_wizard'].create({
-                    'acronym': self.learning_unit_acronym,
-
-                    'line_ids':[(0,0,{'notes_encoding_id': rec_notes_encoding.id,
-                                      'encoding_stage' : 3,
-                                      'student_name': rec_notes_encoding.student_name,
-                                      'score_1': rec_notes_encoding.score_1,
-                                      'justification_1':rec_notes_encoding.justification_1,
-                                      'score_2': rec_notes_encoding.score_2,
-                                      'justification_2':rec_notes_encoding.justification_2
-                                      }) for rec_notes_encoding in notes_encoding_ids],
-                })
-                print wiz_id.id
-                return {
-                    'type': 'ir.actions.act_window',
-                    'view_type': 'form',
-                    'view_mode': 'form',
-                    'res_model': 'osis.notes_wizard',
-                    'res_id': wiz_id.id,
-                    'view_id' : self.env.ref('osis_louvain.compare_resultswizard_form_view').id,
-                    'target': 'new',
-                }
-            else:
-                raise exceptions.ValidationError(_("All notes are identical"))
-        else:
-            raise exceptions.ValidationError(_("Encode notes before double encoding"))
+        # double_encoding_done = False
+        # for rec_notes_encoding in self.notes_encoding_ids:
+        #     if rec_notes_encoding.double_encoding_done:
+        #         double_encoding_done=True
+        #         break
+        #self.offer_ids |= enrol.offer_enrollment_id.offer_year_id.offer_id
+        # if double_encoding_done:
+        #     notes_encoding_ids=[]
+        #     for rec in self.notes_encoding_ids:
+        #         if rec.score_1 != rec.score_2 or rec.justification_1  != rec.justification_2:
+        #             notes_encoding_ids.append(rec)
+        #
+        #     if notes_encoding_ids:
+        #         wiz_id = self.env['osis.notes_wizard'].create({
+        #             'acronym': self.learning_unit_acronym,
+        #
+        #             'line_ids':[(0,0,{'notes_encoding_id': rec_notes_encoding.id,
+        #                               'encoding_stage' : 3,
+        #                               'student_name': rec_notes_encoding.student_name,
+        #                               'score_1': rec_notes_encoding.score_1,
+        #                               'justification_1':rec_notes_encoding.justification_1,
+        #                               'score_2': rec_notes_encoding.score_2,
+        #                               'justification_2':rec_notes_encoding.justification_2
+        #                               }) for rec_notes_encoding in notes_encoding_ids],
+        #         })
+        #         print wiz_id.id
+        #         return {
+        #             'type': 'ir.actions.act_window',
+        #             'view_type': 'form',
+        #             'view_mode': 'form',
+        #             'res_model': 'osis.notes_wizard',
+        #             'res_id': wiz_id.id,
+        #             'view_id' : self.env.ref('osis_louvain.compare_resultswizard_form_view').id,
+        #             'target': 'new',
+        #         }
+        #     else:
+        #         raise exceptions.ValidationError(_("All notes are identical"))
+        # else:
+        #     raise exceptions.ValidationError(_("Encode notes before double encoding"))
 
     @api.multi
     def open_session_notes(self):
-        print 'open_session_notes'
+        ''' Executed by "Notes" button in the encoding_notes_filter.xml '''
         self.ensure_one()
         for rec in self.exam_enrollment_ids:
+            rec_date_remise = self.env['osis.academic_calendar'].search([('academic_year_id' ,'=', self.academic_year_id.id),('event','=',self.number_session)])
+            print 'date remise : ', rec_date_remise[0].end_date
+
+            date_remise = None
+            if rec_date_remise[0]:
+                date_remise=rec_date_remise[0].end_date
             rec_notes_encoding =  self.env['osis.notes_encoding'].search([('exam_enrollment_id' ,'=', rec.id)])
             if rec_notes_encoding:
-                print 'kk'
+                print 'kkk'
             else:
                 if rec.encoding_status != 'SUBMITTED':
-                    self.env['osis.notes_encoding'].create({'session_exam_id':self.id,'exam_enrollment_id':rec.id})
+
+                    self.env['osis.notes_encoding'].create({'session_exam_id':self.id,
+                                                            'exam_enrollment_id':rec.id,
+                                                            'end_date':date_remise})
 
         return {
             'type': 'ir.actions.act_window',
@@ -205,12 +179,34 @@ class SessionExam(models.Model):
             'view_id' : self.env.ref('osis_louvain.consulting_notes_session_form_primherit_view').id
         }
 
+    @api.multi
+    def encode_final_notes(self):
+        print 'encode_final_notes'
+        self.ensure_one()
+        authorized = False
+        for rec in self.notes_encoding_filter_ids:
+            if rec.score_1 != rec.score_2 or rec.justification_1 != rec.justification_2:
+                authorized = True
+
+        if authorized:
+            print 'authorized'
+            return {
+                'type': 'ir.actions.act_window',
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'osis.session_exam',
+                'res_id': self.id,
+                'view_id' : self.env.ref('osis_louvain.encode_final_notes_form_view').id,
+                'target': 'new',
+            }
+        else:
+            print 'unauthorized'
+            '''Ce bouton n'est disponible que quand les 2 colonnes notes ou les 2 colonnes motifs ne sont pas identiques'''
+            raise exceptions.ValidationError(_("Unauthorized action,  notes/justifications must be non-identical for at leasts one student"))
+
 
     @api.multi
     def print_session_notes(self):
-        print 'print_session_notes'
-
-
         datas = {
         'ids': [self.id]
         }
@@ -265,14 +261,30 @@ class SessionExam(models.Model):
         # 'student_name' ,
         # 'student_registration_number',
         # 'offer']
-        field_names=['score_1',
+        field_names=['academic_year',
+                     'learning_unit',
+                     'offer',
                      'student_registration_number',
+                     'student_name',
+                     'student_first_name',
+                     'score_final',
+                     'justification_final',
+                     'end_date',
                      '.id']
 
         read = self.notes_encoding_ids.export_data(field_names)
         # body = [['Session Juin', '', ''],
         #         ['', 'Line2']]
-        body = [['Score_1', 'Registration_number','encoding_notes_id']]
+        body = [['Academic year',
+                 'Activity',
+                 'Offer',
+                 'Registration_number',
+                 'Lastname',
+                 'Firstname',
+                 'Score_final',
+                 'Justification_final',
+                 'End_date',
+                 'Id']]
         body += read['datas']
 
         import pprint; pprint.pprint(body)
@@ -297,28 +309,44 @@ class SessionExam(models.Model):
             'res_model': 'osis.xls_load',
             'res_id': rec_xls.id,
             'target': 'new'
-
         }
+
 
     @api.one
     def validate_results(self):
-        return True
-
-    @api.one
-    def submit_results(self):
-        #ici on va sauver dans exam_enrollment et changer le status
-        for rec in self.notes_encoding_ids:
-            for rec_note in rec.notes_encoding_id:
-                print 'zut '+str(rec_note.score_1)
-                rec_note.exam_enrollment_id.write({'score': rec_note.score_1,'justification': rec_note.justification_1,'encoding_status':'SUBMITTED'})
-                #ici il faut supprimer l'enregistrement notes_encoding
-                rec_note.unlink()
+        ''' Save the notes_encoding.  Executed : validate button '''
         return True
 
 
     @api.multi
-    def double_encoding(self):
+    def submit_results(self):
+        self.ensure_one()
+        authorized = True
+        for rec in self.notes_encoding_filter_ids:
+            if rec.score_1 != rec.score_2 or rec.justification_1 != rec.justification_2:
+                authorized = False
 
+        if authorized:
+            '''Ici on va sauver dans exam_enrollment et changer le status'''
+            for rec in self.notes_encoding_filter_ids:
+                rec_note.exam_enrollment_id.write({'score_draft': rec_note.score_1,
+                                                   'justification_draft': rec_note.justification_1,
+                                                   'score_reencoded': rec_note.score_2,
+                                                   'justification_reencoded': rec_note.justification_2,
+                                                   'score_final': rec_note.score_final,
+                                                   'justification_final': rec_note.justification_final,
+                                                   'encoding_status':'SUBMITTED'})
+                #ici il faut supprimer l'enregistrement notes_encoding
+                rec_note.unlink()
+            return True
+        else:
+            '''Ce bouton n'est disponible que quand les 2 colonnes notes et les 2 colonnes motifs sont identiques'''
+            raise exceptions.ValidationError(_("Unauthorized action,  notes/justifications must be identical for all student"))
+
+
+
+    @api.multi
+    def double_encoding(self):
         return {
             'type': 'ir.actions.act_window',
             'view_type': 'form',
@@ -328,3 +356,22 @@ class SessionExam(models.Model):
             'view_id' : self.env.ref('osis_louvain.double_resultswizard_form_view').id,
             'target' : 'new'
         }
+    @api.multi
+    def save_comment(self):
+        self.ensure_one()
+        self.env['osis.session_exam'].browse(self.id).write({'comment' : self.comment})
+        return True
+
+    @api.multi
+    def submit_final_notes(self):
+        validate = True
+        for record in self:
+            for note in self.notes_encoding_compare_filter_ids:
+                if note.score_final is None and note.justification_final is None:
+                    validate = False
+                    break
+
+        if validate:
+            return True
+        else:
+            raise exceptions.ValidationError(_("All notes must be encoded"))

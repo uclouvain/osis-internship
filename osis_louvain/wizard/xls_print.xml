@@ -9,6 +9,9 @@
 
       <field name="arch" type="xml">
         <form string="Xls print form">
+          <header>
+            <separator string="Export xls file"/>
+          </header>
             <field name="content" filename="file_name" readonly="1"/>
             <field name="file_name" invisible="1"/>
             <footer>

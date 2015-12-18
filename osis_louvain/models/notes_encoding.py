@@ -1,40 +1,20 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OSIS stands for Open Student Information System. It's an application
-#    designed to manage the core business of higher education institutions,
-#    such as universities, faculties, institutes and professional schools.
-#    The core business involves the administration of students, teachers,
-#    courses, programs and so on.
-#
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    A copy of this license - GNU Affero General Public License - is available
-#    at the root of the source code of this program.  If not,
-#    see http://www.gnu.org/licenses/.
-#
-##############################################################################
 
-from openerp import models, fields, api, _
+from openerp import models, fields, api, _, exceptions
 
 class Notes_encoding(models.Model):
         _name = 'osis.notes_encoding'
         _description = "Notes encoding"
+        _sql_constraints = [('notes_encoding_unique','unique(exam_enrollment_id)','A note encoding record must be unique on exam enrollment')]
 
         score_1 = fields.Float('Score 1')
         justification_1 = fields.Selection([('ILL',_('Ill')),('ABSENT',_('Absent')),('JUSTIFIED_ABSENCE',_('Justified absence')),('CHEATING',_('Cheating')),('SCORE_MISSING',_('Score missing'))])
         score_2 = fields.Float('Score 2')
         justification_2 = fields.Selection([('ILL',_('Ill')),('ABSENT',_('Absent')),('JUSTIFIED_ABSENCE',_('Justified absence')),('CHEATING',_('Cheating')),('SCORE_MISSING',_('Score missing'))])
+        score_final = fields.Float('Score Final')
+        justification_final = fields.Selection([('ILL',_('Ill')),('ABSENT',_('Absent')),('JUSTIFIED_ABSENCE',_('Justified absence')),('CHEATING',_('Cheating')),('SCORE_MISSING',_('Score missing'))])
+        end_date = fields.Date()
+
         notes_status = fields.Char(compute = '_get_notes_status')
         session_exam_id = fields.Many2one('osis.session_exam', string='Session exam')
         exam_enrollment_id =fields.Many2one('osis.exam_enrollment', string='Exam enrollment', ondelete='cascade')
@@ -46,7 +26,11 @@ class Notes_encoding(models.Model):
         offer_id = fields.Many2one('osis.offer', related="exam_enrollment_id.learning_unit_enrollment_id.offer_enrollment_id.offer_year_id.offer_id")
         encoding_stage_1_done = fields.Boolean('Encoding stage 1 done', default = False)
         double_encoding_done = fields.Boolean('Double encoding done', default = False)
-        # offer_id = fields.Integer(related="exam_enrollment_id.learning_unit_enrollment_id.offer_enrollment_id.offer_year_id.offer_id.id")
+        learning_unit = fields.Char(related="exam_enrollment_id.learning_unit_enrollment_id.learning_unit_year_id.acronym")
+        academic_year = fields.Integer(related="exam_enrollment_id.learning_unit_enrollment_id.learning_unit_year_id.academic_year_id.year")
+        learning_unit_credits = fields.Float(related="exam_enrollment_id.learning_unit_enrollment_id.learning_unit_year_id.credits")
+
+
         @api.multi
         def _get_notes_status(self):
             notes_status = 'NULL'
@@ -63,3 +47,17 @@ class Notes_encoding(models.Model):
                         record.notes_status = 'EQUAL'
                 if (record.justification_1 and not record.justification_2) or (record.justification_2 and not record.justification_1):
                     record.notes_status = 'DIFFERENT'
+
+
+        @api.constrains('score_1', 'score_2', 'score_final')
+        def _check_scores(self):
+            for record in self:
+                if record.score_1:
+                    if record.score_1 < 0 or record.score_1 >20:
+                        raise exceptions.ValidationError(_("Score must be >= 0 and <=20"))
+                if record.score_2:
+                    if record.score_2 < 0 or record.score_2 >20:
+                        raise exceptions.ValidationError(_("Score must be >= 0 and <=20"))
+                if record.score_final:
+                    if record.score_final < 0 or record.score_final >20:
+                        raise exceptions.ValidationError(_("Score must be >= 0 and <=20"))

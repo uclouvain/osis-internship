@@ -31,9 +31,20 @@ class Offer_year_calendar(models.Model):
     _name = "osis.offer_year_calendar"
     _description = "Offer year calendar"
 
-
     event = fields.Selection([(1,'Session 1'),(2,'Session 2'),(3,'Session 3')])
     start_date = fields.Date('Start date')
     end_date = fields.Date('End date')
     academic_calendar_id = fields.Many2one('osis.academic_calendar', string='Academic calendar')
     offer_year_id = fields.Many2one('osis.offer_year', string='Offer year')
+
+    def name_get(self,cr,uid,ids,context=None):
+        result={}
+        for record in self.browse(cr,uid,ids,context=context):
+            acronym = "-"
+            if record.offer_year_id:
+                acronym = record.offer_year_id.offer_id.acronym
+            result[record.id] = u"Session %s - %s - %s - %s" % (record.event,
+                                                           record.start_date,
+                                                           record.end_date,
+                                                           acronym)
+        return result.items()

@@ -348,6 +348,7 @@
           <field name="learning_unit_year_id" ref="learning_unit_year_math_2015"/>
           <field name="student_id" ref="student_sophie"/>
           <field name="date_enrollment">10/10/2015</field>
+          <field name="offer_enrollment_id" ref="offer_sophie"/>
         </record>
         <record id="learning_unit_programmation_2015_sophie" model="osis.learning_unit_enrollment">
           <field name="learning_unit_year_id" ref="learning_unit_year_programmation_2015"/>
@@ -366,6 +367,34 @@
         <record id="exam_sophie_programmation" model="osis.exam_enrollment">
           <field name="exam_id" ref="exam_programmation_2015_juin"/>
           <field name="learning_unit_enrollment_id" ref="learning_unit_programmation_2015_sophie"/>
+        </record>
+        <record id="academic_calendar_2015_session_1" model="osis.academic_calendar">
+          <field name="event" eval="int(1)"/>
+          <field name="start_date">01/01/2015</field>
+          <field name="end_date">30/01/2015</field>
+          <field name="description">academic calendar 2015 session 1</field>
+          <field name="academic_year_id" ref="academic_year_2015"/>
+        </record>
+        <record id="academic_calendar_2015_session_2" model="osis.academic_calendar">
+          <field name="event" eval="int(2)"/>
+          <field name="start_date">01/06/2015</field>
+          <field name="end_date">30/06/2015</field>
+          <field name="description">academic calendar 2015 session 2</field>
+          <field name="academic_year_id" ref="academic_year_2015"/>
+        </record>
+        <record id="academic_calendar_2015_session_3" model="osis.academic_calendar">
+          <field name="event" eval="int(3)"/>
+          <field name="start_date">01/09/2015</field>
+          <field name="end_date">30/09/2015</field>
+          <field name="description">academic calendar 2015 session 3</field>
+          <field name="academic_year_id" ref="academic_year_2015"/>
+        </record>
+        <record id="offer_year_calendar_math1ba_2015" model="osis.offer_year_calendar">
+          <field name="event" eval="int(3)"/>
+          <field name="start_date">01/09/2015</field>
+          <field name="end_date">30/09/2015</field>
+          <field name="offer_year_id" ref="offer_year_math_2015"/>
+          <field name="academic_calendar_id" ref="academic_calendar_2015_session_3"/>
         </record>
     </data>
 </openerp>

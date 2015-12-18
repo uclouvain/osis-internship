@@ -29,6 +29,13 @@
             <field name="view_id" eval="False"/>
             <field name="help" type="html"><p class="oe_view_nocontent_create">Create the first offer year</p></field>
         </record>
+        <record model="ir.actions.act_window" id="offer_year_calendar_list_action">
+            <field name="name">Offer Year Calendar</field>
+            <field name="res_model">osis.offer_year_calendar</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="help" type="html"><p class="oe_view_nocontent_create">Create the first offer year calendar</p></field>
+        </record>
         <record model="ir.actions.act_window" id="learning_unit_year_list_action">
             <field name="name">Learning unit year</field>
             <field name="res_model">osis.learning_unit_year</field>
@@ -38,6 +45,13 @@
         <record model="ir.actions.act_window" id="academic_year_list_action">
             <field name="name">Academic year</field>
             <field name="res_model">osis.academic_year</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
+        </record>
+        <record model="ir.actions.act_window" id="academic_calendar_list_action">
+            <field name="name">Academic calendar</field>
+            <field name="res_model">osis.academic_calendar</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" eval="False"/>
@@ -142,11 +156,15 @@
         <menuitem id="tutors_menu" name="Tutors" parent="academy_sub_menu" action="tutor_list_action"/>
 
         <menuitem id="institution_main_menu" name="Institution"/>
+
         <menuitem id="academic_year_main_menu" parent="institution_main_menu" name="Academic Year"/>
-        <menuitem id="offer_year_menu" name="Offers" parent="academic_year_main_menu" action="offer_year_list_action"/>
-        <menuitem id="learning_unit_year_menu" name="Learning units" parent="academic_year_main_menu" action="learning_unit_year_list_action"/>
-        <menuitem id="exams_menu" name="Exams" parent="academic_year_main_menu" action="exam_list_action"/>
-        <menuitem id="academic_year_menu" name="Academic years" parent="academic_year_main_menu" action="academic_year_list_action"/>
+        <menuitem id="offer_year_menu" name="Offers" parent="academic_year_main_menu" action="offer_year_list_action" sequence="0"/>
+        <menuitem id="offer_year_calendar_menu" name="Offers year calendar" parent="academic_year_main_menu" action="offer_year_calendar_list_action" sequence="1"/>
+        <menuitem id="learning_unit_year_menu" name="Learning units" parent="academic_year_main_menu" action="learning_unit_year_list_action" sequence="2"/>
+        <menuitem id="exams_menu" name="Exams" parent="academic_year_main_menu" action="exam_list_action" sequence="3"/>
+        <menuitem id="academic_year_menu" name="Academic years" parent="academic_year_main_menu" action="academic_year_list_action" sequence="4"/>
+        <menuitem id="academic_calendar_menu" name="Academic calendar" parent="academic_year_main_menu" action="academic_calendar_list_action" sequence="5"/>
+
         <menuitem id="structure_main_menu" parent="institution_main_menu" name="Structure"/>
         <menuitem id="structure_menu" parent="structure_main_menu" name="Structure" action="structure_list_action"/>
         <menuitem id="persons_menu" parent="structure_main_menu" name="Persons" action="person_list_action"/>

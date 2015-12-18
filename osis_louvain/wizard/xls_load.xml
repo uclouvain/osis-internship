@@ -9,7 +9,9 @@
 
       <field name="arch" type="xml">
         <form string="Xls load form">
-
+          <header>
+            <separator string="Load xls file"/>
+          </header>
             <field name="content" filename="file_name" />
             <group>
               <field name="file_name" invisible="1" string="File to load"/>

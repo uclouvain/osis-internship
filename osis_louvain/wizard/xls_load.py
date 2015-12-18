@@ -10,6 +10,7 @@ class XlsLoad(models.TransientModel):
 
     @api.one
     def load_xls_data(self):
+        print 'load_xls_data'
         # Open the workbook
         xl_workbook = xlrd.open_workbook(file_contents=base64.decodestring(self.content))
 
@@ -22,7 +23,16 @@ class XlsLoad(models.TransientModel):
 
         # Print all values, iterating through rows and columns
         #
-        header = ['score_1','registration_number','encoding_notes_id']
+        header = ['Academic year',
+                 'Activity',
+                 'Offer',
+                 'Registration_number',
+                 'Lastname',
+                 'Firstname',
+                 'Score_final',
+                 'Justification_final',
+                 'End_date',
+                 'Id']
         values=[]
         num_cols = xl_sheet.ncols   # Number of columns
         for row_idx in range(1, xl_sheet.nrows):    # Iterate through rows
@@ -32,5 +42,6 @@ class XlsLoad(models.TransientModel):
                 values_col.append(cell_obj.value)
             values.append(dict(zip(header,values_col)))
         for encoding_data in values:
-            encoding_id = int(encoding_data.pop('encoding_notes_id'))
-            self.env['osis.notes_encoding'].browse(encoding_id).write({'score_1' : encoding_data['score_1']})
+            #todo ajouter validation
+            encoding_id = int(encoding_data.pop('Id'))
+            self.env['osis.notes_encoding'].browse(encoding_id).write({'score_final' : encoding_data['Score_final']})
