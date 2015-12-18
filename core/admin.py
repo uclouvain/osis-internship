@@ -17,10 +17,7 @@ from .models import Person
 from .models import Student
 from .models import Tutor
 
-class AcademicYearAdmin(admin.ModelAdmin):
-    list_display = ('year')
-
-admin.site.register(AcademicYear, AcademicYearAdmin)
+admin.site.register(AcademicYear)
 
 class AcademicCalendarAdmin(admin.ModelAdmin):
     list_display = ('title', 'event_type', 'academic_year', 'start_date', 'end_date')
@@ -48,7 +45,7 @@ class OfferEnrollmentAdmin(admin.ModelAdmin):
 admin.site.register(OfferEnrollment, OfferEnrollmentAdmin)
 
 class PersonAdmin(admin.ModelAdmin):
-    list_display = ('first_name' , 'middle_name', 'last_name', 'username', 'gender','global_id', 'national_number')
+    list_display = ('first_name' , 'middle_name', 'last_name', 'username', 'gender','global_id', 'national_id')
 
 admin.site.register(Person, PersonAdmin)
 

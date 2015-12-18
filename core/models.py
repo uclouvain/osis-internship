@@ -79,10 +79,10 @@ class AcademicCalendar(models.Model):
     end_date      = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
 
     def current_year():
-        return AcademicYear.objects.filter(event_type='academic_year').filter(start_date__lte=timezone.now()).filter(end_date__gte=timezone.now()).first()
+        return AcademicCalendar.objects.filter(event_type='academic_year').filter(start_date__lte=timezone.now()).filter(end_date__gte=timezone.now()).first()
 
     def __str__(self):
-        return self.title
+        return u"%s %s" % (self.academic_year, self.title)
 
 
 class Offer(models.Model):
@@ -129,13 +129,10 @@ class OfferYearCalendar(models.Model):
     end_date          = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
 
     def current_session_exam():
-        return OfferCalendar.objects.filter(
-                                       event_type__startswith='session_exam'
-                                   ).filter(
-                                       start_date__gte=timezone.now()
-                                   ).filter(
-                                       end_date__lte=timezone.now()
-                                   ).first()
+        return OfferYearCalendar.objects.filter(event_type__startswith='session_exam').filter(start_date__lte=timezone.now()).filter(end_date__gte=timezone.now()).first()
+
+    def __str__(self):
+        return u"%s" % self.academic_calendar
 
 
 class LearningUnit(models.Model):
@@ -184,11 +181,15 @@ class SessionExam(models.Model):
     offer_year_calendar = models.ForeignKey(OfferYearCalendar, blank = False, null = True)
 
     def current_session_exam():
-        offer_calendar = OfferCalendar.current_session_exam()
-        return SessionExam.objects.filter(offer_calendar=offer_calendar).first().number_session
+        offer_calendar = OfferYearCalendar.current_session_exam()
+        session_exam = SessionExam.objects.filter(offer_year_calendar=offer_calendar).first()
+        return session_exam.number_session
+
+    def sessions(tutor, academic_year, session):
+        return SessionExam.objects.all();
 
     def __str__(self):
-        return u"%s - %s" % (self.learning_unit_year, self.start_session.strftime("%B"))
+        return u"%s - %d" % (self.learning_unit_year, self.number_session)
 
 
 class ExamEnrollment(models.Model):
