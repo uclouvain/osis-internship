@@ -8,7 +8,7 @@ This application is designed as a module of [Odoo](https://www.odoo.com), a modu
 
 ## Documentation
 
-The whole documentation of the project is published at: http://uclouvain.github.io/osis-louvain-documentation. Read it to understand how the business works and all the technical installation and configuration.
+The whole documentation of the project is published at: http://uclouvain.github.io/osis-louvain-documentation. Read it to understand how the business works and all the technical installation and configuration. Visit the project website for the latest news at: http://uclouvain.github.io/osis-louvain.
 
 ## Contributing to the Project
 
