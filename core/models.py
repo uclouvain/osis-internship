@@ -2,7 +2,7 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import User
 from django.utils import timezone
-import datetime
+
 
 class Person(models.Model):
     GENDER_CHOICES = (
@@ -10,11 +10,11 @@ class Person(models.Model):
         ('M','Male'),
         ('U','Unknown'))
 
-    user            = models.OneToOneField(User, on_delete=models.CASCADE)
-    middle_name     = models.CharField(max_length = 50,blank = True, null = True)
-    global_id       = models.CharField(max_length = 10,blank = True, null = True)
-    gender          = models.CharField(max_length = 1, blank = True, null = True, choices = GENDER_CHOICES, default = 'U')
-    national_id     = models.CharField(max_length = 25,blank = True, null = True)
+    user        = models.OneToOneField(User, on_delete=models.CASCADE)
+    middle_name = models.CharField(max_length = 50,blank = True, null = True)
+    global_id   = models.CharField(max_length = 10,blank = True, null = True)
+    gender      = models.CharField(max_length = 1, blank = True, null = True, choices = GENDER_CHOICES, default = 'U')
+    national_id = models.CharField(max_length = 25,blank = True, null = True)
 
     def first_name(self):
         return self.user.first_name
@@ -33,32 +33,32 @@ class Tutor(models.Model):
     person = models.ForeignKey(Person, null = False)
 
     def find_by_user(user):
-        person = Person.objects.filter(user = user)
+        person = Person.objects.filter(user=user)
         return Tutor.objects.get(person = person)
 
     def __str__(self):
-        return u"%s" % (self.person)
+        return u"%s" % self.person
 
 
 class Student(models.Model):
-    registration_id = models.CharField(max_length = 10, null = False)
-    person          = models.ForeignKey(Person, null = False)
+    registration_id = models.CharField(max_length=10, null=False)
+    person          = models.ForeignKey(Person, null=False)
 
     def __str__(self):
         return u"%s (%s)" % (self.person, self.registration_number)
 
 
 class Structure(models.Model):
-    acronym = models.CharField(max_length = 10, blank = False, null = False)
-    title = models.TextField(blank = False, null = False)
-    part_of = models.ForeignKey('self', blank = True, null = True)
+    acronym = models.CharField(max_length=10, blank=False, null=False)
+    title = models.TextField(blank=False, null=False)
+    part_of = models.ForeignKey('self', blank=True, null=True)
 
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)
 
 
 class AcademicYear(models.Model):
-    year = models.IntegerField(blank = False, null = False)
+    year = models.IntegerField(blank=False, null=False)
 
     def __str__(self):
         return u"%s-%s" % (self.year, self.year + 1)
@@ -66,10 +66,10 @@ class AcademicYear(models.Model):
 
 class AcademicCalendar(models.Model):
     EVENT_TYPE = (
-        ('academic_year','Academic Year'),
-        ('session_exam_1','Session Exams 1'),
-        ('session_exam_2','Session Exams 2'),
-        ('session_exam_3','Session Exams 3'))
+        ('academic_year', 'Academic Year'),
+        ('session_exam_1', 'Session Exams 1'),
+        ('session_exam_2', 'Session Exams 2'),
+        ('session_exam_3', 'Session Exams 3'))
 
     academic_year = models.ForeignKey(AcademicYear, null = False)
     event_type    = models.CharField(max_length = 50, blank = False, null = False, choices = EVENT_TYPE)
@@ -78,8 +78,9 @@ class AcademicCalendar(models.Model):
     start_date    = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
     end_date      = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
 
-    def current_year():
-        return AcademicCalendar.objects.filter(event_type='academic_year').filter(start_date__lte=timezone.now()).filter(end_date__gte=timezone.now()).first()
+    def current_academic_year():
+        academic_calendar = AcademicCalendar.objects.filter(event_type='academic_year').filter(start_date__lte=timezone.now()).filter(end_date__gte=timezone.now()).first()
+        return academic_calendar.academic_year
 
     def __str__(self):
         return u"%s %s" % (self.academic_year, self.title)
@@ -169,11 +170,26 @@ class LearningUnitEnrollment(models.Model):
         return u"%s - %s" % (self.learning_unit_year, self.offer_enrollment.student)
 
 
+class Attribution(models.Model):
+    FUNCTION_CHOICES = (
+        ('COORDINATOR','Coordinator'),
+        ('PROFESSOR','Professor'))
+
+    start_date    = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
+    end_date      = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
+    function      = models.CharField(max_length = 15, blank = True, null = True,choices = FUNCTION_CHOICES, default = 'UNKNOWN')
+    learning_unit = models.ForeignKey(LearningUnit, null = False)
+    tutor         = models.ForeignKey(Tutor, null = False)
+
+    def __str__(self):
+        return u"%s - %s" % (self.tutor.person, self.function)
+
+
 class SessionExam(models.Model):
     SESSION_STATUS = (
-        ('IDLE','Idle'),
-        ('OPEN','Open'),
-        ('CLOSED','Closed'))
+        ('IDLE', 'Idle'),
+        ('OPEN', 'Open'),
+        ('CLOSED', 'Closed'))
 
     number_session      = models.IntegerField(blank = False, null = False)
     status              = models.CharField(max_length = 10, blank = False, null = False,choices = SESSION_STATUS)
@@ -186,7 +202,10 @@ class SessionExam(models.Model):
         return session_exam.number_session
 
     def sessions(tutor, academic_year, session):
-        return SessionExam.objects.all();
+        learning_units = Attribution.objects.filter(tutor=tutor).values('learning_unit')
+        return SessionExam.objects.filter(number_session=session
+                                 ).filter(learning_unit_year__academic_year=academic_year
+                                 ).filter(learning_unit_year__learning_unit__in=learning_units)
 
     def __str__(self):
         return u"%s - %d" % (self.learning_unit_year, self.number_session)
@@ -209,18 +228,3 @@ class ExamEnrollment(models.Model):
     encoding_status          = models.CharField(max_length = 9, blank = True, null = True,choices = ENCODING_STATUS_CHOICES)
     session_exam             = models.ForeignKey(SessionExam, null = False)
     learning_unit_enrollment = models.ForeignKey(LearningUnitEnrollment, null = False)
-
-
-class Attribution(models.Model):
-    FUNCTION_CHOICES = (
-        ('COORDINATOR','Coordinator'),
-        ('PROFESSOR','Professor'))
-
-    start_date    = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
-    end_date      = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
-    function      = models.CharField(max_length = 15, blank = True, null = True,choices = FUNCTION_CHOICES, default = 'UNKNOWN')
-    learning_unit = models.ForeignKey(LearningUnit, null = False)
-    tutor         = models.ForeignKey(Tutor, null = False)
-
-    def __str__(self):
-        return u"%s - %s" % (self.tutor.person, self.function)
