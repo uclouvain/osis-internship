@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from core.models import Tutor, AcademicCalendar, SessionExam
+from core.models import Tutor, AcademicCalendar, SessionExam, ExamEnrollment
 
 def home(request):
     return render(request, "home.html", {})
@@ -31,10 +31,13 @@ def online_encoding(request, session_id):
     tutor = Tutor.find_by_user(request.user)
     academic_year = AcademicCalendar.current_academic_year()
     session = SessionExam.find_session(session_id)
-    sessions = SessionExam.sessions(tutor, academic_year, session)
+    enrollments = ExamEnrollment.find_exam_enrollments(session)
+    progress = ExamEnrollment.calculate_progress(enrollments)
+
     return render(request, "online_encoding.html",
                   {'section':       'scores_encoding',
                    'tutor':         tutor,
                    'academic_year': academic_year,
                    'session':       session,
-                   'sessions':      sessions})
+                   'progress':      progress,
+                   'enrollments':   enrollments})

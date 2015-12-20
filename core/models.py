@@ -45,7 +45,7 @@ class Student(models.Model):
     person          = models.ForeignKey(Person, null=False)
 
     def __str__(self):
-        return u"%s (%s)" % (self.person, self.registration_number)
+        return u"%s (%s)" % (self.person, self.registration_id)
 
 
 class Structure(models.Model):
@@ -115,7 +115,7 @@ class OfferEnrollment(models.Model):
     student         = models.ForeignKey(Student, null = False)
 
     def __str__(self):
-        return u"%s - %s" % (self.offer_year, self.student)
+        return u"%s" % self.student
 
 
 class OfferYearCalendar(models.Model):
@@ -215,19 +215,25 @@ class SessionExam(models.Model):
 
 
 class ExamEnrollment(models.Model):
-    JUSTIFICATION_CHOICES = (
+    JUSTIFICATION_TYPES = (
         ('ABSENT','Absent'),
         ('CHEATING','Cheating'),
         ('ILL','Ill'),
         ('JUSTIFIED_ABSENCE','Justified absence'),
         ('SCORE_MISSING','Score missing'))
 
-    ENCODING_STATUS_CHOICES = (
+    ENCODING_STATUS = (
         ('SAVED','Saved'),
         ('SUBMITTED','Submitted'))
 
     score                    = models.DecimalField(max_digits = 4, decimal_places = 2, blank = True, null = True, validators=[MaxValueValidator(20), MinValueValidator(0)])
-    justification            = models.CharField(max_length = 17, blank = True, null = True,choices = JUSTIFICATION_CHOICES)
-    encoding_status          = models.CharField(max_length = 9, blank = True, null = True,choices = ENCODING_STATUS_CHOICES)
+    justification            = models.CharField(max_length = 17, blank = True, null = True,choices = JUSTIFICATION_TYPES)
+    encoding_status          = models.CharField(max_length = 9, blank = True, null = True,choices = ENCODING_STATUS)
     session_exam             = models.ForeignKey(SessionExam, null = False)
     learning_unit_enrollment = models.ForeignKey(LearningUnitEnrollment, null = False)
+
+    def calculate_progress(enrollments):
+        return len([e for e in enrollments if e.score is not None or e.justification is not None]) / len(enrollments)
+
+    def find_exam_enrollments(session_exam):
+        return ExamEnrollment.objects.filter(session_exam=session_exam)
