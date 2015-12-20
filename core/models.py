@@ -199,11 +199,14 @@ class SessionExam(models.Model):
     def current_session_exam():
         offer_calendar = OfferYearCalendar.current_session_exam()
         session_exam = SessionExam.objects.filter(offer_year_calendar=offer_calendar).first()
-        return session_exam.number_session
+        return session_exam
+
+    def find_session(id):
+        return SessionExam.objects.get(pk=1)
 
     def sessions(tutor, academic_year, session):
         learning_units = Attribution.objects.filter(tutor=tutor).values('learning_unit')
-        return SessionExam.objects.filter(number_session=session
+        return SessionExam.objects.filter(number_session=session.number_session
                                  ).filter(learning_unit_year__academic_year=academic_year
                                  ).filter(learning_unit_year__learning_unit__in=learning_units)
 

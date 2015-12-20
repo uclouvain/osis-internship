@@ -1,0 +1,87 @@
+{% extends "layout.html" %}
+{% block breadcrumb %}
+  <li><a href="{% url 'studies' %}">Les études</a></li>
+  <li><a href="{% url 'assessements' %}">Évaluations</a></li>
+  <li><a href="{% url 'scores_encoding' %}">Encodage des notes</a></li>
+  <li class="active">Encodage en ligne</li>
+{% endblock %}
+{% block content %}
+  <div class="page-header">
+    <h2>Encodage des notes en ligne</h2>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title" style="font-size: 150%; color: #3399CC;"><b>{{ session.learning_unit_year }}</b></h3>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Responsable</label><br>
+            {{ tutor }}
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Année académique</label><br>
+            {{ academic_year }}
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Session</label><br>
+            {{ session.number_session }}
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Programme</label><br>
+            <select>
+              <option value="volvo">Tous</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Nombre d'inscrits</label><br>
+            {{ num_enrollments }}
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Progrès</label><br>
+            {{ progress }}
+          </div>
+        </div>
+      </div>
+
+      <br><p><b>L'étudiants inscrits</b></p>
+
+      <table class="table table-striped table-hover">
+          <thead>
+            <th>Statut</th>
+            <th>Sigle</th>
+            <th>Cours</th>
+          </thead>
+          <tbody>
+          {% for enrollment in enrollments %}
+            <tr>
+              <td>{% if session.status == 'IDLE' %}
+                    <span style="color: orange" class="glyphicon glyphicon-time" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="Idle"></span>
+                  {% elif session.status == 'OPEN' %}
+                    <span style="color: blue" class="glyphicon glyphicon-flag" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="Open"></span>
+                  {% else %}
+                    <span style="color: green" class="glyphicon glyphicon-ok" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="Closed"></span> {{ session.status|title }}</td>
+                  {% endif %}
+              <td>{{ session.learning_unit_year.acronym }}</td>
+              <td>{{ session.learning_unit_year.title }}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

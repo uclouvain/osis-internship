@@ -27,12 +27,12 @@ def scores_encoding(request):
                    'sessions':      sessions})
 
 @login_required
-def scores_encoding(request):
+def online_encoding(request, session_id):
     tutor = Tutor.find_by_user(request.user)
     academic_year = AcademicCalendar.current_academic_year()
-    session = SessionExam.current_session_exam()
+    session = SessionExam.find_session(session_id)
     sessions = SessionExam.sessions(tutor, academic_year, session)
-    return render(request, "scores_encoding.html",
+    return render(request, "online_encoding.html",
                   {'section':       'scores_encoding',
                    'tutor':         tutor,
                    'academic_year': academic_year,
