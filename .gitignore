@@ -5,5 +5,4 @@
 *.pyc
 venv/
 __pycache__/
-core/migrations/
-
+*.iml

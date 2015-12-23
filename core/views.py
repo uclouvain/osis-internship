@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from core.models import Tutor, AcademicCalendar, SessionExam, ExamEnrollment
+import os
 
 def home(request):
-    return render(request, "home.html", {})
+    return render(request, "home.html", {'envs' : os.environ ,})
 
 @login_required
 def studies(request):
