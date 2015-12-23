@@ -1,2 +1,0 @@
-xlsxwriter==0.7.7
-xlrd==0.9.4
