@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% block breadcrumb %}
+  <li><a href="{% url 'studies' %}">Les études</a></li>
+  <li class="active">Évaluations</li>
+{% endblock %}
+{% block content %}
+  <div class="page-header">
+    <h2>Évaluations</h2>
+  </div>
+  <ul class="media-list">
+    <li class="media">
+      <div class="media-left">
+        <a href="#">
+          <img class="media-object" src="{% static 'images/icon_assessements.png' %}">
+        </a>
+      </div>
+      <div class="media-body">
+        <h4 class="media-heading"><a href="#">Inscription aux examens</a></h4>
+        Ce processus gère les inscriptions aux examens.
+      </div>
+    </li>
+    <li class="media">
+      <div class="media-left">
+        <a href="{% url 'scores_encoding' %}">
+          <img class="media-object" src="{% static 'images/icon_encoding_scores.png' %}">
+        </a>
+      </div>
+      <div class="media-body">
+        <h4 class="media-heading"><a href="{% url 'scores_encoding' %}">Encodage des notes</a></h4>
+        Ce processus aide les enseignants à coder leurs notes pour chaque session d'examens.
+      </div>
+    </li>
+    <li class="media">
+      <div class="media-left">
+        <a href="#">
+          <img class="media-object" src="{% static 'images/icon_deliberations.png' %}">
+        </a>
+      </div>
+      <div class="media-body">
+        <h4 class="media-heading"><a href="#">Délibérations</a></h4>
+        Ce processus aide les enseignants à coder leurs notes pour chaque session d'examens.
+      </div>
+    </li>
+  </ul>
+{% endblock %}
