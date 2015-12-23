@@ -1,4 +1,9 @@
 *.html
 *.pdf
 *.vpp~*
+.idea/
 *.pyc
+venv/
+__pycache__/
+core/migrations/
+
