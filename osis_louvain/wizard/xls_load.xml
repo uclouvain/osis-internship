@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+  <data>
+
+    <!-- Form -->
+    <record id="xls_load_form" model="ir.ui.view">
+      <field name="name">osis.xls_load.form</field>
+      <field name="model">osis.xls_load</field>
+
+      <field name="arch" type="xml">
+        <form string="Xls load form">
+          <header>
+            <separator string="Load xls file"/>
+          </header>
+            <field name="content" filename="file_name" />
+            <group>
+              <field name="file_name" invisible="1" string="File to load"/>
+             </group>
+            <footer>
+              <button name="load_xls_data" string="Load data" type="object" />
+            </footer>
+        </form>
+      </field>
+    </record>
+
+  </data>
+</openerp>

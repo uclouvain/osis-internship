@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+  <data>
+    <!-- Form générale-->
+    <record id="common_encoding_notes_session_form" model="ir.ui.view">
+      <field name="name">osis.view.encoding.notes.session.form</field>
+      <field name="model">osis.session_exam</field>
+
+      <field name="arch" type="xml">
+      <form string="Encoding notes session form" create="false" delete="false" editable="false" >
+        <header>
+        </header>
+        <group>
+            <field name="learning_unit_acronym" readonly="1" string="Learning unit"/>
+            <field name="learning_unit_title" readonly="1"  />
+            <field name="number_session" readonly="1" string="Session"/>
+            <field name="offer_filter_id" options="{'no_create': true,'no_open' : true}" string="Offer"  />
+            <field name="offer_ids" invisible="1" />
+            <field name="notes_count" invisible='1'/>
+            <field name="registered_student_count" string="Number of registered students" invisible='0'/>
+            <field name="comment" readonly="1"/>
+          </group>
+        <separator string="Notes"/>
+        <group>
+          <field name="notes_encoding_ids" attrs="{'readonly':True}" invisible="1">
+            <tree>
+              <field name="offer"/>
+              <field name="student_registration_number"/>
+              <field name="student_name"/>
+              <field name="student_first_name"/>
+              <field name="score_1" />
+              <field name="justification_1" />
+              <field name="score_2" />
+              <field name="justification_2" />
+              <field name="score_final" />
+              <field name="justification_final" />
+              <field name="end_date" />
+            </tree>
+          </field>
+           <field name="notes_encoding_filter_ids" readonly="1" nolabel="1" >
+             <tree editable="bottom">
+               <field name="offer"/>
+               <field name="student_registration_number"/>
+               <field name="student_name"/>
+               <field name="student_first_name"/>
+               <field name="score_final" string="Score" />
+               <field name="justification_final" string="Justification" />
+               <field name="end_date" />
+             </tree>
+           </field>
+        </group>
+        <div style="font-size:10pt;">
+          <div style="visibility:hidden">
+          <!--<table cellspacing="2" cellpadding="2" style="margin : 10px;">
+            <tr>
+              <td>Only one note encoded</td>
+            </tr>
+            <tr>
+              <td class="equal">2 notes equal</td>
+            </tr>
+            <tr>
+              <td class="different">2 notes different</td>
+            </tr>
+          </table>-->
+</div>
+          <!--<table style="margin : 10px;">
+            <tr>
+              <td>Note chiffrée :</td>
+              <td>0 : code de présence</td>
+              <td>Autre note :</td>
+              <td>A : absent</td>
+              <td colspan="2">Autre note :</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td class="legend">(vide) : pas encore de note</td>
+              <td></td>
+              <td class="legend">T : tricherie</td>
+              <td colspan="2">(Accessible uniquement pour le gestionnaire de programme)</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td class="unauthorized">décimale non autorisée</td>
+              <td></td>
+              <td class="legend">? : Note manquant/Perte la copie</td>
+              <td></td>
+              <td class="legend">M : Absent justifié</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td class="legend">S : Absent non justifié</td>
+            </tr>
+          </table>-->
+        </div>
+      </form>
+    </field>
+  </record>
+  <!-- Form pour consultation notes -->
+  <record model="ir.ui.view" id="consulting_notes_session_form_primherit_view">
+      <field name="name">encoding.form</field>
+      <field name="model">osis.session_exam</field>
+      <field name="mode">primary</field>
+      <field eval="16" name="priority"/>
+      <field name="inherit_id" ref="osis_louvain.common_encoding_notes_session_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//form/header" position="replace">
+          <header>
+              <button name="print_session_notes" string="Print" type="object" icon="gtk-print" attrs="{'invisible': [('notes_count','=', 0)]}" help="Print a report with the notes"/>
+              <button name="encode_session_notes" string="Encoding" type="object" attrs="{'invisible': [('notes_count','=', 0)]}" help="First encoding"/>
+              <button name="xls_export_session_notes" string="Export xls" type="object" attrs="{'invisible': [('notes_count','=', 0)]}" help="Export xls file"/>
+              <button name="load_xls_session_notes" string="Load xls" type="object" attrs="{'invisible': [('notes_count','=', 0)]}" help="Load final notes with a xls file"/>
+          </header>
+        </xpath>
+        <xpath expr="//field[@name='student_first_name']" position="after">
+          <field name="score_1" string="Score "/>
+          <field name="justification_1" string="Justification"/>
+          <field name="notes_status" invisible="1"/>
+        </xpath>
+      </field>
+  </record>
+  <!-- Form pour l'encodage-->
+  <record model="ir.ui.view" id="encoding_notes_session_form_primherit_view">
+      <field name="name">encoding.form</field>
+      <field name="model">osis.session_exam</field>
+      <field name="mode">primary</field>
+      <field eval="16" name="priority"/>
+      <field name="inherit_id" ref="osis_louvain.common_encoding_notes_session_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//form/header" position="replace">
+          <header>
+            <group cols="4">
+              <button name="save_session_notes" string="Save" type="object"/>
+              <button name="submit_session_notes" string="Submit" type="object"/>
+              <button name="double_encoding" string="Double encoding" type="object"/>
+            </group>
+          </header>
+        </xpath>
+        <xpath expr="//field[@name='student_first_name']" position="after">
+          <field name="score_1"/>
+          <field name="justification_1"/>
+        </xpath>
+      </field>
+  </record>
+
+  <!-- Form pour le double encodage-->
+  <record model="ir.ui.view" id="double_encoding_notes_session_form_primherit_view">
+      <field name="sequence" eval="3"/>
+      <field name="name">encoding.form</field>
+      <field name="model">osis.session_exam</field>
+      <field name="mode">primary</field>
+<field eval="16" name="priority"/>
+      <field name="inherit_id" ref="osis_louvain.common_encoding_notes_session_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//form/header" position="replace">
+          <header>
+            <group cols="4">
+              <button name="save_double_encoding_session_notes" string="Save" type="object"/>
+              <button name="compare_session_notes" string="Compare" type="object"/>
+            </group>
+          </header>
+        </xpath>
+        <xpath expr="//field[@name='student_first_name']" position="after">
+          <field name="score_1"/>
+          <field name="justification_1"/>
+          <field name="score_2"/>
+          <field name="justification_2"/>
+        </xpath>
+      </field>
+  </record>
+  </data>
+</openerp>

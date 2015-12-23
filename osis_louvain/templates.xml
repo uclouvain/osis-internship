@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- OSIS stands for Open Student Information System. It's an application
+ *   designed to manage the core business of higher education institutions,
+ *   such as universities, faculties, institutes and professional schools.
+ *   The core business involves the administration of students, teachers,
+ *   courses, programs and so on.
+ *
+ *   Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU Affero General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU Affero General Public License for more details.
+ *
+ *   A copy of this license - GNU Affero General Public License - is available
+ *   at the root of the source code of this program.  If not,
+ *   see http://www.gnu.org/licenses/. -->
+<openerp>
+    <data>
+        <template id="listing">
+          <label>ffff</label>
+        <!--   <ul> -->
+        <!--     <li t-foreach="objects" t-as="object"> -->
+        <!--       <a t-attf-href="#{ root }/objects/#{ object.id }"> -->
+        <!--         <t t-esc="object.display_name"/> -->
+        <!--       </a> -->
+        <!--     </li> -->
+        <!--   </ul> -->
+        <!-- </template> -->
+        <!-- <template id="object"> -->
+        <!--   <h1><t t-esc="object.display_name"/></h1> -->
+        <!--   <dl> -->
+        <!--     <t t-foreach="object._fields" t-as="field"> -->
+        <!--       <dt><t t-esc="field"/></dt> -->
+        <!--       <dd><t t-esc="object[field]"/></dd> -->
+        <!--     </t> -->
+        <!--   </dl> -->
+        </template>
+        <template id="student_notes_listing">
+          <div class="oe_structure">
+               <div class="container">
+                 <input type="button" value="ok"/>
+                 <table border="1">
+            <t t-foreach="student_notes" t-as="notes">
+
+              <tr>
+                <td><t t-esc="notes.status"/></td>
+                <td><t t-esc="notes.acronym"/></td>
+                <td><t t-esc="notes.title"/></td>
+                <td><t t-esc="notes.year"/></td>
+                <td><t t-esc="notes.session_number"/></td>
+                <td><t t-esc="notes.tutor_name"/></td>
+
+              </tr>
+
+            </t>
+          </table>
+          </div>
+         </div>
+        </template>
+        <template id="html_extra">
+          <label>extra</label>
+        </template>
+        <template id="offer" >
+          <div class="oe_structure">
+               <div class="container">
+                 <form>
+                   <input type="button" value="ok"/>
+                 <table t-name="ListView" class="oe_list_content">
+            <t t-foreach="offers" t-as="offer">
+
+              <tr>
+                <td class="oe_list_record_selector" width="1">
+
+                    <input type="checkbox" name="radiogroup"></input>
+
+                </td>
+                <td class="oe_list_field_cell oe_list_field_char   oe_readonly" ><t t-esc="offer.acronym"/></td>
+                <td><t t-esc="offer.title"/></td>
+
+
+              </tr>
+
+            </t>
+          </table>
+        </form>
+          </div>
+         </div>
+        </template>
+    </data>
+</openerp>

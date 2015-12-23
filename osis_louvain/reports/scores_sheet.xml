@@ -1,0 +1,74 @@
+<openerp>
+  <data>
+    <report
+      id="report_scores_sheet_pdf"
+      model="osis.session_exam"
+      string="Scores sheet pdf"
+      name="osis_louvain.report_scores_sheet"
+      file="osis_louvain.report_scores_sheet"
+      report_type="qweb-pdf"/>
+
+      <report
+        id="report_scores_sheet_html"
+        model="osis.session_exam"
+        string="Scores sheet html"
+        name="osis_louvain.report_scores_sheet"
+        file="osis_louvain.report_scores_sheet"
+        report_type="qweb-html" />
+
+      <template id="report_scores_sheet">
+        <t t-call="report.html_container">
+          <div class="page">
+            <t t-foreach="docs" t-as="doc">
+              <!--
+              <div id="bloc_entete" style="margin-left: 13.5cm">
+              -->
+                <div class="row">
+                  <div class="col-md-4 col-md-offset-8">
+                    <span>Academic year </span>
+                    <span t-field="doc.learning_unit_year_id.academic_year_id"></span>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4 col-md-offset-8">
+                    <span>Session : </span>
+                    <span t-field="doc.session_number"></span>
+                  </div>
+                </div>
+                <div class="row mt16">
+                  <div class="col-md-4 col-md-offset-8">
+                    <span><b>Scores sheet</b></span>
+                  </div>
+                </div>
+                <!--
+              </div>bloc_entete -->
+              <div class="row mt32 mb16">
+                <b><span t-field="doc.learning_unit_year_id.acronym"/> - <span t-field="doc.learning_unit_year_id.title"/></b>
+              </div>
+              <div id="bloc_signature">
+                <div class="row mb8">Fait à ........................................</div>
+                <div class="row mb8">le ........../........../..........</div>
+                <div class="row">Signature</div>
+              </div><!-- bloc_signature -->
+              <div class="row mt48" id="tableau">
+                <table class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th>Offer year</th>
+                      <th>Name and firstname</th>
+                      <th>Registration number</th>
+                      <th>Score</th>
+                      <th>Justification</th>
+                      <th>N° ordre</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                </tbody>
+                </table>
+              </div> <!-- tableau -->
+            </t>
+          </div> <!-- page -->
+        </t>
+      </template>
+    </data>
+  </openerp>

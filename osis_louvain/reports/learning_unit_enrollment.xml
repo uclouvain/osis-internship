@@ -1,0 +1,39 @@
+<openerp>
+  <data>
+
+    <report file="osis_louvain.report_learning_unit_enrollment"
+      id="report_learning_unit_enrollment_html"
+      model="osis.learning_unit_enrollment"
+      name="osis_louvain.report_learning_unit_enrollment_view_simple"
+      report_type="qweb-html"
+      string="Learning Unit Enrollment Report HTML"/>
+
+    <template id="report_learning_unit_enrollment_view_simple">
+      <t t-call="report.html_container">
+        <t t-call="report.external_layout">
+          <div class="page">
+            <h1>Learning Unit Enrollment - Report</h1>
+            <table class="table table-condensed" style="border: 1px solid #9999">
+              <thead>
+                <tr>
+                  <th>Student</th>
+                  <th>Learning unit year</th>
+                  <th>Enrollment date</th>
+                </tr>
+              </thead>
+              <t t-as="doc" t-foreach="docs">
+                <tr>
+                  <td><span t-field="doc.student_id"/></td>
+                  <td><span t-field="doc.learning_unit_year_id"/></td>
+                  <td><span t-field="doc.date_enrollment"/></td>
+                </tr>
+              </t>
+            </table>
+          </div>
+        </t>
+
+      </t>
+    </template>
+
+  </data>
+</openerp>
