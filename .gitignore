@@ -1,6 +1,3 @@
-*.html
-*.pdf
-*.vpp~*
 .idea/
 *.pyc
 venv/
