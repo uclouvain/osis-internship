@@ -4,7 +4,7 @@ from core.models import Tutor, AcademicCalendar, SessionExam, ExamEnrollment
 import os
 
 def home(request):
-    return render(request, "home.html", {'envs' : os.environ ,})
+    return render(request, "home.html", {'envs' : os.environ , 'meta' : request.META})
 
 @login_required
 def studies(request):
