@@ -4,7 +4,12 @@ from core.models import Tutor, AcademicCalendar, SessionExam, ExamEnrollment
 import os
 
 def home(request):
-    return render(request, "home.html", {'envs' : os.environ , 'meta' : request.META})
+    meta = request.META
+    with open('shib_infos.txt','w') as file :
+        for key, value in meta.items() :
+            env = ''.join(key,' : ',value,'\n')
+            file.write(env)
+    return render(request, "home.html")
 
 @login_required
 def studies(request):
