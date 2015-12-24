@@ -4,6 +4,8 @@ from django.core.urlresolvers import reverse_lazy
 
 import logging
 
+os.environ.setdefault("SERVER","DEV")
+
 logger = logging.getLogger(__name__)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -32,9 +34,14 @@ INSTALLED_APPS = (
     'core'
 )
 
-server_env = os.getenv('SERVER')
+envs = ''.join([''.join([k,' : ',v,' \n ']) for k,v in os.environ.items()])
+try :
+    server_env = os.environ['SERVER']
+except KeyError :
+    server_env = None
 if server_env is not None:
     logger.warning('SERVER : ' + server_env)
+    logger.warning('ENVS : '+envs)
     MIDDLEWARE_CLASSES = (
         'django.contrib.sessions.middleware.SessionMiddleware',
         'django.middleware.common.CommonMiddleware',
@@ -48,6 +55,7 @@ if server_env is not None:
     )
 else:
     logger.warning('SERVER : Local')
+    logger.warning('ENVS : '+envs)
     MIDDLEWARE_CLASSES = (
         'django.contrib.sessions.middleware.SessionMiddleware',
         'django.middleware.common.CommonMiddleware',
