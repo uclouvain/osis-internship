@@ -28,17 +28,30 @@ INSTALLED_APPS = (
     'core'
 )
 
-MIDDLEWARE_CLASSES = (
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'core.authentication.shibbollethUser.ShibbollethUserMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-)
+server_env = os.getenv('SERVER')
+if server_env is not None :
+    MIDDLEWARE_CLASSES = (
+        'django.contrib.sessions.middleware.SessionMiddleware',
+        'django.middleware.common.CommonMiddleware',
+        'django.middleware.csrf.CsrfViewMiddleware',
+        'django.contrib.auth.middleware.AuthenticationMiddleware',
+        'core.authentication.shibbollethUser.ShibbollethUserMiddleware',
+        'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+        'django.contrib.messages.middleware.MessageMiddleware',
+        'django.middleware.clickjacking.XFrameOptionsMiddleware',
+        'django.middleware.security.SecurityMiddleware',
+    )
+else :
+    MIDDLEWARE_CLASSES = (
+        'django.contrib.sessions.middleware.SessionMiddleware',
+        'django.middleware.common.CommonMiddleware',
+        'django.middleware.csrf.CsrfViewMiddleware',
+        'django.contrib.auth.middleware.AuthenticationMiddleware',
+        'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+        'django.contrib.messages.middleware.MessageMiddleware',
+        'django.middleware.clickjacking.XFrameOptionsMiddleware',
+        'django.middleware.security.SecurityMiddleware',
+    )
 
 ROOT_URLCONF = 'osis_backend.urls'
 
@@ -102,9 +115,10 @@ LOGIN_REDIRECT_URL = '/'
 
 # Authentification type
 # If the first one is not available, it take the second ...
-AUTHENTICATION_BACKENDS = [
-    'core.authentication.shibbollethUser.ShibbollethUserBackend',
-    ]
+if server_env is not None :
+    AUTHENTICATION_BACKENDS = [
+        'core.authentication.shibbollethUser.ShibbollethUserBackend',
+        ]
 
 
 FIXTURE_DIRS = (
