@@ -33,8 +33,8 @@ INSTALLED_APPS = (
 )
 
 server_env = os.getenv('SERVER')
-if server_env is not None :
-    logger.warning('SERVER : '+server_env)
+if server_env is not None:
+    logger.warning('SERVER : ' + server_env)
     MIDDLEWARE_CLASSES = (
         'django.contrib.sessions.middleware.SessionMiddleware',
         'django.middleware.common.CommonMiddleware',
@@ -46,7 +46,7 @@ if server_env is not None :
         'django.middleware.clickjacking.XFrameOptionsMiddleware',
         'django.middleware.security.SecurityMiddleware',
     )
-else :
+else:
     logger.warning('SERVER : Local')
     MIDDLEWARE_CLASSES = (
         'django.contrib.sessions.middleware.SessionMiddleware',
@@ -121,12 +121,30 @@ LOGIN_REDIRECT_URL = '/'
 
 # Authentification type
 # If the first one is not available, it take the second ...
-if server_env is not None :
+if server_env is not None:
     AUTHENTICATION_BACKENDS = [
         'core.authentication.shibbollethUser.ShibbollethUserBackend',
-        ]
-
+    ]
 
 FIXTURE_DIRS = (
-   '/core/fixtures/',
+    '/core/fixtures/',
 )
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'home/osis/django_logs/debug.log',
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
