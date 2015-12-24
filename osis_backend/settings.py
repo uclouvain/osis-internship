@@ -29,8 +29,9 @@ try :
     config.read('/home/osis/ConfigFile.properties')
     os.environ.setdefault("SERVER",config.get('ServerProperties','server.env'))
     logger.warning('TRY reussi')
-except Exception :
+except Exception as e :
     logger.warning('catch')
+    logger.warning(e)
     pass
 
 # Application definition
