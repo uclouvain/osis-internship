@@ -2,6 +2,10 @@ import os
 
 from django.core.urlresolvers import reverse_lazy
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
@@ -30,6 +34,7 @@ INSTALLED_APPS = (
 
 server_env = os.getenv('SERVER')
 if server_env is not None :
+    logger.warning('SERVER : '+server_env)
     MIDDLEWARE_CLASSES = (
         'django.contrib.sessions.middleware.SessionMiddleware',
         'django.middleware.common.CommonMiddleware',
@@ -42,6 +47,7 @@ if server_env is not None :
         'django.middleware.security.SecurityMiddleware',
     )
 else :
+    logger.warning('SERVER : Local')
     MIDDLEWARE_CLASSES = (
         'django.contrib.sessions.middleware.SessionMiddleware',
         'django.middleware.common.CommonMiddleware',
