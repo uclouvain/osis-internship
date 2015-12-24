@@ -3,10 +3,10 @@ import os
 from django.core.urlresolvers import reverse_lazy
 
 import logging
+from  configparser import ConfigParser
 
-os.environ.setdefault("SERVER","DEV")
 
-logger = logging.getLogger(__name__)
+
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -21,6 +21,15 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+
+logger = logging.getLogger(__name__)
+
+config = ConfigParser.ConfigParser()
+try :
+    config.read('/home/osis/ConfigFile.properties')
+    os.environ.setdefault("SERVER",config.get('ServerProperties','server.env'))
+except Exception :
+    pass
 
 # Application definition
 
