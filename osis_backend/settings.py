@@ -28,7 +28,9 @@ config = configparser.ConfigParser()
 try :
     config.read('/home/osis/ConfigFile.properties')
     os.environ.setdefault("SERVER",config.get('ServerProperties','server.env'))
+    logger.warning('TRY reussi')
 except Exception :
+    logger.warning('catch')
     pass
 
 # Application definition
@@ -43,11 +45,14 @@ INSTALLED_APPS = (
     'core'
 )
 
+envs = ''.join([''.join([k,' : ',v,' \n ']) for k,v in os.environ.items()])
 try :
     server_env = os.environ['SERVER']
 except KeyError :
     server_env = None
 if server_env is not None:
+    logger.warning('SERVER : ' + server_env)
+    logger.warning('ENVS : '+envs)
     MIDDLEWARE_CLASSES = (
         'django.contrib.sessions.middleware.SessionMiddleware',
         'django.middleware.common.CommonMiddleware',
@@ -60,6 +65,8 @@ if server_env is not None:
         'django.middleware.security.SecurityMiddleware',
     )
 else:
+    logger.warning('SERVER : Local')
+    logger.warning('ENVS : '+envs)
     MIDDLEWARE_CLASSES = (
         'django.contrib.sessions.middleware.SessionMiddleware',
         'django.middleware.common.CommonMiddleware',
