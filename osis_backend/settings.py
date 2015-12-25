@@ -3,36 +3,50 @@ import os
 from django.core.urlresolvers import reverse_lazy
 
 import logging
-import  configparser
-
-
+import configparser
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
+logger = logging.getLogger(__name__)
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'chgajy@#q91^!6owmz29%@#3jw094@yr@1!6w3lxx@n6v!7nvd'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Analyse in which environment the application is running
+config = configparser.ConfigParser()
+server_env = None
+
+# Database default config
+DB_ENGINE = 'django.db.backends.sqlite3'
+DB_NAME = 'osis_backend_local'
+DB_USER = ''
+DB_PASSWORD = ''
+DB_HOST = ''
+DB_PORT = ''
+
+try:
+    config.read('/home/osis/ConfigFile.properties')
+    server_env = config.get('ServerProperties', 'server.env')
+    SECRET_KEY = config.get('DjangoProperties', 'secret_key')
+    DB_ENGINE = config.get('DbProperties', 'db.engine')
+    DB_NAME = config.get('DbProperties', 'db.name')
+    DB_USER = config.get('DbProperties', 'db.user')
+    DB_PASSWORD = config.get('DbProperties', 'db.password')
+    DB_HOST = config.get('DbProperties', 'db.host')
+    DB_PORT = config.get('DbProperties', 'db.port')
+
+    logger.info('SERVER : ' + server_env)
+except Exception as e:
+    logger.info('SERVER : Local')
+    pass
+
+
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
+
 
 ALLOWED_HOSTS = []
-
-
-logger = logging.getLogger(__name__)
-
-config = configparser.ConfigParser()
-try :
-    config.read('/home/osis/ConfigFile.properties')
-    os.environ.setdefault("SERVER",config.get('ServerProperties','server.env'))
-    logger.warning('TRY reussi')
-except Exception as e :
-    logger.warning('catch')
-    logger.warning(e)
-    pass
 
 # Application definition
 
@@ -46,16 +60,10 @@ INSTALLED_APPS = (
     'core'
 )
 
-envs = ''.join([''.join([k,' : ',v,' \n ']) for k,v in os.environ.items()])
-try :
-    server_env = os.environ['SERVER']
-except KeyError :
-    server_env = None
-if server_env is not None:
-    logger.warning('SERVER : ' + server_env)
-    logger.warning('ENVS : '+envs)
+if server_env is not None and server_env != 'LOCAL':
     MIDDLEWARE_CLASSES = (
         'django.contrib.sessions.middleware.SessionMiddleware',
+        'django.middleware.locale.LocaleMiddleware',
         'django.middleware.common.CommonMiddleware',
         'django.middleware.csrf.CsrfViewMiddleware',
         'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -65,11 +73,32 @@ if server_env is not None:
         'django.middleware.clickjacking.XFrameOptionsMiddleware',
         'django.middleware.security.SecurityMiddleware',
     )
+    AUTHENTICATION_BACKENDS = [
+        'core.authentication.shibbollethUser.ShibbollethUserBackend',
+    ]
+
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'file': {
+                'level': 'DEBUG',
+                'class': 'logging.FileHandler',
+                'filename': 'home/osis/django_logs/debug.log',
+            },
+        },
+        'loggers': {
+            'django.request': {
+                'handlers': ['file'],
+                'level': 'DEBUG',
+                'propagate': True,
+            },
+        },
+    }
 else:
-    logger.warning('SERVER : Local')
-    logger.warning('ENVS : '+envs)
     MIDDLEWARE_CLASSES = (
         'django.contrib.sessions.middleware.SessionMiddleware',
+        'django.middleware.locale.LocaleMiddleware',
         'django.middleware.common.CommonMiddleware',
         'django.middleware.csrf.CsrfViewMiddleware',
         'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -78,6 +107,24 @@ else:
         'django.middleware.clickjacking.XFrameOptionsMiddleware',
         'django.middleware.security.SecurityMiddleware',
     )
+
+if server_env is None or server_env == 'DEV' or server_env == 'LOCAL':
+    DEBUG = True
+else:
+    DEBUG = False
+
+# Database
+# https://docs.djangoproject.com/en/1.8/ref/settings/#databases
+DATABASES = {
+    'default': {
+        'ENGINE': DB_ENGINE,
+        'NAME': DB_NAME,
+        'USER': DB_USER,
+        'PASSWORD': DB_PASSWORD,
+        'HOST': DB_HOST,
+        'PORT': DB_PORT,
+    }
+}
 
 ROOT_URLCONF = 'osis_backend.urls'
 
@@ -100,21 +147,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'osis_backend.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/1.8/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'osis_backend_dev',
-        'USER': 'osis_usr',
-        'PASSWORD': 'osis',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
-    }
-}
-
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
@@ -133,38 +165,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# Authentication settings
-
 LOGIN_URL = reverse_lazy('login')
 LOGOUT_URL = reverse_lazy('logout')
 LOGIN_REDIRECT_URL = '/'
 
-# Authentification type
-# If the first one is not available, it take the second ...
-if server_env is not None:
-    AUTHENTICATION_BACKENDS = [
-        'core.authentication.shibbollethUser.ShibbollethUserBackend',
-    ]
-
 FIXTURE_DIRS = (
     '/core/fixtures/',
 )
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': 'home/osis/django_logs/debug.log',
-        },
-    },
-    'loggers': {
-        'django.request': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-    },
-}

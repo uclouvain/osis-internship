@@ -6,5 +6,5 @@ urlpatterns = [
     url(r'', include('core.urls')),
 ]
 
-handler404 = 'osis_backend.views.page_not_found'
-handler403 = 'osis_backend.views.access_denied'
+handler404 = 'core.views.page_not_found'
+handler403 = 'core.views.access_denied'
