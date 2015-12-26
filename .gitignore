@@ -1,6 +1,7 @@
 *.html
 *.pdf
 *.vpp~*
+/core/migrations
 .idea/
 *.pyc
 venv/
