@@ -105,6 +105,8 @@ FIXTURE_DIRS = (
 )
 
 try  :
-    from sever_settings import *
+    from sevrer_settings import *
+    print('server')
 except ImportError:
+    print('local')
     pass
