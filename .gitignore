@@ -8,3 +8,4 @@
 venv/
 __pycache__/
 *.iml
+/osis_backend/server_settings.py
