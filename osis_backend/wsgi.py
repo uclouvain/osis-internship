@@ -1,1 +1,0 @@
-/home/osis/django_configs/wsgi.py
