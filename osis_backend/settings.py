@@ -105,7 +105,7 @@ FIXTURE_DIRS = (
 )
 
 try  :
-    from sevrer_settings import *
+    from osis_backend.sevrer_settings import *
     print('server')
 except ImportError:
     print('local')
