@@ -1,6 +1,5 @@
 *.html
 *.pdf
-/osis_backend/wsgi.py
 *.vpp~*
 /core/migrations
 .idea/

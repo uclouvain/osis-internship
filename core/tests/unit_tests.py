@@ -9,8 +9,6 @@ from django.test import TestCase
 
 
 class CoreAuthTestCase(TestCase):
-
-
     """
     Test case for the authentication (login) and authorisations process.
     This has to be independent of the authentication mecanism (basic, remote,...).
@@ -18,7 +16,8 @@ class CoreAuthTestCase(TestCase):
     """
 
 
-def setUp(self):
+@classmethod
+def setUpClass(cls):
     """
     Initialise the test environment :
     - Create valid user with required permission to access methods, without admin rights
@@ -26,9 +25,11 @@ def setUp(self):
     - Create valid user without required permission to access methods
     """
     util.init_all_test_users()
+    super(CoreAuthTestCase, cls).setUpClass()
 
 
 def test_home(self):
     """
     Test the home page
     """
+    return

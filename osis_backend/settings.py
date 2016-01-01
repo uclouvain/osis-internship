@@ -106,7 +106,5 @@ FIXTURE_DIRS = (
 
 try  :
     from osis_backend.server_settings import *
-    print('server')
 except ImportError:
-    print('local')
     pass
