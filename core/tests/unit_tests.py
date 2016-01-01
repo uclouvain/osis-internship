@@ -30,6 +30,6 @@ def setUpClass(cls):
 
 def test_home(self):
     """
-    Test the home page
+    Test the home page.
     """
     return
