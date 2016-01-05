@@ -2,8 +2,6 @@
 
 OSIS stands for **Open Student Information System**. It's an application designed to manage the core business of higher education institutions, such as universities, faculties, institutes and professional schools. The core business involves the administration of students, teachers, courses, programs and so on.
 
-This application is designed as a module of [Odoo](https://www.odoo.com), a modular ERP framework written in Python.
-
 [![Join the chat at https://gitter.im/uclouvain/OSIS-Louvain](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/uclouvain/OSIS-Louvain?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## Documentation
@@ -14,11 +12,9 @@ The whole documentation of the project is published at: http://uclouvain.github.
 
 If you wish to point out an issue in the application or propose a new feature, you can do so by filing a GitHub issue at https://github.com/uclouvain/osis-louvain/issues.
 
-### 
-
 ### Updating your Fork
 
-It's a good practice to update your fork before submiting a new pull request. It helps the project manager on his demanding job of merging and solving conflits on the code. To update your fork, add a new remote link pointing to the original repository:
+It's a good practice to update your fork before submiting a new pull request. It helps the project manager on his demanding job of merging and solving conflicts on the code. To update your fork, add a new remote link pointing to the original repository:
 
     $ git remote add upstream https://github.com/uclouvain/osis-louvain.git
 
