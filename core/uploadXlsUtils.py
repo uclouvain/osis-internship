@@ -12,7 +12,7 @@ from core.models import AcademicCalendar, SessionExam, ExamEnrollment, LearningU
 from core.forms import ScoreFileForm
 
 @login_required
-def upload_scores_file(request):
+def upload_scores_file(request,session_id,learning_unit_year_id,academic_year_id):
     print ('upload_scores_file')
     """
 
@@ -24,7 +24,8 @@ def upload_scores_file(request):
         if form.is_valid():
             print ('form valid')
             __save_xls_scores(request.FILES['file'])
-            return HttpResponseRedirect(reverse('scores_encoding'))
+            # return HttpResponseRedirect(reverse('scores_encoding'))
+            return HttpResponseRedirect(reverse('prepare_upload_score' , args=[session_id,learning_unit_year_id,academic_year_id]))
 
 
 def __save_xls_scores(file):
@@ -43,6 +44,7 @@ def __save_xls_scores(file):
             learning_unit_enrollment = LearningUnitEnrollment.objects.get(learning_unit_year=learning_unit_year,offer_enrollment=offer_enrollment)
             exam_enrollment = ExamEnrollment.objects.filter(learning_unit_enrollment = learning_unit_enrollment).filter(session_exam__number_session = int(row[1].value)).first()
             exam_enrollment.score = float(row[8].value)
+            exam_enrollment.justification = row[9].value
             exam_enrollment.save()
         else:
             #todo

@@ -1,7 +1,10 @@
 from django.http import HttpResponse
+
 from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl.cell import get_column_letter
+from openpyxl.worksheet.datavalidation import DataValidation
+
 from core.models import AcademicCalendar, SessionExam, ExamEnrollment, LearningUnitYear, Person, AcademicYear
 
 def export_xls(request,session_id,learning_unit_year_id,academic_year_id):
@@ -22,13 +25,19 @@ def export_xls(request,session_id,learning_unit_year_id,academic_year_id):
               'Registration_number',
               'Lastname',
               'Firstname',
-              'Score_final',
-              'Justification_final',
+              'Score',
+              'Justification',
               'End_date',
               'ID']
     ws.append(header)
+    dv = DataValidation(type="list", formula1='"ABSENT,CHEATING,ILL,JUSTIFIED_ABSENCE,SCORE_MISSING"', allow_blank=True)
+    dv.error ='Your entry is not in the list'
+    dv.errorTitle = 'Invalid Entry'
 
-
+    dv.prompt = 'Please select from the list'
+    dv.promptTitle = 'List Selection'
+    ws.add_data_validation(dv)
+    cptr=1
     for rec_exam_enrollment in ExamEnrollment.find_exam_enrollments(session_exam):
         student = rec_exam_enrollment.learning_unit_enrollment.student
         o = rec_exam_enrollment.learning_unit_enrollment.offer
@@ -47,8 +56,9 @@ def export_xls(request,session_id,learning_unit_year_id,academic_year_id):
                    academic_calendar.end_date,
                    rec_exam_enrollment.id
                    ])
-
-
+        cptr = cptr+1
+    print ('cptr',cptr)
+    dv.ranges.append('J2:J'+str(cptr+100))#Ajouter 100 pour si on ajoute des enregistrements
     response = HttpResponse(content=save_virtual_workbook(wb))
     response['Content-Disposition'] = 'attachment; filename=myexport.xlsx'
     response['Content-type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'

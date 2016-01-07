@@ -116,3 +116,21 @@ def __save_xls_scores(file):
         exam_enrollment = ExamEnrollment.objects.filter(learning_unit_enrollment = learning_unit_enrollment).filter(session_exam__number_session = record['Session']).first()
         exam_enrollment.score = record['Note chiffrée']
         exam_enrollment.save()
+
+
+def prepare_upload_scores(request,session_id,learning_unit_year_id,academic_year_id):
+    tutor = Tutor.find_by_user(request.user)
+    academic_year = AcademicYear.find_academic_year(academic_year_id)
+    session = SessionExam.current_session_exam()
+    sessions = SessionExam.sessions(tutor, academic_year, session)
+
+    session_exam = SessionExam.current_session_exam()
+    academic_calendar = AcademicCalendar.find_academic_calendar_by_event_type(academic_year_id,session_exam.number_session)
+
+    return render(request, "scores_encoding_upload.html",
+                  {'section':       'scores_encoding',
+                   'tutor':         tutor,
+                   'academic_year': academic_year,
+                   'session':       session,
+                   'sessions':      sessions,
+                   'exam_enrollments' : ExamEnrollment.find_exam_enrollments(session_exam)})

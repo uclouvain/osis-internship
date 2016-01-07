@@ -19,5 +19,7 @@ urlpatterns = [
     url(r'^studies/assessements/scores_encoding/online/([0-9]+)/$', views.online_encoding, name='online_encoding'),
     url(r'^studies/assessements/scores_encoding/xlsdownload/([0-9]+)/([0-9]+)/([0-9]+)/$',exportUtils.export_xls, name='scores_encoding_download'),
     url(r'^studies/assessements/scores_encoding/download/([0-9]+)/$',views.download_scores_file,name='donwload_scores_file'),
-    url(r'^studies/assessements/scores_encoding/upload$',uploadXlsUtils.upload_scores_file,name='upload_encoding'),
+    url(r'^studies/assessements/scores_encoding/upload/([0-9]+)/([0-9]+)/([0-9]+)/$',uploadXlsUtils.upload_scores_file,name='upload_encoding'),
+    url(r'^studies/assessements/scores_encoding/upload_preview/([0-9]+)/([0-9]+)/([0-9]+)/$',views.prepare_upload_scores,name='prepare_upload_score'),
+
 ]
