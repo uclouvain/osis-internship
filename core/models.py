@@ -16,14 +16,19 @@ class Person(models.Model):
     gender      = models.CharField(max_length = 1, blank = True, null = True, choices = GENDER_CHOICES, default = 'U')
     national_id = models.CharField(max_length = 25,blank = True, null = True)
 
+    @property
     def first_name(self):
         return self.user.first_name
 
+    @property
     def last_name(self):
         return self.user.last_name
 
     def username(self):
         return self.user.username
+
+    def find_person(person_id):
+        return Person.objects.get(id=person_id)
 
     def __str__(self):
         return u"%s %s, %s" % (self.middle_name.upper(), self.user.last_name.upper(),self.user.first_name)
@@ -44,6 +49,7 @@ class Student(models.Model):
     registration_id = models.CharField(max_length=10, null=False)
     person          = models.ForeignKey(Person, null=False)
 
+
     def __str__(self):
         return u"%s (%s)" % (self.person, self.registration_id)
 
@@ -63,6 +69,9 @@ class AcademicYear(models.Model):
     def __str__(self):
         return u"%s-%s" % (self.year, self.year + 1)
 
+    def find_academic_year(id):
+        return AcademicYear.objects.get(pk=id)
+
 
 class AcademicCalendar(models.Model):
     EVENT_TYPE = (
@@ -81,6 +90,10 @@ class AcademicCalendar(models.Model):
     def current_academic_year():
         academic_calendar = AcademicCalendar.objects.filter(event_type='academic_year').filter(start_date__lte=timezone.now()).filter(end_date__gte=timezone.now()).first()
         return academic_calendar.academic_year
+
+    def find_academic_calendar_by_event_type(academic_year_id, session_number):
+        event_type_criteria = "session_exam_"+str(session_number)
+        return AcademicCalendar.objects.get(academic_year=academic_year_id, event_type=event_type_criteria)
 
     def __str__(self):
         return u"%s %s" % (self.academic_year, self.title)
@@ -158,13 +171,28 @@ class LearningUnitYear(models.Model):
         return u"%s - %s" % (self.academic_year,self.learning_unit)
 
 
+    def find_offer_enrollments(learning_unit_year_id):
+        print ('find_offer_enrollments')
+        learning_unit_enrollment_list= LearningUnitEnrollment.objects.filter(learning_unit_year=learning_unit_year_id)
+        offer_list = []
+        for lue in learning_unit_enrollment_list:
+            offer_list.append(lue.offer_enrollment)
+
+        return offer_list
+
+
 class LearningUnitEnrollment(models.Model):
     date_enrollment    = models.DateField(auto_now = False, blank = False, null = False, auto_now_add = False)
     learning_unit_year = models.ForeignKey(LearningUnitYear, null = False)
     offer_enrollment   = models.ForeignKey(OfferEnrollment, null = False)
 
+    @property
     def student(self):
         return self.offer_enrollment.student
+
+    @property
+    def offer(self):
+        return self.offer_enrollment.offer_year
 
     def __str__(self):
         return u"%s - %s" % (self.learning_unit_year, self.offer_enrollment.student)

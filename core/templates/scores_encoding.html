@@ -96,7 +96,9 @@
                         {% endif %}
                     <td>{{ session.learning_unit_year.acronym }}</td>
                     <td>{{ session.learning_unit_year.title }}</td>
-                    <td><a class="btn btn-default" href="#" role="button">Télécharger</a></td>
+                    <td>
+                      <a href="{% url 'scores_encoding_download' session.id session.learning_unit_year.id academic_year.id%}" class="btn btn-default">Télécharger</a>
+                    </td>
                   </tr>
                 {% endfor %}
                 </tbody>
