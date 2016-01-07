@@ -33,3 +33,20 @@ def test_home(self):
     Test the home page.
     """
     return
+
+class UploadScoreTestCase(TestCase):
+    """
+
+    """
+
+@classmethod
+def setUpClass(cls):
+    """
+    Initialise the test environment :
+    - Create valid user with required permission to access methods, without admin rights
+    - Create valid user with required permission to access methods, with admin rights
+    - Create valid user without required permission to access methods
+    """
+    util.init_all_test_users()
+    super(CoreAuthTestCase, cls).setUpClass()
+

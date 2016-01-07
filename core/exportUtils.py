@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
+from openpyxl.cell import get_column_letter
 from core.models import AcademicCalendar, SessionExam, ExamEnrollment, LearningUnitYear, Person, AcademicYear
 
 def export_xls(request,session_id,learning_unit_year_id,academic_year_id):
@@ -10,6 +11,8 @@ def export_xls(request,session_id,learning_unit_year_id,academic_year_id):
 
     wb = Workbook()
     ws = wb.active
+    col_d = ws.column_dimensions['L']
+    col_d.hidden = True
 
     header = ['Academic year',
               'Session',
@@ -21,8 +24,10 @@ def export_xls(request,session_id,learning_unit_year_id,academic_year_id):
               'Firstname',
               'Score_final',
               'Justification_final',
-              'End_date']
+              'End_date',
+              'ID']
     ws.append(header)
+
 
     for rec_exam_enrollment in ExamEnrollment.find_exam_enrollments(session_exam):
         student = rec_exam_enrollment.learning_unit_enrollment.student
@@ -39,8 +44,10 @@ def export_xls(request,session_id,learning_unit_year_id,academic_year_id):
                    person.first_name,
                    rec_exam_enrollment.score,
                    rec_exam_enrollment.justification,
-                   academic_calendar.end_date
+                   academic_calendar.end_date,
+                   rec_exam_enrollment.id
                    ])
+
 
     response = HttpResponse(content=save_virtual_workbook(wb))
     response['Content-Disposition'] = 'attachment; filename=myexport.xlsx'

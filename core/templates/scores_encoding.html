@@ -83,6 +83,7 @@
                   <th>Sigle</th>
                   <th>Cours</th>
                   <th></th>
+                  <th></th>
                 </thead>
                 <tbody>
                 {% for session in sessions %}
@@ -97,7 +98,10 @@
                     <td>{{ session.learning_unit_year.acronym }}</td>
                     <td>{{ session.learning_unit_year.title }}</td>
                     <td>
-                      <a href="{% url 'scores_encoding_download' session.id session.learning_unit_year.id academic_year.id%}" class="btn btn-default">Télécharger</a>
+                      <a href="{% url 'scores_encoding_download' session.id session.learning_unit_year.id academic_year.id%}" class="btn btn-default" role="button">Télécharger</a>
+                    </td>
+                    <td>
+                      <button type="button" class="btn btn-default" data-toggle="modal" data-target="#uploadScoreModal">Téléverser</button>
                     </td>
                   </tr>
                 {% endfor %}
@@ -137,4 +141,27 @@
       </div>
     </div>
   </div>
+
+  <!-- UploadFile modal -->
+    <div class="modal fade" id="uploadScoreModal" tabindex="-1" role="dialog" aria-labelledby="uploadScroresLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form method="post" enctype="multipart/form-data" action="{% url 'upload_encoding' %}">
+                    {% csrf_token %}
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="uploadScroresLabel">Téléchargement des notes</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="file" id="scoresInputFile" id="file" name="file"/>
+                    <p class="help-block">Veuillez sélectionner le fichier excel à télécharger</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                    <input type="submit" class="btn btn-primary">Télécharger</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock %}
