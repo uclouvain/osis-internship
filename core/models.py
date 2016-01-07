@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 from django.utils import timezone
 
@@ -33,8 +34,12 @@ class Tutor(models.Model):
     person = models.ForeignKey(Person, null = False)
 
     def find_by_user(user):
-        person = Person.objects.filter(user=user)
-        return Tutor.objects.get(person = person)
+        try:
+            person = Person.objects.filter(user=user)
+            tutor = Tutor.objects.get(person = person)
+            return tutor
+        except ObjectDoesNotExist:
+            return None
 
     def __str__(self):
         return u"%s" % self.person
