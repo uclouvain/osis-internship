@@ -30,6 +30,7 @@ INSTALLED_APPS = (
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -52,10 +53,10 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-            ],
+                ],
+            },
         },
-    },
-]
+    ]
 
 WSGI_APPLICATION = 'osis_backend.wsgi.application'
 
@@ -71,7 +72,7 @@ DATABASES = {
         'PASSWORD': 'osis',
         'HOST': '127.0.0.1',
         'PORT': '5432',
-    }
+        }
 }
 
 
@@ -100,5 +101,10 @@ LOGOUT_URL = reverse_lazy('logout')
 LOGIN_REDIRECT_URL = '/'
 
 FIXTURE_DIRS = (
-   '/core/fixtures/',
+    '/core/fixtures/',
 )
+
+try  :
+    from osis_backend.server_settings import *
+except ImportError:
+    pass

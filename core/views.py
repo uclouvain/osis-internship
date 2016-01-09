@@ -1,9 +1,16 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from core.models import Tutor, AcademicCalendar, SessionExam, ExamEnrollment
+import os
+
+def page_not_found(request):
+    return render(request,'page_not_found.html')
+
+def access_denied(request):
+    return render(request,'acces_denied.html')
 
 def home(request):
-    return render(request, "home.html", {})
+    return render(request, "home.html")
 
 @login_required
 def studies(request):

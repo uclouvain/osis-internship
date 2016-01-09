@@ -1,13 +1,13 @@
 from django.conf.urls import url
-from django.contrib.auth import views as auth_views
+from django.contrib.auth.views import login,logout
 from . import views
 
 urlpatterns = [
     url(r'^$', views.home, name='home'),
 
     # login / logout urls
-    url(r'^login/$', auth_views.login, name='login'),
-    url(r'^logout/$', auth_views.logout_then_login, name='logout'),
+    url(r'^login/$', login, name='login'),
+    url(r'^logout/$', logout, name='logout'),
 
     url(r'^studies/$', views.studies, name='studies'),
     url(r'^studies/assessements/$', views.assessements, name='assessements'),
