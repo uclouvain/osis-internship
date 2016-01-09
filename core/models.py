@@ -55,7 +55,7 @@ class Student(models.Model):
 
 class Structure(models.Model):
     acronym = models.CharField(max_length=10, blank=False, null=False)
-    title   = models.TextField(blank=False, null=False)
+    title   = models.CharField(max_length=255, blank=False, null=False)
     part_of = models.ForeignKey('self', blank=True, null=True)
 
     def __str__(self):

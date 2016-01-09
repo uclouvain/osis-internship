@@ -75,7 +75,10 @@ class ExamEnrollmentAdmin(admin.ModelAdmin):
 
 admin.site.register(ExamEnrollment, ExamEnrollmentAdmin)
 
-admin.site.register(Structure)
+class StructureAdmin(admin.ModelAdmin):
+    list_display = ('acronym', 'title', 'part_of')
+
+admin.site.register(Structure, StructureAdmin)
 
 class StudentAdmin(admin.ModelAdmin):
     list_display = ('person', 'registration_id')
