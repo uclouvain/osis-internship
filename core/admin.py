@@ -14,6 +14,7 @@ from .models import OfferYear
 from .models import OfferYearCalendar
 from .models import Structure
 from .models import Person
+from .models import ProgrammeManager
 from .models import Student
 from .models import Tutor
 
@@ -82,6 +83,10 @@ class StudentAdmin(admin.ModelAdmin):
 admin.site.register(Student, StudentAdmin)
 admin.site.register(Tutor)
 
+class ProgrammeManagerAdmin(admin.ModelAdmin):
+    list_display = ('person', 'faculty')
+
+admin.site.register(ProgrammeManager, ProgrammeManagerAdmin)
 
 class AttributionAdmin(admin.ModelAdmin):
     list_display = ('tutor','function','learning_unit','start_date', 'end_date')

@@ -15,10 +15,15 @@ def assessements(request):
 
 @login_required
 def scores_encoding(request):
-    tutor = Tutor.find_by_user(request.user)
     academic_year = AcademicCalendar.current_academic_year()
     session = SessionExam.current_session_exam()
-    sessions = SessionExam.sessions(tutor, academic_year, session)
+
+    tutor = Tutor.find_by_user(request.user)
+    # If the user is not a tutor, then we check whether it is member of a faculty.
+    #if tutor:
+    sessions = SessionExam.sessions_by_tutor(tutor, academic_year, session)
+    #elif not tutor and request.user.groups.filter(name='FAC').exists():
+    #    sessions = SessionExam.s
 
     # Calculate the progress of all courses of the tutor.
     all_enrollments = []

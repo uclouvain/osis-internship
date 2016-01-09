@@ -55,11 +55,19 @@ class Student(models.Model):
 
 class Structure(models.Model):
     acronym = models.CharField(max_length=10, blank=False, null=False)
-    title = models.TextField(blank=False, null=False)
+    title   = models.TextField(blank=False, null=False)
     part_of = models.ForeignKey('self', blank=True, null=True)
 
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)
+
+
+class ProgrammeManager(models.Model):
+    person  = models.ForeignKey(Person, null=False)
+    faculty = models.ForeignKey(Structure, null=False)
+
+    def __str__(self):
+        return u"%s - %s" % (self.person, self.faculty)
 
 
 class AcademicYear(models.Model):
@@ -209,7 +217,7 @@ class SessionExam(models.Model):
     def find_session(id):
         return SessionExam.objects.get(pk=1)
 
-    def sessions(tutor, academic_year, session):
+    def sessions_by_tutor(tutor, academic_year, session):
         learning_units = Attribution.objects.filter(tutor=tutor).values('learning_unit')
         return SessionExam.objects.filter(number_session=session.number_session
                                  ).filter(learning_unit_year__academic_year=academic_year
@@ -238,7 +246,11 @@ class ExamEnrollment(models.Model):
     learning_unit_enrollment = models.ForeignKey(LearningUnitEnrollment, null = False)
 
     def calculate_progress(enrollments):
-        return len([e for e in enrollments if e.score is not None or e.justification is not None]) / len(enrollments)
+        if enrollments:
+            progress = len([e for e in enrollments if e.score is not None or e.justification is not None]) / len(enrollments)
+        else:
+            progress = 0
+        return progress
 
     def find_exam_enrollments(session_exam):
         return ExamEnrollment.objects.filter(session_exam=session_exam)
