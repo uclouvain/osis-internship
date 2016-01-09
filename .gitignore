@@ -2,7 +2,6 @@
 *.pdf
 *.pyc
 *.iml
-core/migrations
 .idea/
 venv/
 __pycache__/
