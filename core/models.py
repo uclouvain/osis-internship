@@ -66,6 +66,10 @@ class ProgrammeManager(models.Model):
     person  = models.ForeignKey(Person, null=False)
     faculty = models.ForeignKey(Structure, null=False)
 
+    def find_faculty_by_user(user):
+        programme_manager = ProgrammeManager.objects.filter(person__user=user).first()
+        return programme_manager.faculty
+
     def __str__(self):
         return u"%s - %s" % (self.person, self.faculty)
 
@@ -138,6 +142,7 @@ class OfferYearCalendar(models.Model):
         ('session_exam_3','Session Exams 3'))
 
     academic_calendar = models.ForeignKey(AcademicCalendar, null = False)
+    offer_year        = models.ForeignKey(OfferYear, null = True)
     event_type        = models.CharField(max_length = 50, blank = False, null = False, choices = EVENT_TYPE)
     start_date        = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
     end_date          = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
@@ -217,11 +222,16 @@ class SessionExam(models.Model):
     def find_session(id):
         return SessionExam.objects.get(pk=1)
 
-    def sessions_by_tutor(tutor, academic_year, session):
+    def find_sessions_by_tutor(tutor, academic_year, session):
         learning_units = Attribution.objects.filter(tutor=tutor).values('learning_unit')
         return SessionExam.objects.filter(number_session=session.number_session
                                  ).filter(learning_unit_year__academic_year=academic_year
                                  ).filter(learning_unit_year__learning_unit__in=learning_units)
+
+    def find_sessions_by_faculty(faculty, academic_year, session):
+        return SessionExam.objects.filter(number_session=session.number_session
+                                 ).filter(offer_year_calendar__offer_year__academic_year=academic_year
+                                 ).filter(offer_year_calendar__offer_year__structure=faculty)
 
     def __str__(self):
         return u"%s - %d" % (self.learning_unit_year, self.number_session)

@@ -35,10 +35,10 @@ class OfferYearAdmin(admin.ModelAdmin):
 
 admin.site.register(OfferYear, OfferYearAdmin)
 
-class OfferCalendarAdmin(admin.ModelAdmin):
-    list_display = ('academic_calendar', 'event_type', 'start_date', 'end_date')
+class OfferYearCalendarAdmin(admin.ModelAdmin):
+    list_display = ('academic_calendar', 'offer_year', 'event_type', 'start_date', 'end_date')
 
-admin.site.register(OfferYearCalendar, OfferCalendarAdmin)
+admin.site.register(OfferYearCalendar, OfferYearCalendarAdmin)
 
 class OfferEnrollmentAdmin(admin.ModelAdmin):
     list_display = ('offer_year','student', 'date_enrollment')

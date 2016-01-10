@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from core.models import Tutor, AcademicCalendar, SessionExam, ExamEnrollment
+from core.models import Tutor, AcademicCalendar, SessionExam, ExamEnrollment, ProgrammeManager
 import os
 
 def page_not_found(request):
@@ -26,11 +26,15 @@ def scores_encoding(request):
     session = SessionExam.current_session_exam()
 
     tutor = Tutor.find_by_user(request.user)
-    # If the user is not a tutor, then we check whether it is member of a faculty.
-    #if tutor:
-    sessions = SessionExam.sessions_by_tutor(tutor, academic_year, session)
-    #elif not tutor and request.user.groups.filter(name='FAC').exists():
-    #    sessions = SessionExam.s
+    # In case the user is a tutor.
+    sessions = None
+    if tutor:
+        sessions = SessionExam.find_sessions_by_tutor(tutor, academic_year, session)
+    # In case the user is not a tutor we check whether it is member of a faculty.
+    elif request.user.groups.filter(name='FAC').exists():
+        faculty = ProgrammeManager.find_faculty_by_user(request.user)
+        if faculty:
+            sessions = SessionExam.find_sessions_by_faculty(faculty, academic_year, session)
 
     # Calculate the progress of all courses of the tutor.
     all_enrollments = []
@@ -45,6 +49,7 @@ def scores_encoding(request):
     return render(request, "scores_encoding.html",
                   {'section':       'scores_encoding',
                    'tutor':         tutor,
+                   'faculty':       faculty,
                    'academic_year': academic_year,
                    'session':       session,
                    'sessions':      sessions})
