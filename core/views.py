@@ -3,10 +3,10 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from core.forms import ScoreFileForm
 from core.models import Tutor, AcademicCalendar, SessionExam, ExamEnrollment, \
                         ProgrammeManager, Student, AcademicYear, OfferYear, \
                         LearningUnitYear, LearningUnitEnrollment, OfferEnrollment
-from core.forms import ScoreFileForm
 
 
 def page_not_found(request):
@@ -51,11 +51,9 @@ def scores_encoding(request):
     # Calculate the progress of all courses of the tutor.
     all_enrollments = []
     for session in sessions:
-        enrollments = ExamEnrollment.find_exam_enrollments(session)
-        if not all_enrollments:
-            all_enrollments = enrollments
-        else:
-            all_enrollments.append(enrollments)
+        enrollments = list(ExamEnrollment.find_exam_enrollments(session))
+        if enrollments:
+            all_enrollments = all_enrollments + enrollments
     progress = ExamEnrollment.calculate_progress(all_enrollments)
 
     return render(request, "scores_encoding.html",

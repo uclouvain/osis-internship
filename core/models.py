@@ -248,7 +248,7 @@ class SessionExam(models.Model):
         return session_exam
 
     def find_session(id):
-        return SessionExam.objects.get(pk=1)
+        return SessionExam.objects.get(pk=id)
 
     def find_sessions_by_tutor(tutor, academic_year, session):
         learning_units = Attribution.objects.filter(tutor=tutor).values('learning_unit')
@@ -291,4 +291,8 @@ class ExamEnrollment(models.Model):
         return progress
 
     def find_exam_enrollments(session_exam):
-        return ExamEnrollment.objects.filter(session_exam=session_exam)
+        enrollments = ExamEnrollment.objects.filter(session_exam=session_exam)
+        return enrollments
+
+    def __str__(self):
+        return u"%s - %s" % (self.session_exam, self.learning_unit_enrollment)
