@@ -125,7 +125,7 @@
                       {% endif %}</td>
                   <td>{{ session.learning_unit_year.acronym }}</td>
                   <td>{{ session.learning_unit_year.title }}</td>
-                  <td><a class="btn btn-default" href="#" role="button">Imprimer</a></td>
+                  <td><a class="btn btn-default" href="{% url 'notes_printing' session.id %}" role="button">Imprimer</a></td>
                 </tr>
               {% endfor %}
               </tbody>

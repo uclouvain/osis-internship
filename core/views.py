@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from core.models import Tutor, AcademicCalendar, SessionExam, ExamEnrollment
 import os
+from . import pdfUtils
 
 def page_not_found(request):
     return render(request,'page_not_found.html')
@@ -48,3 +49,17 @@ def online_encoding(request, session_id):
                    'session':       session,
                    'progress':      progress,
                    'enrollments':   enrollments})
+
+@login_required
+def notes_printing(request,session_id):
+    tutor = Tutor.find_by_user(request.user)
+    academic_year = AcademicCalendar.current_academic_year()
+    session_exam = SessionExam.current_session_exam()
+    sessions = SessionExam.sessions(tutor, academic_year, session_exam)
+    return pdfUtils.pdf_test(request,tutor,academic_year,session_exam,sessions)
+    # return render(request, "scores_encoding.html",
+    #               {'section':       'scores_encoding',
+    #                'tutor':         tutor,
+    #                'academic_year': academic_year,
+    #                'session':       session,
+    #                'sessions':      sessions})
