@@ -103,7 +103,7 @@ LOGIN_REDIRECT_URL = '/'
 FIXTURE_DIRS = (
     '/core/fixtures/',
 )
-
+MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
 try  :
     from osis_backend.server_settings import *
 except ImportError:
