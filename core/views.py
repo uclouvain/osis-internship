@@ -7,8 +7,6 @@ from core.models import Tutor, AcademicCalendar, SessionExam, ExamEnrollment, \
                         ProgrammeManager, Student, AcademicYear, OfferYear, \
                         LearningUnitYear, LearningUnitEnrollment, OfferEnrollment
 from core.forms import ScoreFileForm
-import os
-import pyexcel
 
 
 def page_not_found(request):
@@ -101,7 +99,7 @@ def online_encoding_form(request, session_id):
                    'session':       session,
                    'progress':      progress,
                    'enrollments':   enrollments,
-                   'justifications':ExamEnrollment.JUSTIFICATION_TYPES})
+                   'justifications':ExamEnrollment.JUSTIFICATION_TYPES,
                    'enrollments':   enrollments})
 
 
