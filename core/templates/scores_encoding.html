@@ -69,7 +69,7 @@
                           <span style="color: green" class="glyphicon glyphicon-ok" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="Closed"></span> {{ session.status|title }}</td>
                         {% endif %}
                     <td>{{ session.learning_unit_year.acronym }}</td>
-                    <td><a href="{% url 'online_encoding' session.id %}">{{ session.learning_unit_year.title }}</a></td>
+                    <td><a href="{% url 'online_encoding' session.id 1 %}">{{ session.learning_unit_year.title }}</a></td>
                     <td><a class="btn btn-default" href="#" role="button">Encoder</a></td>
                   </tr>
                 {% endfor %}
@@ -83,6 +83,7 @@
                   <th>Sigle</th>
                   <th>Cours</th>
                   <th></th>
+                  <th></th>
                 </thead>
                 <tbody>
                 {% for session in sessions %}
@@ -95,8 +96,11 @@
                           <span style="color: green" class="glyphicon glyphicon-ok" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="Closed"></span> {{ session.status|title }}</td>
                         {% endif %}
                     <td>{{ session.learning_unit_year.acronym }}</td>
-                    <td>{{ session.learning_unit_year.title }}</td>
-                    <td><a class="btn btn-default" href="#" role="button">Télécharger</a></td>
+                    <td><a href="{% url 'online_encoding' session.id 2%}"title="Visualiser/charger les notes pour le cours">{{ session.learning_unit_year.title }}</a></td>
+                    <td>
+                      <a href="{% url 'scores_encoding_download' session.id session.learning_unit_year.id academic_year.id %}" class="btn btn-default" role="button" title="Télécharger un fichier xls avec les notes pour le cours">Télécharger</a>
+                    </td>
+
                   </tr>
                 {% endfor %}
                 </tbody>
@@ -135,4 +139,5 @@
       </div>
     </div>
   </div>
+
 {% endblock %}
