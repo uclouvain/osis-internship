@@ -39,7 +39,7 @@ def scores_encoding(request):
                    'sessions':      sessions})
 
 @login_required
-def online_encoding(request, session_id):
+def online_encoding(request, session_id, encoding_type):
     tutor = Tutor.find_by_user(request.user)
     academic_year = AcademicCalendar.current_academic_year()
     session = SessionExam.find_session(session_id)
@@ -52,7 +52,8 @@ def online_encoding(request, session_id):
                    'academic_year': academic_year,
                    'session':       session,
                    'progress':      progress,
-                   'enrollments':   enrollments})
+                   'enrollments':   enrollments,
+                   'encoding_type': encoding_type})
 
 
 
@@ -118,19 +119,7 @@ def __save_xls_scores(file):
         exam_enrollment.save()
 
 
-def prepare_upload_scores(request,session_id,learning_unit_year_id,academic_year_id):
-    tutor = Tutor.find_by_user(request.user)
-    academic_year = AcademicYear.find_academic_year(academic_year_id)
-    session = SessionExam.current_session_exam()
-    sessions = SessionExam.sessions(tutor, academic_year, session)
-
-    session_exam = SessionExam.current_session_exam()
-    academic_calendar = AcademicCalendar.find_academic_calendar_by_event_type(academic_year_id,session_exam.number_session)
-
-    return render(request, "scores_encoding_upload.html",
-                  {'section':       'scores_encoding',
-                   'tutor':         tutor,
-                   'academic_year': academic_year,
-                   'session':       session,
-                   'sessions':      sessions,
-                   'exam_enrollments' : ExamEnrollment.find_exam_enrollments(session_exam)})
+def upload_score_error(request):
+    print ('upload_score_error')
+    return render(request, "upload_score_error.html",
+                  {})
