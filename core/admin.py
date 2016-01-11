@@ -14,6 +14,7 @@ from .models import OfferYear
 from .models import OfferYearCalendar
 from .models import Structure
 from .models import Person
+from .models import ProgrammeManager
 from .models import Student
 from .models import Tutor
 
@@ -34,10 +35,10 @@ class OfferYearAdmin(admin.ModelAdmin):
 
 admin.site.register(OfferYear, OfferYearAdmin)
 
-class OfferCalendarAdmin(admin.ModelAdmin):
-    list_display = ('academic_calendar', 'event_type', 'start_date', 'end_date')
+class OfferYearCalendarAdmin(admin.ModelAdmin):
+    list_display = ('academic_calendar', 'offer_year', 'event_type', 'start_date', 'end_date')
 
-admin.site.register(OfferYearCalendar, OfferCalendarAdmin)
+admin.site.register(OfferYearCalendar, OfferYearCalendarAdmin)
 
 class OfferEnrollmentAdmin(admin.ModelAdmin):
     list_display = ('offer_year','student', 'date_enrollment')
@@ -74,10 +75,21 @@ class ExamEnrollmentAdmin(admin.ModelAdmin):
 
 admin.site.register(ExamEnrollment, ExamEnrollmentAdmin)
 
-admin.site.register(Structure)
-admin.site.register(Student)
+class StructureAdmin(admin.ModelAdmin):
+    list_display = ('acronym', 'title', 'part_of')
+
+admin.site.register(Structure, StructureAdmin)
+
+class StudentAdmin(admin.ModelAdmin):
+    list_display = ('person', 'registration_id')
+
+admin.site.register(Student, StudentAdmin)
 admin.site.register(Tutor)
 
+class ProgrammeManagerAdmin(admin.ModelAdmin):
+    list_display = ('person', 'faculty')
+
+admin.site.register(ProgrammeManager, ProgrammeManagerAdmin)
 
 class AttributionAdmin(admin.ModelAdmin):
     list_display = ('tutor','function','learning_unit','start_date', 'end_date')

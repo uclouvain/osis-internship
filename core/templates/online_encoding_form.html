@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+{% load percentage %}
+{% block breadcrumb %}
+  <li><a href="{% url 'studies' %}">Les études</a></li>
+  <li><a href="{% url 'assessements' %}">Évaluations</a></li>
+  <li><a href="{% url 'scores_encoding' %}">Encodage des notes</a></li>
+  <li class="active">Encodage en ligne</li>
+{% endblock %}
+{% block content %}
+  <div class="page-header">
+    <h2>Encodage en ligne</h2>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title" style="font-size: 150%; color: #3399CC;">{{ session.learning_unit_year }}</h3>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Responsable</label><br>
+            {{ tutor }}
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label>Année académique</label><br>
+            {{ academic_year }}
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label>Session</label><br>
+            {{ session.number_session }}
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label>Nombre d'inscrits</label><br>
+            {{ enrollments|length }}
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label>Progrès</label><br>
+            {{ progress | percentage }}
+          </div>
+        </div>
+      </div>
+      <hr>
+      <form class="form-inline">
+        <table class="table table-striped table-hover">
+            <thead>
+              <th>Programme</th>
+              <th>Noma</th>
+              <th>Nom</th>
+              <th>Prénom</th>
+              <th>Note</th>
+              <th>Justification</th>
+              <th>Date de remise</th>
+            </thead>
+            <tbody>
+            {% for enrollment in enrollments %}
+              <tr>
+                <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
+                <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
+                <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
+                <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
+                <td><input type="number" value="{{ enrollment.score | default_if_none:"" }}" class="form-control"></td>
+                <td><select class="form-control">
+                    {% for justification in justifications %}
+                      <option value="{{ justification.0 }}">{{ justification.1 }}</option>
+                    {% endfor %}
+                    </select></td>
+                <td>{{ enrollment.session_exam.offer_year_calendar.end_date }}</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+      </form>
+    </div>
+  </div>
+{% endblock %}
