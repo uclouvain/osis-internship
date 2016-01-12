@@ -68,7 +68,7 @@ def print_notes(request,tutor, academic_year, session_exam,sessions,learning_uni
               'Date de remise'])
 
     for rec_exam_enrollment in ExamEnrollment.find_exam_enrollments(session_exam):
-        print('ztt: ',str(rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.id))
+        
         if (int(rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.id) == int(learning_unit_year_id)) or int(learning_unit_year_id) == -1:
             student = rec_exam_enrollment.learning_unit_enrollment.student
             o = rec_exam_enrollment.learning_unit_enrollment.offer
