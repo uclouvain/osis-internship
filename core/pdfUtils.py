@@ -30,7 +30,7 @@ def print_notes(request,tutor, academic_year, session_exam,sessions,learning_uni
 
     buffer = BytesIO()
     doc = SimpleDocTemplate(buffer,
-                            pagesize=landscape(PAGE_SIZE),
+                            pagesize=PAGE_SIZE,
                             rightMargin=72,
                             leftMargin=72,
                             topMargin=72,
@@ -43,14 +43,10 @@ def print_notes(request,tutor, academic_year, session_exam,sessions,learning_uni
     Contenu = []
 #critères
     academic_calendar = AcademicCalendar.find_academic_calendar_by_event_type(academic_year.id,session_exam.number_session)
-    Contenu.append(Spacer(1, 30))
-    Contenu.append(Paragraph("Responsable : %s" % tutor, styles["Normal"]) )
-    Contenu.append(Paragraph('Année académique : %s' % str(academic_year), styles["Normal"]))
-    Contenu.append(Paragraph('Session : %d' % session_exam.number_session, styles["Normal"]))
+
     if learning_unit_year_id != -1 :
         list_exam_enrollment = ExamEnrollment.find_exam_enrollments(session_exam)
     else:
-
         if tutor:
             sessions = SessionExam.find_sessions_by_tutor(tutor, academic_year, session_exam)
         # In case the user is not a tutor we check whether it is member of a faculty.
@@ -67,9 +63,9 @@ def print_notes(request,tutor, academic_year, session_exam,sessions,learning_uni
                 list_exam_enrollment = list_exam_enrollment + enrollments
 
 
-    list_notes_building(session_exam, learning_unit_year_id, academic_year, academic_calendar, tutor, list_exam_enrollment, Contenu)
+    list_notes_building(session_exam, learning_unit_year_id, academic_year, academic_calendar, tutor, list_exam_enrollment, styles, Contenu)
 
-    legend_building(Contenu, styles)
+
 
     doc.build(Contenu, onFirstPage=addHeaderFooter, onLaterPages=addHeaderFooter)
     pdf = buffer.getvalue()
@@ -95,7 +91,6 @@ def addHeaderFooter(canvas, doc):
     canvas.restoreState()
 
 
-
 def header_building(canvas, doc,styles):
     a = Image("core/static/images/logo_institution.jpg")
     P = Paragraph('''
@@ -103,9 +98,10 @@ def header_building(canvas, doc,styles):
                         <font size=16>Feuille de notes</font>
                     </para>''',
        styles["BodyText"])
-    data_header=[[a,'Université Catholique Louvain\nLouvain-la-Neuve\nBelgique',P],
-                ]
-    t_header=Table(data_header, [30*mm, 100*mm,100*mm])
+    data_header=[[a,'Université Catholique Louvain\nLouvain-la-Neuve\nBelgique',P],]
+
+    t_header=Table(data_header, [30*mm, 100*mm,50*mm])
+
     t_header.setStyle(TableStyle([
                     #    ('SPAN',(0,0), (0,-1)),
                        ]))
@@ -120,35 +116,48 @@ def footer_building(canvas, doc,styles):
     footer.drawOn(canvas, doc.leftMargin, h)
 
 
-def list_notes_building(session_exam, learning_unit_year_id, academic_year, academic_calendar, tutor,list_exam_enrollment, Contenu):
-    print(learning_unit_year_id)
-    print(session_exam.id)
+def list_notes_building(session_exam, learning_unit_year_id, academic_year, academic_calendar, tutor,list_exam_enrollment, styles, Contenu):
 #liste des notes
     Contenu.append(Spacer(1, 12))
-    data =[]
-    data.append(['Année académique',
-              'Session',
-              'Code cours',
-              'Programme',
-              'Noma',
-              'Nom',
-              'Prénom',
-              'Note chiffrée',
-              'Autre note',
-              'Date de remise'])
+    data = headers_table()
 
+    old_pgm = None
+    current_learning_unit_year= None
     for rec_exam_enrollment in list_exam_enrollment:
         print('for')
         if (int(rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.id) == int(learning_unit_year_id)) or int(learning_unit_year_id) == -1:
             print('if')
             student = rec_exam_enrollment.learning_unit_enrollment.student
             o = rec_exam_enrollment.learning_unit_enrollment.offer
+            if old_pgm is None:
+                old_pgm = o
+                current_learning_unit_year = rec_exam_enrollment.learning_unit_enrollment.learning_unit_year
+            if o != old_pgm:
+                #Autre programme - 1. mettre les critères
+                main_data(tutor, academic_year, session_exam, styles, current_learning_unit_year,old_pgm, Contenu)
+                #Autre programme - 2. il faut écrire le tableau
+
+                t=Table(data,[30*mm,30*mm,30*mm,30*mm,30*mm,30*mm])
+                t.setStyle(TableStyle([
+                                   ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                                   ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                                   ('VALIGN',(0,0), (-1,-1), 'TOP')
+                                   ]))
+
+
+                Contenu.append(t)
+                #Autre programme - 3. Imprimer légende
+                end_page_infos_building(Contenu, styles)
+                legend_building(Contenu, styles)
+                #Autre programme - 4. il faut faire un saut de page
+                Contenu.append(PageBreak())
+                data = headers_table()
+                old_pgm =o
+                current_learning_unit_year = rec_exam_enrollment.learning_unit_enrollment.learning_unit_year
+                #
+
             person = Person.find_person(student.person.id)
-            data.append([str(academic_year),
-                           str(session_exam.number_session),
-                           session_exam.learning_unit_year.acronym,
-                           o.acronym,
-                           student.registration_id,
+            data.append([student.registration_id,
                            person.last_name,
                            person.first_name,
                            rec_exam_enrollment.score,
@@ -157,62 +166,20 @@ def list_notes_building(session_exam, learning_unit_year_id, academic_year, acad
                            ])
 
 
-
-    t=Table(data,[None,None,None,None,None,None,None,None,45*mm,None])
-    t.setStyle(TableStyle([
-                       ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
-                       ('BOX', (0,0), (-1,-1), 0.25, colors.black),
-                       ]))
-
-
-    Contenu.append(t)
-
-def list_notes_building_by_program(session_exam, learning_unit_year_id, academic_year, academic_calendar, tutor, list_exam_enrollment, Contenu):
-    print(learning_unit_year_id)
-    print(session_exam.id)
-#liste des notes
-    Contenu.append(Spacer(1, 12))
-    data =[]
-    data.append(['Année académique',
-              'Session',
-              'Code cours',
-              'Programme',
-              'Noma',
-              'Nom',
-              'Prénom',
-              'Note chiffrée',
-              'Autre note',
-              'Date de remise'])
-
-    for rec_exam_enrollment in list_exam_enrollment:
-        print('for')
-        if (int(rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.id) == int(learning_unit_year_id)) or int(learning_unit_year_id) == -1:
-            print('if')
-            student = rec_exam_enrollment.learning_unit_enrollment.student
-            o = rec_exam_enrollment.learning_unit_enrollment.offer
-            person = Person.find_person(student.person.id)
-            data.append([str(academic_year),
-                           str(session_exam.number_session),
-                           session_exam.learning_unit_year.acronym,
-                           o.acronym,
-                           student.registration_id,
-                           person.last_name,
-                           person.first_name,
-                           rec_exam_enrollment.score,
-                           rec_exam_enrollment.justification,
-                           academic_calendar.end_date.strftime('%d/%m/%Y')
-                           ])
+    if old_pgm is None:
+        pass
+    else:
+        main_data(tutor, academic_year, session_exam, styles,current_learning_unit_year, old_pgm, Contenu)
+        t=Table(data,[30*mm,30*mm,30*mm,30*mm,30*mm,30*mm])
+        t.setStyle(TableStyle([
+                           ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                           ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                           ]))
 
 
-
-    t=Table(data,[None,None,None,None,None,None,None,None,45*mm,None])
-    t.setStyle(TableStyle([
-                       ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
-                       ('BOX', (0,0), (-1,-1), 0.25, colors.black),
-                       ]))
-
-
-    Contenu.append(t)
+        Contenu.append(t)
+        end_page_infos_building(Contenu, styles)
+        legend_building(Contenu, styles)
 
 
 def legend_building(Contenu, styles):
@@ -225,3 +192,74 @@ def legend_building(Contenu, styles):
     p.fontSize = 10
     p.borderPadding = 5
     Contenu.append(Paragraph("Légende pour le champ 'autre note' : absent  - tricherie - notes manquantes" , p))
+
+
+def headers_table():
+    data =[]
+    data.append([
+              'Noma',
+              'Nom',
+              'Prénom',
+              'Note chiffrée',
+              'Autre note',
+              'Date de remise'])
+    return data
+
+
+def main_data(tutor, academic_year, session_exam, styles, learning_unit_year, pgm, Contenu):
+    p = ParagraphStyle('entete')
+    p.alignment = TA_RIGHT
+    p.fontSize = 10
+
+    Contenu.append(Spacer(1, 30))
+    Contenu.append(Paragraph('Année académique : %s' % str(academic_year), p))
+    Contenu.append(Paragraph('Session : %d' % session_exam.number_session, p))
+    Contenu.append(Spacer(1, 30))
+    Contenu.append(Paragraph("<strong>%s : %s</strong>" % (learning_unit_year.acronym,learning_unit_year.title), styles["Normal"]) )
+    Contenu.append(Spacer(1, 30))
+    p_tutor = Paragraph('''<b>%s</b>''' % tutor, styles["Normal"])
+    data_tutor= [[p_tutor],
+       [''],
+       [''],
+       ['']]
+    table_tutor=Table(data_tutor)
+    p_pgm = Paragraph('''<b>Programme : %s</b>''' % pgm.acronym, styles["Normal"])
+    data_pgm= [[p_pgm   ],
+               ['Date de délibération : '],
+               ['Président du jury : '],
+               ['Secrétaire du jury : '],
+              ]
+    table_pgm=Table(data_pgm)
+    table_pgm.setStyle(TableStyle([
+
+                       ('VALIGN',(0,0), (-1,-1), 'TOP')
+                       ]))
+    # Contenu.append(Paragraph("Responsable : %s" % tutor, styles["Normal"]) )
+    dataTT = [[table_pgm,table_tutor]]
+
+    tt=Table(dataTT)
+    tt.setStyle(TableStyle([
+
+                       ('VALIGN',(0,0), (-1,-1), 'TOP')
+                       ]))
+    Contenu.append(tt)
+    Contenu.append(Spacer(1, 12))
+
+def end_page_infos_building(Contenu, styles):
+    Contenu.append(Spacer(1, 30))
+    p = ParagraphStyle('info')
+    p.fontSize = 10
+    p.leftIndent = 50
+    Contenu.append(Paragraph("Veuillez renvoyer ce formulaire au secrétariat de l'entité gestionnaire" , p))
+    Contenu.append(Spacer(1, 30))
+
+    P = Paragraph('''
+                <para>
+                    <font size=10>Fait à ....................................</font>
+                    <br/>
+                    <font size=10>Le ..../..../........</font>
+                    <br/>
+                    <font size=10>Signature</font>
+                </para>''',
+                styles["BodyText"])
+    Contenu.append(P)
