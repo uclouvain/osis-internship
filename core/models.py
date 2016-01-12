@@ -311,9 +311,10 @@ class ExamEnrollment(models.Model):
     def calculate_progress(enrollments):
         if enrollments:
             progress = len([e for e in enrollments if e.score is not None or e.justification is not None]) / len(enrollments)
+            print(progress)
         else:
             progress = 0
-        return progress
+        return progress * 100
 
     def find_exam_enrollments(session_exam):
         enrollments = ExamEnrollment.objects.filter(session_exam=session_exam)

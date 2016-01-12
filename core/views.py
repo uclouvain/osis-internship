@@ -87,12 +87,19 @@ def scores_encoding(request):
                    'faculty':       faculty,
                    'academic_year': academic_year,
                    'session':       session,
-                   'sessions':      sessions})
+                   'sessions':      sessions,
+                   'progress':      "{0:.0f}".format(progress)})
 
 
 @login_required
 def online_encoding(request, session_id):
-    tutor = Tutor.find_by_user(request.user)
+    tutor = None
+    faculty = None
+    if request.user.groups.filter(name='FAC').exists():
+        faculty = ProgrammeManager.find_faculty_by_user(request.user)
+    else:
+        tutor = Tutor.find_by_user(request.user)
+
     academic_year = AcademicCalendar.current_academic_year()
     session = SessionExam.find_session(session_id)
     enrollments = ExamEnrollment.find_exam_enrollments(session)
@@ -101,6 +108,7 @@ def online_encoding(request, session_id):
     return render(request, "online_encoding.html",
                   {'section':       'scores_encoding',
                    'tutor':         tutor,
+                   'faculty':       faculty,
                    'academic_year': academic_year,
                    'session':       session,
                    'progress':      progress,

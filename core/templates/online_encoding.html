@@ -43,8 +43,11 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label>Responsable</label><br>
-            {{ tutor }}
+            {% if tutor %}
+              <label>Responsable</label><br>{{ tutor }}
+            {% else %}
+              <label>Faculté</label><br>{{ faculty }}
+            {% endif %}
           </div>
         </div>
         <div class="col-md-2">
@@ -71,18 +74,6 @@
             {{ progress | percentage }}
           </div>
         </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-6">
-          <div class="form-group">
-            <label>Programme</label><br>
-            <select class="form-control">
-              <option value="volvo">Tous</option>
-            </select>
-          </div>
-        </div>
-        <div class="col-md-6"></div>
       </div>
 
       <br><a class="btn btn-default" href="{% url 'online_encoding_form' session.id %}" role="button"><i class="fa fa-hashtag"></i> Encoder</a></p>

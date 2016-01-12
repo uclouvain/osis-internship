@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% load l10n %}
 {% load percentage %}
 
 {% comment "License" %}
@@ -91,11 +92,12 @@
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
-                <td><input type="number" value="{{ enrollment.score | default_if_none:"" }}" class="form-control"></td>
+                <td><input type="number" value="{{ enrollment.score|unlocalize | default_if_none:"" }}" class="form-control"></td>
                 <td><select class="form-control">
-                    {% for justification in justifications %}
-                      <option value="{{ justification.0 }}">{{ justification.1 }}</option>
-                    {% endfor %}
+                      <option value=""></option>
+                      <option value="ABSENT">Absent</option>
+                      <option value="CHEATING">Tricherie</option>
+                      <option value="SCORE_MISSING">Note manquant</option>
                     </select></td>
                 <td>{{ enrollment.session_exam.offer_year_calendar.end_date }}</td>
               </tr>
