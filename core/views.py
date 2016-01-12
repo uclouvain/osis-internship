@@ -121,7 +121,7 @@ def notes_printing(request,session_id,learning_unit_year_id):
     tutor = Tutor.find_by_user(request.user)
     academic_year = AcademicCalendar.current_academic_year()
     session_exam = SessionExam.current_session_exam()
-    sessions = SessionExam.sessions(tutor, academic_year, session_exam)
+    sessions = SessionExam.find_sessions_by_tutor(tutor, academic_year, session_exam)
     return pdfUtils.print_notes(request,tutor,academic_year,session_exam,sessions,learning_unit_year_id)
 
 
