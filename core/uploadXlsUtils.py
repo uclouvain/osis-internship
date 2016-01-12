@@ -66,10 +66,10 @@ def upload_scores_file(request, session_id, learning_unit_year_id, academic_year
                     else:
                         request.session['message_validation'] = "Fichier invalide"
                 messages.add_message(request, messages.INFO, message_validation)
-                return HttpResponseRedirect(reverse('online_encoding' , args=[session_id, 2]))
+                return HttpResponseRedirect(reverse('online_encoding' , args=[session_id]))
         else:
             #todo traiter si pas de fichier sélectionné
-            return HttpResponseRedirect(reverse('online_encoding' , args=[session_id, 2]))
+            return HttpResponseRedirect(reverse('online_encoding' , args=[session_id]))
 
 
 def __save_xls_scores(request, file_name):
