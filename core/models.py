@@ -170,7 +170,7 @@ class OfferEnrollment(models.Model):
     student         = models.ForeignKey(Student, null = False)
 
     def __str__(self):
-        return u"%s" % self.student
+        return u"%s - %s" % (self.student, self.offer_year)
 
 
 class OfferYearCalendar(models.Model):
@@ -189,7 +189,7 @@ class OfferYearCalendar(models.Model):
         return OfferYearCalendar.objects.filter(event_type__startswith='session_exam').filter(start_date__lte=timezone.now()).filter(end_date__gte=timezone.now()).first()
 
     def __str__(self):
-        return u"%s" % self.academic_calendar
+        return u"%s - %s" % (self.academic_calendar, self.offer_year)
 
 
 class LearningUnit(models.Model):

@@ -94,7 +94,7 @@ def export_xls(request,session_id,learning_unit_year_id,academic_year_id):
     dv.ranges.append('I2:I'+str(cptr+100))#Ajouter 100 pour si on ajoute des enregistrements
 
     response = HttpResponse(content=save_virtual_workbook(wb))
-    response['Content-Disposition'] = 'attachment; filename=myexport.xlsx'
+    response['Content-Disposition'] = 'attachment; filename=score_encoding.xlsx'
     response['Content-type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     return response
 

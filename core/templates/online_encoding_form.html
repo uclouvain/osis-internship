@@ -75,6 +75,9 @@
       </div>
       <hr>
       <form class="form-inline">
+        <submit class="btn btn-primary"><span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> Enregistrer</submit>
+        <a class="btn btn-default" href="{% url 'online_encoding' session.id %}" role="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Annuler</a><br><br>
+
         <table class="table table-hover">
             <thead>
               <th>Programme</th>
@@ -104,6 +107,9 @@
             {% endfor %}
             </tbody>
         </table>
+
+        <submit class="btn btn-primary"><span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> Enregistrer</submit>
+        <a class="btn btn-default" href="{% url 'online_encoding' session.id %}" role="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Annuler</a>
       </form>
     </div>
   </div>
