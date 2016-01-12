@@ -21,7 +21,8 @@ PAGE_SIZE = A4
 MARGIN_SIZE = 25 * mm
 
 def print_notes(request,tutor, academic_year, session_exam,sessions,learning_unit_year_id):
-    print('zut', str(learning_unit_year_id))
+    print('zut', str(learning_unit_year_id), ' zut session exam : ' ,str(session_exam.id) )
+
     """
     Create a multi-page document
     """
@@ -67,8 +68,8 @@ def print_notes(request,tutor, academic_year, session_exam,sessions,learning_uni
               'Autre note',
               'Date de remise'])
 
-    for rec_exam_enrollment in ExamEnrollment.find_exam_enrollments(session_exam):
-        
+    for rec_exam_enrollment in ExamEnrollment.find_exam_enrollments(session_exam.id):
+        print('zut : ', str(rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.id))
         if (int(rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.id) == int(learning_unit_year_id)) or int(learning_unit_year_id) == -1:
             student = rec_exam_enrollment.learning_unit_enrollment.student
             o = rec_exam_enrollment.learning_unit_enrollment.offer

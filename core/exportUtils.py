@@ -39,8 +39,9 @@ from django.utils.dateformat import DateFormat
 from django.utils.formats import get_format
 
 def export_xls(request,session_id,learning_unit_year_id,academic_year_id):
+
     academic_year = AcademicYear.find_academic_year(academic_year_id)
-    session_exam = SessionExam.current_session_exam()
+    session_exam = SessionExam.find_session(session_id)
     academic_calendar = AcademicCalendar.find_academic_calendar_by_event_type(academic_year_id,session_exam.number_session)
 
     wb = Workbook()
@@ -68,7 +69,7 @@ def export_xls(request,session_id,learning_unit_year_id,academic_year_id):
     ws.add_data_validation(dv)
 
     cptr=1
-    for rec_exam_enrollment in ExamEnrollment.find_exam_enrollments(session_exam):
+    for rec_exam_enrollment in ExamEnrollment.find_exam_enrollments(session_exam.id):
         student = rec_exam_enrollment.learning_unit_enrollment.student
         o = rec_exam_enrollment.learning_unit_enrollment.offer
         person = Person.find_person(student.person.id)

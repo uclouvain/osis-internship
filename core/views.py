@@ -78,7 +78,7 @@ def scores_encoding(request):
     # Calculate the progress of all courses of the tutor.
     all_enrollments = []
     for session in sessions:
-        enrollments = list(ExamEnrollment.find_exam_enrollments(session))
+        enrollments = list(ExamEnrollment.find_exam_enrollments(session.id))
         if enrollments:
             all_enrollments = all_enrollments + enrollments
     progress = ExamEnrollment.calculate_progress(all_enrollments)
@@ -103,7 +103,7 @@ def online_encoding(request, session_id):
         tutor = Tutor.find_by_user(request.user)
     academic_year = AcademicCalendar.current_academic_year()
     session = SessionExam.find_session(session_id)
-    enrollments = ExamEnrollment.find_exam_enrollments(session)
+    enrollments = ExamEnrollment.find_exam_enrollments(session.id)
     progress = ExamEnrollment.calculate_progress(enrollments)
 
     return render(request, "online_encoding.html",
@@ -117,10 +117,10 @@ def online_encoding(request, session_id):
 
 
 @login_required
-def notes_printing(request,session_id,learning_unit_year_id):
+def notes_printing(request,session_exam_id,learning_unit_year_id):
     tutor = Tutor.find_by_user(request.user)
     academic_year = AcademicCalendar.current_academic_year()
-    session_exam = SessionExam.current_session_exam()
+    session_exam = SessionExam.find_session(session_exam_id)
     sessions = SessionExam.find_sessions_by_tutor(tutor, academic_year, session_exam)
     return pdfUtils.print_notes(request,tutor,academic_year,session_exam,sessions,learning_unit_year_id)
 
@@ -130,7 +130,7 @@ def online_encoding_form(request, session_id):
     tutor = Tutor.find_by_user(request.user)
     academic_year = AcademicCalendar.current_academic_year()
     session = SessionExam.find_session(session_id)
-    enrollments = ExamEnrollment.find_exam_enrollments(session)
+    enrollments = ExamEnrollment.find_exam_enrollments(session.id)
     progress = ExamEnrollment.calculate_progress(enrollments)
 
     return render(request, "online_encoding_form.html",
