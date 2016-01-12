@@ -108,7 +108,7 @@
           </div>
           <div role="tabpanel" class="tab-pane" id="home">
             <br>
-            <a class="btn btn-default" href="#" role="button">Imprimer tous les cours</a>
+            <a class="btn btn-default" href="{% url 'all_notes_printing' session.id %}" role="button">Imprimer tous les cours</a>
             <br><br>
             <table class="table table-striped table-hover">
               <thead>
@@ -129,7 +129,7 @@
                       {% endif %}</td>
                   <td>{{ session.learning_unit_year.acronym }}</td>
                   <td>{{ session.learning_unit_year.title }}</td>
-                  <td><a class="btn btn-default" href="{% url 'notes_printing' session.id %}" role="button">Imprimer</a></td>
+                  <td><a class="btn btn-default" href="{% url 'notes_printing' session.id session.learning_unit_year.id%}" role="button">Imprimer</a></td>
                 </tr>
               {% endfor %}
               </tbody>

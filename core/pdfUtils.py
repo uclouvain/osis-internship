@@ -20,8 +20,8 @@ from core.models import AcademicCalendar, SessionExam, ExamEnrollment, LearningU
 PAGE_SIZE = A4
 MARGIN_SIZE = 25 * mm
 
-def pdf_test(request,tutor, academic_year, session_exam,sessions):
-
+def print_notes(request,tutor, academic_year, session_exam,sessions,learning_unit_year_id):
+    print('zut', str(learning_unit_year_id))
     """
     Create a multi-page document
     """
@@ -48,17 +48,11 @@ def pdf_test(request,tutor, academic_year, session_exam,sessions):
     styles.add(ParagraphStyle(name='Justify', alignment=TA_JUSTIFY))
 
     Contenu = []
-    #
-    # logo = "static/images/logo_osis.png"
-    # im = Image(logo, 2*inch, 2*inch)
-    # Contenu.append(im)
 
     academic_calendar = AcademicCalendar.find_academic_calendar_by_event_type(academic_year.id,session_exam.number_session)
     Contenu.append(Paragraph("<font size=12>Responsable : %s</font>" % tutor, styles["Normal"]) )
     Contenu.append(Paragraph('<font size=12>Année académique : %s</font>' % str(academic_year.year), styles["Normal"]))
     Contenu.append(Paragraph('<font size=12>Session : %d</font>' % session_exam.number_session, styles["Normal"]))
-
-
 
     Contenu.append(Spacer(1, 12))
     data =[]
@@ -74,20 +68,22 @@ def pdf_test(request,tutor, academic_year, session_exam,sessions):
               'Date de remise'])
 
     for rec_exam_enrollment in ExamEnrollment.find_exam_enrollments(session_exam):
-        student = rec_exam_enrollment.learning_unit_enrollment.student
-        o = rec_exam_enrollment.learning_unit_enrollment.offer
-        person = Person.find_person(student.person.id)
-        data.append([str(academic_year),
-                       str(session_exam.number_session),
-                       session_exam.learning_unit_year.acronym,
-                       o.acronym,
-                       student.registration_id,
-                       person.last_name,
-                       person.first_name,
-                       rec_exam_enrollment.score,
-                       rec_exam_enrollment.justification,
-                       academic_calendar.end_date.strftime('%d/%m/%Y')
-                       ])
+        print('ztt: ',str(rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.id))
+        if (int(rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.id) == int(learning_unit_year_id)) or int(learning_unit_year_id) == -1:
+            student = rec_exam_enrollment.learning_unit_enrollment.student
+            o = rec_exam_enrollment.learning_unit_enrollment.offer
+            person = Person.find_person(student.person.id)
+            data.append([str(academic_year),
+                           str(session_exam.number_session),
+                           session_exam.learning_unit_year.acronym,
+                           o.acronym,
+                           student.registration_id,
+                           person.last_name,
+                           person.first_name,
+                           rec_exam_enrollment.score,
+                           rec_exam_enrollment.justification,
+                           academic_calendar.end_date.strftime('%d/%m/%Y')
+                           ])
 
 
 
