@@ -111,38 +111,37 @@ def addHeaderFooter(canvas, doc):
     """
     Add the page number
     """
-    page_num = canvas.getPageNumber()
-    # text = "Page #%s" % page_num
-    # canvas.drawRightString(200*mm, 20*mm, text)
-
+    styles = getSampleStyleSheet()
     # Save the state of our canvas so we can draw on it
     canvas.saveState()
-    #todo ajouter le logo
-
-
-
-    styles = getSampleStyleSheet()
-
 
     # Header
-    header_lines="<b>Université Catholique Louvain</b>"
-    header_lines += "<br/>"
-    header_lines += "Louvain-la-Neuve"
-    header_lines += "<br/>"
-    header_lines += "Belgique"
-    header_lines += "<br/>"
-    header_lines += "http://www.uclouvain.be"
-    header = Paragraph(header_lines, styles['Normal'])
-    w, h = header.wrap(doc.width, doc.topMargin)
-    header.drawOn(canvas, doc.leftMargin, doc.height + doc.topMargin - h)
+    header_building(canvas,doc)
     # Footer
-
-    footer_text = 'Footer' + 'Page #%s' % page_num
-
-
-    footer = Paragraph(footer_text, styles['Normal'])
-    w, h = footer.wrap(doc.width, doc.bottomMargin)
-    footer.drawOn(canvas, doc.leftMargin, h)
+    footer_building(canvas, doc,styles)
 
     # Release the canvas
     canvas.restoreState()
+
+
+
+def header_building(canvas, doc):
+    #todo ne plus écrire en dur localhost
+    a = Image("http://localhost:8000"+settings.STATIC_URL + "images/logo_osis.png")
+
+    data_header=[[a,'Université Catholique Louvain',''],
+                 ['','Louvain-la-Neuve','Feuille de notes'],
+                 ['','Belgique','']]
+    t_header=Table(data_header, [40*mm, 100*mm,100*mm])
+    t_header.setStyle(TableStyle([
+                       ('SPAN',(0,0), (0,-1)),
+                       ]))
+    w, h = t_header.wrap(doc.width, doc.topMargin)
+    t_header.drawOn(canvas, doc.leftMargin, doc.height + doc.topMargin - h)
+
+
+def footer_building(canvas, doc,styles):
+    page_num = canvas.getPageNumber()
+    footer = Paragraph('Footer' + 'Page #%s' % page_num, styles['Normal'])
+    w, h = footer.wrap(doc.width, doc.bottomMargin)
+    footer.drawOn(canvas, doc.leftMargin, h)
