@@ -131,7 +131,10 @@ class AcademicCalendar(models.Model):
 
     def current_academic_year():
         academic_calendar = AcademicCalendar.objects.filter(event_type='academic_year').filter(start_date__lte=timezone.now()).filter(end_date__gte=timezone.now()).first()
-        return academic_calendar.academic_year
+        if academic_calendar:
+            return academic_calendar.academic_year
+        else:
+            return None
 
     def find_academic_calendar_by_event_type(academic_year_id, session_number):
         event_type_criteria = "session_exam_"+str(session_number)
