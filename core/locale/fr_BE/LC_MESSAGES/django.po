@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-25 00:47+0100\n"
+"POT-Creation-Date: 2016-01-14 15:12+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,17 +17,81 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: core/templates/access_denied.html:6
-msgid "Access denied!"
-msgstr "Accès refusé!"
+#: templates/layout.html:70 templates/scores_encoding.html.py:30
+msgid "Evaluations"
+msgstr "Evaluations"
 
-#: core/templates/access_denied.html:7
-msgid ""
-"Please contact the service desk if you are supposed to have acces to this "
-"page."
-msgstr ""
-"Contactez le service-desk si vous pensez avoir accès à cette page"
+#: templates/layout.html:77
+msgid "Domain"
+msgstr "Domaine"
 
-#: core/templates/page_not_found.html:6
-msgid "Page not found!"
-msgstr "Page non trouvée!"
+#: templates/layout.html:81
+msgid "Logout"
+msgstr "Logout"
+
+#: templates/layout.html:82
+msgid "Profile"
+msgstr "Profil"
+
+#: templates/layout.html:86
+msgid "Login"
+msgstr "Login"
+
+#: templates/scores_encoding.html:29
+msgid "Studies"
+msgstr "Les études"
+
+#: templates/scores_encoding.html:31 templates/scores_encoding.html.py:35
+msgid "Scores encoding"
+msgstr "Encodage de notes"
+
+#: templates/scores_encoding.html:43
+msgid "Tutor"
+msgstr "Enseignant"
+
+#: templates/scores_encoding.html:45
+msgid "Faculty"
+msgstr "Faculté"
+
+#: templates/scores_encoding.html:51
+msgid "Academic year"
+msgstr "Année académique"
+
+#: templates/scores_encoding.html:57
+msgid "Session"
+msgstr "Session"
+
+#: templates/scores_encoding.html:64
+msgid "Progress"
+msgstr "Progression"
+
+#: templates/scores_encoding.html:73
+msgid "Select an encoding type"
+msgstr "Sélectionner un type d'encodage"
+
+#: templates/scores_encoding.html:76
+msgid "Online"
+msgstr "En ligne"
+
+#: templates/scores_encoding.html:77
+msgid "With xls"
+msgstr "En Feuille de calcul"
+
+#: templates/scores_encoding.html:78
+msgid "Via paper"
+msgstr "En papier"
+
+#: templates/scores_encoding.html:85 templates/scores_encoding.html.py:111
+#: templates/scores_encoding.html:141
+msgid "Status"
+msgstr "Statut"
+
+#: templates/scores_encoding.html:86 templates/scores_encoding.html.py:112
+#: templates/scores_encoding.html:142
+msgid "Code"
+msgstr "Sigle"
+
+#: templates/scores_encoding.html:87 templates/scores_encoding.html.py:113
+#: templates/scores_encoding.html:143
+msgid "Activity"
+msgstr "Activité"

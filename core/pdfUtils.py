@@ -4,6 +4,7 @@ from io import StringIO
 from reportlab.pdfgen import canvas
 from django.http import HttpResponse
 from django.conf import settings
+from django.utils.translation import ugettext_lazy as _
 
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.enums import TA_JUSTIFY, TA_RIGHT, TA_CENTER, TA_LEFT
@@ -227,7 +228,7 @@ def main_data(tutor, academic_year, session_exam, styles, learning_unit_year, pg
     p.alignment = TA_RIGHT
     p.fontSize = 10
 
-    Contenu.append(Paragraph('Année académique : %s' % str(academic_year), p))
+    Contenu.append(Paragraph('_(Année académique) : %s' % str(academic_year), p))
     Contenu.append(Paragraph('Session : %d' % session_exam.number_session, p))
     Contenu.append(BIG_INTER_LINE)
 
