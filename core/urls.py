@@ -42,6 +42,7 @@ urlpatterns = [
     url(r'^studies/assessements/scores_encoding/online/([0-9]+)/$', views.online_encoding, name='online_encoding'),
     url(r'^studies/assessements/scores_encoding/online/([0-9]+)/form$', views.online_encoding_form, name='online_encoding_form'),
     url(r'^studies/assessements/scores_encoding/online/([0-9]+)/double_form$', views.online_double_encoding_form, name='online_double_encoding_form'),
+    url(r'^studies/assessements/scores_encoding/online/([0-9]+)/double_validation$', views.online_double_encoding_validation, name='online_double_encoding_validation'),
     url(r'^studies/assessements/all_notes_printing/([0-9]+)/$', views.all_notes_printing, name='all_notes_printing'),
     url(r'^studies/assessements/notes_printing/([0-9]+)/([0-9]+)/$', views.notes_printing, name='notes_printing'),
     url(r'^studies/assessements/scores_encoding/xlsdownload/([0-9]+)/([0-9]+)/([0-9]+)/$',exportUtils.export_xls, name='scores_encoding_download'),

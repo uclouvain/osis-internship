@@ -302,8 +302,12 @@ class ExamEnrollment(models.Model):
         ('SAVED','Saved'),
         ('SUBMITTED','Submitted'))
 
-    score                    = models.DecimalField(max_digits = 4, decimal_places = 2, blank = True, null = True, validators=[MaxValueValidator(20), MinValueValidator(0)])
-    justification            = models.CharField(max_length = 17, blank = True, null = True,choices = JUSTIFICATION_TYPES)
+    score_draft              = models.DecimalField(max_digits = 4, decimal_places = 2, blank = True, null = True, validators=[MaxValueValidator(20), MinValueValidator(0)])
+    justification_draft      = models.CharField(max_length = 17, blank = True, null = True,choices = JUSTIFICATION_TYPES)
+    score_reencoded          = models.DecimalField(max_digits = 4, decimal_places = 2, blank = True, null = True, validators=[MaxValueValidator(20), MinValueValidator(0)])
+    justification_reencoded  = models.CharField(max_length = 17, blank = True, null = True,choices = JUSTIFICATION_TYPES)
+    score_final              = models.DecimalField(max_digits = 4, decimal_places = 2, blank = True, null = True, validators=[MaxValueValidator(20), MinValueValidator(0)])
+    justification_final      = models.CharField(max_length = 17, blank = True, null = True,choices = JUSTIFICATION_TYPES)
     encoding_status          = models.CharField(max_length = 9, blank = True, null = True,choices = ENCODING_STATUS)
     session_exam             = models.ForeignKey(SessionExam, null = False)
     learning_unit_enrollment = models.ForeignKey(LearningUnitEnrollment, null = False)

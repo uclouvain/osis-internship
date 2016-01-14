@@ -79,18 +79,10 @@
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-md-6">
-          <a class="btn btn-default" href="{% url 'online_encoding_form' session.id %}" role="button"><i class="fa fa-hashtag"></i> Encoder</a>
-          <a class="btn btn-default" href="{% url 'online_double_encoding_form' session.id %}" role="button"><i class="fa fa-hashtag"></i><i class="fa fa-hashtag"></i> Double encoder</a>
-        </div>
-        <div class="col-md-6 pull-right">
-          <a class="btn btn-warning" href="{% url 'online_encoding_form' session.id %}" role="button"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> Soumettre</a>
-          <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#uploadScoreModal" title="Permet de sélectionner le fichier excel contenant les notes à téléverser"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Soumettre fichier Excel</button>
-        </div>
-      </div>
-
-      <br>
+      <a class="btn btn-default" href="{% url 'online_encoding_form' session.id %}" role="button"><i class="fa fa-hashtag"></i> Encoder</a>
+      <a class="btn btn-default" href="{% url 'online_double_encoding_form' session.id %}" role="button"><i class="fa fa-hashtag"></i><i class="fa fa-hashtag"></i> Double encoder</a>
+      <a class="btn btn-warning" href="{% url 'online_encoding_form' session.id %}" role="button"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> Soumettre</a>
+      <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#uploadScoreModal" title="Permet de sélectionner le fichier excel contenant les notes à téléverser"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Soumettre fichier Excel</button><br><br>
 
       <table class="table table-hover">
           <thead>
