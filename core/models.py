@@ -36,7 +36,7 @@ class Person(models.Model):
         ('M','Male'),
         ('U','Unknown'))
 
-    external_id = models.CharField(max_length = 40,blank = False, null = False)
+    external_id = models.CharField(max_length = 40,blank = True, null = True)
     user        = models.OneToOneField(User, on_delete=models.CASCADE, null = True)
     global_id   = models.CharField(max_length = 10,blank = True, null = True)
     gender      = models.CharField(max_length = 1, blank = True, null = True, choices = GENDER_CHOICES, default = 'U')
@@ -67,7 +67,7 @@ class Person(models.Model):
 
 
 class Tutor(models.Model):
-    external_id = models.CharField(max_length = 40,blank = False, null = False)
+    external_id = models.CharField(max_length = 40,blank = True, null = True)
     person = models.ForeignKey(Person, null = False)
 
     def find_by_user(user):
@@ -83,7 +83,7 @@ class Tutor(models.Model):
 
 
 class Student(models.Model):
-    external_id = models.CharField(max_length = 40,blank = False, null = False)
+    external_id = models.CharField(max_length = 40,blank = True, null = True)
     registration_id = models.CharField(max_length=10, null=False)
     person          = models.ForeignKey(Person, null=False)
 
@@ -93,7 +93,7 @@ class Student(models.Model):
 
 
 class Structure(models.Model):
-    external_id = models.CharField(max_length = 40,blank = False, null = False)
+    external_id = models.CharField(max_length = 40,blank = True, null = True)
     acronym = models.CharField(max_length=10, blank=False, null=False)
     title   = models.CharField(max_length=255, blank=False, null=False)
     part_of = models.ForeignKey('self', blank=True, null=True)
@@ -115,7 +115,7 @@ class ProgrammeManager(models.Model):
 
 
 class AcademicYear(models.Model):
-    external_id = models.CharField(max_length = 40,blank = False, null = False)
+    external_id = models.CharField(max_length = 40,blank = True, null = True)
     year = models.IntegerField(blank=False, null=False)
 
     def __str__(self):
@@ -152,7 +152,7 @@ class AcademicCalendar(models.Model):
 
 
 class Offer(models.Model):
-    external_id = models.CharField(max_length = 40,blank = False, null = False)
+    external_id = models.CharField(max_length = 40,blank = True, null = True)
     acronym = models.CharField(max_length = 10,blank = False, null = False)
     title   = models.CharField(max_length = 255, blank = False, null = False)
 
@@ -165,7 +165,7 @@ class Offer(models.Model):
 
 
 class OfferYear(models.Model):
-    external_id = models.CharField(max_length = 40,blank = False, null = False)
+    external_id = models.CharField(max_length = 40,blank = True, null = True)
     offer         = models.ForeignKey(Offer, null = False)
     academic_year = models.ForeignKey(AcademicYear, null = False)
     acronym       = models.CharField(max_length = 10,blank = False, null = False)
@@ -177,7 +177,7 @@ class OfferYear(models.Model):
 
 
 class OfferEnrollment(models.Model):
-    external_id = models.CharField(max_length = 50,blank = False, null = False)
+    external_id = models.CharField(max_length = 50,blank = True, null = True)
     date_enrollment = models.DateField(auto_now = False, blank = False, null = False, auto_now_add = False)
     offer_year      = models.ForeignKey(OfferYear, null = False)
     student         = models.ForeignKey(Student, null = False)
@@ -192,7 +192,7 @@ class OfferYearCalendar(models.Model):
         ('session_exam_2','Session Exams 2'),
         ('session_exam_3','Session Exams 3'))
 
-    external_id = models.CharField(max_length = 40,blank = False, null = False)
+    external_id = models.CharField(max_length = 40,blank = True, null = True)
     academic_calendar = models.ForeignKey(AcademicCalendar, null = False)
     offer_year        = models.ForeignKey(OfferYear, null = True)
     event_type        = models.CharField(max_length = 50, blank = False, null = False, choices = EVENT_TYPE)
@@ -207,7 +207,7 @@ class OfferYearCalendar(models.Model):
 
 
 class LearningUnit(models.Model):
-    external_id = models.CharField(max_length = 40,blank = False, null = False)
+    external_id = models.CharField(max_length = 40,blank = True, null = True)
     acronym     = models.CharField(max_length = 10, blank = False, null = False)
     title       = models.CharField(max_length = 255, null = False)
     description = models.TextField(blank = True, null = True)
@@ -219,7 +219,7 @@ class LearningUnit(models.Model):
 
 
 class LearningUnitYear(models.Model):
-    external_id = models.CharField(max_length = 40,blank = False, null = False)
+    external_id = models.CharField(max_length = 40,blank = True, null = True)
     acronym       = models.CharField(max_length = 15,blank = False, null = False)
     title         = models.CharField(max_length = 255, blank = False, null = False)
     credits       = models.DecimalField(max_digits = 4, decimal_places = 2, blank = True, null = True)
@@ -241,7 +241,7 @@ class LearningUnitYear(models.Model):
 
 
 class LearningUnitEnrollment(models.Model):
-    external_id = models.CharField(max_length = 70,blank = False, null = False)
+    external_id = models.CharField(max_length = 70,blank = True, null = True)
     date_enrollment    = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
     learning_unit_year = models.ForeignKey(LearningUnitYear, null = False)
     offer_enrollment   = models.ForeignKey(OfferEnrollment, null = False)
@@ -263,7 +263,7 @@ class Attribution(models.Model):
         ('COORDINATOR','Coordinator'),
         ('PROFESSOR','Professor'))
 
-    external_id = models.CharField(max_length = 40,blank = False, null = False)
+    external_id = models.CharField(max_length = 40,blank = True, null = True)
     start_date    = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
     end_date      = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
     function      = models.CharField(max_length = 15, blank = True, null = True,choices = FUNCTION_CHOICES, default = 'UNKNOWN')
@@ -280,7 +280,7 @@ class SessionExam(models.Model):
         ('OPEN', 'Open'),
         ('CLOSED', 'Closed'))
 
-    external_id = models.CharField(max_length = 40,blank = False, null = False)
+    external_id = models.CharField(max_length = 40,blank = True, null = True)
     number_session      = models.IntegerField(blank = False, null = False)
     status              = models.CharField(max_length = 10, blank = False, null = False,choices = SESSION_STATUS)
     learning_unit_year  = models.ForeignKey(LearningUnitYear, null = False)
@@ -321,7 +321,7 @@ class ExamEnrollment(models.Model):
         ('SAVED','Saved'),
         ('SUBMITTED','Submitted'))
 
-    external_id = models.CharField(max_length = 40,blank = False, null = False)
+    external_id = models.CharField(max_length = 40,blank = True, null = True)
     score                    = models.DecimalField(max_digits = 4, decimal_places = 2, blank = True, null = True, validators=[MaxValueValidator(20), MinValueValidator(0)])
     justification            = models.CharField(max_length = 17, blank = True, null = True,choices = JUSTIFICATION_TYPES)
     encoding_status          = models.CharField(max_length = 9, blank = True, null = True,choices = ENCODING_STATUS)
