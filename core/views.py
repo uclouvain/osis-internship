@@ -89,8 +89,7 @@ def scores_encoding(request):
                    'faculty':       faculty,
                    'academic_year': academic_year,
                    'session':       session,
-                   'sessions':      sessions,
-                   'progress':      "{0:.0f}".format(progress)})
+                   'sessions':      sessions})
 
 
 @login_required
@@ -112,7 +111,7 @@ def online_encoding(request, session_id):
                    'faculty':       faculty,
                    'academic_year': academic_year,
                    'session':       session,
-                   'progress':      progress,
+                   'progress':      "{0:.0f}".format(progress),
                    'enrollments':   enrollments})
 
 
