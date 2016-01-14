@@ -149,6 +149,10 @@ class Offer(models.Model):
         self.acronym = self.acronym.upper()
         super(Offer, self).save(*args, **kwargs)
 
+    @property
+    def structure(self):
+        return Structure.objects.filter(id=self.id).structure
+
     def __str__(self):
         return self.acronym
 
@@ -215,7 +219,6 @@ class LearningUnitYear(models.Model):
 
 
     def find_offer_enrollments(learning_unit_year_id):
-        print ('find_offer_enrollments')
         learning_unit_enrollment_list= LearningUnitEnrollment.objects.filter(learning_unit_year=learning_unit_year_id)
         offer_list = []
         for lue in learning_unit_enrollment_list:
@@ -322,3 +325,27 @@ class ExamEnrollment(models.Model):
 
     def __str__(self):
         return u"%s - %s" % (self.session_exam, self.learning_unit_enrollment)
+
+    def justification_label(self,lang):
+        if lang == 'fr':
+            if self.justification == "ABSENT":
+                return 'Absent'
+            if self.justification == "ILL":
+                return 'Malade'
+            if self.justification == "CHEATING":
+                return 'Tricherie'
+            if self.justification == "JUSTIFIED_ABSENCE":
+                return 'Absence justifiée'
+            if self.justification == "SCORE_MISSING":
+                return 'Note manquante'
+            return None
+
+
+    def justification_label_authorized( lang, isFac):
+        if lang == 'fr':
+            if isFac:
+                return 'Absent - Malade - Tricherie - Absence justifiée - Note manquante'
+            else:
+                return 'Absent - Malade - Tricherie'
+
+        return ""

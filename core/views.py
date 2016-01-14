@@ -122,7 +122,7 @@ def notes_printing(request,session_exam_id,learning_unit_year_id):
     academic_year = AcademicCalendar.current_academic_year()
     session_exam = SessionExam.find_session(session_exam_id)
     sessions = SessionExam.find_sessions_by_tutor(tutor, academic_year, session_exam)
-    return pdfUtils.print_notes(request,tutor,academic_year,session_exam,sessions,learning_unit_year_id)
+    return pdfUtils.print_notes(request,tutor,academic_year,session_exam,sessions,learning_unit_year_id,request.user.groups.filter(name='FAC').exists())
 
 
 @login_required

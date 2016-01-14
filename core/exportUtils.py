@@ -51,7 +51,6 @@ def export_xls(request,session_id,learning_unit_year_id,academic_year_id):
 
 # masquage de la colonne avec l'id exam enrollment
 
-
     header = ['Année académique',
               'Session',
               'Code cours',
@@ -89,7 +88,7 @@ def export_xls(request,session_id,learning_unit_year_id,academic_year_id):
 
 
         cptr = cptr+1
-        __coloring_non_editable(ws,cptr)
+        __coloring_non_editable(ws,cptr, rec_exam_enrollment.encoding_status)
 
 
     dv.ranges.append('I2:I'+str(cptr+100))#Ajouter 100 pour si on ajoute des enregistrements
@@ -132,7 +131,7 @@ def  __create_data_list_for_justification():
     return dv
 
 
-def __coloring_non_editable(ws,cptr):
+def __coloring_non_editable(ws, cptr, encoding_status):
     """
     définition du style pour les colonnes qu'on ne doit pas modifier
     :return:
@@ -144,4 +143,8 @@ def __coloring_non_editable(ws,cptr):
     while i < 11:
         if i< 8 or i>9:
             ws.cell(row=cptr, column=i).style = style_no_modification
+        else:
+            if encoding_status == 'SUBMITTED':
+                ws.cell(row=cptr, column=i).style = style_no_modification
+
         i=i+1
