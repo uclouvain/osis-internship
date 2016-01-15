@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
+{% load i18n %}
 
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
@@ -34,7 +35,7 @@
       </a>
     </div>
     <div class="media-body">
-      <h4 class="media-heading"><a href="{% url 'studies' %}">Les études</a></h4>
+      <h4 class="media-heading"><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></h4>
     </div>
 </ul>
 {% endblock %}

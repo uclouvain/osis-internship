@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% load percentage %}
+{% load i18n %}
 
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
@@ -26,9 +27,9 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}">Les études</a></li>
-  <li><a href="{% url 'assessements' %}">Évaluations</a></li>
-  <li><a href="{% url 'scores_encoding' %}">Encodage des notes</a></li>
+  <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+  <li><a href="{% url 'assessements' %}">{% trans 'Evaluations' %}</a></li>
+  <li><a href="{% url 'scores_encoding' %}">{% trans 'Scores encoding' %}</a></li>
   <li class="active">Encodage en ligne</li>
 {% endblock %}
 {% block content %}
@@ -70,7 +71,7 @@
         </div>
         <div class="col-md-2">
           <div class="form-group">
-            <label>Progrès</label><br>
+            <label>_('Progress')</label><br>
             {{ progress | percentage }}
           </div>
         </div>
@@ -79,13 +80,13 @@
       <br><a class="btn btn-default" href="{% url 'online_encoding_form' session.id %}" role="button"><i class="fa fa-hashtag"></i> Encoder</a></p>
       <table class="table table-hover">
           <thead>
-            <th>Programme</th>
-            <th>Noma</th>
-            <th>Nom</th>
-            <th>Prénom</th>
-            <th>Note</th>
-            <th>Justification</th>
-            <th>Date de remise</th>
+            <th>{% trans 'Program' %}</th>
+            <th>{% trans 'Registration number' %}</th>
+            <th>{% trans 'Last name' %}</th>
+            <th>{% trans 'First name' %}</th>
+            <th>{% trans 'Score' %}</th>
+            <th>{% trans 'Other score' %}</th>
+            <th>{% trans 'End_date' %}</th>
           </thead>
           <tbody>
           {% for enrollment in enrollments %}

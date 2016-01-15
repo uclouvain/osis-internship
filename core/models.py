@@ -28,6 +28,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
 
 
 class Person(models.Model):
@@ -341,11 +342,8 @@ class ExamEnrollment(models.Model):
             return None
 
 
-    def justification_label_authorized( lang, isFac):
-        if lang == 'fr':
-            if isFac:
-                return 'Absent - Malade - Tricherie - Absence justifiée - Note manquante'
-            else:
-                return 'Absent - Malade - Tricherie'
-
-        return ""
+    def justification_label_authorized(isFac):
+        if isFac:
+            return '%s - %s - %s - %s - %s' % (_('Absent'), _('Ill'), _('Cheating'), _('Justified absence'), _('Score missing'))
+        else:
+            return '%s - %s - %s' % (_('Absent'), _('Ill'), _('Cheating'))

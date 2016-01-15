@@ -65,7 +65,7 @@
             {% if request.user.is_authenticated %}
             <ul class="nav navbar-nav">
               <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Les études <span class="caret"></span></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{% trans 'Studies' %} <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                   <li><a href="{% url 'assessements' %}">{% trans 'Evaluations' %}</a></li>
                 </ul>

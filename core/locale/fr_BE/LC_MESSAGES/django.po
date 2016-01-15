@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-14 15:12+0100\n"
+"POT-Creation-Date: 2016-01-15 10:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,9 +17,171 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: templates/layout.html:70 templates/scores_encoding.html.py:30
+#: models.py:347 models.py:349 templates/online_encoding_form.html.py:99
+msgid "Absent"
+msgstr "Absent"
+
+#: models.py:347 models.py:349
+msgid "Ill"
+msgstr "Malade"
+
+#: models.py:347 models.py:349 templates/online_encoding_form.html.py:100
+msgid "Cheating"
+msgstr "Tricherie"
+
+#: models.py:347
+#, fuzzy
+#| msgid "Justification"
+msgid "Justified absence"
+msgstr "Justification"
+
+#: models.py:347 templates/online_encoding_form.html.py:101
+#, fuzzy
+#| msgid "Scores encoding"
+msgid "Score missing"
+msgstr "Encodage de notes"
+
+#: pdfUtils.py:104
+#, fuzzy
+#| msgid "Scores encoding"
+msgid "Scores transcript"
+msgstr "Encodage de notes"
+
+#: pdfUtils.py:106
+msgid ""
+"University Catholic Louvain\n"
+"Louvain-la-Neuve\n"
+"Belgium"
+msgstr ""
+"Université Catholique Louvain\n"
+"Louvain-la-Neuve\n"
+"Belgique"
+
+#: pdfUtils.py:200
+msgid "Other score legend"
+msgstr "Légende pour le champ 'autre note'"
+
+#: pdfUtils.py:202
+msgid "UnAuthorized decimal for this activity"
+msgstr "Attention décimale non-autorisée pour ce cours"
+
+#: pdfUtils.py:213 templates/online_encoding.html.py:84
+#: templates/online_encoding_form.html:82
+msgid "Registration number"
+msgstr "Noma"
+
+#: pdfUtils.py:214 templates/online_encoding.html.py:85
+#, fuzzy
+#| msgid "Last name"
+msgid "Last name"
+msgstr "Nom"
+
+#: pdfUtils.py:215 templates/online_encoding.html.py:86
+#, fuzzy
+#| msgid "First name"
+msgid "First name"
+msgstr "Prénom"
+
+#: pdfUtils.py:216
+msgid "Numbered score"
+msgstr "Note chiffrée"
+
+#: pdfUtils.py:217 templates/online_encoding.html.py:88
+msgid "Other score"
+msgstr "Autre note"
+
+#: pdfUtils.py:218 templates/online_encoding_form.html.py:87
+msgid "End date"
+msgstr "Date de remise"
+
+#: pdfUtils.py:232 templates/online_encoding_form.html.py:54
+#: templates/scores_encoding.html:51
+msgid "Academic year"
+msgstr "Année académique"
+
+#: pdfUtils.py:249 templates/online_encoding.html.py:83
+#, fuzzy
+#| msgid "Progress"
+msgid "Program"
+msgstr "Programme"
+
+#: pdfUtils.py:251
+#, fuzzy
+#| msgid "Deliberations"
+msgid "Deliberation date"
+msgstr "Deliberations"
+
+#: pdfUtils.py:252
+msgid "Chair of the exam board"
+msgstr "Président du jury"
+
+#: pdfUtils.py:253
+msgid "Exam board secretary"
+msgstr "Secrétaire du jury"
+
+#: pdfUtils.py:289
+msgid "Done at"
+msgstr "Fait à"
+
+#: pdfUtils.py:289
+msgid "The"
+msgstr "Le"
+
+#: pdfUtils.py:289
+msgid "Signature"
+msgstr "Signature"
+
+#: templates/assessements.html:30 templates/home.html.py:38
+#: templates/layout.html:68 templates/online_encoding.html.py:30
+#: templates/online_encoding_form.html:31 templates/scores_encoding.html:29
+#: templates/studies.html.py:30 templates/studies.html:34
+msgid "Studies"
+msgstr "Les études"
+
+#: templates/assessements.html:31 templates/assessements.html.py:35
+#: templates/layout.html:70 templates/online_encoding.html.py:31
+#: templates/online_encoding_form.html:32 templates/scores_encoding.html:30
+#: templates/studies.html.py:44
 msgid "Evaluations"
 msgstr "Evaluations"
+
+#: templates/assessements.html:45
+msgid "Exams enrollment"
+msgstr "Inscriptions aux examens"
+
+#: templates/assessements.html:46
+#, fuzzy
+#| msgid "This process helps tutors while scores encoding."
+msgid "This process helps the exams enrollments management"
+msgstr ""
+"Ce processus aide les enseignants à coder leurs notes pour chaque session "
+"d'examens."
+
+#: templates/assessements.html:56 templates/online_encoding.html.py:32
+#: templates/online_encoding_form.html:33 templates/scores_encoding.html:31
+#: templates/scores_encoding.html.py:35
+msgid "Scores encoding"
+msgstr "Encodage de notes"
+
+#: templates/assessements.html:57
+#, fuzzy
+#| msgid "This process helps tutors while scores encoding."
+msgid "This process helps tutor while encoding notes for the exams sessions."
+msgstr ""
+"Ce processus aide les enseignants à coder leurs notes pour chaque session "
+"d'examens."
+
+#: templates/assessements.html:67
+msgid "Deliberations"
+msgstr "Deliberations"
+
+#: templates/assessements.html:68
+#, fuzzy
+#| msgid "This process helps tutors while scores encoding."
+msgid "This process helps for the deliberations"
+msgstr ""
+"Ce processus aide les enseignants à coder leurs notes pour chaque session "
+"d'examens."
 
 #: templates/layout.html:77
 msgid "Domain"
@@ -37,13 +199,57 @@ msgstr "Profil"
 msgid "Login"
 msgstr "Login"
 
-#: templates/scores_encoding.html:29
-msgid "Studies"
-msgstr "Les études"
+#: templates/online_encoding.html:87 templates/online_encoding_form.html:85
+msgid "Score"
+msgstr "Note"
 
-#: templates/scores_encoding.html:31 templates/scores_encoding.html.py:35
-msgid "Scores encoding"
+#: templates/online_encoding.html:89
+#, fuzzy
+#| msgid "End date"
+msgid "End_date"
+msgstr "Date de remise"
+
+#: templates/online_encoding_form.html:34
+#, fuzzy
+#| msgid "Scores encoding"
+msgid "Online encoding"
 msgstr "Encodage de notes"
+
+#: templates/online_encoding_form.html:48
+msgid "Responsible"
+msgstr "Responsable"
+
+#: templates/online_encoding_form.html:60 templates/scores_encoding.html:57
+msgid "Session"
+msgstr "Session"
+
+#: templates/online_encoding_form.html:66
+msgid "Number of enrollments"
+msgstr "Nombre d'inscrits"
+
+#: templates/online_encoding_form.html:72 templates/scores_encoding.html:64
+msgid "Progress"
+msgstr "Progression"
+
+#: templates/online_encoding_form.html:81
+msgid "Offer"
+msgstr "Offre"
+
+#: templates/online_encoding_form.html:83
+#, fuzzy
+#| msgid "Last name"
+msgid "Lastname"
+msgstr "Nom"
+
+#: templates/online_encoding_form.html:84
+#, fuzzy
+#| msgid "First name"
+msgid "Firstname"
+msgstr "Prénom"
+
+#: templates/online_encoding_form.html:86
+msgid "Justification"
+msgstr "Justification"
 
 #: templates/scores_encoding.html:43
 msgid "Tutor"
@@ -52,18 +258,6 @@ msgstr "Enseignant"
 #: templates/scores_encoding.html:45
 msgid "Faculty"
 msgstr "Faculté"
-
-#: templates/scores_encoding.html:51
-msgid "Academic year"
-msgstr "Année académique"
-
-#: templates/scores_encoding.html:57
-msgid "Session"
-msgstr "Session"
-
-#: templates/scores_encoding.html:64
-msgid "Progress"
-msgstr "Progression"
 
 #: templates/scores_encoding.html:73
 msgid "Select an encoding type"
@@ -95,3 +289,35 @@ msgstr "Sigle"
 #: templates/scores_encoding.html:143
 msgid "Activity"
 msgstr "Activité"
+
+#: templates/scores_encoding.html:102
+#, fuzzy
+#| msgid "Scores encoding"
+msgid "Encoding"
+msgstr "Encodage de notes"
+
+#: templates/scores_encoding.html:129
+#, fuzzy
+#| msgid "Create a xls file while activity"
+msgid "Create a xls file while activity\\"
+msgstr "Télécharger un fichier xls avec les notes pour le cours"
+
+#: templates/scores_encoding.html:129
+#, fuzzy
+#| msgid "With xls"
+msgid "Get xls"
+msgstr "En Feuille de calcul"
+
+#: templates/scores_encoding.html:137
+msgid "Print scores for all activities"
+msgstr "Imprimer tous les cours"
+
+#: templates/scores_encoding.html:158
+msgid "Print"
+msgstr "Imprimer"
+
+#: templates/studies.html:45
+msgid "This process helps tutors while scores encoding."
+msgstr ""
+"Ce processus aide les enseignants à coder leurs notes pour chaque session "
+"d'examens."
