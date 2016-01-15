@@ -247,8 +247,8 @@ class LearningUnitEnrollment(models.Model):
 
 class Attribution(models.Model):
     FUNCTION_CHOICES = (
-        ('COORDINATOR','Coordinator'),
-        ('PROFESSOR','Professor'))
+        ('COORDINATOR', _('Coordinator')),
+        ('PROFESSOR', _('Professor')))
 
     start_date    = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
     end_date      = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
@@ -262,9 +262,9 @@ class Attribution(models.Model):
 
 class SessionExam(models.Model):
     SESSION_STATUS = (
-        ('IDLE', 'Idle'),
-        ('OPEN', 'Open'),
-        ('CLOSED', 'Closed'))
+        ('IDLE', _('Idle')),
+        ('OPEN', _('Open')),
+        ('CLOSED', _('Closed')))
 
     number_session      = models.IntegerField(blank = False, null = False)
     status              = models.CharField(max_length = 10, blank = False, null = False,choices = SESSION_STATUS)
@@ -296,15 +296,15 @@ class SessionExam(models.Model):
 
 class ExamEnrollment(models.Model):
     JUSTIFICATION_TYPES = (
-        ('ABSENT','Absent'),
-        ('CHEATING','Cheating'),
-        ('ILL','Ill'),
-        ('JUSTIFIED_ABSENCE','Justified absence'),
-        ('SCORE_MISSING','Score missing'))
+        ('ABSENT',_('Absent')),
+        ('CHEATING',_('Cheating')),
+        ('ILL',_('Ill')),
+        ('JUSTIFIED_ABSENCE',_('Justified absence')),
+        ('SCORE_MISSING',_('Score missing')))
 
     ENCODING_STATUS = (
-        ('SAVED','Saved'),
-        ('SUBMITTED','Submitted'))
+        ('SAVED',_('Saved')),
+        ('SUBMITTED',_('Submitted')))
 
     score                    = models.DecimalField(max_digits = 4, decimal_places = 2, blank = True, null = True, validators=[MaxValueValidator(20), MinValueValidator(0)])
     justification            = models.CharField(max_length = 17, blank = True, null = True,choices = JUSTIFICATION_TYPES)
@@ -344,6 +344,6 @@ class ExamEnrollment(models.Model):
 
     def justification_label_authorized(isFac):
         if isFac:
-            return '%s - %s - %s - %s - %s' % (_('Absent'), _('Ill'), _('Cheating'), _('Justified absence'), _('Score missing'))
+            return '%s, %s, %s, %s, %s' % (_('Absent'), _('Ill'), _('Cheating'), _('Justified absence'), _('Score missing'))
         else:
-            return '%s - %s - %s' % (_('Absent'), _('Ill'), _('Cheating'))
+            return '%s, %s, %s' % (_('Absent'), _('Ill'), _('Cheating'))

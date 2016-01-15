@@ -126,7 +126,7 @@
                         {% endif %}
                     <td>{{ session.learning_unit_year.acronym }}</td>
                     <td><a href="{% url 'online_encoding' session.id%}"title="Visualiser/charger les notes pour le cours">{{ session.learning_unit_year.title }}</a></td>
-                    <td><a class="btn btn-default" href="{% url 'scores_encoding_download' session.id session.learning_unit_year.id academic_year.id %}" role="button" title="{% trans 'Create a xls file while activity\'s scores'%}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span> {% trans 'Get xls'%}</a></td>
+                    <td><a class="btn btn-default" href="{% url 'scores_encoding_download' session.id session.learning_unit_year.id academic_year.id  %}" role="button" title="{% trans 'Create a xls file while activity\'s scores'%}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span> {% trans 'Get xls'%}</a></td>
                   </tr>
                 {% endfor %}
                 </tbody>

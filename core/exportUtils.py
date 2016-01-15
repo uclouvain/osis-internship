@@ -37,8 +37,9 @@ from core.models import AcademicCalendar, SessionExam, ExamEnrollment, LearningU
 
 from django.utils.dateformat import DateFormat
 from django.utils.formats import get_format
+from django.utils.translation import ugettext_lazy as _
 
-def export_xls(request,session_id,learning_unit_year_id,academic_year_id):
+def export_xls(request, session_id, learning_unit_year_id, academic_year_id, isFac):
 
     academic_year = AcademicYear.find_academic_year(academic_year_id)
     session_exam = SessionExam.find_session(session_id)
@@ -51,20 +52,20 @@ def export_xls(request,session_id,learning_unit_year_id,academic_year_id):
 
 # masquage de la colonne avec l'id exam enrollment
 
-    header = ['Année académique',
-              'Session',
-              'Code cours',
-              'Programme',
-              'Noma',
-              'Nom',
-              'Prénom',
-              'Note chiffrée',
-              'Autre note',
-              'Date de remise',
-              'ID']
+    header = [str(_('Academic year')),
+              str(_('Session')),
+              str(_('Activity code')),
+              str(_('Program')),
+              str(_('Registration number')),
+              str(_('Last name')),
+              str(_('First name')),
+              str(_('Numbered score')),
+              str(_('Other score')),
+              str(_('End date')),
+              str(_('ID'))]
     ws.append(header)
 
-    dv = __create_data_list_for_justification()
+    dv = __create_data_list_for_justification(isFac)
     ws.add_data_validation(dv)
 
     cptr=1
@@ -107,6 +108,10 @@ def __columns_ajusting(ws):
     """
     col_academic_year = ws.column_dimensions['A']
     col_academic_year.width = 18
+    col_academic_year = ws.column_dimensions['C']
+    col_academic_year.width = 18
+    col_academic_year = ws.column_dimensions['E']
+    col_academic_year.width = 18
     col_last_name = ws.column_dimensions['F']
     col_last_name.width = 30
     col_first_name = ws.column_dimensions['G']
@@ -117,17 +122,17 @@ def __columns_ajusting(ws):
     col_id_exam_enrollment.hidden = True
 
 
-def  __create_data_list_for_justification():
+def  __create_data_list_for_justification(isFac):
     """
     Création de la liste de choix pour la justification
     :return:
     """
-    dv = DataValidation(type="list", formula1='"ABSENT,CHEATING,ILL,JUSTIFIED_ABSENCE,SCORE_MISSING"', allow_blank=True)
-    dv.error ='Votre entrée n\'est pas dans la liste'
-    dv.errorTitle = 'Entrée invalide'
+    dv = DataValidation(type="list", formula1='%s' % ExamEnrollment.justification_label_authorized(isFac), allow_blank=True)
+    dv.error = str(_('Invalid entry, not in the list of choices'))
+    dv.errorTitle = str(_('Invalid entry'))
 
-    dv.prompt = 'Merci de sélectionner dans la liste'
-    dv.promptTitle = 'Liste de sélection'
+    dv.prompt = str(_('Please choose in the list'))
+    dv.promptTitle = str(_('List of choices'))
     return dv
 
 

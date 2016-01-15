@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-15 10:10+0100\n"
+"POT-Creation-Date: 2016-01-15 10:35+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,29 +17,131 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: models.py:347 models.py:349 templates/online_encoding_form.html.py:99
+#: exportUtils.py:55 pdfUtils.py:232 templates/online_encoding_form.html.py:54
+#: templates/scores_encoding.html:51
+msgid "Academic year"
+msgstr "Année académique"
+
+#: exportUtils.py:56 templates/online_encoding_form.html.py:60
+#: templates/scores_encoding.html:57
+msgid "Session"
+msgstr "Session"
+
+#: exportUtils.py:57
+#, fuzzy
+#| msgid "Activity"
+msgid "Activity code"
+msgstr "Activité"
+
+#: exportUtils.py:58 pdfUtils.py:249 templates/online_encoding.html.py:83
+#, fuzzy
+#| msgid "Progress"
+msgid "Program"
+msgstr "Programme"
+
+#: exportUtils.py:59 pdfUtils.py:213 templates/online_encoding.html.py:84
+#: templates/online_encoding_form.html:82
+msgid "Registration number"
+msgstr "Noma"
+
+#: exportUtils.py:60 pdfUtils.py:214 templates/online_encoding.html.py:85
+#, fuzzy
+#| msgid "Last name"
+msgid "Last name"
+msgstr "Nom"
+
+#: exportUtils.py:61 pdfUtils.py:215 templates/online_encoding.html.py:86
+#, fuzzy
+#| msgid "First name"
+msgid "First name"
+msgstr "Prénom"
+
+#: exportUtils.py:62 pdfUtils.py:216
+msgid "Numbered score"
+msgstr "Note chiffrée"
+
+#: exportUtils.py:63 pdfUtils.py:217 templates/online_encoding.html.py:88
+msgid "Other score"
+msgstr "Autre note"
+
+#: exportUtils.py:64 pdfUtils.py:218 templates/online_encoding_form.html.py:87
+msgid "End date"
+msgstr "Date de remise"
+
+#: exportUtils.py:65
+msgid "ID"
+msgstr "ID"
+
+#: exportUtils.py:131
+msgid "Invalid entry, not in the list of choices"
+msgstr "Votre entrée n\'est pas dans la liste"
+
+#: exportUtils.py:132
+msgid "Invalid entry"
+msgstr "Entrée invalide"
+
+#: exportUtils.py:134
+msgid "Please choose in the list"
+msgstr "Merci de sélectionner dans la liste"
+
+#: exportUtils.py:135
+msgid "List of choices"
+msgstr "Liste de choix"
+#: models.py:250
+msgid "Coordinator"
+msgstr "Coordinateur"
+
+#: models.py:251
+#, fuzzy
+#| msgid "Profile"
+msgid "Professor"
+msgstr "Professeur"
+
+#: models.py:265
+msgid "Idle"
+msgstr "Idle"
+
+#: models.py:266
+msgid "Open"
+msgstr "Ouvert"
+
+#: models.py:267
+msgid "Closed"
+msgstr "Fermé"
+
+#: models.py:299 models.py:347 models.py:349
+#: templates/online_encoding_form.html:99
 msgid "Absent"
 msgstr "Absent"
 
-#: models.py:347 models.py:349
-msgid "Ill"
-msgstr "Malade"
-
-#: models.py:347 models.py:349 templates/online_encoding_form.html.py:100
+#: models.py:300 models.py:347 models.py:349
+#: templates/online_encoding_form.html:100
 msgid "Cheating"
 msgstr "Tricherie"
 
-#: models.py:347
+#: models.py:301 models.py:347 models.py:349
+msgid "Ill"
+msgstr "Malade"
+
+#: models.py:302 models.py:347
 #, fuzzy
 #| msgid "Justification"
 msgid "Justified absence"
-msgstr "Justification"
+msgstr "Absence justifiée"
 
-#: models.py:347 templates/online_encoding_form.html.py:101
+#: models.py:303 models.py:347 templates/online_encoding_form.html.py:101
 #, fuzzy
 #| msgid "Scores encoding"
 msgid "Score missing"
 msgstr "Encodage de notes"
+
+#: models.py:306
+msgid "Saved"
+msgstr "Enregistré"
+
+#: models.py:307
+msgid "Submitted"
+msgstr "Soumis"
 
 #: pdfUtils.py:104
 #, fuzzy
@@ -64,46 +166,6 @@ msgstr "Légende pour le champ 'autre note'"
 #: pdfUtils.py:202
 msgid "UnAuthorized decimal for this activity"
 msgstr "Attention décimale non-autorisée pour ce cours"
-
-#: pdfUtils.py:213 templates/online_encoding.html.py:84
-#: templates/online_encoding_form.html:82
-msgid "Registration number"
-msgstr "Noma"
-
-#: pdfUtils.py:214 templates/online_encoding.html.py:85
-#, fuzzy
-#| msgid "Last name"
-msgid "Last name"
-msgstr "Nom"
-
-#: pdfUtils.py:215 templates/online_encoding.html.py:86
-#, fuzzy
-#| msgid "First name"
-msgid "First name"
-msgstr "Prénom"
-
-#: pdfUtils.py:216
-msgid "Numbered score"
-msgstr "Note chiffrée"
-
-#: pdfUtils.py:217 templates/online_encoding.html.py:88
-msgid "Other score"
-msgstr "Autre note"
-
-#: pdfUtils.py:218 templates/online_encoding_form.html.py:87
-msgid "End date"
-msgstr "Date de remise"
-
-#: pdfUtils.py:232 templates/online_encoding_form.html.py:54
-#: templates/scores_encoding.html:51
-msgid "Academic year"
-msgstr "Année académique"
-
-#: pdfUtils.py:249 templates/online_encoding.html.py:83
-#, fuzzy
-#| msgid "Progress"
-msgid "Program"
-msgstr "Programme"
 
 #: pdfUtils.py:251
 #, fuzzy
@@ -218,10 +280,6 @@ msgstr "Encodage de notes"
 #: templates/online_encoding_form.html:48
 msgid "Responsible"
 msgstr "Responsable"
-
-#: templates/online_encoding_form.html:60 templates/scores_encoding.html:57
-msgid "Session"
-msgstr "Session"
 
 #: templates/online_encoding_form.html:66
 msgid "Number of enrollments"

@@ -30,6 +30,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from core.models import Tutor, AcademicCalendar, SessionExam, ExamEnrollment
 from . import pdfUtils
+from . import exportUtils
 from core.forms import ScoreFileForm
 from core.models import Tutor, AcademicCalendar, SessionExam, ExamEnrollment, \
                         ProgrammeManager, Student, AcademicYear, OfferYear, \
@@ -147,3 +148,6 @@ def online_encoding_form(request, session_id):
 @login_required
 def all_notes_printing(request,session_id):
     return notes_printing(request,session_id,-1)
+
+def export_xls(request, session_id, learning_unit_year_id, academic_year_id):
+    return exportUtils.export_xls(request, session_id, learning_unit_year_id, academic_year_id, request.user.groups.filter(name='FAC').exists())
