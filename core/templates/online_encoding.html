@@ -33,6 +33,7 @@
   <li class="active">Encodage en ligne</li>
 {% endblock %}
 {% block content %}
+
   <div class="page-header">
     <h2>{% trans 'Scores encoding' %}</h2>
   </div>
@@ -126,16 +127,45 @@
                   <h4 class="modal-title" id="uploadScroresLabel">{% trans 'Scores injection' %}</h4>
               </div>
               <div class="modal-body">
-                 <label for="scoresInputFile" class="btn btn-default">{% trans 'Choose file' %}</label>
-                  <input type="file" id="scoresInputFile" name="file" style="visibility: hidden;display:none"/>
+                 <label for="scoresInputFile" class="btn btn-default" >{% trans 'Choose file' %}</label>
+
+                  <input type="file" id="scoresInputFile" name="file" style="display:none" />
+                  <div id="selectedFiles"></div>
                   <p class="help-block">{% trans 'Please select an xls file for injection' %}</p>
               </div>
               <div class="modal-footer">
                   <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'Cancel' %}</button>
-                  <input type="submit" class="btn btn-primary" value="{% trans 'Inject'%}"/>
+                  <input type="submit" class="btn btn-primary" value="{% trans 'Inject'%}" onclick="document.getElementById('files').style.visibility='visible'"/>
               </div>
               </form>
           </div>
       </div>
   </div>
+  <script>
+	var selDiv = "";
+
+	document.addEventListener("DOMContentLoaded", init, false);
+
+	function init() {
+		document.querySelector('#scoresInputFile').addEventListener('change', handleFileSelect, false);
+		selDiv = document.querySelector("#selectedFiles");
+	}
+
+	function handleFileSelect(e) {
+
+		if(!e.target.files) return;
+
+		selDiv.innerHTML = "";
+
+		var files = e.target.files;
+		for(var i=0; i<files.length; i++) {
+			var f = files[i];
+
+			selDiv.innerHTML += f.name + "<br/>";
+
+		}
+
+	}
+	</script>
+
 {% endblock %}

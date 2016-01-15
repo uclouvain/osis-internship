@@ -68,7 +68,8 @@ def upload_scores_file(request, session_id, learning_unit_year_id, academic_year
                     if isValid:
                         pass
                     else:
-                        request.session['message_validation'] = _('Invalid file')
+                        # request.session['message_validation'] = '%s' % _('Invalid file')
+                        message_validation = '%s' % _('Invalid file')
 
                 messages.add_message(request, messages.INFO, '%s' % message_validation)
                 return HttpResponseRedirect(reverse('online_encoding' , args=[session_id]))
@@ -145,7 +146,7 @@ def __save_xls_scores(request, file_name):
                                         if exam_enrollment.justification != row[8].value:
                                             nb_nouvelles_notes = nb_nouvelles_notes + 1
                                             nouvelles_notes = True
-                                        exam_enrollment.encoding_status = 'SUBMITTED'    
+                                        exam_enrollment.encoding_status = 'SUBMITTED'
                                         exam_enrollment.justification = row[8].value
                                         exam_enrollment.save()
 
@@ -155,8 +156,6 @@ def __save_xls_scores(request, file_name):
             print ('else')
             #Il faut valider le fichier xls
             #Je valide les entêtes de colonnes
-            #todo Il faut valider les données
-            # list_header=[str(_(''))"Année académique",str(_(''))"Session",str(_(''))"Code cours",str(_(''))"Programme",str(_(''))"Noma",str(_(''))"Nom",str(_(''))"Prénom",str(_(''))"Note chiffrée",str(_(''))"Autre note",str(_(''))"Date de remise"]
             list_header = exportUtils.HEADER
             print ('else 2')
             i = 0
@@ -170,6 +169,7 @@ def __save_xls_scores(request, file_name):
         nb_row = nb_row + 1
 
     messages.add_message(request, messages.WARNING, erreur_validation)
+
     if nouvelles_notes :
         if nb_nouvelles_notes > 0:
             count = nb_nouvelles_notes
@@ -185,6 +185,7 @@ def __save_xls_scores(request, file_name):
 
             messages.add_message(request, messages.INFO, '%s' % text)
     else:
-        messages.add_message(request, messages.INFO, '%s' % _('No score injected'))
+        if isValid:
+            messages.add_message(request, messages.INFO, '%s' % _('No score injected'))
 
     return isValid

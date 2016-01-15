@@ -149,5 +149,7 @@ def online_encoding_form(request, session_id):
 def all_notes_printing(request,session_id):
     return notes_printing(request,session_id,-1)
 
+    
+@login_required
 def export_xls(request, session_id, learning_unit_year_id, academic_year_id):
     return exportUtils.export_xls(request, session_id, learning_unit_year_id, academic_year_id, request.user.groups.filter(name='FAC').exists())
