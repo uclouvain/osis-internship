@@ -1,7 +1,7 @@
 Django==1.9
+Pillow==3.1.0
 et-xmlfile==1.0.1
 jdcal==1.2
 openpyxl==2.3.2
 psycopg2==2.6.1
-wheel==0.24.0
-pyexcel==0.1.7
+reportlab==3.2.0

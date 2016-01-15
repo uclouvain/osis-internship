@@ -1,28 +1,29 @@
 {% extends "layout.html" %}
+{% load l10n %}
 {% load percentage %}
 
 {% comment "License" %}
-   OSIS stands for Open Student Information System. It's an application
-   designed to manage the core business of higher education institutions,
-   such as universities, faculties, institutes and professional schools.
-   The core business involves the administration of students, teachers,
-   courses, programs and so on.
-
-   Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
-
-   This program is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   A copy of this license - GNU General Public License - is available
-   at the root of the source code of this program.  If not,
-   see http://www.gnu.org/licenses/.
+ * OSIS stands for Open Student Information System. It's an application
+ * designed to manage the core business of higher education institutions,
+ * such as universities, faculties, institutes and professional schools.
+ * The core business involves the administration of students, teachers,
+ * courses, programs and so on.
+ *
+ * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * A copy of this license - GNU General Public License - is available
+ * at the root of the source code of this program.  If not,
+ * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
 {% block breadcrumb %}
@@ -74,7 +75,7 @@
       </div>
       <hr>
       <form class="form-inline">
-        <table class="table table-striped table-hover">
+        <table class="table table-hover">
             <thead>
               <th>Programme</th>
               <th>Noma</th>
@@ -91,11 +92,12 @@
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
-                <td><input type="number" value="{{ enrollment.score | default_if_none:"" }}" class="form-control"></td>
+                <td><input type="number" value="{{ enrollment.score|unlocalize | default_if_none:"" }}" class="form-control"></td>
                 <td><select class="form-control">
-                    {% for justification in justifications %}
-                      <option value="{{ justification.0 }}">{{ justification.1 }}</option>
-                    {% endfor %}
+                      <option value=""></option>
+                      <option value="ABSENT">Absent</option>
+                      <option value="CHEATING">Tricherie</option>
+                      <option value="SCORE_MISSING">Note manquant</option>
                     </select></td>
                 <td>{{ enrollment.session_exam.offer_year_calendar.end_date }}</td>
               </tr>

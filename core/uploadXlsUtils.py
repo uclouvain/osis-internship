@@ -66,10 +66,10 @@ def upload_scores_file(request, session_id, learning_unit_year_id, academic_year
                     else:
                         request.session['message_validation'] = "Fichier invalide"
                 messages.add_message(request, messages.INFO, message_validation)
-                return HttpResponseRedirect(reverse('online_encoding' , args=[session_id, 2]))
+                return HttpResponseRedirect(reverse('online_encoding' , args=[session_id]))
         else:
             #todo traiter si pas de fichier sélectionné
-            return HttpResponseRedirect(reverse('online_encoding' , args=[session_id, 2]))
+            return HttpResponseRedirect(reverse('online_encoding' , args=[session_id]))
 
 
 def __save_xls_scores(request, file_name):
@@ -108,17 +108,18 @@ def __save_xls_scores(request, file_name):
                                     erreur_validation += "Ligne " + str(data_line_number) + " : l'inscription à l'activité " + row[2].value + " n'existe pas. "
                                 else:
                                     exam_enrollment = ExamEnrollment.objects.filter(learning_unit_enrollment = learning_unit_enrollment).filter(session_exam__number_session = int(row[1].value)).first()
-                                    if exam_enrollment.score != float(row[7].value):
-                                        nb_nouvelles_notes = nb_nouvelles_notes + 1
-                                        nouvelles_notes = True
+                                    if exam_enrollment.encoding_status != 'SUBMITTED':
+                                        if exam_enrollment.score != float(row[7].value):
+                                            nb_nouvelles_notes = nb_nouvelles_notes + 1
+                                            nouvelles_notes = True
 
-                                    exam_enrollment.score = float(row[7].value)
+                                        exam_enrollment.score = float(row[7].value)
 
-                                    if exam_enrollment.justification != row[8].value:
-                                        nb_nouvelles_notes = nb_nouvelles_notes + 1
-                                        nouvelles_notes = True
-                                    exam_enrollment.justification = row[8].value
-                                    exam_enrollment.save()
+                                        if exam_enrollment.justification != row[8].value:
+                                            nb_nouvelles_notes = nb_nouvelles_notes + 1
+                                            nouvelles_notes = True
+                                        exam_enrollment.justification = row[8].value
+                                        exam_enrollment.save()
 
             data_line_number=data_line_number+1
 

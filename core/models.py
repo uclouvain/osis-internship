@@ -160,6 +160,10 @@ class Offer(models.Model):
         self.acronym = self.acronym.upper()
         super(Offer, self).save(*args, **kwargs)
 
+    @property
+    def structure(self):
+        return Structure.objects.filter(id=self.id).structure
+
     def __str__(self):
         return self.acronym
 
@@ -231,7 +235,6 @@ class LearningUnitYear(models.Model):
 
 
     def find_offer_enrollments(learning_unit_year_id):
-        print ('find_offer_enrollments')
         learning_unit_enrollment_list= LearningUnitEnrollment.objects.filter(learning_unit_year=learning_unit_year_id)
         offer_list = []
         for lue in learning_unit_enrollment_list:
@@ -292,7 +295,7 @@ class SessionExam(models.Model):
         return session_exam
 
     def find_session(id):
-        return SessionExam.objects.get(pk=1)
+        return SessionExam.objects.get(pk=id)
 
     def find_sessions_by_tutor(tutor, academic_year, session):
         learning_units = Attribution.objects.filter(tutor=tutor).values('learning_unit')
@@ -331,9 +334,38 @@ class ExamEnrollment(models.Model):
     def calculate_progress(enrollments):
         if enrollments:
             progress = len([e for e in enrollments if e.score is not None or e.justification is not None]) / len(enrollments)
+            print(progress)
         else:
             progress = 0
-        return progress
+        return progress * 100
 
     def find_exam_enrollments(session_exam):
-        return ExamEnrollment.objects.filter(session_exam=session_exam)
+        enrollments = ExamEnrollment.objects.filter(session_exam=session_exam)
+        return enrollments
+
+    def __str__(self):
+        return u"%s - %s" % (self.session_exam, self.learning_unit_enrollment)
+
+    def justification_label(self,lang):
+        if lang == 'fr':
+            if self.justification == "ABSENT":
+                return 'Absent'
+            if self.justification == "ILL":
+                return 'Malade'
+            if self.justification == "CHEATING":
+                return 'Tricherie'
+            if self.justification == "JUSTIFIED_ABSENCE":
+                return 'Absence justifiée'
+            if self.justification == "SCORE_MISSING":
+                return 'Note manquante'
+            return None
+
+
+    def justification_label_authorized( lang, isFac):
+        if lang == 'fr':
+            if isFac:
+                return 'Absent - Malade - Tricherie - Absence justifiée - Note manquante'
+            else:
+                return 'Absent - Malade - Tricherie'
+
+        return ""
