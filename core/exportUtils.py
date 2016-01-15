@@ -39,6 +39,18 @@ from django.utils.dateformat import DateFormat
 from django.utils.formats import get_format
 from django.utils.translation import ugettext_lazy as _
 
+HEADER = [str(_('Academic year')),
+          str(_('Session')),
+          str(_('Activity code')),
+          str(_('Program')),
+          str(_('Registration number')),
+          str(_('Last name')),
+          str(_('First name')),
+          str(_('Numbered score')),
+          str(_('Other score')),
+          str(_('End date')),
+          str(_('ID'))]
+
 def export_xls(request, session_id, learning_unit_year_id, academic_year_id, isFac):
 
     academic_year = AcademicYear.find_academic_year(academic_year_id)
@@ -52,18 +64,7 @@ def export_xls(request, session_id, learning_unit_year_id, academic_year_id, isF
 
 # masquage de la colonne avec l'id exam enrollment
 
-    header = [str(_('Academic year')),
-              str(_('Session')),
-              str(_('Activity code')),
-              str(_('Program')),
-              str(_('Registration number')),
-              str(_('Last name')),
-              str(_('First name')),
-              str(_('Numbered score')),
-              str(_('Other score')),
-              str(_('End date')),
-              str(_('ID'))]
-    ws.append(header)
+    ws.append(HEADER)
 
     dv = __create_data_list_for_justification(isFac)
     ws.add_data_validation(dv)

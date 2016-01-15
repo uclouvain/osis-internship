@@ -34,7 +34,7 @@
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>Encodage en ligne</h2>
+    <h2>{% trans 'Scores encoding' %}</h2>
   </div>
   <div class="panel panel-default">
     <div class="panel-heading">
@@ -45,39 +45,39 @@
         <div class="col-md-4">
           <div class="form-group">
             {% if tutor %}
-              <label>Responsable</label><br>{{ tutor }}
+              <label>{% trans 'Responsible' %}</label><br>{{ tutor }}
             {% else %}
-              <label>Faculté</label><br>{{ faculty }}
+              <label>{% trans 'Faculty' %}</label><br>{{ faculty }}
             {% endif %}
           </div>
         </div>
         <div class="col-md-2">
           <div class="form-group">
-            <label>Année académique</label><br>
+            <label>{% trans 'Academic year' %}</label><br>
             {{ academic_year }}
           </div>
         </div>
         <div class="col-md-2">
           <div class="form-group">
-            <label>Session</label><br>
+            <label>{% trans 'Session' %}</label><br>
             {{ session.number_session }}
           </div>
         </div>
         <div class="col-md-2">
           <div class="form-group">
-            <label>Nombre d'inscrits</label><br>
+            <label>{% trans 'Number of enrollments ' %}</label><br>
             {{ enrollments|length }}
           </div>
-        </div>
+        </div
         <div class="col-md-2">
           <div class="form-group">
-            <label>_('Progress')</label><br>
+            <label>{% trans 'Progress' %}</label><br>
             {{ progress | percentage }}
           </div>
         </div>
       </div>
 
-      <br><a class="btn btn-default" href="{% url 'online_encoding_form' session.id %}" role="button"><i class="fa fa-hashtag"></i> Encoder</a></p>
+      <br><a class="btn btn-default" href="{% url 'online_encoding_form' session.id %}" role="button"><i class="fa fa-hashtag"></i> {% trans 'encode' %}</a></p>
       <table class="table table-hover">
           <thead>
             <th>{% trans 'Program' %}</th>
@@ -86,7 +86,7 @@
             <th>{% trans 'First name' %}</th>
             <th>{% trans 'Score' %}</th>
             <th>{% trans 'Other score' %}</th>
-            <th>{% trans 'End_date' %}</th>
+            <th>{% trans 'End date' %}</th>
           </thead>
           <tbody>
           {% for enrollment in enrollments %}
@@ -110,7 +110,8 @@
       </ul>
       {% endif %}
 
-      <button type="button" class="btn btn-default" data-toggle="modal" data-target="#uploadScoreModal" title="Permet de sélectionner le fichier excel contenant les notes à téléverser">Téléverser</button>
+      <button type="button" class="btn btn-default" data-toggle="modal" data-target="#uploadScoreModal"
+              title="{% trans 'Select a xls file from which to injec scores' %}">{% trans 'Injection' %}</button>
       <br/>
     </div>
   </div>
@@ -122,15 +123,15 @@
                   {% csrf_token %}
               <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  <h4 class="modal-title" id="uploadScroresLabel">Téléchargement des notes</h4>
+                  <h4 class="modal-title" id="uploadScroresLabel">{% trans 'Scores injection' %}</h4>
               </div>
               <div class="modal-body">
                   <input type="file" id="scoresInputFile" id="file" name="file"/>
-                  <p class="help-block">Veuillez sélectionner le fichier excel à télécharger</p>
+                  <p class="help-block">{% trans 'Please select an xls file for injection' %}</p>
               </div>
               <div class="modal-footer">
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-                  <input type="submit" class="btn btn-primary" value="Charger"/>
+                  <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'Cancel' %}</button>
+                  <input type="submit" class="btn btn-primary" value="{% trans 'Inject'%}"/>
               </div>
               </form>
           </div>

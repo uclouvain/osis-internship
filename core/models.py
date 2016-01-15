@@ -33,9 +33,9 @@ from django.utils.translation import ugettext_lazy as _
 
 class Person(models.Model):
     GENDER_CHOICES = (
-        ('F','Female'),
-        ('M','Male'),
-        ('U','Unknown'))
+        ('F',_('Female')),
+        ('M',_('Male')),
+        ('U',_('Unknown')))
 
     user        = models.OneToOneField(User, on_delete=models.CASCADE)
     middle_name = models.CharField(max_length = 50,blank = True, null = True)
@@ -118,10 +118,10 @@ class AcademicYear(models.Model):
 
 class AcademicCalendar(models.Model):
     EVENT_TYPE = (
-        ('academic_year', 'Academic Year'),
-        ('session_exam_1', 'Session Exams 1'),
-        ('session_exam_2', 'Session Exams 2'),
-        ('session_exam_3', 'Session Exams 3'))
+        ('academic_year', _('Academic Year')),
+        ('session_exam_1', _('Session Exams 1')),
+        ('session_exam_2', _('Session Exams 2')),
+        ('session_exam_3', _('Session Exams 3')))
 
     academic_year = models.ForeignKey(AcademicYear, null = False)
     event_type    = models.CharField(max_length = 50, blank = False, null = False, choices = EVENT_TYPE)
@@ -180,9 +180,9 @@ class OfferEnrollment(models.Model):
 
 class OfferYearCalendar(models.Model):
     EVENT_TYPE = (
-        ('session_exam_1','Session Exams 1'),
-        ('session_exam_2','Session Exams 2'),
-        ('session_exam_3','Session Exams 3'))
+        ('session_exam_1',_('Session Exams 1')),
+        ('session_exam_2',_('Session Exams 2')),
+        ('session_exam_3',_('Session Exams 3')))
 
     academic_calendar = models.ForeignKey(AcademicCalendar, null = False)
     offer_year        = models.ForeignKey(OfferYear, null = True)
