@@ -49,6 +49,7 @@ HEADER = [str(_('Academic year')),
           str(_('Numbered score')),
           str(_('Other score')),
           str(_('End date')),
+          str(_('Credits')),
           str(_('ID'))]
 
 def export_xls(request, session_id, learning_unit_year_id, academic_year_id, isFac):
@@ -74,6 +75,9 @@ def export_xls(request, session_id, learning_unit_year_id, academic_year_id, isF
         student = rec_exam_enrollment.learning_unit_enrollment.student
         o = rec_exam_enrollment.learning_unit_enrollment.offer
         person = Person.find_person(student.person.id)
+        text_credits = ""
+        if not(rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.credits is None):
+            credits = rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.credits
 
         ws.append([str(academic_year),
                    str(session_exam.number_session),
@@ -85,12 +89,13 @@ def export_xls(request, session_id, learning_unit_year_id, academic_year_id, isF
                    rec_exam_enrollment.score,
                    rec_exam_enrollment.justification,
                    academic_calendar.end_date.strftime('%d/%m/%Y'),
+                   credits,
                    rec_exam_enrollment.id
                    ])
 
 
         cptr = cptr+1
-        __coloring_non_editable(ws,cptr, rec_exam_enrollment.encoding_status)
+        __coloring_non_editable(ws,cptr, rec_exam_enrollment.encoding_status,rec_exam_enrollment.score,rec_exam_enrollment.justification)
 
 
     dv.ranges.append('I2:I'+str(cptr+100))#Ajouter 100 pour si on ajoute des enregistrements
@@ -119,7 +124,7 @@ def __columns_ajusting(ws):
     col_first_name.width = 30
     col_note = ws.column_dimensions['H']
     col_note.width = 20
-    col_id_exam_enrollment = ws.column_dimensions['K']
+    col_id_exam_enrollment = ws.column_dimensions['L']
     col_id_exam_enrollment.hidden = True
 
 
@@ -137,20 +142,26 @@ def  __create_data_list_for_justification(isFac):
     return dv
 
 
-def __coloring_non_editable(ws, cptr, encoding_status):
+def __coloring_non_editable(ws, cptr, encoding_status, score, justification):
     """
     définition du style pour les colonnes qu'on ne doit pas modifier
     :return:
     """
     style_no_modification = Style(fill=PatternFill(patternType='solid', fgColor=Color('C1C1C1')))
+    style_submitted = Style(fill=PatternFill(patternType='solid', fgColor=Color('FF9900')))
 
     # coloration des colonnes qu'on ne doit pas modifier
     i=1
-    while i < 11:
+    while i < 13:
         if i< 8 or i>9:
             ws.cell(row=cptr, column=i).style = style_no_modification
         else:
             if encoding_status == 'SUBMITTED':
-                ws.cell(row=cptr, column=i).style = style_no_modification
-
+                ws.cell(row=cptr, column=8).style = style_submitted
+                ws.cell(row=cptr, column=9).style = style_submitted
+            else:
+                if not(score is None):
+                    ws.cell(row=cptr, column=8).style = style_no_modification
+                if not(justification is None):
+                    ws.cell(row=cptr, column=9).style = style_no_modification
         i=i+1

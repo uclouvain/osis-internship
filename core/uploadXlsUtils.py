@@ -141,10 +141,11 @@ def __save_xls_scores(request, file_name):
 
                                             exam_enrollment.score = note
 
+
                                         if exam_enrollment.justification != row[8].value:
                                             nb_nouvelles_notes = nb_nouvelles_notes + 1
                                             nouvelles_notes = True
-
+                                        exam_enrollment.encoding_status = 'SUBMITTED'    
                                         exam_enrollment.justification = row[8].value
                                         exam_enrollment.save()
 
