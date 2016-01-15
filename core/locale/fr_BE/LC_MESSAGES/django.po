@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-15 12:05+0100\n"
+"POT-Creation-Date: 2016-01-15 13:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -70,36 +70,40 @@ msgid "End date"
 msgstr "Date de remise"
 
 #: exportUtils.py:52
+msgid "Credits"
+msgstr ""
+
+#: exportUtils.py:53
 msgid "ID"
 msgstr "ID"
 
-#: exportUtils.py:132
+#: exportUtils.py:137
 msgid "Invalid entry, not in the list of choices"
 msgstr "Votre entrée n'est pas dans la liste"
 
-#: exportUtils.py:133
+#: exportUtils.py:138
 msgid "Invalid entry"
 msgstr "Entrée invalide"
 
-#: exportUtils.py:135
+#: exportUtils.py:140
 msgid "Please choose in the list"
 msgstr "Merci de sélectionner dans la liste"
 
-#: exportUtils.py:136
+#: exportUtils.py:141
 msgid "List of choices"
 msgstr "Liste de choix"
 
 #: models.py:36
 msgid "Female"
-msgstr ""
+msgstr "Féminin"
 
 #: models.py:37
 msgid "Male"
-msgstr ""
+msgstr "Masculin"
 
 #: models.py:38
 msgid "Unknown"
-msgstr ""
+msgstr "Indéfini"
 
 #: models.py:121
 #, fuzzy
@@ -340,15 +344,19 @@ msgstr "Injection"
 msgid "Scores injection"
 msgstr "Encodage de notes"
 
-#: templates/online_encoding.html:130
+#: templates/online_encoding.html:129
+msgid "Choose file"
+msgstr "Parcourir"
+
+#: templates/online_encoding.html:131
 msgid "Please select an xls file for injection"
 msgstr "Sélectionner un fichier xls pour l'injection de notes"
 
-#: templates/online_encoding.html:133
+#: templates/online_encoding.html:134
 msgid "Cancel"
 msgstr "Annuler"
 
-#: templates/online_encoding.html:134
+#: templates/online_encoding.html:135
 msgid "Inject"
 msgstr "Injecter"
 
@@ -510,29 +518,30 @@ msgstr "la note semble incorrecte, est dans être >=0 ou <=20"
 msgid ""
 "the score seems to be incorrect. When activity's credits < 15 decimales are "
 "not allowed!"
-msgstr "la note semble incorrecte. Quand les crédits d'une activité sont < 15 "
-"les décimales ne sont pas autorisées"
+msgstr ""
+"la note semble incorrecte. Quand les crédits d'une activité sont < 15 les "
+"décimales ne sont pas autorisées"
 
-#: uploadXlsUtils.py:176
+#: uploadXlsUtils.py:177
 #, python-format
 msgid "%(count)d %(name)s."
 msgid_plural "%(count)d %(plural_name)s."
 msgstr[0] ""
 msgstr[1] ""
 
-#: uploadXlsUtils.py:181
+#: uploadXlsUtils.py:182
 #, fuzzy
 #| msgid "No score injected"
 msgid "score injected"
 msgstr "Aucune note injectée"
 
-#: uploadXlsUtils.py:182
+#: uploadXlsUtils.py:183
 #, fuzzy
 #| msgid "No score injected"
 msgid "scores injected"
 msgstr "Aucune note injectée"
 
-#: uploadXlsUtils.py:187
+#: uploadXlsUtils.py:188
 msgid "No score injected"
 msgstr "Aucune note injectée"
 

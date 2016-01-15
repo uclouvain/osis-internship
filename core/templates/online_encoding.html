@@ -126,7 +126,8 @@
                   <h4 class="modal-title" id="uploadScroresLabel">{% trans 'Scores injection' %}</h4>
               </div>
               <div class="modal-body">
-                  <input type="file" id="scoresInputFile" id="file" name="file"/>
+                 <label for="scoresInputFile" class="btn btn-default">{% trans 'Choose file' %}</label>
+                  <input type="file" id="scoresInputFile" name="file" style="visibility: hidden;display:none"/>
                   <p class="help-block">{% trans 'Please select an xls file for injection' %}</p>
               </div>
               <div class="modal-footer">
