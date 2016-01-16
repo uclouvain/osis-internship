@@ -104,7 +104,7 @@ def online_encoding(request, session_id):
         tutor = Tutor.find_by_user(request.user)
     academic_year = AcademicCalendar.current_academic_year()
     session = SessionExam.find_session(session_id)
-    enrollments = ExamEnrollment.find_exam_enrollments(session)
+    enrollments = ExamEnrollment.find_exam_enrollments(session.id)
     progress = ExamEnrollment.calculate_progress(enrollments)
 
     return render(request, "online_encoding.html",
@@ -135,12 +135,22 @@ def online_encoding_form(request, session_id):
                    'justifications':ExamEnrollment.JUSTIFICATION_TYPES,
                    'enrollments':   enrollments})
 
+
+@login_required
+def notes_printing(request,session_exam_id,learning_unit_year_id):
+    tutor = Tutor.find_by_user(request.user)
+    academic_year = AcademicCalendar.current_academic_year()
+    session_exam = SessionExam.find_session(session_exam_id)
+    sessions = SessionExam.find_sessions_by_tutor(tutor, academic_year, session_exam)
+    return pdfUtils.print_notes(request,tutor,academic_year,session_exam,sessions,learning_unit_year_id,request.user.groups.filter(name='FAC').exists())
+
+
 @login_required
 def online_double_encoding_form(request, session_id):
     tutor = Tutor.find_by_user(request.user)
     academic_year = AcademicCalendar.current_academic_year()
     session = SessionExam.find_session(session_id)
-    enrollments = ExamEnrollment.find_exam_enrollments(session)
+    enrollments = ExamEnrollment.find_exam_enrollments(session.id)
     progress = ExamEnrollment.calculate_progress(enrollments)
 
     return render(request, "online_double_encoding_form.html",

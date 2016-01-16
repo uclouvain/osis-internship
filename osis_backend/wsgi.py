@@ -23,8 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import os
+import os,sys
 from django.core.wsgi import get_wsgi_application
+
+#The two following lines are mandatory for working with mod_wsgi on the servers
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/..' )
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../osis_backend')
+
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "osis_backend.settings")
 application = get_wsgi_application()
