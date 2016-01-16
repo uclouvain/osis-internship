@@ -35,28 +35,22 @@ from core.models import Tutor, AcademicCalendar, SessionExam, ExamEnrollment, \
                         ProgrammeManager, Student, AcademicYear, OfferYear, \
                         LearningUnitYear, LearningUnitEnrollment, OfferEnrollment
 
-
 def page_not_found(request):
     return render(request,'page_not_found.html')
-
 
 def access_denied(request):
     return render(request,'acces_denied.html')
 
-
 def home(request):
     return render(request, "home.html")
-
 
 @login_required
 def studies(request):
     return render(request, "studies.html", {'section': 'studies'})
 
-
 @login_required
 def assessements(request):
     return render(request, "assessements.html", {'section': 'assessements'})
-
 
 @login_required
 def scores_encoding(request):
@@ -93,7 +87,6 @@ def scores_encoding(request):
                    'sessions':      sessions,
                    'progress':      "{0:.0f}".format(progress)})
 
-
 @login_required
 def online_encoding(request, session_id):
     tutor = None
@@ -116,7 +109,6 @@ def online_encoding(request, session_id):
                    'progress':      progress,
                    'enrollments':   enrollments})
 
-
 @login_required
 def online_encoding_form(request, session_id):
     tutor = Tutor.find_by_user(request.user)
@@ -135,7 +127,6 @@ def online_encoding_form(request, session_id):
                    'justifications':ExamEnrollment.JUSTIFICATION_TYPES,
                    'enrollments':   enrollments})
 
-
 @login_required
 def notes_printing(request,session_exam_id,learning_unit_year_id):
     tutor = Tutor.find_by_user(request.user)
@@ -143,7 +134,6 @@ def notes_printing(request,session_exam_id,learning_unit_year_id):
     session_exam = SessionExam.find_session(session_exam_id)
     sessions = SessionExam.find_sessions_by_tutor(tutor, academic_year, session_exam)
     return pdfUtils.print_notes(request,tutor,academic_year,session_exam,sessions,learning_unit_year_id,request.user.groups.filter(name='FAC').exists())
-
 
 @login_required
 def online_double_encoding_form(request, session_id):
@@ -163,12 +153,10 @@ def online_double_encoding_form(request, session_id):
                    'justifications':ExamEnrollment.JUSTIFICATION_TYPES,
                    'enrollments':   enrollments})
 
-
 @login_required
 def upload_score_error(request):
     print ('upload_score_error')
     return render(request, "upload_score_error.html", {})
-
 
 @login_required
 def notes_printing(request, session_id, learning_unit_year_id):
@@ -177,7 +165,6 @@ def notes_printing(request, session_id, learning_unit_year_id):
     session_exam = SessionExam.current_session_exam()
     sessions = SessionExam.find_sessions_by_tutor(tutor, academic_year, session_exam)
     return pdfUtils.print_notes(request,tutor,academic_year,session_exam,sessions,learning_unit_year_id)
-
 
 @login_required
 def all_notes_printing(request, session_id):
