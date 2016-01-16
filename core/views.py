@@ -84,8 +84,7 @@ def scores_encoding(request):
                    'faculty':       faculty,
                    'academic_year': academic_year,
                    'session':       session,
-                   'sessions':      sessions,
-                   'progress':      "{0:.0f}".format(progress)})
+                   'sessions':      sessions})
 
 @login_required
 def online_encoding(request, session_id):
@@ -106,7 +105,7 @@ def online_encoding(request, session_id):
                    'faculty':       faculty,
                    'academic_year': academic_year,
                    'session':       session,
-                   'progress':      progress,
+                   'progress':      "{0:.0f}".format(progress),
                    'enrollments':   enrollments})
 
 @login_required
@@ -152,6 +151,25 @@ def online_double_encoding_form(request, session_id):
                    'enrollments':   enrollments,
                    'justifications':ExamEnrollment.JUSTIFICATION_TYPES,
                    'enrollments':   enrollments})
+
+@login_required
+def online_double_encoding_validation(request, session_id):
+    tutor = Tutor.find_by_user(request.user)
+    academic_year = AcademicCalendar.current_academic_year()
+    session = SessionExam.find_session(session_id)
+    enrollments = ExamEnrollment.find_exam_enrollments(session)
+    progress = ExamEnrollment.calculate_progress(enrollments)
+
+    return render(request, "online_double_encoding_validation.html",
+                  {'section':       'scores_encoding',
+                   'tutor':         tutor,
+                   'academic_year': academic_year,
+                   'session':       session,
+                   'progress':      progress,
+                   'enrollments':   enrollments,
+                   'justifications':ExamEnrollment.JUSTIFICATION_TYPES,
+                   'enrollments':   enrollments})
+
 
 @login_required
 def upload_score_error(request):

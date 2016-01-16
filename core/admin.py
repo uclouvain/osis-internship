@@ -99,7 +99,7 @@ class SessionExamAdmin(admin.ModelAdmin):
 admin.site.register(SessionExam, SessionExamAdmin)
 
 class ExamEnrollmentAdmin(admin.ModelAdmin):
-    list_display = ('student', 'session_exam', 'score', 'justification', 'encoding_status')
+    list_display = ('student', 'session_exam', 'score_final', 'justification_final', 'encoding_status')
     list_filter = ('encoding_status',)
 
 admin.site.register(ExamEnrollment, ExamEnrollmentAdmin)

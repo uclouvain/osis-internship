@@ -81,9 +81,6 @@ class ShibbollethUserBackend(RemoteUserBackend):
         user.save()
 
 
-
-
-
 class ShibbollethUserMiddleware(RemoteUserMiddleware):
     def process_request(self, request):
         # AuthenticationMiddleware is required so that request.user exists.

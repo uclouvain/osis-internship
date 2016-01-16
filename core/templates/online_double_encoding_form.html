@@ -1,0 +1,113 @@
+{% extends "layout.html" %}
+{% load l10n %}
+{% load percentage %}
+
+{% comment "License" %}
+ * OSIS stands for Open Student Information System. It's an application
+ * designed to manage the core business of higher education institutions,
+ * such as universities, faculties, institutes and professional schools.
+ * The core business involves the administration of students, teachers,
+ * courses, programs and so on.
+ *
+ * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * A copy of this license - GNU General Public License - is available
+ * at the root of the source code of this program.  If not,
+ * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block breadcrumb %}
+  <li><a href="{% url 'studies' %}">Les études</a></li>
+  <li><a href="{% url 'assessements' %}">Évaluations</a></li>
+  <li><a href="{% url 'scores_encoding' %}">Encodage des notes</a></li>
+  <li><a href="{% url 'online_encoding' session.id %}">Encodage en ligne</a></li>
+  <li class="active">Double encodage en ligne</li>
+{% endblock %}
+{% block content %}
+  <div class="page-header">
+    <h2>Double encodage en ligne</h2>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title" style="font-size: 150%; color: #3399CC;">{{ session.learning_unit_year }}</h3>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Responsable</label><br>
+            {{ tutor }}
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label>Année académique</label><br>
+            {{ academic_year }}
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label>Session</label><br>
+            {{ session.number_session }}
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label>Nombre d'inscrits</label><br>
+            {{ enrollments|length }}
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label>Progrès</label><br>
+            {{ progress | percentage }}
+          </div>
+        </div>
+      </div>
+      <hr>
+      <form class="form-inline">
+        <table class="table table-hover">
+            <thead>
+              <th>Programme</th>
+              <th>Noma</th>
+              <th>Nom</th>
+              <th>Prénom</th>
+              <th>Note</th>
+              <th>Justification</th>
+              <th>Date de remise</th>
+            </thead>
+            <tbody>
+            {% for enrollment in enrollments %}
+              <tr>
+                <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
+                <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
+                <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
+                <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
+                <td><input type="number" value="" class="form-control"></td>
+                <td><select class="form-control">
+                      <option value=""></option>
+                      <option value="ABSENT">Absent</option>
+                      <option value="CHEATING">Tricherie</option>
+                      <option value="SCORE_MISSING">Note manquant</option>
+                    </select></td>
+                <td>{{ enrollment.session_exam.offer_year_calendar.end_date }}</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <a class="btn btn-primary" href="{% url 'online_double_encoding_validation' session.id %}" role="button"><span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> Comparer</a>
+        <a class="btn btn-default" href="{% url 'online_encoding' session.id %}" role="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Annuler</a>
+      </form>
+    </div>
+  </div>
+{% endblock %}
