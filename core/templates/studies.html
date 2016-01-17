@@ -26,23 +26,22 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li class="active">Les études</li>
+  <li class="active">Parcours</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>Les études</h2>
+    <h2>Parcours</h2>
   </div>
-  <ul class="media-list">
-    <li class="media">
-      <div class="media-left">
-        <a href="{% url 'assessements' %}">
-          <img class="media-object" src="{% static 'images/icon_assessements.png' %}">
-        </a>
+
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-1"><i class="fa fa-tachometer" style="font-size: 400%; color: #6699FF;"></i></div>
+        <div class="col-md-11">
+          <h4 class="media-heading"><a href="{% url 'assessements' %}">Évaluations</a></h4>
+          <p>Ce processus aide les enseignants à coder leurs notes pour chaque session d'examens.</p>
+        </div>
       </div>
-      <div class="media-body">
-        <h4 class="media-heading"><a href="{% url 'assessements' %}">Évaluations</a></h4>
-        Ce processus aide les enseignants à coder leurs notes pour chaque session d'examens.
-      </div>
-    </li>
-  </ul>
+    </div>
+  </div>
 {% endblock %}

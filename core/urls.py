@@ -48,4 +48,6 @@ urlpatterns = [
     url(r'^studies/assessements/scores_encoding/xlsdownload/([0-9]+)/([0-9]+)/([0-9]+)/$',exportUtils.export_xls, name='scores_encoding_download'),
     url(r'^studies/assessements/scores_encoding/upload/([0-9]+)/([0-9]+)/([0-9]+)/$',uploadXlsUtils.upload_scores_file,name='upload_encoding'),
     url(r'^studies/assessements/scores_encoding/upload_score_error$',views.upload_score_error,name='upload_score_error'),
+
+    url(r'^programme/$', views.programme, name='programme'),
 ]

@@ -187,3 +187,7 @@ def notes_printing(request, session_id, learning_unit_year_id):
 @login_required
 def all_notes_printing(request, session_id):
     return notes_printing(request,session_id,-1)
+
+@login_required
+def programme(request):
+    return render(request, "programme.html", {'section': 'programme'})

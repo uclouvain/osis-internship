@@ -25,21 +25,18 @@
  * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{% block breadcrumbarea %}
+{% block breadcrumb %}
+  <li class="active">Programme</li>
 {% endblock %}
 {% block content %}
 <br>
 <div class="panel panel-default">
   <div class="panel-body">
     <div class="row">
-      <div class="col-md-1"><i class="fa fa-university" style="font-size: 400%; color: #6699FF;"></i></div>
-      <div class="col-md-5">
-        <h4 class="media-heading"><a href="{% url 'programme' %}">Programme d'etudes</a></h4>
-        <p>Élaboration et gestion du programme d'études.</p></div>
-      <div class="col-md-1"><i class="fa fa-users" style="font-size: 400%; color: #6699FF;"></i></div>
-      <div class="col-md-5">
-        <h4 class="media-heading"><a href="{% url 'studies' %}">Parcours</a></h4>
-        <p>Le parcours des étudiants de l'inscription au diplôme.</p>
+      <div class="col-md-1"><i class="fa fa-book" style="font-size: 400%; color: #6699FF;"></i></div>
+      <div class="col-md-11">
+        <h4 class="media-heading"><a href="{% url 'programme' %}">Unités d'enseignement</a></h4>
+        <p>Gestion des cours, des formations et d'autres activités qui composent le programme.</p>
       </div>
     </div>
   </div>

@@ -231,7 +231,7 @@ class LearningUnitYear(models.Model):
     acronym        = models.CharField(max_length = 15,blank = False, null = False)
     title          = models.CharField(max_length = 255, blank = False, null = False)
     credits        = models.DecimalField(max_digits = 4, decimal_places = 2, blank = True, null = True)
-    decimal_scores = models.BooleanField()
+    decimal_scores = models.BooleanField(default = False)
     academic_year  = models.ForeignKey(AcademicYear, null = True)
     learning_unit  = models.ForeignKey(LearningUnit, null = True)
 
@@ -342,7 +342,7 @@ class ExamEnrollment(models.Model):
 
     def calculate_progress(enrollments):
         if enrollments:
-            progress = len([e for e in enrollments if e.score_draft is not None or e.justification is not None]) / len(enrollments)
+            progress = len([e for e in enrollments if e.score_draft is not None or e.justification_draft is not None]) / len(enrollments)
             print(progress)
         else:
             progress = 0
