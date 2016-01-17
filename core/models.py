@@ -227,12 +227,13 @@ class LearningUnit(models.Model):
 
 
 class LearningUnitYear(models.Model):
-    external_id   = models.CharField(max_length = 40,blank = True, null = True)
-    acronym       = models.CharField(max_length = 15,blank = False, null = False)
-    title         = models.CharField(max_length = 255, blank = False, null = False)
-    credits       = models.DecimalField(max_digits = 4, decimal_places = 2, blank = True, null = True)
-    academic_year = models.ForeignKey(AcademicYear, null = True)
-    learning_unit = models.ForeignKey(LearningUnit, null = True)
+    external_id    = models.CharField(max_length = 40,blank = True, null = True)
+    acronym        = models.CharField(max_length = 15,blank = False, null = False)
+    title          = models.CharField(max_length = 255, blank = False, null = False)
+    credits        = models.DecimalField(max_digits = 4, decimal_places = 2, blank = True, null = True)
+    decimal_scores = models.BooleanField()
+    academic_year  = models.ForeignKey(AcademicYear, null = True)
+    learning_unit  = models.ForeignKey(LearningUnit, null = True)
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year,self.learning_unit)
@@ -341,7 +342,7 @@ class ExamEnrollment(models.Model):
 
     def calculate_progress(enrollments):
         if enrollments:
-            progress = len([e for e in enrollments if e.score is not None or e.justification is not None]) / len(enrollments)
+            progress = len([e for e in enrollments if e.score_draft is not None or e.justification is not None]) / len(enrollments)
             print(progress)
         else:
             progress = 0
