@@ -315,6 +315,19 @@ class SessionExam(models.Model):
             return rec_exam_enrollment.learning_unit_enrollment.offer
         return None
 
+    @property
+    def progress(self):
+        enrollments = list(ExamEnrollment.find_exam_enrollments(self.id))
+
+        if enrollments:
+            progress = 0
+            for e in enrollments:
+                if e.score is not None or e.justification is not None:
+                    progress = progress +1
+            return str(progress) + "/"+ str(len(enrollments))
+        else:
+            return "0/0"
+
     def __str__(self):
         return u"%s - %d" % (self.learning_unit_year, self.number_session)
 
@@ -341,10 +354,10 @@ class ExamEnrollment(models.Model):
     def calculate_progress(enrollments):
         if enrollments:
             progress = len([e for e in enrollments if e.score is not None or e.justification is not None]) / len(enrollments)
-            print(progress)
         else:
             progress = 0
         return progress * 100
+
 
     def find_exam_enrollments(session_exam):
         enrollments = ExamEnrollment.objects.filter(session_exam=session_exam)
