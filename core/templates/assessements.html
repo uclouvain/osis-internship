@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
+{% load i18n %}
 
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
@@ -26,12 +27,12 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}">Les études</a></li>
-  <li class="active">Évaluations</li>
+  <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+  <li class="active">{% trans 'Evaluations' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>Évaluations</h2>
+    <h2>{% trans 'Evaluations' %}</h2>
   </div>
   <ul class="media-list">
     <li class="media">
@@ -41,8 +42,8 @@
         </a>
       </div>
       <div class="media-body">
-        <h4 class="media-heading"><a href="#">Inscription aux examens</a></h4>
-        Ce processus gère les inscriptions aux examens.
+        <h4 class="media-heading"><a href="#">{% trans 'Exams enrollment' %}</a></h4>
+        {% trans 'This process helps the exams enrollments management' %}
       </div>
     </li>
     <li class="media">
@@ -52,8 +53,8 @@
         </a>
       </div>
       <div class="media-body">
-        <h4 class="media-heading"><a href="{% url 'scores_encoding' %}">Encodage des notes</a></h4>
-        Ce processus aide les enseignants à coder leurs notes pour chaque session d'examens.
+        <h4 class="media-heading"><a href="{% url 'scores_encoding' %}">{% trans 'Scores encoding' %}</a></h4>
+        {% trans 'This process helps tutor while encoding notes for the exams sessions.' %}
       </div>
     </li>
     <li class="media">
@@ -63,8 +64,8 @@
         </a>
       </div>
       <div class="media-body">
-        <h4 class="media-heading"><a href="#">Délibérations</a></h4>
-        Ce processus aide les enseignants à coder leurs notes pour chaque session d'examens.
+        <h4 class="media-heading"><a href="#">{% trans 'Deliberations' %}</a></h4>
+        {% trans 'This process helps for the deliberations' %}
       </div>
     </li>
   </ul>

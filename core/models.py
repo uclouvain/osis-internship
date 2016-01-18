@@ -28,13 +28,14 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
 
 
 class Person(models.Model):
     GENDER_CHOICES = (
-        ('F','Female'),
-        ('M','Male'),
-        ('U','Unknown'))
+        ('F',_('Female')),
+        ('M',_('Male')),
+        ('U',_('Unknown')))
 
     external_id = models.CharField(max_length = 40,blank = True, null = True)
     user        = models.OneToOneField(User, on_delete=models.CASCADE, null = True)
@@ -127,10 +128,10 @@ class AcademicYear(models.Model):
 
 class AcademicCalendar(models.Model):
     EVENT_TYPE = (
-        ('academic_year', 'Academic Year'),
-        ('session_exam_1', 'Session Exams 1'),
-        ('session_exam_2', 'Session Exams 2'),
-        ('session_exam_3', 'Session Exams 3'))
+        ('academic_year', _('Academic Year')),
+        ('session_exam_1', _('Session Exams 1')),
+        ('session_exam_2', _('Session Exams 2')),
+        ('session_exam_3', _('Session Exams 3')))
 
     academic_year = models.ForeignKey(AcademicYear, null = False)
     event_type    = models.CharField(max_length = 50, blank = False, null = False, choices = EVENT_TYPE)
@@ -192,9 +193,9 @@ class OfferEnrollment(models.Model):
 
 class OfferYearCalendar(models.Model):
     EVENT_TYPE = (
-        ('session_exam_1','Session Exams 1'),
-        ('session_exam_2','Session Exams 2'),
-        ('session_exam_3','Session Exams 3'))
+        ('session_exam_1',_('Session Exams 1')),
+        ('session_exam_2',_('Session Exams 2')),
+        ('session_exam_3',_('Session Exams 3')))
 
     external_id = models.CharField(max_length = 40,blank = True, null = True)
     academic_calendar = models.ForeignKey(AcademicCalendar, null = False)
@@ -263,8 +264,8 @@ class LearningUnitEnrollment(models.Model):
 
 class Attribution(models.Model):
     FUNCTION_CHOICES = (
-        ('COORDINATOR','Coordinator'),
-        ('PROFESSOR','Professor'))
+        ('COORDINATOR', _('Coordinator')),
+        ('PROFESSOR', _('Professor')))
 
     external_id = models.CharField(max_length = 40,blank = True, null = True)
     start_date    = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
@@ -279,9 +280,9 @@ class Attribution(models.Model):
 
 class SessionExam(models.Model):
     SESSION_STATUS = (
-        ('IDLE', 'Idle'),
-        ('OPEN', 'Open'),
-        ('CLOSED', 'Closed'))
+        ('IDLE', _('Idle')),
+        ('OPEN', _('Open')),
+        ('CLOSED', _('Closed')))
 
     external_id = models.CharField(max_length = 40,blank = True, null = True)
     number_session      = models.IntegerField(blank = False, null = False)
@@ -314,15 +315,15 @@ class SessionExam(models.Model):
 
 class ExamEnrollment(models.Model):
     JUSTIFICATION_TYPES = (
-        ('ABSENT','Absent'),
-        ('CHEATING','Cheating'),
-        ('ILL','Ill'),
-        ('JUSTIFIED_ABSENCE','Justified absence'),
-        ('SCORE_MISSING','Score missing'))
+        ('ABSENT',_('Absent')),
+        ('CHEATING',_('Cheating')),
+        ('ILL',_('Ill')),
+        ('JUSTIFIED_ABSENCE',_('Justified absence')),
+        ('SCORE_MISSING',_('Score missing')))
 
     ENCODING_STATUS = (
-        ('SAVED','Saved'),
-        ('SUBMITTED','Submitted'))
+        ('SAVED',_('Saved')),
+        ('SUBMITTED',_('Submitted')))
 
     external_id = models.CharField(max_length = 40,blank = True, null = True)
     score                    = models.DecimalField(max_digits = 4, decimal_places = 2, blank = True, null = True, validators=[MaxValueValidator(20), MinValueValidator(0)])
@@ -361,11 +362,8 @@ class ExamEnrollment(models.Model):
             return None
 
 
-    def justification_label_authorized( lang, isFac):
-        if lang == 'fr':
-            if isFac:
-                return 'Absent - Malade - Tricherie - Absence justifiée - Note manquante'
-            else:
-                return 'Absent - Malade - Tricherie'
-
-        return ""
+    def justification_label_authorized(isFac):
+        if isFac:
+            return '%s, %s, %s, %s, %s' % (_('Absent'), _('Ill'), _('Cheating'), _('Justified absence'), _('Score missing'))
+        else:
+            return '%s, %s, %s' % (_('Absent'), _('Ill'), _('Cheating'))

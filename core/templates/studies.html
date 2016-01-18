@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
+{% load i18n %}
 
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
@@ -26,11 +27,11 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li class="active">Les études</li>
+  <li class="active">{% trans 'Studies' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>Les études</h2>
+    <h2>{% trans 'Studies' %}</h2>
   </div>
   <ul class="media-list">
     <li class="media">
@@ -40,8 +41,9 @@
         </a>
       </div>
       <div class="media-body">
-        <h4 class="media-heading"><a href="{% url 'assessements' %}">Évaluations</a></h4>
-        Ce processus aide les enseignants à coder leurs notes pour chaque session d'examens.
+        <h4 class="media-heading"><a href="{% url 'assessements' %}">{% trans 'Evaluations' %}</a></h4>
+        {% trans 'This process helps tutors while scores encoding.' %}
+
       </div>
     </li>
   </ul>

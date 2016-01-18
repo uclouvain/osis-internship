@@ -4,6 +4,7 @@ from io import StringIO
 from reportlab.pdfgen import canvas
 from django.http import HttpResponse
 from django.conf import settings
+from django.utils.translation import ugettext_lazy as _
 
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.enums import TA_JUSTIFY, TA_RIGHT, TA_CENTER, TA_LEFT
@@ -92,19 +93,21 @@ def addHeaderFooter(canvas, doc):
 
 
 def header_building(canvas, doc,styles):
-    a = Image("core/static/images/logo_institution.jpg")
+    a = Image("../core/" + settings.STATIC_URL + "images/logo_institution.jpg")
+
     P = Paragraph('''
                     <para align=center spaceb=3>
-                        <font size=16>Feuille de notes</font>
-                    </para>''',
+                        <font size=16>%s</font>
+                    </para>''' % (_('Scores transcript')),
        styles["BodyText"])
-    data_header=[[a,'Université Catholique Louvain\nLouvain-la-Neuve\nBelgique',P],]
+    data_header=[[a,'%s' % _('University Catholic Louvain\nLouvain-la-Neuve\nBelgium') ,P],]
 
     t_header=Table(data_header, [30*mm, 100*mm,50*mm])
 
     t_header.setStyle(TableStyle([
                     #    ('SPAN',(0,0), (0,-1)),
                        ]))
+
     w, h = t_header.wrap(doc.width, doc.topMargin)
     t_header.drawOn(canvas, doc.leftMargin, doc.height + doc.topMargin - h)
 
@@ -114,7 +117,11 @@ def list_notes_building(session_exam, learning_unit_year_id, academic_year, acad
     liste des notes
     """
 
-    data = headers_table()
+
+def list_notes_building(session_exam, learning_unit_year_id, academic_year, academic_calendar, tutor,list_exam_enrollment, styles, learning_unit_year, isFac, Contenu):
+#liste des notes
+    Contenu.append(SMALL_INTER_LINE)
+    data = headers_table(styles)
 
     old_pgm = None
     current_learning_unit_year= None
@@ -144,7 +151,7 @@ def list_notes_building(session_exam, learning_unit_year_id, academic_year, acad
                 legend_building(current_learning_unit_year, isFac, Contenu, styles)
                 #Autre programme - 4. il faut faire un saut de page
                 Contenu.append(PageBreak())
-                data = headers_table()
+                data = headers_table(styles)
                 old_pgm =o
                 current_learning_unit_year = rec_exam_enrollment.learning_unit_enrollment.learning_unit_year
                 #
@@ -167,6 +174,7 @@ def list_notes_building(session_exam, learning_unit_year_id, academic_year, acad
         t.setStyle(TableStyle([
                            ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
                            ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                           ('VALIGN',(0,0), (-1,-1), 'TOP')
                            ]))
 
         Contenu.append(t)
@@ -184,27 +192,25 @@ def legend_building(learning_unit_year, isFac, Contenu, styles):
     p.alignment = TA_CENTER
     p.fontSize =8
     p.borderPadding = 5
-    legend_text = "Légende pour le champ 'autre note' : " + ExamEnrollment.justification_label_authorized('fr',isFac)
+    legend_text = "%s : %s" % (_('Other score legend'), ExamEnrollment.justification_label_authorized(isFac))
     if learning_unit_year.credits is None or learning_unit_year.credits < float(15):
-        legend_text += "<br/><font color=red>Attention décimale non-autorisée pour ce cours</font>"
+        legend_text += "<br/><font color=red>%s</font>" % _('UnAuthorized decimal for this activity')
 
     Contenu.append(Paragraph('''
                             <para>
                                 %s
-
                             </para>
                             ''' % legend_text, p))
 
 
-def headers_table():
+def headers_table(styles):
     data =[]
-    data.append([
-              'Noma',
-              'Nom',
-              'Prénom',
-              'Note chiffrée',
-              'Autre note',
-              'Date de remise'])
+    data.append([Paragraph('''%s''' % _('Registration number'), styles['BodyText']),
+                 Paragraph('''%s''' % _('Last name'), styles['BodyText']),
+                 Paragraph('''%s''' % _('First name'), styles['BodyText']),
+                 Paragraph('''%s''' % _('Numbered score'), styles['BodyText']),
+                 Paragraph('''%s''' % _('Other score'), styles['BodyText']),
+                 Paragraph('''%s''' % _('End date'), styles['BodyText'])])
     return data
 
 
@@ -218,7 +224,7 @@ def main_data(tutor, academic_year, session_exam, styles, learning_unit_year, pg
     p.alignment = TA_RIGHT
     p.fontSize = 10
 
-    Contenu.append(Paragraph('Année académique : %s' % str(academic_year), p))
+    Contenu.append(Paragraph('%s : %s' % (_('Academic year'), str(academic_year)), p))
     Contenu.append(Paragraph('Session : %d' % session_exam.number_session, p))
     Contenu.append(BIG_INTER_LINE)
 
@@ -228,21 +234,23 @@ def main_data(tutor, academic_year, session_exam, styles, learning_unit_year, pg
 
     Contenu.append(Paragraph("<strong>%s : %s</strong>" % (learning_unit_year.acronym,learning_unit_year.title), styles["Normal"]) )
     Contenu.append(SMALL_INTER_LINE)
+
     tutor = None
     if tutor is None:
         p_tutor = Paragraph(''' ''' , styles["Normal"])
     else:
         p_tutor = Paragraph('''<b>%s %s</b>''' % (tutor.person.last_name, tutor.person.first_name), styles["Normal"])
+
     data_tutor= [[p_tutor],
        [''],
        [''],
        ['']]
     table_tutor=Table(data_tutor)
-    p_pgm = Paragraph('''<b>Programme : %s</b>''' % pgm.acronym, styles["Normal"])
+    p_pgm = Paragraph('''<b>%s : %s</b>''' % (_('Program'),pgm.acronym), styles["Normal"])
     data_pgm= [[p_pgm],
-               ['Date de délibération : '],
-               ['Président du jury : '],
-               ['Secrétaire du jury : '],
+               [_('Deliberation date') + ' : '],
+               [_('Chair of the exam board') + ' : '],
+               [_('Exam board secretary') + ' : '],
               ]
     table_pgm=Table(data_pgm)
     table_pgm.setStyle(TableStyle([
@@ -268,17 +276,17 @@ def end_page_infos_building(Contenu, styles):
     p = ParagraphStyle('info')
     p.fontSize = 10
     p.alignment = TA_LEFT
-    Contenu.append(Paragraph("Veuillez renvoyer ce formulaire au secrétariat de l'entité gestionnaire" , p))
+    Contenu.append(Paragraph("Please return this document to the administrative office of the program administrator" , p))
     Contenu.append(BIG_INTER_LINE)
     p_signature = ParagraphStyle('info')
     p_signature.fontSize = 10
-    p_signature.leftIndent = 335
+    p_signature.leftIndent = 330
     P = Paragraph('''
-                    <font size=10>Fait à ....................................</font>
+                    <font size=10>%s ....................................</font>
                     <br/>
-                    <font size=10>Le ..../..../........</font>
+                    <font size=10>%s ..../..../........</font>
                     <br/>
-                    <font size=10>Signature</font>
-                ''',
+                    <font size=10>%s</font>
+                ''' % (_('Done at'), _('The'), _('Signature')),
                 p_signature)
     Contenu.append(P)
