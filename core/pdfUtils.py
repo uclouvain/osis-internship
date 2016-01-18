@@ -48,7 +48,6 @@ def print_notes(request,tutor, academic_year, session_exam,sessions,learning_uni
 #critères
     academic_calendar = AcademicCalendar.find_academic_calendar_by_event_type(academic_year.id,session_exam.number_session)
 
-    learning_unit_year = LearningUnitYear.objects.get(pk=learning_unit_year_id)
 
     if learning_unit_year_id != -1 :
         list_exam_enrollment = ExamEnrollment.find_exam_enrollments(session_exam)
@@ -69,7 +68,7 @@ def print_notes(request,tutor, academic_year, session_exam,sessions,learning_uni
                 list_exam_enrollment = list_exam_enrollment + enrollments
 
 
-    list_notes_building(session_exam, learning_unit_year_id, academic_year, academic_calendar, tutor, list_exam_enrollment, styles, learning_unit_year, isFac, Contenu)
+    list_notes_building(session_exam, learning_unit_year_id, academic_year, academic_calendar, tutor, list_exam_enrollment, styles, isFac, Contenu)
 
     doc.build(Contenu, onFirstPage=addHeaderFooter, onLaterPages=addHeaderFooter)
     pdf = buffer.getvalue()
@@ -88,8 +87,6 @@ def addHeaderFooter(canvas, doc):
 
     # Header
     header_building(canvas,doc, styles)
-    # Footer
-    footer_building(canvas, doc,styles)
 
     # Release the canvas
     canvas.restoreState()
@@ -115,11 +112,10 @@ def header_building(canvas, doc,styles):
     t_header.drawOn(canvas, doc.leftMargin, doc.height + doc.topMargin - h)
 
 
-def footer_building(canvas, doc,styles):
-    page_num = canvas.getPageNumber()
-    footer = Paragraph('Page #%s' % page_num, styles['Normal'])
-    w, h = footer.wrap(doc.width, doc.bottomMargin)
-    footer.drawOn(canvas, doc.leftMargin, h)
+def list_notes_building(session_exam, learning_unit_year_id, academic_year, academic_calendar, tutor,list_exam_enrollment, styles, isFac, Contenu):
+    """
+    liste des notes
+    """
 
 
 def list_notes_building(session_exam, learning_unit_year_id, academic_year, academic_calendar, tutor,list_exam_enrollment, styles, learning_unit_year, isFac, Contenu):
@@ -152,7 +148,7 @@ def list_notes_building(session_exam, learning_unit_year_id, academic_year, acad
                 Contenu.append(t)
                 #Autre programme - 3. Imprimer légende
                 end_page_infos_building(Contenu, styles)
-                legend_building(learning_unit_year, isFac, Contenu, styles)
+                legend_building(current_learning_unit_year, isFac, Contenu, styles)
                 #Autre programme - 4. il faut faire un saut de page
                 Contenu.append(PageBreak())
                 data = headers_table(styles)
@@ -181,10 +177,9 @@ def list_notes_building(session_exam, learning_unit_year_id, academic_year, acad
                            ('VALIGN',(0,0), (-1,-1), 'TOP')
                            ]))
 
-
         Contenu.append(t)
         end_page_infos_building(Contenu, styles)
-        legend_building(learning_unit_year, isFac, Contenu, styles)
+        legend_building(current_learning_unit_year, isFac, Contenu, styles)
 
 
 def legend_building(learning_unit_year, isFac, Contenu, styles):
@@ -220,7 +215,7 @@ def headers_table(styles):
 
 
 def main_data(tutor, academic_year, session_exam, styles, learning_unit_year, pgm, Contenu):
-
+    Contenu.append(SMALL_INTER_LINE)
     p_structure = ParagraphStyle('entete_structure')
     p_structure.alignment = TA_LEFT
     p_structure.fontSize = 10
@@ -235,12 +230,17 @@ def main_data(tutor, academic_year, session_exam, styles, learning_unit_year, pg
 
     if pgm.structure is not None:
         Contenu.append(Paragraph('%s' % pgm.structure, p_structure))
-        Contenu.append(BIG_INTER_LINE)
+        Contenu.append(SMALL_INTER_LINE)
 
     Contenu.append(Paragraph("<strong>%s : %s</strong>" % (learning_unit_year.acronym,learning_unit_year.title), styles["Normal"]) )
     Contenu.append(SMALL_INTER_LINE)
 
-    p_tutor = Paragraph('''<b>%s %s</b>''' % (tutor.person.last_name, tutor.person.first_name), styles["Normal"])
+    tutor = None
+    if tutor is None:
+        p_tutor = Paragraph(''' ''' , styles["Normal"])
+    else:
+        p_tutor = Paragraph('''<b>%s %s</b>''' % (tutor.person.last_name, tutor.person.first_name), styles["Normal"])
+
     data_tutor= [[p_tutor],
        [''],
        [''],
@@ -269,6 +269,7 @@ def main_data(tutor, academic_year, session_exam, styles, learning_unit_year, pg
                        ]))
     Contenu.append(tt)
     Contenu.append(Spacer(1, 12))
+
 
 def end_page_infos_building(Contenu, styles):
     Contenu.append(BIG_INTER_LINE)
