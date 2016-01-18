@@ -83,6 +83,13 @@ def scores_encoding(request):
         if enrollments:
             all_enrollments = all_enrollments + enrollments
     progress = ExamEnrollment.calculate_progress(all_enrollments)
+    css_offer = dict()
+
+    for r in sessions :
+        if r.offer.id  in css_offer:
+            pass
+        else:
+            css_offer[str(r.offer.id)] = "color" + str(len(css_offer)+1)
 
     return render(request, "scores_encoding.html",
                   {'section':       'scores_encoding',
@@ -91,7 +98,8 @@ def scores_encoding(request):
                    'academic_year': academic_year,
                    'session':       session,
                    'sessions':      sessions,
-                   'progress':      "{0:.0f}".format(progress)})
+                   'progress':      "{0:.0f}".format(progress),
+                   'css_offer':     css_offer})
 
 
 @login_required
