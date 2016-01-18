@@ -308,6 +308,12 @@ class SessionExam(models.Model):
                                  ).filter(offer_year_calendar__offer_year__academic_year=academic_year
                                  ).filter(offer_year_calendar__offer_year__structure=faculty)
 
+    @property
+    def offer(self):
+        for rec_exam_enrollment in ExamEnrollment.find_exam_enrollments(self):
+            return rec_exam_enrollment.learning_unit_enrollment.offer
+        return None
+
     def __str__(self):
         return u"%s - %d" % (self.learning_unit_year, self.number_session)
 
