@@ -1,9 +1,8 @@
 *.html
 *.pdf
-*.vpp~*
-.idea/
 *.pyc
+*.iml
+.idea/
 venv/
 __pycache__/
-core/migrations/
-
+osis_backend/server_settings.py

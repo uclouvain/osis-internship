@@ -1,12 +1,38 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+ * OSIS stands for Open Student Information System. It's an application
+ * designed to manage the core business of higher education institutions,
+ * such as universities, faculties, institutes and professional schools.
+ * The core business involves the administration of students, teachers,
+ * courses, programs and so on.
+ *
+ * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * A copy of this license - GNU General Public License - is available
+ * at the root of the source code of this program.  If not,
+ * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}">Les études</a></li>
-  <li class="active">Évaluations</li>
+  <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+  <li class="active">{% trans 'Evaluations' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>Évaluations</h2>
+    <h2>{% trans 'Evaluations' %}</h2>
   </div>
   <ul class="media-list">
     <li class="media">
@@ -16,8 +42,8 @@
         </a>
       </div>
       <div class="media-body">
-        <h4 class="media-heading"><a href="#">Inscription aux examens</a></h4>
-        Ce processus gère les inscriptions aux examens.
+        <h4 class="media-heading"><a href="#">{% trans 'Exams enrollment' %}</a></h4>
+        {% trans 'This process helps the exams enrollments management' %}
       </div>
     </li>
     <li class="media">
@@ -27,8 +53,8 @@
         </a>
       </div>
       <div class="media-body">
-        <h4 class="media-heading"><a href="{% url 'scores_encoding' %}">Encodage des notes</a></h4>
-        Ce processus aide les enseignants à coder leurs notes pour chaque session d'examens.
+        <h4 class="media-heading"><a href="{% url 'scores_encoding' %}">{% trans 'Scores encoding' %}</a></h4>
+        {% trans 'This process helps tutor while encoding notes for the exams sessions.' %}
       </div>
     </li>
     <li class="media">
@@ -38,8 +64,8 @@
         </a>
       </div>
       <div class="media-body">
-        <h4 class="media-heading"><a href="#">Délibérations</a></h4>
-        Ce processus aide les enseignants à coder leurs notes pour chaque session d'examens.
+        <h4 class="media-heading"><a href="#">{% trans 'Deliberations' %}</a></h4>
+        {% trans 'This process helps for the deliberations' %}
       </div>
     </li>
   </ul>
