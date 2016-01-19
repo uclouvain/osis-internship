@@ -116,7 +116,6 @@ class ProgrammeManager(models.Model):
 
 
 class AcademicYear(models.Model):
-    external_id = models.CharField(max_length = 40,blank = True, null = True)
     year = models.IntegerField(blank=False, null=False)
 
     def __str__(self):
@@ -126,10 +125,7 @@ class AcademicYear(models.Model):
         return AcademicYear.objects.get(pk=id)
 
 EVENT_TYPE = (
-    ('academic_year', 'Academic Year'),
-    ('session_exam_1', 'Session Exams 1'),
-    ('session_exam_2', 'Session Exams 2'),
-    ('session_exam_3', 'Session Exams 3'),
+    ('ACADEMIC_YEAR', 'Academic Year'),
     ('DISSERTATIONS_SUBMISSION_SESS_1', 'Submission of academic dissertations - exam session 1'),
     ('DISSERTATIONS_SUBMISSION_SESS_2', 'Submission of academic dissertations - exam session 2'),
     ('DISSERTATIONS_SUBMISSION_SESS_3', 'Submission of academic dissertations - exam session 3'),
@@ -155,7 +151,7 @@ class AcademicCalendar(models.Model):
     end_date      = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
 
     def current_academic_year():
-        academic_calendar = AcademicCalendar.objects.filter(event_type='academic_year').filter(start_date__lte=timezone.now()).filter(end_date__gte=timezone.now()).first()
+        academic_calendar = AcademicCalendar.objects.filter(event_type='ACADEMIC_YEAR').filter(start_date__lte=timezone.now()).filter(end_date__gte=timezone.now()).first()
         return academic_calendar.academic_year
 
     def find_academic_calendar_by_event_type(academic_year_id, session_number):
@@ -206,7 +202,7 @@ class OfferEnrollment(models.Model):
 
 
 class OfferYearCalendar(models.Model):
-    external_id = models.CharField(max_length = 40,blank = True, null = True)
+    external_id = models.CharField(max_length = 70,blank = True, null = True)
     academic_calendar = models.ForeignKey(AcademicCalendar, null = False)
     offer_year        = models.ForeignKey(OfferYear, null = False)
     event_type        = models.CharField(max_length = 50, blank = False, null = False, choices = EVENT_TYPE)
@@ -340,7 +336,7 @@ class ExamEnrollment(models.Model):
         ('SAVED',_('Saved')),
         ('SUBMITTED',_('Submitted')))
 
-    external_id = models.CharField(max_length = 40,blank = True, null = True)
+    external_id = models.CharField(max_length = 70,blank = True, null = True)
     score                    = models.DecimalField(max_digits = 4, decimal_places = 2, blank = True, null = True, validators=[MaxValueValidator(20), MinValueValidator(0)])
     justification            = models.CharField(max_length = 17, blank = True, null = True,choices = JUSTIFICATION_TYPES)
     encoding_status          = models.CharField(max_length = 9, blank = True, null = True,choices = ENCODING_STATUS)
