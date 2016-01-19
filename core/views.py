@@ -32,9 +32,7 @@ from core.models import Tutor, AcademicCalendar, SessionExam, ExamEnrollment
 from . import pdfUtils
 from . import exportUtils
 from core.forms import ScoreFileForm
-from core.models import Tutor, AcademicCalendar, SessionExam, ExamEnrollment, \
-                        ProgrammeManager, Student, AcademicYear, OfferYear, \
-                        LearningUnitYear, LearningUnitEnrollment, OfferEnrollment
+from core.models import *
 
 def page_not_found(request):
     return render(request,'page_not_found.html')
@@ -72,19 +70,20 @@ def scores_encoding(request):
 
     # Calculate the progress of all courses of the tutor.
     all_enrollments = []
+    css_offer = dict()
     if sessions:
         for session in sessions:
             enrollments = list(ExamEnrollment.find_exam_enrollments(session))
             if enrollments:
                 all_enrollments = all_enrollments + enrollments
-    progress = ExamEnrollment.calculate_progress(all_enrollments)
-    css_offer = dict()
 
-    for r in sessions :
-        if r.offer.id  in css_offer:
-            pass
-        else:
-            css_offer[str(r.offer.id)] = "color" + str(len(css_offer)+1)
+        for r in sessions :
+            if r.offer.id in css_offer:
+                pass
+            else:
+                css_offer[str(r.offer.id)] = "color" + str(len(css_offer) + 1)
+
+    progress = ExamEnrollment.calculate_progress(all_enrollments)
 
     return render(request, "scores_encoding.html",
                   {'section':       'scores_encoding',
@@ -179,7 +178,6 @@ def online_double_encoding_validation(request, session_id):
                    'enrollments':   enrollments,
                    'justifications':ExamEnrollment.JUSTIFICATION_TYPES,
                    'enrollments':   enrollments})
-
 
 @login_required
 def upload_score_error(request):
