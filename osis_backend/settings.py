@@ -103,7 +103,7 @@ DATABASES = {
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
-
+# LANGUAGE_CODE = 'fr-be'
 LANGUAGE_CODE = 'fr-be'
 
 TIME_ZONE = 'Europe/Brussels'

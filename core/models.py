@@ -28,13 +28,14 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
 
 
 class Person(models.Model):
     GENDER_CHOICES = (
-        ('F','Female'),
-        ('M','Male'),
-        ('U','Unknown'))
+        ('F',_('Female')),
+        ('M',_('Male')),
+        ('U',_('Unknown')))
 
     external_id = models.CharField(max_length = 40,blank = True, null = True)
     user        = models.OneToOneField(User, on_delete=models.CASCADE, null = True)
@@ -126,13 +127,25 @@ class AcademicYear(models.Model):
         return AcademicYear.objects.get(pk=id)
 
 
-class AcademicCalendar(models.Model):
-    EVENT_TYPE = (
-        ('academic_year', 'Academic Year'),
-        ('session_exam_1', 'Session Exams 1'),
-        ('session_exam_2', 'Session Exams 2'),
-        ('session_exam_3', 'Session Exams 3'))
+EVENT_TYPE = (
+    ('ACADEMIC_YEAR', 'Academic Year'),
+    ('DISSERTATIONS_SUBMISSION_SESS_1', 'Submission of academic dissertations - exam session 1'),
+    ('DISSERTATIONS_SUBMISSION_SESS_2', 'Submission of academic dissertations - exam session 2'),
+    ('DISSERTATIONS_SUBMISSION_SESS_3', 'Submission of academic dissertations - exam session 3'),
+    ('EXAM_SCORES_SUBMISSION_SESS_1', 'Submission of exam scores - exam session 1'),
+    ('EXAM_SCORES_SUBMISSION_SESS_2', 'Submission of exam scores - exam session 2'),
+    ('EXAM_SCORES_SUBMISSION_SESS_3', 'Submission of exam scores - exam session 3'),
+    ('DELIBERATIONS_SESS_1', 'Deliberations - exam session 1'),
+    ('DELIBERATIONS_SESS_2', 'Deliberations - exam session 2'),
+    ('DELIBERATIONS_SESS_3', 'Deliberations - exam session 3'),
+    ('EXAM_SCORES_DIFFUSION_SESS_1', 'Diffusion of exam scores - exam session 1'),
+    ('EXAM_SCORES_DIFFUSION_SESS_2', 'Diffusion of exam scores - exam session 2'),
+    ('EXAM_SCORES_DIFFUSION_SESS_3', 'Diffusion of exam scores - exam session 3'),
+    ('EXAM_ENROLLMENTS_SESS_1', 'Exam enrollments - exam session 1'),
+    ('EXAM_ENROLLMENTS_SESS_2', 'Exam enrollments - exam session 2'),
+    ('EXAM_ENROLLMENTS_SESS_3', 'Exam enrollments - exam session 3'))
 
+class AcademicCalendar(models.Model):
     academic_year = models.ForeignKey(AcademicYear, null = False)
     event_type    = models.CharField(max_length = 50, blank = False, null = False, choices = EVENT_TYPE)
     title         = models.CharField(max_length = 50, blank = True, null = True)
@@ -141,7 +154,7 @@ class AcademicCalendar(models.Model):
     end_date      = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
 
     def current_academic_year():
-        academic_calendar = AcademicCalendar.objects.filter(event_type='academic_year').filter(start_date__lte=timezone.now()).filter(end_date__gte=timezone.now()).first()
+        academic_calendar = AcademicCalendar.objects.filter(event_type='ACADEMIC_YEAR').filter(start_date__lte=timezone.now()).filter(end_date__gte=timezone.now()).first()
         if academic_calendar:
             return academic_calendar.academic_year
         else:
@@ -195,14 +208,9 @@ class OfferEnrollment(models.Model):
 
 
 class OfferYearCalendar(models.Model):
-    EVENT_TYPE = (
-        ('session_exam_1','Session Exams 1'),
-        ('session_exam_2','Session Exams 2'),
-        ('session_exam_3','Session Exams 3'))
-
     external_id       = models.CharField(max_length = 40,blank = True, null = True)
     academic_calendar = models.ForeignKey(AcademicCalendar, null = False)
-    offer_year        = models.ForeignKey(OfferYear, null = True)
+    offer_year        = models.ForeignKey(OfferYear, null = False)
     event_type        = models.CharField(max_length = 50, blank = False, null = False, choices = EVENT_TYPE)
     start_date        = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
     end_date          = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
@@ -282,9 +290,9 @@ class LearningUnitEnrollment(models.Model):
 
 class SessionExam(models.Model):
     SESSION_STATUS = (
-        ('IDLE', 'Idle'),
-        ('OPEN', 'Open'),
-        ('CLOSED', 'Closed'))
+        ('IDLE', _('Idle')),
+        ('OPEN', _('Open')),
+        ('CLOSED', _('Closed')))
 
     external_id         = models.CharField(max_length = 40,blank = True, null = True)
     number_session      = models.IntegerField(blank = False, null = False)
@@ -311,29 +319,35 @@ class SessionExam(models.Model):
                                  ).filter(offer_year_calendar__offer_year__academic_year=academic_year
                                  ).filter(offer_year_calendar__offer_year__structure=faculty)
 
+    @property
+    def offer(self):
+        for rec_exam_enrollment in ExamEnrollment.find_exam_enrollments(self):
+            return rec_exam_enrollment.learning_unit_enrollment.offer
+        return None
+
     def __str__(self):
         return u"%s - %d" % (self.learning_unit_year, self.number_session)
 
 
 class ExamEnrollment(models.Model):
     JUSTIFICATION_TYPES = (
-        ('ABSENT','Absent'),
-        ('CHEATING','Cheating'),
-        ('ILL','Ill'),
-        ('JUSTIFIED_ABSENCE','Justified absence'),
-        ('SCORE_MISSING','Score missing'))
+        ('ABSENT',_('Absent')),
+        ('CHEATING',_('Cheating')),
+        ('ILL',_('Ill')),
+        ('JUSTIFIED_ABSENCE',_('Justified absence')),
+        ('SCORE_MISSING',_('Score missing')))
 
     ENCODING_STATUS = (
-        ('SAVED','Saved'),
-        ('SUBMITTED','Submitted'))
+        ('SAVED',_('Saved')),
+        ('SUBMITTED',_('Submitted')))
 
-    external_id              = models.CharField(max_length = 40,blank = True, null = True)
+    external_id              = models.CharField(max_length = 70,blank = True, null = True)
     score_draft              = models.DecimalField(max_digits = 4, decimal_places = 2, blank = True, null = True, validators=[MaxValueValidator(20), MinValueValidator(0)])
     score_reencoded          = models.DecimalField(max_digits = 4, decimal_places = 2, blank = True, null = True, validators=[MaxValueValidator(20), MinValueValidator(0)])
     score_final              = models.DecimalField(max_digits = 4, decimal_places = 2, blank = True, null = True, validators=[MaxValueValidator(20), MinValueValidator(0)])
-    justification_draft      = models.CharField(max_length = 17, blank = True, null = True,choices = JUSTIFICATION_TYPES)
-    justification_reencoded  = models.CharField(max_length = 17, blank = True, null = True,choices = JUSTIFICATION_TYPES)
-    justification_final      = models.CharField(max_length = 17, blank = True, null = True,choices = JUSTIFICATION_TYPES)
+    justification_draft      = models.CharField(max_length = 20, blank = True, null = True,choices = JUSTIFICATION_TYPES)
+    justification_reencoded  = models.CharField(max_length = 20, blank = True, null = True,choices = JUSTIFICATION_TYPES)
+    justification_final      = models.CharField(max_length = 20, blank = True, null = True,choices = JUSTIFICATION_TYPES)
     encoding_status          = models.CharField(max_length = 9, blank = True, null = True,choices = ENCODING_STATUS)
     session_exam             = models.ForeignKey(SessionExam, null = False)
     learning_unit_enrollment = models.ForeignKey(LearningUnitEnrollment, null = False)
@@ -367,14 +381,11 @@ class ExamEnrollment(models.Model):
                 return 'Note manquante'
             return None
 
-    def justification_label_authorized( lang, isFac):
-        if lang == 'fr':
-            if isFac:
-                return 'Absent - Malade - Tricherie - Absence justifiée - Note manquante'
-            else:
-                return 'Absent - Malade - Tricherie'
-
-        return ""
+    def justification_label_authorized(isFac):
+        if isFac:
+            return '%s, %s, %s, %s, %s' % (_('Absent'), _('Ill'), _('Cheating'), _('Justified absence'), _('Score missing'))
+        else:
+            return '%s, %s, %s' % (_('Absent'), _('Ill'), _('Cheating'))
 
     def __str__(self):
         return u"%s - %s" % (self.session_exam, self.learning_unit_enrollment)

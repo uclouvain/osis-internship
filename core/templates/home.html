@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
+{% load i18n %}
 
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
@@ -28,6 +29,7 @@
 {% block breadcrumbarea %}
 {% endblock %}
 {% block content %}
+
 <div class="jumbotron">
   <h1>Encodage des notes!</h1>
   <p>L'encodage des notes pour la session de janvier est en cours maintenant!</p>
@@ -43,7 +45,7 @@
         <p>Élaboration et gestion du programme d'études.</p></div>
       <div class="col-md-1"><i class="fa fa-users" style="font-size: 400%; color: #6699FF;"></i></div>
       <div class="col-md-5">
-        <h4 class="media-heading"><a href="{% url 'studies' %}">Parcours</a></h4>
+        <h4 class="media-heading"><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></h4>
         <p>Le parcours des étudiants de l'inscription au diplôme.</p>
       </div>
     </div>

@@ -25,6 +25,7 @@
 ##############################################################################
 from django.conf.urls import url
 from django.contrib.auth.views import login,logout_then_login
+
 from . import views
 from . import exportUtils
 from . import uploadXlsUtils
@@ -33,7 +34,7 @@ urlpatterns = [
     url(r'^$', views.home, name='home'),
 
     # S'il vous plaît, organiser les urls par ordre alphabétique.
-    
+
     url(r'^learning_units/$', views.programme, name='learning_units'),
 
     url(r'^login/$', login, name='login'),
@@ -50,9 +51,8 @@ urlpatterns = [
     url(r'^studies/assessements/scores_encoding/online/([0-9]+)/form$', views.online_encoding_form, name='online_encoding_form'),
     url(r'^studies/assessements/scores_encoding/online/([0-9]+)/double_form$', views.online_double_encoding_form, name='online_double_encoding_form'),
     url(r'^studies/assessements/scores_encoding/online/([0-9]+)/double_validation$', views.online_double_encoding_validation, name='online_double_encoding_validation'),
-    url(r'^studies/assessements/all_notes_printing/([0-9]+)/$', views.all_notes_printing, name='all_notes_printing'),
-    url(r'^studies/assessements/notes_printing/([0-9]+)/([0-9]+)/$', views.notes_printing, name='notes_printing'),
-    url(r'^studies/assessements/scores_encoding/xlsdownload/([0-9]+)/([0-9]+)/([0-9]+)/$',exportUtils.export_xls, name='scores_encoding_download'),
+    url(r'^studies/assessements/scores_encoding/all_notes_printing/([0-9]+)/$', views.all_notes_printing, name='all_notes_printing'),
+    url(r'^studies/assessements/scores_encoding/notes_printing/([0-9]+)/([0-9]+)/$', views.notes_printing, name='notes_printing'),
+    url(r'^studies/assessements/scores_encoding/xlsdownload/([0-9]+)/([0-9]+)/([0-9]+)/$',views.export_xls, name='scores_encoding_download'),
     url(r'^studies/assessements/scores_encoding/upload/([0-9]+)/([0-9]+)/([0-9]+)/$',uploadXlsUtils.upload_scores_file,name='upload_encoding'),
-    url(r'^studies/assessements/scores_encoding/upload_score_error$',views.upload_score_error,name='upload_score_error'),
 ]

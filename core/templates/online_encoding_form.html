@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% load l10n %}
+{% load i18n %}
 {% load percentage %}
 
 {% comment "License" %}
@@ -27,10 +28,10 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}">Parcours</a></li>
-  <li><a href="{% url 'assessements' %}">Évaluations</a></li>
-  <li><a href="{% url 'scores_encoding' %}">Encodage des notes</a></li>
-  <li class="active">Encodage en ligne</li>
+  <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+  <li><a href="{% url 'assessements' %}">{% trans 'Evaluations' %}</a></li>
+  <li><a href="{% url 'scores_encoding' %}">{% trans 'Scores encoding' %}</a></li>
+  <li class="active">{% trans 'Online encoding' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
@@ -44,31 +45,31 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label>Responsable</label><br>
+            <label>{% trans 'Responsible' %}</label><br>
             {{ tutor }}
           </div>
         </div>
         <div class="col-md-2">
           <div class="form-group">
-            <label>Année académique</label><br>
+            <label>{% trans 'Academic year' %}</label><br>
             {{ academic_year }}
           </div>
         </div>
         <div class="col-md-2">
           <div class="form-group">
-            <label>Session</label><br>
+            <label>{% trans 'Session' %}</label><br>
             {{ session.number_session }}
           </div>
         </div>
         <div class="col-md-2">
           <div class="form-group">
-            <label>Nombre d'inscrits</label><br>
+            <label>{%trans 'Number of enrollments' %}</label><br>
             {{ enrollments|length }}
           </div>
         </div>
         <div class="col-md-2">
           <div class="form-group">
-            <label>Progrès</label><br>
+            <label>{% trans 'Progress' %}</label><br>
             {{ progress | percentage }}
           </div>
         </div>
@@ -80,13 +81,13 @@
 
         <table class="table table-hover">
             <thead>
-              <th>Programme</th>
-              <th>Noma</th>
-              <th>Nom</th>
-              <th>Prénom</th>
-              <th>Note</th>
-              <th>Justification</th>
-              <th>Date de remise</th>
+              <th>{% trans 'Offer' %}</th>
+              <th>{% trans 'Registration number' %}</th>
+              <th>{% trans 'Lastname' %}</th>
+              <th>{% trans 'Firstname' %}</th>
+              <th>{% trans 'Score' %}</th>
+              <th>{% trans 'Justification' %}</th>
+              <th>{% trans 'End date' %}</th>
             </thead>
             <tbody>
             {% for enrollment in enrollments %}
@@ -98,9 +99,9 @@
                 <td><input type="number" value="{{ enrollment.score|unlocalize | default_if_none:"" }}" class="form-control"></td>
                 <td><select class="form-control">
                       <option value=""></option>
-                      <option value="ABSENT">Absent</option>
-                      <option value="CHEATING">Tricherie</option>
-                      <option value="SCORE_MISSING">Note manquant</option>
+                      <option value="ABSENT">{% trans 'Absent' %}</option>
+                      <option value="CHEATING">{% trans 'Cheating' %}'</option>
+                      <option value="SCORE_MISSING">{% trans 'Score missing' %}</option>
                     </select></td>
                 <td>{{ enrollment.session_exam.offer_year_calendar.end_date }}</td>
               </tr>

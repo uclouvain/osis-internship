@@ -1,4 +1,7 @@
 {% extends "layout.html" %}
+{% load i18n %}
+{% load staticfiles %}
+{% load dictionnary %}
 
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
@@ -23,15 +26,19 @@
  * at the root of the source code of this program.  If not,
  * see http://www.gnu.org/licenses/.
 {% endcomment %}
-
+{% block tablecss %}
+<script src="{% static "js/jquery-2.1.4.min.js" %}"></script>
+<script src="{% static "js/bootstrap.min.js" %}"></script>
+<script src="{% static "js/bootstrap-table.js" %}"></script>
+{% endblock %}
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}">Parcours</a></li>
-  <li><a href="{% url 'assessements' %}">Évaluations</a></li>
-  <li class="active">Encodage des notes</li>
+  <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+  <li><a href="{% url 'assessements' %}">{% trans 'Evaluations' %}</a></li>
+  <li class="active">{% trans 'Scores encoding' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>Encodage des notes</h2>
+    <h2>{% trans 'Scores encoding' %}</h2>
   </div>
   <div class="panel panel-default">
     <div class="panel-body">
@@ -39,47 +46,46 @@
         <div class="col-md-4">
           <div class="form-group">
             {% if tutor %}
-              <label>Enseignant</label><br>{{ tutor }}
+              <label>{% trans 'Tutor' %}</label><br>{{ tutor }}
             {% else %}
-              <label>Faculté</label><br>{{ faculty }}
+              <label>{% trans 'Faculty' %}</label><br>{{ faculty }}
             {% endif %}
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <label>Année académique</label><br>
+            <label>{% trans 'Academic year' %}</label><br>
             {{ academic_year }}
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <label>Session</label><br>
+            <label>{% trans 'Session' %}</label><br>
             {{ session.number_session }}
           </div>
         </div>
       </div>
-
       <br>
-      <p><b>Sélectionnez un type de codage</b></p>
+      <p><b>{% trans 'Select an encoding type' %}</b></p>
       <div>
         <ul class="nav nav-tabs" role="tablist">
-          <li role="presentation" class="active"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">En ligne</a></li>
-          <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">En feuille de calcul</a></li>
-          <li role="presentation"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">En papier</a></li>
+          <li role="presentation" class="active"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">{% trans 'Online' %}</a></li>
+          <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">{% trans 'With xls' %}</a></li>
+          <li role="presentation"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">{% trans 'Via paper' %}</a></li>
         </ul>
 
         <div class="tab-content">
           <div role="tabpanel" class="tab-pane fade in active" id="profile">
             <table class="table table-hover">
                 <thead>
-                  <th>Statut</th>
-                  <th>Sigle</th>
-                  <th>Cours</th>
+                  <th>{% trans 'Status' %}</th>
+                  <th>{% trans 'Code' %}</th>
+                  <th>{% trans 'Activity' %}</th>
                   <th></th>
                 </thead>
                 <tbody>
                 {% for session in sessions %}
-                  <tr>
+                  <tr  class="{{ css_offer|get_item:session.offer.id }}">
                     <td>{% if session.status == 'IDLE' %}
                           <span style="color: orange" class="glyphicon glyphicon-time" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="Idle"></span>
                         {% elif session.status == 'OPEN' %}
@@ -89,7 +95,7 @@
                         {% endif %}
                     <td>{{ session.learning_unit_year.acronym }}</td>
                     <td><a href="{% url 'online_encoding' session.id %}">{{ session.learning_unit_year.title }}</a></td>
-                    <td><a class="btn btn-default" href="{% url 'online_encoding_form' session.id %}" role="button"><i class="fa fa-hashtag"></i> Encoder</a></td>
+                    <td><a class="btn btn-default" href="{% url 'online_encoding_form' session.id %}" role="button"><i class="fa fa-hashtag"></i> {% trans 'Encoding'%}</a></td>
                   </tr>
                 {% endfor %}
                 </tbody>
@@ -98,14 +104,14 @@
           <div role="tabpanel" class="tab-pane fade" id="messages">
             <table class="table table-hover">
                 <thead>
-                  <th>Statut</th>
-                  <th>Sigle</th>
-                  <th>Cours</th>
+                  <th>{% trans 'Status' %}</th>
+                  <th>{% trans 'Code' %}</th>
+                  <th>{% trans 'Activity' %}</th>
                   <th></th>
                 </thead>
                 <tbody>
                 {% for session in sessions %}
-                  <tr>
+                  <tr class="{{ css_offer|get_item:session.offer.id }}">
                     <td>{% if session.status == 'IDLE' %}
                           <span style="color: orange" class="glyphicon glyphicon-time" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="Idle"></span>
                         {% elif session.status == 'OPEN' %}
@@ -115,7 +121,7 @@
                         {% endif %}
                     <td>{{ session.learning_unit_year.acronym }}</td>
                     <td><a href="{% url 'online_encoding' session.id%}"title="Visualiser/charger les notes pour le cours">{{ session.learning_unit_year.title }}</a></td>
-                    <td><a class="btn btn-default" href="{% url 'scores_encoding_download' session.id session.learning_unit_year.id academic_year.id %}" role="button" title="Télécharger un fichier xls avec les notes pour le cours"><span class="glyphicon glyphicon-download" aria-hidden="true"></span> Obtenir fichier excel</a></td>
+                    <td><a class="btn btn-default" href="{% url 'scores_encoding_download' session.id session.learning_unit_year.id academic_year.id  %}" role="button" title="{% trans 'Create a xls file while activity\'s scores'%}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span> {% trans 'Get xls'%}</a></td>
                   </tr>
                 {% endfor %}
                 </tbody>
@@ -123,18 +129,18 @@
           </div>
           <div role="tabpanel" class="tab-pane fade" id="home">
             <br>
-            <a class="btn btn-default" href="{% url 'all_notes_printing' session.id %}" role="button"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> Obtenir tous les feuille des notes</a>
+            <a class="btn btn-default" href="{% url 'all_notes_printing' session.id %}" role="button"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'Print scores for all activities' %}</a>
             <br><br>
             <table class="table table-hover">
               <thead>
-                <th>Statut</th>
-                <th>Sigle</th>
-                <th>Cours</th>
+                <th>{% trans 'Status' %}</th>
+                <th>{% trans 'Code' %}</th>
+                <th>{% trans 'Activity' %}</th>
                 <th></th>
               </thead>
               <tbody>
               {% for session in sessions %}
-                <tr>
+                <tr class="{{ css_offer|get_item:session.offer.id }}">
                   <td>{% if session.status == 'IDLE' %}
                         <span style="color: orange" class="glyphicon glyphicon-time" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="Idle"></span>
                       {% elif session.status == 'OPEN' %}
@@ -143,8 +149,8 @@
                         <span style="color: green" class="glyphicon glyphicon-ok" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="Closed"></span> {{ session.status|title }}
                       {% endif %}</td>
                   <td>{{ session.learning_unit_year.acronym }}</td>
-                  <td>{{ session.learning_unit_year.title }}</td>
-                  <td><a class="btn btn-default" href="{% url 'notes_printing' session.id session.learning_unit_year.id%}" role="button"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> Obtenir feuille des notes</a></td>
+                  <td>{{ session.learning_unit_year.title }} {{session.id}}</td>
+                  <td><a class="btn btn-default" href="{% url 'notes_printing' session.id session.learning_unit_year.id%}" role="button"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'Print' %}</a></td>
                 </tr>
               {% endfor %}
               </tbody>
@@ -154,4 +160,6 @@
       </div>
     </div>
   </div>
+{% endblock %}
+{% block script %}
 {% endblock %}

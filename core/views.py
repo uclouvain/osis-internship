@@ -30,6 +30,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from core.models import Tutor, AcademicCalendar, SessionExam, ExamEnrollment
 from . import pdfUtils
+from . import exportUtils
 from core.forms import ScoreFileForm
 from core.models import Tutor, AcademicCalendar, SessionExam, ExamEnrollment, \
                         ProgrammeManager, Student, AcademicYear, OfferYear, \
@@ -77,6 +78,13 @@ def scores_encoding(request):
             if enrollments:
                 all_enrollments = all_enrollments + enrollments
     progress = ExamEnrollment.calculate_progress(all_enrollments)
+    css_offer = dict()
+
+    for r in sessions :
+        if r.offer.id  in css_offer:
+            pass
+        else:
+            css_offer[str(r.offer.id)] = "color" + str(len(css_offer)+1)
 
     return render(request, "scores_encoding.html",
                   {'section':       'scores_encoding',
@@ -84,7 +92,9 @@ def scores_encoding(request):
                    'faculty':       faculty,
                    'academic_year': academic_year,
                    'session':       session,
-                   'sessions':      sessions})
+                   'sessions':      sessions,
+                   'progress':      "{0:.0f}".format(progress),
+                   'css_offer':     css_offer})
 
 @login_required
 def online_encoding(request, session_id):
@@ -191,3 +201,7 @@ def all_notes_printing(request, session_id):
 @login_required
 def programme(request):
     return render(request, "programme.html", {'section': 'programme'})
+
+@login_required
+def export_xls(request, session_id, learning_unit_year_id, academic_year_id):
+    return exportUtils.export_xls(request, session_id, learning_unit_year_id, academic_year_id, request.user.groups.filter(name='FAC').exists())
