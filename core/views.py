@@ -193,7 +193,7 @@ def notes_printing(request, session_id, learning_unit_year_id):
     return pdfUtils.print_notes(request,tutor,academic_year,session_exam,sessions,learning_unit_year_id)
 
 @login_required
-def all_notes_printing(request, session_id):
+def notes_printing_all(request, session_id):
     return notes_printing(request,session_id,-1)
 
 @login_required
