@@ -46,7 +46,7 @@ from .models import Tutor
 admin.site.register(AcademicYear)
 
 class AcademicCalendarAdmin(admin.ModelAdmin):
-    list_display = ('title', 'event_type', 'academic_year', 'start_date', 'end_date')
+    list_display = ('event_type', 'title', 'academic_year', 'start_date', 'end_date')
 
 admin.site.register(AcademicCalendar, AcademicCalendarAdmin)
 
@@ -56,12 +56,13 @@ class OfferAdmin(admin.ModelAdmin):
 admin.site.register(Offer, OfferAdmin)
 
 class OfferYearAdmin(admin.ModelAdmin):
-    list_display = ('offer','academic_year')
+    list_display = ('offer', 'title','academic_year')
 
 admin.site.register(OfferYear, OfferYearAdmin)
 
 class OfferYearCalendarAdmin(admin.ModelAdmin):
     list_display = ('academic_calendar', 'offer_year', 'event_type', 'start_date', 'end_date')
+    list_filter = ('event_type',)
 
 admin.site.register(OfferYearCalendar, OfferYearCalendarAdmin)
 
@@ -72,6 +73,7 @@ admin.site.register(OfferEnrollment, OfferEnrollmentAdmin)
 
 class PersonAdmin(admin.ModelAdmin):
     list_display = ('first_name' , 'middle_name', 'last_name', 'username', 'gender','global_id', 'national_id')
+    search_fields = ['first_name', 'middle_name', 'last_name', 'user__username']
 
 admin.site.register(Person, PersonAdmin)
 
@@ -92,11 +94,13 @@ admin.site.register(LearningUnitEnrollment, LearningUnitEnrollmentAdmin)
 
 class SessionExamAdmin(admin.ModelAdmin):
     list_display = ('learning_unit_year', 'number_session', 'status')
+    list_filter = ('status',)
 
 admin.site.register(SessionExam, SessionExamAdmin)
 
 class ExamEnrollmentAdmin(admin.ModelAdmin):
-    list_display = ('learning_unit_enrollment', 'session_exam', 'score', 'justification', 'encoding_status')
+    list_display = ('student', 'session_exam', 'score_final', 'justification_final', 'encoding_status')
+    list_filter = ('encoding_status',)
 
 admin.site.register(ExamEnrollment, ExamEnrollmentAdmin)
 
@@ -118,5 +122,6 @@ admin.site.register(ProgrammeManager, ProgrammeManagerAdmin)
 
 class AttributionAdmin(admin.ModelAdmin):
     list_display = ('tutor','function','learning_unit','start_date', 'end_date')
+    list_filter = ('function',)
 
 admin.site.register(Attribution, AttributionAdmin)
