@@ -32,9 +32,16 @@ from . import uploadXlsUtils
 urlpatterns = [
     url(r'^$', views.home, name='home'),
 
-    # login / logout urls
+    # S'il vous plaît, organiser les urls par ordre alphabétique.
+    
+    url(r'^learning_units/$', views.programme, name='learning_units'),
+
     url(r'^login/$', login, name='login'),
     url(r'^logout/$', logout_then_login, name='logout'),
+
+    url(r'^offers/$', views.programme, name='offers'),
+
+    url(r'^programme/$', views.programme, name='programme'),
 
     url(r'^studies/$', views.studies, name='studies'),
     url(r'^studies/assessements/$', views.assessements, name='assessements'),
@@ -48,6 +55,4 @@ urlpatterns = [
     url(r'^studies/assessements/scores_encoding/xlsdownload/([0-9]+)/([0-9]+)/([0-9]+)/$',exportUtils.export_xls, name='scores_encoding_download'),
     url(r'^studies/assessements/scores_encoding/upload/([0-9]+)/([0-9]+)/([0-9]+)/$',uploadXlsUtils.upload_scores_file,name='upload_encoding'),
     url(r'^studies/assessements/scores_encoding/upload_score_error$',views.upload_score_error,name='upload_score_error'),
-
-    url(r'^programme/$', views.programme, name='programme'),
 ]

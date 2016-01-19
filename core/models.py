@@ -226,6 +226,22 @@ class LearningUnit(models.Model):
         return u"%s - %s" % (self.acronym, self.title)
 
 
+class Attribution(models.Model):
+    FUNCTION_CHOICES = (
+        ('COORDINATOR','Coordinator'),
+        ('PROFESSOR','Professor'))
+
+    external_id   = models.CharField(max_length = 40,blank = True, null = True)
+    start_date    = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
+    end_date      = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
+    function      = models.CharField(max_length = 15, blank = True, null = True,choices = FUNCTION_CHOICES, default = 'UNKNOWN')
+    learning_unit = models.ForeignKey(LearningUnit, null = False)
+    tutor         = models.ForeignKey(Tutor, null = False)
+
+    def __str__(self):
+        return u"%s - %s" % (self.tutor.person, self.function)
+
+
 class LearningUnitYear(models.Model):
     external_id    = models.CharField(max_length = 40,blank = True, null = True)
     acronym        = models.CharField(max_length = 15,blank = False, null = False)
@@ -238,13 +254,11 @@ class LearningUnitYear(models.Model):
     def __str__(self):
         return u"%s - %s" % (self.academic_year,self.learning_unit)
 
-
     def find_offer_enrollments(learning_unit_year_id):
         learning_unit_enrollment_list= LearningUnitEnrollment.objects.filter(learning_unit_year=learning_unit_year_id)
         offer_list = []
         for lue in learning_unit_enrollment_list:
             offer_list.append(lue.offer_enrollment)
-
         return offer_list
 
 
@@ -264,22 +278,6 @@ class LearningUnitEnrollment(models.Model):
 
     def __str__(self):
         return u"%s - %s" % (self.learning_unit_year, self.offer_enrollment.student)
-
-
-class Attribution(models.Model):
-    FUNCTION_CHOICES = (
-        ('COORDINATOR','Coordinator'),
-        ('PROFESSOR','Professor'))
-
-    external_id   = models.CharField(max_length = 40,blank = True, null = True)
-    start_date    = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
-    end_date      = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
-    function      = models.CharField(max_length = 15, blank = True, null = True,choices = FUNCTION_CHOICES, default = 'UNKNOWN')
-    learning_unit = models.ForeignKey(LearningUnit, null = False)
-    tutor         = models.ForeignKey(Tutor, null = False)
-
-    def __str__(self):
-        return u"%s - %s" % (self.tutor.person, self.function)
 
 
 class SessionExam(models.Model):

@@ -26,17 +26,31 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li class="active">Programme</li>
+  <li class="active">Programme d'études</li>
 {% endblock %}
 {% block content %}
-<br>
+<div class="page-header">
+  <h2>Programme d'études</h2>
+</div>
 <div class="panel panel-default">
   <div class="panel-body">
     <div class="row">
+      <div class="col-md-1"><i class="fa fa-map" style="font-size: 400%; color: #6699FF;"></i></div>
+      <div class="col-md-5">
+        <h4 class="media-heading"><a href="{% url 'offers' %}">Offres</a></h4>
+        <p>Gestion des offres qui composent le programme.</p>
+      </div>
       <div class="col-md-1"><i class="fa fa-book" style="font-size: 400%; color: #6699FF;"></i></div>
-      <div class="col-md-11">
-        <h4 class="media-heading"><a href="{% url 'programme' %}">Unités d'enseignement</a></h4>
+      <div class="col-md-5">
+        <h4 class="media-heading"><a href="{% url 'learning_units' %}">Unités d'enseignement</a></h4>
         <p>Gestion des cours, des formations et d'autres activités qui composent le programme.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-1"><i class="fa fa-calendar" style="font-size: 400%; color: #6699FF;"></i></div>
+      <div class="col-md-11">
+        <h4 class="media-heading"><a href="{% url 'offers' %}">L'année académique</a></h4>
+        <p>Gestion du programme annualisé.</p>
       </div>
     </div>
   </div>
