@@ -116,6 +116,7 @@ class ProgrammeManager(models.Model):
 
 
 class AcademicYear(models.Model):
+    external_id = models.CharField(max_length = 40,blank = True, null = True)
     year = models.IntegerField(blank=False, null=False)
 
     def __str__(self):
@@ -143,6 +144,7 @@ EVENT_TYPE = (
     ('EXAM_ENROLLMENTS_SESS_3', 'Exam enrollments - exam session 3'))
 
 class AcademicCalendar(models.Model):
+    external_id = models.CharField(max_length = 40,blank = True, null = True)
     academic_year = models.ForeignKey(AcademicYear, null = False)
     event_type    = models.CharField(max_length = 50, blank = False, null = False, choices = EVENT_TYPE)
     title         = models.CharField(max_length = 50, blank = True, null = True)
