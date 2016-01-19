@@ -125,30 +125,28 @@ class AcademicYear(models.Model):
     def find_academic_year(id):
         return AcademicYear.objects.get(pk=id)
 
+EVENT_TYPE = (
+    ('academic_year', 'Academic Year'),
+    ('session_exam_1', 'Session Exams 1'),
+    ('session_exam_2', 'Session Exams 2'),
+    ('session_exam_3', 'Session Exams 3'),
+    ('DISSERTATIONS_SUBMISSION_SESS_1', 'Submission of academic dissertations - exam session 1'),
+    ('DISSERTATIONS_SUBMISSION_SESS_2', 'Submission of academic dissertations - exam session 2'),
+    ('DISSERTATIONS_SUBMISSION_SESS_3', 'Submission of academic dissertations - exam session 3'),
+    ('EXAM_SCORES_SUBMISSION_SESS_1', 'Submission of exam scores - exam session 1'),
+    ('EXAM_SCORES_SUBMISSION_SESS_2', 'Submission of exam scores - exam session 2'),
+    ('EXAM_SCORES_SUBMISSION_SESS_3', 'Submission of exam scores - exam session 3'),
+    ('DELIBERATIONS_SESS_1', 'Deliberations - exam session 1'),
+    ('DELIBERATIONS_SESS_2', 'Deliberations - exam session 2'),
+    ('DELIBERATIONS_SESS_3', 'Deliberations - exam session 3'),
+    ('EXAM_SCORES_DIFFUSION_SESS_1', 'Diffusion of exam scores - exam session 1'),
+    ('EXAM_SCORES_DIFFUSION_SESS_2', 'Diffusion of exam scores - exam session 2'),
+    ('EXAM_SCORES_DIFFUSION_SESS_3', 'Diffusion of exam scores - exam session 3'),
+    ('EXAM_ENROLLMENTS_SESS_1', 'Exam enrollments - exam session 1'),
+    ('EXAM_ENROLLMENTS_SESS_2', 'Exam enrollments - exam session 2'),
+    ('EXAM_ENROLLMENTS_SESS_3', 'Exam enrollments - exam session 3'))
 
 class AcademicCalendar(models.Model):
-    EVENT_TYPE = (
-        ('academic_year', 'Academic Year'),
-        ('session_exam_1', 'Session Exams 1'),
-        ('session_exam_2', 'Session Exams 2'),
-        ('session_exam_3', 'Session Exams 3'),
-        ('DISSERTATIONS_SUBMISSION_SESS_1', 'Submission of academic dissertations - exam session 1'),
-        ('DISSERTATIONS_SUBMISSION_SESS_2', 'Submission of academic dissertations - exam session 2'),
-        ('DISSERTATIONS_SUBMISSION_SESS_3', 'Submission of academic dissertations - exam session 3'),
-        ('EXAM_SCORES_SUBMISSION_SESS_1', 'Submission of exam scores - exam session 1'),
-        ('EXAM_SCORES_SUBMISSION_SESS_2', 'Submission of exam scores - exam session 2'),
-        ('EXAM_SCORES_SUBMISSION_SESS_3', 'Submission of exam scores - exam session 3'),
-        ('DELIBERATIONS_SESS_1', 'Deliberations - exam session 1'),
-        ('DELIBERATIONS_SESS_2', 'Deliberations - exam session 2'),
-        ('DELIBERATIONS_SESS_3', 'Deliberations - exam session 3'),
-        ('EXAM_SCORES_DIFFUSION_SESS_1', 'Diffusion of exam scores - exam session 1'),
-        ('EXAM_SCORES_DIFFUSION_SESS_2', 'Diffusion of exam scores - exam session 2'),
-        ('EXAM_SCORES_DIFFUSION_SESS_3', 'Diffusion of exam scores - exam session 3'),
-        ('EXAM_ENROLLMENTS_SESS_1', 'Exam enrollments - exam session 1'),
-        ('EXAM_ENROLLMENTS_SESS_2', 'Exam enrollments - exam session 2'),
-        ('EXAM_ENROLLMENTS_SESS_3', 'Exam enrollments - exam session 3'))
-
-    external_id = models.CharField(max_length = 40,blank = True, null = True)
     academic_year = models.ForeignKey(AcademicYear, null = False)
     event_type    = models.CharField(max_length = 50, blank = False, null = False, choices = EVENT_TYPE)
     title         = models.CharField(max_length = 50, blank = True, null = True)
@@ -208,27 +206,6 @@ class OfferEnrollment(models.Model):
 
 
 class OfferYearCalendar(models.Model):
-    EVENT_TYPE = (
-        ('academic_year', 'Academic Year'),
-        ('session_exam_1', 'Session Exams 1'),
-        ('session_exam_2', 'Session Exams 2'),
-        ('session_exam_3', 'Session Exams 3'),
-        ('DISSERTATIONS_SUBMISSION_SESS_1', 'Submission of academic dissertations - exam session 1'),
-        ('DISSERTATIONS_SUBMISSION_SESS_2', 'Submission of academic dissertations - exam session 2'),
-        ('DISSERTATIONS_SUBMISSION_SESS_3', 'Submission of academic dissertations - exam session 3'),
-        ('EXAM_SCORES_SUBMISSION_SESS_1', 'Submission of exam scores - exam session 1'),
-        ('EXAM_SCORES_SUBMISSION_SESS_2', 'Submission of exam scores - exam session 2'),
-        ('EXAM_SCORES_SUBMISSION_SESS_3', 'Submission of exam scores - exam session 3'),
-        ('DELIBERATIONS_SESS_1', 'Deliberations - exam session 1'),
-        ('DELIBERATIONS_SESS_2', 'Deliberations - exam session 2'),
-        ('DELIBERATIONS_SESS_3', 'Deliberations - exam session 3'),
-        ('EXAM_SCORES_DIFFUSION_SESS_1', 'Diffusion of exam scores - exam session 1'),
-        ('EXAM_SCORES_DIFFUSION_SESS_2', 'Diffusion of exam scores - exam session 2'),
-        ('EXAM_SCORES_DIFFUSION_SESS_3', 'Diffusion of exam scores - exam session 3'),
-        ('EXAM_ENROLLMENTS_SESS_1', 'Exam enrollments - exam session 1'),
-        ('EXAM_ENROLLMENTS_SESS_2', 'Exam enrollments - exam session 2'),
-        ('EXAM_ENROLLMENTS_SESS_3', 'Exam enrollments - exam session 3'))
-
     external_id = models.CharField(max_length = 40,blank = True, null = True)
     academic_calendar = models.ForeignKey(AcademicCalendar, null = False)
     offer_year        = models.ForeignKey(OfferYear, null = False)
