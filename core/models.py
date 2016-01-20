@@ -69,7 +69,7 @@ class Person(models.Model):
 
 
 class Tutor(models.Model):
-    external_id = models.CharField(max_length = 40)
+    external_id = models.CharField(max_length = 40, blank = True, null = True)
     person      = models.ForeignKey(Person)
 
     def find_by_user(user):
