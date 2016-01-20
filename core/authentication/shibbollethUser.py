@@ -29,6 +29,7 @@ from django.contrib.auth.middleware import RemoteUserMiddleware
 from django.contrib import auth
 from django.contrib.auth import backends
 from django.core.exceptions import ImproperlyConfigured
+from django.utils.encoding import smart_text
 from core.models import Person
 
 
@@ -136,9 +137,9 @@ class ShibbollethUserMiddleware(RemoteUserMiddleware):
             auth.login(request, user)
 
     def get_shibbolleth_infos(self, request):
-        user_first_name = request.META['givenName']
-        user_last_name = request.META['sn']
-        user_email = request.META['mail']
+        user_first_name = smart_text(request.META['givenName'],strings_only=True)
+        user_last_name = smart_text(request.META['sn'],strings_only=True)
+        user_email = smart_text(request.META['mail'],strings_only=True)
         employee_number_len = len(request.META['employeeNumber'])
         prefix_fgs = (8 - employee_number_len) * '0'
         user_fgs = ''.join([prefix_fgs, request.META['employeeNumber']])
