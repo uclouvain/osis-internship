@@ -203,3 +203,34 @@ def programme(request):
 @login_required
 def export_xls(request, session_id, learning_unit_year_id, academic_year_id):
     return exportUtils.export_xls(request, session_id, learning_unit_year_id, academic_year_id, request.user.groups.filter(name='FAC').exists())
+
+@login_required
+def offers(request):
+    
+    faculty = request.POST.get('faculty')
+    validity = request.POST.get('validity')
+    code = request.POST.get('code')
+    print(faculty)
+    print(validity)
+    print(code)
+
+    faculties = Structure.objects.all().order_by('acronym')
+    validities = AcademicYear.objects.all().order_by('year')
+
+    if validity is None:
+        academic_year = AcademicCalendar.current_academic_year()
+        if not(academic_year is None):
+            validity = academic_year.id
+
+    query = OfferYear.objects.filter(academic_year=int(validity))
+
+    if not(faculty is None) and faculty != "*" :
+        query = query.filter(structure=int(faculty))
+
+    if not(code is None) and len(code) > 0  :
+        query = query.filter(acronym=code)
+
+    return render(request, "offers.html", {'faculties':     faculties,
+                                           'validity':      validity,
+                                           'validities':    validities,
+                                           'offers':        query })

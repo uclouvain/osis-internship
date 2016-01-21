@@ -40,7 +40,8 @@ urlpatterns = [
     url(r'^login/$', login, name='login'),
     url(r'^logout/$', logout_then_login, name='logout'),
 
-    url(r'^offers/$', views.programme, name='offers'),
+    url(r'^offers/$', views.offers, name='offers'),
+
 
     url(r'^programme/$', views.programme, name='programme'),
 
