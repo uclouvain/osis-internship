@@ -139,9 +139,7 @@ class ShibbollethUserMiddleware(RemoteUserMiddleware):
 
     def get_shibbolleth_infos(self, request):
         user_first_name = self.clean_string(request.META['givenName'])
-        print('FiNa : '+user_first_name)
         user_last_name = self.clean_string(request.META['sn'])
-        print('LaNa : '+user_last_name)
         user_email = request.META['mail']
         employee_number_len = len(request.META['employeeNumber'])
         prefix_fgs = (8 - employee_number_len) * '0'
@@ -151,12 +149,5 @@ class ShibbollethUserMiddleware(RemoteUserMiddleware):
         return user_infos
 
     def clean_string(self,string):
-        clean_string = string.encode('raw_unicode_escape').decode("utf-8")
-        reg = re.compile('\\[A-Za-z0-9]{3}\\[A-Za-z0-9]{3}',re.IGNORECASE)
-        if reg.match(clean_string):
-            found = reg.group()
-            print(u"Chaîne trouvée : " + found)
-            if found == "\\xc3\\xab":
-                found = u"ë"
-                print(found)
-        return clean_string
+        return string.encode('raw_unicode_escape').decode("utf-8")
+
