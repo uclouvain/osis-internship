@@ -94,10 +94,10 @@ class Student(models.Model):
 
 
 class Structure(models.Model):
-    external_id = models.CharField(max_length = 40,blank = True, null = True)
-    acronym     = models.CharField(max_length=10)
-    title       = models.CharField(max_length=255)
-    part_of     = models.ForeignKey('self', null=True, blank=True)
+    external_id = models.CharField(max_length = 40, blank = True, null = True)
+    acronym     = models.CharField(max_length = 10)
+    title       = models.CharField(max_length = 255)
+    part_of     = models.ForeignKey('self', null = True, blank = True)
 
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)
