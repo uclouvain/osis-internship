@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
+{% load i18n %}
 
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
@@ -26,46 +27,23 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}">Les études</a></li>
-  <li class="active">Évaluations</li>
+  <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+  <li class="active">{% trans 'Evaluations' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>Évaluations</h2>
+    <h2>{% trans 'Evaluations' %}</h2>
   </div>
-  <ul class="media-list">
-    <li class="media">
-      <div class="media-left">
-        <a href="#">
-          <img class="media-object" src="{% static 'images/icon_assessements.png' %}">
-        </a>
+  
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-1"><i class="fa fa-hashtag" style="font-size: 400%; color: #6699FF;"></i></div>
+        <div class="col-md-11">
+          <h4 class="media-heading"><a href="{% url 'scores_encoding' %}">{% trans 'Scores encoding' %}</a></h4>
+          <p>{% trans 'This process helps tutor while encoding notes for the exams sessions.' %}</p>
+        </div>
       </div>
-      <div class="media-body">
-        <h4 class="media-heading"><a href="#">Inscription aux examens</a></h4>
-        Ce processus gère les inscriptions aux examens.
-      </div>
-    </li>
-    <li class="media">
-      <div class="media-left">
-        <a href="{% url 'scores_encoding' %}">
-          <img class="media-object" src="{% static 'images/icon_encoding_scores.png' %}">
-        </a>
-      </div>
-      <div class="media-body">
-        <h4 class="media-heading"><a href="{% url 'scores_encoding' %}">Encodage des notes</a></h4>
-        Ce processus aide les enseignants à coder leurs notes pour chaque session d'examens.
-      </div>
-    </li>
-    <li class="media">
-      <div class="media-left">
-        <a href="#">
-          <img class="media-object" src="{% static 'images/icon_deliberations.png' %}">
-        </a>
-      </div>
-      <div class="media-body">
-        <h4 class="media-heading"><a href="#">Délibérations</a></h4>
-        Ce processus aide les enseignants à coder leurs notes pour chaque session d'examens.
-      </div>
-    </li>
-  </ul>
+    </div>
+  </div>
 {% endblock %}

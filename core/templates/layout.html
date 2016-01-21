@@ -1,4 +1,5 @@
 {% load staticfiles %}
+{% load i18n %}
 
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
@@ -33,8 +34,8 @@
         <meta name="apple-mobile-web-app-capable" content="yes" />
 		    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 		    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-        <link href='https://fonts.googleapis.com/css?family=Armata' rel='stylesheet' type='text/css'>
-        <link rel="icon" href="{% static 'images/favicon.ico' %}" />
+        <link rel="icon" href="{% static 'img/favicon.ico' %}" />
+        <link rel="stylesheet" href="{% static "css/armata.css" %}" type='text/css'>
         <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
         <link rel="stylesheet" href="{% static "css/bootstrap-theme.min.css" %}">
         <link rel="stylesheet" href="{% static "css/custom.css" %}">
@@ -56,7 +57,7 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{% url 'home' %}"><img src="{% static 'images/logo_osis.png' %}" style="margin-top: -10px;"></a>
+            <a class="navbar-brand" href="{% url 'home' %}"><img src="{% static 'img/logo_osis.png' %}" style="margin-top: -10px;"></a>
           </div>
 
           <!-- Collect the nav links, forms, and other content for toggling -->
@@ -64,25 +65,35 @@
             {% if request.user.is_authenticated %}
             <ul class="nav navbar-nav">
               <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Les études <span class="caret"></span></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Programme d'études <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                  <li><a href="{% url 'assessements' %}">Évaluations</a></li>
+                  <li><a href="{% url 'offers' %}">Offres</a></li>
+                  <li><a href="{% url 'learning_units' %}">Unités d'enseignement</a></li>
+                  <li><a href="{% url 'learning_units' %}">L'année académique</a></li>
+                </ul>
+              </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{% trans 'Studies' %} <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="{% url 'assessements' %}">{% trans 'Evaluations' %}</a></li>
                 </ul>
               </li>
             </ul>
             {% endif %}
             <ul class="nav navbar-nav navbar-right">
               {% if request.user.is_authenticated %}
-                <li><a href="/admin/core" target="_blank"><span class="glyphicon glyphicon-education" aria-hidden="true"></span> Domaine</a></li>
+                {% if request.user.is_staff %}
+                  <li><a href="/admin" target="_blank">Administration</a></li>
+                {% endif %}
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ request.user.first_name }} <span class="caret"></span></a>
                   <ul class="dropdown-menu">
-                    <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-off" aria-hidden="true"></span> Logout</a></li>
-                    <li><a href="/profile">Profile</a></li>
+                    <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-off" aria-hidden="true"></span> {% trans 'Logout' %}</a></li>
+                    <li><a href="/profile">{% trans 'Profile' %}</a></li>
                   </ul>
                 </li>
               {% else %}
-                <li><a href="{% url 'login' %}"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span> Login</a></li>
+                <li><a href="{% url 'login' %}"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span> {% trans 'Login' %}</a></li>
               {% endif %}
             </ul>
           </div>
@@ -91,12 +102,14 @@
 
       <div class="container">
         {% if request.user.is_authenticated %}
+          {% block breadcrumbarea %}
           <ol class="breadcrumb">
             <li><a href="{% url 'home' %}"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
             {% block breadcrumb %}
             {% endblock %}
             <a href="http://uclouvain.github.io/osis-louvain-documentation/doc/business/user-manual_fr.html#{{ section }}" target="help"><span class="glyphicon glyphicon-question-sign pull-right" style="font-size: 14pt; color: green" aria-hidden="true"></span></a>
           </ol>
+          {% endblock %}
         {% endif %}
         {% block content %}
         {% endblock %}
@@ -104,7 +117,10 @@
 
       <nav class="navbar navbar-default navbar-fixed-bottom">
         <div class="container">
-
+          <p class="navbar-text pull-left"><a href="http://uclouvain.github.io/osis-louvain-documentation/doc/business/user-manual_fr.html" target="_blank">Documentation</a> |
+                                           <a href="http://uclouvain.github.io/osis-louvain/" target="_blank">Website</a> |
+                                           <a href="https://github.com/uclouvain/osis-louvain" target="_blank">Source Code</a></p>
+          <p class="navbar-text pull-right"><span class="glyphicon glyphicon-copyright-mark"></span> 2016 <a href="http://www.uclouvain.be" target="_blank">Université catholique de Louvain</a></p>
         </div>
       </nav>
 

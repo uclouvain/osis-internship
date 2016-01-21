@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
+{% load i18n %}
 
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
@@ -25,16 +26,29 @@
  * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
+{% block breadcrumbarea %}
+{% endblock %}
 {% block content %}
-<ul class="media-list">
-  <li class="media">
-    <div class="media-left">
-      <a href="{% url 'studies' %}">
-        <img class="media-object" src="{% static 'images/icon_studies.png' %}">
-      </a>
+
+<div class="jumbotron">
+  <h1>Encodage des notes!</h1>
+  <p>L'encodage des notes pour la session de janvier est en cours maintenant!</p>
+  <p><a class="btn btn-primary btn-lg" href="{% url 'scores_encoding' %}" role="button">Encoder mes notes</a></p>
+</div>
+<br>
+<div class="panel panel-default">
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-md-1"><i class="fa fa-university" style="font-size: 400%; color: #6699FF;"></i></div>
+      <div class="col-md-5">
+        <h4 class="media-heading"><a href="{% url 'programme' %}">Programme d'etudes</a></h4>
+        <p>Élaboration et gestion du programme d'études.</p></div>
+      <div class="col-md-1"><i class="fa fa-users" style="font-size: 400%; color: #6699FF;"></i></div>
+      <div class="col-md-5">
+        <h4 class="media-heading"><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></h4>
+        <p>Le parcours des étudiants de l'inscription au diplôme.</p>
+      </div>
     </div>
-    <div class="media-body">
-      <h4 class="media-heading"><a href="{% url 'studies' %}">Les études</a></h4>
-    </div>
-</ul>
+  </div>
+</div>
 {% endblock %}

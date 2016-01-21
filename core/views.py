@@ -30,33 +30,26 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from core.models import Tutor, AcademicCalendar, SessionExam, ExamEnrollment
 from . import pdfUtils
+from . import exportUtils
 from core.forms import ScoreFileForm
-from core.models import Tutor, AcademicCalendar, SessionExam, ExamEnrollment, \
-                        ProgrammeManager, Student, AcademicYear, OfferYear, \
-                        LearningUnitYear, LearningUnitEnrollment, OfferEnrollment
-
+from core.models import *
 
 def page_not_found(request):
     return render(request,'page_not_found.html')
 
-
 def access_denied(request):
     return render(request,'acces_denied.html')
 
-
 def home(request):
     return render(request, "home.html")
-
 
 @login_required
 def studies(request):
     return render(request, "studies.html", {'section': 'studies'})
 
-
 @login_required
 def assessements(request):
     return render(request, "assessements.html", {'section': 'assessements'})
-
 
 @login_required
 def scores_encoding(request):
@@ -77,18 +70,20 @@ def scores_encoding(request):
 
     # Calculate the progress of all courses of the tutor.
     all_enrollments = []
-    for session in sessions:
-        enrollments = list(ExamEnrollment.find_exam_enrollments(session.id))
-        if enrollments:
-            all_enrollments = all_enrollments + enrollments
-    progress = ExamEnrollment.calculate_progress(all_enrollments)
     css_offer = dict()
+    if sessions:
+        for session in sessions:
+            enrollments = list(ExamEnrollment.find_exam_enrollments(session))
+            if enrollments:
+                all_enrollments = all_enrollments + enrollments
 
-    for r in sessions :
-        if r.offer.id  in css_offer:
-            pass
-        else:
-            css_offer[str(r.offer.id)] = "color" + str(len(css_offer)+1)
+        for r in sessions :
+            if r.offer.id in css_offer:
+                pass
+            else:
+                css_offer[str(r.offer.id)] = "color" + str(len(css_offer) + 1)
+
+    progress = ExamEnrollment.calculate_progress(all_enrollments)
 
     return render(request, "scores_encoding.html",
                   {'section':       'scores_encoding',
@@ -99,7 +94,6 @@ def scores_encoding(request):
                    'sessions':      sessions,
                    'progress':      "{0:.0f}".format(progress),
                    'css_offer':     css_offer})
-
 
 @login_required
 def online_encoding(request, session_id):
@@ -120,25 +114,15 @@ def online_encoding(request, session_id):
                    'faculty':       faculty,
                    'academic_year': academic_year,
                    'session':       session,
-                   'progress':      progress,
+                   'progress':      "{0:.0f}".format(progress),
                    'enrollments':   enrollments})
-
-
-@login_required
-def notes_printing(request,session_exam_id,learning_unit_year_id):
-    tutor = Tutor.find_by_user(request.user)
-    academic_year = AcademicCalendar.current_academic_year()
-    session_exam = SessionExam.find_session(session_exam_id)
-    sessions = SessionExam.find_sessions_by_tutor(tutor, academic_year, session_exam)
-    return pdfUtils.print_notes(request,tutor,academic_year,session_exam,sessions,learning_unit_year_id,request.user.groups.filter(name='FAC').exists())
-
 
 @login_required
 def online_encoding_form(request, session_id):
     tutor = Tutor.find_by_user(request.user)
     academic_year = AcademicCalendar.current_academic_year()
     session = SessionExam.find_session(session_id)
-    enrollments = ExamEnrollment.find_exam_enrollments(session.id)
+    enrollments = ExamEnrollment.find_exam_enrollments(session)
     progress = ExamEnrollment.calculate_progress(enrollments)
 
     return render(request, "online_encoding_form.html",
@@ -151,7 +135,71 @@ def online_encoding_form(request, session_id):
                    'justifications':ExamEnrollment.JUSTIFICATION_TYPES,
                    'enrollments':   enrollments})
 
+@login_required
+def notes_printing(request,session_exam_id,learning_unit_year_id):
+    tutor = Tutor.find_by_user(request.user)
+    academic_year = AcademicCalendar.current_academic_year()
+    session_exam = SessionExam.find_session(session_exam_id)
+    sessions = SessionExam.find_sessions_by_tutor(tutor, academic_year, session_exam)
+    return pdfUtils.print_notes(request,tutor,academic_year,session_exam,sessions,learning_unit_year_id,request.user.groups.filter(name='FAC').exists())
 
 @login_required
-def all_notes_printing(request,session_id):
+def online_double_encoding_form(request, session_id):
+    tutor = Tutor.find_by_user(request.user)
+    academic_year = AcademicCalendar.current_academic_year()
+    session = SessionExam.find_session(session_id)
+    enrollments = ExamEnrollment.find_exam_enrollments(session.id)
+    progress = ExamEnrollment.calculate_progress(enrollments)
+
+    return render(request, "online_double_encoding_form.html",
+                  {'section':       'scores_encoding',
+                   'tutor':         tutor,
+                   'academic_year': academic_year,
+                   'session':       session,
+                   'progress':      progress,
+                   'enrollments':   enrollments,
+                   'justifications':ExamEnrollment.JUSTIFICATION_TYPES,
+                   'enrollments':   enrollments})
+
+@login_required
+def online_double_encoding_validation(request, session_id):
+    tutor = Tutor.find_by_user(request.user)
+    academic_year = AcademicCalendar.current_academic_year()
+    session = SessionExam.find_session(session_id)
+    enrollments = ExamEnrollment.find_exam_enrollments(session)
+    progress = ExamEnrollment.calculate_progress(enrollments)
+
+    return render(request, "online_double_encoding_validation.html",
+                  {'section':       'scores_encoding',
+                   'tutor':         tutor,
+                   'academic_year': academic_year,
+                   'session':       session,
+                   'progress':      progress,
+                   'enrollments':   enrollments,
+                   'justifications':ExamEnrollment.JUSTIFICATION_TYPES,
+                   'enrollments':   enrollments})
+
+@login_required
+def upload_score_error(request):
+    print ('upload_score_error')
+    return render(request, "upload_score_error.html", {})
+
+@login_required
+def notes_printing(request, session_id, learning_unit_year_id):
+    tutor = Tutor.find_by_user(request.user)
+    academic_year = AcademicCalendar.current_academic_year()
+    session_exam = SessionExam.current_session_exam()
+    sessions = SessionExam.find_sessions_by_tutor(tutor, academic_year, session_exam)
+    return pdfUtils.print_notes(request,tutor,academic_year,session_exam,sessions,learning_unit_year_id)
+
+@login_required
+def notes_printing_all(request, session_id):
     return notes_printing(request,session_id,-1)
+
+@login_required
+def programme(request):
+    return render(request, "programme.html", {'section': 'programme'})
+
+@login_required
+def export_xls(request, session_id, learning_unit_year_id, academic_year_id):
+    return exportUtils.export_xls(request, session_id, learning_unit_year_id, academic_year_id, request.user.groups.filter(name='FAC').exists())
