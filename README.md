@@ -13,3 +13,5 @@ The whole documentation of the project is published at: http://uclouvain.github.
 [![Stories in Ready](https://badge.waffle.io/uclouvain/osis-louvain.png?label=ready&title=Ready)](http://waffle.io/uclouvain/osis-louvain)
 
 [![Throughput Graph](https://graphs.waffle.io/uclouvain/osis-louvain/throughput.svg)](https://waffle.io/uclouvain/osis-louvain/metrics)
+
+<script type='text/javascript' src='https://www.openhub.net/p/osis-louvain/widgets/project_basic_stats?format=js'></script>
