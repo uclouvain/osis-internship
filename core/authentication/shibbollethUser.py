@@ -153,7 +153,7 @@ class ShibbollethUserMiddleware(RemoteUserMiddleware):
     def clean_string(self,string):
         clean_string = string.encode('raw_unicode_escape').decode("utf-8")
         reg = re.compile('\\[A-Za-z0-9]{3}\\[A-Za-z0-9]{3}',re.IGNORECASE)
-        if reg.match():
+        if reg.match(clean_string):
             found = reg.group()
             print(u"Chaîne trouvée : " + found)
             if found == "\\xc3\\xab":
