@@ -25,7 +25,7 @@
 ##############################################################################
 from io import StringIO
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from core.models import Tutor, AcademicCalendar, SessionExam, ExamEnrollment
@@ -203,3 +203,9 @@ def programme(request):
 @login_required
 def export_xls(request, session_id, learning_unit_year_id, academic_year_id):
     return exportUtils.export_xls(request, session_id, learning_unit_year_id, academic_year_id, request.user.groups.filter(name='FAC').exists())
+
+
+def py_info(request):
+    from .pyinfo import pyinfo
+    output = pyinfo()
+    return HttpResponse(output, content_type='text/html', )
