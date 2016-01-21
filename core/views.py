@@ -70,18 +70,12 @@ def scores_encoding(request):
 
     # Calculate the progress of all courses of the tutor.
     all_enrollments = []
-    css_offer = dict()
+
     if sessions:
         for session in sessions:
             enrollments = list(ExamEnrollment.find_exam_enrollments(session))
             if enrollments:
                 all_enrollments = all_enrollments + enrollments
-
-        for r in sessions :
-            if r.offer.id in css_offer:
-                pass
-            else:
-                css_offer[str(r.offer.id)] = "color" + str(len(css_offer) + 1)
 
     progress = ExamEnrollment.calculate_progress(all_enrollments)
 
@@ -92,8 +86,7 @@ def scores_encoding(request):
                    'academic_year': academic_year,
                    'session':       session,
                    'sessions':      sessions,
-                   'progress':      "{0:.0f}".format(progress),
-                   'css_offer':     css_offer})
+                   'progress':      "{0:.0f}".format(progress)})
 
 @login_required
 def online_encoding(request, session_id):

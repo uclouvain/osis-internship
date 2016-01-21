@@ -162,7 +162,7 @@ class AcademicCalendar(models.Model):
             return None
 
     def find_academic_calendar_by_event_type(academic_year_id, session_number):
-        event_type_criteria = "session_exam_"+str(session_number)
+        event_type_criteria = "EXAM_SCORES_SUBMISSION_SESS"+str(session_number)
         return AcademicCalendar.objects.get(academic_year=academic_year_id, event_type=event_type_criteria)
 
     def __str__(self):
