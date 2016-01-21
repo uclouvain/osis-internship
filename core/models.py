@@ -97,7 +97,7 @@ class Structure(models.Model):
     external_id = models.CharField(max_length = 40,blank = True, null = True)
     acronym     = models.CharField(max_length=10)
     title       = models.CharField(max_length=255)
-    part_of     = models.ForeignKey('self', null=True)
+    part_of     = models.ForeignKey('self', null=True, blank=True)
 
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)
@@ -333,7 +333,7 @@ class SessionExam(models.Model):
         if enrollments:
             progress = 0
             for e in enrollments:
-                if e.score is not None or e.justification is not None:
+                if e.score_final is not None or e.justification_final is not None:
                     progress = progress +1
             return str(progress) + "/"+ str(len(enrollments))
         else:
