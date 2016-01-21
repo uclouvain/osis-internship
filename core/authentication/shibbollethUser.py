@@ -31,6 +31,7 @@ from django.contrib.auth import backends
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.encoding import smart_text
 from core.models import Person
+import re
 
 
 class ShibbollethUserBackend(RemoteUserBackend):
@@ -137,12 +138,24 @@ class ShibbollethUserMiddleware(RemoteUserMiddleware):
             auth.login(request, user)
 
     def get_shibbolleth_infos(self, request):
-        user_first_name = smart_text(request.META['givenName'],strings_only=True)
-        user_last_name = smart_text(request.META['sn'],strings_only=True)
-        user_email = smart_text(request.META['mail'],strings_only=True)
+        user_first_name = self.clean_string(request.META['givenName'])
+        user_last_name = self.clean_string(request.META['sn'])
+        user_email = request.META['mail']
         employee_number_len = len(request.META['employeeNumber'])
         prefix_fgs = (8 - employee_number_len) * '0'
         user_fgs = ''.join([prefix_fgs, request.META['employeeNumber']])
         user_infos = {'USER_FIRST_NAME': user_first_name, 'USER_LAST_NAME': user_last_name, 'USER_EMAIL': user_email,
                       'USER_FGS': user_fgs}
         return user_infos
+
+    def clean_string(self,string):
+        clean_string = string.encode('raw_unicode_escape').decode("utf-8")
+        reg = re.compile('\\[A-Za-z0-9]{3}\\[A-Za-z0-9]{3}',re.IGNORECASE)
+        if reg.match():
+            found = reg.group()
+            print(u"Chaîne trouvée : " + found)
+            if found == "\\xc3\\xab":
+                found = u"ë"
+                print(found)
+
+        return clean_string
