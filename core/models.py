@@ -217,7 +217,9 @@ class OfferYearCalendar(models.Model):
     end_date          = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
 
     def current_session_exam():
-        return OfferYearCalendar.objects.filter(event_type__startswith='session_exam').filter(start_date__lte=timezone.now()).filter(end_date__gte=timezone.now()).first()
+        return OfferYearCalendar.objects.filter(event_type__startswith='EXAM_SCORES_SUBMISSION_SESS'
+                                       ).filter(start_date__lte=timezone.now()
+                                       ).filter(end_date__gte=timezone.now()).first()
 
     def __str__(self):
         return u"%s - %s" % (self.academic_calendar, self.offer_year)
