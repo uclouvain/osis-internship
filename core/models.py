@@ -162,7 +162,7 @@ class AcademicCalendar(models.Model):
             return None
 
     def find_academic_calendar_by_event_type(academic_year_id, session_number):
-        event_type_criteria = "session_exam_"+str(session_number)
+        event_type_criteria = "EXAM_SCORES_SUBMISSION_SESS"+str(session_number)
         return AcademicCalendar.objects.get(academic_year=academic_year_id, event_type=event_type_criteria)
 
     def __str__(self):
@@ -217,7 +217,9 @@ class OfferYearCalendar(models.Model):
     end_date          = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
 
     def current_session_exam():
-        return OfferYearCalendar.objects.filter(event_type__startswith='session_exam').filter(start_date__lte=timezone.now()).filter(end_date__gte=timezone.now()).first()
+        return OfferYearCalendar.objects.filter(event_type__startswith='EXAM_SCORES_SUBMISSION_SESS'
+                                       ).filter(start_date__lte=timezone.now()
+                                       ).filter(end_date__gte=timezone.now()).first()
 
     def __str__(self):
         return u"%s - %s" % (self.academic_calendar, self.offer_year)
@@ -333,7 +335,7 @@ class SessionExam(models.Model):
         if enrollments:
             progress = 0
             for e in enrollments:
-                if e.score is not None or e.justification is not None:
+                if e.score_final is not None or e.justification_final is not None:
                     progress = progress +1
             return str(progress) + "/"+ str(len(enrollments))
         else:
