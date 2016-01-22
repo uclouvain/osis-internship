@@ -255,7 +255,7 @@ class LearningUnitYear(models.Model):
     external_id    = models.CharField(max_length = 40,blank = True, null = True)
     acronym        = models.CharField(max_length = 15)
     title          = models.CharField(max_length = 255)
-    credits        = models.DecimalField(max_digits = 4, decimal_places = 2, blank = True, null = True)
+    credits        = models.DecimalField(max_digits = 5, decimal_places = 2, blank = True, null = True)
     decimal_scores = models.BooleanField(default = False)
     academic_year  = models.ForeignKey(AcademicYear)
     learning_unit  = models.ForeignKey(LearningUnit)
