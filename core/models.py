@@ -333,7 +333,7 @@ class SessionExam(models.Model):
         if enrollments:
             progress = 0
             for e in enrollments:
-                if e.score is not None or e.justification is not None:
+                if e.score_final is not None or e.justification_final is not None:
                     progress = progress +1
             return str(progress) + "/"+ str(len(enrollments))
         else:

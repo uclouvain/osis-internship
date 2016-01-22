@@ -1,3 +1,4 @@
+
 ##############################################################################
 #
 #    OSIS stands for Open Student Information System. It's an application
@@ -23,12 +24,37 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django import forms
+from django import template
 
-class LoginForm(forms.Form):
-    username = forms.CharField()
-    password = forms.CharField(widget=forms.PasswordInput)
+register = template.Library()
 
+COLOR_1 = ""
+COLOR_2 = ""
+COLOR_CURRENT = ""
 
-class ScoreFileForm(forms.Form):
-    file = forms.FileField()
+@register.filter
+def previous(value, arg):
+    arg = arg-1
+
+    if arg > 0:
+        try:
+            previous_e = value[int(arg)-1]
+            current_e = value[int(arg)]
+            global COLOR_1, COLOR_2, COLOR_CURRENT
+            if previous_e.learning_unit_enrollment.offer_enrollment.offer_year.acronym != current_e.learning_unit_enrollment.offer_enrollment.offer_year.acronym:
+                if COLOR_CURRENT == COLOR_1:
+                    COLOR_CURRENT = COLOR_2
+                else:
+                    COLOR_CURRENT = COLOR_1
+                # pass
+            return COLOR_CURRENT
+            # return value[int(arg)-1]
+        except:
+            return COLOR_CURRENT
+    else:
+        global COLOR_1, COLOR_2, COLOR_CURRENT
+        COLOR_1 = "#FFFFFF"
+        COLOR_2 = "#e5f2ff"
+        COLOR_CURRENT=COLOR_1
+        COLOR_CURRENT = COLOR_1
+        return COLOR_CURRENT

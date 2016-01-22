@@ -31,7 +31,7 @@ from django.contrib.auth.decorators import login_required
 from core.models import Tutor, AcademicCalendar, SessionExam, ExamEnrollment
 from . import pdfUtils
 from . import exportUtils
-from core.forms import ScoreFileForm, OfferForm
+from core.forms import ScoreFileForm
 from core.models import *
 
 def page_not_found(request):
@@ -214,7 +214,8 @@ def offers(request):
                                            'faculty':       faculty,
                                            'code':          code,
                                            'validities':    validities,
-                                           'offers':        [] })
+                                           'offers':        [] ,
+                                           'init':          "1"})
 
 
 def offers_search(request):
@@ -239,39 +240,9 @@ def offers_search(request):
         query = query.filter(acronym__startswith=code)
 
     return render(request, "offers.html", {'faculties':     faculties,
-                                           'validity':      validity,
-                                           'faculty':       faculty,
+                                           'validity':      int(validity),
+                                           'faculty':       int(faculty),
                                            'code':          code,
                                            'validities':    validities,
-                                           'offers':        query })
-
-@login_required
-def offers_post(request):
-
-    faculty = request.POST.get('faculty')
-    validity = request.POST.get('validity')
-    code = request.POST.get('code')
-    print(faculty)
-    print(validity)
-    print(code)
-
-    faculties = Structure.objects.all().order_by('acronym')
-    validities = AcademicYear.objects.all().order_by('year')
-
-    if validity is None:
-        academic_year = AcademicCalendar.current_academic_year()
-        if not(academic_year is None):
-            validity = academic_year.id
-
-    query = OfferYear.objects.filter(academic_year=int(validity))
-
-    if not(faculty is None) and faculty != "*" :
-        query = query.filter(structure=int(faculty))
-
-    if not(code is None) and len(code) > 0  :
-        query = query.filter(acronym=code)
-
-    return render(request, "offers.html", {'faculties':     faculties,
-                                           'validity':      validity,
-                                           'validities':    validities,
-                                           'offers':        query })
+                                           'offers':        query ,
+                                           'init':          "0"})

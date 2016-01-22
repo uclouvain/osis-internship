@@ -37,15 +37,19 @@
 </div>
 <div class="panel panel-default">
   <div class="panel-body">
+    <div class="row">
       <form  method="get" action="{% url 'offers_search'%}">
-        <div class="row">
-          {{ form.as_p }}
+
           <div class="col-md-3">
             <div class="form-group">
               <label for="faculty">{% trans 'Faculty' %}</label>
-              <select class="form-control" id="faculty"  name="faculty" value="{{ faculty }}">
+              <select class="form-control" id="faculty"  name="faculty">
                 {% for f in faculties %}
-                <option value="{{ f.id }}">{{ f.acronym }}</option>
+                  {% if f.id == faculty %}
+                    <option selected value="{{ f.id }}">{{ f.acronym }}</option>
+                  {% else %}
+                    <option value="{{ f.id }}">{{ f.acronym }}</option>
+                  {% endif %}
                 {% endfor %}
               </select>
             </div>
@@ -59,10 +63,13 @@
           <div class="col-md-2">
             <div class="form-group">
               <label for="validity" >{% trans 'Validity'%}</label>
-              {{ validity }}
               <select class="form-control" id="validity"  name="validity" value="{{ validity }}">
                 {% for v in validities %}
+                  {% if v.id == validity %}
+                    <option selected value="{{ v.id }}">{{ v.year }}</option>
+                  {% else %}
                     <option value="{{ v.id }}">{{ v.year }}</option>
+                  {% endif %}
                 {% endfor %}
               </select>
             </div>
@@ -74,11 +81,11 @@
           </div>
 
     </form>
-
       </div>
+      <br/>
       <div class="row">
-    {% if offers|length == 0%}
 
+    {% if offers|length == 0 and init == "0" %}
       <span class="alert alert-info">No result!</span>
 
     {% endif %}
@@ -92,7 +99,6 @@
         <tr>
           <td>{{ o.acronym }}</td>
           <td>{{ o.title }}</td>
-
         </tr>
       {% endfor %}
     </table>
