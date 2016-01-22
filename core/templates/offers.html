@@ -37,16 +37,13 @@
 </div>
 <div class="panel panel-default">
   <div class="panel-body">
-
-      <form  method="post" action="{% url 'offers'%}">
-        {% csrf_token %}
-      
+      <form  method="get" action="{% url 'offers_search'%}">
         <div class="row">
+          {{ form.as_p }}
           <div class="col-md-3">
             <div class="form-group">
               <label for="faculty">{% trans 'Faculty' %}</label>
-              <select class="form-control" id="faculty"  name="faculty">
-
+              <select class="form-control" id="faculty"  name="faculty" value="{{ faculty }}">
                 {% for f in faculties %}
                 <option value="{{ f.id }}">{{ f.acronym }}</option>
                 {% endfor %}
@@ -56,31 +53,35 @@
           <div class="col-md-3">
             <div class="form-group">
               <label for="code">{% trans 'Code'%}</label>
-              <input class="form-control" id="code" placeholder="{% trans 'Code' %}" name="code">
+              <input class="form-control" id="code" placeholder="{% trans 'Code' %}" name="code" value="{{ code }}">
             </div>
           </div>
           <div class="col-md-2">
             <div class="form-group">
-              <label for="validity">{% trans 'Validity'%}</label>
-
-              <select class="form-control" id="validity"  name="validity">
+              <label for="validity" >{% trans 'Validity'%}</label>
+              {{ validity }}
+              <select class="form-control" id="validity"  name="validity" value="{{ validity }}">
                 {% for v in validities %}
-
                     <option value="{{ v.id }}">{{ v.year }}</option>
-
                 {% endfor %}
               </select>
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <input type="submit" value="OK">
+              <input type="submit" value="OK" id="btn"  name="btn" >
             </div>
           </div>
 
     </form>
-    <br/>
 
+      </div>
+      <div class="row">
+    {% if offers|length == 0%}
+
+      <span class="alert alert-info">No result!</span>
+
+    {% endif %}
     {% if offers|length > 0%}
     <table class="table table-striped table-hover">
       <thead>
@@ -96,10 +97,7 @@
       {% endfor %}
     </table>
     {% endif %}
-    {% if offers|length == 0%}
-    <span class="alert alert-info">No result!</span>
-    {% endif %}
+</div>
 
-  </div>
 </div>
 {% endblock %}

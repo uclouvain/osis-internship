@@ -32,3 +32,9 @@ class LoginForm(forms.Form):
 
 class ScoreFileForm(forms.Form):
     file = forms.FileField()
+
+
+class OfferForm(forms.Form):
+    faculty = forms.IntegerField()
+    code = forms.CharField()
+    validity = forms.IntegerField()
