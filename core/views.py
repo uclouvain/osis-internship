@@ -196,3 +196,53 @@ def programme(request):
 @login_required
 def export_xls(request, session_id, learning_unit_year_id, academic_year_id):
     return exportUtils.export_xls(request, session_id, learning_unit_year_id, academic_year_id, request.user.groups.filter(name='FAC').exists())
+
+
+def offers(request):
+    validity = None
+    faculty = None
+    code = ""
+
+    faculties = Structure.objects.all().order_by('acronym')
+    validities = AcademicYear.objects.all().order_by('year')
+
+    academic_year = AcademicCalendar.current_academic_year()
+    if not(academic_year is None):
+        validity = academic_year.id
+    return render(request, "offers.html", {'faculties':     faculties,
+                                           'validity':      validity,
+                                           'faculty':       faculty,
+                                           'code':          code,
+                                           'validities':    validities,
+                                           'offers':        [] ,
+                                           'init':          "1"})
+
+
+def offers_search(request):
+    faculty = request.GET['faculty']
+    validity = request.GET['validity']
+    code = request.GET['code']
+
+    faculties = Structure.objects.all().order_by('acronym')
+    validities = AcademicYear.objects.all().order_by('year')
+
+    if validity is None:
+        academic_year = AcademicCalendar.current_academic_year()
+        if not(academic_year is None):
+            validity = academic_year.id
+
+    query = OfferYear.objects.filter(academic_year=int(validity))
+
+    if not(faculty is None) and faculty != "*" :
+        query = query.filter(structure=int(faculty))
+
+    if not(code is None) and len(code) > 0  :
+        query = query.filter(acronym__startswith=code)
+
+    return render(request, "offers.html", {'faculties':     faculties,
+                                           'validity':      int(validity),
+                                           'faculty':       int(faculty),
+                                           'code':          code,
+                                           'validities':    validities,
+                                           'offers':        query ,
+                                           'init':          "0"})
