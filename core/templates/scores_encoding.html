@@ -1,7 +1,6 @@
 {% extends "layout.html" %}
 {% load i18n %}
 {% load staticfiles %}
-{% load dictionnary %}
 
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
@@ -86,7 +85,7 @@
                   </thead>
                   <tbody>
                   {% for session in sessions %}
-                    <tr  class="{{ css_offer|get_item:session.offer.id }}">
+                    <tr>
                       <td>{% if session.status == 'IDLE' %}
                             <span style="color: orange" class="glyphicon glyphicon-time" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="Idle"></span>
                           {% elif session.status == 'OPEN' %}
@@ -112,7 +111,7 @@
                   </thead>
                   <tbody>
                   {% for session in sessions %}
-                    <tr class="{{ css_offer|get_item:session.offer.id }}">
+                    <tr>
                       <td>{% if session.status == 'IDLE' %}
                             <span style="color: orange" class="glyphicon glyphicon-time" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="Idle"></span>
                           {% elif session.status == 'OPEN' %}
@@ -144,7 +143,7 @@
                 </thead>
                 <tbody>
                 {% for session in sessions %}
-                  <tr  class="{{ css_offer|get_item:session.offer.id }}">
+                  <tr>
                     <td>{% if session.status == 'IDLE' %}
                           <span style="color: orange" class="glyphicon glyphicon-time" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="Idle"></span>
                         {% elif session.status == 'OPEN' %}
@@ -173,7 +172,7 @@
                 </thead>
                 <tbody>
                 {% for session in sessions %}
-                  <tr class="{{ css_offer|get_item:session.offer.id }}">
+                  <tr>
                     <td>{% if session.status == 'IDLE' %}
                           <span style="color: orange" class="glyphicon glyphicon-time" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="Idle"></span>
                         {% elif session.status == 'OPEN' %}
@@ -192,7 +191,7 @@
           </div>
           <div role="tabpanel" class="tab-pane fade" id="home">
             <br>
-            <a class="btn btn-default" href="{% url 'all_notes_printing' session.id %}" role="button"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'Print scores for all activities' %}</a>
+            <a class="btn btn-default" href="{% url 'notes_printing_all' session.id %}" role="button"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'Print scores for all activities' %}</a>
             <br><br>
             <table class="table table-hover">
               <thead>
@@ -204,7 +203,7 @@
               </thead>
               <tbody>
               {% for session in sessions %}
-                <tr class="{{ css_offer|get_item:session.offer.id }}">
+                <tr>
                   <td>{% if session.status == 'IDLE' %}
                         <span style="color: orange" class="glyphicon glyphicon-time" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="Idle"></span>
                       {% elif session.status == 'OPEN' %}

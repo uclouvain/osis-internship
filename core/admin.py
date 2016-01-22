@@ -102,6 +102,12 @@ class ExamEnrollmentAdmin(admin.ModelAdmin):
 
 admin.site.register(ExamEnrollment, ExamEnrollmentAdmin)
 
+class OrganizationAdmin(admin.ModelAdmin):
+    list_display = ('name', 'acronym')
+    fieldsets = ((None, {'fields': ('name', 'acronym')}),)
+
+admin.site.register(Organization, OrganizationAdmin)
+
 class StructureAdmin(admin.ModelAdmin):
     list_display = ('acronym', 'title', 'part_of')
     fieldsets = ((None, {'fields': ('acronym','title','part_of')}),)
