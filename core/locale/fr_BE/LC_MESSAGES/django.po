@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-22 09:59+0100\n"
+"POT-Creation-Date: 2016-01-22 11:53+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -254,17 +254,21 @@ msgid "Faculty"
 msgstr "Faculté"
 
 #: templates/offers.html:59 templates/offers.html.py:60
-#: templates/offers.html:95 templates/scores_encoding.html.py:83
-#: templates/scores_encoding.html:109 templates/scores_encoding.html.py:140
-#: templates/scores_encoding.html:168 templates/scores_encoding.html.py:200
-msgid "Code"
+#: templates/offers.html:96
+msgid "Acronym"
 msgstr "Sigle"
 
 #: templates/offers.html:65
-msgid "Validity"
-msgstr "Validité"
+#, fuzzy
+#| msgid "Academic year"
+msgid "Academic Year"
+msgstr "Année académique"
 
-#: templates/offers.html:96
+#: templates/offers.html:90
+msgid "No result!"
+msgstr "Aucun résultat!"
+
+#: templates/offers.html:97
 msgid "Title"
 msgstr "Intitulé"
 
@@ -372,6 +376,12 @@ msgstr "En papier"
 #: templates/scores_encoding.html:199
 msgid "Status"
 msgstr "Statut"
+
+#: templates/scores_encoding.html:83 templates/scores_encoding.html.py:109
+#: templates/scores_encoding.html:140 templates/scores_encoding.html.py:168
+#: templates/scores_encoding.html:200
+msgid "Code"
+msgstr "Sigle"
 
 #: templates/scores_encoding.html:84 templates/scores_encoding.html.py:110
 #: templates/scores_encoding.html:141 templates/scores_encoding.html.py:169
@@ -499,10 +509,8 @@ msgstr "Aucune note injectée"
 msgid "No score injected"
 msgstr "Aucune note injectée"
 
-#, fuzzy
-#~| msgid "Academic year"
-#~ msgid "Academic Year"
-#~ msgstr "Année académique"
+#~ msgid "Validity"
+#~ msgstr "Validité"
 
 #, fuzzy
 #~| msgid "Session"
