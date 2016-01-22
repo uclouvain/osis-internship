@@ -40,7 +40,9 @@ urlpatterns = [
     url(r'^login/$', login, name='login'),
     url(r'^logout/$', logout_then_login, name='logout'),
 
-    url(r'^offers/$', views.programme, name='offers'),
+    url(r'^offers/$', views.offers, name='offers'),
+    url(r'^offers/search$', views.offers_search, name='offers_search'),
+
 
     url(r'^programme/$', views.programme, name='programme'),
 
@@ -51,7 +53,7 @@ urlpatterns = [
     url(r'^studies/assessements/scores_encoding/online/([0-9]+)/form$', views.online_encoding_form, name='online_encoding_form'),
     url(r'^studies/assessements/scores_encoding/online/([0-9]+)/double_form$', views.online_double_encoding_form, name='online_double_encoding_form'),
     url(r'^studies/assessements/scores_encoding/online/([0-9]+)/double_validation$', views.online_double_encoding_validation, name='online_double_encoding_validation'),
-    url(r'^studies/assessements/scores_encoding/all_notes_printing/([0-9]+)/$', views.all_notes_printing, name='all_notes_printing'),
+    url(r'^studies/assessements/scores_encoding/notes_printing_all/([0-9]+)/$', views.notes_printing_all, name='notes_printing_all'),
     url(r'^studies/assessements/scores_encoding/notes_printing/([0-9]+)/([0-9]+)/$', views.notes_printing, name='notes_printing'),
     url(r'^studies/assessements/scores_encoding/xlsdownload/([0-9]+)/([0-9]+)/([0-9]+)/$',views.export_xls, name='scores_encoding_download'),
     url(r'^studies/assessements/scores_encoding/upload/([0-9]+)/([0-9]+)/([0-9]+)/$',uploadXlsUtils.upload_scores_file,name='upload_encoding'),

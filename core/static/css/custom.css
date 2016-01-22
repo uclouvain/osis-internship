@@ -14,34 +14,9 @@ body {
 .error {
   color:red;
 }
-
-.color1{
-  background-color: #ffff99;
+.btn.btn-as-block {
+  display: block;
 }
-.color2{
-  background-color: #ff9966;
-}
-.color3{
-  background-color: #ff5050;
-}
-.color4{
-  background-color: #99ffcc;
-}
-.color5{
-  background-color: #99ccff;
-}
-.color6{
-  background-color: #cccc00;
-}
-.color7{
-  background-color: #9966ff;
-}
-.color8{
-  background-color: #ccffff;
-}
-.color9{
-  background-color: #00C28F;
-}
-.color10{
-  background-color: #00BF3A;
+.invisible{
+  visibility: hidden;
 }

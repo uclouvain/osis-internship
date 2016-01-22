@@ -7,3 +7,11 @@ OSIS stands for **Open Student Information System**. It's an application designe
 ## Documentation
 
 The whole documentation of the project is published at: http://uclouvain.github.io/osis-louvain-documentation. Read it to understand how the business works and all the technical installation and configuration. Visit the project website for the latest news, to meet the community and to learn how to contribute: http://uclouvain.github.io/osis-louvain. To see statistics about the project visit https://www.openhub.net/p/osis-louvain.
+
+## Project
+
+[![Stories in Ready](https://badge.waffle.io/uclouvain/osis-louvain.png?label=ready&title=Ready)](http://waffle.io/uclouvain/osis-louvain)
+
+[![Throughput Graph](https://graphs.waffle.io/uclouvain/osis-louvain/throughput.svg)](https://waffle.io/uclouvain/osis-louvain/metrics)
+
+<script type='text/javascript' src='https://www.openhub.net/p/osis-louvain/widgets/project_basic_stats?format=js'></script>
