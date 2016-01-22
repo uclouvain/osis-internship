@@ -89,6 +89,7 @@ admin.site.register(LearningUnitYear, LearningUnitYearAdmin)
 
 class LearningUnitEnrollmentAdmin(admin.ModelAdmin):
     list_display = ('student', 'learning_unit_year', 'date_enrollment')
+    fieldsets = ((None, {'fields': ('learning_unit_year','offer_enrollment','date_enrollment')}),)
 
 admin.site.register(LearningUnitEnrollment, LearningUnitEnrollmentAdmin)
 
