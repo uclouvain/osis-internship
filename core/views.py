@@ -203,9 +203,3 @@ def programme(request):
 @login_required
 def export_xls(request, session_id, learning_unit_year_id, academic_year_id):
     return exportUtils.export_xls(request, session_id, learning_unit_year_id, academic_year_id, request.user.groups.filter(name='FAC').exists())
-
-
-def py_info(request):
-    from .pyinfo import pyinfo
-    output = pyinfo()
-    return HttpResponse(output, content_type='text/html', )
