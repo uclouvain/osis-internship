@@ -25,23 +25,7 @@
 ##############################################################################
 from django.contrib import admin
 
-from .models import AcademicYear
-from .models import AcademicCalendar
-from .models import Attribution
-from .models import SessionExam
-from .models import ExamEnrollment
-from .models import LearningUnit
-from .models import LearningUnitEnrollment
-from .models import LearningUnitYear
-from .models import Offer
-from .models import OfferEnrollment
-from .models import OfferYear
-from .models import OfferYearCalendar
-from .models import Structure
-from .models import Person
-from .models import ProgrammeManager
-from .models import Student
-from .models import Tutor
+from .models import *
 
 class AcademicYearAdmin(admin.ModelAdmin):
     fieldsets = ((None, {'fields': ('year',)}),)
@@ -117,6 +101,12 @@ class ExamEnrollmentAdmin(admin.ModelAdmin):
     fieldsets = ((None, {'fields': ('session_exam','learning_unit_enrollment')}),)
 
 admin.site.register(ExamEnrollment, ExamEnrollmentAdmin)
+
+class OrganizationAdmin(admin.ModelAdmin):
+    list_display = ('name', 'acronym')
+    fieldsets = ((None, {'fields': ('name', 'acronym')}),)
+
+admin.site.register(Organization, OrganizationAdmin)
 
 class StructureAdmin(admin.ModelAdmin):
     list_display = ('acronym', 'title', 'part_of')
