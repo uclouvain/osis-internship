@@ -10,6 +10,8 @@ The whole documentation of the project is published at: http://uclouvain.github.
 
 ## Project
 
+OSIS is not a final product yet. It is still an on going project with ambicious goals and deadlines. The good news is that we are already using it in production because what is available complements or replaces existing business applications. Meanwhile, you can follow up the project throgh our sprint board.
+
 [![Stories in Ready](https://badge.waffle.io/uclouvain/osis-louvain.png?label=ready&title=Ready)](http://waffle.io/uclouvain/osis-louvain)
 
 [![Throughput Graph](https://graphs.waffle.io/uclouvain/osis-louvain/throughput.svg)](https://waffle.io/uclouvain/osis-louvain/metrics)
