@@ -112,21 +112,29 @@ def online_encoding(request, session_id):
 
 @login_required
 def online_encoding_form(request, session_id):
-    tutor = Tutor.find_by_user(request.user)
-    academic_year = AcademicCalendar.current_academic_year()
     session = SessionExam.find_session(session_id)
     enrollments = ExamEnrollment.find_exam_enrollments(session)
-    progress = ExamEnrollment.calculate_progress(enrollments)
+    if request.method == 'GET':
+        tutor = Tutor.find_by_user(request.user)
+        academic_year = AcademicCalendar.current_academic_year()
+        return render(request, "online_encoding_form.html",
+                      {'section':       'scores_encoding',
+                       'tutor':         tutor,
+                       'academic_year': academic_year,
+                       'session':       session,
+                       'enrollments':   enrollments,
+                       'justifications':ExamEnrollment.JUSTIFICATION_TYPES,
+                       'enrollments':   enrollments})
+    elif request.method == 'POST':
+        for enrollment in enrollments:
+            score = request.POST['score_'+ str(enrollment.id)]
+            if score:
+                enrollment.score_draft = int(float(score))
+            enrollment.justification_draft = request.POST['justification_'+ str(enrollment.id)]
+            enrollment.save()
+        return online_encoding(request, session_id)
 
-    return render(request, "online_encoding_form.html",
-                  {'section':       'scores_encoding',
-                   'tutor':         tutor,
-                   'academic_year': academic_year,
-                   'session':       session,
-                   'progress':      progress,
-                   'enrollments':   enrollments,
-                   'justifications':ExamEnrollment.JUSTIFICATION_TYPES,
-                   'enrollments':   enrollments})
+
 
 @login_required
 def notes_printing(request,session_exam_id,learning_unit_year_id):

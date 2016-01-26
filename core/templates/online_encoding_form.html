@@ -49,7 +49,7 @@
             {{ tutor }}
           </div>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-3">
           <div class="form-group">
             <label>{% trans 'Academic year' %}</label><br>
             {{ academic_year }}
@@ -61,21 +61,16 @@
             {{ session.number_session }}
           </div>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-3">
           <div class="form-group">
             <label>{%trans 'Number of enrollments' %}</label><br>
             {{ enrollments|length }}
           </div>
         </div>
-        <div class="col-md-2">
-          <div class="form-group">
-            <label>{% trans 'Progress' %}</label><br>
-            {{ progress | percentage }}
-          </div>
-        </div>
       </div>
       <hr>
-      <form class="form-inline">
+      <form class="form-inline" method="POST" action="{% url 'online_encoding_form' session.id %}">
+        {% csrf_token %}
         <submit class="btn btn-primary"><span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> Enregistrer</submit>
         <a class="btn btn-default" href="{% url 'online_encoding' session.id %}" role="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Annuler</a><br><br>
 
@@ -96,12 +91,12 @@
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
-                <td><input type="number" value="{{ enrollment.score|unlocalize | default_if_none:"" }}" class="form-control"></td>
-                <td><select class="form-control">
+                <td><input type="number" name="score_{{ enrollment.id }}" id="score_{{ enrollment.id }}" value="{{ enrollment.score_draft|unlocalize | default_if_none:"" }}" class="form-control"></td>
+                <td><select class="form-control" name="justification_{{ enrollment.id }}" id="justification_score_{{ enrollment.id }}">
                       <option value=""></option>
-                      <option value="ABSENT">{% trans 'Absent' %}</option>
-                      <option value="CHEATING">{% trans 'Cheating' %}'</option>
-                      <option value="SCORE_MISSING">{% trans 'Score missing' %}</option>
+                      <option value="ABSENT" {% if enrollment.justification_draft == 'ABSENT' %}selected="selected"{% endif %}>{% trans 'Absent' %}</option>
+                      <option value="CHEATING" {% if enrollment.justification_draft == 'CHEATING' %}selected="selected"{% endif %}>{% trans 'Cheating' %}</option>
+                      <option value="SCORE_MISSING" {% if enrollment.justification_draft == 'SCORE_MISSING' %}selected="selected"{% endif %}>{% trans 'Score missing' %}</option>
                     </select></td>
                 <td>{{ enrollment.session_exam.offer_year_calendar.end_date }}</td>
               </tr>
@@ -109,7 +104,7 @@
             </tbody>
         </table>
 
-        <submit class="btn btn-primary"><span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> Enregistrer</submit>
+        <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> Enregistrer</button>
         <a class="btn btn-default" href="{% url 'online_encoding' session.id %}" role="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Annuler</a>
       </form>
     </div>
