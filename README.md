@@ -6,7 +6,7 @@ OSIS stands for **Open Student Information System**. It's an application designe
 
 ## Documentation
 
-The whole documentation of the project is published at: http://uclouvain.github.io/osis-louvain-documentation. Read it to understand how the business works and all the technical installation and configuration. Visit the project website for the latest news, to meet the community and to learn how to contribute: http://uclouvain.github.io/osis-louvain. To see statistics about the project visit https://www.openhub.net/p/osis-louvain.
+The whole documentation of the project is published at: http://uclouvain.github.io/osis-louvain-documentation. Read it to understand how the business works and all the technical installation and configuration. Visit the project website for the latest news, to meet the community and to learn how to contribute: http://uclouvain.github.io/osis-louvain.
 
 ## Project
 
@@ -19,5 +19,7 @@ OSIS is not a final product yet. It is still an on going project with ambicious 
 <script type='text/javascript' src='https://www.openhub.net/p/osis-louvain/widgets/project_basic_stats?format=js'></script>
 
 ## Code
+
+OSIS is writen in Python 3.4, HTML5 and uses DJango 1.9 as web framework. To know more about the code and the collaboration of the community, please visit our [OpenHub](https://www.openhub.net/p/osis-louvain) page.
 
 [![Code Climate](https://codeclimate.com/github/uclouvain/osis-louvain/badges/gpa.svg)](https://codeclimate.com/github/uclouvain/osis-louvain) [![Test Coverage](https://codeclimate.com/github/uclouvain/osis-louvain/badges/coverage.svg)](https://codeclimate.com/github/uclouvain/osis-louvain/coverage) 
