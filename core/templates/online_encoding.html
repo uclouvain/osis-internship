@@ -103,8 +103,8 @@
               <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
               <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
               <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
-              <td>{{ enrollment.score | default_if_none:"-" }}</td>
-              <td>{{ enrollment.justification | default_if_none:"-" }}</td>
+              <td>{{ enrollment.score_draft | default_if_none:"-" }}</td>
+              <td>{{ enrollment.justification_draft | title }}</td>
               <td>{{ enrollment.session_exam.offer_year_calendar.end_date }}</td>
             </tr>
           {% endfor %}
