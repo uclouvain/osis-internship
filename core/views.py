@@ -134,8 +134,6 @@ def online_encoding_form(request, session_id):
             enrollment.save()
         return online_encoding(request, session_id)
 
-
-
 @login_required
 def notes_printing(request,session_exam_id,learning_unit_year_id):
     tutor = Tutor.find_by_user(request.user)
@@ -205,7 +203,6 @@ def programme(request):
 def export_xls(request, session_id, learning_unit_year_id, academic_year_id):
     return exportUtils.export_xls(request, session_id, learning_unit_year_id, academic_year_id, request.user.groups.filter(name='FAC').exists())
 
-
 def offers(request):
     validity = None
     faculty = None
@@ -224,7 +221,6 @@ def offers(request):
                                            'validities':    validities,
                                            'offers':        [] ,
                                            'init':          "1"})
-
 
 def offers_search(request):
     faculty = request.GET['faculty']
