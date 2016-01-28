@@ -4,6 +4,7 @@
 {% load sum %}
 {% load list%}
 {% load score_display %}
+{% load programme_manager %}
 
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
@@ -99,6 +100,11 @@
                       <option value="ABSENT" {% if enrollment.justification_draft == 'ABSENT' %}selected="selected"{% endif %}>{% trans 'Absent' %}</option>
                       <option value="CHEATING" {% if enrollment.justification_draft == 'CHEATING' %}selected="selected"{% endif %}>{% trans 'Cheating' %}</option>
                       <option value="SCORE_MISSING" {% if enrollment.justification_draft == 'SCORE_MISSING' %}selected="selected"{% endif %}>{% trans 'Score missing' %}</option>
+                      {% programme_manager as pm %}
+                      {% if pm %}
+                      <option value="ILL" {% if enrollment.justification_draft == 'ILL' %}selected="selected"{% endif %}>{% trans 'Ill' %}</option>
+                      <option value="JUSTIFIED_ABSENCE" {% if enrollment.justification_draft == 'JUSTIFIED_ABSENCE' %}selected="selected"{% endif %}>{% trans 'Justified absence' %}</option>)
+                      {% endif %}
                     </select></td>
                 <td>{{ enrollment.session_exam.offer_year_calendar.end_date }}</td>
               </tr>

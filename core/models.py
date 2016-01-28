@@ -207,6 +207,16 @@ class OfferYear(models.Model):
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.offer.acronym)
 
+    def is_programme_manager(self,user):
+        person = Person.objects.get(user=user)
+        if user:
+            programme_manager = ProgrammeManager.objects.filter(person=person.id, faculty=self.structure)
+            print('zut111')
+            if programme_manager:
+                return True
+
+        return False
+
 
 class OfferEnrollment(models.Model):
     external_id     = models.CharField(max_length = 100,blank = True, null = True)
