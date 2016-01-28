@@ -129,7 +129,10 @@ def online_encoding_form(request, session_id):
         for enrollment in enrollments:
             score = request.POST['score_'+ str(enrollment.id)]
             if score:
-                enrollment.score_draft = int(float(score))
+                if enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores:
+                    enrollment.score_draft = float(score)
+                else:
+                    enrollment.score_draft = int(float(score))
             enrollment.justification_draft = request.POST['justification_'+ str(enrollment.id)]
             enrollment.save()
         return online_encoding(request, session_id)
