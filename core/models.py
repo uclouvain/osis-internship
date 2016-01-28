@@ -385,7 +385,6 @@ class ExamEnrollment(models.Model):
             progress = 0
         return progress * 100
 
-
     def find_exam_enrollments(session_exam):
         enrollments = ExamEnrollment.objects.filter(session_exam=session_exam)
         return enrollments

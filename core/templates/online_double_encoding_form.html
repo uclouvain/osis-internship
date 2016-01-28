@@ -3,6 +3,8 @@
 {% load i18n %}
 {% load percentage %}
 {% load list%}
+{% load sum %}
+{% load score_display %}
 
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
@@ -51,7 +53,7 @@
             {{ tutor }}
           </div>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-3">
           <div class="form-group">
             <label>{% trans 'Academic year' %}</label><br>
             {{ academic_year }}
@@ -63,51 +65,46 @@
             {{ session.number_session }}
           </div>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-3">
           <div class="form-group">
             <label>{%trans 'Number of enrollments' %}</label><br>
             {{ enrollments|length }}
           </div>
         </div>
-        <div class="col-md-2">
-          <div class="form-group">
-            <label>{%trans 'Progress' %}</label><br>
-            {{ progress | percentage }}
-          </div>
-        </div>
       </div>
       <hr>
-      <form class="form-inline">
+      <form class="form-inline" method="POST" action="{% url 'online_double_encoding_form' session.id %}">
+        {% csrf_token %}
         <table class="table table-hover">
-            <thead>
-              <th>{% trans 'Offer' %}</th>
-              <th>{% trans 'Registration number' %}</th>
-              <th>{% trans 'Lastname' %}</th>
-              <th>{% trans 'Firstname' %}</th>
-              <th>{% trans 'Score' %}</th>
-              <th>{% trans 'Justification' %}</th>
-              <th>{% trans 'End date' %}</th>
-            </thead>
-            <tbody>
-            {% for enrollment in enrollments %}
-              <tr style="background-color:{{ enrollments|previous:forloop.counter }}">
-                <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
-                <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
-                <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
-                <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
-                <td><input type="number" value="" class="form-control"></td>
-                <td><select class="form-control">
-                      <option value=""></option>
-                      <option value="ABSENT">{% trans 'Absent' %}</option>
-                      <option value="CHEATING">{% trans 'Cheating' %}</option>
-                      <option value="SCORE_MISSING">{% trans 'Score missing' %}</option>
-                    </select></td>
-                <td>{{ enrollment.session_exam.offer_year_calendar.end_date }}</td>
-              </tr>
-            {% endfor %}
-            </tbody>
+          <thead>
+            <th>{% trans 'Offer' %}</th>
+            <th>{% trans 'Registration number' %}</th>
+            <th>{% trans 'Lastname' %}</th>
+            <th>{% trans 'Firstname' %}</th>
+            <th>{% trans 'Score' %}</th>
+            <th>{% trans 'Justification' %}</th>
+            <th>{% trans 'End date' %}</th>
+          </thead>
+          <tbody>
+          {% for enrollment in enrollments %}
+            <tr style="background-color:{{ enrollments|previous:forloop.counter }}">
+              <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
+              <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
+              <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
+              <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
+              <td><input type="number" step="any" name="score_{{ enrollment.id }}" id="score_{{ enrollment.id }}" tabindex="{{ forloop.counter }}" value="{{ enrollment.score_reencoded | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores }}" class="form-control"></td>
+              <td><select class="form-control" name="justification_{{ enrollment.id }}" id="justification_score_{{ enrollment.id }}" tabindex="{{ enrollments|length|sum:forloop.counter }}">
+                    <option value=""></option>
+                    <option value="ABSENT" {% if enrollment.justification_reencoded == 'ABSENT' %}selected="selected"{% endif %}>{% trans 'Absent' %}</option>
+                    <option value="CHEATING" {% if enrollment.justification_reencoded == 'CHEATING' %}selected="selected"{% endif %}>{% trans 'Cheating' %}</option>
+                    <option value="SCORE_MISSING" {% if enrollment.justification_reencoded == 'SCORE_MISSING' %}selected="selected"{% endif %}>{% trans 'Score missing' %}</option>
+                  </select></td>
+              <td>{{ enrollment.session_exam.offer_year_calendar.end_date }}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
         </table>
-        <a class="btn btn-primary" href="{% url 'online_double_encoding_validation' session.id %}" role="button"><span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> {% trans 'Compare' %}</a>
+        <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> {% trans 'Compare' %}</button>
         <a class="btn btn-default" href="{% url 'online_encoding' session.id %}" role="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'Cancel' %}</a>
       </form>
     </div>
