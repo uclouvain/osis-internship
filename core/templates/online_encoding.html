@@ -2,6 +2,7 @@
 {% load percentage %}
 {% load i18n %}
 {% load list%}
+{% load score_display %}
 
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
@@ -31,7 +32,7 @@
   <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
   <li><a href="{% url 'assessements' %}">{% trans 'Evaluations' %}</a></li>
   <li><a href="{% url 'scores_encoding' %}">{% trans 'Scores encoding' %}</a></li>
-  <li class="active">Encodage en ligne</li>
+  <li class="active">{% trans 'Online encoding' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
@@ -73,7 +74,7 @@
       </div>
 
       <div class="form-group">
-        <label>Progrès</label><br>
+        <label>{% trans 'Progress' %}</label><br>
         <div class="progress">
           <div class="progress-bar" role="progressbar" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ progress }}%;">
             {{ progress }}%
@@ -81,10 +82,10 @@
         </div>
       </div>
 
-      <a class="btn btn-default" href="{% url 'online_encoding_form' session.id %}" role="button"><i class="fa fa-hashtag"></i> {% trans 'encode' %}</a>
-      <a class="btn btn-default" href="{% url 'online_double_encoding_form' session.id %}" role="button"><i class="fa fa-hashtag"></i><i class="fa fa-hashtag"></i> Double encoder</a>
-      <a class="btn btn-warning" href="{% url 'online_encoding_form' session.id %}" role="button"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> Soumettre</a>
-      <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#uploadScoreModal" title="{% trans 'Select a xls file from which to injec scores' %}"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Soumettre fichier Excel</button><br><br>
+      <a class="btn btn-default" href="{% url 'online_encoding_form' session.id %}" role="button"><i class="fa fa-hashtag"></i> {% trans 'Encode' %}</a>
+      <a class="btn btn-default" href="{% url 'online_double_encoding_form' session.id %}" role="button"><i class="fa fa-hashtag"></i><i class="fa fa-hashtag"></i> {% trans 'Double encoding' %}</a>
+      <a class="btn btn-warning" href="{% url 'online_encoding_form' session.id %}" role="button"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'Submission' %}</a>
+      <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#uploadScoreModal" title="{% trans 'Select a xls file from which to injec scores' %}"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> {% trans 'Submit xls file' %}</button><br><br>
 
       <table class="table table-hover">
           <thead>
@@ -103,8 +104,13 @@
               <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
               <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
               <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
-              <td>{{ enrollment.score_draft | default_if_none:"-" }}</td>
-              <td>{{ enrollment.justification_draft | title }}</td>
+              <td>{{ enrollment.score_draft | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores }}</td>
+              <td>{% if enrollment.justification_draft %}
+                    {{ enrollment.justification_draft | title }}
+                  {% else %}
+                    -
+                  {% endif %}
+              </td>
               <td>{{ enrollment.session_exam.offer_year_calendar.end_date }}</td>
             </tr>
           {% endfor %}
