@@ -321,14 +321,14 @@ class SessionExam(models.Model):
     def find_session(id):
         return SessionExam.objects.get(pk=id)
 
-    def find_sessions_by_tutor(tutor, academic_year):
+    def find_sessions_by_tutor(tutor, academic_year, session):
         learning_units = Attribution.objects.filter(tutor=tutor).values('learning_unit')
-        return SessionExam.objects.filter(status='OPEN'
+        return SessionExam.objects.filter(number_session=session.number_session
                                  ).filter(learning_unit_year__academic_year=academic_year
                                  ).filter(learning_unit_year__learning_unit__in=learning_units)
 
     def find_sessions_by_faculty(faculty, academic_year, session):
-        return SessionExam.objects.filter(status='OPEN'
+        return SessionExam.objects.filter(number_session=session.number_session
                                  ).filter(offer_year_calendar__offer_year__academic_year=academic_year
                                  ).filter(offer_year_calendar__offer_year__structure=faculty)
 
@@ -384,7 +384,6 @@ class ExamEnrollment(models.Model):
         else:
             progress = 0
         return progress * 100
-
 
     def find_exam_enrollments(session_exam):
         enrollments = ExamEnrollment.objects.filter(session_exam=session_exam)
