@@ -3,6 +3,7 @@
 {% load i18n %}
 {% load percentage %}
 {% load score_display %}
+{% load list%}
 
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
@@ -96,7 +97,7 @@
             </thead>
             <tbody>
             {% for enrollment in enrollments %}
-              <tr>
+              <tr style="background-color:{{ enrollments|previous:forloop.counter }}">
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>

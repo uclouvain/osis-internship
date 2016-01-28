@@ -2,6 +2,7 @@
 {% load l10n %}
 {% load i18n %}
 {% load sum %}
+{% load list%}
 {% load score_display %}
 
 {% comment "License" %}
@@ -87,7 +88,7 @@
             </thead>
             <tbody>
             {% for enrollment in enrollments %}
-              <tr>
+              <tr  style="background-color:{{ enrollments|previous:forloop.counter }}">
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
