@@ -54,19 +54,18 @@ def assessements(request):
 @login_required
 def scores_encoding(request):
     academic_year = AcademicCalendar.current_academic_year()
-    session = SessionExam.current_session_exam()
 
     tutor = Tutor.find_by_user(request.user)
     # In case the user is a tutor.
     sessions = None
     faculty = None
     if tutor:
-        sessions = SessionExam.find_sessions_by_tutor(tutor, academic_year, session)
+        sessions = SessionExam.find_sessions_by_tutor(tutor, academic_year)
     # In case the user is not a tutor we check whether it is member of a faculty.
     elif request.user.groups.filter(name='FAC').exists():
         faculty = ProgrammeManager.find_faculty_by_user(request.user)
         if faculty:
-            sessions = SessionExam.find_sessions_by_faculty(faculty, academic_year, session)
+            sessions = SessionExam.find_sessions_by_faculty(faculty, academic_year)
 
     # Calculate the progress of all courses of the tutor.
     all_enrollments = []
@@ -84,7 +83,7 @@ def scores_encoding(request):
                    'tutor':         tutor,
                    'faculty':       faculty,
                    'academic_year': academic_year,
-                   'session':       session,
+                   'session':       sessions.first(),
                    'sessions':      sessions,
                    'progress':      "{0:.0f}".format(progress)})
 
@@ -142,7 +141,7 @@ def notes_printing(request,session_exam_id,learning_unit_year_id):
     tutor = Tutor.find_by_user(request.user)
     academic_year = AcademicCalendar.current_academic_year()
     session_exam = SessionExam.find_session(session_exam_id)
-    sessions = SessionExam.find_sessions_by_tutor(tutor, academic_year, session_exam)
+    sessions = SessionExam.find_sessions_by_tutor(tutor, academic_year)
     return pdfUtils.print_notes(request,tutor,academic_year,session_exam,sessions,learning_unit_year_id,request.user.groups.filter(name='FAC').exists())
 
 @login_required
@@ -191,7 +190,7 @@ def notes_printing(request, session_id, learning_unit_year_id):
     tutor = Tutor.find_by_user(request.user)
     academic_year = AcademicCalendar.current_academic_year()
     session_exam = SessionExam.current_session_exam()
-    sessions = SessionExam.find_sessions_by_tutor(tutor, academic_year, session_exam)
+    sessions = SessionExam.find_sessions_by_tutor(tutor, academic_year)
     return pdfUtils.print_notes(request,tutor,academic_year,session_exam,sessions,learning_unit_year_id)
 
 @login_required
