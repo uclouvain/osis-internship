@@ -1,6 +1,8 @@
 {% extends "layout.html" %}
 {% load l10n %}
+{% load i18n %}
 {% load percentage %}
+{% load list%}
 
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
@@ -27,15 +29,15 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}">Parcours</a></li>
-  <li><a href="{% url 'assessements' %}">Évaluations</a></li>
-  <li><a href="{% url 'scores_encoding' %}">Encodage des notes</a></li>
-  <li><a href="{% url 'online_encoding' session.id %}">Encodage en ligne</a></li>
-  <li class="active">Double encodage en ligne</li>
+  <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+  <li><a href="{% url 'assessements' %}">{% trans 'Evaluations' %}</a></li>
+  <li><a href="{% url 'scores_encoding' %}">{% trans 'Scores encoding' %}</a></li>
+  <li><a href="{% url 'online_encoding' session.id %}">{% trans 'Online scores encoding' %}</a></li>
+  <li class="active">{% trans 'Dubble online scores encoding' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>Double encodage en ligne</h2>
+    <h2>{% trans 'Dubble online scores encoding' %}</h2>
   </div>
   <div class="panel panel-default">
     <div class="panel-heading">
@@ -45,31 +47,31 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label>Responsable</label><br>
+            <label>{% trans 'Responsible' %}</label><br>
             {{ tutor }}
           </div>
         </div>
         <div class="col-md-2">
           <div class="form-group">
-            <label>Année académique</label><br>
+            <label>{% trans 'Academic year' %}</label><br>
             {{ academic_year }}
           </div>
         </div>
         <div class="col-md-2">
           <div class="form-group">
-            <label>Session</label><br>
+            <label>{% trans 'Session' %}</label><br>
             {{ session.number_session }}
           </div>
         </div>
         <div class="col-md-2">
           <div class="form-group">
-            <label>Nombre d'inscrits</label><br>
+            <label>{%trans 'Number of enrollments' %}</label><br>
             {{ enrollments|length }}
           </div>
         </div>
         <div class="col-md-2">
           <div class="form-group">
-            <label>Progrès</label><br>
+            <label>{%trans 'Progress' %}</label><br>
             {{ progress | percentage }}
           </div>
         </div>
@@ -78,17 +80,17 @@
       <form class="form-inline">
         <table class="table table-hover">
             <thead>
-              <th>Programme</th>
-              <th>Noma</th>
-              <th>Nom</th>
-              <th>Prénom</th>
-              <th>Note</th>
-              <th>Justification</th>
-              <th>Date de remise</th>
+              <th>{% trans 'Offer' %}</th>
+              <th>{% trans 'Registration number' %}</th>
+              <th>{% trans 'Lastname' %}</th>
+              <th>{% trans 'Firstname' %}</th>
+              <th>{% trans 'Score' %}</th>
+              <th>{% trans 'Justification' %}</th>
+              <th>{% trans 'End date' %}</th>
             </thead>
             <tbody>
             {% for enrollment in enrollments %}
-              <tr>
+              <tr style="background-color:{{ enrollments|previous:forloop.counter }}">
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
@@ -96,17 +98,17 @@
                 <td><input type="number" value="" class="form-control"></td>
                 <td><select class="form-control">
                       <option value=""></option>
-                      <option value="ABSENT">Absent</option>
-                      <option value="CHEATING">Tricherie</option>
-                      <option value="SCORE_MISSING">Note manquant</option>
+                      <option value="ABSENT">{% trans 'Absent' %}</option>
+                      <option value="CHEATING">{% trans 'Cheating' %}</option>
+                      <option value="SCORE_MISSING">{% trans 'Score missing' %}</option>
                     </select></td>
                 <td>{{ enrollment.session_exam.offer_year_calendar.end_date }}</td>
               </tr>
             {% endfor %}
             </tbody>
         </table>
-        <a class="btn btn-primary" href="{% url 'online_double_encoding_validation' session.id %}" role="button"><span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> Comparer</a>
-        <a class="btn btn-default" href="{% url 'online_encoding' session.id %}" role="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Annuler</a>
+        <a class="btn btn-primary" href="{% url 'online_double_encoding_validation' session.id %}" role="button"><span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> {% trans 'Compare' %}</a>
+        <a class="btn btn-default" href="{% url 'online_encoding' session.id %}" role="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'Cancel' %}</a>
       </form>
     </div>
   </div>
