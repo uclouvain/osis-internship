@@ -52,7 +52,7 @@
             {{ tutor }}
           </div>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-3">
           <div class="form-group">
             <label>{% trans 'Academic year' %}</label><br>
             {{ academic_year }}
@@ -64,21 +64,16 @@
             {{ session.number_session }}
           </div>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-3">
           <div class="form-group">
             <label>{%trans 'Number of enrollments' %}</label><br>
             {{ enrollments|length }}
           </div>
         </div>
-        <div class="col-md-2">
-          <div class="form-group">
-            <label>{%trans 'Progress' %}</label><br>
-            {{ progress | percentage }}
-          </div>
-        </div>
       </div>
       <hr>
-      <form class="form-inline">
+      <form class="form-inline" method="POST" action="{% url 'online_double_encoding_form' session.id %}">
+        {% csrf_token %}
         <table class="table">
             <thead>
               <tr>
@@ -102,19 +97,19 @@
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
-                <td>{{ enrollment.score_draft | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores  }}</td>
+                <td>{{ enrollment.score_draft | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores }}</td>
                 <td>{{ enrollment.justification_draft | default_if_none:"-" }}</td>
                 <td><a class="btn btn-default btn-sm"><span class="glyphicon glyphicon-ok" style="color: green" aria-hidden="true"></span></a></td>
-                <td>{{ enrollment.score | default_if_none:"-" }}</td>
-                <td>{{ enrollment.justification | default_if_none:"-" }}</td>
+                <td>{{ enrollment.score_reencoded | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores }}</td>
+                <td>{{ enrollment.justification_reencoded | default_if_none:"-" }}</td>
                 <td><a class="btn btn-default btn-sm"><span class="glyphicon glyphicon-ok" style="color: green" aria-hidden="true"></span></a></td>
-                <td>{{ enrollment.score | default_if_none:"-" }}</td>
-                <td>{{ enrollment.justification | default_if_none:"-" }}</td>
+                <td>{{ enrollment.score_final | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores }}</td>
+                <td>{{ enrollment.justification_final | default_if_none:"-" }}</td>
               </tr>
             {% endfor %}
             </tbody>
         </table>
-        <submit class="btn btn-primary"><span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'Save' %}</submit>
+        <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'Save' %}</button>
         <a class="btn btn-default" href="{% url 'online_encoding' session.id %}" role="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'Cancel' %}</a>
       </form>
     </div>

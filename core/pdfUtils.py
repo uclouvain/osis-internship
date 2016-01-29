@@ -25,6 +25,7 @@ SMALL_INTER_LINE = Spacer(1, 12)
 BIG_INTER_LINE = Spacer(1, 30)
 
 def print_notes(request,tutor, academic_year, session_exam,sessions,learning_unit_year_id):
+    print(request.path)
     """
     Create a multi-page document
     """
@@ -88,8 +89,7 @@ def addHeaderFooter(canvas, doc):
     canvas.restoreState()
 
 def header_building(canvas, doc,styles):
-    # a = Image("../core/" + settings.STATIC_URL + "images/logo_institution.jpg")
-    a = Image("/home/leila/Python/Projets/osis-louvain/core/static/img/logo_institution.jpg")
+    a = Image("core"+ settings.STATIC_URL +"/img/logo_institution.jpg")
 
     P = Paragraph('''
                     <para align=center spaceb=3>

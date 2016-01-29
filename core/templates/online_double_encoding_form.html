@@ -3,7 +3,12 @@
 {% load i18n %}
 {% load percentage %}
 {% load list%}
+<<<<<<< HEAD
 {% load programme_manager %}
+=======
+{% load sum %}
+{% load score_display %}
+>>>>>>> 20039c47f47deb5c416ea6b64d26263366a5acd2
 
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
@@ -52,7 +57,7 @@
             {{ tutor }}
           </div>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-3">
           <div class="form-group">
             <label>{% trans 'Academic year' %}</label><br>
             {{ academic_year }}
@@ -64,21 +69,16 @@
             {{ session.number_session }}
           </div>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-3">
           <div class="form-group">
             <label>{%trans 'Number of enrollments' %}</label><br>
             {{ enrollments|length }}
           </div>
         </div>
-        <div class="col-md-2">
-          <div class="form-group">
-            <label>{%trans 'Progress' %}</label><br>
-            {{ progress | percentage }}
-          </div>
-        </div>
       </div>
       <hr>
-      <form class="form-inline">
+      <form class="form-inline" method="POST" action="{% url 'online_double_encoding_form' session.id %}">
+        {% csrf_token %}
         <table class="table table-hover">
             <thead>
               <th>{% trans 'Offer' %}</th>
@@ -113,7 +113,7 @@
             {% endfor %}
             </tbody>
         </table>
-        <a class="btn btn-primary" href="{% url 'online_double_encoding_validation' session.id %}" role="button"><span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> {% trans 'Compare' %}</a>
+        <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> {% trans 'Compare' %}</button>
         <a class="btn btn-default" href="{% url 'online_encoding' session.id %}" role="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'Cancel' %}</a>
       </form>
     </div>

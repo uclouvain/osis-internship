@@ -54,19 +54,18 @@ def assessements(request):
 @login_required
 def scores_encoding(request):
     academic_year = AcademicCalendar.current_academic_year()
-    session = SessionExam.current_session_exam()
 
     tutor = Tutor.find_by_user(request.user)
     # In case the user is a tutor.
     sessions = None
     faculty = None
     if tutor:
-        sessions = SessionExam.find_sessions_by_tutor(tutor, academic_year, session)
+        sessions = SessionExam.find_sessions_by_tutor(tutor, academic_year)
     # In case the user is not a tutor we check whether it is member of a faculty.
     elif request.user.groups.filter(name='FAC').exists():
         faculty = ProgrammeManager.find_faculty_by_user(request.user)
         if faculty:
-            sessions = SessionExam.find_sessions_by_faculty(faculty, academic_year, session)
+            sessions = SessionExam.find_sessions_by_faculty(faculty, academic_year)
 
     # Calculate the progress of all courses of the tutor.
     all_enrollments = []
@@ -84,7 +83,7 @@ def scores_encoding(request):
                    'tutor':         tutor,
                    'faculty':       faculty,
                    'academic_year': academic_year,
-                   'session':       session,
+                   'session':       sessions.first(),
                    'sessions':      sessions,
                    'progress':      "{0:.0f}".format(progress)})
 
@@ -138,52 +137,59 @@ def online_encoding_form(request, session_id):
         return online_encoding(request, session_id)
 
 @login_required
-def notes_printing(request,session_exam_id,learning_unit_year_id):
-    tutor = Tutor.find_by_user(request.user)
-    academic_year = AcademicCalendar.current_academic_year()
-    session_exam = SessionExam.find_session(session_exam_id)
-    sessions = SessionExam.find_sessions_by_tutor(tutor, academic_year, session_exam)
-    return pdfUtils.print_notes(request,tutor,academic_year,session_exam,sessions,learning_unit_year_id)
-
-@login_required
-def online_double_encoding_form(request, session_id):
-    tutor = Tutor.find_by_user(request.user)
-    academic_year = AcademicCalendar.current_academic_year()
-    session = SessionExam.find_session(session_id)
-    enrollments = ExamEnrollment.find_exam_enrollments(session.id)
-    progress = ExamEnrollment.calculate_progress(enrollments)
-
-    return render(request, "online_double_encoding_form.html",
-                  {'section':       'scores_encoding',
-                   'tutor':         tutor,
-                   'academic_year': academic_year,
-                   'session':       session,
-                   'progress':      progress,
-                   'enrollments':   enrollments,
-                   'justifications':ExamEnrollment.JUSTIFICATION_TYPES,
-                   'enrollments':   enrollments})
-
-@login_required
 def online_double_encoding_validation(request, session_id):
     tutor = Tutor.find_by_user(request.user)
     academic_year = AcademicCalendar.current_academic_year()
     session = SessionExam.find_session(session_id)
     enrollments = ExamEnrollment.find_exam_enrollments(session)
-    progress = ExamEnrollment.calculate_progress(enrollments)
 
     return render(request, "online_double_encoding_validation.html",
                   {'section':       'scores_encoding',
                    'tutor':         tutor,
                    'academic_year': academic_year,
                    'session':       session,
-                   'progress':      progress,
                    'enrollments':   enrollments,
                    'justifications':ExamEnrollment.JUSTIFICATION_TYPES,
                    'enrollments':   enrollments})
 
+
+@login_required
+def online_double_encoding_form(request, session_id):
+    session = SessionExam.find_session(session_id)
+    enrollments = ExamEnrollment.find_exam_enrollments(session.id)
+    if request.method == 'GET':
+        tutor = Tutor.find_by_user(request.user)
+        academic_year = AcademicCalendar.current_academic_year()
+        return render(request, "online_double_encoding_form.html",
+                      {'section':       'scores_encoding',
+                       'tutor':         tutor,
+                       'academic_year': academic_year,
+                       'session':       session,
+                       'enrollments':   enrollments,
+                       'justifications':ExamEnrollment.JUSTIFICATION_TYPES,
+                       'enrollments':   enrollments})
+    elif request.method == 'POST':
+        for enrollment in enrollments:
+            score = request.POST['score_'+ str(enrollment.id)]
+            if score:
+                if enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores:
+                    enrollment.score_reencoded = float(score)
+                else:
+                    enrollment.score_reencoded = int(float(score))
+            enrollment.justification_reencoded = request.POST['justification_'+ str(enrollment.id)]
+            enrollment.save()
+        return online_double_encoding_validation(request, session_id)
+
+@login_required
+def notes_printing(request,session_exam_id,learning_unit_year_id):
+    tutor = Tutor.find_by_user(request.user)
+    academic_year = AcademicCalendar.current_academic_year()
+    session_exam = SessionExam.find_session(session_exam_id)
+    sessions = SessionExam.find_sessions_by_tutor(tutor, academic_year)
+    return pdfUtils.print_notes(request,tutor,academic_year,session_exam,sessions,learning_unit_year_id)
+
 @login_required
 def upload_score_error(request):
-    print ('upload_score_error')
     return render(request, "upload_score_error.html", {})
 
 @login_required
@@ -191,7 +197,7 @@ def notes_printing(request, session_id, learning_unit_year_id):
     tutor = Tutor.find_by_user(request.user)
     academic_year = AcademicCalendar.current_academic_year()
     session_exam = SessionExam.current_session_exam()
-    sessions = SessionExam.find_sessions_by_tutor(tutor, academic_year, session_exam)
+    sessions = SessionExam.find_sessions_by_tutor(tutor, academic_year)
     return pdfUtils.print_notes(request,tutor,academic_year,session_exam,sessions,learning_unit_year_id)
 
 @login_required
