@@ -51,7 +51,7 @@ def print_notes(request,tutor, academic_year, session_exam,sessions,learning_uni
         list_exam_enrollment = ExamEnrollment.find_exam_enrollments(session_exam)
     else:
         if tutor:
-            sessions = SessionExam.find_sessions_by_tutor(tutor, academic_year, session_exam)
+            sessions = SessionExam.find_sessions_by_tutor(tutor, academic_year)
         # In case the user is not a tutor we check whether it is member of a faculty.
         elif request.user.groups.filter(name='FAC').exists():
             faculty = ProgrammeManager.find_faculty_by_user(request.user)
