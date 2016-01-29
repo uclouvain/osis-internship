@@ -172,7 +172,7 @@ class AcademicCalendar(models.Model):
             return None
 
     def find_academic_calendar_by_event_type(academic_year_id, session_number):
-        event_type_criteria = "EXAM_SCORES_SUBMISSION_SESS"+str(session_number)
+        event_type_criteria = "EXAM_SCORES_SUBMISSION_SESS_"+str(session_number)
         return AcademicCalendar.objects.get(academic_year=academic_year_id, event_type=event_type_criteria)
 
     def __str__(self):
@@ -237,7 +237,7 @@ class OfferYearCalendar(models.Model):
     end_date          = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
 
     def current_session_exam():
-        return OfferYearCalendar.objects.filter(event_type__startswith='EXAM_SCORES_SUBMISSION_SESS'
+        return OfferYearCalendar.objects.filter(event_type__startswith='EXAM_SCORES_SUBMISSION_SESS_'
                                        ).filter(start_date__lte=timezone.now()
                                        ).filter(end_date__gte=timezone.now()).first()
 
@@ -403,19 +403,18 @@ class ExamEnrollment(models.Model):
     def student(self):
         return self.learning_unit_enrollment.student
 
-    def justification_label(self,lang):
-        if lang == 'fr':
-            if self.justification == "ABSENT":
-                return 'Absent'
-            if self.justification == "ILL":
-                return 'Malade'
-            if self.justification == "CHEATING":
-                return 'Tricherie'
-            if self.justification == "JUSTIFIED_ABSENCE":
-                return 'Absence justifiée'
-            if self.justification == "SCORE_MISSING":
-                return 'Note manquante'
-            return None
+    def justification_label(self):
+        if self.justification_draft == "ABSENT":
+            return _('Absent')
+        if self.justification_draft == "ILL":
+            return _('Ill')
+        if self.justification_draft == "CHEATING":
+            return _('Cheating')
+        if self.justification_draft == "JUSTIFIED_ABSENCE":
+            return _('Justified absence')
+        if self.justification_draft == "SCORE_MISSING":
+            return _('Score missing')
+        return None
 
     def justification_label_authorized(isFac):
         if isFac:
