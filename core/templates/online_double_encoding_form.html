@@ -3,6 +3,7 @@
 {% load i18n %}
 {% load percentage %}
 {% load list%}
+{% load programme_manager %}
 
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
@@ -101,6 +102,11 @@
                       <option value="ABSENT">{% trans 'Absent' %}</option>
                       <option value="CHEATING">{% trans 'Cheating' %}</option>
                       <option value="SCORE_MISSING">{% trans 'Score missing' %}</option>
+                      {% programme_manager as pm %}
+                      {% if pm %}
+                      <option value="ILL" >{% trans 'Ill' %}</option>
+                      <option value="JUSTIFIED_ABSENCE">{% trans 'Justified absence' %}</option>)
+                      {% endif %}
                     </select></td>
                 <td>{{ enrollment.session_exam.offer_year_calendar.end_date }}</td>
               </tr>
