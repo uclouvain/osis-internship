@@ -27,10 +27,6 @@ from django import template
 
 register = template.Library()
 
-COLOR_1 = ""
-COLOR_2 = ""
-COLOR_CURRENT = ""
-
 @register.filter
 def previous(value, arg):
     arg = arg-1
