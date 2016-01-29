@@ -45,17 +45,17 @@ $("input[id^='double_score_']" ).blur(function(event) {
     id = target.attr("id");
   }
 
-  enrollmentId = id.substring(id.lastIndexOf("_") + 1);
-  score_draft = Number($("#score_draft_" + enrollmentId).val());
+  var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
+  var score_draft = Number($("#score_draft_" + enrollmentId).val());
 
   if (target.val() != score_draft)
     target.css("border", "1px solid #ff0000");
   else
     target.css("border", "0px");
 
-  double_justification_field = $("#double_justification_score_"+ enrollmentId);
-  justification_double = double_justification_field.val();
-  justification_draft =  $("#justification_draft_" + enrollmentId).val();
+  var double_justification_field = $("#double_justification_score_"+ enrollmentId);
+  var justification_double = double_justification_field.val();
+  var justification_draft =  $("#justification_draft_" + enrollmentId).val();
 
   if (justification_double != justification_draft)
     double_justification_field.css("border", "1px solid #ff0000");
@@ -72,12 +72,47 @@ $("select[id^='double_justification_score_']" ).blur(function(event) {
     id = target.attr("id");
   }
 
-  enrollmentId = id.substring(id.lastIndexOf("_") + 1);
-  justification_draft =  $("#justification_draft_" + enrollmentId).val();
+  var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
+  var justification_draft =  $("#justification_draft_" + enrollmentId).val();
 
   if (target.val() != justification_draft)
     target.css("border", "1px solid #ff0000");
   else
     target.css("border", "0px");
+});
+
+/*** Double encoding validation ***/
+$("button[id^='take_draft_']").click(function(event) {
+  var target = $(event.target);
+  var id = target.attr("id");
+  if (typeof id == 'undefined') {
+    target = target.parent();
+    id = target.attr("id");
+  }
+
+  var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
+  var score_draft = $("#score_draft_"+ enrollmentId).val();
+  var justification_draft = $("#justification_draft_"+ enrollmentId).val();
+  $("#score_final_show_"+ enrollmentId).html(score_draft);
+  $("#score_"+ enrollmentId).val(score_draft);
+  $("#justification_final_show_"+ enrollmentId).html(justification_draft);
+  $("#justification_"+ enrollmentId).val(justification_draft);
+});
+
+$("button[id^='take_reencoded_']").click(function(event) {
+  var target = $(event.target);
+  var id = target.attr("id");
+  if (typeof id == 'undefined') {
+    target = target.parent();
+    id = target.attr("id");
+  }
+
+  var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
+  var score_reencoded = $("#score_reencoded_"+ enrollmentId).val();
+  var justification_reencoded = $("#justification_reencoded_"+ enrollmentId).val();
+  $("#score_final_show_"+ enrollmentId).html(score_reencoded);
+  $("#score_"+ enrollmentId).val(score_reencoded);
+  $("#justification_final_show_"+ enrollmentId).html(justification_reencoded);
+  $("#justification_"+ enrollmentId).val(justification_reencoded);
 });
 /******************************************************************************/
