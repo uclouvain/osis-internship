@@ -96,8 +96,8 @@
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
-                <td><input type="number" value="" class="form-control"></td>
-                <td><select class="form-control">
+                <td><input type="number" value="" class="form-control" {{ enrollment.score_final | disabled }}></td>
+                <td><select class="form-control" {{ enrollment.score_final | disabled }}>
                       <option value=""></option>
                       <option value="ABSENT">{% trans 'Absent' %}</option>
                       <option value="CHEATING">{% trans 'Cheating' %}</option>
