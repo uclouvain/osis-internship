@@ -389,6 +389,12 @@ class ExamEnrollment(models.Model):
         enrollments = ExamEnrollment.objects.filter(session_exam=session_exam)
         return enrollments
 
+    def find_exam_enrollments_to_validate(session_exam):
+        enrollments = ExamEnrollment.objects.filter(session_exam=session_exam
+                                           ).filter(~models.Q(score_draft=models.F('score_reencoded')) |
+                                                    ~models.Q(justification_draft=models.F('justification_reencoded')))
+        return enrollments
+
     def student(self):
         return self.learning_unit_enrollment.student
 

@@ -141,7 +141,7 @@ def online_double_encoding_validation(request, session_id):
     tutor = Tutor.find_by_user(request.user)
     academic_year = AcademicCalendar.current_academic_year()
     session = SessionExam.find_session(session_id)
-    enrollments = ExamEnrollment.find_exam_enrollments(session)
+    enrollments = ExamEnrollment.find_exam_enrollments_to_validate(session)
 
     return render(request, "online_double_encoding_validation.html",
                   {'section':       'scores_encoding',

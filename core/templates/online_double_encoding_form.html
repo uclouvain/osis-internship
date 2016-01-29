@@ -94,15 +94,15 @@
               <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
               <td>
                 <input type="hidden" id="score_draft_{{ enrollment.id }}" value="{{ enrollment.score_draft | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores }}">
-                <input type="number" step="any" name="score_{{ enrollment.id }}" id="double_score_{{ enrollment.id }}" tabindex="{{ forloop.counter }}" value="{{ enrollment.score_reencoded | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores }}" class="form-control">
+                <input type="number" step="any" name="score_{{ enrollment.id }}" id="double_score_{{ enrollment.id }}" tabindex="{{ forloop.counter }}" class="form-control">
               </td>
               <td>
                 <input type="hidden" id="justification_draft_{{ enrollment.id }}" value="{{ enrollment.justification_draft }}">
                 <select class="form-control" name="justification_{{ enrollment.id }}" id="double_justification_score_{{ enrollment.id }}" tabindex="{{ enrollments|length|sum:forloop.counter }}">
                   <option value=""></option>
-                  <option value="ABSENT" {% if enrollment.justification_reencoded == 'ABSENT' %}selected="selected"{% endif %}>{% trans 'Absent' %}</option>
-                  <option value="CHEATING" {% if enrollment.justification_reencoded == 'CHEATING' %}selected="selected"{% endif %}>{% trans 'Cheating' %}</option>
-                  <option value="SCORE_MISSING" {% if enrollment.justification_reencoded == 'SCORE_MISSING' %}selected="selected"{% endif %}>{% trans 'Score missing' %}</option>
+                  <option value="ABSENT">{% trans 'Absent' %}</option>
+                  <option value="CHEATING">{% trans 'Cheating' %}</option>
+                  <option value="SCORE_MISSING">{% trans 'Score missing' %}</option>
                 </select>
               </td>
               <td>{{ enrollment.session_exam.offer_year_calendar.end_date }}</td>
@@ -112,7 +112,7 @@
         </table>
         <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> {% trans 'Compare' %}</button>
         <a class="btn btn-default" href="{% url 'online_encoding' session.id %}" role="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'Cancel' %}</a>
-      </form>      
+      </form>
     </div>
   </div>
 {% endblock %}
