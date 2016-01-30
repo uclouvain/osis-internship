@@ -24,7 +24,8 @@ COLS_WIDTH = [25*mm,30*mm,30*mm,25*mm,30*mm,27*mm]
 SMALL_INTER_LINE = Spacer(1, 12)
 BIG_INTER_LINE = Spacer(1, 30)
 
-def print_notes(request,tutor, academic_year, session_exam,sessions,learning_unit_year_id, isFac):
+def print_notes(request,tutor, academic_year, session_exam,sessions,learning_unit_year_id):
+    print(request.path)
     """
     Create a multi-page document
     """
@@ -50,7 +51,7 @@ def print_notes(request,tutor, academic_year, session_exam,sessions,learning_uni
         list_exam_enrollment = ExamEnrollment.find_exam_enrollments(session_exam)
     else:
         if tutor:
-            sessions = SessionExam.find_sessions_by_tutor(tutor, academic_year, session_exam)
+            sessions = SessionExam.find_sessions_by_tutor(tutor, academic_year)
         # In case the user is not a tutor we check whether it is member of a faculty.
         elif request.user.groups.filter(name='FAC').exists():
             faculty = ProgrammeManager.find_faculty_by_user(request.user)
@@ -65,7 +66,7 @@ def print_notes(request,tutor, academic_year, session_exam,sessions,learning_uni
                 list_exam_enrollment = list_exam_enrollment + enrollments
 
 
-    list_notes_building(session_exam, learning_unit_year_id, academic_year, academic_calendar, tutor, list_exam_enrollment, styles, isFac, Contenu)
+    list_notes_building(session_exam, learning_unit_year_id, academic_year, academic_calendar, tutor, list_exam_enrollment, styles, request.user.groups.filter(name='FAC').exists(), Contenu)
 
     doc.build(Contenu, onFirstPage=addHeaderFooter, onLaterPages=addHeaderFooter)
     pdf = buffer.getvalue()
@@ -88,7 +89,8 @@ def addHeaderFooter(canvas, doc):
     canvas.restoreState()
 
 def header_building(canvas, doc,styles):
-    a = Image("../core/" + settings.STATIC_URL + "images/logo_institution.jpg")
+    a = Image("core"+ settings.STATIC_URL +"/img/logo_institution.jpg")
+
     P = Paragraph('''
                     <para align=center spaceb=3>
                         <font size=16>%s</font>
@@ -104,7 +106,7 @@ def header_building(canvas, doc,styles):
     w, h = t_header.wrap(doc.width, doc.topMargin)
     t_header.drawOn(canvas, doc.leftMargin, doc.height + doc.topMargin - h)
 
-def list_notes_building(session_exam, learning_unit_year_id, academic_year, academic_calendar, tutor,list_exam_enrollment, styles, learning_unit_year, isFac, Contenu):
+def list_notes_building(session_exam, learning_unit_year_id, academic_year, academic_calendar, tutor,list_exam_enrollment, styles, isFac, Contenu):
     #liste des notes
     Contenu.append(SMALL_INTER_LINE)
     data = headers_table(styles)
@@ -141,11 +143,16 @@ def list_notes_building(session_exam, learning_unit_year_id, academic_year, acad
                 current_learning_unit_year = rec_exam_enrollment.learning_unit_enrollment.learning_unit_year
 
             person = Person.find_person(student.person.id)
+            if not (rec_exam_enrollment.score_draft is None):
+                if rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores :
+                    score = "{0:.2f}".format(rec_exam_enrollment.score_draft)
+                else:
+                    score = "{0:.0f}".format(rec_exam_enrollment.score_draft)
             data.append([student.registration_id,
                            person.last_name,
                            person.first_name,
-                           rec_exam_enrollment.score,
-                           rec_exam_enrollment.justification_label('fr'),
+                           score,
+                           rec_exam_enrollment.justification_label(),
                            academic_calendar.end_date.strftime('%d/%m/%Y')
                            ])
 

@@ -3,8 +3,12 @@
 {% load i18n %}
 {% load percentage %}
 {% load list%}
+<<<<<<< HEAD
+{% load programme_manager %}
+=======
 {% load sum %}
 {% load score_display %}
+>>>>>>> 20039c47f47deb5c416ea6b64d26263366a5acd2
 
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
@@ -76,39 +80,38 @@
       <form class="form-inline" method="POST" action="{% url 'online_double_encoding_form' session.id %}">
         {% csrf_token %}
         <table class="table table-hover">
-          <thead>
-            <th>{% trans 'Offer' %}</th>
-            <th>{% trans 'Registration number' %}</th>
-            <th>{% trans 'Lastname' %}</th>
-            <th>{% trans 'Firstname' %}</th>
-            <th>{% trans 'Score' %}</th>
-            <th>{% trans 'Justification' %}</th>
-            <th>{% trans 'End date' %}</th>
-          </thead>
-          <tbody>
-          {% for enrollment in enrollments %}
-            <tr style="background-color:{{ enrollments|previous:forloop.counter }}">
-              <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
-              <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
-              <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
-              <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
-              <td>
-                <input type="hidden" id="score_draft_{{ enrollment.id }}" value="{{ enrollment.score_draft | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores }}">
-                <input type="number" step="any" name="score_{{ enrollment.id }}" id="double_score_{{ enrollment.id }}" tabindex="{{ forloop.counter }}" class="form-control">
-              </td>
-              <td>
-                <input type="hidden" id="justification_draft_{{ enrollment.id }}" value="{{ enrollment.justification_draft }}">
-                <select class="form-control" name="justification_{{ enrollment.id }}" id="double_justification_score_{{ enrollment.id }}" tabindex="{{ enrollments|length|sum:forloop.counter }}">
-                  <option value=""></option>
-                  <option value="ABSENT">{% trans 'Absent' %}</option>
-                  <option value="CHEATING">{% trans 'Cheating' %}</option>
-                  <option value="SCORE_MISSING">{% trans 'Score missing' %}</option>
-                </select>
-              </td>
-              <td>{{ enrollment.session_exam.offer_year_calendar.end_date }}</td>
-            </tr>
-          {% endfor %}
-          </tbody>
+            <thead>
+              <th>{% trans 'Offer' %}</th>
+              <th>{% trans 'Registration number' %}</th>
+              <th>{% trans 'Lastname' %}</th>
+              <th>{% trans 'Firstname' %}</th>
+              <th>{% trans 'Score' %}</th>
+              <th>{% trans 'Justification' %}</th>
+              <th>{% trans 'End date' %}</th>
+            </thead>
+            <tbody>
+            {% for enrollment in enrollments %}
+              <tr style="background-color:{{ enrollments|previous:forloop.counter }}">
+                <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
+                <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
+                <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
+                <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
+                <td><input type="number" value="" class="form-control" {{ enrollment.score_final | disabled }}></td>
+                <td><select class="form-control" {{ enrollment.score_final | disabled }}>
+                      <option value=""></option>
+                      <option value="ABSENT">{% trans 'Absent' %}</option>
+                      <option value="CHEATING">{% trans 'Cheating' %}</option>
+                      <option value="SCORE_MISSING">{% trans 'Score missing' %}</option>
+                      {% programme_manager as pm %}
+                      {% if pm %}
+                      <option value="ILL" >{% trans 'Ill' %}</option>
+                      <option value="JUSTIFIED_ABSENCE">{% trans 'Justified absence' %}</option>)
+                      {% endif %}
+                    </select></td>
+                <td>{{ enrollment.session_exam.offer_year_calendar.end_date }}</td>
+              </tr>
+            {% endfor %}
+            </tbody>
         </table>
         <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> {% trans 'Compare' %}</button>
         <a class="btn btn-default" href="{% url 'online_encoding' session.id %}" role="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'Cancel' %}</a>

@@ -27,19 +27,9 @@ from django import template
 
 register = template.Library()
 
-@register.filter
-def score_display(value, decimal_option):
-    if value is None or str(value) == '-':
-        return "-"
-    else:
-        if decimal_option:
-            return "{0:.2f}".format(value)
-        else:
-            return "{0:.0f}".format(value)
+@register.assignment_tag(takes_context=True)
+def programme_manager(context):
+    request = context['request']
+    enrollment = context['enrollment']
 
-@register.filter
-def disabled(value):
-    if value is None:
-        return ""
-    else:
-        return "disabled"
+    return enrollment.learning_unit_enrollment.offer_enrollment.offer_year.is_programme_manager(request.user)
