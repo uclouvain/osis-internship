@@ -137,23 +137,6 @@ def online_encoding_form(request, session_id):
         return online_encoding(request, session_id)
 
 @login_required
-def online_double_encoding_validation(request, session_id):
-    tutor = Tutor.find_by_user(request.user)
-    academic_year = AcademicCalendar.current_academic_year()
-    session = SessionExam.find_session(session_id)
-    enrollments = ExamEnrollment.find_exam_enrollments_to_validate(session)
-
-    return render(request, "online_double_encoding_validation.html",
-                  {'section':       'scores_encoding',
-                   'tutor':         tutor,
-                   'academic_year': academic_year,
-                   'session':       session,
-                   'enrollments':   enrollments,
-                   'justifications':ExamEnrollment.JUSTIFICATION_TYPES,
-                   'enrollments':   enrollments})
-
-
-@login_required
 def online_double_encoding_form(request, session_id):
     session = SessionExam.find_session(session_id)
     enrollments = ExamEnrollment.find_exam_enrollments(session.id)
@@ -178,7 +161,43 @@ def online_double_encoding_form(request, session_id):
                     enrollment.score_reencoded = int(float(score))
             enrollment.justification_reencoded = request.POST['justification_'+ str(enrollment.id)]
             enrollment.save()
-        return online_double_encoding_validation(request, session_id)
+        return HttpResponseRedirect(reverse('online_double_encoding_validation', args=(session.id,)))
+
+@login_required
+def online_double_encoding_validation(request, session_id):
+    session = SessionExam.find_session(session_id)
+    enrollments = None
+    if request.method == 'GET':
+        tutor = Tutor.find_by_user(request.user)
+        academic_year = AcademicCalendar.current_academic_year()
+        enrollments = ExamEnrollment.find_exam_enrollments_to_validate(session)
+        return render(request, "online_double_encoding_validation.html",
+                      {'section':       'scores_encoding',
+                       'tutor':         tutor,
+                       'academic_year': academic_year,
+                       'session':       session,
+                       'enrollments':   enrollments,
+                       'justifications':ExamEnrollment.JUSTIFICATION_TYPES,
+                       'enrollments':   enrollments})
+    elif request.method == 'POST':
+        print(request.POST)
+        enrollments = ExamEnrollment.find_exam_enrollments(session)
+        for enrollment in enrollments:
+            score = request.POST.get('score_'+ str(enrollment.id), None)
+            if score:
+                if enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores:
+                    enrollment.score_final = float(score)
+                else:
+                    enrollment.score_final = int(float(score))
+            else:
+                enrollment.score_final = enrollment.score_draft
+
+            justification = request.POST.get('justification_'+ str(enrollment.id), None)
+            if justification:
+                enrollment.justification_final = justification
+            else:
+                enrollment.justification_final = enrollment.justification_draft
+        return online_encoding(request, session_id)
 
 @login_required
 def notes_printing(request,session_exam_id,learning_unit_year_id):

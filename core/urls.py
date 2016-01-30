@@ -43,7 +43,6 @@ urlpatterns = [
     url(r'^offers/$', views.offers, name='offers'),
     url(r'^offers/search$', views.offers_search, name='offers_search'),
 
-
     url(r'^programme/$', views.programme, name='programme'),
 
     url(r'^studies/$', views.studies, name='studies'),
