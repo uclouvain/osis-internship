@@ -32,9 +32,7 @@ from openpyxl.cell import get_column_letter
 from openpyxl.worksheet.datavalidation import DataValidation
 from openpyxl.styles import Fill, Color, Style, PatternFill
 from openpyxl.worksheet import Worksheet, ColumnDimension, RowDimension
-
 from core.models import AcademicCalendar, SessionExam, ExamEnrollment, LearningUnitYear, Person, AcademicYear
-
 from django.utils.dateformat import DateFormat
 from django.utils.formats import get_format
 from django.utils.translation import ugettext_lazy as _
@@ -53,11 +51,9 @@ HEADER = [str(_('Academic year')),
           str(_('ID'))]
 
 def export_xls(request, session_id, learning_unit_year_id, academic_year_id, isFac):
-
     academic_year = AcademicYear.find_academic_year(academic_year_id)
     session_exam = SessionExam.find_session(session_id)
     academic_calendar = AcademicCalendar.find_academic_calendar_by_event_type(academic_year_id,session_exam.number_session)
-
     wb = Workbook()
     ws = wb.active
 
@@ -78,7 +74,16 @@ def export_xls(request, session_id, learning_unit_year_id, academic_year_id, isF
         text_credits = ""
         if not(rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.credits is None):
             credits = rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.credits
-
+        if academic_calendar.end_date is None:
+            end_date="-"
+        else:
+            end_date = academic_calendar.end_date.strftime('%d/%m/%Y')
+        score="-"
+        if not (rec_exam_enrollment.score_draft is None):
+            if rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores :
+                score = "{0:.2f}".format(rec_exam_enrollment.score_draft)
+            else:
+                score = "{0:.0f}".format(rec_exam_enrollment.score_draft)
         ws.append([str(academic_year),
                    str(session_exam.number_session),
                    session_exam.learning_unit_year.acronym,
@@ -86,22 +91,20 @@ def export_xls(request, session_id, learning_unit_year_id, academic_year_id, isF
                    student.registration_id,
                    person.last_name,
                    person.first_name,
-                   rec_exam_enrollment.score,
-                   rec_exam_enrollment.justification,
-                   academic_calendar.end_date.strftime('%d/%m/%Y'),
+                   score,
+                   rec_exam_enrollment.justification_draft,
+                   end_date,
                    credits,
                    rec_exam_enrollment.id
                    ])
 
-
         cptr = cptr+1
-        __coloring_non_editable(ws,cptr, rec_exam_enrollment.encoding_status,rec_exam_enrollment.score,rec_exam_enrollment.justification)
-
+        __coloring_non_editable(ws,cptr, rec_exam_enrollment.encoding_status,score,rec_exam_enrollment.justification_draft)
 
     dv.ranges.append('I2:I'+str(cptr+100))#Ajouter 100 pour si on ajoute des enregistrements
 
     response = HttpResponse(content=save_virtual_workbook(wb))
-    response['Content-Disposition'] = 'attachment; filename=myexport.xlsx'
+    response['Content-Disposition'] = 'attachment; filename=score_encoding.xlsx'
     response['Content-type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     return response
 

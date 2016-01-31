@@ -34,39 +34,16 @@
   <div class="page-header">
     <h2>{% trans 'Evaluations' %}</h2>
   </div>
-  <ul class="media-list">
-    <li class="media">
-      <div class="media-left">
-        <a href="#">
-          <img class="media-object" src="{% static 'images/icon_assessements.png' %}">
-        </a>
+  
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-1"><i class="fa fa-hashtag" style="font-size: 400%; color: #6699FF;"></i></div>
+        <div class="col-md-11">
+          <h4 class="media-heading"><a href="{% url 'scores_encoding' %}">{% trans 'Scores encoding' %}</a></h4>
+          <p>{% trans 'This process helps tutor while encoding notes for the exams sessions.' %}</p>
+        </div>
       </div>
-      <div class="media-body">
-        <h4 class="media-heading"><a href="#">{% trans 'Exams enrollment' %}</a></h4>
-        {% trans 'This process helps the exams enrollments management' %}
-      </div>
-    </li>
-    <li class="media">
-      <div class="media-left">
-        <a href="{% url 'scores_encoding' %}">
-          <img class="media-object" src="{% static 'images/icon_encoding_scores.png' %}">
-        </a>
-      </div>
-      <div class="media-body">
-        <h4 class="media-heading"><a href="{% url 'scores_encoding' %}">{% trans 'Scores encoding' %}</a></h4>
-        {% trans 'This process helps tutor while encoding notes for the exams sessions.' %}
-      </div>
-    </li>
-    <li class="media">
-      <div class="media-left">
-        <a href="#">
-          <img class="media-object" src="{% static 'images/icon_deliberations.png' %}">
-        </a>
-      </div>
-      <div class="media-body">
-        <h4 class="media-heading"><a href="#">{% trans 'Deliberations' %}</a></h4>
-        {% trans 'This process helps for the deliberations' %}
-      </div>
-    </li>
-  </ul>
+    </div>
+  </div>
 {% endblock %}

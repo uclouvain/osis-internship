@@ -14,3 +14,9 @@ body {
 .error {
   color:red;
 }
+.btn.btn-as-block {
+  display: block;
+}
+.invisible{
+  visibility: hidden;
+}

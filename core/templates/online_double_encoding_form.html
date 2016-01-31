@@ -1,10 +1,11 @@
 {% extends "layout.html" %}
 {% load l10n %}
 {% load i18n %}
-{% load sum %}
+{% load percentage %}
 {% load list%}
-{% load score_display %}
 {% load programme_manager %}
+{% load sum %}
+{% load score_display %}
 
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
@@ -34,11 +35,12 @@
   <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
   <li><a href="{% url 'assessments' %}">{% trans 'Evaluations' %}</a></li>
   <li><a href="{% url 'scores_encoding' %}">{% trans 'Scores encoding' %}</a></li>
-  <li class="active">{% trans 'Online encoding' %}</li>
+  <li><a href="{% url 'online_encoding' session.id %}">{% trans 'Online scores encoding' %}</a></li>
+  <li class="active">{% trans 'Dubble online scores encoding' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'Online encoding' %}</h2>
+    <h2>{% trans 'Dubble online scores encoding' %}</h2>
   </div>
   <div class="panel panel-default">
     <div class="panel-heading">
@@ -72,11 +74,8 @@
         </div>
       </div>
       <hr>
-      <form class="form-inline" method="POST" action="{% url 'online_encoding_form' session.id %}">
+      <form class="form-inline" method="POST" action="{% url 'online_double_encoding_form' session.id %}">
         {% csrf_token %}
-        <submit class="btn btn-primary"><span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'Save' %}</submit>
-        <a class="btn btn-default" href="{% url 'online_encoding' session.id %}" role="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'Cancel' %}</a><br><br>
-
         <table class="table table-hover">
             <thead>
               <th>{% trans 'Offer' %}</th>
@@ -89,31 +88,34 @@
             </thead>
             <tbody>
             {% for enrollment in enrollments %}
-              <tr  style="background-color:{{ enrollments|previous:forloop.counter }}">
+              <tr style="background-color:{{ enrollments|previous:forloop.counter }}">
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
-                <td><input type="number" step="any" name="score_{{ enrollment.id }}" id="score_{{ enrollment.id }}" tabindex="{{ forloop.counter }}"
-                           value="{{ enrollment.score_draft | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores }}" class="form-control" {% if enrollment.score_final or enrollment.justification_final %} disabled {% endif %}></td>
-                <td><select class="form-control" name="justification_{{ enrollment.id }}" id="justification_score_{{ enrollment.id }}" tabindex="{{ enrollments|length|sum:forloop.counter }}" {% if enrollment.score_final or enrollment.justification_final %} disabled {% endif %}>
+                <td>
+                   <input type="hidden" id="score_draft_{{ enrollment.id }}" value="{{ enrollment.score_draft | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores }}">
+                   <input type="number" step="any" name="score_{{ enrollment.id }}" id="double_score_{{ enrollment.id }}" tabindex="{{ forloop.counter }}" class="form-control" {% if enrollment.score_final or enrollment.justification_final %} disabled {% endif %}>
+                </td>
+                <td>
+                   <input type="hidden" id="justification_draft_{{ enrollment.id }}" value="{{ enrollment.justification_draft }}">
+                   <select class="form-control" name="justification_{{ enrollment.id }}" id="double_justification_score_{{ enrollment.id }}" tabindex="{{ enrollments|length|sum:forloop.counter }}" {% if enrollment.score_final or enrollment.justification_final %} disabled {% endif %}>
                       <option value=""></option>
-                      <option value="ABSENT" {% if enrollment.justification_draft == 'ABSENT' %}selected="selected"{% endif %}>{% trans 'Absent' %}</option>
-                      <option value="CHEATING" {% if enrollment.justification_draft == 'CHEATING' %}selected="selected"{% endif %}>{% trans 'Cheating' %}</option>
-                      <option value="SCORE_MISSING" {% if enrollment.justification_draft == 'SCORE_MISSING' %}selected="selected"{% endif %}>{% trans 'Score missing' %}</option>
-                      {% programme_manager as pm %}
-                      {% if pm %}
-                      <option value="ILL" {% if enrollment.justification_draft == 'ILL' %}selected="selected"{% endif %}>{% trans 'Ill' %}</option>
-                      <option value="JUSTIFIED_ABSENCE" {% if enrollment.justification_draft == 'JUSTIFIED_ABSENCE' %}selected="selected"{% endif %}>{% trans 'Justified absence' %}</option>)
+                      <option value="ABSENT">{% trans 'Absent' %}</option>
+                      <option value="CHEATING">{% trans 'Cheating' %}</option>
+                      <option value="SCORE_MISSING">{% trans 'Score missing' %}</option>
+                      {% if programme_manager %}
+                      <option value="ILL" >{% trans 'Ill' %}</option>
+                      <option value="JUSTIFIED_ABSENCE">{% trans 'Justified absence' %}</option>)
                       {% endif %}
-                    </select></td>
+                   </select>
+                </td>
                 <td>{{ enrollment.session_exam.offer_year_calendar.end_date }}</td>
               </tr>
             {% endfor %}
             </tbody>
         </table>
-
-        <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'Save' %}</button>
+        <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> {% trans 'Compare' %}</button>
         <a class="btn btn-default" href="{% url 'online_encoding' session.id %}" role="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'Cancel' %}</a>
       </form>
     </div>

@@ -1,4 +1,5 @@
-*.html
+os
+sys
 *.pdf
 *.pyc
 *.iml
