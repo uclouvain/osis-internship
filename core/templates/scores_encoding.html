@@ -157,7 +157,7 @@
                           <span style="color: green" class="glyphicon glyphicon-ok" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="Closed"></span> {{ session.status|title }}</td>
                         {% endif %}
                     <td>{{ session.learning_unit_year.acronym }}</td>
-                    <td><a href="{% url 'online_encoding' session.id %}">{{ session.learning_unit_year.title }}</a></td>
+                    <td>{{ session.learning_unit_year.title }}</td>
                     <td>{{ session.progress }}</td>
                     <td><a class="btn btn-default" href="{% url 'notes_printing' session.id session.learning_unit_year.id %}" role="button"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> Imprimer</a></td>
                   </tr>

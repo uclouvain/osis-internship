@@ -104,7 +104,7 @@
           <tbody>
           {% for enrollment in enrollments %}
             <tr style="background-color:{{ enrollments|previous:forloop.counter }}">
-                <td>{% if enrollment.score_final %}
+                <td>{% if enrollment.score_final or enrollment.justification_final %}
                         <span class="glyphicon glyphicon-ok" aria-hidden="true" style="color: green;"></span>
                     {% endif %}
                 </td>
@@ -168,7 +168,7 @@
                   <h4 class="modal-title" id="submissionScoresLabel">Submission</h4>
               </div>
               <div class="modal-body">
-                  <p class="help-block">Vous êtes en train de soumettre {{ enrollments|length }} notes.</p>
+                  <p class="help-block">Vous êtes en train de soumettre {{ num_encoded_scores }} notes.</p>
               </div>
               <div class="modal-footer">
                   <a class="btn btn-warning" href="{% url 'online_encoding_submission' session.id %}" role="button"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> Soumettre</a>
