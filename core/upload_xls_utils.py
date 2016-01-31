@@ -29,26 +29,18 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext
-
 from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl.cell import get_column_letter
 from openpyxl import load_workbook
-
 from core.models import AcademicCalendar, SessionExam, ExamEnrollment, LearningUnitYear, Person, AcademicYear, Student,OfferYear,LearningUnitEnrollment,OfferEnrollment
 from core.forms import ScoreFileForm
-
 from django.contrib import messages
-from . import exportUtils
+from . import export_utils
 
 
 @login_required
 def upload_scores_file(request, session_id, learning_unit_year_id, academic_year_id):
-    """
-
-    :param request:
-    :return:
-    """
     message_validation = ""
     if request.method == 'POST':
         form = ScoreFileForm(request.POST, request.FILES)
@@ -156,7 +148,7 @@ def __save_xls_scores(request, file_name):
             print ('else')
             #Il faut valider le fichier xls
             #Je valide les entêtes de colonnes
-            list_header = exportUtils.HEADER
+            list_header = export_utils.HEADER
             print ('else 2')
             i = 0
             for header_col in list_header:

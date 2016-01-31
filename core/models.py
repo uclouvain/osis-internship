@@ -119,7 +119,10 @@ class ProgrammeManager(models.Model):
 
     def find_faculty_by_user(user):
         programme_manager = ProgrammeManager.objects.filter(person__user=user).first()
-        return programme_manager.faculty
+        if programme_manager:
+            return programme_manager.faculty
+        else:
+            return None
 
     def __str__(self):
         return u"%s - %s" % (self.person, self.faculty)
@@ -207,14 +210,13 @@ class OfferYear(models.Model):
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.offer.acronym)
 
+    # This function should not be here.
     def is_programme_manager(self,user):
         person = Person.objects.get(user=user)
         if user:
             programme_manager = ProgrammeManager.objects.filter(person=person.id, faculty=self.structure)
-            print('zut111')
             if programme_manager:
                 return True
-
         return False
 
 

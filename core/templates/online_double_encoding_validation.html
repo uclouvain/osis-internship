@@ -31,7 +31,7 @@
 
 {% block breadcrumb %}
   <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
-  <li><a href="{% url 'assessements' %}">{% trans 'Evaluations' %}</a></li>
+  <li><a href="{% url 'assessments' %}">{% trans 'Evaluations' %}</a></li>
   <li><a href="{% url 'scores_encoding' %}">{% trans 'Scores encoding' %}</a></li>
   <li><a href="{% url 'online_encoding' session.id %}">{% trans 'Online scores encoding' %}</a></li>
   <li class="active">{% trans 'Dubble online scores encoding' %}</li>

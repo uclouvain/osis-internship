@@ -30,7 +30,7 @@
 
 {% block breadcrumb %}
   <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
-  <li><a href="{% url 'assessements' %}">{% trans 'Evaluations' %}</a></li>
+  <li><a href="{% url 'assessments' %}">{% trans 'Evaluations' %}</a></li>
   <li><a href="{% url 'scores_encoding' %}">{% trans 'Scores encoding' %}</a></li>
   <li class="active">{% trans 'Online encoding' %}</li>
 {% endblock %}
@@ -84,34 +84,42 @@
 
       <a class="btn btn-default" href="{% url 'online_encoding_form' session.id %}" role="button"><i class="fa fa-hashtag"></i> {% trans 'Encode' %}</a>
       <a class="btn btn-default" href="{% url 'online_double_encoding_form' session.id %}" role="button"><i class="fa fa-hashtag"></i><i class="fa fa-hashtag"></i> {% trans 'Double encoding' %}</a>
-      <a class="btn btn-warning" href="{% url 'online_encoding_form' session.id %}" role="button"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'Submission' %}</a>
-      <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#uploadScoreModal" title="{% trans 'Select a xls file from which to injec scores' %}"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> {% trans 'Submit xls file' %}</button><br><br>
+      <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#submissionScoresModal"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'Submission' %}</button>
+      <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#uploadScoreModal" title="{% trans 'Select a xls file from which to injec scores' %}"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> {% trans 'Submit xls file' %}</button>
+      <br><br>
 
       <table class="table table-hover">
           <thead>
-            <th>{% trans 'Program' %}</th>
-            <th>{% trans 'Registration number' %}</th>
-            <th>{% trans 'Last name' %}</th>
-            <th>{% trans 'First name' %}</th>
-            <th>{% trans 'Score' %}</th>
-            <th>{% trans 'Other score' %}</th>
-            <th>{% trans 'End date' %}</th>
+            <tr>
+                <th> </th>
+                <th>{% trans 'Program' %}</th>
+                <th>{% trans 'Registration number' %}</th>
+                <th>{% trans 'Last name' %}</th>
+                <th>{% trans 'First name' %}</th>
+                <th>{% trans 'Score' %}</th>
+                <th>{% trans 'Other score' %}</th>
+                <th>{% trans 'End date' %}</th>
+            </tr>
           </thead>
           <tbody>
           {% for enrollment in enrollments %}
             <tr style="background-color:{{ enrollments|previous:forloop.counter }}">
-              <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
-              <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
-              <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
-              <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
-              <td>{{ enrollment.score_draft | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores }}</td>
-              <td>{% if enrollment.justification_draft %}
-                    {{ enrollment.justification_draft | title }}
-                  {% else %}
-                    -
-                  {% endif %}
-              </td>
-              <td>{{ enrollment.session_exam.offer_year_calendar.end_date }}</td>
+                <td>{% if enrollment.score_final %}
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true" style="color: green;"></span>
+                    {% endif %}
+                </td>
+                <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
+                <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
+                <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
+                <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
+                <td>{{ enrollment.score_draft | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores }}</td>
+                <td>{% if enrollment.justification_draft %}
+                        {{ enrollment.justification_draft | title }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td>{{ enrollment.session_exam.offer_year_calendar.end_date }}</td>
             </tr>
           {% endfor %}
           </tbody>
@@ -119,34 +127,53 @@
       {% if messages %}
       <ul class="messages">
           {% for message in messages %}
-          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+          <li{% if message.tags %}class="{{ message.tags }}"{% endif %}>{{ message }}</li>
           {% endfor %}
       </ul>
       {% endif %}
     </div>
   </div>
   <!-- UploadFile modal -->
-  <div class="modal fade" id="uploadScoreModal" tabindex="-1" role="dialog" aria-labelledby="uploadScroresLabel">
+  <div class="modal fade" id="uploadScoreModal" tabindex="-1" role="dialog" aria-labelledby="uploadScoresLabel">
       <div class="modal-dialog" role="document">
           <div class="modal-content">
               <form method="post" enctype="multipart/form-data" action="{% url 'upload_encoding' session.id session.learning_unit_year.id academic_year.id%}">
                   {% csrf_token %}
+                  <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <h4 class="modal-title" id="uploadScroresLabel">{% trans 'Scores injection' %}</h4>
+                  </div>
+                  <div class="modal-body">
+                      <label for="scoresInputFile" class="btn btn-default" >{% trans 'Choose file' %}</label>
+
+                      <input type="file" id="scoresInputFile" name="file" style="display:none" />
+                      <div id="selectedFiles"></div>
+                      <p class="help-block">{% trans 'Please select an xls file for injection' %}</p>
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'Cancel' %}</button>
+                      <input type="submit" class="btn btn-primary" value="{% trans 'Inject'%}" onclick="document.getElementById('files').style.visibility='visible'"/>
+                  </div>
+              </form>
+          </div>
+      </div>
+  </div>
+
+  <!-- Submission modal -->
+  <div class="modal fade" id="submissionScoresModal" tabindex="-1" role="dialog" aria-labelledby="submissionScoresLabel">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
               <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  <h4 class="modal-title" id="uploadScroresLabel">{% trans 'Scores injection' %}</h4>
+                  <h4 class="modal-title" id="submissionScoresLabel">Submission</h4>
               </div>
               <div class="modal-body">
-                 <label for="scoresInputFile" class="btn btn-default" >{% trans 'Choose file' %}</label>
-
-                  <input type="file" id="scoresInputFile" name="file" style="display:none" />
-                  <div id="selectedFiles"></div>
-                  <p class="help-block">{% trans 'Please select an xls file for injection' %}</p>
+                  <p class="help-block">Vous êtes en train de soumettre {{ enrollments|length }} notes.</p>
               </div>
               <div class="modal-footer">
+                  <a class="btn btn-warning" href="{% url 'online_encoding_submission' session.id %}" role="button"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> Soumettre</a>
                   <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'Cancel' %}</button>
-                  <input type="submit" class="btn btn-primary" value="{% trans 'Inject'%}" onclick="document.getElementById('files').style.visibility='visible'"/>
               </div>
-              </form>
           </div>
       </div>
   </div>
