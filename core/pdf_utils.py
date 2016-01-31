@@ -1,11 +1,34 @@
-
+##############################################################################
+#
+#    OSIS stands for Open Student Information System. It's an application
+#    designed to manage the core business of higher education institutions,
+#    such as universities, faculties, institutes and professional schools.
+#    The core business involves the administration of students, teachers,
+#    courses, programs and so on.
+#
+#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    A copy of this license - GNU General Public License - is available
+#    at the root of the source code of this program.  If not,
+#    see http://www.gnu.org/licenses/.
+#
+##############################################################################
 from io import BytesIO
 from io import StringIO
 from reportlab.pdfgen import canvas
 from django.http import HttpResponse
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
-
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.enums import TA_JUSTIFY, TA_RIGHT, TA_CENTER, TA_LEFT
 from reportlab.lib.pagesizes import letter
@@ -15,7 +38,6 @@ from reportlab.lib.units import mm
 from reportlab.lib.units import inch
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter, landscape
-
 from core.models import AcademicCalendar, SessionExam, ExamEnrollment, LearningUnitYear, Person, AcademicYear, OfferYear
 
 PAGE_SIZE = A4
@@ -24,11 +46,10 @@ COLS_WIDTH = [25*mm,30*mm,30*mm,25*mm,30*mm,27*mm]
 SMALL_INTER_LINE = Spacer(1, 12)
 BIG_INTER_LINE = Spacer(1, 30)
 
-def print_notes(request,tutor, academic_year, session_exam,sessions,learning_unit_year_id, isFac):
+def print_notes(request,tutor, academic_year, session_exam,sessions,learning_unit_year_id):
     """
     Create a multi-page document
     """
-
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="feuillesNotes.pdf"'
 
@@ -40,20 +61,18 @@ def print_notes(request,tutor, academic_year, session_exam,sessions,learning_uni
                             topMargin=72,
                             bottomMargin=18)
 
-
     styles = getSampleStyleSheet()
     styles.add(ParagraphStyle(name='Justify', alignment=TA_JUSTIFY))
 
     Contenu = []
-#critères
+    #critères
     academic_calendar = AcademicCalendar.find_academic_calendar_by_event_type(academic_year.id,session_exam.number_session)
-
 
     if learning_unit_year_id != -1 :
         list_exam_enrollment = ExamEnrollment.find_exam_enrollments(session_exam)
     else:
         if tutor:
-            sessions = SessionExam.find_sessions_by_tutor(tutor, academic_year, session_exam)
+            sessions = SessionExam.find_sessions_by_tutor(tutor, academic_year)
         # In case the user is not a tutor we check whether it is member of a faculty.
         elif request.user.groups.filter(name='FAC').exists():
             faculty = ProgrammeManager.find_faculty_by_user(request.user)
@@ -68,14 +87,13 @@ def print_notes(request,tutor, academic_year, session_exam,sessions,learning_uni
                 list_exam_enrollment = list_exam_enrollment + enrollments
 
 
-    list_notes_building(session_exam, learning_unit_year_id, academic_year, academic_calendar, tutor, list_exam_enrollment, styles, isFac, Contenu)
+    list_notes_building(session_exam, learning_unit_year_id, academic_year, academic_calendar, tutor, list_exam_enrollment, styles, request.user.groups.filter(name='FAC').exists(), Contenu)
 
     doc.build(Contenu, onFirstPage=addHeaderFooter, onLaterPages=addHeaderFooter)
     pdf = buffer.getvalue()
     buffer.close()
     response.write(pdf)
     return response
-
 
 def addHeaderFooter(canvas, doc):
     """
@@ -91,15 +109,13 @@ def addHeaderFooter(canvas, doc):
     # Release the canvas
     canvas.restoreState()
 
-
 def header_building(canvas, doc,styles):
-    a = Image("../core/" + settings.STATIC_URL + "images/logo_institution.jpg")
+    a = Image("core"+ settings.STATIC_URL +"/img/logo_institution.jpg")
 
     P = Paragraph('''
                     <para align=center spaceb=3>
                         <font size=16>%s</font>
-                    </para>''' % (_('Scores transcript')),
-       styles["BodyText"])
+                    </para>''' % (_('Scores transcript')), styles["BodyText"])
     data_header=[[a,'%s' % _('University Catholic Louvain\nLouvain-la-Neuve\nBelgium') ,P],]
 
     t_header=Table(data_header, [30*mm, 100*mm,50*mm])
@@ -111,15 +127,8 @@ def header_building(canvas, doc,styles):
     w, h = t_header.wrap(doc.width, doc.topMargin)
     t_header.drawOn(canvas, doc.leftMargin, doc.height + doc.topMargin - h)
 
-
 def list_notes_building(session_exam, learning_unit_year_id, academic_year, academic_calendar, tutor,list_exam_enrollment, styles, isFac, Contenu):
-    """
-    liste des notes
-    """
-
-
-def list_notes_building(session_exam, learning_unit_year_id, academic_year, academic_calendar, tutor,list_exam_enrollment, styles, learning_unit_year, isFac, Contenu):
-#liste des notes
+    #liste des notes
     Contenu.append(SMALL_INTER_LINE)
     data = headers_table(styles)
 
@@ -144,7 +153,6 @@ def list_notes_building(session_exam, learning_unit_year_id, academic_year, acad
                                    ('VALIGN',(0,0), (-1,-1), 'TOP')
                                    ]))
 
-
                 Contenu.append(t)
                 #Autre programme - 3. Imprimer légende
                 end_page_infos_building(Contenu, styles)
@@ -154,17 +162,20 @@ def list_notes_building(session_exam, learning_unit_year_id, academic_year, acad
                 data = headers_table(styles)
                 old_pgm =o
                 current_learning_unit_year = rec_exam_enrollment.learning_unit_enrollment.learning_unit_year
-                #
 
             person = Person.find_person(student.person.id)
+            if not (rec_exam_enrollment.score_draft is None):
+                if rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores :
+                    score = "{0:.2f}".format(rec_exam_enrollment.score_draft)
+                else:
+                    score = "{0:.0f}".format(rec_exam_enrollment.score_draft)
             data.append([student.registration_id,
                            person.last_name,
                            person.first_name,
-                           rec_exam_enrollment.score,
-                           rec_exam_enrollment.justification_label('fr'),
+                           score,
+                           rec_exam_enrollment.justification_label(),
                            academic_calendar.end_date.strftime('%d/%m/%Y')
                            ])
-
 
     if old_pgm is None:
         pass
@@ -180,7 +191,6 @@ def list_notes_building(session_exam, learning_unit_year_id, academic_year, acad
         Contenu.append(t)
         end_page_infos_building(Contenu, styles)
         legend_building(current_learning_unit_year, isFac, Contenu, styles)
-
 
 def legend_building(learning_unit_year, isFac, Contenu, styles):
     Contenu.append(BIG_INTER_LINE)
@@ -202,7 +212,6 @@ def legend_building(learning_unit_year, isFac, Contenu, styles):
                             </para>
                             ''' % legend_text, p))
 
-
 def headers_table(styles):
     data =[]
     data.append([Paragraph('''%s''' % _('Registration number'), styles['BodyText']),
@@ -212,7 +221,6 @@ def headers_table(styles):
                  Paragraph('''%s''' % _('Other score'), styles['BodyText']),
                  Paragraph('''%s''' % _('End date'), styles['BodyText'])])
     return data
-
 
 def main_data(tutor, academic_year, session_exam, styles, learning_unit_year, pgm, Contenu):
     Contenu.append(SMALL_INTER_LINE)
@@ -269,7 +277,6 @@ def main_data(tutor, academic_year, session_exam, styles, learning_unit_year, pg
                        ]))
     Contenu.append(tt)
     Contenu.append(Spacer(1, 12))
-
 
 def end_page_infos_building(Contenu, styles):
     Contenu.append(BIG_INTER_LINE)
