@@ -35,11 +35,11 @@
 		    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 		    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
         <link rel="icon" href="{% static 'img/favicon.ico' %}" />
-        <link rel="stylesheet" href="{% static "css/armata.css" %}" type='text/css'>
-        <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
-        <link rel="stylesheet" href="{% static "css/bootstrap-theme.min.css" %}">
-        <link rel="stylesheet" href="{% static "css/custom.css" %}">
-        <link rel="stylesheet" href="{% static "css/font-awesome.min.css" %}">
+        <link rel="stylesheet" href="{% static 'css/armata.css' %}" type='text/css'>
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/bootstrap-theme.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+        <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
         {% block style %}
         {% endblock %}
         <style>
@@ -75,7 +75,7 @@
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{% trans 'Studies' %} <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                  <li><a href="{% url 'assessements' %}">{% trans 'Evaluations' %}</a></li>
+                  <li><a href="{% url 'assessments' %}">{% trans 'Evaluations' %}</a></li>
                   <li><a href="#">{% trans 'Stages' %}</a></li>
                 </ul>
               </li>
@@ -127,9 +127,9 @@
         </div>
       </nav>
 
-      <script src="{% static "js/jquery-2.1.4.min.js" %}"></script>
-      <script src="{% static "js/bootstrap.min.js" %}"></script>
-      <script src="{% static "js/osis.js" %}"></script>
+      <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
+      <script src="{% static 'js/bootstrap.min.js' %}"></script>
+      <script src="{% static 'js/osis.js' %}"></script>
       {% block script %}
       {% endblock %}
     </body>

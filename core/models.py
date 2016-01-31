@@ -119,7 +119,10 @@ class ProgrammeManager(models.Model):
 
     def find_faculty_by_user(user):
         programme_manager = ProgrammeManager.objects.filter(person__user=user).first()
-        return programme_manager.faculty
+        if programme_manager:
+            return programme_manager.faculty
+        else:
+            return None
 
     def __str__(self):
         return u"%s - %s" % (self.person, self.faculty)
@@ -207,14 +210,13 @@ class OfferYear(models.Model):
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.offer.acronym)
 
+    # This function should not be here.
     def is_programme_manager(self,user):
         person = Person.objects.get(user=user)
         if user:
             programme_manager = ProgrammeManager.objects.filter(person=person.id, faculty=self.structure)
-            print('zut111')
             if programme_manager:
                 return True
-
         return False
 
 
@@ -333,11 +335,12 @@ class SessionExam(models.Model):
 
     def find_sessions_by_tutor(tutor, academic_year):
         learning_units = Attribution.objects.filter(tutor=tutor).values('learning_unit')
-        return SessionExam.objects.filter(learning_unit_year__academic_year=academic_year
+        return SessionExam.objects.filter(status='OPEN'
+                                 ).filter(learning_unit_year__academic_year=academic_year
                                  ).filter(learning_unit_year__learning_unit__in=learning_units)
 
-    def find_sessions_by_faculty(faculty, academic_year, session):
-        return SessionExam.objects.filter(number_session=session.number_session
+    def find_sessions_by_faculty(faculty, academic_year):
+        return SessionExam.objects.filter(status='OPEN'
                                  ).filter(offer_year_calendar__offer_year__academic_year=academic_year
                                  ).filter(offer_year_calendar__offer_year__structure=faculty)
 
@@ -395,13 +398,36 @@ class ExamEnrollment(models.Model):
         return progress * 100
 
     def find_exam_enrollments(session_exam):
-        enrollments = ExamEnrollment.objects.filter(session_exam=session_exam)
+        enrollments = ExamEnrollment.objects.filter(session_exam=session_exam)\
+                                            .order_by('learning_unit_enrollment__offer_enrollment__offer_year__acronym',
+                                                      'learning_unit_enrollment__offer_enrollment__student__person__last_name',
+                                                      'learning_unit_enrollment__offer_enrollment__student__person__first_name')
         return enrollments
 
+    def find_draft_exam_enrollments(session_exam):
+        """ Return the enrollments of a session but not the ones already submitted. """
+        enrollments = ExamEnrollment.objects.filter(session_exam=session_exam)\
+                                            .filter(score_final__isnull=True)\
+                                            .filter(justification_final__isnull=True)
+        return enrollments
+
+    def count_encoded_scores(enrollments):
+        """ Count the scores that were already encoded but not submitted yet. """
+        counter = 0
+        for enrollment in enrollments:
+            if (enrollment.score_draft or enrollment.justification_draft) \
+                    and not enrollment.score_final \
+                    and not enrollment.justification_final:
+                counter += 1
+
+        return counter
+
     def find_exam_enrollments_to_validate(session_exam):
-        enrollments = ExamEnrollment.objects.filter(session_exam=session_exam
-                                           ).filter(~models.Q(score_draft=models.F('score_reencoded')) |
-                                                    ~models.Q(justification_draft=models.F('justification_reencoded')))
+        enrollments = ExamEnrollment.objects.filter(session_exam=session_exam)\
+                                            .filter(~models.Q(score_draft=models.F('score_reencoded')) |
+                                                    ~models.Q(justification_draft=models.F('justification_reencoded')))\
+                                            .filter(score_final__isnull=True)\
+                                            .filter(justification_final__isnull=True)
         return enrollments
 
     def student(self):

@@ -94,9 +94,9 @@ $("button[id^='take_draft_']").click(function(event) {
   var score_draft = $("#score_draft_"+ enrollmentId).val();
   var justification_draft = $("#justification_draft_"+ enrollmentId).val();
   $("#score_final_show_"+ enrollmentId).html(score_draft);
-  $("#score_"+ enrollmentId).val(score_draft);
+  $("#score_final_"+ enrollmentId).val(score_draft);
   $("#justification_final_show_"+ enrollmentId).html(justification_draft);
-  $("#justification_"+ enrollmentId).val(justification_draft);
+  $("#justification_final_"+ enrollmentId).val(justification_draft);
 });
 
 $("button[id^='take_reencoded_']").click(function(event) {
@@ -111,8 +111,8 @@ $("button[id^='take_reencoded_']").click(function(event) {
   var score_reencoded = $("#score_reencoded_"+ enrollmentId).val();
   var justification_reencoded = $("#justification_reencoded_"+ enrollmentId).val();
   $("#score_final_show_"+ enrollmentId).html(score_reencoded);
-  $("#score_"+ enrollmentId).val(score_reencoded);
+  $("#score_final_"+ enrollmentId).val(score_reencoded);
   $("#justification_final_show_"+ enrollmentId).html(justification_reencoded);
-  $("#justification_"+ enrollmentId).val(justification_reencoded);
+  $("#justification_final_"+ enrollmentId).val(justification_reencoded);
 });
 /******************************************************************************/
