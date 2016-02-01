@@ -35,7 +35,7 @@ urlpatterns = [
 
     # Please, organize the urls in alphabetic order.
 
-    url(r'^learning_units/$', views.programme, name='learning_units'),
+    url(r'^learning_units/$', views.catalog, name='learning_units'),
 
     url(r'^login/$', login, name='login'),
     url(r'^logout/$', logout_then_login, name='logout'),
@@ -43,7 +43,7 @@ urlpatterns = [
     url(r'^offers/$', views.offers, name='offers'),
     url(r'^offers/search$', views.offers_search, name='offers_search'),
 
-    url(r'^programme/$', views.programme, name='programme'),
+    url(r'^catalog/$', views.catalog, name='catalog'),
 
     url(r'^studies/$', views.studies, name='studies'),
     url(r'^studies/assessments/$', views.assessments, name='assessments'),

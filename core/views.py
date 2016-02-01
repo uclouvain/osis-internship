@@ -280,8 +280,8 @@ def notes_printing_all(request, session_id):
 
 
 @login_required
-def programme(request):
-    return render(request, "programme.html", {'section': 'programme'})
+def catalog(request):
+    return render(request, "catalog.html", {'section': 'catalog'})
 
 
 @login_required
