@@ -54,14 +54,6 @@ class Person(models.Model):
     def find_person(person_id):
         return Person.objects.get(id=person_id)
 
-    def is_programme_manager(user, structure):
-        person = Person.objects.get(user=user)
-        if user:
-            programme_manager = ProgrammeManager.objects.filter(person=person.id, faculty=structure)
-            if programme_manager:
-                return True
-        return False
-
     def __str__(self):
         first_name = ""
         middle_name = ""
@@ -131,6 +123,14 @@ class ProgrammeManager(models.Model):
             return programme_manager.faculty
         else:
             return None
+
+    def is_programme_manager(user, structure):
+        person = Person.objects.get(user=user)
+        if user:
+            programme_manager = ProgrammeManager.objects.filter(person=person.id, faculty=structure)
+            if programme_manager:
+                return True
+        return False
 
     def __str__(self):
         return u"%s - %s" % (self.person, self.faculty)
