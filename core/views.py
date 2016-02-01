@@ -72,12 +72,13 @@ def scores_encoding(request):
 
     # Calculate the progress of all courses of the tutor.
     all_enrollments = []
-
+    session = None
     if sessions:
         for session in sessions:
             enrollments = list(ExamEnrollment.find_exam_enrollments(session))
             if enrollments:
                 all_enrollments = all_enrollments + enrollments
+        session = sessions.first()
 
     progress = ExamEnrollment.calculate_progress(all_enrollments)
 
@@ -87,6 +88,7 @@ def scores_encoding(request):
                    'faculty': faculty,
                    'academic_year': academic_year,
                    'sessions': sessions,
+                   'session': session,
                    'progress': "{0:.0f}".format(progress)})
 
 
