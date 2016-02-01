@@ -82,11 +82,13 @@
         </div>
       </div>
 
-      <a class="btn btn-default" href="{% url 'online_encoding_form' session.id %}" role="button"><i class="fa fa-hashtag"></i> {% trans 'Encode' %}</a>
-      <a class="btn btn-default" href="{% url 'online_double_encoding_form' session.id %}" role="button"><i class="fa fa-hashtag"></i><i class="fa fa-hashtag"></i> {% trans 'Double encoding' %}</a>
-      <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#submissionScoresModal"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'Submission' %}</button>
-      <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#uploadScoreModal" title="{% trans 'Select a xls file from which to injec scores' %}"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> {% trans 'Submit xls file' %}</button>
-      <br><br>
+      {% if session.status == 'OPEN' %}
+          <a class="btn btn-default" href="{% url 'online_encoding_form' session.id %}" role="button"><i class="fa fa-hashtag"></i> {% trans 'Encode' %}</a>
+          <a class="btn btn-default" href="{% url 'online_double_encoding_form' session.id %}" role="button"><i class="fa fa-hashtag"></i><i class="fa fa-hashtag"></i> {% trans 'Double encoding' %}</a>
+          <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#submissionScoresModal"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'Submission' %}</button>
+          <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#uploadScoreModal" title="{% trans 'Select a xls file from which to injec scores' %}"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> {% trans 'Submit xls file' %}</button>
+          <br><br>
+      {% endif %}
 
       <table class="table table-hover">
           <thead>
