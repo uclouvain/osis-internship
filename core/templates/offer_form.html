@@ -34,41 +34,33 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-  <h2>{% trans 'Offer' %}</h2>
+  <h2>{{ offer.title }}</h2>
 </div>
 <div class="panel panel-default">
   <div class="panel-body">
-    <div class="row">
-      <div class="col-md-3">
-        <label for="title">{% trans 'Academic year'%}</label>
-        <input class="form-control" id="academic_year" placeholder="{% trans 'Academic year' %}" name="academic_year" value="{{ offer.academic_year }}" readonly="true">
-      </div>
-      <div class="col-md-3">
-        <label for="acronym">{% trans 'Acronym' %}</label>
-        <input class="form-control" id="faculty" placeholder="{% trans 'Acronym' %}" name="acronym" value="{{ offer.acronym }}" readonly="true">
-      </div>
-
-      <div class="col-md-6">
-
-      </div>
+    <ul class="nav nav-tabs">
+      <li class="active"><a data-toggle="tab" href="#informations">{% trans 'Informations'%}</a></li>
+    </ul>
+    <div class="tab-content">
+      <p>
+        <div id="informations" class="tab-pane fade in active">
+          <div class="row">
+            <div class="col-md-3">
+              <label for="title">{% trans 'Academic year'%}</label><br>
+              {{ offer.academic_year }}
+            </div>
+            <div class="col-md-3">
+              <label for="acronym">{% trans 'Acronym' %}</label><br>
+              {{ offer.acronym }}
+            </div>
+            <div class="col-md-6">
+              <label for="structure">{% trans 'Structure' %}</label><br>
+              {{ offer.structure }}
+            </div>
+          </div>
+        </div>
+      </p>
     </div>
-    <div class="row">
-      <div class="col-md-12">
-        <label for="title">{% trans 'Title'%}</label>
-        <input class="form-control" id="title" placeholder="{% trans 'Title' %}" name="title" value="{{ offer.title }}" readonly="true">
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-5">
-        <label for="structure">{% trans 'Structure' %}</label>
-        <input class="form-control" id="structure" placeholder="{% trans 'Structure' %}" name="structure" value="{{ offer.structure }}" readonly="true">
-      </div>
-      <div class="col-md-7">
-
-      </div>
-    </div>
-
   </div>
-
 </div>
 {% endblock %}
