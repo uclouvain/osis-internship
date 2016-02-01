@@ -51,7 +51,7 @@ $("input[id^='double_score_']" ).blur(function(event) {
   if (target.val() != score_draft)
     target.css("border", "1px solid #ff0000");
   else
-    target.css("border", "0px");
+    target.css("border", "1px solid lightgrey");
 
   var double_justification_field = $("#double_justification_score_"+ enrollmentId);
   var justification_double = double_justification_field.val();
@@ -60,7 +60,11 @@ $("input[id^='double_score_']" ).blur(function(event) {
   if (justification_double != justification_draft)
     double_justification_field.css("border", "1px solid #ff0000");
   else
-    double_justification_field.css("border", "0px");
+    double_justification_field.css("border", "1px solid lightgrey");
+
+  if(target.val() != "") {
+      $("#double_justification_score_" + enrollmentId).val('');
+  }
 });
 
 $("select[id^='double_justification_score_']" ).blur(function(event) {
@@ -78,7 +82,10 @@ $("select[id^='double_justification_score_']" ).blur(function(event) {
   if (target.val() != justification_draft)
     target.css("border", "1px solid #ff0000");
   else
-    target.css("border", "0px");
+    target.css("border", "1px solid lightgrey");
+
+  if(target.val() != "")
+      $("#double_score_" + enrollmentId).val('');
 });
 
 /*** Double encoding validation ***/

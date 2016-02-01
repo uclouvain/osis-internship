@@ -85,13 +85,13 @@ def scores_encoding(request):
     progress = ExamEnrollment.calculate_progress(all_enrollments)
 
     return render(request, "scores_encoding.html",
-                  {'section':       'scores_encoding',
-                   'tutor':         tutor,
-                   'faculty':       faculty,
+                  {'section': 'scores_encoding',
+                   'tutor': tutor,
+                   'faculty': faculty,
                    'academic_year': academic_year,
-                   'session':       sessions.first(),
-                   'sessions':      sessions,
-                   'progress':      "{0:.0f}".format(progress)})
+                   'session': sessions.first(),
+                   'sessions': sessions,
+                   'progress': "{0:.0f}".format(progress)})
 
 
 @login_required
@@ -126,12 +126,12 @@ def online_encoding_form(request, session_id):
         tutor = Tutor.find_by_user(request.user)
         academic_year = AcademicCalendar.current_academic_year()
         return render(request, "online_encoding_form.html",
-                      {'section':       'scores_encoding',
-                       'tutor':         tutor,
+                      {'section': 'scores_encoding',
+                       'tutor': tutor,
                        'academic_year': academic_year,
-                       'session':       session,
-                       'enrollments':   enrollments,
-                       'justifications':ExamEnrollment.JUSTIFICATION_TYPES})
+                       'session': session,
+                       'enrollments': enrollments,
+                       'justifications': ExamEnrollment.JUSTIFICATION_TYPES})
     elif request.method == 'POST':
         for enrollment in enrollments:
             score = request.POST.get('score_' + str(enrollment.id), None)
@@ -145,23 +145,23 @@ def online_encoding_form(request, session_id):
 
             enrollment.justification_draft = request.POST.get('justification_' + str(enrollment.id), None)
             enrollment.save()
-        return online_encoding(request, session_id)
+        return HttpResponseRedirect(reverse('online_encoding', args=(session_id,)))
 
 
 @login_required
 def online_double_encoding_form(request, session_id):
     session = SessionExam.find_session(session_id)
-    enrollments = ExamEnrollment.find_exam_enrollments(session)
+    enrollments = ExamEnrollment.find_draft_exam_enrollments(session)
     if request.method == 'GET':
         tutor = Tutor.find_by_user(request.user)
         academic_year = AcademicCalendar.current_academic_year()
         return render(request, "online_double_encoding_form.html",
-                      {'section':       'scores_encoding',
-                       'tutor':         tutor,
+                      {'section': 'scores_encoding',
+                       'tutor': tutor,
                        'academic_year': academic_year,
-                       'session':       session,
-                       'enrollments':   enrollments,
-                       'justifications':ExamEnrollment.JUSTIFICATION_TYPES})
+                       'session': session,
+                       'enrollments': enrollments,
+                       'justifications': ExamEnrollment.JUSTIFICATION_TYPES})
     elif request.method == 'POST':
         for enrollment in enrollments:
             score = request.POST.get('score_' + str(enrollment.id), None)
@@ -170,27 +170,36 @@ def online_double_encoding_form(request, session_id):
                     enrollment.score_reencoded = float(score)
                 else:
                     enrollment.score_reencoded = int(float(score))
-            enrollment.justification_reencoded = request.POST.get('justification_' + str(enrollment.id), None)
+            else:
+                enrollment.score_reencoded = None
+
+            justification = request.POST.get('justification_' + str(enrollment.id), None)
+            if justification:
+                enrollment.justification_reencoded = justification
+            else:
+                enrollment.justification_reencoded = None
             enrollment.save()
         return HttpResponseRedirect(reverse('online_double_encoding_validation', args=(session.id,)))
 
 
 @login_required
 def online_double_encoding_validation(request, session_id):
-    session = SessionExam.find_session(session_id)
+    session_exam = SessionExam.find_session(session_id)
     if request.method == 'GET':
         tutor = Tutor.find_by_user(request.user)
         academic_year = AcademicCalendar.current_academic_year()
-        enrollments = ExamEnrollment.find_exam_enrollments_to_validate(session)
+        enrollments = ExamEnrollment.find_exam_enrollments_to_validate(session_exam)
         return render(request, "online_double_encoding_validation.html",
                       {'section': 'scores_encoding',
                        'tutor': tutor,
                        'academic_year': academic_year,
-                       'session': session,
+                       'session': session_exam,
                        'enrollments': enrollments,
                        'justifications': ExamEnrollment.JUSTIFICATION_TYPES})
+
     elif request.method == 'POST':
-        enrollments = ExamEnrollment.find_exam_enrollments(session)
+        enrollments = ExamEnrollment.find_exam_enrollments(session_exam)
+
         for enrollment in enrollments:
             score = request.POST.get('score_' + str(enrollment.id), None)
             if score:
@@ -198,15 +207,26 @@ def online_double_encoding_validation(request, session_id):
                     enrollment.score_final = float(score)
                 else:
                     enrollment.score_final = int(float(score))
-            else:
-                enrollment.score_final = enrollment.score_draft
+                enrollment.score_draft = enrollment.score_final
+            enrollment.score_reencoded = None
 
             justification = request.POST.get('justification_' + str(enrollment.id), None)
             if justification:
                 enrollment.justification_final = justification
-            else:
-                enrollment.justification_final = enrollment.justification_draft
-        return online_encoding(request, session_id)
+                enrollment.justification_draft = enrollment.justification_final
+            enrollment.justification_reencoded = None
+            enrollment.save()
+
+        all_encoded = True
+        for enrollment in enrollments:
+            if not enrollment.score_final and not enrollment.justification_final:
+                all_encoded = False
+
+        if all_encoded:
+            session_exam.status = 'CLOSED'
+            session_exam.save()
+
+        return HttpResponseRedirect(reverse('online_encoding', args=(session_id,)))
 
 
 @login_required
@@ -216,8 +236,10 @@ def online_encoding_submission(request, session_id):
     all_encoded = True
     for enrollment in enrollments:
         if enrollment.score_draft or enrollment.justification_draft:
-            enrollment.score_final = enrollment.score_draft
-            enrollment.justification_final = enrollment.justification_draft
+            if enrollment.score_draft:
+                enrollment.score_final = enrollment.score_draft
+            if enrollment.justification_draft:
+                enrollment.justification_final = enrollment.justification_draft
             enrollment.save()
         else:
             all_encoded = False

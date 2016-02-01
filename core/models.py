@@ -335,14 +335,14 @@ class SessionExam(models.Model):
 
     def find_sessions_by_tutor(tutor, academic_year):
         learning_units = Attribution.objects.filter(tutor=tutor).values('learning_unit')
-        return SessionExam.objects.filter(status='OPEN'
-                                 ).filter(learning_unit_year__academic_year=academic_year
-                                 ).filter(learning_unit_year__learning_unit__in=learning_units)
+        return SessionExam.objects.filter(~models.Q(status='IDLE'))\
+                                  .filter(learning_unit_year__academic_year=academic_year)\
+                                  .filter(learning_unit_year__learning_unit__in=learning_units)
 
     def find_sessions_by_faculty(faculty, academic_year):
-        return SessionExam.objects.filter(status='OPEN'
-                                 ).filter(offer_year_calendar__offer_year__academic_year=academic_year
-                                 ).filter(offer_year_calendar__offer_year__structure=faculty)
+        return SessionExam.objects.filter(~models.Q(status='IDLE'))\
+                                  .filter(offer_year_calendar__offer_year__academic_year=academic_year)\
+                                  .filter(offer_year_calendar__offer_year__structure=faculty)
 
     @property
     def offer(self):
@@ -392,7 +392,7 @@ class ExamEnrollment(models.Model):
 
     def calculate_progress(enrollments):
         if enrollments:
-            progress = len([e for e in enrollments if e.score_draft is not None or e.justification_draft is not None]) / len(enrollments)
+            progress = len([e for e in enrollments if e.score_final or e.justification_final]) / len(enrollments)
         else:
             progress = 0
         return progress * 100
@@ -408,7 +408,8 @@ class ExamEnrollment(models.Model):
         """ Return the enrollments of a session but not the ones already submitted. """
         enrollments = ExamEnrollment.objects.filter(session_exam=session_exam)\
                                             .filter(score_final__isnull=True)\
-                                            .filter(justification_final__isnull=True)
+                                            .filter(models.Q(justification_final__isnull=True) |
+                                                    models.Q(justification_final=''))
         return enrollments
 
     def count_encoded_scores(enrollments):
@@ -427,7 +428,8 @@ class ExamEnrollment(models.Model):
                                             .filter(~models.Q(score_draft=models.F('score_reencoded')) |
                                                     ~models.Q(justification_draft=models.F('justification_reencoded')))\
                                             .filter(score_final__isnull=True)\
-                                            .filter(justification_final__isnull=True)
+                                            .filter(models.Q(justification_final__isnull=True) |
+                                                    models.Q(justification_final=''))
         return enrollments
 
     def student(self):
