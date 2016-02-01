@@ -268,38 +268,38 @@ def export_xls(request, session_id, learning_unit_year_id, academic_year_id):
 
 
 def offers(request):
-    validity = None
+    academic_year = None
     faculty = None
     code = ""
 
     faculties = Structure.objects.all().order_by('acronym')
-    validities = AcademicYear.objects.all().order_by('year')
+    academic_years = AcademicYear.objects.all().order_by('year')
 
-    academic_year = AcademicCalendar.current_academic_year()
-    if not(academic_year is None):
-        validity = academic_year.id
-    return render(request, "offers.html", {'faculties':     faculties,
-                                           'validity':      validity,
-                                           'faculty':       faculty,
-                                           'code':          code,
-                                           'validities':    validities,
-                                           'offers':        [] ,
-                                           'init':          "1"})
+    academic_year_calendar = AcademicCalendar.current_academic_year()
+    if not(academic_year_calendar is None):
+        academic_year = academic_year_calendar.id
+    return render(request, "offers.html", {'faculties':      faculties,
+                                           'academic_year':  academic_year,
+                                           'faculty':        faculty,
+                                           'code':           code,
+                                           'academic_years': academic_years,
+                                           'offers':         [] ,
+                                           'init':           "1"})
 
 def offers_search(request):
     faculty = request.GET['faculty']
-    validity = request.GET['validity']
+    academic_year = request.GET['academic_year']
     code = request.GET['code']
 
     faculties = Structure.objects.all().order_by('acronym')
-    validities = AcademicYear.objects.all().order_by('year')
+    academic_years = AcademicYear.objects.all().order_by('year')
 
-    if validity is None:
-        academic_year = AcademicCalendar.current_academic_year()
-        if not(academic_year is None):
-            validity = academic_year.id
+    if academic_year is None:
+        academic_year_calendar = AcademicCalendar.current_academic_year()
+        if not(academic_year_calendar is None):
+            academic_year = academic_year_calendar.id
 
-    query = OfferYear.objects.filter(academic_year=int(validity))
+    query = OfferYear.objects.filter(academic_year=int(academic_year))
 
     if not(faculty is None) and faculty != "*" :
         query = query.filter(structure=int(faculty))
@@ -307,13 +307,13 @@ def offers_search(request):
     if not(code is None) and len(code) > 0  :
         query = query.filter(acronym__startswith=code)
 
-    return render(request, "offers.html", {'faculties':     faculties,
-                                           'validity':      int(validity),
-                                           'faculty':       int(faculty),
-                                           'code':          code,
-                                           'validities':    validities,
-                                           'offers':        query ,
-                                           'init':          "0"})
+    return render(request, "offers.html", {'faculties':      faculties,
+                                           'academic_year':  int(academic_year),
+                                           'faculty':        int(faculty),
+                                           'code':           code,
+                                           'academic_years': academic_years,
+                                           'offers':         query ,
+                                           'init':           "0"})
 
 def offer_form(request,offer_year_id):
     offer_year = OfferYear.objects.get(pk=offer_year_id)

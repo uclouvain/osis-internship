@@ -41,11 +41,11 @@
     <div class="row">
       <div class="col-md-3">
         <label for="title">{% trans 'Academic year'%}</label>
-        <input class="form-control" id="academic_year" placeholder="{% trans 'Academic year' %}" name="academic_year" value="{{ offer.academic_year }}">
+        <input class="form-control" id="academic_year" placeholder="{% trans 'Academic year' %}" name="academic_year" value="{{ offer.academic_year }}" readonly="true">
       </div>
       <div class="col-md-3">
         <label for="acronym">{% trans 'Acronym' %}</label>
-        <input class="form-control" id="faculty" placeholder="{% trans 'Acronym' %}" name="acronym" value="{{ offer.acronym }}">
+        <input class="form-control" id="faculty" placeholder="{% trans 'Acronym' %}" name="acronym" value="{{ offer.acronym }}" readonly="true">
       </div>
 
       <div class="col-md-6">
@@ -55,13 +55,13 @@
     <div class="row">
       <div class="col-md-12">
         <label for="title">{% trans 'Title'%}</label>
-        <input class="form-control" id="title" placeholder="{% trans 'Title' %}" name="title" value="{{ offer.title }}">
+        <input class="form-control" id="title" placeholder="{% trans 'Title' %}" name="title" value="{{ offer.title }}" readonly="true">
       </div>
     </div>
     <div class="row">
       <div class="col-md-5">
         <label for="structure">{% trans 'Structure' %}</label>
-        <input class="form-control" id="structure" placeholder="{% trans 'Structure' %}" name="structure" value="{{ offer.structure }}">
+        <input class="form-control" id="structure" placeholder="{% trans 'Structure' %}" name="structure" value="{{ offer.structure }}" readonly="true">
       </div>
       <div class="col-md-7">
 
