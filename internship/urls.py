@@ -31,10 +31,10 @@ from . import views
 urlpatterns = [
     # S'il vous plaît, organiser les urls par ordre alphabétique.
 
-    url(r'^studies/internship_home/$', views.internship_home, name='internship_home'),
-    url(r'^studies/internship_home/places/$', views.places, name='places'),
-    url(r'^studies/internship_home/students/$', views.students, name='students'),
-    url(r'^studies/internship_home/internships/$', views.internships, name='internships'),
-    url(r'^studies/internship_home/periods/$', views.periods, name='periods'),
+    url(r'^studies/internships/$', views.internships, name='internships'),
+    url(r'^studies/internships/home/$', views.internships_home, name='internships_home'),
     url(r'^studies/internship_home/interships_masters/$', views.interships_masters, name='interships_masters'),
+    url(r'^studies/internship_home/periods/$', views.internships_periods, name='internships_periods'),
+    url(r'^studies/internship_home/places/$', views.internships_places, name='internships_places'),
+    url(r'^studies/internship_home/students/$', views.internships_students, name='internships_students'),
 ]

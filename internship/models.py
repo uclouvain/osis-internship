@@ -28,7 +28,7 @@ from core.models import Organization, LearningUnitEnrollment
 
 class InternshipEnrollment(models.Model):
     external_id              = models.CharField(max_length = 100, blank = True, null = True)
-    learning_unit_enrollment = models.ForeignKey(LearningUnitEnrollment) #leave blank
+    learning_unit_enrollment = models.ForeignKey(LearningUnitEnrollment)
     organization             = models.ForeignKey(Organization)
     start_date               = models.DateField()
     end_date                 = models.DateField()

@@ -27,7 +27,8 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li class="active">{% trans 'Studies' %}</li>
+  <li class="active"><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+  <li><a href="{% url 'internships_home' %}">Stages</a></li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
@@ -38,11 +39,11 @@
     <div class="panel-body">
       <div class="row">
         <div class="col-md-5">
-          <h4 class="media-heading"><a href="{% url 'places' %}">{% trans 'Hôpitaux' %}</a></h4>
+          <h4 class="media-heading"><a href="{% url 'internships_places' %}">{% trans 'Hôpitaux' %}</a></h4>
           <!--<p>{% trans 'This process helps tutors while scores encoding.' %}</p>-->
         </div>
         <div class="col-md-5">
-          <h4 class="media-heading"><a href="{% url 'students' %}">{% trans 'Etudiants' %}</a></h4>
+          <h4 class="media-heading"><a href="{% url 'internships_students' %}">{% trans 'Etudiants' %}</a></h4>
           <!--<p>{% trans 'This process helps tutors while scores encoding.' %}</p>-->
         </div>
         <div class="col-md-5">
@@ -50,7 +51,7 @@
           <!--<p>{% trans 'This process helps tutors while scores encoding.' %}</p>-->
         </div>
         <div class="col-md-5">
-          <h4 class="media-heading"><a href="{% url 'periods' %}">{% trans 'Périodes' %}</a></h4>
+          <h4 class="media-heading"><a href="{% url 'internships_periods' %}">{% trans 'Périodes' %}</a></h4>
           <!--<p>{% trans 'This process helps tutors while scores encoding.' %}</p>-->
         </div>
         <div class="col-md-5">
