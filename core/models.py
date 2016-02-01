@@ -399,14 +399,10 @@ class ExamEnrollment(models.Model):
         return progress * 100
 
     def find_exam_enrollments(session_exam):
-        enrollments = ExamEnrollment.objects.filter(session_exam=session_exam)
-        for ee in ExamEnrollment.objects.all():
-            print (ee.session_exam.id)
-        # enrollments = ExamEnrollment.objects.filter(session_exam=session_exam)\
-        #                                     .order_by('learning_unit_enrollment__offer_enrollment__offer_year__acronym',
-        #                                               'learning_unit_enrollment__offer_enrollment__student__person__last_name',
-        #                                               'learning_unit_enrollment__offer_enrollment__student__person__first_name')
-        print (enrollments)
+        enrollments = ExamEnrollment.objects.filter(session_exam=session_exam)\
+                                            .order_by('learning_unit_enrollment__offer_enrollment__offer_year__acronym',
+                                                      'learning_unit_enrollment__offer_enrollment__student__person__last_name',
+                                                      'learning_unit_enrollment__offer_enrollment__student__person__first_name')
         return enrollments
 
     def find_draft_exam_enrollments(session_exam):
