@@ -33,8 +33,8 @@ urlpatterns = [
 
     url(r'^studies/internships/$', views.internships, name='internships'),
     url(r'^studies/internships/home/$', views.internships_home, name='internships_home'),
-    url(r'^studies/internship_home/interships_masters/$', views.interships_masters, name='interships_masters'),
-    url(r'^studies/internship_home/periods/$', views.internships_periods, name='internships_periods'),
-    url(r'^studies/internship_home/places/$', views.internships_places, name='internships_places'),
-    url(r'^studies/internship_home/students/$', views.internships_students, name='internships_students'),
+    url(r'^studies/internships/interships_masters/$', views.interships_masters, name='interships_masters'),
+    url(r'^studies/internships/periods/$', views.internships_periods, name='internships_periods'),
+    url(r'^studies/internships/places/$', views.internships_places, name='internships_places'),
+    url(r'^studies/internships/students/$', views.internships_students, name='internships_students'),
 ]
