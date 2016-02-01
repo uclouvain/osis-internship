@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from django import template
+from core.models import Person
 
 register = template.Library()
 
@@ -32,4 +33,4 @@ def programme_manager(context):
     request = context['request']
     enrollment = context['enrollment']
 
-    return enrollment.learning_unit_enrollment.offer_enrollment.offer_year.is_programme_manager(request.user)
+    return Person.is_programme_manager(request.user, enrollment.learning_unit_enrollment.offer_enrollment.offer_year.structure)
