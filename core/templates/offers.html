@@ -28,7 +28,7 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li>{% trans 'Program' %}</li>
+  <li><a href="{% url 'programme' %}">Programme d'etudes</a>{% trans 'Program' %}</li>
   <li class="active">{% trans 'Offers' %}</li>
 {% endblock %}
 {% block content %}
@@ -96,10 +96,10 @@
         <th>{% trans 'Acronym'%}</th>
         <th>{% trans 'Title'%}</th>
       </thead>
-      {% for o in offers %}
+      {% for offer in offers %}
         <tr>
-          <td>{{ o.acronym }}</td>
-          <td>{{ o.title }}</td>
+          <td><a href="{% url 'offer_form' offer.id %}">{{ offer.acronym }}</a></td>
+          <td>{{ offer.title }}</td>
         </tr>
       {% endfor %}
     </table>

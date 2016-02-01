@@ -42,6 +42,7 @@ urlpatterns = [
 
     url(r'^offers/$', views.offers, name='offers'),
     url(r'^offers/search$', views.offers_search, name='offers_search'),
+    url(r'^offers/([0-9]+)/form$', views.offer_form, name='offer_form'),
 
     url(r'^programme/$', views.programme, name='programme'),
 
