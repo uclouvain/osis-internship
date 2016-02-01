@@ -23,15 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from io import StringIO
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from core.models import Tutor, AcademicCalendar, SessionExam, ExamEnrollment
 from . import pdf_utils
 from . import export_utils
-from core.forms import ScoreFileForm
 from core.models import *
 
 
@@ -89,7 +86,6 @@ def scores_encoding(request):
                    'tutor': tutor,
                    'faculty': faculty,
                    'academic_year': academic_year,
-                   'session': sessions.first(),
                    'sessions': sessions,
                    'progress': "{0:.0f}".format(progress)})
 
@@ -300,13 +296,13 @@ def offers(request):
     academic_year = AcademicCalendar.current_academic_year()
     if not(academic_year is None):
         validity = academic_year.id
-    return render(request, "offers.html", {'faculties':     faculties,
-                                           'validity':      validity,
-                                           'faculty':       faculty,
-                                           'code':          code,
-                                           'validities':    validities,
-                                           'offers':        [] ,
-                                           'init':          "1"})
+    return render(request, "offers.html", {'faculties': faculties,
+                                           'validity': validity,
+                                           'faculty': faculty,
+                                           'code': code,
+                                           'validities': validities,
+                                           'offers': [],
+                                           'init': "1"})
 
 def offers_search(request):
     faculty = request.GET['faculty']
@@ -329,10 +325,10 @@ def offers_search(request):
     if not(code is None) and len(code) > 0  :
         query = query.filter(acronym__startswith=code)
 
-    return render(request, "offers.html", {'faculties':     faculties,
-                                           'validity':      int(validity),
-                                           'faculty':       int(faculty),
-                                           'code':          code,
-                                           'validities':    validities,
-                                           'offers':        query ,
-                                           'init':          "0"})
+    return render(request, "offers.html", {'faculties': faculties,
+                                           'validity': int(validity),
+                                           'faculty': int(faculty),
+                                           'code': code,
+                                           'validities': validities,
+                                           'offers': query ,
+                                           'init': "0"})
