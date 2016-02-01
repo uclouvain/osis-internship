@@ -23,12 +23,18 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from core.models import Organization, LearningUnitEnrollment
+from django.conf.urls import url
+from django.contrib.auth.views import login,logout_then_login
 
-class InternshipEnrollment(models.Model):
-    external_id              = models.CharField(max_length = 100, blank = True, null = True)
-    learning_unit_enrollment = models.ForeignKey(LearningUnitEnrollment) #leave blank
-    organization             = models.ForeignKey(Organization)
-    start_date               = models.DateField()
-    end_date                 = models.DateField()
+from . import views
+
+urlpatterns = [
+    # S'il vous plaît, organiser les urls par ordre alphabétique.
+
+    url(r'^studies/internship_home/$', views.internship_home, name='internship_home'),
+    url(r'^studies/internship_home/places/$', views.places, name='places'),
+    url(r'^studies/internship_home/students/$', views.students, name='students'),
+    url(r'^studies/internship_home/internships/$', views.internships, name='internships'),
+    url(r'^studies/internship_home/periods/$', views.periods, name='periods'),
+    url(r'^studies/internship_home/interships_masters/$', views.interships_masters, name='interships_masters'),
+]
