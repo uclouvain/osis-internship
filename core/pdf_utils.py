@@ -1,11 +1,34 @@
-
+##############################################################################
+#
+#    OSIS stands for Open Student Information System. It's an application
+#    designed to manage the core business of higher education institutions,
+#    such as universities, faculties, institutes and professional schools.
+#    The core business involves the administration of students, teachers,
+#    courses, programs and so on.
+#
+#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    A copy of this license - GNU General Public License - is available
+#    at the root of the source code of this program.  If not,
+#    see http://www.gnu.org/licenses/.
+#
+##############################################################################
 from io import BytesIO
 from io import StringIO
 from reportlab.pdfgen import canvas
 from django.http import HttpResponse
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
-
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.enums import TA_JUSTIFY, TA_RIGHT, TA_CENTER, TA_LEFT
 from reportlab.lib.pagesizes import letter
@@ -15,7 +38,6 @@ from reportlab.lib.units import mm
 from reportlab.lib.units import inch
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter, landscape
-
 from core.models import AcademicCalendar, SessionExam, ExamEnrollment, LearningUnitYear, Person, AcademicYear, OfferYear
 
 PAGE_SIZE = A4
@@ -25,7 +47,6 @@ SMALL_INTER_LINE = Spacer(1, 12)
 BIG_INTER_LINE = Spacer(1, 30)
 
 def print_notes(request,tutor, academic_year, session_exam,sessions,learning_unit_year_id):
-    print(request.path)
     """
     Create a multi-page document
     """
@@ -48,6 +69,7 @@ def print_notes(request,tutor, academic_year, session_exam,sessions,learning_uni
     academic_calendar = AcademicCalendar.find_academic_calendar_by_event_type(academic_year.id,session_exam.number_session)
 
     if learning_unit_year_id != -1 :
+        #par cours
         list_exam_enrollment = ExamEnrollment.find_exam_enrollments(session_exam)
     else:
         if tutor:
@@ -61,10 +83,9 @@ def print_notes(request,tutor, academic_year, session_exam,sessions,learning_uni
         # Calculate the progress of all courses of the tutor.
         list_exam_enrollment = []
         for session in sessions:
-            enrollments = list(ExamEnrollment.find_exam_enrollments(session.id))
+            enrollments = list(ExamEnrollment.find_exam_enrollments(session))
             if enrollments:
                 list_exam_enrollment = list_exam_enrollment + enrollments
-
 
     list_notes_building(session_exam, learning_unit_year_id, academic_year, academic_calendar, tutor, list_exam_enrollment, styles, request.user.groups.filter(name='FAC').exists(), Contenu)
 
@@ -148,6 +169,8 @@ def list_notes_building(session_exam, learning_unit_year_id, academic_year, acad
                     score = "{0:.2f}".format(rec_exam_enrollment.score_draft)
                 else:
                     score = "{0:.0f}".format(rec_exam_enrollment.score_draft)
+            else:
+                score = "-"
             data.append([student.registration_id,
                            person.last_name,
                            person.first_name,
@@ -182,7 +205,7 @@ def legend_building(learning_unit_year, isFac, Contenu, styles):
     p.fontSize =8
     p.borderPadding = 5
     legend_text = "%s : %s" % (_('Other score legend'), ExamEnrollment.justification_label_authorized(isFac))
-    if learning_unit_year.credits is None or learning_unit_year.credits < float(15):
+    if not(learning_unit_year.decimal_scores):
         legend_text += "<br/><font color=red>%s</font>" % _('UnAuthorized decimal for this activity')
 
     Contenu.append(Paragraph('''

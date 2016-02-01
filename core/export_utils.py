@@ -32,9 +32,7 @@ from openpyxl.cell import get_column_letter
 from openpyxl.worksheet.datavalidation import DataValidation
 from openpyxl.styles import Fill, Color, Style, PatternFill
 from openpyxl.worksheet import Worksheet, ColumnDimension, RowDimension
-
 from core.models import AcademicCalendar, SessionExam, ExamEnrollment, LearningUnitYear, Person, AcademicYear
-
 from django.utils.dateformat import DateFormat
 from django.utils.formats import get_format
 from django.utils.translation import ugettext_lazy as _
@@ -56,7 +54,6 @@ def export_xls(request, session_id, learning_unit_year_id, academic_year_id, isF
     academic_year = AcademicYear.find_academic_year(academic_year_id)
     session_exam = SessionExam.find_session(session_id)
     academic_calendar = AcademicCalendar.find_academic_calendar_by_event_type(academic_year_id,session_exam.number_session)
-    print (academic_calendar)
     wb = Workbook()
     ws = wb.active
 
@@ -70,7 +67,7 @@ def export_xls(request, session_id, learning_unit_year_id, academic_year_id, isF
     ws.add_data_validation(dv)
 
     cptr=1
-    for rec_exam_enrollment in ExamEnrollment.find_exam_enrollments(session_exam.id):
+    for rec_exam_enrollment in ExamEnrollment.find_exam_enrollments(session_exam):
         student = rec_exam_enrollment.learning_unit_enrollment.student
         o = rec_exam_enrollment.learning_unit_enrollment.offer
         person = Person.find_person(student.person.id)
@@ -101,10 +98,8 @@ def export_xls(request, session_id, learning_unit_year_id, academic_year_id, isF
                    rec_exam_enrollment.id
                    ])
 
-
         cptr = cptr+1
         __coloring_non_editable(ws,cptr, rec_exam_enrollment.encoding_status,score,rec_exam_enrollment.justification_draft)
-
 
     dv.ranges.append('I2:I'+str(cptr+100))#Ajouter 100 pour si on ajoute des enregistrements
 
