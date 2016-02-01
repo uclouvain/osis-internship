@@ -243,7 +243,8 @@ class OfferYearCalendar(models.Model):
                                        ).filter(end_date__gte=timezone.now()).first()
 
     def __str__(self):
-        return u"%s - %s" % (self.academic_calendar, self.offer_year)
+
+        return u"%s - %s - %s" % (self.academic_calendar, self.offer_year, self.event_type)
 
 
 class LearningUnit(models.Model):
@@ -351,7 +352,7 @@ class SessionExam(models.Model):
 
     @property
     def progress(self):
-        enrollments = list(ExamEnrollment.find_exam_enrollments(self.id))
+        enrollments = list(ExamEnrollment.find_exam_enrollments(self))
 
         if enrollments:
             progress = 0

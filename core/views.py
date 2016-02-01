@@ -103,7 +103,7 @@ def online_encoding(request, session_id):
 
     academic_year = AcademicCalendar.current_academic_year()
     session = SessionExam.find_session(session_id)
-    enrollments = ExamEnrollment.find_exam_enrollments(session.id)
+    enrollments = ExamEnrollment.find_exam_enrollments(session)
     progress = ExamEnrollment.calculate_progress(enrollments)
     num_encoded_scores = ExamEnrollment.count_encoded_scores(enrollments)
 
@@ -151,7 +151,7 @@ def online_encoding_form(request, session_id):
 @login_required
 def online_double_encoding_form(request, session_id):
     session = SessionExam.find_session(session_id)
-    enrollments = ExamEnrollment.find_exam_enrollments(session.id)
+    enrollments = ExamEnrollment.find_exam_enrollments(session)
     if request.method == 'GET':
         tutor = Tutor.find_by_user(request.user)
         academic_year = AcademicCalendar.current_academic_year()
@@ -244,10 +244,10 @@ def upload_score_error(request):
 
 
 @login_required
-def notes_printing(request, session_id, learning_unit_year_id):
+def notes_printing(request, session_exam_id, learning_unit_year_id):
     tutor = Tutor.find_by_user(request.user)
     academic_year = AcademicCalendar.current_academic_year()
-    session_exam = SessionExam.current_session_exam()
+    session_exam = SessionExam.find_session(session_exam_id)
     sessions = SessionExam.find_sessions_by_tutor(tutor, academic_year)
     return pdf_utils.print_notes(request,tutor,academic_year,session_exam,sessions,learning_unit_year_id)
 
