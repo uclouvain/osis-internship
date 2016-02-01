@@ -392,7 +392,7 @@ class ExamEnrollment(models.Model):
 
     def calculate_progress(enrollments):
         if enrollments:
-            progress = len([e for e in enrollments if e.score_draft is not None or e.justification_draft is not None]) / len(enrollments)
+            progress = len([e for e in enrollments if e.score_final or e.justification_final]) / len(enrollments)
         else:
             progress = 0
         return progress * 100
@@ -408,7 +408,8 @@ class ExamEnrollment(models.Model):
         """ Return the enrollments of a session but not the ones already submitted. """
         enrollments = ExamEnrollment.objects.filter(session_exam=session_exam)\
                                             .filter(score_final__isnull=True)\
-                                            .filter(justification_final__isnull=True)
+                                            .filter(models.Q(justification_final__isnull=True) |
+                                                    models.Q(justification_final=''))
         return enrollments
 
     def count_encoded_scores(enrollments):
@@ -427,7 +428,8 @@ class ExamEnrollment(models.Model):
                                             .filter(~models.Q(score_draft=models.F('score_reencoded')) |
                                                     ~models.Q(justification_draft=models.F('justification_reencoded')))\
                                             .filter(score_final__isnull=True)\
-                                            .filter(justification_final__isnull=True)
+                                            .filter(models.Q(justification_final__isnull=True) |
+                                                    models.Q(justification_final=''))
         return enrollments
 
     def student(self):
