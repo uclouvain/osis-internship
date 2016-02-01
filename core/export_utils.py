@@ -67,7 +67,7 @@ def export_xls(request, session_id, learning_unit_year_id, academic_year_id, isF
     ws.add_data_validation(dv)
 
     cptr=1
-    for rec_exam_enrollment in ExamEnrollment.find_exam_enrollments(session_exam.id):
+    for rec_exam_enrollment in ExamEnrollment.find_exam_enrollments(session_exam):
         student = rec_exam_enrollment.learning_unit_enrollment.student
         o = rec_exam_enrollment.learning_unit_enrollment.offer
         person = Person.find_person(student.person.id)

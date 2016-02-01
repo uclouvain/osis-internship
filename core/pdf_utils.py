@@ -69,6 +69,7 @@ def print_notes(request,tutor, academic_year, session_exam,sessions,learning_uni
     academic_calendar = AcademicCalendar.find_academic_calendar_by_event_type(academic_year.id,session_exam.number_session)
 
     if learning_unit_year_id != -1 :
+        #par cours
         list_exam_enrollment = ExamEnrollment.find_exam_enrollments(session_exam)
     else:
         if tutor:
@@ -82,10 +83,9 @@ def print_notes(request,tutor, academic_year, session_exam,sessions,learning_uni
         # Calculate the progress of all courses of the tutor.
         list_exam_enrollment = []
         for session in sessions:
-            enrollments = list(ExamEnrollment.find_exam_enrollments(session.id))
+            enrollments = list(ExamEnrollment.find_exam_enrollments(session))
             if enrollments:
                 list_exam_enrollment = list_exam_enrollment + enrollments
-
 
     list_notes_building(session_exam, learning_unit_year_id, academic_year, academic_calendar, tutor, list_exam_enrollment, styles, request.user.groups.filter(name='FAC').exists(), Contenu)
 
@@ -169,6 +169,8 @@ def list_notes_building(session_exam, learning_unit_year_id, academic_year, acad
                     score = "{0:.2f}".format(rec_exam_enrollment.score_draft)
                 else:
                     score = "{0:.0f}".format(rec_exam_enrollment.score_draft)
+            else:
+                score = "-"
             data.append([student.registration_id,
                            person.last_name,
                            person.first_name,
@@ -203,7 +205,7 @@ def legend_building(learning_unit_year, isFac, Contenu, styles):
     p.fontSize =8
     p.borderPadding = 5
     legend_text = "%s : %s" % (_('Other score legend'), ExamEnrollment.justification_label_authorized(isFac))
-    if learning_unit_year.credits is None or learning_unit_year.credits < float(15):
+    if not(learning_unit_year.decimal_scores):
         legend_text += "<br/><font color=red>%s</font>" % _('UnAuthorized decimal for this activity')
 
     Contenu.append(Paragraph('''

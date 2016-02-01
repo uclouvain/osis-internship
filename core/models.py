@@ -124,6 +124,14 @@ class ProgrammeManager(models.Model):
         else:
             return None
 
+    def is_programme_manager(user, structure):
+        person = Person.objects.get(user=user)
+        if user:
+            programme_manager = ProgrammeManager.objects.filter(person=person.id, faculty=structure)
+            if programme_manager:
+                return True
+        return False
+
     def __str__(self):
         return u"%s - %s" % (self.person, self.faculty)
 
@@ -209,15 +217,6 @@ class OfferYear(models.Model):
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.offer.acronym)
-
-    # This function should not be here.
-    def is_programme_manager(self,user):
-        person = Person.objects.get(user=user)
-        if user:
-            programme_manager = ProgrammeManager.objects.filter(person=person.id, faculty=self.structure)
-            if programme_manager:
-                return True
-        return False
 
 
 class OfferEnrollment(models.Model):
