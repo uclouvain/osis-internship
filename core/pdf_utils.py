@@ -181,9 +181,7 @@ def list_notes_building(session_exam, learning_unit_year_id, academic_year, acad
                            academic_calendar.end_date.strftime('%d/%m/%Y')
                            ])
 
-    if old_pgm is None:
-        pass
-    else:
+    if not old_pgm is None:
         main_data(tutor, academic_year, session_exam, styles,current_learning_unit_year, old_pgm, Contenu)
         t=Table(data,COLS_WIDTH)
         t.setStyle(TableStyle([

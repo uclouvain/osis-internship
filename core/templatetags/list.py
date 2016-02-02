@@ -41,9 +41,7 @@ def previous(value, arg):
                     COLOR_CURRENT = COLOR_2
                 else:
                     COLOR_CURRENT = COLOR_1
-                # pass
             return COLOR_CURRENT
-            # return value[int(arg)-1]
         except:
             return COLOR_CURRENT
     else:
