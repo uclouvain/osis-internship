@@ -47,10 +47,9 @@ HEADER = [str(_('Academic year')),
           str(_('Numbered score')),
           str(_('Other score')),
           str(_('End date')),
-          str(_('Credits')),
           str(_('ID'))]
 
-def export_xls(request, session_id, learning_unit_year_id, academic_year_id, isFac):
+def export_xls(request, session_id, learning_unit_year_id, academic_year_id, is_fac):
     academic_year = AcademicYear.find_academic_year(academic_year_id)
     session_exam = SessionExam.find_session(session_id)
     academic_calendar = AcademicCalendar.find_academic_calendar_by_event_type(academic_year_id,session_exam.number_session)
@@ -63,7 +62,7 @@ def export_xls(request, session_id, learning_unit_year_id, academic_year_id, isF
 
     ws.append(HEADER)
 
-    dv = __create_data_list_for_justification(isFac)
+    dv = __create_data_list_for_justification(is_fac)
     ws.add_data_validation(dv)
 
     cptr=1
@@ -71,19 +70,22 @@ def export_xls(request, session_id, learning_unit_year_id, academic_year_id, isF
         student = rec_exam_enrollment.learning_unit_enrollment.student
         o = rec_exam_enrollment.learning_unit_enrollment.offer
         person = Person.find_person(student.person.id)
-        text_credits = ""
-        if not(rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.credits is None):
+
+        if not rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.credits is None:
             credits = rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.credits
         if academic_calendar.end_date is None:
             end_date="-"
         else:
             end_date = academic_calendar.end_date.strftime('%d/%m/%Y')
-        score="-"
-        if not (rec_exam_enrollment.score_draft is None):
-            if rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores :
-                score = "{0:.2f}".format(rec_exam_enrollment.score_draft)
+        score=None
+        if not rec_exam_enrollment.score_final is None:
+            if rec_exam_enrollment.session_exam.learning_unit_year.decimal_scores :
+                score = "{0:.2f}".format(rec_exam_enrollment.score_final)
             else:
-                score = "{0:.0f}".format(rec_exam_enrollment.score_draft)
+                score = "{0:.0f}".format(rec_exam_enrollment.score_final)
+        justification = ""
+        if rec_exam_enrollment.justification_final:
+            justification = dict(ExamEnrollment.JUSTIFICATION_TYPES)[rec_exam_enrollment.justification_final]
         ws.append([str(academic_year),
                    str(session_exam.number_session),
                    session_exam.learning_unit_year.acronym,
@@ -92,14 +94,13 @@ def export_xls(request, session_id, learning_unit_year_id, academic_year_id, isF
                    person.last_name,
                    person.first_name,
                    score,
-                   rec_exam_enrollment.justification_draft,
+                   str(justification),
                    end_date,
-                   credits,
                    rec_exam_enrollment.id
                    ])
 
         cptr = cptr+1
-        __coloring_non_editable(ws,cptr, rec_exam_enrollment.encoding_status,score,rec_exam_enrollment.justification_draft)
+        __coloring_non_editable(ws,cptr, rec_exam_enrollment.encoding_status,score,rec_exam_enrollment.justification_final)
 
     dv.ranges.append('I2:I'+str(cptr+100))#Ajouter 100 pour si on ajoute des enregistrements
 
@@ -107,7 +108,6 @@ def export_xls(request, session_id, learning_unit_year_id, academic_year_id, isF
     response['Content-Disposition'] = 'attachment; filename=score_encoding.xlsx'
     response['Content-type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     return response
-
 
 def __columns_ajusting(ws):
     """
@@ -127,23 +127,23 @@ def __columns_ajusting(ws):
     col_first_name.width = 30
     col_note = ws.column_dimensions['H']
     col_note.width = 20
-    col_id_exam_enrollment = ws.column_dimensions['L']
+    col_note = ws.column_dimensions['I']
+    col_note.width = 20
+    col_id_exam_enrollment = ws.column_dimensions['K']
     col_id_exam_enrollment.hidden = True
 
-
-def  __create_data_list_for_justification(isFac):
+def  __create_data_list_for_justification(is_fac):
     """
     Création de la liste de choix pour la justification
     :return:
     """
-    dv = DataValidation(type="list", formula1='%s' % ExamEnrollment.justification_label_authorized(isFac), allow_blank=True)
+    dv = DataValidation(type="list", formula1='%s' % ExamEnrollment.justification_label_authorized(is_fac), allow_blank=True)
     dv.error = str(_('Invalid entry, not in the list of choices'))
     dv.errorTitle = str(_('Invalid entry'))
 
     dv.prompt = str(_('Please choose in the list'))
     dv.promptTitle = str(_('List of choices'))
     return dv
-
 
 def __coloring_non_editable(ws, cptr, encoding_status, score, justification):
     """
@@ -155,7 +155,7 @@ def __coloring_non_editable(ws, cptr, encoding_status, score, justification):
 
     # coloration des colonnes qu'on ne doit pas modifier
     i=1
-    while i < 13:
+    while i < 12:
         if i< 8 or i>9:
             ws.cell(row=cptr, column=i).style = style_no_modification
         else:
@@ -163,7 +163,7 @@ def __coloring_non_editable(ws, cptr, encoding_status, score, justification):
                 ws.cell(row=cptr, column=8).style = style_submitted
                 ws.cell(row=cptr, column=9).style = style_submitted
             else:
-                if not(score is None):
+                if not score is None:
                     ws.cell(row=cptr, column=8).style = style_no_modification
                 if not(justification is None):
                     ws.cell(row=cptr, column=9).style = style_no_modification

@@ -94,7 +94,7 @@
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
                 <td>
-                   <input type="hidden" id="score_draft_{{ enrollment.id }}" value="{{ enrollment.score_draft | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores }}">
+                   <input type="hidden" id="score_draft_{{ enrollment.id }}" value="{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}">
                    <input type="number" step="any" name="score_{{ enrollment.id }}" id="double_score_{{ enrollment.id }}" tabindex="{{ forloop.counter }}" class="form-control" {% if enrollment.score_final or enrollment.justification_final %} disabled {% endif %}>
                 </td>
                 <td>
