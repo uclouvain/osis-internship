@@ -102,7 +102,7 @@
                   {{ enrollment.score_draft | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores }}
                 </td>
                 <td>
-                  <input type="hidden" id="justification_draft_{{ enrollment.id }}" value="{{ enrollment.justification_draft }}">
+                  <input type="hidden" id="justification_draft_{{ enrollment.id }}" value="{{ enrollment.justification_draft | default_if_none:'' }}">
                   {{ enrollment.justification_draft | default_if_none:"" }}
                 </td>
                 <td><button type="button" id="take_draft_{{ enrollment.id }}" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-ok" style="color: green" aria-hidden="true"></span></button></td>
@@ -111,8 +111,8 @@
                   {{ enrollment.score_reencoded | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores }}
                 </td>
                 <td>
-                  <input type="hidden" id="justification_reencoded_{{ enrollment.id }}" value="{{ enrollment.justification_reencoded }}">
-                  {{ enrollment.justification_reencoded | default_if_none:"-" }}
+                  <input type="hidden" id="justification_reencoded_{{ enrollment.id }}" value="{{ enrollment.justification_reencoded | default_if_none:'' }}">
+                  {{ enrollment.justification_reencoded | default_if_none:"" }}
                 </td>
                 <td><button type="button" id="take_reencoded_{{ enrollment.id }}" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-ok" style="color: green" aria-hidden="true"></span></button></td>
                 <td>

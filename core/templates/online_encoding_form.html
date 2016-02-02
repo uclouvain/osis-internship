@@ -74,18 +74,18 @@
       <hr>
       <form class="form-inline" method="POST" action="{% url 'online_encoding_form' session.id %}">
         {% csrf_token %}
-        <submit class="btn btn-primary"><span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'Save' %}</submit>
-        <a class="btn btn-default" href="{% url 'online_encoding' session.id %}" role="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'Cancel' %}</a><br><br>
 
         <table class="table table-hover">
             <thead>
-              <th>{% trans 'Offer' %}</th>
-              <th>{% trans 'Registration number' %}</th>
-              <th>{% trans 'Lastname' %}</th>
-              <th>{% trans 'Firstname' %}</th>
-              <th>{% trans 'Score' %}</th>
-              <th>{% trans 'Justification' %}</th>
-              <th>{% trans 'End date' %}</th>
+                <tr>
+                  <th>{% trans 'Offer' %}</th>
+                  <th>{% trans 'Registration number' %}</th>
+                  <th>{% trans 'Lastname' %}</th>
+                  <th>{% trans 'Firstname' %}</th>
+                  <th>{% trans 'Score' %}</th>
+                  <th>{% trans 'Justification' %}</th>
+                  <th>{% trans 'End date' %}</th>
+                </tr>
             </thead>
             <tbody>
             {% for enrollment in enrollments %}
