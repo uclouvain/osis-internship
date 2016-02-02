@@ -99,7 +99,7 @@
       </thead>
       {% for offer in offers %}
         <tr>
-          <td><a href="{% url 'offer_form' offer.id %}">{{ offer.acronym }}</a></td>
+          <td><a href="{% url 'offer_read' offer.id %}">{{ offer.acronym }}</a></td>
           <td>{{ offer.title }}</td>
         </tr>
       {% endfor %}

@@ -336,6 +336,6 @@ def offers_search(request):
                                            'offers':         query ,
                                            'init':           "0"})
 
-def offer_form(request,offer_year_id):
+def offer_read(request,offer_year_id):
     offer_year = OfferYear.objects.get(pk=offer_year_id)
-    return render(request, "offer_form.html", {'offer':     offer_year})
+    return render(request, "offer.html", {'offer':     offer_year})
