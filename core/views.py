@@ -134,7 +134,7 @@ def online_encoding_form(request, session_id):
         for enrollment in enrollments:
             score = request.POST.get('score_' + str(enrollment.id), None)
             if score:
-                if enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores:
+                if enrollment.session_exam.learning_unit_year.decimal_scores:
                     enrollment.score_draft = float(score)
                 else:
                     enrollment.score_draft = int(float(score))
@@ -164,7 +164,7 @@ def online_double_encoding_form(request, session_id):
         for enrollment in enrollments:
             score = request.POST.get('score_' + str(enrollment.id), None)
             if score:
-                if enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores:
+                if enrollment.session_exam.learning_unit_year.decimal_scores:
                     enrollment.score_reencoded = float(score)
                 else:
                     enrollment.score_reencoded = int(float(score))
@@ -201,7 +201,7 @@ def online_double_encoding_validation(request, session_id):
         for enrollment in enrollments:
             score = request.POST.get('score_' + str(enrollment.id), None)
             if score:
-                if enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores:
+                if enrollment.session_exam.learning_unit_year.decimal_scores:
                     enrollment.score_final = float(score)
                 else:
                     enrollment.score_final = int(float(score))

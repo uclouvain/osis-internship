@@ -79,7 +79,7 @@ def export_xls(request, session_id, learning_unit_year_id, academic_year_id, is_
             end_date = academic_calendar.end_date.strftime('%d/%m/%Y')
         score=None
         if not rec_exam_enrollment.score_final is None:
-            if rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores :
+            if rec_exam_enrollment.session_exam.learning_unit_year.decimal_scores :
                 score = "{0:.2f}".format(rec_exam_enrollment.score_final)
             else:
                 score = "{0:.0f}".format(rec_exam_enrollment.score_final)
