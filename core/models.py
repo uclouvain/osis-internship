@@ -435,21 +435,8 @@ class ExamEnrollment(models.Model):
     def student(self):
         return self.learning_unit_enrollment.student
 
-    def justification_label(self):
-        if self.justification_draft == "ABSENT":
-            return _('Absent')
-        if self.justification_draft == "ILL":
-            return _('Ill')
-        if self.justification_draft == "CHEATING":
-            return _('Cheating')
-        if self.justification_draft == "JUSTIFIED_ABSENCE":
-            return _('Justified absence')
-        if self.justification_draft == "SCORE_MISSING":
-            return _('Score missing')
-        return None
-
-    def justification_label_authorized(isFac):
-        if isFac:
+    def justification_label_authorized(is_fac):
+        if is_fac:
             return '%s, %s, %s, %s, %s' % (_('Absent'), _('Ill'), _('Cheating'), _('Justified absence'), _('Score missing'))
         else:
             return '%s, %s, %s' % (_('Absent'), _('Ill'), _('Cheating'))

@@ -164,18 +164,20 @@ def list_notes_building(session_exam, learning_unit_year_id, academic_year, acad
                 current_learning_unit_year = rec_exam_enrollment.learning_unit_enrollment.learning_unit_year
 
             person = Person.find_person(student.person.id)
-            if not (rec_exam_enrollment.score_draft is None):
+            score = None
+            if not (rec_exam_enrollment.score_final is None):
                 if rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores :
-                    score = "{0:.2f}".format(rec_exam_enrollment.score_draft)
+                    score = "{0:.2f}".format(rec_exam_enrollment.score_final)
                 else:
-                    score = "{0:.0f}".format(rec_exam_enrollment.score_draft)
-            else:
-                score = "-"
+                    score = "{0:.0f}".format(rec_exam_enrollment.score_final)
+            justification = ""
+            if rec_exam_enrollment.justification_final:
+                justification = dict(ExamEnrollment.JUSTIFICATION_TYPES)[rec_exam_enrollment.justification_final]
             data.append([student.registration_id,
                            person.last_name,
                            person.first_name,
                            score,
-                           rec_exam_enrollment.justification_label(),
+                           justification,
                            academic_calendar.end_date.strftime('%d/%m/%Y')
                            ])
 
