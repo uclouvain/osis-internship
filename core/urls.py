@@ -42,6 +42,7 @@ urlpatterns = [
 
     url(r'^offers/$', views.offers, name='offers'),
     url(r'^offers/search$', views.offers_search, name='offers_search'),
+    url(r'^offers/([0-9]+)/$', views.offer_read, name='offer_read'),
 
     url(r'^catalog/$', views.catalog, name='catalog'),
 

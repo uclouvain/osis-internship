@@ -28,8 +28,9 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'catalog' %}">Catalogue de formation</a></li>
-    <li class="active">{% trans 'Offers' %}</li>
+  <li><a href="{% url 'catalog' %}">Catalogue de formation</a></li>
+  <li class="active">{% trans 'Offers' %}</li>
+
 {% endblock %}
 {% block content %}
 <div class="page-header">
@@ -62,10 +63,10 @@
           </div>
           <div class="col-md-2">
 
-              <label for="validity" >{% trans 'Academic Year'%}</label>
-              <select class="form-control" id="validity"  name="validity" value="{{ validity }}">
-                {% for v in validities %}
-                  {% if v.id == validity %}
+              <label for="academic_year" >{% trans 'Academic Year'%}</label>
+              <select class="form-control" id="academic_year"  name="academic_year" value="{{ academic_year }}">
+                {% for v in academic_years %}
+                  {% if v.id == academic_year %}
                     <option selected value="{{ v.id }}">{{ v.year }}</option>
                   {% else %}
                     <option value="{{ v.id }}">{{ v.year }}</option>
@@ -96,10 +97,10 @@
         <th>{% trans 'Acronym'%}</th>
         <th>{% trans 'Title'%}</th>
       </thead>
-      {% for o in offers %}
+      {% for offer in offers %}
         <tr>
-          <td>{{ o.acronym }}</td>
-          <td>{{ o.title }}</td>
+          <td><a href="{% url 'offer_read' offer.id %}">{{ offer.acronym }}</a></td>
+          <td>{{ offer.title }}</td>
         </tr>
       {% endfor %}
     </table>
