@@ -127,7 +127,7 @@ def header_building(canvas, doc,styles):
     w, h = t_header.wrap(doc.width, doc.topMargin)
     t_header.drawOn(canvas, doc.leftMargin, doc.height + doc.topMargin - h)
 
-def list_notes_building(session_exam, learning_unit_year_id, academic_year, academic_calendar, tutor,list_exam_enrollment, styles, isFac, Contenu):
+def list_notes_building(session_exam, learning_unit_year_id, academic_year, academic_calendar, tutor,list_exam_enrollment, styles, is_fac, Contenu):
     #liste des notes
     Contenu.append(SMALL_INTER_LINE)
     data = headers_table(styles)
@@ -156,7 +156,7 @@ def list_notes_building(session_exam, learning_unit_year_id, academic_year, acad
                 Contenu.append(t)
                 #Autre programme - 3. Imprimer légende
                 end_page_infos_building(Contenu, styles)
-                legend_building(current_learning_unit_year, isFac, Contenu, styles)
+                legend_building(current_learning_unit_year, is_fac, Contenu, styles)
                 #Autre programme - 4. il faut faire un saut de page
                 Contenu.append(PageBreak())
                 data = headers_table(styles)
@@ -194,9 +194,9 @@ def list_notes_building(session_exam, learning_unit_year_id, academic_year, acad
 
         Contenu.append(t)
         end_page_infos_building(Contenu, styles)
-        legend_building(current_learning_unit_year, isFac, Contenu, styles)
+        legend_building(current_learning_unit_year, is_fac, Contenu, styles)
 
-def legend_building(learning_unit_year, isFac, Contenu, styles):
+def legend_building(learning_unit_year, is_fac, Contenu, styles):
     Contenu.append(BIG_INTER_LINE)
     Contenu.append(BIG_INTER_LINE)
     p = ParagraphStyle('legend')
@@ -206,7 +206,7 @@ def legend_building(learning_unit_year, isFac, Contenu, styles):
     p.alignment = TA_CENTER
     p.fontSize =8
     p.borderPadding = 5
-    legend_text = "%s : %s" % (_('Other score legend'), ExamEnrollment.justification_label_authorized(isFac))
+    legend_text = "%s : %s" % (_('Other score legend'), ExamEnrollment.justification_label_authorized(is_fac))
     if not(learning_unit_year.decimal_scores):
         legend_text += "<br/><font color=red>%s</font>" % _('UnAuthorized decimal for this activity')
 

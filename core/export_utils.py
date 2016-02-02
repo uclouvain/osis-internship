@@ -47,7 +47,6 @@ HEADER = [str(_('Academic year')),
           str(_('Numbered score')),
           str(_('Other score')),
           str(_('End date')),
-          str(_('Credits')),
           str(_('ID'))]
 
 def export_xls(request, session_id, learning_unit_year_id, academic_year_id, is_fac):
@@ -71,7 +70,7 @@ def export_xls(request, session_id, learning_unit_year_id, academic_year_id, is_
         student = rec_exam_enrollment.learning_unit_enrollment.student
         o = rec_exam_enrollment.learning_unit_enrollment.offer
         person = Person.find_person(student.person.id)
-        text_credits = ""
+
         if not rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.credits is None:
             credits = rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.credits
         if academic_calendar.end_date is None:
@@ -97,7 +96,6 @@ def export_xls(request, session_id, learning_unit_year_id, academic_year_id, is_
                    score,
                    str(justification),
                    end_date,
-                   credits,
                    rec_exam_enrollment.id
                    ])
 
@@ -131,7 +129,7 @@ def __columns_ajusting(ws):
     col_note.width = 20
     col_note = ws.column_dimensions['I']
     col_note.width = 20
-    col_id_exam_enrollment = ws.column_dimensions['L']
+    col_id_exam_enrollment = ws.column_dimensions['K']
     col_id_exam_enrollment.hidden = True
 
 def  __create_data_list_for_justification(is_fac):
@@ -157,7 +155,7 @@ def __coloring_non_editable(ws, cptr, encoding_status, score, justification):
 
     # coloration des colonnes qu'on ne doit pas modifier
     i=1
-    while i < 13:
+    while i < 12:
         if i< 8 or i>9:
             ws.cell(row=cptr, column=i).style = style_no_modification
         else:
