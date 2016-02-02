@@ -27,27 +27,16 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li class="active">{% trans 'Studies' %}</li>
+  <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+  <li><a href="{% url 'internships_home' %}">Stages</a></li>
+  <li class="active">{% trans 'Periods' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'Studies' %}</h2>
+    <h2>{% trans 'Periods' %}</h2>
   </div>
 
   <div class="panel panel-default">
-    <div class="panel-body">
-      <div class="row">
-        <div class="col-md-1"><i class="fa fa-tachometer" style="font-size: 400%; color: #6699FF;"></i></div>
-        <div class="col-md-5">
-          <h4 class="media-heading"><a href="{% url 'assessments' %}">{% trans 'Evaluations' %}</a></h4>
-          <p>{% trans 'This process helps tutors while scores encoding.' %}</p>
-        </div>
-        <div class="col-md-1"><i class="fa fa-user-md" style="font-size: 400%; color: #6699FF;"></i></div>
-        <div class="col-md-5">
-          <h4 class="media-heading"><a href="{% url 'internships_home' %}">Stages</a></h4>
-          <p>{% trans 'This process controls students internships.' %}</p>
-        </div>
-      </div>
-    </div>
+
   </div>
 {% endblock %}

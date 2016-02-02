@@ -23,25 +23,18 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+from django.conf.urls import url
+from django.contrib.auth.views import login,logout_then_login
 
+from . import views
 
-@login_required
-def internships_home(request):
-    return render(request, "internships_home.html", {'section': 'internship'})
+urlpatterns = [
+    # S'il vous plaît, organiser les urls par ordre alphabétique.
 
-def internships_places(request):
-    return render(request, "places.html", {'section': 'internship'})
-
-def internships_students(request):
-    return render(request, "students.html", {'section': 'internship'})
-
-def internships(request):
-    return render(request, "internships.html", {'section': 'internship'})
-
-def internships_periods(request):
-    return render(request, "periods.html", {'section': 'internship'})
-
-def interships_masters(request):
-    return render(request, "interships_masters.html", {'section': 'internship'})
+    url(r'^studies/internships/$', views.internships, name='internships'),
+    url(r'^studies/internships/home/$', views.internships_home, name='internships_home'),
+    url(r'^studies/internships/interships_masters/$', views.interships_masters, name='interships_masters'),
+    url(r'^studies/internships/periods/$', views.internships_periods, name='internships_periods'),
+    url(r'^studies/internships/places/$', views.internships_places, name='internships_places'),
+    url(r'^studies/internships/students/$', views.internships_students, name='internships_students'),
+]
