@@ -1,6 +1,9 @@
 {% extends "layout.html" %}
 {% load l10n %}
+{% load i18n %}
 {% load percentage %}
+{% load score_display %}
+{% load list%}
 
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
@@ -27,15 +30,15 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}">Parcours</a></li>
-  <li><a href="{% url 'assessements' %}">Évaluations</a></li>
-  <li><a href="{% url 'scores_encoding' %}">Encodage des notes</a></li>
-  <li><a href="{% url 'online_encoding' session.id %}">Encodage en ligne</a></li>
-  <li class="active">Double encodage en ligne</li>
+  <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+  <li><a href="{% url 'assessments' %}">{% trans 'Evaluations' %}</a></li>
+  <li><a href="{% url 'scores_encoding' %}">{% trans 'Scores encoding' %}</a></li>
+  <li><a href="{% url 'online_encoding' session.id %}">{% trans 'Online scores encoding' %}</a></li>
+  <li class="active">{% trans 'Dubble online scores encoding' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>Double encodage en ligne</h2>
+    <h2>{% trans 'Dubble online scores encoding' %}</h2>
   </div>
   <div class="panel panel-default">
     <div class="panel-heading">
@@ -45,74 +48,87 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label>Responsable</label><br>
+            <label>{% trans 'Responsible' %}</label><br>
             {{ tutor }}
           </div>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-3">
           <div class="form-group">
-            <label>Année académique</label><br>
+            <label>{% trans 'Academic year' %}</label><br>
             {{ academic_year }}
           </div>
         </div>
         <div class="col-md-2">
           <div class="form-group">
-            <label>Session</label><br>
+            <label>{% trans 'Session' %}</label><br>
             {{ session.number_session }}
           </div>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-3">
           <div class="form-group">
-            <label>Nombre d'inscrits</label><br>
+            <label>{%trans 'Number of enrollments' %}</label><br>
             {{ enrollments|length }}
-          </div>
-        </div>
-        <div class="col-md-2">
-          <div class="form-group">
-            <label>Progrès</label><br>
-            {{ progress | percentage }}
           </div>
         </div>
       </div>
       <hr>
-      <form class="form-inline">
+      <form class="form-inline" method="POST" action="{% url 'online_double_encoding_validation' session.id %}">
+        {% csrf_token %}
         <table class="table">
             <thead>
               <tr>
                 <th colspan="4"></th>
-                <th colspan="8">Notes / Justifications</th>
+                <th colspan="8">{%trans 'Scores' %} / {%trans 'Other score' %}</th>
               </tr>
               <tr>
-                <th>Programme</th>
-                <th>Noma</th>
-                <th>Nom</th>
-                <th>Prénom</th>
-                <th colspan="3">Encodage</th>
-                <th colspan="3">Reencodage</th>
-                <th colspan="2">Final</th>
+                <th>{%trans 'Offer' %}</th>
+                <th>{%trans 'Registration number' %}</th>
+                <th>{% trans 'Lastname' %}</th>
+                <th>{% trans 'Firstname' %}</th>
+                <th colspan="3">{% trans 'Encoding' %}</th>
+                <th colspan="3">{% trans 'Dubble encoding' %}</th>
+                <th colspan="2">{% trans 'Final' %}</th>
               </tr>
             </thead>
             <tbody>
             {% for enrollment in enrollments %}
-              <tr>
+              <tr style="background-color:{{ enrollments|previous:forloop.counter }}">
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
-                <td>{{ enrollment.score | default_if_none:"-" }}</td>
-                <td>{{ enrollment.justification | default_if_none:"-" }}</td>
-                <td><a class="btn btn-default btn-sm"><span class="glyphicon glyphicon-ok" style="color: green" aria-hidden="true"></span></a></td>
-                <td>{{ enrollment.score | default_if_none:"-" }}</td>
-                <td>{{ enrollment.justification | default_if_none:"-" }}</td>
-                <td><a class="btn btn-default btn-sm"><span class="glyphicon glyphicon-ok" style="color: green" aria-hidden="true"></span></a></td>
-                <td>{{ enrollment.score | default_if_none:"-" }}</td>
-                <td>{{ enrollment.justification | default_if_none:"-" }}</td>
+                <td>
+                  <input type="hidden" id="score_draft_{{ enrollment.id }}" value="{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}">
+                  {{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}
+                </td>
+                <td>
+                  <input type="hidden" id="justification_draft_{{ enrollment.id }}" value="{{ enrollment.justification_draft | default_if_none:'' }}">
+                  {{ enrollment.justification_draft | default_if_none:"" }}
+                </td>
+                <td><button type="button" id="take_draft_{{ enrollment.id }}" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-ok" style="color: green" aria-hidden="true"></span></button></td>
+                <td>
+                  <input type="hidden" id="score_reencoded_{{ enrollment.id }}" value="{{ enrollment.score_reencoded | score_display:enrollment.session_exam.learning_unit_year.decimal_scores}}">
+                  {{ enrollment.score_reencoded | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}
+                </td>
+                <td>
+                  <input type="hidden" id="justification_reencoded_{{ enrollment.id }}" value="{{ enrollment.justification_reencoded | default_if_none:'' }}">
+                  {{ enrollment.justification_reencoded | default_if_none:"" }}
+                </td>
+                <td><button type="button" id="take_reencoded_{{ enrollment.id }}" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-ok" style="color: green" aria-hidden="true"></span></button></td>
+                <td>
+                  <input type="hidden" name="score_{{ enrollment.id }}" id="score_final_{{ enrollment.id }}">
+                  <div id="score_final_show_{{ enrollment.id }}" style="font-weight: bold; color: blue;">{{ enrollment.score_final | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}</div>
+                </td>
+                <td>
+                  <input type="hidden" name="justification_{{ enrollment.id }}" id="justification_final_{{ enrollment.id }}">
+                  <div id="justification_final_show_{{ enrollment.id }}" style="font-weight: bold; color: blue;">{{ enrollment.justification_final | default_if_none:"-" }}</div>
+                </td>
               </tr>
             {% endfor %}
             </tbody>
         </table>
-        <submit class="btn btn-primary"><span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> Enregistrer</submit>
-        <a class="btn btn-default" href="{% url 'online_encoding' session.id %}" role="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Annuler</a>
+        <button type="submit" class="btn btn-warning"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'Submission' %}</button>
+        <a class="btn btn-default" href="{% url 'online_encoding' session.id %}" role="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'Cancel' %}</a>
       </form>
     </div>
   </div>

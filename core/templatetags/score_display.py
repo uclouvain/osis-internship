@@ -28,28 +28,18 @@ from django import template
 register = template.Library()
 
 @register.filter
-def previous(value, arg):
-    arg = arg-1
-
-    if arg > 0:
-        try:
-            previous_e = value[int(arg)-1]
-            current_e = value[int(arg)]
-            global COLOR_1, COLOR_2, COLOR_CURRENT
-            if previous_e.learning_unit_enrollment.offer_enrollment.offer_year.acronym != current_e.learning_unit_enrollment.offer_enrollment.offer_year.acronym:
-                if COLOR_CURRENT == COLOR_1:
-                    COLOR_CURRENT = COLOR_2
-                else:
-                    COLOR_CURRENT = COLOR_1
-                # pass
-            return COLOR_CURRENT
-            # return value[int(arg)-1]
-        except:
-            return COLOR_CURRENT
+def score_display(value, decimal_option):
+    if value is None or str(value) == '-':
+        return ""
     else:
-        global COLOR_1, COLOR_2, COLOR_CURRENT
-        COLOR_1 = "#FFFFFF"
-        COLOR_2 = "#e5f2ff"
-        COLOR_CURRENT=COLOR_1
-        COLOR_CURRENT = COLOR_1
-        return COLOR_CURRENT
+        if decimal_option:
+            return "{0:.2f}".format(value)
+        else:
+            return "{0:.0f}".format(value)
+
+@register.filter
+def disabled(value):
+    if value is None:
+        return ""
+    else:
+        return "disabled"

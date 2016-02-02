@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
+{% load i18n %}
+{% load list %}
 
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
@@ -26,32 +28,38 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li class="active">Programme d'études</li>
+  <li><a href="{% url 'catalog' %}">{% trans 'Catalog' %}</a></li>
+  <li><a href="{% url 'offers' %}">{% trans 'Offers' %}</a></li>
+  <li class="active">{% trans 'Offer' %}</li>
 {% endblock %}
 {% block content %}
 <div class="page-header">
-  <h2>Programme d'études</h2>
+  <h2>{{ offer.title }}</h2>
 </div>
 <div class="panel panel-default">
   <div class="panel-body">
-    <div class="row">
-      <div class="col-md-1"><i class="fa fa-map" style="font-size: 400%; color: #6699FF;"></i></div>
-      <div class="col-md-5">
-        <h4 class="media-heading"><a href="{% url 'offers' %}">Offres</a></h4>
-        <p>Gestion des offres qui composent le programme.</p>
-      </div>
-      <div class="col-md-1"><i class="fa fa-book" style="font-size: 400%; color: #6699FF;"></i></div>
-      <div class="col-md-5">
-        <h4 class="media-heading"><a href="{% url 'learning_units' %}">Unités d'enseignement</a></h4>
-        <p>Gestion des cours, des formations et d'autres activités qui composent le programme.</p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-1"><i class="fa fa-calendar" style="font-size: 400%; color: #6699FF;"></i></div>
-      <div class="col-md-11">
-        <h4 class="media-heading"><a href="{% url 'offers' %}">L'année académique</a></h4>
-        <p>Gestion du programme annualisé.</p>
-      </div>
+    <ul class="nav nav-tabs">
+      <li class="active"><a data-toggle="tab" href="#informations">{% trans 'Informations'%}</a></li>
+    </ul>
+    <div class="tab-content">
+      <p>
+        <div id="informations" class="tab-pane fade in active">
+          <div class="row">
+            <div class="col-md-3">
+              <label for="title">{% trans 'Academic year'%}</label><br>
+              {{ offer.academic_year }}
+            </div>
+            <div class="col-md-3">
+              <label for="acronym">{% trans 'Acronym' %}</label><br>
+              {{ offer.acronym }}
+            </div>
+            <div class="col-md-6">
+              <label for="structure">{% trans 'Structure' %}</label><br>
+              {{ offer.structure }}
+            </div>
+          </div>
+        </div>
+      </p>
     </div>
   </div>
 </div>

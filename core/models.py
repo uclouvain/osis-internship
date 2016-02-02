@@ -119,7 +119,18 @@ class ProgrammeManager(models.Model):
 
     def find_faculty_by_user(user):
         programme_manager = ProgrammeManager.objects.filter(person__user=user).first()
-        return programme_manager.faculty
+        if programme_manager:
+            return programme_manager.faculty
+        else:
+            return None
+
+    def is_programme_manager(user, structure):
+        person = Person.objects.get(user=user)
+        if user:
+            programme_manager = ProgrammeManager.objects.filter(person=person.id, faculty=structure)
+            if programme_manager:
+                return True
+        return False
 
     def __str__(self):
         return u"%s - %s" % (self.person, self.faculty)
@@ -172,7 +183,7 @@ class AcademicCalendar(models.Model):
             return None
 
     def find_academic_calendar_by_event_type(academic_year_id, session_number):
-        event_type_criteria = "EXAM_SCORES_SUBMISSION_SESS"+str(session_number)
+        event_type_criteria = "EXAM_SCORES_SUBMISSION_SESS_"+str(session_number)
         return AcademicCalendar.objects.get(academic_year=academic_year_id, event_type=event_type_criteria)
 
     def __str__(self):
@@ -227,12 +238,13 @@ class OfferYearCalendar(models.Model):
     end_date          = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
 
     def current_session_exam():
-        return OfferYearCalendar.objects.filter(event_type__startswith='EXAM_SCORES_SUBMISSION_SESS'
+        return OfferYearCalendar.objects.filter(event_type__startswith='EXAM_SCORES_SUBMISSION_SESS_'
                                        ).filter(start_date__lte=timezone.now()
                                        ).filter(end_date__gte=timezone.now()).first()
 
     def __str__(self):
-        return u"%s - %s" % (self.academic_calendar, self.offer_year)
+
+        return u"%s - %s - %s" % (self.academic_calendar, self.offer_year, self.event_type)
 
 
 class LearningUnit(models.Model):
@@ -321,16 +333,16 @@ class SessionExam(models.Model):
     def find_session(id):
         return SessionExam.objects.get(pk=id)
 
-    def find_sessions_by_tutor(tutor, academic_year, session):
+    def find_sessions_by_tutor(tutor, academic_year):
         learning_units = Attribution.objects.filter(tutor=tutor).values('learning_unit')
-        return SessionExam.objects.filter(number_session=session.number_session
-                                 ).filter(learning_unit_year__academic_year=academic_year
-                                 ).filter(learning_unit_year__learning_unit__in=learning_units)
+        return SessionExam.objects.filter(~models.Q(status='IDLE'))\
+                                  .filter(learning_unit_year__academic_year=academic_year)\
+                                  .filter(learning_unit_year__learning_unit__in=learning_units)
 
-    def find_sessions_by_faculty(faculty, academic_year, session):
-        return SessionExam.objects.filter(number_session=session.number_session
-                                 ).filter(offer_year_calendar__offer_year__academic_year=academic_year
-                                 ).filter(offer_year_calendar__offer_year__structure=faculty)
+    def find_sessions_by_faculty(faculty, academic_year):
+        return SessionExam.objects.filter(~models.Q(status='IDLE'))\
+                                  .filter(offer_year_calendar__offer_year__academic_year=academic_year)\
+                                  .filter(offer_year_calendar__offer_year__structure=faculty)
 
     @property
     def offer(self):
@@ -340,7 +352,7 @@ class SessionExam(models.Model):
 
     @property
     def progress(self):
-        enrollments = list(ExamEnrollment.find_exam_enrollments(self.id))
+        enrollments = list(ExamEnrollment.find_exam_enrollments(self))
 
         if enrollments:
             progress = 0
@@ -380,35 +392,51 @@ class ExamEnrollment(models.Model):
 
     def calculate_progress(enrollments):
         if enrollments:
-            progress = len([e for e in enrollments if e.score_draft is not None or e.justification_draft is not None]) / len(enrollments)
+            progress = len([e for e in enrollments if e.score_final or e.justification_final]) / len(enrollments)
         else:
             progress = 0
         return progress * 100
 
-
     def find_exam_enrollments(session_exam):
-        enrollments = ExamEnrollment.objects.filter(session_exam=session_exam)
+        enrollments = ExamEnrollment.objects.filter(session_exam=session_exam)\
+                                            .order_by('learning_unit_enrollment__offer_enrollment__offer_year__acronym',
+                                                      'learning_unit_enrollment__offer_enrollment__student__person__last_name',
+                                                      'learning_unit_enrollment__offer_enrollment__student__person__first_name')
+        return enrollments
+
+    def find_draft_exam_enrollments(session_exam):
+        """ Return the enrollments of a session but not the ones already submitted. """
+        enrollments = ExamEnrollment.objects.filter(session_exam=session_exam)\
+                                            .filter(score_final__isnull=True)\
+                                            .filter(models.Q(justification_final__isnull=True) |
+                                                    models.Q(justification_final=''))
+        return enrollments
+
+    def count_encoded_scores(enrollments):
+        """ Count the scores that were already encoded but not submitted yet. """
+        counter = 0
+        for enrollment in enrollments:
+            if (enrollment.score_draft or enrollment.justification_draft) \
+                    and not enrollment.score_final \
+                    and not enrollment.justification_final:
+                counter += 1
+
+        return counter
+
+    def find_exam_enrollments_to_validate(session_exam):
+        enrollments = ExamEnrollment.objects.filter(session_exam=session_exam)\
+                                            .filter(~models.Q(score_draft=models.F('score_reencoded')) |
+                                                    ~models.Q(justification_draft=models.F('justification_reencoded')))\
+                                            .filter(score_final__isnull=True)\
+                                            .filter(models.Q(justification_final__isnull=True) |
+                                                    models.Q(justification_final=''))
         return enrollments
 
     def student(self):
         return self.learning_unit_enrollment.student
 
-    def justification_label(self,lang):
-        if lang == 'fr':
-            if self.justification == "ABSENT":
-                return 'Absent'
-            if self.justification == "ILL":
-                return 'Malade'
-            if self.justification == "CHEATING":
-                return 'Tricherie'
-            if self.justification == "JUSTIFIED_ABSENCE":
-                return 'Absence justifiée'
-            if self.justification == "SCORE_MISSING":
-                return 'Note manquante'
-            return None
-
-    def justification_label_authorized(isFac):
-        if isFac:
+    def justification_label_authorized(is_fac):
+        if is_fac:
             return '%s, %s, %s, %s, %s' % (_('Absent'), _('Ill'), _('Cheating'), _('Justified absence'), _('Score missing'))
         else:
             return '%s, %s, %s' % (_('Absent'), _('Ill'), _('Cheating'))
