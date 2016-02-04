@@ -375,7 +375,7 @@ class ExamEnrollment(models.Model):
         ('JUSTIFIED_ABSENCE',_('Justified absence')),
         ('SCORE_MISSING',_('Score missing')))
 
-    ENCODING_STATUS = (
+    ENCODING_STATUS_LIST = (
         ('SAVED',_('Saved')),
         ('SUBMITTED',_('Submitted')))
 
@@ -386,7 +386,7 @@ class ExamEnrollment(models.Model):
     justification_draft      = models.CharField(max_length = 20, blank = True, null = True,choices = JUSTIFICATION_TYPES)
     justification_reencoded  = models.CharField(max_length = 20, blank = True, null = True,choices = JUSTIFICATION_TYPES)
     justification_final      = models.CharField(max_length = 20, blank = True, null = True,choices = JUSTIFICATION_TYPES)
-    encoding_status          = models.CharField(max_length = 9, blank = True, null = True,choices = ENCODING_STATUS)
+    encoding_status          = models.CharField(max_length = 9, blank = True, null = True,choices = ENCODING_STATUS_LIST)
     session_exam             = models.ForeignKey(SessionExam)
     learning_unit_enrollment = models.ForeignKey(LearningUnitEnrollment)
 

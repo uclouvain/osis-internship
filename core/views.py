@@ -296,7 +296,7 @@ def offers(request):
     academic_years = AcademicYear.objects.all().order_by('year')
 
     academic_year_calendar = AcademicCalendar.current_academic_year()
-    if not(academic_year_calendar is None):
+    if not academic_year_calendar is None:
         academic_year = academic_year_calendar.id
     return render(request, "offers.html", {'faculties':      faculties,
                                            'academic_year':  academic_year,
@@ -317,16 +317,16 @@ def offers_search(request):
 
     if academic_year is None:
         academic_year_calendar = AcademicCalendar.current_academic_year()
-        if not(academic_year_calendar is None):
+        if not academic_year_calendar is None:
             academic_year = academic_year_calendar.id
 
     query = OfferYear.objects.filter(academic_year=int(academic_year))
 
-    if not(faculty is None) and faculty != "*" :
+    if not faculty is None and faculty != "*" :
         query = query.filter(structure=int(faculty))
 
-    if not(code is None) and len(code) > 0  :
-        query = query.filter(acronym__istartswith=code)
+    if not code is None and len(code) > 0  :
+        query = query.filter(acronym__startswith=code)
 
     return render(request, "offers.html", {'faculties':      faculties,
                                            'academic_year':  int(academic_year),
