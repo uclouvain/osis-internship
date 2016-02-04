@@ -23,3 +23,31 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django import template
+
+register = template.Library()
+
+@register.filter
+def previous(value, arg):
+    arg = arg-1
+
+    if arg > 0:
+        try:
+            previous_e = value[int(arg)-1]
+            current_e = value[int(arg)]
+            global COLOR_1, COLOR_2, COLOR_CURRENT
+            if previous_e.learning_unit_enrollment.offer_enrollment.offer_year.acronym != current_e.learning_unit_enrollment.offer_enrollment.offer_year.acronym:
+                if COLOR_CURRENT == COLOR_1:
+                    COLOR_CURRENT = COLOR_2
+                else:
+                    COLOR_CURRENT = COLOR_1
+            return COLOR_CURRENT
+        except:
+            return COLOR_CURRENT
+    else:
+        global COLOR_1, COLOR_2, COLOR_CURRENT
+        COLOR_1 = "#FFFFFF"
+        COLOR_2 = "#e5f2ff"
+        COLOR_CURRENT=COLOR_1
+        COLOR_CURRENT = COLOR_1
+        return COLOR_CURRENT
