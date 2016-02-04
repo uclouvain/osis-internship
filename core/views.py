@@ -326,7 +326,7 @@ def offers_search(request):
         query = query.filter(structure=int(faculty))
 
     if not(code is None) and len(code) > 0  :
-        query = query.filter(acronym__startswith=code)
+        query = query.filter(acronym__istartswith=code)
 
     return render(request, "offers.html", {'faculties':      faculties,
                                            'academic_year':  int(academic_year),

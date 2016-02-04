@@ -30,12 +30,18 @@ from . import views
 from . import export_utils
 from . import upload_xls_utils
 
+from core.views_osis import learning_unit
+
+
 urlpatterns = [
     url(r'^$', views.home, name='home'),
 
     # Please, organize the urls in alphabetic order.
 
-    url(r'^learning_units/$', views.catalog, name='learning_units'),
+    # url(r'^learning_units/$', views.catalog, name='learning_units'),
+    url(r'^learning_units/$', learning_unit.learning_units, name='learning_units'),
+    url(r'^learning_units/search$', learning_unit.learning_units_search, name='learning_units_search'),
+    url(r'^learning_units/([0-9]+)/$', learning_unit.learning_unit_read, name='learning_unit_read'),
 
     url(r'^login/$', login, name='login'),
     url(r'^logout/$', logout_then_login, name='logout'),

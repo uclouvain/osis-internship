@@ -57,9 +57,7 @@ def upload_scores_file(request, session_id, learning_unit_year_id, academic_year
                 else:
                     isValid = __save_xls_scores(request, file_name)
                     #todo afficher un message parlant dans l'écran si xls invalide ou problème
-                    if isValid:
-                        pass
-                    else:
+                    if not isValid:
                         message_validation = '%s' % _('Invalid file')
 
                 messages.add_message(request, messages.INFO, '%s' % message_validation)
