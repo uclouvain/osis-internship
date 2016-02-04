@@ -2,7 +2,6 @@
 {% load l10n %}
 {% load i18n %}
 {% load sum %}
-{% load list%}
 {% load score_display %}
 {% load programme_manager %}
 
@@ -89,7 +88,13 @@
             </thead>
             <tbody>
             {% for enrollment in enrollments %}
-              <tr  style="background-color:{{ enrollments|previous:forloop.counter }}">
+              <tr style="background-color:
+                      {% ifchanged enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym %}
+                             {% cycle "white" "#E5F2FF" as rowcolors %}
+                         {% else %}
+                             {{ rowcolors }}
+                         {% endifchanged %}
+                      ">
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
