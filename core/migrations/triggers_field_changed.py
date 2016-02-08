@@ -28,7 +28,16 @@ class Migration(migrations.Migration):
         """CREATE OR REPLACE FUNCTION update_changed_column()
         RETURNS TRIGGER AS $$
         BEGIN
-            NEW.changed = now();
+            -- Si on ne fournit pas de nouvelle date
+            IF (NEW.changed = NULL or OLD.changed = NEW.changed) THEN
+                NEW.changed = now();
+                RETURN NEW;
+            END IF;
+            -- Condition ci-dessous pour si jamais le record a été modifié entre
+            -- le début et la fin de (ou pendant) l'exécution du script de synchronisation
+            IF (old.changed > NEW.changed) THEN
+                NEW.changed = OLD.changed;
+            END IF;
             RETURN NEW;
         END;
         $$ language 'plpgsql';"""
