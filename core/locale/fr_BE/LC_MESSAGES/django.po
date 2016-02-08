@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-02 13:18+0100\n"
+"POT-Creation-Date: 2016-02-08 16:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,17 +17,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: export_utils.py:40 pdf_utils.py:237 templates/offer_form.html:49
-#: templates/online_double_encoding_form.html:59
-#: templates/online_double_encoding_validation.html:57
-#: templates/online_encoding.html:58 templates/online_encoding_form.html:57
+#: export_utils.py:40 pdf_utils.py:237 templates/learning_unit.html.py:48
+#: templates/offer.html:48 templates/online_double_encoding_form.html.py:58
+#: templates/online_double_encoding_validation.html:56
+#: templates/online_encoding.html:57 templates/online_encoding_form.html:56
 #: templates/scores_encoding.html:52
 msgid "Academic year"
 msgstr "Année académique"
 
-#: export_utils.py:41 templates/online_double_encoding_form.html:65
-#: templates/online_double_encoding_validation.html:63
-#: templates/online_encoding.html:64 templates/online_encoding_form.html:63
+#: export_utils.py:41 templates/online_double_encoding_form.html.py:64
+#: templates/online_double_encoding_validation.html:62
+#: templates/online_encoding.html:63 templates/online_encoding_form.html:62
 #: templates/scores_encoding.html:58
 msgid "Session"
 msgstr "Session"
@@ -37,24 +37,24 @@ msgstr "Session"
 msgid "Activity code"
 msgstr "Activité"
 
-#: export_utils.py:43 pdf_utils.py:259 templates/online_encoding.html:97
+#: export_utils.py:43 pdf_utils.py:259 templates/online_encoding.html.py:96
 #, fuzzy
 msgid "Program"
 msgstr "Programme"
 
 #: export_utils.py:44 pdf_utils.py:219
-#: templates/online_double_encoding_form.html:82
-#: templates/online_double_encoding_validation.html:85
-#: templates/online_encoding.html:98 templates/online_encoding_form.html:82
+#: templates/online_double_encoding_form.html:81
+#: templates/online_double_encoding_validation.html:84
+#: templates/online_encoding.html:97 templates/online_encoding_form.html:81
 msgid "Registration number"
 msgstr "Noma"
 
-#: export_utils.py:45 pdf_utils.py:220 templates/online_encoding.html:99
+#: export_utils.py:45 pdf_utils.py:220 templates/online_encoding.html.py:98
 #, fuzzy
 msgid "Last name"
 msgstr "Nom"
 
-#: export_utils.py:46 pdf_utils.py:221 templates/online_encoding.html:100
+#: export_utils.py:46 pdf_utils.py:221 templates/online_encoding.html.py:99
 #, fuzzy
 msgid "First name"
 msgstr "Prénom"
@@ -64,38 +64,34 @@ msgid "Numbered score"
 msgstr "Note chiffrée"
 
 #: export_utils.py:48 pdf_utils.py:223
-#: templates/online_double_encoding_validation.html:81
-#: templates/online_encoding.html:102
+#: templates/online_double_encoding_validation.html:80
+#: templates/online_encoding.html:101
 msgid "Other score"
 msgstr "Autre note"
 
 #: export_utils.py:49 pdf_utils.py:224
-#: templates/online_double_encoding_form.html:87
-#: templates/online_encoding.html:103 templates/online_encoding_form.html:87
+#: templates/online_double_encoding_form.html:86
+#: templates/online_encoding.html:102 templates/online_encoding_form.html:86
 msgid "End date"
 msgstr "Date de remise"
 
 #: export_utils.py:50
-msgid "Credits"
-msgstr "Crédits"
-
-#: export_utils.py:51
 msgid "ID"
 msgstr "ID"
 
-#: export_utils.py:140
+#: export_utils.py:141
 msgid "Invalid entry, not in the list of choices"
 msgstr "Votre entrée n'est pas dans la liste"
 
-#: export_utils.py:141
+#: export_utils.py:142
 msgid "Invalid entry"
 msgstr "Entrée invalide"
 
-#: export_utils.py:143
+#: export_utils.py:144
 msgid "Please choose in the list"
 msgstr "Merci de sélectionner dans la liste"
 
-#: export_utils.py:144
+#: export_utils.py:145
 msgid "List of choices"
 msgstr "Liste de choix"
 
@@ -123,34 +119,32 @@ msgstr "Ouvert"
 msgid "Closed"
 msgstr "Fermé"
 
-#: models.py:372 models.py:440 models.py:453 models.py:455
-#: templates/online_double_encoding_form.html:104
-#: templates/online_encoding_form.html:101
+#: models.py:372 models.py:440 models.py:442
+#: templates/online_double_encoding_form.html:109
+#: templates/online_encoding_form.html:106
 msgid "Absent"
 msgstr "Absent"
 
-#: models.py:373 models.py:444 models.py:453 models.py:455
-#: templates/online_double_encoding_form.html:105
-#: templates/online_encoding_form.html:102
+#: models.py:373 models.py:440 models.py:442
+#: templates/online_double_encoding_form.html:110
+#: templates/online_encoding_form.html:107
 msgid "Cheating"
 msgstr "Tricherie"
 
-#: models.py:374 models.py:442 models.py:453 models.py:455
-#: templates/online_double_encoding_form.html:108
-#: templates/online_encoding_form.html:106
+#: models.py:374 models.py:440 models.py:442
+#: templates/online_double_encoding_form.html:113
+#: templates/online_encoding_form.html:111
 msgid "Ill"
 msgstr "Malade"
 
-#: models.py:375 models.py:446 models.py:453
-#: templates/online_double_encoding_form.html:109
-#: templates/online_encoding_form.html:107
+#: models.py:375 models.py:440 templates/online_double_encoding_form.html:114
+#: templates/online_encoding_form.html:112
 #, fuzzy
 msgid "Justified absence"
 msgstr "Absence justifiée"
 
-#: models.py:376 models.py:448 models.py:453
-#: templates/online_double_encoding_form.html:106
-#: templates/online_encoding_form.html:103
+#: models.py:376 models.py:440 templates/online_double_encoding_form.html:111
+#: templates/online_encoding_form.html:108
 #, fuzzy
 msgid "Score missing"
 msgstr "Encodage de notes"
@@ -211,109 +205,31 @@ msgstr "Le"
 msgid "Signature"
 msgstr "Signature"
 
-#: upload_xls_utils.py:51
-msgid "No file selected"
-msgstr "Aucun fichier sélectionné"
+#: templates/acces_denied.html:34
+msgid "Acces denied!"
+msgstr "Accès refusé!"
 
-#: upload_xls_utils.py:56
-msgid "The file must be a XLS"
-msgstr "Le fichier doit être de type XLS"
-
-#: upload_xls_utils.py:64
-#, fuzzy
-msgid "Invalid file"
-msgstr "Entrée invalide"
-
-#: upload_xls_utils.py:85
-msgid "Line"
-msgstr "Ligne"
-
-#: upload_xls_utils.py:87
-msgid "the student"
-msgstr "L'étudiant"
-
-#: upload_xls_utils.py:87 upload_xls_utils.py:91 upload_xls_utils.py:95
-#: upload_xls_utils.py:99 upload_xls_utils.py:105 upload_xls_utils.py:109
-msgid "does not exists"
-msgstr "n'existe pas"
-
-#: upload_xls_utils.py:91
-#, fuzzy
-msgid "the academic year"
-msgstr "Année académique"
-
-#: upload_xls_utils.py:95
-msgid "the offer year"
-msgstr "l'offre annualisée"
-
-#: upload_xls_utils.py:99
-#, fuzzy
-msgid "the offer enrollment"
-msgstr "Nombre d'inscrits"
-
-#: upload_xls_utils.py:105
-#, fuzzy
-msgid "the activity"
-msgstr "Activité"
-
-#: upload_xls_utils.py:109
-msgid "the enrollment to the activity"
-msgstr "l'inscription à l'activité"
-
-#: upload_xls_utils.py:121
-msgid "the score seems to be incorrect (it must be >=0 and <=20)"
-msgstr "la note semble incorrecte, est dans être >=0 ou <=20"
-
-#: upload_xls_utils.py:127
-msgid ""
-"the score seems to be incorrect. When activity's credits < 15 decimales are "
-"not allowed!"
-msgstr ""
-"la note semble incorrecte. Quand les crédits d'une activité sont < 15 les "
-"décimales ne sont pas autorisées"
-
-#: upload_xls_utils.py:169
-#, python-format
-msgid "%(count)d %(name)s."
-msgid_plural "%(count)d %(plural_name)s."
-msgstr[0] ""
-msgstr[1] ""
-
-#: upload_xls_utils.py:174
-#, fuzzy
-msgid "score injected"
-msgstr "Aucune note injectée"
-
-#: upload_xls_utils.py:175
-#, fuzzy
-msgid "scores injected"
-msgstr "Aucune note injectée"
-
-#: upload_xls_utils.py:181
-msgid "No score injected"
-msgstr "Aucune note injectée"
-
-#: templates/assessments.html:30 templates/home.html:48
-#: templates/online_double_encoding_form.html:35
-#: templates/online_double_encoding_validation.html:33
-#: templates/online_encoding.html:32 templates/online_encoding_form.html:34
-#: templates/scores_encoding.html:29 templates/studies.html:30
-#: templates/studies.html.py:34
+#: templates/assessments.html:30 templates/home.html.py:48
+#: templates/online_double_encoding_form.html:34
+#: templates/online_double_encoding_validation.html:32
+#: templates/online_encoding.html:31 templates/online_encoding_form.html:33
+#: templates/scores_encoding.html:29 templates/studies.html.py:30
+#: templates/studies.html:34
 msgid "Studies"
 msgstr "Les études"
 
 #: templates/assessments.html:31 templates/assessments.html.py:35
-#: templates/layout.html:78 templates/online_double_encoding_form.html:36
-#: templates/online_double_encoding_validation.html:34
-#: templates/online_encoding.html:33 templates/online_encoding_form.html:35
-#: templates/scores_encoding.html:30 templates/studies.html:42
+#: templates/layout.html:78 templates/online_double_encoding_form.html.py:35
+#: templates/online_double_encoding_validation.html:33
+#: templates/online_encoding.html:32 templates/online_encoding_form.html:34
+#: templates/scores_encoding.html:30 templates/studies.html.py:42
 msgid "Evaluations"
 msgstr "Evaluations"
 
-#: templates/assessments.html:43 templates/online_double_encoding_form.html:37
-#: templates/online_double_encoding_validation.html:35
-#: templates/online_encoding.html:34 templates/online_encoding.html.py:39
-#: templates/online_encoding_form.html:36 templates/scores_encoding.html:31
+#: templates/assessments.html:43 templates/online_double_encoding_form.html:36
+#: templates/online_double_encoding_validation.html:34
+#: templates/online_encoding.html:33 templates/online_encoding.html.py:38
+#: templates/online_encoding_form.html:35 templates/scores_encoding.html:31
 #: templates/scores_encoding.html.py:35
 msgid "Scores encoding"
 msgstr "Encodage de notes"
@@ -324,10 +240,6 @@ msgid "This process helps tutor while encoding notes for the exams sessions."
 msgstr ""
 "Ce processus aide les enseignants à coder leurs notes pour chaque session "
 "d'examens."
-
-#: templates/layout.html:79
-msgid "Stages"
-msgstr ""
 
 #: templates/layout.html:92
 msgid "Logout"
@@ -341,190 +253,223 @@ msgstr "Profil"
 msgid "Login"
 msgstr "Login"
 
-#: templates/offer_form.html:31
+#: templates/learning_unit.html:30 templates/learning_units.html.py:30
+#: templates/offer.html:30
 msgid "Catalog"
 msgstr "Catalogue de formation"
 
-#: templates/offer_form.html:32 templates/offers.html:32
-#: templates/offers.html.py:37
+#: templates/learning_unit.html:31 templates/learning_units.html.py:31
+#: templates/learning_units.html:36
+msgid "Learning units"
+msgstr ""
+
+#: templates/learning_unit.html:32
+msgid "Learning unit"
+msgstr ""
+
+#: templates/learning_unit.html:41
 #, fuzzy
-msgid "Offers"
-msgstr "Offre"
-
-#: templates/offer_form.html:33 templates/online_double_encoding_form.html:81
-#: templates/online_double_encoding_validation.html:84
-#: templates/online_encoding_form.html:81
-msgid "Offer"
-msgstr "Offre"
-
-#: templates/offer_form.html:42
-msgid "Informations"
+#| msgid "Informations"
+msgid "General informations"
 msgstr "Informations"
 
-#: templates/offer_form.html:53 templates/offers.html:60
-#: templates/offers.html.py:61 templates/offers.html:97
+#: templates/learning_unit.html:52 templates/learning_units.html.py:43
+#: templates/learning_units.html:44 templates/learning_units.html.py:76
+#: templates/offer.html:52 templates/offers.html.py:59 templates/offers.html:60
+#: templates/offers.html.py:96
 msgid "Acronym"
 msgstr "Sigle"
 
-#: templates/offer_form.html:57
-msgid "Structure"
-msgstr "Structure"
+#: templates/learning_unit.html:56 templates/learning_units.html.py:78
+msgid "Credits"
+msgstr "Crédits"
 
-#: templates/offers.html:46 templates/online_encoding.html:52
-#: templates/scores_encoding.html:46
-msgid "Faculty"
-msgstr "Faculté"
-
-#: templates/offers.html:66
+#: templates/learning_units.html:47 templates/offers.html.py:65
 #, fuzzy
 msgid "Academic Year"
 msgstr "Année académique"
 
-#: templates/offers.html:91
+#: templates/learning_units.html:70 templates/offers.html.py:90
 msgid "No result!"
 msgstr "Aucun résultat!"
 
-#: templates/offers.html:98
+#: templates/learning_units.html:77 templates/offers.html.py:97
 msgid "Title"
 msgstr "Intitulé"
 
-#: templates/online_double_encoding_form.html:38
-#: templates/online_double_encoding_validation.html:36
+#: templates/offer.html:31 templates/offers.html.py:31 templates/offers.html:36
+#, fuzzy
+msgid "Offers"
+msgstr "Offre"
+
+#: templates/offer.html:32 templates/online_double_encoding_form.html.py:80
+#: templates/online_double_encoding_validation.html:83
+#: templates/online_encoding_form.html:80
+msgid "Offer"
+msgstr "Offre"
+
+#: templates/offer.html:41
+msgid "Informations"
+msgstr "Informations"
+
+#: templates/offer.html:56
+msgid "Structure"
+msgstr "Structure"
+
+#: templates/offers.html:45 templates/online_encoding.html.py:51
+#: templates/scores_encoding.html:46
+msgid "Faculty"
+msgstr "Faculté"
+
+#: templates/online_double_encoding_form.html:37
+#: templates/online_double_encoding_validation.html:35
 #, fuzzy
 msgid "Online scores encoding"
 msgstr "Encodage de notes"
 
-#: templates/online_double_encoding_form.html:39
-#: templates/online_double_encoding_form.html:43
-#: templates/online_double_encoding_validation.html:37
-#: templates/online_double_encoding_validation.html:41
+#: templates/online_double_encoding_form.html:38
+#: templates/online_double_encoding_form.html:42
+#: templates/online_double_encoding_validation.html:36
+#: templates/online_double_encoding_validation.html:40
 #, fuzzy
 msgid "Dubble online scores encoding"
 msgstr "Encodage de notes"
 
-#: templates/online_double_encoding_form.html:53
-#: templates/online_double_encoding_validation.html:51
-#: templates/online_encoding.html:50 templates/online_encoding_form.html:51
+#: templates/online_double_encoding_form.html:52
+#: templates/online_double_encoding_validation.html:50
+#: templates/online_encoding.html:49 templates/online_encoding_form.html:50
 msgid "Responsible"
 msgstr "Responsable"
 
-#: templates/online_double_encoding_form.html:71
-#: templates/online_double_encoding_validation.html:69
-#: templates/online_encoding_form.html:69
+#: templates/online_double_encoding_form.html:70
+#: templates/online_double_encoding_validation.html:68
+#: templates/online_encoding_form.html:68
 msgid "Number of enrollments"
 msgstr "Nombre d'inscrits"
+
+#: templates/online_double_encoding_form.html:82
+#: templates/online_double_encoding_validation.html:85
+#: templates/online_encoding_form.html:82
+#, fuzzy
+msgid "Lastname"
+msgstr "Nom"
 
 #: templates/online_double_encoding_form.html:83
 #: templates/online_double_encoding_validation.html:86
 #: templates/online_encoding_form.html:83
 #, fuzzy
-msgid "Lastname"
-msgstr "Nom"
-
-#: templates/online_double_encoding_form.html:84
-#: templates/online_double_encoding_validation.html:87
-#: templates/online_encoding_form.html:84
-#, fuzzy
 msgid "Firstname"
 msgstr "Prénom"
 
-#: templates/online_double_encoding_form.html:85
-#: templates/online_encoding.html:101 templates/online_encoding_form.html:85
+#: templates/online_double_encoding_form.html:84
+#: templates/online_encoding.html:100 templates/online_encoding_form.html:84
 msgid "Score"
 msgstr "Note"
 
-#: templates/online_double_encoding_form.html:86
-#: templates/online_encoding_form.html:86
+#: templates/online_double_encoding_form.html:85
+#: templates/online_encoding_form.html:85
 msgid "Justification"
 msgstr "Justification"
 
-#: templates/online_double_encoding_form.html:118
+#: templates/online_double_encoding_form.html:123
 msgid "Compare"
 msgstr "Comparer"
 
-#: templates/online_double_encoding_form.html:119
-#: templates/online_double_encoding_validation.html:131
-#: templates/online_encoding.html:156 templates/online_encoding.html.py:177
-#: templates/online_encoding_form.html:117
+#: templates/online_double_encoding_form.html:124
+#: templates/online_double_encoding_validation.html:136
+#: templates/online_encoding.html:164 templates/online_encoding.html.py:185
+#: templates/online_encoding_form.html:122
 msgid "Cancel"
 msgstr "Annuler"
 
-#: templates/online_double_encoding_validation.html:81
+#: templates/online_double_encoding_validation.html:80
 #, fuzzy
 msgid "Scores"
 msgstr "Note"
 
-#: templates/online_double_encoding_validation.html:88
+#: templates/online_double_encoding_validation.html:87
 #: templates/scores_encoding.html:98
 #, fuzzy
 msgid "Encoding"
 msgstr "Encodage de notes"
 
-#: templates/online_double_encoding_validation.html:89
+#: templates/online_double_encoding_validation.html:88
 #, fuzzy
 msgid "Dubble encoding"
 msgstr "Encodage de notes"
 
-#: templates/online_double_encoding_validation.html:90
+#: templates/online_double_encoding_validation.html:89
 msgid "Final"
 msgstr "Final"
 
-#: templates/online_double_encoding_validation.html:130
-#: templates/online_encoding.html:88
+#: templates/online_double_encoding_validation.html:135
+#: templates/online_encoding.html:87
 #, fuzzy
 msgid "Submission"
 msgstr "Session"
 
-#: templates/online_encoding.html:35 templates/online_encoding_form.html:37
-#: templates/online_encoding_form.html:41
+#: templates/online_encoding.html:34 templates/online_encoding_form.html:36
+#: templates/online_encoding_form.html:40
 #, fuzzy
 msgid "Online encoding"
 msgstr "Encodage de notes"
 
-#: templates/online_encoding.html:70
+#: templates/online_encoding.html:69
 #, fuzzy
 msgid "Number of enrollments "
 msgstr "Nombre d'inscrits"
 
-#: templates/online_encoding.html:86
+#: templates/online_encoding.html:85
 #, fuzzy
 msgid "Encode"
 msgstr "encoder"
 
-#: templates/online_encoding.html:87
+#: templates/online_encoding.html:86
 #, fuzzy
 msgid "Double encoding"
 msgstr "Encodage de notes"
 
-#: templates/online_encoding.html:89
+#: templates/online_encoding.html:88
 msgid "Select a xls file from which to injec scores"
 msgstr "Sélectionner un fichier xls à partir duquel injecter des notes"
 
-#: templates/online_encoding.html:89
+#: templates/online_encoding.html:88
 msgid "Submit xls file"
 msgstr "Soumettre fichier xls"
 
-#: templates/online_encoding.html:146
+#: templates/online_encoding.html:154
 #, fuzzy
 msgid "Scores injection"
 msgstr "Encodage de notes"
 
-#: templates/online_encoding.html:149
+#: templates/online_encoding.html:157
 msgid "Choose file"
 msgstr "Parcourir"
 
-#: templates/online_encoding.html:153
+#: templates/online_encoding.html:161
 msgid "Please select an xls file for injection"
 msgstr "Sélectionner un fichier xls pour l'injection de notes"
 
-#: templates/online_encoding.html:157
+#: templates/online_encoding.html:165
 msgid "Inject"
 msgstr "Injecter"
 
-#: templates/online_encoding_form.html:116
+#: templates/online_encoding_form.html:103
+msgid "Decimal score allowed"
+msgstr ""
+
+#: templates/online_encoding_form.html:103
+msgid "Decimal score NOT allowed"
+msgstr ""
+
+#: templates/online_encoding_form.html:121
 #, fuzzy
 msgid "Save"
 msgstr "Enregistré"
+
+#: templates/page_not_found.html:34
+msgid "Page not Found"
+msgstr "Page innexistante"
 
 #: templates/scores_encoding.html:44
 msgid "Tutor"
@@ -589,6 +534,90 @@ msgstr ""
 #: templates/studies.html:48
 msgid "This process controls students internships."
 msgstr ""
+
+#: upload_xls_utils.py:51
+msgid "No file selected"
+msgstr "Aucun fichier sélectionné"
+
+#: upload_xls_utils.py:56
+msgid "The file must be a XLS"
+msgstr "Le fichier doit être de type XLS"
+
+#: upload_xls_utils.py:61
+#, fuzzy
+msgid "Invalid file"
+msgstr "Entrée invalide"
+
+#: upload_xls_utils.py:83
+msgid "Line"
+msgstr "Ligne"
+
+#: upload_xls_utils.py:85
+msgid "the student"
+msgstr "L'étudiant"
+
+#: upload_xls_utils.py:85 upload_xls_utils.py:89 upload_xls_utils.py:93
+#: upload_xls_utils.py:97 upload_xls_utils.py:103 upload_xls_utils.py:107
+msgid "does not exists"
+msgstr "n'existe pas"
+
+#: upload_xls_utils.py:89
+#, fuzzy
+msgid "the academic year"
+msgstr "Année académique"
+
+#: upload_xls_utils.py:93
+msgid "the offer year"
+msgstr "l'offre annualisée"
+
+#: upload_xls_utils.py:97
+#, fuzzy
+msgid "the offer enrollment"
+msgstr "Nombre d'inscrits"
+
+#: upload_xls_utils.py:103
+#, fuzzy
+msgid "the activity"
+msgstr "Activité"
+
+#: upload_xls_utils.py:107
+msgid "the enrollment to the activity"
+msgstr "l'inscription à l'activité"
+
+#: upload_xls_utils.py:118
+msgid "the score seems to be incorrect (it must be >=0 and <=20)"
+msgstr "la note semble incorrecte, est dans être >=0 ou <=20"
+
+#: upload_xls_utils.py:122
+#, fuzzy
+#| msgid ""
+#| "the score seems to be incorrect. When activity's credits < 15 decimales "
+#| "are not allowed!"
+msgid "the score seems to be incorrect. Decimales NOT allowed!"
+msgstr ""
+"la note semble incorrecte. Quand les crédits d'une activité sont < 15 les "
+"décimales ne sont pas autorisées"
+
+#: upload_xls_utils.py:173
+#, python-format
+msgid "%(count)d %(name)s."
+msgid_plural "%(count)d %(plural_name)s."
+msgstr[0] ""
+msgstr[1] ""
+
+#: upload_xls_utils.py:178
+#, fuzzy
+msgid "score injected"
+msgstr "Aucune note injectée"
+
+#: upload_xls_utils.py:179
+#, fuzzy
+msgid "scores injected"
+msgstr "Aucune note injectée"
+
+#: upload_xls_utils.py:185
+msgid "No score injected"
+msgstr "Aucune note injectée"
 
 #~ msgid "Print"
 #~ msgstr "Imprimer"
