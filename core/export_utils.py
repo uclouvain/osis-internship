@@ -32,7 +32,7 @@ from openpyxl.cell import get_column_letter
 from openpyxl.worksheet.datavalidation import DataValidation
 from openpyxl.styles import Fill, Color, Style, PatternFill
 from openpyxl.worksheet import Worksheet, ColumnDimension, RowDimension
-from core.models import AcademicCalendar, SessionExam, ExamEnrollment, LearningUnitYear, Person, AcademicYear
+from core.models import *
 from django.utils.dateformat import DateFormat
 from django.utils.formats import get_format
 from django.utils.translation import ugettext_lazy as _
