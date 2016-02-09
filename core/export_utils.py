@@ -158,12 +158,8 @@ def __coloring_non_editable(ws, cptr, encoding_status, score, justification):
         if i< 8 or i>9:
             ws.cell(row=cptr, column=i).style = style_no_modification
         else:
-            if encoding_status == 'SUBMITTED':
+            if not( score is None and justification is None):
                 ws.cell(row=cptr, column=8).style = style_no_modification
                 ws.cell(row=cptr, column=9).style = style_no_modification
-            else:
-                if not score is None:
-                    ws.cell(row=cptr, column=8).style = style_no_modification
-                if not(justification is None):
-                    ws.cell(row=cptr, column=9).style = style_no_modification
+
         i=i+1
