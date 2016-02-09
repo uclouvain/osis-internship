@@ -151,7 +151,6 @@ def __coloring_non_editable(ws, cptr, encoding_status, score, justification):
     :return:
     """
     style_no_modification = Style(fill=PatternFill(patternType='solid', fgColor=Color('C1C1C1')))
-    style_submitted = Style(fill=PatternFill(patternType='solid', fgColor=Color('FF9900')))
 
     # coloration des colonnes qu'on ne doit pas modifier
     i=1
@@ -160,8 +159,8 @@ def __coloring_non_editable(ws, cptr, encoding_status, score, justification):
             ws.cell(row=cptr, column=i).style = style_no_modification
         else:
             if encoding_status == 'SUBMITTED':
-                ws.cell(row=cptr, column=8).style = style_submitted
-                ws.cell(row=cptr, column=9).style = style_submitted
+                ws.cell(row=cptr, column=8).style = style_no_modification
+                ws.cell(row=cptr, column=9).style = style_no_modification
             else:
                 if not score is None:
                     ws.cell(row=cptr, column=8).style = style_no_modification
