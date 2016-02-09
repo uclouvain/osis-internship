@@ -133,15 +133,10 @@ FIXTURE_DIRS = (
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
 
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-SCREEN_SHOT_FOLDER = os.path.join(BASE_DIR, "core/tests/sent_mails")
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, "core/tests/sent_mails")
 
 DEFAULT_FROM_EMAIL = 'osis-localhost@uclouvain.be'
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
-
-
-SCREEN_SHOT_FOLDER = os.path.join(BASE_DIR, "core/tests/selenium/screenshots")
-FIREFOX_PROFILE_PATH = os.path.join(BASE_DIR, "core/tests/selenium/firefox_profile")
-JENKINS_TASKS = []
 
 try  :
     from osis_backend.server_settings import *
