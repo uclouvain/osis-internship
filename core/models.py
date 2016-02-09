@@ -55,6 +55,9 @@ class Person(models.Model):
     def find_person(person_id):
         return Person.objects.get(id=person_id)
 
+    def find_person_by_user(user):
+        return Person.objects.get(user=user)
+
     def __str__(self):
         first_name = ""
         middle_name = ""
@@ -113,6 +116,9 @@ class Structure(models.Model):
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)
 
+    def find_structures():
+        return Structure.objects.all().order_by('acronym')
+
 
 class AcademicYear(models.Model):
     external_id = models.CharField(max_length = 100,blank = True, null = True)
@@ -123,6 +129,9 @@ class AcademicYear(models.Model):
 
     def find_academic_year(id):
         return AcademicYear.objects.get(pk=id)
+
+    def find_academic_years():
+        return AcademicYear.objects.all().order_by('year')
 
 
 EVENT_TYPE = (
@@ -195,6 +204,12 @@ class OfferYear(models.Model):
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.offer.acronym)
+
+    def find_offer_years_by_academic_year(academic_year):
+        return OfferYear.objects.filter(academic_year=int(academic_year))
+
+    def find_offer_year_by_id(offer_year_id):
+        return OfferYear.objects.get(pk=offer_year_id)
 
 
 class ProgrammeManager(models.Model):
@@ -294,6 +309,12 @@ class LearningUnitYear(models.Model):
         for lue in learning_unit_enrollment_list:
             offer_list.append(lue.offer_enrollment)
         return offer_list
+
+    def find_learning_unit_years_by_academic_year(academic_year):
+        return LearningUnitYear.objects.filter(academic_year=int(academic_year))
+
+    def find_learning_unit_year_by_id(learning_unit_id) :
+        return LearningUnitYear.objects.get(pk=learning_unit_id)
 
 
 class LearningUnitEnrollment(models.Model):

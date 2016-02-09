@@ -66,9 +66,9 @@
               <select class="form-control" id="academic_year"  name="academic_year" value="{{ academic_year }}">
                 {% for v in academic_years %}
                   {% if v.id == academic_year %}
-                    <option selected value="{{ v.id }}">{{ v.year }}</option>
+                    <option selected value="{{ v.id }}">{{ v }}</option>
                   {% else %}
-                    <option value="{{ v.id }}">{{ v.year }}</option>
+                    <option value="{{ v.id }}">{{ v }}</option>
                   {% endif %}
                 {% endfor %}
               </select>
