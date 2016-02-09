@@ -9,6 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-02-04 23:07+0100\n"
+"POT-Creation-Date: 2016-02-08 16:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -250,6 +251,10 @@ msgstr "Monsieur"
 #: send_mail.py:58
 msgid "Miss"
 msgstr "Madame"
+
+#: templates/acces_denied.html:34
+msgid "Acces denied!"
+msgstr "Accès refusé!"
 
 #: templates/assessments.html:30 templates/home.html.py:48
 #: templates/online_double_encoding_form.html:34
@@ -508,6 +513,10 @@ msgstr ""
 #, fuzzy
 msgid "Save"
 msgstr "Enregistré"
+
+#: templates/page_not_found.html:34
+msgid "Page not Found"
+msgstr "Page innexistante"
 
 #: templates/scores_encoding.html:44
 msgid "Tutor"
