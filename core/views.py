@@ -29,6 +29,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from . import pdf_utils
 from . import export_utils
+from core import send_mail
 from core.models import *
 
 
@@ -254,6 +255,12 @@ def online_encoding_submission(request, session_id):
         session_exam.status = 'CLOSED'
         session_exam.save()
 
+    #Send mail to all the teachers of the submitted learning unit on any submission
+    learning_unit = session_exam.learning_unit_year.learning_unit
+    attributions = Attribution.objects.filter(learning_unit=learning_unit)
+    persons = [attribution.tutor.person for attribution in attributions if attribution.function == 'PROFESSOR']
+    send_mail.send_mail_after_scores_submission(persons,learning_unit.acronym)
+    
     return HttpResponseRedirect(reverse('online_encoding', args=(session_id,)))
 
 

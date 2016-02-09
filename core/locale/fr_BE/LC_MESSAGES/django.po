@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-08 16:58+0100\n"
+"POT-Creation-Date: 2016-02-09 13:46+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -107,53 +107,53 @@ msgstr "Masculin"
 msgid "Unknown"
 msgstr "Indéfini"
 
-#: models.py:318
+#: models.py:319
 msgid "Idle"
 msgstr "Idle"
 
-#: models.py:319
+#: models.py:320
 msgid "Open"
 msgstr "Ouvert"
 
-#: models.py:320
+#: models.py:321
 msgid "Closed"
 msgstr "Fermé"
 
-#: models.py:372 models.py:440 models.py:442
+#: models.py:372 models.py:442 models.py:444
 #: templates/online_double_encoding_form.html:109
 #: templates/online_encoding_form.html:106
 msgid "Absent"
 msgstr "Absent"
 
-#: models.py:373 models.py:440 models.py:442
+#: models.py:373 models.py:442 models.py:444
 #: templates/online_double_encoding_form.html:110
 #: templates/online_encoding_form.html:107
 msgid "Cheating"
 msgstr "Tricherie"
 
-#: models.py:374 models.py:440 models.py:442
+#: models.py:374 models.py:442 models.py:444
 #: templates/online_double_encoding_form.html:113
 #: templates/online_encoding_form.html:111
 msgid "Ill"
 msgstr "Malade"
 
-#: models.py:375 models.py:440 templates/online_double_encoding_form.html:114
+#: models.py:375 models.py:442 templates/online_double_encoding_form.html:114
 #: templates/online_encoding_form.html:112
 #, fuzzy
 msgid "Justified absence"
 msgstr "Absence justifiée"
 
-#: models.py:376 models.py:440 templates/online_double_encoding_form.html:111
+#: models.py:376 models.py:442 templates/online_double_encoding_form.html:111
 #: templates/online_encoding_form.html:108
 #, fuzzy
 msgid "Score missing"
 msgstr "Encodage de notes"
 
-#: models.py:379
+#: models.py:381
 msgid "Saved"
 msgstr "Enregistré"
 
-#: models.py:380
+#: models.py:382
 msgid "Submitted"
 msgstr "Soumis"
 
@@ -204,6 +204,61 @@ msgstr "Le"
 #: pdf_utils.py:299
 msgid "Signature"
 msgstr "Signature"
+
+#: send_mail.py:42
+#, python-brace-format
+msgid "Sumbmission of scores for {0}."
+msgstr ""
+
+#: send_mail.py:44
+msgid "<p>Hi, </p>"
+msgstr "Bonjour, "
+
+#: send_mail.py:45
+#, fuzzy, python-brace-format
+#| msgid ""
+#| "We inform you that the scores encoding of {learning_unit_name} has "
+#| "ended.\n"
+#| "\n"
+msgid ""
+"<p>We inform you that a scores submission was made for {learning_unit_name}."
+"</p></br>"
+msgstr ""
+"<p>Nous vous informons qu'une soumission d'encodage de points viens d'être effectué pour {learning_unit_name}."
+"</p></br>"
+
+#: send_mail.py:47
+msgid "The OSIS Team<br>"
+msgstr "L'équipe OSIS"
+
+#: send_mail.py:51
+msgid "Hi, \n"
+msgstr "Bonjour, \n"
+
+#: send_mail.py:52
+#, fuzzy, python-brace-format
+#| msgid ""
+#| "We inform you that the scores encoding of {learning_unit_name} has "
+#| "ended.\n"
+#| "\n"
+msgid ""
+"We inform you that a scores submission was made for {learning_unit_name}.\n"
+"\n"
+msgstr ""
+"Nous vous informons qu'une soumission d'encodage de points viens d'être effectué pour {learning_unit_name}.\n"
+"\n"
+
+#: send_mail.py:54
+msgid "The OSIS Team."
+msgstr "L'équipe OSIS"
+
+#: send_mail.py:61
+msgid "Mister"
+msgstr "Monsieur"
+
+#: send_mail.py:62
+msgid "Miss"
+msgstr "Madame"
 
 #: templates/acces_denied.html:34
 msgid "Acces denied!"
@@ -618,6 +673,15 @@ msgstr "Aucune note injectée"
 #: upload_xls_utils.py:185
 msgid "No score injected"
 msgstr "Aucune note injectée"
+
+#~ msgid "End of the encoding process for the scores of {0}."
+#~ msgstr "Fin de l'encodage des points de {0}"
+
+#~ msgid "<h3>Dear {title} {name},</h3>"
+#~ msgstr "<h3>Cher {title} {name},</h3>"
+
+#~ msgid "Dear {title} {name}, \n"
+#~ msgstr "Cher {title} {name}, \n"
 
 #~ msgid "Print"
 #~ msgstr "Imprimer"
