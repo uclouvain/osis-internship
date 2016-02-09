@@ -50,6 +50,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_jenkins',
     'core',
     'internship'
 )
@@ -98,7 +99,7 @@ DATABASES = {
         'PASSWORD': 'osis',
         'HOST': '127.0.0.1',
         'PORT': '5432',
-        }
+    },
 }
 
 

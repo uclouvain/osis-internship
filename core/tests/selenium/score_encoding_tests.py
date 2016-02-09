@@ -34,7 +34,8 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 import os
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
-from osis_backend.settings import FIREFOX_PROFILE_PATH, SCREEN_SHOT_FOLDER
+from core.tests import util
+from osis_backend.settings import FIREFOX_PROFILE_PATH, SCREEN_SHOT_FOLDER, EMAIL_FILE_PATH
 
 
 class TestSendMailAfterSubmission(StaticLiveServerTestCase):
@@ -43,6 +44,8 @@ class TestSendMailAfterSubmission(StaticLiveServerTestCase):
     All the previous states of this business feature are supposed to be done.
     We only test the fact that after the submission , a mail is sent
     """
+
+    fixtures = ['core/fixtures/send_mail_after_encoding.json']
 
     def take_screen_shot(self, name):
         today = date.today().strftime("%d_%m_%y")
@@ -80,6 +83,7 @@ class TestSendMailAfterSubmission(StaticLiveServerTestCase):
         cls.selenium.maximize_window()
         super(TestSendMailAfterSubmission, cls).setUpClass()
 
+
     def setUp(self):
         """
         Initialisation For each test:
@@ -96,4 +100,36 @@ class TestSendMailAfterSubmission(StaticLiveServerTestCase):
         """
         cls.selenium.quit()
         super(TestSendMailAfterSubmission, cls).tearDownClass()
+
+    def test_send_mail_after_encoding_submission(self):
+        """
+        Test if a mail is sent after the submission of encoded scores
+        """
+        self.getUrl("/")
+        self.selenium.find_element_by_id('login_bt').click()
+        assert self.is_element_present('id_username')
+        assert self.is_element_present('id_password')
+        user_name_field = self.selenium.find_element_by_id('id_username')
+        user_name_field.send_keys('osis')
+        user_password_field = self.selenium.find_element_by_id('id_password')
+        user_password_field.send_keys('osis')
+        self.selenium.find_element_by_id('post_login_btn').click()
+        self.selenium.find_element_by_id('home_studies_btn').click()
+        self.take_screen_shot('submission_1')
+        assert self.is_element_present('studies_evaluation_btn')
+        self.selenium.find_element_by_id('studies_evaluation_btn').click()
+        self.take_screen_shot('submission_2')
+        assert self.is_element_present('score_encoding_btn')
+        self.selenium.find_element_by_id("score_encoding_btn").click()
+        self.take_screen_shot('submission_3')
+        assert self.is_element_present('DROI1000_link')
+        self.selenium.find_element_by_id("DROI1000_link").click()
+        self.take_screen_shot('submission_4')
+        assert self.is_element_present('score_submission_modal_btn')
+        self.selenium.find_element_by_id("score_submission_modal_btn").click()
+        self.take_screen_shot('submission_5')
+        assert self.is_element_present('post_scores_submission_btn')
+        self.selenium.find_element_by_id("post_scores_submission_btn").click()
+        self.take_screen_shot('submission_6')
+
 

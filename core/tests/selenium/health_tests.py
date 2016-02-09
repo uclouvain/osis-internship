@@ -114,6 +114,7 @@ class HealthTests(StaticLiveServerTestCase):
         user_name_field.send_keys(util.ADMIN_USER)
         user_password_field = self.selenium.find_element_by_id('id_password')
         user_password_field.send_keys(util.PASSWORD)
+        self.selenium.find_element_by_id('post_login_btn').click()
         assert self.is_element_present('admin_bt')
         assert self.is_element_present('user_btn')
         self.assertFalse(self.is_element_present('login_bt'))

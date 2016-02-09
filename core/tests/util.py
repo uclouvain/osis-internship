@@ -32,7 +32,7 @@ import os
 from selenium.common.exceptions import NoSuchElementException
 from datetime import date
 from core.models import Person
-from osis_backend.settings import SCREEN_SHOT_FOLDER, FIREFOX_PROFILE_PATH
+from osis_backend.settings import SCREEN_SHOT_FOLDER, FIREFOX_PROFILE_PATH, EMAIL_FILE_PATH
 
 ADMIN_USER='admin_user'
 GRANTED_USER='granted_user'
@@ -76,30 +76,17 @@ def init_all_test_users() :
     Initialise all user types
     """
     init_admin_user()
-    init__granted_user()
+    init_granted_user()
     init_valid_user()
 
 def email_destination_person() :
     return Person(last_name='Test user',gender='M',email='gaetan.lamarca@uclouvain.be')
 
-def take_screen_shot(name):
-    today = date.today().strftime("%d_%m_%y")
-    screenshot_name = ''.join([name, '_', today, '.png'])
-    selenium.save_screenshot(os.path.join(SCREEN_SHOT_FOLDER, screenshot_name))
-
-
-def getUrl(url):
-    selenium.get('%s%s' % (live_server_url, url))
-
-def is_element_present(id):
-    """
-    Check if an element is present on a web page.
-    :param id:
-    :return:
-    """
-    try:
-        selenium.find_element_by_id(id)
-    except NoSuchElementException:
+def test_if_file_starting_with_exists(starting_with,file_dir_path):
+    filenames = os.listdir(file_dir_path)
+    for filename in filenames:
+        if os.path.isfile(filename) and filename.startswith(starting_with) :
+            return True
+    else :
         return False
-    return True
 

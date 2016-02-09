@@ -10,11 +10,14 @@ import os,sys,getopt
 UNIT_TESTS_CLASSES = []
 
 # Selenium tests classes
-SELENIUM_TESTS_CLASSES = []
+SELENIUM_TESTS_CLASSES = [
+    'core.tests.selenium.health_tests',
+    'core.tests.selenium.score_encoding_tests',
+]
 
 # All tests classes
 ALL_TESTS_CLASSES = UNIT_TESTS_CLASSES + SELENIUM_TESTS_CLASSES
-COMMAND = PRECOMAND = 'python manage.py jenkins -v 2 --enable-coverage '
+COMMAND = PRECOMAND = 'python3 manage.py jenkins -v 2 --enable-coverage '
 
 
 def main(argv):

@@ -1,4 +1,3 @@
-/core/tests/selenium/screenshots
 /core/tests/selenium/firefox_profile
 os
 sys
@@ -10,3 +9,4 @@ venv/
 __pycache__/
 osis_backend/server_settings.py
 /core/tests/sent_mails
+/reports
