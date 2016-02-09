@@ -76,6 +76,7 @@ def __save_xls_scores(request, file_name):
     data_line_number = 1
     nb_nouvelles_notes = 0
     nouvelles_notes = False
+    session_exam = None
     for row in ws.rows:
         nouveau_score = False
         if nb_row > 0 and isValid:
@@ -107,6 +108,8 @@ def __save_xls_scores(request, file_name):
                                     erreur_validation += "%s %s %s %s!" % (info_line, _('the enrollment to the activity'), str(row[2].value), _('does not exists'))
                                 else:
                                     exam_enrollment = ExamEnrollment.objects.filter(learning_unit_enrollment = learning_unit_enrollment).filter(session_exam__number_session = int(row[1].value)).first()
+                                    if session_exam is None:
+                                        session_exam = exam_enrollment.session_exam
                                     if exam_enrollment.encoding_status != 'SUBMITTED':
                                         if row[7].value is None:
                                             note = None
@@ -134,7 +137,6 @@ def __save_xls_scores(request, file_name):
                                         justification_xls=None
                                         if row[8].value:
                                             for k, v in dict(ExamEnrollment.JUSTIFICATION_TYPES).items():
-                                                print(row[8].value)
                                                 if v.lower() == str(row[8].value.lower()):
                                                     justification_xls=k
 
@@ -143,8 +145,11 @@ def __save_xls_scores(request, file_name):
                                             nouvelles_notes = True
                                             nouveau_score=True
                                             exam_enrollment.justification_final = justification_xls
+
                                         if nouveau_score :
                                             exam_enrollment.encoding_status = 'SUBMITTED'
+                                            exam_enrollment.score_draft = note
+                                            exam_enrollment.justification_draft = justification_xls
                                             exam_enrollment.save()
 
             data_line_number=data_line_number+1
@@ -165,6 +170,16 @@ def __save_xls_scores(request, file_name):
         nb_row = nb_row + 1
 
     messages.add_message(request, messages.WARNING, erreur_validation)
+    if not session_exam is None:
+        all_encoded = True
+        enrollments = ExamEnrollment.objects.filter(session_exam = session_exam)
+        for enrollment in enrollments:
+            if not enrollment.score_final and not enrollment.justification_final:
+                all_encoded = False
+
+        if all_encoded:
+            session_exam.status = 'CLOSED'
+            session_exam.save()
 
     if nouvelles_notes :
         if nb_nouvelles_notes > 0:
