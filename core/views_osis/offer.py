@@ -35,8 +35,8 @@ def offers(request):
     faculty = None
     code = ""
 
-    faculties = Structure.objects.all().order_by('acronym')
-    academic_years = AcademicYear.objects.all().order_by('year')
+    faculties = Structure.find_structures()
+    academic_years = AcademicYear.find_academic_years()
 
     academic_year_calendar = AcademicCalendar.current_academic_year()
     if not academic_year_calendar is None:
@@ -55,21 +55,21 @@ def offers_search(request):
     academic_year = request.GET['academic_year']
     code = request.GET['code']
 
-    faculties = Structure.objects.all().order_by('acronym')
-    academic_years = AcademicYear.objects.all().order_by('year')
+    faculties = Structure.find_structures()
+    academic_years = AcademicYear.find_academic_years()
 
     if academic_year is None:
         academic_year_calendar = AcademicCalendar.current_academic_year()
         if not academic_year_calendar is None:
             academic_year = academic_year_calendar.id
 
-    query = OfferYear.objects.filter(academic_year=int(academic_year))
+    query = OfferYear.find_offer_years_by_academic_year(academic_year)
 
     if not faculty is None and faculty != "*" :
         query = query.filter(structure=int(faculty))
 
     if not code is None and len(code) > 0  :
-        query = query.filter(acronym__istartswith=code)
+        query = query.filter(acronym__icontains=code)
 
     return render(request, "offers.html", {'faculties':      faculties,
                                            'academic_year':  int(academic_year),
@@ -80,5 +80,5 @@ def offers_search(request):
                                            'init':           "0"})
 
 def offer_read(request,offer_year_id):
-    offer_year = OfferYear.objects.get(pk=offer_year_id)
+    offer_year = OfferYear.find_offer_year_by_id(offer_year_id)
     return render(request, "offer.html", {'offer':     offer_year})
