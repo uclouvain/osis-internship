@@ -55,6 +55,9 @@ class Person(models.Model):
     def find_person(person_id):
         return Person.objects.get(id=person_id)
 
+    def find_person_by_user(user):
+        return Person.objects.get(user=user)
+
     def __str__(self):
         first_name = ""
         middle_name = ""
