@@ -26,10 +26,13 @@
 """
 Utility file for Tests units
 """
+from datetime import date
 from django.contrib.auth.models import User
+import os
+from selenium.common.exceptions import NoSuchElementException
+from datetime import date
 from core.models import Person
-
-__author__ = 'glamarca'
+from osis_backend.settings import SCREEN_SHOT_FOLDER, FIREFOX_PROFILE_PATH
 
 ADMIN_USER='admin_user'
 GRANTED_USER='granted_user'
@@ -45,7 +48,7 @@ def init_admin_user():
     user = User.objects.create_superuser(ADMIN_USER,EMAIL,PASSWORD,is_staff=True)
     user.save()
 
-def init__granted_user() :
+def init_granted_user() :
     """
     Initialise a user tha has been granted to acces tested methods.
     If a new authorisation is set for a tested method , it has to be added to the "set_permissions_to_granted" methods.
@@ -78,3 +81,25 @@ def init_all_test_users() :
 
 def email_destination_person() :
     return Person(last_name='Test user',gender='M',email='gaetan.lamarca@uclouvain.be')
+
+def take_screen_shot(name):
+    today = date.today().strftime("%d_%m_%y")
+    screenshot_name = ''.join([name, '_', today, '.png'])
+    selenium.save_screenshot(os.path.join(SCREEN_SHOT_FOLDER, screenshot_name))
+
+
+def getUrl(url):
+    selenium.get('%s%s' % (live_server_url, url))
+
+def is_element_present(id):
+    """
+    Check if an element is present on a web page.
+    :param id:
+    :return:
+    """
+    try:
+        selenium.find_element_by_id(id)
+    except NoSuchElementException:
+        return False
+    return True
+

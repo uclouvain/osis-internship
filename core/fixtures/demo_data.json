@@ -1,0 +1,2249 @@
+[
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 1,
+        "fields": {
+            "app_label": "admin",
+            "model": "logentry"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 2,
+        "fields": {
+            "app_label": "auth",
+            "model": "permission"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 3,
+        "fields": {
+            "app_label": "auth",
+            "model": "group"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 4,
+        "fields": {
+            "app_label": "auth",
+            "model": "user"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 5,
+        "fields": {
+            "app_label": "contenttypes",
+            "model": "contenttype"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 6,
+        "fields": {
+            "app_label": "sessions",
+            "model": "session"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 7,
+        "fields": {
+            "app_label": "core",
+            "model": "person"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 8,
+        "fields": {
+            "app_label": "core",
+            "model": "tutor"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 9,
+        "fields": {
+            "app_label": "core",
+            "model": "student"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 10,
+        "fields": {
+            "app_label": "core",
+            "model": "organization"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 11,
+        "fields": {
+            "app_label": "core",
+            "model": "structure"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 12,
+        "fields": {
+            "app_label": "core",
+            "model": "academicyear"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 13,
+        "fields": {
+            "app_label": "core",
+            "model": "academiccalendar"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 14,
+        "fields": {
+            "app_label": "core",
+            "model": "offer"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 15,
+        "fields": {
+            "app_label": "core",
+            "model": "offeryear"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 16,
+        "fields": {
+            "app_label": "core",
+            "model": "programmemanager"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 17,
+        "fields": {
+            "app_label": "core",
+            "model": "offerenrollment"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 18,
+        "fields": {
+            "app_label": "core",
+            "model": "offeryearcalendar"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 19,
+        "fields": {
+            "app_label": "core",
+            "model": "learningunit"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 20,
+        "fields": {
+            "app_label": "core",
+            "model": "attribution"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 21,
+        "fields": {
+            "app_label": "core",
+            "model": "learningunityear"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 22,
+        "fields": {
+            "app_label": "core",
+            "model": "learningunitenrollment"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 23,
+        "fields": {
+            "app_label": "core",
+            "model": "sessionexam"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 24,
+        "fields": {
+            "app_label": "core",
+            "model": "examenrollment"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 25,
+        "fields": {
+            "app_label": "core",
+            "model": "examenrollmenthistory"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 26,
+        "fields": {
+            "app_label": "internship",
+            "model": "internshipenrollment"
+        }
+    },
+    {
+        "model": "sessions.session",
+        "pk": "15pe87x50a4vyusx23flu57f3sqes1kx",
+        "fields": {
+            "session_data": "MzNiMDk4NmU0NzBkNmY0OWUxZjU3NDU5MDU0MTc4ZjRkMWYwMDk3ZTp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiIyYWQyMjM1ZTY2MzQwMGVjMTQzYmQzODhlODcxZWM2OTY2MDc5M2EzIn0=",
+            "expire_date": "2016-02-23T16:52:17.381Z"
+        }
+    },
+    {
+        "model": "sessions.session",
+        "pk": "r8eylu89he5nnl6z4ivmyud8rmym9x2k",
+        "fields": {
+            "session_data": "MWQ2Y2I4NTk0YWQwYmE4ZDlhOWZhMTU4ZTBiMzA0NzNhZmRjYzFmZDp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6IjEiLCJfYXV0aF91c2VyX2hhc2giOiIyYWQyMjM1ZTY2MzQwMGVjMTQzYmQzODhlODcxZWM2OTY2MDc5M2EzIn0=",
+            "expire_date": "2016-02-23T13:53:18.977Z"
+        }
+    },
+    {
+        "model": "core.tutor",
+        "pk": 1,
+        "fields": {
+            "external_id": null,
+            "person": 3
+        }
+    },
+    {
+        "model": "core.tutor",
+        "pk": 2,
+        "fields": {
+            "external_id": null,
+            "person": 2
+        }
+    },
+    {
+        "model": "core.tutor",
+        "pk": 3,
+        "fields": {
+            "external_id": null,
+            "person": 1
+        }
+    },
+    {
+        "model": "core.student",
+        "pk": 1,
+        "fields": {
+            "external_id": null,
+            "registration_id": "00000001",
+            "person": 4
+        }
+    },
+    {
+        "model": "core.student",
+        "pk": 2,
+        "fields": {
+            "external_id": null,
+            "registration_id": "00000002",
+            "person": 5
+        }
+    },
+    {
+        "model": "core.structure",
+        "pk": 1,
+        "fields": {
+            "external_id": null,
+            "acronym": "DRT",
+            "title": "Facult\u00e9 de Droit",
+            "organization": null,
+            "part_of": null
+        }
+    },
+    {
+        "model": "core.academicyear",
+        "pk": 1,
+        "fields": {
+            "external_id": null,
+            "year": 2016
+        }
+    },
+    {
+        "model": "core.academicyear",
+        "pk": 2,
+        "fields": {
+            "external_id": null,
+            "year": 2015
+        }
+    },
+    {
+        "model": "core.academiccalendar",
+        "pk": 1,
+        "fields": {
+            "external_id": null,
+            "academic_year": 2,
+            "event_type": "ACADEMIC_YEAR",
+            "title": "Ann\u00e9e acad\u00e9mique",
+            "description": "",
+            "start_date": "2015-09-01",
+            "end_date": "2016-08-31"
+        }
+    },
+    {
+        "model": "core.offer",
+        "pk": 1,
+        "fields": {
+            "external_id": null,
+            "acronym": "DROI1BA",
+            "title": "Bachelier en Droit"
+        }
+    },
+    {
+        "model": "core.offeryear",
+        "pk": 1,
+        "fields": {
+            "external_id": null,
+            "offer": 1,
+            "academic_year": 1,
+            "acronym": "DROIT1BA",
+            "title": "Bachelier en Droit",
+            "structure": 1
+        }
+    },
+    {
+        "model": "core.offeryear",
+        "pk": 2,
+        "fields": {
+            "external_id": null,
+            "offer": 1,
+            "academic_year": 2,
+            "acronym": "DROI1BA",
+            "title": "Introduction au droit",
+            "structure": 1
+        }
+    },
+    {
+        "model": "core.programmemanager",
+        "pk": 1,
+        "fields": {
+            "person": 6,
+            "faculty": 1
+        }
+    },
+    {
+        "model": "core.offerenrollment",
+        "pk": 1,
+        "fields": {
+            "external_id": null,
+            "date_enrollment": "2015-09-01",
+            "offer_year": 1,
+            "student": 1
+        }
+    },
+    {
+        "model": "core.offerenrollment",
+        "pk": 2,
+        "fields": {
+            "external_id": null,
+            "date_enrollment": "2015-09-01",
+            "offer_year": 1,
+            "student": 2
+        }
+    },
+    {
+        "model": "core.offerenrollment",
+        "pk": 3,
+        "fields": {
+            "external_id": null,
+            "date_enrollment": "2015-09-01",
+            "offer_year": 2,
+            "student": 1
+        }
+    },
+    {
+        "model": "core.offerenrollment",
+        "pk": 4,
+        "fields": {
+            "external_id": null,
+            "date_enrollment": "2015-09-01",
+            "offer_year": 2,
+            "student": 2
+        }
+    },
+    {
+        "model": "core.offeryearcalendar",
+        "pk": 1,
+        "fields": {
+            "external_id": null,
+            "academic_calendar": 1,
+            "offer_year": 1,
+            "event_type": "ACADEMIC_YEAR",
+            "start_date": null,
+            "end_date": null
+        }
+    },
+    {
+        "model": "core.offeryearcalendar",
+        "pk": 2,
+        "fields": {
+            "external_id": null,
+            "academic_calendar": 1,
+            "offer_year": 2,
+            "event_type": "ACADEMIC_YEAR",
+            "start_date": "2015-08-31",
+            "end_date": "2016-08-31"
+        }
+    },
+    {
+        "model": "core.learningunit",
+        "pk": 1,
+        "fields": {
+            "external_id": null,
+            "acronym": "DROI1000",
+            "title": "Introduction au Droit",
+            "description": "",
+            "start_year": 2015,
+            "end_year": null
+        }
+    },
+    {
+        "model": "core.learningunit",
+        "pk": 2,
+        "fields": {
+            "external_id": null,
+            "acronym": "PHYS1000",
+            "title": "Introduction \u00e0 la physique",
+            "description": "",
+            "start_year": 2015,
+            "end_year": null
+        }
+    },
+    {
+        "model": "core.attribution",
+        "pk": 1,
+        "fields": {
+            "external_id": null,
+            "start_date": "2015-09-01",
+            "end_date": "2016-08-31",
+            "function": "PROFESSOR",
+            "learning_unit": 1,
+            "tutor": 1
+        }
+    },
+    {
+        "model": "core.attribution",
+        "pk": 2,
+        "fields": {
+            "external_id": null,
+            "start_date": "2015-09-01",
+            "end_date": "2016-08-31",
+            "function": "COORDINATOR",
+            "learning_unit": 1,
+            "tutor": 3
+        }
+    },
+    {
+        "model": "core.attribution",
+        "pk": 3,
+        "fields": {
+            "external_id": null,
+            "start_date": "2015-09-01",
+            "end_date": "2016-08-31",
+            "function": "PROFESSOR",
+            "learning_unit": 2,
+            "tutor": 2
+        }
+    },
+    {
+        "model": "core.attribution",
+        "pk": 4,
+        "fields": {
+            "external_id": null,
+            "start_date": "2015-09-01",
+            "end_date": "2016-08-31",
+            "function": "PROFESSOR",
+            "learning_unit": 2,
+            "tutor": 1
+        }
+    },
+    {
+        "model": "core.attribution",
+        "pk": 5,
+        "fields": {
+            "external_id": null,
+            "start_date": "2015-09-01",
+            "end_date": "2016-08-31",
+            "function": "COORDINATOR",
+            "learning_unit": 2,
+            "tutor": 3
+        }
+    },
+    {
+        "model": "core.learningunityear",
+        "pk": 1,
+        "fields": {
+            "external_id": null,
+            "acronym": "DROI1000",
+            "title": "Introduction au droit",
+            "credits": "0.10",
+            "decimal_scores": false,
+            "academic_year": 1,
+            "learning_unit": 1
+        }
+    },
+    {
+        "model": "core.learningunityear",
+        "pk": 2,
+        "fields": {
+            "external_id": null,
+            "acronym": "PHYS1000",
+            "title": "Introduction \u00e0 la Physique",
+            "credits": "1.00",
+            "decimal_scores": false,
+            "academic_year": 1,
+            "learning_unit": 2
+        }
+    },
+    {
+        "model": "core.learningunityear",
+        "pk": 3,
+        "fields": {
+            "external_id": null,
+            "acronym": "DROI1000",
+            "title": "Introduction au droit",
+            "credits": "10.00",
+            "decimal_scores": false,
+            "academic_year": 2,
+            "learning_unit": 1
+        }
+    },
+    {
+        "model": "core.learningunityear",
+        "pk": 4,
+        "fields": {
+            "external_id": null,
+            "acronym": "PHYS1000",
+            "title": "Phys1000",
+            "credits": "10.00",
+            "decimal_scores": false,
+            "academic_year": 2,
+            "learning_unit": 2
+        }
+    },
+    {
+        "model": "core.learningunitenrollment",
+        "pk": 1,
+        "fields": {
+            "external_id": null,
+            "date_enrollment": "2015-09-01",
+            "learning_unit_year": 1,
+            "offer_enrollment": 1
+        }
+    },
+    {
+        "model": "core.learningunitenrollment",
+        "pk": 2,
+        "fields": {
+            "external_id": null,
+            "date_enrollment": "2015-09-01",
+            "learning_unit_year": 2,
+            "offer_enrollment": 2
+        }
+    },
+    {
+        "model": "core.learningunitenrollment",
+        "pk": 3,
+        "fields": {
+            "external_id": null,
+            "date_enrollment": "2015-09-01",
+            "learning_unit_year": 2,
+            "offer_enrollment": 1
+        }
+    },
+    {
+        "model": "core.learningunitenrollment",
+        "pk": 4,
+        "fields": {
+            "external_id": null,
+            "date_enrollment": "2015-09-01",
+            "learning_unit_year": 4,
+            "offer_enrollment": 3
+        }
+    },
+    {
+        "model": "core.learningunitenrollment",
+        "pk": 5,
+        "fields": {
+            "external_id": null,
+            "date_enrollment": "2015-09-01",
+            "learning_unit_year": 3,
+            "offer_enrollment": 4
+        }
+    },
+    {
+        "model": "core.learningunitenrollment",
+        "pk": 6,
+        "fields": {
+            "external_id": null,
+            "date_enrollment": "2015-09-01",
+            "learning_unit_year": 3,
+            "offer_enrollment": 3
+        }
+    },
+    {
+        "model": "core.sessionexam",
+        "pk": 1,
+        "fields": {
+            "external_id": null,
+            "number_session": 1,
+            "status": "OPEN",
+            "learning_unit_year": 1,
+            "offer_year_calendar": 1
+        }
+    },
+    {
+        "model": "core.sessionexam",
+        "pk": 2,
+        "fields": {
+            "external_id": null,
+            "number_session": 1,
+            "status": "OPEN",
+            "learning_unit_year": 3,
+            "offer_year_calendar": 2
+        }
+    },
+    {
+        "model": "core.examenrollment",
+        "pk": 1,
+        "fields": {
+            "external_id": null,
+            "score_draft": null,
+            "score_reencoded": null,
+            "score_final": null,
+            "justification_draft": null,
+            "justification_reencoded": null,
+            "justification_final": null,
+            "encoding_status": null,
+            "session_exam": 1,
+            "learning_unit_enrollment": 1
+        }
+    },
+    {
+        "model": "core.examenrollment",
+        "pk": 2,
+        "fields": {
+            "external_id": null,
+            "score_draft": null,
+            "score_reencoded": null,
+            "score_final": null,
+            "justification_draft": null,
+            "justification_reencoded": null,
+            "justification_final": null,
+            "encoding_status": null,
+            "session_exam": 1,
+            "learning_unit_enrollment": 2
+        }
+    },
+    {
+        "model": "core.examenrollment",
+        "pk": 3,
+        "fields": {
+            "external_id": null,
+            "score_draft": null,
+            "score_reencoded": null,
+            "score_final": null,
+            "justification_draft": null,
+            "justification_reencoded": null,
+            "justification_final": null,
+            "encoding_status": null,
+            "session_exam": 2,
+            "learning_unit_enrollment": 4
+        }
+    },
+    {
+        "model": "core.examenrollment",
+        "pk": 4,
+        "fields": {
+            "external_id": null,
+            "score_draft": null,
+            "score_reencoded": null,
+            "score_final": null,
+            "justification_draft": null,
+            "justification_reencoded": null,
+            "justification_final": null,
+            "encoding_status": null,
+            "session_exam": 2,
+            "learning_unit_enrollment": 5
+        }
+    },
+    {
+        "model": "core.examenrollment",
+        "pk": 5,
+        "fields": {
+            "external_id": null,
+            "score_draft": null,
+            "score_reencoded": null,
+            "score_final": null,
+            "justification_draft": null,
+            "justification_reencoded": null,
+            "justification_final": null,
+            "encoding_status": null,
+            "session_exam": 2,
+            "learning_unit_enrollment": 6
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 1,
+        "fields": {
+            "name": "Can add log entry",
+            "content_type": 1,
+            "codename": "add_logentry"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 2,
+        "fields": {
+            "name": "Can change log entry",
+            "content_type": 1,
+            "codename": "change_logentry"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 3,
+        "fields": {
+            "name": "Can delete log entry",
+            "content_type": 1,
+            "codename": "delete_logentry"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 4,
+        "fields": {
+            "name": "Can add permission",
+            "content_type": 2,
+            "codename": "add_permission"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 5,
+        "fields": {
+            "name": "Can change permission",
+            "content_type": 2,
+            "codename": "change_permission"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 6,
+        "fields": {
+            "name": "Can delete permission",
+            "content_type": 2,
+            "codename": "delete_permission"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 7,
+        "fields": {
+            "name": "Can add group",
+            "content_type": 3,
+            "codename": "add_group"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 8,
+        "fields": {
+            "name": "Can change group",
+            "content_type": 3,
+            "codename": "change_group"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 9,
+        "fields": {
+            "name": "Can delete group",
+            "content_type": 3,
+            "codename": "delete_group"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 10,
+        "fields": {
+            "name": "Can add user",
+            "content_type": 4,
+            "codename": "add_user"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 11,
+        "fields": {
+            "name": "Can change user",
+            "content_type": 4,
+            "codename": "change_user"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 12,
+        "fields": {
+            "name": "Can delete user",
+            "content_type": 4,
+            "codename": "delete_user"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 13,
+        "fields": {
+            "name": "Can add content type",
+            "content_type": 5,
+            "codename": "add_contenttype"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 14,
+        "fields": {
+            "name": "Can change content type",
+            "content_type": 5,
+            "codename": "change_contenttype"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 15,
+        "fields": {
+            "name": "Can delete content type",
+            "content_type": 5,
+            "codename": "delete_contenttype"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 16,
+        "fields": {
+            "name": "Can add session",
+            "content_type": 6,
+            "codename": "add_session"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 17,
+        "fields": {
+            "name": "Can change session",
+            "content_type": 6,
+            "codename": "change_session"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 18,
+        "fields": {
+            "name": "Can delete session",
+            "content_type": 6,
+            "codename": "delete_session"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 19,
+        "fields": {
+            "name": "Can add person",
+            "content_type": 7,
+            "codename": "add_person"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 20,
+        "fields": {
+            "name": "Can change person",
+            "content_type": 7,
+            "codename": "change_person"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 21,
+        "fields": {
+            "name": "Can delete person",
+            "content_type": 7,
+            "codename": "delete_person"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 22,
+        "fields": {
+            "name": "Can add tutor",
+            "content_type": 8,
+            "codename": "add_tutor"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 23,
+        "fields": {
+            "name": "Can change tutor",
+            "content_type": 8,
+            "codename": "change_tutor"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 24,
+        "fields": {
+            "name": "Can delete tutor",
+            "content_type": 8,
+            "codename": "delete_tutor"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 25,
+        "fields": {
+            "name": "Can add student",
+            "content_type": 9,
+            "codename": "add_student"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 26,
+        "fields": {
+            "name": "Can change student",
+            "content_type": 9,
+            "codename": "change_student"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 27,
+        "fields": {
+            "name": "Can delete student",
+            "content_type": 9,
+            "codename": "delete_student"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 28,
+        "fields": {
+            "name": "Can add organization",
+            "content_type": 10,
+            "codename": "add_organization"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 29,
+        "fields": {
+            "name": "Can change organization",
+            "content_type": 10,
+            "codename": "change_organization"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 30,
+        "fields": {
+            "name": "Can delete organization",
+            "content_type": 10,
+            "codename": "delete_organization"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 31,
+        "fields": {
+            "name": "Can add structure",
+            "content_type": 11,
+            "codename": "add_structure"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 32,
+        "fields": {
+            "name": "Can change structure",
+            "content_type": 11,
+            "codename": "change_structure"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 33,
+        "fields": {
+            "name": "Can delete structure",
+            "content_type": 11,
+            "codename": "delete_structure"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 34,
+        "fields": {
+            "name": "Can add academic year",
+            "content_type": 12,
+            "codename": "add_academicyear"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 35,
+        "fields": {
+            "name": "Can change academic year",
+            "content_type": 12,
+            "codename": "change_academicyear"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 36,
+        "fields": {
+            "name": "Can delete academic year",
+            "content_type": 12,
+            "codename": "delete_academicyear"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 37,
+        "fields": {
+            "name": "Can add academic calendar",
+            "content_type": 13,
+            "codename": "add_academiccalendar"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 38,
+        "fields": {
+            "name": "Can change academic calendar",
+            "content_type": 13,
+            "codename": "change_academiccalendar"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 39,
+        "fields": {
+            "name": "Can delete academic calendar",
+            "content_type": 13,
+            "codename": "delete_academiccalendar"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 40,
+        "fields": {
+            "name": "Can add offer",
+            "content_type": 14,
+            "codename": "add_offer"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 41,
+        "fields": {
+            "name": "Can change offer",
+            "content_type": 14,
+            "codename": "change_offer"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 42,
+        "fields": {
+            "name": "Can delete offer",
+            "content_type": 14,
+            "codename": "delete_offer"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 43,
+        "fields": {
+            "name": "Can add offer year",
+            "content_type": 15,
+            "codename": "add_offeryear"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 44,
+        "fields": {
+            "name": "Can change offer year",
+            "content_type": 15,
+            "codename": "change_offeryear"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 45,
+        "fields": {
+            "name": "Can delete offer year",
+            "content_type": 15,
+            "codename": "delete_offeryear"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 46,
+        "fields": {
+            "name": "Can add programme manager",
+            "content_type": 16,
+            "codename": "add_programmemanager"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 47,
+        "fields": {
+            "name": "Can change programme manager",
+            "content_type": 16,
+            "codename": "change_programmemanager"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 48,
+        "fields": {
+            "name": "Can delete programme manager",
+            "content_type": 16,
+            "codename": "delete_programmemanager"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 49,
+        "fields": {
+            "name": "Can add offer enrollment",
+            "content_type": 17,
+            "codename": "add_offerenrollment"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 50,
+        "fields": {
+            "name": "Can change offer enrollment",
+            "content_type": 17,
+            "codename": "change_offerenrollment"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 51,
+        "fields": {
+            "name": "Can delete offer enrollment",
+            "content_type": 17,
+            "codename": "delete_offerenrollment"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 52,
+        "fields": {
+            "name": "Can add offer year calendar",
+            "content_type": 18,
+            "codename": "add_offeryearcalendar"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 53,
+        "fields": {
+            "name": "Can change offer year calendar",
+            "content_type": 18,
+            "codename": "change_offeryearcalendar"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 54,
+        "fields": {
+            "name": "Can delete offer year calendar",
+            "content_type": 18,
+            "codename": "delete_offeryearcalendar"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 55,
+        "fields": {
+            "name": "Can add learning unit",
+            "content_type": 19,
+            "codename": "add_learningunit"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 56,
+        "fields": {
+            "name": "Can change learning unit",
+            "content_type": 19,
+            "codename": "change_learningunit"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 57,
+        "fields": {
+            "name": "Can delete learning unit",
+            "content_type": 19,
+            "codename": "delete_learningunit"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 58,
+        "fields": {
+            "name": "Can add attribution",
+            "content_type": 20,
+            "codename": "add_attribution"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 59,
+        "fields": {
+            "name": "Can change attribution",
+            "content_type": 20,
+            "codename": "change_attribution"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 60,
+        "fields": {
+            "name": "Can delete attribution",
+            "content_type": 20,
+            "codename": "delete_attribution"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 61,
+        "fields": {
+            "name": "Can add learning unit year",
+            "content_type": 21,
+            "codename": "add_learningunityear"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 62,
+        "fields": {
+            "name": "Can change learning unit year",
+            "content_type": 21,
+            "codename": "change_learningunityear"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 63,
+        "fields": {
+            "name": "Can delete learning unit year",
+            "content_type": 21,
+            "codename": "delete_learningunityear"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 64,
+        "fields": {
+            "name": "Can add learning unit enrollment",
+            "content_type": 22,
+            "codename": "add_learningunitenrollment"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 65,
+        "fields": {
+            "name": "Can change learning unit enrollment",
+            "content_type": 22,
+            "codename": "change_learningunitenrollment"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 66,
+        "fields": {
+            "name": "Can delete learning unit enrollment",
+            "content_type": 22,
+            "codename": "delete_learningunitenrollment"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 67,
+        "fields": {
+            "name": "Can add session exam",
+            "content_type": 23,
+            "codename": "add_sessionexam"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 68,
+        "fields": {
+            "name": "Can change session exam",
+            "content_type": 23,
+            "codename": "change_sessionexam"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 69,
+        "fields": {
+            "name": "Can delete session exam",
+            "content_type": 23,
+            "codename": "delete_sessionexam"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 70,
+        "fields": {
+            "name": "Can add exam enrollment",
+            "content_type": 24,
+            "codename": "add_examenrollment"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 71,
+        "fields": {
+            "name": "Can change exam enrollment",
+            "content_type": 24,
+            "codename": "change_examenrollment"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 72,
+        "fields": {
+            "name": "Can delete exam enrollment",
+            "content_type": 24,
+            "codename": "delete_examenrollment"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 73,
+        "fields": {
+            "name": "Can add exam enrollment history",
+            "content_type": 25,
+            "codename": "add_examenrollmenthistory"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 74,
+        "fields": {
+            "name": "Can change exam enrollment history",
+            "content_type": 25,
+            "codename": "change_examenrollmenthistory"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 75,
+        "fields": {
+            "name": "Can delete exam enrollment history",
+            "content_type": 25,
+            "codename": "delete_examenrollmenthistory"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 76,
+        "fields": {
+            "name": "Can add internship enrollment",
+            "content_type": 26,
+            "codename": "add_internshipenrollment"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 77,
+        "fields": {
+            "name": "Can change internship enrollment",
+            "content_type": 26,
+            "codename": "change_internshipenrollment"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 78,
+        "fields": {
+            "name": "Can delete internship enrollment",
+            "content_type": 26,
+            "codename": "delete_internshipenrollment"
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 1,
+        "fields": {
+            "password": "pbkdf2_sha256$24000$77SWySS12ruQ$UsUBakPSpBMYF1zao1QZAwFiNCSkAo15E+xtq/waCrY=",
+            "last_login": "2016-02-09T16:52:17.376Z",
+            "is_superuser": true,
+            "username": "osis",
+            "first_name": "",
+            "last_name": "",
+            "email": "osi@uclouvain.be",
+            "is_staff": true,
+            "is_active": true,
+            "date_joined": "2016-02-09T13:52:02.286Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "core.person",
+        "pk": 1,
+        "fields": {
+            "external_id": null,
+            "user": null,
+            "global_id": "",
+            "gender": "F",
+            "national_id": "",
+            "first_name": "Osis",
+            "middle_name": "",
+            "last_name": "Osis-Dev",
+            "email": null
+        }
+    },
+    {
+        "model": "core.person",
+        "pk": 2,
+        "fields": {
+            "external_id": null,
+            "user": null,
+            "global_id": "",
+            "gender": "M",
+            "national_id": "",
+            "first_name": "Prof1",
+            "middle_name": "",
+            "last_name": "Prof1",
+            "email": null
+        }
+    },
+    {
+        "model": "core.person",
+        "pk": 3,
+        "fields": {
+            "external_id": null,
+            "user": 1,
+            "global_id": "",
+            "gender": "U",
+            "national_id": "",
+            "first_name": "OsisProfUser",
+            "middle_name": "",
+            "last_name": "OsisProfUser",
+            "email": "OsisProfUser@uclouvain.be"
+        }
+    },
+    {
+        "model": "core.person",
+        "pk": 4,
+        "fields": {
+            "external_id": null,
+            "user": null,
+            "global_id": "",
+            "gender": "F",
+            "national_id": "",
+            "first_name": "Osis-Student-1",
+            "middle_name": "",
+            "last_name": "Osis-Student-1",
+            "email": "Osis-Student-1@uclouvain.be"
+        }
+    },
+    {
+        "model": "core.person",
+        "pk": 5,
+        "fields": {
+            "external_id": null,
+            "user": null,
+            "global_id": "",
+            "gender": "U",
+            "national_id": "",
+            "first_name": "Osis-Student-2",
+            "middle_name": "",
+            "last_name": "Osis-Student-2",
+            "email": "Osis-Student-2@uclouvain.be"
+        }
+    },
+    {
+        "model": "core.person",
+        "pk": 6,
+        "fields": {
+            "external_id": null,
+            "user": null,
+            "global_id": "",
+            "gender": "U",
+            "national_id": "",
+            "first_name": "Osis-Prog-Manager",
+            "middle_name": "",
+            "last_name": "Osis-Prog-Manager",
+            "email": "Osis-Prog-Manager@uclouvain.be"
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 1,
+        "fields": {
+            "action_time": "2016-02-09T13:53:36.618Z",
+            "user": 1,
+            "content_type": 12,
+            "object_id": "1",
+            "object_repr": "2016-2017",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 2,
+        "fields": {
+            "action_time": "2016-02-09T13:53:52.673Z",
+            "user": 1,
+            "content_type": 13,
+            "object_id": "1",
+            "object_repr": "2016-2017 ",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 3,
+        "fields": {
+            "action_time": "2016-02-09T14:16:17.145Z",
+            "user": 1,
+            "content_type": 7,
+            "object_id": "1",
+            "object_repr": "OSIS-DEV, Osis ",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 4,
+        "fields": {
+            "action_time": "2016-02-09T14:20:46.142Z",
+            "user": 1,
+            "content_type": 7,
+            "object_id": "2",
+            "object_repr": "PROF1, Prof1 ",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 5,
+        "fields": {
+            "action_time": "2016-02-09T14:27:12.421Z",
+            "user": 1,
+            "content_type": 7,
+            "object_id": "3",
+            "object_repr": "OSISPROFUSER, OsisProfUser ",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 6,
+        "fields": {
+            "action_time": "2016-02-09T14:28:04.070Z",
+            "user": 1,
+            "content_type": 19,
+            "object_id": "1",
+            "object_repr": "DROI1000 - Introduction au Droit",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 7,
+        "fields": {
+            "action_time": "2016-02-09T14:28:25.052Z",
+            "user": 1,
+            "content_type": 8,
+            "object_id": "1",
+            "object_repr": "OSISPROFUSER, OsisProfUser ",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 8,
+        "fields": {
+            "action_time": "2016-02-09T14:28:53.470Z",
+            "user": 1,
+            "content_type": 20,
+            "object_id": "1",
+            "object_repr": "OSISPROFUSER, OsisProfUser  - PROFESSOR",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 9,
+        "fields": {
+            "action_time": "2016-02-09T14:31:59.691Z",
+            "user": 1,
+            "content_type": 8,
+            "object_id": "2",
+            "object_repr": "PROF1, Prof1 ",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 10,
+        "fields": {
+            "action_time": "2016-02-09T14:32:13.158Z",
+            "user": 1,
+            "content_type": 8,
+            "object_id": "3",
+            "object_repr": "OSIS-DEV, Osis ",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 11,
+        "fields": {
+            "action_time": "2016-02-09T14:32:21.053Z",
+            "user": 1,
+            "content_type": 20,
+            "object_id": "2",
+            "object_repr": "OSIS-DEV, Osis  - COORDINATOR",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 12,
+        "fields": {
+            "action_time": "2016-02-09T14:32:50.741Z",
+            "user": 1,
+            "content_type": 19,
+            "object_id": "2",
+            "object_repr": "PHYS1000 - Introduction \u00e0 la physique",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 13,
+        "fields": {
+            "action_time": "2016-02-09T14:33:03.146Z",
+            "user": 1,
+            "content_type": 20,
+            "object_id": "3",
+            "object_repr": "PROF1, Prof1  - PROFESSOR",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 14,
+        "fields": {
+            "action_time": "2016-02-09T14:33:12.955Z",
+            "user": 1,
+            "content_type": 20,
+            "object_id": "4",
+            "object_repr": "OSISPROFUSER, OsisProfUser  - PROFESSOR",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 15,
+        "fields": {
+            "action_time": "2016-02-09T14:33:31.159Z",
+            "user": 1,
+            "content_type": 20,
+            "object_id": "5",
+            "object_repr": "OSIS-DEV, Osis  - COORDINATOR",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 16,
+        "fields": {
+            "action_time": "2016-02-09T14:39:10.601Z",
+            "user": 1,
+            "content_type": 21,
+            "object_id": "1",
+            "object_repr": "2016-2017 - DROI1000 - Introduction au Droit",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 17,
+        "fields": {
+            "action_time": "2016-02-09T14:44:47.666Z",
+            "user": 1,
+            "content_type": 14,
+            "object_id": "1",
+            "object_repr": "DROI1BA",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 18,
+        "fields": {
+            "action_time": "2016-02-09T14:45:07.893Z",
+            "user": 1,
+            "content_type": 11,
+            "object_id": "1",
+            "object_repr": "DRT - Facult\u00e9 de Droit",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 19,
+        "fields": {
+            "action_time": "2016-02-09T14:45:22.363Z",
+            "user": 1,
+            "content_type": 15,
+            "object_id": "1",
+            "object_repr": "2016-2017 - DROI1BA",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 20,
+        "fields": {
+            "action_time": "2016-02-09T14:45:26.347Z",
+            "user": 1,
+            "content_type": 18,
+            "object_id": "1",
+            "object_repr": "2016-2017  - 2016-2017 - DROI1BA - ACADEMIC_YEAR",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 21,
+        "fields": {
+            "action_time": "2016-02-09T14:45:33.047Z",
+            "user": 1,
+            "content_type": 23,
+            "object_id": "1",
+            "object_repr": "2016-2017 - DROI1000 - Introduction au Droit - 1",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 22,
+        "fields": {
+            "action_time": "2016-02-09T14:46:44.727Z",
+            "user": 1,
+            "content_type": 7,
+            "object_id": "4",
+            "object_repr": "OSIS-STUDENT-1, Osis-Student-1 ",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 23,
+        "fields": {
+            "action_time": "2016-02-09T14:47:00.370Z",
+            "user": 1,
+            "content_type": 9,
+            "object_id": "1",
+            "object_repr": "OSIS-STUDENT-1, Osis-Student-1  (00000001)",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 24,
+        "fields": {
+            "action_time": "2016-02-09T14:47:17.814Z",
+            "user": 1,
+            "content_type": 17,
+            "object_id": "1",
+            "object_repr": "OSIS-STUDENT-1, Osis-Student-1  (00000001) - 2016-2017 - DROI1BA",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 25,
+        "fields": {
+            "action_time": "2016-02-09T14:47:48.966Z",
+            "user": 1,
+            "content_type": 22,
+            "object_id": "1",
+            "object_repr": "2016-2017 - DROI1000 - Introduction au Droit - OSIS-STUDENT-1, Osis-Student-1  (00000001)",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 26,
+        "fields": {
+            "action_time": "2016-02-09T14:47:55.316Z",
+            "user": 1,
+            "content_type": 24,
+            "object_id": "1",
+            "object_repr": "2016-2017 - DROI1000 - Introduction au Droit - 1 - 2016-2017 - DROI1000 - Introduction au Droit - OSIS-STUDENT-1, Osis-Student-1  (00000001)",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 27,
+        "fields": {
+            "action_time": "2016-02-09T14:49:29.159Z",
+            "user": 1,
+            "content_type": 7,
+            "object_id": "5",
+            "object_repr": "OSIS-STUDENT-2, Osis-Student-2 ",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 28,
+        "fields": {
+            "action_time": "2016-02-09T14:49:34.278Z",
+            "user": 1,
+            "content_type": 9,
+            "object_id": "2",
+            "object_repr": "OSIS-STUDENT-2, Osis-Student-2  (00000002)",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 29,
+        "fields": {
+            "action_time": "2016-02-09T14:50:09.082Z",
+            "user": 1,
+            "content_type": 17,
+            "object_id": "2",
+            "object_repr": "OSIS-STUDENT-2, Osis-Student-2  (00000002) - 2016-2017 - DROI1BA",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 30,
+        "fields": {
+            "action_time": "2016-02-09T14:50:43.187Z",
+            "user": 1,
+            "content_type": 21,
+            "object_id": "2",
+            "object_repr": "2016-2017 - PHYS1000 - Introduction \u00e0 la physique",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 31,
+        "fields": {
+            "action_time": "2016-02-09T14:51:08.401Z",
+            "user": 1,
+            "content_type": 22,
+            "object_id": "2",
+            "object_repr": "2016-2017 - PHYS1000 - Introduction \u00e0 la physique - OSIS-STUDENT-2, Osis-Student-2  (00000002)",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 32,
+        "fields": {
+            "action_time": "2016-02-09T14:51:18.276Z",
+            "user": 1,
+            "content_type": 24,
+            "object_id": "2",
+            "object_repr": "2016-2017 - DROI1000 - Introduction au Droit - 1 - 2016-2017 - PHYS1000 - Introduction \u00e0 la physique - OSIS-STUDENT-2, Osis-Student-2  (00000002)",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 33,
+        "fields": {
+            "action_time": "2016-02-09T14:51:35.210Z",
+            "user": 1,
+            "content_type": 22,
+            "object_id": "3",
+            "object_repr": "2016-2017 - PHYS1000 - Introduction \u00e0 la physique - OSIS-STUDENT-1, Osis-Student-1  (00000001)",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 34,
+        "fields": {
+            "action_time": "2016-02-09T14:51:37.217Z",
+            "user": 1,
+            "content_type": 24,
+            "object_id": "3",
+            "object_repr": "2016-2017 - DROI1000 - Introduction au Droit - 1 - 2016-2017 - PHYS1000 - Introduction \u00e0 la physique - OSIS-STUDENT-1, Osis-Student-1  (00000001)",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 35,
+        "fields": {
+            "action_time": "2016-02-09T14:52:54.706Z",
+            "user": 1,
+            "content_type": 7,
+            "object_id": "6",
+            "object_repr": "OSIS-PROG-MANAGER, Osis-Prog-Manager ",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 36,
+        "fields": {
+            "action_time": "2016-02-09T14:53:00.779Z",
+            "user": 1,
+            "content_type": 16,
+            "object_id": "1",
+            "object_repr": "OSIS-PROG-MANAGER, Osis-Prog-Manager  - DRT - Facult\u00e9 de Droit",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 37,
+        "fields": {
+            "action_time": "2016-02-09T16:04:17.463Z",
+            "user": 1,
+            "content_type": 12,
+            "object_id": "2",
+            "object_repr": "2015-2016",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 38,
+        "fields": {
+            "action_time": "2016-02-09T16:04:45.919Z",
+            "user": 1,
+            "content_type": 13,
+            "object_id": "1",
+            "object_repr": "2015-2016 Ann\u00e9e acad\u00e9mique",
+            "action_flag": 2,
+            "change_message": "Modification de academic_year, title, start_date et end_date."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 39,
+        "fields": {
+            "action_time": "2016-02-09T16:06:07.985Z",
+            "user": 1,
+            "content_type": 20,
+            "object_id": "5",
+            "object_repr": "OSIS-DEV, Osis  - COORDINATOR",
+            "action_flag": 2,
+            "change_message": "Modification de start_date et end_date."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 40,
+        "fields": {
+            "action_time": "2016-02-09T16:06:25.889Z",
+            "user": 1,
+            "content_type": 20,
+            "object_id": "4",
+            "object_repr": "OSISPROFUSER, OsisProfUser  - PROFESSOR",
+            "action_flag": 2,
+            "change_message": "Modification de start_date et end_date."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 41,
+        "fields": {
+            "action_time": "2016-02-09T16:06:40.666Z",
+            "user": 1,
+            "content_type": 20,
+            "object_id": "3",
+            "object_repr": "PROF1, Prof1  - PROFESSOR",
+            "action_flag": 2,
+            "change_message": "Modification de start_date et end_date."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 42,
+        "fields": {
+            "action_time": "2016-02-09T16:06:50.824Z",
+            "user": 1,
+            "content_type": 20,
+            "object_id": "2",
+            "object_repr": "OSIS-DEV, Osis  - COORDINATOR",
+            "action_flag": 2,
+            "change_message": "Modification de start_date et end_date."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 43,
+        "fields": {
+            "action_time": "2016-02-09T16:06:58.321Z",
+            "user": 1,
+            "content_type": 20,
+            "object_id": "1",
+            "object_repr": "OSISPROFUSER, OsisProfUser  - PROFESSOR",
+            "action_flag": 2,
+            "change_message": "Modification de start_date et end_date."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 44,
+        "fields": {
+            "action_time": "2016-02-09T16:07:36.220Z",
+            "user": 1,
+            "content_type": 21,
+            "object_id": "3",
+            "object_repr": "2015-2016 - DROI1000 - Introduction au Droit",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 45,
+        "fields": {
+            "action_time": "2016-02-09T16:08:24.052Z",
+            "user": 1,
+            "content_type": 15,
+            "object_id": "2",
+            "object_repr": "2015-2016 - DROI1BA",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 46,
+        "fields": {
+            "action_time": "2016-02-09T16:09:00.102Z",
+            "user": 1,
+            "content_type": 18,
+            "object_id": "2",
+            "object_repr": "2015-2016 Ann\u00e9e acad\u00e9mique - 2015-2016 - DROI1BA - ACADEMIC_YEAR",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 47,
+        "fields": {
+            "action_time": "2016-02-09T16:09:05.385Z",
+            "user": 1,
+            "content_type": 23,
+            "object_id": "2",
+            "object_repr": "2015-2016 - DROI1000 - Introduction au Droit - 1",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 48,
+        "fields": {
+            "action_time": "2016-02-09T16:09:37.695Z",
+            "user": 1,
+            "content_type": 17,
+            "object_id": "3",
+            "object_repr": "OSIS-STUDENT-1, Osis-Student-1  (00000001) - 2015-2016 - DROI1BA",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 49,
+        "fields": {
+            "action_time": "2016-02-09T16:10:01.681Z",
+            "user": 1,
+            "content_type": 21,
+            "object_id": "4",
+            "object_repr": "2015-2016 - PHYS1000 - Introduction \u00e0 la physique",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 50,
+        "fields": {
+            "action_time": "2016-02-09T16:10:13.959Z",
+            "user": 1,
+            "content_type": 22,
+            "object_id": "4",
+            "object_repr": "2015-2016 - PHYS1000 - Introduction \u00e0 la physique - OSIS-STUDENT-1, Osis-Student-1  (00000001)",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 51,
+        "fields": {
+            "action_time": "2016-02-09T16:10:35.431Z",
+            "user": 1,
+            "content_type": 24,
+            "object_id": "3",
+            "object_repr": "2015-2016 - DROI1000 - Introduction au Droit - 1 - 2015-2016 - PHYS1000 - Introduction \u00e0 la physique - OSIS-STUDENT-1, Osis-Student-1  (00000001)",
+            "action_flag": 2,
+            "change_message": "Modification de session_exam et learning_unit_enrollment."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 52,
+        "fields": {
+            "action_time": "2016-02-09T16:11:09.607Z",
+            "user": 1,
+            "content_type": 17,
+            "object_id": "4",
+            "object_repr": "OSIS-STUDENT-2, Osis-Student-2  (00000002) - 2015-2016 - DROI1BA",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 53,
+        "fields": {
+            "action_time": "2016-02-09T16:11:20.166Z",
+            "user": 1,
+            "content_type": 22,
+            "object_id": "5",
+            "object_repr": "2015-2016 - DROI1000 - Introduction au Droit - OSIS-STUDENT-2, Osis-Student-2  (00000002)",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 54,
+        "fields": {
+            "action_time": "2016-02-09T16:11:24.402Z",
+            "user": 1,
+            "content_type": 24,
+            "object_id": "4",
+            "object_repr": "2015-2016 - DROI1000 - Introduction au Droit - 1 - 2015-2016 - DROI1000 - Introduction au Droit - OSIS-STUDENT-2, Osis-Student-2  (00000002)",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 55,
+        "fields": {
+            "action_time": "2016-02-09T16:12:18.703Z",
+            "user": 1,
+            "content_type": 22,
+            "object_id": "6",
+            "object_repr": "2015-2016 - DROI1000 - Introduction au Droit - OSIS-STUDENT-1, Osis-Student-1  (00000001)",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 56,
+        "fields": {
+            "action_time": "2016-02-09T16:12:21.895Z",
+            "user": 1,
+            "content_type": 24,
+            "object_id": "5",
+            "object_repr": "2015-2016 - DROI1000 - Introduction au Droit - 1 - 2015-2016 - DROI1000 - Introduction au Droit - OSIS-STUDENT-1, Osis-Student-1  (00000001)",
+            "action_flag": 1,
+            "change_message": "Ajout."
+        }
+    }
+]
