@@ -30,6 +30,7 @@ Utility files for mail sending
 from django.core.mail import send_mail
 
 from django.utils.translation import ugettext_lazy as _
+from osis_backend.settings import DEFAULT_FROM_EMAIL
 
 
 def send_mail_after_scores_submission(persons, learning_unit_name):
@@ -54,7 +55,7 @@ def send_mail_after_scores_submission(persons, learning_unit_name):
         str(_('The OSIS Team.')),
     ])
 
-    send_mail(subject=subject,message=message,recipient_list=[person.email for person in persons],html_message=html_message)
+    send_mail(subject=subject,message=message,recipient_list=[person.email for person in persons],html_message=html_message,from_email=DEFAULT_FROM_EMAIL)
 
 
 GENDER_TITLE_MAP = {
