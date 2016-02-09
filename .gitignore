@@ -1,3 +1,5 @@
+/core/tests/selenium/screenshots
+/core/tests/selenium/firefox_profile
 os
 sys
 *.pdf
