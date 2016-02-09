@@ -71,7 +71,7 @@
         </div>
       </div>
       <hr>
-      <form class="form-inline" method="POST" action="{% url 'online_encoding_form' session.id %}">
+      <form id="score_encoding_form" class="form-inline" method="POST" action="{% url 'online_encoding_form' session.id %}">
         {% csrf_token %}
 
         <table class="table table-hover">
@@ -99,7 +99,7 @@
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
-                <td><input type="number" step="any" name="score_{{ enrollment.id }}" id="score_{{ enrollment.id }}" tabindex="{{ forloop.counter }}"
+                <td><input type="number" min="0" max="20" step="any" name="score_{{ enrollment.id }}" id="score_{{ enrollment.id }}" tabindex="{{ forloop.counter }}"
                            value="{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}" class="form-control" {% if enrollment.score_final or enrollment.justification_final %} disabled {% endif %} title="{% if enrollment.session_exam.learning_unit_year.decimal_scores %}{%trans 'Decimal score allowed'%}{%else%}{%trans 'Decimal score NOT allowed'%}{%endif%}"></td>
                 <td><select class="form-control" name="justification_{{ enrollment.id }}" id="justification_score_{{ enrollment.id }}" tabindex="{{ enrollments|length|sum:forloop.counter }}" {% if enrollment.score_final or enrollment.justification_final %} disabled {% endif %}>
                       <option value=""></option>
@@ -121,6 +121,7 @@
         <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'Save' %}</button>
         <a class="btn btn-default" href="{% url 'online_encoding' session.id %}" role="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'Cancel' %}</a>
       </form>
+
     </div>
   </div>
 {% endblock %}
