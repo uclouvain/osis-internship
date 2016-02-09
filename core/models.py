@@ -37,17 +37,18 @@ class Person(models.Model):
         ('M',_('Male')),
         ('U',_('Unknown')))
 
-    external_id = models.CharField(max_length = 100,blank = True, null = True)
-    user        = models.OneToOneField(User, on_delete=models.CASCADE, null = True)
-    global_id   = models.CharField(max_length = 10,blank = True, null = True)
-    gender      = models.CharField(max_length = 1, blank = True, null = True, choices = GENDER_CHOICES, default = 'U')
-    national_id = models.CharField(max_length = 25,blank = True, null = True)
-    first_name  = models.CharField(max_length = 50,blank = True, null = True)
-    middle_name = models.CharField(max_length = 50,blank = True, null = True)
-    last_name   = models.CharField(max_length = 50,blank = True, null = True)
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    user        = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    global_id   = models.CharField(max_length=10, blank=True, null=True)
+    gender      = models.CharField(max_length=1, blank=True, null=True, choices=GENDER_CHOICES, default='U')
+    national_id = models.CharField(max_length=25,blank=True, null=True)
+    first_name  = models.CharField(max_length=50,blank=True, null=True)
+    middle_name = models.CharField(max_length=50,blank=True, null=True)
+    last_name   = models.CharField(max_length=50,blank=True, null=True)
+    email       = models.CharField(max_length=255, blank=True, null=True)
 
     def username(self):
-        if self.user is None :
+        if self.user is None:
             return None
         return self.user.username
 
@@ -111,29 +112,6 @@ class Structure(models.Model):
 
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)
-
-
-class ProgrammeManager(models.Model):
-    person  = models.ForeignKey(Person)
-    faculty = models.ForeignKey(Structure)
-
-    def find_faculty_by_user(user):
-        programme_manager = ProgrammeManager.objects.filter(person__user=user).first()
-        if programme_manager:
-            return programme_manager.faculty
-        else:
-            return None
-
-    def is_programme_manager(user, structure):
-        person = Person.objects.get(user=user)
-        if user:
-            programme_manager = ProgrammeManager.objects.filter(person=person.id, faculty=structure)
-            if programme_manager:
-                return True
-        return False
-
-    def __str__(self):
-        return u"%s - %s" % (self.person, self.faculty)
 
 
 class AcademicYear(models.Model):
@@ -217,6 +195,29 @@ class OfferYear(models.Model):
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.offer.acronym)
+
+
+class ProgrammeManager(models.Model):
+    person = models.ForeignKey(Person)
+    faculty = models.ForeignKey(Structure)
+
+    def find_faculty_by_user(user):
+        programme_manager = ProgrammeManager.objects.filter(person__user=user).first()
+        if programme_manager:
+            return programme_manager.faculty
+        else:
+            return None
+
+    def is_programme_manager(user, structure):
+        person = Person.objects.get(user=user)
+        if user:
+            programme_manager = ProgrammeManager.objects.filter(person=person.id, faculty=structure)
+            if programme_manager:
+                return True
+        return False
+
+    def __str__(self):
+        return u"%s - %s" % (self.person, self.faculty)
 
 
 class OfferEnrollment(models.Model):
