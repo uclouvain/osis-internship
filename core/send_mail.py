@@ -23,34 +23,38 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+
+"""
+Utility files for mail sending
+"""
 from django.core.mail import send_mail
 
 from django.utils.translation import ugettext_lazy as _
 
 
-def send_mail_after_encoding(person, learning_unit_name):
+def send_mail_after_scores_submission(persons, learning_unit_name):
     """
-    Send an email to the teacher after the end of the scores encoding of a learning unit
-    :param person: The Person object related to the teacher we want to send the mail to
-    :param learning_unit_name: The name of the learning unit where the scores were encoded
+    Send an email to all the teachers after the scores submission for a learning unit
+    :param persons: The list of the teachers of the leaning unit
+    :param learning_unit_name: The name of the learning unit for wihch scores were submitted
     """
 
-    subject = _('End of the encoding process for the scores of {0}.').format(learning_unit_name)
+    subject = _('Sumbmission of scores for {0}.').format(learning_unit_name)
     html_message = ''.join([
-        _('<h3>Dear {title} {name},</h3>').format(title=GENDER_TITLE_MAP[person.gender], name=person.last_name),
-        _('<p>We inform you that the scores encoding of {learning_unit_name} has ended.</p></br>').format(
+        _('<p>Hi, </p>'),
+        _('<p>We inform you that a scores submission was made for {learning_unit_name}.</p></br>').format(
             learning_unit_name=learning_unit_name),
         _('The OSIS Team<br>'),
         EMAIL_SIGNATURE,
     ])
     message = ''.join([
-        _('Dear {title} {name}, \n').format(title=GENDER_TITLE_MAP[person.gender], name=person.last_name),
-        _('We inform you that the scores encoding of {learning_unit_name} has ended.\n\n').format(
+        _('Hi, \n'),
+        _('We inform you that a scores submission was made for {learning_unit_name}.\n\n').format(
             learning_unit_name=learning_unit_name),
         _('The OSIS Team.'),
     ])
 
-    send_mail(subject=subject,message=message,recipient_list=[person.email],html_message=html_message)
+    send_mail(subject=subject,message=message,recipient_list=persons,html_message=html_message)
 
 
 GENDER_TITLE_MAP = {
