@@ -33,10 +33,11 @@ from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl.cell import get_column_letter
 from openpyxl import load_workbook
-from core.models import AcademicCalendar, SessionExam, ExamEnrollment, LearningUnitYear, Person, AcademicYear, Student,OfferYear,LearningUnitEnrollment,OfferEnrollment
+from core.models import *
 from core.forms import ScoreFileForm
 from django.contrib import messages
 from . import export_utils
+from . import views
 
 
 @login_required
@@ -126,6 +127,18 @@ def __save_xls_scores(request, file_name):
                                                     note_valide = False
                                         else:
                                             note_valide=False
+                                        #attention dans le xsl les choix pour la justification sont des libellés pas les valeurs BD
+                                        justification_xls=None
+                                        if row[8].value:
+                                            for k, v in dict(JUSTIFICATION_TYPES).items():
+                                                if v.lower() == str(row[8].value.lower()):
+                                                    justification_xls=k
+                                        justification_valide=True
+                                        if not note is None and (not justification_xls is None and not justification_xls=='CHEATING'):
+                                            note_valide = False
+                                            justification_valide=False
+                                            erreur_validation += "%s %s!" % (info_line, _('You can\'t encode a \'score\' AND an \'other score\' together (unless the \'other score\' is CHEATING)!'))
+
                                         if note_valide:
                                             if exam_enrollment.score_final != note:
                                                 nb_nouvelles_notes = nb_nouvelles_notes + 1
@@ -133,14 +146,8 @@ def __save_xls_scores(request, file_name):
                                                 nouveau_score=True
 
                                             exam_enrollment.score_final = note
-                                        #attention dans le xsl les choix pour la justification sont des libellés pas les valeurs BD
-                                        justification_xls=None
-                                        if row[8].value:
-                                            for k, v in dict(ExamEnrollment.JUSTIFICATION_TYPES).items():
-                                                if v.lower() == str(row[8].value.lower()):
-                                                    justification_xls=k
 
-                                        if not justification_xls is None and exam_enrollment.justification_final != justification_xls:
+                                        if justification_valide and not justification_xls is None and exam_enrollment.justification_final != justification_xls:
                                             nb_nouvelles_notes = nb_nouvelles_notes + 1
                                             nouvelles_notes = True
                                             nouveau_score=True
@@ -151,6 +158,7 @@ def __save_xls_scores(request, file_name):
                                             exam_enrollment.score_draft = note
                                             exam_enrollment.justification_draft = justification_xls
                                             exam_enrollment.save()
+                                            views.exam_enrollment_historic(request.user,exam_enrollment,note,justification_xls)
 
             data_line_number=data_line_number+1
 

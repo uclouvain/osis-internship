@@ -172,7 +172,7 @@ def list_notes_building(session_exam, learning_unit_year_id, academic_year, acad
                     score = "{0:.0f}".format(rec_exam_enrollment.score_final)
             justification = ""
             if rec_exam_enrollment.justification_final:
-                justification = dict(ExamEnrollment.JUSTIFICATION_TYPES)[rec_exam_enrollment.justification_final]
+                justification = dict(JUSTIFICATION_TYPES)[rec_exam_enrollment.justification_final]
             data.append([student.registration_id,
                            person.last_name,
                            person.first_name,
