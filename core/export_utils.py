@@ -85,7 +85,7 @@ def export_xls(request, session_id, learning_unit_year_id, academic_year_id, is_
                 score = "{0:.0f}".format(rec_exam_enrollment.score_final)
         justification = ""
         if rec_exam_enrollment.justification_final:
-            justification = dict(ExamEnrollment.JUSTIFICATION_TYPES)[rec_exam_enrollment.justification_final]
+            justification = dict(JUSTIFICATION_TYPES)[rec_exam_enrollment.justification_final]
         ws.append([str(academic_year),
                    str(session_exam.number_session),
                    session_exam.learning_unit_year.acronym,

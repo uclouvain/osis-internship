@@ -33,10 +33,11 @@ from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl.cell import get_column_letter
 from openpyxl import load_workbook
-from core.models import AcademicCalendar, SessionExam, ExamEnrollment, LearningUnitYear, Person, AcademicYear, Student,OfferYear,LearningUnitEnrollment,OfferEnrollment
+from core.models import *
 from core.forms import ScoreFileForm
 from django.contrib import messages
 from . import export_utils
+from . import views
 
 
 @login_required
@@ -133,7 +134,7 @@ def __save_xls_scores(request, file_name):
                                         #attention dans le xsl les choix pour la justification sont des libellés pas les valeurs BD
                                         justification_xls=None
                                         if row[8].value:
-                                            for k, v in dict(ExamEnrollment.JUSTIFICATION_TYPES).items():
+                                            for k, v in dict(JUSTIFICATION_TYPES).items():
                                                 print(row[8].value)
                                                 if v.lower() == str(row[8].value.lower()):
                                                     justification_xls=k
@@ -146,6 +147,7 @@ def __save_xls_scores(request, file_name):
                                         if nouveau_score :
                                             exam_enrollment.encoding_status = 'SUBMITTED'
                                             exam_enrollment.save()
+                                            views.exam_enrollment_historic(request.user,exam_enrollment,note,justification_xls)
 
             data_line_number=data_line_number+1
 
