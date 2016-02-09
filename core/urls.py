@@ -30,7 +30,7 @@ from . import views
 from . import export_utils
 from . import upload_xls_utils
 
-from core.views_osis import learning_unit
+from core.views_osis import learning_unit, offer
 
 
 urlpatterns = [
@@ -46,9 +46,9 @@ urlpatterns = [
     url(r'^login/$', login, name='login'),
     url(r'^logout/$', logout_then_login, name='logout'),
 
-    url(r'^offers/$', views.offers, name='offers'),
-    url(r'^offers/search$', views.offers_search, name='offers_search'),
-    url(r'^offers/([0-9]+)/$', views.offer_read, name='offer_read'),
+    url(r'^offers/$', offer.offers, name='offers'),
+    url(r'^offers/search$', offer.offers_search, name='offers_search'),
+    url(r'^offers/([0-9]+)/$', offer.offer_read, name='offer_read'),
 
     url(r'^catalog/$', views.catalog, name='catalog'),
 

@@ -1,7 +1,6 @@
 {% extends "layout.html" %}
 {% load percentage %}
 {% load i18n %}
-{% load list%}
 {% load score_display %}
 
 {% comment "License" %}
@@ -105,8 +104,17 @@
           </thead>
           <tbody>
           {% for enrollment in enrollments %}
-            <tr style="background-color:{{ enrollments|previous:forloop.counter }}">
-                <td>{% if enrollment.score_final or enrollment.justification_final %}
+            <tr style="background-color:
+                    {% ifchanged enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym %}
+                           {% cycle "white" "#E5F2FF" as rowcolors %}
+                       {% else %}
+                           {{ rowcolors }}
+                       {% endifchanged %}
+                    ">
+                <td>
+
+
+                  {% if enrollment.score_final or enrollment.justification_final %}
                         <span class="glyphicon glyphicon-ok" aria-hidden="true" style="color: green;"></span>
                     {% endif %}
                 </td>
