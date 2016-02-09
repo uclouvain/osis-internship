@@ -132,6 +132,11 @@ FIXTURE_DIRS = (
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+DEFAULT_FROM_EMAIL = 'osis-localhost@uclouvain.be'
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
+
 try  :
     from osis_backend.server_settings import *
 except ImportError:

@@ -27,6 +27,7 @@
 Utility file for Tests units
 """
 from django.contrib.auth.models import User
+from core.models import Person
 
 __author__ = 'glamarca'
 
@@ -74,3 +75,6 @@ def init_all_test_users() :
     init_admin_user()
     init__granted_user()
     init_valid_user()
+
+def email_destination_person() :
+    return Person(last_name='Test user',gender='M',email='gaetan.lamarca@uclouvain.be')
