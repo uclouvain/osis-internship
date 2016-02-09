@@ -367,14 +367,15 @@ class SessionExam(models.Model):
         return u"%s - %d" % (self.learning_unit_year, self.number_session)
 
 
-class ExamEnrollment(models.Model):
-    JUSTIFICATION_TYPES = (
+JUSTIFICATION_TYPES = (
         ('ABSENT',_('Absent')),
         ('CHEATING',_('Cheating')),
         ('ILL',_('Ill')),
         ('JUSTIFIED_ABSENCE',_('Justified absence')),
         ('SCORE_MISSING',_('Score missing')))
 
+
+class ExamEnrollment(models.Model):
     ENCODING_STATUS_LIST = (
         ('SAVED',_('Saved')),
         ('SUBMITTED',_('Submitted')))
@@ -443,3 +444,11 @@ class ExamEnrollment(models.Model):
 
     def __str__(self):
         return u"%s - %s" % (self.session_exam, self.learning_unit_enrollment)
+
+
+class ExamEnrollmentHistory(models.Model):
+    exam_enrollment     = models.ForeignKey(ExamEnrollment)
+    person              = models.ForeignKey(Person)
+    score_final         = models.DecimalField(max_digits=4, decimal_places=2, null=True)
+    justification_final = models.CharField(max_length=20, null=True, choices=JUSTIFICATION_TYPES)
+    modification_date   = models.DateTimeField(auto_now=True)
