@@ -129,7 +129,7 @@ def online_encoding_form(request, session_id):
                        'academic_year': academic_year,
                        'session': session,
                        'enrollments': enrollments,
-                       'justifications': ExamEnrollment.JUSTIFICATION_TYPES})
+                       'justifications': JUSTIFICATION_TYPES})
     elif request.method == 'POST':
         for enrollment in enrollments:
             score = request.POST.get('score_' + str(enrollment.id), None)
@@ -159,7 +159,7 @@ def online_double_encoding_form(request, session_id):
                        'academic_year': academic_year,
                        'session': session,
                        'enrollments': enrollments,
-                       'justifications': ExamEnrollment.JUSTIFICATION_TYPES})
+                       'justifications': JUSTIFICATION_TYPES})
     elif request.method == 'POST':
         for enrollment in enrollments:
             score = request.POST.get('score_' + str(enrollment.id), None)
@@ -193,7 +193,7 @@ def online_double_encoding_validation(request, session_id):
                        'academic_year': academic_year,
                        'session': session_exam,
                        'enrollments': enrollments,
-                       'justifications': ExamEnrollment.JUSTIFICATION_TYPES})
+                       'justifications': JUSTIFICATION_TYPES})
 
     elif request.method == 'POST':
         enrollments = ExamEnrollment.find_exam_enrollments(session_exam)
@@ -212,6 +212,8 @@ def online_double_encoding_validation(request, session_id):
             if justification:
                 enrollment.justification_final = justification
                 enrollment.justification_draft = enrollment.justification_final
+            if score or justification:
+                exam_enrollment_historic(request.user,enrollment,score,justification)
             enrollment.justification_reencoded = None
             enrollment.save()
 
@@ -239,6 +241,7 @@ def online_encoding_submission(request, session_id):
             if enrollment.justification_draft:
                 enrollment.justification_final = enrollment.justification_draft
             enrollment.save()
+            exam_enrollment_historic(request.user,enrollment,enrollment.score_final,enrollment.justification_final)
         else:
             all_encoded = False
 
@@ -285,3 +288,12 @@ def catalog(request):
 @login_required
 def export_xls(request, session_id, learning_unit_year_id, academic_year_id):
     return export_utils.export_xls(request, session_id, learning_unit_year_id, academic_year_id, request.user.groups.filter(name='FAC').exists())
+
+
+def exam_enrollment_historic(user, enrollment, score, justification):
+    exam_enrollment_history = ExamEnrollmentHistory()
+    exam_enrollment_history.exam_enrollment = enrollment
+    exam_enrollment_history.score_final = score
+    exam_enrollment_history.justification_final = justification
+    exam_enrollment_history.person = Person.objects.get(user=user)
+    exam_enrollment_history.save()
