@@ -146,6 +146,9 @@ class AcademicYear(models.Model):
     def find_academic_year(id):
         return AcademicYear.objects.get(pk=id)
 
+    def find_academic_years():
+        return AcademicYear.objects.all().order_by('year')
+
 
 EVENT_TYPE = (
     ('ACADEMIC_YEAR', 'Academic Year'),
@@ -293,6 +296,12 @@ class LearningUnitYear(models.Model):
         for lue in learning_unit_enrollment_list:
             offer_list.append(lue.offer_enrollment)
         return offer_list
+
+    def find_learning_unit_years_by_academic_year(academic_year):
+        return LearningUnitYear.objects.filter(academic_year=int(academic_year))
+
+    def find_learning_unit_year_by_id(learning_unit_id) :
+        return LearningUnitYear.objects.get(pk=learning_unit_id)
 
 
 class LearningUnitEnrollment(models.Model):
