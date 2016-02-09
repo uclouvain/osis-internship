@@ -45,7 +45,7 @@ class Person(models.Model):
     first_name  = models.CharField(max_length=50,blank=True, null=True)
     middle_name = models.CharField(max_length=50,blank=True, null=True)
     last_name   = models.CharField(max_length=50,blank=True, null=True)
-    email       = models.CharField(max_length=255, blank=True, null=True)
+    email       = models.EmailField(max_length=255, blank=True, null=True)
 
     def username(self):
         if self.user is None:
