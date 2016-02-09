@@ -118,6 +118,7 @@ def online_encoding(request, session_id):
 
 @login_required
 def online_encoding_form(request, session_id):
+    print('kkkk')
     session = SessionExam.find_session(session_id)
     enrollments = ExamEnrollment.find_exam_enrollments(session)
     if request.method == 'GET':
@@ -140,8 +141,10 @@ def online_encoding_form(request, session_id):
                     enrollment.score_draft = int(float(score))
             else:
                 enrollment.score_draft = enrollment.score_final
-
-            enrollment.justification_draft = request.POST.get('justification_' + str(enrollment.id), None)
+            if request.POST.get('justification_' + str(enrollment.id), None) == "None":
+                enrollment.justification_draft = None
+            else:
+                enrollment.justification_draft = request.POST.get('justification_' + str(enrollment.id), None)
             enrollment.save()
         return HttpResponseRedirect(reverse('online_encoding', args=(session_id,)))
 
@@ -170,8 +173,10 @@ def online_double_encoding_form(request, session_id):
                     enrollment.score_reencoded = int(float(score))
             else:
                 enrollment.score_reencoded = None
-
-            justification = request.POST.get('justification_' + str(enrollment.id), None)
+            if request.POST.get('justification_' + str(enrollment.id), None) == "None":
+                justification = None 
+            else:
+                justification = request.POST.get('justification_' + str(enrollment.id), None)
             if justification:
                 enrollment.justification_reencoded = justification
             else:
