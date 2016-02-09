@@ -113,6 +113,9 @@ class Structure(models.Model):
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)
 
+    def find_structures():
+        return Structure.objects.all().order_by('acronym')
+
 
 class AcademicYear(models.Model):
     external_id = models.CharField(max_length = 100,blank = True, null = True)
@@ -198,6 +201,12 @@ class OfferYear(models.Model):
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.offer.acronym)
+
+    def find_offer_years_by_academic_year(academic_year):
+        return OfferYear.objects.filter(academic_year=int(academic_year))
+
+    def find_offer_year_by_id(offer_year_id):
+        return OfferYear.objects.get(pk=offer_year_id)
 
 
 class ProgrammeManager(models.Model):
