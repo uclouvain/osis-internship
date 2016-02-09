@@ -41,20 +41,20 @@ def send_mail_after_scores_submission(persons, learning_unit_name):
 
     subject = _('Sumbmission of scores for {0}.').format(learning_unit_name)
     html_message = ''.join([
-        _('<p>Hi, </p>'),
-        _('<p>We inform you that a scores submission was made for {learning_unit_name}.</p></br>').format(
+        str(_('<p>Hi, </p>')),
+        str(_('<p>We inform you that a scores submission was made for {learning_unit_name}.</p></br>')).format(
             learning_unit_name=learning_unit_name),
-        _('The OSIS Team<br>'),
+        str(_('The OSIS Team<br>')),
         EMAIL_SIGNATURE,
     ])
     message = ''.join([
-        _('Hi, \n'),
-        _('We inform you that a scores submission was made for {learning_unit_name}.\n\n').format(
+        str(_('Hi, \n')),
+        str(_('We inform you that a scores submission was made for {learning_unit_name}.\n\n')).format(
             learning_unit_name=learning_unit_name),
-        _('The OSIS Team.'),
+        str(_('The OSIS Team.')),
     ])
 
-    send_mail(subject=subject,message=message,recipient_list=persons,html_message=html_message)
+    send_mail(subject=subject,message=message,recipient_list=[person.email for person in persons],html_message=html_message)
 
 
 GENDER_TITLE_MAP = {
