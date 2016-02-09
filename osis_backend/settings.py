@@ -133,7 +133,7 @@ FIXTURE_DIRS = (
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
 
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-EMAIL_FILE_PATH = '/tmp/osis-mails'
+SCREEN_SHOT_FOLDER = os.path.join(BASE_DIR, "core/tests/sent_mails")
 
 DEFAULT_FROM_EMAIL = 'osis-localhost@uclouvain.be'
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
