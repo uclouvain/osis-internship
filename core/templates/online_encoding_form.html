@@ -2,7 +2,6 @@
 {% load l10n %}
 {% load i18n %}
 {% load sum %}
-{% load list%}
 {% load score_display %}
 {% load programme_manager %}
 
@@ -89,7 +88,13 @@
             </thead>
             <tbody>
             {% for enrollment in enrollments %}
-              <tr  style="background-color:{{ enrollments|previous:forloop.counter }}">
+              <tr style="background-color:
+                      {% ifchanged enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym %}
+                             {% cycle "white" "#E5F2FF" as rowcolors %}
+                         {% else %}
+                             {{ rowcolors }}
+                         {% endifchanged %}
+                      ">
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
@@ -97,7 +102,7 @@
                 <td><input type="number" step="any" name="score_{{ enrollment.id }}" id="score_{{ enrollment.id }}" tabindex="{{ forloop.counter }}"
                            value="{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}" class="form-control" {% if enrollment.score_final or enrollment.justification_final %} disabled {% endif %} title="{% if enrollment.session_exam.learning_unit_year.decimal_scores %}{%trans 'Decimal score allowed'%}{%else%}{%trans 'Decimal score NOT allowed'%}{%endif%}"></td>
                 <td><select class="form-control" name="justification_{{ enrollment.id }}" id="justification_score_{{ enrollment.id }}" tabindex="{{ enrollments|length|sum:forloop.counter }}" {% if enrollment.score_final or enrollment.justification_final %} disabled {% endif %}>
-                      <option value=""></option>
+                      <option value="None"></option>
                       <option value="ABSENT" {% if enrollment.justification_draft == 'ABSENT' %}selected="selected"{% endif %}>{% trans 'Absent' %}</option>
                       <option value="CHEATING" {% if enrollment.justification_draft == 'CHEATING' %}selected="selected"{% endif %}>{% trans 'Cheating' %}</option>
                       <option value="SCORE_MISSING" {% if enrollment.justification_draft == 'SCORE_MISSING' %}selected="selected"{% endif %}>{% trans 'Score missing' %}</option>

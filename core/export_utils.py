@@ -32,7 +32,7 @@ from openpyxl.cell import get_column_letter
 from openpyxl.worksheet.datavalidation import DataValidation
 from openpyxl.styles import Fill, Color, Style, PatternFill
 from openpyxl.worksheet import Worksheet, ColumnDimension, RowDimension
-from core.models import AcademicCalendar, SessionExam, ExamEnrollment, LearningUnitYear, Person, AcademicYear
+from core.models import *
 from django.utils.dateformat import DateFormat
 from django.utils.formats import get_format
 from django.utils.translation import ugettext_lazy as _
@@ -85,7 +85,7 @@ def export_xls(request, session_id, learning_unit_year_id, academic_year_id, is_
                 score = "{0:.0f}".format(rec_exam_enrollment.score_final)
         justification = ""
         if rec_exam_enrollment.justification_final:
-            justification = dict(ExamEnrollment.JUSTIFICATION_TYPES)[rec_exam_enrollment.justification_final]
+            justification = dict(JUSTIFICATION_TYPES)[rec_exam_enrollment.justification_final]
         ws.append([str(academic_year),
                    str(session_exam.number_session),
                    session_exam.learning_unit_year.acronym,
@@ -151,7 +151,6 @@ def __coloring_non_editable(ws, cptr, encoding_status, score, justification):
     :return:
     """
     style_no_modification = Style(fill=PatternFill(patternType='solid', fgColor=Color('C1C1C1')))
-    style_submitted = Style(fill=PatternFill(patternType='solid', fgColor=Color('FF9900')))
 
     # coloration des colonnes qu'on ne doit pas modifier
     i=1
@@ -159,12 +158,8 @@ def __coloring_non_editable(ws, cptr, encoding_status, score, justification):
         if i< 8 or i>9:
             ws.cell(row=cptr, column=i).style = style_no_modification
         else:
-            if encoding_status == 'SUBMITTED':
-                ws.cell(row=cptr, column=8).style = style_submitted
-                ws.cell(row=cptr, column=9).style = style_submitted
-            else:
-                if not score is None:
-                    ws.cell(row=cptr, column=8).style = style_no_modification
-                if not(justification is None):
-                    ws.cell(row=cptr, column=9).style = style_no_modification
+            if not( score is None and justification is None):
+                ws.cell(row=cptr, column=8).style = style_no_modification
+                ws.cell(row=cptr, column=9).style = style_no_modification
+
         i=i+1

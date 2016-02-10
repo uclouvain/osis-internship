@@ -29,6 +29,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from . import pdf_utils
 from . import export_utils
+from core import send_mail
 from core.models import *
 
 
@@ -118,6 +119,7 @@ def online_encoding(request, session_id):
 
 @login_required
 def online_encoding_form(request, session_id):
+    print('kkkk')
     session = SessionExam.find_session(session_id)
     enrollments = ExamEnrollment.find_exam_enrollments(session)
     if request.method == 'GET':
@@ -129,7 +131,7 @@ def online_encoding_form(request, session_id):
                        'academic_year': academic_year,
                        'session': session,
                        'enrollments': enrollments,
-                       'justifications': ExamEnrollment.JUSTIFICATION_TYPES})
+                       'justifications': JUSTIFICATION_TYPES})
     elif request.method == 'POST':
         for enrollment in enrollments:
             score = request.POST.get('score_' + str(enrollment.id), None)
@@ -140,8 +142,10 @@ def online_encoding_form(request, session_id):
                     enrollment.score_draft = int(float(score))
             else:
                 enrollment.score_draft = enrollment.score_final
-
-            enrollment.justification_draft = request.POST.get('justification_' + str(enrollment.id), None)
+            if request.POST.get('justification_' + str(enrollment.id), None) == "None":
+                enrollment.justification_draft = None
+            else:
+                enrollment.justification_draft = request.POST.get('justification_' + str(enrollment.id), None)
             enrollment.save()
         return HttpResponseRedirect(reverse('online_encoding', args=(session_id,)))
 
@@ -159,7 +163,7 @@ def online_double_encoding_form(request, session_id):
                        'academic_year': academic_year,
                        'session': session,
                        'enrollments': enrollments,
-                       'justifications': ExamEnrollment.JUSTIFICATION_TYPES})
+                       'justifications': JUSTIFICATION_TYPES})
     elif request.method == 'POST':
         for enrollment in enrollments:
             score = request.POST.get('score_' + str(enrollment.id), None)
@@ -170,8 +174,10 @@ def online_double_encoding_form(request, session_id):
                     enrollment.score_reencoded = int(float(score))
             else:
                 enrollment.score_reencoded = None
-
-            justification = request.POST.get('justification_' + str(enrollment.id), None)
+            if request.POST.get('justification_' + str(enrollment.id), None) == "None":
+                justification = None 
+            else:
+                justification = request.POST.get('justification_' + str(enrollment.id), None)
             if justification:
                 enrollment.justification_reencoded = justification
             else:
@@ -193,7 +199,7 @@ def online_double_encoding_validation(request, session_id):
                        'academic_year': academic_year,
                        'session': session_exam,
                        'enrollments': enrollments,
-                       'justifications': ExamEnrollment.JUSTIFICATION_TYPES})
+                       'justifications': JUSTIFICATION_TYPES})
 
     elif request.method == 'POST':
         enrollments = ExamEnrollment.find_exam_enrollments(session_exam)
@@ -212,6 +218,8 @@ def online_double_encoding_validation(request, session_id):
             if justification:
                 enrollment.justification_final = justification
                 enrollment.justification_draft = enrollment.justification_final
+            if score or justification:
+                exam_enrollment_historic(request.user,enrollment,score,justification)
             enrollment.justification_reencoded = None
             enrollment.save()
 
@@ -239,6 +247,7 @@ def online_encoding_submission(request, session_id):
             if enrollment.justification_draft:
                 enrollment.justification_final = enrollment.justification_draft
             enrollment.save()
+            exam_enrollment_historic(request.user,enrollment,enrollment.score_final,enrollment.justification_final)
         else:
             all_encoded = False
 
@@ -246,6 +255,12 @@ def online_encoding_submission(request, session_id):
         session_exam.status = 'CLOSED'
         session_exam.save()
 
+    #Send mail to all the teachers of the submitted learning unit on any submission
+    learning_unit = session_exam.learning_unit_year.learning_unit
+    attributions = Attribution.objects.filter(learning_unit=learning_unit)
+    persons = [attribution.tutor.person for attribution in attributions if attribution.function == 'PROFESSOR']
+    send_mail.send_mail_after_scores_submission(persons,learning_unit.acronym)
+    
     return HttpResponseRedirect(reverse('online_encoding', args=(session_id,)))
 
 
@@ -287,55 +302,10 @@ def export_xls(request, session_id, learning_unit_year_id, academic_year_id):
     return export_utils.export_xls(request, session_id, learning_unit_year_id, academic_year_id, request.user.groups.filter(name='FAC').exists())
 
 
-def offers(request):
-    academic_year = None
-    faculty = None
-    code = ""
-
-    faculties = Structure.objects.all().order_by('acronym')
-    academic_years = AcademicYear.objects.all().order_by('year')
-
-    academic_year_calendar = AcademicCalendar.current_academic_year()
-    if not(academic_year_calendar is None):
-        academic_year = academic_year_calendar.id
-    return render(request, "offers.html", {'faculties':      faculties,
-                                           'academic_year':  academic_year,
-                                           'faculty':        faculty,
-                                           'code':           code,
-                                           'academic_years': academic_years,
-                                           'offers':         [] ,
-                                           'init':           "1"})
-
-
-def offers_search(request):
-    faculty = request.GET['faculty']
-    academic_year = request.GET['academic_year']
-    code = request.GET['code']
-
-    faculties = Structure.objects.all().order_by('acronym')
-    academic_years = AcademicYear.objects.all().order_by('year')
-
-    if academic_year is None:
-        academic_year_calendar = AcademicCalendar.current_academic_year()
-        if not(academic_year_calendar is None):
-            academic_year = academic_year_calendar.id
-
-    query = OfferYear.objects.filter(academic_year=int(academic_year))
-
-    if not(faculty is None) and faculty != "*" :
-        query = query.filter(structure=int(faculty))
-
-    if not(code is None) and len(code) > 0  :
-        query = query.filter(acronym__startswith=code)
-
-    return render(request, "offers.html", {'faculties':      faculties,
-                                           'academic_year':  int(academic_year),
-                                           'faculty':        int(faculty),
-                                           'code':           code,
-                                           'academic_years': academic_years,
-                                           'offers':         query ,
-                                           'init':           "0"})
-
-def offer_read(request,offer_year_id):
-    offer_year = OfferYear.objects.get(pk=offer_year_id)
-    return render(request, "offer.html", {'offer':     offer_year})
+def exam_enrollment_historic(user, enrollment, score, justification):
+    exam_enrollment_history = ExamEnrollmentHistory()
+    exam_enrollment_history.exam_enrollment = enrollment
+    exam_enrollment_history.score_final = score
+    exam_enrollment_history.justification_final = justification
+    exam_enrollment_history.person = Person.find_person_by_user(user)
+    exam_enrollment_history.save()

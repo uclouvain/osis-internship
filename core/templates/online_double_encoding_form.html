@@ -2,7 +2,6 @@
 {% load l10n %}
 {% load i18n %}
 {% load percentage %}
-{% load list%}
 {% load programme_manager %}
 {% load sum %}
 {% load score_display %}
@@ -88,7 +87,13 @@
             </thead>
             <tbody>
             {% for enrollment in enrollments %}
-              <tr style="background-color:{{ enrollments|previous:forloop.counter }}">
+              <tr style="background-color:
+                      {% ifchanged enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym %}
+                             {% cycle "white" "#E5F2FF" as rowcolors %}
+                         {% else %}
+                             {{ rowcolors }}
+                         {% endifchanged %}
+                      ">
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
@@ -100,7 +105,7 @@
                 <td>
                    <input type="hidden" id="justification_draft_{{ enrollment.id }}" value="{{ enrollment.justification_draft }}">
                    <select class="form-control" name="justification_{{ enrollment.id }}" id="double_justification_score_{{ enrollment.id }}" tabindex="{{ enrollments|length|sum:forloop.counter }}" {% if enrollment.score_final or enrollment.justification_final %} disabled {% endif %}>
-                      <option value=""></option>
+                      <option value="None"></option>
                       <option value="ABSENT">{% trans 'Absent' %}</option>
                       <option value="CHEATING">{% trans 'Cheating' %}</option>
                       <option value="SCORE_MISSING">{% trans 'Score missing' %}</option>
