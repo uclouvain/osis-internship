@@ -20,7 +20,7 @@ def create_trigger_for_changed_field(table_name):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0005_auto_20160209_1140'),
+        ('core', '0008_auto_20160209_1659'),
     ]
 
     operations = [
