@@ -38,14 +38,14 @@ class Person(models.Model):
         ('U',_('Unknown')))
 
     external_id = models.CharField(max_length=100, blank=True, null=True)
-    user        = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    user        = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
     global_id   = models.CharField(max_length=10, blank=True, null=True)
     gender      = models.CharField(max_length=1, blank=True, null=True, choices=GENDER_CHOICES, default='U')
     national_id = models.CharField(max_length=25,blank=True, null=True)
     first_name  = models.CharField(max_length=50,blank=True, null=True)
     middle_name = models.CharField(max_length=50,blank=True, null=True)
     last_name   = models.CharField(max_length=50,blank=True, null=True)
-    email       = models.CharField(max_length=255, blank=True, null=True)
+    email       = models.EmailField(max_length=255, blank=True, null=True)
 
     def username(self):
         if self.user is None:
