@@ -13,14 +13,14 @@ def create_trigger_for_changed_field(table_name):
     :param table_name: Nom de la table/modèle dans laquelle il faut créer un trigger.
     """
     table_name = table_name.lower()
-    return "CREATE TRIGGER update_" + table_name + "_modtime BEFORE UPDATE ON core_" + table_name + " FOR EACH ROW EXECUTE PROCEDURE update_changed_column();"
+    return "CREATE TRIGGER update_" + table_name + "_modtime BEFORE INSERT OR UPDATE ON core_" + table_name + " FOR EACH ROW EXECUTE PROCEDURE update_changed_column();"
 
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0003_auto_20160122_1201'),
+        ('core', '0005_auto_20160209_1140'),
     ]
 
     operations = [
@@ -29,14 +29,14 @@ class Migration(migrations.Migration):
         RETURNS TRIGGER AS $$
         BEGIN
             -- Si on ne fournit pas de nouvelle date
-            IF (NEW.changed = NULL or OLD.changed = NEW.changed) THEN
-                NEW.changed = now();
+            IF (NEW.changed IS NULL) OR (NEW.changed = OLD.changed) THEN
+                NEW.changed := now();
                 RETURN NEW;
             END IF;
             -- Condition ci-dessous pour si jamais le record a été modifié entre
             -- le début et la fin de (ou pendant) l'exécution du script de synchronisation
-            IF (old.changed > NEW.changed) THEN
-                NEW.changed = OLD.changed;
+            IF (OLD.changed > NEW.changed) THEN
+                NEW.changed := OLD.changed;
             END IF;
             RETURN NEW;
         END;
