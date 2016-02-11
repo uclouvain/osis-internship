@@ -34,15 +34,18 @@
 {% block content %}
 <div class="page-header">
   <h2>{{ offer.title }}</h2>
+  {% if offer.offer_year_sibling %}
+  <h3>{% trans 'With professional focus' %}</h3>
+  {% endif %}
 </div>
 <div class="panel panel-default">
   <div class="panel-body">
     <ul class="nav nav-tabs">
-      <li class="active"><a data-toggle="tab" href="#informations">{% trans 'Informations'%}</a></li>
+      <li class="active"><a data-toggle="tab" href="#identification">{% trans 'Identification'%}</a></li>
     </ul>
     <div class="tab-content">
       <p>
-        <div id="informations" class="tab-pane fade in active">
+        <div id="identification" class="tab-pane fade in active">
           <div class="row">
             <div class="col-md-3">
               <label for="title">{% trans 'Academic year'%}</label><br>
@@ -62,4 +65,50 @@
     </div>
   </div>
 </div>
+{% if offer.offer_year_children or offer.offer_year_sibling %}
+<div class="panel panel-default">
+  <div class="panel-body">
+    {% if offer.offer_year_children %}
+    <div class="row">
+      <div class="col-md-12">
+        <label>{% trans 'Focuses' %}</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <table class="table table-striped table-hover">
+          <thead>
+            <td>{% trans 'Acronym' %}</td>
+            <td>{% trans 'Title' %}</td>
+          </thead>
+          {% for o in offer.offer_year_children%}
+          <tr><td><a href="{% url 'offer_read' o.id %}">{{ o.acronym }}</a></td><td>{{ o.title }}</td></tr>
+          {% endfor%}
+      </table>
+      </div>
+    </div>
+    {% endif %}
+    {% if offer.offer_year_sibling %}
+    <div class="row">
+      <div class="col-md-12">
+        <label>{% trans 'Other sibling offers' %}</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <table class="table table-striped table-hover">
+          <thead>
+            <td>{% trans 'Acronym' %}</td>
+            <td>{% trans 'Title' %}</td>
+          </thead>
+          {% for o in offer.offer_year_sibling%}
+          <tr><td><a href="{% url 'offer_read' o.id %}">{{ o.acronym }}</a></td><td>{{ o.title }}</td></tr>
+          {% endfor%}
+      </table>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+  {% endif %}
 {% endblock %}
