@@ -37,22 +37,29 @@ class Person(models.Model):
         ('M',_('Male')),
         ('U',_('Unknown')))
 
-    external_id = models.CharField(max_length = 100,blank = True, null = True)
-    user        = models.OneToOneField(User, on_delete=models.CASCADE, null = True)
-    global_id   = models.CharField(max_length = 10,blank = True, null = True)
-    gender      = models.CharField(max_length = 1, blank = True, null = True, choices = GENDER_CHOICES, default = 'U')
-    national_id = models.CharField(max_length = 25,blank = True, null = True)
-    first_name  = models.CharField(max_length = 50,blank = True, null = True)
-    middle_name = models.CharField(max_length = 50,blank = True, null = True)
-    last_name   = models.CharField(max_length = 50,blank = True, null = True)
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    changed     = models.DateTimeField(null = True)
+    user        = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
+    global_id   = models.CharField(max_length=10, blank=True, null=True)
+    gender      = models.CharField(max_length=1, blank=True, null=True, choices=GENDER_CHOICES, default='U')
+    national_id = models.CharField(max_length=25,blank=True, null=True)
+    first_name  = models.CharField(max_length=50,blank=True, null=True)
+    middle_name = models.CharField(max_length=50,blank=True, null=True)
+    last_name   = models.CharField(max_length=50,blank=True, null=True)
+    email       = models.EmailField(max_length=255, blank=True, null=True)
 
     def username(self):
-        if self.user is None :
+        if self.user is None:
             return None
         return self.user.username
 
+    @staticmethod
     def find_person(person_id):
         return Person.objects.get(id=person_id)
+
+    @staticmethod
+    def find_person_by_user(user):
+        return Person.objects.get(user=user)
 
     def __str__(self):
         first_name = ""
@@ -69,9 +76,11 @@ class Person(models.Model):
 
 
 class Tutor(models.Model):
-    external_id = models.CharField(max_length = 100, blank = True, null = True)
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    changed     = models.DateTimeField(null=True)
     person      = models.ForeignKey(Person)
 
+    @staticmethod
     def find_by_user(user):
         try:
             person = Person.objects.filter(user=user)
@@ -85,7 +94,8 @@ class Tutor(models.Model):
 
 
 class Student(models.Model):
-    external_id     = models.CharField(max_length = 100,blank = True, null = True)
+    external_id     = models.CharField(max_length=100, blank=True, null=True)
+    changed         = models.DateTimeField(null=True)
     registration_id = models.CharField(max_length=10)
     person          = models.ForeignKey(Person)
 
@@ -94,49 +104,46 @@ class Student(models.Model):
 
 
 class Organization(models.Model):
-    external_id = models.CharField(max_length = 100, blank = True, null = True)
-    name        = models.CharField(max_length = 255)
-    acronym     = models.CharField(max_length = 15)
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    changed     = models.DateTimeField(null=True)
+    name        = models.CharField(max_length=255)
+    acronym     = models.CharField(max_length=15)
 
     def __str__(self):
         return self.name
 
 
 class Structure(models.Model):
-    external_id  = models.CharField(max_length = 100, blank = True, null = True)
-    acronym      = models.CharField(max_length = 15)
-    title        = models.CharField(max_length = 255)
-    organization = models.ForeignKey(Organization, null = True)
-    part_of      = models.ForeignKey('self', null = True, blank = True)
+    external_id  = models.CharField(max_length=100, blank=True, null=True)
+    changed      = models.DateTimeField(null=True)
+    acronym      = models.CharField(max_length=15)
+    title        = models.CharField(max_length=255)
+    organization = models.ForeignKey(Organization, null=True)
+    part_of      = models.ForeignKey('self', null=True, blank=True)
+
+    @staticmethod
+    def find_structures():
+        return Structure.objects.all().order_by('acronym')
 
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)
 
 
-class ProgrammeManager(models.Model):
-    person  = models.ForeignKey(Person)
-    faculty = models.ForeignKey(Structure)
-
-    def find_faculty_by_user(user):
-        programme_manager = ProgrammeManager.objects.filter(person__user=user).first()
-        if programme_manager:
-            return programme_manager.faculty
-        else:
-            return None
-
-    def __str__(self):
-        return u"%s - %s" % (self.person, self.faculty)
-
-
 class AcademicYear(models.Model):
-    external_id = models.CharField(max_length = 100,blank = True, null = True)
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    changed     = models.DateTimeField(null=True)
     year        = models.IntegerField()
+
+    @staticmethod
+    def find_academic_year(id):
+        return AcademicYear.objects.get(pk=id)
+
+    @staticmethod
+    def find_academic_years():
+        return AcademicYear.objects.all().order_by('year')
 
     def __str__(self):
         return u"%s-%s" % (self.year, self.year + 1)
-
-    def find_academic_year(id):
-        return AcademicYear.objects.get(pk=id)
 
 
 EVENT_TYPE = (
@@ -159,21 +166,26 @@ EVENT_TYPE = (
 
 
 class AcademicCalendar(models.Model):
-    external_id   = models.CharField(max_length = 100,blank = True, null = True)
+    external_id   = models.CharField(max_length=100, blank=True, null=True)
+    changed       = models.DateTimeField(null=True)
     academic_year = models.ForeignKey(AcademicYear)
-    event_type    = models.CharField(max_length = 50, choices = EVENT_TYPE)
-    title         = models.CharField(max_length = 50, blank = True, null = True)
-    description   = models.TextField(blank = True, null = True)
-    start_date    = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
-    end_date      = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
+    event_type    = models.CharField(max_length=50, choices=EVENT_TYPE)
+    title         = models.CharField(max_length=50, blank=True, null=True)
+    description   = models.TextField(blank=True, null=True)
+    start_date    = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
+    end_date      = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
 
+    @staticmethod
     def current_academic_year():
-        academic_calendar = AcademicCalendar.objects.filter(event_type='ACADEMIC_YEAR').filter(start_date__lte=timezone.now()).filter(end_date__gte=timezone.now()).first()
+        academic_calendar = AcademicCalendar.objects.filter(event_type='ACADEMIC_YEAR')\
+                                                    .filter(start_date__lte=timezone.now())\
+                                                    .filter(end_date__gte=timezone.now()).first()
         if academic_calendar:
             return academic_calendar.academic_year
         else:
             return None
 
+    @staticmethod
     def find_academic_calendar_by_event_type(academic_year_id, session_number):
         event_type_criteria = "EXAM_SCORES_SUBMISSION_SESS_"+str(session_number)
         return AcademicCalendar.objects.get(academic_year=academic_year_id, event_type=event_type_criteria)
@@ -183,9 +195,10 @@ class AcademicCalendar(models.Model):
 
 
 class Offer(models.Model):
-    external_id = models.CharField(max_length = 100,blank = True, null = True)
-    acronym     = models.CharField(max_length = 15)
-    title       = models.CharField(max_length = 255)
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    changed     = models.DateTimeField(null=True)
+    acronym     = models.CharField(max_length=15)
+    title       = models.CharField(max_length=255)
 
     def save(self, *args, **kwargs):
         self.acronym = self.acronym.upper()
@@ -200,28 +213,55 @@ class Offer(models.Model):
 
 
 class OfferYear(models.Model):
-    external_id   = models.CharField(max_length = 100,blank = True, null = True)
+    external_id   = models.CharField(max_length=100, blank=True, null=True)
+    changed       = models.DateTimeField(null=True)
     offer         = models.ForeignKey(Offer)
     academic_year = models.ForeignKey(AcademicYear)
-    acronym       = models.CharField(max_length = 15)
-    title         = models.CharField(max_length = 255)
+    acronym       = models.CharField(max_length=15)
+    title         = models.CharField(max_length=255)
     structure     = models.ForeignKey(Structure)
+
+    @staticmethod
+    def find_offer_years_by_academic_year(academic_year):
+        return OfferYear.objects.filter(academic_year=int(academic_year))
+
+    @staticmethod
+    def find_offer_year_by_id(offer_year_id):
+        return OfferYear.objects.get(pk=offer_year_id)
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.offer.acronym)
 
-    # This function should not be here.
-    def is_programme_manager(self,user):
+
+class ProgrammeManager(models.Model):
+    changed = models.DateTimeField(null=True)
+    person  = models.ForeignKey(Person)
+    faculty = models.ForeignKey(Structure)
+
+    @staticmethod
+    def find_faculty_by_user(user):
+        programme_manager = ProgrammeManager.objects.filter(person__user=user).first()
+        if programme_manager:
+            return programme_manager.faculty
+        else:
+            return None
+
+    @staticmethod
+    def is_programme_manager(user, structure):
         person = Person.objects.get(user=user)
         if user:
-            programme_manager = ProgrammeManager.objects.filter(person=person.id, faculty=self.structure)
+            programme_manager = ProgrammeManager.objects.filter(person=person.id, faculty=structure)
             if programme_manager:
                 return True
         return False
 
+    def __str__(self):
+        return u"%s - %s" % (self.person, self.faculty)
+
 
 class OfferEnrollment(models.Model):
-    external_id     = models.CharField(max_length = 100,blank = True, null = True)
+    external_id     = models.CharField(max_length=100, blank=True, null=True)
+    changed         = models.DateTimeField(null=True)
     date_enrollment = models.DateField()
     offer_year      = models.ForeignKey(OfferYear)
     student         = models.ForeignKey(Student)
@@ -231,29 +271,32 @@ class OfferEnrollment(models.Model):
 
 
 class OfferYearCalendar(models.Model):
-    external_id       = models.CharField(max_length = 100,blank = True, null = True)
+    external_id       = models.CharField(max_length=100, blank=True, null=True)
+    changed           = models.DateTimeField(null=True)
     academic_calendar = models.ForeignKey(AcademicCalendar)
     offer_year        = models.ForeignKey(OfferYear)
-    event_type        = models.CharField(max_length = 50, choices = EVENT_TYPE)
-    start_date        = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
-    end_date          = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
+    event_type        = models.CharField(max_length=50, choices=EVENT_TYPE)
+    start_date        = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
+    end_date          = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
 
+    @staticmethod
     def current_session_exam():
-        return OfferYearCalendar.objects.filter(event_type__startswith='EXAM_SCORES_SUBMISSION_SESS_'
-                                       ).filter(start_date__lte=timezone.now()
-                                       ).filter(end_date__gte=timezone.now()).first()
+        return OfferYearCalendar.objects.filter(event_type__startswith='EXAM_SCORES_SUBMISSION_SESS_')\
+                                        .filter(start_date__lte=timezone.now())\
+                                        .filter(end_date__gte=timezone.now()).first()
 
     def __str__(self):
-        return u"%s - %s" % (self.academic_calendar, self.offer_year)
+        return u"%s - %s - %s" % (self.academic_calendar, self.offer_year, self.event_type)
 
 
 class LearningUnit(models.Model):
-    external_id = models.CharField(max_length = 100,blank = True, null = True)
-    acronym     = models.CharField(max_length = 15)
-    title       = models.CharField(max_length = 255)
-    description = models.TextField(blank = True, null = True)
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    changed     = models.DateTimeField(null=True)
+    acronym     = models.CharField(max_length=15)
+    title       = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
     start_year  = models.IntegerField()
-    end_year    = models.IntegerField(blank = True, null = True)
+    end_year    = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)
@@ -264,10 +307,11 @@ class Attribution(models.Model):
         ('COORDINATOR','Coordinator'),
         ('PROFESSOR','Professor'))
 
-    external_id   = models.CharField(max_length = 100,blank = True, null = True)
-    start_date    = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
-    end_date      = models.DateField(auto_now = False, blank = True, null = True, auto_now_add = False)
-    function      = models.CharField(max_length = 15, blank = True, null = True,choices = FUNCTION_CHOICES, default = 'UNKNOWN')
+    external_id   = models.CharField(max_length=100, blank=True, null=True)
+    changed       = models.DateTimeField(null=True)
+    start_date    = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
+    end_date      = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
+    function      = models.CharField(max_length=15, blank=True, null=True, choices=FUNCTION_CHOICES, default='UNKNOWN')
     learning_unit = models.ForeignKey(LearningUnit)
     tutor         = models.ForeignKey(Tutor)
 
@@ -276,17 +320,16 @@ class Attribution(models.Model):
 
 
 class LearningUnitYear(models.Model):
-    external_id    = models.CharField(max_length = 100,blank = True, null = True)
-    acronym        = models.CharField(max_length = 15)
-    title          = models.CharField(max_length = 255)
-    credits        = models.DecimalField(max_digits = 5, decimal_places = 2, blank = True, null = True)
-    decimal_scores = models.BooleanField(default = False)
+    external_id    = models.CharField(max_length=100, blank=True, null=True)
+    changed        = models.DateTimeField(null=True)
+    acronym        = models.CharField(max_length=15)
+    title          = models.CharField(max_length=255)
+    credits        = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    decimal_scores = models.BooleanField(default=False)
     academic_year  = models.ForeignKey(AcademicYear)
     learning_unit  = models.ForeignKey(LearningUnit)
 
-    def __str__(self):
-        return u"%s - %s" % (self.academic_year,self.learning_unit)
-
+    @staticmethod
     def find_offer_enrollments(learning_unit_year_id):
         learning_unit_enrollment_list= LearningUnitEnrollment.objects.filter(learning_unit_year=learning_unit_year_id)
         offer_list = []
@@ -294,9 +337,21 @@ class LearningUnitYear(models.Model):
             offer_list.append(lue.offer_enrollment)
         return offer_list
 
+    @staticmethod
+    def find_learning_unit_years_by_academic_year(academic_year):
+        return LearningUnitYear.objects.filter(academic_year=int(academic_year))
+
+    @staticmethod
+    def find_learning_unit_year_by_id(learning_unit_id) :
+        return LearningUnitYear.objects.get(pk=learning_unit_id)
+
+    def __str__(self):
+        return u"%s - %s" % (self.academic_year,self.learning_unit)
+
 
 class LearningUnitEnrollment(models.Model):
-    external_id        = models.CharField(max_length = 100,blank = True, null = True)
+    external_id        = models.CharField(max_length=100, blank=True, null=True)
+    changed            = models.DateTimeField(null=True)
     date_enrollment    = models.DateField()
     learning_unit_year = models.ForeignKey(LearningUnitYear)
     offer_enrollment   = models.ForeignKey(OfferEnrollment)
@@ -319,30 +374,35 @@ class SessionExam(models.Model):
         ('OPEN', _('Open')),
         ('CLOSED', _('Closed')))
 
-    external_id         = models.CharField(max_length = 100,blank = True, null = True)
+    external_id         = models.CharField(max_length=100, blank=True, null=True)
+    changed             = models.DateTimeField(null=True)
     number_session      = models.IntegerField()
-    status              = models.CharField(max_length = 10,choices = SESSION_STATUS)
+    status              = models.CharField(max_length=10,choices=SESSION_STATUS)
     learning_unit_year  = models.ForeignKey(LearningUnitYear)
     offer_year_calendar = models.ForeignKey(OfferYearCalendar)
 
+    @staticmethod
     def current_session_exam():
         offer_calendar = OfferYearCalendar.current_session_exam()
         session_exam = SessionExam.objects.filter(offer_year_calendar=offer_calendar).first()
         return session_exam
 
+    @staticmethod
     def find_session(id):
         return SessionExam.objects.get(pk=id)
 
+    @staticmethod
     def find_sessions_by_tutor(tutor, academic_year):
         learning_units = Attribution.objects.filter(tutor=tutor).values('learning_unit')
-        return SessionExam.objects.filter(status='OPEN'
-                                 ).filter(learning_unit_year__academic_year=academic_year
-                                 ).filter(learning_unit_year__learning_unit__in=learning_units)
+        return SessionExam.objects.filter(~models.Q(status='IDLE'))\
+                                  .filter(learning_unit_year__academic_year=academic_year)\
+                                  .filter(learning_unit_year__learning_unit__in=learning_units)
 
+    @staticmethod
     def find_sessions_by_faculty(faculty, academic_year):
-        return SessionExam.objects.filter(status='OPEN'
-                                 ).filter(offer_year_calendar__offer_year__academic_year=academic_year
-                                 ).filter(offer_year_calendar__offer_year__structure=faculty)
+        return SessionExam.objects.filter(~models.Q(status='IDLE'))\
+                                  .filter(offer_year_calendar__offer_year__academic_year=academic_year)\
+                                  .filter(offer_year_calendar__offer_year__structure=faculty)
 
     @property
     def offer(self):
@@ -352,7 +412,7 @@ class SessionExam(models.Model):
 
     @property
     def progress(self):
-        enrollments = list(ExamEnrollment.find_exam_enrollments(self.id))
+        enrollments = list(ExamEnrollment.find_exam_enrollments(self))
 
         if enrollments:
             progress = 0
@@ -367,36 +427,40 @@ class SessionExam(models.Model):
         return u"%s - %d" % (self.learning_unit_year, self.number_session)
 
 
-class ExamEnrollment(models.Model):
-    JUSTIFICATION_TYPES = (
+JUSTIFICATION_TYPES = (
         ('ABSENT',_('Absent')),
         ('CHEATING',_('Cheating')),
         ('ILL',_('Ill')),
         ('JUSTIFIED_ABSENCE',_('Justified absence')),
         ('SCORE_MISSING',_('Score missing')))
 
-    ENCODING_STATUS = (
+
+class ExamEnrollment(models.Model):
+    ENCODING_STATUS_LIST = (
         ('SAVED',_('Saved')),
         ('SUBMITTED',_('Submitted')))
 
-    external_id              = models.CharField(max_length = 100,blank = True, null = True)
-    score_draft              = models.DecimalField(max_digits = 4, decimal_places = 2, blank = True, null = True, validators=[MaxValueValidator(20), MinValueValidator(0)])
-    score_reencoded          = models.DecimalField(max_digits = 4, decimal_places = 2, blank = True, null = True, validators=[MaxValueValidator(20), MinValueValidator(0)])
-    score_final              = models.DecimalField(max_digits = 4, decimal_places = 2, blank = True, null = True, validators=[MaxValueValidator(20), MinValueValidator(0)])
-    justification_draft      = models.CharField(max_length = 20, blank = True, null = True,choices = JUSTIFICATION_TYPES)
-    justification_reencoded  = models.CharField(max_length = 20, blank = True, null = True,choices = JUSTIFICATION_TYPES)
-    justification_final      = models.CharField(max_length = 20, blank = True, null = True,choices = JUSTIFICATION_TYPES)
-    encoding_status          = models.CharField(max_length = 9, blank = True, null = True,choices = ENCODING_STATUS)
+    external_id              = models.CharField(max_length=100, blank=True, null=True)
+    changed                  = models.DateTimeField(null=True)
+    score_draft              = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
+    score_reencoded          = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
+    score_final              = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
+    justification_draft      = models.CharField(max_length=20, blank=True, null=True, choices=JUSTIFICATION_TYPES)
+    justification_reencoded  = models.CharField(max_length=20, blank=True, null=True, choices=JUSTIFICATION_TYPES)
+    justification_final      = models.CharField(max_length=20, blank=True, null=True, choices=JUSTIFICATION_TYPES)
+    encoding_status          = models.CharField(max_length=9, blank=True, null=True, choices=ENCODING_STATUS_LIST)
     session_exam             = models.ForeignKey(SessionExam)
     learning_unit_enrollment = models.ForeignKey(LearningUnitEnrollment)
 
+    @staticmethod
     def calculate_progress(enrollments):
         if enrollments:
-            progress = len([e for e in enrollments if e.score_draft is not None or e.justification_draft is not None]) / len(enrollments)
+            progress = len([e for e in enrollments if e.score_final or e.justification_final]) / len(enrollments)
         else:
             progress = 0
         return progress * 100
 
+    @staticmethod
     def find_exam_enrollments(session_exam):
         enrollments = ExamEnrollment.objects.filter(session_exam=session_exam)\
                                             .order_by('learning_unit_enrollment__offer_enrollment__offer_year__acronym',
@@ -404,13 +468,16 @@ class ExamEnrollment(models.Model):
                                                       'learning_unit_enrollment__offer_enrollment__student__person__first_name')
         return enrollments
 
+    @staticmethod
     def find_draft_exam_enrollments(session_exam):
         """ Return the enrollments of a session but not the ones already submitted. """
         enrollments = ExamEnrollment.objects.filter(session_exam=session_exam)\
                                             .filter(score_final__isnull=True)\
-                                            .filter(justification_final__isnull=True)
+                                            .filter(models.Q(justification_final__isnull=True) |
+                                                    models.Q(justification_final=''))
         return enrollments
 
+    @staticmethod
     def count_encoded_scores(enrollments):
         """ Count the scores that were already encoded but not submitted yet. """
         counter = 0
@@ -422,35 +489,33 @@ class ExamEnrollment(models.Model):
 
         return counter
 
+    @staticmethod
     def find_exam_enrollments_to_validate(session_exam):
         enrollments = ExamEnrollment.objects.filter(session_exam=session_exam)\
                                             .filter(~models.Q(score_draft=models.F('score_reencoded')) |
                                                     ~models.Q(justification_draft=models.F('justification_reencoded')))\
                                             .filter(score_final__isnull=True)\
-                                            .filter(justification_final__isnull=True)
+                                            .filter(models.Q(justification_final__isnull=True) |
+                                                    models.Q(justification_final=''))
         return enrollments
 
     def student(self):
         return self.learning_unit_enrollment.student
 
-    def justification_label(self):
-        if self.justification_draft == "ABSENT":
-            return _('Absent')
-        if self.justification_draft == "ILL":
-            return _('Ill')
-        if self.justification_draft == "CHEATING":
-            return _('Cheating')
-        if self.justification_draft == "JUSTIFIED_ABSENCE":
-            return _('Justified absence')
-        if self.justification_draft == "SCORE_MISSING":
-            return _('Score missing')
-        return None
-
-    def justification_label_authorized(isFac):
-        if isFac:
+    @staticmethod
+    def justification_label_authorized(is_fac):
+        if is_fac:
             return '%s, %s, %s, %s, %s' % (_('Absent'), _('Ill'), _('Cheating'), _('Justified absence'), _('Score missing'))
         else:
             return '%s, %s, %s' % (_('Absent'), _('Ill'), _('Cheating'))
 
     def __str__(self):
         return u"%s - %s" % (self.session_exam, self.learning_unit_enrollment)
+
+
+class ExamEnrollmentHistory(models.Model):
+    exam_enrollment     = models.ForeignKey(ExamEnrollment)
+    person              = models.ForeignKey(Person)
+    score_final         = models.DecimalField(max_digits=4, decimal_places=2, null=True)
+    justification_final = models.CharField(max_length=20, null=True, choices=JUSTIFICATION_TYPES)
+    modification_date   = models.DateTimeField(auto_now=True)

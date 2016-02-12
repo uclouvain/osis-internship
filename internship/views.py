@@ -24,5 +24,24 @@
 #
 ##############################################################################
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 
-# Create your views here.
+
+@login_required
+def internships_home(request):
+    return render(request, "internships_home.html", {'section': 'internship'})
+
+def internships_places(request):
+    return render(request, "places.html", {'section': 'internship'})
+
+def internships_students(request):
+    return render(request, "students.html", {'section': 'internship'})
+
+def internships(request):
+    return render(request, "internships.html", {'section': 'internship'})
+
+def internships_periods(request):
+    return render(request, "periods.html", {'section': 'internship'})
+
+def interships_masters(request):
+    return render(request, "interships_masters.html", {'section': 'internship'})

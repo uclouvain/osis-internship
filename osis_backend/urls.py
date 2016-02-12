@@ -29,6 +29,7 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'', include('core.urls')),
+    url(r'', include('internship.urls')),
 ]
 
 handler404 = 'core.views.page_not_found'

@@ -24,27 +24,38 @@
 #
 ##############################################################################
 from io import BytesIO
-from io import StringIO
-from reportlab.pdfgen import canvas
 from django.http import HttpResponse
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.enums import TA_JUSTIFY, TA_RIGHT, TA_CENTER, TA_LEFT
-from reportlab.lib.pagesizes import letter
-from reportlab.platypus import BaseDocTemplate,SimpleDocTemplate, Paragraph, Spacer, Image, PageBreak, Table,TableStyle,Frame,PageTemplate
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, PageBreak, Table,TableStyle
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import mm
-from reportlab.lib.units import inch
 from reportlab.lib import colors
-from reportlab.lib.pagesizes import letter, landscape
-from core.models import AcademicCalendar, SessionExam, ExamEnrollment, LearningUnitYear, Person, AcademicYear, OfferYear
+from core.models import *
 
 PAGE_SIZE = A4
 MARGIN_SIZE = 20 * mm
 COLS_WIDTH = [25*mm,30*mm,30*mm,25*mm,30*mm,27*mm]
 SMALL_INTER_LINE = Spacer(1, 12)
 BIG_INTER_LINE = Spacer(1, 30)
+
+
+def add_header_footer(canvas, doc):
+    """
+    Add the page number
+    """
+    styles = getSampleStyleSheet()
+    # Save the state of our canvas so we can draw on it
+    canvas.saveState()
+
+    # Header
+    header_building(canvas,doc, styles)
+
+    # Release the canvas
+    canvas.restoreState()
+
 
 def print_notes(request,tutor, academic_year, session_exam,sessions,learning_unit_year_id):
     """
@@ -64,11 +75,11 @@ def print_notes(request,tutor, academic_year, session_exam,sessions,learning_uni
     styles = getSampleStyleSheet()
     styles.add(ParagraphStyle(name='Justify', alignment=TA_JUSTIFY))
 
-    Contenu = []
-    #critères
+    content = []
     academic_calendar = AcademicCalendar.find_academic_calendar_by_event_type(academic_year.id,session_exam.number_session)
 
     if learning_unit_year_id != -1 :
+        #par cours
         list_exam_enrollment = ExamEnrollment.find_exam_enrollments(session_exam)
     else:
         if tutor:
@@ -82,32 +93,18 @@ def print_notes(request,tutor, academic_year, session_exam,sessions,learning_uni
         # Calculate the progress of all courses of the tutor.
         list_exam_enrollment = []
         for session in sessions:
-            enrollments = list(ExamEnrollment.find_exam_enrollments(session.id))
+            enrollments = list(ExamEnrollment.find_exam_enrollments(session))
             if enrollments:
                 list_exam_enrollment = list_exam_enrollment + enrollments
 
+    list_notes_building(session_exam, learning_unit_year_id, academic_year, academic_calendar, tutor, list_exam_enrollment, styles, request.user.groups.filter(name='FAC').exists(), content)
 
-    list_notes_building(session_exam, learning_unit_year_id, academic_year, academic_calendar, tutor, list_exam_enrollment, styles, request.user.groups.filter(name='FAC').exists(), Contenu)
-
-    doc.build(Contenu, onFirstPage=addHeaderFooter, onLaterPages=addHeaderFooter)
+    doc.build(content, onFirstPage=add_header_footer, onLaterPages=add_header_footer)
     pdf = buffer.getvalue()
     buffer.close()
     response.write(pdf)
     return response
 
-def addHeaderFooter(canvas, doc):
-    """
-    Add the page number
-    """
-    styles = getSampleStyleSheet()
-    # Save the state of our canvas so we can draw on it
-    canvas.saveState()
-
-    # Header
-    header_building(canvas,doc, styles)
-
-    # Release the canvas
-    canvas.restoreState()
 
 def header_building(canvas, doc,styles):
     a = Image("core"+ settings.STATIC_URL +"/img/logo_institution.jpg")
@@ -127,9 +124,10 @@ def header_building(canvas, doc,styles):
     w, h = t_header.wrap(doc.width, doc.topMargin)
     t_header.drawOn(canvas, doc.leftMargin, doc.height + doc.topMargin - h)
 
-def list_notes_building(session_exam, learning_unit_year_id, academic_year, academic_calendar, tutor,list_exam_enrollment, styles, isFac, Contenu):
+
+def list_notes_building(session_exam, learning_unit_year_id, academic_year, academic_calendar, tutor,list_exam_enrollment, styles, is_fac, content):
     #liste des notes
-    Contenu.append(SMALL_INTER_LINE)
+    content.append(SMALL_INTER_LINE)
     data = headers_table(styles)
 
     old_pgm = None
@@ -143,7 +141,7 @@ def list_notes_building(session_exam, learning_unit_year_id, academic_year, acad
                 current_learning_unit_year = rec_exam_enrollment.learning_unit_enrollment.learning_unit_year
             if o != old_pgm:
                 #Autre programme - 1. mettre les critères
-                main_data(tutor, academic_year, session_exam, styles, current_learning_unit_year,old_pgm, Contenu)
+                main_data(tutor, academic_year, session_exam, styles, current_learning_unit_year,old_pgm, content)
                 #Autre programme - 2. il faut écrire le tableau
 
                 t=Table(data,COLS_WIDTH)
@@ -153,34 +151,36 @@ def list_notes_building(session_exam, learning_unit_year_id, academic_year, acad
                                    ('VALIGN',(0,0), (-1,-1), 'TOP')
                                    ]))
 
-                Contenu.append(t)
+                content.append(t)
                 #Autre programme - 3. Imprimer légende
-                end_page_infos_building(Contenu, styles)
-                legend_building(current_learning_unit_year, isFac, Contenu, styles)
+                end_page_infos_building(content, styles)
+                legend_building(current_learning_unit_year, is_fac, content, styles)
                 #Autre programme - 4. il faut faire un saut de page
-                Contenu.append(PageBreak())
+                content.append(PageBreak())
                 data = headers_table(styles)
                 old_pgm =o
                 current_learning_unit_year = rec_exam_enrollment.learning_unit_enrollment.learning_unit_year
 
             person = Person.find_person(student.person.id)
-            if not (rec_exam_enrollment.score_draft is None):
-                if rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores :
-                    score = "{0:.2f}".format(rec_exam_enrollment.score_draft)
+            score = None
+            if not (rec_exam_enrollment.score_final is None):
+                if rec_exam_enrollment.session_exam.learning_unit_year.decimal_scores :
+                    score = "{0:.2f}".format(rec_exam_enrollment.score_final)
                 else:
-                    score = "{0:.0f}".format(rec_exam_enrollment.score_draft)
+                    score = "{0:.0f}".format(rec_exam_enrollment.score_final)
+            justification = ""
+            if rec_exam_enrollment.justification_final:
+                justification = dict(JUSTIFICATION_TYPES)[rec_exam_enrollment.justification_final]
             data.append([student.registration_id,
                            person.last_name,
                            person.first_name,
                            score,
-                           rec_exam_enrollment.justification_label(),
+                           justification,
                            academic_calendar.end_date.strftime('%d/%m/%Y')
                            ])
 
-    if old_pgm is None:
-        pass
-    else:
-        main_data(tutor, academic_year, session_exam, styles,current_learning_unit_year, old_pgm, Contenu)
+    if not old_pgm is None:
+        main_data(tutor, academic_year, session_exam, styles,current_learning_unit_year, old_pgm, content)
         t=Table(data,COLS_WIDTH)
         t.setStyle(TableStyle([
                            ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
@@ -188,13 +188,14 @@ def list_notes_building(session_exam, learning_unit_year_id, academic_year, acad
                            ('VALIGN',(0,0), (-1,-1), 'TOP')
                            ]))
 
-        Contenu.append(t)
-        end_page_infos_building(Contenu, styles)
-        legend_building(current_learning_unit_year, isFac, Contenu, styles)
+        content.append(t)
+        end_page_infos_building(content, styles)
+        legend_building(current_learning_unit_year, is_fac, content, styles)
 
-def legend_building(learning_unit_year, isFac, Contenu, styles):
-    Contenu.append(BIG_INTER_LINE)
-    Contenu.append(BIG_INTER_LINE)
+
+def legend_building(learning_unit_year, is_fac, content, styles):
+    content.append(BIG_INTER_LINE)
+    content.append(BIG_INTER_LINE)
     p = ParagraphStyle('legend')
     p.textColor = 'grey'
     p.borderColor = 'grey'
@@ -202,15 +203,16 @@ def legend_building(learning_unit_year, isFac, Contenu, styles):
     p.alignment = TA_CENTER
     p.fontSize =8
     p.borderPadding = 5
-    legend_text = "%s : %s" % (_('Other score legend'), ExamEnrollment.justification_label_authorized(isFac))
-    if learning_unit_year.credits is None or learning_unit_year.credits < float(15):
+    legend_text = "%s : %s" % (_('Other score legend'), ExamEnrollment.justification_label_authorized(is_fac))
+    if not learning_unit_year.decimal_scores:
         legend_text += "<br/><font color=red>%s</font>" % _('UnAuthorized decimal for this activity')
 
-    Contenu.append(Paragraph('''
+    content.append(Paragraph('''
                             <para>
                                 %s
                             </para>
                             ''' % legend_text, p))
+
 
 def headers_table(styles):
     data =[]
@@ -222,8 +224,9 @@ def headers_table(styles):
                  Paragraph('''%s''' % _('End date'), styles['BodyText'])])
     return data
 
-def main_data(tutor, academic_year, session_exam, styles, learning_unit_year, pgm, Contenu):
-    Contenu.append(SMALL_INTER_LINE)
+
+def main_data(tutor, academic_year, session_exam, styles, learning_unit_year, pgm, content):
+    content.append(SMALL_INTER_LINE)
     p_structure = ParagraphStyle('entete_structure')
     p_structure.alignment = TA_LEFT
     p_structure.fontSize = 10
@@ -232,16 +235,16 @@ def main_data(tutor, academic_year, session_exam, styles, learning_unit_year, pg
     p.alignment = TA_RIGHT
     p.fontSize = 10
 
-    Contenu.append(Paragraph('%s : %s' % (_('Academic year'), str(academic_year)), p))
-    Contenu.append(Paragraph('Session : %d' % session_exam.number_session, p))
-    Contenu.append(BIG_INTER_LINE)
+    content.append(Paragraph('%s : %s' % (_('Academic year'), str(academic_year)), p))
+    content.append(Paragraph('Session : %d' % session_exam.number_session, p))
+    content.append(BIG_INTER_LINE)
 
     if pgm.structure is not None:
-        Contenu.append(Paragraph('%s' % pgm.structure, p_structure))
-        Contenu.append(SMALL_INTER_LINE)
+        content.append(Paragraph('%s' % pgm.structure, p_structure))
+        content.append(SMALL_INTER_LINE)
 
-    Contenu.append(Paragraph("<strong>%s : %s</strong>" % (learning_unit_year.acronym,learning_unit_year.title), styles["Normal"]) )
-    Contenu.append(SMALL_INTER_LINE)
+    content.append(Paragraph("<strong>%s : %s</strong>" % (learning_unit_year.acronym,learning_unit_year.title), styles["Normal"]) )
+    content.append(SMALL_INTER_LINE)
 
     tutor = None
     if tutor is None:
@@ -266,7 +269,6 @@ def main_data(tutor, academic_year, session_exam, styles, learning_unit_year, pg
                          ('RIGHTPADDING',(0,0),(-1,-1), 0),
                        ('VALIGN',(0,0), (-1,-1), 'TOP')
                        ]))
-    # Contenu.append(Paragraph("Responsable : %s" % tutor, styles["Normal"]) )
     dataTT = [[table_pgm,table_tutor]]
 
     tt=Table(dataTT, colWidths='*')
@@ -275,16 +277,17 @@ def main_data(tutor, academic_year, session_exam, styles, learning_unit_year, pg
                              ('RIGHTPADDING',(0,0),(-1,-1), 0),
                        ('VALIGN',(0,0), (-1,-1), 'TOP')
                        ]))
-    Contenu.append(tt)
-    Contenu.append(Spacer(1, 12))
+    content.append(tt)
+    content.append(Spacer(1, 12))
 
-def end_page_infos_building(Contenu, styles):
-    Contenu.append(BIG_INTER_LINE)
+
+def end_page_infos_building(content, styles):
+    content.append(BIG_INTER_LINE)
     p = ParagraphStyle('info')
     p.fontSize = 10
     p.alignment = TA_LEFT
-    Contenu.append(Paragraph("Please return this document to the administrative office of the program administrator" , p))
-    Contenu.append(BIG_INTER_LINE)
+    content.append(Paragraph("Please return this document to the administrative office of the program administrator" , p))
+    content.append(BIG_INTER_LINE)
     p_signature = ParagraphStyle('info')
     p_signature.fontSize = 10
     p_signature.leftIndent = 330
@@ -296,4 +299,4 @@ def end_page_infos_building(Contenu, styles):
                     <font size=10>%s</font>
                 ''' % (_('Done at'), _('The'), _('Signature')),
                 p_signature)
-    Contenu.append(P)
+    content.append(P)

@@ -33,10 +33,11 @@ from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl.cell import get_column_letter
 from openpyxl import load_workbook
-from core.models import AcademicCalendar, SessionExam, ExamEnrollment, LearningUnitYear, Person, AcademicYear, Student,OfferYear,LearningUnitEnrollment,OfferEnrollment
+from core.models import *
 from core.forms import ScoreFileForm
 from django.contrib import messages
 from . import export_utils
+from . import views
 
 
 @login_required
@@ -57,10 +58,7 @@ def upload_scores_file(request, session_id, learning_unit_year_id, academic_year
                 else:
                     isValid = __save_xls_scores(request, file_name)
                     #todo afficher un message parlant dans l'écran si xls invalide ou problème
-                    if isValid:
-                        pass
-                    else:
-                        # request.session['message_validation'] = '%s' % _('Invalid file')
+                    if not isValid:
                         message_validation = '%s' % _('Invalid file')
 
                 messages.add_message(request, messages.INFO, '%s' % message_validation)
@@ -79,7 +77,9 @@ def __save_xls_scores(request, file_name):
     data_line_number = 1
     nb_nouvelles_notes = 0
     nouvelles_notes = False
+    session_exam = None
     for row in ws.rows:
+        nouveau_score = False
         if nb_row > 0 and isValid:
             student = Student.objects.filter(registration_id=row[4].value)
             info_line = "%s %d :" % (_('Line'),data_line_number)
@@ -109,47 +109,64 @@ def __save_xls_scores(request, file_name):
                                     erreur_validation += "%s %s %s %s!" % (info_line, _('the enrollment to the activity'), str(row[2].value), _('does not exists'))
                                 else:
                                     exam_enrollment = ExamEnrollment.objects.filter(learning_unit_enrollment = learning_unit_enrollment).filter(session_exam__number_session = int(row[1].value)).first()
+                                    if session_exam is None:
+                                        session_exam = exam_enrollment.session_exam
                                     if exam_enrollment.encoding_status != 'SUBMITTED':
-
                                         if row[7].value is None:
                                             note = None
                                         else:
                                             note = float(row[7].value)
                                         note_valide = True
-                                        if not(note is None):
+                                        if not note is None:
                                             if note<0 or note>20:
                                                 erreur_validation += "%s %s!" % (info_line, _('the score seems to be incorrect (it must be >=0 and <=20)'))
                                                 note_valide = False
                                             else:
-                                                if not(learning_unit_year is None) and learning_unit_year.credits < 15:
-                                                    #vérification des décimales
-                                                    if round(note) != note:
-                                                        erreur_validation += "%s %s!" % (info_line, _('the score seems to be incorrect. When activity\'s credits < 15 decimales are not allowed!'))
-                                                        note_valide = False
+                                                if not learning_unit_year is None and not learning_unit_year.decimal_scores and round(note) != note:
+                                                    erreur_validation += "%s %s!" % (info_line, _('the score seems to be incorrect. Decimales NOT allowed!'))
+                                                    note_valide = False
+                                        else:
+                                            note_valide=False
+                                        #attention dans le xsl les choix pour la justification sont des libellés pas les valeurs BD
+                                        justification_xls=None
+                                        if row[8].value:
+                                            for k, v in dict(JUSTIFICATION_TYPES).items():
+                                                if v.lower() == str(row[8].value.lower()):
+                                                    justification_xls=k
+                                        justification_valide=True
+                                        if not note is None and (not justification_xls is None and not justification_xls=='CHEATING'):
+                                            note_valide = False
+                                            justification_valide=False
+                                            erreur_validation += "%s %s!" % (info_line, _('You can\'t encode a \'score\' AND an \'other score\' together (unless the \'other score\' is CHEATING)!'))
 
                                         if note_valide:
-                                            if exam_enrollment.score != note:
+                                            if exam_enrollment.score_final != note:
                                                 nb_nouvelles_notes = nb_nouvelles_notes + 1
                                                 nouvelles_notes = True
+                                                nouveau_score=True
 
-                                            exam_enrollment.score = note
+                                            exam_enrollment.score_final = note
 
-
-                                        if exam_enrollment.justification != row[8].value:
+                                        if justification_valide and not justification_xls is None and exam_enrollment.justification_final != justification_xls:
                                             nb_nouvelles_notes = nb_nouvelles_notes + 1
                                             nouvelles_notes = True
-                                        exam_enrollment.encoding_status = 'SUBMITTED'
-                                        exam_enrollment.justification = row[8].value
-                                        exam_enrollment.save()
+                                            nouveau_score=True
+                                            exam_enrollment.justification_final = justification_xls
+
+                                        if nouveau_score :
+                                            exam_enrollment.encoding_status = 'SUBMITTED'
+                                            exam_enrollment.score_draft = note
+                                            exam_enrollment.justification_draft = justification_xls
+                                            exam_enrollment.save()
+                                            views.exam_enrollment_historic(request.user,exam_enrollment,note,justification_xls)
 
             data_line_number=data_line_number+1
 
         else:
-            print ('else')
             #Il faut valider le fichier xls
             #Je valide les entêtes de colonnes
             list_header = export_utils.HEADER
-            print ('else 2')
+
             i = 0
             for header_col in list_header:
                 if str(row[i].value) != header_col:
@@ -161,6 +178,16 @@ def __save_xls_scores(request, file_name):
         nb_row = nb_row + 1
 
     messages.add_message(request, messages.WARNING, erreur_validation)
+    if not session_exam is None:
+        all_encoded = True
+        enrollments = ExamEnrollment.objects.filter(session_exam = session_exam)
+        for enrollment in enrollments:
+            if not enrollment.score_final and not enrollment.justification_final:
+                all_encoded = False
+
+        if all_encoded:
+            session_exam.status = 'CLOSED'
+            session_exam.save()
 
     if nouvelles_notes :
         if nb_nouvelles_notes > 0:

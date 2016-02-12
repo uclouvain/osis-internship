@@ -1,7 +1,6 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
 {% load i18n %}
-{% load list %}
 
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
@@ -28,8 +27,9 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li>{% trans 'Program' %}</li>
+  <li><a href="{% url 'catalog' %}">Catalogue de formation</a></li>
   <li class="active">{% trans 'Offers' %}</li>
+
 {% endblock %}
 {% block content %}
 <div class="page-header">
@@ -57,18 +57,18 @@
           <div class="col-md-3">
 
               <label for="code">{% trans 'Acronym'%}</label>
-              <input class="form-control" id="code" placeholder="{% trans 'Acronym' %}" name="code" value="{{ code }}">
+              <input class="form-control" id="code" placeholder="{% trans 'Acronym' %}" name="code" value="{{ code }}" style="text-transform:uppercase">
 
           </div>
           <div class="col-md-2">
 
-              <label for="validity" >{% trans 'Academic Year'%}</label>
-              <select class="form-control" id="validity"  name="validity" value="{{ validity }}">
-                {% for v in validities %}
-                  {% if v.id == validity %}
-                    <option selected value="{{ v.id }}">{{ v.year }}</option>
+              <label for="academic_year" >{% trans 'Academic Year'%}</label>
+              <select class="form-control" id="academic_year"  name="academic_year" value="{{ academic_year }}">
+                {% for v in academic_years %}
+                  {% if v.id == academic_year %}
+                    <option selected value="{{ v.id }}">{{ v }}</option>
                   {% else %}
-                    <option value="{{ v.id }}">{{ v.year }}</option>
+                    <option value="{{ v.id }}">{{ v }}</option>
                   {% endif %}
                 {% endfor %}
               </select>
@@ -96,10 +96,10 @@
         <th>{% trans 'Acronym'%}</th>
         <th>{% trans 'Title'%}</th>
       </thead>
-      {% for o in offers %}
+      {% for offer in offers %}
         <tr>
-          <td>{{ o.acronym }}</td>
-          <td>{{ o.title }}</td>
+          <td><a href="{% url 'offer_read' offer.id %}">{{ offer.acronym }}</a></td>
+          <td>{{ offer.title }}</td>
         </tr>
       {% endfor %}
     </table>
