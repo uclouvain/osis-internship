@@ -52,6 +52,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_jenkins',
     'core',
+    'dissertation',
     'internship'
 )
 
