@@ -30,20 +30,27 @@ from . import views
 from . import export_utils
 from . import upload_xls_utils
 
+from core.views_osis import learning_unit, offer
+
+
 urlpatterns = [
     url(r'^$', views.home, name='home'),
 
     # Please, organize the urls in alphabetic order.
 
-    url(r'^learning_units/$', views.programme, name='learning_units'),
+    # url(r'^learning_units/$', views.catalog, name='learning_units'),
+    url(r'^learning_units/$', learning_unit.learning_units, name='learning_units'),
+    url(r'^learning_units/search$', learning_unit.learning_units_search, name='learning_units_search'),
+    url(r'^learning_units/([0-9]+)/$', learning_unit.learning_unit_read, name='learning_unit_read'),
 
     url(r'^login/$', login, name='login'),
     url(r'^logout/$', logout_then_login, name='logout'),
 
-    url(r'^offers/$', views.offers, name='offers'),
-    url(r'^offers/search$', views.offers_search, name='offers_search'),
+    url(r'^offers/$', offer.offers, name='offers'),
+    url(r'^offers/search$', offer.offers_search, name='offers_search'),
+    url(r'^offers/([0-9]+)/$', offer.offer_read, name='offer_read'),
 
-    url(r'^programme/$', views.programme, name='programme'),
+    url(r'^catalog/$', views.catalog, name='catalog'),
 
     url(r'^studies/$', views.studies, name='studies'),
     url(r'^studies/assessments/$', views.assessments, name='assessments'),

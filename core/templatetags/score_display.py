@@ -30,7 +30,7 @@ register = template.Library()
 @register.filter
 def score_display(value, decimal_option):
     if value is None or str(value) == '-':
-        return "-"
+        return ""
     else:
         if decimal_option:
             return "{0:.2f}".format(value)

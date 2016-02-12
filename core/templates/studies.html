@@ -39,12 +39,12 @@
       <div class="row">
         <div class="col-md-1"><i class="fa fa-tachometer" style="font-size: 400%; color: #6699FF;"></i></div>
         <div class="col-md-5">
-          <h4 class="media-heading"><a href="{% url 'assessments' %}">{% trans 'Evaluations' %}</a></h4>
+          <h4 class="media-heading"><a href="{% url 'assessments' %}" id="studies_evaluation_btn" >{% trans 'Evaluations' %}</a></h4>
           <p>{% trans 'This process helps tutors while scores encoding.' %}</p>
         </div>
         <div class="col-md-1"><i class="fa fa-user-md" style="font-size: 400%; color: #6699FF;"></i></div>
         <div class="col-md-5">
-          <h4 class="media-heading"><a href="#">Stages</a></h4>
+          <h4 class="media-heading"><a href="{% url 'internships_home' %}">Stages</a></h4>
           <p>{% trans 'This process controls students internships.' %}</p>
         </div>
       </div>
