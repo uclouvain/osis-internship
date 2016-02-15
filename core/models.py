@@ -505,9 +505,9 @@ class ExamEnrollment(models.Model):
     @staticmethod
     def justification_label_authorized(is_fac):
         if is_fac:
-            return '%s, %s, %s, %s, %s' % (_('Absent'), _('Ill'), _('Cheating'), _('Justified absence'), _('Score missing'))
+            return '%s, %s, %s, %s, %s' % (_('Absent'),_('Cheating'), _('Ill'),  _('Justified absence'), _('Score missing'))
         else:
-            return '%s, %s, %s' % (_('Absent'), _('Ill'), _('Cheating'))
+            return '%s, %s, %s' % (_('Absent'), _('Cheating'),_('Score missing'),)
 
     def __str__(self):
         return u"%s - %s" % (self.session_exam, self.learning_unit_enrollment)

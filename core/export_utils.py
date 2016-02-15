@@ -137,7 +137,7 @@ def  __create_data_list_for_justification(is_fac):
     Création de la liste de choix pour la justification
     :return:
     """
-    dv = DataValidation(type="list", formula1='%s' % ExamEnrollment.justification_label_authorized(is_fac), allow_blank=True)
+    dv = DataValidation(type="list", formula1='"%s"' % ExamEnrollment.justification_label_authorized(is_fac), allow_blank=True)
     dv.error = str(_('Invalid entry, not in the list of choices'))
     dv.errorTitle = str(_('Invalid entry'))
 
