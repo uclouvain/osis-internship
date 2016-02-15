@@ -24,7 +24,6 @@
 #
 ##############################################################################
 from django.db import models
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -38,7 +37,8 @@ class Person(models.Model):
         ('U',_('Unknown')))
 
     external_id = models.CharField(max_length=100, blank=True, null=True)
-    user        = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    changed     = models.DateTimeField(null=True)
+    user        = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
     global_id   = models.CharField(max_length=10, blank=True, null=True)
     gender      = models.CharField(max_length=1, blank=True, null=True, choices=GENDER_CHOICES, default='U')
     national_id = models.CharField(max_length=25,blank=True, null=True)
