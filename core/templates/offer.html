@@ -33,9 +33,9 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-  <h2>{{ offer.title }}</h2>
-  {% if offer.offer_year_sibling %}
-  <h3>{% trans 'With professional focus' %}</h3>
+  <h2>{%if offer.offer_parent %}{{offer.offer_parent.title}}{%else%}{{ offer.title }}{% endif %}</h2>
+  {% if offer.offer_parent %}
+  <h3>{{ offer.title }}</h3>
   {% endif %}
 </div>
 <div class="panel panel-default">
