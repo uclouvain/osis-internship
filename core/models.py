@@ -220,6 +220,7 @@ class OfferYear(models.Model):
     acronym       = models.CharField(max_length=15)
     title         = models.CharField(max_length=255)
     structure     = models.ForeignKey(Structure)
+    offer_parent  = models.ForeignKey('self', blank=True, null=True, related_name='children',db_index=True)
 
     @staticmethod
     def find_offer_years_by_academic_year(academic_year):
@@ -231,6 +232,14 @@ class OfferYear(models.Model):
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.offer.acronym)
+
+    def offer_year_children(self):
+        return OfferYear.objects.filter(offer_parent=self)
+
+    def offer_year_sibling(self):
+        if self.offer_parent:
+            return OfferYear.objects.filter(offer_parent=self.offer_parent).exclude(id=self.id)
+        return None
 
 
 class ProgrammeManager(models.Model):
@@ -505,9 +514,9 @@ class ExamEnrollment(models.Model):
     @staticmethod
     def justification_label_authorized(is_fac):
         if is_fac:
-            return '%s, %s, %s, %s, %s' % (_('Absent'), _('Ill'), _('Cheating'), _('Justified absence'), _('Score missing'))
+            return '%s, %s, %s, %s, %s' % (_('Absent'),_('Cheating'), _('Ill'),  _('Justified absence'), _('Score missing'))
         else:
-            return '%s, %s, %s' % (_('Absent'), _('Ill'), _('Cheating'))
+            return '%s, %s, %s' % (_('Absent'), _('Cheating'),_('Score missing'),)
 
     def __str__(self):
         return u"%s - %s" % (self.session_exam, self.learning_unit_enrollment)
