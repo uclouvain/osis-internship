@@ -31,8 +31,7 @@ from django.contrib.auth.decorators import login_required
 from core.models import *
 
 def structures(request):
-
-    return render(request, "structures.html", {})
+    return render(request, "structures.html", {'init': "1"})
 
 def structures_search(request):
     acronym = request.GET['acronym']
@@ -45,9 +44,10 @@ def structures_search(request):
     if not title is None and len(title) > 0  :
         query = query.filter(title__icontains=title)
 
-    return render(request, "structures.html", {'title':        title,
-                                           'acronym':           acronym,
-                                           'structures':         query })
+    return render(request, "structures.html", {'title':      title,
+                                               'acronym':    acronym,
+                                               'init':       "0",
+                                               'structures': query })
 
 def structure_read(request,id):
     structure = Structure.find_by_id(id)
