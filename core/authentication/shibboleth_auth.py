@@ -34,7 +34,7 @@ from core.models import Person
 import re
 
 
-class ShibbolethAuth(RemoteUserBackend):
+class ShibbolethAuthBackend(RemoteUserBackend):
     def authenticate(self, remote_user, user_infos):
         """
         The username passed as ``remote_user`` is considered trusted.  This
