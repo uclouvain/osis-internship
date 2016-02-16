@@ -125,6 +125,9 @@ class Structure(models.Model):
     def find_structures():
         return Structure.objects.all().order_by('acronym')
 
+    def find_by_id(id):
+        return Structure.objects.get(pk=id)
+
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)
 

@@ -30,7 +30,7 @@ from . import views
 from . import export_utils
 from . import upload_xls_utils
 
-from core.views_osis import learning_unit, offer
+from core.views_osis import learning_unit, offer, structure
 
 
 urlpatterns = [
@@ -64,4 +64,9 @@ urlpatterns = [
     url(r'^studies/assessments/scores_encoding/notes_printing/([0-9]+)/([0-9]+)/$', views.notes_printing, name='notes_printing'),
     url(r'^studies/assessments/scores_encoding/xlsdownload/([0-9]+)/([0-9]+)/([0-9]+)/$',views.export_xls, name='scores_encoding_download'),
     url(r'^studies/assessments/scores_encoding/upload/([0-9]+)/([0-9]+)/([0-9]+)/$',upload_xls_utils.upload_scores_file,name='upload_encoding'),
+
+    url(r'^institution/$', views.institution, name='institution'),
+    url(r'^structures/$', structure.structures, name='structures'),
+    url(r'^structures/search$', structure.structures_search, name='structures_search'),
+    url(r'^structures/([0-9]+)/$', structure.structure_read, name='structure_read'),
 ]
