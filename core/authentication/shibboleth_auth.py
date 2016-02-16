@@ -34,7 +34,7 @@ from core.models import Person
 import re
 
 
-class ShibbollethUserBackend(RemoteUserBackend):
+class ShibbolethAuth(RemoteUserBackend):
     def authenticate(self, remote_user, user_infos):
         """
         The username passed as ``remote_user`` is considered trusted.  This
@@ -82,6 +82,7 @@ class ShibbollethUserBackend(RemoteUserBackend):
     def __update_user(self, user, user_infos):
         user.first_name = user_infos['USER_FIRST_NAME']
         user.last_name = user_infos['USER_LAST_NAME']
+        user.email = user_infos['USER_EMAIL']
         user.save()
         return user
 
@@ -89,15 +90,16 @@ class ShibbollethUserBackend(RemoteUserBackend):
         persons = Person.objects.filter(user=user)
         if not persons:
             person = Person(user=user, global_id=user_infos['USER_FGS'], first_name=user_infos['USER_FIRST_NAME'],
-                            last_name=user_infos['USER_LAST_NAME'])
+                            last_name=user_infos['USER_LAST_NAME'],email=user_infos['USER_EMAIL'])
         else:
             person = persons[0]
             person.first_name = user.first_name
             person.last_name = user.last_name
+            person.email = user.email
         person.save()
 
 
-class ShibbollethUserMiddleware(RemoteUserMiddleware):
+class ShibbolethAuthMiddleware(RemoteUserMiddleware):
     def process_request(self, request):
         # AuthenticationMiddleware is required so that request.user exists.
         if not hasattr(request, 'user'):
@@ -129,7 +131,7 @@ class ShibbollethUserMiddleware(RemoteUserMiddleware):
 
         # We are seeing this user for the first time in this session, attempt
         # to authenticate the user.
-        user_infos = self.get_shibbolleth_infos(request)
+        user_infos = self.get_shibboleth_infos(request)
         user = auth.authenticate(remote_user=username, user_infos=user_infos)
         if user:
             # User is valid.  Set request.user and persist user in the session
@@ -137,7 +139,7 @@ class ShibbollethUserMiddleware(RemoteUserMiddleware):
             request.user = user
             auth.login(request, user)
 
-    def get_shibbolleth_infos(self, request):
+    def get_shibboleth_infos(self, request):
         user_first_name = self.clean_string(request.META['givenName'])
         user_last_name = self.clean_string(request.META['sn'])
         user_email = request.META['mail']

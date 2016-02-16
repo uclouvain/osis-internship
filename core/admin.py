@@ -65,9 +65,9 @@ class OfferEnrollmentAdmin(admin.ModelAdmin):
 admin.site.register(OfferEnrollment, OfferEnrollmentAdmin)
 
 class PersonAdmin(admin.ModelAdmin):
-    list_display = ('first_name' , 'middle_name', 'last_name', 'username', 'gender','global_id', 'national_id', 'changed')
-    search_fields = ['first_name', 'middle_name', 'last_name', 'user__username']
-    fieldsets = ((None, {'fields': ('user','global_id','national_id','gender','first_name','middle_name','last_name')}),)
+    list_display = ('first_name' , 'middle_name', 'last_name', 'username','email', 'gender','global_id', 'national_id', 'changed')
+    search_fields = ['first_name', 'middle_name', 'last_name', 'user__username','email']
+    fieldsets = ((None, {'fields': ('user','global_id','national_id','gender','first_name','middle_name','last_name','email')}),)
 
 admin.site.register(Person, PersonAdmin)
 
