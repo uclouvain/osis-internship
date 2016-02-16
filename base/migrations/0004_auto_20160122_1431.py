@@ -8,22 +8,23 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    initial = True
-
     dependencies = [
-        ('base', '0004_auto_20160122_1431'),
+        ('base', '0003_auto_20160122_1201'),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='InternshipEnrollment',
+            name='Organization',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('external_id', models.CharField(blank=True, max_length=100, null=True)),
-                ('start_date', models.DateField()),
-                ('end_date', models.DateField()),
-                ('learning_unit_enrollment', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='base.LearningUnitEnrollment')),
-                ('organization', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='base.Organization')),
+                ('name', models.CharField(max_length=255)),
+                ('acronym', models.CharField(max_length=15)),
             ],
+        ),
+        migrations.AddField(
+            model_name='structure',
+            name='organization',
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='base.Organization'),
         ),
     ]
