@@ -86,20 +86,20 @@
       </div>
 
   <div >
-    {% if offers|length == 0 and init == "0" %}
+    {% if offer_years|length == 0 and init == "0" %}
       <label class="alert alert-info" style="margin:5px">{% trans 'No result!' %}</label>
 
     {% endif %}
-    {% if offers|length > 0%}
+    {% if offer_years|length > 0%}
     <table class="table table-striped table-hover">
       <thead>
         <th>{% trans 'Acronym'%}</th>
         <th>{% trans 'Title'%}</th>
       </thead>
-      {% for offer in offers %}
+      {% for offer_year in offer_years %}
         <tr>
-          <td><a href="{% url 'offer_read' offer.id %}">{{ offer.acronym }}</a></td>
-          <td>{{ offer.title }}</td>
+          <td><a href="{% url 'offer_read' offer_year.id %}">{{ offer_year.acronym }}</a></td>
+          <td>{{ offer_year.title }}</td>
         </tr>
       {% endfor %}
     </table>

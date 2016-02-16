@@ -76,9 +76,9 @@ def offers_search(request):
                                            'faculty':        int(faculty),
                                            'code':           code,
                                            'academic_years': academic_years,
-                                           'offers':         query ,
+                                           'offer_years':         query ,
                                            'init':           "0"})
 
 def offer_read(request,offer_year_id):
     offer_year = OfferYear.find_offer_year_by_id(offer_year_id)
-    return render(request, "offer.html", {'offer':     offer_year})
+    return render(request, "offer.html", {'offer_year':     offer_year})
