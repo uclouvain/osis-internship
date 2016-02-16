@@ -208,6 +208,9 @@ class Offer(models.Model):
     def structure(self):
         return Structure.objects.filter(id=self.id).structure
 
+    def find_offer_by_id(id):
+        return Offer.objects.get(pk=id)
+
     def __str__(self):
         return self.acronym
 
@@ -240,6 +243,17 @@ class OfferYear(models.Model):
         if self.offer_parent:
             return OfferYear.objects.filter(offer_parent=self.offer_parent).exclude(id=self.id)
         return None
+
+    def is_orientation(self):
+        if self.orientation_sibling():
+            return True
+        else:
+            return False
+
+    def orientation_sibling(self):
+        if self.offer:
+            offer = Offer.find_offer_by_id(self.offer.id)
+            return OfferYear.objects.filter(offer=offer,acronym=self.acronym,academic_year=self.academic_year).exclude(id=self.id)
 
 
 class ProgrammeManager(models.Model):
@@ -516,7 +530,7 @@ class ExamEnrollment(models.Model):
         if is_fac:
             return '%s, %s, %s, %s, %s' % (_('Absent'),_('Cheating'), _('Ill'),  _('Justified absence'), _('Score missing'))
         else:
-            return '%s, %s, %s' % (_('Absent'), _('Cheating'),_('Score missing'),)
+            return '%s, %s, %s' % (_('Absent'), _('Cheating'),_('Score missing'))
 
     def __str__(self):
         return u"%s - %s" % (self.session_exam, self.learning_unit_enrollment)

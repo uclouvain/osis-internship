@@ -33,9 +33,14 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-  <h2>{%if offer_year.offer_parent %}{{offer_year.offer_parent.title}}{%else%}{{ offer_year.title }}{% endif %}</h2>
+  <h2>{%if offer_year.offer_parent %}{{offer_year.offer_parent.title}}{%else%}{%if offer_year.is_orientation %}{{offer_year.offer.title}}{%else%}{{ offer_year.title }}{% endif %}{% endif %}
+</h2>
   {% if offer_year.offer_parent %}
   <h3>{{ offer_year.title }}</h3>
+  {% else %}
+    {%if offer_year.is_orientation %}
+      <h3>{{offer_year.title}}</h3>
+    {% endif %}
   {% endif %}
 </div>
 <div class="panel panel-default">
@@ -111,4 +116,29 @@
   </div>
 </div>
   {% endif %}
+ {%if offer_year.orientation_sibling %}
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-12">
+          <label>{% trans 'Other sibling orientations' %}</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+
+          <table class="table table-striped table-hover">
+            <thead>
+              <td>{% trans 'Acronym' %}</td>
+              <td>{% trans 'Title' %}</td>
+            </thead>
+            {% for orientation in offer_year.orientation_sibling%}
+            <tr><td><a href="{% url 'offer_read' orientation.id %}">{{ orientation.acronym }}</a></td><td>{{ orientation.title }}</td></tr>
+            {% endfor%}
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
 {% endblock %}
