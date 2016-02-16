@@ -24,7 +24,7 @@
 #
 ##############################################################################
 from django.db import models
-from core.models import Organization, LearningUnitEnrollment, Person
+from core.models import Organization, LearningUnitEnrollment, Student
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -38,33 +38,34 @@ class InternshipEnrollment(models.Model):
 
 class Place(models.Model):
     number                  = models.IntegerField()
-    name                    = models.CharField(max_length = 100,blank = True, null = True)
-    address                 = models.CharField(max_length = 100,blank = True, null = True)
+    name                    = models.CharField(max_length = 100)
+    address                 = models.CharField(max_length = 100)
     postal_code             = models.IntegerField()
-    town                    = models.CharField(max_length = 100,blank = True, null = True)
-    country                 = models.CharField(max_length = 100,blank = True, null = True)
-    url                     = models.TextField()
+    town                    = models.CharField(max_length = 100)
+    country                 = models.CharField(max_length = 100)
+    url                     = models.TextField(blank = True, null = True)
     #external_id intership master
 
-class Student_(Person):
+class Student_(models.Model):
+    student                  = models.ForeignKey(Student)
     noma                    = models.IntegerField()
     annual_bloc             = models.IntegerField()
     #external id periode                 =
-    mail                    = models.CharField(max_length = 100,blank = True, null = True)
-    address                 = models.CharField(max_length = 100,blank = True, null = True)
+    mail                    = models.CharField(max_length = 100)
+    address                 = models.CharField(max_length = 100)
     postal_code             = models.IntegerField()
-    town                    = models.CharField(max_length = 100,blank = True, null = True)
+    town                    = models.CharField(max_length = 100)
     phone_number            = models.IntegerField()
 
 class Internship(models.Model):
-    name                    = models.CharField(max_length = 100,blank = True, null = True)
-    speciality              = models.CharField(max_length = 100,blank = True, null = True)
+    name                    = models.CharField(max_length = 100)
+    speciality              = models.CharField(max_length = 100)
     #external id    place
     student_min             = models.IntegerField()
     student_max             = models.IntegerField()
 
 class Periode(models.Model):
-    name                    = models.CharField(max_length = 100,blank = True, null = True)
+    name                    = models.CharField(max_length = 100)
     date_start              = models.DateField()
     date_end                = models.DateField()
 

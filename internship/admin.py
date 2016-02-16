@@ -40,8 +40,8 @@ class PlaceAdmin(admin.ModelAdmin):
 admin.site.register(Place, PlaceAdmin)
 
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ('noma', 'annual_bloc', 'mail', 'address', 'postal_code', 'town', 'phone_number')
-    fieldsets = ((None, {'fields': ('noma', 'annual_bloc', 'mail', 'address', 'postal_code', 'town', 'phone_number')}),)
+    list_display = ('student', 'noma', 'annual_bloc', 'mail', 'address', 'postal_code', 'town', 'phone_number')
+    fieldsets = ((None, {'fields': ('student', 'noma', 'annual_bloc', 'mail', 'address', 'postal_code', 'town', 'phone_number')}),)
 
 admin.site.register(Student_, StudentAdmin)
 
