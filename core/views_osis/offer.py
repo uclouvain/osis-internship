@@ -71,7 +71,7 @@ def offers_search(request):
     if not code is None and len(code) > 0  :
         query = query.filter(acronym__icontains=code)
 
-    # on ne doit prendre que les offres racines (pas les finalités)  
+    # on ne doit prendre que les offres racines (pas les finalités)
     query = query.filter(offer_parent=None)
 
     return render(request, "offers.html", {'faculties':      faculties,
