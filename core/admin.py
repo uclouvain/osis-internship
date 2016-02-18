@@ -46,7 +46,7 @@ class OfferAdmin(admin.ModelAdmin):
 admin.site.register(Offer, OfferAdmin)
 
 class OfferYearAdmin(admin.ModelAdmin):
-    list_display = ('offer', 'title','academic_year', 'changed')
+    list_display = ('offer','offer_parent', 'title','academic_year', 'changed')
     fieldsets = ((None, {'fields': ('offer','academic_year','structure','acronym','title','offer_parent')}),)
 
 admin.site.register(OfferYear, OfferYearAdmin)
@@ -111,7 +111,7 @@ admin.site.register(Organization, OrganizationAdmin)
 
 class StructureAdmin(admin.ModelAdmin):
     list_display = ('acronym', 'title', 'part_of', 'changed')
-    fieldsets = ((None, {'fields': ('acronym','title','part_of')}),)
+    fieldsets = ((None, {'fields': ('acronym','title','part_of','organization')}),)
 
 admin.site.register(Structure, StructureAdmin)
 
