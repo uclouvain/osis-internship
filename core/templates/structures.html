@@ -29,7 +29,6 @@
 {% block breadcrumb %}
   <li><a href="{% url 'institution' %}">{% trans 'Institution' %}</a></li>
   <li class="active">{% trans 'Entities' %}</li>
-
 {% endblock %}
 {% block content %}
 <div class="page-header">
@@ -45,7 +44,7 @@
               <input class="form-control" id="code" placeholder="{% trans 'Acronym' %}" name="acronym" value="{{ acronym }}" style="text-transform:uppercase">
           </div>
           <div class="col-md-2">
-              <label for="title" >{% trans 'Academic Year'%}</label>
+              <label for="title" >{% trans 'Title'%}</label>
               <input class="form-control" placeholder="{% trans 'Title' %}" name="title" value="{{ title }}" style="text-transform:uppercase">
           </div>
           <div class="col-md-6">

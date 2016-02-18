@@ -124,7 +124,8 @@ class Structure(models.Model):
     @staticmethod
     def find_structures():
         return Structure.objects.all().order_by('acronym')
-
+        
+    @staticmethod
     def find_by_id(id):
         return Structure.objects.get(pk=id)
 

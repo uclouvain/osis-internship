@@ -33,7 +33,11 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-  <h3>{%if structure.part_of %}<a href="{% url 'structure_read' structure.part_of.id %}">{{structure.part_of.title}}</a>{%else%}<a href="{% url 'structure_read' structure.id %}">{{ structure.title }}</a>{% endif %}</h3>
+  <h3>{%if structure.part_of %}
+        <a href="{% url 'structure_read' structure.part_of.id %}">{{structure.part_of.title}}</a>
+      {%else%}
+        {{ structure.title }}
+      {% endif %}</h3>
   {% if structure.part_of %}
   <h2>{{ structure.acronym }} - {{ structure.title }}</h2>
   {% endif %}
