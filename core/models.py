@@ -124,6 +124,13 @@ class Structure(models.Model):
     @staticmethod
     def find_structures():
         return Structure.objects.all().order_by('acronym')
+        
+    @staticmethod
+    def find_by_id(id):
+        return Structure.objects.get(pk=id)
+
+    def find_children(self):
+        return Structure.objects.filter(part_of=self).order_by('acronym')
 
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)

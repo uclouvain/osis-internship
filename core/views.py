@@ -175,7 +175,7 @@ def online_double_encoding_form(request, session_id):
             else:
                 enrollment.score_reencoded = None
             if request.POST.get('justification_' + str(enrollment.id), None) == "None":
-                justification = None 
+                justification = None
             else:
                 justification = request.POST.get('justification_' + str(enrollment.id), None)
             if justification:
@@ -260,7 +260,7 @@ def online_encoding_submission(request, session_id):
     attributions = Attribution.objects.filter(learning_unit=learning_unit)
     persons = [attribution.tutor.person for attribution in attributions if attribution.function == 'PROFESSOR']
     send_mail.send_mail_after_scores_submission(persons,learning_unit.acronym)
-    
+
     return HttpResponseRedirect(reverse('online_encoding', args=(session_id,)))
 
 
@@ -309,3 +309,7 @@ def exam_enrollment_historic(user, enrollment, score, justification):
     exam_enrollment_history.justification_final = justification
     exam_enrollment_history.person = Person.find_person_by_user(user)
     exam_enrollment_history.save()
+
+@login_required
+def institution(request):
+    return render(request, "institution.html", {'section': 'institution'})
