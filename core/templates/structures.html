@@ -27,7 +27,7 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'institution' %}">{% trans 'Institution' %}</a></li>
+  <li><a href="{% url 'institution' %}" id="link_institution">{% trans 'Institution' %}</a></li>
   <li class="active">{% trans 'Entities' %}</li>
 {% endblock %}
 {% block content %}
@@ -41,17 +41,17 @@
 
           <div class="col-md-3">
               <label for="acronym">{% trans 'Acronym'%}</label>
-              <input class="form-control" id="code" placeholder="{% trans 'Acronym' %}" name="acronym" value="{{ acronym }}" style="text-transform:uppercase">
+              <input class="form-control" id="acronym" placeholder="{% trans 'Acronym' %}" name="acronym" value="{{ acronym }}" style="text-transform:uppercase">
           </div>
           <div class="col-md-2">
               <label for="title" >{% trans 'Title'%}</label>
-              <input class="form-control" placeholder="{% trans 'Title' %}" name="title" value="{{ title }}" style="text-transform:uppercase">
+              <input class="form-control" placeholder="{% trans 'Title' %}" id="title" name="title" value="{{ title }}" style="text-transform:uppercase">
           </div>
           <div class="col-md-6">
           </div>
           <div class="col-md-1">
             <label class="invisible">&nbsp;</label>
-            <div class="btnbtn-as-block"><input type="submit" value="OK" id="btn"  name="btn" ></div>
+            <div class="btnbtn-as-block"><input type="submit" value="OK" id="btn_submit_structure_search" name="btn" ></div>
           </div>
         </div>
 
@@ -70,7 +70,7 @@
       </thead>
       {% for structure in structures %}
         <tr>
-          <td><a href="{% url 'structure_read' structure.id %}">{{ structure.acronym }}</a></td>
+          <td><a href="{% url 'structure_read' structure.id %}" id="link_structure">{{ structure.acronym }}</a></td>
           <td>{{ structure.title }}</td>
         </tr>
       {% endfor %}
