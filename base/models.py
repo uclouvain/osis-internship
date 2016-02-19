@@ -132,6 +132,15 @@ class Structure(models.Model):
     def find_children(self):
         return Structure.objects.filter(part_of=self).order_by('acronym')
 
+    def find_offer_years_by_academic_year(self):
+        print('find_offer_years_by_academic_year')
+        list = []
+        for ay in AcademicYear.find_academic_years():
+            print('for1',ay.year)
+            for oy in OfferYear.find_offer_years_by_academic_year_structure(ay,self):
+                list.append(oy)
+        return list
+
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)
 
@@ -235,6 +244,10 @@ class OfferYear(models.Model):
     @staticmethod
     def find_offer_years_by_academic_year(academic_year):
         return OfferYear.objects.filter(academic_year=int(academic_year))
+
+    @staticmethod
+    def find_offer_years_by_academic_year_structure(academic_year,structure):
+        return OfferYear.objects.filter(academic_year=academic_year, structure=structure).order_by('acronym')
 
     @staticmethod
     def find_offer_year_by_id(offer_year_id):
