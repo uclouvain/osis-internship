@@ -89,7 +89,7 @@
                     <td>{% trans 'Title' %}</td>
                   </thead>
                   {% for o in offer_year.offer_year_children%}
-                  <tr><td><a href="{% url 'offer_read' o.id %}" id="lnk_offer_year_children">{{ o.acronym }}</a></td><td>{{ o.title }}</td></tr>
+                  <tr><td><a href="{% url 'offer_read' o.id %}" id="lnk_offer_year_children_{o.id}">{{ o.acronym }}</a></td><td>{{ o.title }}</td></tr>
                   {% endfor%}
               </table>
               </div>
@@ -109,7 +109,7 @@
                     <td>{% trans 'Title' %}</td>
                   </thead>
                   {% for o in offer_year.offer_year_sibling%}
-                  <tr><td><a href="{% url 'offer_read' o.id %}" id="lnk_offer_year_sibling">{{ o.acronym }}</a></td><td>{{ o.title }}</td></tr>
+                  <tr><td><a href="{% url 'offer_read' o.id %}" id="lnk_offer_year_sibling_{o.id}">{{ o.acronym }}</a></td><td>{{ o.title }}</td></tr>
                   {% endfor%}
                 </table>
               </div>
@@ -136,7 +136,7 @@
                       <td>{% trans 'Title' %}</td>
                     </thead>
                     {% for orientation in offer_year.orientation_sibling%}
-                    <tr><td><a href="{% url 'offer_read' orientation.id %}" id="lnk_offer_year_orientation_sibling">{{ orientation.acronym }}</a></td><td>{{ orientation.title }}</td></tr>
+                    <tr><td><a href="{% url 'offer_read' orientation.id %}" id="lnk_offer_year_orientation_sibling_{o.id}">{{ orientation.acronym }}</a></td><td>{{ orientation.title }}</td></tr>
                     {% endfor%}
                   </table>
                 </div>
@@ -171,7 +171,7 @@
                     <td>{% trans 'Title' %}</td>
                   </thead>
                   {% for o in offer_year.offer_year_children%}
-                  <tr><td><a href="{% url 'offer_read' o.id %}" id="offer_year_children">{{ o.acronym }}</a></td><td>{{ o.title }}</td></tr>
+                  <tr><td><a href="{% url 'offer_read' o.id %}" id="offer_year_children_{o.id}">{{ o.acronym }}</a></td><td>{{ o.title }}</td></tr>
                   {% endfor%}
               </table>
               </div>
@@ -191,7 +191,7 @@
                     <td>{% trans 'Title' %}</td>
                   </thead>
                   {% for o in offer_year.offer_year_sibling%}
-                  <tr><td><a href="{% url 'offer_read' o.id %}" id="offer_year_sibling">{{ o.acronym }}</a></td><td>{{ o.title }}</td></tr>
+                  <tr><td><a href="{% url 'offer_read' o.id %}" id="offer_year_sibling_{o.id}">{{ o.acronym }}</a></td><td>{{ o.title }}</td></tr>
                   {% endfor%}
                 </table>
               </div>
@@ -219,7 +219,7 @@
                     <td>{% trans 'Title' %}</td>
                   </thead>
                   {% for orientation in offer_year.orientation_sibling%}
-                  <tr><td><a href="{% url 'offer_read' orientation.id %}" id="lnk_offer_year_orientation_sibling">{{ orientation.acronym }}</a></td><td>{{ orientation.title }}</td></tr>
+                  <tr><td><a href="{% url 'offer_read' orientation.id %}" id="lnk_offer_year_orientation_sibling_{o.id}">{{ orientation.acronym }}</a></td><td>{{ orientation.title }}</td></tr>
                   {% endfor%}
                 </table>
               </div>
