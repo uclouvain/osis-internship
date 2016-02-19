@@ -56,12 +56,10 @@ def offers_search(request):
     faculties = Structure.find_structures()
     academic_years = AcademicYear.find_academic_years()
 
-    if academic_year is None:
-        academic_year_calendar = AcademicCalendar.current_academic_year()
-        if not academic_year_calendar is None:
-            academic_year = academic_year_calendar.id
-
-    query = OfferYear.find_offer_years_by_academic_year(academic_year)
+    if academic_year and academic_year != "*":
+        query = OfferYear.find_offer_years_by_academic_year(academic_year)
+    else:
+        query = OfferYear.find_all()
 
     if faculty and faculty != "*":
         query = query.filter(structure=int(faculty))
@@ -71,10 +69,17 @@ def offers_search(request):
 
     # on ne doit prendre que les offres racines (pas les finalités)
     query = query.filter(offer_parent=None)
-
+    if faculty is None or faculty == "*" :
+        faculty=None
+    else:
+        faculty = int(faculty)
+    if academic_year is None or academic_year == "*" :
+        academic_year=None
+    else:
+        academic_year = int(academic_year)
     return render(request, "offers.html", {'faculties':      faculties,
-                                           'academic_year':  int(academic_year),
-                                           'faculty':        int(faculty),
+                                           'academic_year':  academic_year,
+                                           'faculty':        faculty,
                                            'code':           code,
                                            'academic_years': academic_years,
                                            'offer_years':         query ,
