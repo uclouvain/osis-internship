@@ -59,7 +59,13 @@
               <label for="title">{% trans 'Title'%}</label><br>
               {{ structure.title }}
             </div>
+          </div>
+          <div class="row">
             <div class="col-md-3">
+                <label for="title">{% trans 'Organization'%}</label><br>
+                {{ structure.organization | default_if_none:'' }}
+            </div>
+            <div class="col-md-9">
             </div>
           </div>
           {%if structure.find_children%}
