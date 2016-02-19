@@ -69,15 +69,17 @@ def offers_search(request):
     if not code is None and len(code) > 0:
         query = query.filter(acronym__icontains=code)
 
-    return render(request, "offers.html", {'faculties': faculties,
-                                           'academic_year': int(academic_year),
-                                           'faculty': int(faculty),
-                                           'code': code,
-                                           'academic_years': academic_years,
-                                           'offers': query,
-                                           'init': "0"})
+    # on ne doit prendre que les offres racines (pas les finalités)
+    query = query.filter(offer_parent=None)
 
+    return render(request, "offers.html", {'faculties':      faculties,
+                                           'academic_year':  int(academic_year),
+                                           'faculty':        int(faculty),
+                                           'code':           code,
+                                           'academic_years': academic_years,
+                                           'offer_years':         query ,
+                                           'init':           "0"})
 
 def offer_read(request,offer_year_id):
     offer_year = OfferYear.find_offer_year_by_id(offer_year_id)
-    return render(request, "offer.html", {'offer': offer_year})
+    return render(request, "offer.html", {'offer_year':     offer_year})

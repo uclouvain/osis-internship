@@ -35,7 +35,7 @@ def learning_units(request):
     academic_years = AcademicYear.find_academic_years()
     academic_year_calendar = AcademicCalendar.current_academic_year()
 
-    if not(academic_year_calendar is None):
+    if not academic_year_calendar is None:
         academic_year = academic_year_calendar.id
     return render(request, "learning_units.html", {
                                            'academic_year':  academic_year,
@@ -56,7 +56,7 @@ def learning_units_search(request):
 
     if academic_year is None:
         academic_year_calendar = AcademicCalendar.current_academic_year()
-        if not(academic_year_calendar is None):
+        if not academic_year_calendar is None:
             academic_year = academic_year_calendar.id
 
     learning_units = LearningUnitYear.find_learning_unit_years_by_academic_year(academic_year)
