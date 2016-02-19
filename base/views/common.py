@@ -23,13 +23,33 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from base.models import Organization, LearningUnitEnrollment
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
 
 
-class InternshipEnrollment(models.Model):
-    external_id              = models.CharField(max_length = 100, blank = True, null = True)
-    learning_unit_enrollment = models.ForeignKey(LearningUnitEnrollment)
-    organization             = models.ForeignKey(Organization)
-    start_date               = models.DateField()
-    end_date                 = models.DateField()
+def page_not_found(request):
+    return render(request,'page_not_found.html')
+
+
+def access_denied(request):
+    return render(request,'acces_denied.html')
+
+
+def home(request):
+    return render(request, "home.html")
+
+
+@login_required
+def studies(request):
+    return render(request, "studies.html", {'section': 'studies'})
+
+
+@login_required
+def assessments(request):
+    return render(request, "assessments.html", {'section': 'assessments'})
+
+
+@login_required
+def catalog(request):
+    return render(request, "catalog.html", {'section': 'catalog'})
+

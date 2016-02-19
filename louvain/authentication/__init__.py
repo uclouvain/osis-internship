@@ -1,9 +1,9 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
-#    designed to manage the core business of higher education institutions,
-#    such as universities, faculties, institutes and professional schools.
-#    The core business involves the administration of students, teachers,
+# OSIS stands for Open Student Information System. It's an application
+# designed to manage the core business of higher education institutions,
+# such as universities, faculties, institutes and professional schools.
+# The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
 #    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
@@ -23,13 +23,3 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from base.models import Organization, LearningUnitEnrollment
-
-
-class InternshipEnrollment(models.Model):
-    external_id              = models.CharField(max_length = 100, blank = True, null = True)
-    learning_unit_enrollment = models.ForeignKey(LearningUnitEnrollment)
-    organization             = models.ForeignKey(Organization)
-    start_date               = models.DateField()
-    end_date                 = models.DateField()

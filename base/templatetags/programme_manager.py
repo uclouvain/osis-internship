@@ -23,13 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from base.models import Organization, LearningUnitEnrollment
+from django import template
+from base.models import ProgrammeManager
 
+register = template.Library()
 
-class InternshipEnrollment(models.Model):
-    external_id              = models.CharField(max_length = 100, blank = True, null = True)
-    learning_unit_enrollment = models.ForeignKey(LearningUnitEnrollment)
-    organization             = models.ForeignKey(Organization)
-    start_date               = models.DateField()
-    end_date                 = models.DateField()
+@register.assignment_tag(takes_context=True)
+def programme_manager(context):
+    request = context['request']
+    enrollment = context['enrollment']
+
+    return ProgrammeManager.is_programme_manager(request.user, enrollment.learning_unit_enrollment.offer_enrollment.offer_year.structure)
