@@ -83,8 +83,8 @@ class Tutor(models.Model):
     @staticmethod
     def find_by_user(user):
         try:
-            person = Person.objects.filter(user=user)
-            tutor = Tutor.objects.get(person = person)
+            person = Person.find_person_by_user(user)
+            tutor = Tutor.objects.filter(person=person)
             return tutor
         except ObjectDoesNotExist:
             return None
@@ -124,7 +124,7 @@ class Structure(models.Model):
     @staticmethod
     def find_structures():
         return Structure.objects.all().order_by('acronym')
-        
+
     @staticmethod
     def find_by_id(id):
         return Structure.objects.get(pk=id)
@@ -215,6 +215,9 @@ class Offer(models.Model):
     def structure(self):
         return Structure.objects.filter(id=self.id).structure
 
+    def find_offer_by_id(id):
+        return Offer.objects.get(pk=id)
+
     def __str__(self):
         return self.acronym
 
@@ -240,12 +243,39 @@ class OfferYear(models.Model):
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.offer.acronym)
 
+    @property
     def offer_year_children(self):
-        return OfferYear.objects.filter(offer_parent=self)
+        '''
+        Pour trouver les enfants
+        '''
+        return  OfferYear.objects.filter(offer_parent=self)
 
+    @property
     def offer_year_sibling(self):
+        '''
+        Pour trouver les autres finalités
+        '''
         if self.offer_parent:
-            return OfferYear.objects.filter(offer_parent=self.offer_parent).exclude(id=self.id)
+            return OfferYear.objects.filter(offer_parent=self.offer_parent).exclude(id=self.id).exclude()
+        return None
+
+    def is_orientation2(self):
+        if self.orientation_sibling():
+            return True
+        else:
+            return Fa
+    @property
+    def is_orientation(self):
+        if self.orientation_sibling():
+            return True
+        else:
+            return False
+
+    @property
+    def orientation_sibling(self):
+        if self.offer:
+            offer = Offer.find_offer_by_id(self.offer.id)
+            return OfferYear.objects.filter(offer=offer,acronym=self.acronym,academic_year=self.academic_year).exclude(id=self.id)
         return None
 
 
@@ -523,7 +553,7 @@ class ExamEnrollment(models.Model):
         if is_fac:
             return '%s, %s, %s, %s, %s' % (_('Absent'),_('Cheating'), _('Ill'),  _('Justified absence'), _('Score missing'))
         else:
-            return '%s, %s, %s' % (_('Absent'), _('Cheating'),_('Score missing'),)
+            return '%s, %s, %s' % (_('Absent'), _('Cheating'),_('Score missing'))
 
     def __str__(self):
         return u"%s - %s" % (self.session_exam, self.learning_unit_enrollment)

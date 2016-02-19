@@ -27,14 +27,14 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'institution' %}">{% trans 'Institution' %}</a></li>
-  <li><a href="{% url 'structures' %}">{% trans 'Entities' %}</a></li>
+  <li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'Institution' %}</a></li>
+  <li><a href="{% url 'structures' %}" id="lnk_entities">{% trans 'Entities' %}</a></li>
   <li class="active">{% trans 'Entity' %}</li>
 {% endblock %}
 {% block content %}
 <div class="page-header">
   <h3>{%if structure.part_of %}
-        <a href="{% url 'structure_read' structure.part_of.id %}">{{structure.part_of.title}}</a>
+        <a href="{% url 'structure_read' structure.part_of.id %}" id="lnk_structure_read_{{structure.part_of.id}}">{{structure.part_of.title}}</a>
       {%else%}
         {{ structure.title }}
       {% endif %}</h3>
@@ -45,11 +45,11 @@
 <div class="panel panel-default">
   <div class="panel-body">
     <ul class="nav nav-tabs">
-      <li class="active"><a data-toggle="tab" href="#identification">{% trans 'Identification'%}</a></li>
+      <li class="active"><a data-toggle="tab" href="#tab_identification">{% trans 'Identification'%}</a></li>
     </ul>
     <div class="tab-content">
       <p>
-        <div id="identification" class="tab-pane fade in active">
+        <div id="tab_identification" class="tab-pane fade in active">
           <div class="row">
             <div class="col-md-3">
               <label for="acronym">{% trans 'Acronym' %}</label><br>
@@ -87,7 +87,7 @@
                     </thead>
                     {% for s in structure.find_children %}
                       <tr>
-                        <td><a href="{% url 'structure_read' s.id %}">{{ s.acronym }}</a></td>
+                        <td><a href="{% url 'structure_read' s.id %}" id="lnk_structure_read_{{s.id}}">{{ s.acronym }}</a></td>
                         <td>{{ s.title }}</td>
                       </tr>
                     {% endfor %}

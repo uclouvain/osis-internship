@@ -27,8 +27,8 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'catalog' %}">{% trans 'Catalog' %}</a></li>
-  <li><a href="{% url 'learning_units' %}">{% trans 'Learning units' %}</a></li>
+  <li><a href="{% url 'catalog' %}" id="lnk_catalog">{% trans 'Catalog' %}</a></li>
+  <li><a href="{% url 'learning_units' %}" id="lnk_learning_units">{% trans 'Learning units' %}</a></li>
   <li class="active">{% trans 'Learning unit' %}</li>
 {% endblock %}
 {% block content %}
@@ -38,11 +38,11 @@
 <div class="panel panel-default">
   <div class="panel-body">
     <ul class="nav nav-tabs">
-      <li class="active"><a data-toggle="tab" href="#informations">{% trans 'General informations'%}</a></li>
+      <li class="active"><a data-toggle="tab" href="#tab_informations" id="lnk_informations_tab">{% trans 'General informations'%}</a></li>
     </ul>
     <div class="tab-content">
       <p>
-        <div id="informations" class="tab-pane fade in active">
+        <div id="tab_informations" class="tab-pane fade in active">
           <div class="row">
             <div class="col-md-3">
               <label for="title">{% trans 'Academic year'%}</label><br>

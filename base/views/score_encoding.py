@@ -94,7 +94,6 @@ def online_encoding(request, session_id):
 
 @login_required
 def online_encoding_form(request, session_id):
-    print('kkkk')
     session = SessionExam.find_session(session_id)
     enrollments = ExamEnrollment.find_exam_enrollments(session)
     if request.method == 'GET':

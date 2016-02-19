@@ -27,8 +27,8 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'catalog' %}">{% trans 'Catalog'%}</a></li>
-  <li class="active">{% trans 'Learning units' %}</li>
+  <li><a href="{% url 'catalog' %}" id="lnk_catalog">{% trans 'Catalog'%}</a></li>
+  <li class="active" id="lnk_learning_units">{% trans 'Learning units' %}</li>
 
 {% endblock %}
 {% block content %}
@@ -38,14 +38,14 @@
 <div class="panel panel-default">
   <div class="panel-body">
     <div class="row">
-      <form  method="get" action="{% url 'learning_units_search'%}" >
+      <form  method="get" action="{% url 'learning_units_search'%}" id="form_learning_units">
           <div class="col-md-6">
               <label for="code">{% trans 'Acronym'%}</label>
-              <input class="form-control" id="code" placeholder="{% trans 'Acronym' %}" name="code" value="{{ code }}" required="true" style="text-transform:uppercase">
+              <input class="form-control" id="txt_code" placeholder="{% trans 'Acronym' %}" name="code" value="{{ code }}" required="true" style="text-transform:uppercase">
           </div>
           <div class="col-md-2">
               <label for="academic_year" >{% trans 'Academic Year'%}</label>
-              <select class="form-control" id="academic_year"  name="academic_year" value="{{ academic_year }}">
+              <select class="form-control" id="slt_academic_year"  name="academic_year" value="{{ academic_year }}">
                 {% for ay in academic_years %}
                   {% if ay.id == academic_year %}
                     <option selected value="{{ ay.id }}">{{ ay }}</option>
@@ -58,7 +58,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <label class="invisible">&nbsp;</label>
-              <div class="btnbtn-as-block"><input type="submit" value="OK" id="btn"  name="btn" ></div>
+              <div class="btnbtn-as-block"><input type="submit" value="OK" id="bt_submit_learning_unit_search"  name="btn" ></div>
             </div>
           </div>
         </form>
@@ -79,7 +79,7 @@
       </thead>
       {% for learning_unit in learning_units %}
         <tr>
-          <td><a href="{% url 'learning_unit_read' learning_unit.id %}">{{ learning_unit.acronym }}</a></td>
+          <td><a href="{% url 'learning_unit_read' learning_unit.id %}" id="lnk_learning_unit_{{learning_unit.id}}">{{ learning_unit.acronym }}</a></td>
           <td>{{ learning_unit.title }}</td>
           <td>{% if learning_unit.credits %}{{ learning_unit.credits }}{% endif %}</td>
         </tr>
