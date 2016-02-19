@@ -30,7 +30,7 @@ from django.contrib import auth
 from django.contrib.auth import backends
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.encoding import smart_text
-from core.models import Person
+from base.models import Person
 import re
 
 
@@ -152,4 +152,3 @@ class ShibbolethAuthMiddleware(RemoteUserMiddleware):
 
     def clean_string(self,string):
         return string.encode('raw_unicode_escape').decode("utf-8")
-
