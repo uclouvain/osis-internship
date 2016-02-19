@@ -23,13 +23,37 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from base.models import Organization, LearningUnitEnrollment
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from base.models import Structure
 
 
-class InternshipEnrollment(models.Model):
-    external_id              = models.CharField(max_length = 100, blank = True, null = True)
-    learning_unit_enrollment = models.ForeignKey(LearningUnitEnrollment)
-    organization             = models.ForeignKey(Organization)
-    start_date               = models.DateField()
-    end_date                 = models.DateField()
+@login_required
+def institution(request):
+    return render(request, "institution.html", {'section': 'institution'})
+
+
+def structures(request):
+    return render(request, "structures.html", {'init': "1"})
+
+
+def structures_search(request):
+    acronym = request.GET['acronym']
+    title = request.GET['title']
+
+    query = Structure.find_structures()
+
+    if not acronym is None and len(acronym) > 0  :
+        query = query.filter(acronym__icontains=acronym)
+    if not title is None and len(title) > 0  :
+        query = query.filter(title__icontains=title)
+
+    return render(request, "structures.html", {'title': title,
+                                               'acronym': acronym,
+                                               'init': "0",
+                                               'structures': query})
+
+
+def structure_read(request,id):
+    structure = Structure.find_by_id(id)
+    return render(request, "structure.html", {'structure': structure})
