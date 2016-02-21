@@ -11,6 +11,16 @@ image::images/entity-relationship-diagram.png[Entity Relationship Diagram]
 
 === Base
 ==== academic_calendar
+
+The academic calendar defines the events that trigger the execution of academic
+processes. The period of an event establishes the time interval in which a
+functionality is accessible to users. The creation of an event in
+`academic_calendar` also creates the same event in the `offer_year_calendar` for
+each one of the offers in the same academic year. Modifications in the events
+propagates to the respective events in the offers' calendar, except when the
+event was changed by the program manager. Deleting an event also deletes all
+related events linked to the offers.
+
 ==== academic_year
 ==== attribution
 ==== learning_unit
@@ -20,6 +30,13 @@ image::images/entity-relationship-diagram.png[Entity Relationship Diagram]
 ==== offer_enrollment
 ==== offer_year
 ==== offer_year_calendar
+
+The calendar of the offers are linked to the academic calendar. Events are
+created in the `offer_year_calendar` when an event is created in the
+`academic_calendar`. Offers of events can be customized to the needs of the
+offer, but when it happens, the field `customized` is set to true and the
+record is not updated when `academic_calendar` changes.
+
 ==== organization
 
 OSIS is capable of managing multiple institutions in a single installation. All
