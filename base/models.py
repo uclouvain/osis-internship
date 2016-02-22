@@ -133,13 +133,7 @@ class Structure(models.Model):
         return Structure.objects.filter(part_of=self).order_by('acronym')
 
     def find_offer_years_by_academic_year(self):
-        print('find_offer_years_by_academic_year')
-        list = []
-        for ay in AcademicYear.find_academic_years():
-            print('for1',ay.year)
-            for oy in OfferYear.find_offer_years_by_academic_year_structure(ay,self):
-                list.append(oy)
-        return list
+        return OfferYear.objects.filter(structure=self).order_by('academic_year','acronym')
 
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)
@@ -224,6 +218,7 @@ class Offer(models.Model):
     def structure(self):
         return Structure.objects.filter(id=self.id).structure
 
+    @staticmethod
     def find_offer_by_id(id):
         return Offer.objects.get(pk=id)
 
@@ -259,24 +254,19 @@ class OfferYear(models.Model):
     @property
     def offer_year_children(self):
         '''
-        Pour trouver les enfants
+        To find children
         '''
         return  OfferYear.objects.filter(offer_parent=self)
 
     @property
     def offer_year_sibling(self):
         '''
-        Pour trouver les autres finalités
+        To find other focuses
         '''
         if self.offer_parent:
             return OfferYear.objects.filter(offer_parent=self.offer_parent).exclude(id=self.id).exclude()
         return None
 
-    def is_orientation2(self):
-        if self.orientation_sibling():
-            return True
-        else:
-            return Fa
     @property
     def is_orientation(self):
         if self.orientation_sibling():
