@@ -70,7 +70,7 @@ def offers_search(request):
         query = query.filter(acronym__icontains=code)
 
     # on ne doit prendre que les offres racines (pas les finalités)
-    query = query.filter(offer_parent=None)
+    query = query.filter(parent=None)
 
     return render(request, "offers.html", {'faculties':      faculties,
                                            'academic_year':  int(academic_year),

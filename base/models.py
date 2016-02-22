@@ -236,7 +236,7 @@ class OfferYear(models.Model):
     acronym       = models.CharField(max_length=15)
     title         = models.CharField(max_length=255)
     structure     = models.ForeignKey(Structure)
-    offer_parent  = models.ForeignKey('self', blank=True, null=True, related_name='children',db_index=True)
+    parent  = models.ForeignKey('self', blank=True, null=True, related_name='children',db_index=True)
 
     @staticmethod
     def find_offer_years_by_academic_year(academic_year):
@@ -258,15 +258,15 @@ class OfferYear(models.Model):
         '''
         To find children
         '''
-        return  OfferYear.objects.filter(offer_parent=self)
+        return  OfferYear.objects.filter(parent=self)
 
     @property
     def offer_year_sibling(self):
         '''
         To find other focuses
         '''
-        if self.offer_parent:
-            return OfferYear.objects.filter(offer_parent=self.offer_parent).exclude(id=self.id).exclude()
+        if self.parent:
+            return OfferYear.objects.filter(parent=self.parent).exclude(id=self.id).exclude()
         return None
 
     @property
