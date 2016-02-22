@@ -278,6 +278,9 @@ class OfferYear(models.Model):
             return OfferYear.objects.filter(offer=offer,acronym=self.acronym,academic_year=self.academic_year).exclude(id=self.id)
         return None
 
+    @staticmethod
+    def find_all():
+        return OfferYear.objects.all()
 
 class ProgrammeManager(models.Model):
     changed = models.DateTimeField(null=True)
