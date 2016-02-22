@@ -285,6 +285,10 @@ class OfferYear(models.Model):
     def find_all():
         return OfferYear.objects.all()
 
+    def find_offer_year_calendar(self):
+        return OfferYearCalendar.objects.filter(offer_year=self).order_by('start_date')
+
+
 class ProgrammeManager(models.Model):
     changed = models.DateTimeField(null=True)
     person  = models.ForeignKey(Person)
