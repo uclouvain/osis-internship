@@ -121,11 +121,11 @@
                 </td>
                 <td><button type="button" id="bt_take_reencoded_{{ enrollment.id }}" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-ok" style="color: green" aria-hidden="true"></span></button></td>
                 <td>
-                  <input type="hidden" name="txt_score_{{ enrollment.id }}" id="hdn_score_final_{{ enrollment.id }}">
+                  <input type="hidden" name="score_{{ enrollment.id }}" id="hdn_score_final_{{ enrollment.id }}">
                   <div id="pnl_score_final_show_{{ enrollment.id }}" style="font-weight: bold; color: blue;">{{ enrollment.score_final | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}</div>
                 </td>
                 <td>
-                  <input type="hidden" name="txt_justification_{{ enrollment.id }}" id="hdn_justification_final_{{ enrollment.id }}">
+                  <input type="hidden" name="justification_{{ enrollment.id }}" id="hdn_justification_final_{{ enrollment.id }}">
                   <div id="pnl_justification_final_show_{{ enrollment.id }}" style="font-weight: bold; color: blue;">{{ enrollment.justification_final | default_if_none:"-" }}</div>
                 </td>
               </tr>

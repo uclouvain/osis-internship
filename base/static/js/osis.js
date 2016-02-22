@@ -3,7 +3,7 @@ $(document).ready(function(){
 });
 
 /*** Score encoding forms *****************************************************/
-$("input[id^='score_']" ).change(function(event) {
+$("input[id^='txt_score_']" ).change(function(event) {
   // Get the object that received the event.
   var target = $(event.target);
   var id = target.attr("id");
@@ -15,11 +15,11 @@ $("input[id^='score_']" ).change(function(event) {
   // Checks whether the object contains an id.
   if (typeof id != 'undefined') {
     if(target.val() != "")
-      $("#justification_" + id).val('');
+      $("#txt_justification_" + id).val('');
   }
 });
 
-$("select[id^='justification_score_']" ).change(function(event) {
+$("select[id^='slt_justification_score_']" ).change(function(event) {
   // Get the object that received the event.
   var target = $(event.target);
   var id = target.attr("id");
@@ -36,7 +36,7 @@ $("select[id^='justification_score_']" ).change(function(event) {
 });
 
 /*** Double encoding ***/
-$("input[id^='double_score_']" ).blur(function(event) {
+$("input[id^='num_double_score_']" ).blur(function(event) {
   // Get the object that received the event.
   var target = $(event.target);
   var id = target.attr("id");
@@ -46,16 +46,16 @@ $("input[id^='double_score_']" ).blur(function(event) {
   }
 
   var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
-  var score_draft = Number($("#score_draft_" + enrollmentId).val());
+  var score_draft = Number($("#txt_score_draft_" + enrollmentId).val());
 
   if (target.val() != score_draft)
     target.css("border", "1px solid #ff0000");
   else
     target.css("border", "1px solid lightgrey");
 
-  var double_justification_field = $("#double_justification_score_"+ enrollmentId);
+  var double_justification_field = $("#slt_double_justification_score_"+ enrollmentId);
   var justification_double = double_justification_field.val();
-  var justification_draft =  $("#justification_draft_" + enrollmentId).val();
+  var justification_draft =  $("#txt_justification_draft_" + enrollmentId).val();
 
   if (justification_double != justification_draft)
     double_justification_field.css("border", "1px solid #ff0000");
@@ -63,11 +63,11 @@ $("input[id^='double_score_']" ).blur(function(event) {
     double_justification_field.css("border", "1px solid lightgrey");
 
   if(target.val() != "") {
-      $("#double_justification_score_" + enrollmentId).val('');
+      $("#slt_double_justification_score_" + enrollmentId).val('');
   }
 });
 
-$("select[id^='double_justification_score_']" ).blur(function(event) {
+$("select[id^='slt_double_justification_score_']" ).blur(function(event) {
   // Get the object that received the event.
   var target = $(event.target);
   var id = target.attr("id");
@@ -77,7 +77,7 @@ $("select[id^='double_justification_score_']" ).blur(function(event) {
   }
 
   var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
-  var justification_draft =  $("#justification_draft_" + enrollmentId).val();
+  var justification_draft =  $("#txt_justification_draft_" + enrollmentId).val();
 
   if (target.val() != justification_draft)
     target.css("border", "1px solid #ff0000");
@@ -85,11 +85,11 @@ $("select[id^='double_justification_score_']" ).blur(function(event) {
     target.css("border", "1px solid lightgrey");
 
   if(target.val() != "")
-      $("#double_score_" + enrollmentId).val('');
+      $("#num_double_score_" + enrollmentId).val('');
 });
 
 /*** Double encoding validation ***/
-$("button[id^='take_draft_']").click(function(event) {
+$("button[id^='bt_take_draft_']").click(function(event) {
   var target = $(event.target);
   var id = target.attr("id");
   if (typeof id == 'undefined') {
@@ -98,15 +98,15 @@ $("button[id^='take_draft_']").click(function(event) {
   }
 
   var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
-  var score_draft = $("#score_draft_"+ enrollmentId).val();
-  var justification_draft = $("#justification_draft_"+ enrollmentId).val();
-  $("#score_final_show_"+ enrollmentId).html(score_draft);
-  $("#score_final_"+ enrollmentId).val(score_draft);
-  $("#justification_final_show_"+ enrollmentId).html(justification_draft);
-  $("#justification_final_"+ enrollmentId).val(justification_draft);
+  var score_draft = $("#txt_score_draft_"+ enrollmentId).val();
+  var justification_draft = $("#txt_justification_draft_"+ enrollmentId).val();
+  $("#pnl_score_final_show_"+ enrollmentId).html(score_draft);
+  $("#hdn_score_final_"+ enrollmentId).val(score_draft);
+  $("#pnl_justification_final_show_"+ enrollmentId).html(justification_draft);
+  $("#hdn_justification_final_"+ enrollmentId).val(justification_draft);
 });
 
-$("button[id^='take_reencoded_']").click(function(event) {
+$("button[id^='bt_take_reencoded_']").click(function(event) {
   var target = $(event.target);
   var id = target.attr("id");
   if (typeof id == 'undefined') {
@@ -115,11 +115,11 @@ $("button[id^='take_reencoded_']").click(function(event) {
   }
 
   var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
-  var score_reencoded = $("#score_reencoded_"+ enrollmentId).val();
-  var justification_reencoded = $("#justification_reencoded_"+ enrollmentId).val();
-  $("#score_final_show_"+ enrollmentId).html(score_reencoded);
-  $("#score_final_"+ enrollmentId).val(score_reencoded);
-  $("#justification_final_show_"+ enrollmentId).html(justification_reencoded);
-  $("#justification_final_"+ enrollmentId).val(justification_reencoded);
+  var score_reencoded = $("#txt_score_reencoded_"+ enrollmentId).val();
+  var justification_reencoded = $("#txt_justification_reencoded_"+ enrollmentId).val();
+  $("#pnl_score_final_show_"+ enrollmentId).html(score_reencoded);
+  $("#hdn_score_final_"+ enrollmentId).val(score_reencoded);
+  $("#pnl_justification_final_show_"+ enrollmentId).html(justification_reencoded);
+  $("#hdn_justification_final_"+ enrollmentId).val(justification_reencoded);
 });
 /******************************************************************************/
