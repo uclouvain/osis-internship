@@ -84,7 +84,9 @@ class Tutor(models.Model):
     def find_by_user(user):
         try:
             person = Person.find_person_by_user(user)
-            tutor = Tutor.objects.filter(person=person)
+            # tutor = Tutor.objects.filter(person=person)
+            tutor = Tutor.objects.get(person = person)
+
             return tutor
         except ObjectDoesNotExist:
             return None
