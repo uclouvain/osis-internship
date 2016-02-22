@@ -30,6 +30,7 @@ from django.contrib.auth.decorators import login_required
 from base.utils import send_mail,pdf_utils,export_utils
 from base.models import *
 
+
 @login_required
 def scores_encoding(request):
     academic_year = AcademicCalendar.current_academic_year()
