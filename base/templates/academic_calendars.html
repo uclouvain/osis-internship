@@ -54,11 +54,16 @@
             {% endfor %}
           </select>
         </div>
-        <div class="col-md-9">
+        <div class="col-md-7">
         </div>
-        <div class="col-md-1">
+        <div class="col-md-3">
           <label class="invisible">&nbsp;</label>
-          <div class="btnbtn-as-block"><input type="submit" value="OK" id="bt_submit_academic_calendar_search" ></div>
+          <div>
+
+            <input type="submit" value="{% trans 'Search'%}" id="bt_submit_academic_calendar_search" class="btn btn-primary" role="button" >
+            &nbsp;&nbsp;
+            <a href="{% url 'academic_calendar_create' %}" id="lnk_academic_calendar_create" class="btn btn-default" role="button">{% trans 'Create'%}</a>
+          </div>
         </div>
 
       </div>
@@ -86,7 +91,7 @@
       {% endfor %}
     </table>
     {% endif %}
-    <a href="{% url 'academic_calendar_create' %}" id="lnk_academic_calendar_create"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+
   </div>
 </div>
 {% endblock %}
