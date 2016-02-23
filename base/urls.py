@@ -75,5 +75,8 @@ urlpatterns = [
     url(r'^academic_calendars/edit/([0-9]+)/$', academic_calendar.academic_calendar_edit, name='academic_calendar_edit'),
     url(r'^academic_calendars/delete/([0-9]+)/$', academic_calendar.academic_calendar_delete, name='academic_calendar_delete'),
     url(r'^academic_calendars/save/([0-9]+)/$', academic_calendar.academic_calendar_save, name='academic_calendar_save'),
+    url(r'^academic_calendars/save/$', academic_calendar.academic_calendar_new, name='academic_calendar_save_new'),
+    url(r'^academic_calendars/create/([0-9]+)/$', academic_calendar.academic_calendar_create, name='academic_calendar_create'),
+
 
     ]

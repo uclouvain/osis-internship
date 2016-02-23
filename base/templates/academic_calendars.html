@@ -79,14 +79,14 @@
       </thead>
       {% for academic_calendar in academic_calendars %}
         <tr>
-          <td><a href="{% url 'academic_calendar_read' academic_calendar.id %}" id="lnk_academic_calendar_{{academic_calendar.id}}">{{ academic_calendar.title }}</a></td>
+          <td><a href="{% url 'academic_calendar_read' academic_calendar.id %}" id="lnk_academic_calendar_edit_{{academic_calendar.id}}">{{ academic_calendar.title }}</a></td>
           <td>{{academic_calendar.start_date| default_if_none:''|date:"j/m/Y" }}</td>
           <td>{{academic_calendar.end_date| default_if_none:''|date:"j/m/Y" }}</td>
         </tr>
       {% endfor %}
     </table>
     {% endif %}
-
+    <a href="{% url 'academic_calendar_create' academic_year.id %}" id="lnk_academic_calendar_create"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
   </div>
 </div>
 {% endblock %}

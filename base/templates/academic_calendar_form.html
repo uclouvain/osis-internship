@@ -35,11 +35,17 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
+  {% if academic_calendar.id%}
   <h2>{{ academic_calendar.title }}</h2>
+  {% endif %}
 </div>
 <div class="panel panel-default">
   <div class="panel-body">
+    {% if academic_calendar.id%}
     <form method="post" action="{% url 'academic_calendar_save' academic_calendar.id %}">
+    {%else%}
+    <form method="post" action="{% url 'academic_calendar_save_new'  %}">
+    {%endif%}
       {% csrf_token %}
       <div class="row">
         <div class="col-md-3">
@@ -102,9 +108,7 @@
         <div class="col-md-8">
         </div>
         <div class="col-md-4">
-          <!--<a href="{% url 'academic_calendar_save' academic_calendar.id %}" title="{%trans 'Save'%}" id="lnk_academic_calendar_save">
-            <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
-          </a>-->
+
           <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}">{% trans 'Save'%}</button>
         </div>
       </div>

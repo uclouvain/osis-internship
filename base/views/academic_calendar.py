@@ -63,9 +63,14 @@ def academic_calendar_read(request,id):
     academic_calendar = AcademicCalendar.find_by_id(id)
     return render(request, "academic_calendar.html", {'academic_calendar':     academic_calendar})
 
+def academic_calendar_new(request):
+    return academic_calendar_save(request,None)
 
 def academic_calendar_save(request,id):
-    academic_calendar = AcademicCalendar.find_by_id(id)
+    if id:
+        academic_calendar = AcademicCalendar.find_by_id(id)
+    else:
+        academic_calendar = AcademicCalendar()
     academic_year=None
     academic_year_id = request.POST['academic_year']
 
@@ -114,7 +119,7 @@ def academic_calendar_save(request,id):
 
     #save
     academic_calendar.save()
-
+    print ('zut',academic_year)
     return render(request, "academic_calendars.html", {
                                            'academic_year': academic_year,
                                            'academic_years': AcademicYear.find_academic_years(),
@@ -130,3 +135,13 @@ def academic_calendar_edit(request, id):
 def academic_calendar_delete(request, id):
     academic_calendar = AcademicCalendar.find_by_id(id)
     return render(request, "academic_calendar_form.html", {'academic_calendar':     academic_calendar})
+
+
+def academic_calendar_create(request,academic_year_id):
+    academic_year = get_object_or_404(AcademicYear, pk=academic_year_id)
+    academic_calendar = AcademicCalendar()
+    academic_calendar.academic_year=academic_year
+    academic_years = AcademicYear.find_academic_years()
+    return render(request, "academic_calendar_form.html", {'academic_calendar':     academic_calendar,
+                                                           'academic_year': academic_year,
+                                                           'academic_years': academic_years})
