@@ -172,14 +172,17 @@ EVENT_TYPE = (
 
 
 class AcademicCalendar(models.Model):
-    external_id   = models.CharField(max_length=100, blank=True, null=True)
-    changed       = models.DateTimeField(null=True)
-    academic_year = models.ForeignKey(AcademicYear)
-    event_type    = models.CharField(max_length=50, choices=EVENT_TYPE)
-    title         = models.CharField(max_length=50, blank=True, null=True)
-    description   = models.TextField(blank=True, null=True)
-    start_date    = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
-    end_date      = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
+    external_id           = models.CharField(max_length=100, blank=True, null=True)
+    changed               = models.DateTimeField(null=True)
+    academic_year         = models.ForeignKey(AcademicYear)
+    event_type            = models.CharField(max_length=50, choices=EVENT_TYPE)
+    title                 = models.CharField(max_length=50, blank=True, null=True)
+    description           = models.TextField(blank=True, null=True)
+    start_date            = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
+    end_date              = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
+    highlight_title       = models.CharField(max_length=255, blank=True, null=True)
+    highlight_description = models.CharField(max_length=255, blank=True, null=True)
+    highlight_shortcut    = models.CharField(max_length=255, blank=True, null=True)
 
     @staticmethod
     def current_academic_year():
@@ -323,6 +326,7 @@ class OfferYearCalendar(models.Model):
     event_type        = models.CharField(max_length=50, choices=EVENT_TYPE)
     start_date        = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
     end_date          = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
+    customized        = models.BooleanField(default=False)
 
     @staticmethod
     def current_session_exam():
