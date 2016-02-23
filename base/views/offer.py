@@ -77,13 +77,13 @@ def offers_search(request):
     else:
         academic_year = int(academic_year)
 
-    return render(request, "offers.html", {'faculties':      faculties,
-                                           'academic_year':  academic_year,
-                                           'faculty':        faculty,
-                                           'code':           code,
+    return render(request, "offers.html", {'faculties': faculties,
+                                           'academic_year': academic_year,
+                                           'faculty': faculty,
+                                           'code': code,
                                            'academic_years': academic_years,
-                                           'offer_years':    query,
-                                           'init':           "0"})
+                                           'offer_years': query,
+                                           'init': "0"})
 
 
 def offer_read(request,offer_year_id):
