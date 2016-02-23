@@ -96,27 +96,26 @@
                              {% cycle "white" "#E5F2FF" as rowcolors %}
                          {% else %}
                              {{ rowcolors }}
-                         {% endifchanged %}
-                      ">
+                         {% endifchanged %}">
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
                 <td>
-                  <input type="hidden" id="txt_score_draft_{{ enrollment.id }}" value="{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}">
+                  <input type="hidden" id="hdn_score_draft_{{ enrollment.id }}" value="{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}">
                   {{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}
                 </td>
                 <td>
-                  <input type="hidden" id="txt_justification_draft_{{ enrollment.id }}" value="{{ enrollment.justification_draft | default_if_none:'' }}">
+                  <input type="hidden" id="hdn_justification_draft_{{ enrollment.id }}" value="{{ enrollment.justification_draft | default_if_none:'' }}">
                   {{ enrollment.justification_draft | default_if_none:"" }}
                 </td>
                 <td><button type="button" id="bt_take_draft_{{ enrollment.id }}" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-ok" style="color: green" aria-hidden="true"></span></button></td>
                 <td>
-                  <input type="hidden" id="txt_score_reencoded_{{ enrollment.id }}" value="{{ enrollment.score_reencoded | score_display:enrollment.session_exam.learning_unit_year.decimal_scores}}">
+                  <input type="hidden" id="hdn_score_reencoded_{{ enrollment.id }}" value="{{ enrollment.score_reencoded | score_display:enrollment.session_exam.learning_unit_year.decimal_scores}}">
                   {{ enrollment.score_reencoded | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}
                 </td>
                 <td>
-                  <input type="hidden" id="txt_justification_reencoded_{{ enrollment.id }}" value="{{ enrollment.justification_reencoded | default_if_none:'' }}">
+                  <input type="hidden" id="hdn_justification_reencoded_{{ enrollment.id }}" value="{{ enrollment.justification_reencoded | default_if_none:'' }}">
                   {{ enrollment.justification_reencoded | default_if_none:"" }}
                 </td>
                 <td><button type="button" id="bt_take_reencoded_{{ enrollment.id }}" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-ok" style="color: green" aria-hidden="true"></span></button></td>
@@ -132,8 +131,8 @@
             {% endfor %}
             </tbody>
         </table>
-        <button type="submit" class="btn btn-warning" btn="bt_submit_online_double_encoding_validation"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'Submission' %}</button>
-        <a class="btn btn-default" href="{% url 'online_encoding' session.id %}" role="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'Cancel' %}</a>
+        <button type="submit" class="btn btn-warning" id="bt_submit_online_double_encoding_validation"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'Submission' %}</button>
+        <a class="btn btn-default" id="lnk_cancel" href="{% url 'online_encoding' session.id %}" role="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'Cancel' %}</a>
       </form>
     </div>
   </div>

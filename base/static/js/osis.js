@@ -3,19 +3,18 @@ $(document).ready(function(){
 });
 
 /*** Score encoding forms *****************************************************/
-$("input[id^='txt_score_']" ).change(function(event) {
+$("input[id^='num_score_']" ).change(function(event) {
   // Get the object that received the event.
   var target = $(event.target);
   var id = target.attr("id");
-  if (typeof id === 'undefined') {
+  if (typeof id == 'undefined') {
     target = target.parent();
     id = target.attr("id");
   }
+  var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
 
-  // Checks whether the object contains an id.
-  if (typeof id !== 'undefined') {
-    if(target.val() !== "")
-      $("#txt_justification_" + id).val('');
+  if(target.val() != "") {
+    $("#slt_justification_score_" + enrollmentId).val('');
   }
 });
 
@@ -48,7 +47,7 @@ $("input[id^='num_double_score_']" ).blur(function(event) {
   var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
   var score_draft = Number($("#txt_score_draft_" + enrollmentId).val());
 
-  if (target.val() !== score_draft)
+  if (target.val() != score_draft)
     target.css("border", "1px solid #ff0000");
   else
     target.css("border", "1px solid lightgrey");
@@ -57,7 +56,7 @@ $("input[id^='num_double_score_']" ).blur(function(event) {
   var justification_double = double_justification_field.val();
   var justification_draft =  $("#txt_justification_draft_" + enrollmentId).val();
 
-  if (justification_double !== justification_draft)
+  if (justification_double != justification_draft)
     double_justification_field.css("border", "1px solid #ff0000");
   else
     double_justification_field.css("border", "1px solid lightgrey");
