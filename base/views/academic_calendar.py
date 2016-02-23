@@ -75,7 +75,7 @@ def academic_calendar_save(request,id):
         academic_calendar.academic_year = academic_year
     else:
         academic_calendar.academic_year = None
-    academic_calendars = AcademicCalendar.find_by_academic_year(academic_year)    
+    academic_calendars = AcademicCalendar.find_by_academic_year(academic_year)
     if request.POST['title']:
         academic_calendar.title = request.POST['title']
     else:
@@ -90,6 +90,26 @@ def academic_calendar_save(request,id):
         academic_calendar.end_date = datetime.strptime(request.POST['end_date'], '%d/%m/%Y')
     else:
         academic_calendar.end_date = None
+
+    if request.POST['description']:
+        academic_calendar.description = request.POST['description']
+    else:
+        academic_calendar.description = None
+
+    if request.POST['highlight_description']:
+        academic_calendar.highlight_description = request.POST['highlight_description']
+    else:
+        academic_calendar.highlight_description = None
+
+    if request.POST['highlight_title']:
+        academic_calendar.highlight_title = request.POST['highlight_title']
+    else:
+        academic_calendar.highlight_title = None
+
+    if request.POST['highlight_shortcut']:
+        academic_calendar.highlight_shortcut = request.POST['highlight_shortcut']
+    else:
+        academic_calendar.highlight_shortcut = None
     #validate
 
     #save

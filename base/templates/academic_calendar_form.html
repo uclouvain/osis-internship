@@ -43,7 +43,7 @@
       {% csrf_token %}
       <div class="row">
         <div class="col-md-3">
-          <label for="academic_year">{% trans 'Academic year'%}</label><br>
+          <label for="academic_year">{% trans 'Academic year'%}</label>
           <select class="form-control" id="slt_academic_year"  name="academic_year">
             {% for v in academic_years %}
               {% if v.id == academic_calendar.academic_year %}
@@ -55,7 +55,7 @@
           </select>
         </div>
         <div class="col-md-6">
-          <label for="title">{% trans 'Title' %}</label><br>
+          <label for="title">{% trans 'Title' %}</label>
           <input class="form-control" value="{{ academic_calendar.title | default_if_none:'' }}" name="title" id="txt_title">
         </div>
         <div class="col-md-3">
@@ -64,16 +64,40 @@
       <br>
       <div class="row">
         <div class="col-md-2">
-          <label for="start_date">{% trans 'Start date'%}</label><br>
+          <label for="start_date">{% trans 'Start date'%}</label>
           <input class="form-control" value="{{ academic_calendar.start_date| default_if_none:''|date:"j/m/Y" }}" name="start_date" id="txt_start_date">
         </div>
         <div class="col-md-2">
-          <label for="end_date">{% trans 'End date' %}</label><br>
+          <label for="end_date">{% trans 'End date' %}</label>
           <input class="form-control" value="{{ academic_calendar.end_date| default_if_none:''|date:"j/m/Y" }}" name="end_date" id="txt_end_date">
         </div>
         <div class="col-md-8">
         </div>
       </div>
+      <div class="row">
+        <div class="col-md-6">
+          <label for="description">{% trans 'Description'%}</label>
+          <input class="form-control" value="{{ academic_calendar.description | default_if_none:'' }}" name="description" id="txt_description">
+        </div>
+        <div class="col-md-6">
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-4">
+          <label for="highlight_title">{% trans 'Highlight title' %}</label>
+          <input class="form-control" value="{{ academic_calendar.highlight_title | default_if_none:'' }}" name="highlight_title" id="txt_highlight_title">
+        </div>
+        <div class="col-md-4">
+          <label for="highlight_description">{% trans 'Highlight description' %}</label>
+          <input class="form-control" value="{{ academic_calendar.highlight_description | default_if_none:'' }}" name="highlight_description" id="txt_highlight_description">
+        </div>
+        <div class="col-md-4">
+          <label for="highlight_shortcut">{% trans 'Highlight shortcut' %}</label>
+          <input class="form-control" value="{{ academic_calendar.highlight_shortcut | default_if_none:'' }}" name="highlight_shortcut" id="txt_highlight_shortcut">
+        </div>
+      </div>
+      <br>
       <div class="row">
         <div class="col-md-8">
         </div>
@@ -81,7 +105,7 @@
           <!--<a href="{% url 'academic_calendar_save' academic_calendar.id %}" title="{%trans 'Save'%}" id="lnk_academic_calendar_save">
             <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
           </a>-->
-          <input type="submit" value="{% trans 'Save'%}">
+          <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}">{% trans 'Save'%}</button>
         </div>
       </div>
 
