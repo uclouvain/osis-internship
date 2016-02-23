@@ -37,8 +37,7 @@ def academic_calendars(request):
     academic_calendars = AcademicCalendar.find_by_academic_year(academic_year)
     return render(request, "academic_calendars.html", {'academic_year': academic_year,
                                            'academic_years': academic_years,
-                                           'academic_calendars': academic_calendars ,
-                                           'init': "1"})
+                                           'academic_calendars': academic_calendars})
 
 
 def academic_calendars_search(request):
@@ -55,8 +54,7 @@ def academic_calendars_search(request):
     return render(request, "academic_calendars.html", {
                                            'academic_year':  int(academic_year),
                                            'academic_years': academic_years,
-                                           'academic_calendars': query ,
-                                           'init':           "0"})
+                                           'academic_calendars': query})
 
 
 def academic_calendar_read(request,id):
@@ -119,12 +117,11 @@ def academic_calendar_save(request,id):
 
     #save
     academic_calendar.save()
-    print ('zut',academic_year)
+
     return render(request, "academic_calendars.html", {
                                            'academic_year': academic_year,
                                            'academic_years': AcademicYear.find_academic_years(),
-                                           'academic_calendars':academic_calendars,
-                                           'init': "0"})
+                                           'academic_calendars':academic_calendars})
 
 def academic_calendar_edit(request, id):
     academic_calendar = AcademicCalendar.find_by_id(id)
@@ -134,14 +131,21 @@ def academic_calendar_edit(request, id):
 
 def academic_calendar_delete(request, id):
     academic_calendar = AcademicCalendar.find_by_id(id)
-    return render(request, "academic_calendar_form.html", {'academic_calendar':     academic_calendar})
+    academic_year = None
+    if academic_calendar:
+        academic_year = academic_calendar.academic_year
+        academic_calendar.delete()
+
+    return render(request, "academic_calendars.html", {
+                                           'academic_year': academic_year,
+                                           'academic_years': AcademicYear.find_academic_years(),
+                                           'academic_calendars':AcademicCalendar.find_by_academic_year(academic_year)})
 
 
-def academic_calendar_create(request,academic_year_id):
-    academic_year = get_object_or_404(AcademicYear, pk=academic_year_id)
+def academic_calendar_create(request):
     academic_calendar = AcademicCalendar()
     academic_calendar.academic_year=academic_year
     academic_years = AcademicYear.find_academic_years()
     return render(request, "academic_calendar_form.html", {'academic_calendar':     academic_calendar,
-                                                           'academic_year': academic_year,
+                                                           'academic_year': None,
                                                            'academic_years': academic_years})
