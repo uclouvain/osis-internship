@@ -26,6 +26,8 @@
 from django.shortcuts import render, get_object_or_404
 from datetime import datetime
 from base.models import *
+from base.forms import AcademicCalendarForm
+from django.utils.translation import ugettext as _
 
 def academic_calendars(request):
     academic_year = None
@@ -65,6 +67,8 @@ def academic_calendar_new(request):
     return academic_calendar_save(request,None)
 
 def academic_calendar_save(request,id):
+    form = AcademicCalendarForm(data=request.POST)
+
     if id:
         academic_calendar = AcademicCalendar.find_by_id(id)
     else:
@@ -83,16 +87,6 @@ def academic_calendar_save(request,id):
         academic_calendar.title = request.POST['title']
     else:
         academic_calendar.title = None
-
-    if request.POST['start_date']:
-        academic_calendar.start_date = datetime.strptime(request.POST['start_date'], '%d/%m/%Y')
-    else:
-        academic_calendar.start_date = None
-
-    if request.POST['end_date']:
-        academic_calendar.end_date = datetime.strptime(request.POST['end_date'], '%d/%m/%Y')
-    else:
-        academic_calendar.end_date = None
 
     if request.POST['description']:
         academic_calendar.description = request.POST['description']
@@ -114,14 +108,37 @@ def academic_calendar_save(request,id):
     else:
         academic_calendar.highlight_shortcut = None
     #validate
+    validation =True
+    if form.is_valid():
+        if request.POST['start_date']:
+            academic_calendar.start_date = datetime.strptime(request.POST['start_date'], '%d/%m/%Y')
+        else:
+            academic_calendar.start_date = None
 
-    #save
-    academic_calendar.save()
+        if request.POST['end_date']:
+            academic_calendar.end_date = datetime.strptime(request.POST['end_date'], '%d/%m/%Y')
+        else:
+            academic_calendar.end_date = None
 
-    return render(request, "academic_calendars.html", {
-                                           'academic_year': academic_year,
-                                           'academic_years': AcademicYear.find_academic_years(),
-                                           'academic_calendars':academic_calendars})
+        if academic_calendar.start_date and academic_calendar.end_date:
+            if academic_calendar.start_date >= academic_calendar.end_date:
+                form.errors['start_date'] =  _('The start date must be greather than the end date')
+                validation = False
+    else:
+        validation = False
+
+    if validation :
+        academic_calendar.save()
+
+        return render(request, "academic_calendars.html", {
+                                               'academic_year': academic_year,
+                                               'academic_years': AcademicYear.find_academic_years(),
+                                               'academic_calendars':academic_calendars})
+    else:
+        return render(request, "academic_calendar_form.html", {'academic_calendar': academic_calendar,
+                                                               'academic_years':    AcademicYear.find_academic_years(),
+                                                               'form' :             form})
+
 
 def academic_calendar_edit(request, id):
     academic_calendar = AcademicCalendar.find_by_id(id)

@@ -67,11 +67,11 @@
         </div>
         <div class="col-md-2">
           <label for="start_date">{% trans 'Start date'%}</label>
-          <input class="form-control" value="{{ academic_calendar.start_date| default_if_none:''|date:"j/m/Y" }}" name="start_date" id="txt_start_date">
+          <input class="form-control" value="{{ academic_calendar.start_date| default_if_none:''|date:"j/m/Y" }}" name="start_date" id="txt_start_date"><font class="error">{{ form.start_date.errors }}</font>
         </div>
         <div class="col-md-2">
           <label for="end_date">{% trans 'End date' %}</label>
-          <input class="form-control" value="{{ academic_calendar.end_date| default_if_none:''|date:"j/m/Y" }}" name="end_date" id="txt_end_date">
+          <input class="form-control" value="{{ academic_calendar.end_date| default_if_none:''|date:"j/m/Y" }}" name="end_date" id="txt_end_date"><font class="error">{{ form.end_date.errors }}</font>
         </div>
       </div>
       <br>
