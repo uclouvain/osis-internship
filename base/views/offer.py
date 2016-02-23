@@ -24,7 +24,6 @@
 #
 ##############################################################################
 from django.shortcuts import render
-
 from base.models import *
 
 
@@ -68,8 +67,8 @@ def offers_search(request):
         query = query.filter(acronym__icontains=code)
 
     # on ne doit prendre que les offres racines (pas les finalités)
-    query = query.filter(offer_parent=None)
-    if faculty is None or faculty == "*" :
+    query = query.filter(parent=None)
+    if faculty is None or faculty == "*":
         faculty=None
     else:
         faculty = int(faculty)
@@ -77,13 +76,15 @@ def offers_search(request):
         academic_year=None
     else:
         academic_year = int(academic_year)
+
     return render(request, "offers.html", {'faculties':      faculties,
                                            'academic_year':  academic_year,
                                            'faculty':        faculty,
                                            'code':           code,
                                            'academic_years': academic_years,
-                                           'offer_years':         query ,
+                                           'offer_years':    query,
                                            'init':           "0"})
+
 
 def offer_read(request,offer_year_id):
     offer_year = OfferYear.find_offer_year_by_id(offer_year_id)

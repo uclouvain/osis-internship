@@ -24,7 +24,6 @@
 #
 ##############################################################################
 from django.db import models
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -38,7 +37,7 @@ class Person(models.Model):
         ('U',_('Unknown')))
 
     external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed     = models.DateTimeField(null = True)
+    changed     = models.DateTimeField(null=True)
     user        = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
     global_id   = models.CharField(max_length=10, blank=True, null=True)
     gender      = models.CharField(max_length=1, blank=True, null=True, choices=GENDER_CHOICES, default='U')
@@ -234,7 +233,7 @@ class OfferYear(models.Model):
     acronym       = models.CharField(max_length=15)
     title         = models.CharField(max_length=255)
     structure     = models.ForeignKey(Structure)
-    offer_parent  = models.ForeignKey('self', blank=True, null=True, related_name='children',db_index=True)
+    parent  = models.ForeignKey('self', blank=True, null=True, related_name='children',db_index=True)
 
     @staticmethod
     def find_offer_years_by_academic_year(academic_year):
@@ -256,15 +255,15 @@ class OfferYear(models.Model):
         '''
         To find children
         '''
-        return  OfferYear.objects.filter(offer_parent=self)
+        return  OfferYear.objects.filter(parent=self)
 
     @property
     def offer_year_sibling(self):
         '''
         To find other focuses
         '''
-        if self.offer_parent:
-            return OfferYear.objects.filter(offer_parent=self.offer_parent).exclude(id=self.id).exclude()
+        if self.parent:
+            return OfferYear.objects.filter(parent=self.parent).exclude(id=self.id).exclude()
         return None
 
     @property
