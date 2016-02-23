@@ -2,6 +2,7 @@
 {% load staticfiles %}
 {% load i18n %}
 {% load full_width %}
+{% load dictionnary %}
 
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
@@ -49,7 +50,7 @@
         </div>
         <div class="col-md-6">
           <label for="event_type">{% trans 'Event type' %}</label><br>
-          {{ academic_calendar.event_type }}
+          {{ academic_calendar.event_type|get_item_event_type }}
         </div>
       </div>
       <div class="row">

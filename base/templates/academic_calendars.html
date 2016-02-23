@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
 {% load i18n %}
+{% load dictionnary %}
 
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
@@ -78,7 +79,7 @@
       </thead>
       {% for academic_calendar in academic_calendars %}
         <tr>
-          <td>{{ academic_calendar.event_type }}</td>
+          <td>{{ academic_calendar.event_type|get_item_event_type }}</td>
           <td><a href="{% url 'academic_calendar_read' academic_calendar.id %}" id="lnk_academic_calendar_{{academic_calendar.id}}">{{ academic_calendar.title }}</a></td>
           <td>{{academic_calendar.start_date| default_if_none:''|date:"j/m/Y" }}</td>
           <td>{{academic_calendar.end_date| default_if_none:''|date:"j/m/Y" }}</td>
