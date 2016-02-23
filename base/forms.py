@@ -38,4 +38,4 @@ class ScoreFileForm(forms.Form):
 class AcademicCalendarForm(ModelForm):
     class Meta:
         model = AcademicCalendar
-        fields=['start_date','end_date']
+        fields=['start_date','end_date','title','highlight_title','highlight_description','highlight_shortcut']

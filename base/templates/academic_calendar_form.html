@@ -63,7 +63,7 @@
         </div>
         <div class="col-md-6">
           <label for="title">{% trans 'Title' %}</label>
-          <input class="form-control" value="{{ academic_calendar.title | default_if_none:'' }}" name="title" id="txt_title">
+          <input class="form-control" value="{{ academic_calendar.title | default_if_none:'' }}" name="title" id="txt_title"><font class="error">{{ form.title.errors }}</font>
         </div>
         <div class="col-md-2">
           <label for="start_date">{% trans 'Start date'%}</label>
@@ -85,15 +85,15 @@
       <div class="row">
         <div class="col-md-4">
           <label for="highlight_title">{% trans 'Highlight title' %}</label>
-          <input class="form-control" value="{{ academic_calendar.highlight_title | default_if_none:'' }}" name="highlight_title" id="txt_highlight_title">
+          <input class="form-control" value="{{ academic_calendar.highlight_title | default_if_none:'' }}" name="highlight_title" id="txt_highlight_title"><font class="error">{{ form.highlight_title.errors }}</font>
         </div>
         <div class="col-md-4">
           <label for="highlight_description">{% trans 'Highlight description' %}</label>
-          <input class="form-control" value="{{ academic_calendar.highlight_description | default_if_none:'' }}" name="highlight_description" id="txt_highlight_description">
+          <input class="form-control" value="{{ academic_calendar.highlight_description | default_if_none:'' }}" name="highlight_description" id="txt_highlight_description"><font class="error">{{ form.highlight_description.errors }}</font>
         </div>
         <div class="col-md-4">
           <label for="highlight_shortcut">{% trans 'Highlight shortcut' %}</label>
-          <input class="form-control" value="{{ academic_calendar.highlight_shortcut | default_if_none:'' }}" name="highlight_shortcut" id="txt_highlight_shortcut">
+          <input class="form-control" value="{{ academic_calendar.highlight_shortcut | default_if_none:'' }}" name="highlight_shortcut" id="txt_highlight_shortcut"><font class="error">{{ form.highlight_shortcut.errors }}</font>
         </div>
       </div>
       <br>
