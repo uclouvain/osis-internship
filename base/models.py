@@ -204,6 +204,14 @@ class AcademicCalendar(models.Model):
         event_type_criteria = "EXAM_SCORES_SUBMISSION_SESS_"+str(session_number)
         return AcademicCalendar.objects.get(academic_year=academic_year_id, event_type=event_type_criteria)
 
+    @staticmethod
+    def find_by_academic_year(academic_year_id):
+        return AcademicCalendar.objects.filter(academic_year=academic_year_id)
+
+    @staticmethod
+    def find_by_id(id):
+        return AcademicCalendar.objects.get(pk=id)
+
     def __str__(self):
         return u"%s %s" % (self.academic_year, self.title)
 

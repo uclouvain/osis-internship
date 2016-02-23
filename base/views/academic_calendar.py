@@ -23,36 +23,43 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+
 from base.models import *
 
-def page_not_found(request):
-    return render(request,'page_not_found.html')
+def academic_calendars(request):
+    academic_year = None
+    academic_years = AcademicYear.find_academic_years()
 
-
-def access_denied(request):
-    return render(request,'acces_denied.html')
-
-
-def home(request):
     academic_year_calendar = AcademicCalendar.current_academic_year()
     if not academic_year_calendar is None:
         academic_year = academic_year_calendar.id
-    academic_calendars = AcademicCalendar.find_by_academic_year(academic_year)
-    return render(request, "home.html",{'academic_calendars' : academic_calendars})
+    return render(request, "academic_calendars.html", {'academic_year': academic_year,
+                                           'academic_years': academic_years,
+                                           'offers': [],
+                                           'init': "1"})
 
 
-@login_required
-def studies(request):
-    return render(request, "studies.html", {'section': 'studies'})
+def academic_calendars_search(request):
+
+    academic_year = request.GET['academic_year']
+
+    academic_years = AcademicYear.find_academic_years()
+
+    if academic_year is None:
+        academic_year_calendar = AcademicCalendar.current_academic_year()
+        if not academic_year_calendar is None:
+            academic_year = academic_year_calendar.id
+
+    query = AcademicCalendar.find_by_academic_year(academic_year)
+
+    return render(request, "academic_calendars.html", {
+                                           'academic_year':  int(academic_year),
+                                           'academic_years': academic_years,
+                                           'academic_calendars':         query ,
+                                           'init':           "0"})
 
 
-@login_required
-def assessments(request):
-    return render(request, "assessments.html", {'section': 'assessments'})
-
-
-@login_required
-def catalog(request):
-    return render(request, "catalog.html", {'section': 'catalog'})
+def academic_calendar_read(request,id):
+    academic_calendar = AcademicCalendar.find_by_id(id)
+    return render(request, "academic_calendar.html", {'academic_calendar':     academic_calendar})

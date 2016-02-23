@@ -27,7 +27,7 @@ from django.conf.urls import url
 from django.contrib.auth.views import login, logout
 
 from base.utils import upload_xls_utils
-from base.views import learning_unit, offer, common, score_encoding, institution
+from base.views import learning_unit, offer, common, score_encoding, institution, academic_calendar
 
 #app_name = 'base'
 
@@ -66,4 +66,10 @@ urlpatterns = [
 
     url(r'^structures/$', institution.structures, name='structures'),
     url(r'^structures/search$', institution.structures_search, name='structures_search'),
-    url(r'^structures/([0-9]+)/$', institution.structure_read, name='structure_read'),]
+    url(r'^structures/([0-9]+)/$', institution.structure_read, name='structure_read'),
+
+    url(r'^academic_calendars/$', academic_calendar.academic_calendars, name='academic_calendars'),
+    url(r'^academic_calendars/search$', academic_calendar.academic_calendars_search, name='academic_calendars_search'),
+    url(r'^academic_calendars/([0-9]+)/$', academic_calendar.academic_calendar_read, name='academic_calendar_read'),
+
+    ]

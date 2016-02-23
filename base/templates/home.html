@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
 {% load i18n %}
+{% load dictionnary %}
 
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -58,6 +59,21 @@
                 <p>Gestion de l'institution.</p></div>
             <div class="col-md-6">
             </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-md-12">
+            {% if academic_calendars|length > 0%}
+              <dl>
+                {% for academic_calendar in academic_calendars %}
+                  {% ifchanged academic_calendar.event_type %}
+                    <dt>{{ academic_calendar.event_type|get_item_event_type }}</dt>
+                  {%endifchanged%}
+                  <dd>{%if academic_calendar.start_date and academic_calendar.end_date%}{{ academic_calendar.start_date| default_if_none:''|date:"j/m/Y" }}-{{ academic_calendar.end_date| default_if_none:''|date:"j/m/Y" }}&nbsp;&nbsp;&nbsp;&nbsp;{%endif%}{{ academic_calendar.title }}</dd>
+                {% endfor%}
+              </dl>
+            {%endif%}
+          </div>
         </div>
     </div>
 </div>
