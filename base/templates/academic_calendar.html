@@ -39,33 +39,43 @@
 </div>
 <div class="panel panel-default">
   <div class="panel-body">
-      <div class="row">
-        <div class="col-md-3">
-          <label for="academic_year">{% trans 'Academic year'%}</label><br>
-          {{ academic_calendar.academic_year }}
-        </div>
-        <div class="col-md-3">
-          <label for="title">{% trans 'Title' %}</label><br>
-          {{ academic_calendar.title }}
-        </div>
-        <div class="col-md-6">
-          <label for="event_type">{% trans 'Event type' %}</label><br>
-          {{ academic_calendar.event_type|get_item_event_type }}
-        </div>
+    <div class="row">
+      <div class="col-md-3">
+        <label for="academic_year">{% trans 'Academic year'%}</label><br>
+        {{ academic_calendar.academic_year }}
       </div>
-      <div class="row">
-        <div class="col-md-3">
-          <label for="start_date">{% trans 'Start date'%}</label><br>
-          {{ academic_calendar.start_date| default_if_none:''|date:"j/m/Y" }}
-        </div>
-        <div class="col-md-3">
-          <label for="end_date">{% trans 'End date' %}</label><br>
-          {{ academic_calendar.end_date| default_if_none:''|date:"j/m/Y" }}
-        </div>
-        <div class="col-md-6">
-
-        </div>
+      <div class="col-md-6">
+        <label for="title">{% trans 'Title' %}</label><br>
+        {{ academic_calendar.title }}
       </div>
+      <div class="col-md-3">
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-md-2">
+        <label for="start_date">{% trans 'Start date'%}</label><br>
+        {{ academic_calendar.start_date| default_if_none:''|date:"j/m/Y" }}
+      </div>
+      <div class="col-md-2">
+        <label for="end_date">{% trans 'End date' %}</label><br>
+        {{ academic_calendar.end_date| default_if_none:''|date:"j/m/Y" }}
+      </div>
+      <div class="col-md-8">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-8">
+      </div>
+      <div class="col-md-4">
+        <a href="{% url 'academic_calendar_edit' academic_calendar.id %}" title="{%trans 'Edit'%}">
+          <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+        </a>
+        <a href="{% url 'academic_calendar_delete' academic_calendar.id %}" title="{%trans 'Delete'%}">
+          <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+        </a>
+      </div>
+    </div>
 
   </div>
 </div>

@@ -68,8 +68,12 @@ urlpatterns = [
     url(r'^structures/search$', institution.structures_search, name='structures_search'),
     url(r'^structures/([0-9]+)/$', institution.structure_read, name='structure_read'),
 
+    url(r'^academic_year/$', common.academic_year, name='academic_year'),
     url(r'^academic_calendars/$', academic_calendar.academic_calendars, name='academic_calendars'),
     url(r'^academic_calendars/search$', academic_calendar.academic_calendars_search, name='academic_calendars_search'),
     url(r'^academic_calendars/([0-9]+)/$', academic_calendar.academic_calendar_read, name='academic_calendar_read'),
+    url(r'^academic_calendars/edit/([0-9]+)/$', academic_calendar.academic_calendar_edit, name='academic_calendar_edit'),
+    url(r'^academic_calendars/delete/([0-9]+)/$', academic_calendar.academic_calendar_delete, name='academic_calendar_delete'),
+    url(r'^academic_calendars/save/([0-9]+)/$', academic_calendar.academic_calendar_save, name='academic_calendar_save'),
 
     ]
