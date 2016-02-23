@@ -64,6 +64,31 @@
       <div class="col-md-8">
       </div>
     </div>
+    <br>
+    <div class="row">
+      <div class="col-md-6">
+        <label for="description">{% trans 'Description'%}</label><br>
+        {{ academic_calendar.description| default_if_none:'' }}&nbsp;
+      </div>
+      <div class="col-md-6">
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-md-4">
+        <label for="highlight_title">{% trans 'Highlight title' %}</label><br>
+        {{ academic_calendar.highlight_title| default_if_none:'' }}&nbsp;
+      </div>
+      <div class="col-md-4">
+        <label for="highlight_description">{% trans 'Highlight description' %}</label><br>
+        {{ academic_calendar.highlight_description| default_if_none:'' }}&nbsp;
+      </div>
+      <div class="col-md-4">
+        <label for="highlight_shortcut">{% trans 'Highlight shortcut' %}</label><br>
+        {{ academic_calendar.highlight_shortcut| default_if_none:'' }}&nbsp;
+      </div>
+    </div>
+    <br>
     <div class="row">
       <div class="col-md-8">
       </div>
