@@ -209,6 +209,10 @@ class AcademicCalendar(models.Model):
         return AcademicCalendar.objects.filter(academic_year=academic_year_id)
 
     @staticmethod
+    def find_by_academic_year_with_dates(academic_year_id):
+        return AcademicCalendar.objects.filter(academic_year=academic_year_id, start_date__isnull=False, end_date__isnull=False)
+
+    @staticmethod
     def find_by_id(id):
         return AcademicCalendar.objects.get(pk=id)
 

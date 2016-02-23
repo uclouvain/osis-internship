@@ -39,7 +39,7 @@ def home(request):
     academic_year_calendar = AcademicCalendar.current_academic_year()
     if not academic_year_calendar is None:
         academic_year = academic_year_calendar.id
-    academic_calendars = AcademicCalendar.find_by_academic_year(academic_year)
+    academic_calendars = AcademicCalendar.find_by_academic_year_with_dates(academic_year)
     return render(request, "home.html",{'academic_calendars' : academic_calendars})
 
 
@@ -56,3 +56,7 @@ def assessments(request):
 @login_required
 def catalog(request):
     return render(request, "catalog.html", {'section': 'catalog'})
+
+@login_required
+def academic_year(request):
+    return render(request, "academic_year.html", {'section': 'acacemic_year'})
