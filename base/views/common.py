@@ -23,26 +23,33 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib import admin
-from .models import *
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
 
 
-class InternshipOfferAdmin(admin.ModelAdmin):
-    list_display = ('organization','learning_unit_year', 'title', 'maximum_enrollments')
-    fieldsets = ((None, {'fields': ('organization','learning_unit_year', 'title', 'maximum_enrollments')}),)
-
-admin.site.register(InternshipOffer, InternshipOfferAdmin)
+def page_not_found(request):
+    return render(request,'page_not_found.html')
 
 
-class InternshipEnrollmentAdmin(admin.ModelAdmin):
-    list_display = ('learning_unit_enrollment','internship_offer', 'start_date', 'end_date')
-    fieldsets = ((None, {'fields': ('learning_unit_enrollment','internship_offer', 'start_date', 'end_date')}),)
-
-admin.site.register(InternshipEnrollment, InternshipEnrollmentAdmin)
+def access_denied(request):
+    return render(request,'acces_denied.html')
 
 
-class InternshipMasterAdmin(admin.ModelAdmin):
-    list_display = ('organization', 'internship_offer', 'person', 'reference', 'civility', 'type_mastery', 'speciality')
-    fieldsets = ((None, {'fields': ('organization', 'internship_offer', 'person', 'reference', 'civility', 'type_mastery', 'speciality')}),)
+def home(request):
+    return render(request, "home.html")
 
-admin.site.register(InternshipMaster, InternshipMasterAdmin)
+
+@login_required
+def studies(request):
+    return render(request, "studies.html", {'section': 'studies'})
+
+
+@login_required
+def assessments(request):
+    return render(request, "assessments.html", {'section': 'assessments'})
+
+
+@login_required
+def catalog(request):
+    return render(request, "catalog.html", {'section': 'catalog'})
+

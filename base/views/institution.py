@@ -23,26 +23,37 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib import admin
-from .models import *
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from base.models import Structure
 
 
-class InternshipOfferAdmin(admin.ModelAdmin):
-    list_display = ('organization','learning_unit_year', 'title', 'maximum_enrollments')
-    fieldsets = ((None, {'fields': ('organization','learning_unit_year', 'title', 'maximum_enrollments')}),)
-
-admin.site.register(InternshipOffer, InternshipOfferAdmin)
+@login_required
+def institution(request):
+    return render(request, "institution.html", {'section': 'institution'})
 
 
-class InternshipEnrollmentAdmin(admin.ModelAdmin):
-    list_display = ('learning_unit_enrollment','internship_offer', 'start_date', 'end_date')
-    fieldsets = ((None, {'fields': ('learning_unit_enrollment','internship_offer', 'start_date', 'end_date')}),)
-
-admin.site.register(InternshipEnrollment, InternshipEnrollmentAdmin)
+def structures(request):
+    return render(request, "structures.html", {'init': "1"})
 
 
-class InternshipMasterAdmin(admin.ModelAdmin):
-    list_display = ('organization', 'internship_offer', 'person', 'reference', 'civility', 'type_mastery', 'speciality')
-    fieldsets = ((None, {'fields': ('organization', 'internship_offer', 'person', 'reference', 'civility', 'type_mastery', 'speciality')}),)
+def structures_search(request):
+    acronym = request.GET['acronym']
+    title = request.GET['title']
 
-admin.site.register(InternshipMaster, InternshipMasterAdmin)
+    query = Structure.find_structures()
+
+    if not acronym is None and len(acronym) > 0  :
+        query = query.filter(acronym__icontains=acronym)
+    if not title is None and len(title) > 0  :
+        query = query.filter(title__icontains=title)
+
+    return render(request, "structures.html", {'title': title,
+                                               'acronym': acronym,
+                                               'init': "0",
+                                               'structures': query})
+
+
+def structure_read(request,id):
+    structure = Structure.find_by_id(id)
+    return render(request, "structure.html", {'structure': structure})

@@ -1,0 +1,92 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+ * OSIS stands for Open Student Information System. It's an application
+ * designed to manage the core business of higher education institutions,
+ * such as universities, faculties, institutes and professional schools.
+ * The core business involves the administration of students, teachers,
+ * courses, programs and so on.
+ *
+ * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * A copy of this license - GNU General Public License - is available
+ * at the root of the source code of this program.  If not,
+ * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block breadcrumb %}
+  <li><a href="{% url 'catalog' %}" id="lnk_catalog">{% trans 'Catalog'%}</a></li>
+  <li class="active" id="lnk_learning_units">{% trans 'Learning units' %}</li>
+
+{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h2>{% trans 'Learning units' %}</h2>
+</div>
+<div class="panel panel-default">
+  <div class="panel-body">
+    <div class="row">
+      <form  method="get" action="{% url 'learning_units_search'%}" id="form_learning_units">
+          <div class="col-md-6">
+              <label for="code">{% trans 'Acronym'%}</label>
+              <input class="form-control" id="txt_code" placeholder="{% trans 'Acronym' %}" name="code" value="{{ code }}" required="true" style="text-transform:uppercase">
+          </div>
+          <div class="col-md-2">
+              <label for="academic_year" >{% trans 'Academic Year'%}</label>
+              <select class="form-control" id="slt_academic_year"  name="academic_year" value="{{ academic_year }}">
+                {% for ay in academic_years %}
+                  {% if ay.id == academic_year %}
+                    <option selected value="{{ ay.id }}">{{ ay }}</option>
+                  {% else %}
+                    <option value="{{ ay.id }}">{{ ay }}</option>
+                  {% endif %}
+                {% endfor %}
+              </select>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="invisible">&nbsp;</label>
+              <div class="btnbtn-as-block"><input type="submit" value="OK" id="bt_submit_learning_unit_search"  name="btn" ></div>
+            </div>
+          </div>
+        </form>
+    </div>
+  </div>
+
+  <div >
+    {% if learning_units|length == 0 and init == "0" %}
+      <label class="alert alert-info" style="margin:5px">{% trans 'No result!' %}</label>
+
+    {% endif %}
+    {% if learning_units|length > 0%}
+    <table class="table table-striped table-hover">
+      <thead>
+        <th>{% trans 'Acronym'%}</th>
+        <th>{% trans 'Title'%}</th>
+        <th>{% trans 'Credits'%}</th>
+      </thead>
+      {% for learning_unit in learning_units %}
+        <tr>
+          <td><a href="{% url 'learning_unit_read' learning_unit.id %}" id="lnk_learning_unit_{{learning_unit.id}}">{{ learning_unit.acronym }}</a></td>
+          <td>{{ learning_unit.title }}</td>
+          <td>{% if learning_unit.credits %}{{ learning_unit.credits }}{% endif %}</td>
+        </tr>
+      {% endfor %}
+    </table>
+    {% endif %}
+
+</div>
+</div>
+{% endblock %}

@@ -23,26 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib import admin
-from .models import *
+from django import template
+from base.models import OfferYear
 
+register = template.Library()
 
-class InternshipOfferAdmin(admin.ModelAdmin):
-    list_display = ('organization','learning_unit_year', 'title', 'maximum_enrollments')
-    fieldsets = ((None, {'fields': ('organization','learning_unit_year', 'title', 'maximum_enrollments')}),)
+@register.assignment_tag(takes_context=True)
+def full_width(context):
 
-admin.site.register(InternshipOffer, InternshipOfferAdmin)
+    offer_year = context['offer_year']
+    if (not offer_year.orientation_sibling is None and len(list(offer_year.orientation_sibling))>0)  and ((not offer_year.offer_year_children is None and len(list(offer_year.offer_year_children))>0)  or (not offer_year.offer_year_sibling is None and len(list(offer_year.offer_year_sibling))>0 )):
+        return False
 
-
-class InternshipEnrollmentAdmin(admin.ModelAdmin):
-    list_display = ('learning_unit_enrollment','internship_offer', 'start_date', 'end_date')
-    fieldsets = ((None, {'fields': ('learning_unit_enrollment','internship_offer', 'start_date', 'end_date')}),)
-
-admin.site.register(InternshipEnrollment, InternshipEnrollmentAdmin)
-
-
-class InternshipMasterAdmin(admin.ModelAdmin):
-    list_display = ('organization', 'internship_offer', 'person', 'reference', 'civility', 'type_mastery', 'speciality')
-    fieldsets = ((None, {'fields': ('organization', 'internship_offer', 'person', 'reference', 'civility', 'type_mastery', 'speciality')}),)
-
-admin.site.register(InternshipMaster, InternshipMasterAdmin)
+    return True

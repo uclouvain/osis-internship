@@ -23,26 +23,25 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import string
+from django.conf.urls import include, url
 from django.contrib import admin
-from .models import *
+import random
+import re
 
 
-class InternshipOfferAdmin(admin.ModelAdmin):
-    list_display = ('organization','learning_unit_year', 'title', 'maximum_enrollments')
-    fieldsets = ((None, {'fields': ('organization','learning_unit_year', 'title', 'maximum_enrollments')}),)
+def admnin_page_url() :
+    return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(random.randint(10,20)))
 
-admin.site.register(InternshipOffer, InternshipOfferAdmin)
+urlpatterns = [
+    url(r'^'+re.escape(admnin_page_url())+r'/', admin.site.urls),
+    url(r'', include('base.urls')),
+    url(r'', include('internship.urls')),
+]
 
+handler404 = 'base.views.common.page_not_found'
+handler403 = 'base.views.common.access_denied'
 
-class InternshipEnrollmentAdmin(admin.ModelAdmin):
-    list_display = ('learning_unit_enrollment','internship_offer', 'start_date', 'end_date')
-    fieldsets = ((None, {'fields': ('learning_unit_enrollment','internship_offer', 'start_date', 'end_date')}),)
-
-admin.site.register(InternshipEnrollment, InternshipEnrollmentAdmin)
-
-
-class InternshipMasterAdmin(admin.ModelAdmin):
-    list_display = ('organization', 'internship_offer', 'person', 'reference', 'civility', 'type_mastery', 'speciality')
-    fieldsets = ((None, {'fields': ('organization', 'internship_offer', 'person', 'reference', 'civility', 'type_mastery', 'speciality')}),)
-
-admin.site.register(InternshipMaster, InternshipMasterAdmin)
+admin.site.site_header = 'OSIS'
+admin.site.site_title  = 'OSIS'
+admin.site.index_title = 'Louvain'

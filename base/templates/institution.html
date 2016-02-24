@@ -1,6 +1,5 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
-{% load i18n %}
 
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
@@ -27,37 +26,24 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
-  <li><a href="{% url 'internships_home' %}">Stages</a></li>
-  <li class="active">{% trans 'Internships' %}</li>
+  <li class="active">Institution</li>
 {% endblock %}
 {% block content %}
-  <div class="page-header">
-    <h2>{% trans 'Internships' %}</h2>
-  </div>
-
-  <div class="panel panel-default">
-    <div class="tab-content">
-      <div role="tabpanel" class="tab-pane fade in active" id="profile">
-        <table class="table table-hover">
-            <thead>
-              <tr>
-                  <th>{% trans 'Name' %}</th>
-                  <th>{% trans 'Speciality' %}</th>
-                  <th>{% trans 'Student min' %}</th>
-                  <th>{% trans 'Student max' %}</th>
-                  <th>{% trans 'Place' %}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                  <td>
-
-                  </td>
-              </tr>
-            </tbody>
-        </table>
+<div class="page-header">
+  <h2>Institution</h2>
+</div>
+<div class="panel panel-default">
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-md-1"><i class="fa fa-sitemap" style="font-size: 400%; color: #6699FF;"></i></div>
+      <div class="col-md-5">
+        <h4 class="media-heading"><a href="{% url 'structures' %}" id="lnk_entities">Structures</a></h4>
+        <p>Gestion des structures.</p>
+      </div>
+      <div class="col-md-6">
       </div>
     </div>
+
   </div>
+</div>
 {% endblock %}

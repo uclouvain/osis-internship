@@ -1,6 +1,4 @@
 {% extends "layout.html" %}
-{% load staticfiles %}
-{% load i18n %}
 
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
@@ -26,38 +24,28 @@
  * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{% block breadcrumb %}
-  <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
-  <li><a href="{% url 'internships_home' %}">Stages</a></li>
-  <li class="active">{% trans 'Internships' %}</li>
-{% endblock %}
 {% block content %}
-  <div class="page-header">
-    <h2>{% trans 'Internships' %}</h2>
-  </div>
-
-  <div class="panel panel-default">
-    <div class="tab-content">
-      <div role="tabpanel" class="tab-pane fade in active" id="profile">
-        <table class="table table-hover">
-            <thead>
-              <tr>
-                  <th>{% trans 'Name' %}</th>
-                  <th>{% trans 'Speciality' %}</th>
-                  <th>{% trans 'Student min' %}</th>
-                  <th>{% trans 'Student max' %}</th>
-                  <th>{% trans 'Place' %}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                  <td>
-
-                  </td>
-              </tr>
-            </tbody>
-        </table>
+  <h1>Log-in</h1>
+  {% if form.errors %}
+    <p class="text-danger">
+      Your username and password didn't match.
+      Please try again.
+    </p>
+  {% endif %}
+  <br>
+  <form action="{% url 'login' %}" method="post" class="form" role="form">
+    {% csrf_token %}
+    <div style="width: 300px;">
+      <div class="form-group">
+        <label class="control-label" for="username">Utilisateur</label>
+        <input id="id_username" maxlength="254" name="username" type="text" class="form-control" placeholder="utilisateur">
       </div>
+      <div class="form-group">
+        <label class="control-label" for="password">Mot de passe</label>
+        <input id="id_password" name="password" type="password" class="form-control" placeholder="mot de passe">
+      </div>
+      <input type="hidden" name="next" value="{{ next }}" />
+      <input type="submit" value="Log-in" class="btn btn-primary" id="post_login_btn">
     </div>
-  </div>
+  </form>
 {% endblock %}
