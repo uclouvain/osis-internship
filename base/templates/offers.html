@@ -1,0 +1,120 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+ * OSIS stands for Open Student Information System. It's an application
+ * designed to manage the core business of higher education institutions,
+ * such as universities, faculties, institutes and professional schools.
+ * The core business involves the administration of students, teachers,
+ * courses, programs and so on.
+ *
+ * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * A copy of this license - GNU General Public License - is available
+ * at the root of the source code of this program.  If not,
+ * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block breadcrumb %}
+  <li><a href="{% url 'catalog' %}" id="lnk_catalog">Catalogue de formation</a></li>
+  <li class="active">{% trans 'Offers' %}</li>
+
+{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h2>{% trans 'Offers' %}</h2>
+</div>
+<div class="panel panel-default">
+  <div class="panel-body">
+    <div class="row">
+      <form  method="get" action="{% url 'offers_search'%}" >
+
+          <div class="col-md-3">
+
+              <label for="faculty">{% trans 'Faculty' %}</label>
+              <select class="form-control" id="slt_faculty"  name="faculty">
+                {%if faculty%}
+                  <option value="*">-</option>
+                {%else%}
+                  <option selected value="*">-</option>
+                {%endif%}
+                {% for f in faculties %}
+                  {% if f.id == faculty %}
+                    <option selected value="{{ f.id }}">{{ f.acronym }}</option>
+                  {% else %}
+                    <option value="{{ f.id }}">{{ f.acronym }}</option>
+                  {% endif %}
+                {% endfor %}
+              </select>
+
+          </div>
+          <div class="col-md-3">
+
+              <label for="code">{% trans 'Acronym'%}</label>
+              <input class="form-control" id="txt_code" placeholder="{% trans 'Acronym' %}" name="code" value="{{ code }}" style="text-transform:uppercase">
+
+          </div>
+          <div class="col-md-2">
+
+              <label for="academic_year" >{% trans 'Academic Year'%}</label>
+              <select class="form-control" id="slt_academic_year"  name="academic_year" value="{{ academic_year }}">
+                {%if academic_year%}
+                  <option value="*">-</option>
+                {%else%}
+                  <option selected value="*">-</option>
+                {%endif%}
+                {% for v in academic_years %}
+                  {% if v.id == academic_year %}
+                    <option selected value="{{ v.id }}">{{ v }}</option>
+                  {% else %}
+                    <option value="{{ v.id }}">{{ v }}</option>
+                  {% endif %}
+                {% endfor %}
+              </select>
+
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+        <label class="invisible">&nbsp;</label>
+        <div class="btnbtn-as-block"><input type="submit" value="OK" id="bt_submit_offer_search"  name="btn" ></div>
+      </div>
+                   </div>
+          </div>
+
+    </form>
+      </div>
+
+  <div >
+    {% if offer_years|length == 0 and init == "0" %}
+      <label class="alert alert-info" style="margin:5px">{% trans 'No result!' %}</label>
+
+    {% endif %}
+    {% if offer_years|length > 0%}
+    <table class="table table-striped table-hover">
+      <thead>
+        <th>{% trans 'Acronym'%}</th>
+        <th>{% trans 'Title'%}</th>
+      </thead>
+      {% for offer_year in offer_years %}
+        <tr>
+          <td><a href="{% url 'offer_read' offer_year.id %}" id="lnk_offer_{{offer_year.id}}">{{ offer_year.acronym }}</a></td>
+          <td>{{ offer_year.title }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+    {% endif %}
+
+</div>
+</div>
+{% endblock %}

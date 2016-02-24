@@ -23,23 +23,37 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from base.models import Organization, Person, LearningUnitYear, LearningUnitEnrollment
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from base.models import Structure
 
 
-class InternshipOffer(models.Model):
-    organization        = models.ForeignKey(Organization)
-    learning_unit_year  = models.ForeignKey(LearningUnitYear)
-    title               = models.CharField(max_length=255)
-    maximum_enrollments = models.IntegerField()
+@login_required
+def institution(request):
+    return render(request, "institution.html", {'section': 'institution'})
 
 
-class InternshipEnrollment(models.Model):
-    learning_unit_enrollment = models.ForeignKey(LearningUnitEnrollment)
-    internship_offer         = models.ForeignKey(InternshipOffer)
-    start_date               = models.DateField()
-    end_date                 = models.DateField()
+def structures(request):
+    return render(request, "structures.html", {'init': "1"})
 
 
-class InternshipMaster(models.Model):
-    reference = models.CharField(max_length=30)
+def structures_search(request):
+    acronym = request.GET['acronym']
+    title = request.GET['title']
+
+    query = Structure.find_structures()
+
+    if not acronym is None and len(acronym) > 0  :
+        query = query.filter(acronym__icontains=acronym)
+    if not title is None and len(title) > 0  :
+        query = query.filter(title__icontains=title)
+
+    return render(request, "structures.html", {'title': title,
+                                               'acronym': acronym,
+                                               'init': "0",
+                                               'structures': query})
+
+
+def structure_read(request,id):
+    structure = Structure.find_by_id(id)
+    return render(request, "structure.html", {'structure': structure})

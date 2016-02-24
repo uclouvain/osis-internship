@@ -23,23 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from base.models import Organization, Person, LearningUnitYear, LearningUnitEnrollment
+from django import template
+from django.utils import timezone
+from datetime import date
 
+register = template.Library()
 
-class InternshipOffer(models.Model):
-    organization        = models.ForeignKey(Organization)
-    learning_unit_year  = models.ForeignKey(LearningUnitYear)
-    title               = models.CharField(max_length=255)
-    maximum_enrollments = models.IntegerField()
-
-
-class InternshipEnrollment(models.Model):
-    learning_unit_enrollment = models.ForeignKey(LearningUnitEnrollment)
-    internship_offer         = models.ForeignKey(InternshipOffer)
-    start_date               = models.DateField()
-    end_date                 = models.DateField()
-
-
-class InternshipMaster(models.Model):
-    reference = models.CharField(max_length=30)
+@register.filter
+def offer_year_calendar_display(value_start, value_end):
+    if not value_start is None and not value_end is None:
+        if value_start <= date.today() and value_end >=date.today():
+            return "font-weight:bold;"
+    return ""

@@ -1,3 +1,4 @@
+/base/tests/selenium/firefox_profile
 os
 sys
 *.pdf
@@ -6,4 +7,6 @@ sys
 .idea/
 venv/
 __pycache__/
-osis_backend/server_settings.py
+backoffice/server_settings.py
+/base/tests/sent_mails
+/reports

@@ -23,23 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from base.models import Organization, Person, LearningUnitYear, LearningUnitEnrollment
+from django import template
+from base.models import OfferYear
 
+register = template.Library()
 
-class InternshipOffer(models.Model):
-    organization        = models.ForeignKey(Organization)
-    learning_unit_year  = models.ForeignKey(LearningUnitYear)
-    title               = models.CharField(max_length=255)
-    maximum_enrollments = models.IntegerField()
+@register.assignment_tag(takes_context=True)
+def full_width(context):
 
+    offer_year = context['offer_year']
+    if (not offer_year.orientation_sibling is None and len(list(offer_year.orientation_sibling))>0)  and ((not offer_year.offer_year_children is None and len(list(offer_year.offer_year_children))>0)  or (not offer_year.offer_year_sibling is None and len(list(offer_year.offer_year_sibling))>0 )):
+        return False
 
-class InternshipEnrollment(models.Model):
-    learning_unit_enrollment = models.ForeignKey(LearningUnitEnrollment)
-    internship_offer         = models.ForeignKey(InternshipOffer)
-    start_date               = models.DateField()
-    end_date                 = models.DateField()
-
-
-class InternshipMaster(models.Model):
-    reference = models.CharField(max_length=30)
+    return True

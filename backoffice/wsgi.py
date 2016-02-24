@@ -23,23 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from base.models import Organization, Person, LearningUnitYear, LearningUnitEnrollment
+import os,sys
+from django.core.wsgi import get_wsgi_application
+
+#The two following lines are mandatory for working with mod_wsgi on the servers
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/..' )
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../backoffice')
 
 
-class InternshipOffer(models.Model):
-    organization        = models.ForeignKey(Organization)
-    learning_unit_year  = models.ForeignKey(LearningUnitYear)
-    title               = models.CharField(max_length=255)
-    maximum_enrollments = models.IntegerField()
-
-
-class InternshipEnrollment(models.Model):
-    learning_unit_enrollment = models.ForeignKey(LearningUnitEnrollment)
-    internship_offer         = models.ForeignKey(InternshipOffer)
-    start_date               = models.DateField()
-    end_date                 = models.DateField()
-
-
-class InternshipMaster(models.Model):
-    reference = models.CharField(max_length=30)
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backoffice.settings")
+application = get_wsgi_application()

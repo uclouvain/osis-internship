@@ -23,23 +23,25 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from base.models import Organization, Person, LearningUnitYear, LearningUnitEnrollment
+import string
+from django.conf.urls import include, url
+from django.contrib import admin
+import random
+import re
 
 
-class InternshipOffer(models.Model):
-    organization        = models.ForeignKey(Organization)
-    learning_unit_year  = models.ForeignKey(LearningUnitYear)
-    title               = models.CharField(max_length=255)
-    maximum_enrollments = models.IntegerField()
+def admnin_page_url() :
+    return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(random.randint(10,20)))
 
+urlpatterns = [
+    url(r'^'+re.escape(admnin_page_url())+r'/', admin.site.urls),
+    url(r'', include('base.urls')),
+    url(r'', include('internship.urls')),
+]
 
-class InternshipEnrollment(models.Model):
-    learning_unit_enrollment = models.ForeignKey(LearningUnitEnrollment)
-    internship_offer         = models.ForeignKey(InternshipOffer)
-    start_date               = models.DateField()
-    end_date                 = models.DateField()
+handler404 = 'base.views.common.page_not_found'
+handler403 = 'base.views.common.access_denied'
 
-
-class InternshipMaster(models.Model):
-    reference = models.CharField(max_length=30)
+admin.site.site_header = 'OSIS'
+admin.site.site_title  = 'OSIS'
+admin.site.index_title = 'Louvain'
