@@ -24,8 +24,8 @@
 #
 ##############################################################################
 from django.contrib import admin
-
 from .models import *
+
 
 class AcademicYearAdmin(admin.ModelAdmin):
     list_display = ('year', 'changed')
@@ -33,11 +33,13 @@ class AcademicYearAdmin(admin.ModelAdmin):
 
 admin.site.register(AcademicYear, AcademicYearAdmin)
 
+
 class AcademicCalendarAdmin(admin.ModelAdmin):
     list_display = ('event_type', 'title', 'academic_year', 'start_date', 'end_date', 'changed')
     fieldsets = ((None, {'fields': ('academic_year', 'event_type', 'title', 'description', 'start_date', 'end_date')}),)
 
 admin.site.register(AcademicCalendar, AcademicCalendarAdmin)
+
 
 class OfferAdmin(admin.ModelAdmin):
     list_display = ('acronym','title', 'changed')
@@ -46,6 +48,7 @@ class OfferAdmin(admin.ModelAdmin):
 
 admin.site.register(Offer, OfferAdmin)
 
+
 class OfferYearAdmin(admin.ModelAdmin):
     list_display = ('offer','parent', 'title','academic_year', 'changed')
     fieldsets = ((None, {'fields': ('offer','academic_year','structure','acronym','title','parent')}),)
@@ -53,6 +56,7 @@ class OfferYearAdmin(admin.ModelAdmin):
     search_fields = ['acronym']
 
 admin.site.register(OfferYear, OfferYearAdmin)
+
 
 class OfferYearCalendarAdmin(admin.ModelAdmin):
     list_display = ('academic_calendar', 'offer_year', 'event_type', 'start_date', 'end_date', 'changed')
@@ -63,6 +67,7 @@ class OfferYearCalendarAdmin(admin.ModelAdmin):
 
 admin.site.register(OfferYearCalendar, OfferYearCalendarAdmin)
 
+
 class OfferEnrollmentAdmin(admin.ModelAdmin):
     list_display = ('offer_year','student', 'date_enrollment', 'changed')
     fieldsets = ((None, {'fields': ('offer_year','student','date_enrollment')}),)
@@ -71,14 +76,23 @@ class OfferEnrollmentAdmin(admin.ModelAdmin):
 
 admin.site.register(OfferEnrollment, OfferEnrollmentAdmin)
 
+
 class PersonAdmin(admin.ModelAdmin):
     list_display = ('first_name' , 'middle_name', 'last_name', 'username','email', 'gender','global_id', 'national_id', 'changed')
     search_fields = ['first_name', 'middle_name', 'last_name', 'user__username','email']
-    fieldsets = ((None, {'fields': ('user','global_id','national_id','gender','first_name','middle_name','last_name','email')}),)
+    fieldsets = ((None, {'fields': ('user','global_id','national_id','gender','first_name','middle_name','last_name','email', 'phone', 'phone_mobile')}),)
     raw_id_fields = ('user',)
     search_fields = ['first_name', 'last_name']
 
 admin.site.register(Person, PersonAdmin)
+
+
+class PersonAddressAdmin(admin.ModelAdmin):
+    list_display = ('person', 'label', 'location', 'postal_code', 'city', 'country')
+    fieldsets = ((None, {'fields': ('person','label','location','postal_code','city', 'country')}),)
+
+admin.site.register(PersonAddress, PersonAddressAdmin)
+
 
 class LearningUnitAdmin(admin.ModelAdmin):
     list_display = ('acronym', 'title', 'start_year', 'end_year', 'changed')
@@ -86,6 +100,7 @@ class LearningUnitAdmin(admin.ModelAdmin):
     search_fields = ['acronym']
 
 admin.site.register(LearningUnit, LearningUnitAdmin)
+
 
 class LearningUnitYearAdmin(admin.ModelAdmin):
     list_display = ('acronym', 'title', 'academic_year', 'credits', 'changed')
@@ -95,6 +110,7 @@ class LearningUnitYearAdmin(admin.ModelAdmin):
 
 admin.site.register(LearningUnitYear, LearningUnitYearAdmin)
 
+
 class LearningUnitEnrollmentAdmin(admin.ModelAdmin):
     list_display = ('student', 'learning_unit_year', 'date_enrollment', 'changed')
     fieldsets = ((None, {'fields': ('offer_enrollment','learning_unit_year','date_enrollment')}),)
@@ -102,6 +118,7 @@ class LearningUnitEnrollmentAdmin(admin.ModelAdmin):
     search_fields = ['learning_unit_year__acronym'] # 'offer_enrollment__student__person__first_name', 'offer_enrollment__student__person__last_name' ==> Très lourd en requete !
 
 admin.site.register(LearningUnitEnrollment, LearningUnitEnrollmentAdmin)
+
 
 class SessionExamAdmin(admin.ModelAdmin):
     list_display = ('learning_unit_year', 'number_session', 'status', 'changed')
@@ -112,6 +129,7 @@ class SessionExamAdmin(admin.ModelAdmin):
 
 admin.site.register(SessionExam, SessionExamAdmin)
 
+
 class ExamEnrollmentAdmin(admin.ModelAdmin):
     list_display = ('student', 'session_exam', 'score_final', 'justification_final', 'encoding_status', 'changed')
     list_filter = ('encoding_status', 'session_exam__number_session')
@@ -121,12 +139,21 @@ class ExamEnrollmentAdmin(admin.ModelAdmin):
 
 admin.site.register(ExamEnrollment, ExamEnrollmentAdmin)
 
+
 class OrganizationAdmin(admin.ModelAdmin):
     list_display = ('name', 'acronym', 'changed')
-    fieldsets = ((None, {'fields': ('name', 'acronym')}),)
+    fieldsets = ((None, {'fields': ('name', 'acronym', 'website', 'reference')}),)
     search_fields = ['acronym']
 
 admin.site.register(Organization, OrganizationAdmin)
+
+
+class OrganizationAddressAdmin(admin.ModelAdmin):
+    list_display = ('organization', 'label', 'location', 'postal_code', 'city', 'country')
+    fieldsets = ((None, {'fields': ('organization', 'label', 'location', 'postal_code', 'city', 'country')}),)
+
+admin.site.register(OrganizationAddress, OrganizationAddressAdmin)
+
 
 class StructureAdmin(admin.ModelAdmin):
     list_display = ('acronym', 'title', 'part_of', 'changed')
@@ -136,6 +163,7 @@ class StructureAdmin(admin.ModelAdmin):
 
 admin.site.register(Structure, StructureAdmin)
 
+
 class StudentAdmin(admin.ModelAdmin):
     list_display = ('person', 'registration_id', 'changed')
     fieldsets = ((None, {'fields': ('registration_id', 'person')}),)
@@ -143,6 +171,7 @@ class StudentAdmin(admin.ModelAdmin):
     search_fields = ['person__first_name', 'person__last_name']
 
 admin.site.register(Student, StudentAdmin)
+
 
 class TutorAdmin(admin.ModelAdmin):
     list_display = ('person', 'changed')
@@ -152,10 +181,12 @@ class TutorAdmin(admin.ModelAdmin):
 
 admin.site.register(Tutor, TutorAdmin)
 
+
 class ProgrammeManagerAdmin(admin.ModelAdmin):
     list_display = ('person', 'faculty')
 
 admin.site.register(ProgrammeManager, ProgrammeManagerAdmin)
+
 
 class AttributionAdmin(admin.ModelAdmin):
     list_display = ('tutor','function','learning_unit','start_date', 'end_date', 'changed')

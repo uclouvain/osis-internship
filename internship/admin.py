@@ -25,40 +25,24 @@
 ##############################################################################
 from django.contrib import admin
 from .models import *
-from core.models import Person
+
+
+class InternshipOfferAdmin(admin.ModelAdmin):
+    list_display = ('organization','learning_unit_year', 'title', 'maximum_enrollments')
+    fieldsets = ((None, {'fields': ('organization','learning_unit_year', 'title', 'maximum_enrollments')}),)
+
+admin.site.register(InternshipOffer, InternshipOfferAdmin)
+
 
 class InternshipEnrollmentAdmin(admin.ModelAdmin):
-    list_display = ('learning_unit_enrollment','organization', 'start_date', 'end_date')
-    fieldsets = ((None, {'fields': ('learning_unit_enrollment','organization', 'start_date', 'end_date')}),)
+    list_display = ('learning_unit_enrollment','internship_offer', 'start_date', 'end_date')
+    fieldsets = ((None, {'fields': ('learning_unit_enrollment','internship_offer', 'start_date', 'end_date')}),)
 
 admin.site.register(InternshipEnrollment, InternshipEnrollmentAdmin)
 
-class PlaceAdmin(admin.ModelAdmin):
-    list_display = ('number', 'name', 'address', 'postal_code', 'town', 'country', 'url')
-    fieldsets = ((None, {'fields': ('number', 'name', 'address', 'postal_code', 'town', 'country', 'url')}),)
-
-admin.site.register(Place, PlaceAdmin)
-
-class StudentAdmin(admin.ModelAdmin):
-    list_display = ('student', 'noma', 'annual_bloc', 'mail', 'address', 'postal_code', 'town', 'phone_number')
-    fieldsets = ((None, {'fields': ('student', 'noma', 'annual_bloc', 'mail', 'address', 'postal_code', 'town', 'phone_number')}),)
-
-admin.site.register(Student_, StudentAdmin)
-
-class InternshipAdmin(admin.ModelAdmin):
-    list_display = ('name', 'speciality', 'student_min', 'student_max')
-    fieldsets = ((None, {'fields': ('name', 'speciality', 'student_min', 'student_max')}),)
-
-admin.site.register(Internship, InternshipAdmin)
-
-class PeriodeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'date_start', 'date_end')
-    fieldsets = ((None, {'fields': ('name', 'date_start', 'date_end')}),)
-
-admin.site.register(Periode, PeriodeAdmin)
 
 class InternshipMasterAdmin(admin.ModelAdmin):
-    list_display = ('number', 'civility', 'type', 'speciality_id','speciality','mail')
-    fieldsets = ((None, {'fields': ('number', 'civility', 'type', 'speciality_id','speciality','mail')}),)
+    list_display = ('organization', 'internship_offer', 'person', 'reference', 'civility', 'type_mastery', 'speciality')
+    fieldsets = ((None, {'fields': ('organization', 'internship_offer', 'person', 'reference', 'civility', 'type_mastery', 'speciality')}),)
 
 admin.site.register(InternshipMaster, InternshipMasterAdmin)
