@@ -77,13 +77,15 @@
         {% csrf_token %}
         <table class="table table-hover">
             <thead>
-              <th>{% trans 'Offer' %}</th>
-              <th>{% trans 'Registration number' %}</th>
-              <th>{% trans 'Lastname' %}</th>
-              <th>{% trans 'Firstname' %}</th>
-              <th>{% trans 'Score' %}</th>
-              <th>{% trans 'Justification' %}</th>
-              <th>{% trans 'End date' %}</th>
+                <tr>
+                    <th>{% trans 'Offer' %}</th>
+                    <th>{% trans 'Registration number' %}</th>
+                    <th>{% trans 'Lastname' %}</th>
+                    <th>{% trans 'Firstname' %}</th>
+                    <th>{% trans 'Score' %}</th>
+                    <th>{% trans 'Justification' %}</th>
+                    <th>{% trans 'End date' %}</th>
+                </tr>
             </thead>
             <tbody>
             {% for enrollment in enrollments %}
@@ -99,12 +101,17 @@
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
                 <td>
-                   <input type="hidden" id="txt_score_draft_{{ enrollment.id }}" value="{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}">
-                   <input type="number" step="any" name="score_{{ enrollment.id }}" id="num_double_score_{{ enrollment.id }}" tabindex="{{ forloop.counter }}" class="form-control" {% if enrollment.score_final or enrollment.justification_final %} disabled {% endif %}>
+                   <input type="hidden" id="hdn_score_draft_{{ enrollment.id }}"
+                          value="{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}">
+                   <input type="number" step="any" name="score_{{ enrollment.id }}" id="num_double_score_{{ enrollment.id }}"
+                          tabindex="{{ forloop.counter }}" class="form-control"
+                          {% if enrollment.score_final or enrollment.justification_final %} disabled {% endif %}>
                 </td>
                 <td>
-                   <input type="hidden" id="txt_justification_draft_{{ enrollment.id }}" value="{{ enrollment.justification_draft }}">
-                   <select class="form-control" name="justification_{{ enrollment.id }}" id="slt_double_justification_score_{{ enrollment.id }}" tabindex="{{ enrollments|length|sum:forloop.counter }}" {% if enrollment.score_final or enrollment.justification_final %} disabled {% endif %}>
+                   <input type="hidden" id="hdn_justification_draft_{{ enrollment.id }}" value="{{ enrollment.justification_draft }}">
+                   <select class="form-control" name="justification_{{ enrollment.id }}" id="slt_double_justification_score_{{ enrollment.id }}"
+                           tabindex="{{ enrollments|length|sum:forloop.counter }}"
+                           {% if enrollment.score_final or enrollment.justification_final %} disabled {% endif %}>
                       <option value="None"></option>
                       <option value="ABSENT">{% trans 'Absent' %}</option>
                       <option value="CHEATING">{% trans 'Cheating' %}</option>
