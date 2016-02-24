@@ -36,16 +36,18 @@ class Person(models.Model):
         ('M',_('Male')),
         ('U',_('Unknown')))
 
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed     = models.DateTimeField(null=True)
-    user        = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
-    global_id   = models.CharField(max_length=10, blank=True, null=True)
-    gender      = models.CharField(max_length=1, blank=True, null=True, choices=GENDER_CHOICES, default='U')
-    national_id = models.CharField(max_length=25,blank=True, null=True)
-    first_name  = models.CharField(max_length=50,blank=True, null=True)
-    middle_name = models.CharField(max_length=50,blank=True, null=True)
-    last_name   = models.CharField(max_length=50,blank=True, null=True)
-    email       = models.EmailField(max_length=255, blank=True, null=True)
+    external_id  = models.CharField(max_length=100, blank=True, null=True)
+    changed      = models.DateTimeField(null=True)
+    user         = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
+    global_id    = models.CharField(max_length=10, blank=True, null=True)
+    gender       = models.CharField(max_length=1, blank=True, null=True, choices=GENDER_CHOICES, default='U')
+    national_id  = models.CharField(max_length=25, blank=True, null=True)
+    first_name   = models.CharField(max_length=50, blank=True, null=True)
+    middle_name  = models.CharField(max_length=50, blank=True, null=True)
+    last_name    = models.CharField(max_length=50, blank=True, null=True)
+    email        = models.EmailField(max_length=255, blank=True, null=True)
+    phone        = models.CharField(max_length=30, blank=True, null=True)
+    phone_mobile = models.CharField(max_length=30, blank=True, null=True)
 
     def username(self):
         if self.user is None:
@@ -72,6 +74,15 @@ class Person(models.Model):
             last_name = self.last_name + ","
 
         return u"%s %s %s" % (last_name.upper(), first_name, middle_name)
+
+
+class PersonAddress(models.Model):
+    person      = models.ForeignKey(Person)
+    label       = models.CharField(max_length=20)
+    location    = models.CharField(max_length=255)
+    postal_code = models.CharField(max_length=20)
+    city        = models.CharField(max_length=255)
+    country     = models.CharField(max_length=255)
 
 
 class Tutor(models.Model):
@@ -107,9 +118,20 @@ class Organization(models.Model):
     changed     = models.DateTimeField(null=True)
     name        = models.CharField(max_length=255)
     acronym     = models.CharField(max_length=15)
+    website     = models.CharField(max_length=255, blank=True, null=True)
+    reference   = models.CharField(max_length=30, blank=True, null=True)
 
     def __str__(self):
         return self.name
+
+
+class OrganizationAddress(models.Model):
+    organization = models.ForeignKey(Organization)
+    label        = models.CharField(max_length=20)
+    location     = models.CharField(max_length=255)
+    postal_code  = models.CharField(max_length=20)
+    city         = models.CharField(max_length=255)
+    country      = models.CharField(max_length=255)
 
 
 class Structure(models.Model):

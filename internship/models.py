@@ -25,6 +25,7 @@
 ##############################################################################
 from django.db import models
 from base.models import Organization, Person, LearningUnitYear, LearningUnitEnrollment
+from django.utils.translation import ugettext_lazy as _
 
 
 class InternshipOffer(models.Model):
@@ -33,6 +34,9 @@ class InternshipOffer(models.Model):
     title               = models.CharField(max_length=255)
     maximum_enrollments = models.IntegerField()
 
+    def __str__(self):
+        return self.title
+
 
 class InternshipEnrollment(models.Model):
     learning_unit_enrollment = models.ForeignKey(LearningUnitEnrollment)
@@ -40,6 +44,29 @@ class InternshipEnrollment(models.Model):
     start_date               = models.DateField()
     end_date                 = models.DateField()
 
+    def __str__(self):
+        return u"%s" % self.learning_unit_enrollment.student
+
 
 class InternshipMaster(models.Model):
-    reference = models.CharField(max_length=30)
+    CIVILITY_CHOICE = (('PROFESSOR',_('Professor')),
+                       ('DOCTOR',_('Doctor')))
+    TYPE_CHOICE = (('SPECIALIST',_('Specialist')),
+                   ('GENERALIST',_('Generalist')))
+    SPECIALITY_CHOICE = (('INTERNAL_MEDICINE',_('Internal Medicine')),
+                        ('SURGERY',_('Surgery')),
+                        ('GYNEC_OBSTETRICS',_('Gynec-Obstetrics')),
+                        ('PEDIATRICS',_('Pediatrics')),
+                        ('EMERGENCY',_('Emergency')),
+                        ('GERIATRICS',_('Geriatrics')))
+
+    organization     = models.ForeignKey(Organization)
+    internship_offer = models.ForeignKey(InternshipOffer)
+    person           = models.ForeignKey(Person)
+    reference        = models.CharField(max_length=30, blank=True, null=True)
+    civility         = models.CharField(max_length=20, blank=True, null=True, choices=CIVILITY_CHOICE)
+    type_mastery     = models.CharField(max_length=20, blank=True, null=True, choices=TYPE_CHOICE)
+    speciality       = models.CharField(max_length=20, blank=True, null=True, choices=SPECIALITY_CHOICE)
+
+    def __str__(self):
+        return u"%s - %s" % (self.person, self.reference)
