@@ -212,7 +212,10 @@ class AcademicCalendar(models.Model):
 
     @staticmethod
     def find_by_academic_year_with_dates(academic_year_id):
-        return AcademicCalendar.objects.filter(academic_year=academic_year_id, start_date__isnull=False, end_date__isnull=False).order_by('start_date')
+        now = timezone.now()
+        return AcademicCalendar.objects.filter(academic_year=academic_year_id, start_date__isnull=False, end_date__isnull=False)\
+                                        .filter(models.Q(start_date__lte=now, end_date__gte=now) | models.Q(start_date__gte=now, end_date__gte=now))\
+                                        .order_by('start_date')
 
     @staticmethod
     def find_by_id(id):
