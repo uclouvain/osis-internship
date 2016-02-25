@@ -218,9 +218,10 @@ class AcademicCalendar(models.Model):
 
     @staticmethod
     def current_academic_year():
+        now = timezone.now()
         academic_calendar = AcademicCalendar.objects.filter(event_type='ACADEMIC_YEAR')\
-                                                    .filter(start_date__lte=timezone.now())\
-                                                    .filter(end_date__gte=timezone.now()).first()
+                                                    .filter(start_date__lte=now)\
+                                                    .filter(end_date__gte=now).first()
         if academic_calendar:
             return academic_calendar.academic_year
         else:
