@@ -215,7 +215,7 @@ Start the virtual environment and install the dependencies:
 
 Before running the application, let's create the data model in the database:
 
-    (venv)$ python manage.py makemigrations core
+    (venv)$ python manage.py makemigrations base
     (venv)$ python manage.py migrate
 
 And then a super user account to access the administration module:
