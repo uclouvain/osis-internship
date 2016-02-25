@@ -72,7 +72,7 @@
               {% ifchanged academic_calendar.start_date|date:"M" %}
                 <dt>{{ academic_calendar.start_date|date:"F Y" }}</dt>
               {%endifchanged%}
-              <dd>{{ academic_calendar.start_date| default_if_none:''|date:"j/m" }}-{{ academic_calendar.end_date| default_if_none:''|date:"j/m" }} : {{ academic_calendar.title }}</dd>
+              <dd>{{ academic_calendar.start_date| default_if_none:''|date:"d/m/Y" }} - {{ academic_calendar.end_date| default_if_none:''|date:"d/m/Y" }} : <a href="{% url 'academic_calendar_read' academic_calendar.id %}" id="lnk_academic_calendar_edit_{{academic_calendar.id}}">{{ academic_calendar.title }}</a></dd>
               <br>
             {% endfor%}
           </dl>
