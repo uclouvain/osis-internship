@@ -227,7 +227,7 @@ class AcademicCalendar(models.Model):
             end_date_before_change = None
             if self.id is None:
                 new = True
-            else:i
+            else:
                 academic_calendar = AcademicCalendar.objects.get(pk=self.id)
                 start_date_before_change = academic_calendar.start_date
                 end_date_before_change = academic_calendar.end_date
@@ -261,6 +261,10 @@ class AcademicCalendar(models.Model):
                             offer_year_calendar.save()
 
             return academic_calendar
+
+    @staticmethod
+    def find_highlight_academic_calendars():
+        return AcademicCalendar.objects.filter(start_date__lte=timezone.now(),end_date__gte=timezone.now())
 
 
 class Offer(models.Model):

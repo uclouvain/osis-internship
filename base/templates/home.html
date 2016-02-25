@@ -36,6 +36,16 @@
     <p>L'encodage des notes pour la session de janvier est en cours maintenant!</p>
     <p><a class="btn btn-primary btn-lg" href="{% url 'scores_encoding' %}" role="button" id="lnk_scores_encoding">Encoder mes notes</a></p>
 </div>
+
+{% if highlight_academic_calendars|length > 0 %}
+    {% for academic_calendar in highlight_academic_calendar %}
+        <div class="jumbotron">
+            <h1>{{ academic_calendar.highlight_title }}</h1>
+            <p>{{ academic_calendar.highlight_description }}</p>
+            <p><a class="btn btn-primary btn-lg" href="{% url '{{ academic_calendar.highlight_shortcut }}' %}" role="button" id="lnk_highlight_{{ academic_calendar.highlight_shortcut }}">{% trans 'Go'%}</a></p>
+        </div>
+    {% endfor %}
+{% endif %}
 <br>
 <div class="panel panel-default">
     <div class="panel-body">
