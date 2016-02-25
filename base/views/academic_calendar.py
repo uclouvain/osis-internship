@@ -29,6 +29,7 @@ from base.models import *
 from base.forms import AcademicCalendarForm
 from django.utils.translation import ugettext as _
 
+
 def academic_calendars(request):
     academic_year = None
     academic_years = AcademicYear.find_academic_years()
@@ -161,7 +162,6 @@ def academic_calendar_delete(request, id):
 
 def academic_calendar_create(request):
     academic_calendar = AcademicCalendar()
-    academic_calendar.academic_year=academic_year
     academic_years = AcademicYear.find_academic_years()
     return render(request, "academic_calendar_form.html", {'academic_calendar':     academic_calendar,
                                                            'academic_year': None,

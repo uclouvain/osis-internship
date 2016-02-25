@@ -31,6 +31,7 @@ from django.core.mail import send_mail
 
 from django.utils.translation import ugettext_lazy as _
 from backoffice.settings import DEFAULT_FROM_EMAIL
+from base.models import *
 
 
 def send_mail_after_scores_submission(persons, learning_unit_name):
@@ -56,6 +57,32 @@ def send_mail_after_scores_submission(persons, learning_unit_name):
     ])
 
     send_mail(subject=subject,message=message,recipient_list=[person.email for person in persons],html_message=html_message,from_email=DEFAULT_FROM_EMAIL)
+
+def send_mail_after_academic_calendar_changes(academic_calendar, offer_year_calendar, programme_managers):
+    """
+    Send an email to all the programme manager after changes has been made on a offer_year_calendar with customized
+    = True
+    :param academic_calendar:
+    :param offer_year_calendar:
+    """
+
+    subject = _('Watch out - Changes has been made on %s, academic calendar (%s)') % (offer_year_calendar.offer_year, academic_calendar)
+    html_message = ''.join([
+        str(_('<p>Hi, </p>')),
+        str(_('<p>We inform you that changes has been made on \'{offer_year}\'({acronym}), academic calendar ({academic_calendar}).</p></br>')).format(
+            offer_year=offer_year_calendar.offer_year.title,acronym=offer_year_calendar.offer_year.acronym, academic_calendar=academic_calendar),
+        str(_('The OSIS Team<br>')),
+        EMAIL_SIGNATURE,
+    ])
+    message = ''.join([
+        str(_('Hi, \n')),
+        str(_('We inform you that changes has been made on \'{offer_year}\'({acronym}), academic calendar ({academic_calendar}).\n\n')).format(
+            offer_year=offer_year_calendar.offer_year.title,acronym=offer_year_calendar.offer_year.acronym, academic_calendar=academic_calendar),
+        str(_('The OSIS Team.')),
+    ])
+
+    send_mail(subject=subject,message=message,recipient_list=[programme_manager.person.email for programme_manager in programme_managers],html_message=html_message,from_email='DEFAULT_FROM_EMAIL')
+
 
 
 GENDER_TITLE_MAP = {
