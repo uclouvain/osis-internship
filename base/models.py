@@ -29,6 +29,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from base.utils import send_mail
+from datetime import datetime
 
 
 class Person(models.Model):
@@ -222,8 +223,15 @@ class AcademicCalendar(models.Model):
 
     def save(self,  *args, **kwargs):
             new = False
+            start_date_before_change = None
+            end_date_before_change = None
             if self.id is None:
                 new = True
+            else:i
+                academic_calendar = AcademicCalendar.objects.get(pk=self.id)
+                start_date_before_change = academic_calendar.start_date
+                end_date_before_change = academic_calendar.end_date
+
             academic_calendar=super(AcademicCalendar, self).save(*args, **kwargs)
             academic_year = self.academic_year
 
@@ -237,19 +245,20 @@ class AcademicCalendar(models.Model):
                     offer_year_calendar.end_date = self.end_date
                     offer_year_calendar.save()
             else:
-                offer_year_calendar_list = OfferYearCalendar.find_offer_years_by_academic_calendar(self)
+                if start_date_before_change.strftime( '%d/%m/%Y') != self.start_date.strftime( '%d/%m/%Y') or end_date_before_change.strftime( '%d/%m/%Y') != self.end_date.strftime( '%d/%m/%Y') :
+                    #Do this only if start_date or end_date changed
+                    offer_year_calendar_list = OfferYearCalendar.find_offer_years_by_academic_calendar(self)
 
-                for offer_year_calendar in offer_year_calendar_list:
-                    if offer_year_calendar.customized == True:
-                        #an email must be sent to the programme manager
-                        programme_managers = ProgrammeManager.objects.filter(faculty=offer_year_calendar.offer_year.structure)
-                        if programme_managers and len(programme_managers) > 0:
-                            send_mail.send_mail_after_academic_calendar_changes(self,offer_year_calendar, programme_managers)
-                    else:
-                        offer_year_calendar.start_date = self.start_date
-                        offer_year_calendar.end_date = self.end_date
-                        offer_year_calendar.save()
-
+                    for offer_year_calendar in offer_year_calendar_list:
+                        if offer_year_calendar.customized == True:
+                            #an email must be sent to the programme manager
+                            programme_managers = ProgrammeManager.objects.filter(faculty=offer_year_calendar.offer_year.structure)
+                            if programme_managers and len(programme_managers) > 0:
+                                send_mail.send_mail_after_academic_calendar_changes(self,offer_year_calendar, programme_managers)
+                        else:
+                            offer_year_calendar.start_date = self.start_date
+                            offer_year_calendar.end_date = self.end_date
+                            offer_year_calendar.save()
 
             return academic_calendar
 
