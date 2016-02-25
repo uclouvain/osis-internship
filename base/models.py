@@ -29,7 +29,6 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from base.utils import send_mail
-from datetime import datetime
 
 
 class Person(models.Model):
@@ -245,7 +244,7 @@ class AcademicCalendar(models.Model):
                     offer_year_calendar.end_date = self.end_date
                     offer_year_calendar.save()
             else:
-                if start_date_before_change.strftime( '%d/%m/%Y') != self.start_date.strftime( '%d/%m/%Y') or end_date_before_change.strftime( '%d/%m/%Y') != self.end_date.strftime( '%d/%m/%Y') :
+                if (start_date_before_change is None and end_date_before_change is None ) or ((not start_date_before_change is None and start_date_before_change.strftime( '%d/%m/%Y')) != (not self.start_date is None and self.start_date.strftime( '%d/%m/%Y')) or (not end_date_before_change is None and end_date_before_change.strftime( '%d/%m/%Y') != self.end_date.strftime( '%d/%m/%Y'))) :
                     #Do this only if start_date or end_date changed
                     offer_year_calendar_list = OfferYearCalendar.find_offer_years_by_academic_calendar(self)
 
@@ -264,7 +263,7 @@ class AcademicCalendar(models.Model):
 
     @staticmethod
     def find_highlight_academic_calendars():
-        return AcademicCalendar.objects.filter(start_date__lte=timezone.now(),end_date__gte=timezone.now())
+        return AcademicCalendar.objects.filter(start_date__lte=timezone.now(), end_date__gte=timezone.now(), highlight_title__isnull=False, highlight_description__isnull=False, highlight_shortcut__isnull=False )
 
 
 class Offer(models.Model):

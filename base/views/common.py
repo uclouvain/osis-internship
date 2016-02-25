@@ -40,7 +40,9 @@ def home(request):
     if not academic_year_calendar is None:
         academic_year = academic_year_calendar.id
     academic_calendars = AcademicCalendar.find_by_academic_year_with_dates(academic_year)
-    return render(request, "home.html",{'academic_calendars' : academic_calendars, 'highlight_academic_calendar' : AcademicCalendar.find_highlight_academic_calendars})
+    return render(request, "home.html",
+                          {'academic_calendars'           : academic_calendars,
+                           'highlight_academic_calendars' : AcademicCalendar.find_highlight_academic_calendars()})
 
 
 @login_required
