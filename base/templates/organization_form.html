@@ -44,8 +44,9 @@
     {% if organization.id%}
     <form method="post" action="{% url 'organization_save' organization.id %}">
     {%else%}
-    <form method="post" action="{% url 'organization_save_new'  %}">
+    <form method="post" action="{% url 'organization_save_new'%}">
     {%endif%}
+      <input type="hidden" value="{{ organization_address_id }}" name="organization_address_id"/>
       {% csrf_token %}
       <div class="row">
 
@@ -74,31 +75,31 @@
 
         <div class="row">
           <div class="col-md-12">
-            <label >{% trans 'Adress' %}</label>
+            <label >{% trans 'Address' %}</label>
           </div>
           </div>
             <div class="row">
               <div class="col-md-6">
-                <label for="adresss_label">{% trans 'Label' %}</label>
-                <input class="form-control" value="{{ organization.adress.label | default_if_none:'' }}" name="adresss_label" id="txt_adresss_label" maxlength="20">
+                <label for="address_label">{% trans 'Label' %}</label>
+                <input class="form-control" value="{{ organization.address.label | default_if_none:'' }}" name="address_label" id="txt_address_label" maxlength="20">
               </div>
               <div class="col-md-6">
-                <label for="adresss_location">{% trans 'Location' %}</label>
-                <input class="form-control" value="{{ organization.adress.location | default_if_none:'' }}" name="adresss_location" id="txt_adresss_location" maxlength="255">
+                <label for="address_location">{% trans 'Location' %}</label>
+                <input class="form-control" value="{{ organization.address.location | default_if_none:'' }}" name="address_location" id="txt_address_location" maxlength="255">
               </div>
             </div>
             <div class="row">
               <div class="col-md-4">
-                <label for="adresss_postal_code">{% trans 'Postal code' %}</label>
-                <input class="form-control" value="{{ organization.adress.postal_code | default_if_none:'' }}" name="adresss_postal_code" id="txt_adresss_postal_code" maxlength="20">
+                <label for="address_postal_code">{% trans 'Postal code' %}</label>
+                <input class="form-control" value="{{ organization.address.postal_code | default_if_none:'' }}" name="address_postal_code" id="txt_address_postal_code" maxlength="20">
               </div>
               <div class="col-md-4">
-                <label for="adresss_city">{% trans 'Location' %}</label>
-                <input class="form-control" value="{{ organization.adress.city | default_if_none:'' }}" name="adresss_city" id="txt_adresss_city" maxlength="255">
+                <label for="address_city">{% trans 'City' %}</label>
+                <input class="form-control" value="{{ organization.address.city | default_if_none:'' }}" name="address_city" id="txt_address_city" maxlength="255">
               </div>
                <div class="col-md-4">
-                <label for="adresss_country">{% trans 'Location' %}</label>
-                <input class="form-control" value="{{ organization.adress.country | default_if_none:'' }}" name="adresss_country" id="txt_adresss_country" maxlength="255">
+                <label for="address_country">{% trans 'Country' %}</label>
+                <input class="form-control" value="{{ organization.address.country | default_if_none:'' }}" name="address_country" id="txt_address_country" maxlength="255" >
               </div>
             </div>
         <br>

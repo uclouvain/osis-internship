@@ -63,31 +63,31 @@
   <br>
   <div class="row">
       <div class="col-md-12">
-        <label >{% trans 'Adress' %}</label>
+        <label >{% trans 'Address' %}</label>
       </div>
   </div>
     <div class="row">
       <div class="col-md-6">
             &nbsp;&nbsp;&nbsp;<label>{% trans 'Label' %}</label><br>
-            &nbsp;&nbsp;&nbsp;{{ organization.adress.label | default_if_none:'' }}
+            &nbsp;&nbsp;&nbsp;{{ organization.address.label | default_if_none:'' }}
       </div>
       <div class="col-md-6">
             <label>{% trans 'Location' %}</label><br>
-            {{ organization.adress.location | default_if_none:'' }}
+            {{ organization.address.location | default_if_none:'' }}
       </div>
     </div>
   <div class="row">
     <div class="col-md-4">
         &nbsp;&nbsp;&nbsp;<label>{% trans 'Postal code' %}</label><br>
-        &nbsp;&nbsp;&nbsp;{{ organization.adress.postal_code | default_if_none:'' }}
+        &nbsp;&nbsp;&nbsp;{{ organization.address.postal_code | default_if_none:'' }}
     </div>
     <div class="col-md-4">
         <label>{% trans 'City' %}</label><br>
-        {{ organization.adress.city | default_if_none:'' }}
+        {{ organization.address.city | default_if_none:'' }}
     </div>
     <div class="col-md-4">
         <label>{% trans 'Country' %}</label><br>
-        {{ organization.adress.country | default_if_none:'' }}
+        {{ organization.address.country | default_if_none:'' }}
     </div>
   </div>
   <br>
@@ -101,7 +101,7 @@
 
       </div>
   </div>
-
+  {% if organization.find_structure%}
     <div class="row">
       <div class="col-md-12">
 
@@ -116,6 +116,7 @@
           </div>
       </div>
   </div>
+      {%endif%}
   </div>
 
 </div>

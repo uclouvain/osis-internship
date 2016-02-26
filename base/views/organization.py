@@ -95,9 +95,42 @@ def organization_save(request,id):
     else:
         organization.reference = None
 
+    organization_address = OrganizationAddress.find_by_organization(organization)
+    organization_address_id  = None
+    if organization_address is None:
+        organization_address= OrganizationAddress()
+        organization_address.organization = organization
+    else:
+        organization_address_id = organization_address.id
+
+    if request.POST['address_label']:
+        organization_address.label = request.POST['address_label']
+    else:
+        organization_address.label = None
+
+    if request.POST['address_location']:
+        organization_address.location = request.POST['address_location']
+    else:
+        organization_address.location = None
+
+    if request.POST['address_postal_code']:
+        organization_address.postal_code = request.POST['address_postal_code']
+    else:
+        organization_address.postal_code = None
+
+    if request.POST['address_city']:
+        organization_address.city = request.POST['address_city']
+    else:
+        organization_address.city = None
+
+    if request.POST['address_country']:
+        organization_address.country = request.POST['address_country']
+    else:
+        organization_address.country = None
+
     if form.is_valid():
-        print('valid')
         organization.save()
+        organization_address.save()
         organizations_list = Organization.find_all()
         return render(request, "organizations.html",
                               {'acronym' :      None,
@@ -105,16 +138,21 @@ def organization_save(request,id):
                                'organizations': organizations_list,
                                'init': "0"})
     else:
-        print('invalid')
+
         return render(request, "organization_form.html",
                               {'organization' : organization,
+                               'organization_address_id' : organization_address_id,
                                'form' :         form})
-
 
 
 def organization_edit(request, id):
     organization = Organization.find_by_id(id)
-    return render(request, "organization_form.html", {'organization':     organization})
+    organization_address_id = None
+    organization_address = OrganizationAddress.find_by_organization(organization)
+    if organization_address:
+        organization_address_id = organization_address.id
+    return render(request, "organization_form.html", {'organization':             organization,
+                                                      'organization_address_id' : organization_address_id})
 
 
 def organization_create(request):

@@ -143,9 +143,9 @@ class Organization(models.Model):
 
     @staticmethod
     def find_all():
-        return Organization.objects.all()
+        return Organization.objects.all().order_by('acronym')
 
-    def adress(self):
+    def address(self):
         return OrganizationAddress.find_by_organization(self)
 
     def find_structure(self):
@@ -156,15 +156,19 @@ class Organization(models.Model):
 
 class OrganizationAddress(models.Model):
     organization = models.ForeignKey(Organization)
-    label        = models.CharField(max_length=20)
-    location     = models.CharField(max_length=255)
-    postal_code  = models.CharField(max_length=20)
-    city         = models.CharField(max_length=255)
-    country      = models.CharField(max_length=255)
+    label        = models.CharField(max_length=20, blank=True, null=True)
+    location     = models.CharField(max_length=255, blank=True, null=True)
+    postal_code  = models.CharField(max_length=20, blank=True, null=True)
+    city         = models.CharField(max_length=255, blank=True, null=True)
+    country      = models.CharField(max_length=255, blank=True, null=True)
 
     @staticmethod
     def find_by_organization(organization):
-        return OrganizationAddress.objects.get(organization=organization)
+        organization_address_list =  OrganizationAddress.objects.filter(organization=organization)
+        for organization_address in organization_address_list:
+            #Supposed there is only one address for on organization
+            return organization_address
+        return None
 
 
 class Structure(models.Model):
@@ -205,11 +209,12 @@ class Structure(models.Model):
 
     @staticmethod
     def find_tree(organization):
-        structure= Structure.objects.get(organization=organization)
+        structure= Structure.objects.filter(organization=organization)
         tags = []
-        for t in Structure.objects.filter(part_of=structure):
-            tags.append(t.serializable_object())
-        print('tags',tags)
+        if not structure is None:
+            for t in Structure.objects.filter(part_of=structure):
+                tags.append(t.serializable_object())
+            print('tags',tags)
         return tags
 
     def __str__(self):
