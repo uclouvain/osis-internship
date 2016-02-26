@@ -146,6 +146,9 @@ class Organization(models.Model):
     def find_all():
         return Organization.objects.all()
 
+    def adress(self):
+        return OrganizationAddress.find_by_organization(self)
+
 
 class OrganizationAddress(models.Model):
     organization = models.ForeignKey(Organization)
@@ -154,6 +157,10 @@ class OrganizationAddress(models.Model):
     postal_code  = models.CharField(max_length=20)
     city         = models.CharField(max_length=255)
     country      = models.CharField(max_length=255)
+
+    @staticmethod
+    def find_by_organization(organization):
+        return OrganizationAddress.objects.get(organization=organization)
 
 
 class Structure(models.Model):

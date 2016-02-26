@@ -71,6 +71,37 @@
         </div>
       </div>
       <br>
+
+        <div class="row">
+          <div class="col-md-12">
+            <label >{% trans 'Adress' %}</label>
+          </div>
+          </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label for="adresss_label">{% trans 'Label' %}</label>
+                <input class="form-control" value="{{ organization.adress.label | default_if_none:'' }}" name="adresss_label" id="txt_adresss_label" maxlength="20">
+              </div>
+              <div class="col-md-6">
+                <label for="adresss_location">{% trans 'Location' %}</label>
+                <input class="form-control" value="{{ organization.adress.location | default_if_none:'' }}" name="adresss_location" id="txt_adresss_location" maxlength="255">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <label for="adresss_postal_code">{% trans 'Postal code' %}</label>
+                <input class="form-control" value="{{ organization.adress.postal_code | default_if_none:'' }}" name="adresss_postal_code" id="txt_adresss_postal_code" maxlength="20">
+              </div>
+              <div class="col-md-4">
+                <label for="adresss_city">{% trans 'Location' %}</label>
+                <input class="form-control" value="{{ organization.adress.city | default_if_none:'' }}" name="adresss_city" id="txt_adresss_city" maxlength="255">
+              </div>
+               <div class="col-md-4">
+                <label for="adresss_country">{% trans 'Location' %}</label>
+                <input class="form-control" value="{{ organization.adress.country | default_if_none:'' }}" name="adresss_country" id="txt_adresss_country" maxlength="255">
+              </div>
+            </div>
+        <br>
       <div class="row">
         <div class="col-md-4">
           <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_organization_save"><span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'Save'%}</button>
