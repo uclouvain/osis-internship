@@ -27,6 +27,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from base.models import *
 
+
 def page_not_found(request):
     return render(request,'page_not_found.html')
 
@@ -57,6 +58,13 @@ def assessments(request):
 def catalog(request):
     return render(request, "catalog.html", {'section': 'catalog'})
 
+
 @login_required
 def academic_year(request):
     return render(request, "academic_year.html", {'section': 'acacemic_year'})
+
+
+@login_required
+def profile(request):
+    person = Person.find_person_by_user(request.user)
+    return render(request, "profile.html", {'person': person})

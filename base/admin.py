@@ -80,9 +80,8 @@ admin.site.register(OfferEnrollment, OfferEnrollmentAdmin)
 class PersonAdmin(admin.ModelAdmin):
     list_display = ('first_name' , 'middle_name', 'last_name', 'username','email', 'gender','global_id', 'national_id', 'changed')
     search_fields = ['first_name', 'middle_name', 'last_name', 'user__username','email']
-    fieldsets = ((None, {'fields': ('user','global_id','national_id','gender','first_name','middle_name','last_name','email', 'phone', 'phone_mobile')}),)
+    fieldsets = ((None, {'fields': ('user','global_id','national_id','gender','first_name','middle_name','last_name','email', 'phone', 'phone_mobile', 'language')}),)
     raw_id_fields = ('user',)
-    search_fields = ['first_name', 'last_name']
 
 admin.site.register(Person, PersonAdmin)
 

@@ -51,6 +51,8 @@ urlpatterns = [
     url(r'^offers/search$', offer.offers_search, name='offers_search'),
     url(r'^offers/([0-9]+)/$', offer.offer_read, name='offer_read'),
 
+    url(r'^profile/$', common.profile, name='profile'),
+
     url(r'^studies/$', common.studies, name='studies'),
     url(r'^studies/assessments/$', common.assessments, name='assessments'),
     url(r'^studies/assessments/scores_encoding$', score_encoding.scores_encoding, name='scores_encoding'),

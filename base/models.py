@@ -38,6 +38,10 @@ class Person(models.Model):
         ('M',_('Male')),
         ('U',_('Unknown')))
 
+    LANGUAGES_CHOICES = (
+        ('FR',_('Français')),
+        ('EN',_('English')))
+
     external_id  = models.CharField(max_length=100, blank=True, null=True)
     changed      = models.DateTimeField(null=True)
     user         = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
@@ -50,6 +54,7 @@ class Person(models.Model):
     email        = models.EmailField(max_length=255, blank=True, null=True)
     phone        = models.CharField(max_length=30, blank=True, null=True)
     phone_mobile = models.CharField(max_length=30, blank=True, null=True)
+    language     = models.CharField(max_length=30, null=True, choices=LANGUAGES_CHOICES, default='FR')
 
     def username(self):
         if self.user is None:
@@ -215,9 +220,10 @@ class AcademicCalendar(models.Model):
 
     @staticmethod
     def current_academic_year():
+        now = timezone.now()
         academic_calendar = AcademicCalendar.objects.filter(event_type='ACADEMIC_YEAR')\
-                                                    .filter(start_date__lte=timezone.now())\
-                                                    .filter(end_date__gte=timezone.now()).first()
+                                                    .filter(start_date__lte=now)\
+                                                    .filter(end_date__gte=now).first()
         if academic_calendar:
             return academic_calendar.academic_year
         else:
