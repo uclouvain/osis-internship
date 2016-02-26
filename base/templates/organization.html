@@ -2,6 +2,7 @@
 {% load staticfiles %}
 {% load i18n %}
 
+
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
  * designed to manage the core business of higher education institutions,
@@ -97,6 +98,22 @@
         </a>
       </div>
       <div class="col-md-8">
+
+      </div>
+  </div>
+
+    <div class="row">
+      <div class="col-md-12">
+
+          <label>{{organization.find_structure}}</label>
+          <div >
+                  <ul>
+                    <li>
+                        {{organization.find_structure}}
+                            {% include "structure_tree_list.html" %}
+                      </li>
+                  </ul>
+          </div>
       </div>
   </div>
   </div>

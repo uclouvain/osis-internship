@@ -29,7 +29,6 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
-
 class Person(models.Model):
     GENDER_CHOICES = (
         ('F',_('Female')),
@@ -149,6 +148,11 @@ class Organization(models.Model):
     def adress(self):
         return OrganizationAddress.find_by_organization(self)
 
+    def find_structure(self):
+        return Structure.find_by_organization(self)
+
+    def find_structure_tree(self):
+        return Structure.find_tree(self)
 
 class OrganizationAddress(models.Model):
     organization = models.ForeignKey(Organization)
@@ -171,6 +175,16 @@ class Structure(models.Model):
     organization = models.ForeignKey(Organization, null=True)
     part_of      = models.ForeignKey('self', null=True, blank=True)
 
+    def children(self):
+        print(self.pk)
+        return Structure.objects.filter(part_of=self.pk)
+
+    def serializable_object(self):
+        obj = {'name': self.acronym, 'children': []}
+        for child in self.children():
+            obj['children'].append(child.serializable_object())
+        return obj
+
     @staticmethod
     def find_structures():
         return Structure.objects.all().order_by('acronym')
@@ -184,6 +198,19 @@ class Structure(models.Model):
 
     def find_offer_years_by_academic_year(self):
         return OfferYear.objects.filter(structure=self).order_by('academic_year','acronym')
+
+    @staticmethod
+    def find_by_organization(organization):
+        return Structure.objects.get(organization=organization)
+
+    @staticmethod
+    def find_tree(organization):
+        structure= Structure.objects.get(organization=organization)
+        tags = []
+        for t in Structure.objects.filter(part_of=structure):
+            tags.append(t.serializable_object())
+        print('tags',tags)
+        return tags
 
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)
@@ -638,3 +665,4 @@ class ExamEnrollmentHistory(models.Model):
         exam_enrollment_history.justification_final = justification
         exam_enrollment_history.person = Person.find_person_by_user(user)
         exam_enrollment_history.save()
+

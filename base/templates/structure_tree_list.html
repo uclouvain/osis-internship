@@ -1,0 +1,10 @@
+<ul>
+{% for tag in tags %}
+    <li>{{ tag.name }}</li>
+    {% if tag.children %}
+       {% with tag.children as tags %}
+            {% include "structure_tree_list.html" %}
+        {% endwith %}
+    {% endif %}
+{% endfor %}
+</ul>
