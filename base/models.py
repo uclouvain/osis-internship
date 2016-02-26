@@ -122,7 +122,7 @@ class Organization(models.Model):
     changed     = models.DateTimeField(null=True)
     name        = models.CharField(max_length=255)
     acronym     = models.CharField(max_length=15)
-    website     = models.CharField(max_length=255, blank=True, null=True)
+    website     = models.URLField(max_length=255, blank=True, null=True)
     reference   = models.CharField(max_length=30, blank=True, null=True)
 
     def __str__(self):
