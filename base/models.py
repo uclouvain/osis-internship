@@ -29,7 +29,6 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from base.utils import send_mail
-from datetime import datetime
 
 
 class Person(models.Model):
@@ -286,6 +285,10 @@ class AcademicCalendar(models.Model):
                             offer_year_calendar.save()
 
             return academic_calendar
+
+    @staticmethod
+    def find_highlight_academic_calendars():
+        return AcademicCalendar.objects.filter(start_date__lte=timezone.now(), end_date__gte=timezone.now(), highlight_title__isnull=False, highlight_description__isnull=False, highlight_shortcut__isnull=False )
 
 
 class Offer(models.Model):
