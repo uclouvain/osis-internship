@@ -31,153 +31,28 @@ from django.utils.translation import ugettext_lazy as _
 from base.utils import send_mail
 
 
-class Person(models.Model):
-    GENDER_CHOICES = (
-        ('F',_('Female')),
-        ('M',_('Male')),
-        ('U',_('Unknown')))
-
-    external_id  = models.CharField(max_length=100, blank=True, null=True)
-    changed      = models.DateTimeField(null=True)
-    user         = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
-    global_id    = models.CharField(max_length=10, blank=True, null=True)
-    gender       = models.CharField(max_length=1, blank=True, null=True, choices=GENDER_CHOICES, default='U')
-    national_id  = models.CharField(max_length=25, blank=True, null=True)
-    first_name   = models.CharField(max_length=50, blank=True, null=True)
-    middle_name  = models.CharField(max_length=50, blank=True, null=True)
-    last_name    = models.CharField(max_length=50, blank=True, null=True)
-    email        = models.EmailField(max_length=255, blank=True, null=True)
-    phone        = models.CharField(max_length=30, blank=True, null=True)
-    phone_mobile = models.CharField(max_length=30, blank=True, null=True)
-
-    def username(self):
-        if self.user is None:
-            return None
-        return self.user.username
-
-    @staticmethod
-    def find_person(person_id):
-        return Person.objects.get(id=person_id)
-
-    @staticmethod
-    def find_person_by_user(user):
-        return Person.objects.get(user=user)
-
-    def __str__(self):
-        first_name = ""
-        middle_name = ""
-        last_name = ""
-        if self.first_name :
-            first_name = self.first_name
-        if self.middle_name :
-            middle_name = self.middle_name
-        if self.last_name :
-            last_name = self.last_name + ","
-
-        return u"%s %s %s" % (last_name.upper(), first_name, middle_name)
 
 
-class PersonAddress(models.Model):
-    person      = models.ForeignKey(Person)
-    label       = models.CharField(max_length=20)
-    location    = models.CharField(max_length=255)
-    postal_code = models.CharField(max_length=20)
-    city        = models.CharField(max_length=255)
-    country     = models.CharField(max_length=255)
 
 
-class Tutor(models.Model):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed     = models.DateTimeField(null=True)
-    person      = models.ForeignKey(Person)
-
-    @staticmethod
-    def find_by_user(user):
-        try:
-            person = Person.find_person_by_user(user)
-            # tutor = Tutor.objects.filter(person=person)
-            tutor = Tutor.objects.get(person = person)
-
-            return tutor
-        except ObjectDoesNotExist:
-            return None
-
-    def __str__(self):
-        return u"%s" % self.person
 
 
-class Student(models.Model):
-    external_id     = models.CharField(max_length=100, blank=True, null=True)
-    changed         = models.DateTimeField(null=True)
-    registration_id = models.CharField(max_length=10)
-    person          = models.ForeignKey(Person)
-
-    def __str__(self):
-        return u"%s (%s)" % (self.person, self.registration_id)
 
 
-class Organization(models.Model):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed     = models.DateTimeField(null=True)
-    name        = models.CharField(max_length=255)
-    acronym     = models.CharField(max_length=15)
-    website     = models.CharField(max_length=255, blank=True, null=True)
-    reference   = models.CharField(max_length=30, blank=True, null=True)
-
-    def __str__(self):
-        return self.name
 
 
-class OrganizationAddress(models.Model):
-    organization = models.ForeignKey(Organization)
-    label        = models.CharField(max_length=20)
-    location     = models.CharField(max_length=255)
-    postal_code  = models.CharField(max_length=20)
-    city         = models.CharField(max_length=255)
-    country      = models.CharField(max_length=255)
 
 
-class Structure(models.Model):
-    external_id  = models.CharField(max_length=100, blank=True, null=True)
-    changed      = models.DateTimeField(null=True)
-    acronym      = models.CharField(max_length=15)
-    title        = models.CharField(max_length=255)
-    organization = models.ForeignKey(Organization, null=True)
-    part_of      = models.ForeignKey('self', null=True, blank=True)
-
-    @staticmethod
-    def find_structures():
-        return Structure.objects.all().order_by('acronym')
-
-    @staticmethod
-    def find_by_id(id):
-        return Structure.objects.get(pk=id)
-
-    def find_children(self):
-        return Structure.objects.filter(part_of=self).order_by('acronym')
-
-    def find_offer_years_by_academic_year(self):
-        return OfferYear.objects.filter(structure=self).order_by('academic_year','acronym')
-
-    def __str__(self):
-        return u"%s - %s" % (self.acronym, self.title)
 
 
-class AcademicYear(models.Model):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed     = models.DateTimeField(null=True)
-    year        = models.IntegerField()
 
-    @staticmethod
-    def find_academic_year(id):
-        return AcademicYear.objects.get(pk=id)
 
-    @staticmethod
-    def find_academic_years():
-        return AcademicYear.objects.all().order_by('year')
 
-    def __str__(self):
-        return u"%s-%s" % (self.year, self.year + 1)
+
+
+
+
+
 
 
 EVENT_TYPE = (
@@ -198,97 +73,6 @@ EVENT_TYPE = (
     ('EXAM_ENROLLMENTS_SESS_2', 'Exam enrollments - exam session 2'),
     ('EXAM_ENROLLMENTS_SESS_3', 'Exam enrollments - exam session 3'))
 
-
-class AcademicCalendar(models.Model):
-    external_id           = models.CharField(max_length=100, blank=True, null=True)
-    changed               = models.DateTimeField(null=True)
-    academic_year         = models.ForeignKey(AcademicYear)
-    event_type            = models.CharField(max_length=50, choices=EVENT_TYPE)
-    title                 = models.CharField(max_length=50, blank=True, null=True)
-    description           = models.TextField(blank=True, null=True)
-    start_date            = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
-    end_date              = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
-    highlight_title       = models.CharField(max_length=255, blank=True, null=True)
-    highlight_description = models.CharField(max_length=255, blank=True, null=True)
-    highlight_shortcut    = models.CharField(max_length=255, blank=True, null=True)
-
-    @staticmethod
-    def current_academic_year():
-        academic_calendar = AcademicCalendar.objects.filter(event_type='ACADEMIC_YEAR')\
-                                                    .filter(start_date__lte=timezone.now())\
-                                                    .filter(end_date__gte=timezone.now()).first()
-        if academic_calendar:
-            return academic_calendar.academic_year
-        else:
-            return None
-
-    @staticmethod
-    def find_academic_calendar_by_event_type(academic_year_id, session_number):
-        event_type_criteria = "EXAM_SCORES_SUBMISSION_SESS_"+str(session_number)
-        return AcademicCalendar.objects.get(academic_year=academic_year_id, event_type=event_type_criteria)
-
-    @staticmethod
-    def find_by_academic_year(academic_year_id):
-        return AcademicCalendar.objects.filter(academic_year=academic_year_id).order_by('title')
-
-    @staticmethod
-    def find_by_academic_year_with_dates(academic_year_id):
-        now = timezone.now()
-        return AcademicCalendar.objects.filter(academic_year=academic_year_id, start_date__isnull=False, end_date__isnull=False)\
-                                        .filter(models.Q(start_date__lte=now, end_date__gte=now) | models.Q(start_date__gte=now, end_date__gte=now))\
-                                        .order_by('start_date')
-
-    @staticmethod
-    def find_by_id(id):
-        return AcademicCalendar.objects.get(pk=id)
-
-    def __str__(self):
-        return u"%s %s" % (self.academic_year, self.title)
-
-    def save(self,  *args, **kwargs):
-            new = False
-            start_date_before_change = None
-            end_date_before_change = None
-            if self.id is None:
-                new = True
-            else:
-                academic_calendar = AcademicCalendar.objects.get(pk=self.id)
-                start_date_before_change = academic_calendar.start_date
-                end_date_before_change = academic_calendar.end_date
-
-            academic_calendar=super(AcademicCalendar, self).save(*args, **kwargs)
-            academic_year = self.academic_year
-
-            if new:
-                offer_year_list = OfferYear.find_offer_years_by_academic_year(academic_year.id)
-                for offer_year in offer_year_list:
-                    offer_year_calendar=OfferYearCalendar()
-                    offer_year_calendar.academic_calendar = self
-                    offer_year_calendar.offer_year=offer_year
-                    offer_year_calendar.start_date = self.start_date
-                    offer_year_calendar.end_date = self.end_date
-                    offer_year_calendar.save()
-            else:
-                if (start_date_before_change is None and end_date_before_change is None ) or ((not start_date_before_change is None and start_date_before_change.strftime( '%d/%m/%Y')) != (not self.start_date is None and self.start_date.strftime( '%d/%m/%Y')) or (not end_date_before_change is None and end_date_before_change.strftime('%d/%m/%Y') != (not self.end_date is None and self.end_date.strftime( '%d/%m/%Y')))) :
-                    #Do this only if start_date or end_date changed
-                    offer_year_calendar_list = OfferYearCalendar.find_offer_years_by_academic_calendar(self)
-
-                    for offer_year_calendar in offer_year_calendar_list:
-                        if offer_year_calendar.customized == True:
-                            #an email must be sent to the programme manager
-                            programme_managers = ProgrammeManager.objects.filter(faculty=offer_year_calendar.offer_year.structure)
-                            if programme_managers and len(programme_managers) > 0:
-                                send_mail.send_mail_after_academic_calendar_changes(self,offer_year_calendar, programme_managers)
-                        else:
-                            offer_year_calendar.start_date = self.start_date
-                            offer_year_calendar.end_date = self.end_date
-                            offer_year_calendar.save()
-
-            return academic_calendar
-
-    @staticmethod
-    def find_highlight_academic_calendars():
-        return AcademicCalendar.objects.filter(start_date__lte=timezone.now(), end_date__gte=timezone.now(), highlight_title__isnull=False, highlight_description__isnull=False, highlight_shortcut__isnull=False )
 
 
 class Offer(models.Model):
