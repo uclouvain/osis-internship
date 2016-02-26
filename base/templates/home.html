@@ -37,7 +37,7 @@
             <h1>{{ academic_calendar.highlight_title }}</h1>
             <p>{{ academic_calendar.highlight_description }}</p>
             {% url academic_calendar.highlight_shortcut as the_url %}
-            <p><a class="btn btn-primary btn-lg" href="{{the_url}}" role="button" id="lnk_highlight_{{ academic_calendar.highlight_shortcut }}">{% trans 'Go'%}</a></p>
+            <p><a class="btn btn-primary btn-lg" href="{{the_url}}" role="button" id="lnk_highlight_{{ academic_calendar.highlight_shortcut }}">Avancer</a></p>
         </div>
     {% endfor %}
 {% endif %}
