@@ -37,12 +37,13 @@ def access_denied(request):
 
 def home(request):
     academic_year_calendar = AcademicCalendar.current_academic_year()
+    academic_calendar = None
     if not academic_year_calendar is None:
         academic_year = academic_year_calendar.id
-    academic_calendars = AcademicCalendar.find_by_academic_year_with_dates(academic_year)
+        academic_calendar = AcademicCalendar.find_by_academic_year_with_dates(academic_year)
     return render(request, "home.html",
-                          {'academic_calendars'           : academic_calendars,
-                           'highlight_academic_calendars' : AcademicCalendar.find_highlight_academic_calendars()})
+                          {'academic_calendar': academic_calendar,
+                           'highlight_academic_calendars': AcademicCalendar.find_highlight_academic_calendars()})
 
 
 @login_required
