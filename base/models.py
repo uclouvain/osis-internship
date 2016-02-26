@@ -37,16 +37,18 @@ class Person(models.Model):
         ('M',_('Male')),
         ('U',_('Unknown')))
 
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed     = models.DateTimeField(null=True)
-    user        = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
-    global_id   = models.CharField(max_length=10, blank=True, null=True)
-    gender      = models.CharField(max_length=1, blank=True, null=True, choices=GENDER_CHOICES, default='U')
-    national_id = models.CharField(max_length=25,blank=True, null=True)
-    first_name  = models.CharField(max_length=50,blank=True, null=True)
-    middle_name = models.CharField(max_length=50,blank=True, null=True)
-    last_name   = models.CharField(max_length=50,blank=True, null=True)
-    email       = models.EmailField(max_length=255, blank=True, null=True)
+    external_id  = models.CharField(max_length=100, blank=True, null=True)
+    changed      = models.DateTimeField(null=True)
+    user         = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
+    global_id    = models.CharField(max_length=10, blank=True, null=True)
+    gender       = models.CharField(max_length=1, blank=True, null=True, choices=GENDER_CHOICES, default='U')
+    national_id  = models.CharField(max_length=25, blank=True, null=True)
+    first_name   = models.CharField(max_length=50, blank=True, null=True)
+    middle_name  = models.CharField(max_length=50, blank=True, null=True)
+    last_name    = models.CharField(max_length=50, blank=True, null=True)
+    email        = models.EmailField(max_length=255, blank=True, null=True)
+    phone        = models.CharField(max_length=30, blank=True, null=True)
+    phone_mobile = models.CharField(max_length=30, blank=True, null=True)
 
     def username(self):
         if self.user is None:
@@ -73,6 +75,15 @@ class Person(models.Model):
             last_name = self.last_name + ","
 
         return u"%s %s %s" % (last_name.upper(), first_name, middle_name)
+
+
+class PersonAddress(models.Model):
+    person      = models.ForeignKey(Person)
+    label       = models.CharField(max_length=20)
+    location    = models.CharField(max_length=255)
+    postal_code = models.CharField(max_length=20)
+    city        = models.CharField(max_length=255)
+    country     = models.CharField(max_length=255)
 
 
 class Tutor(models.Model):
@@ -110,9 +121,20 @@ class Organization(models.Model):
     changed     = models.DateTimeField(null=True)
     name        = models.CharField(max_length=255)
     acronym     = models.CharField(max_length=15)
+    website     = models.CharField(max_length=255, blank=True, null=True)
+    reference   = models.CharField(max_length=30, blank=True, null=True)
 
     def __str__(self):
         return self.name
+
+
+class OrganizationAddress(models.Model):
+    organization = models.ForeignKey(Organization)
+    label        = models.CharField(max_length=20)
+    location     = models.CharField(max_length=255)
+    postal_code  = models.CharField(max_length=20)
+    city         = models.CharField(max_length=255)
+    country      = models.CharField(max_length=255)
 
 
 class Structure(models.Model):
@@ -211,7 +233,10 @@ class AcademicCalendar(models.Model):
 
     @staticmethod
     def find_by_academic_year_with_dates(academic_year_id):
-        return AcademicCalendar.objects.filter(academic_year=academic_year_id, start_date__isnull=False, end_date__isnull=False).order_by('start_date')
+        now = timezone.now()
+        return AcademicCalendar.objects.filter(academic_year=academic_year_id, start_date__isnull=False, end_date__isnull=False)\
+                                        .filter(models.Q(start_date__lte=now, end_date__gte=now) | models.Q(start_date__gte=now, end_date__gte=now))\
+                                        .order_by('start_date')
 
     @staticmethod
     def find_by_id(id):
@@ -244,7 +269,7 @@ class AcademicCalendar(models.Model):
                     offer_year_calendar.end_date = self.end_date
                     offer_year_calendar.save()
             else:
-                if (start_date_before_change is None and end_date_before_change is None ) or ((not start_date_before_change is None and start_date_before_change.strftime( '%d/%m/%Y')) != (not self.start_date is None and self.start_date.strftime( '%d/%m/%Y')) or (not end_date_before_change is None and end_date_before_change.strftime( '%d/%m/%Y') != self.end_date.strftime( '%d/%m/%Y'))) :
+                if (start_date_before_change is None and end_date_before_change is None ) or ((not start_date_before_change is None and start_date_before_change.strftime( '%d/%m/%Y')) != (not self.start_date is None and self.start_date.strftime( '%d/%m/%Y')) or (not end_date_before_change is None and end_date_before_change.strftime('%d/%m/%Y') != (not self.end_date is None and self.end_date.strftime( '%d/%m/%Y')))) :
                     #Do this only if start_date or end_date changed
                     offer_year_calendar_list = OfferYearCalendar.find_offer_years_by_academic_calendar(self)
 
@@ -342,6 +367,13 @@ class OfferYear(models.Model):
             offer = Offer.find_offer_by_id(self.offer.id)
             return OfferYear.objects.filter(offer=offer,acronym=self.acronym,academic_year=self.academic_year).exclude(id=self.id)
         return None
+
+    @staticmethod
+    def find_all():
+        return OfferYear.objects.all()
+
+    def find_offer_year_calendar(self):
+        return OfferYearCalendar.objects.filter(offer_year=self,start_date__isnull=False,end_date__isnull=False).order_by('start_date','academic_calendar__title')
 
 
 class ProgrammeManager(models.Model):

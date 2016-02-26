@@ -99,7 +99,7 @@
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
-                <td><input type="number" step="any" name="score_{{ enrollment.id }}" id="num_score_{{ enrollment.id }}" tabindex="{{ forloop.counter }}"
+                <td><input type="number" min="0" max="20" step="any" name="score_{{ enrollment.id }}" id="num_score_{{ enrollment.id }}" tabindex="{{ forloop.counter }}"
                            value="{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}"
                            class="form-control" {% if enrollment.score_final or enrollment.justification_final %} disabled {% endif %}
                            title="{% if enrollment.session_exam.learning_unit_year.decimal_scores %}

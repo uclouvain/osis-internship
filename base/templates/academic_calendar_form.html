@@ -27,7 +27,9 @@
  * at the root of the source code of this program.  If not,
  * see http://www.gnu.org/licenses/.
 {% endcomment %}
-
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/bootstrap-datepicker3.min.css' %}" type='text/css'>
+{% endblock %}
 {% block breadcrumb %}
 <li><a href="{% url 'catalog' %}" id="lnk_catalog">{% trans 'Catalog' %}</a></li>
 <li><a href="{% url 'academic_year' %}" id="lnk_academic_year">{% trans 'Academic year' %}</a></li>
@@ -67,18 +69,25 @@
         </div>
         <div class="col-md-2">
           <label for="start_date">{% trans 'Start date'%}</label>
-          <input class="form-control" value="{{ academic_calendar.start_date| default_if_none:''|date:"j/m/Y" }}" name="start_date" id="txt_start_date"><font class="error">{{ form.start_date.errors }}</font>
+          <input type="text" class="form-control" value="{{ academic_calendar.start_date| default_if_none:''|date:"j/m/Y" }}" name="start_date" id="txt_start_date"><font class="error">{{ form.start_date.errors }}</font>
         </div>
         <div class="col-md-2">
           <label for="end_date">{% trans 'End date' %}</label>
-          <input class="form-control" value="{{ academic_calendar.end_date| default_if_none:''|date:"j/m/Y" }}" name="end_date" id="txt_end_date"><font class="error">{{ form.end_date.errors }}</font>
+          <input type="text" class="form-control" value="{{ academic_calendar.end_date| default_if_none:''|date:"j/m/Y" }}" name="end_date" id="txt_end_date"><font class="error">{{ form.end_date.errors }}</font>
         </div>
       </div>
       <br>
       <div class="row">
         <div class="col-md-12">
           <label for="description">{% trans 'Description'%}</label>
-          <input class="form-control" value="{{ academic_calendar.description | default_if_none:'' }}" name="description" id="txt_description">
+          <textarea name="description" id="txt_description"  class="form-control" >{{ academic_calendar.description | default_if_none:'' }}</textarea>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-12">
+          <label for="highlight_description">{% trans 'Highlight description' %}</label>
+          <textarea name="highlight_description" id="txt_highlight_description"  class="form-control" >{{ academic_calendar.highlight_description | default_if_none:'' }}</textarea><font class="error">{{ form.highlight_description.errors }}</font>
         </div>
       </div>
       <br>
@@ -88,18 +97,16 @@
           <input class="form-control" value="{{ academic_calendar.highlight_title | default_if_none:'' }}" name="highlight_title" id="txt_highlight_title"><font class="error">{{ form.highlight_title.errors }}</font>
         </div>
         <div class="col-md-4">
-          <label for="highlight_description">{% trans 'Highlight description' %}</label>
-          <input class="form-control" value="{{ academic_calendar.highlight_description | default_if_none:'' }}" name="highlight_description" id="txt_highlight_description"><font class="error">{{ form.highlight_description.errors }}</font>
-        </div>
-        <div class="col-md-4">
           <label for="highlight_shortcut">{% trans 'Highlight shortcut' %}</label>
           <input class="form-control" value="{{ academic_calendar.highlight_shortcut | default_if_none:'' }}" name="highlight_shortcut" id="txt_highlight_shortcut"><font class="error">{{ form.highlight_shortcut.errors }}</font>
+        </div>
+        <div class="col-md-4">
         </div>
       </div>
       <br>
       <div class="row">
         <div class="col-md-4">
-          <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_academic_calendar_save">{% trans 'Save'%}</button>
+          <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_academic_calendar_save"><span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'Save'%}</button>
         </div>
         <div class="col-md-8">
         </div>
@@ -108,5 +115,19 @@
     </form>
   </div>
 </div>
-
+{% endblock %}
+{% block script %}
+<script src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>
+<script>
+  $("#txt_start_date").datepicker({
+      format: "dd/mm/yyyy",
+      autoclose: true,
+      orientation: "bottom auto"
+  });
+  $("#txt_end_date").datepicker({
+      format: "dd/mm/yyyy",
+      autoclose: true,
+      orientation: "bottom auto"
+  });
+</script>
 {% endblock %}

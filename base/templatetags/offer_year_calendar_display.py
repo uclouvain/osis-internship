@@ -23,26 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib import admin
-from .models import *
+from django import template
+from django.utils import timezone
+from datetime import date
 
+register = template.Library()
 
-class InternshipOfferAdmin(admin.ModelAdmin):
-    list_display = ('organization','learning_unit_year', 'title', 'maximum_enrollments')
-    fieldsets = ((None, {'fields': ('organization','learning_unit_year', 'title', 'maximum_enrollments')}),)
-
-admin.site.register(InternshipOffer, InternshipOfferAdmin)
-
-
-class InternshipEnrollmentAdmin(admin.ModelAdmin):
-    list_display = ('learning_unit_enrollment','internship_offer', 'start_date', 'end_date')
-    fieldsets = ((None, {'fields': ('learning_unit_enrollment','internship_offer', 'start_date', 'end_date')}),)
-
-admin.site.register(InternshipEnrollment, InternshipEnrollmentAdmin)
-
-
-class InternshipMasterAdmin(admin.ModelAdmin):
-    list_display = ('organization', 'internship_offer', 'person', 'reference', 'civility', 'type_mastery', 'speciality')
-    fieldsets = ((None, {'fields': ('organization', 'internship_offer', 'person', 'reference', 'civility', 'type_mastery', 'speciality')}),)
-
-admin.site.register(InternshipMaster, InternshipMasterAdmin)
+@register.filter
+def offer_year_calendar_display(value_start, value_end):
+    if not value_start is None and not value_end is None:
+        if value_start <= date.today() and value_end >=date.today():
+            return "font-weight:bold;"
+    return ""

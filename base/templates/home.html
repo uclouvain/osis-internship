@@ -41,7 +41,6 @@
         </div>
     {% endfor %}
 {% endif %}
-<br>
 <div class="panel panel-default">
     <div class="panel-body">
         <div class="row">
@@ -66,20 +65,22 @@
             </div>
         </div>
         <br>
-        <div class="row">
-          <div class="col-md-12">
-            {% if academic_calendars|length > 0%}
-              <dl>
-                {% for academic_calendar in academic_calendars %}
-                  {% ifchanged academic_calendar.start_date|date:"M" %}
-                    <dt>{{ academic_calendar.start_date|date:"F Y" }}</dt>
-                  {%endifchanged%}
-                  <dd>{{ academic_calendar.start_date| default_if_none:''|date:"j/m" }}-{{ academic_calendar.end_date| default_if_none:''|date:"j/m" }} : {{ academic_calendar.title }}</dd>
-                {% endfor%}
-              </dl>
-            {%endif%}
-          </div>
-        </div>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading"><h3 class="panel-title">{% trans 'Academic Calendar'%}</h3></div>
+    <div class="panel-body">
+        {% if academic_calendars|length > 0%}
+          <dl>
+            {% for academic_calendar in academic_calendars %}
+              {% ifchanged academic_calendar.start_date|date:"M" %}
+                <dt>{{ academic_calendar.start_date|date:"F Y" }}</dt>
+              {%endifchanged%}
+              <dd>{{ academic_calendar.start_date| default_if_none:''|date:"d/m/Y" }} - {{ academic_calendar.end_date| default_if_none:''|date:"d/m/Y" }} : <a href="{% url 'academic_calendar_read' academic_calendar.id %}" id="lnk_academic_calendar_edit_{{academic_calendar.id}}">{{ academic_calendar.title }}</a></dd>
+              <br>
+            {% endfor%}
+          </dl>
+        {%endif%}
     </div>
 </div>
 {% endblock %}
