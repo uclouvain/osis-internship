@@ -1,3 +1,0 @@
-accounts.firefox.com:HSTS	0	16840	1470587060261,1,1
-stats.g.doubleclick.net:HSTS	0	16840	1465921459764,1,0
-start.fedoraproject.org:HSTS	0	16840	1470803059771,1,1
