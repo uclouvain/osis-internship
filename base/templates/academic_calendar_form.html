@@ -27,7 +27,9 @@
  * at the root of the source code of this program.  If not,
  * see http://www.gnu.org/licenses/.
 {% endcomment %}
-
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/bootstrap-datepicker3.min.css' %}" type='text/css'>
+{% endblock %}
 {% block breadcrumb %}
 <li><a href="{% url 'catalog' %}" id="lnk_catalog">{% trans 'Catalog' %}</a></li>
 <li><a href="{% url 'academic_year' %}" id="lnk_academic_year">{% trans 'Academic year' %}</a></li>
@@ -67,11 +69,11 @@
         </div>
         <div class="col-md-2">
           <label for="start_date">{% trans 'Start date'%}</label>
-          <input class="form-control" value="{{ academic_calendar.start_date| default_if_none:''|date:"j/m/Y" }}" name="start_date" id="txt_start_date"><font class="error">{{ form.start_date.errors }}</font>
+          <input type="text" class="form-control" value="{{ academic_calendar.start_date| default_if_none:''|date:"j/m/Y" }}" name="start_date" id="txt_start_date"><font class="error">{{ form.start_date.errors }}</font>
         </div>
         <div class="col-md-2">
           <label for="end_date">{% trans 'End date' %}</label>
-          <input class="form-control" value="{{ academic_calendar.end_date| default_if_none:''|date:"j/m/Y" }}" name="end_date" id="txt_end_date"><font class="error">{{ form.end_date.errors }}</font>
+          <input type="text" class="form-control" value="{{ academic_calendar.end_date| default_if_none:''|date:"j/m/Y" }}" name="end_date" id="txt_end_date"><font class="error">{{ form.end_date.errors }}</font>
         </div>
       </div>
       <br>
@@ -113,5 +115,19 @@
     </form>
   </div>
 </div>
-
+{% endblock %}
+{% block script %}
+<script src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>
+<script>
+  $("#txt_start_date").datepicker({
+      format: "dd/mm/yyyy",
+      autoclose: true,
+      orientation: "bottom auto"
+  });
+  $("#txt_end_date").datepicker({
+      format: "dd/mm/yyyy",
+      autoclose: true,
+      orientation: "bottom auto"
+  });
+</script>
 {% endblock %}

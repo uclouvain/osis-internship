@@ -123,7 +123,7 @@ def academic_calendar_save(request,id):
 
         if academic_calendar.start_date and academic_calendar.end_date:
             if academic_calendar.start_date >= academic_calendar.end_date:
-                form.errors['start_date'] =  _('The start date must be greather than the end date')
+                form.errors['start_date'] =  'La date de début doit être le même ou avant la date de fin'
                 validation = False
     else:
         validation = False
