@@ -24,6 +24,8 @@
 #
 ##############################################################################
 from django import forms
+from django.forms import ModelForm
+from base.models import *
 
 class LoginForm(forms.Form):
     username = forms.CharField()
@@ -32,3 +34,8 @@ class LoginForm(forms.Form):
 
 class ScoreFileForm(forms.Form):
     file = forms.FileField()
+
+class OrganizationForm(ModelForm):
+    class Meta:
+        model = Organization
+        fields=['acronym','name','website','reference']

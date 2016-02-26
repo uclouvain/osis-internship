@@ -1,0 +1,87 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+{% load full_width %}
+{% load dictionnary %}
+
+{% comment "License" %}
+ * OSIS stands for Open Student Information System. It's an application
+ * designed to manage the core business of higher education institutions,
+ * such as universities, faculties, institutes and professional schools.
+ * The core business involves the administration of students, teachers,
+ * courses, programs and so on.
+ *
+ * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * A copy of this license - GNU General Public License - is available
+ * at the root of the source code of this program.  If not,
+ * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block breadcrumb %}
+  <li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'Institution' %}</a></li>
+  <li><a href="{% url 'organizations' %}" id="lnk_organizations">{% trans 'Organizations' %}</a></li>
+  <li class="active">{% trans 'Organization' %}</li>
+{% endblock %}
+{% block content %}
+<div class="page-header">
+  {% if organization.id%}
+  <h2>{{ organization.acronym }}</h2>
+  {% endif %}
+</div>
+<div class="panel panel-default">
+  <div class="panel-body">
+    {% if organization.id%}
+    <form method="post" action="{% url 'organization_save' organization.id %}">
+    {%else%}
+    <form method="post" action="{% url 'organization_save_new'  %}">
+    {%endif%}
+      {% csrf_token %}
+      <div class="row">
+
+        <div class="col-md-3">
+          <label for="acronym">{% trans 'Acronym' %}</label>
+          <input class="form-control" value="{{ organization.acronym | default_if_none:'' }}" name="acronym" id="txt_acronym" maxlength="15"><font class="error">{{ form.acronym.errors }}</font>
+        </div>
+        <div class="col-md-9">
+          <label for="name">{% trans 'Name'%}</label>
+          <input class="form-control" value="{{ organization.name| default_if_none:'' }}" name="name" id="txt_name" maxlength="255"><font class="error">{{ form.name.errors }}</font>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+
+        <div class="col-md-6">
+          <label for="website">{% trans 'Website' %}</label>
+          <input class="form-control" value="{{ organization.website | default_if_none:'' }}" name="website" id="txt_website" maxlength="255"><font class="error">{{ form.website.errors }}</font>
+        </div>
+        <div class="col-md-6">
+          <label for="reference">{% trans 'Reference'%}</label>
+          <input class="form-control" value="{{ organization.reference | default_if_none:'' }}" name="reference" id="txt_reference" maxlength="30"><font class="error">{{ form.reference.errors }}</font>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-4">
+          <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_organization_save"><span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'Save'%}</button>
+          <button type="cancel" class="btn btn-default" title="{% trans 'Cancel'%}" id="bt_organization_cancel"><span class="glyphicon glyphicon-cancel" aria-hidden="true"></span> {% trans 'Cancel'%}</button>
+        </div>
+        <div class="col-md-8">
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+{% endblock %}

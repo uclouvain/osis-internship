@@ -27,7 +27,7 @@ from django.conf.urls import url
 from django.contrib.auth.views import login, logout
 
 from base.utils import upload_xls_utils
-from base.views import learning_unit, offer, common, score_encoding, institution
+from base.views import learning_unit, offer, common, score_encoding, institution, organization
 
 #app_name = 'base'
 
@@ -66,4 +66,13 @@ urlpatterns = [
 
     url(r'^structures/$', institution.structures, name='structures'),
     url(r'^structures/search$', institution.structures_search, name='structures_search'),
-    url(r'^structures/([0-9]+)/$', institution.structure_read, name='structure_read'),]
+    url(r'^structures/([0-9]+)/$', institution.structure_read, name='structure_read'),
+
+    url(r'^organizations/$', organization.organizations, name='organizations'),
+    url(r'^organizations/search$', organization.organizations_search, name='organizations_search'),
+    url(r'^organizations/([0-9]+)/$', organization.organization_read, name='organization_read'),
+    url(r'^organization/edit/([0-9]+)/$', organization.organization_edit, name='organization_edit'),
+    url(r'^organization/save/([0-9]+)/$', organization.organization_save, name='organization_save'),
+    url(r'^organization/save/$', organization.organization_new, name='organization_save_new'),
+    url(r'^organization/create/$', organization.organization_create, name='organization_create'),
+]
