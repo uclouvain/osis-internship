@@ -30,11 +30,10 @@ import random
 import re
 
 
-def admnin_page_url() :
-    return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(random.randint(10,20)))
+ADMIN_PAGE_URL = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(random.randint(10,20)))
 
 urlpatterns = [
-    url(r'^'+re.escape(admnin_page_url())+r'/', admin.site.urls),
+    url(r'^'+re.escape(ADMIN_PAGE_URL)+r'/', admin.site.urls),
     url(r'', include('base.urls')),
     url(r'', include('internship.urls')),
 ]
