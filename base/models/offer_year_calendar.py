@@ -23,25 +23,32 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import string
-from django.conf.urls import include, url
-from django.contrib import admin
-import random
-import re
+
+from django.db import models
+from django.utils import timezone
+
+from base.enums import EVENT_TYPE
 
 
-def admnin_page_url() :
-    return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(random.randint(10, 20)))
+class OfferYearCalendar(models.Model):
+    external_id       = models.CharField(max_length=100, blank=True, null=True)
+    changed           = models.DateTimeField(null=True)
+    academic_calendar = models.ForeignKey('AcademicCalendar')
+    offer_year        = models.ForeignKey('OfferYear')
+    event_type        = models.CharField(max_length=50, choices=EVENT_TYPE)
+    start_date        = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
+    end_date          = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
+    customized        = models.BooleanField(default=False)
 
-urlpatterns = [
-    url(r'^'+re.escape(admnin_page_url())+r'/', admin.site.urls),
-    url(r'', include('base.urls')),
-    url(r'', include('internship.urls')),
-]
+    def __str__(self):
+        return u"%s - %s - %s" % (self.academic_calendar, self.offer_year, self.event_type)
 
-handler404 = 'base.views.common.page_not_found'
-handler403 = 'base.views.common.access_denied'
 
-admin.site.site_header = 'OSIS'
-admin.site.site_title  = 'OSIS'
-admin.site.index_title = 'Louvain'
+def offer_year_calendar_by_current_session_exam():
+    return OfferYearCalendar.objects.filter(event_type__startswith='EXAM_SCORES_SUBMISSION_SESS_') \
+        .filter(start_date__lte=timezone.now()) \
+        .filter(end_date__gte=timezone.now()).first()
+
+
+def find_offer_years_by_academic_calendar(academic_calendar):
+    return OfferYearCalendar.objects.filter(academic_calendar=int(academic_calendar.id))

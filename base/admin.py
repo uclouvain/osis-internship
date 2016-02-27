@@ -24,7 +24,27 @@
 #
 ##############################################################################
 from django.contrib import admin
-from .models import *
+
+from base.models.academic_year import AcademicYear
+from base.models.academic_year_calendar import AcademicCalendar
+from base.models.attribution import Attribution
+from base.models.exam_enrollment import ExamEnrollment
+from base.models.learning_unit import LearningUnit
+from base.models.learning_unit_enrollment import LearningUnitEnrollment
+from base.models.learning_unit_year import LearningUnitYear
+from base.models.offer import Offer
+from base.models.offer_enrollment import OfferEnrollment
+from base.models.offer_year import OfferYear
+from base.models.offer_year_calendar import OfferYearCalendar
+from base.models.organisation import Organization
+from base.models.organisation_address import OrganizationAddress
+from base.models.person import Person
+from base.models.person_address import PersonAddress
+from base.models.program_manager import ProgrammeManager
+from base.models.session_exam import SessionExam
+from base.models.structure import Structure
+from base.models.student import Student
+from base.models.tutor import Tutor
 
 
 class AcademicYearAdmin(admin.ModelAdmin):

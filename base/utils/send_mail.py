@@ -28,10 +28,9 @@
 Utility files for mail sending
 """
 from django.core.mail import send_mail
-
 from django.utils.translation import ugettext_lazy as _
+
 from backoffice.settings import DEFAULT_FROM_EMAIL
-from base.models import *
 
 
 def send_mail_after_scores_submission(persons, learning_unit_name):
@@ -57,6 +56,7 @@ def send_mail_after_scores_submission(persons, learning_unit_name):
     ])
 
     send_mail(subject=subject,message=message,recipient_list=[person.email for person in persons],html_message=html_message,from_email=DEFAULT_FROM_EMAIL)
+
 
 def send_mail_after_academic_calendar_changes(academic_calendar, offer_year_calendar, programme_managers):
     """
@@ -84,8 +84,7 @@ def send_mail_after_academic_calendar_changes(academic_calendar, offer_year_cale
     send_mail(subject=subject,message=message,recipient_list=[programme_manager.person.email for programme_manager in programme_managers],html_message=html_message,from_email='DEFAULT_FROM_EMAIL')
 
 
-
-GENDER_TITLE_MAP = {
+GENDER_TITLE_MAP={
     'M': _('Mister'),
     'F': _('Miss'),
     'U': ''

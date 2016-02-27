@@ -29,7 +29,13 @@ from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl.worksheet.datavalidation import DataValidation
 from openpyxl.styles import Color, Style, PatternFill
 from django.utils.translation import ugettext_lazy as _
-from base.models import *
+
+from base.enums import JUSTIFICATION_TYPES
+from base.models.academic_year import find_academic_year_by_id
+from base.models.academic_year_calendar import find_academic_calendar_by_event_type
+from base.models.exam_enrollment import ExamEnrollment, find_exam_enrollments_by_session, justification_label_authorized
+from base.models.person import find_person
+from base.models.session_exam import find_session_by_id
 
 
 HEADER = [str(_('Academic year')),
@@ -45,9 +51,9 @@ HEADER = [str(_('Academic year')),
           str(_('ID'))]
 
 def export_xls(request, session_id, learning_unit_year_id, academic_year_id, is_fac):
-    academic_year = AcademicYear.find_academic_year(academic_year_id)
-    session_exam = SessionExam.find_session(session_id)
-    academic_calendar = AcademicCalendar.find_academic_calendar_by_event_type(academic_year_id,session_exam.number_session)
+    academic_year = find_academic_year_by_id(academic_year_id)
+    session_exam = find_session_by_id(session_id)
+    academic_calendar = find_academic_calendar_by_event_type(academic_year_id,session_exam.number_session)
     wb = Workbook()
     ws = wb.active
 
@@ -61,10 +67,10 @@ def export_xls(request, session_id, learning_unit_year_id, academic_year_id, is_
     ws.add_data_validation(dv)
 
     cptr=1
-    for rec_exam_enrollment in ExamEnrollment.find_exam_enrollments(session_exam):
+    for rec_exam_enrollment in find_exam_enrollments_by_session(session_exam):
         student = rec_exam_enrollment.learning_unit_enrollment.student
         o = rec_exam_enrollment.learning_unit_enrollment.offer
-        person = Person.find_person(student.person.id)
+        person = find_person(student.person.id)
 
         if not rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.credits is None:
             credits = rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.credits
@@ -132,7 +138,7 @@ def  __create_data_list_for_justification(is_fac):
     Création de la liste de choix pour la justification
     :return:
     """
-    dv = DataValidation(type="list", formula1='"%s"' % ExamEnrollment.justification_label_authorized(is_fac), allow_blank=True)
+    dv = DataValidation(type="list", formula1='"%s"' % justification_label_authorized(is_fac), allow_blank=True)
     dv.error = str(_('Invalid entry, not in the list of choices'))
     dv.errorTitle = str(_('Invalid entry'))
 

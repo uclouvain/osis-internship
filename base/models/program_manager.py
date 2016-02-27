@@ -23,25 +23,33 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import string
-from django.conf.urls import include, url
-from django.contrib import admin
-import random
-import re
+
+from django.db import models
+
+from base.models.person import Person
 
 
-def admnin_page_url() :
-    return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(random.randint(10, 20)))
+class ProgrammeManager(models.Model):
+    changed = models.DateTimeField(null=True)
+    person  = models.ForeignKey('Person')
+    faculty = models.ForeignKey('Structure')
 
-urlpatterns = [
-    url(r'^'+re.escape(admnin_page_url())+r'/', admin.site.urls),
-    url(r'', include('base.urls')),
-    url(r'', include('internship.urls')),
-]
+    def __str__(self):
+        return u"%s - %s" % (self.person, self.faculty)
 
-handler404 = 'base.views.common.page_not_found'
-handler403 = 'base.views.common.access_denied'
 
-admin.site.site_header = 'OSIS'
-admin.site.site_title  = 'OSIS'
-admin.site.index_title = 'Louvain'
+def find_faculty_by_user(user):
+    programme_manager = ProgrammeManager.objects.filter(person__user=user).first()
+    if programme_manager:
+        return programme_manager.faculty
+    else:
+        return None
+
+
+def is_programme_manager(user, structure):
+    person = Person.objects.get(user=user)
+    if user:
+        programme_manager = ProgrammeManager.objects.filter(person=person.id, faculty=structure)
+        if programme_manager:
+            return True
+    return False

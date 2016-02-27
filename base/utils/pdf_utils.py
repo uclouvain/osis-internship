@@ -32,8 +32,14 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, Page
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import mm
 from reportlab.lib import colors
+from django.utils.translation import ugettext_lazy as _
 
-from base.models import *
+from base.enums import JUSTIFICATION_TYPES
+from base.models.academic_year_calendar import find_academic_calendar_by_event_type
+from base.models.exam_enrollment import find_exam_enrollments_by_session, justification_label_authorized
+from base.models.person import find_person
+from base.models.program_manager import find_faculty_by_user
+from base.models.session_exam import find_sessions_by_tutor, find_sessions_by_faculty
 
 
 PAGE_SIZE = A4
@@ -77,24 +83,24 @@ def print_notes(request,tutor, academic_year, session_exam,sessions,learning_uni
     styles.add(ParagraphStyle(name='Justify', alignment=TA_JUSTIFY))
 
     content = []
-    academic_calendar = AcademicCalendar.find_academic_calendar_by_event_type(academic_year.id,session_exam.number_session)
+    academic_calendar = find_academic_calendar_by_event_type(academic_year.id,session_exam.number_session)
 
     if learning_unit_year_id != -1 :
         #par cours
-        list_exam_enrollment = ExamEnrollment.find_exam_enrollments(session_exam)
+        list_exam_enrollment = find_exam_enrollments_by_session(session_exam)
     else:
         if tutor:
-            sessions = SessionExam.find_sessions_by_tutor(tutor, academic_year)
+            sessions = find_sessions_by_tutor(tutor, academic_year)
         # In case the user is not a tutor we check whether it is member of a faculty.
         elif request.user.groups.filter(name='FAC').exists():
-            faculty = ProgrammeManager.find_faculty_by_user(request.user)
+            faculty = find_faculty_by_user(request.user)
             if faculty:
-                sessions = SessionExam.find_sessions_by_faculty(faculty, academic_year, session_exam)
+                sessions = find_sessions_by_faculty(faculty, academic_year, session_exam)
 
         # Calculate the progress of all courses of the tutor.
         list_exam_enrollment = []
         for session in sessions:
-            enrollments = list(ExamEnrollment.find_exam_enrollments(session))
+            enrollments = list(find_exam_enrollments_by_session(session))
             if enrollments:
                 list_exam_enrollment = list_exam_enrollment + enrollments
 
@@ -162,7 +168,7 @@ def list_notes_building(session_exam, learning_unit_year_id, academic_year, acad
                 old_pgm =o
                 current_learning_unit_year = rec_exam_enrollment.learning_unit_enrollment.learning_unit_year
 
-            person = Person.find_person(student.person.id)
+            person = find_person(student.person.id)
             score = None
             if not (rec_exam_enrollment.score_final is None):
                 if rec_exam_enrollment.session_exam.learning_unit_year.decimal_scores :
@@ -204,7 +210,7 @@ def legend_building(learning_unit_year, is_fac, content, styles):
     p.alignment = TA_CENTER
     p.fontSize =8
     p.borderPadding = 5
-    legend_text = "%s : %s" % (_('Other score legend'), ExamEnrollment.justification_label_authorized(is_fac))
+    legend_text = "%s : %s" % (_('Other score legend'), justification_label_authorized(is_fac))
     if not learning_unit_year.decimal_scores:
         legend_text += "<br/><font color=red>%s</font>" % _('UnAuthorized decimal for this activity')
 

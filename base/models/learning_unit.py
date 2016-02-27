@@ -23,25 +23,18 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import string
-from django.conf.urls import include, url
-from django.contrib import admin
-import random
-import re
+from django.db import models
 
 
-def admnin_page_url() :
-    return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(random.randint(10, 20)))
+class LearningUnit(models.Model):
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    changed     = models.DateTimeField(null=True)
+    acronym     = models.CharField(max_length=15)
+    title       = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
+    start_year  = models.IntegerField()
+    end_year    = models.IntegerField(blank=True, null=True)
 
-urlpatterns = [
-    url(r'^'+re.escape(admnin_page_url())+r'/', admin.site.urls),
-    url(r'', include('base.urls')),
-    url(r'', include('internship.urls')),
-]
+    def __str__(self):
+        return u"%s - %s" % (self.acronym, self.title)
 
-handler404 = 'base.views.common.page_not_found'
-handler403 = 'base.views.common.access_denied'
-
-admin.site.site_header = 'OSIS'
-admin.site.site_title  = 'OSIS'
-admin.site.index_title = 'Louvain'

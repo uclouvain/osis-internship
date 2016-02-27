@@ -24,7 +24,10 @@
 #
 ##############################################################################
 from django.shortcuts import render
-from base.models import *
+
+from base.models.academic_year import find_academic_years
+from base.models.academic_year_calendar import current_academic_year
+from base.models.structure import find_structures
 
 
 def offers(request):
@@ -32,10 +35,10 @@ def offers(request):
     faculty = None
     code = ""
 
-    faculties = Structure.find_structures()
-    academic_years = AcademicYear.find_academic_years()
+    faculties = find_structures()
+    academic_years = find_academic_years()
 
-    academic_year_calendar = AcademicCalendar.current_academic_year()
+    academic_year_calendar = current_academic_year()
     if not academic_year_calendar is None:
         academic_year = academic_year_calendar.id
     return render(request, "offers.html", {'faculties': faculties,
@@ -52,13 +55,13 @@ def offers_search(request):
     academic_year = request.GET['academic_year']
     code = request.GET['code']
 
-    faculties = Structure.find_structures()
-    academic_years = AcademicYear.find_academic_years()
+    faculties = find_structures()
+    academic_years = find_academic_years()
 
     if academic_year and academic_year != "*":
-        query = OfferYear.find_offer_years_by_academic_year(academic_year)
+        query = find_offer_years_by_academic_year(academic_year)
     else:
-        query = OfferYear.find_all()
+        query = find_all_offers()
 
     if faculty and faculty != "*":
         query = query.filter(structure=int(faculty))
@@ -87,5 +90,5 @@ def offers_search(request):
 
 
 def offer_read(request,offer_year_id):
-    offer_year = OfferYear.find_offer_year_by_id(offer_year_id)
+    offer_year = find_offer_year_by_id(offer_year_id)
     return render(request, "offer.html", {'offer_year':     offer_year})

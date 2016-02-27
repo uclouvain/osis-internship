@@ -23,25 +23,23 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import string
-from django.conf.urls import include, url
-from django.contrib import admin
-import random
-import re
+from django.db import models
 
 
-def admnin_page_url() :
-    return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(random.randint(10, 20)))
+class LearningUnitEnrollment(models.Model):
+    external_id        = models.CharField(max_length=100, blank=True, null=True)
+    changed            = models.DateTimeField(null=True)
+    date_enrollment    = models.DateField()
+    learning_unit_year = models.ForeignKey('LearningUnitYear')
+    offer_enrollment   = models.ForeignKey('OfferEnrollment')
 
-urlpatterns = [
-    url(r'^'+re.escape(admnin_page_url())+r'/', admin.site.urls),
-    url(r'', include('base.urls')),
-    url(r'', include('internship.urls')),
-]
+    @property
+    def student(self):
+        return self.offer_enrollment.student
 
-handler404 = 'base.views.common.page_not_found'
-handler403 = 'base.views.common.access_denied'
+    @property
+    def offer(self):
+        return self.offer_enrollment.offer_year
 
-admin.site.site_header = 'OSIS'
-admin.site.site_title  = 'OSIS'
-admin.site.index_title = 'Louvain'
+    def __str__(self):
+        return u"%s - %s" % (self.learning_unit_year, self.offer_enrollment.student)

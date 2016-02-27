@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -23,58 +23,63 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.shortcuts import render, get_object_or_404
 from datetime import datetime
-from base.models import *
+
+from django.shortcuts import render, get_object_or_404
+
 from base.forms import AcademicCalendarForm
-from django.utils.translation import ugettext as _
+from base.models.academic_year import find_academic_years, AcademicYear
+from base.models.academic_year_calendar import AcademicCalendar, find_academic_calendar_by_id, find_academic_calendar_by_academic_year, \
+    current_academic_year
 
 
 def academic_calendars(request):
     academic_year = None
-    academic_years = AcademicYear.find_academic_years()
+    academic_years = find_academic_years()
 
-    academic_year_calendar = AcademicCalendar.current_academic_year()
+    academic_year_calendar = current_academic_year()
     if not academic_year_calendar is None:
         academic_year = academic_year_calendar.id
-    academic_calendars = AcademicCalendar.find_by_academic_year(academic_year)
+    academic_calendars = find_academic_calendar_by_academic_year(academic_year)
     return render(request, "academic_calendars.html", {'academic_year': academic_year,
-                                           'academic_years': academic_years,
-                                           'academic_calendars': academic_calendars})
+                                                       'academic_years': academic_years,
+                                                       'academic_calendars': academic_calendars})
 
 
 def academic_calendars_search(request):
     academic_year = request.GET['academic_year']
-    academic_years = AcademicYear.find_academic_years()
+    academic_years = find_academic_years()
 
     if academic_year is None:
-        academic_year_calendar = AcademicCalendar.current_academic_year()
+        academic_year_calendar = current_academic_year()
         if not academic_year_calendar is None:
             academic_year = academic_year_calendar.id
 
-    query = AcademicCalendar.find_by_academic_year(academic_year)
+    query = find_academic_calendar_by_academic_year(academic_year)
 
     return render(request, "academic_calendars.html", {
-                                           'academic_year':  int(academic_year),
-                                           'academic_years': academic_years,
-                                           'academic_calendars': query})
+        'academic_year': int(academic_year),
+        'academic_years': academic_years,
+        'academic_calendars': query})
 
 
-def academic_calendar_read(request,id):
-    academic_calendar = AcademicCalendar.find_by_id(id)
-    return render(request, "academic_calendar.html", {'academic_calendar':     academic_calendar})
+def academic_calendar_read(request, id):
+    academic_calendar = find_academic_calendar_by_id(id)
+    return render(request, "academic_calendar.html", {'academic_calendar': academic_calendar})
+
 
 def academic_calendar_new(request):
-    return academic_calendar_save(request,None)
+    return academic_calendar_save(request, None)
 
-def academic_calendar_save(request,id):
+
+def academic_calendar_save(request, id):
     form = AcademicCalendarForm(data=request.POST)
 
     if id:
-        academic_calendar = AcademicCalendar.find_by_id(id)
+        academic_calendar = find_academic_calendar_by_id(id)
     else:
         academic_calendar = AcademicCalendar()
-    academic_year=None
+    academic_year = None
     academic_year_id = request.POST['academic_year']
 
     #get the screen modifications
@@ -83,7 +88,7 @@ def academic_calendar_save(request,id):
         academic_calendar.academic_year = academic_year
     else:
         academic_calendar.academic_year = None
-    academic_calendars = AcademicCalendar.find_by_academic_year(academic_year)
+    academic_calendars = find_academic_calendar_by_academic_year(academic_year)
     if request.POST['title']:
         academic_calendar.title = request.POST['title']
     else:
@@ -109,7 +114,7 @@ def academic_calendar_save(request,id):
     else:
         academic_calendar.highlight_shortcut = None
     #validate
-    validation =True
+    validation = True
     if form.is_valid():
         if request.POST['start_date']:
             academic_calendar.start_date = datetime.strptime(request.POST['start_date'], '%d/%m/%Y')
@@ -123,46 +128,47 @@ def academic_calendar_save(request,id):
 
         if academic_calendar.start_date and academic_calendar.end_date:
             if academic_calendar.start_date >= academic_calendar.end_date:
-                form.errors['start_date'] =  'La date de début doit être le même ou avant la date de fin'
+                form.errors['start_date'] = 'La date de début doit être le même ou avant la date de fin'
                 validation = False
     else:
         validation = False
 
-    if validation :
+    if validation:
         academic_calendar.save()
 
         return render(request, "academic_calendars.html", {
-                                               'academic_year': academic_year,
-                                               'academic_years': AcademicYear.find_academic_years(),
-                                               'academic_calendars':academic_calendars})
+            'academic_year': academic_year,
+            'academic_years': find_academic_years(),
+            'academic_calendars': academic_calendars})
     else:
         return render(request, "academic_calendar_form.html", {'academic_calendar': academic_calendar,
-                                                               'academic_years':    AcademicYear.find_academic_years(),
-                                                               'form' :             form})
+                                                               'academic_years': find_academic_years(),
+                                                               'form': form})
 
 
 def academic_calendar_edit(request, id):
-    academic_calendar = AcademicCalendar.find_by_id(id)
-    academic_years = AcademicYear.find_academic_years()
-    return render(request, "academic_calendar_form.html", {'academic_calendar':     academic_calendar,
+    academic_calendar = find_academic_calendar_by_id(id)
+    academic_years = find_academic_years()
+    return render(request, "academic_calendar_form.html", {'academic_calendar': academic_calendar,
                                                            'academic_years': academic_years})
 
+
 def academic_calendar_delete(request, id):
-    academic_calendar = AcademicCalendar.find_by_id(id)
+    academic_calendar = find_academic_calendar_by_id(id)
     academic_year = None
     if academic_calendar:
         academic_year = academic_calendar.academic_year
         academic_calendar.delete()
 
     return render(request, "academic_calendars.html", {
-                                           'academic_year': academic_year,
-                                           'academic_years': AcademicYear.find_academic_years(),
-                                           'academic_calendars':AcademicCalendar.find_by_academic_year(academic_year)})
+        'academic_year': academic_year,
+        'academic_years': find_academic_years(),
+        'academic_calendars': find_academic_calendar_by_academic_year(academic_year)})
 
 
 def academic_calendar_create(request):
     academic_calendar = AcademicCalendar()
-    academic_years = AcademicYear.find_academic_years()
-    return render(request, "academic_calendar_form.html", {'academic_calendar':     academic_calendar,
+    academic_years = find_academic_years()
+    return render(request, "academic_calendar_form.html", {'academic_calendar': academic_calendar,
                                                            'academic_year': None,
                                                            'academic_years': academic_years})

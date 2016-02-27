@@ -25,7 +25,10 @@
 ##############################################################################
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from base.models import *
+
+from base.models.academic_year_calendar import current_academic_year, \
+    find_highlight_academic_calendars, find_academic_calendar_by_academic_year_with_dates
+
 
 def page_not_found(request):
     return render(request,'page_not_found.html')
@@ -36,14 +39,14 @@ def access_denied(request):
 
 
 def home(request):
-    academic_year_calendar = AcademicCalendar.current_academic_year()
+    academic_year_calendar = current_academic_year()
     academic_calendar = None
     if not academic_year_calendar is None:
         academic_year = academic_year_calendar.id
-        academic_calendar = AcademicCalendar.find_by_academic_year_with_dates(academic_year)
+        academic_calendar = find_academic_calendar_by_academic_year_with_dates(academic_year)
     return render(request, "home.html",
                           {'academic_calendar': academic_calendar,
-                           'highlight_academic_calendars': AcademicCalendar.find_highlight_academic_calendars()})
+                           'highlight_academic_calendars': find_highlight_academic_calendars()})
 
 
 @login_required

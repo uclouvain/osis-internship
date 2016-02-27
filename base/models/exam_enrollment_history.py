@@ -23,25 +23,25 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import string
-from django.conf.urls import include, url
-from django.contrib import admin
-import random
-import re
+from django.db import models
+
+from base.enums import JUSTIFICATION_TYPES
+
+from base.models.person import find_person_by_user
 
 
-def admnin_page_url() :
-    return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(random.randint(10, 20)))
+class ExamEnrollmentHistory(models.Model):
+    exam_enrollment     = models.ForeignKey('ExamEnrollment')
+    person              = models.ForeignKey('Person')
+    score_final         = models.DecimalField(max_digits=4, decimal_places=2, null=True)
+    justification_final = models.CharField(max_length=20, null=True, choices=JUSTIFICATION_TYPES)
+    modification_date   = models.DateTimeField(auto_now=True)
 
-urlpatterns = [
-    url(r'^'+re.escape(admnin_page_url())+r'/', admin.site.urls),
-    url(r'', include('base.urls')),
-    url(r'', include('internship.urls')),
-]
 
-handler404 = 'base.views.common.page_not_found'
-handler403 = 'base.views.common.access_denied'
-
-admin.site.site_header = 'OSIS'
-admin.site.site_title  = 'OSIS'
-admin.site.index_title = 'Louvain'
+def create_exam_enrollment_historic(user, enrollment, score, justification):
+    exam_enrollment_history = ExamEnrollmentHistory()
+    exam_enrollment_history.exam_enrollment = enrollment
+    exam_enrollment_history.score_final = score
+    exam_enrollment_history.justification_final = justification
+    exam_enrollment_history.person = find_person_by_user(user)
+    exam_enrollment_history.save()

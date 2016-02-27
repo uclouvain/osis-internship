@@ -25,11 +25,34 @@
 ##############################################################################
 from django.db import models
 
+from base.models.learning_unit_enrollment import LearningUnitEnrollment
 
-class OrganizationAddress(models.Model):
-    organization = models.ForeignKey('Organization')
-    label        = models.CharField(max_length=20)
-    location     = models.CharField(max_length=255)
-    postal_code  = models.CharField(max_length=20)
-    city         = models.CharField(max_length=255)
-    country      = models.CharField(max_length=255)
+
+class LearningUnitYear(models.Model):
+    external_id    = models.CharField(max_length=100, blank=True, null=True)
+    changed        = models.DateTimeField(null=True)
+    acronym        = models.CharField(max_length=15)
+    title          = models.CharField(max_length=255)
+    credits        = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    decimal_scores = models.BooleanField(default=False)
+    academic_year  = models.ForeignKey('AcademicYear')
+    learning_unit  = models.ForeignKey('LearningUnit')
+
+    def __str__(self):
+        return u"%s - %s" % (self.academic_year,self.learning_unit)
+
+
+def find_offer_enrollments_by_learning_unit_year(learning_unit_year_id):
+    learning_unit_enrollment_list= LearningUnitEnrollment.objects.filter(learning_unit_year=learning_unit_year_id)
+    offer_list = []
+    for lue in learning_unit_enrollment_list:
+        offer_list.append(lue.offer_enrollment)
+    return offer_list
+
+
+def find_learning_unit_years_by_academic_year(academic_year):
+    return LearningUnitYear.objects.filter(academic_year=int(academic_year))
+
+
+def find_learning_unit_year_by_id(learning_unit_id) :
+    return LearningUnitYear.objects.get(pk=learning_unit_id)

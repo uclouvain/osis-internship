@@ -25,7 +25,8 @@
 ##############################################################################
 from django import forms
 from django.forms import ModelForm
-from base.models import *
+from base.models.academic_year_calendar import AcademicCalendar
+
 
 class LoginForm(forms.Form):
     username = forms.CharField()

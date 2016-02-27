@@ -30,12 +30,13 @@ Most of the time a feature need tata to be on a specific state; for that reason 
 Data will be injected for specific state.
 """
 from datetime import date
+
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 import os
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
-from base.tests import util
-from backoffice.settings import FIREFOX_PROFILE_PATH, SCREEN_SHOT_FOLDER, EMAIL_FILE_PATH
+
+from backoffice.settings import FIREFOX_PROFILE_PATH, SCREEN_SHOT_FOLDER
 
 
 class TestSendMailAfterSubmission(StaticLiveServerTestCase):
@@ -59,8 +60,6 @@ class TestSendMailAfterSubmission(StaticLiveServerTestCase):
     def is_element_present(self,id):
         """
         Check if an element is present on a web page.
-        :param id:
-        :return:
         """
         try:
             self.selenium.find_element_by_id(id)
@@ -74,8 +73,6 @@ class TestSendMailAfterSubmission(StaticLiveServerTestCase):
         Initialisation for all the testCase , done only once
         - Initialise Firefox driver
         - Maximize browser window
-        :param cls:
-        :return:
         """
         profile = webdriver.FirefoxProfile(FIREFOX_PROFILE_PATH)
         cls.selenium = webdriver.Firefox(profile)
@@ -87,8 +84,6 @@ class TestSendMailAfterSubmission(StaticLiveServerTestCase):
     def setUp(self):
         """
         Initialisation For each test:
-
-        :return:
         """
         self.verificationErrors = []
 
@@ -96,7 +91,6 @@ class TestSendMailAfterSubmission(StaticLiveServerTestCase):
     def tearDownClass(cls):
         """
         - close selenium conexion
-        :return:
         """
         cls.selenium.quit()
         super(TestSendMailAfterSubmission, cls).tearDownClass()
