@@ -28,9 +28,17 @@ from django.conf.urls import include, url
 from django.contrib import admin
 import random
 import re
+from backoffice.settings import PROPERTIES_FILE
+
+ADMIN_PAGE_URL = 'admin'
+if PROPERTIES_FILE :
+    import configparser
+    config = configparser.ConfigParser()
+    config.read(PROPERTIES_FILE)
+    if config['ADMINISTRATION']['admin_page']:
+        ADMIN_PAGE_URL = config['ADMINISTRATION']['admin_page']
 
 
-ADMIN_PAGE_URL = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(random.randint(10,20)))
 
 urlpatterns = [
     url(r'^'+re.escape(ADMIN_PAGE_URL)+r'/', admin.site.urls),

@@ -31,7 +31,6 @@ from django.core.mail import send_mail
 
 from django.utils.translation import ugettext_lazy as _
 from backoffice.settings import DEFAULT_FROM_EMAIL
-from base.models import *
 
 
 def send_mail_after_scores_submission(persons, learning_unit_name):
