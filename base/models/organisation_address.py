@@ -24,10 +24,17 @@
 #
 ##############################################################################
 from django.db import models
+from django.contrib import admin
+from base.models import organisation
+
+
+class OrganizationAddressAdmin(admin.ModelAdmin):
+    list_display = ('organization', 'label', 'location', 'postal_code', 'city', 'country')
+    fieldsets = ((None, {'fields': ('organization', 'label', 'location', 'postal_code', 'city', 'country')}),)
 
 
 class OrganizationAddress(models.Model):
-    organization = models.ForeignKey('Organization')
+    organization = models.ForeignKey(organisation.Organization)
     label        = models.CharField(max_length=20)
     location     = models.CharField(max_length=255)
     postal_code  = models.CharField(max_length=20)

@@ -24,8 +24,15 @@
 #
 ##############################################################################
 from django.db import models
+from django.contrib import admin
+from base.models import academic_year, learning_unit
 
-from base.models.learning_unit_enrollment import LearningUnitEnrollment
+
+class LearningUnitYearAdmin(admin.ModelAdmin):
+    list_display = ('acronym', 'title', 'academic_year', 'credits', 'changed')
+    fieldsets = ((None, {'fields': ('learning_unit', 'academic_year', 'acronym', 'title', 'credits', 'decimal_scores')}),)
+    raw_id_fields = ('learning_unit',)
+    search_fields = ['acronym']
 
 
 class LearningUnitYear(models.Model):
@@ -35,23 +42,15 @@ class LearningUnitYear(models.Model):
     title          = models.CharField(max_length=255)
     credits        = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     decimal_scores = models.BooleanField(default=False)
-    academic_year  = models.ForeignKey('AcademicYear')
-    learning_unit  = models.ForeignKey('LearningUnit')
+    academic_year  = models.ForeignKey(academic_year.AcademicYear)
+    learning_unit  = models.ForeignKey(learning_unit.LearningUnit)
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year,self.learning_unit)
 
 
-def find_offer_enrollments_by_learning_unit_year(learning_unit_year_id):
-    learning_unit_enrollment_list= LearningUnitEnrollment.objects.filter(learning_unit_year=learning_unit_year_id)
-    offer_list = []
-    for lue in learning_unit_enrollment_list:
-        offer_list.append(lue.offer_enrollment)
-    return offer_list
-
-
-def find_learning_unit_years_by_academic_year(academic_year):
-    return LearningUnitYear.objects.filter(academic_year=int(academic_year))
+def find_learning_unit_years_by_academic_year(academic_yr):
+    return LearningUnitYear.objects.filter(academic_year=int(academic_yr))
 
 
 def find_learning_unit_year_by_id(learning_unit_id) :

@@ -25,7 +25,7 @@
 ##############################################################################
 from django import forms
 from django.forms import ModelForm
-from base.models.academic_year_calendar import AcademicCalendar
+from base.models.academic_calendar import AcademicCalendar
 
 
 class LoginForm(forms.Form):
@@ -35,6 +35,7 @@ class LoginForm(forms.Form):
 
 class ScoreFileForm(forms.Form):
     file = forms.FileField()
+
 
 class AcademicCalendarForm(ModelForm):
     class Meta:

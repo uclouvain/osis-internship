@@ -25,10 +25,16 @@
 ##############################################################################
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.contrib import admin
+from base.models import attribution, offer_year_calendar, learning_unit_year
 
-from base.models.attribution import Attribution
-from base.models.exam_enrollment import find_exam_enrollments_by_session
-from base.models.offer_year_calendar import offer_year_calendar_by_current_session_exam
+
+class SessionExamAdmin(admin.ModelAdmin):
+    list_display = ('learning_unit_year', 'number_session', 'status', 'changed')
+    list_filter = ('status', 'number_session')
+    raw_id_fields = ('learning_unit_year','offer_year_calendar')
+    fieldsets = ((None, {'fields': ('learning_unit_year','number_session','status','offer_year_calendar')}),)
+    search_fields = ['learning_unit_year__acronym']
 
 
 class SessionExam(models.Model):
@@ -41,34 +47,15 @@ class SessionExam(models.Model):
     changed             = models.DateTimeField(null=True)
     number_session      = models.IntegerField()
     status              = models.CharField(max_length=10,choices=SESSION_STATUS)
-    learning_unit_year  = models.ForeignKey('LearningUnitYear')
-    offer_year_calendar = models.ForeignKey('OfferYearCalendar')
-
-    @property
-    def offer(self):
-        for rec_exam_enrollment in find_exam_enrollments_by_session(self):
-            return rec_exam_enrollment.learning_unit_enrollment.offer
-        return None
-
-    @property
-    def progress(self):
-        enrollments = list(find_exam_enrollments_by_session(self))
-
-        if enrollments:
-            progress = 0
-            for e in enrollments:
-                if e.score_final is not None or e.justification_final is not None:
-                    progress = progress +1
-            return str(progress) + "/"+ str(len(enrollments))
-        else:
-            return "0/0"
+    learning_unit_year  = models.ForeignKey(learning_unit_year.LearningUnitYear)
+    offer_year_calendar = models.ForeignKey(offer_year_calendar.OfferYearCalendar)
 
     def __str__(self):
         return u"%s - %d" % (self.learning_unit_year, self.number_session)
 
 
 def current_session_exam():
-    offer_calendar = offer_year_calendar_by_current_session_exam()
+    offer_calendar = offer_year_calendar.offer_year_calendar_by_current_session_exam()
     session_exam = SessionExam.objects.filter(offer_year_calendar=offer_calendar).first()
     return session_exam
 
@@ -78,7 +65,7 @@ def find_session_by_id(id):
 
 
 def find_sessions_by_tutor(tutor, academic_year):
-    learning_units = Attribution.objects.filter(tutor=tutor).values('learning_unit')
+    learning_units = attribution.Attribution.objects.filter(tutor=tutor).values('learning_unit')
     return SessionExam.objects.filter(~models.Q(status='IDLE')) \
         .filter(learning_unit_year__academic_year=academic_year) \
         .filter(learning_unit_year__learning_unit__in=learning_units)
@@ -88,4 +75,3 @@ def find_sessions_by_faculty(faculty, academic_year):
     return SessionExam.objects.filter(~models.Q(status='IDLE')) \
         .filter(offer_year_calendar__offer_year__academic_year=academic_year) \
         .filter(offer_year_calendar__offer_year__structure=faculty)
-

@@ -24,12 +24,22 @@
 #
 ##############################################################################
 from django.db import models
+from django.contrib import admin
+
+
+class AcademicYearAdmin(admin.ModelAdmin):
+    list_display = ('name', 'changed')
+    fieldsets = ((None, {'fields': ('year',)}),)
 
 
 class AcademicYear(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed     = models.DateTimeField(null=True)
     year        = models.IntegerField()
+
+    @property
+    def name(self):
+        return self.__str__()
 
     def __str__(self):
         return u"%s-%s" % (self.year, self.year + 1)

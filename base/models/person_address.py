@@ -24,10 +24,17 @@
 #
 ##############################################################################
 from django.db import models
+from django.contrib import admin
+from base.models import person
+
+
+class PersonAddressAdmin(admin.ModelAdmin):
+    list_display = ('person', 'label', 'location', 'postal_code', 'city', 'country')
+    fieldsets = ((None, {'fields': ('person', 'label', 'location', 'postal_code', 'city', 'country')}),)
 
 
 class PersonAddress(models.Model):
-    person      = models.ForeignKey('Person')
+    person      = models.ForeignKey(person.Person)
     label       = models.CharField(max_length=20)
     location    = models.CharField(max_length=255)
     postal_code = models.CharField(max_length=20)

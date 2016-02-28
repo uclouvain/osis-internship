@@ -34,12 +34,7 @@ from reportlab.lib.units import mm
 from reportlab.lib import colors
 from django.utils.translation import ugettext_lazy as _
 
-from base.enums import JUSTIFICATION_TYPES
-from base.models.academic_year_calendar import find_academic_calendar_by_event_type
-from base.models.exam_enrollment import find_exam_enrollments_by_session, justification_label_authorized
-from base.models.person import find_person
-from base.models.program_manager import find_faculty_by_user
-from base.models.session_exam import find_sessions_by_tutor, find_sessions_by_faculty
+from base.models import *
 
 
 PAGE_SIZE = A4

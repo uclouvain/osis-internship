@@ -25,19 +25,17 @@
 ##############################################################################
 from django.shortcuts import render
 
-from base.models.academic_year import find_academic_years
-from base.models.academic_year_calendar import current_academic_year
-from base.models.learning_unit_year import find_learning_unit_year_by_id, find_learning_unit_years_by_academic_year
+from base import models as mdl
 
 
 def learning_units(request):
     academic_year = None
     code = ""
 
-    academic_years = find_academic_years()
-    academic_year_calendar = current_academic_year()
+    academic_years = mdl.academic_year.find_academic_years()
+    academic_year_calendar = mdl.academic_calendar.current_academic_year()
 
-    if not academic_year_calendar is None:
+    if academic_year_calendar:
         academic_year = academic_year_calendar.id
     return render(request, "learning_units.html", {
         'academic_year': academic_year,
@@ -51,18 +49,18 @@ def learning_units_search(request):
     """
     Learning units search
     """
-    #criteria
+    # criteria
     academic_year = request.GET['academic_year']
     code = request.GET['code']
 
-    academic_years = find_academic_years()
+    academic_years = mdl.academic_year.find_academic_years()
 
     if academic_year is None:
-        academic_year_calendar = current_academic_year()
+        academic_year_calendar = mdl.academic_calendar.current_academic_year()
         if not academic_year_calendar is None:
             academic_year = academic_year_calendar.id
 
-    learning_units = find_learning_unit_years_by_academic_year(academic_year)
+    learning_units = mdl.learning_unit_year.find_learning_unit_years_by_academic_year(academic_year)
 
     if not code is None and len(code) > 0:
         learning_units = learning_units.filter(acronym__icontains=code)
@@ -75,5 +73,5 @@ def learning_units_search(request):
 
 
 def learning_unit_read(request, learning_unit_id):
-    learning_unit_year = find_learning_unit_year_by_id(learning_unit_id)
+    learning_unit_year = mdl.learning_unit_year.find_learning_unit_year_by_id(learning_unit_id)
     return render(request, "learning_unit.html", {'learning_unit_year': learning_unit_year})

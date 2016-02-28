@@ -26,15 +26,24 @@
 
 from django.db import models
 from django.utils import timezone
-
+from django.contrib import admin
 from base.enums import EVENT_TYPE
+from base.models import academic_calendar, offer_year, offer_year_calendar
+
+
+class OfferYearCalendarAdmin(admin.ModelAdmin):
+    list_display = ('academic_calendar', 'offer_year', 'event_type', 'start_date', 'end_date', 'changed')
+    list_filter = ('event_type',)
+    fieldsets = ((None, {'fields': ('offer_year', 'academic_calendar', 'event_type', 'start_date', 'end_date')}),)
+    raw_id_fields = ('offer_year',)
+    search_fields = ['event_type']
 
 
 class OfferYearCalendar(models.Model):
     external_id       = models.CharField(max_length=100, blank=True, null=True)
     changed           = models.DateTimeField(null=True)
-    academic_calendar = models.ForeignKey('AcademicCalendar')
-    offer_year        = models.ForeignKey('OfferYear')
+    academic_calendar = models.ForeignKey(academic_calendar.AcademicCalendar)
+    offer_year        = models.ForeignKey(offer_year.OfferYear)
     event_type        = models.CharField(max_length=50, choices=EVENT_TYPE)
     start_date        = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
     end_date          = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
@@ -44,11 +53,24 @@ class OfferYearCalendar(models.Model):
         return u"%s - %s - %s" % (self.academic_calendar, self.offer_year, self.event_type)
 
 
+def save(acad_calendar):
+    academic_yr = acad_calendar.academic_year
+
+    offer_year_list = offer_year.find_offer_years_by_academic_year(academic_yr.id)
+    for offer_yr in offer_year_list:
+        offer_yr_calendar = offer_year_calendar.OfferYearCalendar()
+        offer_yr_calendar.academic_calendar = acad_calendar
+        offer_yr_calendar.offer_year = offer_yr
+        offer_yr_calendar.start_date = acad_calendar.start_date
+        offer_yr_calendar.end_date = acad_calendar.end_date
+        offer_yr_calendar.save()
+
+
 def offer_year_calendar_by_current_session_exam():
     return OfferYearCalendar.objects.filter(event_type__startswith='EXAM_SCORES_SUBMISSION_SESS_') \
-        .filter(start_date__lte=timezone.now()) \
-        .filter(end_date__gte=timezone.now()).first()
+                                    .filter(start_date__lte=timezone.now()) \
+                                    .filter(end_date__gte=timezone.now()).first()
 
 
-def find_offer_years_by_academic_calendar(academic_calendar):
-    return OfferYearCalendar.objects.filter(academic_calendar=int(academic_calendar.id))
+def find_offer_years_by_academic_calendar(academic_cal):
+    return OfferYearCalendar.objects.filter(academic_calendar=int(academic_cal.id))

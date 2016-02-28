@@ -24,6 +24,13 @@
 #
 ##############################################################################
 from django.db import models
+from django.contrib import admin
+
+
+class OrganizationAdmin(admin.ModelAdmin):
+    list_display = ('name', 'acronym', 'changed')
+    fieldsets = ((None, {'fields': ('name', 'acronym', 'website', 'reference')}),)
+    search_fields = ['acronym']
 
 
 class Organization(models.Model):

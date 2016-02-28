@@ -30,12 +30,7 @@ from openpyxl.worksheet.datavalidation import DataValidation
 from openpyxl.styles import Color, Style, PatternFill
 from django.utils.translation import ugettext_lazy as _
 
-from base.enums import JUSTIFICATION_TYPES
-from base.models.academic_year import find_academic_year_by_id
-from base.models.academic_year_calendar import find_academic_calendar_by_event_type
-from base.models.exam_enrollment import ExamEnrollment, find_exam_enrollments_by_session, justification_label_authorized
-from base.models.person import find_person
-from base.models.session_exam import find_session_by_id
+from base.models import *
 
 
 HEADER = [str(_('Academic year')),
@@ -50,6 +45,7 @@ HEADER = [str(_('Academic year')),
           str(_('End date')),
           str(_('ID'))]
 
+
 def export_xls(request, session_id, learning_unit_year_id, academic_year_id, is_fac):
     academic_year = find_academic_year_by_id(academic_year_id)
     session_exam = find_session_by_id(session_id)
@@ -59,7 +55,7 @@ def export_xls(request, session_id, learning_unit_year_id, academic_year_id, is_
 
     __columns_ajusting(ws)
 
-# masquage de la colonne avec l'id exam enrollment
+    # masquage de la colonne avec l'id exam enrollment
 
     ws.append(HEADER)
 
@@ -110,6 +106,7 @@ def export_xls(request, session_id, learning_unit_year_id, academic_year_id, is_
     response['Content-type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     return response
 
+
 def __columns_ajusting(ws):
     """
     ajustement des colonnes à la bonne dimension
@@ -133,7 +130,8 @@ def __columns_ajusting(ws):
     col_id_exam_enrollment = ws.column_dimensions['K']
     col_id_exam_enrollment.hidden = True
 
-def  __create_data_list_for_justification(is_fac):
+
+def __create_data_list_for_justification(is_fac):
     """
     Création de la liste de choix pour la justification
     :return:
@@ -145,6 +143,7 @@ def  __create_data_list_for_justification(is_fac):
     dv.prompt = str(_('Please choose in the list'))
     dv.promptTitle = str(_('List of choices'))
     return dv
+
 
 def __coloring_non_editable(ws, cptr, encoding_status, score, justification):
     """

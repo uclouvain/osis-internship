@@ -28,70 +28,60 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
-from base.enums import JUSTIFICATION_TYPES
-
-from base.models.academic_year_calendar import current_academic_year
-from base.models.attribution import Attribution
-from base.models.exam_enrollment import calculate_exam_enrollment_progress, \
-    find_exam_enrollments_by_session, find_exam_enrollments_drafts_by_session, count_encoded_scores, \
-    find_exam_enrollments_to_validate_by_session
-from base.models.exam_enrollment_history import ExamEnrollmentHistory, create_exam_enrollment_historic
-from base.models.program_manager import find_faculty_by_user
-from base.models.session_exam import find_session_by_id, find_sessions_by_tutor, find_sessions_by_faculty
-from base.models.tutor import find_tutor_by_user
+from base import models as mdl
 from base.utils import send_mail, pdf_utils, export_utils
 
 
 @login_required
 def scores_encoding(request):
-    academic_year = current_academic_year()
+    academic_yr = mdl.academic_calendar.current_academic_year()
 
-    tutor = find_tutor_by_user(request.user)
+    tutor = mdl.tutor.find_tutor_by_user(request.user)
     # In case the user is a tutor.
     sessions = None
     faculty = None
     if tutor:
-        sessions = find_sessions_by_tutor(tutor, academic_year)
+        sessions = mdl.session_exam.find_sessions_by_tutor(tutor, academic_yr)
     # In case the user is not a tutor we check whether it is member of a faculty.
     elif request.user.groups.filter(name='FAC').exists():
-        faculty = find_faculty_by_user(request.user)
+        faculty = mdl.program_manager.find_faculty_by_user(request.user)
         if faculty:
-            sessions = find_sessions_by_faculty(faculty, academic_year)
+            sessions = mdl.session_exam.find_sessions_by_faculty(faculty, academic_yr)
 
     # Calculate the progress of all courses of the tutor.
     all_enrollments = []
     session = None
     if sessions:
         for session in sessions:
-            enrollments = list(find_exam_enrollments_by_session(session))
+            enrollments = list(mdl.exam_enrollment.find_exam_enrollments_by_session(session))
             if enrollments:
                 all_enrollments = all_enrollments + enrollments
         session = sessions.first()
 
-    progress = calculate_exam_enrollment_progress(all_enrollments)
+    progress = mdl.exam_enrollment.calculate_session_exam_progress(session)
 
     return render(request, "scores_encoding.html",
                   {'section': 'scores_encoding',
                    'tutor': tutor,
                    'faculty': faculty,
-                   'academic_year': academic_year,
+                   'academic_year': academic_yr,
                    'sessions': sessions,
                    'session': session,
-                   'progress': "{0:.0f}".format(progress)})
+                   'progress': progress})
 
 
 @login_required
 def online_encoding(request, session_id):
     tutor = None
-    faculty = find_faculty_by_user(request.user)
+    faculty = mdl.program_manager.find_faculty_by_user(request.user)
     if not faculty:
-        tutor = find_tutor_by_user(request.user)
+        tutor = mdl.tutor.find_tutor_by_user(request.user)
 
-    academic_year = current_academic_year()
-    session = find_session_by_id(session_id)
-    enrollments = find_exam_enrollments_by_session(session)
-    progress = calculate_exam_enrollment_progress(enrollments)
-    num_encoded_scores = count_encoded_scores(enrollments)
+    academic_year = mdl.academic_calendar.current_academic_year()
+    session = mdl.session_exam.find_session_by_id(session_id)
+    enrollments = mdl.exam_enrollment.find_exam_enrollments_by_session(session)
+    progress = mdl.exam_enrollment.calculate_exam_enrollment_progress(enrollments)
+    num_encoded_scores = mdl.exam_enrollment.count_encoded_scores(enrollments)
 
     return render(request, "online_encoding.html",
                   {'section': 'scores_encoding',
@@ -106,18 +96,18 @@ def online_encoding(request, session_id):
 
 @login_required
 def online_encoding_form(request, session_id):
-    session = find_session_by_id(session_id)
-    enrollments = find_exam_enrollments_by_session(session)
+    session = mdl.session_exam.find_session_by_id(session_id)
+    enrollments = mdl.exam_enrollment.find_exam_enrollments_by_session(session)
     if request.method == 'GET':
-        tutor = find_tutor_by_user(request.user)
-        academic_year = current_academic_year()
+        tutor = mdl.tutor.find_tutor_by_user(request.user)
+        academic_year = mdl.academic_calendar.current_academic_year()
         return render(request, "online_encoding_form.html",
                       {'section': 'scores_encoding',
                        'tutor': tutor,
                        'academic_year': academic_year,
                        'session': session,
                        'enrollments': enrollments,
-                       'justifications': JUSTIFICATION_TYPES})
+                       'justifications': mdl.exam_enrollment.JUSTIFICATION_TYPES})
     elif request.method == 'POST':
         for enrollment in enrollments:
             score = request.POST.get('score_' + str(enrollment.id), None)
@@ -138,18 +128,18 @@ def online_encoding_form(request, session_id):
 
 @login_required
 def online_double_encoding_form(request, session_id):
-    session = find_session_by_id(session_id)
-    enrollments = find_exam_enrollments_drafts_by_session(session)
+    session = mdl.session_exam.find_session_by_id(session_id)
+    enrollments = mdl.exam_enrollment.find_exam_enrollments_drafts_by_session(session)
     if request.method == 'GET':
-        tutor = find_tutor_by_user(request.user)
-        academic_year = current_academic_year()
+        tutor = mdl.tutor.find_tutor_by_user(request.user)
+        academic_year = mdl.academic_calendar.current_academic_year()
         return render(request, "online_double_encoding_form.html",
                       {'section': 'scores_encoding',
                        'tutor': tutor,
                        'academic_year': academic_year,
                        'session': session,
                        'enrollments': enrollments,
-                       'justifications': JUSTIFICATION_TYPES})
+                       'justifications': mdl.exam_enrollment.JUSTIFICATION_TYPES})
     elif request.method == 'POST':
         for enrollment in enrollments:
             score = request.POST.get('score_' + str(enrollment.id), None)
@@ -174,21 +164,21 @@ def online_double_encoding_form(request, session_id):
 
 @login_required
 def online_double_encoding_validation(request, session_id):
-    session_exam = find_session_by_id(session_id)
+    session_exam = mdl.session_exam.find_session_by_id(session_id)
     if request.method == 'GET':
-        tutor = find_tutor_by_user(request.user)
-        academic_year = current_academic_year()
-        enrollments = find_exam_enrollments_to_validate_by_session(session_exam)
+        tutor = mdl.tutor.find_tutor_by_user(request.user)
+        academic_year = mdl.academic_calendar.current_academic_year()
+        enrollments = mdl.exam_enrollment.find_exam_enrollments_to_validate_by_session(session_exam)
         return render(request, "online_double_encoding_validation.html",
                       {'section': 'scores_encoding',
                        'tutor': tutor,
                        'academic_year': academic_year,
                        'session': session_exam,
                        'enrollments': enrollments,
-                       'justifications': JUSTIFICATION_TYPES})
+                       'justifications': mdl.exam_enrollment.JUSTIFICATION_TYPES})
 
     elif request.method == 'POST':
-        enrollments = find_exam_enrollments_by_session(session_exam)
+        enrollments = mdl.exam_enrollment.find_exam_enrollments_by_session(session_exam)
 
         for enrollment in enrollments:
             score = request.POST.get('score_' + str(enrollment.id), None)
@@ -205,7 +195,7 @@ def online_double_encoding_validation(request, session_id):
                 enrollment.justification_final = justification
                 enrollment.justification_draft = enrollment.justification_final
             if score or justification:
-                create_exam_enrollment_historic(request.user, enrollment, score, justification)
+                mdl.exam_enrollment.create_exam_enrollment_historic(request.user, enrollment, score, justification)
             enrollment.justification_reencoded = None
             enrollment.save()
 
@@ -223,8 +213,8 @@ def online_double_encoding_validation(request, session_id):
 
 @login_required
 def online_encoding_submission(request, session_id):
-    session_exam = find_session_by_id(session_id)
-    enrollments = find_exam_enrollments_drafts_by_session(session_exam)
+    session_exam = mdl.session_exam.find_session_by_id(session_id)
+    enrollments = mdl.exam_enrollment.find_exam_enrollments_drafts_by_session(session_exam)
     all_encoded = True
     for enrollment in enrollments:
         if enrollment.score_draft or enrollment.justification_draft:
@@ -233,7 +223,7 @@ def online_encoding_submission(request, session_id):
             if enrollment.justification_draft:
                 enrollment.justification_final = enrollment.justification_draft
             enrollment.save()
-            create_exam_enrollment_historic(request.user, enrollment, enrollment.score_final,
+            mdl.exam_enrollment.create_exam_enrollment_historic(request.user, enrollment, enrollment.score_final,
                                                            enrollment.justification_final)
         else:
             all_encoded = False
@@ -242,9 +232,9 @@ def online_encoding_submission(request, session_id):
         session_exam.status = 'CLOSED'
         session_exam.save()
 
-    #Send mail to all the teachers of the submitted learning unit on any submission
+    # Send mail to all the teachers of the submitted learning unit on any submission
     learning_unit = session_exam.learning_unit_year.learning_unit
-    attributions = Attribution.objects.filter(learning_unit=learning_unit)
+    attributions = mdl.attribution.Attribution.objects.filter(learning_unit=learning_unit)
     persons = [attribution.tutor.person for attribution in attributions if attribution.function == 'PROFESSOR']
     send_mail.send_mail_after_scores_submission(persons, learning_unit.acronym)
 
@@ -253,10 +243,10 @@ def online_encoding_submission(request, session_id):
 
 @login_required
 def notes_printing(request, session_exam_id, learning_unit_year_id):
-    tutor = find_tutor_by_user(request.user)
-    academic_year = current_academic_year()
-    session_exam = find_session_by_id(session_exam_id)
-    sessions = find_sessions_by_tutor(tutor, academic_year)
+    tutor = mdl.tutor.find_tutor_by_user(request.user)
+    academic_year = mdl.academic_calendar.current_academic_year()
+    session_exam = mdl.session_exam.find_session_by_id(session_exam_id)
+    sessions = mdl.session_exam.find_sessions_by_tutor(tutor, academic_year)
     return pdf_utils.print_notes(request, tutor, academic_year, session_exam, sessions, learning_unit_year_id)
 
 
@@ -267,10 +257,10 @@ def upload_score_error(request):
 
 @login_required
 def notes_printing(request, session_exam_id, learning_unit_year_id):
-    tutor = find_tutor_by_user(request.user)
-    academic_year = current_academic_year()
-    session_exam = find_session_by_id(session_exam_id)
-    sessions = find_sessions_by_tutor(tutor, academic_year)
+    tutor = mdl.tutor.find_tutor_by_user(request.user)
+    academic_year = mdl.academic_calendar.current_academic_year()
+    session_exam = mdl.session_exam.find_session_by_id(session_exam_id)
+    sessions = mdl.session_exam.find_sessions_by_tutor(tutor, academic_year)
     return pdf_utils.print_notes(request, tutor, academic_year, session_exam, sessions, learning_unit_year_id)
 
 

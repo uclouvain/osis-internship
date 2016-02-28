@@ -24,20 +24,30 @@
 #
 ##############################################################################
 from django.db import models
+from django.contrib import admin
+from base.models import learning_unit, tutor
+
+
+class AttributionAdmin(admin.ModelAdmin):
+    list_display = ('tutor','function','learning_unit','start_date', 'end_date', 'changed')
+    list_filter = ('function',)
+    fieldsets = ((None, {'fields': ('learning_unit','tutor','function','start_date','end_date')}),)
+    raw_id_fields = ('learning_unit', 'tutor' )
+    search_fields = ['tutor__person__first_name', 'tutor__person__last_name', 'learning_unit__acronym']
 
 
 class Attribution(models.Model):
     FUNCTION_CHOICES = (
-        ('COORDINATOR','Coordinator'),
-        ('PROFESSOR','Professor'))
+        ('COORDINATOR', 'Coordinator'),
+        ('PROFESSOR', 'Professor'))
 
     external_id   = models.CharField(max_length=100, blank=True, null=True)
     changed       = models.DateTimeField(null=True)
     start_date    = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
     end_date      = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
     function      = models.CharField(max_length=15, blank=True, null=True, choices=FUNCTION_CHOICES, default='UNKNOWN')
-    learning_unit = models.ForeignKey('LearningUnit')
-    tutor         = models.ForeignKey('Tutor')
+    learning_unit = models.ForeignKey(learning_unit.LearningUnit)
+    tutor         = models.ForeignKey(tutor.Tutor)
 
     def __str__(self):
         return u"%s - %s" % (self.tutor.person, self.function)

@@ -30,17 +30,9 @@ from django.utils.translation import ungettext
 from openpyxl import load_workbook
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
-from base.enums import JUSTIFICATION_TYPES
 
 from base.forms import ScoreFileForm
-from base.models.academic_year import AcademicYear
-from base.models.exam_enrollment import ExamEnrollment
-from base.models.exam_enrollment_history import ExamEnrollmentHistory, create_exam_enrollment_historic
-from base.models.learning_unit_enrollment import LearningUnitEnrollment
-from base.models.learning_unit_year import LearningUnitYear
-from base.models.offer_enrollment import OfferEnrollment
-from base.models.offer_year import OfferYear
-from base.models.student import Student
+from base.models import *
 from base.utils import export_utils
 
 

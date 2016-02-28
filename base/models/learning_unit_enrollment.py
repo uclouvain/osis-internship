@@ -24,14 +24,23 @@
 #
 ##############################################################################
 from django.db import models
+from django.contrib import admin
+from base.models import learning_unit_year, offer_enrollment
+
+
+class LearningUnitEnrollmentAdmin(admin.ModelAdmin):
+    list_display = ('student', 'learning_unit_year', 'date_enrollment', 'changed')
+    fieldsets = ((None, {'fields': ('offer_enrollment','learning_unit_year','date_enrollment')}),)
+    raw_id_fields = ('offer_enrollment', 'learning_unit_year')
+    search_fields = ['learning_unit_year__acronym']
 
 
 class LearningUnitEnrollment(models.Model):
     external_id        = models.CharField(max_length=100, blank=True, null=True)
     changed            = models.DateTimeField(null=True)
     date_enrollment    = models.DateField()
-    learning_unit_year = models.ForeignKey('LearningUnitYear')
-    offer_enrollment   = models.ForeignKey('OfferEnrollment')
+    learning_unit_year = models.ForeignKey(learning_unit_year.LearningUnitYear)
+    offer_enrollment   = models.ForeignKey(offer_enrollment.OfferEnrollment)
 
     @property
     def student(self):

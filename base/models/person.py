@@ -24,16 +24,25 @@
 #
 ##############################################################################
 
-
 from django.db import models
+from django.contrib import admin
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
+
+class PersonAdmin(admin.ModelAdmin):
+    list_display = ('first_name' , 'middle_name', 'last_name', 'username','email', 'gender','global_id', 'national_id', 'changed')
+    search_fields = ['first_name', 'middle_name', 'last_name', 'user__username','email']
+    fieldsets = ((None, {'fields': ('user','global_id','national_id','gender','first_name','middle_name','last_name','email', 'phone', 'phone_mobile')}),)
+    raw_id_fields = ('user',)
+    search_fields = ['first_name', 'last_name']
+
+
 class Person(models.Model):
     GENDER_CHOICES = (
-        ('F',_('Female')),
-        ('M',_('Male')),
-        ('U',_('Unknown')))
+        ('F', _('Female')),
+        ('M', _('Male')),
+        ('U', _('Unknown')))
 
     external_id  = models.CharField(max_length=100, blank=True, null=True)
     changed      = models.DateTimeField(null=True)

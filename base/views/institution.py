@@ -26,7 +26,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
-from base.models.structure import find_structures, find_structure_by_id
+from base import models as mdl
 
 
 @login_required
@@ -42,7 +42,7 @@ def structures_search(request):
     acronym = request.GET['acronym']
     title = request.GET['title']
 
-    query = find_structures()
+    query = mdl.structure.find_structures()
 
     if not acronym is None and len(acronym) > 0  :
         query = query.filter(acronym__icontains=acronym)
@@ -56,5 +56,7 @@ def structures_search(request):
 
 
 def structure_read(request,id):
-    structure = find_structure_by_id(id)
-    return render(request, "structure.html", {'structure': structure})
+    structure = mdl.structure.find_structure_by_id(id)
+    offers_years = mdl.offer_year.find_offer_years_by_structure(structure)
+    return render(request, "structure.html", {'structure': structure,
+                                              'offers_years': offers_years})

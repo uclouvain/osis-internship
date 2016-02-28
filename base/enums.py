@@ -24,8 +24,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.utils.translation import ugettext_lazy as _
-
 EVENT_TYPE = (
     ('ACADEMIC_YEAR', 'Academic Year'),
     ('DISSERTATIONS_SUBMISSION_SESS_1', 'Submission of academic dissertations - exam session 1'),
@@ -45,9 +43,3 @@ EVENT_TYPE = (
     ('EXAM_ENROLLMENTS_SESS_3', 'Exam enrollments - exam session 3'))
 
 
-JUSTIFICATION_TYPES = (
-    ('ABSENT',_('Absent')),
-    ('CHEATING',_('Cheating')),
-    ('ILL',_('Ill')),
-    ('JUSTIFIED_ABSENCE',_('Justified absence')),
-    ('SCORE_MISSING',_('Score missing')))

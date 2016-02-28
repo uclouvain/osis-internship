@@ -24,19 +24,25 @@
 #
 ##############################################################################
 from django.db import models
+from django.contrib import admin
+from base.models import academic_year, offer, offer_year_calendar, structure
 
-from base.models.offer import find_offer_by_id
-from base.models.offer_year_calendar import OfferYearCalendar
+
+class OfferYearAdmin(admin.ModelAdmin):
+    list_display = ('offer', 'parent', 'title', 'academic_year', 'changed')
+    fieldsets = ((None, {'fields': ('offer', 'academic_year', 'structure', 'acronym', 'title', 'parent')}),)
+    raw_id_fields = ('offer', 'structure', 'parent')
+    search_fields = ['acronym']
 
 
 class OfferYear(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
-    offer = models.ForeignKey('Offer')
-    academic_year = models.ForeignKey('AcademicYear')
+    offer = models.ForeignKey(offer.Offer)
+    academic_year = models.ForeignKey(academic_year.AcademicYear)
     acronym = models.CharField(max_length=15)
     title = models.CharField(max_length=255)
-    structure = models.ForeignKey('Structure')
+    structure = models.ForeignKey(structure.Structure)
     parent = models.ForeignKey('self', blank=True, null=True, related_name='children', db_index=True)
 
     def __str__(self):
@@ -68,23 +74,28 @@ class OfferYear(models.Model):
     @property
     def orientation_sibling(self):
         if self.offer:
-            offer = find_offer_by_id(self.offer.id)
-            return OfferYear.objects.filter(offer=offer, acronym=self.acronym,
+            off = offer.find_offer_by_id(self.offer.id)
+            return OfferYear.objects.filter(offer=off, acronym=self.acronym,
                                             academic_year=self.academic_year).exclude(id=self.id)
         return None
 
     def find_offer_year_calendar(self):
-        return OfferYearCalendar.objects.filter(offer_year=self, start_date__isnull=False,
-                                                end_date__isnull=False).order_by('start_date',
-                                                                                 'academic_calendar__title')
+        return offer_year_calendar.OfferYearCalendar.objects.filter(offer_year=self,
+                                                                    start_date__isnull=False,
+                                                                    end_date__isnull=False).order_by('start_date',
+                                                                                                     'academic_calendar__title')
 
 
-def find_offer_years_by_academic_year(academic_year):
-    return OfferYear.objects.filter(academic_year=int(academic_year))
+def find_offer_years_by_academic_year(academic_yr):
+    return OfferYear.objects.filter(academic_year=int(academic_yr))
 
 
-def find_offer_years_by_academic_year_structure(academic_year, structure):
-    return OfferYear.objects.filter(academic_year=academic_year, structure=structure).order_by('acronym')
+def find_offer_years_by_academic_year_structure(academic_yr, struct):
+    return OfferYear.objects.filter(academic_year=academic_yr, structure=struct).order_by('acronym')
+
+
+def find_offer_years_by_structure(struct):
+        return OfferYear.objects.filter(structure=struct).order_by('academic_year', 'acronym')
 
 
 def find_offer_year_by_id(offer_year_id):

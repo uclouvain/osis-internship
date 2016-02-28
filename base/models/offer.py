@@ -24,6 +24,13 @@
 #
 ##############################################################################
 from django.db import models
+from django.contrib import admin
+
+
+class OfferAdmin(admin.ModelAdmin):
+    list_display = ('acronym', 'title', 'changed')
+    fieldsets = ((None, {'fields': ('acronym', 'title')}),)
+    search_fields = ['acronym']
 
 
 class Offer(models.Model):

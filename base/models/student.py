@@ -24,13 +24,22 @@
 #
 ##############################################################################
 from django.db import models
+from django.contrib import admin
+from base.models import person
+
+
+class StudentAdmin(admin.ModelAdmin):
+    list_display = ('person', 'registration_id', 'changed')
+    fieldsets = ((None, {'fields': ('registration_id', 'person')}),)
+    raw_id_fields = ('person', )
+    search_fields = ['person__first_name', 'person__last_name']
 
 
 class Student(models.Model):
     external_id     = models.CharField(max_length=100, blank=True, null=True)
     changed         = models.DateTimeField(null=True)
     registration_id = models.CharField(max_length=10)
-    person          = models.ForeignKey('Person')
+    person          = models.ForeignKey(person.Person)
 
     def __str__(self):
         return u"%s (%s)" % (self.person, self.registration_id)

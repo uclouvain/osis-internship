@@ -25,14 +25,21 @@
 ##############################################################################
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
+from django.contrib import admin
+from base.models import person
 
-from base.models.person import find_person_by_user
+
+class TutorAdmin(admin.ModelAdmin):
+    list_display = ('person', 'changed')
+    fieldsets = ((None, {'fields': ('person',)}),)
+    raw_id_fields = ('person', )
+    search_fields = ['person__first_name', 'person__last_name']
 
 
 class Tutor(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed     = models.DateTimeField(null=True)
-    person      = models.ForeignKey('Person')
+    person      = models.ForeignKey(person.Person)
 
     def __str__(self):
         return u"%s" % self.person
@@ -40,10 +47,8 @@ class Tutor(models.Model):
 
 def find_tutor_by_user(user):
     try:
-        person = find_person_by_user(user)
-        # tutor = Tutor.objects.filter(person=person)
-        tutor = Tutor.objects.get(person = person)
-
+        pers = person.find_person_by_user(user)
+        tutor = Tutor.objects.get(person=pers)
         return tutor
     except ObjectDoesNotExist:
         return None

@@ -23,22 +23,22 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
-
 from django.db import models
 from django.utils import timezone
-
+from django.contrib import admin
+from base.models import academic_year
 from base.enums import EVENT_TYPE
-from base.models.offer_year import find_offer_years_by_academic_year
-from base.models.offer_year_calendar import OfferYearCalendar, find_offer_years_by_academic_calendar
-from base.models.program_manager import ProgrammeManager
-from base.utils import send_mail
+
+
+class AcademicCalendarAdmin(admin.ModelAdmin):
+    list_display = ('event_type', 'title', 'academic_year', 'start_date', 'end_date', 'changed')
+    fieldsets = ((None, {'fields': ('academic_year', 'event_type', 'title', 'description', 'start_date', 'end_date')}),)
 
 
 class AcademicCalendar(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
-    academic_year = models.ForeignKey('base.AcademicYear')
+    academic_year = models.ForeignKey(academic_year.AcademicYear)
     event_type = models.CharField(max_length=50, choices=EVENT_TYPE)
     title = models.CharField(max_length=50, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
@@ -48,56 +48,8 @@ class AcademicCalendar(models.Model):
     highlight_description = models.CharField(max_length=255, blank=True, null=True)
     highlight_shortcut = models.CharField(max_length=255, blank=True, null=True)
 
-
     def __str__(self):
         return u"%s %s" % (self.academic_year, self.title)
-
-    def save(self, *args, **kwargs):
-        new = False
-        start_date_before_change = None
-        end_date_before_change = None
-        if self.id is None:
-            new = True
-        else:
-            academic_calendar = AcademicCalendar.objects.get(pk=self.id)
-            start_date_before_change = academic_calendar.start_date
-            end_date_before_change = academic_calendar.end_date
-
-        academic_calendar = super(AcademicCalendar, self).save(*args, **kwargs)
-        academic_year = self.academic_year
-
-        if new:
-            offer_year_list = find_offer_years_by_academic_year(academic_year.id)
-            for offer_year in offer_year_list:
-                offer_year_calendar = OfferYearCalendar()
-                offer_year_calendar.academic_calendar = self
-                offer_year_calendar.offer_year = offer_year
-                offer_year_calendar.start_date = self.start_date
-                offer_year_calendar.end_date = self.end_date
-                offer_year_calendar.save()
-        else:
-            if (start_date_before_change is None and end_date_before_change is None ) or (
-                    (not start_date_before_change is None and start_date_before_change.strftime('%d/%m/%Y')) != (
-                    not self.start_date is None and self.start_date.strftime('%d/%m/%Y')) or (
-                not end_date_before_change is None and end_date_before_change.strftime('%d/%m/%Y') != (
-                not self.end_date is None and self.end_date.strftime('%d/%m/%Y')))):
-                #Do this only if start_date or end_date changed
-                offer_year_calendar_list = find_offer_years_by_academic_calendar(self)
-
-                for offer_year_calendar in offer_year_calendar_list:
-                    if offer_year_calendar.customized == True:
-                        #an email must be sent to the programme manager
-                        programme_managers = ProgrammeManager.objects.filter(
-                            faculty=offer_year_calendar.offer_year.structure)
-                        if programme_managers and len(programme_managers) > 0:
-                            send_mail.send_mail_after_academic_calendar_changes(self, offer_year_calendar,
-                                                                                programme_managers)
-                    else:
-                        offer_year_calendar.start_date = self.start_date
-                        offer_year_calendar.end_date = self.end_date
-                        offer_year_calendar.save()
-
-        return academic_calendar
 
 
 def find_highlight_academic_calendars():

@@ -26,8 +26,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
-from base.models.academic_year_calendar import current_academic_year, \
-    find_highlight_academic_calendars, find_academic_calendar_by_academic_year_with_dates
+from base import models as mdl
 
 
 def page_not_found(request):
@@ -39,14 +38,13 @@ def access_denied(request):
 
 
 def home(request):
-    academic_year_calendar = current_academic_year()
-    academic_calendar = None
-    if not academic_year_calendar is None:
-        academic_year = academic_year_calendar.id
-        academic_calendar = find_academic_calendar_by_academic_year_with_dates(academic_year)
+    academic_year_calendar = mdl.academic_calendar.current_academic_year()
+    calendar_events = None
+    if academic_year_calendar:
+        calendar_events = mdl.academic_calendar.find_academic_calendar_by_academic_year_with_dates(academic_year_calendar.id)
     return render(request, "home.html",
-                          {'academic_calendar': academic_calendar,
-                           'highlight_academic_calendars': find_highlight_academic_calendars()})
+                          {'academic_calendar': calendar_events,
+                           'highlight_academic_calendars': mdl.academic_calendar.find_highlight_academic_calendars()})
 
 
 @login_required
@@ -62,6 +60,7 @@ def assessments(request):
 @login_required
 def catalog(request):
     return render(request, "catalog.html", {'section': 'catalog'})
+
 
 @login_required
 def academic_year(request):

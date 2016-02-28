@@ -24,8 +24,14 @@
 #
 ##############################################################################
 from django.db import models
+from django.contrib import admin
 
-from base.models.offer_year import OfferYear
+
+class StructureAdmin(admin.ModelAdmin):
+    list_display = ('acronym', 'title', 'part_of', 'changed')
+    fieldsets = ((None, {'fields': ('acronym','title','part_of','organization')}),)
+    raw_id_fields = ('part_of', )
+    search_fields = ['acronym']
 
 
 class Structure(models.Model):
@@ -38,9 +44,6 @@ class Structure(models.Model):
 
     def find_children(self):
         return Structure.objects.filter(part_of=self).order_by('acronym')
-
-    def find_offer_years(self):
-        return OfferYear.objects.filter(structure=self).order_by('academic_year','acronym')
 
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)

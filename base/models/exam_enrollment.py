@@ -24,8 +24,25 @@
 #
 ##############################################################################
 from django.db import models
+from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
-from base.enums import JUSTIFICATION_TYPES
+from base.models import person, session_exam, learning_unit_enrollment
+
+
+JUSTIFICATION_TYPES = (
+    ('ABSENT', _('Absent')),
+    ('CHEATING', _('Cheating')),
+    ('ILL', _('Ill')),
+    ('JUSTIFIED_ABSENCE', _('Justified absence')),
+    ('SCORE_MISSING', _('Score missing')))
+
+
+class ExamEnrollmentAdmin(admin.ModelAdmin):
+    list_display = ('student', 'session_exam', 'score_final', 'justification_final', 'encoding_status', 'changed')
+    list_filter = ('encoding_status', 'session_exam__number_session')
+    fieldsets = ((None, {'fields': ('session_exam','learning_unit_enrollment')}),)
+    raw_id_fields = ('session_exam', 'learning_unit_enrollment')
+    search_fields = ['learning_unit_enrollment__student__person__first_name', 'learning_unit_enrollment__student__person__last_name']
 
 
 class ExamEnrollment(models.Model):
@@ -42,22 +59,14 @@ class ExamEnrollment(models.Model):
     justification_reencoded  = models.CharField(max_length=20, blank=True, null=True, choices=JUSTIFICATION_TYPES)
     justification_final      = models.CharField(max_length=20, blank=True, null=True, choices=JUSTIFICATION_TYPES)
     encoding_status          = models.CharField(max_length=9, blank=True, null=True, choices=ENCODING_STATUS_LIST)
-    session_exam             = models.ForeignKey('SessionExam')
-    learning_unit_enrollment = models.ForeignKey('LearningUnitEnrollment')
+    session_exam             = models.ForeignKey(session_exam.SessionExam)
+    learning_unit_enrollment = models.ForeignKey(learning_unit_enrollment.LearningUnitEnrollment)
 
     def student(self):
         return self.learning_unit_enrollment.student
 
     def __str__(self):
         return u"%s - %s" % (self.session_exam, self.learning_unit_enrollment)
-
-
-def calculate_exam_enrollment_progress(enrollments):
-    if enrollments:
-        progress = len([e for e in enrollments if e.score_final or e.justification_final]) / len(enrollments)
-    else:
-        progress = 0
-    return progress * 100
 
 
 def find_exam_enrollments_by_session(session_exam):
@@ -99,6 +108,27 @@ def find_exam_enrollments_to_validate_by_session(session_exam):
     return enrollments
 
 
+def calculate_exam_enrollment_progress(enrollments):
+    if enrollments:
+        progress = len([e for e in enrollments if e.score_final or e.justification_final]) / len(enrollments)
+    else:
+        progress = 0
+    return progress * 100
+
+
+def calculate_session_exam_progress(session_exam):
+    enrollments = list(find_exam_enrollments_by_session(session_exam))
+
+    if enrollments:
+        progress = 0
+        for e in enrollments:
+            if e.score_final is not None or e.justification_final is not None:
+                progress += 1
+        return str(progress) + "/" + str(len(enrollments))
+    else:
+        return "0/0"
+
+
 def justification_label_authorized(is_fac):
     if is_fac:
         return '%s, %s, %s, %s, %s' % (_('Absent'),_('Cheating'), _('Ill'),  _('Justified absence'), _('Score missing'))
@@ -106,3 +136,23 @@ def justification_label_authorized(is_fac):
         return '%s, %s, %s' % (_('Absent'), _('Cheating'),_('Score missing'))
 
 
+class ExamEnrollmentHistoryAdmin(admin.ModelAdmin):
+    list_display = ('exam_enrollment', 'person', 'score_final', 'justification_final', 'modification_date')
+    fieldsets = ((None, {'fields': ('exam_enrollment', 'person', 'score_final', 'justification_final')}),)
+
+
+class ExamEnrollmentHistory(models.Model):
+    exam_enrollment     = models.ForeignKey(ExamEnrollment)
+    person              = models.ForeignKey(person.Person)
+    score_final         = models.DecimalField(max_digits=4, decimal_places=2, null=True)
+    justification_final = models.CharField(max_length=20, null=True, choices=JUSTIFICATION_TYPES)
+    modification_date   = models.DateTimeField(auto_now=True)
+
+
+def create_exam_enrollment_historic(user, enrollment, score, justification):
+    exam_enrollment_history = ExamEnrollmentHistory()
+    exam_enrollment_history.exam_enrollment = enrollment
+    exam_enrollment_history.score_final = score
+    exam_enrollment_history.justification_final = justification
+    exam_enrollment_history.person = person.find_person_by_user(user)
+    exam_enrollment_history.save()

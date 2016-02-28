@@ -24,6 +24,13 @@
 #
 ##############################################################################
 from django.db import models
+from django.contrib import admin
+
+
+class LearningUnitAdmin(admin.ModelAdmin):
+    list_display = ('acronym', 'title', 'start_year', 'end_year', 'changed')
+    fieldsets = ((None, {'fields': ('acronym','title','description','start_year','end_year')}),)
+    search_fields = ['acronym']
 
 
 class LearningUnit(models.Model):

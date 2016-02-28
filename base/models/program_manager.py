@@ -25,14 +25,18 @@
 ##############################################################################
 
 from django.db import models
+from django.contrib import admin
+from base.models import person, structure
 
-from base.models.person import Person
+
+class ProgrammeManagerAdmin(admin.ModelAdmin):
+    list_display = ('person', 'faculty')
 
 
 class ProgrammeManager(models.Model):
     changed = models.DateTimeField(null=True)
-    person  = models.ForeignKey('Person')
-    faculty = models.ForeignKey('Structure')
+    person  = models.ForeignKey(person.Person)
+    faculty = models.ForeignKey(structure.Structure)
 
     def __str__(self):
         return u"%s - %s" % (self.person, self.faculty)
@@ -46,10 +50,10 @@ def find_faculty_by_user(user):
         return None
 
 
-def is_programme_manager(user, structure):
-    person = Person.objects.get(user=user)
+def is_programme_manager(user, faculty):
+    pers = person.Person.objects.get(user=user)
     if user:
-        programme_manager = ProgrammeManager.objects.filter(person=person.id, faculty=structure)
+        programme_manager = ProgrammeManager.objects.filter(person=pers.id, faculty=faculty)
         if programme_manager:
             return True
     return False
