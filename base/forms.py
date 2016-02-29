@@ -35,7 +35,14 @@ class LoginForm(forms.Form):
 class ScoreFileForm(forms.Form):
     file = forms.FileField()
 
+
 class OrganizationForm(ModelForm):
     class Meta:
         model = Organization
         fields=['acronym','name','website','reference']
+
+class AcademicCalendarForm(ModelForm):
+    class Meta:
+        model = AcademicCalendar
+        fields=['start_date','end_date','title','highlight_title','highlight_description','highlight_shortcut']
+

@@ -27,7 +27,8 @@ from django.conf.urls import url
 from django.contrib.auth.views import login, logout
 
 from base.utils import upload_xls_utils
-from base.views import learning_unit, offer, common, score_encoding, institution, organization
+from base.views import learning_unit, offer, common, score_encoding, institution, organization,academic_calendar
+
 
 #app_name = 'base'
 
@@ -51,6 +52,8 @@ urlpatterns = [
     url(r'^offers/search$', offer.offers_search, name='offers_search'),
     url(r'^offers/([0-9]+)/$', offer.offer_read, name='offer_read'),
 
+    url(r'^profile/$', common.profile, name='profile'),
+
     url(r'^studies/$', common.studies, name='studies'),
     url(r'^studies/assessments/$', common.assessments, name='assessments'),
     url(r'^studies/assessments/scores_encoding$', score_encoding.scores_encoding, name='scores_encoding'),
@@ -67,6 +70,7 @@ urlpatterns = [
     url(r'^structures/$', institution.structures, name='structures'),
     url(r'^structures/search$', institution.structures_search, name='structures_search'),
     url(r'^structures/([0-9]+)/$', institution.structure_read, name='structure_read'),
+
     url(r'^structures/([0-9]+)/diagram/$', institution.structure_diagram, name='structure_diagram'),
     url(r'^structures/(?P<name>.+)/$', institution.structure_read_by_acronym, name='structure_read_by_acronym'),
 
@@ -77,4 +81,14 @@ urlpatterns = [
     url(r'^organization/save/([0-9]+)/$', organization.organization_save, name='organization_save'),
     url(r'^organization/save/$', organization.organization_new, name='organization_save_new'),
     url(r'^organization/create/$', organization.organization_create, name='organization_create'),
-]
+
+    url(r'^academic_year/$', common.academic_year, name='academic_year'),
+    url(r'^academic_calendars/$', academic_calendar.academic_calendars, name='academic_calendars'),
+    url(r'^academic_calendars/search$', academic_calendar.academic_calendars_search, name='academic_calendars_search'),
+    url(r'^academic_calendars/([0-9]+)/$', academic_calendar.academic_calendar_read, name='academic_calendar_read'),
+    url(r'^academic_calendars/edit/([0-9]+)/$', academic_calendar.academic_calendar_edit, name='academic_calendar_edit'),
+    url(r'^academic_calendars/delete/([0-9]+)/$', academic_calendar.academic_calendar_delete, name='academic_calendar_delete'),
+    url(r'^academic_calendars/save/([0-9]+)/$', academic_calendar.academic_calendar_save, name='academic_calendar_save'),
+    url(r'^academic_calendars/save/$', academic_calendar.academic_calendar_new, name='academic_calendar_save_new'),
+    url(r'^academic_calendars/create/$', academic_calendar.academic_calendar_create, name='academic_calendar_create'),
+    ]

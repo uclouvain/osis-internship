@@ -24,9 +24,14 @@
 #
 ##############################################################################
 from django import template
+from base.models import *
 
 register = template.Library()
 
 @register.filter
 def get_item(dictionary, key):
     return dictionary.get(str(key))
+
+@register.filter
+def get_item_event_type( key):
+    return dict(EVENT_TYPE).get(str(key))
