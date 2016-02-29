@@ -1,6 +1,6 @@
 = OSIS Technical Manual
 Hildeberto Mendonça, PhD
-v0.1, 2016-02-19
+v0.1, 2016-02-29
 :toc: right
 
 This documentation explains how to contribute as a committer to OSIS project. A
@@ -14,45 +14,52 @@ quality of your work as a programmer.
 The first thing to do to start contributing to the project is to prepare the
 development environment. During this section, we explain in details how to do
 that in a Debian-based distribution (Debian Linux, Ubuntu, Mint, etc.). This is
-the recommended operating system for development and deployment, but if you are
-using a different operating system, such as Windows or Mac, then you can use a
-virtual machine that also offers good productivity.
+the recommended operating system for development and deployment.
 
 If your operating system is not based on Debian Linux then you can rely on a
-virtual machine as a development environment, otherwise jump to the next section.
-For the virtual machine, we suggest  https://www.virtualbox.org[VirtualBox] as
-virtual rumtime and https://ubuntu-mate.org[Ubuntu Mate] as operating system.
-Follow the installation instructions on their respective websites according to
-your own platform. When the Ubuntu virtual machine is created and running,
-execute the following command to make the operating system aware of the virtual
-runtime:
+virtual machine as a development environment. For the virtual machine, we
+suggest  https://www.virtualbox.org[VirtualBox] as virtual runtime and
+https://ubuntu-mate.org[Ubuntu Mate] as operating system. Follow the
+installation instructions on their respective websites according to your own
+platform. When the Ubuntu virtual machine is created and running, execute the
+following command to make the operating system aware of the virtual runtime:
 
     $ sudo apt-get install virtualbox-guest-dkms virtualbox-guest-x11
 
 Now that you have a Debian-based Linux system available, you can start preparing
-the development environment in it. For that, you have to:
+the development environment in it. Follow the steps below:
 
-- install and configure Git;
-- install and configure PostgreSQL;
-- install and configure Django; and
-- install OSIS.
+- <<installing-git>>
+- <<installing-postgresql>>
+- <<installing-django>>
+- <<installing-osis>>
 
+[[installing-git]]
 == Installing and Configuring Git
 
-We start by installing Git to be able to download OSIS' source code:
+Git is a distributed version control system used to manage the source code of
+OSIS. The source code is necessary to develop and deploy OSIS and we start the
+instructions by explaining how to install and configure it. We can use `apt-get`
+to install Git:
 
     $ sudo apt-get update
     $ sudo apt-get install git
 
-The `update` command downloads package lists from repositories to get
-information on the newest versions of packages and their dependencies. This way,
-we make sure we are getting the last version of Git and all other dependencies.
+The `update` command downloads package lists from remote repositories to get
+information about the newest versions of packages and their dependencies. This
+way, we make sure we are getting the last version of Git and all other
+dependencies. Then `install git` performs the installation. We can test it by
+cloning the repository:
 
-Then, we add some personal information in the local Git installation to make
-sure the author is well identified in all commits:
+    $ mkdir -p ~/python/projects/osis
+    $ cd ~/python/projects/osis
+    $ git clone git@github.com:uclouvain/osis.git
+
+Next, we add some personal information in the local Git installation to make
+sure you are well identified in all commits:
 
     $ git config --global user.name "[Firstname] [Lastname]"
-    $ git config --global user.email "[firstname.lastname]@uclouvain.be"
+    $ git config --global user.email "[firstname.lastname]@domain.com"
 
 Since version 2.0, Git has adopted a new behavior to pull and push commits while
 in a branch. When you execute `git push` or `git pull` Git will consider pushing
@@ -63,7 +70,7 @@ old behavior to the new one. To do that, execute the following command:
 
     $ git config --global push.default simple
 
-== Configuring Git to Simplify GitHub Authentication
+=== Configuring Git to Simplify GitHub Authentication
 
 For the moment, every time we push code to GitHub the prompt asks for a username
 and password. We can bypass this step by registering a SSH key. To do that, we
@@ -74,12 +81,12 @@ first check whether there is already an existing SSH key we can reuse:
 If files with the extension `.pub` are listed then one of them can be reused to
 authenticate to GitHub. If not, then we can create one:
 
-    $ ssh-keygen -t rsa -b 4096 -C "[firstname.lastname]@uclouvain.be"
+    $ ssh-keygen -t rsa -b 4096 -C "[firstname.lastname]@domain.com"
       Enter file in which to save the key (/Users/[user]/.ssh/id_rsa): [Press enter]
       Enter passphrase (empty for no passphrase): [Type a passphrase]
       Enter same passphrase again: [Type passphrase again]
 
-The next step is to add the new key - or an existing one - to the ssh-agent.
+The next step is to add the new key - or an existing one - to the `ssh-agent`.
 This program runs the duration of a local login session, stores unencrypted keys
 in memory, and communicates with SSH clients using a Unix domain socket.
 Everyone who is able to connect to this socket also has access to the ssh-agent.
@@ -105,14 +112,14 @@ The command above is the equivalent of opening the file `~/.ssh/id_rsa.pub`,
 selecting the whole content and pressing `Ctrl+C`. This way, you can paste the
 content on GitHub when required in the next steps. On the GitHub side:
 
- . Login at https://github.com.
+ . Login at https://github.com
  . In the top right corner of the page, click on the profile photo and select
-   **Settings**.
- . In the user settings sidebar, click **SSH keys**.
- . Then click **Add SSH key**.
+   **Settings**
+ . In the user settings sidebar, click **SSH keys**
+ . Then click **Add SSH key**
  . In the form, define a friendly title for the new key and paste the key in the
-   **Key** field.
- . Click **Add Key** to finish with GitHub.
+   **Key** field
+ . Click **Add Key** to finish with GitHub
 
 To make sure everything is working, lets test the connection:
 
@@ -143,8 +150,8 @@ The automatic authentication should work after that.
 
 PostgreSQL is the only database supported by OSIS. In theory, the Django ORM
 would make the application database-independent, but we do not test OSIS with
-other databases, thus we cannot guarantee that it works other databases such as
-MySQL or Oracle. Fortunately, PostgreSQL has a very good reputation, a large
+other databases, thus we cannot guarantee that it works on other databases such
+as MySQL or Oracle. Fortunately, PostgreSQL has a very good reputation, a large
 community and a generous documentation.
 
 TIP: If you really need a database different from PostgreSQL then you could
@@ -177,11 +184,12 @@ to PostgreSQL:
 
     $ sudo apt-get install python3-dev libpq-dev
 
+[[installing-django]]
 == Installing and Configuring Django
 
-Django is a modern and lightweight web framework to support our backend and
-frontend applications. The choice for Django was made thanks to the following
-advantages:
+Django is a modern and lightweight web framework to support our back office and
+front office applications. The choice for Django was made thanks to the
+following advantages:
 
 - Very well documented.
 - The most popular web framework on the Python ecosystem. Largely supported by
@@ -192,15 +200,15 @@ advantages:
 - Easily testable with Selenium.
 - In general, more productive than most of the alternatives.
 
-The repository `osis` is a Django application. To contribute to that,
-clone the repository locally:
+The repository `osis` is a Django application. We already cloned that when
+installing git. At that point we executed the following commands:
 
     $ cd ~/python/projects/osis
-    $ git clone https://github.com/uclouvain/osis.git
+    $ git clone git@github.com:uclouvain/osis.git
 
 Install the Python virtual environment and other system dependencies:
 
-    $ sudo apt-get install python-virtualenv libjpeg-dev libpng-dev
+    $ sudo apt-get install build-essential, python-virtualenv libjpeg-dev libpng-dev
 
 In the new repository, create a virtual environment to isolate all dependencies
 of the project:
@@ -208,14 +216,16 @@ of the project:
     $ cd osis
     $ virtualenv --python=python3.4 venv
 
+[[installing-osis]]
+== Installing OSIS
+
 Start the virtual environment and install the dependencies:
 
     $ source venv/bin/activate
     (venv)$ pip install -r requirements.txt
 
-Before running the application, let's create the data model in the database:
+Before running the application, let's create the data structure in the database:
 
-    (venv)$ python manage.py makemigrations base
     (venv)$ python manage.py migrate
 
 And then a super user account to access the administration module:
