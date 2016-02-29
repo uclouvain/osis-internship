@@ -23,34 +23,32 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import string
-from django.conf.urls import include, url
+from django.db import models
 from django.contrib import admin
-import random
-import re
-from backoffice.settings import PROPERTIES_FILE
-
-ADMIN_PAGE_URL = 'admin'
-if PROPERTIES_FILE :
-    import configparser
-    config = configparser.ConfigParser()
-    config.read(PROPERTIES_FILE)
-    if config['ADMINISTRATION']['admin_page']:
-        ADMIN_PAGE_URL = config['ADMINISTRATION']['admin_page']
+from base.models import learning_unit_year, offer_enrollment
 
 
-def admnin_page_url() :
-    return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(random.randint(10, 20)))
+class LearningUnitEnrollmentAdmin(admin.ModelAdmin):
+    list_display = ('student', 'learning_unit_year', 'date_enrollment', 'changed')
+    fieldsets = ((None, {'fields': ('offer_enrollment','learning_unit_year','date_enrollment')}),)
+    raw_id_fields = ('offer_enrollment', 'learning_unit_year')
+    search_fields = ['learning_unit_year__acronym']
 
-urlpatterns = [
-    url(r'^'+re.escape(ADMIN_PAGE_URL)+r'/', admin.site.urls),
-    url(r'', include('base.urls')),
-    url(r'', include('internship.urls')),
-]
 
-handler404 = 'base.views.common.page_not_found'
-handler403 = 'base.views.common.access_denied'
+class LearningUnitEnrollment(models.Model):
+    external_id        = models.CharField(max_length=100, blank=True, null=True)
+    changed            = models.DateTimeField(null=True)
+    date_enrollment    = models.DateField()
+    learning_unit_year = models.ForeignKey(learning_unit_year.LearningUnitYear)
+    offer_enrollment   = models.ForeignKey(offer_enrollment.OfferEnrollment)
 
-admin.site.site_header = 'OSIS'
-admin.site.site_title  = 'OSIS'
-admin.site.index_title = 'Louvain'
+    @property
+    def student(self):
+        return self.offer_enrollment.student
+
+    @property
+    def offer(self):
+        return self.offer_enrollment.offer_year
+
+    def __str__(self):
+        return u"%s - %s" % (self.learning_unit_year, self.offer_enrollment.student)

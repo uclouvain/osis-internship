@@ -1,3 +1,4 @@
+
 ##############################################################################
 #
 #    OSIS stands for Open Student Information System. It's an application
@@ -23,34 +24,22 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import string
-from django.conf.urls import include, url
-from django.contrib import admin
-import random
-import re
-from backoffice.settings import PROPERTIES_FILE
+EVENT_TYPE = (
+    ('ACADEMIC_YEAR', 'Academic Year'),
+    ('DISSERTATIONS_SUBMISSION_SESS_1', 'Submission of academic dissertations - exam session 1'),
+    ('DISSERTATIONS_SUBMISSION_SESS_2', 'Submission of academic dissertations - exam session 2'),
+    ('DISSERTATIONS_SUBMISSION_SESS_3', 'Submission of academic dissertations - exam session 3'),
+    ('EXAM_SCORES_SUBMISSION_SESS_1', 'Submission of exam scores - exam session 1'),
+    ('EXAM_SCORES_SUBMISSION_SESS_2', 'Submission of exam scores - exam session 2'),
+    ('EXAM_SCORES_SUBMISSION_SESS_3', 'Submission of exam scores - exam session 3'),
+    ('DELIBERATIONS_SESS_1', 'Deliberations - exam session 1'),
+    ('DELIBERATIONS_SESS_2', 'Deliberations - exam session 2'),
+    ('DELIBERATIONS_SESS_3', 'Deliberations - exam session 3'),
+    ('EXAM_SCORES_DIFFUSION_SESS_1', 'Diffusion of exam scores - exam session 1'),
+    ('EXAM_SCORES_DIFFUSION_SESS_2', 'Diffusion of exam scores - exam session 2'),
+    ('EXAM_SCORES_DIFFUSION_SESS_3', 'Diffusion of exam scores - exam session 3'),
+    ('EXAM_ENROLLMENTS_SESS_1', 'Exam enrollments - exam session 1'),
+    ('EXAM_ENROLLMENTS_SESS_2', 'Exam enrollments - exam session 2'),
+    ('EXAM_ENROLLMENTS_SESS_3', 'Exam enrollments - exam session 3'))
 
-ADMIN_PAGE_URL = 'admin'
-if PROPERTIES_FILE :
-    import configparser
-    config = configparser.ConfigParser()
-    config.read(PROPERTIES_FILE)
-    if config['ADMINISTRATION']['admin_page']:
-        ADMIN_PAGE_URL = config['ADMINISTRATION']['admin_page']
 
-
-def admnin_page_url() :
-    return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(random.randint(10, 20)))
-
-urlpatterns = [
-    url(r'^'+re.escape(ADMIN_PAGE_URL)+r'/', admin.site.urls),
-    url(r'', include('base.urls')),
-    url(r'', include('internship.urls')),
-]
-
-handler404 = 'base.views.common.page_not_found'
-handler403 = 'base.views.common.access_denied'
-
-admin.site.site_header = 'OSIS'
-admin.site.site_title  = 'OSIS'
-admin.site.index_title = 'Louvain'

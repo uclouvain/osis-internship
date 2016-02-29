@@ -23,34 +23,35 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import string
-from django.conf.urls import include, url
+from django.db import models
 from django.contrib import admin
-import random
-import re
-from backoffice.settings import PROPERTIES_FILE
-
-ADMIN_PAGE_URL = 'admin'
-if PROPERTIES_FILE :
-    import configparser
-    config = configparser.ConfigParser()
-    config.read(PROPERTIES_FILE)
-    if config['ADMINISTRATION']['admin_page']:
-        ADMIN_PAGE_URL = config['ADMINISTRATION']['admin_page']
+from base.models import academic_year, learning_unit
 
 
-def admnin_page_url() :
-    return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(random.randint(10, 20)))
+class LearningUnitYearAdmin(admin.ModelAdmin):
+    list_display = ('acronym', 'title', 'academic_year', 'credits', 'changed')
+    fieldsets = ((None, {'fields': ('learning_unit', 'academic_year', 'acronym', 'title', 'credits', 'decimal_scores')}),)
+    raw_id_fields = ('learning_unit',)
+    search_fields = ['acronym']
 
-urlpatterns = [
-    url(r'^'+re.escape(ADMIN_PAGE_URL)+r'/', admin.site.urls),
-    url(r'', include('base.urls')),
-    url(r'', include('internship.urls')),
-]
 
-handler404 = 'base.views.common.page_not_found'
-handler403 = 'base.views.common.access_denied'
+class LearningUnitYear(models.Model):
+    external_id    = models.CharField(max_length=100, blank=True, null=True)
+    changed        = models.DateTimeField(null=True)
+    acronym        = models.CharField(max_length=15)
+    title          = models.CharField(max_length=255)
+    credits        = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    decimal_scores = models.BooleanField(default=False)
+    academic_year  = models.ForeignKey(academic_year.AcademicYear)
+    learning_unit  = models.ForeignKey(learning_unit.LearningUnit)
 
-admin.site.site_header = 'OSIS'
-admin.site.site_title  = 'OSIS'
-admin.site.index_title = 'Louvain'
+    def __str__(self):
+        return u"%s - %s" % (self.academic_year,self.learning_unit)
+
+
+def find_learning_unit_years_by_academic_year(academic_yr):
+    return LearningUnitYear.objects.filter(academic_year=int(academic_yr))
+
+
+def find_learning_unit_year_by_id(learning_unit_id) :
+    return LearningUnitYear.objects.get(pk=learning_unit_id)

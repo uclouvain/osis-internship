@@ -29,9 +29,10 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ungettext
 from openpyxl import load_workbook
 from django.contrib import messages
+from django.utils.translation import ugettext_lazy as _
 
-from base.models import *
 from base.forms import ScoreFileForm
+from base.models import *
 from base.utils import export_utils
 
 
@@ -153,7 +154,7 @@ def __save_xls_scores(request, file_name):
                                             exam_enrollment.score_draft = note
                                             exam_enrollment.justification_draft = justification_xls
                                             exam_enrollment.save()
-                                            ExamEnrollmentHistory.exam_enrollment_historic(request.user,exam_enrollment,note,justification_xls)
+                                            create_exam_enrollment_historic(request.user,exam_enrollment,note,justification_xls)
             data_line_number=data_line_number+1
         else:
             #Il faut valider le fichier xls

@@ -23,34 +23,35 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import string
-from django.conf.urls import include, url
+from django.db import models
 from django.contrib import admin
-import random
-import re
-from backoffice.settings import PROPERTIES_FILE
-
-ADMIN_PAGE_URL = 'admin'
-if PROPERTIES_FILE :
-    import configparser
-    config = configparser.ConfigParser()
-    config.read(PROPERTIES_FILE)
-    if config['ADMINISTRATION']['admin_page']:
-        ADMIN_PAGE_URL = config['ADMINISTRATION']['admin_page']
 
 
-def admnin_page_url() :
-    return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(random.randint(10, 20)))
+class StructureAdmin(admin.ModelAdmin):
+    list_display = ('acronym', 'title', 'part_of', 'changed')
+    fieldsets = ((None, {'fields': ('acronym','title','part_of','organization')}),)
+    raw_id_fields = ('part_of', )
+    search_fields = ['acronym']
 
-urlpatterns = [
-    url(r'^'+re.escape(ADMIN_PAGE_URL)+r'/', admin.site.urls),
-    url(r'', include('base.urls')),
-    url(r'', include('internship.urls')),
-]
 
-handler404 = 'base.views.common.page_not_found'
-handler403 = 'base.views.common.access_denied'
+class Structure(models.Model):
+    external_id  = models.CharField(max_length=100, blank=True, null=True)
+    changed      = models.DateTimeField(null=True)
+    acronym      = models.CharField(max_length=15)
+    title        = models.CharField(max_length=255)
+    organization = models.ForeignKey('Organization', null=True)
+    part_of      = models.ForeignKey('self', null=True, blank=True)
 
-admin.site.site_header = 'OSIS'
-admin.site.site_title  = 'OSIS'
-admin.site.index_title = 'Louvain'
+    def find_children(self):
+        return Structure.objects.filter(part_of=self).order_by('acronym')
+
+    def __str__(self):
+        return u"%s - %s" % (self.acronym, self.title)
+
+
+def find_structures():
+    return Structure.objects.all().order_by('acronym')
+
+
+def find_structure_by_id(id):
+    return Structure.objects.get(pk=id)

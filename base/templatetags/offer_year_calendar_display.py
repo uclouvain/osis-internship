@@ -24,7 +24,6 @@
 #
 ##############################################################################
 from django import template
-from django.utils import timezone
 from datetime import date
 
 register = template.Library()

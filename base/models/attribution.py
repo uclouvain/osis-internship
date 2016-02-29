@@ -23,34 +23,31 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import string
-from django.conf.urls import include, url
+from django.db import models
 from django.contrib import admin
-import random
-import re
-from backoffice.settings import PROPERTIES_FILE
-
-ADMIN_PAGE_URL = 'admin'
-if PROPERTIES_FILE :
-    import configparser
-    config = configparser.ConfigParser()
-    config.read(PROPERTIES_FILE)
-    if config['ADMINISTRATION']['admin_page']:
-        ADMIN_PAGE_URL = config['ADMINISTRATION']['admin_page']
+from base.models import learning_unit, tutor
 
 
-def admnin_page_url() :
-    return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(random.randint(10, 20)))
+class AttributionAdmin(admin.ModelAdmin):
+    list_display = ('tutor','function','learning_unit','start_date', 'end_date', 'changed')
+    list_filter = ('function',)
+    fieldsets = ((None, {'fields': ('learning_unit','tutor','function','start_date','end_date')}),)
+    raw_id_fields = ('learning_unit', 'tutor' )
+    search_fields = ['tutor__person__first_name', 'tutor__person__last_name', 'learning_unit__acronym']
 
-urlpatterns = [
-    url(r'^'+re.escape(ADMIN_PAGE_URL)+r'/', admin.site.urls),
-    url(r'', include('base.urls')),
-    url(r'', include('internship.urls')),
-]
 
-handler404 = 'base.views.common.page_not_found'
-handler403 = 'base.views.common.access_denied'
+class Attribution(models.Model):
+    FUNCTION_CHOICES = (
+        ('COORDINATOR', 'Coordinator'),
+        ('PROFESSOR', 'Professor'))
 
-admin.site.site_header = 'OSIS'
-admin.site.site_title  = 'OSIS'
-admin.site.index_title = 'Louvain'
+    external_id   = models.CharField(max_length=100, blank=True, null=True)
+    changed       = models.DateTimeField(null=True)
+    start_date    = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
+    end_date      = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
+    function      = models.CharField(max_length=15, blank=True, null=True, choices=FUNCTION_CHOICES, default='UNKNOWN')
+    learning_unit = models.ForeignKey(learning_unit.LearningUnit)
+    tutor         = models.ForeignKey(tutor.Tutor)
+
+    def __str__(self):
+        return u"%s - %s" % (self.tutor.person, self.function)
