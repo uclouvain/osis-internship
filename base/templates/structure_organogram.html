@@ -1,0 +1,35 @@
+{% load staticfiles %}
+{% load i18n %}
+{% load has_child %}
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>OSIS</title>
+
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+		    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+		    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+        <link rel="icon" href="{% static 'img/favicon.ico' %}" />
+        <link rel="stylesheet" href="{% static 'css/armata.css' %}" type='text/css'>
+        <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+        <link rel="stylesheet" href="{% static 'css/tree.css' %}">
+        {% block style %}
+        {% endblock %}
+        <style>
+          body { font-family: 'Armata', sans-serif; }
+        </style>
+    </head>
+    <body>
+  {% if organization.find_structure%}
+      <div class="tree" style="width:2000px;margin-top:-80px">
+        <ul>
+            <li>
+                <a href="{% url 'structure_read' organization.find_structure.id %}">{{organization.find_structure}}</a>
+                {% include "structure_tree_list.html" %}
+            </li>
+         </ul>
+      </div>
+  {%endif%}
+    </body>
+</html>

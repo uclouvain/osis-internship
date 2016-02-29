@@ -154,6 +154,9 @@ class Organization(models.Model):
     def find_structure_tree(self):
         return Structure.find_tree(self)
 
+    def find_structure_tree_2(self):
+        return Structure.find_tree2(self)
+
 class OrganizationAddress(models.Model):
     organization = models.ForeignKey(Organization)
     label        = models.CharField(max_length=20, blank=True, null=True)
@@ -180,7 +183,6 @@ class Structure(models.Model):
     part_of      = models.ForeignKey('self', null=True, blank=True)
 
     def children(self):
-        print(self.pk)
         return Structure.objects.filter(part_of=self.pk)
 
     def serializable_object(self):
@@ -214,8 +216,15 @@ class Structure(models.Model):
         if not structure is None:
             for t in Structure.objects.filter(part_of=structure):
                 tags.append(t.serializable_object())
-            print('tags',tags)
         return tags
+
+    @staticmethod
+    def find_by_acronym(acronym):
+        try:
+            return Structure.objects.get(acronym=acronym)
+        except:
+            return None
+
 
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)

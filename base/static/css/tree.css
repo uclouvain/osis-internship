@@ -140,7 +140,8 @@ right connector from last child*/
 /* Lets add some extra styles */
 
 div.tree > ul > li > ul > li > a {
-  width: 11em;
+  /*width: 11em;*/
+  width: 5em
 }
 
 div.tree > ul > li > a {

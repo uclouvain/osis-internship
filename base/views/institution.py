@@ -25,7 +25,7 @@
 ##############################################################################
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from base.models import Structure
+from base.models import Structure, Organization
 
 
 @login_required
@@ -57,3 +57,15 @@ def structures_search(request):
 def structure_read(request,id):
     structure = Structure.find_by_id(id)
     return render(request, "structure.html", {'structure': structure})
+
+
+def structure_read_by_acronym(request,name):
+    structure = Structure.find_by_acronym(name)
+    return render(request, "structure.html", {'structure': structure})
+
+
+def structure_diagram(request, organization_id):
+    organization = Organization.find_by_id(organization_id)
+    tags =  organization.find_structure_tree()
+    return render(request, "structure_organogram.html", {'organization': organization, 'tags':tags})
+

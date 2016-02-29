@@ -2,123 +2,117 @@
 {% load staticfiles %}
 {% load i18n %}
 
-
 {% comment "License" %}
- * OSIS stands for Open Student Information System. It's an application
- * designed to manage the core business of higher education institutions,
- * such as universities, faculties, institutes and professional schools.
- * The core business involves the administration of students, teachers,
- * courses, programs and so on.
- *
- * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * A copy of this license - GNU General Public License - is available
- * at the root of the source code of this program.  If not,
- * see http://www.gnu.org/licenses/.
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'Institution' %}</a></li>
-  <li><a href="{% url 'organizations' %}" id="lnk_organizations">{% trans 'Organizations' %}</a></li>
-  <li class="active">{% trans 'Organization' %}</li>
+<li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'Institution' %}</a></li>
+<li><a href="{% url 'organizations' %}" id="lnk_organizations">{% trans 'Organizations' %}</a></li>
+<li class="active">{% trans 'Organization' %}</li>
 {% endblock %}
 {% block content %}
 <div class="page-header">
-  <h3>{{ organization.acronym }}</h3>
+    <h3>{{ organization.acronym }}</h3>
 </div>
 <div class="panel panel-default">
-  <div class="panel-body">
+    <div class="panel-body">
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#tab_identification">{% trans 'Identification'%}</a></li>
+            <li><a data-toggle="tab" href="#tab_structure">{% trans 'Structure'%}</a></li>
+        </ul>
+        <div class="tab-content">
+            <div id="tab_identification" class="tab-pane fade in active">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="acronym">{% trans 'Acronym' %}</label><br>
+                        {{ organization.acronym | default_if_none:'' }}
+                    </div>
+                    <div class="col-md-9">
+                        <label for="title">{% trans 'Name'%}</label><br>
+                        {{ organization.name | default_if_none:'' }}
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="website">{% trans 'Website' %}</label><br>
+                        {{ organization.website | default_if_none:'' }}
+                    </div>
+                    <div class="col-md-6">
+                        <label for="reference">{% trans 'Reference'%}</label><br>
+                        {{ organization.reference | default_if_none:'' }}
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label>{% trans 'Address' %}</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        &nbsp;&nbsp;&nbsp;<label>{% trans 'Label' %}</label><br>
+                        &nbsp;&nbsp;&nbsp;{{ organization.address.label | default_if_none:'' }}
+                    </div>
+                    <div class="col-md-6">
+                        <label>{% trans 'Location' %}</label><br>
+                        {{ organization.address.location | default_if_none:'' }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        &nbsp;&nbsp;&nbsp;<label>{% trans 'Postal code' %}</label><br>
+                        &nbsp;&nbsp;&nbsp;{{ organization.address.postal_code | default_if_none:'' }}
+                    </div>
+                    <div class="col-md-4">
+                        <label>{% trans 'City' %}</label><br>
+                        {{ organization.address.city | default_if_none:'' }}
+                    </div>
+                    <div class="col-md-4">
+                        <label>{% trans 'Country' %}</label><br>
+                        {{ organization.address.country | default_if_none:'' }}
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-4">
+                        <a href="{% url 'organization_edit' organization.id %}" title="{%trans 'Edit'%}"
+                           class="btn btn-primary" role="button" id="bt_organization_edit">
+                            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> {% trans 'Edit'%}
+                        </a>
+                    </div>
+                    <div class="col-md-8">
 
-  <div class="row">
-    <div class="col-md-3">
-      <label for="acronym">{% trans 'Acronym' %}</label><br>
-      {{ organization.acronym | default_if_none:'' }}
-    </div>
-    <div class="col-md-9">
-      <label for="title">{% trans 'Name'%}</label><br>
-      {{ organization.name | default_if_none:'' }}
-    </div>
-  </div>
-  <br>
-  <div class="row">
-    <div class="col-md-6">
-      <label for="website">{% trans 'Website' %}</label><br>
-      {{ organization.website | default_if_none:'' }}
-    </div>
-    <div class="col-md-6">
-      <label for="reference">{% trans 'Reference'%}</label><br>
-      {{ organization.reference | default_if_none:'' }}
-    </div>
-  </div>
-  <br>
-  <div class="row">
-      <div class="col-md-12">
-        <label >{% trans 'Address' %}</label>
-      </div>
-  </div>
-    <div class="row">
-      <div class="col-md-6">
-            &nbsp;&nbsp;&nbsp;<label>{% trans 'Label' %}</label><br>
-            &nbsp;&nbsp;&nbsp;{{ organization.address.label | default_if_none:'' }}
-      </div>
-      <div class="col-md-6">
-            <label>{% trans 'Location' %}</label><br>
-            {{ organization.address.location | default_if_none:'' }}
-      </div>
-    </div>
-  <div class="row">
-    <div class="col-md-4">
-        &nbsp;&nbsp;&nbsp;<label>{% trans 'Postal code' %}</label><br>
-        &nbsp;&nbsp;&nbsp;{{ organization.address.postal_code | default_if_none:'' }}
-    </div>
-    <div class="col-md-4">
-        <label>{% trans 'City' %}</label><br>
-        {{ organization.address.city | default_if_none:'' }}
-    </div>
-    <div class="col-md-4">
-        <label>{% trans 'Country' %}</label><br>
-        {{ organization.address.country | default_if_none:'' }}
-    </div>
-  </div>
-  <br>
-  <div class="row">
-      <div class="col-md-4">
-        <a href="{% url 'organization_edit' organization.id %}" title="{%trans 'Edit'%}" class="btn btn-primary" role="button" id="bt_organization_edit">
-          <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> {% trans 'Edit'%}
-        </a>
-      </div>
-      <div class="col-md-8">
+                    </div>
+                </div>
+            </div>
+            <div id="tab_structure" class="tab-pane fade">
+                <iframe src="{%url 'structure_diagram' organization.id %}" width="1100px" height="600px"
+                        frameborder="0"></iframe>
+            </div>
 
-      </div>
-  </div>
-  {% if organization.find_structure%}
-    <div class="row">
-      <div class="col-md-12">
-
-          <label>{{organization.find_structure}}</label>
-          <div >
-                  <ul>
-                    <li>
-                        {{organization.find_structure}}
-                            {% include "structure_tree_list.html" %}
-                      </li>
-                  </ul>
-          </div>
-      </div>
-  </div>
-      {%endif%}
-  </div>
-
+        </div>
+    </div>
 </div>
-
 {% endblock %}
