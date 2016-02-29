@@ -59,10 +59,7 @@ def organizations_search(request):
 
 def organization_read(request,id):
     organization = Organization.find_by_id(id)
-    tags =  organization.find_structure_tree()
-
-    # tags= [ {'name': 'API', 'children': [{'name': 'IDAP', 'children': []}, {'name': 'DEV', 'children': []}]}]
-    return render(request, "organization.html", {'organization':  organization, 'tags' : tags})
+    return render(request, "organization.html", {'organization':  organization})
 
 
 def organization_new(request):

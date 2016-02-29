@@ -161,8 +161,6 @@ class Organization(models.Model):
     def find_structure_tree(self):
         return Structure.find_tree(self)
 
-    def find_structure_tree_2(self):
-        return Structure.find_tree2(self)
 
 class OrganizationAddress(models.Model):
     organization = models.ForeignKey(Organization)
@@ -223,6 +221,7 @@ class Structure(models.Model):
         if not structure is None:
             for t in Structure.objects.filter(part_of=structure):
                 tags.append(t.serializable_object())
+        print(tags)
         return tags
 
     @staticmethod

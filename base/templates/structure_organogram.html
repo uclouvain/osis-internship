@@ -21,15 +21,56 @@
         </style>
     </head>
     <body>
-  {% if organization.find_structure%}
-      <div class="tree" style="width:2000px;margin-top:-80px">
-        <ul>
-            <li>
-                <a href="{% url 'structure_read' organization.find_structure.id %}">{{organization.find_structure}}</a>
-                {% include "structure_tree_list.html" %}
-            </li>
-         </ul>
-      </div>
-  {%endif%}
+    {% if organization.find_structure%}
+        <div class="tree" id="organogram" style="width:2000px;margin-top:-80px">
+
+        </div>
+        <br><br>
+        <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
+        <script>
+            function show_nodes(super_node, vec) {
+                var sub_nodes =$("<ul></ul>");
+                for(var i = 0, len = vec.length ;i < len; i++) {
+                    var children = vec[i].children;
+                    if(Array.isArray(children) && children.length > 0) {
+                       var sub_nodes = $("<ul class='vertical'></ul>");
+                       console.log(vec[i].name)
+                       console.log(JSON.stringify(children));
+
+                       super_node.append($("<li></li>")
+                                                      .append($("<a></a>").attr("href","#").text(vec[i].name))
+                                                      .append(sub_nodes));
+                       show_nodes(sub_nodes, children);
+                    }else{
+                        sub_nodes="";
+                        super_node.append($("<li></li>").append($("<a></a>").attr("href","#")
+                                                                 .text(vec[i].name)));
+                        console.log(vec[i].name)
+
+                    }
+                }
+            }
+
+            function show_organogram(data) {
+                var sub_nodes = $("<ul></ul>");
+
+                var json_data = JSON.parse(data);
+                //console.log(data);
+                show_nodes(sub_nodes, json_data);
+
+                $('#organogram').append($("<ul></ul>")
+                                          .append($("<li></li>")
+                                                    .append($("<a></a>").attr("href","{% url 'structure_read' organization.find_structure.id %}")
+                                                                        .text('{{organization.find_structure}}'))
+                                                    .append(sub_nodes)));
+            }
+
+            $(document).ready(function() {
+                show_organogram('{{data | safe}}');
+            });
+        </script>
+    {%endif%}
+
+
     </body>
 </html>

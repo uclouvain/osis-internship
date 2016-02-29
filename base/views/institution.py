@@ -26,7 +26,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from base.models import Structure, Organization
-
+import json
 
 @login_required
 def institution(request):
@@ -67,5 +67,6 @@ def structure_read_by_acronym(request,name):
 def structure_diagram(request, organization_id):
     organization = Organization.find_by_id(organization_id)
     tags =  organization.find_structure_tree()
-    return render(request, "structure_organogram.html", {'organization': organization, 'tags':tags})
+    data = json.dumps(tags)
+    return render(request, "structure_organogram.html", {'organization': organization, 'tags':tags, 'data':data})
 
