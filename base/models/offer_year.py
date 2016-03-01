@@ -25,7 +25,7 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-from base.models import academic_year, offer, offer_year_calendar, structure
+from base.models import academic_year, offer, structure
 
 
 class OfferYearAdmin(admin.ModelAdmin):
@@ -79,12 +79,6 @@ class OfferYear(models.Model):
                                             academic_year=self.academic_year).exclude(id=self.id)
         return None
 
-    def find_offer_year_calendar(self):
-        return offer_year_calendar.OfferYearCalendar.objects.filter(offer_year=self,
-                                                                    start_date__isnull=False,
-                                                                    end_date__isnull=False).order_by('start_date',
-                                                                                                     'academic_calendar__title')
-
 
 def find_offer_years_by_academic_year(academic_yr):
     return OfferYear.objects.filter(academic_year=int(academic_yr))
@@ -95,7 +89,7 @@ def find_offer_years_by_academic_year_structure(academic_yr, struct):
 
 
 def find_offer_years_by_structure(struct):
-        return OfferYear.objects.filter(structure=struct).order_by('academic_year', 'acronym')
+    return OfferYear.objects.filter(structure=struct).order_by('academic_year', 'acronym')
 
 
 def find_offer_year_by_id(offer_year_id):

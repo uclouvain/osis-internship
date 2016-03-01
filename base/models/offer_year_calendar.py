@@ -28,7 +28,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib import admin
 from base.enums import EVENT_TYPE
-from base.models import academic_calendar, offer_year, offer_year_calendar
+from base.models import academic_calendar, offer_year
 
 
 class OfferYearCalendarAdmin(admin.ModelAdmin):
@@ -58,7 +58,7 @@ def save(acad_calendar):
 
     offer_year_list = offer_year.find_offer_years_by_academic_year(academic_yr.id)
     for offer_yr in offer_year_list:
-        offer_yr_calendar = offer_year_calendar.OfferYearCalendar()
+        offer_yr_calendar = OfferYearCalendar()
         offer_yr_calendar.academic_calendar = acad_calendar
         offer_yr_calendar.offer_year = offer_yr
         offer_yr_calendar.start_date = acad_calendar.start_date
@@ -74,3 +74,10 @@ def offer_year_calendar_by_current_session_exam():
 
 def find_offer_years_by_academic_calendar(academic_cal):
     return OfferYearCalendar.objects.filter(academic_calendar=int(academic_cal.id))
+
+
+def find_offer_year_calendar(offer_yr):
+    return OfferYearCalendar.objects.filter(offer_year=offer_yr,
+                                            start_date__isnull=False,
+                                            end_date__isnull=False).order_by('start_date',
+                                                                             'academic_calendar__title')
