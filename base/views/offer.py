@@ -90,4 +90,6 @@ def offers_search(request):
 
 def offer_read(request, offer_year_id):
     offer_yr = mdl.offer_year.find_offer_year_by_id(offer_year_id)
-    return render(request, "offer.html", {'offer_year': offer_yr})
+    offer_yr_events = mdl.offer_year_calendar.find_offer_year_calendar(offer_yr)
+    return render(request, "offer.html", {'offer_year': offer_yr,
+                                          'offer_year_events': offer_yr_events})
