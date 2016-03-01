@@ -40,3 +40,11 @@ class OrganizationAddress(models.Model):
     postal_code  = models.CharField(max_length=20)
     city         = models.CharField(max_length=255)
     country      = models.CharField(max_length=255)
+
+
+def find_by_organization(organization):
+    organization_address_list = OrganizationAddress.objects.filter(organization=organization)
+    for organization_address in organization_address_list:
+        # Supposed there is only one address for on organization
+        return organization_address
+    return None

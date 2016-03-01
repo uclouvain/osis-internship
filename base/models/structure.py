@@ -42,8 +42,11 @@ class Structure(models.Model):
     organization = models.ForeignKey('Organization', null=True)
     part_of      = models.ForeignKey('self', null=True, blank=True)
 
-    def find_children(self):
-        return Structure.objects.filter(part_of=self).order_by('acronym')
+    def serializable_object(self):
+        obj = {'name': self.acronym, 'children': []}
+        for child in self.children():
+            obj['children'].append(child.serializable_object())
+        return obj
 
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)
@@ -53,5 +56,35 @@ def find_structures():
     return Structure.objects.all().order_by('acronym')
 
 
-def find_structure_by_id(id):
+def find_by_id(id):
     return Structure.objects.get(pk=id)
+
+
+def find_children(self):
+    return Structure.objects.filter(part_of=self).order_by('acronym')
+
+
+def find_by_organization(organization):
+    return Structure.objects.filter(organization=organization, part_of__isnull=True)
+
+
+def find_tree_by_organization(organization):
+    structure = Structure.objects.filter(organization=organization)
+    tags = []
+    if structure:
+        for t in Structure.objects.filter(part_of=structure):
+            tags.append(t.serializable_object())
+    return tags
+
+
+def find_structure_hierarchy(struc):
+    structure = Structure.objects.get(pk=struc.id)
+    tags = []
+    if structure:
+        for t in Structure.objects.filter(part_of=structure):
+            tags.append(t.serializable_object())
+    return tags
+
+
+def find_by_acronym(acronym):
+    return Structure.objects.get(acronym=acronym.strip())

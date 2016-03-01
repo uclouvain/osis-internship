@@ -31,9 +31,11 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class PersonAdmin(admin.ModelAdmin):
-    list_display = ('first_name' , 'middle_name', 'last_name', 'username','email', 'gender','global_id', 'national_id', 'changed')
+    list_display = ('first_name' , 'middle_name', 'last_name', 'username','email', 'gender','global_id', 'national_id',
+                    'changed')
     search_fields = ['first_name', 'middle_name', 'last_name', 'user__username','email']
-    fieldsets = ((None, {'fields': ('user','global_id','national_id','gender','first_name','middle_name','last_name','email', 'phone', 'phone_mobile')}),)
+    fieldsets = ((None, {'fields': ('user', 'global_id', 'national_id', 'gender', 'first_name', 'middle_name',
+                                    'last_name', 'email', 'phone', 'phone_mobile', 'language')}),)
     raw_id_fields = ('user',)
     search_fields = ['first_name', 'last_name']
 

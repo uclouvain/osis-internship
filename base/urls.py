@@ -74,7 +74,7 @@ urlpatterns = [
     url(r'^structures/([0-9]+)/$', institution.structure_read, name='structure_read'),
 
     url(r'^structures/([0-9]+)/diagram/$', institution.structure_diagram, name='structure_diagram'),
-    url(r'^structure/([0-9]+)/diagram/$', institution.structure_diagram_by_entitie, name='structure_diagram_by_entitie'),
+    url(r'^structure/([0-9]+)/diagram/$', institution.structure_diagram_by_parent, name='structure_diagram_by_parent'),
     url(r'^structures/name/([A-Z]+)/$', institution.structure_read_by_acronym, name='structure_read_by_acronym'),
 
     url(r'^organizations/$', organization.organizations, name='organizations'),

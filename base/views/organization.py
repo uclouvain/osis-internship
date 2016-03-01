@@ -24,57 +24,57 @@
 #
 ##############################################################################
 from django.shortcuts import render
-from base.models import *
+from base import models as mdl
 from base.forms import OrganizationForm
 
 
 def organizations(request):
-    organizations_list = Organization.find_all()
+    organizations_list = mdl.organisation.Organization.find_all()
     return render(request, "organizations.html",
-                          {'acronym' :      None,
-                           'name'    :      None,
-                           'organizations': organizations_list,
-                           'init': "1"})
+                           {'acronym': None,
+                            'name': None,
+                            'organizations': organizations_list,
+                            'init': "1"})
 
 
 def organizations_search(request):
     acronym = request.GET['acronym']
     name = request.GET['name']
     if acronym is None and name is None:
-        organizations_list = Organization.find_all()
+        organizations_list = mdl.organisation.Organization.find_all()
     if acronym is None and not name is None:
-        organizations_list = Organization.find_by_name(name)
+        organizations_list = mdl.organisation.Organization.find_by_name(name)
     if not acronym is None and name is None:
-        organizations_list = Organization.find_by_acronym(acronym)
+        organizations_list = mdl.organisation.Organization.find_by_acronym(acronym)
     if not acronym is None and not name is None:
-        organizations_list = Organization.find_by_acronym_name(acronym,name)
+        organizations_list = mdl.organisation.Organization.find_by_acronym_name(acronym,name)
 
     return render(request, "organizations.html",
-                          {'acronym' :      acronym,
-                           'name' :         name,
-                           'organizations': organizations_list,
-                           'init': "0"})
+                           {'acronym': acronym,
+                            'name': name,
+                            'organizations': organizations_list,
+                            'init': "0"})
 
 
 def organization_read(request,id):
-    organization = Organization.find_by_id(id)
+    organization = mdl.organisation.Organization.find_by_id(id)
     structures = organization.find_structure()
-    return render(request, "organization.html", {'organization':  organization ,
-                                                 'structures':    structures})
+    return render(request, "organization.html", {'organization': organization,
+                                                 'structures': structures})
 
 
 def organization_new(request):
     return organization_save(request,None)
 
 
-def organization_save(request,id):
+def organization_save(request, id):
     form = OrganizationForm(data=request.POST)
     if id:
-        organization = Organization.find_by_id(id)
+        organization = mdl.organisation.Organization.find_by_id(id)
     else:
-        organization = Organization()
+        organization = mdl.organisation.Organization()
 
-    #get the screen modifications
+    # get the screen modifications
     if request.POST['acronym']:
         organization.acronym = request.POST['acronym']
     else:
@@ -95,10 +95,10 @@ def organization_save(request,id):
     else:
         organization.reference = None
 
-    organization_address = OrganizationAddress.find_by_organization(organization)
+    organization_address = mdl.organisation_address.OrganizationAddress.find_by_organization(organization)
     organization_address_id  = None
     if organization_address is None:
-        organization_address= OrganizationAddress()
+        organization_address= mdl.organisation_address.OrganizationAddress()
         organization_address.organization = organization
     else:
         organization_address_id = organization_address.id
@@ -131,30 +131,30 @@ def organization_save(request,id):
     if form.is_valid():
         organization.save()
         organization_address.save()
-        organizations_list = Organization.find_all()
+        organizations_list = mdl.organisation.Organization.find_all()
         return render(request, "organizations.html",
-                              {'acronym' :      None,
-                               'name'    :      None,
-                               'organizations': organizations_list,
-                               'init': "0"})
+                               {'acronym': None,
+                                'name': None,
+                                'organizations': organizations_list,
+                                'init': "0"})
     else:
 
         return render(request, "organization_form.html",
-                              {'organization' : organization,
-                               'organization_address_id' : organization_address_id,
-                               'form' :         form})
+                               {'organization': organization,
+                                'organization_address_id': organization_address_id,
+                                'form': form})
 
 
 def organization_edit(request, id):
-    organization = Organization.find_by_id(id)
+    organization = mdl.organisation.Organization.find_by_id(id)
     organization_address_id = None
-    organization_address = OrganizationAddress.find_by_organization(organization)
+    organization_address = mdl.organisation_address.OrganizationAddress.find_by_organization(organization)
     if organization_address:
         organization_address_id = organization_address.id
-    return render(request, "organization_form.html", {'organization':             organization,
-                                                      'organization_address_id' : organization_address_id})
+    return render(request, "organization_form.html", {'organization': organization,
+                                                      'organization_address_id': organization_address_id})
 
 
 def organization_create(request):
-    organization = Organization()
-    return render(request, "organization_form.html", {'organization':     organization})
+    organization = mdl.organisation.Organization()
+    return render(request, "organization_form.html", {'organization': organization})
