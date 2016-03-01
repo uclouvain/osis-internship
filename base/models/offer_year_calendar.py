@@ -28,7 +28,8 @@ from django.db import models
 from django.utils import timezone
 from django.contrib import admin
 from base.enums import EVENT_TYPE
-from base.models import academic_calendar, offer_year
+from base.models import academic_calendar, offer_year, program_manager
+from base.utils import send_mail
 
 
 class OfferYearCalendarAdmin(admin.ModelAdmin):
@@ -81,3 +82,17 @@ def find_offer_year_calendar(offer_yr):
                                             start_date__isnull=False,
                                             end_date__isnull=False).order_by('start_date',
                                                                              'academic_calendar__title')
+
+def update(acad_calendar):
+    offer_year_calendar_list = find_offer_years_by_academic_calendar(acad_calendar)
+
+    for offer_year_calendar in offer_year_calendar_list:
+        if offer_year_calendar.customized == True:
+            #an email must be sent to the program manager
+            program_managers = program_manager.find_program_manager_by_faculty(offer_year_calendar.offer_year.structure)
+            if program_managers and len(program_managers) > 0:
+                send_mail.send_mail_after_academic_calendar_changes(acad_calendar,offer_year_calendar, program_managers)
+        else:
+            offer_year_calendar.start_date = acad_calendar.start_date
+            offer_year_calendar.end_date = acad_calendar.end_date
+            offer_year_calendar.save()

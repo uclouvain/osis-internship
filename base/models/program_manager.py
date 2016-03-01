@@ -38,6 +38,10 @@ class ProgrammeManager(models.Model):
     person  = models.ForeignKey(person.Person)
     faculty = models.ForeignKey(structure.Structure)
 
+    @property
+    def name(self):
+        return self.__str__()
+
     def __str__(self):
         return u"%s - %s" % (self.person, self.faculty)
 
@@ -57,3 +61,6 @@ def is_programme_manager(user, faculty):
         if programme_manager:
             return True
     return False
+
+def find_program_manager_by_faculty(faculty):
+    return  ProgrammeManager.objects.filter(faculty=faculty)
