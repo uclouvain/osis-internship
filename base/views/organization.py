@@ -29,7 +29,7 @@ from base.forms import OrganizationForm
 
 
 def organizations(request):
-    organizations_list = mdl.organisation.Organization.find_all()
+    organizations_list = mdl.organisation.find_all()
     return render(request, "organizations.html",
                            {'acronym': None,
                             'name': None,
@@ -41,13 +41,13 @@ def organizations_search(request):
     acronym = request.GET['acronym']
     name = request.GET['name']
     if acronym is None and name is None:
-        organizations_list = mdl.organisation.Organization.find_all()
+        organizations_list = mdl.organisation.find_all()
     if acronym is None and not name is None:
-        organizations_list = mdl.organisation.Organization.find_by_name(name)
+        organizations_list = mdl.organisation.find_by_name(name)
     if not acronym is None and name is None:
-        organizations_list = mdl.organisation.Organization.find_by_acronym(acronym)
+        organizations_list = mdl.organisation.find_by_acronym(acronym)
     if not acronym is None and not name is None:
-        organizations_list = mdl.organisation.Organization.find_by_acronym_name(acronym,name)
+        organizations_list = mdl.organisation.find_by_acronym_name(acronym,name)
 
     return render(request, "organizations.html",
                            {'acronym': acronym,
@@ -57,8 +57,8 @@ def organizations_search(request):
 
 
 def organization_read(request,id):
-    organization = mdl.organisation.Organization.find_by_id(id)
-    structures = organization.find_structure()
+    organization = mdl.organisation.find_by_id(id)
+    structures = mdl.structure.find_by_organization(organization)
     return render(request, "organization.html", {'organization': organization,
                                                  'structures': structures})
 
@@ -70,7 +70,7 @@ def organization_new(request):
 def organization_save(request, id):
     form = OrganizationForm(data=request.POST)
     if id:
-        organization = mdl.organisation.Organization.find_by_id(id)
+        organization = mdl.organisation.find_by_id(id)
     else:
         organization = mdl.organisation.Organization()
 
@@ -95,7 +95,7 @@ def organization_save(request, id):
     else:
         organization.reference = None
 
-    organization_address = mdl.organisation_address.OrganizationAddress.find_by_organization(organization)
+    organization_address = mdl.organisation_address.find_by_organization(organization)
     organization_address_id  = None
     if organization_address is None:
         organization_address= mdl.organisation_address.OrganizationAddress()
@@ -146,9 +146,9 @@ def organization_save(request, id):
 
 
 def organization_edit(request, id):
-    organization = mdl.organisation.Organization.find_by_id(id)
+    organization = mdl.organisation.find_by_id(id)
     organization_address_id = None
-    organization_address = mdl.organisation_address.OrganizationAddress.find_by_organization(organization)
+    organization_address = mdl.organisation_address.find_by_organization(organization)
     if organization_address:
         organization_address_id = organization_address.id
     return render(request, "organization_form.html", {'organization': organization,

@@ -42,6 +42,9 @@ class Structure(models.Model):
     organization = models.ForeignKey('Organization', null=True)
     part_of      = models.ForeignKey('self', null=True, blank=True)
 
+    def children(self):
+        return Structure.objects.filter(part_of=self.pk)
+
     def serializable_object(self):
         obj = {'name': self.acronym, 'children': []}
         for child in self.children():
