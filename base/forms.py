@@ -25,7 +25,8 @@
 ##############################################################################
 from django import forms
 from django.forms import ModelForm
-from base.models import *
+from base import models as mdl
+
 
 class LoginForm(forms.Form):
     username = forms.CharField()
@@ -38,11 +39,12 @@ class ScoreFileForm(forms.Form):
 
 class OrganizationForm(ModelForm):
     class Meta:
-        model = Organization
-        fields=['acronym','name','website','reference']
+        model = mdl.organisation.Organization
+        fields = ['acronym', 'name', 'website', 'reference']
+
 
 class AcademicCalendarForm(ModelForm):
     class Meta:
-        model = AcademicCalendar
-        fields=['start_date','end_date','title','highlight_title','highlight_description','highlight_shortcut']
+        model = mdl.academic_calendar.AcademicCalendar
+        fields = ['start_date', 'end_date', 'title', 'highlight_title', 'highlight_description', 'highlight_shortcut']
 

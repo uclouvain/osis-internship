@@ -24,7 +24,7 @@
 #
 ##############################################################################
 from django import template
-from base.models import *
+from base.enums import EVENT_TYPE
 
 register = template.Library()
 

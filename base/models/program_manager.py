@@ -23,34 +23,37 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import string
-from django.conf.urls import include, url
+
+from django.db import models
 from django.contrib import admin
-import random
-import re
-from backoffice.settings import PROPERTIES_FILE
-
-ADMIN_PAGE_URL = 'admin'
-if PROPERTIES_FILE :
-    import configparser
-    config = configparser.ConfigParser()
-    config.read(PROPERTIES_FILE)
-    if config['ADMINISTRATION']['admin_page']:
-        ADMIN_PAGE_URL = config['ADMINISTRATION']['admin_page']
+from base.models import person, structure
 
 
-def admnin_page_url() :
-    return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(random.randint(10, 20)))
+class ProgrammeManagerAdmin(admin.ModelAdmin):
+    list_display = ('person', 'faculty')
 
-urlpatterns = [
-    url(r'^'+re.escape(ADMIN_PAGE_URL)+r'/', admin.site.urls),
-    url(r'', include('base.urls')),
-    url(r'', include('internship.urls')),
-]
 
-handler404 = 'base.views.common.page_not_found'
-handler403 = 'base.views.common.access_denied'
+class ProgrammeManager(models.Model):
+    changed = models.DateTimeField(null=True)
+    person  = models.ForeignKey(person.Person)
+    faculty = models.ForeignKey(structure.Structure)
 
-admin.site.site_header = 'OSIS'
-admin.site.site_title  = 'OSIS'
-admin.site.index_title = 'Louvain'
+    def __str__(self):
+        return u"%s - %s" % (self.person, self.faculty)
+
+
+def find_faculty_by_user(user):
+    programme_manager = ProgrammeManager.objects.filter(person__user=user).first()
+    if programme_manager:
+        return programme_manager.faculty
+    else:
+        return None
+
+
+def is_programme_manager(user, faculty):
+    pers = person.Person.objects.get(user=user)
+    if user:
+        programme_manager = ProgrammeManager.objects.filter(person=pers.id, faculty=faculty)
+        if programme_manager:
+            return True
+    return False

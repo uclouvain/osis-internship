@@ -23,34 +23,23 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import string
-from django.conf.urls import include, url
-from django.contrib import admin
-import random
-import re
-from backoffice.settings import PROPERTIES_FILE
-
-ADMIN_PAGE_URL = 'admin'
-if PROPERTIES_FILE :
-    import configparser
-    config = configparser.ConfigParser()
-    config.read(PROPERTIES_FILE)
-    if config['ADMINISTRATION']['admin_page']:
-        ADMIN_PAGE_URL = config['ADMINISTRATION']['admin_page']
-
-
-def admnin_page_url() :
-    return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(random.randint(10, 20)))
-
-urlpatterns = [
-    url(r'^'+re.escape(ADMIN_PAGE_URL)+r'/', admin.site.urls),
-    url(r'', include('base.urls')),
-    url(r'', include('internship.urls')),
-]
-
-handler404 = 'base.views.common.page_not_found'
-handler403 = 'base.views.common.access_denied'
-
-admin.site.site_header = 'OSIS'
-admin.site.site_title  = 'OSIS'
-admin.site.index_title = 'Louvain'
+from base.models import academic_year
+from base.models import academic_calendar
+from base.models import attribution
+from base.models import exam_enrollment
+from base.models import learning_unit
+from base.models import learning_unit_enrollment
+from base.models import learning_unit_year
+from base.models import offer
+from base.models import offer_enrollment
+from base.models import offer_year
+from base.models import offer_year_calendar
+from base.models import organisation
+from base.models import organisation_address
+from base.models import person
+from base.models import person_address
+from base.models import program_manager
+from base.models import session_exam
+from base.models import structure
+from base.models import student
+from base.models import tutor

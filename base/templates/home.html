@@ -31,12 +31,16 @@
 {% endblock %}
 {% block content %}
 
-<div class="jumbotron">
-    <h1>Encodage des notes!</h1>
-    <p>L'encodage des notes pour la session de janvier est en cours maintenant!</p>
-    <p><a class="btn btn-primary btn-lg" href="{% url 'scores_encoding' %}" role="button" id="lnk_scores_encoding">Encoder mes notes</a></p>
-</div>
-
+{% if highlight_academic_calendars|length > 0 %}
+    {% for academic_calendar in highlight_academic_calendars %}
+        <div class="jumbotron">
+            <h1>{{ academic_calendar.highlight_title }}</h1>
+            <p>{{ academic_calendar.highlight_description }}</p>
+            {% url academic_calendar.highlight_shortcut as the_url %}
+            <p><a class="btn btn-primary btn-lg" href="{{the_url}}" role="button" id="lnk_highlight_{{ academic_calendar.highlight_shortcut }}">Avancer</a></p>
+        </div>
+    {% endfor %}
+{% endif %}
 <div class="panel panel-default">
     <div class="panel-body">
         <div class="row">
@@ -63,20 +67,23 @@
         <br>
     </div>
 </div>
+{% if academic_calendar|length > 0%}
 <div class="panel panel-default">
     <div class="panel-heading"><h3 class="panel-title">{% trans 'Academic Calendar'%}</h3></div>
     <div class="panel-body">
-        {% if academic_calendars|length > 0%}
-          <dl>
-            {% for academic_calendar in academic_calendars %}
-              {% ifchanged academic_calendar.start_date|date:"M" %}
-                <dt>{{ academic_calendar.start_date|date:"F Y" }}</dt>
-              {%endifchanged%}
-              <dd>{{ academic_calendar.start_date| default_if_none:''|date:"d/m/Y" }} - {{ academic_calendar.end_date| default_if_none:''|date:"d/m/Y" }} : <a href="{% url 'academic_calendar_read' academic_calendar.id %}" id="lnk_academic_calendar_edit_{{academic_calendar.id}}">{{ academic_calendar.title }}</a></dd>
-              <br>
-            {% endfor%}
-          </dl>
-        {%endif%}
+      <dl>
+        {% for academic_event in academic_calendar %}
+          {% ifchanged academic_event.start_date|date:"M" %}
+            <dt>{{ academic_event.start_date|date:"F Y" }}</dt>
+          {% endifchanged %}
+          <dd>{{ academic_event.start_date| default_if_none:''|date:"d/m/Y" }} -
+              {{ academic_event.end_date| default_if_none:''|date:"d/m/Y" }} :
+              <a href="{% url 'academic_calendar_read' academic_event.id %}"
+                 id="lnk_academic_calendar_edit_{{academic_event.id}}">{{ academic_event.title }}</a></dd>
+          <br>
+        {% endfor %}
+      </dl>
     </div>
 </div>
+{%endif%}
 {% endblock %}

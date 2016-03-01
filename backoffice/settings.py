@@ -144,6 +144,8 @@ SCREEN_SHOT_FOLDER = os.path.join(BASE_DIR, "base/tests/selenium/screenshots")
 FIREFOX_PROFILE_PATH = os.path.join(BASE_DIR, "base/tests/selenium/firefox_profile")
 JENKINS_TASKS = []
 
+PROPERTIES_FILE = ''
+
 try  :
     from backoffice.server_settings import *
 except ImportError:

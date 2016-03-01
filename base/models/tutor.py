@@ -23,34 +23,32 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import string
-from django.conf.urls import include, url
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import models
 from django.contrib import admin
-import random
-import re
-from backoffice.settings import PROPERTIES_FILE
-
-ADMIN_PAGE_URL = 'admin'
-if PROPERTIES_FILE :
-    import configparser
-    config = configparser.ConfigParser()
-    config.read(PROPERTIES_FILE)
-    if config['ADMINISTRATION']['admin_page']:
-        ADMIN_PAGE_URL = config['ADMINISTRATION']['admin_page']
+from base.models import person
 
 
-def admnin_page_url() :
-    return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(random.randint(10, 20)))
+class TutorAdmin(admin.ModelAdmin):
+    list_display = ('person', 'changed')
+    fieldsets = ((None, {'fields': ('person',)}),)
+    raw_id_fields = ('person', )
+    search_fields = ['person__first_name', 'person__last_name']
 
-urlpatterns = [
-    url(r'^'+re.escape(ADMIN_PAGE_URL)+r'/', admin.site.urls),
-    url(r'', include('base.urls')),
-    url(r'', include('internship.urls')),
-]
 
-handler404 = 'base.views.common.page_not_found'
-handler403 = 'base.views.common.access_denied'
+class Tutor(models.Model):
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    changed     = models.DateTimeField(null=True)
+    person      = models.ForeignKey(person.Person)
 
-admin.site.site_header = 'OSIS'
-admin.site.site_title  = 'OSIS'
-admin.site.index_title = 'Louvain'
+    def __str__(self):
+        return u"%s" % self.person
+
+
+def find_tutor_by_user(user):
+    try:
+        pers = person.find_person_by_user(user)
+        tutor = Tutor.objects.get(person=pers)
+        return tutor
+    except ObjectDoesNotExist:
+        return None

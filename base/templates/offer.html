@@ -74,11 +74,16 @@
                   <td>{% trans 'Start date' %}</td>
                   <td>{% trans 'End date' %}</td>
                 </thead>
-                {% for offer_year_calendar in offer_year.find_offer_year_calendar %}
-                    {% ifchanged offer_year_calendar.start_date|date:"M" %}
-                      <tr style="background-color:#E5F2FF"><td colspan="4"><h4 style="{{ offer_year_calendar.start_date |offer_year_calendar_display:offer_year_calendar.end_date }}">{{ offer_year_calendar.start_date|date:"F Y" }}</h4></td></tr>
+                {% for event in offer_year_events %}
+                    {% ifchanged event.start_date|date:"M" %}
+                      <tr style="background-color:#E5F2FF"><td colspan="4"><h4 style="{{ offer_year_calendar.start_date |offer_year_calendar_display:offer_year_calendar.end_date }}">{{ event.start_date|date:"F Y" }}</h4></td></tr>
                     {% endifchanged %}
-                  <tr style="{{ offer_year_calendar.start_date |offer_year_calendar_display:offer_year_calendar.end_date }}"><td>{{ offer_year_calendar.academic_calendar.title }}</td><td>{{ offer_year_calendar.academic_calendar.description }}</td><td>{{ offer_year_calendar.start_date|date:"j/m/Y" }}</td><td>{{ offer_year_calendar.end_date|date:"j/m/Y" }}</td></tr>
+                      <tr style="{{ offer_year_calendar.start_date |offer_year_calendar_display:offer_year_calendar.end_date }}">
+                          <td>{{ event.academic_calendar.title }}</td>
+                          <td>{{ event.academic_calendar.description }}</td>
+                          <td>{{ event.start_date|date:"j/m/Y" }}</td>
+                          <td>{{ event.end_date|date:"j/m/Y" }}</td>
+                      </tr>
                 {% endfor%}
               </table>
             </div>
