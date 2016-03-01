@@ -60,14 +60,11 @@ def structure_read(request,id):
 
 
 def structure_read_by_acronym(request,name):
-    print('structure_read_by_acronym',name)
     structure = Structure.find_by_acronym(name)
-    print(structure)
     return render(request, "structure.html", {'structure': structure})
 
 
 def structure_diagram(request, organization_id):
-    print('structure_diagram')
     organization = Organization.find_by_id(organization_id)
     structure = organization.find_structure()
     tags =  organization.find_structure_tree()#Tree of structure
@@ -76,7 +73,6 @@ def structure_diagram(request, organization_id):
 
 
 def structure_diagram_by_entitie(request,id):
-    print('structure_diagram_by_structure')
     structure = Structure.find_by_id(id)
     # structure_parent = structure.part_of
     tags = structure.find_tree_by_structure()#Tree of structure

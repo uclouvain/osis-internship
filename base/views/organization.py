@@ -25,7 +25,6 @@
 ##############################################################################
 from django.shortcuts import render
 from base.models import *
-from django.utils.translation import ugettext as _
 from base.forms import OrganizationForm
 
 
@@ -59,7 +58,9 @@ def organizations_search(request):
 
 def organization_read(request,id):
     organization = Organization.find_by_id(id)
-    return render(request, "organization.html", {'organization':  organization})
+    structures = organization.find_structure()
+    return render(request, "organization.html", {'organization':  organization ,
+                                                 'structures':    structures})
 
 
 def organization_new(request):

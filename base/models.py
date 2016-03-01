@@ -212,7 +212,7 @@ class Structure(models.Model):
 
     @staticmethod
     def find_by_organization(organization):
-        return Structure.objects.get(organization=organization)
+        return Structure.objects.filter(organization=organization, part_of__isnull=True)
 
     @staticmethod
     def find_tree_by_organization(organization):

@@ -57,6 +57,7 @@
                 $('#organogram').append($("<ul></ul>")
                                           .append($("<li></li>")
                                                     .append($("<a></a>").attr("href","{% url 'structure_read' structure.id %}")
+                                                                         .attr("target","_parent")
                                                                         .text('{{structure}}'))
                                                     .append(sub_nodes)));
             }
