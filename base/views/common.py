@@ -44,7 +44,7 @@ def home(request):
         calendar_events = mdl.academic_calendar.find_academic_calendar_by_academic_year_with_dates(academic_year_calendar.id)
     return render(request, "home.html",
                           {'academic_calendar': calendar_events,
-                           'highlight_academic_calendars': mdl.academic_calendar.find_highlight_academic_calendars()})
+                           'highlights': mdl.academic_calendar.find_highlight_academic_calendars()})
 
 
 @login_required

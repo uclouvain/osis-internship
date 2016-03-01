@@ -31,13 +31,13 @@
 {% endblock %}
 {% block content %}
 
-{% if highlight_academic_calendars|length > 0 %}
-    {% for academic_calendar in highlight_academic_calendars %}
+{% if highlights|length > 0 %}
+    {% for highlight in highlights %}
         <div class="jumbotron">
-            <h1>{{ academic_calendar.highlight_title }}</h1>
-            <p>{{ academic_calendar.highlight_description }}</p>
-            {% url academic_calendar.highlight_shortcut as the_url %}
-            <p><a class="btn btn-primary btn-lg" href="{{the_url}}" role="button" id="lnk_highlight_{{ academic_calendar.highlight_shortcut }}">Avancer</a></p>
+            <h1>{{ highlight.highlight_title }}</h1>
+            <p>{{ highlight.highlight_description }}</p>
+            <p><a class="btn btn-primary btn-lg" href="/{{ highlight.highlight_shortcut }}" role="button"
+                  id="lnk_highlight_{{ highlight.highlight_shortcut }}">Avancer</a></p>
         </div>
     {% endfor %}
 {% endif %}
