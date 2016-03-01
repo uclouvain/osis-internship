@@ -26,6 +26,7 @@
 from django import forms
 from django.forms import ModelForm
 from base.models.academic_calendar import AcademicCalendar
+from base.models.offer_year_calendar import OfferYearCalendar
 
 
 class LoginForm(forms.Form):
@@ -41,3 +42,14 @@ class AcademicCalendarForm(ModelForm):
     class Meta:
         model = AcademicCalendar
         fields=['start_date','end_date','title','highlight_title','highlight_description','highlight_shortcut']
+
+class OfferYearCalendarForm(ModelForm):
+    start_date = forms.DateField(widget=forms.DateInput(format = '%d/%m/%Y'),
+                                 input_formats=('%d/%m/%Y',),
+                                 required=False)
+    end_date = forms.DateField(widget=forms.DateInput(format = '%d/%m/%Y'),
+                               input_formats=('%d/%m/%Y',),
+                               required=False)
+    class Meta:
+        model = OfferYearCalendar
+        fields=['offer_year','start_date','end_date','customized']

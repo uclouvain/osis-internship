@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+ * OSIS stands for Open Student Information System. It's an application
+ * designed to manage the core business of higher education institutions,
+ * such as universities, faculties, institutes and professional schools.
+ * The core business involves the administration of students, teachers,
+ * courses, programs and so on.
+ *
+ * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * A copy of this license - GNU General Public License - is available
+ * at the root of the source code of this program.  If not,
+ * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block breadcrumb %}
+  <li><a href="{% url 'catalog' %}" id="lnk_catalog">{% trans 'Catalog' %}</a></li>
+  <li><a href="{% url 'offers' %}" id="lnk_offers">{% trans 'Offers' %}</a></li>
+  <li class="active">{% trans 'Offer year calendar' %}</li>
+{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h2>{{ offer_year_calendar.offer_year.acronym}}</h2>
+</div>
+<div class="panel panel-default">
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-md-8">
+        <label for="academic_year">{% trans 'Academic calendar'%}</label><br>
+        {{ offer_year_calendar.academic_calendar }}
+      </div>
+      <div class="col-md-2">
+        <label for="start_date">{% trans 'Start date'%}</label><br>
+        {{ offer_year_calendar.start_date| default_if_none:''|date:"j/m/Y" }}
+      </div>
+      <div class="col-md-2">
+        <label for="end_date">{% trans 'End date' %}</label><br>
+        {{ offer_year_calendar.end_date| default_if_none:''|date:"j/m/Y" }}
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-md-4">
+        <a href="{% url 'offer_year_calendar_edit' offer_year_calendar.id %}" title="{%trans 'Edit'%}" class="btn btn-primary" role="button" id="bt_offer_year_calendar_edit">
+          <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> {% trans 'Edit'%}
+        </a>
+        <a href="{% url 'offer_read' offer_year_calendar.offer_year.id %}" title="{%trans 'Cancel'%}" class="btn btn-default" role="button" id="bt_cancel">
+          <span class="glyphicon glyphicon-cancel" aria-hidden="true"></span> {% trans 'Cancel'%}
+        </a>
+      </div>
+      <div class="col-md-8">
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

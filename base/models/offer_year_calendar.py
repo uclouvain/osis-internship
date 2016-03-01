@@ -81,3 +81,12 @@ def find_offer_year_calendar(offer_yr):
                                             start_date__isnull=False,
                                             end_date__isnull=False).order_by('start_date',
                                                                              'academic_calendar__title')
+
+
+def find_offer_year_calendars_by_academic_year(academic_yr):
+    return OfferYearCalendar.objects.filter(academic_calendar__academic_year=academic_yr)\
+                                        .order_by('academic_calendar','offer_year__acronym')
+
+
+def find_by_id(offer_year_calendar_id):
+    return OfferYearCalendar.objects.get(pk=offer_year_calendar_id)
