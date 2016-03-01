@@ -159,7 +159,7 @@ class Organization(models.Model):
         return Structure.find_by_organization(self)
 
     def find_structure_tree(self):
-        return Structure.find_tree(self)
+        return Structure.find_tree_by_organization(self)
 
 
 class OrganizationAddress(models.Model):
@@ -215,22 +215,25 @@ class Structure(models.Model):
         return Structure.objects.get(organization=organization)
 
     @staticmethod
-    def find_tree(organization):
+    def find_tree_by_organization(organization):
         structure= Structure.objects.filter(organization=organization)
         tags = []
         if not structure is None:
             for t in Structure.objects.filter(part_of=structure):
                 tags.append(t.serializable_object())
-        print(tags)
+        return tags
+
+    def find_tree_by_structure(self):
+        structure= Structure.objects.get(pk=self.id)
+        tags = []
+        if not structure is None:
+            for t in Structure.objects.filter(part_of=structure):
+                tags.append(t.serializable_object())
         return tags
 
     @staticmethod
     def find_by_acronym(acronym):
-        try:
-            return Structure.objects.get(acronym=acronym)
-        except:
-            return None
-
+        return Structure.objects.get(acronym=acronym.strip())
 
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)

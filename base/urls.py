@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.contrib.auth.views import login, logout
 
 from base.utils import upload_xls_utils
@@ -34,6 +34,8 @@ from base.views import learning_unit, offer, common, score_encoding, institution
 
 urlpatterns = [
     url(r'^$', common.home, name='home'),
+
+    #url(r'^djangojs/', include('djangojs.urls')),
 
     # Please, organize the urls in alphabetic order.
 
@@ -72,7 +74,8 @@ urlpatterns = [
     url(r'^structures/([0-9]+)/$', institution.structure_read, name='structure_read'),
 
     url(r'^structures/([0-9]+)/diagram/$', institution.structure_diagram, name='structure_diagram'),
-    url(r'^structures/(?P<name>.+)/$', institution.structure_read_by_acronym, name='structure_read_by_acronym'),
+    url(r'^structure/([0-9]+)/diagram/$', institution.structure_diagram_by_entitie, name='structure_diagram_by_entitie'),
+    url(r'^structures/name/([A-Z]+)/$', institution.structure_read_by_acronym, name='structure_read_by_acronym'),
 
     url(r'^organizations/$', organization.organizations, name='organizations'),
     url(r'^organizations/search$', organization.organizations_search, name='organizations_search'),

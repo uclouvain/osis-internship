@@ -47,6 +47,7 @@
     <ul class="nav nav-tabs">
       <li class="active"><a data-toggle="tab" href="#tab_identification">{% trans 'Identification'%}</a></li>
       <li><a data-toggle="tab" href="#tab_offers">{% trans 'Offers'%}</a></li>
+      <li><a data-toggle="tab" href="#tab_structure">{% trans 'Structure'%}</a></li>
     </ul>
     <div class="tab-content">
       <p>
@@ -122,6 +123,12 @@
               {% endif %}
             </div>
           </div>
+        </div>
+        <div id="tab_structure" class="tab-pane fade">
+            {%if structure%}
+                <iframe src="{%url 'structure_diagram_by_entitie' structure.id %}" width="1100px" height="600px"
+                        frameborder="0"></iframe>
+            {%endif%}
         </div>
       </p>
     </div>
