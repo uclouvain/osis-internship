@@ -27,7 +27,6 @@ from django.db import models
 from django.utils import timezone
 from django.contrib import admin
 from base.models import academic_year
-from base.enums import EVENT_TYPE
 
 
 class AcademicCalendarAdmin(admin.ModelAdmin):
@@ -39,7 +38,6 @@ class AcademicCalendar(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     academic_year = models.ForeignKey(academic_year.AcademicYear)
-    event_type = models.CharField(max_length=50, choices=EVENT_TYPE)
     title = models.CharField(max_length=50, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     start_date = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
@@ -59,18 +57,12 @@ def find_highlight_academic_calendars():
 
 
 def current_academic_year():
-    academic_calendar = AcademicCalendar.objects.filter(event_type='ACADEMIC_YEAR') \
-        .filter(start_date__lte=timezone.now()) \
-        .filter(end_date__gte=timezone.now()).first()
-    if academic_calendar:
-        return academic_calendar.academic_year
+    academic_yr = academic_year.AcademicYear.objects.filter(start_date__lte=timezone.now()) \
+                                                    .filter(end_date__gte=timezone.now()).first()
+    if academic_yr:
+        return academic_yr
     else:
         return None
-
-
-def find_academic_calendar_by_event_type(academic_year_id, session_number):
-    event_type_criteria = "EXAM_SCORES_SUBMISSION_SESS_" + str(session_number)
-    return AcademicCalendar.objects.get(academic_year=academic_year_id, event_type=event_type_criteria)
 
 
 def find_academic_calendar_by_academic_year(academic_year_id):
