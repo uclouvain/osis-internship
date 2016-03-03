@@ -36,7 +36,7 @@ def offers(request):
     faculties = mdl.structure.find_structures()
     academic_years = mdl.academic_year.find_academic_years()
 
-    academic_year_calendar = mdl.academic_calendar.current_academic_year()
+    academic_year_calendar = mdl.academic_year.current_academic_year()
     if academic_year_calendar:
         academic_yr = academic_year_calendar.id
     return render(request, "offers.html", {'faculties': faculties,

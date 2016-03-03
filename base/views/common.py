@@ -38,7 +38,7 @@ def access_denied(request):
 
 
 def home(request):
-    academic_year_calendar = mdl.academic_calendar.current_academic_year()
+    academic_year_calendar = mdl.academic_year.current_academic_year()
     calendar_events = None
     if academic_year_calendar:
         calendar_events = mdl.academic_calendar.find_academic_calendar_by_academic_year_with_dates(academic_year_calendar.id)

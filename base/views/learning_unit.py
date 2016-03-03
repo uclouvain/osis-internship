@@ -33,7 +33,7 @@ def learning_units(request):
     code = ""
 
     academic_years = mdl.academic_year.find_academic_years()
-    academic_year_calendar = mdl.academic_calendar.current_academic_year()
+    academic_year_calendar = mdl.academic_year.current_academic_year()
 
     if academic_year_calendar:
         academic_year = academic_year_calendar.id
@@ -56,19 +56,19 @@ def learning_units_search(request):
     academic_years = mdl.academic_year.find_academic_years()
 
     if academic_year is None:
-        academic_year_calendar = mdl.academic_calendar.current_academic_year()
-        if not academic_year_calendar is None:
+        academic_year_calendar = mdl.academic_year.current_academic_year()
+        if academic_year_calendar:
             academic_year = academic_year_calendar.id
 
-    learning_units = mdl.learning_unit_year.find_learning_unit_years_by_academic_year(academic_year)
+    learning_unts = mdl.learning_unit_year.find_learning_unit_years_by_academic_year(academic_year)
 
-    if not code is None and len(code) > 0:
-        learning_units = learning_units.filter(acronym__icontains=code)
+    if code and len(code) > 0:
+        learning_unts = learning_unts.filter(acronym__icontains=code)
 
     return render(request, "learning_units.html", {'academic_year': int(academic_year),
                                                    'code': code,
                                                    'academic_years': academic_years,
-                                                   'learning_units': learning_units,
+                                                   'learning_units': learning_unts,
                                                    'init': "0"})
 
 

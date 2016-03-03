@@ -30,8 +30,8 @@ from base.models import academic_year
 
 
 class AcademicCalendarAdmin(admin.ModelAdmin):
-    list_display = ('event_type', 'title', 'academic_year', 'start_date', 'end_date', 'changed')
-    fieldsets = ((None, {'fields': ('academic_year', 'event_type', 'title', 'description', 'start_date', 'end_date')}),)
+    list_display = ('title', 'academic_year', 'start_date', 'end_date', 'changed')
+    fieldsets = ((None, {'fields': ('academic_year', 'title', 'description', 'start_date', 'end_date')}),)
 
 
 class AcademicCalendar(models.Model):
@@ -56,25 +56,18 @@ def find_highlight_academic_calendars():
                                            highlight_shortcut__isnull=False)
 
 
-def current_academic_year():
-    academic_yr = academic_year.AcademicYear.objects.filter(start_date__lte=timezone.now()) \
-                                                    .filter(end_date__gte=timezone.now()).first()
-    if academic_yr:
-        return academic_yr
-    else:
-        return None
-
-
 def find_academic_calendar_by_academic_year(academic_year_id):
     return AcademicCalendar.objects.filter(academic_year=academic_year_id).order_by('title')
 
 
 def find_academic_calendar_by_academic_year_with_dates(academic_year_id):
     now = timezone.now()
-    return AcademicCalendar.objects.filter(academic_year=academic_year_id, start_date__isnull=False,
+    return AcademicCalendar.objects.filter(academic_year=academic_year_id,
+                                           start_date__isnull=False,
                                            end_date__isnull=False) \
-        .filter(models.Q(start_date__lte=now, end_date__gte=now) | models.Q(start_date__gte=now, end_date__gte=now)) \
-        .order_by('start_date')
+                                   .filter(models.Q(start_date__lte=now, end_date__gte=now) |
+                                           models.Q(start_date__gte=now, end_date__gte=now)) \
+                                   .order_by('start_date')
 
 
 def find_academic_calendar_by_id(id):
