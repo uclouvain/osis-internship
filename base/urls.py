@@ -66,7 +66,7 @@ urlpatterns = [
     url(r'^studies/assessments/scores_encoding/online/([0-9]+)/double_validation$', score_encoding.online_double_encoding_validation, name='online_double_encoding_validation'),
     url(r'^studies/assessments/scores_encoding/notes_printing_all/([0-9]+)/$', score_encoding.notes_printing_all, name='notes_printing_all'),
     url(r'^studies/assessments/scores_encoding/notes_printing/([0-9]+)/([0-9]+)/$', score_encoding.notes_printing, name='notes_printing'),
-    url(r'^studies/assessments/scores_encoding/xlsdownload/([0-9]+)/([0-9]+)/([0-9]+)/$',score_encoding.export_xls, name='scores_encoding_download'),
+    url(r'^studies/assessments/scores_encoding/xlsdownload/([0-9]+)/([0-9]+)/$',score_encoding.export_xls, name='scores_encoding_download'),
     url(r'^studies/assessments/scores_encoding/upload/([0-9]+)/([0-9]+)/([0-9]+)/$', upload_xls_utils.upload_scores_file,name='upload_encoding'),
 
     url(r'^structures/$', institution.structures, name='structures'),

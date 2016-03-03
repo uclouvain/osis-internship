@@ -51,7 +51,6 @@ def find_offer_year_by_user(user):
 
 
 def is_programme_manager(user, offer_year):
-    print('is_programme_manager', offer_year)
     pers = person.Person.objects.get(user=user)
     if user:
         programme_manager = ProgrammeManager.objects.filter(person=pers.id, offer_year=offer_year)

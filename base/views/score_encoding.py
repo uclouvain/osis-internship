@@ -274,6 +274,5 @@ def notes_printing_all(request, session_id):
 
 
 @login_required
-def export_xls(request, session_id, learning_unit_year_id, academic_year_id):
-    return export_utils.export_xls(request, session_id, learning_unit_year_id, academic_year_id,
-                                   request.user.groups.filter(name='FAC').exists())
+def export_xls(request, session_id, academic_year_id):
+    return export_utils.export_xls(request, session_id, academic_year_id)
