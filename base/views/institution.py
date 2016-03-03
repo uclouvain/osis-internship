@@ -25,6 +25,7 @@
 ##############################################################################
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+import json
 
 from base import models as mdl
 
@@ -34,19 +35,21 @@ def institution(request):
     return render(request, "institution.html", {'section': 'institution'})
 
 
+@login_required
 def structures(request):
     return render(request, "structures.html", {'init': "1"})
 
 
+@login_required
 def structures_search(request):
     acronym = request.GET['acronym']
     title = request.GET['title']
 
     query = mdl.structure.find_structures()
 
-    if not acronym is None and len(acronym) > 0  :
+    if acronym and len(acronym) > 0:
         query = query.filter(acronym__icontains=acronym)
-    if not title is None and len(title) > 0  :
+    if title and len(title) > 0:
         query = query.filter(title__icontains=title)
 
     return render(request, "structures.html", {'title': title,
@@ -55,8 +58,31 @@ def structures_search(request):
                                                'structures': query})
 
 
-def structure_read(request,id):
-    structure = mdl.structure.find_structure_by_id(id)
+@login_required
+def structure_read(request, id):
+    structure = mdl.structure.find_by_id(id)
     offers_years = mdl.offer_year.find_offer_years_by_structure(structure)
     return render(request, "structure.html", {'structure': structure,
                                               'offers_years': offers_years})
+
+
+def structure_read_by_acronym(request, name):
+    structure = mdl.structure.find_by_acronym(name)
+    return render(request, "structure.html", {'structure': structure})
+
+
+def structure_diagram(request, organization_id):
+    organization = mdl.organisation.find_by_id(organization_id)
+    structure = organization.find_structure()
+    tags = organization.find_structure_tree()
+    data = json.dumps(tags)
+    return render(request, "structure_organogram.html", {'structure': structure,
+                                                         'data': data})
+
+
+def structure_diagram_by_parent(request, parent_id):
+    structure = mdl.structure.find_by_id(parent_id)
+    tags = mdl.structure.find_structure_hierarchy(structure)
+    data = json.dumps(tags)
+    return render(request, "structure_organogram.html", {'structure': structure,
+                                                         'data': data})

@@ -47,8 +47,8 @@ class ExamEnrollmentAdmin(admin.ModelAdmin):
 
 class ExamEnrollment(models.Model):
     ENCODING_STATUS_LIST = (
-        ('SAVED',_('Saved')),
-        ('SUBMITTED',_('Submitted')))
+        ('SAVED', _('Saved')),
+        ('SUBMITTED', _('Submitted')))
 
     external_id              = models.CharField(max_length=100, blank=True, null=True)
     changed                  = models.DateTimeField(null=True)
@@ -69,8 +69,8 @@ class ExamEnrollment(models.Model):
         return u"%s - %s" % (self.session_exam, self.learning_unit_enrollment)
 
 
-def find_exam_enrollments_by_session(session_exam):
-    enrollments = ExamEnrollment.objects.filter(session_exam=session_exam) \
+def find_exam_enrollments_by_session(session_exm):
+    enrollments = ExamEnrollment.objects.filter(session_exam=session_exm) \
         .order_by('learning_unit_enrollment__offer_enrollment__offer_year__acronym',
                   'learning_unit_enrollment__offer_enrollment__student__person__last_name',
                   'learning_unit_enrollment__offer_enrollment__student__person__first_name')
