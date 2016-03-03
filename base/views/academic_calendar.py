@@ -29,7 +29,7 @@ from django.shortcuts import render, get_object_or_404
 
 from base.forms import AcademicCalendarForm
 from base import models as mdl
-
+from django.utils.translation import ugettext_lazy as _
 
 def academic_calendars(request):
     academic_year = None
@@ -115,6 +115,7 @@ def academic_calendar_save(request, id):
     # validate
     validation = True
     if form.is_valid():
+        print('is valid')
         if request.POST['start_date']:
             academic_calendar.start_date = datetime.strptime(request.POST['start_date'], '%d/%m/%Y')
         else:
@@ -126,16 +127,24 @@ def academic_calendar_save(request, id):
             academic_calendar.end_date = None
 
         if academic_calendar.start_date and academic_calendar.end_date:
-            if academic_calendar.start_date >= academic_calendar.end_date:
-                form.errors['start_date'] = 'La date de début doit être le même ou avant la date de fin'
+            if academic_calendar.start_date > academic_calendar.end_date:
+                form.errors['start_date'] = _('La date de début doit être égale ou inférieure à la date de fin')
                 validation = False
     else:
+        print('is ot valid')
         validation = False
 
     academic_years = mdl.academic_year.find_academic_years()
     if validation:
+        new_academic_calendar=False
+        if academic_calendar.id is None:
+            new_academic_calendar = True
         academic_calendar.save()
-        mdl.offer_year_calendar.save(academic_calendar)
+        if new_academic_calendar:
+            mdl.offer_year_calendar.save(academic_calendar)
+        else:
+            mdl.offer_year_calendar.update(academic_calendar)
+
         return render(request, "academic_calendars.html", {
             'academic_year': academic_year,
             'academic_years': academic_years,

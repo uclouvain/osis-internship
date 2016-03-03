@@ -44,82 +44,80 @@
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
-        {% if academic_calendar.id%}
-        <form method="post" action="{% url 'academic_calendar_save' academic_calendar.id %}">
-            {%else%}
-            <form method="post" action="{% url 'academic_calendar_save_new'  %}">
-                {%endif%}
-                {% csrf_token %}
-                <div class="row">
-                    <div class="col-md-2">
-                        <label for="academic_year">{% trans 'Academic year'%}</label>
-                        <select class="form-control" id="slt_academic_year" name="academic_year">
-                            {% for v in academic_years %}
-                            {% if v.id == academic_calendar.academic_year %}
-                            <option selected value="{{ v.id }}">{{ v }}</option>
-                            {% else %}
-                            <option value="{{ v.id }}">{{ v }}</option>
-                            {% endif %}
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="title">{% trans 'Title' %}</label>
-                        <input class="form-control" value="{{ academic_calendar.title | default_if_none:'' }}"
-                               name="title" id="txt_title"><font class="error">{{ form.title.errors }}</font>
-                    </div>
-                    <div class="col-md-2">
-                        <label for="start_date">{% trans 'Start date'%}</label>
-                        <input type="text" class="form-control"
-                               value="{{ academic_calendar.start_date| default_if_none:''|date:"j/m/Y" }}"
-                        name="start_date" id="txt_start_date"><font class="error">{{ form.start_date.errors }}</font>
-                    </div>
-                    <div class="col-md-2">
-                        <label for="end_date">{% trans 'End date' %}</label>
-                        <input type="text" class="form-control"
-                               value="{{ academic_calendar.end_date| default_if_none:''|date:"j/m/Y" }}"
-                        name="end_date" id="txt_end_date"><font class="error">{{ form.end_date.errors }}</font>
-                    </div>
+        <form method="post" action="{% if academic_calendar.id%}{% url 'academic_calendar_save' academic_calendar.id %}{%else%}{% url 'academic_calendar_save_new' %}{%endif%}">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-2">
+                    <label for="academic_year">{% trans 'Academic year'%}</label>
+                    <select class="form-control" id="slt_academic_year" name="academic_year">
+                        {% for v in academic_years %}
+                        {% if v.id == academic_calendar.academic_year %}
+                        <option selected value="{{ v.id }}">{{ v }}</option>
+                        {% else %}
+                        <option value="{{ v.id }}">{{ v }}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
                 </div>
-                <br>
-                <div class="row">
-                    <div class="col-md-12">
-                        <label for="txt_description">{% trans 'Description'%}</label>
-                        <textarea name="description" id="txt_description" class="form-control">{{ academic_calendar.description | default_if_none:'' }}</textarea>
-                    </div>
+                <div class="col-md-6">
+                    <label for="title">{% trans 'Title' %}</label>
+                    <input class="form-control" value="{{ academic_calendar.title | default_if_none:'' }}"
+                           name="title" id="txt_title"><font class="error">{{ form.title.errors }}</font>
                 </div>
-                <br>
-                <div class="row">
-                    <div class="col-md-6">
-                        <label for="txt_highlight_title">{% trans 'Highlight title' %}</label>
-                        <input class="form-control" value="{{ academic_calendar.highlight_title | default_if_none:'' }}"
-                               name="highlight_title" id="txt_highlight_title">
-                        <font class="error">{{ form.highlight_title.errors }}</font>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="txt_highlight_shortcut">{% trans 'Highlight shortcut' %}</label>
-                        <input class="form-control"
-                               value="{{ academic_calendar.highlight_shortcut | default_if_none:'' }}"
-                               name="highlight_shortcut" id="txt_highlight_shortcut">
-                        <font class="error">{{ form.highlight_shortcut.errors }}</font>
-                    </div>
+                <div class="col-md-2">
+                    <label for="start_date">{% trans 'Start date'%}</label>
+                    <input type="text" class="form-control"
+                           value="{{ academic_calendar.start_date| default_if_none:''|date:"j/m/Y" }}"
+                    name="start_date" id="txt_start_date"><font class="error">{{ form.start_date.errors }}</font>
                 </div>
-                <br>
-                <label for="txa_highlight_description">{% trans 'Highlight description' %}</label>
-                <textarea name="highlight_description" id="txa_highlight_description" class="form-control">{{ academic_calendar.highlight_description | default_if_none:'' }}</textarea>
-                <font class="error">{{ form.highlight_description.errors }}</font>
-                <br>
+                <div class="col-md-2">
+                    <label for="end_date">{% trans 'End date' %}</label>
+                    <input type="text" class="form-control"
+                           value="{{ academic_calendar.end_date| default_if_none:''|date:"j/m/Y" }}"
+                    name="end_date" id="txt_end_date"><font class="error">{{ form.end_date.errors }}</font>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-12">
+                    <label for="txt_description">{% trans 'Description'%}</label>
+                    <textarea name="description" id="txt_description" class="form-control">{{ academic_calendar.description | default_if_none:'' }}</textarea>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="txt_highlight_title">{% trans 'Highlight title' %}</label>
+                    <input class="form-control" value="{{ academic_calendar.highlight_title | default_if_none:'' }}"
+                           name="highlight_title" id="txt_highlight_title">
+                    <font class="error">{{ form.highlight_title.errors }}</font>
+                </div>
+                <div class="col-md-6">
+                    <label for="txt_highlight_shortcut">{% trans 'Highlight shortcut' %}</label>
+                    <input class="form-control"
+                           value="{{ academic_calendar.highlight_shortcut | default_if_none:'' }}"
+                           name="highlight_shortcut" id="txt_highlight_shortcut">
+                    <font class="error">{{ form.highlight_shortcut.errors }}</font>
+                </div>
+            </div>
+            <br>
+            <label for="txa_highlight_description">{% trans 'Highlight description' %}</label>
+            <textarea name="highlight_description" id="txa_highlight_description" class="form-control">{{ academic_calendar.highlight_description | default_if_none:'' }}</textarea>
+            <font class="error">{{ form.highlight_description.errors }}</font>
+            <br>
+            <div class="jumbotron">
+                <h1><div id="pnl_title"></div></h1>
+                <p><div id="pnl_description"></div></p>
+                <p><div id="pnl_shortcut"></div></p>
+            </div>
 
-                <div class="jumbotron">
-                    <h1><div id="pnl_title"></div></h1>
-                    <p><div id="pnl_description"></div></p>
-                    <p><div id="pnl_shortcut"></div></p>
-                </div>
-
-                <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_academic_calendar_save">
-                    <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'Save'%}
-                </button>
-            </form>
+            <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_academic_calendar_save">
+                <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'Save'%}
+            </button>
+            <a class="btn btn-default" href="{% url 'academic_calendars' %}" role="button" id="lnk_cancel_academic_calendar">
+                <span class="glyphicon glyphicon-cancel" aria-hidden="true"></span> {% trans 'Cancel' %}
+            </a>
+        </form>
     </div>
 </div>
 {% endblock %}

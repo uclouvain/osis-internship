@@ -44,6 +44,12 @@ class OrganizationForm(ModelForm):
 
 
 class AcademicCalendarForm(ModelForm):
+    start_date = forms.DateField(widget=forms.DateInput(format = '%d/%m/%Y'),
+                                 input_formats=('%d/%m/%Y',),
+                                 required=False)
+    end_date = forms.DateField(widget=forms.DateInput(format = '%d/%m/%Y'),
+                               input_formats=('%d/%m/%Y',),
+                               required=False)
     class Meta:
         model = mdl.academic_calendar.AcademicCalendar
         fields = ['start_date', 'end_date', 'title', 'highlight_title', 'highlight_description', 'highlight_shortcut']
