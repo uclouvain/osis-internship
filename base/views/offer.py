@@ -36,7 +36,7 @@ def offers(request):
     faculties = mdl.structure.find_structures()
     academic_years = mdl.academic_year.find_academic_years()
 
-    academic_year_calendar = mdl.academic_calendar.current_academic_year()
+    academic_year_calendar = mdl.academic_year.current_academic_year()
     if academic_year_calendar:
         academic_yr = academic_year_calendar.id
     return render(request, "offers.html", {'faculties': faculties,
@@ -64,17 +64,17 @@ def offers_search(request):
     if faculty and faculty != "*":
         query = query.filter(structure=int(faculty))
 
-    if not code is None and len(code) > 0:
+    if code and len(code) > 0:
         query = query.filter(acronym__icontains=code)
 
     # on ne doit prendre que les offres racines (pas les finalités)
     query = query.filter(parent=None)
     if faculty is None or faculty == "*":
-        faculty=None
+        faculty = None
     else:
         faculty = int(faculty)
 
-    if academic_yr is None or academic_yr == "*" :
+    if academic_yr is None or academic_yr == "*":
         academic_yr = None
     else:
         academic_yr = int(academic_yr)

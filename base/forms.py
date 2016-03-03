@@ -25,7 +25,7 @@
 ##############################################################################
 from django import forms
 from django.forms import ModelForm
-from base.models.academic_calendar import AcademicCalendar
+from base import models as mdl
 
 
 class LoginForm(forms.Form):
@@ -37,7 +37,14 @@ class ScoreFileForm(forms.Form):
     file = forms.FileField()
 
 
+class OrganizationForm(ModelForm):
+    class Meta:
+        model = mdl.organisation.Organization
+        fields = ['acronym', 'name', 'website', 'reference']
+
+
 class AcademicCalendarForm(ModelForm):
     class Meta:
-        model = AcademicCalendar
-        fields=['start_date','end_date','title','highlight_title','highlight_description','highlight_shortcut']
+        model = mdl.academic_calendar.AcademicCalendar
+        fields = ['start_date', 'end_date', 'title', 'highlight_title', 'highlight_description', 'highlight_shortcut']
+

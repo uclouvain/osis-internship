@@ -27,16 +27,13 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib import admin
-from base.enums import EVENT_TYPE
 from base.models import academic_calendar, offer_year
 
 
 class OfferYearCalendarAdmin(admin.ModelAdmin):
-    list_display = ('academic_calendar', 'offer_year', 'event_type', 'start_date', 'end_date', 'changed')
-    list_filter = ('event_type',)
-    fieldsets = ((None, {'fields': ('offer_year', 'academic_calendar', 'event_type', 'start_date', 'end_date')}),)
+    list_display = ('academic_calendar', 'offer_year', 'start_date', 'end_date', 'changed')
+    fieldsets = ((None, {'fields': ('offer_year', 'academic_calendar', 'start_date', 'end_date')}),)
     raw_id_fields = ('offer_year',)
-    search_fields = ['event_type']
 
 
 class OfferYearCalendar(models.Model):
@@ -44,13 +41,12 @@ class OfferYearCalendar(models.Model):
     changed           = models.DateTimeField(null=True)
     academic_calendar = models.ForeignKey(academic_calendar.AcademicCalendar)
     offer_year        = models.ForeignKey(offer_year.OfferYear)
-    event_type        = models.CharField(max_length=50, choices=EVENT_TYPE)
     start_date        = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
     end_date          = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
     customized        = models.BooleanField(default=False)
 
     def __str__(self):
-        return u"%s - %s - %s" % (self.academic_calendar, self.offer_year, self.event_type)
+        return u"%s - %s" % (self.academic_calendar, self.offer_year)
 
 
 def save(acad_calendar):
@@ -67,8 +63,7 @@ def save(acad_calendar):
 
 
 def offer_year_calendar_by_current_session_exam():
-    return OfferYearCalendar.objects.filter(event_type__startswith='EXAM_SCORES_SUBMISSION_SESS_') \
-                                    .filter(start_date__lte=timezone.now()) \
+    return OfferYearCalendar.objects.filter(start_date__lte=timezone.now()) \
                                     .filter(end_date__gte=timezone.now()).first()
 
 

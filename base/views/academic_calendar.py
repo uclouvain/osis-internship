@@ -35,7 +35,7 @@ def academic_calendars(request):
     academic_year = None
     academic_years = mdl.academic_year.find_academic_years()
 
-    academic_year_calendar = mdl.academic_calendar.current_academic_year()
+    academic_year_calendar = mdl.academic_year.current_academic_year()
     if academic_year_calendar:
         academic_year = academic_year_calendar.id
     academic_calendars = mdl.academic_calendar.find_academic_calendar_by_academic_year(academic_year)
@@ -49,7 +49,7 @@ def academic_calendars_search(request):
     academic_years = mdl.academic_year.find_academic_years()
 
     if academic_year is None:
-        academic_year_calendar = mdl.academic_calendar.current_academic_year()
+        academic_year_calendar = mdl.academic_year.current_academic_year()
         if not academic_year_calendar is None:
             academic_year = academic_year_calendar.id
 
