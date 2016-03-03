@@ -42,11 +42,12 @@ def scores_encoding(request):
     faculty = None
     if tutor:
         sessions = mdl.session_exam.find_sessions_by_tutor(tutor, academic_yr)
-    # In case the user is not a tutor we check whether it is member of a faculty.
-    elif request.user.groups.filter(name='FAC').exists():
-        faculty = mdl.program_manager.find_faculty_by_user(request.user)
-        if faculty:
-            sessions = mdl.session_exam.find_sessions_by_faculty(faculty, academic_yr)
+    # In case the user is not a tutor we check whether it is a program manager for the offer.
+    else:
+        offer_year = mdl.program_manager.find_offer_year_by_user(request.user)
+        if offer_year:
+            sessions = mdl.session_exam.find_sessions_by_faculty(offer_year.structure, academic_yr)
+            faculty = offer_year.structure
 
     # Calculate the progress of all courses of the tutor.
     all_enrollments = []
@@ -73,9 +74,12 @@ def scores_encoding(request):
 @login_required
 def online_encoding(request, session_id):
     tutor = None
-    faculty = mdl.program_manager.find_faculty_by_user(request.user)
-    if not faculty:
+    faculty = None
+    offer_year = mdl.program_manager.find_offer_year_by_user(request.user)
+    if not offer_year:
         tutor = mdl.tutor.find_tutor_by_user(request.user)
+    else:
+        faculty = offer_year.structure
 
     academic_year = mdl.academic_calendar.current_academic_year()
     session = mdl.session_exam.find_session_by_id(session_id)
