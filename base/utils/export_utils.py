@@ -46,9 +46,11 @@ HEADER = [str(_('Academic year')),
           str(_('ID'))]
 
 
-def export_xls(request, session_id, learning_unit_year_id, academic_year_id, is_fac):
+def export_xls(request, session_id, academic_year_id):
+
     academic_year = mdl.academic_year.find_academic_year_by_id(academic_year_id)
     session_exam = mdl.session_exam.find_session_by_id(session_id)
+    is_fac = mdl.program_manager.is_programme_manager(request.user,session_exam.offer_year_calendar.offer_year)
     wb = Workbook()
     ws = wb.active
 
@@ -67,12 +69,10 @@ def export_xls(request, session_id, learning_unit_year_id, academic_year_id, is_
         o = rec_exam_enrollment.learning_unit_enrollment.offer
         person = mdl.person.find_person(student.person.id)
 
-        if rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.credits:
-            credits = rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.credits
-        if session_exam.learning_unit_year.end_date is None:
+        if session_exam.offer_year_calendar.end_date is None:
             end_date = "-"
         else:
-            end_date = session_exam.learning_unit_year.end_date.strftime('%d/%m/%Y')
+            end_date = session_exam.offer_year_calendar.end_date.strftime('%d/%m/%Y')
         score = None
         if rec_exam_enrollment.score_final:
             if rec_exam_enrollment.session_exam.learning_unit_year.decimal_scores:

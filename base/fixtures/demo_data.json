@@ -118,7 +118,7 @@
         "pk": 1,
         "fields": {
             "person": 6,
-            "faculty": 1
+            "offer_year": 1
         }
     },
     {

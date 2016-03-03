@@ -62,6 +62,12 @@ def add_header_footer(canvas, doc):
 def print_notes(request, tutor, academic_year, session_exam, sessions, learning_unit_year_id):
     """
     Create a multi-page document
+    :param request:
+    :param tutor:
+    :param academic_year:
+    :param session_exam:
+    :param sessions:
+    :param learning_unit_year_id:
     """
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="feuillesNotes.pdf"'
@@ -78,7 +84,7 @@ def print_notes(request, tutor, academic_year, session_exam, sessions, learning_
     styles.add(ParagraphStyle(name='Justify', alignment=TA_JUSTIFY))
 
     content = []
-
+    is_fac = mdl.program_manager.is_programme_manager(request.user,session_exam.offer_year_calendar.offer_year)
     if learning_unit_year_id != -1 :
         #par cours
         list_exam_enrollment = mdl.exam_enrollment.find_exam_enrollments_by_session(session_exam)
@@ -86,7 +92,7 @@ def print_notes(request, tutor, academic_year, session_exam, sessions, learning_
         if tutor:
             sessions = mdl.session_exam.find_sessions_by_tutor(tutor, academic_year)
         # In case the user is not a tutor we check whether it is member of a faculty.
-        elif request.user.groups.filter(name='FAC').exists():
+        elif is_fac:
             faculty = mdl.program_manager.find_faculty_by_user(request.user)
             if faculty:
                 sessions = mdl.session_exam.find_sessions_by_faculty(faculty, academic_year, session_exam)
@@ -98,7 +104,7 @@ def print_notes(request, tutor, academic_year, session_exam, sessions, learning_
             if enrollments:
                 list_exam_enrollment = list_exam_enrollment + enrollments
 
-    list_notes_building(session_exam, learning_unit_year_id, academic_year, session_exam.learning_unit_year, tutor, list_exam_enrollment, styles, request.user.groups.filter(name='FAC').exists(), content)
+    list_notes_building(session_exam, learning_unit_year_id, academic_year, session_exam.learning_unit_year, tutor, list_exam_enrollment, styles, is_fac, content)
 
     doc.build(content, onFirstPage=add_header_footer, onLaterPages=add_header_footer)
     pdf = buffer.getvalue()
@@ -108,7 +114,7 @@ def print_notes(request, tutor, academic_year, session_exam, sessions, learning_
 
 
 def header_building(canvas, doc,styles):
-    a = Image("core"+ settings.STATIC_URL +"/img/logo_institution.jpg")
+    a = Image("base"+ settings.STATIC_URL +"img/logo_institution.jpg")
 
     P = Paragraph('''
                     <para align=center spaceb=3>
@@ -177,7 +183,7 @@ def list_notes_building(session_exam, learning_unit_year_id, academic_year, acad
                            person.first_name,
                            score,
                            justification,
-                           academic_calendar.end_date.strftime('%d/%m/%Y')])
+                           session_exam.offer_year_calendar.end_date.strftime('%d/%m/%Y')])
 
     if not old_pgm is None:
         main_data(tutor, academic_year, session_exam, styles, current_learning_unit_year, old_pgm, content)

@@ -50,7 +50,7 @@
         <div class="col-md-4">
           <div class="form-group">
             <label>{% trans 'Responsible' %}</label><br>
-            {{ tutor }}
+            {{ tutor | default_if_none:'' }}
           </div>
         </div>
         <div class="col-md-3">
@@ -116,7 +116,8 @@
                       <option value="ABSENT">{% trans 'Absent' %}</option>
                       <option value="CHEATING">{% trans 'Cheating' %}</option>
                       <option value="SCORE_MISSING">{% trans 'Score missing' %}</option>
-                      {% if programme_manager %}
+                      {% programme_manager as pm %}
+                      {% if pm %}
                       <option value="ILL" >{% trans 'Ill' %}</option>
                       <option value="JUSTIFIED_ABSENCE">{% trans 'Justified absence' %}</option>)
                       {% endif %}
