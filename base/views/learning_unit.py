@@ -29,20 +29,19 @@ from base import models as mdl
 
 
 def learning_units(request):
-    academic_year = None
+    academic_yr = None
     code = ""
 
     academic_years = mdl.academic_year.find_academic_years()
-    academic_year_calendar = mdl.academic_year.current_academic_year()
+    academic_yr_calendar = mdl.academic_year.current_academic_year()
 
-    if academic_year_calendar:
-        academic_year = academic_year_calendar.id
-    return render(request, "learning_units.html", {
-        'academic_year': academic_year,
-        'code': code,
-        'academic_years': academic_years,
-        'learning_units': [],
-        'init': "1"})
+    if academic_yr_calendar:
+        academic_yr = academic_yr_calendar.id
+    return render(request, "learning_units.html", {'academic_year': academic_yr,
+                                                   'code': code,
+                                                   'academic_years': academic_years,
+                                                   'learning_units': [],
+                                                   'init': "1"})
 
 
 def learning_units_search(request):

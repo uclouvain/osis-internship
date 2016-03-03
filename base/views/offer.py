@@ -64,17 +64,17 @@ def offers_search(request):
     if faculty and faculty != "*":
         query = query.filter(structure=int(faculty))
 
-    if not code is None and len(code) > 0:
+    if code and len(code) > 0:
         query = query.filter(acronym__icontains=code)
 
     # on ne doit prendre que les offres racines (pas les finalités)
     query = query.filter(parent=None)
     if faculty is None or faculty == "*":
-        faculty=None
+        faculty = None
     else:
         faculty = int(faculty)
 
-    if academic_yr is None or academic_yr == "*" :
+    if academic_yr is None or academic_yr == "*":
         academic_yr = None
     else:
         academic_yr = int(academic_yr)
