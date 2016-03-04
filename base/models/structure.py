@@ -59,8 +59,8 @@ def find_structures():
     return Structure.objects.all().order_by('acronym')
 
 
-def find_by_id(id):
-    return Structure.objects.get(pk=id)
+def find_by_id(structure_id):
+    return Structure.objects.get(pk=structure_id)
 
 
 def find_children(self):

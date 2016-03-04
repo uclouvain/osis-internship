@@ -50,10 +50,10 @@ admin.site.register(offer_year.OfferYear,
                     offer_year.OfferYearAdmin)
 admin.site.register(offer_year_calendar.OfferYearCalendar,
                     offer_year_calendar.OfferYearCalendarAdmin)
-admin.site.register(organisation.Organization,
-                    organisation.OrganizationAdmin)
-admin.site.register(organisation_address.OrganizationAddress,
-                    organisation_address.OrganizationAddressAdmin)
+admin.site.register(organization.Organization,
+                    organization.OrganizationAdmin)
+admin.site.register(organization_address.OrganizationAddress,
+                    organization_address.OrganizationAddressAdmin)
 admin.site.register(person.Person,
                     person.PersonAdmin)
 admin.site.register(person_address.PersonAddress,

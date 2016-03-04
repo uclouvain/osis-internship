@@ -37,7 +37,7 @@ class ProgrammeManagerAdmin(admin.ModelAdmin):
 class ProgrammeManager(models.Model):
     changed = models.DateTimeField(null=True)
     person  = models.ForeignKey(person.Person)
-    offer_year = models.ForeignKey(offer_year.OfferYear, blank=True, null = True)
+    offer_year = models.ForeignKey(offer_year.OfferYear, blank=True, null=True)
 
     @property
     def name(self):
@@ -55,16 +55,16 @@ def find_offer_year_by_user(user):
         return None
 
 
-def is_programme_manager(user, offer_year):
+def is_programme_manager(user, offer_yr):
     try:
         pers = person.Person.objects.get(user=user)
         if user:
-            programme_manager = ProgrammeManager.objects.filter(person=pers.id, offer_year=offer_year)
+            programme_manager = ProgrammeManager.objects.filter(person=pers.id, offer_year=offer_yr)
             if programme_manager:
                 return True
     except ObjectDoesNotExist:
         return False
-    return False
+
 
 def find_program_manager_by_faculty(faculty):
-    return  ProgrammeManager.objects.filter(faculty=faculty)
+    return ProgrammeManager.objects.filter(faculty=faculty)

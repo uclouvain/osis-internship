@@ -31,6 +31,7 @@ from django.utils.translation import ugettext_lazy as _
 from base.utils import send_mail
 from datetime import datetime
 
+
 class Person(models.Model):
     GENDER_CHOICES = (
         ('F',_('Female')),
