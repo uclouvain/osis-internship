@@ -34,8 +34,8 @@ from base.models import offer
 from base.models import offer_enrollment
 from base.models import offer_year
 from base.models import offer_year_calendar
-from base.models import organisation
-from base.models import organisation_address
+from base.models import organization
+from base.models import organization_address
 from base.models import person
 from base.models import person_address
 from base.models import program_manager

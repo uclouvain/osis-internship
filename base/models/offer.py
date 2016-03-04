@@ -47,5 +47,5 @@ class Offer(models.Model):
         return self.acronym
 
 
-def find_offer_by_id(id):
-    return Offer.objects.get(pk=id)
+def find_offer_by_id(offer_id):
+    return Offer.objects.get(pk=offer_id)

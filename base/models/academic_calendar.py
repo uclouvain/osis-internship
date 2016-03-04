@@ -70,5 +70,5 @@ def find_academic_calendar_by_academic_year_with_dates(academic_year_id):
                                    .order_by('start_date')
 
 
-def find_academic_calendar_by_id(id):
-    return AcademicCalendar.objects.get(pk=id)
+def find_academic_calendar_by_id(academic_calendar_id):
+    return AcademicCalendar.objects.get(pk=academic_calendar_id)

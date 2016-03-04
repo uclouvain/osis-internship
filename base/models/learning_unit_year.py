@@ -53,5 +53,5 @@ def find_learning_unit_years_by_academic_year(academic_yr):
     return LearningUnitYear.objects.filter(academic_year=int(academic_yr))
 
 
-def find_learning_unit_year_by_id(learning_unit_id) :
+def find_learning_unit_year_by_id(learning_unit_id):
     return LearningUnitYear.objects.get(pk=learning_unit_id)

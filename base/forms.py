@@ -39,7 +39,7 @@ class ScoreFileForm(forms.Form):
 
 class OrganizationForm(ModelForm):
     class Meta:
-        model = mdl.organisation.Organization
+        model = mdl.organization.Organization
         fields = ['acronym', 'name', 'website', 'reference']
 
 
