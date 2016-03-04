@@ -27,6 +27,7 @@
 from django.db import models
 from django.contrib import admin
 from base.models import person, offer_year
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class ProgrammeManagerAdmin(admin.ModelAdmin):
@@ -36,7 +37,7 @@ class ProgrammeManagerAdmin(admin.ModelAdmin):
 class ProgrammeManager(models.Model):
     changed = models.DateTimeField(null=True)
     person  = models.ForeignKey(person.Person)
-    offer_year = models.ForeignKey(offer_year.OfferYear, blank=True, null = True)
+    offer_year = models.ForeignKey(offer_year.OfferYear, blank=True, null=True)
 
     @property
     def name(self):
@@ -55,13 +56,15 @@ def find_offer_year_by_user(user):
 
 
 def is_programme_manager(user, offer_yr):
-    pers = person.Person.objects.get(user=user)
-    if user:
-        programme_manager = ProgrammeManager.objects.filter(person=pers.id, offer_year=offer_yr)
-        if programme_manager:
-            return True
-    return False
+    try:
+        pers = person.Person.objects.get(user=user)
+        if user:
+            programme_manager = ProgrammeManager.objects.filter(person=pers.id, offer_year=offer_yr)
+            if programme_manager:
+                return True
+    except ObjectDoesNotExist:
+        return False
 
 
-def find_program_manager_by_faculty(faculty):
-    return  ProgrammeManager.objects.filter(faculty=faculty)
+def find_program_manager_by_offer_year(offer_yr):
+    return ProgrammeManager.objects.filter(offer_year=offer_yr)

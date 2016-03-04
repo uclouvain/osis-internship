@@ -27,7 +27,7 @@ from django.conf.urls import url, include
 from django.contrib.auth.views import login, logout
 
 from base.utils import upload_xls_utils
-from base.views import learning_unit, offer, common, score_encoding, institution, organization,academic_calendar
+from base.views import learning_unit, offer, common, score_encoding, institution, organization,academic_calendar, offer_year
 
 
 #app_name = 'base'
@@ -94,4 +94,9 @@ urlpatterns = [
     url(r'^academic_calendars/save/([0-9]+)/$', academic_calendar.academic_calendar_save, name='academic_calendar_save'),
     url(r'^academic_calendars/save/$', academic_calendar.academic_calendar_new, name='academic_calendar_save_new'),
     url(r'^academic_calendars/create/$', academic_calendar.academic_calendar_create, name='academic_calendar_create'),
+
+    url(r'^offer_year_calendars/([0-9]+)/$', offer_year.offer_year_calendar_read, name='offer_year_calendar_read'),
+    url(r'^offer_year_calendars/edit/([0-9]+)/$', offer_year.offer_year_calendar_edit, name='offer_year_calendar_edit'),
+    url(r'^offer_year_calendars/save/([0-9]+)/$', offer_year.offer_year_calendar_save, name='offer_year_calendar_save'),
+
     ]
