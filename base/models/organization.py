@@ -25,26 +25,41 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-from base.models import organisation
 
 
-class OrganizationAddressAdmin(admin.ModelAdmin):
-    list_display = ('organization', 'label', 'location', 'postal_code', 'city', 'country')
-    fieldsets = ((None, {'fields': ('organization', 'label', 'location', 'postal_code', 'city', 'country')}),)
+class OrganizationAdmin(admin.ModelAdmin):
+    list_display = ('name', 'acronym', 'changed')
+    fieldsets = ((None, {'fields': ('name', 'acronym', 'website', 'reference')}),)
+    search_fields = ['acronym']
 
 
-class OrganizationAddress(models.Model):
-    organization = models.ForeignKey(organisation.Organization)
-    label        = models.CharField(max_length=20)
-    location     = models.CharField(max_length=255)
-    postal_code  = models.CharField(max_length=20)
-    city         = models.CharField(max_length=255)
-    country      = models.CharField(max_length=255)
+class Organization(models.Model):
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    changed     = models.DateTimeField(null=True)
+    name        = models.CharField(max_length=255)
+    acronym     = models.CharField(max_length=15)
+    website     = models.CharField(max_length=255, blank=True, null=True)
+    reference   = models.CharField(max_length=30, blank=True, null=True)
+
+    def __str__(self):
+        return self.name
 
 
-def find_by_organization(organization):
-    organization_address_list = OrganizationAddress.objects.filter(organization=organization)
-    for organization_address in organization_address_list:
-        # Supposed there is only one address for on organization
-        return organization_address
-    return None
+def find_by_id(organization_id):
+    return Organization.objects.get(pk=organization_id)
+
+
+def find_by_acronym(acronym):
+    return Organization.objects.filter(acronym__icontains=acronym)
+
+
+def find_by_name(name):
+    return Organization.objects.filter(name__icontains=name)
+
+
+def find_by_acronym_name(acronym, name):
+    return Organization.objects.filter(acronym__icontains=acronym, name__icontains=name)
+
+
+def find_all():
+    return Organization.objects.all().order_by('acronym')

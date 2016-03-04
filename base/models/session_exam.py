@@ -60,8 +60,8 @@ def current_session_exam():
     return session_exam
 
 
-def find_session_by_id(id):
-    return SessionExam.objects.get(pk=id)
+def find_session_by_id(session_exam_id):
+    return SessionExam.objects.get(pk=session_exam_id)
 
 
 def find_sessions_by_tutor(tutor, academic_year):

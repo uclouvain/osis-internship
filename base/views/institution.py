@@ -59,8 +59,8 @@ def structures_search(request):
 
 
 @login_required
-def structure_read(request, id):
-    structure = mdl.structure.find_by_id(id)
+def structure_read(request, structure_id):
+    structure = mdl.structure.find_by_id(structure_id)
     offers_years = mdl.offer_year.find_offer_years_by_structure(structure)
     return render(request, "structure.html", {'structure': structure,
                                               'offers_years': offers_years})
@@ -72,7 +72,7 @@ def structure_read_by_acronym(request, name):
 
 
 def structure_diagram(request, organization_id):
-    organization = mdl.organisation.find_by_id(organization_id)
+    organization = mdl.organization.find_by_id(organization_id)
     structure = organization.find_structure()
     tags = organization.find_structure_tree()
     data = json.dumps(tags)

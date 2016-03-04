@@ -48,8 +48,8 @@ class AcademicYear(models.Model):
         return u"%s-%s" % (self.year, self.year + 1)
 
 
-def find_academic_year_by_id(id):
-    return AcademicYear.objects.get(pk=id)
+def find_academic_year_by_id(academic_year_id):
+    return AcademicYear.objects.get(pk=academic_year_id)
 
 
 def find_academic_years():
