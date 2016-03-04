@@ -93,7 +93,7 @@ def update(acad_calendar):
     for offer_year_calendar in offer_year_calendar_list:
         if offer_year_calendar.customized:
             # an email must be sent to the program manager
-            program_managers = program_manager.find_program_manager_by_faculty(offer_year_calendar.offer_year.structure)
+            program_managers = program_manager.find_program_manager_by_offer_year(offer_year_calendar.offer_year)
             if program_managers and len(program_managers) > 0:
                 send_mail.send_mail_after_academic_calendar_changes(acad_calendar, offer_year_calendar, program_managers)
         else:

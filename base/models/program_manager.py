@@ -66,5 +66,5 @@ def is_programme_manager(user, offer_yr):
         return False
 
 
-def find_program_manager_by_faculty(faculty):
-    return ProgrammeManager.objects.filter(faculty=faculty)
+def find_program_manager_by_offer_year(offer_yr):
+    return ProgrammeManager.objects.filter(offer_year=offer_yr)
