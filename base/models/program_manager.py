@@ -26,34 +26,45 @@
 
 from django.db import models
 from django.contrib import admin
-from base.models import person, structure
+from base.models import person, offer_year
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class ProgrammeManagerAdmin(admin.ModelAdmin):
-    list_display = ('person', 'faculty')
+    list_display = ('person', 'offer_year')
 
 
 class ProgrammeManager(models.Model):
     changed = models.DateTimeField(null=True)
     person  = models.ForeignKey(person.Person)
-    faculty = models.ForeignKey(structure.Structure)
+    offer_year = models.ForeignKey(offer_year.OfferYear, blank=True, null = True)
+
+    @property
+    def name(self):
+        return self.__str__()
 
     def __str__(self):
-        return u"%s - %s" % (self.person, self.faculty)
+        return u"%s - %s" % (self.person, self.offer_year)
 
 
-def find_faculty_by_user(user):
+def find_offer_year_by_user(user):
     programme_manager = ProgrammeManager.objects.filter(person__user=user).first()
     if programme_manager:
-        return programme_manager.faculty
+        return programme_manager.offer_year
     else:
         return None
 
 
-def is_programme_manager(user, faculty):
-    pers = person.Person.objects.get(user=user)
-    if user:
-        programme_manager = ProgrammeManager.objects.filter(person=pers.id, faculty=faculty)
-        if programme_manager:
-            return True
+def is_programme_manager(user, offer_year):
+    try:
+        pers = person.Person.objects.get(user=user)
+        if user:
+            programme_manager = ProgrammeManager.objects.filter(person=pers.id, offer_year=offer_year)
+            if programme_manager:
+                return True
+    except ObjectDoesNotExist:
+        return False
     return False
+
+def find_program_manager_by_faculty(faculty):
+    return  ProgrammeManager.objects.filter(faculty=faculty)

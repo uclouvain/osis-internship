@@ -34,7 +34,7 @@ from base.utils import send_mail, pdf_utils, export_utils
 
 @login_required
 def scores_encoding(request):
-    academic_yr = mdl.academic_calendar.current_academic_year()
+    academic_yr = mdl.academic_year.current_academic_year()
 
     tutor = mdl.tutor.find_tutor_by_user(request.user)
     # In case the user is a tutor.
@@ -42,11 +42,12 @@ def scores_encoding(request):
     faculty = None
     if tutor:
         sessions = mdl.session_exam.find_sessions_by_tutor(tutor, academic_yr)
-    # In case the user is not a tutor we check whether it is member of a faculty.
-    elif request.user.groups.filter(name='FAC').exists():
-        faculty = mdl.program_manager.find_faculty_by_user(request.user)
-        if faculty:
-            sessions = mdl.session_exam.find_sessions_by_faculty(faculty, academic_yr)
+    # In case the user is not a tutor we check whether it is a program manager for the offer.
+    else:
+        offer_year = mdl.program_manager.find_offer_year_by_user(request.user)
+        if offer_year:
+            sessions = mdl.session_exam.find_sessions_by_faculty(offer_year.structure, academic_yr)
+            faculty = offer_year.structure
 
     # Calculate the progress of all courses of the tutor.
     all_enrollments = []
@@ -73,11 +74,14 @@ def scores_encoding(request):
 @login_required
 def online_encoding(request, session_id):
     tutor = None
-    faculty = mdl.program_manager.find_faculty_by_user(request.user)
-    if not faculty:
+    faculty = None
+    offer_year = mdl.program_manager.find_offer_year_by_user(request.user)
+    if not offer_year:
         tutor = mdl.tutor.find_tutor_by_user(request.user)
+    else:
+        faculty = offer_year.structure
 
-    academic_year = mdl.academic_calendar.current_academic_year()
+    academic_year = mdl.academic_year.current_academic_year()
     session = mdl.session_exam.find_session_by_id(session_id)
     enrollments = mdl.exam_enrollment.find_exam_enrollments_by_session(session)
     progress = mdl.exam_enrollment.calculate_exam_enrollment_progress(enrollments)
@@ -100,7 +104,7 @@ def online_encoding_form(request, session_id):
     enrollments = mdl.exam_enrollment.find_exam_enrollments_by_session(session)
     if request.method == 'GET':
         tutor = mdl.tutor.find_tutor_by_user(request.user)
-        academic_year = mdl.academic_calendar.current_academic_year()
+        academic_year = mdl.academic_year.current_academic_year()
         return render(request, "online_encoding_form.html",
                       {'section': 'scores_encoding',
                        'tutor': tutor,
@@ -132,7 +136,7 @@ def online_double_encoding_form(request, session_id):
     enrollments = mdl.exam_enrollment.find_exam_enrollments_drafts_by_session(session)
     if request.method == 'GET':
         tutor = mdl.tutor.find_tutor_by_user(request.user)
-        academic_year = mdl.academic_calendar.current_academic_year()
+        academic_year = mdl.academic_year.current_academic_year()
         return render(request, "online_double_encoding_form.html",
                       {'section': 'scores_encoding',
                        'tutor': tutor,
@@ -167,7 +171,7 @@ def online_double_encoding_validation(request, session_id):
     session_exam = mdl.session_exam.find_session_by_id(session_id)
     if request.method == 'GET':
         tutor = mdl.tutor.find_tutor_by_user(request.user)
-        academic_year = mdl.academic_calendar.current_academic_year()
+        academic_year = mdl.academic_year.current_academic_year()
         enrollments = mdl.exam_enrollment.find_exam_enrollments_to_validate_by_session(session_exam)
         return render(request, "online_double_encoding_validation.html",
                       {'section': 'scores_encoding',
@@ -244,7 +248,7 @@ def online_encoding_submission(request, session_id):
 @login_required
 def notes_printing(request, session_exam_id, learning_unit_year_id):
     tutor = mdl.tutor.find_tutor_by_user(request.user)
-    academic_year = mdl.academic_calendar.current_academic_year()
+    academic_year = mdl.academic_year.current_academic_year()
     session_exam = mdl.session_exam.find_session_by_id(session_exam_id)
     sessions = mdl.session_exam.find_sessions_by_tutor(tutor, academic_year)
     return pdf_utils.print_notes(request, tutor, academic_year, session_exam, sessions, learning_unit_year_id)
@@ -258,7 +262,7 @@ def upload_score_error(request):
 @login_required
 def notes_printing(request, session_exam_id, learning_unit_year_id):
     tutor = mdl.tutor.find_tutor_by_user(request.user)
-    academic_year = mdl.academic_calendar.current_academic_year()
+    academic_year = mdl.academic_year.current_academic_year()
     session_exam = mdl.session_exam.find_session_by_id(session_exam_id)
     sessions = mdl.session_exam.find_sessions_by_tutor(tutor, academic_year)
     return pdf_utils.print_notes(request, tutor, academic_year, session_exam, sessions, learning_unit_year_id)
@@ -270,6 +274,5 @@ def notes_printing_all(request, session_id):
 
 
 @login_required
-def export_xls(request, session_id, learning_unit_year_id, academic_year_id):
-    return export_utils.export_xls(request, session_id, learning_unit_year_id, academic_year_id,
-                                   request.user.groups.filter(name='FAC').exists())
+def export_xls(request, session_id, academic_year_id):
+    return export_utils.export_xls(request, session_id, academic_year_id)

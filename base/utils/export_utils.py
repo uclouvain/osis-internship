@@ -30,7 +30,7 @@ from openpyxl.worksheet.datavalidation import DataValidation
 from openpyxl.styles import Color, Style, PatternFill
 from django.utils.translation import ugettext_lazy as _
 
-from base.models import *
+from base import models as mdl
 
 
 HEADER = [str(_('Academic year')),
@@ -46,10 +46,11 @@ HEADER = [str(_('Academic year')),
           str(_('ID'))]
 
 
-def export_xls(request, session_id, learning_unit_year_id, academic_year_id, is_fac):
-    academic_year = find_academic_year_by_id(academic_year_id)
-    session_exam = find_session_by_id(session_id)
-    academic_calendar = find_academic_calendar_by_event_type(academic_year_id,session_exam.number_session)
+def export_xls(request, session_id, academic_year_id):
+
+    academic_year = mdl.academic_year.find_academic_year_by_id(academic_year_id)
+    session_exam = mdl.session_exam.find_session_by_id(session_id)
+    is_fac = mdl.program_manager.is_programme_manager(request.user,session_exam.offer_year_calendar.offer_year)
     wb = Workbook()
     ws = wb.active
 
@@ -62,27 +63,25 @@ def export_xls(request, session_id, learning_unit_year_id, academic_year_id, is_
     dv = __create_data_list_for_justification(is_fac)
     ws.add_data_validation(dv)
 
-    cptr=1
-    for rec_exam_enrollment in find_exam_enrollments_by_session(session_exam):
+    cptr = 1
+    for rec_exam_enrollment in mdl.exam_enrollment.find_exam_enrollments_by_session(session_exam):
         student = rec_exam_enrollment.learning_unit_enrollment.student
         o = rec_exam_enrollment.learning_unit_enrollment.offer
-        person = find_person(student.person.id)
+        person = mdl.person.find_person(student.person.id)
 
-        if not rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.credits is None:
-            credits = rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.credits
-        if academic_calendar.end_date is None:
-            end_date="-"
+        if session_exam.offer_year_calendar.end_date is None:
+            end_date = "-"
         else:
-            end_date = academic_calendar.end_date.strftime('%d/%m/%Y')
-        score=None
-        if not rec_exam_enrollment.score_final is None:
-            if rec_exam_enrollment.session_exam.learning_unit_year.decimal_scores :
+            end_date = session_exam.offer_year_calendar.end_date.strftime('%d/%m/%Y')
+        score = None
+        if rec_exam_enrollment.score_final:
+            if rec_exam_enrollment.session_exam.learning_unit_year.decimal_scores:
                 score = "{0:.2f}".format(rec_exam_enrollment.score_final)
             else:
                 score = "{0:.0f}".format(rec_exam_enrollment.score_final)
         justification = ""
         if rec_exam_enrollment.justification_final:
-            justification = dict(JUSTIFICATION_TYPES)[rec_exam_enrollment.justification_final]
+            justification = dict(mdl.exam_enrollment.JUSTIFICATION_TYPES)[rec_exam_enrollment.justification_final]
         ws.append([str(academic_year),
                    str(session_exam.number_session),
                    session_exam.learning_unit_year.acronym,
@@ -93,13 +92,13 @@ def export_xls(request, session_id, learning_unit_year_id, academic_year_id, is_
                    score,
                    str(justification),
                    end_date,
-                   rec_exam_enrollment.id
-                   ])
+                   rec_exam_enrollment.id])
 
-        cptr = cptr+1
-        __coloring_non_editable(ws,cptr, rec_exam_enrollment.encoding_status,score,rec_exam_enrollment.justification_final)
+        cptr += 1
+        __coloring_non_editable(ws, cptr, rec_exam_enrollment.encoding_status,score,rec_exam_enrollment.justification_final)
 
-    dv.ranges.append('I2:I'+str(cptr+100))#Ajouter 100 pour si on ajoute des enregistrements
+    # Ajouter 100 pour si on ajoute des enregistrements
+    dv.ranges.append('I2:I' + str(cptr + 100))
 
     response = HttpResponse(content=save_virtual_workbook(wb))
     response['Content-Disposition'] = 'attachment; filename=score_encoding.xlsx'
@@ -110,8 +109,6 @@ def export_xls(request, session_id, learning_unit_year_id, academic_year_id, is_
 def __columns_ajusting(ws):
     """
     ajustement des colonnes à la bonne dimension
-    :param ws:
-    :return:
     """
     col_academic_year = ws.column_dimensions['A']
     col_academic_year.width = 18
@@ -134,9 +131,9 @@ def __columns_ajusting(ws):
 def __create_data_list_for_justification(is_fac):
     """
     Création de la liste de choix pour la justification
-    :return:
     """
-    dv = DataValidation(type="list", formula1='"%s"' % justification_label_authorized(is_fac), allow_blank=True)
+    dv = DataValidation(type="list", formula1='"%s"' % mdl.exam_enrollment.justification_label_authorized(is_fac),
+                        allow_blank=True)
     dv.error = str(_('Invalid entry, not in the list of choices'))
     dv.errorTitle = str(_('Invalid entry'))
 
@@ -148,18 +145,17 @@ def __create_data_list_for_justification(is_fac):
 def __coloring_non_editable(ws, cptr, encoding_status, score, justification):
     """
     définition du style pour les colonnes qu'on ne doit pas modifier
-    :return:
     """
     style_no_modification = Style(fill=PatternFill(patternType='solid', fgColor=Color('C1C1C1')))
 
     # coloration des colonnes qu'on ne doit pas modifier
-    i=1
+    i = 1
     while i < 12:
-        if i< 8 or i>9:
+        if i < 8 or i > 9:
             ws.cell(row=cptr, column=i).style = style_no_modification
         else:
-            if not( score is None and justification is None):
+            if not(score is None and justification is None):
                 ws.cell(row=cptr, column=8).style = style_no_modification
                 ws.cell(row=cptr, column=9).style = style_no_modification
 
-        i=i+1
+        i += 1

@@ -27,16 +27,14 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib import admin
-from base.enums import EVENT_TYPE
-from base.models import academic_calendar, offer_year
+from base.models import academic_calendar, offer_year, program_manager
+from base.utils import send_mail
 
 
 class OfferYearCalendarAdmin(admin.ModelAdmin):
-    list_display = ('academic_calendar', 'offer_year', 'event_type', 'start_date', 'end_date', 'changed')
-    list_filter = ('event_type',)
-    fieldsets = ((None, {'fields': ('offer_year', 'academic_calendar', 'event_type', 'start_date', 'end_date')}),)
+    list_display = ('academic_calendar', 'offer_year', 'start_date', 'end_date', 'changed')
+    fieldsets = ((None, {'fields': ('offer_year', 'academic_calendar', 'start_date', 'end_date')}),)
     raw_id_fields = ('offer_year',)
-    search_fields = ['event_type']
 
 
 class OfferYearCalendar(models.Model):
@@ -44,13 +42,12 @@ class OfferYearCalendar(models.Model):
     changed           = models.DateTimeField(null=True)
     academic_calendar = models.ForeignKey(academic_calendar.AcademicCalendar)
     offer_year        = models.ForeignKey(offer_year.OfferYear)
-    event_type        = models.CharField(max_length=50, choices=EVENT_TYPE)
     start_date        = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
     end_date          = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
     customized        = models.BooleanField(default=False)
 
     def __str__(self):
-        return u"%s - %s - %s" % (self.academic_calendar, self.offer_year, self.event_type)
+        return u"%s - %s" % (self.academic_calendar, self.offer_year)
 
 
 def save(acad_calendar):
@@ -67,8 +64,7 @@ def save(acad_calendar):
 
 
 def offer_year_calendar_by_current_session_exam():
-    return OfferYearCalendar.objects.filter(event_type__startswith='EXAM_SCORES_SUBMISSION_SESS_') \
-                                    .filter(start_date__lte=timezone.now()) \
+    return OfferYearCalendar.objects.filter(start_date__lte=timezone.now()) \
                                     .filter(end_date__gte=timezone.now()).first()
 
 
@@ -90,3 +86,18 @@ def find_offer_year_calendars_by_academic_year(academic_yr):
 
 def find_by_id(offer_year_calendar_id):
     return OfferYearCalendar.objects.get(pk=offer_year_calendar_id)
+
+def update(acad_calendar):
+    offer_year_calendar_list = find_offer_years_by_academic_calendar(acad_calendar)
+
+    for offer_year_calendar in offer_year_calendar_list:
+        if offer_year_calendar.customized:
+            # an email must be sent to the program manager
+            program_managers = program_manager.find_program_manager_by_faculty(offer_year_calendar.offer_year.structure)
+            if program_managers and len(program_managers) > 0:
+                send_mail.send_mail_after_academic_calendar_changes(acad_calendar, offer_year_calendar, program_managers)
+        else:
+            offer_year_calendar.start_date = acad_calendar.start_date
+            offer_year_calendar.end_date = acad_calendar.end_date
+            offer_year_calendar.save()
+

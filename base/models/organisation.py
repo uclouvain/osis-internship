@@ -43,3 +43,23 @@ class Organization(models.Model):
 
     def __str__(self):
         return self.name
+
+
+def find_by_id(id):
+    return Organization.objects.get(pk=id)
+
+
+def find_by_acronym(acronym):
+    return Organization.objects.filter(acronym__icontains=acronym)
+
+
+def find_by_name(name):
+    return Organization.objects.filter(name__icontains=name)
+
+
+def find_by_acronym_name(acronym, name):
+    return Organization.objects.filter(acronym__icontains=acronym, name__icontains=name)
+
+
+def find_all():
+    return Organization.objects.all().order_by('acronym')

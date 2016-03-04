@@ -33,7 +33,9 @@ from base.views import offer
 
 def offer_year_calendar_read(request, id):
     offer_year_calendar = mdl.offer_year_calendar.find_by_id(id)
-    return render(request, "offer_year_calendar.html", {'offer_year_calendar': offer_year_calendar})
+    is_programme_manager = mdl.program_manager.is_programme_manager(request.user,offer_year_calendar.offer_year)
+    return render(request, "offer_year_calendar.html", {'offer_year_calendar':   offer_year_calendar,
+                                                        'is_programme_manager' : is_programme_manager})
 
 
 def offer_year_calendar_save(request, id):
