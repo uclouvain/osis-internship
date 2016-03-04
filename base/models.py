@@ -84,6 +84,9 @@ class PersonAddress(models.Model):
     city        = models.CharField(max_length=255)
     country     = models.CharField(max_length=255)
 
+    @staticmethod
+    def find_address_by_person(person):
+        return PersonAddress.objects.get(person=person)
 
 class Tutor(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
@@ -114,6 +117,9 @@ class Student(models.Model):
     def __str__(self):
         return u"%s (%s)" % (self.person, self.registration_id)
 
+    @staticmethod
+    def find_students():
+        return Student.objects.all()
 
 class Organization(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
@@ -126,6 +132,9 @@ class Organization(models.Model):
     def __str__(self):
         return self.name
 
+    @staticmethod
+    def find_organizations():
+        return Organization.objects.all().order_by('reference')
 
 class OrganizationAddress(models.Model):
     organization = models.ForeignKey(Organization)
@@ -134,6 +143,18 @@ class OrganizationAddress(models.Model):
     postal_code  = models.CharField(max_length=20)
     city         = models.CharField(max_length=255)
     country      = models.CharField(max_length=255)
+
+    @staticmethod
+    def find_address_by_orga(organization):
+        try:
+            organization_address = OrganizationAddress.objects.get(organization=organization)
+            return organization_address
+        except ObjectDoesNotExist:
+            return None
+
+    @staticmethod
+    def find_addreses():
+        return OrganizationAddress.objects.all()
 
 
 class Structure(models.Model):

@@ -25,23 +25,48 @@
 ##############################################################################
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-
+from internship.models import InternshipOffer, InternshipMaster
+from base.models import Student, PersonAddress, Organization, OrganizationAddress
+from pprint import pprint
 
 @login_required
 def internships_home(request):
     return render(request, "internships_home.html", {'section': 'internship'})
 
 def internships_places(request):
-    return render(request, "places.html", {'section': 'internship'})
+    organizations = Organization.find_organizations()
+
+    if organizations:
+        for organization in organizations:
+            organization.address=""
+            address = OrganizationAddress.find_address_by_orga(organization.id)
+            if address:
+                organization.address=address
+
+
+    return render(request, "places.html", {'section': 'internship', 'all_organizations' : organizations})
 
 def internships_students(request):
-    return render(request, "students.html", {'section': 'internship'})
+    students = Student.find_students()
+
+    if students:
+        for student in students:
+            student.address=""
+            address = OrganizationAddress.find_address_by_person(student.person)
+            if address:
+                student.address=address
+
+    return render(request, "students.html", {'section': 'internship', 'all_students' : students})
 
 def internships(request):
-    return render(request, "internships.html", {'section': 'internship'})
+    query = InternshipOffer.find_internships()
+
+    return render(request, "internships.html", {'section': 'internship', 'all_internships': query})
 
 def internships_periods(request):
     return render(request, "periods.html", {'section': 'internship'})
 
 def interships_masters(request):
-    return render(request, "interships_masters.html", {'section': 'internship'})
+    query = InternshipMaster.find_masters()
+
+    return render(request, "interships_masters.html", {'section': 'internship', 'all_masters':query})
