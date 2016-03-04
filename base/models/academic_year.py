@@ -29,8 +29,8 @@ from django.utils import timezone
 
 
 class AcademicYearAdmin(admin.ModelAdmin):
-    list_display = ('name', 'changed')
-    fieldsets = ((None, {'fields': ('year',)}),)
+    list_display = ('name', 'start_date', 'end_date')
+    fieldsets = ((None, {'fields': ('year', 'start_date', 'end_date')}),)
 
 
 class AcademicYear(models.Model):

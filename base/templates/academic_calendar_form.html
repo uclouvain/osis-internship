@@ -146,19 +146,23 @@
 
     $("#txt_highlight_shortcut").on('input', function() {
         $('#pnl_shortcut').empty();
-        $('#pnl_shortcut').append($("<a></a>").attr("href", "/"+ $(this).val())
-                                              .attr("target", "_blank")
-                                              .attr("class", "btn btn-primary btn-lg")
-                                              .attr("role", "button").text('Avancer'))
+        if($("#txt_highlight_shortcut").val() !== "") {
+            $('#pnl_shortcut').append($("<a></a>").attr("href", "/"+ $(this).val())
+                                                  .attr("target", "_blank")
+                                                  .attr("class", "btn btn-primary btn-lg")
+                                                  .attr("role", "button").text('Avancer'));
+        }
     });
 
     $(document).ready(function() {
         $('#pnl_title').text($('#txt_highlight_title').val());
         $('#pnl_description').attr("style","font-size: 150%;").text($("#txa_highlight_description").val());
-        $('#pnl_shortcut').append($("<a></a>").attr("href", "/"+ $("#txt_highlight_shortcut").val())
-                                              .attr("target", "_blank")
-                                              .attr("class", "btn btn-primary btn-lg")
-                                              .attr("role", "button").text('Avancer'))
+        if($("#txt_highlight_shortcut").val() !== "") {
+            $('#pnl_shortcut').append($("<a></a>").attr("href", "/"+ $("#txt_highlight_shortcut").val())
+                                                  .attr("target", "_blank")
+                                                  .attr("class", "btn btn-primary btn-lg")
+                                                  .attr("role", "button").text('Avancer'));
+        }
     });
 </script>
 {% endblock %}

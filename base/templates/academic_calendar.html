@@ -70,8 +70,10 @@
         <div class="jumbotron">
             <h1>{{ academic_calendar.highlight_title| default_if_none:'' }}</h1>
             <p>{{ academic_calendar.highlight_description| default_if_none:'' }}</p>
+            {% if academic_calendar.highlight_shortcut %}
             <p><a class="btn btn-primary btn-lg" href="/{{ academic_calendar.highlight_shortcut| default_if_none:'' }}" role="button"
                   id="lnk_highlight" target="_blank">Avancer</a></p>
+            {% endif %}
         </div>
 
         <div class="row">
