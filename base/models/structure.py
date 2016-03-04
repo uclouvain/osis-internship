@@ -28,8 +28,8 @@ from django.contrib import admin
 
 
 class StructureAdmin(admin.ModelAdmin):
-    list_display = ('acronym', 'title', 'part_of', 'changed')
-    fieldsets = ((None, {'fields': ('acronym','title','part_of','organization')}),)
+    list_display = ('acronym', 'title', 'part_of', 'organization')
+    fieldsets = ((None, {'fields': ('acronym', 'title', 'part_of', 'organization')}),)
     raw_id_fields = ('part_of', )
     search_fields = ['acronym']
 
