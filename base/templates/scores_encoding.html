@@ -93,7 +93,7 @@
                           {% endif %}
                       <td>{{ session.learning_unit_year.acronym }}</td>
                       <td><a href="{% url 'online_encoding' session.id %}" id="lnk_{{ session.learning_unit_year.acronym }}" >{{ session.learning_unit_year.title }}</a></td>
-                      <td>{{ session.progress }}</td>
+                      <td>{{ progress }}</td>
                       <td>{% if session.status == 'OPEN' %}
                             <a class="btn btn-default" href="{% url 'online_encoding_form' session.id %}" role="button" id="lnk_online_encoding_profile_{{session.id}}"><i class="fa fa-hashtag"></i> {% trans 'Encoding'%}</a>
                           {% endif %}
@@ -127,9 +127,9 @@
                           {% endif %}
                       <td>{{ session.learning_unit_year.acronym }}</td>
                       <td><a href="{% url 'online_encoding' session.id%}"title="Visualiser/charger les notes pour le cours" id="lnk_online_encoding_messages_{{session.id}}">{{ session.learning_unit_year.title }}</a></td>
-                      <td>{{ session.progress }}</td>
+                      <td>{{ progress }}</td>
                       <td>{% if session.status == 'OPEN' %}
-                            <a class="btn btn-default" href="{% url 'scores_encoding_download' session.id session.learning_unit_year.id academic_year.id  %}" role="button" title="{% trans 'Create a xls file while activity\'s scores'%}" id="lnk_scores_encoding_download_{{session.id}}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span> {% trans 'Get xls'%}</a>
+                            <a class="btn btn-default" href="{% url 'scores_encoding_download' session.id academic_year.id  %}" role="button" title="{% trans 'Create a xls file while activity\'s scores'%}" id="lnk_scores_encoding_download_{{session.id}}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span> {% trans 'Get xls'%}</a>
                           {% endif %}
                       </td>
                     </tr>
@@ -165,7 +165,7 @@
                         {% endif %}
                     <td>{{ session.learning_unit_year.acronym }}</td>
                     <td>{{ session.learning_unit_year.title }}</td>
-                    <td>{{ session.progress }}</td>
+                    <td>{{ progress }}</td>
                     <td>{% if session.status == 'OPEN' %}
                             <a class="btn btn-default" href="{% url 'notes_printing' session.id session.learning_unit_year.id %}" role="button" id="lnk_notes_printing_{{session.id}}"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> Imprimer</a>
                         {% endif %}

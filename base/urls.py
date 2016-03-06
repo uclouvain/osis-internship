@@ -23,16 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.contrib.auth.views import login, logout
 
 from base.utils import upload_xls_utils
-from base.views import learning_unit, offer, common, score_encoding, institution
+from base.views import learning_unit, offer, common, score_encoding, institution, organization,academic_calendar, offer_year
+
 
 #app_name = 'base'
 
 urlpatterns = [
     url(r'^$', common.home, name='home'),
+
+    #url(r'^djangojs/', include('djangojs.urls')),
 
     # Please, organize the urls in alphabetic order.
 
@@ -51,6 +54,8 @@ urlpatterns = [
     url(r'^offers/search$', offer.offers_search, name='offers_search'),
     url(r'^offers/([0-9]+)/$', offer.offer_read, name='offer_read'),
 
+    url(r'^profile/$', common.profile, name='profile'),
+
     url(r'^studies/$', common.studies, name='studies'),
     url(r'^studies/assessments/$', common.assessments, name='assessments'),
     url(r'^studies/assessments/scores_encoding$', score_encoding.scores_encoding, name='scores_encoding'),
@@ -61,9 +66,37 @@ urlpatterns = [
     url(r'^studies/assessments/scores_encoding/online/([0-9]+)/double_validation$', score_encoding.online_double_encoding_validation, name='online_double_encoding_validation'),
     url(r'^studies/assessments/scores_encoding/notes_printing_all/([0-9]+)/$', score_encoding.notes_printing_all, name='notes_printing_all'),
     url(r'^studies/assessments/scores_encoding/notes_printing/([0-9]+)/([0-9]+)/$', score_encoding.notes_printing, name='notes_printing'),
-    url(r'^studies/assessments/scores_encoding/xlsdownload/([0-9]+)/([0-9]+)/([0-9]+)/$',score_encoding.export_xls, name='scores_encoding_download'),
+    url(r'^studies/assessments/scores_encoding/xlsdownload/([0-9]+)/([0-9]+)/$',score_encoding.export_xls, name='scores_encoding_download'),
     url(r'^studies/assessments/scores_encoding/upload/([0-9]+)/([0-9]+)/([0-9]+)/$', upload_xls_utils.upload_scores_file,name='upload_encoding'),
 
     url(r'^structures/$', institution.structures, name='structures'),
     url(r'^structures/search$', institution.structures_search, name='structures_search'),
-    url(r'^structures/([0-9]+)/$', institution.structure_read, name='structure_read'),]
+    url(r'^structures/([0-9]+)/$', institution.structure_read, name='structure_read'),
+
+    url(r'^structures/([0-9]+)/diagram/$', institution.structure_diagram, name='structure_diagram'),
+    url(r'^structure/([0-9]+)/diagram/$', institution.structure_diagram_by_parent, name='structure_diagram_by_parent'),
+    url(r'^structures/name/([A-Z]+)/$', institution.structure_read_by_acronym, name='structure_read_by_acronym'),
+
+    url(r'^organizations/$', organization.organizations, name='organizations'),
+    url(r'^organizations/search$', organization.organizations_search, name='organizations_search'),
+    url(r'^organizations/([0-9]+)/$', organization.organization_read, name='organization_read'),
+    url(r'^organization/edit/([0-9]+)/$', organization.organization_edit, name='organization_edit'),
+    url(r'^organization/save/([0-9]+)/$', organization.organization_save, name='organization_save'),
+    url(r'^organization/save/$', organization.organization_new, name='organization_save_new'),
+    url(r'^organization/create/$', organization.organization_create, name='organization_create'),
+
+    url(r'^academic_year/$', common.academic_year, name='academic_year'),
+    url(r'^academic_calendars/$', academic_calendar.academic_calendars, name='academic_calendars'),
+    url(r'^academic_calendars/search$', academic_calendar.academic_calendars_search, name='academic_calendars_search'),
+    url(r'^academic_calendars/([0-9]+)/$', academic_calendar.academic_calendar_read, name='academic_calendar_read'),
+    url(r'^academic_calendars/edit/([0-9]+)/$', academic_calendar.academic_calendar_edit, name='academic_calendar_edit'),
+    url(r'^academic_calendars/delete/([0-9]+)/$', academic_calendar.academic_calendar_delete, name='academic_calendar_delete'),
+    url(r'^academic_calendars/save/([0-9]+)/$', academic_calendar.academic_calendar_save, name='academic_calendar_save'),
+    url(r'^academic_calendars/save/$', academic_calendar.academic_calendar_new, name='academic_calendar_save_new'),
+    url(r'^academic_calendars/create/$', academic_calendar.academic_calendar_create, name='academic_calendar_create'),
+
+    url(r'^offer_year_calendars/([0-9]+)/$', offer_year.offer_year_calendar_read, name='offer_year_calendar_read'),
+    url(r'^offer_year_calendars/edit/([0-9]+)/$', offer_year.offer_year_calendar_edit, name='offer_year_calendar_edit'),
+    url(r'^offer_year_calendars/save/([0-9]+)/$', offer_year.offer_year_calendar_save, name='offer_year_calendar_save'),
+
+    ]
