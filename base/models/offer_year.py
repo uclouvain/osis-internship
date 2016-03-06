@@ -25,6 +25,7 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
+from django.utils.translation import ugettext_lazy as _
 from base.models import academic_year, offer, structure
 
 
@@ -35,6 +36,12 @@ class OfferYearAdmin(admin.ModelAdmin):
     search_fields = ['acronym']
 
 
+GRADE_TYPES = (
+    ('BACHELOR', _('Bachelor')),
+    ('MASTER', _('Master')),
+    ('DOCTORATE', _('Ph.D')))
+
+
 class OfferYear(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
@@ -42,8 +49,12 @@ class OfferYear(models.Model):
     academic_year = models.ForeignKey(academic_year.AcademicYear)
     acronym = models.CharField(max_length=15)
     title = models.CharField(max_length=255)
+    title_international = models.CharField(max_length=255, blank=True, null=True)
+    title_short = models.CharField(max_length=255, blank=True, null=True)
+    title_printable = models.CharField(max_length=255, blank=True, null=True)
     structure = models.ForeignKey(structure.Structure)
     parent = models.ForeignKey('self', blank=True, null=True, related_name='children', db_index=True)
+    grade = models.CharField(max_length=20, blank=True, null=True, choices=GRADE_TYPES)
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.offer.acronym)
