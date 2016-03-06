@@ -85,7 +85,7 @@ class OfferYear(models.Model):
     @property
     def orientation_sibling(self):
         if self.offer:
-            off = offer.find_offer_by_id(self.offer.id)
+            off = offer.find_by_id(self.offer.id)
             return OfferYear.objects.filter(offer=off, acronym=self.acronym,
                                             academic_year=self.academic_year).exclude(id=self.id)
         return None
