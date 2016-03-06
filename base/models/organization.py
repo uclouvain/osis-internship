@@ -62,4 +62,4 @@ def find_by_acronym_name(acronym, name):
 
 
 def find_all():
-    return Organization.objects.all().order_by('acronym')
+    return Organization.objects.all().order_by('name')
