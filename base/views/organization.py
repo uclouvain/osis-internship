@@ -40,6 +40,7 @@ def organizations(request):
 def organizations_search(request):
     acronym = request.GET['acronym']
     name = request.GET['name']
+    organizations_list=[]
     if acronym is None and name is None:
         organizations_list = mdl.organization.find_all()
     if acronym is None and name:
@@ -59,8 +60,10 @@ def organizations_search(request):
 def organization_read(request, organization_id):
     organization = mdl.organization.find_by_id(organization_id)
     structures = mdl.structure.find_by_organization(organization)
-    return render(request, "organization.html", {'organization': organization,
-                                                 'structures': structures})
+    organization_addresses = mdl.organization_address.find_by_organization(organization)
+    return render(request, "organization.html", {'organization':            organization,
+                                                 'organization_addresses' : organization_addresses,
+                                                 'structures':              structures})
 
 
 def organization_new(request):
@@ -69,7 +72,7 @@ def organization_new(request):
 
 def organization_save(request, organization_id):
     form = OrganizationForm(data=request.POST)
-    if id:
+    if organization_id:
         organization = mdl.organization.find_by_id(organization_id)
     else:
         organization = mdl.organization.Organization()
@@ -95,66 +98,93 @@ def organization_save(request, organization_id):
     else:
         organization.reference = None
 
-    organization_address = mdl.organization_address.find_by_organization(organization)
-    organization_address_id  = None
-    if organization_address is None:
-        organization_address= mdl.organization_address.OrganizationAddress()
-        organization_address.organization = organization
-    else:
-        organization_address_id = organization_address.id
-
-    if request.POST['address_label']:
-        organization_address.label = request.POST['address_label']
-    else:
-        organization_address.label = None
-
-    if request.POST['address_location']:
-        organization_address.location = request.POST['address_location']
-    else:
-        organization_address.location = None
-
-    if request.POST['address_postal_code']:
-        organization_address.postal_code = request.POST['address_postal_code']
-    else:
-        organization_address.postal_code = None
-
-    if request.POST['address_city']:
-        organization_address.city = request.POST['address_city']
-    else:
-        organization_address.city = None
-
-    if request.POST['address_country']:
-        organization_address.country = request.POST['address_country']
-    else:
-        organization_address.country = None
-
     if form.is_valid():
         organization.save()
-        organization_address.save()
-        organizations_list = mdl.organization.Organization.find_all()
-        return render(request, "organizations.html",
-                               {'acronym': None,
-                                'name': None,
-                                'organizations': organizations_list,
-                                'init': "0"})
+        return organization_read(request, organization.id)
     else:
 
         return render(request, "organization_form.html",
                                {'organization': organization,
-                                'organization_address_id': organization_address_id,
                                 'form': form})
 
 
 def organization_edit(request, organization_id):
     organization = mdl.organization.find_by_id(organization_id)
-    organization_address_id = None
-    organization_address = mdl.organization_address.find_by_organization(organization)
-    if organization_address:
-        organization_address_id = organization_address.id
-    return render(request, "organization_form.html", {'organization': organization,
-                                                      'organization_address_id': organization_address_id})
+    return render(request, "organization_form.html", {'organization': organization})
 
 
 def organization_create(request):
     organization = mdl.organization.Organization()
     return render(request, "organization_form.html", {'organization': organization})
+
+
+def organization_address_read(request, organization_address_id):
+    organization_address = mdl.organization_address.find_by_id(organization_address_id)
+    organization_id = organization_address.organization.id
+    return render(request, "organization_address.html", {'organization_address': organization_address,
+                                                         'organization_id':      organization_id})
+
+
+def organization_address_edit(request, organization_address_id):
+    organization_address = mdl.organization_address.find_by_id(organization_address_id)
+    organization_id = organization_address.organization.id
+    return render(request, "organization_address_form.html", {'organization_address': organization_address,
+                                                              'organization_id':      organization_id})
+
+
+def organization_address_save(request, organization_address_id):
+
+    if organization_address_id:
+        organization_address = mdl.organization_address.find_by_id(organization_address_id)
+    else:
+        organization_address = mdl.organization_address.OrganizationAddress()
+
+    if request.POST['organization_address_label']:
+        organization_address.label = request.POST['organization_address_label']
+    else:
+        organization_address.label = None
+
+    if request.POST['organization_address_location']:
+        organization_address.location = request.POST['organization_address_location']
+    else:
+        organization_address.location = None
+
+    if request.POST['organization_address_postal_code']:
+        organization_address.postal_code = request.POST['organization_address_postal_code']
+    else:
+        organization_address.postal_code = None
+
+    if request.POST['organization_address_city']:
+        organization_address.city = request.POST['organization_address_city']
+    else:
+        organization_address.city = None
+
+    if request.POST['organization_address_country']:
+        organization_address.country = request.POST['organization_address_country']
+    else:
+        organization_address.country = None
+
+    if request.POST['organization_id']:
+        organization_address.organization = mdl.organization.find_by_id(int(request.POST['organization_id']))
+
+    organization_address.save()
+
+    return organization_read(request, organization_address.organization.id)
+
+
+def organization_address_new(request):
+    return organization_address_save(request, None)
+
+
+def organization_address_create(request, organization_id):
+    organization_address = mdl.organization_address.OrganizationAddress()
+    organization = mdl.organization.find_by_id(organization_id)
+    return render(request, "organization_address_form.html", {'organization_address': organization_address,
+                                                              'organization_id' : organization.id})
+
+
+def organization_address_delete(request, organization_address_id):
+    organization_address = mdl.organization_address.find_by_id(organization_address_id)
+    organization = organization_address.organization
+    organization_address.delete()
+    return organization_read(request, organization.id)
