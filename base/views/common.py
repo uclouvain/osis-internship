@@ -26,17 +26,24 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
+from base import models as mdl
+
 
 def page_not_found(request):
-    return render(request,'page_not_found.html')
+    return render(request, 'page_not_found.html')
 
 
 def access_denied(request):
-    return render(request,'acces_denied.html')
+    return render(request, 'access_denied.html')
 
 
 def home(request):
-    return render(request, "home.html")
+    academic_yr = mdl.academic_year.current_academic_year()
+    calendar_events = None
+    if academic_yr:
+        calendar_events = mdl.academic_calendar.find_academic_calendar_by_academic_year_with_dates(academic_yr.id)
+    return render(request, "home.html", {'academic_calendar': calendar_events,
+                                         'highlights': mdl.academic_calendar.find_highlight_academic_calendars()})
 
 
 @login_required
@@ -53,3 +60,13 @@ def assessments(request):
 def catalog(request):
     return render(request, "catalog.html", {'section': 'catalog'})
 
+
+@login_required
+def academic_year(request):
+    return render(request, "academic_year.html", {'section': 'academic_year'})
+
+
+@login_required
+def profile(request):
+    person = mdl.person.Person.find_person_by_user(request.user)
+    return render(request, "profile.html", {'person': person})

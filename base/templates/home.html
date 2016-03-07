@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
 {% load i18n %}
+{% load dictionnary %}
 
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -30,12 +31,16 @@
 {% endblock %}
 {% block content %}
 
-<div class="jumbotron">
-    <h1>Encodage des notes!</h1>
-    <p>L'encodage des notes pour la session de janvier est en cours maintenant!</p>
-    <p><a class="btn btn-primary btn-lg" href="{% url 'scores_encoding' %}" role="button" id="lnk_scores_encoding">Encoder mes notes</a></p>
-</div>
-<br>
+{% if highlights|length > 0 %}
+    {% for highlight in highlights %}
+        <div class="jumbotron">
+            <h1>{{ highlight.highlight_title }}</h1>
+            <p>{{ highlight.highlight_description }}</p>
+            <p><a class="btn btn-primary btn-lg" href="/{{ highlight.highlight_shortcut }}" role="button"
+                  id="lnk_highlight_{{ highlight.highlight_shortcut }}">Avancer</a></p>
+        </div>
+    {% endfor %}
+{% endif %}
 <div class="panel panel-default">
     <div class="panel-body">
         <div class="row">
@@ -59,6 +64,26 @@
             <div class="col-md-6">
             </div>
         </div>
+        <br>
     </div>
 </div>
+{% if academic_calendar|length > 0%}
+<div class="panel panel-default">
+    <div class="panel-heading"><h3 class="panel-title">{% trans 'Academic Calendar'%}</h3></div>
+    <div class="panel-body">
+      <dl>
+        {% for academic_event in academic_calendar %}
+          {% ifchanged academic_event.start_date|date:"M" %}
+            <dt>{{ academic_event.start_date|date:"F Y" }}</dt>
+          {% endifchanged %}
+          <dd>{{ academic_event.start_date| default_if_none:''|date:"d/m/Y" }} -
+              {{ academic_event.end_date| default_if_none:''|date:"d/m/Y" }} :
+              <a href="{% url 'academic_calendar_read' academic_event.id %}"
+                 id="lnk_academic_calendar_edit_{{academic_event.id}}">{{ academic_event.title }}</a></dd>
+          <br>
+        {% endfor %}
+      </dl>
+    </div>
+</div>
+{%endif%}
 {% endblock %}

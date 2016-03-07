@@ -74,7 +74,6 @@
         "fields": {
             "external_id": null,
             "academic_year": 2,
-            "event_type": "ACADEMIC_YEAR",
             "title": "Ann\u00e9e acad\u00e9mique",
             "description": "",
             "start_date": "2015-09-01",
@@ -119,7 +118,7 @@
         "pk": 1,
         "fields": {
             "person": 6,
-            "faculty": 1
+            "offer_year": 1
         }
     },
     {
@@ -169,7 +168,6 @@
             "external_id": null,
             "academic_calendar": 1,
             "offer_year": 1,
-            "event_type": "ACADEMIC_YEAR",
             "start_date": null,
             "end_date": null
         }
@@ -181,7 +179,6 @@
             "external_id": null,
             "academic_calendar": 1,
             "offer_year": 2,
-            "event_type": "ACADEMIC_YEAR",
             "start_date": "2015-08-31",
             "end_date": "2016-08-31"
         }

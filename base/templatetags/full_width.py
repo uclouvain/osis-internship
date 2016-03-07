@@ -24,7 +24,6 @@
 #
 ##############################################################################
 from django import template
-from base.models import OfferYear
 
 register = template.Library()
 

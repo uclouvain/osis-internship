@@ -32,8 +32,9 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, Page
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import mm
 from reportlab.lib import colors
+from django.utils.translation import ugettext_lazy as _
 
-from base.models import *
+from base import models as mdl
 
 
 PAGE_SIZE = A4
@@ -58,9 +59,15 @@ def add_header_footer(canvas, doc):
     canvas.restoreState()
 
 
-def print_notes(request,tutor, academic_year, session_exam,sessions,learning_unit_year_id):
+def print_notes(request, tutor, academic_year, session_exam, sessions, learning_unit_year_id):
     """
     Create a multi-page document
+    :param request:
+    :param tutor:
+    :param academic_year:
+    :param session_exam:
+    :param sessions:
+    :param learning_unit_year_id:
     """
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="feuillesNotes.pdf"'
@@ -77,28 +84,27 @@ def print_notes(request,tutor, academic_year, session_exam,sessions,learning_uni
     styles.add(ParagraphStyle(name='Justify', alignment=TA_JUSTIFY))
 
     content = []
-    academic_calendar = AcademicCalendar.find_academic_calendar_by_event_type(academic_year.id,session_exam.number_session)
-
+    is_fac = mdl.program_manager.is_programme_manager(request.user,session_exam.offer_year_calendar.offer_year)
     if learning_unit_year_id != -1 :
         #par cours
-        list_exam_enrollment = ExamEnrollment.find_exam_enrollments(session_exam)
+        list_exam_enrollment = mdl.exam_enrollment.find_exam_enrollments_by_session(session_exam)
     else:
         if tutor:
-            sessions = SessionExam.find_sessions_by_tutor(tutor, academic_year)
+            sessions = mdl.session_exam.find_sessions_by_tutor(tutor, academic_year)
         # In case the user is not a tutor we check whether it is member of a faculty.
-        elif request.user.groups.filter(name='FAC').exists():
-            faculty = ProgrammeManager.find_faculty_by_user(request.user)
+        elif is_fac:
+            faculty = mdl.program_manager.find_faculty_by_user(request.user)
             if faculty:
-                sessions = SessionExam.find_sessions_by_faculty(faculty, academic_year, session_exam)
+                sessions = mdl.session_exam.find_sessions_by_faculty(faculty, academic_year, session_exam)
 
         # Calculate the progress of all courses of the tutor.
         list_exam_enrollment = []
         for session in sessions:
-            enrollments = list(ExamEnrollment.find_exam_enrollments(session))
+            enrollments = list(mdl.exam_enrollment.find_exam_enrollments_by_session(session))
             if enrollments:
                 list_exam_enrollment = list_exam_enrollment + enrollments
 
-    list_notes_building(session_exam, learning_unit_year_id, academic_year, academic_calendar, tutor, list_exam_enrollment, styles, request.user.groups.filter(name='FAC').exists(), content)
+    list_notes_building(session_exam, learning_unit_year_id, academic_year, session_exam.learning_unit_year, tutor, list_exam_enrollment, styles, is_fac, content)
 
     doc.build(content, onFirstPage=add_header_footer, onLaterPages=add_header_footer)
     pdf = buffer.getvalue()
@@ -108,7 +114,7 @@ def print_notes(request,tutor, academic_year, session_exam,sessions,learning_uni
 
 
 def header_building(canvas, doc,styles):
-    a = Image("core"+ settings.STATIC_URL +"/img/logo_institution.jpg")
+    a = Image("base"+ settings.STATIC_URL +"img/logo_institution.jpg")
 
     P = Paragraph('''
                     <para align=center spaceb=3>
@@ -162,7 +168,7 @@ def list_notes_building(session_exam, learning_unit_year_id, academic_year, acad
                 old_pgm =o
                 current_learning_unit_year = rec_exam_enrollment.learning_unit_enrollment.learning_unit_year
 
-            person = Person.find_person(student.person.id)
+            person = mdl.person.find_person(student.person.id)
             score = None
             if not (rec_exam_enrollment.score_final is None):
                 if rec_exam_enrollment.session_exam.learning_unit_year.decimal_scores :
@@ -171,23 +177,20 @@ def list_notes_building(session_exam, learning_unit_year_id, academic_year, acad
                     score = "{0:.0f}".format(rec_exam_enrollment.score_final)
             justification = ""
             if rec_exam_enrollment.justification_final:
-                justification = dict(JUSTIFICATION_TYPES)[rec_exam_enrollment.justification_final]
+                justification = dict(mdl.exam_enrollment.JUSTIFICATION_TYPES)[rec_exam_enrollment.justification_final]
             data.append([student.registration_id,
                            person.last_name,
                            person.first_name,
                            score,
                            justification,
-                           academic_calendar.end_date.strftime('%d/%m/%Y')
-                           ])
+                           session_exam.offer_year_calendar.end_date.strftime('%d/%m/%Y')])
 
     if not old_pgm is None:
-        main_data(tutor, academic_year, session_exam, styles,current_learning_unit_year, old_pgm, content)
+        main_data(tutor, academic_year, session_exam, styles, current_learning_unit_year, old_pgm, content)
         t=Table(data,COLS_WIDTH)
-        t.setStyle(TableStyle([
-                           ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
-                           ('BOX', (0,0), (-1,-1), 0.25, colors.black),
-                           ('VALIGN',(0,0), (-1,-1), 'TOP')
-                           ]))
+        t.setStyle(TableStyle([('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                               ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                               ('VALIGN',(0,0), (-1,-1), 'TOP')]))
 
         content.append(t)
         end_page_infos_building(content, styles)
@@ -204,7 +207,7 @@ def legend_building(learning_unit_year, is_fac, content, styles):
     p.alignment = TA_CENTER
     p.fontSize =8
     p.borderPadding = 5
-    legend_text = "%s : %s" % (_('Other score legend'), ExamEnrollment.justification_label_authorized(is_fac))
+    legend_text = "%s : %s" % (_('Other score legend'), mdl.exam_enrollment.justification_label_authorized(is_fac))
     if not learning_unit_year.decimal_scores:
         legend_text += "<br/><font color=red>%s</font>" % _('UnAuthorized decimal for this activity')
 
@@ -216,7 +219,7 @@ def legend_building(learning_unit_year, is_fac, content, styles):
 
 
 def headers_table(styles):
-    data =[]
+    data = []
     data.append([Paragraph('''%s''' % _('Registration number'), styles['BodyText']),
                  Paragraph('''%s''' % _('Last name'), styles['BodyText']),
                  Paragraph('''%s''' % _('First name'), styles['BodyText']),
@@ -249,7 +252,7 @@ def main_data(tutor, academic_year, session_exam, styles, learning_unit_year, pg
 
     tutor = None
     if tutor is None:
-        p_tutor = Paragraph(''' ''' , styles["Normal"])
+        p_tutor = Paragraph(''' ''', styles["Normal"])
     else:
         p_tutor = Paragraph('''<b>%s %s</b>''' % (tutor.person.last_name, tutor.person.first_name), styles["Normal"])
 
@@ -287,7 +290,7 @@ def end_page_infos_building(content, styles):
     p = ParagraphStyle('info')
     p.fontSize = 10
     p.alignment = TA_LEFT
-    content.append(Paragraph("Please return this document to the administrative office of the program administrator" , p))
+    content.append(Paragraph("Please return this document to the administrative office of the program administrator", p))
     content.append(BIG_INTER_LINE)
     p_signature = ParagraphStyle('info')
     p_signature.fontSize = 10
