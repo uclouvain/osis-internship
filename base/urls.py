@@ -99,4 +99,10 @@ urlpatterns = [
     url(r'^offer_year_calendars/edit/([0-9]+)/$', offer_year.offer_year_calendar_edit, name='offer_year_calendar_edit'),
     url(r'^offer_year_calendars/save/([0-9]+)/$', offer_year.offer_year_calendar_save, name='offer_year_calendar_save'),
 
+    url(r'^organization_address/read/([0-9]+)/$', organization.organization_address_read, name='organization_address_read'),
+    url(r'^organization_address/edit/([0-9]+)/$', organization.organization_address_edit, name='organization_address_edit'),
+    url(r'^organization_address/save/([0-9]+)/$', organization.organization_address_save, name='organization_address_save'),
+    url(r'^organization_address/save/$', organization.organization_address_new, name='organization_address_save_new'),
+    url(r'^organization_address/create/([0-9]+)/$', organization.organization_address_create, name='organization_address_create'),
+    url(r'^organization_address/delete/([0-9]+)/$', organization.organization_address_delete, name='organization_address_delete'),
     ]
