@@ -48,3 +48,6 @@ def find_by_organization(organization):
         # Supposed there is only one address for on organization
         return organization_address
     return None
+
+def find_all():
+    return OrganizationAddress.objects.all()
