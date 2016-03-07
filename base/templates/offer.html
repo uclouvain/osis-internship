@@ -63,6 +63,36 @@
               {{ offer_year.structure }}
             </div>
           </div>
+          <br>
+          <div class="row">
+            <div class="col-md-12">
+              <label for="title">{% trans 'International title'%}</label><br>
+              {{ offer_year.title_international | default_if_none:'-' }}
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-md-12">
+              <label for="title">{% trans 'Short title'%}</label><br>
+              {{ offer_year.title_short | default_if_none:'-' }}
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-md-12">
+              <label for="title">{% trans 'Printable title'%}</label><br>
+              {{ offer_year.title_printable | default_if_none:'-' }}
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-md-6">
+              <label for="title">{% trans 'Grade'%}</label><br>
+              {{ offer_year.get_grade_display | default_if_none:'-' }}
+            </div>
+            <div class="col-md-6">
+            </div>
+          </div>
         </div>
         <div id="tab_academic_calendar" class="tab-pane fade">
           <div class="row">
