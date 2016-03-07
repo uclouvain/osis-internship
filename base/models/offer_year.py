@@ -31,7 +31,7 @@ from base.models import academic_year, offer, structure
 
 class OfferYearAdmin(admin.ModelAdmin):
     list_display = ('offer', 'parent', 'title', 'academic_year', 'changed')
-    fieldsets = ((None, {'fields': ('offer', 'academic_year', 'structure', 'acronym', 'title', 'parent')}),)
+    fieldsets = ((None, {'fields': ('offer', 'academic_year', 'structure', 'acronym', 'title', 'parent','title_international','title_short','title_printable','grade')}),)
     raw_id_fields = ('offer', 'structure', 'parent')
     search_fields = ['acronym']
 
@@ -57,7 +57,7 @@ class OfferYear(models.Model):
     grade = models.CharField(max_length=20, blank=True, null=True, choices=GRADE_TYPES)
 
     def __str__(self):
-        return u"%s - %s" % (self.academic_year, self.offer.acronym)
+        return u"%s - %s" % (self.academic_year, self.acronym)
 
     @property
     def offer_year_children(self):
