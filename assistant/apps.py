@@ -26,5 +26,5 @@
 from django.apps import AppConfig
 
 
-class TrtsConfig(AppConfig):
+class AssistantConfig(AppConfig):
     name = 'assistant'
