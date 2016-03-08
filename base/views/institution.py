@@ -29,6 +29,10 @@ import json
 
 from base import models as mdl
 
+from django.utils.translation import ugettext_lazy as _
+import operator
+from functools import reduce
+from django.db import models
 
 @login_required
 def institution(request):
@@ -44,18 +48,29 @@ def structures(request):
 def structures_search(request):
     acronym = request.GET['acronym']
     title = request.GET['title']
-
+    criterias = []
+    criteria_present = False
     query = mdl.structure.find_structures()
 
     if acronym and len(acronym) > 0:
-        query = query.filter(acronym__icontains=acronym)
+        criteria_present = True
+        criterias.append(models.Q(acronym__icontains=acronym))
     if title and len(title) > 0:
-        query = query.filter(title__icontains=title)
+        criteria_present = True
+        criterias.append(models.Q(title__icontains=title))
 
-    return render(request, "structures.html", {'title': title,
-                                               'acronym': acronym,
-                                               'init': "0",
-                                               'structures': query})
+    structures = None
+    message = None
+    if criteria_present:
+        structures = mdl.structure.Structure.objects.filter(reduce(operator.and_, criterias))
+    else:
+        message = "%s" % _('You must choose at least one criteria!')
+
+    return render(request, "structures.html", {'title':      title,
+                                               'acronym':    acronym,
+                                               'init':       "0",
+                                               'structures': structures,
+                                               'message':    message})
 
 
 @login_required
