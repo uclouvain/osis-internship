@@ -42,6 +42,8 @@ admin.site.register(learning_unit_enrollment.LearningUnitEnrollment,
                     learning_unit_enrollment.LearningUnitEnrollmentAdmin)
 admin.site.register(learning_unit_year.LearningUnitYear,
                     learning_unit_year.LearningUnitYearAdmin)
+admin.site.register(message_template.MessageTemplate,
+                    message_template.MessageTemplateAdmin)
 admin.site.register(offer.Offer,
                     offer.OfferAdmin)
 admin.site.register(offer_enrollment.OfferEnrollment,
