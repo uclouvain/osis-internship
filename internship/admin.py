@@ -26,8 +26,23 @@
 from django.contrib import admin
 from .models import *
 
+
+class InternshipOfferAdmin(admin.ModelAdmin):
+    list_display = ('organization','learning_unit_year', 'title', 'maximum_enrollments')
+    fieldsets = ((None, {'fields': ('organization','learning_unit_year', 'title', 'maximum_enrollments')}),)
+
+admin.site.register(InternshipOffer, InternshipOfferAdmin)
+
+
 class InternshipEnrollmentAdmin(admin.ModelAdmin):
-    list_display = ('learning_unit_enrollment','organization', 'start_date', 'end_date')
-    fieldsets = ((None, {'fields': ('learning_unit_enrollment','organization', 'start_date', 'end_date')}),)
+    list_display = ('learning_unit_enrollment','internship_offer', 'start_date', 'end_date')
+    fieldsets = ((None, {'fields': ('learning_unit_enrollment','internship_offer', 'start_date', 'end_date')}),)
 
 admin.site.register(InternshipEnrollment, InternshipEnrollmentAdmin)
+
+
+class InternshipMasterAdmin(admin.ModelAdmin):
+    list_display = ('organization', 'internship_offer', 'person', 'reference', 'civility', 'type_mastery', 'speciality')
+    fieldsets = ((None, {'fields': ('organization', 'internship_offer', 'person', 'reference', 'civility', 'type_mastery', 'speciality')}),)
+
+admin.site.register(InternshipMaster, InternshipMasterAdmin)
