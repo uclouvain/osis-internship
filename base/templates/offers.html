@@ -94,7 +94,11 @@
 
     </form>
       </div>
-
+  {% if message %}
+  <div>
+    <label class="alert alert-warning" style="margin:5px">{{message}}</label>
+  </div>
+  {% else%}
   <div >
     {% if offer_years|length == 0 and init == "0" %}
       <label class="alert alert-info" style="margin:5px">{% trans 'No result!' %}</label>
@@ -116,5 +120,6 @@
     {% endif %}
 
 </div>
+      {% endif%}
 </div>
 {% endblock %}
