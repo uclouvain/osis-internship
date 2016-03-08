@@ -52,7 +52,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_jenkins',
     'base',
-    'internship'
+    'assistant',
+    'internship',
 )
 
 MIDDLEWARE_CLASSES = (
