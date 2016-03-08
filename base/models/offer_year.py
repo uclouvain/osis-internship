@@ -105,7 +105,3 @@ def find_offer_years_by_structure(struct):
 
 def find_offer_year_by_id(offer_year_id):
     return OfferYear.objects.get(pk=offer_year_id)
-
-
-def find_all_offers():
-    return OfferYear.objects.all()
