@@ -42,25 +42,25 @@
                 <div class="row">
                     <div class="col-md-6">
                         &nbsp;&nbsp;&nbsp;<label>{% trans 'Label' %}</label><br>
-                        &nbsp;&nbsp;&nbsp;{{ organization_address.label | default_if_none:'' }}
+                        &nbsp;&nbsp;&nbsp;{{ organization_address.label | default_if_none:'-' }}
                     </div>
                     <div class="col-md-6">
                         <label>{% trans 'Location' %}</label><br>
-                        {{ organization_address.location | default_if_none:'' }}
+                        {{ organization_address.location | default_if_none:'-' }}
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-4">
                         &nbsp;&nbsp;&nbsp;<label>{% trans 'Postal code' %}</label><br>
-                        &nbsp;&nbsp;&nbsp;{{ organization_address.postal_code | default_if_none:'' }}
+                        &nbsp;&nbsp;&nbsp;{{ organization_address.postal_code | default_if_none:'-' }}
                     </div>
                     <div class="col-md-4">
                         <label>{% trans 'City' %}</label><br>
-                        {{ organization_address.city | default_if_none:'' }}
+                        {{ organization_address.city | default_if_none:'-' }}
                     </div>
                     <div class="col-md-4">
                         <label>{% trans 'Country' %}</label><br>
-                        {{ organization_address.country | default_if_none:'' }}
+                        {{ organization_address.country | default_if_none:'-' }}
                     </div>
                 </div>
                 <br>
@@ -76,7 +76,7 @@
                         </a>
                         <a href="{% url 'organization_read' organization_address.organization.id %}"
                            id="lnk_organization_read_{{organization_address.organization.id}}"  title="{%trans 'Back'%}"
-                           class="btn btn-default" role="button" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> {% trans 'Back'%}</a>
+                           class="btn btn-default" role="button" ><span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span> {% trans 'Back'%}</a>
 
                     </div>
                     <div class="col-md-8">
