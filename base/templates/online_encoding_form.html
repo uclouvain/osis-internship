@@ -132,3 +132,38 @@
     </div>
   </div>
 {% endblock %}
+{% block script %}
+<script>
+$("input[id^='num_score_']" ).change(function(event) {
+    // Get the object that received the event.
+    var target = $(event.target);
+    var id = target.attr("id");
+    if (typeof id == 'undefined') {
+        target = target.parent();
+        id = target.attr("id");
+    }
+    var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
+
+    if(target.val() != "" && $("#slt_justification_score_"+ enrollmentId).val() != "CHEATING") {
+        $("#slt_justification_score_" + enrollmentId).val('');
+    }
+});
+
+$("select[id^='slt_justification_score_']" ).change(function(event) {
+    // Get the object that received the event.
+    var target = $(event.target);
+    var id = target.attr("id");
+    if (typeof id == 'undefined') {
+        target = target.parent();
+        id = target.attr("id");
+    }
+
+    var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
+
+    // Checks whether the object contains an id.
+    if(target.val() != "CHEATING") {
+        $("#num_score_" + enrollmentId).val('');
+    }
+});
+</script>
+{% endblock %}
