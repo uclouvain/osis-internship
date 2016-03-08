@@ -36,9 +36,13 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-  <h2>{{ offer_year.offer.title }}</h2>
-  <h3>{{ offer_year.title }}</h3>
+  {% if offer_year.parent %}
+    <h2>{{ offer_year.parent.title }}</h2>
+    <h3>{{ offer_year.title }}</h3>
 
+  {%else%}
+    <h3>{{ offer_year.title }}</h3>
+  {%endif%}
 </div>
 <div class="panel panel-default">
   <div class="panel-body">
