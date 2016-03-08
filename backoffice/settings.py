@@ -53,6 +53,7 @@ INSTALLED_APPS = (
     'django_jenkins',
     'base',
     'assistant',
+    'dissertation',
     'internship',
 )
 
