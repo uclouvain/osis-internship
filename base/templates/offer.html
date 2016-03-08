@@ -51,79 +51,79 @@
       <li><a data-toggle="tab" href="#tab_academic_calendar" id="lnk_academic_calendar">{% trans 'Academic calendar'%}</a></li>
     </ul>
     <div class="tab-content">
-      <p>
-        <div id="tab_identification" class="tab-pane fade in active">
-          <div class="row">
-            <div class="col-md-3">
-              <label for="title">{% trans 'Academic year'%}</label><br>
-              {{ offer_year.academic_year }}
-            </div>
-            <div class="col-md-3">
-              <label for="acronym">{% trans 'Acronym' %}</label><br>
-              {{ offer_year.acronym }}
-            </div>
-            <div class="col-md-6">
-              <label for="structure">{% trans 'Structure' %}</label><br>
-              {{ offer_year.structure }}
-            </div>
+      <div id="tab_identification" class="tab-pane fade in active">
+        <br>
+        <div class="row">
+          <div class="col-md-3">
+            <label for="title">{% trans 'Academic year'%}</label><br>
+            {{ offer_year.academic_year }}
           </div>
-          <br>
-          <div class="row">
-            <div class="col-md-12">
-              <label for="title">{% trans 'International title'%}</label><br>
-              {{ offer_year.title_international | default_if_none:'-' }}
-            </div>
+          <div class="col-md-3">
+            <label for="acronym">{% trans 'Acronym' %}</label><br>
+            {{ offer_year.acronym }}
           </div>
-          <br>
-          <div class="row">
-            <div class="col-md-12">
-              <label for="title">{% trans 'Short title'%}</label><br>
-              {{ offer_year.title_short | default_if_none:'-' }}
-            </div>
-          </div>
-          <br>
-          <div class="row">
-            <div class="col-md-12">
-              <label for="title">{% trans 'Printable title'%}</label><br>
-              {{ offer_year.title_printable | default_if_none:'-' }}
-            </div>
-          </div>
-          <br>
-          <div class="row">
-            <div class="col-md-6">
-              <label for="title">{% trans 'Grade'%}</label><br>
-              {{ offer_year.get_grade_display | default_if_none:'-' }}
-            </div>
-            <div class="col-md-6">
-            </div>
+          <div class="col-md-6">
+            <label for="structure">{% trans 'Structure' %}</label><br>
+            {{ offer_year.structure }}
           </div>
         </div>
-        <div id="tab_academic_calendar" class="tab-pane fade">
-          <div class="row">
-            <div class="col-md-12">
-              <table class="table table-striped table-hover">
-                <thead>
-                  <td>{% trans 'Title' %}</td>
-                  <td>{% trans 'Description' %}</td>
-                  <td>{% trans 'Start date' %}</td>
-                  <td>{% trans 'End date' %}</td>
-                </thead>
-                {% for event in offer_year_events %}
-                    {% ifchanged event.start_date|date:"M" %}
-                      <tr style="background-color:#E5F2FF"><td colspan="4"><h4 style="{{ event.start_date |offer_year_calendar_display:event.end_date }}">{{ event.start_date|date:"F Y" }}</h4></td></tr>
-                    {% endifchanged %}
-                      <tr style="{{ event.start_date |offer_year_calendar_display:event.end_date }}">
-                          <td><a href="{% url 'offer_year_calendar_read' event.id  %}" id="lnk_offer_year_calendar_read_{{event.id}}">{{ event.academic_calendar.title| default_if_none:'' }}</a></td>
-                          <td>{{ event.academic_calendar.description| default_if_none:'' }}</td>
-                          <td>{{ event.start_date|date:"j/m/Y"| default_if_none:'' }}</td>
-                          <td>{{ event.end_date|date:"j/m/Y" | default_if_none:''}}</td>
-                      </tr>
-                {% endfor%}
-              </table>
-            </div>
+        <br>
+        <div class="row">
+          <div class="col-md-12">
+            <label for="title">{% trans 'International title'%}</label><br>
+            {{ offer_year.title_international | default_if_none:'-' }}
           </div>
         </div>
-      </p>
+        <br>
+        <div class="row">
+          <div class="col-md-12">
+            <label for="title">{% trans 'Short title'%}</label><br>
+            {{ offer_year.title_short | default_if_none:'-' }}
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-md-12">
+            <label for="title">{% trans 'Printable title'%}</label><br>
+            {{ offer_year.title_printable | default_if_none:'-' }}
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-md-6">
+            <label for="title">{% trans 'Grade'%}</label><br>
+            {{ offer_year.get_grade_display | default_if_none:'-' }}
+          </div>
+          <div class="col-md-6">
+          </div>
+        </div>
+      </div>
+      <div id="tab_academic_calendar" class="tab-pane fade">
+        <br>
+        <div class="row">
+          <div class="col-md-12">
+            <table class="table table-striped table-hover">
+              <thead>
+                <td>{% trans 'Title' %}</td>
+                <td>{% trans 'Description' %}</td>
+                <td>{% trans 'Start date' %}</td>
+                <td>{% trans 'End date' %}</td>
+              </thead>
+              {% for event in offer_year_events %}
+                  {% ifchanged event.start_date|date:"M" %}
+                    <tr style="background-color:#E5F2FF"><td colspan="4"><h4 style="{{ event.start_date |offer_year_calendar_display:event.end_date }}">{{ event.start_date|date:"F Y" }}</h4></td></tr>
+                  {% endifchanged %}
+                    <tr style="{{ event.start_date |offer_year_calendar_display:event.end_date }}">
+                        <td><a href="{% url 'offer_year_calendar_read' event.id  %}" id="lnk_offer_year_calendar_read_{{event.id}}">{{ event.academic_calendar.title| default_if_none:'' }}</a></td>
+                        <td>{{ event.academic_calendar.description| default_if_none:'' }}</td>
+                        <td>{{ event.start_date|date:"j/m/Y"| default_if_none:'' }}</td>
+                        <td>{{ event.end_date|date:"j/m/Y" | default_if_none:''}}</td>
+                    </tr>
+              {% endfor%}
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
