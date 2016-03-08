@@ -38,9 +38,19 @@ def organizations(request):
 
 
 def organizations_search(request):
+    print('organizations_search')
     acronym = request.GET['acronym']
     name = request.GET['name']
     organizations_list=[]
+
+    name = name.strip()
+    if len(name) <= 0:
+        name  =None
+
+    acronym = acronym.strip()
+    if len(acronym) <= 0:
+        acronym = None
+
     if acronym is None and name is None:
         organizations_list = mdl.organization.find_all()
     if acronym is None and name:

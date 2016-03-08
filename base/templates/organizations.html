@@ -43,18 +43,14 @@
               <label for="acronym">{% trans 'Acronym'%}</label>
               <input class="form-control" id="txt_acronym" placeholder="{% trans 'Acronym' %}" name="acronym" value="{{ acronym | default_if_none:'' }}" style="text-transform:uppercase">
           </div>
-          <div class="col-md-2">
+          <div class="col-md-7">
               <label for="name" >{% trans 'Name'%}</label>
               <input class="form-control" placeholder="{% trans 'Name' %}" id="txt_name" name="name" value="{{ name | default_if_none:'' }}" style="text-transform:uppercase">
           </div>
-          <div class="col-md-4">
-          </div>
-          <div class="col-md-3">
-            <label class="invisible">&nbsp;</label>
-            <div>
-                <input type="submit" value="{% trans 'Search' %}" id="bt_submit_organization_search" class="btn btn-primary" role="button">&nbsp;&nbsp;
-                <a href="{% url 'organization_create' %}" id="lnk_organization_create" class="btn btn-default" role="button">{% trans 'Create'%}</a>
-            </div>
+          <div class="col-md-2">
+              <br>
+              <button type="submit" id="bt_submit_organization_search" class="btn btn-primary" role="button" title="{% trans 'Search for an organization' %}"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>&nbsp;&nbsp;
+              <a href="{% url 'organization_create' %}" id="lnk_organization_create" class="btn btn-default" role="button" title="{% trans 'Create an organization'%}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
           </div>
         </div>
 
