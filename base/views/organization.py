@@ -27,44 +27,52 @@ from django.shortcuts import render
 from base import models as mdl
 from base.forms import OrganizationForm
 
+from django.utils.translation import ugettext_lazy as _
+
 
 def organizations(request):
-    organizations_list = mdl.organization.find_all()
     return render(request, "organizations.html",
                            {'acronym': None,
                             'name': None,
-                            'organizations': organizations_list,
+                            'organizations': None,
                             'init': "1"})
 
 
 def organizations_search(request):
-    print('organizations_search')
     acronym = request.GET['acronym']
     name = request.GET['name']
-    organizations_list=[]
+    organizations_list = []
+    criteria_present = False
 
     name = name.strip()
     if len(name) <= 0:
         name  =None
+    else:
+        criteria_present=True
 
     acronym = acronym.strip()
     if len(acronym) <= 0:
         acronym = None
+    else:
+        criteria_present=True
 
-    if acronym is None and name is None:
-        organizations_list = mdl.organization.find_all()
-    if acronym is None and name:
-        organizations_list = mdl.organization.find_by_name(name)
-    if acronym and name is None:
-        organizations_list = mdl.organization.find_by_acronym(acronym)
-    if acronym and name:
-        organizations_list = mdl.organization.find_by_acronym_name(acronym, name)
+    message = None
+    if criteria_present:
+        if acronym is None and name:
+            organizations_list = mdl.organization.find_by_name(name)
+        if acronym and name is None:
+            organizations_list = mdl.organization.find_by_acronym(acronym)
+        if acronym and name:
+            organizations_list = mdl.organization.find_by_acronym_name(acronym, name)
+    else:
+         message = "%s" % _('You must choose at least one criteria!')
 
     return render(request, "organizations.html",
-                           {'acronym': acronym,
-                            'name': name,
+                           {'acronym':       acronym,
+                            'name':          name,
                             'organizations': organizations_list,
-                            'init': "0"})
+                            'init':          "0",
+                            'message':       message})
 
 
 def organization_read(request, organization_id):
