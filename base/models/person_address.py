@@ -44,6 +44,3 @@ class PersonAddress(models.Model):
 
 def find_by_person(person):
     return PersonAddress.objects.get(person=person)
-
-def find_address_by_person(person):
-    return PersonAddress.objects.get(person=person)

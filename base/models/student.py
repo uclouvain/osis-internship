@@ -43,6 +43,3 @@ class Student(models.Model):
 
     def __str__(self):
         return u"%s (%s)" % (self.person, self.registration_id)
-
-def find_students():
-    return Student.objects.all()
