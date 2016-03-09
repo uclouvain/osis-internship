@@ -55,6 +55,11 @@ def find_by_user(user):
         return None
 
 
+def find_by_person(a_person):
+    programs_managed = ProgrammeManager.objects.filter(person=a_person)
+    return programs_managed
+
+
 def is_programme_manager(user, offer_yr):
     try:
         pers = person.Person.objects.get(user=user)

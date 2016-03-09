@@ -69,12 +69,25 @@ def academic_year(request):
 @login_required
 def profile(request):
     person = mdl.person.find_by_user(request.user)
+    addresses = mdl.person_address.find_by_person(person)
     tutor = mdl.tutor.find_by_person(person)
     attributions = mdl.attribution.find_by_tutor(tutor)
     student = mdl.student.find_by_person(person)
     offer_enrollments = mdl.offer_enrollment.find_by_student(student)
+    programs_managed = mdl.program_manager.find_by_person(person)
     return render(request, "profile.html", {'person': person,
+                                            'addresses': addresses,
                                             'tutor': tutor,
                                             'attributions': attributions,
                                             'student': student,
-                                            'offer_enrollments': offer_enrollments})
+                                            'offer_enrollments': offer_enrollments,
+                                            'programs_managed': programs_managed,
+                                            'supported_languages': mdl.supported_languages.SUPPORTED_LANGUAGES,
+                                            'default_language': mdl.supported_languages.DEFAULT_LANGUAGE})
+
+
+@login_required
+def profile_lang(request):
+    ui_language = request.POST.get('ui_language')
+    mdl.person.change_language(request.user, ui_language)
+    return profile(request)
