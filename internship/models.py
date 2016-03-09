@@ -37,6 +37,10 @@ class InternshipOffer(models.Model):
     def __str__(self):
         return self.title
 
+    @staticmethod
+    def find_internships():
+        return InternshipOffer.objects.all()
+
 
 class InternshipEnrollment(models.Model):
     learning_unit_enrollment = models.ForeignKey('base.LearningUnitEnrollment')
@@ -67,6 +71,10 @@ class InternshipMaster(models.Model):
     civility         = models.CharField(max_length=20, blank=True, null=True, choices=CIVILITY_CHOICE)
     type_mastery     = models.CharField(max_length=20, blank=True, null=True, choices=TYPE_CHOICE)
     speciality       = models.CharField(max_length=20, blank=True, null=True, choices=SPECIALITY_CHOICE)
+
+    @staticmethod
+    def find_masters():
+        return InternshipMaster.objects.all()
 
     def __str__(self):
         return u"%s - %s" % (self.person, self.reference)
