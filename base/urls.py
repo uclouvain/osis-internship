@@ -55,6 +55,7 @@ urlpatterns = [
     url(r'^offers/([0-9]+)/$', offer.offer_read, name='offer_read'),
 
     url(r'^profile/$', common.profile, name='profile'),
+    url(r'^profile/lang$', common.profile_lang, name='profile_lang'),
 
     url(r'^studies/$', common.studies, name='studies'),
     url(r'^studies/assessments/$', common.assessments, name='assessments'),

@@ -81,11 +81,12 @@ def find_offer_year_calendar(offer_yr):
 
 def find_offer_year_calendars_by_academic_year(academic_yr):
     return OfferYearCalendar.objects.filter(academic_calendar__academic_year=academic_yr)\
-                                        .order_by('academic_calendar','offer_year__acronym')
+                                    .order_by('academic_calendar','offer_year__acronym')
 
 
 def find_by_id(offer_year_calendar_id):
     return OfferYearCalendar.objects.get(pk=offer_year_calendar_id)
+
 
 def update(acad_calendar):
     offer_year_calendar_list = find_offer_years_by_academic_calendar(acad_calendar)
@@ -93,11 +94,10 @@ def update(acad_calendar):
     for offer_year_calendar in offer_year_calendar_list:
         if offer_year_calendar.customized:
             # an email must be sent to the program manager
-            program_managers = program_manager.find_program_manager_by_offer_year(offer_year_calendar.offer_year)
+            program_managers = program_manager.find_by_offer_year(offer_year_calendar.offer_year)
             if program_managers and len(program_managers) > 0:
                 send_mail.send_mail_after_academic_calendar_changes(acad_calendar, offer_year_calendar, program_managers)
         else:
             offer_year_calendar.start_date = acad_calendar.start_date
             offer_year_calendar.end_date = acad_calendar.end_date
             offer_year_calendar.save()
-

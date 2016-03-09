@@ -45,10 +45,18 @@ class Tutor(models.Model):
         return u"%s" % self.person
 
 
-def find_tutor_by_user(user):
+def find_by_user(user):
     try:
-        pers = person.find_person_by_user(user)
+        pers = person.find_by_user(user)
         tutor = Tutor.objects.get(person=pers)
+        return tutor
+    except ObjectDoesNotExist:
+        return None
+
+
+def find_by_person(a_person):
+    try:
+        tutor = Tutor.objects.get(person=a_person)
         return tutor
     except ObjectDoesNotExist:
         return None

@@ -155,5 +155,5 @@ def create_exam_enrollment_historic(user, enrollment, score, justification):
     exam_enrollment_history.exam_enrollment = enrollment
     exam_enrollment_history.score_final = score
     exam_enrollment_history.justification_final = justification
-    exam_enrollment_history.person = person.find_person_by_user(user)
+    exam_enrollment_history.person = person.find_by_user(user)
     exam_enrollment_history.save()

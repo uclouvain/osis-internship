@@ -36,7 +36,7 @@ class PersonAdmin(admin.ModelAdmin):
                     'changed')
     search_fields = ['first_name', 'middle_name', 'last_name', 'user__username', 'email']
     fieldsets = ((None, {'fields': ('user', 'global_id', 'national_id', 'gender', 'first_name', 'middle_name',
-                                    'last_name', 'email', 'phone', 'phone_mobile')}),)
+                                    'last_name', 'email', 'phone', 'phone_mobile', 'language')}),)
     raw_id_fields = ('user',)
     search_fields = ['first_name', 'last_name']
 
@@ -80,9 +80,17 @@ class Person(models.Model):
         return u"%s %s %s" % (last_name.upper(), first_name, middle_name)
 
 
-def find_person(person_id):
+def find_by_id(person_id):
     return Person.objects.get(id=person_id)
 
 
-def find_person_by_user(user):
-    return Person.objects.get(user=user)
+def find_by_user(user):
+    person = Person.objects.filter(user=user).first()
+    return person
+
+
+def change_language(user, new_language):
+    if new_language:
+        person = Person.objects.get(user=user)
+        person.language = new_language
+        person.save()

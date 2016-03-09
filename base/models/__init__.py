@@ -43,4 +43,5 @@ from base.models import program_manager
 from base.models import session_exam
 from base.models import structure
 from base.models import student
+from base.models import supported_languages
 from base.models import tutor

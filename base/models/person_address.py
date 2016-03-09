@@ -42,5 +42,8 @@ class PersonAddress(models.Model):
     country     = models.CharField(max_length=255)
 
 
-def find_by_person(person):
-    return PersonAddress.objects.get(person=person)
+def find_by_person(a_person):
+    """ Return a list containing one or more addresses of a person. Returns None if there is no address.
+    :param a_person: An instance of the class base.models.person.Person
+    """
+    return PersonAddress.objects.filter(person=a_person)
