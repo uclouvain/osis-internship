@@ -68,5 +68,13 @@ def academic_year(request):
 
 @login_required
 def profile(request):
-    person = mdl.person.Person.find_person_by_user(request.user)
-    return render(request, "profile.html", {'person': person})
+    person = mdl.person.find_by_user(request.user)
+    tutor = mdl.tutor.find_by_person(person)
+    attributions = mdl.attribution.find_by_tutor(tutor)
+    student = mdl.student.find_by_person(person)
+    offer_enrollments = mdl.offer_enrollment.find_by_student(student)
+    return render(request, "profile.html", {'person': person,
+                                            'tutor': tutor,
+                                            'attributions': attributions,
+                                            'student': student,
+                                            'offer_enrollments': offer_enrollments})

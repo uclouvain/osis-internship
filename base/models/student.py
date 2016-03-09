@@ -26,6 +26,7 @@
 from django.db import models
 from django.contrib import admin
 from base.models import person
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class StudentAdmin(admin.ModelAdmin):
@@ -43,3 +44,11 @@ class Student(models.Model):
 
     def __str__(self):
         return u"%s (%s)" % (self.person, self.registration_id)
+
+
+def find_by_person(a_person):
+    try:
+        student = Student.objects.get(person=a_person)
+        return student
+    except ObjectDoesNotExist:
+        return None

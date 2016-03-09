@@ -50,7 +50,7 @@ def export_xls(request, session_id, academic_year_id):
 
     academic_year = mdl.academic_year.find_academic_year_by_id(academic_year_id)
     session_exam = mdl.session_exam.find_session_by_id(session_id)
-    is_fac = mdl.program_manager.is_programme_manager(request.user,session_exam.offer_year_calendar.offer_year)
+    is_fac = mdl.program_manager.is_programme_manager(request.user, session_exam.offer_year_calendar.offer_year)
     wb = Workbook()
     ws = wb.active
 
@@ -67,7 +67,7 @@ def export_xls(request, session_id, academic_year_id):
     for rec_exam_enrollment in mdl.exam_enrollment.find_exam_enrollments_by_session(session_exam):
         student = rec_exam_enrollment.learning_unit_enrollment.student
         o = rec_exam_enrollment.learning_unit_enrollment.offer
-        person = mdl.person.find_person(student.person.id)
+        person = mdl.person.find_by_id(student.person.id)
 
         if session_exam.offer_year_calendar.end_date is None:
             end_date = "-"

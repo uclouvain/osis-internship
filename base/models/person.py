@@ -80,9 +80,10 @@ class Person(models.Model):
         return u"%s %s %s" % (last_name.upper(), first_name, middle_name)
 
 
-def find_person(person_id):
+def find_by_id(person_id):
     return Person.objects.get(id=person_id)
 
 
-def find_person_by_user(user):
-    return Person.objects.get(user=user)
+def find_by_user(user):
+    person = Person.objects.filter(user=user).first()
+    return person

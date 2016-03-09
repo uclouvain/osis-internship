@@ -47,10 +47,10 @@ class ProgrammeManager(models.Model):
         return u"%s - %s" % (self.person, self.offer_year)
 
 
-def find_offer_year_by_user(user):
+def find_by_user(user):
     programme_manager = ProgrammeManager.objects.filter(person__user=user).first()
     if programme_manager:
-        return programme_manager.offer_year
+        return programme_manager
     else:
         return None
 
@@ -66,5 +66,5 @@ def is_programme_manager(user, offer_yr):
         return False
 
 
-def find_program_manager_by_offer_year(offer_yr):
+def find_by_offer_year(offer_yr):
     return ProgrammeManager.objects.filter(offer_year=offer_yr)

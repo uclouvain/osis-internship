@@ -51,3 +51,8 @@ class Attribution(models.Model):
 
     def __str__(self):
         return u"%s - %s" % (self.tutor.person, self.function)
+
+
+def find_by_tutor(a_tutor):
+    attributions = Attribution.objects.filter(tutor=a_tutor)
+    return attributions
