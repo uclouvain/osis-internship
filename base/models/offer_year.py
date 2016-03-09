@@ -25,14 +25,21 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
+from django.utils.translation import ugettext_lazy as _
 from base.models import academic_year, offer, structure
 
 
 class OfferYearAdmin(admin.ModelAdmin):
     list_display = ('offer', 'parent', 'title', 'academic_year', 'changed')
-    fieldsets = ((None, {'fields': ('offer', 'academic_year', 'structure', 'acronym', 'title', 'parent')}),)
+    fieldsets = ((None, {'fields': ('offer', 'academic_year', 'structure', 'acronym', 'title', 'parent','title_international','title_short','title_printable','grade')}),)
     raw_id_fields = ('offer', 'structure', 'parent')
     search_fields = ['acronym']
+
+
+GRADE_TYPES = (
+    ('BACHELOR', _('Bachelor')),
+    ('MASTER', _('Master')),
+    ('DOCTORATE', _('Ph.D')))
 
 
 class OfferYear(models.Model):
@@ -42,11 +49,15 @@ class OfferYear(models.Model):
     academic_year = models.ForeignKey(academic_year.AcademicYear)
     acronym = models.CharField(max_length=15)
     title = models.CharField(max_length=255)
+    title_international = models.CharField(max_length=255, blank=True, null=True)
+    title_short = models.CharField(max_length=255, blank=True, null=True)
+    title_printable = models.CharField(max_length=255, blank=True, null=True)
     structure = models.ForeignKey(structure.Structure)
     parent = models.ForeignKey('self', blank=True, null=True, related_name='children', db_index=True)
+    grade = models.CharField(max_length=20, blank=True, null=True, choices=GRADE_TYPES)
 
     def __str__(self):
-        return u"%s - %s" % (self.academic_year, self.offer.acronym)
+        return u"%s - %s" % (self.academic_year, self.acronym)
 
     @property
     def offer_year_children(self):
@@ -74,7 +85,7 @@ class OfferYear(models.Model):
     @property
     def orientation_sibling(self):
         if self.offer:
-            off = offer.find_offer_by_id(self.offer.id)
+            off = offer.find_by_id(self.offer.id)
             return OfferYear.objects.filter(offer=off, acronym=self.acronym,
                                             academic_year=self.academic_year).exclude(id=self.id)
         return None
@@ -94,7 +105,3 @@ def find_offer_years_by_structure(struct):
 
 def find_offer_year_by_id(offer_year_id):
     return OfferYear.objects.get(pk=offer_year_id)
-
-
-def find_all_offers():
-    return OfferYear.objects.all()

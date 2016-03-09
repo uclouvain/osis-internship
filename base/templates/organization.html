@@ -43,58 +43,62 @@
         </ul>
         <div class="tab-content">
             <div id="tab_identification" class="tab-pane fade in active">
+                <br>
                 <div class="row">
                     <div class="col-md-3">
                         <label for="acronym">{% trans 'Acronym' %}</label><br>
-                        {{ organization.acronym | default_if_none:'' }}
+                        {{ organization.acronym | default_if_none:'-' }}
                     </div>
                     <div class="col-md-9">
                         <label for="title">{% trans 'Name'%}</label><br>
-                        {{ organization.name | default_if_none:'' }}
+                        {{ organization.name | default_if_none:'-' }}
                     </div>
                 </div>
                 <br>
                 <div class="row">
                     <div class="col-md-6">
                         <label for="website">{% trans 'Website' %}</label><br>
-                        {{ organization.website | default_if_none:'' }}
+                        {{ organization.website | default_if_none:'-' }}
                     </div>
                     <div class="col-md-6">
                         <label for="reference">{% trans 'Reference'%}</label><br>
-                        {{ organization.reference | default_if_none:'' }}
+                        {{ organization.reference | default_if_none:'-' }}
                     </div>
                 </div>
                 <br>
+                <div class="row">
+                    <div class="col-md-10">
+                        <label>{% trans 'Address(ses)' %}</label>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="{% url 'organization_address_create' organization.id %}" id="lnk_organization_address_create"
+                           class="btn btn-default" role="button" title="{% trans 'Add an address to the organization' %}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>  {% trans 'Add address'%}</a>
+                    </div>
+                </div>
+                <br>
+                {%if organization_addresses%}
                 <div class="row">
                     <div class="col-md-12">
-                        <label>{% trans 'Address' %}</label>
+                        <div class="list-group">
+                            {% for address in organization_addresses %}
+                            <a href="{% url 'organization_address_read' address.id %}" class="list-group-item">
+                                <h4 class="list-group-item-heading">{{ address.label | default_if_none:'' }}</h4>
+                                <p class="list-group-item-text">
+                                <address>
+                                    {{ address.location | default_if_none:'' }}<br>
+                                    {{ address.postal_code | default_if_none:'' }} {{ address.city | default_if_none:''}} <br>
+                                    {{ address.country | default_if_none:'' }}
+                                </address>
+                                </p>
+
+                            </a>
+                            {%endfor%}
+                        </div>
+
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        &nbsp;&nbsp;&nbsp;<label>{% trans 'Label' %}</label><br>
-                        &nbsp;&nbsp;&nbsp;{{ organization.address.label | default_if_none:'' }}
-                    </div>
-                    <div class="col-md-6">
-                        <label>{% trans 'Location' %}</label><br>
-                        {{ organization.address.location | default_if_none:'' }}
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        &nbsp;&nbsp;&nbsp;<label>{% trans 'Postal code' %}</label><br>
-                        &nbsp;&nbsp;&nbsp;{{ organization.address.postal_code | default_if_none:'' }}
-                    </div>
-                    <div class="col-md-4">
-                        <label>{% trans 'City' %}</label><br>
-                        {{ organization.address.city | default_if_none:'' }}
-                    </div>
-                    <div class="col-md-4">
-                        <label>{% trans 'Country' %}</label><br>
-                        {{ organization.address.country | default_if_none:'' }}
-                    </div>
-                </div>
-                <br>
+                {%endif%}
+
                 <div class="row">
                     <div class="col-md-4">
                         <a href="{% url 'organization_edit' organization.id %}" title="{%trans 'Edit'%}"
@@ -110,34 +114,36 @@
             <div id="tab_structure" class="tab-pane fade">
                 <br>
                 {% if structures %}
-                    <ul class="nav nav-tabs">
+                <ul class="nav nav-tabs">
                     {% for structure in structures %}
-                        {% if forloop.first%}
-                           <li class="active"><a data-toggle="tab" href="#tab_{{structure.acronym}}">{{structure.acronym}}</a></li>
-                        {% else %}
-                            <li><a data-toggle="tab" href="#tab_{{structure.acronym}}">{{structure.acronym}}</a></li>
-                        {% endif %}
+                    {% if forloop.first%}
+                    <li class="active"><a data-toggle="tab" href="#tab_{{structure.acronym}}">{{structure.acronym}}</a>
+                    </li>
+                    {% else %}
+                    <li><a data-toggle="tab" href="#tab_{{structure.acronym}}">{{structure.acronym}}</a></li>
+                    {% endif %}
 
                     {% endfor %}
-                    </ul>
+                </ul>
                 <div class="tab-content">
 
                     {% for structure in structures %}
-                        {% if forloop.first %}
-                           <div id="tab_{{structure.acronym}}" class="tab-pane fade in active">
+                    {% if forloop.first %}
+                    <div id="tab_{{structure.acronym}}" class="tab-pane fade in active">
 
                         {% else %}
-                            <div id="tab_{{structure.acronym}}" class="tab-pane fade">
-                        {% endif %}
-                        <iframe src="{%url 'structure_diagram_by_parent' structure.id %}" width="1100px" height="600px"
-                        frameborder="0"></iframe>
+                        <div id="tab_{{structure.acronym}}" class="tab-pane fade">
+                            {% endif %}
+                            <iframe src="{%url 'structure_diagram_by_parent' structure.id %}" width="1100px"
+                                    height="600px"
+                                    frameborder="0"></iframe>
                         </div>
 
-                    {% endfor %}
-                {% endif %}
-            </div>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
 
+                </div>
+            </div>
         </div>
-    </div>
-</div>
-{% endblock %}
+        {% endblock %}

@@ -28,24 +28,19 @@ from django.contrib import admin
 
 
 class OfferAdmin(admin.ModelAdmin):
-    list_display = ('acronym', 'title', 'changed')
-    fieldsets = ((None, {'fields': ('acronym', 'title')}),)
-    search_fields = ['acronym']
+    list_display = ('title', 'changed')
+    fieldsets = ((None, {'fields': ('title',)}),)
+    search_fields = ['title']
 
 
 class Offer(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed     = models.DateTimeField(null=True)
-    acronym     = models.CharField(max_length=15)
     title       = models.CharField(max_length=255)
 
-    def save(self, *args, **kwargs):
-        self.acronym = self.acronym.upper()
-        super(Offer, self).save(*args, **kwargs)
-
     def __str__(self):
-        return self.acronym
+        return self.title
 
 
-def find_offer_by_id(offer_id):
+def find_by_id(offer_id):
     return Offer.objects.get(pk=offer_id)

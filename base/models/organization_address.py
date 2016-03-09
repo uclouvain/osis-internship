@@ -43,8 +43,8 @@ class OrganizationAddress(models.Model):
 
 
 def find_by_organization(organization):
-    organization_address_list = OrganizationAddress.objects.filter(organization=organization)
-    for organization_address in organization_address_list:
-        # Supposed there is only one address for on organization
-        return organization_address
-    return None
+    return OrganizationAddress.objects.filter(organization=organization)
+
+
+def find_by_id(organization_address_id):
+    return OrganizationAddress.objects.get(pk=organization_address_id)

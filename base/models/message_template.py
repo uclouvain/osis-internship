@@ -25,41 +25,30 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
+from django.utils.translation import ugettext_lazy as _
+from base.models.supported_languages import SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE
 
 
-class OrganizationAdmin(admin.ModelAdmin):
-    list_display = ('name', 'acronym', 'changed')
-    fieldsets = ((None, {'fields': ('name', 'acronym', 'website', 'reference')}),)
-    search_fields = ['acronym']
+class MessageTemplateAdmin(admin.ModelAdmin):
+    list_display = ('reference', 'subject', 'format', 'language')
+    fieldsets = ((None, {'fields': ('reference', 'subject', 'template', 'format', 'language')}),)
 
 
-class Organization(models.Model):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed     = models.DateTimeField(null=True)
-    name        = models.CharField(max_length=255)
-    acronym     = models.CharField(max_length=15)
-    website     = models.URLField(max_length=255, blank=True, null=True)
-    reference   = models.CharField(max_length=30, blank=True, null=True)
+class MessageTemplate(models.Model):
+    FORMAT_CHOICES = (('PLAIN', _('Plain')),
+                      ('HTML', 'HTML'),
+                      ('PLAIN_HTML', _('Plain and HTML')))
+
+    reference = models.CharField(max_length=50, unique=True)
+    subject   = models.CharField(max_length=255)
+    template  = models.TextField()
+    format    = models.CharField(max_length=15, choices=FORMAT_CHOICES)
+    language  = models.CharField(max_length=30, null=True, choices=SUPPORTED_LANGUAGES, default=DEFAULT_LANGUAGE)
 
     def __str__(self):
-        return self.name
+        return self.subject
 
 
-def find_by_id(organization_id):
-    return Organization.objects.get(pk=organization_id)
-
-
-def find_by_acronym(acronym):
-    return Organization.objects.filter(acronym__icontains=acronym)
-
-
-def find_by_name(name):
-    return Organization.objects.filter(name__icontains=name)
-
-
-def find_by_acronym_name(acronym, name):
-    return Organization.objects.filter(acronym__icontains=acronym, name__icontains=name)
-
-
-def find_all():
-    return Organization.objects.all().order_by('name')
+def find_by_reference(reference):
+    message_template = MessageTemplate.objects.get(reference=reference)
+    return message_template
