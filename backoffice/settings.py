@@ -52,7 +52,9 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_jenkins',
     'base',
-    'internship'
+    'assistant',
+    'dissertation',
+    'internship',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -143,6 +145,8 @@ SERVER_EMAIL = DEFAULT_FROM_EMAIL
 SCREEN_SHOT_FOLDER = os.path.join(BASE_DIR, "base/tests/selenium/screenshots")
 FIREFOX_PROFILE_PATH = os.path.join(BASE_DIR, "base/tests/selenium/firefox_profile")
 JENKINS_TASKS = []
+
+PROPERTIES_FILE = ''
 
 try  :
     from backoffice.server_settings import *

@@ -61,12 +61,11 @@
             &nbsp;&nbsp;
           <a href="{% url 'academic_calendar_create' %}" id="lnk_academic_calendar_create" class="btn btn-default" role="button"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
           </div>
-        </div>
+
       </form>
     </div>
-  </div>
-
-  <div>
+      <br>
+        <div>
     {% if academic_calendars|length == 0 and init == "0" %}
       <label class="alert alert-info" style="margin:5px">{% trans 'No result!' %}</label>
     {% endif %}
@@ -88,5 +87,8 @@
     {% endif %}
 
   </div>
+  </div>
+
+
 </div>
 {% endblock %}

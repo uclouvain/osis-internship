@@ -29,9 +29,8 @@ from django.contrib.auth.middleware import RemoteUserMiddleware
 from django.contrib import auth
 from django.contrib.auth import backends
 from django.core.exceptions import ImproperlyConfigured
-from django.utils.encoding import smart_text
-from base.models import Person
-import re
+
+from base.models.person import Person
 
 
 class ShibbolethAuthBackend(RemoteUserBackend):
