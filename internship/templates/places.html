@@ -48,7 +48,7 @@
                   <select>
                     <option value="0">0</option>
                     {% for address in all_addresses %}
-                      <option value="1">{{ address.city }}</option> 
+                      <option value="1">{{ address.city }}</option>
                     {% endfor %}
                   </select>
                 </td>
@@ -78,7 +78,7 @@
                     {{ organization.reference }}
                   </td>
                   <td>
-                    {{ organization.name }}
+                    <a href="{% url 'internships' %}?place={{ organization.name }}">{{ organization.name }}</a>
                   </td>
                   <td>
                     {{ organization.address.location }}
