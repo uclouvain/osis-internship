@@ -35,11 +35,11 @@ from base.views import learning_unit, offer, common, score_encoding, institution
 urlpatterns = [
     url(r'^$', common.home, name='home'),
 
-    #url(r'^djangojs/', include('djangojs.urls')),
-
     # Please, organize the urls in alphabetic order.
 
     url(r'^catalog/$', common.catalog, name='catalog'),
+
+    url(r'^storage/$', common.storage, name='storage'),
 
     url(r'^institution/$', institution.institution, name='institution'),
 
