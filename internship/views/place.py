@@ -26,7 +26,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from base import models as mdl
-import pprint
+from pprint import pprint
 
 @login_required
 def internships_places(request):
@@ -40,9 +40,6 @@ def internships_places(request):
             if address:
                 organization.address = address
                 organization_addresses.append(address)
-
-
-    for o in organization_addresses:
-        pprint(vars(o))
-        
-    return render(request, "places.html", {'section': 'internship', 'all_organizations' : organizations, 'all_addresses':organization_addresses})
+                
+    list(set(organization_addresses))
+    return render(request, "places.html", {'section': 'internship', 'all_organizations' : organizations, 'all_addresses' : organization_addresses})

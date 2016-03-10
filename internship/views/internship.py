@@ -31,4 +31,12 @@ from internship.models import InternshipOffer
 def internships(request):
     query = InternshipOffer.find_internships()
 
-    return render(request, "internships.html", {'section': 'internship', 'all_internships': query})
+    internship_luy = []
+    internship_places = []
+    for internship in query:
+        internship_luy.append(internship.learning_unit_year)
+        internship_places.append(internship.organization)
+
+    internship_luy = list(set(internship_luy))
+    internship_places = list(set(internship_places))
+    return render(request, "internships.html", {'section': 'internship', 'all_internships': query, 'all_luy':internship_luy, 'all_places':internship_places})
