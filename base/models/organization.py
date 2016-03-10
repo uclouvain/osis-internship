@@ -38,7 +38,7 @@ class Organization(models.Model):
     changed     = models.DateTimeField(null=True)
     name        = models.CharField(max_length=255)
     acronym     = models.CharField(max_length=15)
-    website     = models.CharField(max_length=255, blank=True, null=True)
+    website     = models.URLField(max_length=255, blank=True, null=True)
     reference   = models.CharField(max_length=30, blank=True, null=True)
 
     def __str__(self):
@@ -63,3 +63,6 @@ def find_by_acronym_name(acronym, name):
 
 def find_all():
     return Organization.objects.all().order_by('name')
+
+def find_all_order_by_reference():
+    return Organization.objects.all().order_by('reference')

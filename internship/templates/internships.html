@@ -44,17 +44,36 @@
               <tr>
                   <th>{% trans 'Name' %}</th>
                   <th>{% trans 'Speciality' %}</th>
-                  <th>{% trans 'Student min' %}</th>
                   <th>{% trans 'Student max' %}</th>
                   <th>{% trans 'Place' %}</th>
+                  <th>{% trans 'Preference' %}</th>
               </tr>
             </thead>
             <tbody>
+              {% for internship in all_internships %}
               <tr>
+                  <td>
+                    {{ internship.title }}
+                  </td>
                   <td>
 
                   </td>
+                  <td>
+                    {{ internship.maximum_enrollments }}
+                  </td>
+                  <td>
+                    {{ internship.organization }}
+                  </td>
+                  <td>
+                    <select>
+                     <option value="0">0</option>
+                     <option value="1">1</option>
+                     <option value="2">2</option>
+                     <option value="3">3</option>
+                    </select>
+                  <td>
               </tr>
+              {% endfor %}
             </tbody>
         </table>
       </div>

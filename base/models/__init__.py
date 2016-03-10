@@ -30,6 +30,7 @@ from base.models import exam_enrollment
 from base.models import learning_unit
 from base.models import learning_unit_enrollment
 from base.models import learning_unit_year
+from base.models import message_template
 from base.models import offer
 from base.models import offer_enrollment
 from base.models import offer_year
@@ -42,4 +43,5 @@ from base.models import program_manager
 from base.models import session_exam
 from base.models import structure
 from base.models import student
+from base.models import supported_languages
 from base.models import tutor

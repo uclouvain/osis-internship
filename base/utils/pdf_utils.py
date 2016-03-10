@@ -168,7 +168,7 @@ def list_notes_building(session_exam, learning_unit_year_id, academic_year, acad
                 old_pgm =o
                 current_learning_unit_year = rec_exam_enrollment.learning_unit_enrollment.learning_unit_year
 
-            person = mdl.person.find_person(student.person.id)
+            person = mdl.person.find_by_id(student.person.id)
             score = None
             if not (rec_exam_enrollment.score_final is None):
                 if rec_exam_enrollment.session_exam.learning_unit_year.decimal_scores :
@@ -179,11 +179,11 @@ def list_notes_building(session_exam, learning_unit_year_id, academic_year, acad
             if rec_exam_enrollment.justification_final:
                 justification = dict(mdl.exam_enrollment.JUSTIFICATION_TYPES)[rec_exam_enrollment.justification_final]
             data.append([student.registration_id,
-                           person.last_name,
-                           person.first_name,
-                           score,
-                           justification,
-                           session_exam.offer_year_calendar.end_date.strftime('%d/%m/%Y')])
+                         person.last_name,
+                         person.first_name,
+                         score,
+                         justification,
+                         session_exam.offer_year_calendar.end_date.strftime('%d/%m/%Y')])
 
     if not old_pgm is None:
         main_data(tutor, academic_year, session_exam, styles, current_learning_unit_year, old_pgm, content)

@@ -48,17 +48,39 @@
                   <th>{% trans 'Forname' %}</th>
                   <th>{% trans 'Civility' %}</th>
                   <th>{% trans 'Type' %}</th>
-                  <th>{% trans 'Speciality Id' %}</th>
                   <th>{% trans 'Speciality' %}</th>
                   <th>{% trans 'Mail' %}</th>
               </tr>
             </thead>
             <tbody>
+              {% for master in all_masters %}
               <tr>
                   <td>
-
+                    {{ master.reference }}
+                  </td>
+                  <td>
+                    {{ master.person.gender }}
+                  </td>
+                  <td>
+                    {{ master.person.last_name }}
+                  </td>
+                  <td>
+                    {{ master.person.first_name }}
+                  </td>
+                  <td>
+                    {{ master.civility }}
+                  </td>
+                  <td>
+                    {{ master.type_mastery }}
+                  </td>
+                  <td>
+                    {{ master.speciality }}
+                  </td>
+                  <td>
+                    {{ master.person.email }}
                   </td>
               </tr>
+              {% endfor %}
             </tbody>
         </table>
       </div>

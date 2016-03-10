@@ -49,17 +49,50 @@
                   <th>{% trans 'Periode' %}</th>
                   <th>{% trans 'Sexe' %}</th>
                   <th>{% trans 'Mail' %}</th>
+                  <th>{% trans 'Address' %}</th>
                   <th>{% trans 'Postal Code' %}</th>
-                  <th>{% trans 'Town' %}</th>
+                  <th>{% trans 'City' %}</th>
                   <th>{% trans 'Phone Number' %}</th>
               </tr>
             </thead>
             <tbody>
+              {% for student in all_students %}
               <tr>
+                  <td>
+                    {{ student.person.last_name }}
+                  </td>
+                  <td>
+                    {{ student.person.first_name }}
+                  </td>
+                  <td>
+                    {{ student.registration_id }}
+                  </td>
                   <td>
 
                   </td>
+                  <td>
+
+                  </td>
+                  <td>
+                    {{ student.person.gender }}
+                  </td>
+                  <td>
+                    {{ student.person.email }}
+                  </td>
+                  <td>
+                    {{ student.address.location}}
+                  </td>
+                  <td>
+                    {{ student.address.postal_code}}
+                  </td>
+                  <td>
+                    {{ student.address.city }}
+                  </td>
+                  <td>
+                    {{ student.person.phone_mobile }}
+                  </td>
               </tr>
+              {% endfor %}
             </tbody>
         </table>
       </div>

@@ -26,7 +26,10 @@
 from django.shortcuts import render
 
 from base import models as mdl
-
+from django.utils.translation import ugettext_lazy as _
+import operator
+from functools import reduce
+from django.db import models
 
 def offers(request):
     academic_yr = None
@@ -49,26 +52,35 @@ def offers(request):
 
 
 def offers_search(request):
+    criterias = []
     faculty = request.GET['faculty']
     academic_yr = request.GET['academic_year']
     code = request.GET['code']
 
     faculties = mdl.structure.find_structures()
     academic_years = mdl.academic_year.find_academic_years()
+    criteria_present = False
 
     if academic_yr and academic_yr != "*":
-        query = mdl.offer_year.find_offer_years_by_academic_year(academic_yr)
-    else:
-        query = mdl.offer_year.find_all_offers()
+        criterias.append(models.Q(academic_year=academic_yr))
+        criteria_present = True
 
     if faculty and faculty != "*":
-        query = query.filter(structure=int(faculty))
+        criterias.append(models.Q(structure=int(faculty)))
+        criteria_present = True
 
     if code and len(code) > 0:
-        query = query.filter(acronym__icontains=code)
+        criterias.append(models.Q(acronym__icontains=code))
+        criteria_present = True
 
-    # on ne doit prendre que les offres racines (pas les finalités)
-    query = query.filter(parent=None)
+    message = None
+    offer_years=None
+    if not criteria_present :
+        message = "%s" %  _('You must choose at least one criteria!')
+    else:
+        # on ne doit prendre que les offres racines (pas les finalités)
+        criterias.append(models.Q(parent=None))
+        offer_years = mdl.offer_year.OfferYear.objects.filter(reduce(operator.and_, criterias))
     if faculty is None or faculty == "*":
         faculty = None
     else:
@@ -79,13 +91,14 @@ def offers_search(request):
     else:
         academic_yr = int(academic_yr)
 
-    return render(request, "offers.html", {'faculties': faculties,
-                                           'academic_year': academic_yr,
-                                           'faculty': faculty,
-                                           'code': code,
+    return render(request, "offers.html", {'faculties':      faculties,
+                                           'academic_year':  academic_yr,
+                                           'faculty':        faculty,
+                                           'code':           code,
                                            'academic_years': academic_years,
-                                           'offer_years': query,
-                                           'init': "0"})
+                                           'offer_years':    offer_years,
+                                           'init':           "0",
+                                           'message' :       message})
 
 
 def offer_read(request, offer_year_id):

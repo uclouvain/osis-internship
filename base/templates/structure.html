@@ -50,8 +50,9 @@
       <li><a data-toggle="tab" href="#tab_structure">{% trans 'Structure'%}</a></li>
     </ul>
     <div class="tab-content">
-      <p>
+
         <div id="tab_identification" class="tab-pane fade in active">
+          <br>
           <div class="row">
             <div class="col-md-3">
               <label for="acronym">{% trans 'Acronym' %}</label><br>
@@ -62,6 +63,7 @@
               {{ structure.title }}
             </div>
           </div>
+          <br>
           <div class="row">
             <div class="col-md-3">
                 <label for="title">{% trans 'Organization'%}</label><br>
@@ -102,6 +104,7 @@
           {% endif %}
         </div>
         <div id="tab_offers" class="tab-pane fade">
+          <br>
           <div class="row">
             <div class="col-md-12">
               {% if offers_years|length > 0%}
@@ -130,7 +133,7 @@
                         frameborder="0"></iframe>
             {%endif%}
         </div>
-      </p>
+
     </div>
   </div>
 </div>

@@ -28,6 +28,7 @@ from django.db import models
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
+from base.models.supported_languages import SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE
 
 
 class PersonAdmin(admin.ModelAdmin):
@@ -35,9 +36,8 @@ class PersonAdmin(admin.ModelAdmin):
                     'changed')
     search_fields = ['first_name', 'middle_name', 'last_name', 'user__username', 'email']
     fieldsets = ((None, {'fields': ('user', 'global_id', 'national_id', 'gender', 'first_name', 'middle_name',
-                                    'last_name', 'email', 'phone', 'phone_mobile')}),)
+                                    'last_name', 'email', 'phone', 'phone_mobile', 'language')}),)
     raw_id_fields = ('user',)
-    search_fields = ['first_name', 'last_name']
 
 
 class Person(models.Model):
@@ -58,6 +58,7 @@ class Person(models.Model):
     email        = models.EmailField(max_length=255, blank=True, null=True)
     phone        = models.CharField(max_length=30, blank=True, null=True)
     phone_mobile = models.CharField(max_length=30, blank=True, null=True)
+    language     = models.CharField(max_length=30, null=True, choices=SUPPORTED_LANGUAGES, default=DEFAULT_LANGUAGE)
 
     def username(self):
         if self.user is None:
@@ -78,9 +79,17 @@ class Person(models.Model):
         return u"%s %s %s" % (last_name.upper(), first_name, middle_name)
 
 
-def find_person(person_id):
+def find_by_id(person_id):
     return Person.objects.get(id=person_id)
 
 
-def find_person_by_user(user):
-    return Person.objects.get(user=user)
+def find_by_user(user):
+    person = Person.objects.filter(user=user).first()
+    return person
+
+
+def change_language(user, new_language):
+    if new_language:
+        person = Person.objects.get(user=user)
+        person.language = new_language
+        person.save()

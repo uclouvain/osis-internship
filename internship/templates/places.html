@@ -46,17 +46,37 @@
                   <th>{% trans 'Name' %}</th>
                   <th>{% trans 'Address' %}</th>
                   <th>{% trans 'Postal Code' %}</th>
-                  <th>{% trans 'Town' %}</th>
+                  <th>{% trans 'City' %}</th>
                   <th>{% trans 'Country' %}</th>
                   <th>{% trans 'Url' %}</th>
               </tr>
             </thead>
             <tbody>
+              {% for organization in all_organizations %}
               <tr>
                   <td>
-
+                    {{ organization.reference }}
+                  </td>
+                  <td>
+                    {{ organization.name }}
+                  </td>
+                  <td>
+                    {{ organization.address.location }}
+                  </td>
+                  <td>
+                    {{ organization.address.postal_code }}
+                  </td>
+                  <td>
+                    {{ organization.address.city }}
+                  </td>
+                  <td>
+                    {{ organization.address.country }}
+                  </td>
+                  <td>
+                    {{ organization.website }}
                   </td>
               </tr>
+              {% endfor %}
             </tbody>
         </table>
       </div>
