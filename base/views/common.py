@@ -25,7 +25,7 @@
 ##############################################################################
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-
+import subprocess
 from base import models as mdl
 
 
@@ -91,3 +91,16 @@ def profile_lang(request):
     ui_language = request.POST.get('ui_language')
     mdl.person.change_language(request.user, ui_language)
     return profile(request)
+
+
+@login_required
+def storage(request):
+    df = subprocess.Popen(["df", "-h"], stdout=subprocess.PIPE)
+    output = df.communicate()[0]
+    lines = output.splitlines()
+    lines[0] = lines[0].decode("utf-8").replace('Mounted on', 'Mounted')
+    lines[0] = lines[0].replace('Avail', 'Available')
+    table = []
+    for line in lines:
+        table.append(line.split())
+    return render(request, "admin/storage.html", {'table': table})
