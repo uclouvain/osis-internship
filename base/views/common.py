@@ -23,9 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import subprocess
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-import subprocess
 from base import models as mdl
 
 
@@ -104,3 +104,8 @@ def storage(request):
     for line in lines:
         table.append(line.split())
     return render(request, "admin/storage.html", {'table': table})
+
+
+@login_required
+def files(request):
+    return render(request, "admin/files.html", {})
