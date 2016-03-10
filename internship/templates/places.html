@@ -46,10 +46,10 @@
               <tr>
                 <td style="text-align:center; width:50%;">
                   <select>
-                   <option value="0">0</option>
-                   <option value="1">1</option>
-                   <option value="2">2</option>
-                   <option value="3">3</option>
+                    <option value="0">0</option>
+                    {% for address in all_addresses %}
+                      <option value="1">{{ address.city }}</option>
+                    {% endfor %}
                   </select>
                 </td>
               </tr>

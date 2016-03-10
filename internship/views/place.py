@@ -26,6 +26,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from base import models as mdl
+import pprint
 
 @login_required
 def internships_places(request):
@@ -34,8 +35,14 @@ def internships_places(request):
     if organizations:
         for organization in organizations:
             organization.address = ""
+            organization_addresses = []
             address = mdl.organization_address.find_by_organization(organization.id)
             if address:
                 organization.address = address
+                organization_addresses.append(address)
 
-    return render(request, "places.html", {'section': 'internship', 'all_organizations' : organizations})
+
+    for o in organization_addresses:
+        pprint(vars(o))
+        
+    return render(request, "places.html", {'section': 'internship', 'all_organizations' : organizations, 'all_addresses':organization_addresses})
