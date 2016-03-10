@@ -93,7 +93,7 @@
                           {% endif %}
                       <td>{{ session.learning_unit_year.acronym }}</td>
                       <td><a href="{% url 'online_encoding' session.id %}" id="lnk_{{ session.learning_unit_year.acronym }}" >{{ session.learning_unit_year.title }}</a></td>
-                      <td>{{ progress }}</td>
+                      <td>{{ session.progress }}</td>
                       <td>{% if session.status == 'OPEN' %}
                             <a class="btn btn-default" href="{% url 'online_encoding_form' session.id %}" role="button" id="lnk_online_encoding_profile_{{session.id}}"><i class="fa fa-hashtag"></i> {% trans 'Encoding'%}</a>
                           {% endif %}

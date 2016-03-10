@@ -57,9 +57,8 @@ def scores_encoding(request):
             enrollments = list(mdl.exam_enrollment.find_exam_enrollments_by_session(session))
             if enrollments:
                 all_enrollments = all_enrollments + enrollments
+            session.progress = mdl.exam_enrollment.calculate_session_exam_progress(session)
         session = sessions.first()
-
-    progress = mdl.exam_enrollment.calculate_session_exam_progress(session)
 
     return render(request, "scores_encoding.html",
                   {'section': 'scores_encoding',
@@ -67,8 +66,7 @@ def scores_encoding(request):
                    'faculty': faculty,
                    'academic_year': academic_yr,
                    'sessions': sessions,
-                   'session': session,
-                   'progress': progress})
+                   'session': session})
 
 
 @login_required

@@ -30,8 +30,9 @@ from base.models import academic_year, offer, structure
 
 
 class OfferYearAdmin(admin.ModelAdmin):
-    list_display = ('offer', 'parent', 'title', 'academic_year', 'changed')
-    fieldsets = ((None, {'fields': ('offer', 'academic_year', 'structure', 'acronym', 'title', 'parent','title_international','title_short','title_printable','grade')}),)
+    list_display = ('acronym', 'offer', 'parent', 'title', 'academic_year', 'changed')
+    fieldsets = ((None, {'fields': ('offer', 'academic_year', 'structure', 'acronym', 'title', 'parent',
+                                    'title_international', 'title_short', 'title_printable', 'grade')}),)
     raw_id_fields = ('offer', 'structure', 'parent')
     search_fields = ['acronym']
 

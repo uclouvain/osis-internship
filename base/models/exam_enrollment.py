@@ -80,11 +80,27 @@ def find_exam_enrollments_by_session(session_exm):
 
 def find_exam_enrollments_drafts_by_session(session_exam):
     """ Return the enrollments of a session but not the ones already submitted. """
-    enrollments = ExamEnrollment.objects.filter(session_exam=session_exam) \
-        .filter(score_final__isnull=True) \
-        .filter(models.Q(justification_final__isnull=True) |
-                models.Q(justification_final=''))
-    return enrollments
+    enrolls = ExamEnrollment.objects.filter(session_exam=session_exam) \
+                                    .filter(score_final__isnull=True) \
+                                    .filter(models.Q(justification_final__isnull=True) |
+                                            models.Q(justification_final='')) \
+                                    .order_by('learning_unit_enrollment__offer_enrollment__offer_year__acronym',
+                                              'learning_unit_enrollment__offer_enrollment__student__person__last_name',
+                                              'learning_unit_enrollment__offer_enrollment__student__person__first_name')
+    return enrolls
+
+
+def find_exam_enrollments_to_validate_by_session(session_exam):
+    enrolls = ExamEnrollment.objects.filter(session_exam=session_exam) \
+                                    .filter(~models.Q(score_draft=models.F('score_reencoded')) |
+                                            ~models.Q(justification_draft=models.F('justification_reencoded'))) \
+                                    .filter(score_final__isnull=True) \
+                                    .filter(models.Q(justification_final__isnull=True) |
+                                            models.Q(justification_final='')) \
+                                    .order_by('learning_unit_enrollment__offer_enrollment__offer_year__acronym',
+                                              'learning_unit_enrollment__offer_enrollment__student__person__last_name',
+                                              'learning_unit_enrollment__offer_enrollment__student__person__first_name')
+    return enrolls
 
 
 def count_encoded_scores(enrollments):
@@ -97,16 +113,6 @@ def count_encoded_scores(enrollments):
             counter += 1
 
     return counter
-
-
-def find_exam_enrollments_to_validate_by_session(session_exam):
-    enrollments = ExamEnrollment.objects.filter(session_exam=session_exam) \
-        .filter(~models.Q(score_draft=models.F('score_reencoded')) |
-                ~models.Q(justification_draft=models.F('justification_reencoded'))) \
-        .filter(score_final__isnull=True) \
-        .filter(models.Q(justification_final__isnull=True) |
-                models.Q(justification_final=''))
-    return enrollments
 
 
 def calculate_exam_enrollment_progress(enrollments):

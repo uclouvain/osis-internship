@@ -49,6 +49,7 @@ class SessionExam(models.Model):
     status              = models.CharField(max_length=10,choices=SESSION_STATUS)
     learning_unit_year  = models.ForeignKey(learning_unit_year.LearningUnitYear)
     offer_year_calendar = models.ForeignKey(offer_year_calendar.OfferYearCalendar)
+    progress = None
 
     def __str__(self):
         return u"%s - %d" % (self.learning_unit_year, self.number_session)
