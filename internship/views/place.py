@@ -36,10 +36,10 @@ def internships_places(request):
         for organization in organizations:
             organization.address = ""
             organization_addresses = []
-            address = mdl.organization_address.find_by_organization(organization.id)
+            address = mdl.organization_address.find_by_organization(organization)
             if address:
                 organization.address = address
                 organization_addresses.append(address)
-                
+
     list(set(organization_addresses))
     return render(request, "places.html", {'section': 'internship', 'all_organizations' : organizations, 'all_addresses' : organization_addresses})

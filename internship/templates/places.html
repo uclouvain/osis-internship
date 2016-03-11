@@ -80,18 +80,26 @@
                   <td>
                     <a href="{% url 'internships' %}?place={{ organization.name }}">{{ organization.name }}</a>
                   </td>
-                  <td>
-                    {{ organization.address.location }}
-                  </td>
-                  <td>
-                    {{ organization.address.postal_code }}
-                  </td>
-                  <td>
-                    {{ organization.address.city }}
-                  </td>
-                  <td>
-                    {{ organization.address.country }}
-                  </td>
+                    <td>
+                      {% for address in organization.address %}
+                        {{address.location}} <br/>
+                      {% endfor %}
+                    </td>
+                    <td>
+                      {% for address in organization.address %}
+                        {{address.postal_code}} <br/>
+                      {% endfor %}
+                    </td>
+                    <td>
+                      {% for address in organization.address %}
+                        {{address.city}} <br/>
+                      {% endfor %}
+                    </td>
+                    <td>
+                      {% for address in organization.address %}
+                        {{address.country}} <br/>
+                      {% endfor %}
+                    </td>
                   <td>
                     {{ organization.website }}
                   </td>
