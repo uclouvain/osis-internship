@@ -31,4 +31,13 @@ from internship.models import InternshipMaster
 def interships_masters(request):
     query = InternshipMaster.find_masters()
 
-    return render(request, "interships_masters.html", {'section': 'internship', 'all_masters': query})
+    master_specs = []
+    master_places = []
+    for master in query:
+        master_specs.append(master.speciality)
+        master_places.append(master.organization)
+
+    master_specs = list(set(master_specs))
+    master_places = list(set(master_places))
+
+    return render(request, "interships_masters.html", {'section': 'internship', 'all_masters': query, 'all_spec' : master_specs, 'all_places' : master_places})
