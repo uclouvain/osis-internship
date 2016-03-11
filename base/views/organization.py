@@ -31,16 +31,21 @@ from django.utils.translation import ugettext_lazy as _
 
 
 def organizations(request):
+
+    organizations_type = ('None','Main','Academic partner','Industrial partner','Service partner','Commerce partner','Public partner')
+
     return render(request, "organizations.html",
                            {'acronym': None,
                             'name': None,
                             'organizations': None,
+                            'type': organizations_type,
                             'init': "1"})
 
 
 def organizations_search(request):
     acronym = request.GET['acronym']
     name = request.GET['name']
+    type = request.GET['type']
     organizations_list = []
     criteria_present = False
 
@@ -56,11 +61,18 @@ def organizations_search(request):
     else:
         criteria_present=True
 
+    if type <= "*":
+        type = None
+    else :
+        criteria_present=True
+
     message = None
     if criteria_present:
-        if acronym is None and name:
+        if acronym is None and name is None and type:
+            organizations_list = mdl.organization.find_by_type(type)
+        if acronym is None and name and type is None:
             organizations_list = mdl.organization.find_by_name(name)
-        if acronym and name is None:
+        if acronym and name is None and type is None:
             organizations_list = mdl.organization.find_by_acronym(acronym)
         if acronym and name:
             organizations_list = mdl.organization.find_by_acronym_name(acronym, name)
@@ -71,8 +83,9 @@ def organizations_search(request):
                            {'acronym':       acronym,
                             'name':          name,
                             'organizations': organizations_list,
-                            'init':          "0",
-                            'message':       message})
+                            'type': type,
+                            'init': "0",
+                            'message': message})
 
 
 def organization_read(request, organization_id):

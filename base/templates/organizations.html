@@ -43,9 +43,26 @@
               <label for="acronym">{% trans 'Acronym'%}</label>
               <input class="form-control" id="txt_acronym" placeholder="{% trans 'Acronym' %}" name="acronym" value="{{ acronym | default_if_none:'' }}" style="text-transform:uppercase">
           </div>
-          <div class="col-md-7">
+          <div class="col-md-5">
               <label for="name" >{% trans 'Name'%}</label>
               <input class="form-control" placeholder="{% trans 'Name' %}" id="txt_name" name="name" value="{{ name | default_if_none:'' }}" style="text-transform:uppercase">
+          </div>
+          <div class="col-md-2">
+            <label for="title">{% trans 'Type'%}</label><br>
+                <select class="form-control" id="slt_type" name="type" value="{{ type }}">
+                    {%if academic_year%}
+                    <option value="*">-</option>
+                    {%else%}
+                    <option selected value="*">-</option>
+                    {%endif%}
+                    {% for v in type %}
+                    {% if v.id == type %}
+                    <option selected value="{{ v.id }}">{{ v }}</option>
+                    {% else %}
+                    <option value="{{ v.id }}">{{ v }}</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
           </div>
           <div class="col-md-2">
               <br>
