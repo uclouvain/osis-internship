@@ -72,7 +72,7 @@ def find_sessions_by_tutor(tutor, academic_year):
         .filter(learning_unit_year__learning_unit__in=learning_units)
 
 
-def find_sessions_by_faculty(faculty, academic_year):
+def find_sessions_by_offer(offer_year, academic_year):
     return SessionExam.objects.filter(~models.Q(status='IDLE')) \
         .filter(offer_year_calendar__offer_year__academic_year=academic_year) \
-        .filter(offer_year_calendar__offer_year__structure=faculty)
+        .filter(offer_year_calendar__offer_year=offer_year)
