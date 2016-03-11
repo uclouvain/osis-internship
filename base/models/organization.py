@@ -34,12 +34,21 @@ class OrganizationAdmin(admin.ModelAdmin):
 
 
 class Organization(models.Model):
+    TYPE_CHOICES = (
+        ('MAIN', 'Main'),
+        ('ACADEMIC_PARTNER', 'Academic partner'),
+        ('INDUSTRIAL_PARTNER', 'Industrial partner'),
+        ('SERVICE_PARTNER', 'Service partner'),
+        ('COMMERCE_PARTNER', 'Commerce partner'),
+        ('PUBLIC_PARTNER', 'Public partner'),
+    )
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed     = models.DateTimeField(null=True)
     name        = models.CharField(max_length=255)
     acronym     = models.CharField(max_length=15)
     website     = models.URLField(max_length=255, blank=True, null=True)
     reference   = models.CharField(max_length=30, blank=True, null=True)
+    type        = models.CharField(max_length=15, blank=True, null=True, choices=TYPE_CHOICES, default='UNKNOWN')
 
     def __str__(self):
         return self.name
@@ -59,6 +68,9 @@ def find_by_name(name):
 
 def find_by_acronym_name(acronym, name):
     return Organization.objects.filter(acronym__icontains=acronym, name__icontains=name)
+
+def find_by_type(type):
+    return Organization.objects.filter(type__icontains=type)
 
 
 def find_all():
