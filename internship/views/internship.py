@@ -39,4 +39,8 @@ def internships(request):
 
     internship_luy = list(set(internship_luy))
     internship_places = list(set(internship_places))
+
+    if request.method == 'GET':
+        print (request.GET.get('luy_tri'))
+
     return render(request, "internships.html", {'section': 'internship', 'all_internships': query, 'all_luy':internship_luy, 'all_places':internship_places})

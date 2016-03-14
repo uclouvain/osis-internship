@@ -45,23 +45,26 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td style="text-align:center; width:50%;">
-                  <select>
-                   <option value="0">--</option>
-                   {% for luy in all_luy %}
-                      <option value="{{ luy }}">{{ luy }}</option>
-                   {% endfor %}
-                  </select>
-                </td>
-                <td style="text-align:center; width:50%;">
-                  <select>
-                   <option value="0">--</option>
-                   {% for place in all_places %}
-                      <option value="{{ place }}">{{ place }}</option>
-                   {% endfor %}
-                  </select>
-                </td>
+              <form action="{%url 'internships' %}" method="get">
+                <tr>
+                  <td style="text-align:center; width:50%;">
+                    <select name="luy_tri" onChange="javascript: this.form.submit();">
+                     <option value="0">--</option>
+                     {% for luy in all_luy %}
+                        <option value="{{ luy }}" {% if luy_tri == luy %}selected{%endif%}>{{ luy }} - {{luy_tri}}</option>
+                     {% endfor %}
+                    </select>
+                  </td>
+                  <td style="text-align:center; width:50%;">
+                    <select name="place_tri" onChange="javascript: this.form.submit();">
+                     <option value="0">--</option>
+                     {% for place in all_places %}
+                        <option value="{{ place }}">{{ place }} - {{ place_val }}</option>
+                     {% endfor %}
+                    </select>
+                  </td>
+                </tr>
+              </form>
             </tbody>
         </table>
   </div>
