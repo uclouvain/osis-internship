@@ -24,22 +24,26 @@
 #
 ##############################################################################
 from django.db import models
-from base.models import Organization, Person, LearningUnitYear, LearningUnitEnrollment
 from django.utils.translation import ugettext_lazy as _
 
 
+
 class InternshipOffer(models.Model):
-    organization        = models.ForeignKey(Organization)
-    learning_unit_year  = models.ForeignKey(LearningUnitYear)
+    organization        = models.ForeignKey('base.Organization')
+    learning_unit_year  = models.ForeignKey('base.LearningUnitYear')
     title               = models.CharField(max_length=255)
     maximum_enrollments = models.IntegerField()
 
     def __str__(self):
         return self.title
 
+    @staticmethod
+    def find_internships():
+        return InternshipOffer.objects.all()
+
 
 class InternshipEnrollment(models.Model):
-    learning_unit_enrollment = models.ForeignKey(LearningUnitEnrollment)
+    learning_unit_enrollment = models.ForeignKey('base.LearningUnitEnrollment')
     internship_offer         = models.ForeignKey(InternshipOffer)
     start_date               = models.DateField()
     end_date                 = models.DateField()
@@ -60,13 +64,17 @@ class InternshipMaster(models.Model):
                         ('EMERGENCY',_('Emergency')),
                         ('GERIATRICS',_('Geriatrics')))
 
-    organization     = models.ForeignKey(Organization)
+    organization     = models.ForeignKey('base.Organization')
     internship_offer = models.ForeignKey(InternshipOffer)
-    person           = models.ForeignKey(Person)
+    person           = models.ForeignKey('base.Person')
     reference        = models.CharField(max_length=30, blank=True, null=True)
     civility         = models.CharField(max_length=20, blank=True, null=True, choices=CIVILITY_CHOICE)
     type_mastery     = models.CharField(max_length=20, blank=True, null=True, choices=TYPE_CHOICE)
     speciality       = models.CharField(max_length=20, blank=True, null=True, choices=SPECIALITY_CHOICE)
+
+    @staticmethod
+    def find_masters():
+        return InternshipMaster.objects.all()
 
     def __str__(self):
         return u"%s - %s" % (self.person, self.reference)

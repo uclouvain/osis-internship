@@ -25,23 +25,57 @@
 ##############################################################################
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from internship.models import InternshipOffer, InternshipMaster
+from base import models as mdl
 
 
 @login_required
 def internships_home(request):
     return render(request, "internships_home.html", {'section': 'internship'})
 
+
+@login_required
 def internships_places(request):
-    return render(request, "places.html", {'section': 'internship'})
+    organizations = mdl.organization.find_all_order_by_reference()
 
+    if organizations:
+        for organization in organizations:
+            organization.address = ""
+            address = mdl.organization_address.find_by_organization(organization.id)
+            if address:
+                organization.address = address
+
+    return render(request, "places.html", {'section': 'internship', 'all_organizations' : organizations})
+
+
+@login_required
 def internships_students(request):
-    return render(request, "students.html", {'section': 'internship'})
+    students = None
 
+    if students:
+        for student in students:
+            student.address = ""
+            address = mdl.person_address.find_by_person(student.person)
+            if address:
+                student.address = address
+
+    return render(request, "students.html", {'section': 'internship', 'all_students': students})
+
+
+@login_required
 def internships(request):
-    return render(request, "internships.html", {'section': 'internship'})
+    query = InternshipOffer.find_internships()
 
+    return render(request, "internships.html", {'section': 'internship', 'all_internships': query})
+
+
+@login_required
 def internships_periods(request):
     return render(request, "periods.html", {'section': 'internship'})
 
+
+@login_required
 def interships_masters(request):
-    return render(request, "interships_masters.html", {'section': 'internship'})
+    query = InternshipMaster.find_masters()
+
+    return render(request, "interships_masters.html", {'section': 'internship', 'all_masters': query})

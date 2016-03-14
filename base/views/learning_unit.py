@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -25,51 +25,52 @@
 ##############################################################################
 from django.shortcuts import render
 
-from base.models import *
+from base import models as mdl
+
 
 def learning_units(request):
-
-    academic_year = None
+    academic_yr = None
     code = ""
 
-    academic_years = AcademicYear.find_academic_years()
-    academic_year_calendar = AcademicCalendar.current_academic_year()
+    academic_years = mdl.academic_year.find_academic_years()
+    academic_yr_calendar = mdl.academic_year.current_academic_year()
 
-    if not academic_year_calendar is None:
-        academic_year = academic_year_calendar.id
-    return render(request, "learning_units.html", {
-                                           'academic_year':  academic_year,
-                                           'code':           code,
-                                           'academic_years': academic_years,
-                                           'learning_units': [] ,
-                                           'init':           "1"})
+    if academic_yr_calendar:
+        academic_yr = academic_yr_calendar.id
+    return render(request, "learning_units.html", {'academic_year': academic_yr,
+                                                   'code': code,
+                                                   'academic_years': academic_years,
+                                                   'learning_units': [],
+                                                   'init': "1"})
+
 
 def learning_units_search(request):
     """
     Learning units search
     """
-    #criteria
+    # criteria
     academic_year = request.GET['academic_year']
     code = request.GET['code']
 
-    academic_years = AcademicYear.find_academic_years()
+    academic_years = mdl.academic_year.find_academic_years()
 
     if academic_year is None:
-        academic_year_calendar = AcademicCalendar.current_academic_year()
-        if not academic_year_calendar is None:
+        academic_year_calendar = mdl.academic_year.current_academic_year()
+        if academic_year_calendar:
             academic_year = academic_year_calendar.id
 
-    learning_units = LearningUnitYear.find_learning_unit_years_by_academic_year(academic_year)
+    learning_unts = mdl.learning_unit_year.find_learning_unit_years_by_academic_year(academic_year)
 
-    if not code is None and len(code) > 0  :
-        learning_units = learning_units.filter(acronym__icontains=code)
+    if code and len(code) > 0:
+        learning_unts = learning_unts.filter(acronym__icontains=code)
 
-    return render(request, "learning_units.html", {'academic_year':  int(academic_year),
-                                           'code':           code,
-                                           'academic_years': academic_years,
-                                           'learning_units': learning_units ,
-                                           'init':           "0"})
+    return render(request, "learning_units.html", {'academic_year': int(academic_year),
+                                                   'code': code,
+                                                   'academic_years': academic_years,
+                                                   'learning_units': learning_unts,
+                                                   'init': "0"})
 
-def learning_unit_read(request,learning_unit_id):
-    learning_unit_year = LearningUnitYear.find_learning_unit_year_by_id(learning_unit_id)
-    return render(request, "learning_unit.html", {'learning_unit_year':    learning_unit_year})
+
+def learning_unit_read(request, learning_unit_id):
+    learning_unit_year = mdl.learning_unit_year.find_learning_unit_year_by_id(learning_unit_id)
+    return render(request, "learning_unit.html", {'learning_unit_year': learning_unit_year})

@@ -25,25 +25,25 @@
 ##############################################################################
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from base.models import *
+import subprocess
+from base import models as mdl
+
 
 def page_not_found(request):
-    return render(request,'page_not_found.html')
+    return render(request, 'page_not_found.html')
 
 
 def access_denied(request):
-    return render(request,'acces_denied.html')
+    return render(request, 'access_denied.html')
 
 
 def home(request):
-    academic_year_calendar = AcademicCalendar.current_academic_year()
-    academic_calendar = None
-    if not academic_year_calendar is None:
-        academic_year = academic_year_calendar.id
-        academic_calendar = AcademicCalendar.find_by_academic_year_with_dates(academic_year)
-    return render(request, "home.html",
-                          {'academic_calendar': academic_calendar,
-                           'highlight_academic_calendars': AcademicCalendar.find_highlight_academic_calendars()})
+    academic_yr = mdl.academic_year.current_academic_year()
+    calendar_events = None
+    if academic_yr:
+        calendar_events = mdl.academic_calendar.find_academic_calendar_by_academic_year_with_dates(academic_yr.id)
+    return render(request, "home.html", {'academic_calendar': calendar_events,
+                                         'highlights': mdl.academic_calendar.find_highlight_academic_calendars()})
 
 
 @login_required
@@ -60,6 +60,47 @@ def assessments(request):
 def catalog(request):
     return render(request, "catalog.html", {'section': 'catalog'})
 
+
 @login_required
 def academic_year(request):
-    return render(request, "academic_year.html", {'section': 'acacemic_year'})
+    return render(request, "academic_year.html", {'section': 'academic_year'})
+
+
+@login_required
+def profile(request):
+    person = mdl.person.find_by_user(request.user)
+    addresses = mdl.person_address.find_by_person(person)
+    tutor = mdl.tutor.find_by_person(person)
+    attributions = mdl.attribution.find_by_tutor(tutor)
+    student = mdl.student.find_by_person(person)
+    offer_enrollments = mdl.offer_enrollment.find_by_student(student)
+    programs_managed = mdl.program_manager.find_by_person(person)
+    return render(request, "profile.html", {'person': person,
+                                            'addresses': addresses,
+                                            'tutor': tutor,
+                                            'attributions': attributions,
+                                            'student': student,
+                                            'offer_enrollments': offer_enrollments,
+                                            'programs_managed': programs_managed,
+                                            'supported_languages': mdl.supported_languages.SUPPORTED_LANGUAGES,
+                                            'default_language': mdl.supported_languages.DEFAULT_LANGUAGE})
+
+
+@login_required
+def profile_lang(request):
+    ui_language = request.POST.get('ui_language')
+    mdl.person.change_language(request.user, ui_language)
+    return profile(request)
+
+
+@login_required
+def storage(request):
+    df = subprocess.Popen(["df", "-h"], stdout=subprocess.PIPE)
+    output = df.communicate()[0]
+    lines = output.splitlines()
+    lines[0] = lines[0].decode("utf-8").replace('Mounted on', 'Mounted')
+    lines[0] = lines[0].replace('Avail', 'Available')
+    table = []
+    for line in lines:
+        table.append(line.split())
+    return render(request, "admin/storage.html", {'table': table})
