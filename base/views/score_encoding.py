@@ -45,7 +45,7 @@ def scores_encoding(request):
         sessions_list.append(sessions)
     # In case the user is not a tutor we check whether it is a program manager for the offer.
     else:
-        program_mgr_list = mdl.program_manager.find_program_mgr_list_by_user(request.user)
+        program_mgr_list = mdl.program_manager.find_by_user(request.user)
         for program_mgr in program_mgr_list:
             if program_mgr.offer_year:
                 sessions = mdl.session_exam.find_sessions_by_offer(program_mgr.offer_year, academic_yr)
@@ -80,7 +80,7 @@ def scores_encoding(request):
 @login_required
 def online_encoding(request, session_id):
     tutor = None
-    program_mgr_list = mdl.program_manager.find_program_mgr_list_by_user(request.user)
+    program_mgr_list = mdl.program_manager.find_by_user(request.user)
     if not program_mgr_list:
         tutor = mdl.tutor.find_by_user(request.user)
 

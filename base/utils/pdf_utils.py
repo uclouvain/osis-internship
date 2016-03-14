@@ -93,7 +93,7 @@ def print_notes(request, tutor, academic_year, session_exam, learning_unit_year_
             sessions_list.append(sessions)
         # In case the user is not a tutor we check whether it is member of a faculty.
         elif is_fac:
-            program_mgr_list = mdl.program_manager.find_program_mgr_list_by_user(request.user)
+            program_mgr_list = mdl.program_manager.find_by_user(request.user)
             for program_mgr in program_mgr_list:
                 if program_mgr.offer_year:
                     sessions = mdl.session_exam.find_sessions_by_offer(program_mgr.offer_year, academic_year)

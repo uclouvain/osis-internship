@@ -67,5 +67,5 @@ def find_by_offer_year(offer_yr):
     return ProgrammeManager.objects.filter(offer_year=offer_yr)
 
 
-def find_program_mgr_list_by_user(user):
+def find_by_user(user):
     return ProgrammeManager.objects.filter(person__user=user)
