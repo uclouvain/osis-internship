@@ -51,7 +51,9 @@
                     <select name="luy_tri" onChange="javascript: this.form.submit();">
                      <option value="0">--</option>
                      {% for luy in all_luy %}
-                        <option value="{{ luy }}" {% if luy_tri == luy %}selected{%endif%}>{{ luy }} - {{luy_tri}}</option>
+                        <option value="{{ luy.title }}" {% if luy.title == luy_tri_get %}selected{%endif%}>
+                          {{ luy.title }}
+                        </option>
                      {% endfor %}
                     </select>
                   </td>
@@ -59,7 +61,9 @@
                     <select name="place_tri" onChange="javascript: this.form.submit();">
                      <option value="0">--</option>
                      {% for place in all_places %}
-                        <option value="{{ place }}">{{ place }} - {{ place_val }}</option>
+                        <option value="{{ place.name }}"{% if place.name == place_tri_get %}selected{% endif %}>
+                            {{ place.name }}
+                        </option>
                      {% endfor %}
                     </select>
                   </td>
@@ -89,7 +93,7 @@
                     {{ internship.title }}
                   </td>
                   <td>
-                    {{ internship.learning_unit_year }}
+                    {{ internship.learning_unit_year.title }}
                   </td>
                   <td>
                     {{ internship.maximum_enrollments }}

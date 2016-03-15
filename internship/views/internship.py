@@ -26,21 +26,41 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from internship.models import InternshipOffer
+from pprint import pprint
 
 @login_required
 def internships(request):
-    query = InternshipOffer.find_internships()
 
+
+    if request.method == 'GET':
+        luy_tri_get = request.GET.get('luy_tri')
+        place_tri_get = request.GET.get('place_tri')
+
+    if luy_tri_get and luy_tri_get != "0":
+        if place_tri_get and place_tri_get != "0":
+            query = InternshipOffer.find_internships_by_luy_and_place(luy_tri_get, place_tri_get)
+        else:
+            query = InternshipOffer.find_internships_by_luy(luy_tri_get)
+    else:
+        if place_tri_get and place_tri_get != "0":
+            query = InternshipOffer.find_internships_by_place(place_tri_get)
+        else :
+            query = InternshipOffer.find_internships()
+
+
+    query_places = InternshipOffer.find_internships()
     internship_luy = []
     internship_places = []
-    for internship in query:
+    for internship in query_places:
         internship_luy.append(internship.learning_unit_year)
         internship_places.append(internship.organization)
 
     internship_luy = list(set(internship_luy))
     internship_places = list(set(internship_places))
 
-    if request.method == 'GET':
-        print (request.GET.get('luy_tri'))
 
-    return render(request, "internships.html", {'section': 'internship', 'all_internships': query, 'all_luy':internship_luy, 'all_places':internship_places})
+
+
+    return render(request, "internships.html", {'section': 'internship', 'all_internships': query,
+                                                'all_luy':internship_luy, 'all_places':internship_places,
+                                                'luy_tri_get':luy_tri_get, 'place_tri_get':place_tri_get})

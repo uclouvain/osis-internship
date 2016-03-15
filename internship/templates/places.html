@@ -78,7 +78,7 @@
                     {{ organization.reference }}
                   </td>
                   <td>
-                    <a href="{% url 'internships' %}?place={{ organization.name }}">{{ organization.name }}</a>
+                    <a href="{% url 'internships' %}?place_tri={{ organization.name }}">{{ organization.name }}</a>
                   </td>
                     <td>
                       {% for address in organization.address %}

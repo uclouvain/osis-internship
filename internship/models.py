@@ -41,6 +41,36 @@ class InternshipOffer(models.Model):
     def find_internships():
         return InternshipOffer.objects.all()
 
+    @staticmethod
+    def find_internships_by_luy_and_place(luy, place):
+        query = InternshipOffer.objects.all()
+        internships_found=[]
+        for i in query :
+            if i.learning_unit_year.title==luy and i.organization.name == place:
+                internships_found.append(i)
+
+        return internships_found
+
+    @staticmethod
+    def find_internships_by_luy(luy):
+        query = InternshipOffer.objects.all()
+        internships_found=[]
+        for i in query :
+            if i.learning_unit_year.title==luy:
+                internships_found.append(i)
+
+        return internships_found
+
+    @staticmethod
+    def find_internships_by_place(place):
+        query = InternshipOffer.objects.all()
+        internships_found=[]
+        for i in query :
+            if i.organization.name == place:
+                internships_found.append(i)
+
+        return internships_found
+
 
 class InternshipEnrollment(models.Model):
     learning_unit_enrollment = models.ForeignKey('base.LearningUnitEnrollment')
