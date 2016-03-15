@@ -30,16 +30,38 @@ from pprint import pprint
 
 @login_required
 def internships_places(request):
-    organizations = mdl.organization.find_all_order_by_reference()
+    if request.method == 'GET':
+        city_tri_get = request.GET.get('city_tri')
 
+    organizations = mdl.organization.find_all_order_by_reference()
     if organizations:
         for organization in organizations:
             organization.address = ""
-            organization_addresses = []
             address = mdl.organization_address.find_by_organization(organization)
             if address:
                 organization.address = address
-                organization_addresses.append(address)
+    organization_addresses = []
+    for orga in organizations:
+        for a in orga.address:
+            organization_addresses.append(a.city)
+    organization_addresses = list(set(organization_addresses))
+    organization_addresses.sort()
 
-    list(set(organization_addresses))
-    return render(request, "places.html", {'section': 'internship', 'all_organizations' : organizations, 'all_addresses' : organization_addresses})
+    l_organizations=[]
+    if city_tri_get and city_tri_get != "0":
+        index = 0
+        for orga in organizations:
+            flag_del = 1
+            if orga.address:
+                for a in orga.address:
+                    if a.city == city_tri_get:
+                        flag_del = 0
+                        break
+            if flag_del == 0:
+                l_organizations.append(orga)
+            index += 1
+    else:
+        l_organizations = organizations
+
+    return render(request, "places.html", {'section': 'internship', 'all_organizations' : l_organizations, 'all_addresses' : organization_addresses,
+                                            'city_tri_get':city_tri_get})

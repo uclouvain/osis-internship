@@ -30,8 +30,6 @@ from pprint import pprint
 
 @login_required
 def internships(request):
-
-
     if request.method == 'GET':
         luy_tri_get = request.GET.get('luy_tri')
         place_tri_get = request.GET.get('place_tri')
@@ -57,9 +55,6 @@ def internships(request):
 
     internship_luy = list(set(internship_luy))
     internship_places = list(set(internship_places))
-
-
-
 
     return render(request, "internships.html", {'section': 'internship', 'all_internships': query,
                                                 'all_luy':internship_luy, 'all_places':internship_places,
