@@ -44,25 +44,31 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td style="text-align:center; width:50%;">
-                  <select>
-                   <option value="0">--</option>
-                   {% for spec in all_spec %}
-                      <option value="{{ spec }}">{{ spec }}</option>
-                   {% endfor %}
-                  </select>
-                </td>
-                <td style="text-align:center; width:50%;">
-                  <select>
-                   <option value="0">--</option>
-                   {% for place in all_places %}
-                      <option value="{{ place }}">{{ place }}</option>
-                   {% endfor %}
-                  </select>
-                </td>
-                </td>
-              </tr>
+              <form action="{%url 'interships_masters' %}" method="get">
+                <tr>
+                  <td style="text-align:center; width:50%;">
+                    <select name="spec_sort" onChange="javascript: this.form.submit();">
+                     <option value="0">--</option>
+                     {% for spec in all_spec %}
+                        <option value="{{ spec }}"{% if spec == spec_sort_get %}selected{% endif %}>
+                          {{ spec }}
+                        </option>
+                     {% endfor %}
+                    </select>
+                  </td>
+                  <td style="text-align:center; width:50%;">
+                    <select name="place_sort" onChange="javascript: this.form.submit();">
+                     <option value="0">--</option>
+                     {% for place in all_places %}
+                        <option value="{{ place.name }}"{% if place.name == place_sort_get %}selected{% endif %}>
+                            {{ place.name }}
+                        </option>
+                     {% endfor %}
+                    </select>
+                  </td>
+                  </td>
+                </tr>
+              </form>
             </tbody>
         </table>
   </div>
@@ -111,7 +117,7 @@
                     {{ master.person.email }}
                   </td>
                   <td>
-                    {{ master.organization }}
+                    <a href="{% url 'internships' %}?place_sort={{ master.organization }}">{{ master.organization }}</a>
                   </td>
               </tr>
               {% endfor %}

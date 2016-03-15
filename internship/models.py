@@ -108,3 +108,33 @@ class InternshipMaster(models.Model):
 
     def __str__(self):
         return u"%s - %s" % (self.person, self.reference)
+
+    @staticmethod
+    def find_masters_by_spec_and_place(spec, place):
+        query = InternshipMaster.objects.all()
+        masters_found=[]
+        for m in query :
+            if m.speciality==spec and m.organization.name == place:
+                masters_found.append(m)
+
+        return masters_found
+
+    @staticmethod
+    def find_masters_by_spec(spec):
+        query = InternshipMaster.objects.all()
+        masters_found=[]
+        for m in query :
+            if m.speciality==spec:
+                masters_found.append(m)
+
+        return masters_found
+
+    @staticmethod
+    def find_masters_by_place(place):
+        query = InternshipMaster.objects.all()
+        masters_found=[]
+        for m in query :
+            if m.organization.name == place:
+                masters_found.append(m)
+
+        return masters_found
