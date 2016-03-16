@@ -29,13 +29,15 @@ from base import models as mdl
 
 @login_required
 def internships_students(request):
+    #Function to find students link to internship incoming
     students = None
 
-    if students:
-        for student in students:
-            student.address = ""
-            address = mdl.person_address.find_by_person(student.person)
-            if address:
-                student.address = address
+    #Dont delete this bloc of comment
+    #if students:
+    #    for student in students:
+    #        student.address = ""
+    #        address = mdl.person_address.find_by_person(student.person)
+    #        if address:
+    #            student.address = address
 
     return render(request, "students.html", {'section': 'internship', 'all_students': students})
