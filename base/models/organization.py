@@ -29,7 +29,7 @@ from django.contrib import admin
 
 class OrganizationAdmin(admin.ModelAdmin):
     list_display = ('name', 'acronym', 'changed')
-    fieldsets = ((None, {'fields': ('name', 'acronym', 'website', 'reference')}),)
+    fieldsets = ((None, {'fields': ('name', 'acronym', 'website', 'reference', 'type')}),)
     search_fields = ['acronym']
 
 
@@ -48,7 +48,7 @@ class Organization(models.Model):
     acronym     = models.CharField(max_length=15)
     website     = models.URLField(max_length=255, blank=True, null=True)
     reference   = models.CharField(max_length=30, blank=True, null=True)
-    type        = models.CharField(max_length=15, blank=True, null=True, choices=TYPE_CHOICES, default='UNKNOWN')
+    type        = models.CharField(max_length=30, blank=True, null=True, choices=TYPE_CHOICES, default='UNKNOWN')
 
     def __str__(self):
         return self.name
@@ -59,10 +59,8 @@ def find_by_id(organization_id):
 def find_by_acronym(acronym):
     return Organization.objects.filter(acronym__icontains=acronym)
 
-
 def find_by_name(name):
     return Organization.objects.filter(name__icontains=name)
-
 
 def find_by_acronym_name(acronym, name):
     return Organization.objects.filter(acronym__icontains=acronym, name__icontains=name)

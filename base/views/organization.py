@@ -32,7 +32,14 @@ from django.utils.translation import ugettext_lazy as _
 
 def organizations(request):
 
-    organizations_type = ('None','Main','Academic partner','Industrial partner','Service partner','Commerce partner','Public partner')
+    organizations_type = (
+        ('MAIN', 'Main'),
+        ('ACADEMIC_PARTNER', 'Academic partner'),
+        ('INDUSTRIAL_PARTNER', 'Industrial partner'),
+        ('SERVICE_PARTNER', 'Service partner'),
+        ('COMMERCE_PARTNER', 'Commerce partner'),
+        ('PUBLIC_PARTNER', 'Public partner'),
+    )
 
     return render(request, "organizations.html",
                            {'acronym': None,
@@ -41,17 +48,24 @@ def organizations(request):
                             'type': organizations_type,
                             'init': "1"})
 
-
 def organizations_search(request):
     acronym = request.GET['acronym']
     name = request.GET['name']
-    type = request.GET['type']
+    type = request.GET['type_choices']
     organizations_list = []
+    organizations_type = (
+        ('MAIN', 'Main'),
+        ('ACADEMIC_PARTNER', 'Academic partner'),
+        ('INDUSTRIAL_PARTNER', 'Industrial partner'),
+        ('SERVICE_PARTNER', 'Service partner'),
+        ('COMMERCE_PARTNER', 'Commerce partner'),
+        ('PUBLIC_PARTNER', 'Public partner'),
+    )
     criteria_present = False
 
     name = name.strip()
     if len(name) <= 0:
-        name  =None
+        name  = None
     else:
         criteria_present=True
 
@@ -61,7 +75,7 @@ def organizations_search(request):
     else:
         criteria_present=True
 
-    if type <= "*":
+    if type == "None":
         type = None
     else :
         criteria_present=True
@@ -83,7 +97,7 @@ def organizations_search(request):
                            {'acronym':       acronym,
                             'name':          name,
                             'organizations': organizations_list,
-                            'type': type,
+                            'type': organizations_type,
                             'init': "0",
                             'message': message})
 
