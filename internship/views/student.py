@@ -23,18 +23,21 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.conf.urls import url
-from django.contrib.auth.views import login,logout_then_login
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from base import models as mdl
 
-from internship.views import home, internship, master, period, place, student
+@login_required
+def internships_students(request):
+    #Function to find students link to internship incoming
+    students = None
 
-urlpatterns = [
-    # S'il vous plaît, organiser les urls par ordre alphabétique.
+    #Dont delete this bloc of comment
+    #if students:
+    #    for student in students:
+    #        student.address = ""
+    #        address = mdl.person_address.find_by_person(student.person)
+    #        if address:
+    #            student.address = address
 
-    url(r'^studies/internships/$', internship.internships, name='internships'),
-    url(r'^studies/internships/home/$', home.internships_home, name='internships_home'),
-    url(r'^studies/internships/interships_masters/$', master.interships_masters, name='interships_masters'),
-    url(r'^studies/internships/periods/$', period.internships_periods, name='internships_periods'),
-    url(r'^studies/internships/places$', place.internships_places, name='internships_places'),
-    url(r'^studies/internships/students/$', student.internships_students, name='internships_students'),
-]
+    return render(request, "students.html", {'section': 'internship', 'all_students': students})

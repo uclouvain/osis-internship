@@ -43,7 +43,7 @@ class OrganizationAddress(models.Model):
 
 
 def find_by_organization(organization):
-    return OrganizationAddress.objects.filter(organization=organization)
+    return OrganizationAddress.objects.filter(organization=organization).order_by('label')
 
 
 def find_by_id(organization_address_id):
