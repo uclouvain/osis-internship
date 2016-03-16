@@ -30,57 +30,57 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 class AcademicAssistant(models.Model):
     PHD_INSCRIPTION_CHOICES = (
-        ('Y', _('Yes')),
-        ('N', _('No')),
-        ('P', _('In progress')))
+        ('YES', _('Yes')),
+        ('NO', _('No')),
+        ('IN_PROGRESS', _('In progress')))
     
     person                  = models.ForeignKey('base.Person')
     position_id             = models.CharField(max_length=12)
-    eft                     = models.DecimalField(max_digits=3, decimal_places=2)
+    fulltime_equivalent     = models.DecimalField(max_digits=3, decimal_places=2)
     sap_id                  = models.CharField(max_length=12)
     entry_date              = models.DateField()
     end_date                = models.DateField()
-    scale                   = models.CharField(maxlength=3)
-    thesis_title            = models.CharField(maxlength=255, null=True, blank=True)
+    scale                   = models.CharField(max_length=3)
+    thesis_title            = models.CharField(max_length=255, null=True, blank=True)
     phd_inscription_date    = models.DateField(null=True, blank=True)
     confirmation_test_date  = models.DateField(null=True, blank=True)
     thesis_date             = models.DateField(null=True, blank=True)
     expected_phd_date       = models.DateField(null=True, blank=True)
-    supervisor_email        = models.CharField(maxlength=255, null=True, blank=True)
+    supervisor_email        = models.CharField(max_length=255, null=True, blank=True)
     remark                  = models.TextField(null=True, blank=True)
-    inscription             = models.CharField(max_length=1, choices=PHD_INSCRIPTION_CHOICES, default='Y')
+    inscription             = models.CharField(max_length=12, choices=PHD_INSCRIPTION_CHOICES, default='YES')
     
 
 class AssistantMandate(models.Model):
     
     RENEWAL_TYPE_CHOICES = (
-        ('N', _('Normal')),
-        ('E', _('Exceptional')))
+        ('NORMAL', _('Normal')),
+        ('EXCEPTIONAL', _('Exceptional')))
     
     STATE_CHOICES = (
-        ('0', _('To do')),
-        ('1', _('Trts')),
-        ('2', _('PhD supervisor')),
-        ('3', _('Research')),
-        ('4', _('Supervision')),
-        ('5', _('Vice rector')))
+        ('TO_DO', _('To do')),
+        ('TRTS', _('Trts')),
+        ('PHD_SUPERVISOR', _('PhD supervisor')),
+        ('RESEARCH', _('Research')),
+        ('SUPERVISION', _('Supervision')),
+        ('VICE_RECTOR', _('Vice rector')))
     
     APPEAL_CHOICES = (
-        ('0', _('N/A')),
-        ('1', _('Positive appeal')),
-        ('2', _('Negative appeal')),
-        ('3', _('Appeal in progress')),
-        ('4', _('No appeal')))
+        ('NONE', _('N/A')),
+        ('POSITIVE_APPEAL', _('Positive appeal')),
+        ('NEGATIVE_APPEAL', _('Negative appeal')),
+        ('APPEAL_IN_PROGRESS', _('Appeal in progress')),
+        ('NO_APPEAL', _('No appeal')))
     
     assistant                       = models.ForeignKey(AcademicAssistant)
     absences                        = models.TextField(null=True, blank=True)
     comment                         = models.TextField(null=True, blank=True)
-    other_status                    = models.CharField(maxlength=50, null=True, blank=True)
-    renewal_type                    = models.CharField(max_length=1, choices=RENEWAL_TYPE_CHOICES, default='N')
+    other_status                    = models.CharField(max_length=50, null=True, blank=True)
+    renewal_type                    = models.CharField(max_length=12, choices=RENEWAL_TYPE_CHOICES, default='NORMAL')
     external_functions              = models.TextField(null=True, blank=True)
-    external_contract               = models.CharField(maxlength=255, null=True, blank=True)
+    external_contract               = models.CharField(max_length=255, null=True, blank=True)
     justification                   = models.TextField(null=True, blank=True)
-    state                           = models.CharField(max_length=1, choices=STATE_CHOICES, default='0')
+    state                           = models.CharField(max_length=20, choices=STATE_CHOICES, default='TO_DO')
     tutoring_remark                 = models.TextField(null=True, blank=True)
     activities_report_remark        = models.TextField(null=True, blank=True)
     research_percent                = models.PositiveIntegerField(validators=[MinValueValidator(0),MaxValueValidator(100)], default=0)
@@ -105,22 +105,22 @@ class AssistantMandate(models.Model):
     events_organisation_service     = models.PositiveIntegerField(default=0)
     publishing_field_service        = models.PositiveIntegerField(default=0)
     scientific_jury_service         = models.PositiveIntegerField(default=0)
-    appeal                          = models.CharField(max_length=1, choices=APPEAL_CHOICES, default='0')
+    appeal                          = models.CharField(max_length=20, choices=APPEAL_CHOICES, default='NONE')
     special                         = models.BooleanField(default=False)
-    contract_duration               = models.CharField(maxlength=30) 
-    contract_duration_fte           = models.CharField(maxlength=30)
+    contract_duration               = models.CharField(max_length=30) 
+    contract_duration_fte           = models.CharField(max_length=30)
     
 class AssistantDocument(models.Model):
     
     DOC_TYPE_CHOICES = (
-        ('0', _('PhD')),
-        ('1', _('Tutoring')),
-        ('2', _('Research'))
+        ('PHD', _('PhD')),
+        ('TUTORING', _('Tutoring')),
+        ('RESEARCH', _('Research'))
         )
     
     assistant = models.ForeignKey(AcademicAssistant)
     mandate = models.ForeignKey(AssistantMandate)
-    doc_type = models.CharField(max_length=1, choices=DOC_TYPE_CHOICES)
+    doc_type = models.CharField(max_length=20, choices=DOC_TYPE_CHOICES)
     
 class TutoringLearningUnitYear(models.Model):
     
@@ -136,13 +136,13 @@ class TutoringLearningUnitYear(models.Model):
 class Review(models.Model):
     
     ADVICE_CHOICES = (
-        ('0', _('Favorable')),
-        ('1', _('Conditional')),
-        ('2', _('Unfavourable'))
+        ('FAVORABLE', _('Favorable')),
+        ('CONDITIONAL', _('Conditional')),
+        ('UNFAVOURABLE', _('Unfavourable'))
         )
     
     mandate         = models.ForeignKey(AssistantMandate)
-    advice          = models.CharField(max_length=1, choices=ADVICE_CHOICES, default='0')
+    advice          = models.CharField(max_length=20, choices=ADVICE_CHOICES)
     justification   = models.TextField(null=True, blank=True)
     remark          = models.TextField(null=True, blank=True)
     confidential    = models.TextField(null=True, blank=True)
