@@ -32,32 +32,36 @@ from pprint import pprint
 def internships(request):
     #First get the value of the 2 options for the sort
     if request.method == 'GET':
-        luy_sort_get = request.GET.get('luy_sort')
-        place_sort_get = request.GET.get('place_sort')
+        learning_unit_year_sort_value = request.GET.get('learning_unit_year_sort')
+        organization_sort_value = request.GET.get('organization_sort')
 
     #Then select Internship Offer depending of the options
-    #If both exist / if just LearningUnitYear exist / if just Place exist / if none exist
-    if luy_sort_get and luy_sort_get != "0":
-        if place_sort_get and place_sort_get != "0":
-            query = InternshipOffer.find_internships_by_luy_and_place(luy_sort_get, place_sort_get)
+    #If both exist / if just LearningUnitYear exist / if just organization exist / if none exist
+    if learning_unit_year_sort_value and learning_unit_year_sort_value != "0":
+        if organization_sort_value and organization_sort_value != "0":
+            query = InternshipOffer.find_interships_by_learning_unit_organization(learning_unit_year_sort_value,
+                                                                                    organization_sort_value)
         else:
-            query = InternshipOffer.find_internships_by_luy(luy_sort_get)
+            query = InternshipOffer.find_interships_by_learning_unit(learning_unit_year_sort_value)
     else:
-        if place_sort_get and place_sort_get != "0":
-            query = InternshipOffer.find_internships_by_place(place_sort_get)
+        if organization_sort_value and organization_sort_value != "0":
+            query = InternshipOffer.find_interships_by_organization(organization_sort_value)
         else :
             query = InternshipOffer.find_internships()
 
     #Create the options for the selected list, delete dubblons
-    query_places = InternshipOffer.find_internships()
-    internship_luy = []
-    internship_places = []
-    for internship in query_places:
-        internship_luy.append(internship.learning_unit_year)
-        internship_places.append(internship.organization)
-    internship_luy = list(set(internship_luy))
-    internship_places = list(set(internship_places))
+    query_organizations = InternshipOffer.find_internships()
+    internship_learning_unit_year = []
+    internship_organizations = []
+    for internship in query_organizations:
+        internship_learning_unit_year.append(internship.learning_unit_year)
+        internship_organizations.append(internship.organization)
+    internship_learning_unit_year = list(set(internship_learning_unit_year))
+    internship_organizations = list(set(internship_organizations))
 
-    return render(request, "internships.html", {'section': 'internship', 'all_internships': query,
-                                                'all_luy':internship_luy, 'all_places':internship_places,
-                                                'luy_sort_get':luy_sort_get, 'place_sort_get':place_sort_get})
+    return render(request, "internships.html", {'section': 'internship',
+                                                'all_internships': query,
+                                                'all_learning_unit_year':internship_learning_unit_year,
+                                                'all_organizations':internship_organizations,
+                                                'learning_unit_year_sort_value':learning_unit_year_sort_value,
+                                                'organization_sort_value':organization_sort_value})

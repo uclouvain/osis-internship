@@ -41,28 +41,30 @@
             <thead>
               <tr>
                   <th style="text-align:center; width:50%;">{% trans 'Learning Unit' %}</th>
-                  <th style="text-align:center; width:50%;">{% trans 'Place' %}</th>
+                  <th style="text-align:center; width:50%;">{% trans 'Organization' %}</th>
               </tr>
             </thead>
             <tbody>
               <form action="{%url 'internships' %}" method="get">
                 <tr>
                   <td style="text-align:center; width:50%;">
-                    <select name="luy_sort" onChange="javascript: this.form.submit();">
+                    <select name="learning_unit_year_sort" onChange="javascript: this.form.submit();">
                      <option value="0">--</option>
-                     {% for luy in all_luy %}
-                        <option value="{{ luy.title }}" {% if luy.title == luy_sort_get %}selected{%endif%}>
-                          {{ luy.title }}
+                     {% for learning_unit_year in all_learning_unit_year %}
+                        <option value="{{ learning_unit_year.title }}"
+                        {% if learning_unit_year.title == learning_unit_year_sort_value %}selected{%endif%}>
+                          {{ learning_unit_year.title }}
                         </option>
                      {% endfor %}
                     </select>
                   </td>
                   <td style="text-align:center; width:50%;">
-                    <select name="place_sort" onChange="javascript: this.form.submit();">
+                    <select name="organization_sort" onChange="javascript: this.form.submit();">
                      <option value="0">--</option>
-                     {% for place in all_places %}
-                        <option value="{{ place.name }}"{% if place.name == place_sort_get %}selected{% endif %}>
-                            {{ place.name }}
+                     {% for organization in all_organizations %}
+                        <option value="{{ organization.name }}"
+                        {% if organization.name == organization_sort_value %}selected{% endif %}>
+                            {{ organization.name }}
                         </option>
                      {% endfor %}
                     </select>
@@ -82,7 +84,7 @@
                   <th>{% trans 'Name' %}</th>
                   <th>{% trans 'learning unit year' %}</th>
                   <th>{% trans 'Student max' %}</th>
-                  <th>{% trans 'Place' %}</th>
+                  <th>{% trans 'organization' %}</th>
                   <th>{% trans 'Preference' %}</th>
               </tr>
             </thead>

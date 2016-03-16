@@ -47,21 +47,23 @@
               <form action="{%url 'interships_masters' %}" method="get">
                 <tr>
                   <td style="text-align:center; width:50%;">
-                    <select name="spec_sort" onChange="javascript: this.form.submit();">
+                    <select name="speciality_sort" onChange="javascript: this.form.submit();">
                      <option value="0">--</option>
                      {% for spec in all_spec %}
-                        <option value="{{ spec }}"{% if spec == spec_sort_get %}selected{% endif %}>
+                        <option value="{{ spec }}"
+                        {% if spec == speciality_sort_value %}selected{% endif %}>
                           {{ spec }}
                         </option>
                      {% endfor %}
                     </select>
                   </td>
                   <td style="text-align:center; width:50%;">
-                    <select name="place_sort" onChange="javascript: this.form.submit();">
+                    <select name="organization_sort" onChange="javascript: this.form.submit();">
                      <option value="0">--</option>
-                     {% for place in all_places %}
-                        <option value="{{ place.name }}"{% if place.name == place_sort_get %}selected{% endif %}>
-                            {{ place.name }}
+                     {% for organization in all_organizations %}
+                        <option value="{{ organization.name }}"
+                        {% if organization.name == organization_sort_value %}selected{% endif %}>
+                            {{ organization.name }}
                         </option>
                      {% endfor %}
                     </select>
@@ -117,7 +119,7 @@
                     {{ master.person.email }}
                   </td>
                   <td>
-                    <a href="{% url 'internships' %}?place_sort={{ master.organization }}">{{ master.organization }}</a>
+                    <a href="{% url 'internships' %}?organization_sort={{ master.organization }}">{{ master.organization }}</a>
                   </td>
               </tr>
               {% endfor %}

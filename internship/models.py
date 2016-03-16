@@ -42,34 +42,20 @@ class InternshipOffer(models.Model):
         return InternshipOffer.objects.all()
 
     @staticmethod
-    def find_internships_by_luy_and_place(luy, place):
-        query = InternshipOffer.objects.all()
-        internships_found=[]
-        for i in query :
-            if i.learning_unit_year.title==luy and i.organization.name == place:
-                internships_found.append(i)
-
-        return internships_found
+    def find_interships_by_learning_unit_organization(learning_unit_year, organization):
+        internships = InternshipOffer.objects.filter(learning_unit_year__title=learning_unit_year)\
+                                            .filter(organization__name=organization)
+        return internships
 
     @staticmethod
-    def find_internships_by_luy(luy):
-        query = InternshipOffer.objects.all()
-        internships_found=[]
-        for i in query :
-            if i.learning_unit_year.title==luy:
-                internships_found.append(i)
-
-        return internships_found
+    def find_interships_by_learning_unit(learning_unit_year):
+        internships = InternshipOffer.objects.filter(learning_unit_year__title=learning_unit_year)
+        return internships
 
     @staticmethod
-    def find_internships_by_place(place):
-        query = InternshipOffer.objects.all()
-        internships_found=[]
-        for i in query :
-            if i.organization.name == place:
-                internships_found.append(i)
-
-        return internships_found
+    def find_interships_by_organization(organization):
+        internships = InternshipOffer.objects.filter(organization__name=organization)
+        return internships
 
 
 class InternshipEnrollment(models.Model):
@@ -110,31 +96,17 @@ class InternshipMaster(models.Model):
         return u"%s - %s" % (self.person, self.reference)
 
     @staticmethod
-    def find_masters_by_spec_and_place(spec, place):
-        query = InternshipMaster.objects.all()
-        masters_found=[]
-        for m in query :
-            if m.speciality==spec and m.organization.name == place:
-                masters_found.append(m)
-
-        return masters_found
+    def find_masters_by_speciality_and_organization(speciality, organization):
+        masters = InternshipMaster.objects.filter(speciality=speciality)\
+                                            .filter(organization__name=organization)
+        return masters
 
     @staticmethod
-    def find_masters_by_spec(spec):
-        query = InternshipMaster.objects.all()
-        masters_found=[]
-        for m in query :
-            if m.speciality==spec:
-                masters_found.append(m)
-
-        return masters_found
+    def find_masters_by_speciality(speciality):
+        masters = InternshipMaster.objects.filter(speciality=speciality)
+        return masters
 
     @staticmethod
-    def find_masters_by_place(place):
-        query = InternshipMaster.objects.all()
-        masters_found=[]
-        for m in query :
-            if m.organization.name == place:
-                masters_found.append(m)
-
-        return masters_found
+    def find_masters_by_organization(organization):
+        masters = InternshipMaster.objects.filter(organization__name=organization)
+        return masters

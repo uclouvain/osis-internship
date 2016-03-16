@@ -31,32 +31,33 @@ from internship.models import InternshipMaster
 def interships_masters(request):
     #First get the value of the 2 options for the sort
     if request.method == 'GET':
-        spec_sort_get = request.GET.get('spec_sort')
-        place_sort_get = request.GET.get('place_sort')
+        speciality_sort_value = request.GET.get('speciality_sort')
+        organization_sort_value = request.GET.get('organization_sort')
 
     #Then select Internship Master depending of the options
-    #If both exist / if just speciality exist / if just Place exist / if none exist
-    if spec_sort_get and spec_sort_get != "0":
-        if place_sort_get and place_sort_get != "0":
-            query = InternshipMaster.find_masters_by_spec_and_place(spec_sort_get, place_sort_get)
+    #If both exist / if just speciality exist / if just organization exist / if none exist
+    if speciality_sort_value and speciality_sort_value != "0":
+        if organization_sort_value and organization_sort_value != "0":
+            query = InternshipMaster.find_masters_by_speciality_and_organization(speciality_sort_value,
+                                                                                organization_sort_value)
         else:
-            query = InternshipMaster.find_masters_by_spec(spec_sort_get)
+            query = InternshipMaster.find_masters_by_speciality(speciality_sort_value)
     else:
-        if place_sort_get and place_sort_get != "0":
-            query = InternshipMaster.find_masters_by_place(place_sort_get)
+        if organization_sort_value and organization_sort_value != "0":
+            query = InternshipMaster.find_masters_by_organization(organization_sort_value)
         else :
             query = InternshipMaster.find_masters()
 
     #Create the options for the selected list, delete dubblons
     query_master = InternshipMaster.find_masters()
     master_specs = []
-    master_places = []
+    master_organizations = []
     for master in query_master:
         master_specs.append(master.speciality)
-        master_places.append(master.organization)
+        master_organizations.append(master.organization)
     master_specs = list(set(master_specs))
-    master_places = list(set(master_places))
+    master_organizations = list(set(master_organizations))
 
     return render(request, "interships_masters.html", {'section': 'internship',
-                                                        'all_masters': query, 'all_spec' : master_specs, 'all_places' : master_places,
-                                                        'spec_sort_get':spec_sort_get, 'place_sort_get':place_sort_get})
+                                                        'all_masters': query, 'all_spec' : master_specs, 'all_organizations' : master_organizations,
+                                                        'speciality_sort_value':speciality_sort_value, 'organization_sort_value':organization_sort_value})
