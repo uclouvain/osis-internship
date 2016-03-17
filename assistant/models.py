@@ -34,7 +34,8 @@ class AcademicAssistant(models.Model):
         ('NO', _('No')),
         ('IN_PROGRESS', _('In progress')))
     
-    person                  = models.ForeignKey('base.Person')
+    person                  = models.OneToOneField('base.Person', on_delete=models.PROTECT)
+    supervisor              = models.OneToOneField('base.Person', on_delete=models.PROTECT, blank=True, null=True)
     position_id             = models.CharField(max_length=12)
     fulltime_equivalent     = models.DecimalField(max_digits=3, decimal_places=2)
     sap_id                  = models.CharField(max_length=12)
@@ -46,7 +47,6 @@ class AcademicAssistant(models.Model):
     confirmation_test_date  = models.DateField(null=True, blank=True)
     thesis_date             = models.DateField(null=True, blank=True)
     expected_phd_date       = models.DateField(null=True, blank=True)
-    supervisor_email        = models.CharField(max_length=255, null=True, blank=True)
     remark                  = models.TextField(null=True, blank=True)
     inscription             = models.CharField(max_length=12, choices=PHD_INSCRIPTION_CHOICES, default='YES')
     
