@@ -29,18 +29,25 @@ from django.contrib import admin
 
 class StructureAdmin(admin.ModelAdmin):
     list_display = ('acronym', 'title', 'part_of', 'organization')
-    fieldsets = ((None, {'fields': ('acronym', 'title', 'part_of', 'organization')}),)
+    fieldsets = ((None, {'fields': ('acronym', 'title', 'part_of', 'organization', 'type')}),)
     raw_id_fields = ('part_of', )
     search_fields = ['acronym']
 
 
 class Structure(models.Model):
+    TYPE_CHOICES = (
+        ('SECTOR', 'Sector'),
+        ('FACULTY', 'Faculty'),
+        ('INSTITUTE', 'Institute'),
+        ('POLE', 'Pole'))
+
     external_id  = models.CharField(max_length=100, blank=True, null=True)
     changed      = models.DateTimeField(null=True)
     acronym      = models.CharField(max_length=15)
     title        = models.CharField(max_length=255)
     organization = models.ForeignKey('Organization', null=True)
     part_of      = models.ForeignKey('self', null=True, blank=True)
+    type         = models.CharField(max_length=30, blank=True, null=True, choices=TYPE_CHOICES, default='UNKNOWN')
 
     def children(self):
         return Structure.objects.filter(part_of=self.pk)
@@ -70,6 +77,8 @@ def find_children(self):
 def find_by_organization(organization):
     return Structure.objects.filter(organization=organization, part_of__isnull=True)
 
+def find_by_type(type):
+    return Structure.objects.filter(type__icontains=type)
 
 def find_tree_by_organization(organization):
     structure = Structure.objects.filter(organization=organization)

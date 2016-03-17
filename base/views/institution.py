@@ -41,11 +41,22 @@ def institution(request):
 
 @login_required
 def structures(request):
-    return render(request, "structures.html", {'init': "1"})
+    structures_type = (
+        ('SECTOR', 'Sector'),
+        ('FACULTY', 'Faculty'),
+        ('INSTITUTE', 'Institute'),
+        ('POLE', 'Pole'))
+    return render(request, "structures.html", {'init': "1",
+                                               'type': structures_type,})
 
 
 @login_required
 def structures_search(request):
+    structures_type = (
+        ('SECTOR', 'Sector'),
+        ('FACULTY', 'Faculty'),
+        ('INSTITUTE', 'Institute'),
+        ('POLE', 'Pole'))
     acronym = request.GET['acronym']
     title = request.GET['title']
     criterias = []
@@ -58,6 +69,11 @@ def structures_search(request):
     if title and len(title) > 0:
         criteria_present = True
         criterias.append(models.Q(title__icontains=title))
+    if type == "None":
+        type = None
+    else :
+        criteria_present=True
+        criterias.append(models.Q(type__icontains=type))
 
     structures = None
     message = None
@@ -70,6 +86,7 @@ def structures_search(request):
                                                'acronym':    acronym,
                                                'init':       "0",
                                                'structures': structures,
+                                               'type': structures_type,
                                                'message':    message})
 
 
