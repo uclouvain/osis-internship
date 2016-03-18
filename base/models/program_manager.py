@@ -36,8 +36,8 @@ class ProgrammeManagerAdmin(admin.ModelAdmin):
 
 class ProgrammeManager(models.Model):
     changed = models.DateTimeField(null=True)
-    person  = models.ForeignKey(person.Person)
-    offer_year = models.ForeignKey(offer_year.OfferYear, blank=True, null=True)
+    person  = models.ForeignKey('Person')
+    offer_year = models.ForeignKey('OfferYear', blank=True, null=True)
 
     @property
     def name(self):
