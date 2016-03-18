@@ -35,7 +35,7 @@ class AcademicAssistant(models.Model):
         ('IN_PROGRESS', _('In progress')))
     
     person                  = models.OneToOneField('base.Person', on_delete=models.PROTECT)
-    supervisor              = models.OneToOneField('base.Person', on_delete=models.PROTECT, blank=True, null=True)
+    supervisor              = models.OneToOneField('base.Person', on_delete=models.PROTECT, blank=True, null=True, related_name='person_supervisor')
     position_id             = models.CharField(max_length=12)
     fulltime_equivalent     = models.DecimalField(max_digits=3, decimal_places=2)
     sap_id                  = models.CharField(max_length=12)
