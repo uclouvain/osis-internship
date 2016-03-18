@@ -36,6 +36,14 @@ admin.site.register(exam_enrollment.ExamEnrollment,
                     exam_enrollment.ExamEnrollmentAdmin)
 admin.site.register(exam_enrollment.ExamEnrollmentHistory,
                     exam_enrollment.ExamEnrollmentHistoryAdmin)
+admin.site.register(continent.Continent,
+                    continent.ContinentAdmin)
+admin.site.register(country.Country,
+                    country.CountryAdmin)
+admin.site.register(currency.Currency,
+                    currency.CurrencyAdmin)
+admin.site.register(language.Language,
+                    language.LanguageAdmin)
 admin.site.register(learning_unit.LearningUnit,
                     learning_unit.LearningUnitAdmin)
 admin.site.register(learning_unit_enrollment.LearningUnitEnrollment,
@@ -60,6 +68,8 @@ admin.site.register(person.Person,
                     person.PersonAdmin)
 admin.site.register(person_address.PersonAddress,
                     person_address.PersonAddressAdmin)
+admin.site.register(postal_code.PostalCode,
+                    postal_code.PostalCodeAdmin)
 admin.site.register(program_manager.ProgrammeManager,
                     program_manager.ProgrammeManagerAdmin)
 admin.site.register(session_exam.SessionExam,
