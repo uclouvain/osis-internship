@@ -59,6 +59,7 @@ def structures_search(request):
         ('POLE', 'Pole'))
     acronym = request.GET['acronym']
     title = request.GET['title']
+    type = request.GET['type']
     criterias = []
     criteria_present = False
     query = mdl.structure.find_structures()
@@ -69,7 +70,7 @@ def structures_search(request):
     if title and len(title) > 0:
         criteria_present = True
         criterias.append(models.Q(title__icontains=title))
-    if type == "None":
+    if type == "NONE":
         type = None
     else :
         criteria_present=True

@@ -47,13 +47,21 @@
               <label for="title" >{% trans 'Title'%}</label>
               <input class="form-control" placeholder="{% trans 'Title' %}" id="txt_title" name="title" value="{{ title }}" style="text-transform:uppercase">
           </div>
-          <div class="col-md-6">
+           <div class="col-md-2"> 
+              <label for="title">{% trans 'Type'%}</label>
+              <select class="form-control" id="slt_type" name="type_choices" value="{{ type | default_if_none:'' }}"> 
+                  <option selected value="NONE">None</option> 
+                  {% for v in type %} 
+                  <option value="{{ v.0 }}">{{ v.1 }}</option> 
+                  {% endfor %} 
+              </select> 
+          </div>
+          <div class="col-md-4">
           </div>
           <div class="col-md-1">
             <br>
-              <button type="submit" id="bt_submit_structure_search" class="btn btn-primary" role="button"
-                      title="{% trans 'Search for an entity' %}">
-              <span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+              <button type="submit" id="bt_submit_structure_search" class="btn btn-primary" role="button" title="{% trans 'Search for an entity' %}">
+              <span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>&nbsp;&nbsp;
           </div>
         </div>
 
