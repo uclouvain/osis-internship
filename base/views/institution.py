@@ -59,7 +59,7 @@ def structures_search(request):
         ('POLE', 'Pole'))
     acronym = request.GET['acronym']
     title = request.GET['title']
-    type = request.GET['type']
+    type = request.GET['type_choices']
     criterias = []
     criteria_present = False
     query = mdl.structure.find_structures()

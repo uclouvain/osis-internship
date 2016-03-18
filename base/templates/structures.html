@@ -81,11 +81,13 @@
           <thead>
             <th>{% trans 'Acronym'%}</th>
             <th>{% trans 'Title'%}</th>
+            <th>{% trans 'Type'%}</th>
           </thead>
           {% for structure in structures %}
             <tr>
               <td><a href="{% url 'structure_read' structure.id %}" id="lnk_structure_read_{{structure.id}}">{{ structure.acronym }}</a></td>
               <td>{{ structure.title }}</td>
+              <td>{{ structure.type }}</td>
             </tr>
           {% endfor %}
         </table>
