@@ -41,6 +41,22 @@ class InternshipOffer(models.Model):
     def find_internships():
         return InternshipOffer.objects.all()
 
+    @staticmethod
+    def find_interships_by_learning_unit_organization(learning_unit_year, organization):
+        internships = InternshipOffer.objects.filter(learning_unit_year__title=learning_unit_year)\
+                                            .filter(organization__name=organization)
+        return internships
+
+    @staticmethod
+    def find_interships_by_learning_unit(learning_unit_year):
+        internships = InternshipOffer.objects.filter(learning_unit_year__title=learning_unit_year)
+        return internships
+
+    @staticmethod
+    def find_interships_by_organization(organization):
+        internships = InternshipOffer.objects.filter(organization__name=organization)
+        return internships
+
 
 class InternshipEnrollment(models.Model):
     learning_unit_enrollment = models.ForeignKey('base.LearningUnitEnrollment')
@@ -78,3 +94,19 @@ class InternshipMaster(models.Model):
 
     def __str__(self):
         return u"%s - %s" % (self.person, self.reference)
+
+    @staticmethod
+    def find_masters_by_speciality_and_organization(speciality, organization):
+        masters = InternshipMaster.objects.filter(speciality=speciality)\
+                                            .filter(organization__name=organization)
+        return masters
+
+    @staticmethod
+    def find_masters_by_speciality(speciality):
+        masters = InternshipMaster.objects.filter(speciality=speciality)
+        return masters
+
+    @staticmethod
+    def find_masters_by_organization(organization):
+        masters = InternshipMaster.objects.filter(organization__name=organization)
+        return masters
