@@ -101,8 +101,21 @@ def storage(request):
     lines[0] = lines[0].decode("utf-8").replace('Mounted on', 'Mounted')
     lines[0] = lines[0].replace('Avail', 'Available')
     table = []
+    num_cols = 0
     for line in lines:
-        table.append(line.split())
+        row = line.split()
+        if num_cols < len(row):
+            num_cols = len(row)
+        table.append(row)
+
+    # This fixes a presentation problem on MacOS. It shows what looks like an alias at the end of the line.
+    if len(table[0]) < num_cols:
+        table[0].append('Alias')
+
+    for row in table[1:]:
+        if len(row) < num_cols:
+            row.append('')
+
     return render(request, "admin/storage.html", {'table': table})
 
 
