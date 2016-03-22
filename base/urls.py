@@ -39,8 +39,6 @@ urlpatterns = [
 
     url(r'^catalog/$', common.catalog, name='catalog'),
 
-    url(r'^storage/$', common.storage, name='storage'),
-
     url(r'^institution/$', institution.institution, name='institution'),
 
     url(r'^learning_units/$', learning_unit.learning_units, name='learning_units'),
@@ -56,6 +54,9 @@ urlpatterns = [
 
     url(r'^profile/$', common.profile, name='profile'),
     url(r'^profile/lang$', common.profile_lang, name='profile_lang'),
+
+    url(r'^storage/$', common.storage, name='storage'),
+    url(r'^storage/files$', common.files, name='files'),
 
     url(r'^studies/$', common.studies, name='studies'),
     url(r'^studies/assessments/$', common.assessments, name='assessments'),
