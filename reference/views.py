@@ -23,49 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.shortcuts import render
 
-from django.db import models
-from django.contrib import admin
-from base.models import person, offer_year
-from django.core.exceptions import ObjectDoesNotExist
-
-
-class ProgrammeManagerAdmin(admin.ModelAdmin):
-    list_display = ('person', 'offer_year')
-
-
-class ProgrammeManager(models.Model):
-    changed = models.DateTimeField(null=True)
-    person  = models.ForeignKey('Person')
-    offer_year = models.ForeignKey('OfferYear', blank=True, null=True)
-
-    @property
-    def name(self):
-        return self.__str__()
-
-    def __str__(self):
-        return u"%s - %s" % (self.person, self.offer_year)
-
-
-def find_by_person(a_person):
-    programs_managed = ProgrammeManager.objects.filter(person=a_person)
-    return programs_managed
-
-
-def is_programme_manager(user, offer_yr):
-    try:
-        pers = person.Person.objects.get(user=user)
-        if user:
-            programme_manager = ProgrammeManager.objects.filter(person=pers.id, offer_year=offer_yr)
-            if programme_manager:
-                return True
-    except ObjectDoesNotExist:
-        return False
-
-
-def find_by_offer_year(offer_yr):
-    return ProgrammeManager.objects.filter(offer_year=offer_yr)
-
-
-def find_by_user(user):
-    return ProgrammeManager.objects.filter(person__user=user)
+# Create your views here.
