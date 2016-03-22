@@ -35,7 +35,7 @@ class AcademicAssistant(models.Model):
         ('IN_PROGRESS', _('In progress')))
     
     person                 = models.ForeignKey('base.Person')
-    supervisor             = models.ForeignKey('base.Person', blank=True, null=True)
+    supervisor             = models.ForeignKey('base.Person', blank=True, null=True, related_name='person_supervisor')
     position_id            = models.CharField(max_length=12)
     fulltime_equivalent    = models.DecimalField(max_digits=3, decimal_places=2)
     sap_id                 = models.CharField(max_length=12)
@@ -82,10 +82,14 @@ class AssistantMandate(models.Model):
     state                         = models.CharField(max_length=20, choices=STATE_CHOICES, default='TO_DO')
     tutoring_remark               = models.TextField(null=True, blank=True)
     activities_report_remark      = models.TextField(null=True, blank=True)
-    research_percent              = models.PositiveIntegerField(validators=[MinValueValidator(0),MaxValueValidator(100)], default=0)
-    tutoring_percent              = models.PositiveIntegerField(validators=[MinValueValidator(0),MaxValueValidator(100)], default=0)
-    service_activities_percent    = models.PositiveIntegerField(validators=[MinValueValidator(0),MaxValueValidator(100)], default=0)
-    formation_activities_percent  = models.PositiveIntegerField(validators=[MinValueValidator(0),MaxValueValidator(100)], default=0)
+    research_percent              = models.PositiveIntegerField(validators=[MinValueValidator(0),
+                                                                            MaxValueValidator(100)], default=0)
+    tutoring_percent              = models.PositiveIntegerField(validators=[MinValueValidator(0),
+                                                                            MaxValueValidator(100)], default=0)
+    service_activities_percent    = models.PositiveIntegerField(validators=[MinValueValidator(0),
+                                                                            MaxValueValidator(100)], default=0)
+    formation_activities_percent  = models.PositiveIntegerField(validators=[MinValueValidator(0),
+                                                                            MaxValueValidator(100)], default=0)
     internships                   = models.TextField(null=True, blank=True)
     conferences                   = models.TextField(null=True, blank=True)
     publications                  = models.TextField(null=True, blank=True)

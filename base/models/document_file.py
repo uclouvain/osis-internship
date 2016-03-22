@@ -29,6 +29,7 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from django.utils import timezone
 
+
 class DocumentFileAdmin(admin.ModelAdmin):
     list_display = ('name', 'content_type', 'creation_date', 'size')
     fieldsets = ((None, {'fields': ('name', 'content_type', 'creation_date', 'storage_duration', 'full_path',
@@ -54,10 +55,10 @@ class DocumentFile(models.Model):
 
     name = models.CharField(max_length=100)
     content_type = models.CharField(max_length=50, choices=CONTENT_TYPE_CHOICES)
-    creation_date = models.DateTimeField(default=timezone.now, editable=False)
+    creation_date = models.DateTimeField(auto_now=True, editable=False)
     storage_duration = models.IntegerField()
     full_path = models.CharField(max_length=255)
-    physical_name = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    physical_name = models.UUIDField(default=uuid.uuid4, editable=False)
     physical_extension = models.CharField(max_length=10)
     description = models.CharField(max_length=255, null=True, blank=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
