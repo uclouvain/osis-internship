@@ -224,11 +224,16 @@ Start the virtual environment and install the dependencies:
     $ source venv/bin/activate
     (venv)$ pip install -r requirements.txt
 
-Before running the application, let's create the data structure in the database:
+Create the data structure in the database:
 
     (venv)$ python manage.py migrate
 
-And then a super user account to access the administration module:
+At this point we have two options:
+
+1. we create a super user and go on with an empty database or
+2. we load the demonstration data that already contains a superuser
+
+To create the super user and continue with an empty database:
 
     (venv)$ python manage.py createsuperuser
        Username (leave blank to use '[linux-user]'):
@@ -240,7 +245,20 @@ And then a super user account to access the administration module:
 You will need this user to login on OSIS for the first time and be able to
 create other users.
 
-Finally, run the application:
+To load the demonstration data that already contains a superuser:
+
+    (venv)$ python manage.py loaddata demo_data.json
+
+The demonstration data create a super user with the following credentials:
+
+    Username: osis
+    Password: osisosis
+
+The demonstration data also create several other users. The password for each
+user is the username typed twice (e.g. user: `antonin`  password:
+`antoninantonin`).
+
+Now, we can run the application:
 
     (venv)$ python manage.py runserver
 

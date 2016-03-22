@@ -28,8 +28,8 @@ from django.contrib import admin
 
 
 class OrganizationAdmin(admin.ModelAdmin):
-    list_display = ('name', 'acronym', 'changed')
-    fieldsets = ((None, {'fields': ('name', 'acronym', 'website', 'reference')}),)
+    list_display = ('reference','name', 'acronym', 'changed')
+    fieldsets = ((None, {'fields': ('reference','name', 'acronym', 'website', )}),)
     search_fields = ['acronym']
 
 
