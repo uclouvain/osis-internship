@@ -27,7 +27,6 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 
-
 class InternshipOffer(models.Model):
     organization        = models.ForeignKey('base.Organization')
     learning_unit_year  = models.ForeignKey('base.LearningUnitYear')
