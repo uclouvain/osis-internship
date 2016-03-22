@@ -31,75 +31,22 @@ from django.utils.translation import ugettext_lazy as _
 
 
 def organizations(request):
-
-    organizations_type = (
-        ('MAIN', 'Main'),
-        ('ACADEMIC_PARTNER', 'Academic partner'),
-        ('INDUSTRIAL_PARTNER', 'Industrial partner'),
-        ('SERVICE_PARTNER', 'Service partner'),
-        ('COMMERCE_PARTNER', 'Commerce partner'),
-        ('PUBLIC_PARTNER', 'Public partner'),
-    )
-
     return render(request, "organizations.html",
                            {'acronym': None,
                             'name': None,
                             'organizations': None,
-                            'type': organizations_type,
+                            'type': mdl.organization.ORGANIZATION_TYPE,
                             'init': "1"})
 
+
 def organizations_search(request):
-    acronym = request.GET['acronym']
-    name = request.GET['name']
-    type = request.GET['type_choices']
-    organizations_list = []
-    organizations_type = (
-        ('MAIN', 'Main'),
-        ('ACADEMIC_PARTNER', 'Academic partner'),
-        ('INDUSTRIAL_PARTNER', 'Industrial partner'),
-        ('SERVICE_PARTNER', 'Service partner'),
-        ('COMMERCE_PARTNER', 'Commerce partner'),
-        ('PUBLIC_PARTNER', 'Public partner'),
-    )
-    criteria_present = False
-
-    name = name.strip()
-    if len(name) <= 0:
-        name  = None
-    else:
-        criteria_present=True
-
-    acronym = acronym.strip()
-    if len(acronym) <= 0:
-        acronym = None
-    else:
-        criteria_present=True
-
-    if type == "None":
-        type = None
-    else :
-        criteria_present=True
-
-    message = None
-    if criteria_present:
-        if acronym is None and name is None and type:
-            organizations_list = mdl.organization.find_by_type(type)
-        if acronym is None and name and type is None:
-            organizations_list = mdl.organization.find_by_name(name)
-        if acronym and name is None and type is None:
-            organizations_list = mdl.organization.find_by_acronym(acronym)
-        if acronym and name:
-            organizations_list = mdl.organization.find_by_acronym_name(acronym, name)
-    else:
-         message = "%s" % _('You must choose at least one criteria!')
+    organizations = mdl.organization.search(acronym=request.GET['acronym'],
+                                            name=request.GET['name'],
+                                            type=request.GET['type_choices'])
 
     return render(request, "organizations.html",
-                           {'acronym':       acronym,
-                            'name':          name,
-                            'organizations': organizations_list,
-                            'type': organizations_type,
-                            'init': "0",
-                            'message': message})
+                           {'organizations': organizations,
+                            'types': mdl.organization.ORGANIZATION_TYPE})
 
 
 def organization_read(request, organization_id):
