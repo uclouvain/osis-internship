@@ -35,6 +35,9 @@ admin.site.register(academic_year.AcademicYear,
 admin.site.register(attribution.Attribution,
                     attribution.AttributionAdmin)
 
+admin.site.register(document_file.DocumentFile,
+                    document_file.DocumentFileAdmin)
+
 admin.site.register(exam_enrollment.ExamEnrollment,
                     exam_enrollment.ExamEnrollmentAdmin)
 
