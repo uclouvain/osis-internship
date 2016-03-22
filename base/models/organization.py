@@ -73,22 +73,5 @@ def search(acronym=None, name=None, type=None):
     return queryset
 
 
-
-def find_by_acronym(acronym):
-    return Organization.objects.filter(acronym__icontains=acronym)
-
-
-def find_by_name(name):
-    return Organization.objects.filter(name__icontains=name)
-
-
-def find_by_acronym_name(acronym, name):
-    return Organization.objects.filter(acronym__icontains=acronym, name__icontains=name)
-
-
-def find_by_type(type):
-    return Organization.objects.filter(type__icontains=type)
-
-
 def find_all_order_by_reference():
     return Organization.objects.all().order_by('reference')

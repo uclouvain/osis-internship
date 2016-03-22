@@ -34,20 +34,20 @@ class StructureAdmin(admin.ModelAdmin):
     search_fields = ['acronym']
 
 
-class Structure(models.Model):
-    TYPE_CHOICES = (
-        ('SECTOR', 'Sector'),
-        ('FACULTY', 'Faculty'),
-        ('INSTITUTE', 'Institute'),
-        ('POLE', 'Pole'))
+ENTITY_TYPE = (('SECTOR', 'Sector'),
+               ('FACULTY', 'Faculty'),
+               ('INSTITUTE', 'Institute'),
+               ('POLE', 'Pole'))
 
+
+class Structure(models.Model):
     external_id  = models.CharField(max_length=100, blank=True, null=True)
     changed      = models.DateTimeField(null=True)
     acronym      = models.CharField(max_length=15)
     title        = models.CharField(max_length=255)
     organization = models.ForeignKey('Organization', null=True)
     part_of      = models.ForeignKey('self', null=True, blank=True)
-    type         = models.CharField(max_length=30, blank=True, null=True, choices=TYPE_CHOICES, default='UNKNOWN')
+    type         = models.CharField(max_length=30, blank=True, null=True, choices=ENTITY_TYPE)
 
     def children(self):
         return Structure.objects.filter(part_of=self.pk)
@@ -70,6 +70,21 @@ def find_by_id(structure_id):
     return Structure.objects.get(pk=structure_id)
 
 
+def search(acronym=None, title=None, type=None):
+    queryset = Structure.objects
+
+    if acronym:
+        queryset = queryset.filter(acronym=acronym)
+
+    if title:
+        queryset = queryset.filter(title=title)
+
+    if type:
+        queryset = queryset.filter(type=type)
+
+    return queryset
+
+
 def find_children(self):
     return Structure.objects.filter(part_of=self).order_by('acronym')
 
@@ -77,8 +92,10 @@ def find_children(self):
 def find_by_organization(organization):
     return Structure.objects.filter(organization=organization, part_of__isnull=True)
 
+
 def find_by_type(type):
     return Structure.objects.filter(type__icontains=type)
+
 
 def find_tree_by_organization(organization):
     structure = Structure.objects.filter(organization=organization)
