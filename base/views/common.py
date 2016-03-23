@@ -26,6 +26,7 @@
 import subprocess
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import login as django_login
+from django.contrib.auth import authenticate
 from django.utils import translation
 from django.shortcuts import render
 from base import models as mdl
