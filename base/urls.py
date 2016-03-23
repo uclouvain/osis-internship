@@ -24,7 +24,7 @@
 #
 ##############################################################################
 from django.conf.urls import url, include
-from django.contrib.auth.views import login, logout
+from django.contrib.auth.views import logout
 
 from base.utils import upload_xls_utils
 from base.views import learning_unit, offer, common, score_encoding, institution, organization,academic_calendar, offer_year
@@ -45,7 +45,7 @@ urlpatterns = [
     url(r'^learning_units/search$', learning_unit.learning_units_search, name='learning_units_search'),
     url(r'^learning_units/([0-9]+)/$', learning_unit.learning_unit_read, name='learning_unit_read'),
 
-    url(r'^login/$', login, name='login'),
+    url(r'^login/$', common.login, name='login'),
     url(r'^logout/$', logout, name='logout'),
 
     url(r'^offers/$', offer.offers, name='offers'),

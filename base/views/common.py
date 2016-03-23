@@ -25,6 +25,9 @@
 ##############################################################################
 import subprocess
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import login as django_login
+from django.contrib.auth import authenticate
+from django.utils import translation
 from django.shortcuts import render
 from base import models as mdl
 
@@ -35,6 +38,18 @@ def page_not_found(request):
 
 def access_denied(request):
     return render(request, 'access_denied.html')
+
+def login(request):
+    if request.method == 'POST' :
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        person = mdl.person.find_by_user(user)
+        if person.language :
+            user_language = person.language
+            translation.activate(user_language)
+            request.session[translation.LANGUAGE_SESSION_KEY] = user_language
+    return django_login(request)
 
 
 def home(request):
@@ -90,6 +105,8 @@ def profile(request):
 def profile_lang(request):
     ui_language = request.POST.get('ui_language')
     mdl.person.change_language(request.user, ui_language)
+    translation.activate(ui_language)
+    request.session[translation.LANGUAGE_SESSION_KEY] = ui_language
     return profile(request)
 
 
