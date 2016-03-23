@@ -57,6 +57,8 @@ urlpatterns = [
 
     url(r'^storage/$', common.storage, name='storage'),
     url(r'^storage/files$', common.files, name='files'),
+    url(r'^storage/files/search$', common.files_search, name='files_search'),
+    url(r'^storage/files/([0-9]+)/$', common.document_file_read, name='document_file_read'),
 
     url(r'^studies/$', common.studies, name='studies'),
     url(r'^studies/assessments/$', common.assessments, name='assessments'),

@@ -23,10 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from datetime import datetime
+
 import subprocess
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from base import models as mdl
+
+from django.utils.translation import ugettext_lazy as _
 
 
 def page_not_found(request):
@@ -122,3 +126,33 @@ def storage(request):
 @login_required
 def files(request):
     return render(request, "admin/files.html", {})
+
+@login_required
+def files_search(request):
+    registration_date = request.GET['registration_date']
+    username = request.GET['user']
+    message = None
+    files = None
+    if registration_date or username :
+        if registration_date :
+            registration_date = datetime.strptime(request.GET['registration_date'], '%Y-%m-%d')
+            print(registration_date.month)
+        files = mdl.document_file.search(username=username, creation_date=registration_date)
+    else :
+        message = "%s" % _('You must choose at least one criteria!')
+
+    return render(request, "admin/files.html", {'files'   : files,
+                                                'message' : message})
+
+@login_required
+def document_file_read(request, document_file_id):
+    document_file = mdl.document_file.find_by_id(document_file_id)
+    return render(request, "admin/file.html", {'file' : document_file})
+
+# def organization_read(request, organization_id):
+#     organization = mdl.organization.find_by_id(organization_id)
+#     structures = mdl.structure.find_by_organization(organization)
+#     organization_addresses = mdl.organization_address.find_by_organization(organization)
+#     return render(request, "organization.html", {'organization':            organization,
+#                                                  'organization_addresses' : organization_addresses,
+#                                                  'structures':              structures})
