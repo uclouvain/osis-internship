@@ -27,12 +27,12 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'storage' %}" id="lnk_stockage">Stockage</a></li>
-  <li class="active">{% trans 'Fichiers' %}</li>
+  <li><a href="{% url 'storage' %}" id="lnk_stockage">{% trans 'Stockage'%}</a></li>
+  <li class="active">{% trans 'Files' %}</li>
 {% endblock %}
 {% block content %}
 <div class="page-header">
-  <h2>{% trans 'Fichiers' %}</h2>
+  <h2>{% trans 'Files' %}</h2>
 </div>
 <div class="panel panel-default">
   <div class="panel-body">

@@ -148,11 +148,3 @@ def files_search(request):
 def document_file_read(request, document_file_id):
     document_file = mdl.document_file.find_by_id(document_file_id)
     return render(request, "admin/file.html", {'file' : document_file})
-
-# def organization_read(request, organization_id):
-#     organization = mdl.organization.find_by_id(organization_id)
-#     structures = mdl.structure.find_by_organization(organization)
-#     organization_addresses = mdl.organization_address.find_by_organization(organization)
-#     return render(request, "organization.html", {'organization':            organization,
-#                                                  'organization_addresses' : organization_addresses,
-#                                                  'structures':              structures})
