@@ -67,3 +67,18 @@ class DocumentFile(models.Model):
 
     def __str__(self):
         return self.name
+
+
+def find_by_id(document_file_id):
+    return DocumentFile.objects.get(pk=document_file_id)
+
+def search(username=None, creation_date=None):
+    queryset = DocumentFile.objects
+
+    if username:
+        queryset = queryset.filter(user__username__icontains=username)
+
+    if creation_date:
+        queryset = queryset.filter(creation_date__year=creation_date.year,creation_date__month=creation_date.month,creation_date__day=creation_date.day)
+
+    return queryset
