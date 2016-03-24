@@ -95,8 +95,8 @@
                                     </thead>
                                     {% for s in structure.find_children %}
                                     <tr>
-                                        <td><a href="{% url 'structure_read' s.id %}" id="lnk_structure_read_{{s.id}}">{{
-                                            s.acronym }}</a></td>
+                                        <td><a href="{% url 'structure_read' s.id %}" id="lnk_structure_read_{{s.id}}">
+                                            {{s.acronym }}</a></td>
                                         <td>{{ s.title }}</td>
                                     </tr>
                                     {% endfor %}
@@ -126,8 +126,8 @@
                             </tr>
                             {% endifchanged %}
                             <tr>
-                                <td><a href="{% url 'offer_read' oy.id %}" id="lnk_offer_read_{{oy.id}}">{{ oy.acronym
-                                    }}</a></td>
+                                <td><a href="{% url 'offer_read' oy.id %}" id="lnk_offer_read_{{oy.id}}">
+                                    {{ oy.acronym}}</a></td>
                                 <td>{{ oy.title }}</td>
                             </tr>
                             {% endfor %}
