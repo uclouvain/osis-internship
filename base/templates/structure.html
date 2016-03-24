@@ -47,7 +47,7 @@
     <div class="panel-body">
         <ul class="nav nav-tabs">
             <li class="active"><a data-toggle="tab" href="#tab_identification">{% trans 'Identification'%}</a></li>
-            {% if structure.type != "FACULTY" %}
+            {% if structure.type == "FACULTY" %}
             <li><a data-toggle="tab" href="#tab_offers">{% trans 'Offers'%}</a></li>
             {% endif %}
             <li><a data-toggle="tab" href="#tab_structure">{% trans 'Structure'%}</a></li>
@@ -108,7 +108,7 @@
                 </div>
                 {% endif %}
             </div>
-            {% if structure.type != "FACULTY" %}
+            {% if structure.type == "FACULTY" %}
             <div id="tab_offers" class="tab-pane fade">
                 <br>
                 <div class="row">
