@@ -26,7 +26,6 @@
 from django.db import models
 from django.contrib import admin
 
-
 class StructureAdmin(admin.ModelAdmin):
     list_display = ('acronym', 'title', 'part_of', 'organization', 'type')
     fieldsets = ((None, {'fields': ('acronym', 'title', 'part_of', 'organization', 'type')}),)
@@ -74,10 +73,10 @@ def search(acronym=None, title=None, type=None):
     queryset = Structure.objects
 
     if acronym:
-        queryset = queryset.filter(acronym=acronym)
+        queryset = queryset.filter(acronym__iexact=acronym)
 
     if title:
-        queryset = queryset.filter(title=title)
+        queryset = queryset.filter(title__icontains=title)
 
     if type:
         queryset = queryset.filter(type=type)
