@@ -46,9 +46,12 @@ def structures(request):
 
 @login_required
 def structures_search(request):
+    structure_type = None
+    if request.GET['type_choices']:
+        structure_type = request.GET['type_choices'] #otherwise type is a blank
     entities = mdl.structure.search(acronym=request.GET['acronym'],
                                     title=request.GET['title'],
-                                    type=request.GET['type_choices'])
+                                    type=structure_type)
 
     return render(request, "structures.html", {'entities': entities,
                                                'types': mdl.structure.ENTITY_TYPE})
