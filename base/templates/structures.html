@@ -94,7 +94,7 @@
                     <td><a href="{% url 'structure_read' entity.id %}" id="lnk_entity_read_{{entity.id}}">
                         {{ entity.acronym }}</a></td>
                     <td>{{ entity.title }}</td>
-                    <td>{{ entity.type }}</td>
+                    <td>{% if entity.type != 'UNKNOWN'%}{{ entity.type|default_if_none:''}}{% endif %}</td>
                 </tr>
                 {% endfor %}
             </table>
