@@ -47,7 +47,9 @@
     <div class="panel-body">
         <ul class="nav nav-tabs">
             <li class="active"><a data-toggle="tab" href="#tab_identification">{% trans 'Identification'%}</a></li>
+            {% if structure.type == "FACULTY" %}
             <li><a data-toggle="tab" href="#tab_offers">{% trans 'Offers'%}</a></li>
+            {% endif %}
             <li><a data-toggle="tab" href="#tab_structure">{% trans 'Structure'%}</a></li>
         </ul>
         <div class="tab-content">
@@ -55,7 +57,7 @@
                 <br>
                 <div class="row">
                     <div class="col-md-3">
-                        <label>{% trans 'Acronym' %}</label><br>
+                        <label>{% trans 'Acronym' %}{{structure.type}}</label><br>
                         {{ structure.acronym }}
                     </div>
                     <div class="col-md-9">
@@ -93,8 +95,8 @@
                                     </thead>
                                     {% for s in structure.find_children %}
                                     <tr>
-                                        <td><a href="{% url 'structure_read' s.id %}" id="lnk_structure_read_{{s.id}}">{{
-                                            s.acronym }}</a></td>
+                                        <td><a href="{% url 'structure_read' s.id %}" id="lnk_structure_read_{{s.id}}">
+                                            {{s.acronym }}</a></td>
                                         <td>{{ s.title }}</td>
                                     </tr>
                                     {% endfor %}
@@ -106,6 +108,7 @@
                 </div>
                 {% endif %}
             </div>
+            {% if structure.type == "FACULTY" %}
             <div id="tab_offers" class="tab-pane fade">
                 <br>
                 <div class="row">
@@ -123,8 +126,8 @@
                             </tr>
                             {% endifchanged %}
                             <tr>
-                                <td><a href="{% url 'offer_read' oy.id %}" id="lnk_offer_read_{{oy.id}}">{{ oy.acronym
-                                    }}</a></td>
+                                <td><a href="{% url 'offer_read' oy.id %}" id="lnk_offer_read_{{oy.id}}">
+                                    {{ oy.acronym}}</a></td>
                                 <td>{{ oy.title }}</td>
                             </tr>
                             {% endfor %}
@@ -133,6 +136,7 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
             <div id="tab_structure" class="tab-pane fade">
                 {%if structure%}
                 <iframe src="{%url 'structure_diagram_by_parent' structure.id %}" width="1100px" height="600px"
