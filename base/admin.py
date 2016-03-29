@@ -41,6 +41,9 @@ admin.site.register(exam_enrollment.ExamEnrollment,
 admin.site.register(exam_enrollment.ExamEnrollmentHistory,
                     exam_enrollment.ExamEnrollmentHistoryAdmin)
 
+admin.site.register(form.Form,
+                    form.FormAdmin)
+
 admin.site.register(learning_unit.LearningUnit,
                     learning_unit.LearningUnitAdmin)
 
@@ -53,11 +56,14 @@ admin.site.register(learning_unit_year.LearningUnitYear,
 admin.site.register(message_template.MessageTemplate,
                     message_template.MessageTemplateAdmin)
 
+admin.site.register(offer_enrollment.OfferEnrollment,
+                    offer_enrollment.OfferEnrollmentAdmin)
+
 admin.site.register(offer.Offer,
                     offer.OfferAdmin)
 
-admin.site.register(offer_enrollment.OfferEnrollment,
-                    offer_enrollment.OfferEnrollmentAdmin)
+admin.site.register(option.Option,
+                    option.OptionAdmin)
 
 admin.site.register(offer_year.OfferYear,
                     offer_year.OfferYearAdmin)
@@ -79,6 +85,9 @@ admin.site.register(person_address.PersonAddress,
 
 admin.site.register(program_manager.ProgrammeManager,
                     program_manager.ProgrammeManagerAdmin)
+
+admin.site.register(question.Question,
+                    question.QuestionAdmin)
 
 admin.site.register(session_exam.SessionExam,
                     session_exam.SessionExamAdmin)
