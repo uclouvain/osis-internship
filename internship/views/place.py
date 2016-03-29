@@ -35,7 +35,7 @@ def internships_places(request):
         city_sort_get = request.GET.get('city_sort')
 
     #Second, import all the organizations with their address(es if they have more than one)
-    organizations = mdl.organization.find_all_order_by_reference()
+    organizations = mdl.organization.find_by_type_order_by_reference("SERVICE_PARTNER")
     if organizations:
         for organization in organizations:
             organization.address = ""

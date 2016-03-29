@@ -75,3 +75,9 @@ def search(acronym=None, name=None, type=None):
 
 def find_all_order_by_reference():
     return Organization.objects.all().order_by('reference')
+
+def find_by_type_order_by_reference(type):
+    return Organization.objects.filter(type=type).order_by('reference')
+
+def find_by_type(type):
+    return Organization.objects.filter(type=type)
