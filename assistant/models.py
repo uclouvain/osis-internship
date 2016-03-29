@@ -112,6 +112,7 @@ class AssistantMandate(models.Model):
     special                       = models.BooleanField(default=False)
     contract_duration             = models.CharField(max_length=30) 
     contract_duration_fte         = models.CharField(max_length=30)
+    service_activities_remark     = models.TextField(null=True, blank=True)
     
 
 class AssistantDocument(models.Model):
@@ -134,6 +135,7 @@ class TutoringLearningUnitYear(models.Model):
     attendees                  = models.PositiveIntegerField(null=True, blank=True)
     preparation_duration       = models.PositiveIntegerField(null=True, blank=True)
     exams_supervision_duration = models.PositiveIntegerField(null=True, blank=True)
+    others_delivery            = models.TextField(null=True, blank=True)
 
     
 class Review(models.Model):
