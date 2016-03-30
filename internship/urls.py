@@ -40,5 +40,4 @@ urlpatterns = [
     url(r'^studies/internships/students/resume/$', student_resume.internships_student_resume, name='internships_student_resume'),
     url(r'^studies/internships/students/search$', student_resume.internships_student_search, name='internships_student_search'),
     url(r'^studies/internships/students/resume/([0-9]+)/$', student_resume.internships_student_read, name='internships_student_read'),
-
 ]

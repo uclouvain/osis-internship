@@ -29,39 +29,99 @@
 {% block breadcrumb %}
   <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
   <li><a href="{% url 'internships_home' %}">Stages</a></li>
-  <li class="active">{% trans 'Students' %}</li>
+  <li><a href="{% url 'internships_student_search' %}">{% trans 'Students' %}</a></li>
+  <li class="active">{% trans 'Student' %}</li>
 {% endblock %}
 {% block content %}
-  <div class="page-header">
-    <h2>{% trans 'Students Resume' %}</h2>
-  </div>
+<div class="page-header">
+  {% for s in student %}
+    <h2>{{ s.person.last_name }} {{ s.person.first_name }}</h2>
+  {% endfor %}
+</div>
   <div class="panel panel-default">
-    <form  method="get" action="{% url 'internships_student_search'%}" >
-      <div class="row">
-          <div class="col-md-3">
-              <label for="noma">{% trans 'Noma'%}</label>
-              <input class="form-control" id="txt_noma" placeholder="{% trans 'Noma' %}"
-                                                        name="s_noma"
-                                                        value="{{ s_noma | default_if_none:'' }}"
-                                                        style="text-transform:uppercase">
+      <div class="panel-body">
+          <ul class="nav nav-tabs">
+              <li class="active"><a data-toggle="tab" href="#tab_identification">{% trans 'Identification'%}</a></li>
+          </ul>
+          <div class="tab-content">
+              <div id="tab_identification" class="tab-pane fade in active">
+                  <br>
+                  {% for s in student %}
+                  <div class="row">
+                      <div class="col-md-4">
+                          <label>{% trans 'Name' %}</label><br>
+                          {{ s.person.last_name | default_if_none:'-' }}
+                      </div>
+                      <div class="col-md-4">
+                          <label>{% trans 'Forname'%}</label><br>
+                          {{ s.person.first_name | default_if_none:'-' }}
+                      </div>
+                      <div class="col-md-4">
+                          <label>{% trans 'Noma'%}</label><br>
+                          {{ s.registration_id | default_if_none:'-' }}
+                      </div>
+                  </div>
+                  <br>
+                  <div class="row">
+                      <div class="col-md-4">
+                          <label>{% trans 'Gender' %}</label><br>
+                          {{ s.person.gender | default_if_none:'-' }}
+                      </div>
+                      <div class="col-md-4">
+                          <label>{% trans 'Email' %}</label><br>
+                          {{ s.person.email | default_if_none:'-' }}
+                      </div>
+                  </div>
+                  <br>
+                  <div class="row">
+                      <div class="col-md-4">
+                          <label>{% trans 'Phone / Mobile' %}</label><br>
+                          {{ s.person.phone | default_if_none:'-' }} /
+                          {{ s.person.phone_mobile | default_if_none:'-' }}
+                      </div>
+                      <div class="col-md-4">
+                          <label>{% trans 'Language' %}</label><br>
+                          {{ s.person.language | default_if_none:'-' }}
+                      </div>
+                      <div class="col-md-4">
+                          <label>{% trans 'Address' %}</label><br>
+                          {%if student_addresses%}
+                          aaaaaa{{ organization.website | default_if_none:'-' }}
+                          {%endif%}
+                      </div>
+                  </div>
+                  <br>
+                  <div class="row">
+                      <div class="col-md-10">
+                          <label>{% trans 'Stage(s)' %}</label>
+                      </div>
+                  </div>
+                  <br>
+                  {%if organization_addresses%}
+                  <div class="row">
+                      <div class="col-md-12">
+                          <div class="list-group">
+                              {% for address in organization_addresses %}
+                              <a href="{% url 'organization_address_read' address.id %}" class="list-group-item">
+                                  <h4 class="list-group-item-heading">{{ address.label | default_if_none:'' }}</h4>
+                                  <p class="list-group-item-text">
+                                  <address>
+                                      {{ address.location | default_if_none:'' }}<br>
+                                      {{ address.postal_code | default_if_none:'' }} {{ address.city | default_if_none:''}} <br>
+                                      {{ address.country | default_if_none:'' }}
+                                  </address>
+                                  </p>
+
+                              </a>
+                              {%endfor%}
+                          </div>
+
+                      </div>
+                  </div>
+                  {%endif%}
+                {%endfor%}
+              </div>
           </div>
-          <div class="col-md-3">
-              <label for="name" >{% trans 'Name'%}</label>
-              <input class="form-control" id="txt_name" placeholder="{% trans 'Name' %}"
-                                                        name="s_name"
-                                                        value="{{ s_name | default_if_none:'' }}"
-                                                        style="text-transform:uppercase">
-          </div>
-          <div class="col-md-2">
-            <br>
-            <button type="submit" id="bt_submit_student_search" class="btn btn-primary"
-                                  role="button" title="{% trans 'Search for a student ' %}">
-              <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-            </button>&nbsp;&nbsp;
-          </div>
-        </div>
-      </form>
       </div>
-    </div>
   </div>
-{% endblock %}
+  {% endblock %}

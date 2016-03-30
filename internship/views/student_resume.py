@@ -25,8 +25,8 @@
 ##############################################################################
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from pprint import pprint
 from base import models as mdl
+from pprint import pprint
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -34,7 +34,7 @@ from django.utils.translation import ugettext_lazy as _
 @login_required
 def internships_student_resume(request):
 
-    return render(request, "student_resume.html", { 's_noma': None,
+    return render(request, "student_search.html", { 's_noma': None,
                                                      's_name': None})
 
 def internships_student_search(request):
@@ -66,15 +66,18 @@ def internships_student_search(request):
          message = "%s" % _('You must choose at least one criteria!')
 
 
-    return render(request, "student_resume.html",
+    return render(request, "student_search.html",
                            {'s_noma':       s_noma,
                             's_name':       s_name,
                             'students':     students_list,
                             'init':         "0",
                             'message':      message})
 
-def internships_student_read(request):
 
-    return render(request, "student_resume.html", { 's_noma': None,
-                                                     's_name': None,
-                                                     's_forname': None})
+def internships_student_read(request, registration_id):
+    student = mdl.student.find_by_noma(registration_id)
+    student_addresses = mdl.person_address.find_by_person(student.person)
+    #stages
+    #organization_addresses = mdl.organization_address.find_by_organization(organization)
+    return render(request, "student_resume.html", {'student':               student,
+                                                    'student_addresses':    student_addresses})

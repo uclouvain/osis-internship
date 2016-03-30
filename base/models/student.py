@@ -27,7 +27,7 @@ from django.db import models
 from django.contrib import admin
 from base.models import person
 from django.core.exceptions import ObjectDoesNotExist
-
+from pprint import pprint
 
 class StudentAdmin(admin.ModelAdmin):
     list_display = ('person', 'registration_id', 'changed')
