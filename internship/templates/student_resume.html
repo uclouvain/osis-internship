@@ -34,9 +34,7 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-  {% for s in student %}
-    <h2>{{ s.person.last_name }} {{ s.person.first_name }}</h2>
-  {% endfor %}
+    <h2>{{ student.person.last_name }} {{ student.person.first_name }}</h2>
 </div>
   <div class="panel panel-default">
       <div class="panel-body">
@@ -46,47 +44,46 @@
           <div class="tab-content">
               <div id="tab_identification" class="tab-pane fade in active">
                   <br>
-                  {% for s in student %}
                   <div class="row">
                       <div class="col-md-4">
                           <label>{% trans 'Name' %}</label><br>
-                          {{ s.person.last_name | default_if_none:'-' }}
+                          {{ student.person.last_name | default_if_none:'-' }}
                       </div>
                       <div class="col-md-4">
                           <label>{% trans 'Forname'%}</label><br>
-                          {{ s.person.first_name | default_if_none:'-' }}
+                          {{ student.person.first_name | default_if_none:'-' }}
                       </div>
                       <div class="col-md-4">
                           <label>{% trans 'Noma'%}</label><br>
-                          {{ s.registration_id | default_if_none:'-' }}
+                          {{ student.registration_id | default_if_none:'-' }}
                       </div>
                   </div>
                   <br>
                   <div class="row">
                       <div class="col-md-4">
                           <label>{% trans 'Gender' %}</label><br>
-                          {{ s.person.gender | default_if_none:'-' }}
+                          {{ student.person.gender | default_if_none:'-' }}
                       </div>
                       <div class="col-md-4">
                           <label>{% trans 'Email' %}</label><br>
-                          {{ s.person.email | default_if_none:'-' }}
+                          {{ student.person.email | default_if_none:'-' }}
                       </div>
                   </div>
                   <br>
                   <div class="row">
                       <div class="col-md-4">
                           <label>{% trans 'Phone / Mobile' %}</label><br>
-                          {{ s.person.phone | default_if_none:'-' }} /
-                          {{ s.person.phone_mobile | default_if_none:'-' }}
+                          {{ student.person.phone | default_if_none:'-' }} /
+                          {{ student.person.phone_mobile | default_if_none:'-' }}
                       </div>
                       <div class="col-md-4">
                           <label>{% trans 'Language' %}</label><br>
-                          {{ s.person.language | default_if_none:'-' }}
+                          {{ student.person.language | default_if_none:'-' }}
                       </div>
                       <div class="col-md-4">
                           <label>{% trans 'Address' %}</label><br>
-                          {%if student_addresses%}
-                          aaaaaa{{ organization.website | default_if_none:'-' }}
+                          {%if student.address%}
+                            {{ student.address.location | default_if_none:'-' }}
                           {%endif%}
                       </div>
                   </div>
@@ -119,7 +116,6 @@
                       </div>
                   </div>
                   {%endif%}
-                {%endfor%}
               </div>
           </div>
       </div>

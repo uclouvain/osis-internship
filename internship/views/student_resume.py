@@ -76,8 +76,15 @@ def internships_student_search(request):
 
 def internships_student_read(request, registration_id):
     student = mdl.student.find_by_noma(registration_id)
-    student_addresses = mdl.person_address.find_by_person(student.person)
+    if student:
+        for student in student:
+            student.address = ""
+            address = mdl.person_address.find_by_person(student.person)
+            if address:
+                print (address)
+                student.address = address
+
+    #student_addresses = mdl.person_address.find_by_person(student)
     #stages
     #organization_addresses = mdl.organization_address.find_by_organization(organization)
-    return render(request, "student_resume.html", {'student':               student,
-                                                    'student_addresses':    student_addresses})
+    return render(request, "student_resume.html", {'student': student})
