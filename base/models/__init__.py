@@ -34,16 +34,13 @@ from base.models import learning_unit_year
 from base.models import message_template
 from base.models import offer
 from base.models import offer_enrollment
-from base.models import form
 from base.models import offer_year
 from base.models import offer_year_calendar
-from base.models import option
 from base.models import organization
 from base.models import organization_address
 from base.models import person
 from base.models import person_address
 from base.models import program_manager
-from base.models import question
 from base.models import session_exam
 from base.models import structure
 from base.models import student
