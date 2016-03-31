@@ -25,13 +25,19 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-
+from django.core.exceptions import ObjectDoesNotExist
 
 class StructureAdmin(admin.ModelAdmin):
-    list_display = ('acronym', 'title', 'part_of', 'organization')
-    fieldsets = ((None, {'fields': ('acronym', 'title', 'part_of', 'organization')}),)
+    list_display = ('acronym', 'title', 'part_of', 'organization', 'type')
+    fieldsets = ((None, {'fields': ('acronym', 'title', 'part_of', 'organization', 'type')}),)
     raw_id_fields = ('part_of', )
     search_fields = ['acronym']
+
+
+ENTITY_TYPE = (('SECTOR', 'Sector'),
+               ('FACULTY', 'Faculty'),
+               ('INSTITUTE', 'Institute'),
+               ('POLE', 'Pole'))
 
 
 class Structure(models.Model):
@@ -41,6 +47,7 @@ class Structure(models.Model):
     title        = models.CharField(max_length=255)
     organization = models.ForeignKey('Organization', null=True)
     part_of      = models.ForeignKey('self', null=True, blank=True)
+    type         = models.CharField(max_length=30, blank=True, null=True, choices=ENTITY_TYPE)
 
     def children(self):
         return Structure.objects.filter(part_of=self.pk)
@@ -63,12 +70,31 @@ def find_by_id(structure_id):
     return Structure.objects.get(pk=structure_id)
 
 
+def search(acronym=None, title=None, type=None):
+    queryset = Structure.objects
+
+    if acronym:
+        queryset = queryset.filter(acronym__iexact=acronym)
+
+    if title:
+        queryset = queryset.filter(title__icontains=title)
+
+    if type:
+        queryset = queryset.filter(type=type)
+
+    return queryset
+
+
 def find_children(self):
     return Structure.objects.filter(part_of=self).order_by('acronym')
 
 
 def find_by_organization(organization):
     return Structure.objects.filter(organization=organization, part_of__isnull=True)
+
+
+def find_by_type(type):
+    return Structure.objects.filter(type__icontains=type)
 
 
 def find_tree_by_organization(organization):
@@ -90,4 +116,7 @@ def find_structure_hierarchy(struc):
 
 
 def find_by_acronym(acronym):
-    return Structure.objects.get(acronym=acronym.strip())
+    try:
+        return Structure.objects.get(acronym__iexact=acronym.strip())
+    except ObjectDoesNotExist:
+        return None

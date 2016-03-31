@@ -51,7 +51,10 @@ def add_header_footer(canvas, doc):
     canvas.saveState()
 
     # Header
-    header_building(canvas,doc, styles)
+    header_building(canvas, doc, styles)
+
+    # Footer
+    footer_building(canvas, doc, styles)
 
     # Release the canvas
     canvas.restoreState()
@@ -75,7 +78,7 @@ def print_notes(request, tutor, academic_year, session_exam, learning_unit_year_
                             pagesize=PAGE_SIZE,
                             rightMargin=MARGIN_SIZE,
                             leftMargin=MARGIN_SIZE,
-                            topMargin=72,
+                            topMargin=85,
                             bottomMargin=18)
 
     styles = getSampleStyleSheet()
@@ -107,7 +110,7 @@ def print_notes(request, tutor, academic_year, session_exam, learning_unit_year_
                 if enrollments:
                     list_exam_enrollment = list_exam_enrollment + enrollments
 
-    list_notes_building(session_exam, learning_unit_year_id, academic_year, tutor, list_exam_enrollment, styles, is_fac, content)
+    list_notes_building(session_exam, learning_unit_year_id, academic_year, list_exam_enrollment, styles, is_fac, content)
 
     doc.build(content, onFirstPage=add_header_footer, onLaterPages=add_header_footer)
     # doc.build(content)
@@ -121,10 +124,11 @@ def header_building(canvas, doc, styles):
     a = Image("base"+ settings.STATIC_URL +"img/logo_institution.jpg")
 
     p = Paragraph('''
-                    <para align=center spaceb=3>
+                    <para align=center>
                         <font size=16>%s</font>
                     </para>''' % (_('Scores transcript')), styles["BodyText"])
-    data_header=[[a,'%s' % _('University Catholic Louvain\nLouvain-la-Neuve\nBelgium') ,p],]
+
+    data_header = [[a, '%s' % _('University Catholic Louvain\nLouvain-la-Neuve\nBelgium'), p], ]
 
     t_header=Table(data_header, [30*mm, 100*mm,50*mm])
 
@@ -132,13 +136,19 @@ def header_building(canvas, doc, styles):
                        ]))
 
     w, h = t_header.wrap(doc.width, doc.topMargin)
-
     t_header.drawOn(canvas, doc.leftMargin, doc.height + doc.topMargin - h)
 
 
-def list_notes_building(session_exam, learning_unit_year_id, academic_year, tutor, list_exam_enrollment, styles,
+def footer_building(canvas, doc, styles):
+    pageinfo = _('Scores sheet')
+    footer = Paragraph(''' <para align=right>Page %d - %s </para>''' % (doc.page, pageinfo), styles['Normal'])
+    w, h = footer.wrap(doc.width, doc.bottomMargin)
+    footer.drawOn(canvas, doc.leftMargin, h)
+
+
+def list_notes_building(session_exam, learning_unit_year_id, academic_year, list_exam_enrollment, styles,
                         is_fac, content):
-    #liste des notes
+
     content.append(Paragraph('''
                             <para spaceb=5>
                                 &nbsp;
@@ -162,7 +172,7 @@ def list_notes_building(session_exam, learning_unit_year_id, academic_year, tuto
                 main_data(academic_year, session_exam, styles, current_learning_unit_year,old_pgm, content)
                 #Autre programme - 2. il faut écrire le tableau
 
-                t=Table(data,COLS_WIDTH)
+                t=Table(data, COLS_WIDTH, repeatRows=1)
                 t.setStyle(TableStyle([
                                    ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
                                    ('BOX', (0,0), (-1,-1), 0.25, colors.black),
@@ -200,9 +210,9 @@ def list_notes_building(session_exam, learning_unit_year_id, academic_year, tuto
     if not old_pgm is None:
         main_data(academic_year, session_exam, styles, current_learning_unit_year, old_pgm, content)
         t = Table(data,COLS_WIDTH)
-        t.setStyle(TableStyle([('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
-                               ('BOX', (0,0), (-1,-1), 0.25, colors.black),
-                               ('VALIGN',(0,0), (-1,-1), 'TOP')]))
+        t.setStyle(TableStyle([('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+                               ('BOX', (0, 0), (-1,-1), 0.25, colors.black),
+                               ('VALIGN', (0, 0), (-1, -1), 'TOP')]))
 
         content.append(t)
         end_page_infos_building(content)
@@ -308,7 +318,7 @@ def main_data(academic_year, session_exam, styles, learning_unit_year, pgm, cont
                        ]))
     data_header = [[table_pgm,table_tutor]]
 
-    tt=Table(data_header, colWidths='*')
+    tt = Table(data_header, colWidths='*')
     tt.setStyle(TableStyle([('LEFTPADDING', (0,0), (-1,-1), 0),
                             ('RIGHTPADDING', (0,0), (-1,-1), 0),
                             ('VALIGN', (0,0), (-1,-1), 'TOP')

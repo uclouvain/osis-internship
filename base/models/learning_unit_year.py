@@ -55,3 +55,16 @@ def find_learning_unit_years_by_academic_year(academic_yr):
 
 def find_learning_unit_year_by_id(learning_unit_id):
     return LearningUnitYear.objects.get(pk=learning_unit_id)
+
+
+def search(academic_year_id=None, acronym=None):
+    print('search, ', academic_year_id , ',' , acronym)
+    queryset = LearningUnitYear.objects
+
+    if academic_year_id:
+        queryset = queryset.filter(academic_year=academic_year_id)
+
+    if acronym:
+        queryset = queryset.filter(acronym__icontains=acronym)
+
+    return queryset
