@@ -83,7 +83,10 @@
                       <div class="col-md-4">
                           <label>{% trans 'Address' %}</label><br>
                           {%if student.address%}
-                            {{ student.address.location | default_if_none:'-' }}
+                            {% for ad in student.address %}
+                              {{ ad.location | default_if_none:'-' }} {{ ad.postal_code | default_if_none:'-' }}
+                              {{ ad.city | default_if_none:'-' }}<br>
+                            {% endfor %}
                           {%endif%}
                       </div>
                   </div>
@@ -94,28 +97,17 @@
                       </div>
                   </div>
                   <br>
-                  {%if organization_addresses%}
-                  <div class="row">
-                      <div class="col-md-12">
-                          <div class="list-group">
-                              {% for address in organization_addresses %}
-                              <a href="{% url 'organization_address_read' address.id %}" class="list-group-item">
-                                  <h4 class="list-group-item-heading">{{ address.label | default_if_none:'' }}</h4>
-                                  <p class="list-group-item-text">
-                                  <address>
-                                      {{ address.location | default_if_none:'' }}<br>
-                                      {{ address.postal_code | default_if_none:'' }} {{ address.city | default_if_none:''}} <br>
-                                      {{ address.country | default_if_none:'' }}
-                                  </address>
-                                  </p>
-
-                              </a>
-                              {%endfor%}
-                          </div>
-
-                      </div>
+                  <ul class="nav nav-tabs">
+                      <li class="active"><a data-toggle="tab" href="#tab_choice">{% trans 'Choix de l\'étudiant' %}</a></li>
+                      <li class="active"><a data-toggle="tab" href="#tab_rep">{% trans 'Répartition de l\'étudiant' %}</a></li>
+                  </ul>
+                  <div class="tab-content">
+                    <div id="tab_choice" class="tab-pane fade in active">
+                      aaaa
+                    </div>
+                    <div id="tab_rep" class="tab-pane fade in active">
+                    </div>
                   </div>
-                  {%endif%}
               </div>
           </div>
       </div>
