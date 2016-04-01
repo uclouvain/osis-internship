@@ -29,7 +29,7 @@
 {% block breadcrumb %}
   <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
   <li><a href="{% url 'internships_home' %}">Stages</a></li>
-  <li><a href="{% url 'internships_student_search' %}">{% trans 'Students' %}</a></li>
+  <li><a href="{% url 'internships_student_resume' %}">{% trans 'Students' %}</a></li>
   <li class="active">{% trans 'Student' %}</li>
 {% endblock %}
 {% block content %}
@@ -38,78 +38,91 @@
 </div>
   <div class="panel panel-default">
       <div class="panel-body">
-          <ul class="nav nav-tabs">
-              <li class="active"><a data-toggle="tab" href="#tab_identification">{% trans 'Identification'%}</a></li>
-          </ul>
-          <div class="tab-content">
-              <div id="tab_identification" class="tab-pane fade in active">
-                  <br>
-                  <div class="row">
-                      <div class="col-md-4">
-                          <label>{% trans 'Name' %}</label><br>
-                          {{ student.person.last_name | default_if_none:'-' }}
-                      </div>
-                      <div class="col-md-4">
-                          <label>{% trans 'Forname'%}</label><br>
-                          {{ student.person.first_name | default_if_none:'-' }}
-                      </div>
-                      <div class="col-md-4">
-                          <label>{% trans 'Noma'%}</label><br>
-                          {{ student.registration_id | default_if_none:'-' }}
-                      </div>
-                  </div>
-                  <br>
-                  <div class="row">
-                      <div class="col-md-4">
-                          <label>{% trans 'Gender' %}</label><br>
-                          {{ student.person.gender | default_if_none:'-' }}
-                      </div>
-                      <div class="col-md-4">
-                          <label>{% trans 'Email' %}</label><br>
-                          {{ student.person.email | default_if_none:'-' }}
-                      </div>
-                  </div>
-                  <br>
-                  <div class="row">
-                      <div class="col-md-4">
-                          <label>{% trans 'Phone / Mobile' %}</label><br>
-                          {{ student.person.phone | default_if_none:'-' }} /
-                          {{ student.person.phone_mobile | default_if_none:'-' }}
-                      </div>
-                      <div class="col-md-4">
-                          <label>{% trans 'Language' %}</label><br>
-                          {{ student.person.language | default_if_none:'-' }}
-                      </div>
-                      <div class="col-md-4">
-                          <label>{% trans 'Address' %}</label><br>
-                          {%if student.address%}
-                            {% for ad in student.address %}
-                              {{ ad.location | default_if_none:'-' }} {{ ad.postal_code | default_if_none:'-' }}
-                              {{ ad.city | default_if_none:'-' }}<br>
-                            {% endfor %}
-                          {%endif%}
-                      </div>
-                  </div>
-                  <br>
-                  <div class="row">
-                      <div class="col-md-10">
-                          <label>{% trans 'Stage(s)' %}</label>
-                      </div>
-                  </div>
-                  <br>
-                  <ul class="nav nav-tabs">
-                      <li class="active"><a data-toggle="tab" href="#tab_choice">{% trans 'Choix de l\'étudiant' %}</a></li>
-                      <li class="active"><a data-toggle="tab" href="#tab_rep">{% trans 'Répartition de l\'étudiant' %}</a></li>
-                  </ul>
+        <br>
+        <div class="row">
+            <div class="col-md-4">
+                <label>{% trans 'Name' %}</label><br>
+                {{ student.person.last_name | default_if_none:'-' }}
+            </div>
+            <div class="col-md-4">
+                <label>{% trans 'Forname'%}</label><br>
+                {{ student.person.first_name | default_if_none:'-' }}
+            </div>
+            <div class="col-md-4">
+                <label>{% trans 'Noma'%}</label><br>
+                {{ student.registration_id | default_if_none:'-' }}
+            </div>
+        </div>
+        <br>
+
+        <div class="row">
+            <div class="col-md-4">
+                <label>{% trans 'Gender' %}</label><br>
+                {{ student.person.gender | default_if_none:'-' }}
+            </div>
+            <div class="col-md-4">
+                <label>{% trans 'Email' %}</label><br>
+                {{ student.person.email | default_if_none:'-' }}
+            </div>
+        </div>
+        <br>
+
+        <div class="row">
+            <div class="col-md-4">
+                <label>{% trans 'Phone / Mobile' %}</label><br>
+                {{ student.person.phone | default_if_none:'-' }} /
+                {{ student.person.phone_mobile | default_if_none:'-' }}
+            </div>
+            <div class="col-md-4">
+                <label>{% trans 'Language' %}</label><br>
+                {{ student.person.language | default_if_none:'-' }}
+            </div>
+            <div class="col-md-4">
+                <label>{% trans 'Address' %}</label><br>
+                {%if student.address%}
+                  {% for ad in student.address %}
+                    {{ ad.location | default_if_none:'-' }} {{ ad.postal_code | default_if_none:'-' }}
+                    {{ ad.city | default_if_none:'-' }}<br>
+                  {% endfor %}
+                {%endif%}
+            </div>
+        </div>
+        <br>
+
+        <div class="row">
+            <div class="col-md-10">
+                <label>{% trans 'Stage(s)' %}</label>
+            </div>
+        </div>
+        <br>
+
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <ul class="nav nav-tabs">
+              <li class="active"><a data-toggle="tab" href="#tab_choice">{% trans 'Choix de l\'étudiant' %}</a></li>
+              <li><a data-toggle="tab" href="#tab_rep">{% trans 'Répartition de l\'étudiant' %}</a></li>
+            </ul>
+            <div class="tab-content">
+              <div id="tab_choice" class="tab-pane fade in active">
+                <div class="panel panel-default">
                   <div class="tab-content">
-                    <div id="tab_choice" class="tab-pane fade in active">
-                      aaaa
-                    </div>
-                    <div id="tab_rep" class="tab-pane fade in active">
+                    <div role="tabpanel" class="tab-pane fade in active" id="profile">
+                      audio
                     </div>
                   </div>
+                </div>
               </div>
+              <div id="tab_rep" class="tab-pane fade in active">
+                <div class="panel panel-default">
+                  <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane fade in active" id="profile">
+                      b
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-      </div>
+        </div>
   </div>
   {% endblock %}
