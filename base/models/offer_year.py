@@ -26,7 +26,7 @@
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
-from base.models import academic_year, offer, structure
+from base.models import offer, structure
 
 
 class OfferYearAdmin(admin.ModelAdmin):

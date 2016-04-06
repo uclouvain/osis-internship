@@ -26,7 +26,6 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib import admin
-from base.models import academic_year
 
 
 class AcademicCalendarAdmin(admin.ModelAdmin):
