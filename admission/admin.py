@@ -29,7 +29,9 @@ from admission.models import *
 
 admin.site.register(form.Form,
                     form.FormAdmin)
+
 admin.site.register(option.Option,
                     option.OptionAdmin)
+
 admin.site.register(question.Question,
                     question.QuestionAdmin)

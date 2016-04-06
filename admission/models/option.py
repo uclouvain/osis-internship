@@ -26,17 +26,18 @@
 from django.db import models
 from django.contrib import admin
 
+
 class OptionAdmin(admin.ModelAdmin):
-    list_display = ('label', 'description')
+    list_display = ('question', 'label', 'description')
     fieldsets = ((None, {'fields': ('label', 'value', 'order', 'description', 'question')}),)
 
+
 class Option(models.Model):
-    changed = models.DateTimeField(null=True)
-    label = models.CharField(max_length=255)
-    value = models.TextField()
-    order = models.IntegerField()
-    description = models.TextField(blank=True, null=True)
     question = models.ForeignKey('Question')
+    label = models.CharField(max_length=255)
+    value = models.TextField(blank=True, null=True)
+    order = models.IntegerField(blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return u"%s" % (self.label)
+        return u"%s" % self.label

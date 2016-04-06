@@ -24,19 +24,18 @@
 #
 ##############################################################################
 from django.db import models
-from django.utils import timezone
 from django.contrib import admin
 
+
 class FormAdmin(admin.ModelAdmin):
-    list_display = ('title', 'description')
+    list_display = ('title', 'description', 'offer_year')
     fieldsets = ((None, {'fields': ('title', 'description', 'offer_year')}),)
 
 
 class Form(models.Model):
-    changed = models.DateTimeField(null=True)
+    offer_year = models.ForeignKey('base.OfferYear')
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
-    offer_year = models.ForeignKey('base.OfferYear')
 
     def __str__(self):
-        return u"%s" % (self.title)
+        return u"%s" % self.title
