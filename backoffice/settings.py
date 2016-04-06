@@ -150,6 +150,12 @@ JENKINS_TASKS = []
 
 PROPERTIES_FILE = ''
 
+QUEUE_URL = 'localhost'
+QUEUE_USER = 'guest'
+QUEUE_PASSWORD = 'guest'
+QUEUE_PORT = 5672
+QUEUE_CONTEXT_ROOT = '/'
+
 try  :
     from backoffice.server_settings import *
 except ImportError:
