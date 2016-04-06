@@ -82,7 +82,7 @@
                     {{ organization.reference }}
                   </td>
                   <td>
-                    <a href="{% url 'internships' %}?place_sort={{ organization.name }}">{{ organization.name }}</a>
+                    <a href="{% url 'internships' %}?organization_sort={{ organization.name }}">{{ organization.name }}</a>
                   </td>
                     <td>
                       {% for address in organization.address %}
