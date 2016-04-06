@@ -56,6 +56,7 @@ INSTALLED_APPS = (
     'assistant',
     'dissertation',
     'internship',
+    'admission',
 )
 
 MIDDLEWARE_CLASSES = (
