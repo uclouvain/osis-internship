@@ -25,11 +25,10 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-from base.models import offer_year, student
 
 
 class OfferEnrollmentAdmin(admin.ModelAdmin):
-    list_display = ('offer_year','student', 'date_enrollment', 'changed')
+    list_display = ('offer_year', 'student', 'date_enrollment', 'changed')
     fieldsets = ((None, {'fields': ('offer_year','student','date_enrollment')}),)
     raw_id_fields = ('offer_year', 'student')
     search_fields = ['offer_year__acronym', 'student__person__first_name', 'student__person__last_name']
