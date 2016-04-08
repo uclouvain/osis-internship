@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -27,24 +27,15 @@ from django.db import models
 from django.contrib import admin
 
 
-class OfferEnrollmentAdmin(admin.ModelAdmin):
-    list_display = ('offer_year', 'student', 'date_enrollment', 'changed')
-    fieldsets = ((None, {'fields': ('offer_year','student','date_enrollment')}),)
-    raw_id_fields = ('offer_year', 'student')
-    search_fields = ['offer_year__acronym', 'student__person__first_name', 'student__person__last_name']
+class FormAdmin(admin.ModelAdmin):
+    list_display = ('title', 'description', 'offer_year')
+    fieldsets = ((None, {'fields': ('title', 'description', 'offer_year')}),)
 
 
-class OfferEnrollment(models.Model):
-    external_id     = models.CharField(max_length=100, blank=True, null=True)
-    changed         = models.DateTimeField(null=True)
-    date_enrollment = models.DateField()
-    offer_year      = models.ForeignKey('OfferYear')
-    student         = models.ForeignKey('Student')
+class Form(models.Model):
+    offer_year = models.ForeignKey('base.OfferYear')
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return u"%s - %s" % (self.student, self.offer_year)
-
-
-def find_by_student(a_student):
-    enrollments = OfferEnrollment.objects.filter(student=a_student)
-    return enrollments
+        return u"%s" % self.title

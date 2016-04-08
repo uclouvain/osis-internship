@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -25,26 +25,34 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
+from django.utils.translation import ugettext_lazy as _
 
 
-class OfferEnrollmentAdmin(admin.ModelAdmin):
-    list_display = ('offer_year', 'student', 'date_enrollment', 'changed')
-    fieldsets = ((None, {'fields': ('offer_year','student','date_enrollment')}),)
-    raw_id_fields = ('offer_year', 'student')
-    search_fields = ['offer_year__acronym', 'student__person__first_name', 'student__person__last_name']
+class QuestionAdmin(admin.ModelAdmin):
+    list_display = ('form', 'label', 'description', 'order')
+    fieldsets = ((None, {'fields': ('label', 'description', 'type', 'order', 'required', 'form')}),)
 
 
-class OfferEnrollment(models.Model):
-    external_id     = models.CharField(max_length=100, blank=True, null=True)
-    changed         = models.DateTimeField(null=True)
-    date_enrollment = models.DateField()
-    offer_year      = models.ForeignKey('OfferYear')
-    student         = models.ForeignKey('Student')
+class Question(models.Model):
+
+    QUESTION_TYPES = (
+        ('LABEL', _('Label')),
+        ('SHORT_INPUT_TEXT', _('Short input text')),
+        ('LONG_INPUT_TEXT', _('Long input text')),
+        ('RADIO_BUTTTON', _('Radio button')),
+        ('CHECKBOX', _('Checkbox')),
+        ('DROPDOWN_LIST', _('Dropdown list')),
+        ('UPLOAD_BUTTON', _('Upload button')),
+        ('DOWNLOAD_LINK', _('Download link')),
+        ('HTTP_LINK', _('HTTP link'))
+    )
+
+    form = models.ForeignKey('Form')
+    label = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
+    type = models.CharField(max_length=20, choices=QUESTION_TYPES)
+    order = models.IntegerField(blank=True, null=True)
+    required = models.BooleanField(default=False)
 
     def __str__(self):
-        return u"%s - %s" % (self.student, self.offer_year)
-
-
-def find_by_student(a_student):
-    enrollments = OfferEnrollment.objects.filter(student=a_student)
-    return enrollments
+        return u"%s" % self.label

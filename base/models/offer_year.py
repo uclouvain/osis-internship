@@ -26,7 +26,7 @@
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
-from base.models import academic_year, offer, structure
+from base.models import offer, structure
 
 
 class OfferYearAdmin(admin.ModelAdmin):
@@ -106,3 +106,19 @@ def find_offer_years_by_structure(struct):
 
 def find_offer_year_by_id(offer_year_id):
     return OfferYear.objects.get(pk=offer_year_id)
+
+
+def search_root_offers(entity=None, academic_yr=None, acronym=None):
+    queryset = OfferYear.objects
+
+    if entity:
+        queryset = queryset.filter(structure=entity)
+
+    if academic_yr:
+        queryset = queryset.filter(academic_year=academic_yr)
+
+    if acronym:
+        queryset = queryset.filter(acronym__icontains=acronym)
+
+    queryset = queryset.filter(parent=None)    # on ne doit prendre que les offres racines (pas les finalités)
+    return queryset

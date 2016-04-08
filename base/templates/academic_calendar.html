@@ -76,21 +76,14 @@
             {% endif %}
         </div>
 
-        <div class="row">
-            <div class="col-md-4">
-                <a href="{% url 'academic_calendar_edit' academic_calendar.id %}" title="{%trans 'Edit'%}"
-                   class="btn btn-primary" role="button" id="bt_academic_calendar_edit">
-                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> {% trans 'Edit'%}
-                </a>
-                <a href="{% url 'academic_calendar_delete' academic_calendar.id %}" title="{%trans 'Delete'%}"
-                   class="btn btn-default" role="button" id="bt_remove">
-                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> {% trans 'Delete'%}
-                </a>
-            </div>
-            <div class="col-md-8">
-            </div>
-        </div>
-
+        <a href="{% url 'academic_calendar_edit' academic_calendar.id %}" title="{%trans 'Edit'%}"
+           class="btn btn-primary" role="button" id="bt_academic_calendar_edit">
+            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> {% trans 'Edit'%}
+        </a>
+        <a href="{% url 'academic_calendar_delete' academic_calendar.id %}" title="{%trans 'Delete'%}"
+           class="btn btn-default" role="button" id="bt_removes" data-toggle="modal" data-target=".bs-example-modal-sm">
+            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> {% trans 'Delete'%}
+        </a>
     </div>
 </div>
 {% endblock %}

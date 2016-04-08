@@ -115,7 +115,6 @@ def academic_calendar_save(request, id):
     # validate
     validation = True
     if form.is_valid():
-        print('is valid')
         if request.POST['start_date']:
             academic_calendar.start_date = datetime.strptime(request.POST['start_date'], '%d/%m/%Y')
         else:
@@ -131,7 +130,6 @@ def academic_calendar_save(request, id):
                 form.errors['start_date'] = _('La date de début doit être égale ou inférieure à la date de fin')
                 validation = False
     else:
-        print('is ot valid')
         validation = False
 
     academic_years = mdl.academic_year.find_academic_years()

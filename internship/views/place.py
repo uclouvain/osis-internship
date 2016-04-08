@@ -26,16 +26,16 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from base import models as mdl
-from pprint import pprint
+
 
 @login_required
 def internships_places(request):
-    #First get the value of the option for the sort
+    # First get the value of the option for the sort
     if request.method == 'GET':
         city_sort_get = request.GET.get('city_sort')
 
-    #Second, import all the organizations with their address(es if they have more than one)
-    organizations = mdl.organization.find_all_order_by_reference()
+    # Second, import all the organizations with their address(es if they have more than one)
+    organizations = mdl.organization.find_by_type("SERVICE_PARTNER", order_by=['reference'])
     if organizations:
         for organization in organizations:
             organization.address = ""
@@ -43,9 +43,9 @@ def internships_places(request):
             if address:
                 organization.address = address
 
-    #Next, if there is a value for the sort, browse all the organizations and put which have the same city
-    #in the address than the sort option
-    l_organizations=[]
+    # Next, if there is a value for the sort, browse all the organizations and put which have the same city
+    # in the address than the sort option
+    l_organizations = []
     if city_sort_get and city_sort_get != "0":
         index = 0
         for orga in organizations:
@@ -61,7 +61,7 @@ def internships_places(request):
     else:
         l_organizations = organizations
 
-    #Create the options for the selected list, delete dubblons
+    # Create the options for the selected list, delete dubblons
     organization_addresses = []
     for orga in organizations:
         for a in orga.address:
@@ -69,6 +69,7 @@ def internships_places(request):
     organization_addresses = list(set(organization_addresses))
     organization_addresses.sort()
 
-
-    return render(request, "places.html", {'section': 'internship', 'all_organizations' : l_organizations, 'all_addresses' : organization_addresses,
-                                            'city_sort_get':city_sort_get})
+    return render(request, "places.html", {'section': 'internship',
+                                           'all_organizations': l_organizations,
+                                           'all_addresses': organization_addresses,
+                                           'city_sort_get': city_sort_get})
