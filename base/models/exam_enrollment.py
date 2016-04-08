@@ -26,7 +26,7 @@
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
-from base.models import person, session_exam, learning_unit_enrollment
+from base.models import person
 
 
 JUSTIFICATION_TYPES = (
@@ -163,3 +163,7 @@ def create_exam_enrollment_historic(user, enrollment, score, justification):
     exam_enrollment_history.justification_final = justification
     exam_enrollment_history.person = person.find_by_user(user)
     exam_enrollment_history.save()
+
+
+def find_by_learning_unit_enrollment_and_session_exam_number_session(learning_unit_enrollment,session_exam_number_session):
+    return ExamEnrollment.objects.filter(learning_unit_enrollment=learning_unit_enrollment).filter(session_exam__number_session=session_exam_number_session).first()
