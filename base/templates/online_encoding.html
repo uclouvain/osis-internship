@@ -73,7 +73,7 @@
       </div>
 
       <div class="form-group">
-        <label>Progrès</label><br>
+        <label>{% trans 'Progress' %}</label><br>
         <div class="progress">
           <div class="progress-bar" role="progressbar" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ progress }}%;">
             {{ progress }}%
@@ -129,7 +129,7 @@
                         -
                     {% endif %}
                 </td>
-                <td>{{ enrollment.session_exam.offer_year_calendar.end_date }}</td>
+                <td>{{ enrollment.session_exam.offer_year_calendar.end_date | default_if_none:'' |date:"j/m/Y" }}</td>
             </tr>
           {% endfor %}
           </tbody>

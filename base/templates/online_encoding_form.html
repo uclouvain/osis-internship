@@ -120,7 +120,7 @@
                       <option value="JUSTIFIED_ABSENCE" {% if enrollment.justification_draft == 'JUSTIFIED_ABSENCE' %}selected="selected"{% endif %}>{% trans 'Justified absence' %}</option>)
                       {% endif %}
                     </select></td>
-                <td>{{ enrollment.session_exam.offer_year_calendar.end_date }}</td>
+                <td>{{ enrollment.session_exam.offer_year_calendar.end_date | default_if_none:''|date:"j/m/Y" }}</td>
               </tr>
             {% endfor %}
             </tbody>
