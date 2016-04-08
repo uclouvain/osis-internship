@@ -33,6 +33,7 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import mm
 from reportlab.lib import colors
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.staticfiles.templatetags.staticfiles import static
 
 from base import models as mdl
 
@@ -121,7 +122,7 @@ def print_notes(request, tutor, academic_year, session_exam, learning_unit_year_
 
 
 def header_building(canvas, doc, styles):
-    a = Image("base"+ settings.STATIC_URL +"img/logo_institution.jpg")
+    a = Image(static("img/logo_institution.jpg"))
 
     p = Paragraph('''
                     <para align=center>
