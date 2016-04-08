@@ -124,7 +124,7 @@
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
                 <td>{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}</td>
                 <td>{% if enrollment.justification_draft %}
-                        {{ enrollment.justification_draft | title }}
+                        {{ enrollment.get_justification_draft_display }}
                     {% else %}
                         -
                     {% endif %}
