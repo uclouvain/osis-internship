@@ -107,7 +107,7 @@
                 </td>
                 <td>
                   <input type="hidden" id="hdn_justification_draft_{{ enrollment.id }}" value="{{ enrollment.justification_draft | default_if_none:'' }}">
-                  {{ enrollment.justification_draft | default_if_none:"" }}
+                  {%if enrollment.get_justification_draft%}{{ enrollment.get_justification_draft.display | default_if_none:"" }}{%endif%}
                 </td>
                 <td>
                     {% if enrollment.score_draft != enrollment.score_reencoded %}
@@ -120,7 +120,7 @@
                 </td>
                 <td>
                   <input type="hidden" id="hdn_justification_reencoded_{{ enrollment.id }}" value="{{ enrollment.justification_reencoded | default_if_none:'' }}">
-                  {{ enrollment.justification_reencoded | default_if_none:"" }}
+                  {%if enrollment.justification_reencoded%}{{ enrollment.get_justification_reencoded_display }}{%else%}-{%endif%}
                 </td>
                 <td>
                     {% if enrollment.score_draft != enrollment.score_reencoded %}
@@ -133,7 +133,7 @@
                 </td>
                 <td>
                   <input type="hidden" name="justification_{{ enrollment.id }}" id="hdn_justification_final_{{ enrollment.id }}">
-                  <div id="pnl_justification_final_show_{{ enrollment.id }}" style="font-weight: bold; color: blue;">{{ enrollment.justification_final | default_if_none:"-" }}</div>
+                  <div id="pnl_justification_final_show_{{ enrollment.id }}" style="font-weight: bold; color: blue;">{%if enrollment.justification_final %}{{ enrollment.get_justification_final_display}}{%else%}-{%endif%}</div>
                 </td>
               </tr>
             {% endfor %}
