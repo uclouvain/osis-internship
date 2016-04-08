@@ -42,8 +42,8 @@ class ExamEnrollmentAdmin(admin.ModelAdmin):
     list_filter = ('encoding_status', 'session_exam__number_session')
     fieldsets = ((None, {'fields': ('session_exam','learning_unit_enrollment')}),)
     raw_id_fields = ('session_exam', 'learning_unit_enrollment')
-    search_fields = ['learning_unit_enrollment__student__person__first_name',
-                     'learning_unit_enrollment__student__person__last_name']
+    search_fields = ['learning_unit_enrollment__offer_enrollment__student__person__first_name',
+                     'learning_unit_enrollment__offer_enrollment__student__person__last_name']
 
 
 class ExamEnrollment(models.Model):
