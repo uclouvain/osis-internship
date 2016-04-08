@@ -49,10 +49,11 @@ def login(request):
         password = request.POST['password']
         user = authenticate(username=username, password=password)
         person = mdl.person.find_by_user(user)
-        if person.language :
-            user_language = person.language
-            translation.activate(user_language)
-            request.session[translation.LANGUAGE_SESSION_KEY] = user_language
+        if person : # ./manage.py createsuperuser (in local) doesn't create automatically a Person associated to User
+            if person.language :
+                user_language = person.language
+                translation.activate(user_language)
+                request.session[translation.LANGUAGE_SESSION_KEY] = user_language
     return django_login(request)
 
 

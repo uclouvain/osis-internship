@@ -56,11 +56,11 @@ admin.site.register(learning_unit_year.LearningUnitYear,
 admin.site.register(message_template.MessageTemplate,
                     message_template.MessageTemplateAdmin)
 
-admin.site.register(offer.Offer,
-                    offer.OfferAdmin)
-
 admin.site.register(offer_enrollment.OfferEnrollment,
                     offer_enrollment.OfferEnrollmentAdmin)
+
+admin.site.register(offer.Offer,
+                    offer.OfferAdmin)
 
 admin.site.register(offer_year.OfferYear,
                     offer_year.OfferYearAdmin)

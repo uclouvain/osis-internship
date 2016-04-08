@@ -37,11 +37,11 @@ def learning_units(request):
 
     if academic_yr_calendar:
         academic_yr = academic_yr_calendar.id
-    return render(request, "learning_units.html", {'academic_year': academic_yr,
-                                                   'code': code,
+    return render(request, "learning_units.html", {'academic_year':  academic_yr,
+                                                   'code':           code,
                                                    'academic_years': academic_years,
                                                    'learning_units': [],
-                                                   'init': "1"})
+                                                   'init':           "1"})
 
 
 def learning_units_search(request):
@@ -51,24 +51,19 @@ def learning_units_search(request):
     # criteria
     academic_year = request.GET['academic_year']
     code = request.GET['code']
-
-    academic_years = mdl.academic_year.find_academic_years()
-
     if academic_year is None:
         academic_year_calendar = mdl.academic_year.current_academic_year()
         if academic_year_calendar:
             academic_year = academic_year_calendar.id
 
-    learning_unts = mdl.learning_unit_year.find_learning_unit_years_by_academic_year(academic_year)
+    learning_unts = mdl.learning_unit_year.search(academic_year_id=academic_year,acronym=code)
+    academic_years = mdl.academic_year.find_academic_years()
 
-    if code and len(code) > 0:
-        learning_unts = learning_unts.filter(acronym__icontains=code)
-
-    return render(request, "learning_units.html", {'academic_year': int(academic_year),
-                                                   'code': code,
+    return render(request, "learning_units.html", {'academic_year':  int(academic_year),
+                                                   'code':           code,
                                                    'academic_years': academic_years,
                                                    'learning_units': learning_unts,
-                                                   'init': "0"})
+                                                   'init':           "0"})
 
 
 def learning_unit_read(request, learning_unit_id):

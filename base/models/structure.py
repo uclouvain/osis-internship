@@ -25,7 +25,7 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-
+from django.core.exceptions import ObjectDoesNotExist
 
 class StructureAdmin(admin.ModelAdmin):
     list_display = ('acronym', 'title', 'part_of', 'organization', 'type')
@@ -74,10 +74,10 @@ def search(acronym=None, title=None, type=None):
     queryset = Structure.objects
 
     if acronym:
-        queryset = queryset.filter(acronym=acronym)
+        queryset = queryset.filter(acronym__iexact=acronym)
 
     if title:
-        queryset = queryset.filter(title=title)
+        queryset = queryset.filter(title__icontains=title)
 
     if type:
         queryset = queryset.filter(type=type)
@@ -116,4 +116,7 @@ def find_structure_hierarchy(struc):
 
 
 def find_by_acronym(acronym):
-    return Structure.objects.get(acronym=acronym.strip())
+    try:
+        return Structure.objects.get(acronym__iexact=acronym.strip())
+    except ObjectDoesNotExist:
+        return None
