@@ -60,6 +60,7 @@ def offers_search(request):
 
     message = None
     offer_years = None
+    bad_criteria=False
     if entity_acronym is None and academic_yr is None and acronym is None :
         message = "%s" % _('You must choose at least one criteria!')
     else:
@@ -67,8 +68,12 @@ def offers_search(request):
         if entity_acronym:
             entity = mdl.structure.find_by_acronym(entity_acronym)
             if entity is None:
-                entity_acronym=None
-        offer_years = mdl.offer_year.search_root_offers(entity=entity, academic_yr=academic_yr, acronym=acronym)
+                message = "%s" % _('Invalid value for the entity\'s criteria!')
+                entity_acronym = None
+                bad_criteria=True
+
+        if not bad_criteria:
+            offer_years = mdl.offer_year.search_root_offers(entity=entity, academic_yr=academic_yr, acronym=acronym)
 
     if academic_yr is None :
         academic_yr = None
