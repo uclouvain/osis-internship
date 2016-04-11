@@ -26,7 +26,7 @@
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
-from base.models import person, session_exam, learning_unit_enrollment
+from base.models import person
 
 
 JUSTIFICATION_TYPES = (
@@ -101,6 +101,11 @@ def find_exam_enrollments_to_validate_by_session(session_exam):
                                               'learning_unit_enrollment__offer_enrollment__student__person__last_name',
                                               'learning_unit_enrollment__offer_enrollment__student__person__first_name')
     return enrolls
+
+
+def find_by_enrollment_session(learning_unit_enrollment, session_exam_number_session):
+    return ExamEnrollment.objects.filter(learning_unit_enrollment=learning_unit_enrollment) \
+                                 .filter(session_exam__number_session=session_exam_number_session).first()
 
 
 def count_encoded_scores(enrollments):

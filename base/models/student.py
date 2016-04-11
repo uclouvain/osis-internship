@@ -25,7 +25,6 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-from base.models import person
 from django.core.exceptions import ObjectDoesNotExist
 
 
@@ -52,3 +51,7 @@ def find_by_person(a_person):
         return student
     except ObjectDoesNotExist:
         return None
+
+
+def find_by_registration_id(registration_id):
+    return Student.objects.get(registration_id=registration_id)
