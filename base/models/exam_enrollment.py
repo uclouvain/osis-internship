@@ -103,6 +103,11 @@ def find_exam_enrollments_to_validate_by_session(session_exam):
     return enrolls
 
 
+def find_by_enrollment_session(learning_unit_enrollment, session_exam_number_session):
+    return ExamEnrollment.objects.filter(learning_unit_enrollment=learning_unit_enrollment) \
+                                 .filter(session_exam__number_session=session_exam_number_session).first()
+
+
 def count_encoded_scores(enrollments):
     """ Count the scores that were already encoded but not submitted yet. """
     counter = 0
@@ -163,8 +168,3 @@ def create_exam_enrollment_historic(user, enrollment, score, justification):
     exam_enrollment_history.justification_final = justification
     exam_enrollment_history.person = person.find_by_user(user)
     exam_enrollment_history.save()
-
-
-def find_by_enrollment_session(learning_unit_enrollment, session_exam_number_session):
-    return ExamEnrollment.objects.filter(learning_unit_enrollment=learning_unit_enrollment) \
-                                 .filter(session_exam__number_session=session_exam_number_session).first()

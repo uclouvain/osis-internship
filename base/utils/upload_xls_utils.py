@@ -117,9 +117,10 @@ def __save_xls_scores(request, file_name):
                                                     validation_error += "%s %s!" % (info_line, _('the score seems to be incorrect. Decimales NOT allowed!'))
                                                     note_valide = False
                                         else:
-                                            note_valide=False
-                                        #attention dans le xsl les choix pour la justification sont des libellés pas les valeurs BD
-                                        justification_xls=None
+                                            note_valide = False
+                                        # attention dans le xsl les choix pour la justification sont des libellés pas
+                                        # les valeurs BD
+                                        justification_xls = None
                                         if row[8].value:
                                             for k, v in dict(mdl.exam_enrollment.JUSTIFICATION_TYPES).items():
                                                 if v.lower() == str(row[8].value.lower()):
