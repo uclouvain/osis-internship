@@ -26,7 +26,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
-from base.models import attribution, offer_year_calendar, learning_unit_year
+from base.models import attribution, offer_year_calendar
 
 
 class SessionExamAdmin(admin.ModelAdmin):
@@ -67,7 +67,7 @@ def find_session_by_id(session_exam_id):
 
 def find_sessions_by_tutor(tutor, academic_year):
     learning_units = attribution.Attribution.objects.filter(tutor=tutor).values('learning_unit')
-    return SessionExam.objects.filter(~models.Q(status='IDLE')) \
+    return SessionExam.objects.filter(models.Q(status='OPEN')) \
         .filter(learning_unit_year__academic_year=academic_year) \
         .filter(learning_unit_year__learning_unit__in=learning_units)
 

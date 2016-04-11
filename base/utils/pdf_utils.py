@@ -199,12 +199,15 @@ def list_notes_building(session_exam, learning_unit_year_id, academic_year, list
             justification = ""
             if rec_exam_enrollment.justification_final:
                 justification = dict(mdl.exam_enrollment.JUSTIFICATION_TYPES)[rec_exam_enrollment.justification_final]
+            end_date = ""
+            if session_exam.offer_year_calendar.end_date:
+                end_date=session_exam.offer_year_calendar.end_date.strftime('%d/%m/%Y')
             data.append([student.registration_id,
                          person.last_name,
                          person.first_name,
                          score,
                          justification,
-                         session_exam.offer_year_calendar.end_date.strftime('%d/%m/%Y')])
+                         end_date])
         cpt = cpt + 1
 
     if not old_pgm is None:

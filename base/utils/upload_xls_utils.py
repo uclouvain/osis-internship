@@ -32,7 +32,6 @@ from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 
 from base.forms import ScoreFileForm
-from base.models import *
 from base.utils import export_utils
 
 
