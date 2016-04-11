@@ -44,11 +44,7 @@
                 <label for="slt_academic_year">{% trans 'Academic Year'%}</label>
                 <select class="form-control" id="slt_academic_year" name="academic_year" value="{{ academic_year }}">
                     {% for v in academic_years %}
-                    {% if v.id == academic_year %}
-                    <option selected value="{{ v.id }}">{{ v }}</option>
-                    {% else %}
-                    <option value="{{ v.id }}">{{ v }}</option>
-                    {% endif %}
+                        <option {%if v.id == academic_year%} selected {%endif%} value="{{ v.id }}">{{ v }}</option>
                     {% endfor %}
                 </select>
 
@@ -79,11 +75,7 @@
             </div>
         </form>
       </div>
-  {% if message %}
-  <div>
-    <label class="alert alert-warning" style="margin:5px">{{message}}</label>
-  </div>
-  {% else%}
+
   <div >
     {% if offer_years|length == 0 and init == "0" %}
       <label class="alert alert-info" style="margin:5px">{% trans 'No result!' %}</label>
@@ -109,6 +101,6 @@
     {% endif %}
 
 </div>
-      {% endif%}
+
 </div>
 {% endblock %}
