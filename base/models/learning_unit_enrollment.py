@@ -53,6 +53,6 @@ class LearningUnitEnrollment(models.Model):
         return u"%s - %s" % (self.learning_unit_year, self.offer_enrollment.student)
 
 
-def find_by_learning_unit_year_and_offer_enrollment(learning_unit_year,offer_enrollment):
+def find_by_learningunit_enrollment(learning_unit_year, offer_enrollment):
     return LearningUnitEnrollment.objects.filter(learning_unit_year=learning_unit_year,
                                                  offer_enrollment=offer_enrollment)

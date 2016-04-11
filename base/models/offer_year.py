@@ -124,5 +124,5 @@ def search_root_offers(entity=None, academic_yr=None, acronym=None):
     return queryset
 
 
-def find_by_academic_year_and_acronym(academic_yr, acronym):
+def find_by_academicyear_acronym(academic_yr, acronym):
     return OfferYear.objects.filter(academic_year=academic_yr, acronym=acronym)

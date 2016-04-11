@@ -165,5 +165,6 @@ def create_exam_enrollment_historic(user, enrollment, score, justification):
     exam_enrollment_history.save()
 
 
-def find_by_learning_unit_enrollment_and_session_exam_number_session(learning_unit_enrollment,session_exam_number_session):
-    return ExamEnrollment.objects.filter(learning_unit_enrollment=learning_unit_enrollment).filter(session_exam__number_session=session_exam_number_session).first()
+def find_by_enrollment_session(learning_unit_enrollment, session_exam_number_session):
+    return ExamEnrollment.objects.filter(learning_unit_enrollment=learning_unit_enrollment) \
+                                 .filter(session_exam__number_session=session_exam_number_session).first()

@@ -70,21 +70,20 @@ def __save_xls_scores(request, file_name):
     for row in ws.rows:
         new_score = False
         if nb_row > 0 and is_valid:
-            student = mdl.student.find_by_registration_id(registration_id=row[4].value)
+            student = mdl.student.find_by_registration_id(row[4].value)
             info_line = "%s %d :" % (_('Line'),data_line_number)
             if not student:
                 validation_error += "%s %s (%s) %s!" % (info_line, _('the student'), str(row[4].value), _('does not exists'))
             else:
-                academic_year = mdl.academic_year.find_academic_year_by_year(year=int(row[0].value[:4]))
+                academic_year = mdl.academic_year.find_academic_year_by_year(int(row[0].value[:4]))
                 if not academic_year:
                     validation_error += "%s %s (%d) %s!" % (info_line, _('the academic year'), row[0].value, _('does not exists'))
                 else:
-                    offer_year = mdl.offer_year.find_by_academic_year_and_acronym(academic_year, row[3].value)
+                    offer_year = mdl.offer_year.find_by_academicyear_acronym(academic_year, row[3].value)
                     if  not offer_year :
                         validation_error += "%s %s (%d) %s-%d !" % (info_line, _('the offer year'), str(row[3].value), academic_year.year, _('does not exists'))
                     else:
-                        offer_enrollment = mdl.offer_enrollment.find_by_student_and_offer_year(student,
-                                                                                               offer_year)
+                        offer_enrollment = mdl.offer_enrollment.find_by_student_offer(student, offer_year)
                         if not offer_enrollment :
                             validation_error += "%s %s %s!" % (info_line, _('the offer enrollment'), _('does not exists'))
                         else:
@@ -95,11 +94,12 @@ def __save_xls_scores(request, file_name):
                             if not learning_unit_year:
                                 validation_error += "%s %s %s %s!" % (info_line, _('the activity'), str(row[2].value), _('does not exists'))
                             else:
-                                learning_unit_enrollment = mdl.learning_unit_enrollment.find_by_learning_unit_year_and_offer_enrollment(learning_unit_year=learning_unit_year,offer_enrollment=offer_enrollment)
+                                learning_unit_enrollment = mdl.learning_unit_enrollment.find_by_learningunit_enrollment(learning_unit_year, offer_enrollment)
                                 if not learning_unit_enrollment:
                                     validation_error += "%s %s %s %s!" % (info_line, _('the enrollment to the activity'), str(row[2].value), _('does not exists'))
                                 else:
-                                    exam_enrollment = mdl.exam_enrollment.find_by_learning_unit_enrollment_and_session_exam_number_session(learning_unit_enrollment, int(row[1].value))
+                                    session_number = int(row[1].value)
+                                    exam_enrollment = mdl.exam_enrollment.find_by_enrollment_session(learning_unit_enrollment, session_number)
                                     if session_exam is None:
                                         session_exam = exam_enrollment.session_exam
                                     if exam_enrollment.encoding_status != 'SUBMITTED':
