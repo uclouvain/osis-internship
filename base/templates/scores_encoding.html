@@ -92,7 +92,7 @@
                                 <span style="color: green" class="glyphicon glyphicon-ok" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="Closed"></span> {{ session.status|title }}</td>
                               {% endif %}
                           <td>{{ session.learning_unit_year.acronym }}</td>
-                          <td>{% if session.status == 'OPEN' and session.progress != '0/0' %}<a href="{% url 'online_encoding' session.id %}" id="lnk_{{ session.learning_unit_year.acronym }}" >{{ session.learning_unit_year.title }}</a>{%else%}{{ session.learning_unit_year.title }}{%endif%}</td>
+                          <td>{% if session.progress != '0/0' %}<a href="{% url 'online_encoding' session.id %}" id="lnk_{{ session.learning_unit_year.acronym }}" >{{ session.learning_unit_year.title }}</a>{%else%}{{ session.learning_unit_year.title }}{%endif%}</td>
                           <td>{{ session.number_session }}</td>
                           <td>{{ session.offer_year_calendar.offer_year.acronym}}</td>
                           <td>{{ session.progress }}</td>
