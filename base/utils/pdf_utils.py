@@ -35,7 +35,6 @@ from reportlab.lib import colors
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.staticfiles.templatetags.staticfiles import static
 
-
 from base import models as mdl
 
 PAGE_SIZE = A4
