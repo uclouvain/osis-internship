@@ -157,7 +157,7 @@ def files_search(request):
             print(registration_date.month)
         files = mdl.document_file.search(username=username, creation_date=registration_date)
     else :
-        message = "%s" % _('You must choose at least one criteria!')
+        message = "%s" % _('minimum_one_criteria')
 
     return render(request, "admin/files.html", {'files'   : files,
                                                 'message' : message})
