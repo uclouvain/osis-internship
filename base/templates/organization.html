@@ -27,9 +27,9 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-<li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'Institution' %}</a></li>
-<li><a href="{% url 'organizations' %}" id="lnk_organizations">{% trans 'Organizations' %}</a></li>
-<li class="active">{% trans 'Organization' %}</li>
+<li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'institution' %}</a></li>
+<li><a href="{% url 'organizations' %}" id="lnk_organizations">{% trans 'organizations' %}</a></li>
+<li class="active">{% trans 'organization' %}</li>
 {% endblock %}
 {% block content %}
 <div class="page-header">
@@ -38,45 +38,45 @@
 <div class="panel panel-default">
     <div class="panel-body">
         <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#tab_identification">{% trans 'Identification'%}</a></li>
-            <li><a data-toggle="tab" href="#tab_structure">{% trans 'Structure'%}</a></li>
+            <li class="active"><a data-toggle="tab" href="#tab_identification">{% trans 'identification'%}</a></li>
+            <li><a data-toggle="tab" href="#tab_structure">{% trans 'structure'%}</a></li>
         </ul>
         <div class="tab-content">
             <div id="tab_identification" class="tab-pane fade in active">
                 <br>
                 <div class="row">
                     <div class="col-md-4">
-                        <label>{% trans 'Acronym' %}</label><br>
+                        <label>{% trans 'acronym' %}</label><br>
                         {{ organization.acronym | default_if_none:'-' }}
                     </div>
                     <div class="col-md-4">
-                        <label>{% trans 'Name'%}</label><br>
+                        <label>{% trans 'name'%}</label><br>
                         {{ organization.name | default_if_none:'-' }}
                     </div>
                     <div class="col-md-4">
-                        <label>{% trans 'Reference'%}</label><br>
+                        <label>{% trans 'reference'%}</label><br>
                         {{ organization.reference | default_if_none:'-' }}
                     </div>
                 </div>
                 <br>
                 <div class="row">
                     <div class="col-md-4">
-                        <label>{% trans 'Website' %}</label><br>
+                        <label>{% trans 'website' %}</label><br>
                         {{ organization.website | default_if_none:'-' }}
                     </div>
                     <div class="col-md-8">
-                        <label>{% trans 'Type' %}</label><br>
+                        <label>{% trans 'type' %}</label><br>
                         {{ organization.type | default_if_none:'-' }}
                     </div>
                 </div>
                 <br>
                 <div class="row">
                     <div class="col-md-10">
-                        <label>{% trans 'Address(ses)' %}</label>
+                        <label>{% trans 'address(ses)' %}</label>
                     </div>
                     <div class="col-md-2">
                         <a href="{% url 'organization_address_create' organization.id %}" id="lnk_organization_address_create"
-                           class="btn btn-default" role="button" title="{% trans 'Add an address to the organization' %}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>  {% trans 'Add address'%}</a>
+                           class="btn btn-default" role="button" title="{% trans 'add_an_address_to_the_organization' %}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>  {% trans 'add_address'%}</a>
                     </div>
                 </div>
                 <br>
@@ -105,9 +105,9 @@
 
                 <div class="row">
                     <div class="col-md-4">
-                        <a href="{% url 'organization_edit' organization.id %}" title="{%trans 'Edit'%}"
+                        <a href="{% url 'organization_edit' organization.id %}" title="{%trans 'edit'%}"
                            class="btn btn-primary" role="button" id="bt_organization_edit">
-                            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> {% trans 'Edit'%}
+                            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> {% trans 'edit'%}
                         </a>
                     </div>
                     <div class="col-md-8">

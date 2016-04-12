@@ -27,48 +27,48 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-<li><a href="{% url 'storage' %}" id="lnk_stockage">{% trans 'Stockage'%}</a></li>
-<li><a href="{% url 'files' %}" id="lnk_files">{% trans 'Files' %}</a></li>
-<li class="active">{% trans 'File' %}</li>
+<li><a href="{% url 'storage' %}" id="lnk_stockage">{% trans 'storage'%}</a></li>
+<li><a href="{% url 'files' %}" id="lnk_files">{% trans 'files' %}</a></li>
+<li class="active">{% trans 'file' %}</li>
 {% endblock %}
 {% block content %}
 <div class="page-header">
     <h3>{{ file.name }}</h3>
 </div>
 <div class="panel panel-default">
-    <div class="panel-heading">{% trans 'File' %} : {{file.name}}</div>
+    <div class="panel-heading">{% trans 'file' %} : {{file.name}}</div>
     <div class="panel-body">
       <div class="row">
         <div class="col-md-12">
-          <label>{% trans 'Type' %}</label><br>
+          <label>{% trans 'type' %}</label><br>
           {{ file.type }}
         </div>
       </div>
       <br>
       <div class="row">
         <div class="col-md-12">
-          <label>{% trans 'Registration date' %}</label><br>
+          <label>{% trans 'creation_date' %}</label><br>
           {{ file.creation_date }}
         </div>
       </div>
       <br>
       <div class="row">
         <div class="col-md-12">
-          <label>{% trans 'File' %}</label><br>
+          <label>{% trans 'file' %}</label><br>
           {{ file.name }}
         </div>
       </div>
       <br>
       <div class="row">
         <div class="col-md-12">
-          <label>{% trans 'Description' %}</label><br>
+          <label>{% trans 'description' %}</label><br>
           {{ file.description }}
         </div>
       </div>
       <br>
       <div class="row">
         <div class="col-md-12">
-          <label>{% trans 'User' %}</label><br>
+          <label>{% trans 'user' %}</label><br>
           {{ file.user.username }}
         </div>
       </div>

@@ -30,9 +30,9 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'catalog' %}" id="lnk_catalog">{% trans 'Catalog' %}</a></li>
-  <li><a href="{% url 'offers' %}" id="lnk_offers">{% trans 'Offers' %}</a></li>
-  <li class="active">{% trans 'Offer' %}</li>
+  <li><a href="{% url 'catalog' %}" id="lnk_catalog">{% trans 'catalogue' %}</a></li>
+  <li><a href="{% url 'offers' %}" id="lnk_offers">{% trans 'offers' %}</a></li>
+  <li class="active">{% trans 'offer' %}</li>
 {% endblock %}
 {% block content %}
 <div class="page-header">
@@ -47,51 +47,51 @@
 <div class="panel panel-default">
   <div class="panel-body">
     <ul class="nav nav-tabs">
-      <li class="active"><a data-toggle="tab" href="#tab_identification" id="lnk_identification_tab">{% trans 'Identification'%}</a></li>
-      <li><a data-toggle="tab" href="#tab_academic_calendar" id="lnk_academic_calendar">{% trans 'Academic calendar'%}</a></li>
+      <li class="active"><a data-toggle="tab" href="#tab_identification" id="lnk_identification_tab">{% trans 'identification'%}</a></li>
+      <li><a data-toggle="tab" href="#tab_academic_calendar" id="lnk_academic_calendar">{% trans 'academic_calendar'%}</a></li>
     </ul>
     <div class="tab-content">
       <div id="tab_identification" class="tab-pane fade in active">
         <br>
         <div class="row">
           <div class="col-md-3">
-            <label for="title">{% trans 'Academic year'%}</label><br>
+            <label for="title">{% trans 'academic_year'%}</label><br>
             {{ offer_year.academic_year }}
           </div>
           <div class="col-md-3">
-            <label for="acronym">{% trans 'Acronym' %}</label><br>
+            <label for="acronym">{% trans 'acronym' %}</label><br>
             {{ offer_year.acronym }}
           </div>
           <div class="col-md-6">
-            <label for="structure">{% trans 'Structure' %}</label><br>
+            <label for="structure">{% trans 'structure' %}</label><br>
             {{ offer_year.structure }}
           </div>
         </div>
         <br>
         <div class="row">
           <div class="col-md-12">
-            <label for="title">{% trans 'International title'%}</label><br>
+            <label for="title">{% trans 'international_title'%}</label><br>
             {{ offer_year.title_international | default_if_none:'-' }}
           </div>
         </div>
         <br>
         <div class="row">
           <div class="col-md-12">
-            <label for="title">{% trans 'Short title'%}</label><br>
+            <label for="title">{% trans 'short_title'%}</label><br>
             {{ offer_year.title_short | default_if_none:'-' }}
           </div>
         </div>
         <br>
         <div class="row">
           <div class="col-md-12">
-            <label for="title">{% trans 'Printable title'%}</label><br>
+            <label for="title">{% trans 'printable_title'%}</label><br>
             {{ offer_year.title_printable | default_if_none:'-' }}
           </div>
         </div>
         <br>
         <div class="row">
           <div class="col-md-6">
-            <label for="title">{% trans 'Grade'%}</label><br>
+            <label for="title">{% trans 'grade'%}</label><br>
             {{ offer_year.get_grade_display | default_if_none:'-' }}
           </div>
           <div class="col-md-6">
@@ -104,10 +104,10 @@
           <div class="col-md-12">
             <table class="table table-striped table-hover">
               <thead>
-                <td>{% trans 'Title' %}</td>
-                <td>{% trans 'Description' %}</td>
-                <td>{% trans 'Start date' %}</td>
-                <td>{% trans 'End date' %}</td>
+                <td>{% trans 'title' %}</td>
+                <td>{% trans 'description' %}</td>
+                <td>{% trans 'start_date' %}</td>
+                <td>{% trans 'end_date' %}</td>
               </thead>
               {% for event in offer_year_events %}
                   {% ifchanged event.start_date|date:"M" %}
@@ -140,15 +140,15 @@
           {% if offer_year.offer_year_children and not offer_year.orientation_sibling %}
             <div class="row">
               <div class="col-md-12">
-                <label>{% trans 'Focuses' %}</label>
+                <label>{% trans 'focuses' %}</label>
               </div>
             </div>
             <div class="row">
               <div class="col-md-12">
                 <table class="table table-striped table-hover">
                   <thead>
-                    <td>{% trans 'Acronym' %}</td>
-                    <td>{% trans 'Title' %}</td>
+                    <td>{% trans 'acronym' %}</td>
+                    <td>{% trans 'title' %}</td>
                   </thead>
                   {% for o in offer_year.offer_year_children%}
                   <tr><td><a href="{% url 'offer_read' o.id %}" id="lnk_offer_year_children_{o.id}">{{ o.acronym }}</a></td><td>{{ o.title }}</td></tr>
@@ -160,15 +160,15 @@
           {% if offer_year.offer_year_sibling %}
             <div class="row">
               <div class="col-md-12">
-                <label>{% trans 'Other sibling offers' %}</label>
+                <label>{% trans 'other_sibling_offers' %}</label>
               </div>
             </div>
             <div class="row">
               <div class="col-md-12">
                 <table class="table table-striped table-hover">
                   <thead>
-                    <td>{% trans 'Acronym' %}</td>
-                    <td>{% trans 'Title' %}</td>
+                    <td>{% trans 'acronym' %}</td>
+                    <td>{% trans 'title' %}</td>
                   </thead>
                   {% for o in offer_year.offer_year_sibling%}
                   <tr><td><a href="{% url 'offer_read' o.id %}" id="lnk_offer_year_sibling_{o.id}">{{ o.acronym }}</a></td><td>{{ o.title }}</td></tr>
@@ -186,7 +186,7 @@
           <div class="panel-body">
               <div class="row">
                 <div class="col-md-12">
-                  <label>{% trans 'Other sibling orientations' %}</label>
+                  <label>{% trans 'other_sibling_orientations' %}</label>
                 </div>
               </div>
               <div class="row">
@@ -194,8 +194,8 @@
 
                   <table class="table table-striped table-hover">
                     <thead>
-                      <td>{% trans 'Acronym' %}</td>
-                      <td>{% trans 'Title' %}</td>
+                      <td>{% trans 'acronym' %}</td>
+                      <td>{% trans 'title' %}</td>
                     </thead>
                     {% for orientation in offer_year.orientation_sibling%}
                     <tr><td><a href="{% url 'offer_read' orientation.id %}" id="lnk_offer_year_orientation_sibling_{o.id}">{{ orientation.acronym }}</a></td><td>{{ orientation.title }}</td></tr>
@@ -222,15 +222,15 @@
           {% if offer_year.offer_year_children and not offer_year.orientation_sibling %}
             <div class="row">
               <div class="col-md-12">
-                <label>{% trans 'Focuses' %}</label>
+                <label>{% trans 'focuses' %}</label>
               </div>
             </div>
             <div class="row">
               <div class="col-md-12">
                 <table class="table table-striped table-hover">
                   <thead>
-                    <td>{% trans 'Acronym' %}</td>
-                    <td>{% trans 'Title' %}</td>
+                    <td>{% trans 'acronym' %}</td>
+                    <td>{% trans 'title' %}</td>
                   </thead>
                   {% for o in offer_year.offer_year_children%}
                   <tr><td><a href="{% url 'offer_read' o.id %}" id="offer_year_children_{o.id}">{{ o.acronym }}</a></td><td>{{ o.title }}</td></tr>
@@ -242,15 +242,15 @@
           {% if offer_year.offer_year_sibling %}
             <div class="row">
               <div class="col-md-12">
-                <label>{% trans 'Other sibling offers' %}</label>
+                <label>{% trans 'other_sibling_offers' %}</label>
               </div>
             </div>
             <div class="row">
               <div class="col-md-12">
                 <table class="table table-striped table-hover">
                   <thead>
-                    <td>{% trans 'Acronym' %}</td>
-                    <td>{% trans 'Title' %}</td>
+                    <td>{% trans 'acronym' %}</td>
+                    <td>{% trans 'title' %}</td>
                   </thead>
                   {% for o in offer_year.offer_year_sibling%}
                   <tr><td><a href="{% url 'offer_read' o.id %}" id="offer_year_sibling_{o.id}">{{ o.acronym }}</a></td><td>{{ o.title }}</td></tr>
@@ -269,7 +269,7 @@
           <div class="panel-body">
             <div class="row">
               <div class="col-md-12">
-                <label>{% trans 'Other sibling orientations' %}</label>
+                <label>{% trans 'other_sibling_orientations' %}</label>
               </div>
             </div>
             <div class="row">
@@ -277,8 +277,8 @@
 
                 <table class="table table-striped table-hover">
                   <thead>
-                    <td>{% trans 'Acronym' %}</td>
-                    <td>{% trans 'Title' %}</td>
+                    <td>{% trans 'acronym' %}</td>
+                    <td>{% trans 'title' %}</td>
                   </thead>
                   {% for orientation in offer_year.orientation_sibling%}
                   <tr><td><a href="{% url 'offer_read' orientation.id %}" id="lnk_offer_year_orientation_sibling_{o.id}">{{ orientation.acronym }}</a></td><td>{{ orientation.title }}</td></tr>

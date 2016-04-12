@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
+{% load i18n %}
 
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -26,11 +27,11 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-<li class="active">Stockage</li>
+<li class="active">{% trans 'storage' %}</li>
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h2>Stockage</h2>
+    <h2>{% trans 'storage' %}</h2>
 </div>
 
 <table class="table table-striped table-hover">
@@ -60,8 +61,8 @@
         <div class="row">
             <div class="col-md-1"><i class="fa fa-files-o" style="font-size: 400%; color: #6699FF;"></i></div>
             <div class="col-md-11">
-                <h4 class="media-heading"><a href="{% url 'files' %}" id="lnk_offers">Fichiers</a></h4>
-                <p>Consultation des fichiers gérér par l'application.</p>
+                <h4 class="media-heading"><a href="{% url 'files' %}" id="lnk_offers">{% trans 'files' %}</a></h4>
+                <p>{% trans 'desc_lnk_files' %}</p>
             </div>
         </div>
     </div>
