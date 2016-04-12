@@ -23,39 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
 from django.contrib import admin
-from django.core.exceptions import ObjectDoesNotExist
-
-class StudentAdmin(admin.ModelAdmin):
-    list_display = ('person', 'registration_id', 'changed')
-    fieldsets = ((None, {'fields': ('registration_id', 'person')}),)
-    raw_id_fields = ('person', )
-    search_fields = ['person__first_name', 'person__last_name']
+from admission.models import *
 
 
-class Student(models.Model):
-    external_id     = models.CharField(max_length=100, blank=True, null=True)
-    changed         = models.DateTimeField(null=True)
-    registration_id = models.CharField(max_length=10)
-    person          = models.ForeignKey('Person')
+admin.site.register(form.Form,
+                    form.FormAdmin)
 
-    def __str__(self):
-        return u"%s (%s)" % (self.person, self.registration_id)
+admin.site.register(option.Option,
+                    option.OptionAdmin)
 
-
-def find_by_person(a_person):
-    try:
-        student = Student.objects.get(person=a_person)
-        return student
-    except ObjectDoesNotExist:
-        return None
-
-def find_by_name(s_name) :
-    return Student.objects.filter(person__last_name__icontains=s_name)
-
-def find_by_registration_id_name(registration_id, s_name) :
-    return Student.objects.filter(registration_id__icontains=s_noma, person__last_name__icontains=s_name)
-
-def find_by_registration_id(registration_id):
-    return Student.objects.get(registration_id__icontains=registration_id)
+admin.site.register(question.Question,
+                    question.QuestionAdmin)

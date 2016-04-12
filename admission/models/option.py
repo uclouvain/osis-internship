@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -25,45 +25,19 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-from django.utils import timezone
 
 
-class AcademicYearAdmin(admin.ModelAdmin):
-    list_display = ('name', 'start_date', 'end_date')
-    fieldsets = ((None, {'fields': ('year', 'start_date', 'end_date')}),)
+class OptionAdmin(admin.ModelAdmin):
+    list_display = ('question', 'label', 'description')
+    fieldsets = ((None, {'fields': ('label', 'value', 'order', 'description', 'question')}),)
 
 
-class AcademicYear(models.Model):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed     = models.DateTimeField(null=True)
-    year        = models.IntegerField()
-    start_date  = models.DateField(blank=True, null=True)
-    end_date    = models.DateField(blank=True, null=True)
-
-    @property
-    def name(self):
-        return self.__str__()
+class Option(models.Model):
+    question = models.ForeignKey('Question')
+    label = models.CharField(max_length=255)
+    value = models.TextField(blank=True, null=True)
+    order = models.IntegerField(blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return u"%s-%s" % (self.year, self.year + 1)
-
-
-def find_academic_year_by_id(academic_year_id):
-    return AcademicYear.objects.get(pk=academic_year_id)
-
-
-def find_academic_years():
-    return AcademicYear.objects.all().order_by('year')
-
-
-def current_academic_year():
-    academic_yr = AcademicYear.objects.filter(start_date__lte=timezone.now()) \
-                                      .filter(end_date__gte=timezone.now()).first()
-    if academic_yr:
-        return academic_yr
-    else:
-        return None
-
-
-def find_academic_year_by_year(year):
-    return AcademicYear.objects.get(year=year)
+        return u"%s" % self.label

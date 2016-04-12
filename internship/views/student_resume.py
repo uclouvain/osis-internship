@@ -59,9 +59,9 @@ def internships_student_search(request):
         if s_noma is None and s_name:
             students_list = mdl.student.find_by_name(s_name)
         if  s_noma and s_name is None:
-            students_list = mdl.student.find_by_noma(s_noma)
+            students_list = mdl.student.find_by_registration_id(s_noma)
         if s_noma and s_name:
-            students_list = mdl.student.find_by_noma_name(s_noma, s_name)
+            students_list = mdl.student.find_by_registration_id_name(s_noma, s_name)
     else:
          message = "%s" % _('You must choose at least one criteria!')
 
@@ -75,13 +75,12 @@ def internships_student_search(request):
 
 
 def internships_student_read(request, registration_id):
-    student = mdl.student.find_by_noma(registration_id)
+    student = mdl.student.find_by_registration_id(registration_id)
     if student:
         for student in student:
             student.address = ""
             address = mdl.person_address.find_by_person(student.person)
             if address:
-                print (address)
                 student.address = address
 
     #student_addresses = mdl.person_address.find_by_person(student)
