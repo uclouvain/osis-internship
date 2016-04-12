@@ -23,27 +23,22 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from base.models import academic_year
-from base.models import academic_calendar
-from base.models import attribution
-from base.models import document_file
-from base.models import domain
-from base.models import exam_enrollment
-from base.models import learning_unit
-from base.models import learning_unit_enrollment
-from base.models import learning_unit_year
-from base.models import message_template
-from base.models import offer
-from base.models import offer_enrollment
-from base.models import offer_year
-from base.models import offer_year_calendar
-from base.models import organization
-from base.models import organization_address
-from base.models import person
-from base.models import person_address
-from base.models import program_manager
-from base.models import session_exam
-from base.models import structure
-from base.models import student
-from base.models import supported_languages
-from base.models import tutor
+from django.db import models
+from django.contrib import admin
+
+class DomainAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    fieldsets = ((None, {'fields': ('name',)}),)
+
+
+class Domain(models.Model):
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    name = models.CharField(max_length=255)
+    parent = models.ForeignKey('self', null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+
+def find_all():
+    return Domain.objects.all()
