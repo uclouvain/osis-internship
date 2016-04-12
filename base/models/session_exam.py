@@ -65,14 +65,28 @@ def find_session_by_id(session_exam_id):
     return SessionExam.objects.get(pk=session_exam_id)
 
 
-def find_sessions_by_tutor(tutor, academic_year):
-    learning_units = attribution.Attribution.objects.filter(tutor=tutor).values('learning_unit')
-    return SessionExam.objects.filter(models.Q(status='OPEN')) \
-        .filter(learning_unit_year__academic_year=academic_year) \
-        .filter(learning_unit_year__learning_unit__in=learning_units)
+def find_sessions_by_tutor(tutor, academic_year, learning_unit_id):
+    if learning_unit_id:
+        learning_units = attribution.Attribution.objects.filter(tutor=tutor).values('learning_unit')
+        return SessionExam.objects.filter(models.Q(status='OPEN')) \
+            .filter(learning_unit_year__academic_year=academic_year) \
+            .filter(learning_unit_year__learning_unit__in=learning_units)
+    else:
+        learning_units = attribution.Attribution.objects.filter(tutor=tutor).values('learning_unit')
+        return SessionExam.objects.filter(models.Q(status='OPEN')) \
+            .filter(learning_unit_year__academic_year=academic_year) \
+            .filter(learning_unit_year__learning_unit__in=learning_units) \
+            .filter(learning_unit_year__learning_unit=learning_unit_id)
 
 
-def find_sessions_by_offer(offer_year, academic_year):
-    return SessionExam.objects.filter(~models.Q(status='IDLE')) \
-        .filter(offer_year_calendar__offer_year__academic_year=academic_year) \
-        .filter(offer_year_calendar__offer_year=offer_year)
+def find_sessions_by_offer(offer_year, academic_year, learning_unit_id):
+    if learning_unit_id:
+        return SessionExam.objects.filter(~models.Q(status='IDLE')) \
+            .filter(offer_year_calendar__offer_year__academic_year=academic_year) \
+            .filter(offer_year_calendar__offer_year=offer_year)\
+            .filter(learning_unit_year__learning_unit=learning_unit_id)
+    else:
+        return SessionExam.objects.filter(~models.Q(status='IDLE')) \
+            .filter(offer_year_calendar__offer_year__academic_year=academic_year) \
+            .filter(offer_year_calendar__offer_year=offer_year)
+

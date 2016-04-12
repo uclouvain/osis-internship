@@ -23,28 +23,20 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
+from django import template
 
+register = template.Library()
 
-class LearningUnitAdmin(admin.ModelAdmin):
-    list_display = ('acronym', 'title', 'start_year', 'end_year', 'changed')
-    fieldsets = ((None, {'fields': ('acronym','title','description','start_year','end_year')}),)
-    search_fields = ['acronym']
+@register.assignment_tag(takes_context=True)
+def session_id_list(context):
+    sessions = context['sessions']
+    url_var = ""
+    i=0
+    for session in sessions:
 
-
-class LearningUnit(models.Model):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed     = models.DateTimeField(null=True)
-    acronym     = models.CharField(max_length=15)
-    title       = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
-    start_year  = models.IntegerField()
-    end_year    = models.IntegerField(blank=True, null=True)
-
-    def __str__(self):
-        return u"%s - %s" % (self.acronym, self.title)
-
-
-def find_learning_unit_by_id(learning_unit_id):
-    return LearningUnit.objects.get(pk=learning_unit_id)
+        if i > 0:
+            url_var+="&"
+        url_var = url_var+"var="+str(session.id)
+        i=i+1
+    print('url_var',url_var)
+    return url_var

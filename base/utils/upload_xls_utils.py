@@ -32,17 +32,20 @@ from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 
 from base.forms import ScoreFileForm
+from base import models as mdl
 from base.utils import export_utils
 
 
 @login_required
-def upload_scores_file(request, session_id, learning_unit_year_id, academic_year_id):
+def upload_scores_file(request, learning_unit_id):
     message_validation = ""
     if request.method == 'POST':
         form = ScoreFileForm(request.POST, request.FILES)
         if form.is_valid():
+            print('form valid')
             file_name = request.FILES['file']
-            if  file_name == None:
+            print('filename:', str(file_name))
+            if file_name is None:
                 #todo vérifier si fichier xls
                 message_validation = _('No file selected')
             else:
@@ -57,13 +60,15 @@ def upload_scores_file(request, session_id, learning_unit_year_id, academic_year
                         message_validation = '%s' % _('Invalid file')
 
                 messages.add_message(request, messages.INFO, '%s' % message_validation)
-                return HttpResponseRedirect(reverse('online_encoding' , args=[session_id]))
+                return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_id]))
         else:
+            print('form invalid')
             #todo traiter si pas de fichier sélectionné
-            return HttpResponseRedirect(reverse('online_encoding' , args=[session_id]))
+            return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_id]))
 
 
 def __save_xls_scores(request, file_name):
+    print('__save_xls_scores')
     wb = load_workbook(file_name, read_only=True)
     ws = wb.active
     nb_row = 0
@@ -76,34 +81,35 @@ def __save_xls_scores(request, file_name):
     for row in ws.rows:
         nouveau_score = False
         if nb_row > 0 and isValid:
-            student = Student.objects.filter(registration_id=row[4].value)
+            student = mdl.student.find_by_registration_id(row[4].value)
             info_line = "%s %d :" % (_('Line'),data_line_number)
             if not student:
                 erreur_validation += "%s %s (%s) %s!" % (info_line, _('the student'), str(row[4].value), _('does not exists'))
             else:
-                academic_year = AcademicYear.objects.filter(year=int(row[0].value[:4]))
+                academic_year = mdl.academic_year.find_academic_year_by_year(int(row[0].value[:4]))
                 if not academic_year :
                     erreur_validation += "%s %s (%d) %s!" % (info_line, _('the academic year'), row[0].value, _('does not exists'))
                 else:
-                    offer_year = OfferYear.objects.filter(academic_year=academic_year,acronym=row[3].value)
+                    offer_year = mdl.offer_year.find_by_academicyear_acronym(academic_year, row[3].value)
                     if  not offer_year :
                         erreur_validation += "%s %s (%d) %s-%d !" % (info_line, _('the offer year'), str(row[3].value), academic_year.year, _('does not exists'))
                     else:
-                        offer_enrollment = OfferEnrollment.objects.filter(student=student,offer_year=offer_year)
+                        offer_enrollment =mdl.offer_enrollment.find_by_student_offer(student, offer_year)
                         if not offer_enrollment :
                             erreur_validation += "%s %s %s!" % (info_line, _('the offer enrollment'), _('does not exists'))
                         else:
-                            learning_unit_year_lists = LearningUnitYear.objects.filter(academic_year=academic_year,acronym=row[2].value)
+                            learning_unit_year_lists =mdl.learning_unit_year.search(academic_year,
+                                                                                     row[2].value)
                             if len(learning_unit_year_lists) == 1:
                                 learning_unit_year = learning_unit_year_lists[0]
                             if not learning_unit_year:
                                 erreur_validation += "%s %s %s %s!" % (info_line, _('the activity'), str(row[2].value), _('does not exists'))
                             else:
-                                learning_unit_enrollment = LearningUnitEnrollment.objects.filter(learning_unit_year=learning_unit_year,offer_enrollment=offer_enrollment)
+                                learning_unit_enrollment = mdl.learning_unit_enrollment.find_by_learningunit_enrollment(learning_unit_year, offer_enrollment)
                                 if not learning_unit_enrollment:
                                     erreur_validation += "%s %s %s %s!" % (info_line, _('the enrollment to the activity'), str(row[2].value), _('does not exists'))
                                 else:
-                                    exam_enrollment = ExamEnrollment.objects.filter(learning_unit_enrollment = learning_unit_enrollment).filter(session_exam__number_session = int(row[1].value)).first()
+                                    exam_enrollment = exam_enrollment = mdl.exam_enrollment.find_by_learning_unit_enrollment_and_session_exam_number_session(learning_unit_enrollment, int(row[1].value))
                                     if session_exam is None:
                                         session_exam = exam_enrollment.session_exam
                                     if exam_enrollment.encoding_status != 'SUBMITTED':
@@ -125,7 +131,7 @@ def __save_xls_scores(request, file_name):
                                         #attention dans le xsl les choix pour la justification sont des libellés pas les valeurs BD
                                         justification_xls=None
                                         if row[8].value:
-                                            for k, v in dict(JUSTIFICATION_TYPES).items():
+                                            for k, v in dict(mdl.exam_enrollment.JUSTIFICATION_TYPES).items():
                                                 if v.lower() == str(row[8].value.lower()):
                                                     justification_xls=k
                                         justification_valide=True
@@ -153,7 +159,7 @@ def __save_xls_scores(request, file_name):
                                             exam_enrollment.score_draft = note
                                             exam_enrollment.justification_draft = justification_xls
                                             exam_enrollment.save()
-                                            create_exam_enrollment_historic(request.user,exam_enrollment,note,justification_xls)
+                                            mdl.create_exam_enrollment_historic(request.user,exam_enrollment,note,justification_xls)
             data_line_number=data_line_number+1
         else:
             #Il faut valider le fichier xls
@@ -173,7 +179,7 @@ def __save_xls_scores(request, file_name):
     messages.add_message(request, messages.WARNING, erreur_validation)
     if not session_exam is None:
         all_encoded = True
-        enrollments = ExamEnrollment.objects.filter(session_exam = session_exam)
+        enrollments = mdl.exam_enrollment.find_exam_enrollments_by_session(session_exam)
         for enrollment in enrollments:
             if not enrollment.score_final and not enrollment.justification_final:
                 all_encoded = False

@@ -23,28 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
+from django import template
+from base.models.exam_enrollment import get_progress
 
+register = template.Library()
 
-class LearningUnitAdmin(admin.ModelAdmin):
-    list_display = ('acronym', 'title', 'start_year', 'end_year', 'changed')
-    fieldsets = ((None, {'fields': ('acronym','title','description','start_year','end_year')}),)
-    search_fields = ['acronym']
-
-
-class LearningUnit(models.Model):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed     = models.DateTimeField(null=True)
-    acronym     = models.CharField(max_length=15)
-    title       = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
-    start_year  = models.IntegerField()
-    end_year    = models.IntegerField(blank=True, null=True)
-
-    def __str__(self):
-        return u"%s - %s" % (self.acronym, self.title)
-
-
-def find_learning_unit_by_id(learning_unit_id):
-    return LearningUnit.objects.get(pk=learning_unit_id)
+@register.assignment_tag(takes_context=True)
+def progress(context):
+    sessions = context['sessions']
+    learning_unit = context['lu']
+    return get_progress(sessions, learning_unit)

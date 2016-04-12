@@ -2,6 +2,9 @@
 {% load i18n %}
 {% load staticfiles %}
 {% load list %}
+{% load progress %}
+{% load session_id_list%}
+{% load get_at_index %}
 
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
@@ -72,80 +75,52 @@
                   <table class="table table-hover">
                       <thead>
                         <tr>
-                            <th>{% trans 'Status' %}</th>
                             <th>{% trans 'Code' %}</th>
                             <th>{% trans 'Activity' %}</th>
-                            <th>{% trans 'Session' %}</th>
-                            <th>{% trans 'Offer' %}</th>
                             <th>{% trans 'Progress' %}</th>
                             <th></th>
                         </tr>
                       </thead>
                       <tbody>
-                      {% for session in sessions %}
+                      {% for lu in learning_unit_list %}
                         <tr>
-                          <td>{% if session.status == 'IDLE' %}
-                                <span style="color: orange" class="glyphicon glyphicon-time" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="Idle"></span>
-                              {% elif session.status == 'OPEN' %}
-                                <span style="color: blue" class="glyphicon glyphicon-flag" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="Open"></span>
-                              {% else %}
-                                <span style="color: green" class="glyphicon glyphicon-ok" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="Closed"></span> {{ session.status|title }}</td>
-                              {% endif %}
-                          <td>{{ session.learning_unit_year.acronym }}</td>
-                          <td>{% if session.progress != '0/0' %}<a href="{% url 'online_encoding' session.id %}" id="lnk_{{ session.learning_unit_year.acronym }}" >{{ session.learning_unit_year.title }}</a>{%else%}{{ session.learning_unit_year.title }}{%endif%}</td>
-                          <td>{{ session.number_session }}</td>
-                          <td>{{ session.offer_year_calendar.offer_year.acronym}}</td>
-                          <td>{{ session.progress }}</td>
-                          <td>{% if session.status == 'OPEN' %}
-                                <a class="btn btn-default" href="{% url 'online_encoding_form' session.id %}"
-                                   {% if session.progress = '0/0' %}
-                                   disabled
-                                   {% endif %}
-                                   role="button" id="lnk_online_encoding_profile_{{session.id}}"><i class="fa fa-hashtag"></i> {% trans 'Encoding'%}</a>
-                              {% endif %}
-                          </td>
+                          <td>{{ lu.acronym }}</td>
+                          <td><a href="{% url 'online_encoding' lu.id %}" id="lnk_{{ session.lu.acronym }}" >{{ lu.title }}</a></td>
+                          <td>{% progress as pg %}{{pg}}</td>
+                          <td></td>
 
                         </tr>
                       {% endfor %}
                       </tbody>
                   </table>
+
                 </div>
                 <div role="tabpanel" class="tab-pane fade" id="tab_messages_{{forloop.counter0}}">
                   <table class="table table-hover">
                       <thead>
                         <tr>
-                            <th>{% trans 'Status' %}</th>
                             <th>{% trans 'Code' %}</th>
                             <th>{% trans 'Activity' %}</th>
-                            <th>{% trans 'Session' %}</th>
-                            <th>{% trans 'Offer' %}</th>
                             <th>{% trans 'Progress' %}</th>
                             <th></th>
                         </tr>
                       </thead>
                       <tbody>
-                      {% for session in sessions %}
+                       {% for lu in learning_unit_list %}
                         <tr>
-                          <td>{% if session.status == 'IDLE' %}
-                                <span style="color: orange" class="glyphicon glyphicon-time" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="Idle"></span>
-                              {% elif session.status == 'OPEN' %}
-                                <span style="color: blue" class="glyphicon glyphicon-flag" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="Open"></span>
-                              {% else %}
-                                <span style="color: green" class="glyphicon glyphicon-ok" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="Closed"></span> {{ session.status|title }}</td>
-                              {% endif %}
-                          <td>{{ session.learning_unit_year.acronym }}</td>
-                          <td><a href="{% url 'online_encoding' session.id%}"title="Visualiser/charger les notes pour le cours" id="lnk_online_encoding_messages_{{session.id}}">{{ session.learning_unit_year.title }}</a></td>
-                          <td>{{ session.number_session }}</td>
-                          <td>{{ session.offer_year_calendar.offer_year.acronym}}</td>
-                          <td>{{ session.progress }}</td>
-                          <td>{% if session.status == 'OPEN' %}
-                                <a class="btn btn-default" href="{% url 'scores_encoding_download' session.id academic_year.id  %}"
+
+                          <td>{{ lu.acronym }}</td>
+                          <td><a href="{% url 'online_encoding' lu.id%}"title="Visualiser/charger les notes pour le cours" id="lnk_online_encoding_messages_{{lu.id}}">{{ lu.title }}</a></td>
+
+                          <td>{% progress as pg %}{{pg}}</td>
+                          <td>{% if pg != '0/0' %}
+                                <a class="btn btn-default" href="{% url 'scores_encoding_download' lu.id  academic_year.id%}"
                                    role="button" title="{% trans 'Create a xls file while activity\'s scores'%}"
                                    {% if session.progress = '0/0' %}
                                    disabled
                                    {% endif %}
-                                   id="lnk_scores_encoding_download_{{session.id}}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span> {% trans 'Get xls'%}</a>
-                              {% endif %}
+                                   id="lnk_scores_encoding_download_{{lu.id}}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span> {% trans 'Get xls'%}</a>
+                              {%endif%}
                           </td>
                         </tr>
                       {% endfor %}
@@ -156,42 +131,30 @@
                   {% if sessions %}
                   <br>
 
-                  <a class="btn btn-default" href="{% url 'notes_printing_all' sessions_offer|lookup_session:forloop.counter0%}" role="button" id="lnk_notes_printing_all_{{session.id}}"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'Print scores for all activities' %}</a>
+                  <a class="btn btn-default" href="{% url 'notes_printing_all' sessions_offer|lookup_session:forloop.counter0%}" role="button" id="lnk_notes_printing_all_{{learning_unit.id}}"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'Print scores for all activities' %}</a>
                   <br><br>
                   {% endif%}
                   <table class="table table-hover">
                     <thead>
                         <tr>
-                          <th>{% trans 'Status' %}</th>
                           <th>{% trans 'Code' %}</th>
                           <th>{% trans 'Activity' %}</th>
-                          <th>{% trans 'Session' %}</th>
-                          <th>{% trans 'Offer' %}</th>
                           <th>{% trans 'Progress' %}</th>
                           <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                    {% for session in sessions %}
+                    {% for lu in learning_unit_list %}
                       <tr>
-                        <td>{% if session.status == 'IDLE' %}
-                              <span style="color: orange" class="glyphicon glyphicon-time" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="Idle"></span>
-                            {% elif session.status == 'OPEN' %}
-                              <span style="color: blue" class="glyphicon glyphicon-flag" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="Open"></span>
-                            {% else %}
-                              <span style="color: green" class="glyphicon glyphicon-ok" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="Closed"></span> {{ session.status|title }}</td>
-                            {% endif %}
-                        <td>{{ session.learning_unit_year.acronym }}</td>
-                        <td>{{ session.learning_unit_year.title }}</td>
-                        <td>{{ session.number_session }}</td>
-                        <td>{{ session.offer_year_calendar.offer_year.acronym}}</td>
-                        <td>{{ session.progress }}</td>
-                        <td>{% if session.status == 'OPEN' %}
-                                <a class="btn btn-default" href="{% url 'notes_printing' session.id session.learning_unit_year.id %}"
+                        <td>{{ lu.acronym }}</td>
+                        <td><a href="{% url 'online_encoding' lu.id%}"title="Visualiser/charger les notes pour le cours" id="lnk_online_encoding_messages_{{lu.id}}">{{ lu.title }}</a></td>
+                        <td>{% progress as pg %}{{pg}}</td>
+                        <td>{% if pg != '0/0' %}
+                                <a class="btn btn-default" href="{% url 'notes_printing' lu.id %}"
                                    {% if session.progress = '0/0' %}
                                    disabled
                                    {% endif %}
-                                   role="button" id="lnk_notes_printing_{{session.id}}"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'Print' %}</a>
+                                   role="button" id="lnk_notes_printing_{{lu.id}}"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'Print' %}</a>
                             {% endif %}
                         </td>
                       </tr>

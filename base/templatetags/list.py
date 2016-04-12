@@ -30,7 +30,10 @@ register = template.Library()
 
 @register.filter
 def lookup(d, key):
-    return d[key].acronym
+    try:
+        return d[key].acronym
+    except:
+        return '?'
 
 
 @register.filter

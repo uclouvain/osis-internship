@@ -43,6 +43,7 @@ def page_not_found(request):
 def access_denied(request):
     return render(request, 'access_denied.html')
 
+
 def login(request):
     if request.method == 'POST' :
         username = request.POST['username']
@@ -154,7 +155,6 @@ def files_search(request):
     if registration_date or username :
         if registration_date :
             registration_date = datetime.strptime(request.GET['registration_date'], '%Y-%m-%d')
-            print(registration_date.month)
         files = mdl.document_file.search(username=username, creation_date=registration_date)
     else :
         message = "%s" % _('You must choose at least one criteria!')

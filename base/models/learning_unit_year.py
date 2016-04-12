@@ -58,7 +58,6 @@ def find_learning_unit_year_by_id(learning_unit_id):
 
 
 def search(academic_year_id=None, acronym=None):
-    print('search, ', academic_year_id , ',' , acronym)
     queryset = LearningUnitYear.objects
 
     if academic_year_id:
