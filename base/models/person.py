@@ -42,9 +42,9 @@ class PersonAdmin(admin.ModelAdmin):
 
 class Person(models.Model):
     GENDER_CHOICES = (
-        ('F', _('Female')),
-        ('M', _('Male')),
-        ('U', _('Unknown')))
+        ('F', _('female')),
+        ('M', _('male')),
+        ('U', _('unknown')))
 
     external_id  = models.CharField(max_length=100, blank=True, null=True)
     changed      = models.DateTimeField(null=True)

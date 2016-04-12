@@ -63,7 +63,7 @@ def offer_year_calendar_save(request, id):
 
         if offer_year_calendar.start_date and offer_year_calendar.end_date:
             if offer_year_calendar.start_date > offer_year_calendar.end_date:
-                form.errors['start_date'] = _('La date de début doit être égale ou inférieure à la date de fin')
+                form.errors['start_date'] = _('begin_date_lt_end_date')
                 validation = False
     else:
         validation = False
