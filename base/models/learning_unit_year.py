@@ -25,7 +25,6 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-from base.models import academic_year, learning_unit
 
 
 class LearningUnitYearAdmin(admin.ModelAdmin):

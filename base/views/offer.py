@@ -61,7 +61,7 @@ def offers_search(request):
     message = None
     offer_years = None
     if entity_acronym is None and academic_yr is None and acronym is None :
-        message = "%s" % _('You must choose at least one criteria!')
+        message = "%s" % _('minimum_one_criteria')
     else:
         entity = None
         if entity_acronym:

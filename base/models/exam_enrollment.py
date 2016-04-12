@@ -26,15 +26,15 @@
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
-from base.models import person, session_exam, learning_unit_enrollment
+from base.models import person
 
 
 JUSTIFICATION_TYPES = (
-    ('ABSENT', _('Absent')),
-    ('CHEATING', _('Cheating')),
-    ('ILL', _('Ill')),
-    ('JUSTIFIED_ABSENCE', _('Justified absence')),
-    ('SCORE_MISSING', _('Score missing')))
+    ('ABSENT', _('absent')),
+    ('CHEATING', _('cheating')),
+    ('ILL', _('ill')),
+    ('JUSTIFIED_ABSENCE', _('justified_absence')),
+    ('SCORE_MISSING', _('score_missing')))
 
 
 class ExamEnrollmentAdmin(admin.ModelAdmin):
@@ -48,8 +48,8 @@ class ExamEnrollmentAdmin(admin.ModelAdmin):
 
 class ExamEnrollment(models.Model):
     ENCODING_STATUS_LIST = (
-        ('SAVED', _('Saved')),
-        ('SUBMITTED', _('Submitted')))
+        ('SAVED', _('saved')),
+        ('SUBMITTED', _('submitted')))
 
     external_id              = models.CharField(max_length=100, blank=True, null=True)
     changed                  = models.DateTimeField(null=True)
@@ -103,6 +103,11 @@ def find_exam_enrollments_to_validate_by_session(session_exam):
     return enrolls
 
 
+def find_by_enrollment_session(learning_unit_enrollment, session_exam_number_session):
+    return ExamEnrollment.objects.filter(learning_unit_enrollment=learning_unit_enrollment) \
+                                 .filter(session_exam__number_session=session_exam_number_session).first()
+
+
 def count_encoded_scores(enrollments):
     """ Count the scores that were already encoded but not submitted yet. """
     counter = 0
@@ -139,9 +144,9 @@ def calculate_session_exam_progress(session_exam):
 
 def justification_label_authorized(is_fac):
     if is_fac:
-        return '%s, %s, %s, %s, %s' % (_('Absent'),_('Cheating'), _('Ill'),  _('Justified absence'), _('Score missing'))
+        return '%s, %s, %s, %s, %s' % (_('absent'),_('cheating'), _('ill'),  _('justified_absence'), _('score_missing'))
     else:
-        return '%s, %s, %s' % (_('Absent'), _('Cheating'),_('Score missing'))
+        return '%s, %s, %s' % (_('absent'), _('cheating'),_('score_missing'))
 
 
 class ExamEnrollmentHistoryAdmin(admin.ModelAdmin):
@@ -167,11 +172,11 @@ def create_exam_enrollment_historic(user, enrollment, score, justification):
 
 
 def get_progress(session_exm_list, learning_unt):
-
+    print('getProgress', len(session_exm_list))
     tot_progress=0
     tot_enrollments = 0
     for session_exm in session_exm_list:
-        enrollments = list(find_exam_enrollments_by_session2(session_exm, learning_unt))
+        enrollments = list(find_exam_enrollments_by_session_learningunit(session_exm))
         if enrollments:
             progress = 0
             for e in enrollments:
@@ -179,14 +184,10 @@ def get_progress(session_exm_list, learning_unt):
                     progress += 1
             tot_progress=tot_progress+progress
             tot_enrollments = tot_enrollments + len(enrollments)
-
+    print('fin getProgress')
     return str(tot_progress)+"/"+str(tot_enrollments)
 
 
-def find_exam_enrollments_by_session2(session_exm, learning_unt):
-    enrollments = ExamEnrollment.objects.filter(session_exam=session_exm) \
-        .filter(learning_unit_enrollment__learning_unit_year__learning_unit=learning_unt) \
-        .order_by('learning_unit_enrollment__offer_enrollment__offer_year__acronym',
-                  'learning_unit_enrollment__offer_enrollment__student__person__last_name',
-                  'learning_unit_enrollment__offer_enrollment__student__person__first_name')
+def find_exam_enrollments_by_session_learningunit(session_exm):
+    enrollments = ExamEnrollment.objects.filter(session_exam=session_exm)
     return enrollments

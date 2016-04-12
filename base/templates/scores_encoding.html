@@ -30,13 +30,13 @@
  * see http://www.gnu.org/licenses/.
 {% endcomment %}
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'Studies' %}</a></li>
-  <li><a href="{% url 'assessments' %}" id="lnk_evaluations">{% trans 'Evaluations' %}</a></li>
-  <li class="active">{% trans 'Scores encoding' %}</li>
+  <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'studies' %}</a></li>
+  <li><a href="{% url 'assessments' %}" id="lnk_evaluations">{% trans 'evaluations' %}</a></li>
+  <li class="active">{% trans 'scores_encoding' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'Scores encoding' %}</h2>
+    <h2>{% trans 'scores_encoding' %}</h2>
   </div>
   {% if sessions_list%}
       {% for sessions in sessions_list %}
@@ -46,28 +46,29 @@
               <div class="col-md-4">
                 <div class="form-group">
                   {% if tutor %}
-                    <label>{% trans 'Tutor' %}</label><br>{{ tutor }}
+                    <label>{% trans 'tutor' %}</label><br>{{ tutor }}
                   {% else %}
-                    <label>{% trans 'Faculty' %}</label><br> {{ faculties|lookup:forloop.counter0  }}
+                    <label>{% trans 'faculty' %}</label><br> {{ faculties|lookup:forloop.counter0  }}
                   {% endif %}
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
-                  <label>{% trans 'Academic year' %}</label><br>
+                  <label>{% trans 'academic_year' %}</label><br>
                   {{ academic_year }}
                 </div>
               </div>
               <div class="col-md-4">
+
               </div>
             </div>
             <br>
-            <p><b>{% trans 'Select an encoding type' %}</b></p>
+            <p><b>{% trans 'select_an_encoding_type' %}</b></p>
             <div>
               <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active"><a href="#tab_profile_{{forloop.counter0}}" aria-controls="profile" role="tab" data-toggle="tab" id="lnk_online_{{forloop.counter0}}">{% trans 'Online' %}</a></li>
-                <li role="presentation"><a href="#tab_messages_{{forloop.counter0}}" aria-controls="messages" role="tab" data-toggle="tab" id="lnk_with_xls_{{forloop.counter0}}">{% trans 'With xls' %}</a></li>
-                <li role="presentation"><a href="#tab_home_{{forloop.counter0}}" aria-controls="home" role="tab" data-toggle="tab" id="lnk_via_paper_{{forloop.counter0}}">{% trans 'Via paper' %}</a></li>
+                <li role="presentation" class="active"><a href="#tab_profile_{{forloop.counter0}}" aria-controls="profile" role="tab" data-toggle="tab" id="lnk_online_{{forloop.counter0}}">{% trans 'online' %}</a></li>
+                <li role="presentation"><a href="#tab_messages_{{forloop.counter0}}" aria-controls="messages" role="tab" data-toggle="tab" id="lnk_with_xls_{{forloop.counter0}}">{% trans 'via_xls' %}</a></li>
+                <li role="presentation"><a href="#tab_home_{{forloop.counter0}}" aria-controls="home" role="tab" data-toggle="tab" id="lnk_via_paper_{{forloop.counter0}}">{% trans 'via_paper' %}</a></li>
               </ul>
 
               <div class="tab-content">
@@ -78,6 +79,7 @@
                             <th>{% trans 'Code' %}</th>
                             <th>{% trans 'Activity' %}</th>
                             <th>{% trans 'Progress' %}</th>
+
                             <th></th>
                         </tr>
                       </thead>
@@ -88,7 +90,6 @@
                           <td><a href="{% url 'online_encoding' lu.id %}" id="lnk_{{ session.lu.acronym }}" >{{ lu.title }}</a></td>
                           <td>{% progress as pg %}{{pg}}</td>
                           <td></td>
-
                         </tr>
                       {% endfor %}
                       </tbody>
@@ -108,7 +109,6 @@
                       <tbody>
                        {% for lu in learning_unit_list %}
                         <tr>
-
                           <td>{{ lu.acronym }}</td>
                           <td><a href="{% url 'online_encoding' lu.id%}"title="Visualiser/charger les notes pour le cours" id="lnk_online_encoding_messages_{{lu.id}}">{{ lu.title }}</a></td>
 
@@ -130,8 +130,8 @@
                 <div role="tabpanel" class="tab-pane fade" id="tab_home_{{forloop.counter0}}">
                   {% if sessions %}
                   <br>
-
                   <a class="btn btn-default" href="{% url 'notes_printing_all' sessions_offer|lookup_session:forloop.counter0%}" role="button" id="lnk_notes_printing_all_{{learning_unit.id}}"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'Print scores for all activities' %}</a>
+
                   <br><br>
                   {% endif%}
                   <table class="table table-hover">
@@ -155,6 +155,7 @@
                                    disabled
                                    {% endif %}
                                    role="button" id="lnk_notes_printing_{{lu.id}}"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'Print' %}</a>
+
                             {% endif %}
                         </td>
                       </tr>

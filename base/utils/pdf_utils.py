@@ -33,9 +33,9 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import mm
 from reportlab.lib import colors
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.staticfiles.templatetags.staticfiles import static
 
 from base import models as mdl
-
 
 PAGE_SIZE = A4
 MARGIN_SIZE = 20 * mm
@@ -104,14 +104,14 @@ def print_notes(request, tutor, academic_year, learning_unit_id, is_fac,sessions
 
 
 def header_building(canvas, doc, styles):
-    a = Image("base"+ settings.STATIC_URL +"img/logo_institution.jpg")
+    a = Image(settings.LOGO_INSTITUTION_URL,width=15*mm,height=20*mm)
 
     p = Paragraph('''
                     <para align=center>
                         <font size=16>%s</font>
-                    </para>''' % (_('Scores transcript')), styles["BodyText"])
+                    </para>''' % (_('scores_transcript')), styles["BodyText"])
 
-    data_header = [[a, '%s' % _('University Catholic Louvain\nLouvain-la-Neuve\nBelgium'), p], ]
+    data_header = [[a, '%s' % _('ucl_denom_location'), p], ]
 
     t_header=Table(data_header, [30*mm, 100*mm,50*mm])
 
@@ -123,7 +123,7 @@ def header_building(canvas, doc, styles):
 
 
 def footer_building(canvas, doc, styles):
-    pageinfo = _('Scores sheet')
+    pageinfo = _('scores_sheet')
     footer = Paragraph(''' <para align=right>Page %d - %s </para>''' % (doc.page, pageinfo), styles['Normal'])
     w, h = footer.wrap(doc.width, doc.bottomMargin)
     footer.drawOn(canvas, doc.leftMargin, h)
@@ -219,9 +219,9 @@ def legend_building(learning_unit_year, is_fac, content):
                             &nbsp;
                         </para>
                         ''' , ParagraphStyle('normal')))
-    legend_text = "%s : %s" % (_('Other score legend'), mdl.exam_enrollment.justification_label_authorized(is_fac))
+    legend_text = "%s : %s" % (_('other_score_legend'), mdl.exam_enrollment.justification_label_authorized(is_fac))
     if not learning_unit_year.decimal_scores:
-        legend_text += "<br/><font color=red>%s</font>" % _('UnAuthorized decimal for this activity')
+        legend_text += "<br/><font color=red>%s</font>" % _('unauthorized_decimal_for_this_activity')
 
     content.append(Paragraph('''
                             <para>
@@ -232,12 +232,12 @@ def legend_building(learning_unit_year, is_fac, content):
 
 def headers_table(styles):
     data = []
-    data.append([Paragraph('''%s''' % _('Registration number'), styles['BodyText']),
-                 Paragraph('''%s''' % _('Last name'), styles['BodyText']),
-                 Paragraph('''%s''' % _('First name'), styles['BodyText']),
-                 Paragraph('''%s''' % _('Numbered score'), styles['BodyText']),
-                 Paragraph('''%s''' % _('Other score'), styles['BodyText']),
-                 Paragraph('''%s''' % _('End date'), styles['BodyText'])])
+    data.append([Paragraph('''%s''' % _('registration_number'), styles['BodyText']),
+                 Paragraph('''%s''' % _('lastname'), styles['BodyText']),
+                 Paragraph('''%s''' % _('firstname'), styles['BodyText']),
+                 Paragraph('''%s''' % _('numbered_score'), styles['BodyText']),
+                 Paragraph('''%s''' % _('other_score'), styles['BodyText']),
+                 Paragraph('''%s''' % _('end_date'), styles['BodyText'])])
     return data
 
 
@@ -255,7 +255,7 @@ def main_data(academic_year, session_exam, styles, learning_unit_year, pgm, cont
                                 &nbsp;
                             </para>
                             ''' , ParagraphStyle('normal')))
-    content.append(Paragraph('%s : %s' % (_('Academic year'), str(academic_year)), p))
+    content.append(Paragraph('%s : %s' % (_('academic_year'), str(academic_year)), p))
     content.append(Paragraph('Session : %d' % session_exam.number_session, p))
     content.append(Paragraph('''
                             <para spaceb=10>
@@ -290,11 +290,11 @@ def main_data(academic_year, session_exam, styles, learning_unit_year, pgm, cont
                   [''],
                   ['']]
     table_tutor=Table(data_tutor)
-    p_pgm = Paragraph('''<b>%s : %s</b>''' % (_('Program'), pgm.acronym), styles["Normal"])
+    p_pgm = Paragraph('''<b>%s : %s</b>''' % (_('program'), pgm.acronym), styles["Normal"])
     data_pgm= [[p_pgm],
-               [_('Deliberation date') + ' : '],
-               [_('Chair of the exam board') + ' : '],
-               [_('Exam board secretary') + ' : '],
+               [_('deliberation_date') + ' : '],
+               [_('chair_of_the_exam_board') + ' : '],
+               [_('exam_board_secretary') + ' : '],
               ]
     table_pgm=Table(data_pgm)
     table_pgm.setStyle(TableStyle([
@@ -338,5 +338,5 @@ def end_page_infos_building(content):
                     <font size=10>%s ..../..../........</font>
                     <br/>
                     <font size=10>%s</font>
-                   ''' % (_('Done at'), _('The'), _('Signature')), p_signature)
+                   ''' % (_('done_at'), _('the'), _('signature')), p_signature)
     content.append(paragraph_signature)

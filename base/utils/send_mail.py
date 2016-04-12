@@ -40,19 +40,19 @@ def send_mail_after_scores_submission(persons, learning_unit_name):
     :param learning_unit_name: The name of the learning unit for wihch scores were submitted
     """
 
-    subject = _('Sumbmission of scores for {0}.').format(learning_unit_name)
+    subject = _('submission_of_scores_for').format(learning_unit_name)
     html_message = ''.join([
-        str(_('<p>Hi, </p>')),
-        str(_('<p>We inform you that a scores submission was made for {learning_unit_name}.</p></br>')).format(
+        '<p>Hi, </p>',
+        '<p>We inform you that a scores submission was made for {learning_unit_name}.</p></br>'.format(
             learning_unit_name=learning_unit_name),
-        str(_('The OSIS Team<br>')),
+        'The OSIS Team<br>',
         EMAIL_SIGNATURE,
     ])
     message = ''.join([
-        str(_('Hi, \n')),
-        str(_('We inform you that a scores submission was made for {learning_unit_name}.\n\n')).format(
+        'Hi, \n',
+        'We inform you that a scores submission was made for {learning_unit_name}.\n\n'.format(
             learning_unit_name=learning_unit_name),
-        str(_('The OSIS Team.')),
+        'The OSIS Team.',
     ])
 
     send_mail(subject=subject,message=message,recipient_list=[person.email for person in persons],html_message=html_message,from_email=DEFAULT_FROM_EMAIL)
@@ -66,27 +66,27 @@ def send_mail_after_academic_calendar_changes(academic_calendar, offer_year_cale
     :param offer_year_calendar:
     """
 
-    subject = _('Watch out - Changes has been made on %s, academic calendar (%s)') % (offer_year_calendar.offer_year, academic_calendar)
+    subject = _('changes_on_offer_year_and_academic_calendar') % (offer_year_calendar.offer_year, academic_calendar)
     html_message = ''.join([
-        str(_('<p>Hi, </p>')),
-        str(_('<p>We inform you that changes has been made on \'{offer_year}\'({acronym}), academic calendar ({academic_calendar}).</p></br>')).format(
+        '<p>Hi, </p>',
+        '<p>We inform you that changes has been made on \'{offer_year}\'({acronym}), academic calendar ({academic_calendar}).</p></br>'.format(
             offer_year=offer_year_calendar.offer_year.title,acronym=offer_year_calendar.offer_year.acronym, academic_calendar=academic_calendar),
-        str(_('The OSIS Team<br>')),
+        'The OSIS Team<br>',
         EMAIL_SIGNATURE,
     ])
     message = ''.join([
-        str(_('Hi, \n')),
-        str(_('We inform you that changes has been made on \'{offer_year}\'({acronym}), academic calendar ({academic_calendar}).\n\n')).format(
+        'Hi, \n',
+        'We inform you that changes has been made on \'{offer_year}\'({acronym}), academic calendar ({academic_calendar}).\n\n'.format(
             offer_year=offer_year_calendar.offer_year.title,acronym=offer_year_calendar.offer_year.acronym, academic_calendar=academic_calendar),
-        str(_('The OSIS Team.')),
+        'The OSIS Team.',
     ])
 
     send_mail(subject=subject,message=message,recipient_list=[programme_manager.person.email for programme_manager in programme_managers],html_message=html_message,from_email='DEFAULT_FROM_EMAIL')
 
 
 GENDER_TITLE_MAP={
-    'M': _('Mister'),
-    'F': _('Miss'),
+    'M': _('mister'),
+    'F': _('miss'),
     'U': ''
 }
 

@@ -38,9 +38,9 @@ class OfferYearAdmin(admin.ModelAdmin):
 
 
 GRADE_TYPES = (
-    ('BACHELOR', _('Bachelor')),
-    ('MASTER', _('Master')),
-    ('DOCTORATE', _('Ph.D')))
+    ('BACHELOR', _('bachelor')),
+    ('MASTER', _('master')),
+    ('DOCTORATE', _('ph_d')))
 
 
 class OfferYear(models.Model):
@@ -123,5 +123,7 @@ def search_root_offers(entity=None, academic_yr=None, acronym=None):
     queryset = queryset.filter(parent=None)    # on ne doit prendre que les offres racines (pas les finalités)
     return queryset
 
+
 def find_by_academicyear_acronym(academic_yr, acronym):
     return OfferYear.objects.filter(academic_year=academic_yr, acronym=acronym)
+

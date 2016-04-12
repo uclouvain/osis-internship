@@ -41,6 +41,7 @@ class LearningUnit(models.Model):
     description = models.TextField(blank=True, null=True)
     start_year  = models.IntegerField()
     end_year    = models.IntegerField(blank=True, null=True)
+    progress = None
 
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)

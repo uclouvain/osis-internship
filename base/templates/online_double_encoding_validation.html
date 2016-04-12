@@ -29,15 +29,15 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'Studies' %}</a></li>
-  <li><a href="{% url 'assessments' %}" id="lnk_evaluations">{% trans 'Evaluations' %}</a></li>
-  <li><a href="{% url 'scores_encoding' %}" id="lnk_scores_encoding">{% trans 'Scores encoding' %}</a></li>
-  <li><a href="{% url 'online_encoding' learning_unit.id %}" id="lnk_online_scores_encoding">{% trans 'Online scores encoding' %}</a></li>
-  <li class="active">{% trans 'Dubble online scores encoding' %}</li>
+  <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'studies' %}</a></li>
+  <li><a href="{% url 'assessments' %}" id="lnk_evaluations">{% trans 'evaluations' %}</a></li>
+  <li><a href="{% url 'scores_encoding' %}" id="lnk_scores_encoding">{% trans 'scores_encoding' %}</a></li>
+  <li><a href="{% url 'online_encoding' learning_unit.id %}" id="lnk_online_scores_encoding">{% trans 'online_scores_encoding' %}</a></li>
+  <li class="active">{% trans 'dubble_online_scores_encoding' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'Dubble online scores encoding' %}</h2>
+    <h2>{% trans 'dubble_online_scores_encoding' %}</h2>
   </div>
   <div class="panel panel-default">
     <div class="panel-heading">
@@ -47,13 +47,13 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label>{% trans 'Responsible' %}</label><br>
+            <label>{% trans 'responsible' %}</label><br>
             {{ tutor }}
           </div>
         </div>
         <div class="col-md-3">
           <div class="form-group">
-            <label>{% trans 'Academic year' %}</label><br>
+            <label>{% trans 'academic_year' %}</label><br>
             {{ academic_year }}
           </div>
         </div>
@@ -61,7 +61,7 @@
         </div>
         <div class="col-md-3">
           <div class="form-group">
-            <label>{%trans 'Number of enrollments' %}</label><br>
+            <label>{%trans 'number_of_enrollments' %}</label><br>
             {{ enrollments|length }}
           </div>
         </div>
@@ -73,16 +73,16 @@
             <thead>
               <tr>
                 <th colspan="4"></th>
-                <th colspan="8">{%trans 'Scores' %} / {%trans 'Other score' %}</th>
+                <th colspan="8">{%trans 'scores' %} / {%trans 'other_score' %}</th>
               </tr>
               <tr>
-                <th>{%trans 'Offer' %}</th>
-                <th>{%trans 'Registration number' %}</th>
-                <th>{% trans 'Lastname' %}</th>
-                <th>{% trans 'Firstname' %}</th>
-                <th colspan="3">{% trans 'Encoding' %}</th>
-                <th colspan="3">{% trans 'Dubble encoding' %}</th>
-                <th colspan="2">{% trans 'Final' %}</th>
+                <th>{%trans 'offer' %}</th>
+                <th>{%trans 'registration_number' %}</th>
+                <th>{% trans 'lastname' %}</th>
+                <th>{% trans 'firstname' %}</th>
+                <th colspan="3">{% trans 'encoding' %}</th>
+                <th colspan="3">{% trans 'dubble_encoding' %}</th>
+                <th colspan="2">{% trans 'final' %}</th>
               </tr>
             </thead>
             <tbody>
@@ -135,8 +135,10 @@
             {% endfor %}
             </tbody>
         </table>
-        <button type="submit" class="btn btn-warning" id="bt_submit_online_double_encoding_validation"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'Submission' %}</button>
-        <a class="btn btn-default" id="lnk_cancel" href="{% url 'online_encoding' learning_unit.id %}" role="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'Cancel' %}</a>
+
+        <button type="submit" class="btn btn-warning" id="bt_submit_online_double_encoding_validation"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'submission' %}</button>
+        <a class="btn btn-default" id="lnk_cancel" href="{% url 'online_encoding' learning_unit.id %}" role="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
+
       </form>
     </div>
   </div>
