@@ -96,4 +96,4 @@ def execute():
     migrate(models.Country, fields=['id', 'iso_code', 'name', 'nationality', 'european_union', 'dialing_code', 'cref_code'])
 
 
-execute()
+# execute()
