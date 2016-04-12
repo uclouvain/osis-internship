@@ -40,6 +40,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+CURRENT_URL='http://localhost:8000'
+
 
 # Application definition
 
