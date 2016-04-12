@@ -54,12 +54,14 @@ def internships_student_search(request):
     else:
         criteria_present=True
 
+
     message = None
     if criteria_present:
         if s_noma is None and s_name:
             students_list = mdl.student.find_by_name(s_name)
         if  s_noma and s_name is None:
             students_list = mdl.student.find_by_registration_id(s_noma)
+            print(students_list)
         if s_noma and s_name:
             students_list = mdl.student.find_by_registration_id_name(s_noma, s_name)
     else:

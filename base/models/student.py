@@ -58,4 +58,4 @@ def find_by_registration_id_name(registration_id, s_name) :
     return Student.objects.filter(registration_id__icontains=s_noma, person__last_name__icontains=s_name)
 
 def find_by_registration_id(registration_id):
-    return Student.objects.get(registration_id__icontains=registration_id)
+    return Student.objects.filter(registration_id__icontains=registration_id)
