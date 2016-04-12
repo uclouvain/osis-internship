@@ -38,9 +38,9 @@ class OfferYearAdmin(admin.ModelAdmin):
 
 
 GRADE_TYPES = (
-    ('BACHELOR', _('Bachelor')),
-    ('MASTER', _('Master')),
-    ('DOCTORATE', _('Ph.D')))
+    ('BACHELOR', _('bachelor')),
+    ('MASTER', _('master')),
+    ('DOCTORATE', _('ph_d')))
 
 
 class OfferYear(models.Model):

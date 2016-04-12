@@ -35,9 +35,9 @@ class MessageTemplateAdmin(admin.ModelAdmin):
 
 
 class MessageTemplate(models.Model):
-    FORMAT_CHOICES = (('PLAIN', _('Plain')),
+    FORMAT_CHOICES = (('PLAIN', _('plain')),
                       ('HTML', 'HTML'),
-                      ('PLAIN_HTML', _('Plain and HTML')))
+                      ('PLAIN_HTML', _('plain_and_html')))
 
     reference = models.CharField(max_length=50, unique=True)
     subject   = models.CharField(max_length=255)
