@@ -121,7 +121,7 @@ def print_notes(request, tutor, academic_year, session_exam, learning_unit_year_
 
 
 def header_building(canvas, doc, styles):
-    a = Image(''.join([settings.CURRENT_URL,static("img/logo_institution.jpg")]))
+    a = Image(settings.LOGO_INSTITUTION_URL,width=15*mm,height=20*mm)
 
     p = Paragraph('''
                     <para align=center>

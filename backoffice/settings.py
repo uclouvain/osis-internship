@@ -40,9 +40,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-CURRENT_URL='http://localhost:8000'
-
-
 # Application definition
 
 INSTALLED_APPS = (
@@ -157,6 +154,8 @@ QUEUE_USER = 'guest'
 QUEUE_PASSWORD = 'guest'
 QUEUE_PORT = 5672
 QUEUE_CONTEXT_ROOT = '/'
+
+LOGO_INSTITUTION_URL = 'http://alfresco.uclouvain.be/alfresco/service/guest/streamDownload/workspace/SpacesStore/a7ac9681-d56e-4ec8-8d1d-01b2de6d9325/UCL_mention_noir_web.jpg?guest=true'
 
 try  :
     from backoffice.server_settings import *
