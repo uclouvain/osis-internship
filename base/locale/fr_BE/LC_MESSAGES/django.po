@@ -429,7 +429,7 @@ msgid "administration"
 msgstr "Administration"
 
 #: templates/layout.html:110
-msgid "datas"
+msgid "data"
 msgstr "Données"
 
 #: templates/layout.html:127
@@ -634,7 +634,7 @@ msgstr "Autre note"
 #: templates/online_double_encoding_validation.html:87
 #: templates/scores_encoding.html:100
 msgid "encoding"
-msgstr "Encoder"
+msgstr "Encodage"
 
 #: templates/online_double_encoding_validation.html:88
 #: templates/online_encoding.html:86
@@ -666,7 +666,7 @@ msgstr "Progression"
 
 #: templates/online_encoding.html:85
 msgid "encode"
-msgstr "encoder"
+msgstr "Encoder"
 
 #: templates/online_encoding.html:88
 msgid "title_btn_upload_score"
@@ -700,7 +700,7 @@ msgstr "Injecter"
 
 #: templates/online_encoding.html:180
 msgid "help_submission_scores_label"
-msgstr "Vous êtes en train de soumettre %s notes."
+msgstr "Vous êtes en train de soumettre %s note(s)."
 
 #: templates/online_encoding.html:183
 msgid "submit"
