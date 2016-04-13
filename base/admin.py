@@ -59,6 +59,9 @@ admin.site.register(message_template.MessageTemplate,
 admin.site.register(offer_enrollment.OfferEnrollment,
                     offer_enrollment.OfferEnrollmentAdmin)
 
+admin.site.register(domain.Domain,
+                    domain.DomainAdmin)
+
 admin.site.register(offer.Offer,
                     offer.OfferAdmin)
 
