@@ -48,7 +48,7 @@ def offers(request):
 
 
 def offers_search(request):
-    entity_acronym = request.GET['entity_acronym']
+    entity = request.GET['entity_acronym']
 
     academic_yr = None
     if request.GET['academic_year']:
@@ -57,21 +57,10 @@ def offers_search(request):
 
     academic_years = mdl.academic_year.find_academic_years()
 
-    offer_years = None
-    bad_criteria = False
-
-    entity = None
-    if entity_acronym:
-        entity = mdl.structure.find_by_acronym(entity_acronym)
-        if entity is None:
-            entity_acronym = None
-            bad_criteria =True
-
-    if not bad_criteria:
-        offer_years = mdl.offer_year.search_root_offers(entity=entity, academic_yr=academic_yr, acronym=acronym)
+    offer_years = mdl.offer_year.search_root_offers(entity=entity, academic_yr=academic_yr, acronym=acronym)
 
     return render(request, "offers.html", {'academic_year':   academic_yr,
-                                           'entity_acronym':  entity_acronym,
+                                           'entity_acronym':  entity,
                                            'code':            acronym,
                                            'academic_years':  academic_years,
                                            'offer_years':     offer_years,
