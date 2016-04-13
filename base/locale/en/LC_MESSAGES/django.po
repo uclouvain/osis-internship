@@ -658,7 +658,7 @@ msgstr "Faculty"
 
 #: templates/online_encoding.html:78
 msgid "decimal_values_accepted"
-msgstr "Decimal values in scores are accepted. \n"
+msgstr "Decimal values in scores are accepted."
 
 #: templates/online_encoding.html:80
 msgid "decimal_values_ignored"
