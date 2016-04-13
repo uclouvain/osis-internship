@@ -26,7 +26,7 @@
 from django.conf.urls import url
 from django.contrib.auth.views import login,logout_then_login
 
-from internship.views import home, internship, master, period, place, student
+from internship.views import home, internship, master, period, place, student, student_resume
 
 urlpatterns = [
     # S'il vous plaît, organiser les urls par ordre alphabétique.
@@ -37,4 +37,7 @@ urlpatterns = [
     url(r'^studies/internships/periods/$', period.internships_periods, name='internships_periods'),
     url(r'^studies/internships/places$', place.internships_places, name='internships_places'),
     url(r'^studies/internships/students/$', student.internships_students, name='internships_students'),
+    url(r'^studies/internships/students/resume/$', student_resume.internships_student_resume, name='internships_student_resume'),
+    url(r'^studies/internships/students/search$', student_resume.internships_student_search, name='internships_student_search'),
+    url(r'^studies/internships/students/resume/([0-9]+)/$', student_resume.internships_student_read, name='internships_student_read'),
 ]
