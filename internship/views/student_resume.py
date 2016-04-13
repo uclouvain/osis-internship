@@ -26,7 +26,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from base import models as mdl
-from pprint import pprint
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -34,9 +33,11 @@ from django.utils.translation import ugettext_lazy as _
 @login_required
 def internships_student_resume(request):
 
-    return render(request, "student_search.html", { 's_noma': None,
-                                                     's_name': None})
+    return render(request, "student_search.html", {'s_noma': None,
+                                                   's_name': None})
 
+
+@login_required
 def internships_student_search(request):
     s_noma = request.GET['s_noma']
     s_name = request.GET['s_name']
@@ -54,19 +55,16 @@ def internships_student_search(request):
     else:
         criteria_present=True
 
-
     message = None
     if criteria_present:
         if s_noma is None and s_name:
-            students_list = mdl.student.find_by_name(s_name)
+            students_list = mdl.student.find_by(person_name=s_name)
         if  s_noma and s_name is None:
-            students_list = mdl.student.find_by_registration_id(s_noma)
-            print(students_list)
+            students_list = mdl.student.find_by(registration_id=s_noma)
         if s_noma and s_name:
-            students_list = mdl.student.find_by_registration_id_name(s_noma, s_name)
+            students_list = mdl.student.find_by(registration_id=s_noma, person_name=s_name)
     else:
          message = "%s" % _('You must choose at least one criteria!')
-
 
     return render(request, "student_search.html",
                            {'s_noma':       s_noma,
@@ -76,8 +74,9 @@ def internships_student_search(request):
                             'message':      message})
 
 
+@login_required
 def internships_student_read(request, registration_id):
-    student = mdl.student.find_by_registration_id(registration_id)
+    student = mdl.student.find_by(registration_id=registration_id)
     if student:
         for student in student:
             student.address = ""
@@ -85,7 +84,4 @@ def internships_student_read(request, registration_id):
             if address:
                 student.address = address
 
-    #student_addresses = mdl.person_address.find_by_person(student)
-    #stages
-    #organization_addresses = mdl.organization_address.find_by_organization(organization)
     return render(request, "student_resume.html", {'student': student})

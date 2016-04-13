@@ -27,6 +27,7 @@ from django.db import models
 from django.contrib import admin
 from django.core.exceptions import ObjectDoesNotExist
 
+
 class StudentAdmin(admin.ModelAdmin):
     list_display = ('person', 'registration_id', 'changed')
     fieldsets = ((None, {'fields': ('registration_id', 'person')}),)
@@ -35,13 +36,35 @@ class StudentAdmin(admin.ModelAdmin):
 
 
 class Student(models.Model):
-    external_id     = models.CharField(max_length=100, blank=True, null=True)
-    changed         = models.DateTimeField(null=True)
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    changed = models.DateTimeField(null=True)
     registration_id = models.CharField(max_length=10)
-    person          = models.ForeignKey('Person')
+    person = models.ForeignKey('Person')
 
     def __str__(self):
         return u"%s (%s)" % (self.person, self.registration_id)
+
+
+def find_by(registration_id=None, person_name=None):
+    """
+    Find students by optional arguments. At least one argument should be informed
+    otherwise it returns empty.
+    """
+    has_criteria = False
+    queryset = Student.objects
+
+    if registration_id:
+        queryset = queryset.filter(registration_id=registration_id)
+        has_criteria = True
+
+    if person_name:
+        queryset = queryset.filter(person__last_name__icontains=person_name)
+        has_criteria = True
+
+    if has_criteria:
+        return queryset
+    else:
+        return None
 
 
 def find_by_person(a_person):
@@ -50,12 +73,3 @@ def find_by_person(a_person):
         return student
     except ObjectDoesNotExist:
         return None
-
-def find_by_name(s_name) :
-    return Student.objects.filter(person__last_name__icontains=s_name)
-
-def find_by_registration_id_name(registration_id, s_name) :
-    return Student.objects.filter(registration_id__icontains=s_noma, person__last_name__icontains=s_name)
-
-def find_by_registration_id(registration_id):
-    return Student.objects.filter(registration_id__icontains=registration_id)
