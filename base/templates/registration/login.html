@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% load i18n %}
 
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
@@ -25,11 +26,10 @@
 {% endcomment %}
 
 {% block content %}
-  <h1>Log-in</h1>
+  <h1>{% trans 'log-in' %}</h1>
   {% if form.errors %}
     <p class="text-danger">
-      Your username and password didn't match.
-      Please try again.
+      {% trans 'msg_error_username_password_not_matching' %}
     </p>
   {% endif %}
   <br>
@@ -37,11 +37,11 @@
     {% csrf_token %}
     <div style="width: 300px;">
       <div class="form-group">
-        <label class="control-label" for="username">Utilisateur</label>
+        <label class="control-label" for="username">{% trans 'user' %}</label>
         <input id="id_username" maxlength="254" name="username" type="text" class="form-control" placeholder="utilisateur">
       </div>
       <div class="form-group">
-        <label class="control-label" for="password">Mot de passe</label>
+        <label class="control-label" for="password">{% trans 'password' %}</label>
         <input id="id_password" name="password" type="password" class="form-control" placeholder="mot de passe">
       </div>
       <input type="hidden" name="next" value="{{ next }}" />

@@ -30,7 +30,7 @@ from base.models import attribution, offer_year_calendar, learning_unit_year
 
 
 class SessionExamAdmin(admin.ModelAdmin):
-    list_display = ('learning_unit_year', 'number_session', 'status', 'changed')
+    list_display = ('learning_unit_year', 'offer_year_calendar', 'number_session', 'status', 'changed')
     list_filter = ('status', 'number_session')
     raw_id_fields = ('learning_unit_year','offer_year_calendar')
     fieldsets = ((None, {'fields': ('learning_unit_year','number_session','status','offer_year_calendar')}),)
@@ -39,9 +39,9 @@ class SessionExamAdmin(admin.ModelAdmin):
 
 class SessionExam(models.Model):
     SESSION_STATUS = (
-        ('IDLE', _('Idle')),
-        ('OPEN', _('Open')),
-        ('CLOSED', _('Closed')))
+        ('IDLE', _('idle')),
+        ('OPEN', _('open')),
+        ('CLOSED', _('closed')))
 
     external_id         = models.CharField(max_length=100, blank=True, null=True)
     changed             = models.DateTimeField(null=True)

@@ -27,9 +27,9 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'catalog' %}" id="lnk_catalog">{% trans 'Catalog' %}</a></li>
-  <li><a href="{% url 'learning_units' %}" id="lnk_learning_units">{% trans 'Learning units' %}</a></li>
-  <li class="active">{% trans 'Learning unit' %}</li>
+  <li><a href="{% url 'catalog' %}" id="lnk_catalog">{% trans 'catalogue' %}</a></li>
+  <li><a href="{% url 'learning_units' %}" id="lnk_learning_units">{% trans 'learning_units' %}</a></li>
+  <li class="active">{% trans 'learning_unit' %}</li>
 {% endblock %}
 {% block content %}
 <div class="page-header">
@@ -38,22 +38,22 @@
 <div class="panel panel-default">
   <div class="panel-body">
     <ul class="nav nav-tabs">
-      <li class="active"><a data-toggle="tab" href="#tab_informations" id="lnk_informations_tab">{% trans 'General informations'%}</a></li>
+      <li class="active"><a data-toggle="tab" href="#tab_informations" id="lnk_informations_tab">{% trans 'general_informations'%}</a></li>
     </ul>
     <div class="tab-content">
         <div id="tab_informations" class="tab-pane fade in active">
         <br>
           <div class="row">
             <div class="col-md-3">
-              <label for="title">{% trans 'Academic year'%}</label><br>
+              <label for="title">{% trans 'academic_year'%}</label><br>
               {{ learning_unit_year.academic_year }}
             </div>
             <div class="col-md-3">
-              <label for="acronym">{% trans 'Acronym' %}</label><br>
+              <label for="acronym">{% trans 'acronym' %}</label><br>
               {{ learning_unit_year.acronym }}
             </div>
             <div class="col-md-2">
-              <label for="acronym">{% trans 'Credits' %}</label><br>
+              <label for="acronym">{% trans 'credits' %}</label><br>
               {%if learning_unit_year.credits %}{{ learning_unit_year.credits }}{%endif%}
             </div>
             <div class="col-md-4">

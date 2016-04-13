@@ -23,33 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
-from django.utils.translation import ugettext_lazy as _
-# from base.models.supported_languages import SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE
-from django.conf import settings
+from django import template
 
+register = template.Library()
 
-class MessageTemplateAdmin(admin.ModelAdmin):
-    list_display = ('reference', 'subject', 'format', 'language')
-    fieldsets = ((None, {'fields': ('reference', 'subject', 'template', 'format', 'language')}),)
-
-
-class MessageTemplate(models.Model):
-    FORMAT_CHOICES = (('PLAIN', _('plain')),
-                      ('HTML', 'HTML'),
-                      ('PLAIN_HTML', _('plain_and_html')))
-
-    reference = models.CharField(max_length=50, unique=True)
-    subject   = models.CharField(max_length=255)
-    template  = models.TextField()
-    format    = models.CharField(max_length=15, choices=FORMAT_CHOICES)
-    language  = models.CharField(max_length=30, null=True, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE)
-
-    def __str__(self):
-        return self.subject
-
-
-def find_by_reference(reference):
-    message_template = MessageTemplate.objects.get(reference=reference)
-    return message_template
+@register.filter
+def format(value, arg):
+    return value % arg

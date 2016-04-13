@@ -27,11 +27,11 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li class="active" id="lnk_studies">{% trans 'Studies' %}</li>
+  <li class="active" id="lnk_studies">{% trans 'studies' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'Studies' %}</h2>
+    <h2>{% trans 'studies' %}</h2>
   </div>
 
   <div class="panel panel-default">
@@ -39,13 +39,13 @@
       <div class="row">
         <div class="col-md-1"><i class="fa fa-tachometer" style="font-size: 400%; color: #6699FF;"></i></div>
         <div class="col-md-5">
-          <h4 class="media-heading"><a href="{% url 'assessments' %}" id="lnk_assessments" >{% trans 'Evaluations' %}</a></h4>
-          <p>{% trans 'This process helps tutors while scores encoding.' %}</p>
+          <h4 class="media-heading"><a href="{% url 'assessments' %}" id="lnk_assessments" >{% trans 'evaluations' %}</a></h4>
+          <p>{% trans 'desc_lnk_assessments' %}</p>
         </div>
         <div class="col-md-1"><i class="fa fa-user-md" style="font-size: 400%; color: #6699FF;"></i></div>
         <div class="col-md-5">
-          <h4 class="media-heading"><a href="{% url 'internships_home' %}" id="lnk_internships">Stages</a></h4>
-          <p>{% trans 'This process controls students internships.' %}</p>
+          <h4 class="media-heading"><a href="{% url 'internships_home' %}" id="lnk_internships">{% trans 'stages' %}</a></h4>
+          <p>{% trans 'desc_lnk_internships' %}</p>
         </div>
       </div>
     </div>

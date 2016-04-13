@@ -23,27 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import string
 from django.conf.urls import include, url
 from django.contrib import admin
-import random
-import re
-from backoffice.settings import PROPERTIES_FILE
-
-ADMIN_PAGE_URL = 'admin'
-if PROPERTIES_FILE :
-    import configparser
-    config = configparser.ConfigParser()
-    config.read(PROPERTIES_FILE)
-    if config['ADMINISTRATION']['admin_page']:
-        ADMIN_PAGE_URL = config['ADMINISTRATION']['admin_page']
-
-
-def admnin_page_url() :
-    return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(random.randint(10, 20)))
+from django.conf import settings
 
 urlpatterns = [
-    url(r'^'+re.escape(ADMIN_PAGE_URL)+r'/', admin.site.urls),
+    url(r'^'+settings.ADMIN_URL, admin.site.urls),
     url(r'', include('base.urls')),
     url(r'', include('internship.urls')),
 ]

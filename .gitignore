@@ -12,4 +12,4 @@ backoffice/server_settings.py
 /reports
 .project
 .pydevproject
-
+*.mo

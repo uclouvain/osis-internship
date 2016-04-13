@@ -33,16 +33,16 @@ from django.utils.translation import ugettext_lazy as _
 from base import models as mdl
 
 
-HEADER = [str(_('Academic year')),
-          str(_('Session')),
-          str(_('Activity code')),
-          str(_('Program')),
-          str(_('Registration number')),
-          str(_('Last name')),
-          str(_('First name')),
-          str(_('Numbered score')),
-          str(_('Other score')),
-          str(_('End date')),
+HEADER = [str(_('academic_year')),
+          str(_('session')),
+          str(_('activity_code')),
+          str(_('program')),
+          str(_('registration_number')),
+          str(_('lastname')),
+          str(_('firstname')),
+          str(_('numbered_score')),
+          str(_('other_score')),
+          str(_('end_date')),
           str(_('ID'))]
 
 
@@ -134,11 +134,11 @@ def __create_data_list_for_justification(is_fac):
     """
     dv = DataValidation(type="list", formula1='"%s"' % mdl.exam_enrollment.justification_label_authorized(is_fac),
                         allow_blank=True)
-    dv.error = str(_('Invalid entry, not in the list of choices'))
-    dv.errorTitle = str(_('Invalid entry'))
+    dv.error = str(_('not_in_choices_list'))
+    dv.errorTitle = str(_('invalid_entry'))
 
-    dv.prompt = str(_('Please choose in the list'))
-    dv.promptTitle = str(_('List of choices'))
+    dv.prompt = str(_('please_choose_in_the_list'))
+    dv.promptTitle = str(_('choices_list'))
     return dv
 
 

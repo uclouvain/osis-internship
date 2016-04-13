@@ -127,7 +127,7 @@ def academic_calendar_save(request, id):
 
         if academic_calendar.start_date and academic_calendar.end_date:
             if academic_calendar.start_date > academic_calendar.end_date:
-                form.errors['start_date'] = _('La date de début doit être égale ou inférieure à la date de fin')
+                form.errors['start_date'] = _('begin_date_lt_end_date')
                 validation = False
     else:
         validation = False
@@ -159,18 +159,6 @@ def academic_calendar_edit(request, id):
     return render(request, "academic_calendar_form.html", {'academic_calendar': academic_calendar,
                                                            'academic_years': academic_years})
 
-
-def academic_calendar_delete(request, id):
-    academic_calendar = mdl.academic_calendar.find_academic_calendar_by_id(id)
-    academic_year = None
-    if academic_calendar:
-        academic_year = academic_calendar.academic_year
-        academic_calendar.delete()
-
-    return render(request, "academic_calendars.html", {
-        'academic_year': academic_year,
-        'academic_years': mdl.academic_year.find_academic_years(),
-        'academic_calendars': mdl.academic_calendar.find_academic_calendar_by_academic_year(academic_year)})
 
 
 def academic_calendar_create(request):
