@@ -35,11 +35,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'chgajy@#q91^!6owmz29%@#3jw094@yr@1!6w3lxx@n6v!7nvd'
 
+ADMIN_URL = '9yk!hw9ra/'
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -155,6 +156,8 @@ QUEUE_USER = 'guest'
 QUEUE_PASSWORD = 'guest'
 QUEUE_PORT = 5672
 QUEUE_CONTEXT_ROOT = '/'
+
+LOGO_INSTITUTION_URL = 'http://alfresco.uclouvain.be/alfresco/service/guest/streamDownload/workspace/SpacesStore/a7ac9681-d56e-4ec8-8d1d-01b2de6d9325/UCL_mention_noir_web.jpg?guest=true'
 
 try  :
     from backoffice.server_settings import *

@@ -24,14 +24,11 @@
 #
 ##############################################################################
 from django.shortcuts import render
-
 from base import models as mdl
-from django.utils.translation import ugettext_lazy as _
 
 
 def offers(request):
     academic_yr = None
-    code = ""
 
     faculties = mdl.structure.find_by_type('FACULTY')
     academic_years = mdl.academic_year.find_academic_years()
@@ -41,7 +38,6 @@ def offers(request):
         academic_yr = academic_year_calendar.id
     return render(request, "offers.html", {'faculties': faculties,
                                            'academic_year': academic_yr,
-                                           'code': code,
                                            'academic_years': academic_years,
                                            'offers': [],
                                            'init': "1"})

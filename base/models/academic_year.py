@@ -63,3 +63,7 @@ def current_academic_year():
         return academic_yr
     else:
         return None
+
+
+def find_academic_year_by_year(year):
+    return AcademicYear.objects.get(year=year)

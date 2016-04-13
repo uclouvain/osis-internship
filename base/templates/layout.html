@@ -68,29 +68,29 @@
             <ul class="nav navbar-nav">
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="false" id="lnk_home_dropdown_catalog">Catalogue de formation <span class="caret"></span></a>
+                       aria-expanded="false" id="lnk_home_dropdown_catalog">{% trans 'formation_catalogue'%}<span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="{% url 'offers' %}" id="lnk_dropdown_offers">Offres</a></li>
-                        <li><a href="{% url 'learning_units' %}" id="lnk_dropdown_learning_units">{% trans 'Learning units' %}</a></li>
-                        <li><a href="{% url 'academic_year' %}" id="lnk_dropdown_academic_year">{% trans 'Academic year' %}</a></li>
+                        <li><a href="{% url 'offers' %}" id="lnk_dropdown_offers">{% trans 'offers'%}</a></li>
+                        <li><a href="{% url 'learning_units' %}" id="lnk_dropdown_learning_units">{% trans 'learning_units' %}</a></li>
+                        <li><a href="{% url 'academic_year' %}" id="lnk_dropdown_academic_year">{% trans 'academic_year' %}</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="false" id="lnk_home_dropdown_parcours">Parcours <span class="caret"></span></a>
+                       aria-expanded="false" id="lnk_home_dropdown_parcours">{% trans 'student_path' %}<span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="{% url 'assessments' %}" id="lnk_dropdown_evaluations">{% trans 'Evaluations' %}</a></li>
-                        <li><a href="{% url 'internships_home' %}" id="lnk_dropdown_internships">{% trans 'Internships' %}</a></li>
+                        <li><a href="{% url 'assessments' %}" id="lnk_dropdown_evaluations">{% trans 'evaluations' %}</a></li>
+                        <li><a href="{% url 'internships_home' %}" id="lnk_dropdown_internships">{% trans 'internships' %}</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="false" id="lnk_home_dropdown_institution">{% trans 'Institution' %} <span
+                       aria-expanded="false" id="lnk_home_dropdown_institution">{% trans 'institution' %} <span
                             class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="{% url 'organizations' %}" id="lnk_organizations">{% trans 'Organizations'%}</a>
+                        <li><a href="{% url 'organizations' %}" id="lnk_organizations">{% trans 'organizations'%}</a>
                         </li>
-                        <li><a href="{% url 'structures' %}" id="lnk_dropdown_entities">{% trans 'Entities' %}</a></li>
+                        <li><a href="{% url 'structures' %}" id="lnk_dropdown_entities">{% trans 'entities' %}</a></li>
                     </ul>
                 </li>
             </ul>
@@ -102,16 +102,16 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                                aria-expanded="false" id="bt_administration">
                                 <span class="glyphicon glyphicon-tower" aria-hidden="true"></span>
-                                Administration
+                                {% trans 'administration' %}
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a href="{% url 'admin:index' %}" id="lnk_data" target="_blank">
-                                        <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Données
+                                        <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>{% trans 'datas' %}
                                     </a>
                                 </li>
                                 <li><a href="{% url 'storage' %}" id="lnk_files">
-                                    <span class="glyphicon glyphicon-hdd" aria-hidden="true"></span> Stockage</a></li>
+                                    <span class="glyphicon glyphicon-hdd" aria-hidden="true"></span>{% trans 'storage' %}</a></li>
                             </ul>
                         </li>
                     {% endif %}
@@ -124,15 +124,15 @@
                         <ul class="dropdown-menu">
                             <li><a href="{% url 'logout' %}?next=/" id="lnk_logout">
                                 <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
-                                {% trans 'Logout' %}</a></li>
+                                {% trans 'logout' %}</a></li>
                             <li><a href="{% url 'profile' %}" id="lnk_profile">
                                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                                {% trans 'Profile' %}</a></li>
+                                {% trans 'profile' %}</a></li>
                         </ul>
                     </li>
                 {% else %}
                     <li><a href="{% url 'login' %}" id="lnk_login"><span class="glyphicon glyphicon-lock"
-                                                                         aria-hidden="true"></span> {% trans 'Login' %}</a>
+                                                                         aria-hidden="true"></span> {% trans 'login' %}</a>
                     </li>
                 {% endif %}
             </ul>
@@ -166,10 +166,10 @@
     <div class="container">
         <p class="navbar-text pull-left"><a
                 href="http://uclouvain.github.io/osis-louvain-documentation/doc/business/user-manual_fr.html"
-                target="_blank" id="lnk_user_manual">Documentation</a> |
-            <a href="http://uclouvain.github.io/osis-louvain/" target="_blank" id="lnk_osis_website">Website</a> |
-            <a href="https://github.com/uclouvain/osis-louvain" target="_blank" id="lnk_osis_source_code">Source
-                Code</a></p>
+                target="_blank" id="lnk_user_manual">{% trans 'documentation' %}</a> |
+            <a href="http://uclouvain.github.io/osis-louvain/" target="_blank" id="lnk_osis_website">{% trans 'website' %}</a> |
+            <a href="https://github.com/uclouvain/osis-louvain" target="_blank" id="lnk_osis_source_code">{% trans 'source_code' %}
+            </a></p>
         <p class="navbar-text pull-right"><span class="glyphicon glyphicon-copyright-mark"></span> 2016 <a
                 href="http://www.uclouvain.be" target="_blank" id="lnk_ucl">Université catholique de Louvain</a></p>
     </div>
