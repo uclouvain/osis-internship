@@ -160,18 +160,6 @@ def academic_calendar_edit(request, id):
                                                            'academic_years': academic_years})
 
 
-# def academic_calendar_delete(request, id):
-#     academic_calendar = mdl.academic_calendar.find_academic_calendar_by_id(id)
-#     academic_year = None
-#     if academic_calendar:
-#         academic_year = academic_calendar.academic_year
-#         academic_calendar.delete()
-#
-#     return render(request, "academic_calendars.html", {
-#         'academic_year': academic_year,
-#         'academic_years': mdl.academic_year.find_academic_years(),
-#         'academic_calendars': mdl.academic_calendar.find_academic_calendar_by_academic_year(academic_year)})
-
 
 def academic_calendar_create(request):
     academic_calendar = mdl.academic_calendar.AcademicCalendar()
