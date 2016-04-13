@@ -26,6 +26,7 @@
 from django.db import models
 from django.contrib import admin
 
+
 class DomainAdmin(admin.ModelAdmin):
     list_display = ('name',)
     fieldsets = ((None, {'fields': ('name',)}),)
@@ -38,7 +39,3 @@ class Domain(models.Model):
 
     def __str__(self):
         return self.name
-
-
-def find_all():
-    return Domain.objects.all()
