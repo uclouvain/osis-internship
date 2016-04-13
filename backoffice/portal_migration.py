@@ -35,21 +35,20 @@ os.environ["DJANGO_SETTINGS_MODULE"] = "backoffice.settings"
 django.setup()
 ###########################################################################
 
-from reference import models
+from reference import models as mdl_ref
+from base import models as mdl_base
 from backoffice import queue
 
 
-QUEUE_NAME = 'reference'
 
-
-def get_all_datas(model_class, fields=None, order_by=None):
+def get_all_data(model_class, fields=None, order_by=None):
     """
     Récupère et renvoie tous les records en DB du modèle passé en paramètre.
     :param model_class: La classe du modèle Django (table)
     :param order_by: A string represent the name of a column in the model.
     :return: Liste des records sous forme de dictionnaire
     """
-    print("Retrieving datas from " + str(model_class) + "...")
+    print("Retrieving data from " + str(model_class) + "...")
     queryset = model_class.objects
     if fields :
         queryset = queryset.values(*fields)
@@ -67,23 +66,24 @@ def get_model_class_str(model_class):
     :return: un String qui représente le model_class passé en paramètre.
     """
     map_classes = {
-        models.Country : 'reference.Country',
+        mdl_ref.Country : 'reference.Country',
+        mdl_base.domain.Domain : 'admission.Domain',
     }
     return map_classes[model_class]
 
 
 
-def migrate(model_class, fields=None):
+def migrate(model_class, queue_name, fields=None):
     """
     Récupère tous les records du modèle passé en paramètre et les envoie dans la queue.
     """
-    records = get_all_datas(model_class, fields=fields, order_by='name')
-    print("Sending records into the queue named '" + QUEUE_NAME + "'...")
-    datas = {
+    records = get_all_data(model_class, fields=fields, order_by='name')
+    print("Sending records into the queue named '" + queue_name + "'...")
+    data = {
         'model_class_str' : get_model_class_str(model_class),
         'records' : records,
     }
-    queue.send_message(QUEUE_NAME, datas)
+    queue.send_message(queue_name, data)
     print("Done.")
 
 
@@ -93,7 +93,8 @@ def execute():
     """
     # migrate(models.Continent)
     # migrate(models.Currency)
-    migrate(models.Country, fields=['id', 'iso_code', 'name', 'nationality', 'european_union', 'dialing_code', 'cref_code'])
+    migrate(mdl_ref.Country, 'reference', fields=['id', 'iso_code', 'name', 'nationality', 'european_union', 'dialing_code', 'cref_code'])
+    migrate(mdl_base.domain.Domain, 'admission', fields=['id', 'external_id', 'name', 'parent_id'])
 
 
 # execute()

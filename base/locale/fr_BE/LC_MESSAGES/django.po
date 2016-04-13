@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-12 12:48+0200\n"
+"POT-Creation-Date: 2016-04-12 15:02+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -168,7 +168,7 @@ msgstr "Date de début"
 #: templates/offer_year_calendar.html:50
 #: templates/offer_year_calendar_form.html:61
 #: templates/online_double_encoding_form.html:87
-#: templates/online_encoding.html:102 templates/online_encoding_form.html:86
+#: templates/online_encoding.html:112 templates/online_encoding_form.html:86
 #: utils/export_utils.py:45 utils/pdf_utils.py:254
 msgid "end_date"
 msgstr "Date de fin"
@@ -229,7 +229,7 @@ msgstr "Sauvegarder"
 #: templates/offer_year_calendar_form.html:73
 #: templates/online_double_encoding_form.html:132
 #: templates/online_double_encoding_validation.html:143
-#: templates/online_encoding.html:163 templates/online_encoding.html.py:184
+#: templates/online_encoding.html:173 templates/online_encoding.html.py:194
 #: templates/online_encoding_form.html:131
 #: templates/organization_address_form.html:86
 #: templates/organization_address_form.html:87
@@ -586,14 +586,14 @@ msgstr "Nombre d'inscrits"
 
 #: templates/online_double_encoding_form.html:82
 #: templates/online_double_encoding_validation.html:84
-#: templates/online_encoding.html:97 templates/online_encoding_form.html:81
+#: templates/online_encoding.html:107 templates/online_encoding_form.html:81
 #: utils/export_utils.py:40 utils/pdf_utils.py:249
 msgid "registration_number"
 msgstr "Noma"
 
 #: templates/online_double_encoding_form.html:83
 #: templates/online_double_encoding_validation.html:85
-#: templates/online_encoding.html:98 templates/online_encoding_form.html:82
+#: templates/online_encoding.html:108 templates/online_encoding_form.html:82
 #: templates/profile.html.py:63 utils/export_utils.py:41
 #: utils/pdf_utils.py:250
 msgid "lastname"
@@ -601,14 +601,14 @@ msgstr "Nom"
 
 #: templates/online_double_encoding_form.html:84
 #: templates/online_double_encoding_validation.html:86
-#: templates/online_encoding.html:99 templates/online_encoding_form.html:83
+#: templates/online_encoding.html:109 templates/online_encoding_form.html:83
 #: templates/profile.html.py:59 utils/export_utils.py:42
 #: utils/pdf_utils.py:251
 msgid "firstname"
 msgstr "Prénom"
 
 #: templates/online_double_encoding_form.html:85
-#: templates/online_encoding.html:100 templates/online_encoding_form.html:84
+#: templates/online_encoding.html:110 templates/online_encoding_form.html:84
 msgid "score"
 msgstr "Note"
 
@@ -626,7 +626,7 @@ msgid "scores"
 msgstr "Notes"
 
 #: templates/online_double_encoding_validation.html:80
-#: templates/online_encoding.html:101 utils/export_utils.py:44
+#: templates/online_encoding.html:111 utils/export_utils.py:44
 #: utils/pdf_utils.py:253
 msgid "other_score"
 msgstr "Autre note"
@@ -637,7 +637,7 @@ msgid "encoding"
 msgstr "Encodage"
 
 #: templates/online_double_encoding_validation.html:88
-#: templates/online_encoding.html:86
+#: templates/online_encoding.html:96
 msgid "dubble_encoding"
 msgstr "Double encodage"
 
@@ -646,7 +646,7 @@ msgid "final"
 msgstr "Final"
 
 #: templates/online_double_encoding_validation.html:142
-#: templates/online_encoding.html:87 templates/online_encoding.html.py:177
+#: templates/online_encoding.html:97 templates/online_encoding.html.py:187
 msgid "submission"
 msgstr "Soumettre"
 
@@ -659,50 +659,59 @@ msgstr "Encodage en ligne"
 msgid "faculty"
 msgstr "Faculté"
 
-#: templates/online_encoding.html:76 templates/scores_encoding.html.py:82
+#: templates/online_encoding.html:78
+msgid "decimal_values_accepted"
+msgstr "Les valeurs décimales dans les notes sont acceptées. "
+
+#: templates/online_encoding.html:80
+msgid "decimal_values_ignored"
+msgstr "Les valeurs décimales dans les notes ne sont PAS acceptées. "
+"Si vous entrez des valeurs décimales, elles seront ignorées."
+
+#: templates/online_encoding.html:86 templates/scores_encoding.html.py:82
 #: templates/scores_encoding.html:116 templates/scores_encoding.html.py:159
 msgid "progress"
 msgstr "Progression"
 
-#: templates/online_encoding.html:85
+#: templates/online_encoding.html:95
 msgid "encode"
 msgstr "Encoder"
 
-#: templates/online_encoding.html:88
+#: templates/online_encoding.html:98
 msgid "title_btn_upload_score"
 msgstr ""
 "Sélectionnez votre fichier excel à partir duquel il faut injecter les notes"
 
-#: templates/online_encoding.html:88
+#: templates/online_encoding.html:98
 msgid "submit_xls_file"
 msgstr "Soumettre fichier xls"
 
-#: templates/online_encoding.html:96 templates/profile.html.py:138
+#: templates/online_encoding.html:106 templates/profile.html.py:138
 #: utils/export_utils.py:39 utils/pdf_utils.py:307
 msgid "program"
 msgstr "Programme"
 
-#: templates/online_encoding.html:154
+#: templates/online_encoding.html:164
 msgid "scores_injection"
 msgstr "Injection des notes"
 
-#: templates/online_encoding.html:157
+#: templates/online_encoding.html:167
 msgid "choose_file"
 msgstr "Parcourir"
 
-#: templates/online_encoding.html:160
+#: templates/online_encoding.html:170
 msgid "help_pnl_selectedfiles"
 msgstr "Veuillez sélectionner un fichier xls pour l'injection des notes"
 
-#: templates/online_encoding.html:164
+#: templates/online_encoding.html:174
 msgid "inject"
 msgstr "Injecter"
 
-#: templates/online_encoding.html:180
+#: templates/online_encoding.html:190
 msgid "help_submission_scores_label"
 msgstr "Vous êtes en train de soumettre %s note(s)."
 
-#: templates/online_encoding.html:183
+#: templates/online_encoding.html:193
 msgid "submit"
 msgstr "Envoyer"
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-11 17:28+0200\n"
+"POT-Creation-Date: 2016-04-12 15:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,34 +17,34 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: models/exam_enrollment.py:33 models/exam_enrollment.py:141
-#: models/exam_enrollment.py:143
+#: models/exam_enrollment.py:33 models/exam_enrollment.py:146
+#: models/exam_enrollment.py:148
 #: templates/online_double_encoding_form.html:116
 #: templates/online_encoding_form.html:114
 msgid "absent"
 msgstr "Absent"
 
-#: models/exam_enrollment.py:34 models/exam_enrollment.py:141
-#: models/exam_enrollment.py:143
+#: models/exam_enrollment.py:34 models/exam_enrollment.py:146
+#: models/exam_enrollment.py:148
 #: templates/online_double_encoding_form.html:117
 #: templates/online_encoding_form.html:115
 msgid "cheating"
 msgstr "Cheating"
 
-#: models/exam_enrollment.py:35 models/exam_enrollment.py:141
+#: models/exam_enrollment.py:35 models/exam_enrollment.py:146
 #: templates/online_double_encoding_form.html:121
 #: templates/online_encoding_form.html:119
 msgid "ill"
 msgstr "Ill"
 
-#: models/exam_enrollment.py:36 models/exam_enrollment.py:141
+#: models/exam_enrollment.py:36 models/exam_enrollment.py:146
 #: templates/online_double_encoding_form.html:122
 #: templates/online_encoding_form.html:120
 msgid "justified_absence"
 msgstr "Justified absence"
 
-#: models/exam_enrollment.py:37 models/exam_enrollment.py:141
-#: models/exam_enrollment.py:143
+#: models/exam_enrollment.py:37 models/exam_enrollment.py:146
+#: models/exam_enrollment.py:148
 #: templates/online_double_encoding_form.html:118
 #: templates/online_encoding_form.html:116
 msgid "score_missing"
@@ -90,15 +90,15 @@ msgstr "Male"
 msgid "unknown"
 msgstr "Unknown"
 
-#: models/session_exam.py:42
+#: models/session_exam.py:42 templates/scores_encoding.html.py:90
 msgid "idle"
 msgstr "Idle"
 
-#: models/session_exam.py:43
+#: models/session_exam.py:43 templates/scores_encoding.html.py:92
 msgid "open"
 msgstr "Open"
 
-#: models/session_exam.py:44
+#: models/session_exam.py:44 templates/scores_encoding.html.py:94
 msgid "closed"
 msgstr ""
 
@@ -168,7 +168,7 @@ msgstr "Start date"
 #: templates/offer_year_calendar.html:50
 #: templates/offer_year_calendar_form.html:61
 #: templates/online_double_encoding_form.html:87
-#: templates/online_encoding.html:102 templates/online_encoding_form.html:86
+#: templates/online_encoding.html:112 templates/online_encoding_form.html:86
 #: utils/export_utils.py:45 utils/pdf_utils.py:254
 msgid "end_date"
 msgstr "End date"
@@ -229,7 +229,7 @@ msgstr "Save"
 #: templates/offer_year_calendar_form.html:73
 #: templates/online_double_encoding_form.html:132
 #: templates/online_double_encoding_validation.html:143
-#: templates/online_encoding.html:163 templates/online_encoding.html.py:184
+#: templates/online_encoding.html:173 templates/online_encoding.html.py:194
 #: templates/online_encoding_form.html:131
 #: templates/organization_address_form.html:86
 #: templates/organization_address_form.html:87
@@ -243,7 +243,7 @@ msgstr "Cancel"
 #: templates/learning_units.html:73 templates/offers.html.py:94
 #: templates/organizations.html:82 templates/structures.html.py:84
 msgid "no_result"
-msgstr "No result ! "
+msgstr "No result!"
 
 #: templates/academic_year.html:43
 msgid "academic_calendar_management"
@@ -583,14 +583,14 @@ msgstr "Number of enrollments"
 
 #: templates/online_double_encoding_form.html:82
 #: templates/online_double_encoding_validation.html:84
-#: templates/online_encoding.html:97 templates/online_encoding_form.html:81
+#: templates/online_encoding.html:107 templates/online_encoding_form.html:81
 #: utils/export_utils.py:40 utils/pdf_utils.py:249
 msgid "registration_number"
 msgstr "Registration number"
 
 #: templates/online_double_encoding_form.html:83
 #: templates/online_double_encoding_validation.html:85
-#: templates/online_encoding.html:98 templates/online_encoding_form.html:82
+#: templates/online_encoding.html:108 templates/online_encoding_form.html:82
 #: templates/profile.html.py:63 utils/export_utils.py:41
 #: utils/pdf_utils.py:250
 msgid "lastname"
@@ -598,14 +598,14 @@ msgstr "Lastname"
 
 #: templates/online_double_encoding_form.html:84
 #: templates/online_double_encoding_validation.html:86
-#: templates/online_encoding.html:99 templates/online_encoding_form.html:83
+#: templates/online_encoding.html:109 templates/online_encoding_form.html:83
 #: templates/profile.html.py:59 utils/export_utils.py:42
 #: utils/pdf_utils.py:251
 msgid "firstname"
 msgstr "Firstname"
 
 #: templates/online_double_encoding_form.html:85
-#: templates/online_encoding.html:100 templates/online_encoding_form.html:84
+#: templates/online_encoding.html:110 templates/online_encoding_form.html:84
 msgid "score"
 msgstr "Score"
 
@@ -623,7 +623,7 @@ msgid "scores"
 msgstr "Scores"
 
 #: templates/online_double_encoding_validation.html:80
-#: templates/online_encoding.html:101 utils/export_utils.py:44
+#: templates/online_encoding.html:111 utils/export_utils.py:44
 #: utils/pdf_utils.py:253
 msgid "other_score"
 msgstr "Other scores"
@@ -634,7 +634,7 @@ msgid "encoding"
 msgstr "Encoding"
 
 #: templates/online_double_encoding_validation.html:88
-#: templates/online_encoding.html:86
+#: templates/online_encoding.html:96
 msgid "dubble_encoding"
 msgstr "Dubble encoding"
 
@@ -643,7 +643,7 @@ msgid "final"
 msgstr "Final"
 
 #: templates/online_double_encoding_validation.html:142
-#: templates/online_encoding.html:87 templates/online_encoding.html.py:177
+#: templates/online_encoding.html:97 templates/online_encoding.html.py:187
 msgid "submission"
 msgstr "Submission"
 
@@ -656,49 +656,58 @@ msgstr "Online encoding"
 msgid "faculty"
 msgstr "Faculty"
 
-#: templates/online_encoding.html:76 templates/scores_encoding.html.py:82
+#: templates/online_encoding.html:78
+msgid "decimal_values_accepted"
+msgstr "Decimal values in scores are accepted. \n"
+
+#: templates/online_encoding.html:80
+msgid "decimal_values_ignored"
+msgstr "Decimal values in scores are NOT accepted. "
+"If you try to put decimal values, it will be ignored."
+
+#: templates/online_encoding.html:86 templates/scores_encoding.html.py:82
 #: templates/scores_encoding.html:116 templates/scores_encoding.html.py:159
 msgid "progress"
 msgstr "Progress"
 
-#: templates/online_encoding.html:85
+#: templates/online_encoding.html:95
 msgid "encode"
 msgstr "Encode"
 
-#: templates/online_encoding.html:88
+#: templates/online_encoding.html:98
 msgid "title_btn_upload_score"
 msgstr "Select your xls file from which to inject scores"
 
-#: templates/online_encoding.html:88
+#: templates/online_encoding.html:98
 msgid "submit_xls_file"
 msgstr "Submit XLS file"
 
-#: templates/online_encoding.html:96 templates/profile.html.py:138
+#: templates/online_encoding.html:106 templates/profile.html.py:138
 #: utils/export_utils.py:39 utils/pdf_utils.py:307
 msgid "program"
 msgstr "Program"
 
-#: templates/online_encoding.html:154
+#: templates/online_encoding.html:164
 msgid "scores_injection"
 msgstr "Scores injection"
 
-#: templates/online_encoding.html:157
+#: templates/online_encoding.html:167
 msgid "choose_file"
 msgstr "Choose file"
 
-#: templates/online_encoding.html:160
+#: templates/online_encoding.html:170
 msgid "help_pnl_selectedfiles"
 msgstr "Please select an XLS file for injection"
 
-#: templates/online_encoding.html:164
+#: templates/online_encoding.html:174
 msgid "inject"
 msgstr "Inject"
 
-#: templates/online_encoding.html:180
+#: templates/online_encoding.html:190
 msgid "help_submission_scores_label"
 msgstr "You will submit %s notes."
 
-#: templates/online_encoding.html:183
+#: templates/online_encoding.html:193
 msgid "submit"
 msgstr "Submit"
 
@@ -1018,75 +1027,71 @@ msgid "miss"
 msgstr "Miss"
 
 #: utils/upload_xls_utils.py:48
-msgid "no_file_selected"
-msgstr "No file selected"
-
-#: utils/upload_xls_utils.py:53
 msgid "file_must_be_xls"
 msgstr "The file must be a XLS"
 
-#: utils/upload_xls_utils.py:58
+#: utils/upload_xls_utils.py:52
 msgid "invalid_file"
 msgstr "Invalid file"
 
-#: utils/upload_xls_utils.py:81
-msgid "line"
-msgstr "Line"
+#: utils/upload_xls_utils.py:74
+msgid "Line"
+msgstr "Ligne"
 
-#: utils/upload_xls_utils.py:83
+#: utils/upload_xls_utils.py:76
 msgid "student_not_exist"
 msgstr "The student (%s) doesn't exist"
 
-#: utils/upload_xls_utils.py:87
+#: utils/upload_xls_utils.py:80
 msgid "academic_year_not_exist"
 msgstr "Academic year (%d) doesn't exist"
 
-#: utils/upload_xls_utils.py:91
+#: utils/upload_xls_utils.py:84
 msgid "offer_year_not_exist"
 msgstr "The offer year (%d) (%d) - doesn't exist"
 
-#: utils/upload_xls_utils.py:95
+#: utils/upload_xls_utils.py:88
 msgid "offer_enrollment_not_exist"
 msgstr "The offer enrollment doesn't exist"
 
-#: utils/upload_xls_utils.py:101
+#: utils/upload_xls_utils.py:95
 msgid "activity_not_exit"
 msgstr "The activity %s doesn't exist"
 
-#: utils/upload_xls_utils.py:105
+#: utils/upload_xls_utils.py:99
 msgid "enrollment_activity_not_exist"
 msgstr "The enrollment to the activity %s doesn't exist"
 
-#: utils/upload_xls_utils.py:118
+#: utils/upload_xls_utils.py:113
 msgid "scores_gt_0_lt_20"
 msgstr "The score seems to be incorrect (it must be >=0 and <=20)"
 
-#: utils/upload_xls_utils.py:122
+#: utils/upload_xls_utils.py:117
 msgid "score_decimal_not_allowed"
 msgstr "The score seems to be incorrect. Decimales NOT allowed"
 
-#: utils/upload_xls_utils.py:136
+#: utils/upload_xls_utils.py:132
 msgid "constraint_score_other_score"
 msgstr ""
 "You can't encode a 'score' AND an 'other score' together (unless the 'other "
 "score' is CHEATING)"
 
-#: utils/upload_xls_utils.py:190
+#: utils/upload_xls_utils.py:188
 #, python-format
 msgid "%(count)d %(name)s."
 msgid_plural "%(count)d %(plural_name)s."
 msgstr[0] ""
 msgstr[1] ""
 
-#: utils/upload_xls_utils.py:195
+#: utils/upload_xls_utils.py:193
 msgid "score_injected"
 msgstr "Scores injected"
 
-#: utils/upload_xls_utils.py:196
+#: utils/upload_xls_utils.py:194
 msgid "scores_injected"
 msgstr "Scores injected"
 
-#: utils/upload_xls_utils.py:202
+#: utils/upload_xls_utils.py:200
 msgid "no_score_injected"
 msgstr "No scores injected"
 
