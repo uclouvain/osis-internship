@@ -243,7 +243,7 @@ msgstr "Cancel"
 #: templates/learning_units.html:73 templates/offers.html.py:94
 #: templates/organizations.html:82 templates/structures.html.py:84
 msgid "no_result"
-msgstr "No result ! "
+msgstr "No result!"
 
 #: templates/academic_year.html:43
 msgid "academic_calendar_management"

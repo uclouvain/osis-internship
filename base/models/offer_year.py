@@ -112,7 +112,7 @@ def search_root_offers(entity=None, academic_yr=None, acronym=None):
     queryset = OfferYear.objects
 
     if entity:
-        queryset = queryset.filter(structure=entity)
+        queryset = queryset.filter(structure__acronym__icontains=entity)
 
     if academic_yr:
         queryset = queryset.filter(academic_year=academic_yr)
