@@ -429,7 +429,7 @@ msgid "administration"
 msgstr "Administration"
 
 #: templates/layout.html:110
-msgid "datas"
+msgid "data"
 msgstr "Données"
 
 #: templates/layout.html:127
@@ -634,7 +634,7 @@ msgstr "Autre note"
 #: templates/online_double_encoding_validation.html:87
 #: templates/scores_encoding.html:100
 msgid "encoding"
-msgstr "Encoder"
+msgstr "Encodage"
 
 #: templates/online_double_encoding_validation.html:88
 #: templates/online_encoding.html:96
@@ -675,7 +675,7 @@ msgstr "Progression"
 
 #: templates/online_encoding.html:95
 msgid "encode"
-msgstr "encoder"
+msgstr "Encoder"
 
 #: templates/online_encoding.html:98
 msgid "title_btn_upload_score"
@@ -709,7 +709,7 @@ msgstr "Injecter"
 
 #: templates/online_encoding.html:190
 msgid "help_submission_scores_label"
-msgstr "Vous êtes en train de soumettre %s notes."
+msgstr "Vous êtes en train de soumettre %s note(s)."
 
 #: templates/online_encoding.html:193
 msgid "submit"
@@ -1110,62 +1110,3 @@ msgstr "La date de début doit etre égale ou inferieure à la date de fin"
 #: views/common.py:160 views/offer.py:64
 msgid "minimum_one_criteria"
 msgstr "Veuillez remplir au moins 1 critère"
-
-# ###############################################################################
-# NE PAS SUPPRIMER
-# !!! Traductions ajoutées à la main !!!
-# Elles sont automatiquement mises en commentaire lors de chaque appel à
-# django-admin makemessages -l fr_BE
-# Il faut les décommenter ! Ce sont des traductions de données stockées dans la DB
-
-msgid "CLOSED"
-msgstr "Fermé"
-
-msgid "Deliberations - exam session 1"
-msgstr "Délibérations - session d'examen 1"
-
-msgid "Deliberations - exam session 2"
-msgstr "Délibérations - session d'examen 2"
-
-msgid "Deliberations - exam session 3"
-msgstr "Délibérations - session d'examen 3"
-
-msgid "Diffusion of exam scores - exam session 1"
-msgstr "Diffusion des notes d'examen - session d'examen 1"
-
-msgid "Diffusion of exam scores - exam session 2"
-msgstr "Diffusion des notes d'examen - session d'examen 2"
-
-msgid "Diffusion of exam scores - exam session 3"
-msgstr "Diffusion des notes d'examen - session d'examen 3"
-
-msgid "Exam enrollments - exam session 1"
-msgstr "Inscription aux examens - session d'examen 1"
-
-msgid "Exam enrollments - exam session 2"
-msgstr "Inscription aux examens - session d'examen 2"
-
-msgid "Exam enrollments - exam session 3"
-msgstr "Inscription aux examens - session d'examen 3"
-
-msgid "Submission of academic dissertations - exam sess 1"
-msgstr "Soumission des mémoires - session d'examen 1"
-
-msgid "Submission of academic dissertations - exam sess 2"
-msgstr "Soumission des mémoires - session d'examen 2"
-
-msgid "Submission of academic dissertations - exam sess 3"
-msgstr "Soumission des mémoires - session d'examen 3"
-
-msgid "Submission of exam scores - exam session 1"
-msgstr "Soumission des notes d'examen - Session d'examen 1"
-
-msgid "Submission of exam scores - exam session 2"
-msgstr "Soumission des notes d'examen - Session d'examen 2"
-
-msgid "Submission of exam scores - exam session 3"
-msgstr "Soumission des notes d'examen - Session d'examen 3"
-
-# ###############################################################################
-#~ msgid "no_file_selected"
-#~ msgstr "Aucun fichier sélectionné"

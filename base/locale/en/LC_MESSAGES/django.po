@@ -426,8 +426,8 @@ msgid "administration"
 msgstr "Administration"
 
 #: templates/layout.html:110
-msgid "datas"
-msgstr "Datas"
+msgid "data"
+msgstr "Data"
 
 #: templates/layout.html:127
 msgid "logout"

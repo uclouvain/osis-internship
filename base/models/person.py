@@ -28,7 +28,8 @@ from django.db import models
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
-from base.models.supported_languages import SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE
+# from base.models.supported_languages import SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE
+from django.conf import settings
 
 
 class PersonAdmin(admin.ModelAdmin):
@@ -58,7 +59,7 @@ class Person(models.Model):
     email        = models.EmailField(max_length=255, blank=True, null=True)
     phone        = models.CharField(max_length=30, blank=True, null=True)
     phone_mobile = models.CharField(max_length=30, blank=True, null=True)
-    language     = models.CharField(max_length=30, null=True, choices=SUPPORTED_LANGUAGES, default=DEFAULT_LANGUAGE)
+    language     = models.CharField(max_length=30, null=True, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE)
 
     def username(self):
         if self.user is None:

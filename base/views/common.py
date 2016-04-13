@@ -32,6 +32,7 @@ from django.contrib.auth import authenticate
 from django.utils import translation
 from django.shortcuts import render
 from base import models as mdl
+from django.conf import settings
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -102,8 +103,8 @@ def profile(request):
                                             'student': student,
                                             'offer_enrollments': offer_enrollments,
                                             'programs_managed': programs_managed,
-                                            'supported_languages': mdl.supported_languages.SUPPORTED_LANGUAGES,
-                                            'default_language': mdl.supported_languages.DEFAULT_LANGUAGE})
+                                            'supported_languages': settings.LANGUAGES,
+                                            'default_language': settings.LANGUAGE_CODE})
 
 
 @login_required
