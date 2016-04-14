@@ -30,20 +30,11 @@ from pprint import pprint
 
 @login_required
 def internships(request):
-    #First get the value of the 2 options for the sort
+    #First get the value of the option's value for the sort
     if request.method == 'GET':
-        learning_unit_year_sort_value = request.GET.get('learning_unit_year_sort')
         organization_sort_value = request.GET.get('organization_sort')
 
-    #Then select Internship Offer depending of the options
-    #If both exist / if just LearningUnitYear exist / if just organization exist / if none exist
-    if learning_unit_year_sort_value and learning_unit_year_sort_value != "0":
-        if organization_sort_value and organization_sort_value != "0":
-            query = InternshipOffer.find_interships_by_learning_unit_organization(learning_unit_year_sort_value,
-                                                                                    organization_sort_value)
-        else:
-            query = InternshipOffer.find_interships_by_learning_unit(learning_unit_year_sort_value)
-    else:
+    #Then select Internship Offer depending of the option
         if organization_sort_value and organization_sort_value != "0":
             query = InternshipOffer.find_interships_by_organization(organization_sort_value)
         else :
@@ -51,17 +42,21 @@ def internships(request):
 
     #Create the options for the selected list, delete dubblons
     query_organizations = InternshipOffer.find_internships()
-    internship_learning_unit_year = []
     internship_organizations = []
     for internship in query_organizations:
-        internship_learning_unit_year.append(internship.learning_unit_year)
         internship_organizations.append(internship.organization)
-    internship_learning_unit_year = list(set(internship_learning_unit_year))
     internship_organizations = list(set(internship_organizations))
 
     return render(request, "internships.html", {'section': 'internship',
                                                 'all_internships': query,
-                                                'all_learning_unit_year':internship_learning_unit_year,
                                                 'all_organizations':internship_organizations,
-                                                'learning_unit_year_sort_value':learning_unit_year_sort_value,
                                                 'organization_sort_value':organization_sort_value})
+
+@login_required
+def internships_save(request):
+
+    return render(request, "internships.html", {'section': 'internship',
+                                                #'all_internships': query,
+                                                #'all_organizations':internship_organizations,
+                                                #'organization_sort_value':organization_sort_value
+                                                })
