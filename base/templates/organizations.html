@@ -43,12 +43,12 @@
                     <input class="form-control" id="txt_acronym" placeholder="{% trans 'acronym' %}" name="acronym"
                            value="{{ request.GET.acronym }}" style="text-transform:uppercase">
                 </div>
-                <div class="col-md-5">
+                <div class="col-md-4">
                     <label for="txt_name">{% trans 'name'%}</label>
                     <input class="form-control" placeholder="{% trans 'name' %}" id="txt_name" name="name"
                            value="{{ request.GET.name }}" style="text-transform:uppercase">
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-3">
                     <label for="slt_type">{% trans 'type'%}</label><br>
                     <select class="form-control" id="slt_type" name="type_choices">
                         <option selected value="">{% trans 'types'%}...</option>

@@ -35,7 +35,7 @@ def organizations(request):
                            {'acronym': None,
                             'name': None,
                             'organizations': None,
-                            'type': mdl.organization.ORGANIZATION_TYPE,
+                            'types': mdl.organization.ORGANIZATION_TYPE,
                             'init': "1"})
 
 
