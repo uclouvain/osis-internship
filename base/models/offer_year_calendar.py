@@ -42,9 +42,22 @@ class OfferYearCalendar(models.Model):
     changed           = models.DateTimeField(null=True)
     academic_calendar = models.ForeignKey('AcademicCalendar')
     offer_year        = models.ForeignKey('OfferYear')
-    start_date        = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
-    end_date          = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
+    _start_date       = models.DateField(db_column="start_date", auto_now=False, blank=True, null=True, auto_now_add=False)
+    _end_date         = models.DateField(db_column="end_date", auto_now=False, blank=True, null=True, auto_now_add=False)
     customized        = models.BooleanField(default=False)
+
+    @property
+    def start_date(self):
+        if self._start_date :
+            return self._start_date
+        return self.academic_calendar.start_date
+
+    @property
+    def end_date(self):
+        if self._end_date :
+            return self._end_date
+        return self.academic_calendar.end_date
+
 
     def __str__(self):
         return u"%s - %s" % (self.academic_calendar, self.offer_year)
