@@ -73,7 +73,7 @@ class Country(models.Model):
     dialing_code = models.CharField(max_length=3, blank=True, null=True)
     cref_code = models.CharField(max_length=3, blank=True, null=True)
     currency = models.ForeignKey('Currency', blank=True, null=True, on_delete=models.CASCADE)
-    continent = models.ForeignKey('Continent', on_delete=models.CASCADE)
+    continent = models.ForeignKey('Continent', blank=True, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
