@@ -173,7 +173,7 @@
                         <td>{{ session.learning_unit_year.acronym }}</td>
                         <td>{{ session.learning_unit_year.title }}</td>
                         <td>{{ progress }}</td>
-                        <td>{% if session.status == 'OPEN' %}
+                        <td>{% if session.status == 'OPEN' or session.status == 'CLOSED' %}
                                 <a class="btn btn-default" href="{% url 'notes_printing' session.id session.learning_unit_year.id %}" role="button" id="lnk_notes_printing_{{session.id}}">
                                   <span class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'print' %}</a>
                             {% endif %}
