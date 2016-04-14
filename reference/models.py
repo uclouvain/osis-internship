@@ -66,6 +66,7 @@ class CountryAdmin(admin.ModelAdmin):
 
 
 class Country(models.Model):
+    external_id = models.CharField(max_length=100, blank=True, null=True)
     iso_code = models.CharField(max_length=2, unique=True)
     name = models.CharField(max_length=80, unique=True)
     nationality = models.CharField(max_length=80, blank=True, null=True)
