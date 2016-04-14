@@ -26,6 +26,7 @@
 import os
 
 from django.core.urlresolvers import reverse_lazy
+from django.utils.translation import ugettext_lazy as _
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -34,6 +35,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'chgajy@#q91^!6owmz29%@#3jw094@yr@1!6w3lxx@n6v!7nvd'
+
+ADMIN_URL = '9yk!hw9ra/'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -108,8 +111,12 @@ DATABASES = {
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
-# LANGUAGE_CODE = 'fr-be'
 LANGUAGE_CODE = 'fr-be'
+
+LANGUAGES = [
+    ('fr-be', _('French')),
+    ('en', _('English')),
+]
 
 TIME_ZONE = 'Europe/Brussels'
 

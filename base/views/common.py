@@ -33,7 +33,7 @@ from django.utils import translation
 from django.shortcuts import render
 from base import models as mdl
 from . import layout
-
+from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -44,13 +44,15 @@ def page_not_found(request):
 def access_denied(request):
     return render(request, 'access_denied.html')
 
+
 def login(request):
     if request.method == 'POST' :
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(username=username, password=password)
         person = mdl.person.find_by_user(user)
-        if person : # ./manage.py createsuperuser (in local) doesn't create automatically a Person associated to User
+        # ./manage.py createsuperuser (in local) doesn't create automatically a Person associated to User
+        if person:
             if person.language :
                 user_language = person.language
                 translation.activate(user_language)
@@ -103,8 +105,8 @@ def profile(request):
                                             'student': student,
                                             'offer_enrollments': offer_enrollments,
                                             'programs_managed': programs_managed,
-                                            'supported_languages': mdl.supported_languages.SUPPORTED_LANGUAGES,
-                                            'default_language': mdl.supported_languages.DEFAULT_LANGUAGE})
+                                            'supported_languages': settings.LANGUAGES,
+                                            'default_language': settings.LANGUAGE_CODE})
 
 
 @login_required
@@ -146,6 +148,7 @@ def storage(request):
 def files(request):
     return render(request, "admin/files.html", {})
 
+
 @login_required
 def files_search(request):
     registration_date = request.GET['registration_date']
@@ -155,13 +158,13 @@ def files_search(request):
     if registration_date or username :
         if registration_date :
             registration_date = datetime.strptime(request.GET['registration_date'], '%Y-%m-%d')
-            print(registration_date.month)
         files = mdl.document_file.search(username=username, creation_date=registration_date)
     else :
         message = "%s" % _('minimum_one_criteria')
 
-    return render(request, "admin/files.html", {'files'   : files,
-                                                'message' : message})
+    return render(request, "admin/files.html", {'files': files,
+                                                'message': message})
+
 
 @login_required
 def document_file_read(request, document_file_id):

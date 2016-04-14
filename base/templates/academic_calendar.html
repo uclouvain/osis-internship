@@ -80,10 +80,6 @@
            class="btn btn-primary" role="button" id="bt_academic_calendar_edit">
             <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> {% trans 'edit'%}
         </a>
-        <a href="{% url 'academic_calendar_delete' academic_calendar.id %}" title="{%trans 'delete'%}"
-           class="btn btn-default" role="button" id="bt_removes" data-toggle="modal" data-target=".bs-example-modal-sm">
-            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> {% trans 'delete'%}
-        </a>
     </div>
 </div>
 {% endblock %}

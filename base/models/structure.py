@@ -27,6 +27,7 @@ from django.db import models
 from django.contrib import admin
 from django.core.exceptions import ObjectDoesNotExist
 
+
 class StructureAdmin(admin.ModelAdmin):
     list_display = ('acronym', 'title', 'part_of', 'organization', 'type')
     fieldsets = ((None, {'fields': ('acronym', 'title', 'part_of', 'organization', 'type')}),)
@@ -41,13 +42,13 @@ ENTITY_TYPE = (('SECTOR', 'Sector'),
 
 
 class Structure(models.Model):
-    external_id  = models.CharField(max_length=100, blank=True, null=True)
-    changed      = models.DateTimeField(null=True)
-    acronym      = models.CharField(max_length=15)
-    title        = models.CharField(max_length=255)
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    changed = models.DateTimeField(null=True)
+    acronym = models.CharField(max_length=15)
+    title = models.CharField(max_length=255)
     organization = models.ForeignKey('Organization', null=True)
-    part_of      = models.ForeignKey('self', null=True, blank=True)
-    type         = models.CharField(max_length=30, blank=True, null=True, choices=ENTITY_TYPE)
+    part_of = models.ForeignKey('self', null=True, blank=True)
+    type = models.CharField(max_length=30, blank=True, null=True, choices=ENTITY_TYPE)
 
     def children(self):
         return Structure.objects.filter(part_of=self.pk)

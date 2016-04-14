@@ -71,6 +71,16 @@
         </div>
       </div>
       <hr>
+      <div class="row">
+        <div class="alert alert-warning">
+            {% get_current_language as LANGUAGE_CODE %}
+            {% if  session.learning_unit_year.decimal_scores %}
+              {% trans 'decimal_values_accepted' %}
+            {% else %}
+              {% trans 'decimal_values_ignored' %}
+            {% endif %}
+        </div>
+      </div>
       <form class="form-inline" method="POST" action="{% url 'online_encoding_form' session.id %}" id="form_online_encoding">
         {% csrf_token %}
 

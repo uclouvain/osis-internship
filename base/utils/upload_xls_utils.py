@@ -70,7 +70,7 @@ def __save_xls_scores(request, file_name):
     for row in ws.rows:
         new_score = False
         if nb_row > 0 and is_valid:
-            student = mdl.student.find_by_registration_id(row[4].value)
+            student = mdl.student.find_by(registration_id=row[4].value)
             info_line = "%s %d :" % (_('Line'),data_line_number)
             if not student:
                 validation_error += "%s %s!" % (info_line, _('student_not_exist') % (str(row[4].value)))
