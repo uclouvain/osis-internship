@@ -39,3 +39,11 @@ def lookup(d, key):
 @register.filter
 def lookup_session(d, key):
     return d[key].id
+
+
+@register.filter
+def lookup_id(d, key):
+    try:
+        return d[key].id
+    except:
+        return '?'

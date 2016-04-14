@@ -26,7 +26,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.contrib import admin
-from base.models import person
+from base.models import person, attribution
 
 
 class TutorAdmin(admin.ModelAdmin):
@@ -60,3 +60,14 @@ def find_by_person(a_person):
         return tutor
     except ObjectDoesNotExist:
         return None
+
+
+def find_by_learning_unit(a_learning_unit):
+    tutor_list = []
+    for at in attribution.find_by_learning_unit(a_learning_unit):
+        tutor_list.append(at.tutor)
+    return tutor_list
+
+
+def find_by_id(tutor_id):
+    return Tutor.objects.get(id=tutor_id)

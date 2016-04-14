@@ -66,3 +66,8 @@ def search(academic_year_id=None, acronym=None):
         queryset = queryset.filter(acronym__icontains=acronym)
 
     return queryset
+
+
+def find_learning_unit_years_by_academic_year_learningunit(academic_yr, learning_unit):
+    return LearningUnitYear.objects.filter(academic_year=academic_yr) \
+                                   .filter(learning_unit=learning_unit).first()

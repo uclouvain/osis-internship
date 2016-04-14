@@ -37,7 +37,7 @@ from base.utils import export_utils
 
 
 @login_required
-def upload_scores_file(request, learning_unit_id):
+def upload_scores_file(request, learning_unit_id,tutor_id):
     message_validation = ""
     if request.method == 'POST':
         form = ScoreFileForm(request.POST, request.FILES)
@@ -53,9 +53,9 @@ def upload_scores_file(request, learning_unit_id):
 
                 messages.add_message(request, messages.INFO, '%s' % message_validation)
 
-                return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_id]))
+                return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_id,tutor_id]))
         else:
-            return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_id]))
+            return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_id,tutor_id]))
 
 
 def __save_xls_scores(request, file_name):

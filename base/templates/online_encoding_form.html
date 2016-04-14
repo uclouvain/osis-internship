@@ -68,7 +68,7 @@
         </div>
       </div>
       <hr>
-      <form class="form-inline" method="POST" action="{% url 'online_encoding_form' learning_unit.id %}" id="form_online_encoding">
+      <form class="form-inline" method="POST" action="{% url 'online_encoding_form' learning_unit.id tutor.id%}" id="form_online_encoding">
         {% csrf_token %}
 
         <table class="table table-hover">
@@ -124,7 +124,7 @@
         </table>
 
         <button type="submit" class="btn btn-primary" id="bt_submit_online_encoding"><span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'Save' %}</button>
-        <a class="btn btn-default" href="{% url 'online_encoding' learning_unit.id %}" role="button" id="lnk_cancel_online_encoding"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'Cancel' %}</a>
+        <a class="btn btn-default" href="{% url 'online_encoding' learning_unit.id tutor.id%}" role="button" id="lnk_cancel_online_encoding"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'Cancel' %}</a>
 
       </form>
     </div>

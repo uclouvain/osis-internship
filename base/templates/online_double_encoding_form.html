@@ -34,7 +34,7 @@
   <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'studies' %}</a></li>
   <li><a href="{% url 'assessments' %}" id="lnk_assesments">{% trans 'evaluations' %}</a></li>
   <li><a href="{% url 'scores_encoding' %}" id="lnk_scores_encoding">{% trans 'scores_encoding' %}</a></li>
-  <li><a href="{% url 'online_encoding' learning_unit.id %}" id="lnk_online_encoding">{% trans 'online_scores_encoding' %}</a></li>
+  <li><a href="{% url 'online_encoding' learning_unit.id tutor.id%}" id="lnk_online_encoding">{% trans 'online_scores_encoding' %}</a></li>
   <li class="active">{% trans 'dubble_online_scores_encoding' %}</li>
 {% endblock %}
 {% block content %}
@@ -70,7 +70,7 @@
         </div>
       </div>
       <hr>
-      <form class="form-inline" method="POST" action="{% url 'online_double_encoding_form' learning_unit.id %}" id="form_online_double_encoding">
+      <form class="form-inline" method="POST" action="{% url 'online_double_encoding_form' learning_unit.id tutor.id %}" id="form_online_double_encoding">
         {% csrf_token %}
         <table class="table table-hover">
             <thead>
@@ -127,7 +127,7 @@
         </table>
 
         <button type="submit" class="btn btn-primary" id="bt_compare"><span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> {% trans 'compare' %}</button>
-        <a class="btn btn-default" href="{% url 'online_encoding' learning_unit.id %}" role="button" id="bt_cancel_online_double_encoding"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
+        <a class="btn btn-default" href="{% url 'online_encoding' learning_unit.id tutor.id%}" role="button" id="bt_cancel_online_double_encoding"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
 
       </form>
     </div>

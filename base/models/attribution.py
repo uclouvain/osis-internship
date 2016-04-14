@@ -25,7 +25,6 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-from base.models import learning_unit, tutor
 
 
 class AttributionAdmin(admin.ModelAdmin):
@@ -55,4 +54,9 @@ class Attribution(models.Model):
 
 def find_by_tutor(a_tutor):
     attributions = Attribution.objects.filter(tutor=a_tutor)
+    return attributions
+
+
+def find_by_learning_unit(a_learning_unit):
+    attributions = Attribution.objects.filter(learning_unit=a_learning_unit)
     return attributions

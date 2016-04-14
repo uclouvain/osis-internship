@@ -176,7 +176,7 @@ def get_progress(session_exm_list, learning_unt):
     tot_progress=0
     tot_enrollments = 0
     for session_exm in session_exm_list:
-        enrollments = list(find_exam_enrollments_by_session_learningunit(session_exm))
+        enrollments = list(find_exam_enrollments_by_session_learningunit(session_exm, learning_unt))
         if enrollments:
             progress = 0
             for e in enrollments:
@@ -188,6 +188,25 @@ def get_progress(session_exm_list, learning_unt):
     return str(tot_progress)+"/"+str(tot_enrollments)
 
 
-def find_exam_enrollments_by_session_learningunit(session_exm):
-    enrollments = ExamEnrollment.objects.filter(session_exam=session_exm)
+def find_exam_enrollments_by_session_learningunit(session_exm, learning_unt):
+    enrollments = ExamEnrollment.objects.filter(session_exam=session_exm) \
+        .filter(learning_unit_enrollment__learning_unit_year__learning_unit=learning_unt)
+    return enrollments
+
+
+def find_exam_enrollments_by_session_structure(session_exm, structure):
+    enrollments = ExamEnrollment.objects.filter(session_exam=session_exm) \
+        .filter(learning_unit_enrollment__offer_enrollment__offer_year__structure=structure) \
+        .order_by('learning_unit_enrollment__offer_enrollment__offer_year__acronym',
+                  'learning_unit_enrollment__offer_enrollment__student__person__last_name',
+                  'learning_unit_enrollment__offer_enrollment__student__person__first_name')
+    return enrollments
+
+
+def find_exam_enrollments_by_session_tutor(session_exm, tutor):
+    enrollments = ExamEnrollment.objects.filter(session_exam=session_exm) \
+        .filter(learning_unit_enrollment__offer_enrollment__offer_year__structure=structure) \
+        .order_by('learning_unit_enrollment__offer_enrollment__offer_year__acronym',
+                  'learning_unit_enrollment__offer_enrollment__student__person__last_name',
+                  'learning_unit_enrollment__offer_enrollment__student__person__first_name')
     return enrollments
