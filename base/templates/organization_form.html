@@ -65,10 +65,22 @@
           <label for="website">{% trans 'website' %}</label>
           <input class="form-control" value="{{ organization.website | default_if_none:'' }}" name="website" id="txt_website" maxlength="255"><font class="error">{{ form.website.errors }}</font>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
           <label for="reference">{% trans 'reference'%}</label>
           <input class="form-control" value="{{ organization.reference | default_if_none:'' }}" name="reference" id="txt_reference" maxlength="30"><font class="error">{{ form.reference.errors }}</font>
         </div>
+        <div class="col-md-2">
+        <label for="slt_type">{% trans 'type'%}</label><br>
+        <select class="form-control" id="slt_type" name="type_choices">
+            <option selected value="">{% trans 'types'%}...</option>
+            {% for type in types %}
+                <option value="{{ type.0 }}" {% if organization.type == type.0 %}selected{% endif %}>
+                    {{ type.1 }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
       </div>
       <br>
 
