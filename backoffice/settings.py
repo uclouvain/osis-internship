@@ -166,5 +166,6 @@ LOGO_INSTITUTION_URL = 'http://alfresco.uclouvain.be/alfresco/service/guest/stre
 
 try  :
     from backoffice.server_settings import *
+    INSTALLED_APPS = INSTALLED_APPS + SERVER_APPS
 except ImportError:
     pass
