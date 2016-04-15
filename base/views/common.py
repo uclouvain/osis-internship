@@ -30,7 +30,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import login as django_login
 from django.contrib.auth import authenticate
 from django.utils import translation
-from django.shortcuts import render
 from base import models as mdl
 from . import layout
 from django.conf import settings
@@ -38,11 +37,11 @@ from django.utils.translation import ugettext_lazy as _
 
 
 def page_not_found(request):
-    return render(request, 'page_not_found.html')
+    return layout.render(request, 'page_not_found.html')
 
 
 def access_denied(request):
-    return render(request, 'access_denied.html')
+    return layout.render(request, 'access_denied.html')
 
 
 def login(request):
@@ -53,7 +52,7 @@ def login(request):
         person = mdl.person.find_by_user(user)
         # ./manage.py createsuperuser (in local) doesn't create automatically a Person associated to User
         if person:
-            if person.language :
+            if person.language:
                 user_language = person.language
                 translation.activate(user_language)
                 request.session[translation.LANGUAGE_SESSION_KEY] = user_language
@@ -66,27 +65,27 @@ def home(request):
     if academic_yr:
         calendar_events = mdl.academic_calendar.find_academic_calendar_by_academic_year_with_dates(academic_yr.id)
     return layout.render(request, "home.html", {'academic_calendar': calendar_events,
-                                         'highlights': mdl.academic_calendar.find_highlight_academic_calendars()})
+                                                'highlights': mdl.academic_calendar.find_highlight_academic_calendars()})
 
 
 @login_required
 def studies(request):
-    return render(request, "studies.html", {'section': 'studies'})
+    return layout.render(request, "studies.html", {'section': 'studies'})
 
 
 @login_required
 def assessments(request):
-    return render(request, "assessments.html", {'section': 'assessments'})
+    return layout.render(request, "assessments.html", {'section': 'assessments'})
 
 
 @login_required
 def catalog(request):
-    return render(request, "catalog.html", {'section': 'catalog'})
+    return layout.render(request, "catalog.html", {'section': 'catalog'})
 
 
 @login_required
 def academic_year(request):
-    return render(request, "academic_year.html", {'section': 'academic_year'})
+    return layout.render(request, "academic_year.html", {'section': 'academic_year'})
 
 
 @login_required
@@ -98,15 +97,15 @@ def profile(request):
     student = mdl.student.find_by_person(person)
     offer_enrollments = mdl.offer_enrollment.find_by_student(student)
     programs_managed = mdl.program_manager.find_by_person(person)
-    return render(request, "profile.html", {'person': person,
-                                            'addresses': addresses,
-                                            'tutor': tutor,
-                                            'attributions': attributions,
-                                            'student': student,
-                                            'offer_enrollments': offer_enrollments,
-                                            'programs_managed': programs_managed,
-                                            'supported_languages': settings.LANGUAGES,
-                                            'default_language': settings.LANGUAGE_CODE})
+    return layout.render(request, "profile.html", {'person': person,
+                                                   'addresses': addresses,
+                                                   'tutor': tutor,
+                                                   'attributions': attributions,
+                                                   'student': student,
+                                                   'offer_enrollments': offer_enrollments,
+                                                   'programs_managed': programs_managed,
+                                                   'supported_languages': settings.LANGUAGES,
+                                                   'default_language': settings.LANGUAGE_CODE})
 
 
 @login_required
@@ -141,12 +140,12 @@ def storage(request):
         if len(row) < num_cols:
             row.append('')
 
-    return render(request, "admin/storage.html", {'table': table})
+    return layout.render(request, "admin/storage.html", {'table': table})
 
 
 @login_required
 def files(request):
-    return render(request, "admin/files.html", {})
+    return layout.render(request, "admin/files.html", {})
 
 
 @login_required
@@ -162,11 +161,11 @@ def files_search(request):
     else :
         message = "%s" % _('minimum_one_criteria')
 
-    return render(request, "admin/files.html", {'files': files,
-                                                'message': message})
+    return layout.render(request, "admin/files.html", {'files': files,
+                                                       'message': message})
 
 
 @login_required
 def document_file_read(request, document_file_id):
     document_file = mdl.document_file.find_by_id(document_file_id)
-    return render(request, "admin/file.html", {'file' : document_file})
+    return layout.render(request, "admin/file.html", {'file': document_file})

@@ -23,7 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
 from django import shortcuts
 from base import models as mdl
 
@@ -36,5 +35,3 @@ def render(request, template, values):
         values['notice'] = list(notice)[0].notice
 
     return shortcuts.render(request, template, values)
-
-

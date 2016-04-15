@@ -23,20 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.shortcuts import render
 from base import models as mdl
 from base.forms import OrganizationForm
-
-from django.utils.translation import ugettext_lazy as _
+from . import layout
 
 
 def organizations(request):
-    return render(request, "organizations.html",
-                           {'acronym': None,
-                            'name': None,
-                            'organizations': None,
-                            'type': mdl.organization.ORGANIZATION_TYPE,
-                            'init': "1"})
+    return layout.render(request, "organizations.html", {'acronym': None,
+                                                         'name': None,
+                                                         'organizations': None,
+                                                         'type': mdl.organization.ORGANIZATION_TYPE,
+                                                         'init': "1"})
 
 
 def organizations_search(request):
@@ -44,18 +41,17 @@ def organizations_search(request):
                                             name=request.GET['name'],
                                             type=request.GET['type_choices'])
 
-    return render(request, "organizations.html",
-                           {'organizations': organizations,
-                            'types': mdl.organization.ORGANIZATION_TYPE})
+    return layout.render(request, "organizations.html", {'organizations': organizations,
+                                                         'types': mdl.organization.ORGANIZATION_TYPE})
 
 
 def organization_read(request, organization_id):
     organization = mdl.organization.find_by_id(organization_id)
     structures = mdl.structure.find_by_organization(organization)
     organization_addresses = mdl.organization_address.find_by_organization(organization)
-    return render(request, "organization.html", {'organization':            organization,
-                                                 'organization_addresses' : organization_addresses,
-                                                 'structures':              structures})
+    return layout.render(request, "organization.html", {'organization': organization,
+                                                        'organization_addresses': organization_addresses,
+                                                        'structures': structures})
 
 
 def organization_new(request):
@@ -95,37 +91,35 @@ def organization_save(request, organization_id):
         return organization_read(request, organization.id)
     else:
 
-        return render(request, "organization_form.html",
-                               {'organization': organization,
-                                'form': form})
+        return layout.render(request, "organization_form.html", {'organization': organization,
+                                                                 'form': form})
 
 
 def organization_edit(request, organization_id):
     organization = mdl.organization.find_by_id(organization_id)
-    return render(request, "organization_form.html", {'organization': organization})
+    return layout.render(request, "organization_form.html", {'organization': organization})
 
 
 def organization_create(request):
     organization = mdl.organization.Organization()
-    return render(request, "organization_form.html", {'organization': organization})
+    return layout.render(request, "organization_form.html", {'organization': organization})
 
 
 def organization_address_read(request, organization_address_id):
     organization_address = mdl.organization_address.find_by_id(organization_address_id)
     organization_id = organization_address.organization.id
-    return render(request, "organization_address.html", {'organization_address': organization_address,
-                                                         'organization_id':      organization_id})
+    return layout.render(request, "organization_address.html", {'organization_address': organization_address,
+                                                                'organization_id':      organization_id})
 
 
 def organization_address_edit(request, organization_address_id):
     organization_address = mdl.organization_address.find_by_id(organization_address_id)
     organization_id = organization_address.organization.id
-    return render(request, "organization_address_form.html", {'organization_address': organization_address,
-                                                              'organization_id':      organization_id})
+    return layout.render(request, "organization_address_form.html", {'organization_address': organization_address,
+                                                                     'organization_id':      organization_id})
 
 
 def organization_address_save(request, organization_address_id):
-
     if organization_address_id:
         organization_address = mdl.organization_address.find_by_id(organization_address_id)
     else:
@@ -171,8 +165,8 @@ def organization_address_new(request):
 def organization_address_create(request, organization_id):
     organization_address = mdl.organization_address.OrganizationAddress()
     organization = mdl.organization.find_by_id(organization_id)
-    return render(request, "organization_address_form.html", {'organization_address': organization_address,
-                                                              'organization_id' : organization.id})
+    return layout.render(request, "organization_address_form.html", {'organization_address': organization_address,
+                                                                     'organization_id': organization.id})
 
 
 def organization_address_delete(request, organization_address_id):
