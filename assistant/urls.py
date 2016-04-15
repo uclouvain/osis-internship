@@ -23,7 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.conf.urls import url
+from assistant.views import home
 
-from django.shortcuts import render
+urlpatterns = [
+    # S'il vous plaît, organiser les urls par ordre alphabétique.
 
-# Create your views here.
+    url(r'^institution/mandates/assistants/$', home.assistant_home, name='assistants_home'),
+]

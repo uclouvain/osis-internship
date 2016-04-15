@@ -39,6 +39,11 @@ def institution(request):
 
 
 @login_required
+def mandates(request):
+    return render(request, "mandates.html", {'section': 'mandates'})
+
+
+@login_required
 def structures(request):
     return render(request, "structures.html", {'init': "1",
                                                'types': mdl.structure.ENTITY_TYPE})

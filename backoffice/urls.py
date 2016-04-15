@@ -30,6 +30,7 @@ from django.conf import settings
 urlpatterns = [
     url(r'^'+settings.ADMIN_URL, admin.site.urls),
     url(r'', include('base.urls')),
+    url(r'', include('assistant.urls')),
     url(r'', include('internship.urls')),
 ]
 

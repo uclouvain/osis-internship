@@ -40,6 +40,7 @@ urlpatterns = [
     url(r'^catalog/$', common.catalog, name='catalog'),
 
     url(r'^institution/$', institution.institution, name='institution'),
+    url(r'^institution/mandates/$', institution.mandates, name='mandates'),
 
     url(r'^learning_units/$', learning_unit.learning_units, name='learning_units'),
     url(r'^learning_units/search$', learning_unit.learning_units_search, name='learning_units_search'),

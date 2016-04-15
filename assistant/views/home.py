@@ -23,3 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def assistant_home(request):
+    return render(request, "assistants.html", {'section': 'assistants'})
