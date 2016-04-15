@@ -26,7 +26,7 @@
 
 from django.db import models
 from django.contrib import admin
-from base.models import person, offer_year
+from base.models import person
 from django.core.exceptions import ObjectDoesNotExist
 
 

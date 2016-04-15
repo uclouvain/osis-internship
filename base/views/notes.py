@@ -7,15 +7,14 @@ class Notes:
 
 class NotesDetail:
     def __init__(self):
-        self.lu =None
+        self.lu = None
         self.nb_notes_encoded = 0
-        self.nb_student= 0
+        self.nb_student = 0
+        self.tutor = None
 
     def completed(self):
 
         if self.nb_notes_encoded == self.nb_student:
-            print('completed')
             return True
 
-        print('not completed')
         return False

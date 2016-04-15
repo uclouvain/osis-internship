@@ -66,10 +66,6 @@
           </div>
         </div>
         <div class="col-md-3">
-            {%if enrollments and all_encoded%}
-                <label>{% trans 'status' %}</label><br>
-                <span style="color: green" class="glyphicon glyphicon-ok" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="{% trans 'closed'%}"></span>  {% trans 'closed' %}
-            {%endif%}
         </div>
         <div class="col-md-3">
         </div>
@@ -97,7 +93,6 @@
                 <th> </th>
                 <th>{% trans 'program' %}</th>
                 <th>{% trans 'session' %}</th>
-                <th>{% trans 'status' %}</th>
                 <th>{% trans 'registration_number' %}</th>
                 <th>{% trans 'lastname' %}</th>
                 <th>{% trans 'firstname' %}</th>
@@ -121,14 +116,8 @@
                     {% endif %}
                 </td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
-                <td>{{ enrollment.session_exam.number_session}} {{ enrollment.session_exam.id}}</td>
-                <td>{% if enrollment.session_exam.status == 'IDLE' %}
-                    <span style="color: orange" class="glyphicon glyphicon-time" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="{% trans 'idle'%}"></span>
-                  {% elif enrollment.session_exam.status == 'OPEN' %}
-                    <span style="color: blue" class="glyphicon glyphicon-flag" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="{% trans 'open'%}"></span>
-                  {% else %}
-                    <span style="color: green" class="glyphicon glyphicon-ok" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="{% trans 'closed'%}"></span></td>
-                  {% endif %}</td>
+                <td>{{ enrollment.session_exam.number_session}}</td>
+
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>

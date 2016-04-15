@@ -58,5 +58,6 @@ def find_by_tutor(a_tutor):
 
 
 def find_by_learning_unit(a_learning_unit):
-    attributions = Attribution.objects.filter(learning_unit=a_learning_unit)
+    attributions = Attribution.objects.filter(learning_unit=a_learning_unit) \
+                              .order_by('tutor__person__last_name','tutor__person__first_name')
     return attributions
