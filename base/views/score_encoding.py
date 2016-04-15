@@ -293,14 +293,19 @@ def notes_printing(request, learning_unit_id, tutor_id):
         for program_mgr in program_mgr_list:
             is_fac = True
             break
-    sessions_list, faculties, notes_list = get_sessions(learning_unit_id, request, tutor, academic_year)
+    if learning_unit_id==-1:
+        sessions_list, faculties, notes_list = get_sessions(None, request, tutor, academic_year)
+    else:
+        sessions_list, faculties, notes_list = get_sessions(learning_unit_id, request, tutor, academic_year)
+    print(sessions_list)
 
     return pdf_utils.print_notes(request, tutor, academic_year, learning_unit_id, is_fac, sessions_list)
 
 
 @login_required
 def notes_printing_all(request, tutor_id):
-    return notes_printing(request, -1, tutor_id)
+    print('notes_printing_all')
+    return notes_printing(request, int(-1), tutor_id)
 
 
 @login_required
@@ -320,14 +325,15 @@ def export_xls(request, learning_unit_id, academic_year_id):
     return export_utils.export_xls(request, learning_unit_id, academic_year_id, is_fac, sessions_list)
 
 
-def get_sessions(learning_unit, request, tutor, academic_yr):
+def get_sessions(learning_unit_param, request, tutor, academic_yr):
     sessions_list = []
     learning_unit_list = []
 
     faculties = []
     notes_list = []
     if tutor:
-        sessions = mdl.session_exam.find_current_sessions_by_tutor(tutor, academic_yr, learning_unit)
+        print('tutor')
+        sessions = mdl.session_exam.find_current_sessions_by_tutor(tutor, academic_yr, learning_unit_param)
         sessions_list.append(sessions)
         learning_unit_list = []
         dict_progress = {}
@@ -367,8 +373,7 @@ def get_sessions(learning_unit, request, tutor, academic_yr):
 
             if program_mgr.offer_year:
                 notes = Notes()
-
-                sessions = mdl.session_exam.find_sessions_by_offer(program_mgr.offer_year, academic_yr, learning_unit)
+                sessions = mdl.session_exam.find_sessions_by_offer(program_mgr.offer_year, academic_yr, learning_unit_param)
                 sessions_list.append(sessions)
                 faculty = program_mgr.offer_year.structure
                 notes.structure = faculty
@@ -377,6 +382,7 @@ def get_sessions(learning_unit, request, tutor, academic_yr):
                 dict_progress = {}
                 dict_progress_ok = {}
                 for session in sessions:
+                    learning_unit=session.learning_unit_year.learning_unit
                     enrollments = list(mdl.exam_enrollment.find_exam_enrollments_by_session_structure(session, session.offer_year_calendar.offer_year.structure))
                     if enrollments:
                         all_enrollments = all_enrollments + enrollments
