@@ -114,7 +114,7 @@
                         <tr>
                           <td>{{ note_detail.lu.acronym }}</td>
                           <td><a href="{% url 'online_encoding' note_detail.lu.id note_detail.tutor.id %}" id="lnk_{{ note_detail.lu.acronym }}" >{{ note_detail.lu.title }}</a></td>
-                          <td>{{ note_detail.tutor.person.last_name }}</td>
+                          <td>{{ note_detail.tutor.person.last_name }}, {{ note_detail.tutor.person.first_name }}</td>
                           <td>{{ note_detail.nb_notes_encoded}}/{{ note_detail.nb_student}}</td>
                           <td></td>
                         </tr>
@@ -169,9 +169,9 @@
                   <table class="table table-hover">
                     <thead>
                         <tr>
-                          <th>{% trans 'Code' %}</th>
-                          <th>{% trans 'Activity' %}</th>
-                          <th>{% trans 'Progress' %}</th>
+                          <th>{% trans 'code' %}</th>
+                          <th>{% trans 'activity' %}</th>
+                          <th>{% trans 'progress' %}</th>
                           <th></th>
                         </tr>
                     </thead>
@@ -184,11 +184,11 @@
                                id="lnk_online_encoding_messages_{{note_detail.lu.id}}">{{ note_detail.lu.title }}</a></td>
                         <td>{{ note_detail.nb_notes_encoded}}/{{ note_detail.nb_student}}</td>
                         <td>
-                                <a class="btn btn-default" href="{% url 'notes_printing_pgmer' note_detail.lu.id %}"
-                                   {% if note_detail.completed%}
-                                   disabled
-                                   {% endif %}
-                                   role="button" id="lnk_notes_printing_{{note_detail.lu.id}}"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'Print' %}</a>
+                            <a class="btn btn-default" href="{% url 'notes_printing' note_detail.lu.id %}"
+                               {% if note_detail.completed%}
+                               disabled
+                               {% endif %}
+                               role="button" id="lnk_notes_printing_{{note_detail.lu.id}}"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'Print' %}</a>
 
                         </td>
                       </tr>

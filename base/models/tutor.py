@@ -26,7 +26,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.contrib import admin
-from base.models import person, attribution, academic_year, program_manager, session_exam
+from base.models import person, attribution, academic_year, program_manager, session_exam, exam_enrollment
 
 
 class TutorAdmin(admin.ModelAdmin):
@@ -43,11 +43,6 @@ class Tutor(models.Model):
 
     def __str__(self):
         return u"%s" % self.person
-
-    @property
-    def get_person(self):
-        return self._person
-
 
 def find_by_user(user):
     try:
@@ -83,26 +78,34 @@ def find_main_tutor(a_learning_unit):
     # S'il y a plusieurs enseignants et pas de coordinateur => premier enseignant par l'ordre alphabétique
     attribution_list = attribution.find_by_learning_unit(a_learning_unit)
 
-    if attribution_list:
-
+    if attribution_list and len(attribution_list) > 0:
         if len(attribution_list) == 1:
-            print('attribution_list[0].tutor:',attribution_list[0].tutor)
             return attribution_list[0].tutor
         else:
-            print('else')
             for lu_attribution in attribution_list:
                 if lu_attribution.function == 'COORDINATOR':
                     return lu_attribution.tutor
             return attribution_list[0].tutor
+    return None
 
 
-def find_by_user(user):
+def find_tutors_by_user(user):
     """
     To find all the tutors managed by a program manager
     """
     academic_yr = academic_year.current_academic_year()
     program_mgr_list= program_manager.find_by_user(user)
+    tutor_list=[]
     for program_mgr in program_mgr_list:
         if program_mgr.offer_year:
             sessions = session_exam.find_sessions_by_offer(program_mgr.offer_year, academic_yr, None)
-    return None
+            for session in sessions:
+                learning_unit = session.learning_unit_year.learning_unit
+                enrollments =exam_enrollment.find_exam_enrollments_drafts_by_session(session)
+                if enrollments and len(enrollments) > 0:
+                    main_tutor = find_main_tutor(learning_unit)
+                    if main_tutor is not None:
+                        if main_tutor not in tutor_list:
+                            tutor_list.append(main_tutor)
+
+    return tutor_list

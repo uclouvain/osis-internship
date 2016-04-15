@@ -99,11 +99,11 @@ def find_sessions_by_offer(offer_year, academic_year, learning_unit_id):
             .filter(offer_year_calendar__end_date__gte=timezone.now())
 
 
-def find_current_sessions_by_tutor(tutor, academic_year, learning_unit_id):
-    if learning_unit_id:
-        learning_units = attribution.Attribution.objects.filter(tutor=tutor).values('learning_unit')
+def find_current_sessions_by_tutor(tutor, academic_year, learning_unit):
+    if learning_unit:
+
         return SessionExam.objects.filter(learning_unit_year__academic_year=academic_year) \
-            .filter(learning_unit_year__learning_unit__in=learning_units) \
+            .filter(learning_unit_year__learning_unit=learning_unit) \
             .filter(offer_year_calendar__start_date__lte=timezone.now()) \
             .filter(offer_year_calendar__end_date__gte=timezone.now())
 

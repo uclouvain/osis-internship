@@ -64,7 +64,6 @@ urlpatterns = [
     url(r'^studies/assessments/$', common.assessments, name='assessments'),
     url(r'^studies/assessments/scores_encoding$', score_encoding.scores_encoding, name='scores_encoding'),
     url(r'^studies/assessments/scores_encoding/online/([0-9]+)/([0-9]+)/$', score_encoding.online_encoding, name='online_encoding'),
-    url(r'^studies/assessments/scores_encoding/onlinepgmer/([0-9]+)/$', score_encoding.online_encoding_pgmer, name='online_encoding_pgmer'),
     url(r'^studies/assessments/scores_encoding/search/$', score_encoding.refresh_list, name='refresh_list'),
 
 
@@ -76,8 +75,6 @@ urlpatterns = [
     url(r'^studies/assessments/scores_encoding/notes_printing/([0-9]+)/([0-9]+)/$', score_encoding.notes_printing, name='notes_printing'),
     url(r'^studies/assessments/scores_encoding/xlsdownload/([0-9]+)/([0-9]+)/$',score_encoding.export_xls, name='scores_encoding_download'),
     url(r'^studies/assessments/scores_encoding/upload/([0-9]+)/([0-9]+)/$', upload_xls_utils.upload_scores_file,name='upload_encoding'),
-    url(r'^studies/assessments/scores_encoding/notes_printing_all_pgmer/$', score_encoding.notes_printing_all_pgmer, name='notes_printing_all_pgmer'),
-    url(r'^studies/assessments/scores_encoding/notes_printing_pgmer/([0-9]+)/$', score_encoding.notes_printing_pgmer, name='notes_printing_pgmer'),
 
     url(r'^structures/$', institution.structures, name='structures'),
     url(r'^structures/search$', institution.structures_search, name='structures_search'),
