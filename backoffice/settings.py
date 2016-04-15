@@ -164,8 +164,11 @@ QUEUE_CONTEXT_ROOT = '/'
 
 LOGO_INSTITUTION_URL = 'http://alfresco.uclouvain.be/alfresco/service/guest/streamDownload/workspace/SpacesStore/a7ac9681-d56e-4ec8-8d1d-01b2de6d9325/UCL_mention_noir_web.jpg?guest=true'
 
-try  :
+try:
     from backoffice.server_settings import *
-    INSTALLED_APPS = INSTALLED_APPS + SERVER_APPS
+    try:
+        INSTALLED_APPS = INSTALLED_APPS + SERVER_APPS
+    except NameError:
+        pass
 except ImportError:
     pass
