@@ -11,5 +11,6 @@ backoffice/server_settings.py
 /base/tests/sent_mails
 /reports
 .project
+.vscode/
 .pydevproject
 *.mo
