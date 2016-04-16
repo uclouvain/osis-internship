@@ -43,12 +43,12 @@ ORGANIZATION_TYPE = (('MAIN', 'Main'),
 
 class Organization(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed     = models.DateTimeField(null=True)
-    name        = models.CharField(max_length=255)
-    acronym     = models.CharField(max_length=15)
-    website     = models.URLField(max_length=255, blank=True, null=True)
-    reference   = models.CharField(max_length=30, blank=True, null=True)
-    type        = models.CharField(max_length=30, blank=True, null=True, choices=ORGANIZATION_TYPE, default='UNKNOWN')
+    changed = models.DateTimeField(null=True)
+    name = models.CharField(max_length=255)
+    acronym = models.CharField(max_length=15)
+    website = models.URLField(max_length=255, blank=True, null=True)
+    reference = models.CharField(max_length=30, blank=True, null=True)
+    type = models.CharField(max_length=30, blank=True, null=True, choices=ORGANIZATION_TYPE, default='UNKNOWN')
 
     def __str__(self):
         return self.name
@@ -59,18 +59,25 @@ def find_by_id(organization_id):
 
 
 def search(acronym=None, name=None, type=None):
+    has_criteria = False
     queryset = Organization.objects
 
     if acronym:
         queryset = queryset.filter(acronym=acronym)
+        has_criteria = True
 
     if name:
         queryset = queryset.filter(name=name)
+        has_criteria = True
 
     if type:
         queryset = queryset.filter(type=type)
+        has_criteria = True
 
-    return queryset
+    if has_criteria:
+        return queryset
+    else:
+        return None
 
 
 def find_all_order_by_reference():

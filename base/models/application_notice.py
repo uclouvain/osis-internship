@@ -23,27 +23,30 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from base.models import academic_year
-from base.models import academic_calendar
-from base.models import application_notice
-from base.models import attribution
-from base.models import document_file
-from base.models import domain
-from base.models import exam_enrollment
-from base.models import learning_unit
-from base.models import learning_unit_enrollment
-from base.models import learning_unit_year
-from base.models import message_template
-from base.models import offer
-from base.models import offer_enrollment
-from base.models import offer_year
-from base.models import offer_year_calendar
-from base.models import organization
-from base.models import organization_address
-from base.models import person
-from base.models import person_address
-from base.models import program_manager
-from base.models import session_exam
-from base.models import structure
-from base.models import student
-from base.models import tutor
+from django.db import models
+from django.contrib import admin
+from django.utils import timezone
+
+
+class ApplicationNoticeAdmin(admin.ModelAdmin):
+    list_display = ('subject','notice','start_publish','stop_publish')
+    fieldsets = ((None, {'fields': ('subject','notice','start_publish','stop_publish')}),)
+
+
+class ApplicationNotice(models.Model):
+    subject = models.CharField(max_length=255)
+    notice = models.TextField()
+    start_publish = models.DateTimeField()
+    stop_publish = models.DateTimeField()
+
+
+def find_current_notice():
+    samples = ApplicationNotice.objects.filter(stop_publish__gt=timezone.now(),
+                                               start_publish__lt=timezone.now()).first()
+    return samples
+
+
+
+
+
+
