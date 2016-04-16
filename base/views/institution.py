@@ -36,7 +36,7 @@ def institution(request):
 
 @login_required
 def mandates(request):
-    return render(request, "mandates.html", {'section': 'mandates'})
+    return layout.render(request, "mandates.html", {'section': 'mandates'})
 
 
 @login_required

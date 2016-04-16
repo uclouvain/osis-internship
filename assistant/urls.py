@@ -28,6 +28,5 @@ from assistant.views import home
 
 urlpatterns = [
     # S'il vous plaît, organiser les urls par ordre alphabétique.
-
-    url(r'^institution/mandates/assistants/$', home.assistant_home, name='assistants_home'),
+    url(r'', home.assistant_home, name='assistants_home'),
 ]
