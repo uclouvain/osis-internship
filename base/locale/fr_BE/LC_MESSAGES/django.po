@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-15 10:50+0200\n"
+"POT-Creation-Date: 2016-04-16 13:47+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -133,13 +133,8 @@ msgid "academic_calendars"
 msgstr "Calendriers académique"
 
 #: templates/academic_calendar.html:35
-#: templates/academic_calendar_form.html:37
-#: templates/academic_calendars.html:38 templates/academic_year.html.py:42
-#: templates/home.html:73 templates/offer.html.py:51
-#: templates/offer_year_calendar.html:42
-#: templates/offer_year_calendar_form.html:52
-msgid "academic_calendar"
-msgstr "Calendrier académique"
+msgid "event"
+msgstr "Événement"
 
 #: templates/academic_calendar.html:49
 #: templates/academic_calendar_form.html:63
@@ -195,6 +190,14 @@ msgstr "Avancer"
 msgid "edit"
 msgstr "Éditer"
 
+#: templates/academic_calendar_form.html:37
+#: templates/academic_calendars.html:38 templates/academic_year.html.py:42
+#: templates/home.html:73 templates/offer.html.py:51
+#: templates/offer_year_calendar.html:42
+#: templates/offer_year_calendar_form.html:52
+msgid "academic_calendar"
+msgstr "Calendrier académique"
+
 #: templates/academic_calendar_form.html:90
 msgid "highlight_title"
 msgstr "Titre de l'événement"
@@ -235,7 +238,7 @@ msgstr "Annuler"
 
 #: templates/academic_calendars.html:70 templates/admin/files.html.py:66
 #: templates/learning_units.html:73 templates/offers.html.py:73
-#: templates/organizations.html:82 templates/structures.html.py:84
+#: templates/organizations.html:98 templates/structures.html.py:84
 msgid "no_result"
 msgstr "Aucun résultat!"
 
@@ -264,7 +267,7 @@ msgid "file"
 msgstr "Fichier"
 
 #: templates/admin/file.html:43 templates/organization.html.py:68
-#: templates/organizations.html:52 templates/organizations.html.py:88
+#: templates/organizations.html:52 templates/organizations.html.py:87
 #: templates/structure.html:75 templates/structures.html.py:53
 #: templates/structures.html:90
 msgid "type"
@@ -287,7 +290,7 @@ msgstr "Recherche d'un fichier"
 
 #: templates/admin/files.html:71 templates/organization.html.py:53
 #: templates/organization_form.html:57 templates/organizations.html.py:47
-#: templates/organizations.html:48 templates/organizations.html.py:87
+#: templates/organizations.html:48 templates/organizations.html.py:86
 msgid "name"
 msgstr "Nom"
 
@@ -446,16 +449,16 @@ msgstr "Profil"
 msgid "login"
 msgstr "Login"
 
-#: templates/layout.html:169
+#: templates/layout.html:175
 msgid "documentation"
 msgstr "Justification"
 
-#: templates/layout.html:170 templates/organization.html.py:64
+#: templates/layout.html:176 templates/organization.html.py:64
 #: templates/organization_form.html:65
 msgid "website"
 msgstr "Site internet"
 
-#: templates/layout.html:171
+#: templates/layout.html:177
 msgid "source_code"
 msgstr "Code source"
 
@@ -482,7 +485,7 @@ msgstr "Informations générales"
 #: templates/offers.html:58 templates/offers.html.py:80
 #: templates/organization.html:49 templates/organization_form.html.py:53
 #: templates/organizations.html:42 templates/organizations.html.py:43
-#: templates/organizations.html:86 templates/structure.html.py:60
+#: templates/organizations.html:85 templates/structure.html.py:60
 #: templates/structure.html:93 templates/structure.html.py:119
 #: templates/structures.html:42 templates/structures.html.py:43
 #: templates/structures.html:88
@@ -1127,10 +1130,10 @@ msgstr "Notes injectées"
 msgid "no_score_injected"
 msgstr "Aucune note injectée"
 
-#: views/academic_calendar.py:130 views/offer_year.py:66
+#: views/academic_calendar.py:131 views/offer_year.py:66
 msgid "begin_date_lt_end_date"
 msgstr "La date de début doit etre égale ou inferieure à la date de fin"
 
-#: views/common.py:161
+#: views/common.py:162
 msgid "minimum_one_criteria"
 msgstr "Veuillez remplir au moins 1 critère"

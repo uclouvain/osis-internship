@@ -23,9 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.shortcuts import render
-
 from base import models as mdl
+from . import layout
 
 
 def learning_units(request):
@@ -37,11 +36,11 @@ def learning_units(request):
 
     if academic_yr_calendar:
         academic_yr = academic_yr_calendar.id
-    return render(request, "learning_units.html", {'academic_year':  academic_yr,
-                                                   'code':           code,
-                                                   'academic_years': academic_years,
-                                                   'learning_units': [],
-                                                   'init':           "1"})
+    return layout.render(request, "learning_units.html", {'academic_year': academic_yr,
+                                                          'code': code,
+                                                          'academic_years': academic_years,
+                                                          'learning_units': [],
+                                                          'init': "1"})
 
 
 def learning_units_search(request):
@@ -59,13 +58,13 @@ def learning_units_search(request):
     learning_unts = mdl.learning_unit_year.search(academic_year_id=academic_year,acronym=code)
     academic_years = mdl.academic_year.find_academic_years()
 
-    return render(request, "learning_units.html", {'academic_year':  int(academic_year),
-                                                   'code':           code,
-                                                   'academic_years': academic_years,
-                                                   'learning_units': learning_unts,
-                                                   'init':           "0"})
+    return layout.render(request, "learning_units.html", {'academic_year': int(academic_year),
+                                                          'code': code,
+                                                          'academic_years': academic_years,
+                                                          'learning_units': learning_unts,
+                                                          'init': "0"})
 
 
 def learning_unit_read(request, learning_unit_id):
     learning_unit_year = mdl.learning_unit_year.find_learning_unit_year_by_id(learning_unit_id)
-    return render(request, "learning_unit.html", {'learning_unit_year': learning_unit_year})
+    return layout.render(request, "learning_unit.html", {'learning_unit_year': learning_unit_year})
