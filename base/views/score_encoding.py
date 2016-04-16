@@ -25,11 +25,11 @@
 ##############################################################################
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
 from base import models as mdl
 from base.utils import send_mail, pdf_utils, export_utils
+from . import layout
 
 
 @login_required
@@ -67,14 +67,13 @@ def scores_encoding(request):
             session = sessions.first()
             sessions_offer.append(session)
 
-    return render(request, "scores_encoding.html",
-                  {'section':        'scores_encoding',
-                   'tutor':          tutor,
-                   'faculties':      faculties,
-                   'academic_year':  academic_yr,
-                   'sessions_list':  sessions_list,
-                   'session':        session,
-                   'sessions_offer': sessions_offer})
+    return layout.render(request, "scores_encoding.html", {'section': 'scores_encoding',
+                                                           'tutor': tutor,
+                                                           'faculties': faculties,
+                                                           'academic_year': academic_yr,
+                                                           'sessions_list': sessions_list,
+                                                           'session': session,
+                                                           'sessions_offer': sessions_offer})
 
 
 @login_required
@@ -92,15 +91,14 @@ def online_encoding(request, session_id):
     progress = mdl.exam_enrollment.calculate_exam_enrollment_progress(enrollments)
     num_encoded_scores = mdl.exam_enrollment.count_encoded_scores(enrollments)
 
-    return render(request, "online_encoding.html",
-                  {'section': 'scores_encoding',
-                   'tutor': tutor,
-                   'faculty': faculty,
-                   'academic_year': academic_year,
-                   'session': session,
-                   'progress': "{0:.0f}".format(progress),
-                   'enrollments': enrollments,
-                   'num_encoded_scores': num_encoded_scores})
+    return layout.render(request, "online_encoding.html", {'section': 'scores_encoding',
+                                                           'tutor': tutor,
+                                                           'faculty': faculty,
+                                                           'academic_year': academic_year,
+                                                           'session': session,
+                                                           'progress': "{0:.0f}".format(progress),
+                                                           'enrollments': enrollments,
+                                                           'num_encoded_scores': num_encoded_scores})
 
 
 @login_required
@@ -110,13 +108,12 @@ def online_encoding_form(request, session_id):
     if request.method == 'GET':
         tutor = mdl.tutor.find_by_user(request.user)
         academic_year = mdl.academic_year.current_academic_year()
-        return render(request, "online_encoding_form.html",
-                      {'section': 'scores_encoding',
-                       'tutor': tutor,
-                       'academic_year': academic_year,
-                       'session': session,
-                       'enrollments': enrollments,
-                       'justifications': mdl.exam_enrollment.JUSTIFICATION_TYPES})
+        return layout.render(request, "online_encoding_form.html", {'section': 'scores_encoding',
+                                                                    'tutor': tutor,
+                                                                    'academic_year': academic_year,
+                                                                    'session': session,
+                                                                    'enrollments': enrollments,
+                                                                    'justifications': mdl.exam_enrollment.JUSTIFICATION_TYPES})
     elif request.method == 'POST':
         for enrollment in enrollments:
             score = request.POST.get('score_' + str(enrollment.id), None)
@@ -142,13 +139,12 @@ def online_double_encoding_form(request, session_id):
     if request.method == 'GET':
         tutor = mdl.tutor.find_by_user(request.user)
         academic_year = mdl.academic_year.current_academic_year()
-        return render(request, "online_double_encoding_form.html",
-                      {'section': 'scores_encoding',
-                       'tutor': tutor,
-                       'academic_year': academic_year,
-                       'session': session,
-                       'enrollments': enrollments,
-                       'justifications': mdl.exam_enrollment.JUSTIFICATION_TYPES})
+        return layout.render(request, "online_double_encoding_form.html", {'section': 'scores_encoding',
+                                                                           'tutor': tutor,
+                                                                           'academic_year': academic_year,
+                                                                           'session': session,
+                                                                           'enrollments': enrollments,
+                                                                           'justifications': mdl.exam_enrollment.JUSTIFICATION_TYPES})
     elif request.method == 'POST':
         for enrollment in enrollments:
             score = request.POST.get('score_' + str(enrollment.id), None)
@@ -178,13 +174,13 @@ def online_double_encoding_validation(request, session_id):
         tutor = mdl.tutor.find_by_user(request.user)
         academic_year = mdl.academic_year.current_academic_year()
         enrollments = mdl.exam_enrollment.find_exam_enrollments_to_validate_by_session(session_exam)
-        return render(request, "online_double_encoding_validation.html",
-                      {'section': 'scores_encoding',
-                       'tutor': tutor,
-                       'academic_year': academic_year,
-                       'session': session_exam,
-                       'enrollments': enrollments,
-                       'justifications': mdl.exam_enrollment.JUSTIFICATION_TYPES})
+        return layout.render(request, "online_double_encoding_validation.html",
+                                      {'section': 'scores_encoding',
+                                       'tutor': tutor,
+                                       'academic_year': academic_year,
+                                       'session': session_exam,
+                                       'enrollments': enrollments,
+                                       'justifications': mdl.exam_enrollment.JUSTIFICATION_TYPES})
 
     elif request.method == 'POST':
         enrollments = mdl.exam_enrollment.find_exam_enrollments_by_session(session_exam)
@@ -233,10 +229,9 @@ def online_encoding_submission(request, session_id):
                 enrollment.justification_final = enrollment.justification_draft
             enrollment.save()
             mdl.exam_enrollment.create_exam_enrollment_historic(request.user, enrollment, enrollment.score_final,
-                                                           enrollment.justification_final)
+                                                                enrollment.justification_final)
         else:
             all_encoded = False
-
     if all_encoded:
         session_exam.status = 'CLOSED'
         session_exam.save()
@@ -260,7 +255,7 @@ def notes_printing(request, session_exam_id, learning_unit_year_id):
 
 @login_required
 def upload_score_error(request):
-    return render(request, "upload_score_error.html", {})
+    return layout.render(request, "upload_score_error.html", {})
 
 
 @login_required
