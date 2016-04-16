@@ -29,11 +29,7 @@ from . import layout
 
 
 def organizations(request):
-    return layout.render(request, "organizations.html", {'acronym': None,
-                                                         'name': None,
-                                                         'organizations': None,
-                                                         'type': mdl.organization.ORGANIZATION_TYPE,
-                                                         'init': "1"})
+    return layout.render(request, "organizations.html", {'types': mdl.organization.ORGANIZATION_TYPE})
 
 
 def organizations_search(request):
