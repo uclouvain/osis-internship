@@ -82,6 +82,11 @@ def organization_save(request, organization_id):
     else:
         organization.reference = None
 
+    if request.POST['type_choices']:
+        organization.type = request.POST['type_choices']
+    else:
+        organization.type = None
+
     if form.is_valid():
         organization.save()
         return organization_read(request, organization.id)
@@ -93,12 +98,14 @@ def organization_save(request, organization_id):
 
 def organization_edit(request, organization_id):
     organization = mdl.organization.find_by_id(organization_id)
-    return layout.render(request, "organization_form.html", {'organization': organization})
+    return layout.render(request, "organization_form.html", {'organization': organization,
+                                                             'types': mdl.organization.ORGANIZATION_TYPE})
 
 
 def organization_create(request):
     organization = mdl.organization.Organization()
-    return layout.render(request, "organization_form.html", {'organization': organization})
+    return layout.render(request, "organization_form.html", {'organization': organization,
+                                                             'types': mdl.organization.ORGANIZATION_TYPE})
 
 
 def organization_address_read(request, organization_address_id):
