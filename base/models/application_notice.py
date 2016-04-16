@@ -42,7 +42,7 @@ class ApplicationNotice(models.Model):
 
 def find_current_notice():
     samples = ApplicationNotice.objects.filter(stop_publish__gt=timezone.now(),
-                                               start_publish__lt=timezone.now())
+                                               start_publish__lt=timezone.now()).first()
     return samples
 
 
