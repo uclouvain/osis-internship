@@ -25,11 +25,11 @@
 ##############################################################################
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
 from base import models as mdl
 from base.utils import send_mail, pdf_utils, export_utils
+from . import layout
 from base.views.notes import Notes
 from base.views.notes import NotesDetail
 
@@ -41,7 +41,7 @@ def scores_encoding(request):
     if tutor:
         data_dict = get_data(request)
         sessions_list, faculties, notes_list = get_sessions(None, request, tutor, academic_yr)
-        return render(request, "scores_encoding.html",
+        return layout.render(request, "scores_encoding.html",
                       {'section':            data_dict['section'],
                        'tutor':              tutor,
                        'academic_year':      academic_yr,
@@ -63,7 +63,7 @@ def scores_encoding(request):
             if offer_sel_id:
                 offer_sel = mdl.offer_year.find_offer_year_by_id(offer_sel_id)
             data_dict = get_data_pgmer(request,None,None)
-            return render(request, "scores_encoding_mgr.html",
+            return layout.render(request, "scores_encoding_mgr.html",
                           {'notes_list':    data_dict['notes_list'],
                            'offer_list':    mdl.offer_year.find_by_user(request.user),
                            'tutor_list':    mdl.tutor.find_tutors_by_user(request.user),
@@ -75,7 +75,7 @@ def scores_encoding(request):
 @login_required
 def online_encoding(request, learning_unit_id, tutor_id):
     data_dict = get_data_online(learning_unit_id, tutor_id, request)
-    return render(request, "online_encoding.html",
+    return layout.render(request, "online_encoding.html",
                   {'section':            data_dict['section'],
                    'tutor':              data_dict['tutor'],
                    'academic_year':      data_dict['academic_year'],
@@ -92,7 +92,7 @@ def online_encoding_form(request, learning_unit_id, tutor_id):
     data = get_data_online(learning_unit_id, tutor_id, request)
     enrollments = data['enrollments']
     if request.method == 'GET':
-        return render(request, "online_encoding_form.html",
+        return layout.render(request, "online_encoding_form.html",
                               {'section': 'scores_encoding',
                                'tutor': data['tutor'],
                                'academic_year': data['academic_year'],
@@ -124,7 +124,7 @@ def online_double_encoding_form(request, learning_unit_id, tutor_id):
     enrollments = data['enrollments']
     learning_unit = data['learning_unit']
     if request.method == 'GET':
-        return render(request, "online_double_encoding_form.html",
+        return layout.render(request, "online_double_encoding_form.html",
                       {'section':        data['section'],
                        'tutor':          data['tutor'],
                        'academic_year':  data['academic_year'],
@@ -172,7 +172,7 @@ def online_double_encoding_validation(request, learning_unit_id, tutor_id):
                     if enrollments:
                         all_enrollments = all_enrollments + enrollments
 
-        return render(request, "online_double_encoding_validation.html",
+        return layout.render(request, "online_double_encoding_validation.html",
                       {'section':        'scores_encoding',
                        'tutor':          tutor,
                        'academic_year':  academic_year,
@@ -274,7 +274,7 @@ def notes_printing(request, session_exam_id, learning_unit_year_id):
 
 @login_required
 def upload_score_error(request):
-    return render(request, "upload_score_error.html", {})
+    return layout.render(request, "upload_score_error.html", {})
 
 
 @login_required

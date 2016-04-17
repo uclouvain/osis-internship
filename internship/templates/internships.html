@@ -88,7 +88,7 @@
                         </thead>
                         <tbody>
                           {% for internship in all_internships %}
-                          {% if internship.learning_unit_year.title = "Stage en Médecine Interne"%}
+                          {% if internship.learning_unit_year.title = "Stage en Médecine interne"%}
                             <tr>
                                 <td>
                                   {{ internship.title }}
@@ -457,6 +457,9 @@
               </div>
             </div>
           </div>
+          <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_academic_calendar_save">
+              <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'Save'%}
+          </button>
         </div>
   </div>
 {% endblock %}

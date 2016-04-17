@@ -32,6 +32,9 @@ admin.site.register(academic_calendar.AcademicCalendar,
 admin.site.register(academic_year.AcademicYear,
                     academic_year.AcademicYearAdmin)
 
+admin.site.register(application_notice.ApplicationNotice,
+                    application_notice.ApplicationNoticeAdmin)
+
 admin.site.register(attribution.Attribution,
                     attribution.AttributionAdmin)
 
@@ -58,6 +61,9 @@ admin.site.register(message_template.MessageTemplate,
 
 admin.site.register(offer_enrollment.OfferEnrollment,
                     offer_enrollment.OfferEnrollmentAdmin)
+
+admin.site.register(domain.Domain,
+                    domain.DomainAdmin)
 
 admin.site.register(offer.Offer,
                     offer.OfferAdmin)

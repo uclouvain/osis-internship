@@ -36,13 +36,35 @@ class StudentAdmin(admin.ModelAdmin):
 
 
 class Student(models.Model):
-    external_id     = models.CharField(max_length=100, blank=True, null=True)
-    changed         = models.DateTimeField(null=True)
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    changed = models.DateTimeField(null=True)
     registration_id = models.CharField(max_length=10)
-    person          = models.ForeignKey('Person')
+    person = models.ForeignKey('Person')
 
     def __str__(self):
         return u"%s (%s)" % (self.person, self.registration_id)
+
+
+def find_by(registration_id=None, person_name=None):
+    """
+    Find students by optional arguments. At least one argument should be informed
+    otherwise it returns empty.
+    """
+    has_criteria = False
+    queryset = Student.objects
+
+    if registration_id:
+        queryset = queryset.filter(registration_id=registration_id)
+        has_criteria = True
+
+    if person_name:
+        queryset = queryset.filter(person__last_name__icontains=person_name)
+        has_criteria = True
+
+    if has_criteria:
+        return queryset
+    else:
+        return None
 
 
 def find_by_person(a_person):
@@ -51,7 +73,3 @@ def find_by_person(a_person):
         return student
     except ObjectDoesNotExist:
         return None
-
-
-def find_by_registration_id(registration_id):
-    return Student.objects.get(registration_id=registration_id)

@@ -109,19 +109,29 @@ def find_offer_year_by_id(offer_year_id):
 
 
 def search_root_offers(entity=None, academic_yr=None, acronym=None):
+    """
+    Offers are organized hierarchically. This function returns only root offers.
+    """
+    has_criteria = False
     queryset = OfferYear.objects
 
     if entity:
-        queryset = queryset.filter(structure=entity)
+        queryset = queryset.filter(structure__acronym__icontains=entity)
+        has_criteria = True
 
     if academic_yr:
         queryset = queryset.filter(academic_year=academic_yr)
+        has_criteria = True
 
     if acronym:
         queryset = queryset.filter(acronym__icontains=acronym)
+        has_criteria = True
 
-    queryset = queryset.filter(parent=None)    # on ne doit prendre que les offres racines (pas les finalités)
-    return queryset
+    if has_criteria:
+        queryset = queryset.filter(parent=None)
+        return queryset
+    else:
+        return None
 
 
 def find_by_academicyear_acronym(academic_yr, acronym):

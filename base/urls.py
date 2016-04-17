@@ -40,6 +40,7 @@ urlpatterns = [
     url(r'^catalog/$', common.catalog, name='catalog'),
 
     url(r'^institution/$', institution.institution, name='institution'),
+    url(r'^institution/mandates/$', institution.mandates, name='mandates'),
 
     url(r'^learning_units/$', learning_unit.learning_units, name='learning_units'),
     url(r'^learning_units/search$', learning_unit.learning_units_search, name='learning_units_search'),
@@ -97,7 +98,6 @@ urlpatterns = [
     url(r'^academic_calendars/search$', academic_calendar.academic_calendars_search, name='academic_calendars_search'),
     url(r'^academic_calendars/([0-9]+)/$', academic_calendar.academic_calendar_read, name='academic_calendar_read'),
     url(r'^academic_calendars/edit/([0-9]+)/$', academic_calendar.academic_calendar_edit, name='academic_calendar_edit'),
-    url(r'^academic_calendars/delete/([0-9]+)/$', academic_calendar.academic_calendar_delete, name='academic_calendar_delete'),
     url(r'^academic_calendars/save/([0-9]+)/$', academic_calendar.academic_calendar_save, name='academic_calendar_save'),
     url(r'^academic_calendars/save/$', academic_calendar.academic_calendar_new, name='academic_calendar_save_new'),
     url(r'^academic_calendars/create/$', academic_calendar.academic_calendar_create, name='academic_calendar_create'),

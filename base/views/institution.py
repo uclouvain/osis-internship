@@ -24,23 +24,24 @@
 #
 ##############################################################################
 import json
-import operator
-from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from base import models as mdl
-from django.utils.translation import ugettext_lazy as _
-from functools import reduce
-from django.db import models
+from . import layout
 
 
 @login_required
 def institution(request):
-    return render(request, "institution.html", {'section': 'institution'})
+    return layout.render(request, "institution.html", {'section': 'institution'})
+
+
+@login_required
+def mandates(request):
+    return layout.render(request, "mandates.html", {'section': 'mandates'})
 
 
 @login_required
 def structures(request):
-    return render(request, "structures.html", {'init': "1",
+    return layout.render(request, "structures.html", {'init': "1",
                                                'types': mdl.structure.ENTITY_TYPE})
 
 
@@ -53,21 +54,21 @@ def structures_search(request):
                                     title=request.GET['title'],
                                     type=structure_type)
 
-    return render(request, "structures.html", {'entities': entities,
-                                               'types': mdl.structure.ENTITY_TYPE})
+    return layout.render(request, "structures.html", {'entities': entities,
+                                                      'types': mdl.structure.ENTITY_TYPE})
 
 
 @login_required
 def structure_read(request, structure_id):
     structure = mdl.structure.find_by_id(structure_id)
     offers_years = mdl.offer_year.find_offer_years_by_structure(structure)
-    return render(request, "structure.html", {'structure': structure,
-                                              'offers_years': offers_years})
+    return layout.render(request, "structure.html", {'structure': structure,
+                                                     'offers_years': offers_years})
 
 
 def structure_read_by_acronym(request, name):
     structure = mdl.structure.find_by_acronym(name)
-    return render(request, "structure.html", {'structure': structure})
+    return layout.render(request, "structure.html", {'structure': structure})
 
 
 def structure_diagram(request, organization_id):
@@ -75,13 +76,13 @@ def structure_diagram(request, organization_id):
     structure = organization.find_structure()
     tags = organization.find_structure_tree()
     data = json.dumps(tags)
-    return render(request, "structure_organogram.html", {'structure': structure,
-                                                         'data': data})
+    return layout.render(request, "structure_organogram.html", {'structure': structure,
+                                                                'data': data})
 
 
 def structure_diagram_by_parent(request, parent_id):
     structure = mdl.structure.find_by_id(parent_id)
     tags = mdl.structure.find_structure_hierarchy(structure)
     data = json.dumps(tags)
-    return render(request, "structure_organogram.html", {'structure': structure,
-                                                         'data': data})
+    return layout.render(request, "structure_organogram.html", {'structure': structure,
+                                                                'data': data})

@@ -23,20 +23,21 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.conf.urls import include, url
-from django.contrib import admin
-from django.conf import settings
+from django import shortcuts
+from base import models as mdl
 
-urlpatterns = [
-    url(r'^'+settings.ADMIN_URL, admin.site.urls),
-    url(r'', include('base.urls')),
-    url(r'^assistants/', include('assistant.urls')),
-    url(r'^internships/', include('internship.urls')),
-]
 
-handler404 = 'base.views.common.page_not_found'
-handler403 = 'base.views.common.access_denied'
+def render(request, template, values):
+    if 'subject' not in request.session and 'notice' not in request.session:
+        print('test')
+        notice = mdl.application_notice.find_current_notice()
+        if notice:
+            request.session.set_expiry(3600)
+            request.session['subject'] = notice.subject
+            request.session['notice'] = notice.notice
+    
+    if 'subject' in request.session and 'notice' in request.session:
+        values['subject'] = request.session['subject']
+        values['notice'] = request.session['notice']
 
-admin.site.site_header = 'OSIS'
-admin.site.site_title  = 'OSIS'
-admin.site.index_title = 'Louvain'
+    return shortcuts.render(request, template, values)
