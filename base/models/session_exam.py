@@ -35,6 +35,7 @@ SESSION_STATUS = (
     ('OPEN', _('open')),
     ('CLOSED', _('closed')))
 
+
 class SessionExamAdmin(admin.ModelAdmin):
     list_display = ('learning_unit_year', 'offer_year_calendar', 'number_session', 'status', 'changed')
     list_filter = ('status', 'number_session')
@@ -44,11 +45,11 @@ class SessionExamAdmin(admin.ModelAdmin):
 
 
 class SessionExam(models.Model):
-    external_id         = models.CharField(max_length=100, blank=True, null=True)
-    changed             = models.DateTimeField(null=True)
-    number_session      = models.IntegerField()
-    status              = models.CharField(max_length=10,choices=SESSION_STATUS)
-    learning_unit_year  = models.ForeignKey('LearningUnitYear')
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    changed = models.DateTimeField(null=True)
+    number_session = models.IntegerField()
+    status = models.CharField(max_length=10,choices=SESSION_STATUS)
+    learning_unit_year = models.ForeignKey('LearningUnitYear')
     offer_year_calendar = models.ForeignKey('OfferYearCalendar')
     progress = None
 
@@ -106,7 +107,6 @@ def find_current_sessions_by_tutor(tutor, academic_year, learning_unit):
             .filter(learning_unit_year__learning_unit=learning_unit) \
             .filter(offer_year_calendar__start_date__lte=timezone.now()) \
             .filter(offer_year_calendar__end_date__gte=timezone.now())
-
     else:
         learning_units = attribution.Attribution.objects.filter(tutor=tutor).values('learning_unit')
         return SessionExam.objects.filter(learning_unit_year__academic_year=academic_year) \

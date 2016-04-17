@@ -51,16 +51,16 @@ class ExamEnrollment(models.Model):
         ('SAVED', _('saved')),
         ('SUBMITTED', _('submitted')))
 
-    external_id              = models.CharField(max_length=100, blank=True, null=True)
-    changed                  = models.DateTimeField(null=True)
-    score_draft              = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
-    score_reencoded          = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
-    score_final              = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
-    justification_draft      = models.CharField(max_length=20, blank=True, null=True, choices=JUSTIFICATION_TYPES)
-    justification_reencoded  = models.CharField(max_length=20, blank=True, null=True, choices=JUSTIFICATION_TYPES)
-    justification_final      = models.CharField(max_length=20, blank=True, null=True, choices=JUSTIFICATION_TYPES)
-    encoding_status          = models.CharField(max_length=9, blank=True, null=True, choices=ENCODING_STATUS_LIST)
-    session_exam             = models.ForeignKey('SessionExam')
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    changed = models.DateTimeField(null=True)
+    score_draft = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
+    score_reencoded = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
+    score_final = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
+    justification_draft = models.CharField(max_length=20, blank=True, null=True, choices=JUSTIFICATION_TYPES)
+    justification_reencoded = models.CharField(max_length=20, blank=True, null=True, choices=JUSTIFICATION_TYPES)
+    justification_final = models.CharField(max_length=20, blank=True, null=True, choices=JUSTIFICATION_TYPES)
+    encoding_status = models.CharField(max_length=9, blank=True, null=True, choices=ENCODING_STATUS_LIST)
+    session_exam = models.ForeignKey('SessionExam')
     learning_unit_enrollment = models.ForeignKey('LearningUnitEnrollment')
 
     def student(self):
@@ -144,9 +144,15 @@ def calculate_session_exam_progress(session_exam):
 
 def justification_label_authorized(is_fac):
     if is_fac:
-        return '%s, %s, %s, %s, %s' % (_('absent'),_('cheating'), _('ill'),  _('justified_absence'), _('score_missing'))
+        return '%s, %s, %s, %s, %s' % (_('absent'),
+                                       _('cheating'),
+                                       _('ill'),
+                                       _('justified_absence'),
+                                       _('score_missing'))
     else:
-        return '%s, %s, %s' % (_('absent'), _('cheating'),_('score_missing'))
+        return '%s, %s, %s' % (_('absent'),
+                               _('cheating'),
+                               _('score_missing'))
 
 
 class ExamEnrollmentHistoryAdmin(admin.ModelAdmin):
@@ -155,11 +161,11 @@ class ExamEnrollmentHistoryAdmin(admin.ModelAdmin):
 
 
 class ExamEnrollmentHistory(models.Model):
-    exam_enrollment     = models.ForeignKey(ExamEnrollment)
-    person              = models.ForeignKey(person.Person)
-    score_final         = models.DecimalField(max_digits=4, decimal_places=2, null=True)
+    exam_enrollment = models.ForeignKey(ExamEnrollment)
+    person = models.ForeignKey(person.Person)
+    score_final = models.DecimalField(max_digits=4, decimal_places=2, null=True)
     justification_final = models.CharField(max_length=20, null=True, choices=JUSTIFICATION_TYPES)
-    modification_date   = models.DateTimeField(auto_now=True)
+    modification_date = models.DateTimeField(auto_now=True)
 
 
 def create_exam_enrollment_historic(user, enrollment, score, justification):
@@ -173,7 +179,7 @@ def create_exam_enrollment_historic(user, enrollment, score, justification):
 
 def get_progress(session_exm_list, learning_unt):
     print('getProgress', len(session_exm_list))
-    tot_progress=0
+    tot_progress = 0
     tot_enrollments = 0
     for session_exm in session_exm_list:
         enrollments = list(find_exam_enrollments_by_session_learningunit(session_exm, learning_unt))
@@ -182,8 +188,8 @@ def get_progress(session_exm_list, learning_unt):
             for e in enrollments:
                 if e.score_final is not None or e.justification_final is not None:
                     progress += 1
-            tot_progress=tot_progress+progress
-            tot_enrollments = tot_enrollments + len(enrollments)
+            tot_progress = tot_progress+progress
+            tot_enrollments += len(enrollments)
     print('fin getProgress')
     return str(tot_progress)+"/"+str(tot_enrollments)
 

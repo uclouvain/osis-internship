@@ -35,12 +35,12 @@ class LearningUnitAdmin(admin.ModelAdmin):
 
 class LearningUnit(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed     = models.DateTimeField(null=True)
-    acronym     = models.CharField(max_length=15)
-    title       = models.CharField(max_length=255)
+    changed = models.DateTimeField(null=True)
+    acronym = models.CharField(max_length=15)
+    title = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
-    start_year  = models.IntegerField()
-    end_year    = models.IntegerField(blank=True, null=True)
+    start_year = models.IntegerField()
+    end_year = models.IntegerField(blank=True, null=True)
     progress = None
 
     def __str__(self):

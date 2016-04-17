@@ -44,6 +44,7 @@ class Tutor(models.Model):
     def __str__(self):
         return u"%s" % self.person
 
+
 def find_by_user(user):
     try:
         pers = person.find_by_user(user)

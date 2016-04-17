@@ -609,7 +609,7 @@ def refresh_list(request):
     else:
         data_dict = get_data_pgmer(request, tutor_sel, offer_sel)
 
-    return render(request, "scores_encoding_mgr.html",
+    return layout.render(request, "scores_encoding_mgr.html",
                   {'notes_list':    data_dict['notes_list'],
                    'offer_list':    mdl.offer_year.find_by_user(request.user),
                    'tutor_list':    mdl.tutor.find_tutors_by_user(request.user),
