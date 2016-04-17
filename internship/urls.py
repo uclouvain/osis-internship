@@ -24,20 +24,18 @@
 #
 ##############################################################################
 from django.conf.urls import url
-from django.contrib.auth.views import login,logout_then_login
 
 from internship.views import home, internship, master, period, place, student, student_resume
 
 urlpatterns = [
     # S'il vous plaît, organiser les urls par ordre alphabétique.
-
-    url(r'^studies/internships/$', internship.internships, name='internships'),
-    url(r'^studies/internships/home/$', home.internships_home, name='internships_home'),
-    url(r'^studies/internships/interships_masters/$', master.interships_masters, name='interships_masters'),
-    url(r'^studies/internships/periods/$', period.internships_periods, name='internships_periods'),
-    url(r'^studies/internships/places$', place.internships_places, name='internships_places'),
-    url(r'^studies/internships/students/$', student.internships_students, name='internships_students'),
-    url(r'^studies/internships/students/resume/$', student_resume.internships_student_resume, name='internships_student_resume'),
-    url(r'^studies/internships/students/search$', student_resume.internships_student_search, name='internships_student_search'),
-    url(r'^studies/internships/students/resume/([0-9]+)/$', student_resume.internships_student_read, name='internships_student_read'),
+    url(r'^$', home.internships_home, name='internships_home'),
+    url(r'^internships', internship.internships, name='internships'),
+    url(r'^internships_masters/$', master.interships_masters, name='interships_masters'),
+    url(r'^periods/$', period.internships_periods, name='internships_periods'),
+    url(r'^places/$', place.internships_places, name='internships_places'),
+    url(r'^students/$', student.internships_students, name='internships_students'),
+    url(r'^students/resume/$', student_resume.internships_student_resume, name='internships_student_resume'),
+    url(r'^students/search$', student_resume.internships_student_search, name='internships_student_search'),
+    url(r'^students/([0-9]+)/resume/$', student_resume.internships_student_read, name='internships_student_read'),
 ]

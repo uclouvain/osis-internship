@@ -44,6 +44,7 @@ def access_denied(request):
     return layout.render(request, 'access_denied.html')
 
 
+
 def login(request):
     if request.method == 'POST' :
         username = request.POST['username']

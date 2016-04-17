@@ -30,7 +30,8 @@ from django.conf import settings
 urlpatterns = [
     url(r'^'+settings.ADMIN_URL, admin.site.urls),
     url(r'', include('base.urls')),
-    url(r'', include('internship.urls')),
+    url(r'^assistants/', include('assistant.urls')),
+    url(r'^internships/', include('internship.urls')),
 ]
 
 handler404 = 'base.views.common.page_not_found'

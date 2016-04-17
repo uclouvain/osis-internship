@@ -23,3 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.conf.urls import url
+from assistant.views import home
+
+urlpatterns = [
+    # S'il vous plaît, organiser les urls par ordre alphabétique.
+    url(r'', home.assistant_home, name='assistants_home'),
+]

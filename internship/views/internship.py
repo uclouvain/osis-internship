@@ -26,21 +26,21 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from internship.models import InternshipOffer
-from pprint import pprint
+
 
 @login_required
 def internships(request):
-    #First get the value of the 2 options for the sort
+    # First get the value of the 2 options for the sort
     if request.method == 'GET':
         learning_unit_year_sort_value = request.GET.get('learning_unit_year_sort')
         organization_sort_value = request.GET.get('organization_sort')
 
-    #Then select Internship Offer depending of the options
-    #If both exist / if just LearningUnitYear exist / if just organization exist / if none exist
+    # Then select Internship Offer depending of the options
+    # If both exist / if just LearningUnitYear exist / if just organization exist / if none exist
     if learning_unit_year_sort_value and learning_unit_year_sort_value != "0":
         if organization_sort_value and organization_sort_value != "0":
             query = InternshipOffer.find_interships_by_learning_unit_organization(learning_unit_year_sort_value,
-                                                                                    organization_sort_value)
+                                                                                  organization_sort_value)
         else:
             query = InternshipOffer.find_interships_by_learning_unit(learning_unit_year_sort_value)
     else:
@@ -49,7 +49,7 @@ def internships(request):
         else :
             query = InternshipOffer.find_internships()
 
-    #Create the options for the selected list, delete dubblons
+    # Create the options for the selected list, delete duplicated
     query_organizations = InternshipOffer.find_internships()
     internship_learning_unit_year = []
     internship_organizations = []
@@ -61,7 +61,7 @@ def internships(request):
 
     return render(request, "internships.html", {'section': 'internship',
                                                 'all_internships': query,
-                                                'all_learning_unit_year':internship_learning_unit_year,
-                                                'all_organizations':internship_organizations,
-                                                'learning_unit_year_sort_value':learning_unit_year_sort_value,
-                                                'organization_sort_value':organization_sort_value})
+                                                'all_learning_unit_year': internship_learning_unit_year,
+                                                'all_organizations': internship_organizations,
+                                                'learning_unit_year_sort_value': learning_unit_year_sort_value,
+                                                'organization_sort_value': organization_sort_value})
