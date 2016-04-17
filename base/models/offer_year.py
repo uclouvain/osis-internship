@@ -92,19 +92,15 @@ class OfferYear(models.Model):
         return None
 
 
-def find_offer_years_by_academic_year(academic_yr):
+def find_by_academic_year(academic_yr):
     return OfferYear.objects.filter(academic_year=int(academic_yr))
 
 
-def find_offer_years_by_academic_year_structure(academic_yr, struct):
-    return OfferYear.objects.filter(academic_year=academic_yr, structure=struct).order_by('acronym')
-
-
-def find_offer_years_by_structure(struct):
+def find_by_structure(struct):
     return OfferYear.objects.filter(structure=struct).order_by('academic_year', 'acronym')
 
 
-def find_offer_year_by_id(offer_year_id):
+def find_by_id(offer_year_id):
     return OfferYear.objects.get(pk=offer_year_id)
 
 

@@ -89,6 +89,7 @@ def academic_calendar_save(request, id):
         academic_calendar.academic_year = None
 
     academic_calendars = mdl.academic_calendar.find_academic_calendar_by_academic_year(academic_year)
+
     if request.POST['title']:
         academic_calendar.title = request.POST['title']
     else:
@@ -113,8 +114,8 @@ def academic_calendar_save(request, id):
         academic_calendar.highlight_shortcut = request.POST['highlight_shortcut']
     else:
         academic_calendar.highlight_shortcut = None
-    # validate
-    validation = True
+
+    academic_years = mdl.academic_year.find_academic_years()
     if form.is_valid():
         if request.POST['start_date']:
             academic_calendar.start_date = datetime.strptime(request.POST['start_date'], '%d/%m/%Y')
@@ -129,13 +130,8 @@ def academic_calendar_save(request, id):
         if academic_calendar.start_date and academic_calendar.end_date:
             if academic_calendar.start_date > academic_calendar.end_date:
                 form.errors['start_date'] = _('begin_date_lt_end_date')
-                validation = False
-    else:
-        validation = False
 
-    academic_years = mdl.academic_year.find_academic_years()
-    if validation:
-        new_academic_calendar=False
+        new_academic_calendar = False
         if academic_calendar.id is None:
             new_academic_calendar = True
         academic_calendar.save()

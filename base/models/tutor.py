@@ -102,7 +102,7 @@ def find_tutors_by_user(user):
             sessions = session_exam.find_sessions_by_offer(program_mgr.offer_year, academic_yr, None)
             for session in sessions:
                 learning_unit = session.learning_unit_year.learning_unit
-                enrollments =exam_enrollment.find_exam_enrollments_drafts_by_session(session)
+                enrollments = exam_enrollment.find_exam_enrollments_drafts_by_session(session)
                 if enrollments and len(enrollments) > 0:
                     main_tutor = find_main_tutor(learning_unit)
                     if main_tutor is not None:

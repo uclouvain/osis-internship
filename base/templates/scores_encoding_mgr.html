@@ -35,17 +35,14 @@
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'scores_encoding' %}</h2>
+    <h2>{% trans 'scores_encoding' %} mgm</h2>
   </div>
-
   {% if notes_list%}
-
       {% for note in notes_list %}
         <div class="panel panel-default">
           <div class="panel-body">
               <form method="get" action="{% url 'refresh_list'%}" id="form_search_learning_units">
             <div class="row">
-
               <div class="col-md-4">
                 <div class="form-group">
                   <label>{% trans 'academic_year' %}</label><br>
@@ -59,7 +56,7 @@
                     <select id="slt_tutor" name="tutor">
                         <option value="">{% trans 'all' %}</option>
                         {%for t in tutor_list%}
-                            <option value="{{t.id}}" {%if tutor.id == t.id%}selected{%else%}{%endif%}>{{t}}</option>
+                            <option value="{{t.id}}" {% if tutor.id == t.id %}selected{%endif%}>{{t}}</option>
                         {%endfor%}
                     </select>
                   {% endif %}

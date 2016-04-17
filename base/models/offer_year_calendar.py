@@ -52,17 +52,40 @@ class OfferYearCalendar(models.Model):
         return u"%s - %s" % (self.academic_calendar, self.offer_year)
 
 
-def save(acad_calendar):
-    academic_yr = acad_calendar.academic_year
-
-    offer_year_list = offer_year.find_offer_years_by_academic_year(academic_yr.id)
+def save(academic_cal):
+    """
+    It creates an event in the academic calendar of each annual offer when an
+    event is created in the academic calendar.
+    """
+    academic_yr = academic_cal.academic_year
+    offer_year_list = offer_year.find_by_academic_year(academic_yr.id)
     for offer_yr in offer_year_list:
         offer_yr_calendar = OfferYearCalendar()
-        offer_yr_calendar.academic_calendar = acad_calendar
+        offer_yr_calendar.academic_calendar = academic_cal
         offer_yr_calendar.offer_year = offer_yr
-        offer_yr_calendar.start_date = acad_calendar.start_date
-        offer_yr_calendar.end_date = acad_calendar.end_date
+        offer_yr_calendar.start_date = academic_cal.start_date
+        offer_yr_calendar.end_date = academic_cal.end_date
         offer_yr_calendar.save()
+
+
+def update(academic_cal):
+    offer_year_calendar_list = find_by_academic_calendar(academic_cal)
+
+    if offer_year_calendar_list:
+        for offer_year_calendar in offer_year_calendar_list:
+            if offer_year_calendar.customized:
+                # an email must be sent to the program manager
+                program_managers = program_manager.find_by_offer_year(offer_year_calendar.offer_year)
+                if program_managers and len(program_managers) > 0:
+                    send_mail.send_mail_after_academic_calendar_changes(academic_cal,
+                                                                        offer_year_calendar,
+                                                                        program_managers)
+            else:
+                offer_year_calendar.start_date = academic_cal.start_date
+                offer_year_calendar.end_date = academic_cal.end_date
+                offer_year_calendar.save()
+    else:
+        save(academic_cal)
 
 
 def offer_year_calendar_by_current_session_exam():
@@ -70,7 +93,7 @@ def offer_year_calendar_by_current_session_exam():
                                     .filter(end_date__gte=timezone.now()).first()
 
 
-def find_offer_years_by_academic_calendar(academic_cal):
+def find_by_academic_calendar(academic_cal):
     return OfferYearCalendar.objects.filter(academic_calendar=int(academic_cal.id))
 
 
@@ -83,23 +106,8 @@ def find_offer_year_calendar(offer_yr):
 
 def find_offer_year_calendars_by_academic_year(academic_yr):
     return OfferYearCalendar.objects.filter(academic_calendar__academic_year=academic_yr)\
-                                    .order_by('academic_calendar','offer_year__acronym')
+                                    .order_by('academic_calendar', 'offer_year__acronym')
 
 
 def find_by_id(offer_year_calendar_id):
     return OfferYearCalendar.objects.get(pk=offer_year_calendar_id)
-
-
-def update(acad_calendar):
-    offer_year_calendar_list = find_offer_years_by_academic_calendar(acad_calendar)
-
-    for offer_year_calendar in offer_year_calendar_list:
-        if offer_year_calendar.customized:
-            # an email must be sent to the program manager
-            program_managers = program_manager.find_by_offer_year(offer_year_calendar.offer_year)
-            if program_managers and len(program_managers) > 0:
-                send_mail.send_mail_after_academic_calendar_changes(acad_calendar, offer_year_calendar, program_managers)
-        else:
-            offer_year_calendar.start_date = acad_calendar.start_date
-            offer_year_calendar.end_date = acad_calendar.end_date
-            offer_year_calendar.save()

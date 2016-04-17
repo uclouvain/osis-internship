@@ -36,7 +36,7 @@ from base.views.notes import NotesDetail
 
 @login_required
 def scores_encoding(request):
-    tutor = mdl.tutor.find_by_user(request.user)
+    tutor = mdl.attribution.get_assigned_tutor(request.user)
     academic_yr = mdl.academic_year.current_academic_year()
     if tutor:
         data_dict = get_data(request)
@@ -61,7 +61,7 @@ def scores_encoding(request):
                 tutor_sel = mdl.tutor.find_by_id(tutor_sel_id)
             offer_sel_id = request.POST.get('offer', None)
             if offer_sel_id:
-                offer_sel = mdl.offer_year.find_offer_year_by_id(offer_sel_id)
+                offer_sel = mdl.offer_year.find_by_id(offer_sel_id)
             data_dict = get_data_pgmer(request,None,None)
             return layout.render(request, "scores_encoding_mgr.html",
                           {'notes_list':    data_dict['notes_list'],
@@ -603,7 +603,7 @@ def refresh_list(request):
 
     if offer_sel_id:
         if offer_sel_id != 'all':
-            offer_sel = mdl.offer_year.find_offer_year_by_id(offer_sel_id)
+            offer_sel = mdl.offer_year.find_by_id(offer_sel_id)
     if offer_sel or tutor_sel:
         data_dict = get_data_pgmer_by_offer(tutor_sel, offer_sel)
     else:

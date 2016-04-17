@@ -48,33 +48,33 @@
             {% csrf_token %}
             <div class="row">
                 <div class="col-md-2">
-                    <label for="academic_year">{% trans 'academic_year'%}</label>
+                    <label for="slt_academic_year">{% trans 'academic_year'%}</label>
                     <select class="form-control" id="slt_academic_year" name="academic_year">
                         {% for v in academic_years %}
-                        {% if v.id == academic_calendar.academic_year %}
-                        <option selected value="{{ v.id }}">{{ v }}</option>
-                        {% else %}
-                        <option value="{{ v.id }}">{{ v }}</option>
-                        {% endif %}
+                            {% if v.id == academic_calendar.academic_year %}
+                                <option selected value="{{ v.id }}">{{ v }}</option>
+                            {% else %}
+                                <option value="{{ v.id }}">{{ v }}</option>
+                            {% endif %}
                         {% endfor %}
                     </select>
                 </div>
                 <div class="col-md-6">
-                    <label for="title">{% trans 'title' %}</label>
+                    <label for="txt_title">{% trans 'title' %}</label>
                     <input class="form-control" value="{{ academic_calendar.title | default_if_none:'' }}"
                            name="title" id="txt_title"><font class="error">{{ form.title.errors }}</font>
                 </div>
                 <div class="col-md-2">
-                    <label for="start_date">{% trans 'start_date'%}</label>
+                    <label for="txt_start_date">{% trans 'start_date'%}</label>
                     <input type="text" class="form-control"
-                           value="{{ academic_calendar.start_date| default_if_none:''|date:"j/m/Y" }}"
+                           value="{{ academic_calendar.start_date| default_if_none:''|date:'j/m/Y' }}"
                     name="start_date" id="txt_start_date"><font class="error">{{ form.start_date.errors }}</font>
                 </div>
                 <div class="col-md-2">
-                    <label for="end_date">{% trans 'end_date' %}</label>
+                    <label for="txt_end_date">{% trans 'end_date' %}</label>
                     <input type="text" class="form-control"
-                           value="{{ academic_calendar.end_date| default_if_none:''|date:"j/m/Y" }}"
-                    name="end_date" id="txt_end_date"><font class="error">{{ form.end_date.errors }}</font>
+                           value="{{ academic_calendar.end_date| default_if_none:''|date:'j/m/Y' }}"
+                           name="end_date" id="txt_end_date"><font class="error">{{ form.end_date.errors }}</font>
                 </div>
             </div>
             <br>
