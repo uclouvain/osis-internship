@@ -29,9 +29,9 @@ from internship.views import home, internship, master, period, place, student, s
 
 urlpatterns = [
     # S'il vous plaît, organiser les urls par ordre alphabétique.
-    url(r'', internship.internships, name='internships'),
-    url(r'^home/$', home.internships_home, name='internships_home'),
-    url(r'^interships_masters/$', master.interships_masters, name='interships_masters'),
+    url(r'^$', home.internships_home, name='internships_home'),
+    url(r'^internships', internship.internships, name='internships'),
+    url(r'^internships_masters/$', master.interships_masters, name='interships_masters'),
     url(r'^periods/$', period.internships_periods, name='internships_periods'),
     url(r'^places/$', place.internships_places, name='internships_places'),
     url(r'^students/$', student.internships_students, name='internships_students'),
