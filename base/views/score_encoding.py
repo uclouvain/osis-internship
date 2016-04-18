@@ -66,7 +66,7 @@ def scores_encoding(request):
             return layout.render(request, "scores_encoding_mgr.html",
                           {'notes_list':    data_dict['notes_list'],
                            'offer_list':    mdl.offer_year.find_by_user(request.user),
-                           'tutor_list':    mdl.tutor.find_tutors_by_user(request.user),
+                           'tutor_list':    mdl.tutor.find_by_program_manager(request.user),
                            'tutor':         tutor_sel,
                            'offer':         offer_sel,
                            'academic_year': data_dict['academic_year']})
@@ -586,7 +586,7 @@ def get_data_pgmer(request, tutor_sel, offer_sel):
         notes_detail.lu = l
         notes_detail.nb_notes_encoded = dict_progress_ok.get(l.acronym)
         notes_detail.nb_student = dict_progress.get(l.acronym)
-        notes_detail.tutor = mdl.tutor.find_main_tutor(l)
+        notes_detail.tutor = mdl.tutor.find_responsible(l)
         if notes_detail.tutor:
             l_lu_detail.append(notes_detail)
     notes.lu_list = l_lu_detail
@@ -620,7 +620,7 @@ def refresh_list(request):
     return layout.render(request, "scores_encoding_mgr.html",
                   {'notes_list':    data_dict['notes_list'],
                    'offer_list':    mdl.offer_year.find_by_user(request.user),
-                   'tutor_list':    mdl.tutor.find_tutors_by_user(request.user),
+                   'tutor_list':    mdl.tutor.find_by_program_manager(request.user),
                    'tutor':     tutor_sel,
                    'offer':     offer_sel,
                    'academic_year': data_dict['academic_year']})
@@ -680,7 +680,7 @@ def get_data_pgmer_by_offer(tutor_sel, offer_sel):
         notes_detail.lu = l
         notes_detail.nb_notes_encoded = dict_progress_ok.get(l.acronym,0)
         notes_detail.nb_student = dict_progress.get(l.acronym,0)
-        notes_detail.tutor = mdl.tutor.find_main_tutor(l)
+        notes_detail.tutor = mdl.tutor.find_responsible(l)
         if notes_detail.tutor:
             l_lu_detail.append(notes_detail)
     notes.lu_list = l_lu_detail
