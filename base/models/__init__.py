@@ -25,6 +25,7 @@
 ##############################################################################
 from base.models import academic_year
 from base.models import academic_calendar
+from base.models import application_notice
 from base.models import attribution
 from base.models import document_file
 from base.models import domain

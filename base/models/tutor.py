@@ -26,7 +26,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.contrib import admin
-from base.models import person
+from base.models import person, attribution, academic_year, program_manager, session_exam, exam_enrollment
 
 
 class TutorAdmin(admin.ModelAdmin):
@@ -38,8 +38,8 @@ class TutorAdmin(admin.ModelAdmin):
 
 class Tutor(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed     = models.DateTimeField(null=True)
-    person      = models.ForeignKey('Person')
+    changed = models.DateTimeField(null=True)
+    person = models.ForeignKey('Person')
 
     def __str__(self):
         return u"%s" % self.person
@@ -60,3 +60,53 @@ def find_by_person(a_person):
         return tutor
     except ObjectDoesNotExist:
         return None
+
+
+def find_by_learning_unit(a_learning_unit):
+    tutor_list = []
+    for at in attribution.find_by_learning_unit(a_learning_unit):
+        tutor_list.append(at.tutor)
+    return tutor_list
+
+
+def find_by_id(tutor_id):
+    return Tutor.objects.get(id=tutor_id)
+
+
+def find_main_tutor(a_learning_unit):
+    # S'il y a un seul enseignant => c'est cet enseignant
+    # S'il y a plusieurs enseignants et un coordinateur => c'est le coordinateur
+    # S'il y a plusieurs enseignants et pas de coordinateur => premier enseignant par l'ordre alphabétique
+    attribution_list = attribution.find_by_learning_unit(a_learning_unit)
+
+    if attribution_list and len(attribution_list) > 0:
+        if len(attribution_list) == 1:
+            return attribution_list[0].tutor
+        else:
+            for lu_attribution in attribution_list:
+                if lu_attribution.function == 'COORDINATOR':
+                    return lu_attribution.tutor
+            return attribution_list[0].tutor
+    return None
+
+
+def find_tutors_by_user(user):
+    """
+    To find all the tutors managed by a program manager
+    """
+    academic_yr = academic_year.current_academic_year()
+    program_mgr_list= program_manager.find_by_user(user)
+    tutor_list=[]
+    for program_mgr in program_mgr_list:
+        if program_mgr.offer_year:
+            sessions = session_exam.find_sessions_by_offer(program_mgr.offer_year, academic_yr, None)
+            for session in sessions:
+                learning_unit = session.learning_unit_year.learning_unit
+                enrollments = exam_enrollment.find_exam_enrollments_drafts_by_session(session)
+                if enrollments and len(enrollments) > 0:
+                    main_tutor = find_main_tutor(learning_unit)
+                    if main_tutor is not None:
+                        if main_tutor not in tutor_list:
+                            tutor_list.append(main_tutor)
+
+    return tutor_list

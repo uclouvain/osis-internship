@@ -51,16 +51,16 @@ class ExamEnrollment(models.Model):
         ('SAVED', _('saved')),
         ('SUBMITTED', _('submitted')))
 
-    external_id              = models.CharField(max_length=100, blank=True, null=True)
-    changed                  = models.DateTimeField(null=True)
-    score_draft              = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
-    score_reencoded          = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
-    score_final              = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
-    justification_draft      = models.CharField(max_length=20, blank=True, null=True, choices=JUSTIFICATION_TYPES)
-    justification_reencoded  = models.CharField(max_length=20, blank=True, null=True, choices=JUSTIFICATION_TYPES)
-    justification_final      = models.CharField(max_length=20, blank=True, null=True, choices=JUSTIFICATION_TYPES)
-    encoding_status          = models.CharField(max_length=9, blank=True, null=True, choices=ENCODING_STATUS_LIST)
-    session_exam             = models.ForeignKey('SessionExam')
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    changed = models.DateTimeField(null=True)
+    score_draft = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
+    score_reencoded = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
+    score_final = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
+    justification_draft = models.CharField(max_length=20, blank=True, null=True, choices=JUSTIFICATION_TYPES)
+    justification_reencoded = models.CharField(max_length=20, blank=True, null=True, choices=JUSTIFICATION_TYPES)
+    justification_final = models.CharField(max_length=20, blank=True, null=True, choices=JUSTIFICATION_TYPES)
+    encoding_status = models.CharField(max_length=9, blank=True, null=True, choices=ENCODING_STATUS_LIST)
+    session_exam = models.ForeignKey('SessionExam')
     learning_unit_enrollment = models.ForeignKey('LearningUnitEnrollment')
 
     def student(self):
@@ -143,9 +143,15 @@ def calculate_session_exam_progress(session_exam):
 
 def justification_label_authorized(is_fac):
     if is_fac:
-        return '%s, %s, %s, %s, %s' % (_('absent'),_('cheating'), _('ill'),  _('justified_absence'), _('score_missing'))
+        return '%s, %s, %s, %s, %s' % (_('absent'),
+                                       _('cheating'),
+                                       _('ill'),
+                                       _('justified_absence'),
+                                       _('score_missing'))
     else:
-        return '%s, %s, %s' % (_('absent'), _('cheating'),_('score_missing'))
+        return '%s, %s, %s' % (_('absent'),
+                               _('cheating'),
+                               _('score_missing'))
 
 
 class ExamEnrollmentHistoryAdmin(admin.ModelAdmin):
@@ -154,11 +160,11 @@ class ExamEnrollmentHistoryAdmin(admin.ModelAdmin):
 
 
 class ExamEnrollmentHistory(models.Model):
-    exam_enrollment     = models.ForeignKey(ExamEnrollment)
-    person              = models.ForeignKey(person.Person)
-    score_final         = models.DecimalField(max_digits=4, decimal_places=2, null=True)
+    exam_enrollment = models.ForeignKey(ExamEnrollment)
+    person = models.ForeignKey(person.Person)
+    score_final = models.DecimalField(max_digits=4, decimal_places=2, null=True)
     justification_final = models.CharField(max_length=20, null=True, choices=JUSTIFICATION_TYPES)
-    modification_date   = models.DateTimeField(auto_now=True)
+    modification_date = models.DateTimeField(auto_now=True)
 
 
 def create_exam_enrollment_historic(user, enrollment, score, justification):
@@ -168,3 +174,48 @@ def create_exam_enrollment_historic(user, enrollment, score, justification):
     exam_enrollment_history.justification_final = justification
     exam_enrollment_history.person = person.find_by_user(user)
     exam_enrollment_history.save()
+
+
+def get_progress(session_exm_list, learning_unt):
+    tot_progress = 0
+    tot_enrollments = 0
+    for session_exm in session_exm_list:
+        enrollments = list(find_exam_enrollments_by_session_learningunit(session_exm, learning_unt))
+        if enrollments:
+            progress = 0
+            for e in enrollments:
+                if e.score_final is not None or e.justification_final is not None:
+                    progress += 1
+            tot_progress = tot_progress+progress
+            tot_enrollments += len(enrollments)
+    return str(tot_progress)+"/"+str(tot_enrollments)
+
+
+def find_exam_enrollments_by_session_learningunit(session_exm, learning_unt):
+    enrollments = ExamEnrollment.objects.filter(session_exam=session_exm) \
+        .filter(learning_unit_enrollment__learning_unit_year__learning_unit=learning_unt)
+    return enrollments
+
+
+def find_exam_enrollments_by_session_structure(session_exm, structure):
+    enrollments = ExamEnrollment.objects.filter(session_exam=session_exm) \
+        .filter(learning_unit_enrollment__offer_enrollment__offer_year__structure=structure) \
+        .order_by('learning_unit_enrollment__offer_enrollment__offer_year__acronym',
+                  'learning_unit_enrollment__offer_enrollment__student__person__last_name',
+                  'learning_unit_enrollment__offer_enrollment__student__person__first_name')
+    return enrollments
+
+
+def find_exam_enrollments_by_session_pgm(session_exm,program_mgr_list):
+    offer_year_structures = []
+    for p in program_mgr_list:
+        if p.offer_year.structure not in offer_year_structures:
+            offer_year_structures.append(p.offer_year.structure)
+
+    enrollments = ExamEnrollment.objects.filter(session_exam=session_exm) \
+                .filter(learning_unit_enrollment__offer_enrollment__offer_year__structure__in=offer_year_structures)\
+                .order_by('learning_unit_enrollment__offer_enrollment__offer_year__acronym',
+                          'learning_unit_enrollment__offer_enrollment__student__person__last_name',
+                          'learning_unit_enrollment__offer_enrollment__student__person__first_name')
+
+    return enrollments

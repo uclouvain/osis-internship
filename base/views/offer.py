@@ -23,8 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.shortcuts import render
 from base import models as mdl
+from . import layout
 
 
 def offers(request):
@@ -36,11 +36,11 @@ def offers(request):
     academic_year_calendar = mdl.academic_year.current_academic_year()
     if academic_year_calendar:
         academic_yr = academic_year_calendar.id
-    return render(request, "offers.html", {'faculties': faculties,
-                                           'academic_year': academic_yr,
-                                           'academic_years': academic_years,
-                                           'offers': [],
-                                           'init': "1"})
+    return layout.render(request, "offers.html", {'faculties': faculties,
+                                                  'academic_year': academic_yr,
+                                                  'academic_years': academic_years,
+                                                  'offers': [],
+                                                  'init': "1"})
 
 
 def offers_search(request):
@@ -55,16 +55,16 @@ def offers_search(request):
 
     offer_years = mdl.offer_year.search_root_offers(entity=entity, academic_yr=academic_yr, acronym=acronym)
 
-    return render(request, "offers.html", {'academic_year':   academic_yr,
-                                           'entity_acronym':  entity,
-                                           'code':            acronym,
-                                           'academic_years':  academic_years,
-                                           'offer_years':     offer_years,
-                                           'init':            "0"})
+    return layout.render(request, "offers.html", {'academic_year': academic_yr,
+                                                  'entity_acronym': entity,
+                                                  'code': acronym,
+                                                  'academic_years': academic_years,
+                                                  'offer_years': offer_years,
+                                                  'init': "0"})
 
 
 def offer_read(request, offer_year_id):
-    offer_yr = mdl.offer_year.find_offer_year_by_id(offer_year_id)
+    offer_yr = mdl.offer_year.find_by_id(offer_year_id)
     offer_yr_events = mdl.offer_year_calendar.find_offer_year_calendar(offer_yr)
-    return render(request, "offer.html", {'offer_year': offer_yr,
+    return layout.render(request, "offer.html", {'offer_year': offer_yr,
                                           'offer_year_events': offer_yr_events})

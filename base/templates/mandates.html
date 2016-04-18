@@ -26,34 +26,21 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-<li class="active">{% trans 'institution' %}</li>
+<li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'institution' %}</a></li>
+<li class="active">{% trans 'mandates' %}</li>
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h2>{% trans 'institution' %}</h2>
+    <h2>{% trans 'mandates' %}</h2>
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
         <div class="row">
-            <div class="col-md-1"><i class="fa fa-university" style="font-size: 400%; color: #6699FF;"></i></div>
-            <div class="col-md-5">
-                <h4 class="media-heading"><a href="{% url 'organizations' %}" id="lnk_organizations">
-                    {% trans 'organizations'%}</a></h4>
-                <p>{% trans 'desc_lnk_organizations' %}</p>
-            </div>
-            <div class="col-md-1"><i class="fa fa-sitemap" style="font-size: 400%; color: #6699FF;"></i></div>
-            <div class="col-md-5">
-                <h4 class="media-heading"><a href="{% url 'structures' %}" id="lnk_entities">{% trans 'entities'%}</a></h4>
-                <p>{% trans 'desc_lnk_entities' %}</p>
-            </div>
-        </div>
-        <br>
-        <div class="row">
             <div class="col-md-1"><i class="fa fa-sitemap" style="font-size: 400%; color: #6699FF;"></i></div>
             <div class="col-md-11">
-                <h4 class="media-heading"><a href="{% url 'mandates' %}" id="lnk_mandates">
-                    {% trans 'mandates'%}</a></h4>
-                <p>{% trans 'desc_lnk_organizations' %}</p>
+                <h4 class="media-heading"><a href="{% url 'assistants_home' %}" id="lnk_assistants">
+                    {% trans 'assistants' %}</a></h4>
+                <p>{% trans 'desc_assistants' %}</p>
             </div>
         </div>
     </div>

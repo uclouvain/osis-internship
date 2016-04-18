@@ -25,7 +25,6 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-from base.models import organization
 
 
 class OrganizationAddressAdmin(admin.ModelAdmin):
@@ -35,11 +34,11 @@ class OrganizationAddressAdmin(admin.ModelAdmin):
 
 class OrganizationAddress(models.Model):
     organization = models.ForeignKey('Organization')
-    label        = models.CharField(max_length=20)
-    location     = models.CharField(max_length=255)
-    postal_code  = models.CharField(max_length=20)
-    city         = models.CharField(max_length=255)
-    country      = models.CharField(max_length=255)
+    label = models.CharField(max_length=20)
+    location = models.CharField(max_length=255)
+    postal_code = models.CharField(max_length=20)
+    city = models.CharField(max_length=255)
+    country = models.CharField(max_length=255)
 
 
 def find_by_organization(organization):
