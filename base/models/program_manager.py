@@ -26,17 +26,18 @@
 
 from django.db import models
 from django.contrib import admin
-from base.models import person, offer_year
+from base.models import person
 from django.core.exceptions import ObjectDoesNotExist
 
 
 class ProgrammeManagerAdmin(admin.ModelAdmin):
     list_display = ('person', 'offer_year')
+    raw_id_fields = ('person', 'offer_year')
 
 
 class ProgrammeManager(models.Model):
     changed = models.DateTimeField(null=True)
-    person  = models.ForeignKey('Person')
+    person = models.ForeignKey('Person')
     offer_year = models.ForeignKey('OfferYear', blank=True, null=True)
 
     @property

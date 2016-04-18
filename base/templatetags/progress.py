@@ -23,20 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.conf.urls import include, url
-from django.contrib import admin
-from django.conf import settings
+from django import template
+from base.models.exam_enrollment import get_progress
 
-urlpatterns = [
-    url(r'^'+settings.ADMIN_URL, admin.site.urls),
-    url(r'', include('base.urls')),
-    url(r'^assistants/', include('assistant.urls')),
-    url(r'^internships/', include('internship.urls')),
-]
+register = template.Library()
 
-handler404 = 'base.views.common.page_not_found'
-handler403 = 'base.views.common.access_denied'
-
-admin.site.site_header = 'OSIS'
-admin.site.site_title  = 'OSIS'
-admin.site.index_title = 'Louvain'
+@register.assignment_tag(takes_context=True)
+def progress(context):
+    sessions = context['sessions']
+    learning_unit = context['lu']
+    return get_progress(sessions, learning_unit)

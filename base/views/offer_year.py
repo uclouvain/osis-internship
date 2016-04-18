@@ -24,18 +24,18 @@
 #
 ##############################################################################
 from datetime import datetime
-from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
 from base.forms import OfferYearCalendarForm
 from base import models as mdl
 from base.views import offer
+from . import layout
 
 
 def offer_year_calendar_read(request, id):
     offer_year_calendar = mdl.offer_year_calendar.find_by_id(id)
     is_programme_manager = mdl.program_manager.is_programme_manager(request.user,offer_year_calendar.offer_year)
-    return render(request, "offer_year_calendar.html", {'offer_year_calendar':   offer_year_calendar,
-                                                        'is_programme_manager' : is_programme_manager})
+    return layout.render(request, "offer_year_calendar.html", {'offer_year_calendar':   offer_year_calendar,
+                                                               'is_programme_manager' : is_programme_manager})
 
 
 def offer_year_calendar_save(request, id):
@@ -73,10 +73,10 @@ def offer_year_calendar_save(request, id):
         offer_year_calendar.save()
         return offer.offer_read(request,offer_year_calendar.offer_year.id)
     else:
-        return render(request, "offer_year_calendar_form.html", {'offer_year_calendar': offer_year_calendar,
-                                                                 'form': form})
+        return layout.render(request, "offer_year_calendar_form.html", {'offer_year_calendar': offer_year_calendar,
+                                                                        'form': form})
 
 
 def offer_year_calendar_edit(request, id):
     offer_year_calendar = mdl.offer_year_calendar.find_by_id(id)
-    return render(request, "offer_year_calendar_form.html", {'offer_year_calendar': offer_year_calendar})
+    return layout.render(request, "offer_year_calendar_form.html", {'offer_year_calendar': offer_year_calendar})

@@ -66,6 +66,7 @@ class CountryAdmin(admin.ModelAdmin):
 
 
 class Country(models.Model):
+    external_id = models.CharField(max_length=100, blank=True, null=True)
     iso_code = models.CharField(max_length=2, unique=True)
     name = models.CharField(max_length=80, unique=True)
     nationality = models.CharField(max_length=80, blank=True, null=True)
@@ -73,7 +74,7 @@ class Country(models.Model):
     dialing_code = models.CharField(max_length=3, blank=True, null=True)
     cref_code = models.CharField(max_length=3, blank=True, null=True)
     currency = models.ForeignKey('Currency', blank=True, null=True, on_delete=models.CASCADE)
-    continent = models.ForeignKey('Continent', on_delete=models.CASCADE)
+    continent = models.ForeignKey('Continent', blank=True, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name

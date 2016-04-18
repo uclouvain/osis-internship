@@ -23,3 +23,21 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django import shortcuts
+from base import models as mdl
+
+
+def render(request, template, values):
+    if 'subject' not in request.session and 'notice' not in request.session:
+        print('test')
+        notice = mdl.application_notice.find_current_notice()
+        if notice:
+            request.session.set_expiry(3600)
+            request.session['subject'] = notice.subject
+            request.session['notice'] = notice.notice
+    
+    if 'subject' in request.session and 'notice' in request.session:
+        values['subject'] = request.session['subject']
+        values['notice'] = request.session['notice']
+
+    return shortcuts.render(request, template, values)

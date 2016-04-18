@@ -60,13 +60,12 @@ def add_header_footer(canvas, doc):
     canvas.restoreState()
 
 
-def print_notes(request, tutor, academic_year, session_exam, learning_unit_year_id):
+def print_notes(request, tutor, academic_year, learning_unit_id, is_fac,sessions_list):
     """
     Create a multi-page document
     :param request:
     :param tutor:
     :param academic_year:
-    :param session_exam:
     :param learning_unit_year_id:
     """
 
@@ -85,32 +84,15 @@ def print_notes(request, tutor, academic_year, session_exam, learning_unit_year_
     styles.add(ParagraphStyle(name='Justify', alignment=TA_JUSTIFY))
 
     content = []
-    is_fac = mdl.program_manager.is_programme_manager(request.user,session_exam.offer_year_calendar.offer_year)
-    sessions_list=[]
-    if learning_unit_year_id != -1 :
-        #par cours
-        list_exam_enrollment = mdl.exam_enrollment.find_exam_enrollments_by_session(session_exam)
-    else:
-        if tutor:
-            sessions = mdl.session_exam.find_sessions_by_tutor(tutor, academic_year)
-            sessions_list.append(sessions)
-        # In case the user is not a tutor we check whether it is member of a faculty.
-        elif is_fac:
-            program_mgr_list = mdl.program_manager.find_by_user(request.user)
-            for program_mgr in program_mgr_list:
-                if program_mgr.offer_year:
-                    sessions = mdl.session_exam.find_sessions_by_offer(program_mgr.offer_year, academic_year)
-                    sessions_list.append(sessions)
 
-        # Calculate the progress of all courses of the tutor.
-        list_exam_enrollment = []
-        for sessions in sessions_list:
-            for session in sessions:
-                enrollments = list(mdl.exam_enrollment.find_exam_enrollments_by_session(session))
-                if enrollments:
-                    list_exam_enrollment = list_exam_enrollment + enrollments
+    list_exam_enrollment = []
+    for sessions in sessions_list:
+        for session in sessions:
+            enrollments = list(mdl.exam_enrollment.find_exam_enrollments_by_session(session))
+            if enrollments:
+                list_exam_enrollment = list_exam_enrollment + enrollments
 
-    list_notes_building(session_exam, learning_unit_year_id, academic_year, list_exam_enrollment, styles, is_fac, content)
+    list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, styles, is_fac, content)
 
     doc.build(content, onFirstPage=add_header_footer, onLaterPages=add_header_footer)
     # doc.build(content)
@@ -146,7 +128,7 @@ def footer_building(canvas, doc, styles):
     footer.drawOn(canvas, doc.leftMargin, h)
 
 
-def list_notes_building(session_exam, learning_unit_year_id, academic_year, list_exam_enrollment, styles,
+def list_notes_building(learning_unit_year_id, academic_year, list_exam_enrollment, styles,
                         is_fac, content):
 
     content.append(Paragraph('''
@@ -169,7 +151,7 @@ def list_notes_building(session_exam, learning_unit_year_id, academic_year, list
                 current_learning_unit_year = rec_exam_enrollment.learning_unit_enrollment.learning_unit_year
             if o != old_pgm:
                 #Autre programme - 1. mettre les critères
-                main_data(academic_year, session_exam, styles, current_learning_unit_year,old_pgm, content)
+                main_data(academic_year, rec_exam_enrollment.session_exam, styles, current_learning_unit_year,old_pgm, content)
                 #Autre programme - 2. il faut écrire le tableau
 
                 t=Table(data, COLS_WIDTH, repeatRows=1)
@@ -199,7 +181,7 @@ def list_notes_building(session_exam, learning_unit_year_id, academic_year, list
             justification = ""
             if rec_exam_enrollment.justification_final:
                 justification = dict(mdl.exam_enrollment.JUSTIFICATION_TYPES)[rec_exam_enrollment.justification_final]
-            end_date = session_exam.offer_year_calendar.end_date # end_date ne devrait jamais etre None !
+            end_date=rec_exam_enrollment.session_exam.offer_year_calendar.end_date.strftime('%d/%m/%Y')
             data.append([student.registration_id,
                          person.last_name,
                          person.first_name,
@@ -209,7 +191,7 @@ def list_notes_building(session_exam, learning_unit_year_id, academic_year, list
         cpt += 1
 
     if not old_pgm is None:
-        main_data(academic_year, session_exam, styles, current_learning_unit_year, old_pgm, content)
+        main_data(academic_year, rec_exam_enrollment.session_exam, styles, current_learning_unit_year, old_pgm, content)
         t = Table(data,COLS_WIDTH)
         t.setStyle(TableStyle([('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
                                ('BOX', (0, 0), (-1,-1), 0.25, colors.black),

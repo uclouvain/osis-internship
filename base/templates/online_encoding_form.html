@@ -30,7 +30,7 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'studies' %}</a></li>
+  <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
   <li><a href="{% url 'assessments' %}" id="lnk_assessments">{% trans 'evaluations' %}</a></li>
   <li><a href="{% url 'scores_encoding' %}" id="lnk_scores_encoding">{% trans 'scores_encoding' %}</a></li>
   <li class="active">{% trans 'online_encoding' %}</li>
@@ -41,11 +41,11 @@
   </div>
   <div class="panel panel-default">
     <div class="panel-heading">
-      <h3 class="panel-title" style="font-size: 150%; color: #3399CC;">{{ session.learning_unit_year }}</h3>
+      <h3 class="panel-title" style="font-size: 150%; color: #3399CC;">{{ learning_unit }}</h3>
     </div>
     <div class="panel-body">
       <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-6">
           <div class="form-group">
             <label>{% trans 'responsible' %}</label><br>
             {{ tutor }}
@@ -55,12 +55,6 @@
           <div class="form-group">
             <label>{% trans 'academic_year' %}</label><br>
             {{ academic_year }}
-          </div>
-        </div>
-        <div class="col-md-2">
-          <div class="form-group">
-            <label>{% trans 'session' %}</label><br>
-            {{ session.number_session }}
           </div>
         </div>
         <div class="col-md-3">
@@ -74,14 +68,14 @@
       <div class="row">
         <div class="alert alert-warning">
             {% get_current_language as LANGUAGE_CODE %}
-            {% if  session.learning_unit_year.decimal_scores %}
+            {% if enrollment.session_exam.learning_unit_year.decimal_scores %}
               {% trans 'decimal_values_accepted' %}
             {% else %}
               {% trans 'decimal_values_ignored' %}
             {% endif %}
         </div>
       </div>
-      <form class="form-inline" method="POST" action="{% url 'online_encoding_form' session.id %}" id="form_online_encoding">
+      <form class="form-inline" method="POST" action="{%if tutor%}{% url 'online_encoding_form' learning_unit.id tutor.id %}{%else%}{% url 'online_encoding_form' learning_unit.id %}{%endif%}" id="form_online_encoding">
         {% csrf_token %}
 
         <table class="table table-hover">
@@ -136,9 +130,9 @@
             </tbody>
         </table>
 
-        <button type="submit" class="btn btn-primary" id="bt_submit_online_encoding"><span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'save' %}</button>
-        <a class="btn btn-default" href="{% url 'online_encoding' session.id %}" role="button" id="lnk_cancel_online_encoding">
-          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
+        <button type="submit" class="btn btn-primary" id="bt_submit_online_encoding"><span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'Save' %}</button>
+        <a class="btn btn-default" href="{%if tutor%}{% url 'online_encoding' learning_unit.id tutor.id%}{%else%}{% url 'online_encoding' learning_unit.id %}{%endif%}" role="button" id="lnk_cancel_online_encoding"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'Cancel' %}</a>
+
       </form>
     </div>
   </div>
