@@ -58,8 +58,6 @@ def export_xls(request, learning_unit_id,academic_year_id, is_fac, sessions_list
 
     ws.append(HEADER)
 
-    dv = __create_data_list_for_justification(is_fac)
-    ws.add_data_validation(dv)
 
     cptr = 1
     if sessions_list:
@@ -98,9 +96,8 @@ def export_xls(request, learning_unit_id,academic_year_id, is_fac, sessions_list
 
                     cptr += 1
                     __coloring_non_editable(ws, cptr, rec_exam_enrollment.encoding_status,score,rec_exam_enrollment.justification_final)
+    ws.append([str(_('Values allowed for \'other score\'')),mdl.exam_enrollment.justification_label_authorized(is_fac)])
 
-    # Ajouter 100 pour si on ajoute des enregistrements
-    dv.ranges.append('I2:I' + str(cptr + 100))
 
     response = HttpResponse(content=save_virtual_workbook(wb, as_template=True))
     response['Content-Disposition'] = 'attachment; filename=score_encoding.xlsx'
