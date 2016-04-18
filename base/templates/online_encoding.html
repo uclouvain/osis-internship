@@ -80,8 +80,13 @@
         </div>
       </div>
         {% if enrollments and progress != 100 %}
-          <a class="btn btn-default" href="{% url 'online_encoding_form' learning_unit.id tutor.id%}" role="button" id="lnk_encode"><i class="fa fa-hashtag"></i> {% trans 'Encode' %}</a>
-          <a class="btn btn-default" href="{% url 'online_double_encoding_form' learning_unit.id tutor.id %}" role="button" id="lnk_online_double_encoding"><i class="fa fa-hashtag"></i><i class="fa fa-hashtag"></i> {% trans 'Double encoding' %}</a>
+          {% if tutor %}
+            <a class="btn btn-default" href="{% url 'online_encoding_form' learning_unit.id tutor.id%}" role="button" id="lnk_encode"><i class="fa fa-hashtag"></i> {% trans 'Encode' %}</a>
+            <a class="btn btn-default" href="{% url 'online_double_encoding_form' learning_unit.id tutor.id %}" role="button" id="lnk_online_double_encoding"><i class="fa fa-hashtag"></i><i class="fa fa-hashtag"></i> {% trans 'Double encoding' %}</a>
+          {%else%}
+<a class="btn btn-default" href="{% url 'online_encoding_form_pgmer' learning_unit.id  %}" role="button" id="lnk_encode"><i class="fa fa-hashtag"></i> {% trans 'Encode' %}</a>
+            <a class="btn btn-default" href="{% url 'online_double_encoding_form_pgmer' learning_unit.id  %}" role="button" id="lnk_online_double_encoding"><i class="fa fa-hashtag"></i><i class="fa fa-hashtag"></i> {% trans 'Double encoding' %}</a>
+          {%endif%}
           <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#pnl_submission_scores_modal" id="bt_score_submission_modal"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'Submission' %}</button>
           <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#pnl_upload_score_modal" title="{% trans 'Select a xls file from which to injec scores' %}" id="bt_upload_score_modal"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> {% trans 'Submit xls file' %}</button>
 
@@ -146,7 +151,7 @@
   <div class="modal fade" id="pnl_upload_score_modal" tabindex="-1" role="dialog" aria-labelledby="uploadScoresLabel">
       <div class="modal-dialog" role="document">
           <div class="modal-content">
-              <form method="post" enctype="multipart/form-data" action="{% url 'upload_encoding' learning_unit.id tutor.id%}">
+              <form method="post" enctype="multipart/form-data" action="{%if tutor%}{% url 'upload_encoding' learning_unit.id tutor.id%}{%else%}{% url 'upload_encoding_pgmer' learning_unit.id %}{%endif%}">
                   {% csrf_token %}
                   <div class="modal-header">
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="bt_close_upload_score_modal"><span aria-hidden="true">&times;</span></button>

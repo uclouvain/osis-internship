@@ -203,10 +203,16 @@ def find_exam_enrollments_by_session_structure(session_exm, structure):
     return enrollments
 
 
-def find_exam_enrollments_by_session_tutor(session_exm, tutor):
+def find_exam_enrollments_by_session_pgm(session_exm,program_mgr_list):
+    print('find_exam_enrollments_by_session_pgm')
+    offer_year_structures = []
+    for p in program_mgr_list:
+        if p.offer_year.structure not in offer_year_structures:
+            offer_year_structures.append(p.offer_year.structure)
+    print('ll',offer_year_structures)
     enrollments = ExamEnrollment.objects.filter(session_exam=session_exm) \
-        .filter(learning_unit_enrollment__offer_enrollment__offer_year__structure=structure) \
-        .order_by('learning_unit_enrollment__offer_enrollment__offer_year__acronym',
-                  'learning_unit_enrollment__offer_enrollment__student__person__last_name',
-                  'learning_unit_enrollment__offer_enrollment__student__person__first_name')
+                    .filter(learning_unit_enrollment__offer_enrollment__offer_year__structure__in=offer_year_structures)\
+                    .order_by('learning_unit_enrollment__offer_enrollment__offer_year__acronym',
+                              'learning_unit_enrollment__offer_enrollment__student__person__last_name',
+                              'learning_unit_enrollment__offer_enrollment__student__person__first_name')
     return enrollments

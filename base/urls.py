@@ -64,17 +64,21 @@ urlpatterns = [
     url(r'^studies/assessments/$', common.assessments, name='assessments'),
     url(r'^studies/assessments/scores_encoding$', score_encoding.scores_encoding, name='scores_encoding'),
     url(r'^studies/assessments/scores_encoding/online/([0-9]+)/([0-9]+)/$', score_encoding.online_encoding, name='online_encoding'),
+    url(r'^studies/assessments/scores_encoding/online_pgmer/([0-9]+)/$', score_encoding.online_encoding_pgmer, name='online_encoding_pgmer'),
     url(r'^studies/assessments/scores_encoding/search/$', score_encoding.refresh_list, name='refresh_list'),
 
 
     url(r'^studies/assessments/scores_encoding/online/([0-9]+)/([0-9]+)/form$', score_encoding.online_encoding_form, name='online_encoding_form'),
+    url(r'^studies/assessments/scores_encoding/online_pgmer/([0-9]+)/form$', score_encoding.online_encoding_form_pgmer, name='online_encoding_form_pgmer'),
     url(r'^studies/assessments/scores_encoding/online/([0-9]+)/submission$', score_encoding.online_encoding_submission, name='online_encoding_submission'),
     url(r'^studies/assessments/scores_encoding/online/([0-9]+)/([0-9]+)/double_form$', score_encoding.online_double_encoding_form, name='online_double_encoding_form'),
+    url(r'^studies/assessments/scores_encoding/online/([0-9]+)/double_form_pgmer$', score_encoding.online_double_encoding_form_pgmer, name='online_double_encoding_form_pgmer'),
     url(r'^studies/assessments/scores_encoding/online/([0-9]+)/([0-9]+)/double_validation$', score_encoding.online_double_encoding_validation, name='online_double_encoding_validation'),
     url(r'^studies/assessments/scores_encoding/notes_printing_all/([0-9]+)/$', score_encoding.notes_printing_all, name='notes_printing_all'),
     url(r'^studies/assessments/scores_encoding/notes_printing/([0-9]+)/([0-9]+)/$', score_encoding.notes_printing, name='notes_printing'),
     url(r'^studies/assessments/scores_encoding/xlsdownload/([0-9]+)/([0-9]+)/$',score_encoding.export_xls, name='scores_encoding_download'),
     url(r'^studies/assessments/scores_encoding/upload/([0-9]+)/([0-9]+)/$', upload_xls_utils.upload_scores_file,name='upload_encoding'),
+    url(r'^studies/assessments/scores_encoding/upload_pgmer/([0-9]+)/$', upload_xls_utils.upload_scores_file_pgmer,name='upload_encoding_pgmer'),
 
     url(r'^structures/$', institution.structures, name='structures'),
     url(r'^structures/search$', institution.structures_search, name='structures_search'),

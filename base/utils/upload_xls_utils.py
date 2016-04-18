@@ -205,3 +205,8 @@ def __save_xls_scores(request, file_name):
             messages.add_message(request, messages.INFO, '%s' % _('no_score_injected'))
 
     return is_valid
+
+
+@login_required
+def upload_scores_file_pgmer(request, learning_unit_id):
+    return upload_scores_file(request,learning_unit_id,None)

@@ -367,23 +367,31 @@ def get_sessions(learning_unit_param, request, tutor, academic_yr):
         notes_list.append(notes)
     # In case the user is not a tutor we check whether it is a program manager for the offer.
     else:
+        print('not tutor')
         program_mgr_list = mdl.program_manager.find_by_user(request.user)
         all_enrollments = []
         for program_mgr in program_mgr_list:
 
+
             if program_mgr.offer_year:
+
                 notes = Notes()
                 sessions = mdl.session_exam.find_sessions_by_offer(program_mgr.offer_year, academic_yr, learning_unit_param)
                 sessions_list.append(sessions)
                 faculty = program_mgr.offer_year.structure
+
                 notes.structure = faculty
-                faculties.append(faculty)
+                if faculty not in faculties:
+                    print('faculty:',faculty)
+                    faculties.append(faculty)
                 learning_unit_list=[]
                 dict_progress = {}
                 dict_progress_ok = {}
                 for session in sessions:
-                    learning_unit=session.learning_unit_year.learning_unit
+                    learning_unit = session.learning_unit_year.learning_unit
                     enrollments = list(mdl.exam_enrollment.find_exam_enrollments_by_session_structure(session, session.offer_year_calendar.offer_year.structure))
+                    if learning_unit.acronym == 'LTRAD2171':
+                        print('2 : LTRAD2171', len(enrollments),'  ', learning_unit.id, ',' , session.id)
                     if enrollments:
                         all_enrollments = all_enrollments + enrollments
 
@@ -462,7 +470,15 @@ def get_data_online(learning_unit_id, tutor_id, request):
     if sessions_list:
         for sessions in sessions_list:
             for session in sessions:
-                enrollments = mdl.exam_enrollment.find_exam_enrollments_by_session(session)
+
+                if program_mgr_list:
+                    print('isqdqsdf')
+                    enrollments = mdl.exam_enrollment.find_exam_enrollments_by_session_pgm(session,program_mgr_list)
+                else:
+                    print('jsqdqsdf')
+                    enrollments = mdl.exam_enrollment.find_exam_enrollments_by_session(session)
+                if session.learning_unit_year.learning_unit.acronym == 'LTRAD2171':
+                    print('LTRAD2171', len(enrollments),'  ', learning_unit.id, ',' , session.id)
                 num_encoded_scores = mdl.exam_enrollment.count_encoded_scores(enrollments)
                 tot_enrollments.extend(enrollments)
                 tot_progress.extend(tot_progress)
@@ -543,9 +559,12 @@ def get_data_pgmer(request, tutor_sel, offer_sel):
 
             for session in sessions:
                 learning_unit = session.learning_unit_year.learning_unit
-                enrollments = list(mdl.exam_enrollment.find_exam_enrollments_by_session_structure(session, session.offer_year_calendar.offer_year.structure))
 
+                enrollments = list(mdl.exam_enrollment.find_exam_enrollments_by_session_structure(session, session.offer_year_calendar.offer_year.structure))
+                if learning_unit.acronym == 'LTRAD2171':
+                    print('LTRAD2171', len(enrollments),'  ',learning_unit.id)
                 if enrollments and len(enrollments) > 0:
+                    #print('learning_unit.acronym',learning_unit.acronym)
                     all_enrollments = all_enrollments + enrollments
                     in_list = False
                     for ll in learning_unit_list:
@@ -553,11 +572,13 @@ def get_data_pgmer(request, tutor_sel, offer_sel):
                             in_list = True
                             break
                     if in_list:
+                        #print('inlist')
                         n = dict_progress.get(learning_unit.acronym)
                         if n is not None:
                             n = n + len(enrollments)
                             dict_progress[learning_unit.acronym] = n
                     else:
+                        #print('not inlist')
                         dict_progress[learning_unit.acronym] = len(enrollments)
                         learning_unit_list.append(learning_unit)
                 if enrollments:
@@ -635,9 +656,11 @@ def get_data_pgmer_by_offer(tutor_sel, offer_sel):
     for session in sessions:
         learning_unit = session.learning_unit_year.learning_unit
         enrollments = list(mdl.exam_enrollment.find_exam_enrollments_by_session_structure(session, session.offer_year_calendar.offer_year.structure))
-
+        if learning_unit.acronym == 'LTRAD2171':
+            print('LTRAD2171', len(enrollments),'  ', learning_unit.id, ',' , session.id)
         if len(enrollments) > 0:
             all_enrollments = all_enrollments + enrollments
+            in_list=False
             for ll in learning_unit_list:
                 if ll.acronym == learning_unit.acronym:
                     in_list = True
@@ -681,3 +704,27 @@ def get_data_pgmer_by_offer(tutor_sel, offer_sel):
     return {'section':       'scores_encoding',
             'academic_year': academic_yr,
             'notes_list':    notes_list}
+
+@login_required
+def online_encoding_pgmer(request, learning_unit_id):
+    data_dict = get_data_online(learning_unit_id, None, request)
+    return render(request, "online_encoding.html",
+                  {'section':            data_dict['section'],
+                   'tutor':              data_dict['tutor'],
+                   'academic_year':      data_dict['academic_year'],
+                   'progress':           "{0:.0f}".format(data_dict['progress']),
+                   'enrollments':        data_dict['enrollments'],
+                   'num_encoded_scores': data_dict['num_encoded_scores'],
+                   'learning_unit':      data_dict['learning_unit'],
+                   'learning_unit_year': data_dict['learning_unit_year'],
+                   'all_encoded':        data_dict['all_encoded']})
+
+
+@login_required
+def online_encoding_form_pgmer(request, learning_unit_id):
+    return online_encoding_form(request, learning_unit_id, None)
+
+
+@login_required
+def online_double_encoding_form_pgmer(request, learning_unit_id):
+    return online_double_encoding_form_pgmer(request, learning_unit_id, None)
