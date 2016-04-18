@@ -181,16 +181,14 @@ def list_notes_building(learning_unit_year_id, academic_year, list_exam_enrollme
             justification = ""
             if rec_exam_enrollment.justification_final:
                 justification = dict(mdl.exam_enrollment.JUSTIFICATION_TYPES)[rec_exam_enrollment.justification_final]
-            end_date = ""
-            if rec_exam_enrollment.session_exam.offer_year_calendar.end_date:
-                end_date=rec_exam_enrollment.session_exam.offer_year_calendar.end_date.strftime('%d/%m/%Y')
+            end_date=rec_exam_enrollment.session_exam.offer_year_calendar.end_date.strftime('%d/%m/%Y')
             data.append([student.registration_id,
                          person.last_name,
                          person.first_name,
                          score,
                          justification,
-                         end_date])
-        cpt = cpt + 1
+                         end_date.strftime('%d/%m/%Y')])
+        cpt += 1
 
     if not old_pgm is None:
         main_data(academic_year, rec_exam_enrollment.session_exam, styles, current_learning_unit_year, old_pgm, content)
@@ -321,7 +319,7 @@ def end_page_infos_building(content):
     p = ParagraphStyle('info')
     p.fontSize = 10
     p.alignment = TA_LEFT
-    content.append(Paragraph("Please return this document to the administrative office of the program administrator"
+    content.append(Paragraph(_("return_doc_to_administrator")
                              , p))
     content.append(Paragraph('''
                             <para spaceb=10>
