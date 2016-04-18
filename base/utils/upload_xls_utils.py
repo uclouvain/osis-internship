@@ -37,7 +37,7 @@ from base.utils import export_utils
 
 
 @login_required
-def upload_scores_file(request, learning_unit_id,tutor_id):
+def upload_scores_file(request, learning_unit_id=None ,tutor_id=None):
     message_validation = ""
     if request.method == 'POST':
         form = ScoreFileForm(request.POST, request.FILES)
@@ -52,14 +52,18 @@ def upload_scores_file(request, learning_unit_id,tutor_id):
                         message_validation = '%s' % _('invalid_file')
 
                 messages.add_message(request, messages.INFO, '%s' % message_validation)
-
-                return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_id,tutor_id]))
+                if tutor_id:
+                    return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_id,tutor_id]))
+                else:
+                    return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_id,]))
         else:
-            return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_id,tutor_id]))
+            if tutor_id:
+                return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_id,tutor_id]))
+            else:
+                return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_id,]))
 
 
 def __save_xls_scores(request, file_name):
-    print('__save_xls_scores')
     wb = load_workbook(file_name, read_only=True)
     ws = wb.active
     nb_row = 0
@@ -73,7 +77,7 @@ def __save_xls_scores(request, file_name):
 
         new_score = False
         if nb_row > 0 and is_valid:
-            student = mdl.student.find_by_registration_id(row[4].value)
+            student = mdl.student.find_by(registration_id=row[4].value)
             info_line = "%s %d :" % (_('Line'),data_line_number)
             if not student:
                 validation_error += "%s %s!" % (info_line, _('student_not_exist') % (str(row[4].value)))
@@ -206,7 +210,3 @@ def __save_xls_scores(request, file_name):
 
     return is_valid
 
-
-@login_required
-def upload_scores_file_pgmer(request, learning_unit_id):
-    return upload_scores_file(request,learning_unit_id,None)

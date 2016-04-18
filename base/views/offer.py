@@ -23,15 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.shortcuts import render
-
 from base import models as mdl
-from django.utils.translation import ugettext_lazy as _
+from . import layout
 
 
 def offers(request):
     academic_yr = None
-    code = ""
 
     faculties = mdl.structure.find_by_type('FACULTY')
     academic_years = mdl.academic_year.find_academic_years()
@@ -39,53 +36,35 @@ def offers(request):
     academic_year_calendar = mdl.academic_year.current_academic_year()
     if academic_year_calendar:
         academic_yr = academic_year_calendar.id
-    return render(request, "offers.html", {'faculties': faculties,
-                                           'academic_year': academic_yr,
-                                           'code': code,
-                                           'academic_years': academic_years,
-                                           'offers': [],
-                                           'init': "1"})
+    return layout.render(request, "offers.html", {'faculties': faculties,
+                                                  'academic_year': academic_yr,
+                                                  'academic_years': academic_years,
+                                                  'offers': [],
+                                                  'init': "1"})
 
 
 def offers_search(request):
-    entity_acronym = request.GET['entity_acronym']
+    entity = request.GET['entity_acronym']
 
     academic_yr = None
     if request.GET['academic_year']:
-        academic_yr = request.GET['academic_year']
+        academic_yr = int(request.GET['academic_year'])
     acronym = request.GET['code']
 
-    faculties = mdl.structure.find_by_type('FACULTY')
     academic_years = mdl.academic_year.find_academic_years()
 
-    message = None
-    offer_years = None
-    if entity_acronym is None and academic_yr is None and acronym is None :
-        message = "%s" % _('minimum_one_criteria')
-    else:
-        entity = None
-        if entity_acronym:
-            entity = mdl.structure.find_by_acronym(entity_acronym)
-            if entity is None:
-                entity_acronym=None
-        offer_years = mdl.offer_year.search_root_offers(entity=entity, academic_yr=academic_yr, acronym=acronym)
+    offer_years = mdl.offer_year.search_root_offers(entity=entity, academic_yr=academic_yr, acronym=acronym)
 
-    if academic_yr is None :
-        academic_yr = None
-    else:
-        academic_yr = int(academic_yr)
-    return render(request, "offers.html", {'faculties':       faculties,
-                                           'academic_year':   academic_yr,
-                                           'entity_acronym': entity_acronym,
-                                           'code':            acronym,
-                                           'academic_years':  academic_years,
-                                           'offer_years':     offer_years,
-                                           'init':            "0",
-                                           'message':         message})
+    return layout.render(request, "offers.html", {'academic_year': academic_yr,
+                                                  'entity_acronym': entity,
+                                                  'code': acronym,
+                                                  'academic_years': academic_years,
+                                                  'offer_years': offer_years,
+                                                  'init': "0"})
 
 
 def offer_read(request, offer_year_id):
-    offer_yr = mdl.offer_year.find_offer_year_by_id(offer_year_id)
+    offer_yr = mdl.offer_year.find_by_id(offer_year_id)
     offer_yr_events = mdl.offer_year_calendar.find_offer_year_calendar(offer_yr)
-    return render(request, "offer.html", {'offer_year': offer_yr,
+    return layout.render(request, "offer.html", {'offer_year': offer_yr,
                                           'offer_year_events': offer_yr_events})

@@ -26,7 +26,7 @@
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
-from base.models.supported_languages import SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE
+from django.conf import settings
 
 
 class MessageTemplateAdmin(admin.ModelAdmin):
@@ -40,10 +40,10 @@ class MessageTemplate(models.Model):
                       ('PLAIN_HTML', _('plain_and_html')))
 
     reference = models.CharField(max_length=50, unique=True)
-    subject   = models.CharField(max_length=255)
-    template  = models.TextField()
-    format    = models.CharField(max_length=15, choices=FORMAT_CHOICES)
-    language  = models.CharField(max_length=30, null=True, choices=SUPPORTED_LANGUAGES, default=DEFAULT_LANGUAGE)
+    subject = models.CharField(max_length=255)
+    template = models.TextField()
+    format = models.CharField(max_length=15, choices=FORMAT_CHOICES)
+    language = models.CharField(max_length=30, null=True, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE)
 
     def __str__(self):
         return self.subject

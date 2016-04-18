@@ -66,22 +66,26 @@ def send_mail_after_academic_calendar_changes(academic_calendar, offer_year_cale
     :param offer_year_calendar:
     """
 
-    subject = _('changes_on_offer_year_and_academic_calendar') % (offer_year_calendar.offer_year, academic_calendar)
+    subject = "Watch out - Changes has been made on %s, academic calendar (%s)" % (offer_year_calendar.offer_year, academic_calendar)
     html_message = ''.join([
         '<p>Hi, </p>',
         '<p>We inform you that changes has been made on \'{offer_year}\'({acronym}), academic calendar ({academic_calendar}).</p></br>'.format(
-            offer_year=offer_year_calendar.offer_year.title,acronym=offer_year_calendar.offer_year.acronym, academic_calendar=academic_calendar),
+            offer_year=offer_year_calendar.offer_year.title, acronym=offer_year_calendar.offer_year.acronym, academic_calendar=academic_calendar),
         'The OSIS Team<br>',
         EMAIL_SIGNATURE,
     ])
     message = ''.join([
         'Hi, \n',
         'We inform you that changes has been made on \'{offer_year}\'({acronym}), academic calendar ({academic_calendar}).\n\n'.format(
-            offer_year=offer_year_calendar.offer_year.title,acronym=offer_year_calendar.offer_year.acronym, academic_calendar=academic_calendar),
+            offer_year=offer_year_calendar.offer_year.title, acronym=offer_year_calendar.offer_year.acronym, academic_calendar=academic_calendar),
         'The OSIS Team.',
     ])
 
-    send_mail(subject=subject,message=message,recipient_list=[programme_manager.person.email for programme_manager in programme_managers],html_message=html_message,from_email='DEFAULT_FROM_EMAIL')
+    send_mail(subject=subject,
+              message=message,
+              recipient_list=[programme_manager.person.email for programme_manager in programme_managers],
+              html_message=html_message,
+              from_email='DEFAULT_FROM_EMAIL')
 
 
 GENDER_TITLE_MAP={

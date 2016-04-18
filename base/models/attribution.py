@@ -40,13 +40,13 @@ class Attribution(models.Model):
         ('COORDINATOR', 'Coordinator'),
         ('PROFESSOR', 'Professor'))
 
-    external_id   = models.CharField(max_length=100, blank=True, null=True)
-    changed       = models.DateTimeField(null=True)
-    start_date    = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
-    end_date      = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
-    function      = models.CharField(max_length=15, blank=True, null=True, choices=FUNCTION_CHOICES, default='UNKNOWN')
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    changed = models.DateTimeField(null=True)
+    start_date = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
+    end_date = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
+    function = models.CharField(max_length=15, blank=True, null=True, choices=FUNCTION_CHOICES, default='UNKNOWN')
     learning_unit = models.ForeignKey('LearningUnit')
-    tutor         = models.ForeignKey('Tutor')
+    tutor = models.ForeignKey('Tutor')
 
     def __str__(self):
         return u"%s - %s" % (self.tutor.person, self.function)
@@ -55,6 +55,14 @@ class Attribution(models.Model):
 def find_by_tutor(a_tutor):
     attributions = Attribution.objects.filter(tutor=a_tutor)
     return attributions
+
+
+def get_assigned_tutor(user):
+    attribution = Attribution.objects.filter(tutor__person__user=user).first()
+    if attribution:
+        return attribution.tutor
+    else:
+        return None
 
 
 def find_by_learning_unit(a_learning_unit):

@@ -2,7 +2,6 @@
 {% load i18n %}
 {% load staticfiles %}
 {% load list %}
-{% load session_id_list%}
 {% load get_at_index %}
 {% load dictionnary %}
 {% comment "License" %}
@@ -35,17 +34,14 @@
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'scores_encoding' %}</h2>
+    <h2>{% trans 'scores_encoding' %} mgm</h2>
   </div>
-
   {% if notes_list%}
-
       {% for note in notes_list %}
         <div class="panel panel-default">
           <div class="panel-body">
               <form method="get" action="{% url 'refresh_list'%}" id="form_search_learning_units">
             <div class="row">
-
               <div class="col-md-4">
                 <div class="form-group">
                   <label>{% trans 'academic_year' %}</label><br>
@@ -59,7 +55,7 @@
                     <select id="slt_tutor" name="tutor">
                         <option value="">{% trans 'all' %}</option>
                         {%for t in tutor_list%}
-                            <option value="{{t.id}}" {%if tutor.id == t.id%}selected{%else%}{%endif%}>{{t}}</option>
+                            <option value="{{t.id}}" {% if tutor.id == t.id %}selected{%endif%}>{{t}}</option>
                         {%endfor%}
                     </select>
                   {% endif %}
@@ -113,7 +109,7 @@
                       {% for note_detail in note.lu_list %}
                         <tr>
                           <td>{{ note_detail.lu.acronym }}</td>
-                          <td><a href="{% url 'online_encoding_pgmer' note_detail.lu.id %}" id="lnk_{{ note_detail.lu.acronym }}" >{{ note_detail.lu.title }}</a></td>
+                          <td><a href="{% url 'online_encoding' note_detail.lu.id %}" id="lnk_{{ note_detail.lu.acronym }}" >{{ note_detail.lu.title }}</a></td>
                           <td>{{ note_detail.tutor.person.last_name }}, {{ note_detail.tutor.person.first_name }}</td>
                           <td>{{ note_detail.nb_notes_encoded}}/{{ note_detail.nb_student}}</td>
                           <td></td>
@@ -137,7 +133,7 @@
                        {% for note_detail in note.lu_list %}
                         <tr>
                           <td>{{ note_detail.lu.acronym }}</td>
-                          <td><a href="{% url 'online_encoding_pgmer' note_detail.lu.id %}"
+                          <td><a href="{% url 'online_encoding' note_detail.lu.id %}"
                                  title="Visualiser/charger les notes pour le cours"
                                  id="lnk_online_encoding_messages_{{note_detail.lu.id}}">{{ note_detail.lu.title }}</a></td>
 
@@ -179,7 +175,7 @@
                     {% for note_detail in note.lu_list %}
                       <tr>
                         <td>{{ note_detail.lu.acronym }}</td>
-                        <td><a href="{% url 'online_encoding_pgmer' note_detail.lu.id  %}"
+                        <td><a href="{% url 'online_encoding' note_detail.lu.id  %}"
                                title="Visualiser/charger les notes pour le cours"
                                id="lnk_online_encoding_messages_{{note_detail.lu.id}}">{{ note_detail.lu.title }}</a></td>
                         <td>{{ note_detail.nb_notes_encoded}}/{{ note_detail.nb_student}}</td>

@@ -23,20 +23,30 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django import template
+from django.db import models
+from django.contrib import admin
+from django.utils import timezone
 
-register = template.Library()
 
-@register.assignment_tag(takes_context=True)
-def session_id_list(context):
-    sessions = context['sessions']
-    url_var = ""
-    i=0
-    for session in sessions:
+class ApplicationNoticeAdmin(admin.ModelAdmin):
+    list_display = ('subject','notice','start_publish','stop_publish')
+    fieldsets = ((None, {'fields': ('subject','notice','start_publish','stop_publish')}),)
 
-        if i > 0:
-            url_var+="&"
-        url_var = url_var+"var="+str(session.id)
-        i=i+1
-    print('url_var',url_var)
-    return url_var
+
+class ApplicationNotice(models.Model):
+    subject = models.CharField(max_length=255)
+    notice = models.TextField()
+    start_publish = models.DateTimeField()
+    stop_publish = models.DateTimeField()
+
+
+def find_current_notice():
+    samples = ApplicationNotice.objects.filter(stop_publish__gt=timezone.now(),
+                                               start_publish__lt=timezone.now()).first()
+    return samples
+
+
+
+
+
+

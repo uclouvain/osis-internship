@@ -35,11 +35,11 @@ class OfferEnrollmentAdmin(admin.ModelAdmin):
 
 
 class OfferEnrollment(models.Model):
-    external_id     = models.CharField(max_length=100, blank=True, null=True)
-    changed         = models.DateTimeField(null=True)
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    changed = models.DateTimeField(null=True)
     date_enrollment = models.DateField()
-    offer_year      = models.ForeignKey('OfferYear')
-    student         = models.ForeignKey('Student')
+    offer_year = models.ForeignKey('OfferYear')
+    student = models.ForeignKey('Student')
 
     def __str__(self):
         return u"%s - %s" % (self.student, self.offer_year)
@@ -51,4 +51,4 @@ def find_by_student(a_student):
 
 
 def find_by_student_offer(a_student,offer_year):
-    return OfferEnrollment.objects.filter(student=a_student,offer_year=offer_year)
+    return OfferEnrollment.objects.filter(student=a_student, offer_year=offer_year)

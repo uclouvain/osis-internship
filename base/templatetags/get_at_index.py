@@ -32,7 +32,4 @@ register = template.Library()
 
 @register.filter
 def get_at_index(list, index):
-    print('get_at_index')
-    print('index',index)
-    print('list', list)
     return list[index]

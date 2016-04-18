@@ -85,7 +85,6 @@ def print_notes(request, tutor, academic_year, learning_unit_id, is_fac,sessions
 
     content = []
 
-    print('sessions_list',sessions_list)
     list_exam_enrollment = []
     for sessions in sessions_list:
         for session in sessions:

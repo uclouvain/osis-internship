@@ -29,10 +29,10 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'studies' %}</a></li>
+  <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
   <li><a href="{% url 'assessments' %}" id="lnk_evaluations">{% trans 'evaluations' %}</a></li>
   <li><a href="{% url 'scores_encoding' %}" id="lnk_scores_encoding">{% trans 'scores_encoding' %}</a></li>
-  <li><a href="{% url 'online_encoding' learning_unit.id tutor.id%}" id="lnk_online_scores_encoding">{% trans 'online_scores_encoding' %}</a></li>
+  <li><a href="{%if tutor%}{% url 'online_encoding' learning_unit.id tutor.id%}{%else%}{% url 'online_encoding' learning_unit.id %}{%endif%}" id="lnk_online_scores_encoding">{% trans 'online_scores_encoding' %}</a></li>
   <li class="active">{% trans 'dubble_online_scores_encoding' %}</li>
 {% endblock %}
 {% block content %}
@@ -67,7 +67,7 @@
         </div>
       </div>
       <hr>
-      <form class="form-inline" method="POST" action="{% url 'online_double_encoding_validation' learning_unit.id tutor.id%}" id="form_online_double_encoding_validation">
+      <form class="form-inline" method="POST" action="{%if tutor%}{% url 'online_double_encoding_validation' learning_unit.id tutor.id %}{%else%}{% url 'online_double_encoding_validation' learning_unit.id %}{%endif%}" id="form_online_double_encoding_validation">
         {% csrf_token %}
         <table class="table">
             <thead>
@@ -137,7 +137,7 @@
         </table>
 
         <button type="submit" class="btn btn-warning" id="bt_submit_online_double_encoding_validation"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'submission' %}</button>
-        <a class="btn btn-default" id="lnk_cancel" href="{% url 'online_encoding' learning_unit.id tutor.id %}" role="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
+        <a class="btn btn-default" id="lnk_cancel" href="{%if tutor%}{% url 'online_encoding' learning_unit.id tutor.id %}{%else%}{% url 'online_encoding' learning_unit.id %}{%endif%}" role="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
 
       </form>
     </div>
