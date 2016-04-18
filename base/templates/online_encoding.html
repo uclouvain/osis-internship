@@ -2,6 +2,7 @@
 {% load format %}
 {% load i18n %}
 {% load score_display %}
+{% load get_at_index %}
 
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
@@ -39,7 +40,7 @@
   </div>
   <div class="panel panel-default">
     <div class="panel-heading">
-      <h3 class="panel-title" style="font-size: 150%; color: #3399CC;">{{ session.learning_unit_year }}</h3>
+      <h3 class="panel-title" style="font-size: 150%; color: #3399CC;">{{ learning_unit_year }}</h3>
     </div>
     <div class="panel-body">
       <div class="row">
@@ -48,7 +49,6 @@
             {% if tutor %}
               <label>{% trans 'responsible' %}</label><br>{{ tutor }}
             {% else %}
-              <label>{% trans 'faculty' %}</label><br>{{ faculty.acronym }}
             {% endif %}
           </div>
         </div>
@@ -60,15 +60,14 @@
         </div>
         <div class="col-md-3">
           <div class="form-group">
-            <label>{% trans 'session' %}</label><br>
-            {{ session.number_session }}
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="form-group">
+
             <label>{% trans 'number_of_enrollments' %}</label><br>
             {{ enrollments|length }}
           </div>
+        </div>
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-3">
         </div>
       </div>
 
@@ -80,20 +79,25 @@
           </div>
         </div>
       </div>
+        {% if enrollments and progress != 100 %}
+          {% if tutor %}
+            <a class="btn btn-default" href="{%if tutor%}{% url 'online_encoding_form' learning_unit.id%}{%else%}{% url 'online_encoding_form_pgmer' learning_unit.id tutor.id%}{%endif%}" role="button" id="lnk_encode"><i class="fa fa-hashtag"></i> {% trans 'Encode' %}</a>
+            <a class="btn btn-default" href="{% url 'online_double_encoding_form' learning_unit.id tutor.id %}" role="button" id="lnk_online_double_encoding"><i class="fa fa-hashtag"></i><i class="fa fa-hashtag"></i> {% trans 'Double encoding' %}</a>
+          {%else%}
+<a class="btn btn-default" href="{% url 'online_encoding_form' learning_unit.id  %}" role="button" id="lnk_encode"><i class="fa fa-hashtag"></i> {% trans 'Encode' %}</a>
+            <a class="btn btn-default" href="{% url 'online_double_encoding_form' learning_unit.id  %}" role="button" id="lnk_online_double_encoding"><i class="fa fa-hashtag"></i><i class="fa fa-hashtag"></i> {% trans 'Double encoding' %}</a>
+          {%endif%}
+          <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#pnl_submission_scores_modal" id="bt_score_submission_modal"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'Submission' %}</button>
+          <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#pnl_upload_score_modal" title="{% trans 'Select a xls file from which to injec scores' %}" id="bt_upload_score_modal"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> {% trans 'Submit xls file' %}</button>
 
-      {% if session.status == 'OPEN' %}
-          <a class="btn btn-default" href="{% url 'online_encoding_form' session.id %}" role="button" id="lnk_encode"><i class="fa fa-hashtag"></i> {% trans 'encode' %}</a>
-          <a class="btn btn-default" href="{% url 'online_double_encoding_form' session.id %}" role="button" id="lnk_online_double_encoding"><i class="fa fa-hashtag"></i><i class="fa fa-hashtag"></i> {% trans 'dubble_encoding' %}</a>
-          <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#pnl_submission_scores_modal" id="bt_score_submission_modal"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'submission' %}</button>
-          <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#pnl_upload_score_modal" title="{% trans 'title_btn_upload_score' %}" id="bt_upload_score_modal"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> {% trans 'submit_xls_file' %}</button>
           <br><br>
-      {% endif %}
-
+        {%endif%}
       <table class="table table-hover">
           <thead>
             <tr>
                 <th> </th>
                 <th>{% trans 'program' %}</th>
+                <th>{% trans 'session' %}</th>
                 <th>{% trans 'registration_number' %}</th>
                 <th>{% trans 'lastname' %}</th>
                 <th>{% trans 'firstname' %}</th>
@@ -112,13 +116,13 @@
                        {% endifchanged %}
                     ">
                 <td>
-
-
                   {% if enrollment.score_final or enrollment.justification_final %}
                         <span class="glyphicon glyphicon-ok" aria-hidden="true" style="color: green;"></span>
                     {% endif %}
                 </td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
+                <td>{{ enrollment.session_exam.number_session}}</td>
+
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
@@ -137,7 +141,7 @@
       {% if messages %}
       <ul class="messages">
           {% for message in messages %}
-          <li{% if message.tags %}class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+          <li {% if message.tags %}{% endif %}>{{ message }}</li>
           {% endfor %}
       </ul>
       {% endif %}
@@ -147,7 +151,7 @@
   <div class="modal fade" id="pnl_upload_score_modal" tabindex="-1" role="dialog" aria-labelledby="uploadScoresLabel">
       <div class="modal-dialog" role="document">
           <div class="modal-content">
-              <form method="post" enctype="multipart/form-data" action="{% url 'upload_encoding' session.id%}">
+              <form method="post" enctype="multipart/form-data" action="{%if tutor%}{% url 'upload_encoding' learning_unit.id tutor.id%}{%else%}{% url 'upload_encoding' learning_unit.id %}{%endif%}">
                   {% csrf_token %}
                   <div class="modal-header">
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="bt_close_upload_score_modal"><span aria-hidden="true">&times;</span></button>
@@ -174,14 +178,16 @@
           <div class="modal-content">
               <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="bt_close_submission_score_modal"><span aria-hidden="true">&times;</span></button>
+
                   <h4 class="modal-title" id="submissionScoresLabel">{% trans 'submission' %}</h4>
               </div>
               <div class="modal-body">
                   <p class="help-block">{% trans 'help_submission_scores_label' as help_submission_scores_label%}{{help_submission_scores_label|format:num_encoded_scores}}</p>
               </div>
               <div class="modal-footer">
-                  <a class="btn btn-warning" href="{% url 'online_encoding_submission' session.id %}" role="button" id="lnk_post_scores_submission_btn"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'submit' %}</a>
-                  <button type="button" class="btn btn-default" data-dismiss="modal" id="bt_cancel_submission_score_modal">{% trans 'cancel' %}</button>
+                  <a class="btn btn-warning" href="{% url 'online_encoding_submission' learning_unit.id %}" role="button" id="lnk_post_scores_submission_btn"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'Submission' %}</a>
+                  <button type="button" class="btn btn-default" data-dismiss="modal" id="bt_cancel_submission_score_modal">{% trans 'Cancel' %}</button>
+
               </div>
           </div>
       </div>

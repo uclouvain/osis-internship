@@ -61,7 +61,7 @@ def structures_search(request):
 @login_required
 def structure_read(request, structure_id):
     structure = mdl.structure.find_by_id(structure_id)
-    offers_years = mdl.offer_year.find_offer_years_by_structure(structure)
+    offers_years = mdl.offer_year.find_by_structure(structure)
     return layout.render(request, "structure.html", {'structure': structure,
                                                      'offers_years': offers_years})
 

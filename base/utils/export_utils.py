@@ -46,11 +46,9 @@ HEADER = [str(_('academic_year')),
           str(_('ID'))]
 
 
-def export_xls(request, session_id, academic_year_id):
-
+def export_xls(request, learning_unit_id,academic_year_id, is_fac, sessions_list):
     academic_year = mdl.academic_year.find_academic_year_by_id(academic_year_id)
-    session_exam = mdl.session_exam.find_session_by_id(session_id)
-    is_fac = mdl.program_manager.is_programme_manager(request.user, session_exam.offer_year_calendar.offer_year)
+
     wb = Workbook()
     ws = wb.active
 
@@ -64,38 +62,42 @@ def export_xls(request, session_id, academic_year_id):
     ws.add_data_validation(dv)
 
     cptr = 1
-    for rec_exam_enrollment in mdl.exam_enrollment.find_exam_enrollments_by_session(session_exam):
-        student = rec_exam_enrollment.learning_unit_enrollment.student
-        o = rec_exam_enrollment.learning_unit_enrollment.offer
-        person = mdl.person.find_by_id(student.person.id)
+    if sessions_list:
+        for sessions in sessions_list:
 
-        if session_exam.offer_year_calendar.end_date is None:
-            end_date = "-"
-        else:
-            end_date = session_exam.offer_year_calendar.end_date.strftime('%d/%m/%Y')
-        score = None
-        if rec_exam_enrollment.score_final:
-            if rec_exam_enrollment.session_exam.learning_unit_year.decimal_scores:
-                score = "{0:.2f}".format(rec_exam_enrollment.score_final)
-            else:
-                score = "{0:.0f}".format(rec_exam_enrollment.score_final)
-        justification = ""
-        if rec_exam_enrollment.justification_final:
-            justification = dict(mdl.exam_enrollment.JUSTIFICATION_TYPES)[rec_exam_enrollment.justification_final]
-        ws.append([str(academic_year),
-                   str(session_exam.number_session),
-                   session_exam.learning_unit_year.acronym,
-                   o.acronym,
-                   student.registration_id,
-                   person.last_name,
-                   person.first_name,
-                   score,
-                   str(justification),
-                   end_date,
-                   rec_exam_enrollment.id])
+            for session_exam in sessions:
+                for rec_exam_enrollment in mdl.exam_enrollment.find_exam_enrollments_by_session(session_exam):
+                    student = rec_exam_enrollment.learning_unit_enrollment.student
+                    o = rec_exam_enrollment.learning_unit_enrollment.offer
+                    person = mdl.person.find_by_id(student.person.id)
 
-        cptr += 1
-        __coloring_non_editable(ws, cptr, rec_exam_enrollment.encoding_status,score,rec_exam_enrollment.justification_final)
+                    if session_exam.offer_year_calendar.end_date is None:
+                        end_date = "-"
+                    else:
+                        end_date = session_exam.offer_year_calendar.end_date.strftime('%d/%m/%Y')
+                    score = None
+                    if rec_exam_enrollment.score_final:
+                        if rec_exam_enrollment.session_exam.learning_unit_year.decimal_scores:
+                            score = "{0:.2f}".format(rec_exam_enrollment.score_final)
+                        else:
+                            score = "{0:.0f}".format(rec_exam_enrollment.score_final)
+                    justification = ""
+                    if rec_exam_enrollment.justification_final:
+                        justification = dict(mdl.exam_enrollment.JUSTIFICATION_TYPES)[rec_exam_enrollment.justification_final]
+                    ws.append([str(academic_year),
+                               str(session_exam.number_session),
+                               session_exam.learning_unit_year.acronym,
+                               o.acronym,
+                               student.registration_id,
+                               person.last_name,
+                               person.first_name,
+                               score,
+                               str(justification),
+                               end_date,
+                               rec_exam_enrollment.id])
+
+                    cptr += 1
+                    __coloring_non_editable(ws, cptr, rec_exam_enrollment.encoding_status,score,rec_exam_enrollment.justification_final)
 
     # Ajouter 100 pour si on ajoute des enregistrements
     dv.ranges.append('I2:I' + str(cptr + 100))

@@ -23,47 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
-from django.utils import timezone
+from django import template
+
+from django import template
+
+register = template.Library()
 
 
-class AcademicYearAdmin(admin.ModelAdmin):
-    list_display = ('name', 'start_date', 'end_date')
-    fieldsets = ((None, {'fields': ('year', 'start_date', 'end_date')}),)
-
-
-class AcademicYear(models.Model):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed = models.DateTimeField(null=True)
-    year = models.IntegerField()
-    start_date = models.DateField(blank=True, null=True)
-    end_date = models.DateField(blank=True, null=True)
-
-    @property
-    def name(self):
-        return self.__str__()
-
-    def __str__(self):
-        return u"%s-%s" % (self.year, self.year + 1)
-
-
-def find_academic_year_by_id(academic_year_id):
-    return AcademicYear.objects.get(pk=academic_year_id)
-
-
-def find_academic_years():
-    return AcademicYear.objects.all().order_by('year')
-
-
-def current_academic_year():
-    academic_yr = AcademicYear.objects.filter(start_date__lte=timezone.now()) \
-                                      .filter(end_date__gte=timezone.now()).first()
-    if academic_yr:
-        return academic_yr
-    else:
-        return None
-
-
-def find_academic_year_by_year(year):
-    return AcademicYear.objects.get(year=year)
+@register.filter
+def get_at_index(list, index):
+    return list[index]

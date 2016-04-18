@@ -37,7 +37,7 @@ from base.utils import export_utils
 
 
 @login_required
-def upload_scores_file(request, session_id):
+def upload_scores_file(request, learning_unit_id=None ,tutor_id=None):
     message_validation = ""
     if request.method == 'POST':
         form = ScoreFileForm(request.POST, request.FILES)
@@ -52,9 +52,15 @@ def upload_scores_file(request, session_id):
                         message_validation = '%s' % _('invalid_file')
 
                 messages.add_message(request, messages.INFO, '%s' % message_validation)
-                return HttpResponseRedirect(reverse('online_encoding', args=[session_id]))
+                if tutor_id:
+                    return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_id,tutor_id]))
+                else:
+                    return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_id,]))
         else:
-            return HttpResponseRedirect(reverse('online_encoding', args=[session_id]))
+            if tutor_id:
+                return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_id,tutor_id]))
+            else:
+                return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_id,]))
 
 
 def __save_xls_scores(request, file_name):
@@ -68,6 +74,7 @@ def __save_xls_scores(request, file_name):
     new_scores = False
     session_exam = None
     for row in ws.rows:
+
         new_score = False
         if nb_row > 0 and is_valid:
             student = mdl.student.find_by(registration_id=row[4].value)
@@ -83,6 +90,7 @@ def __save_xls_scores(request, file_name):
                     if  not offer_year :
                         validation_error += "%s %s!" % (info_line, _('offer_year_not_exist') % (str(row[3].value), academic_year.year))
                     else:
+
                         offer_enrollment = mdl.offer_enrollment.find_by_student_offer(student, offer_year)
                         if not offer_enrollment :
                             validation_error += "%s %s!" % (info_line, _('offer_enrollment_not_exist'))
@@ -153,6 +161,7 @@ def __save_xls_scores(request, file_name):
                                             mdl.exam_enrollment.create_exam_enrollment_historic(request.user,
                                                                                                 exam_enrollment,note,
                                                                                                 justification_xls)
+
             data_line_number=data_line_number+1
         else:
             #Il faut valider le fichier xls
@@ -200,3 +209,4 @@ def __save_xls_scores(request, file_name):
             messages.add_message(request, messages.INFO, '%s' % _('no_score_injected'))
 
     return is_valid
+

@@ -28,40 +28,60 @@
  * see http://www.gnu.org/licenses/.
 {% endcomment %}
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
+  <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'studies' %}</a></li>
   <li><a href="{% url 'assessments' %}" id="lnk_evaluations">{% trans 'evaluations' %}</a></li>
   <li class="active">{% trans 'scores_encoding' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'scores_encoding' %}</h2>
+    <h2>{% trans 'scores_encoding' %} mgm</h2>
   </div>
-
   {% if notes_list%}
-
       {% for note in notes_list %}
         <div class="panel panel-default">
           <div class="panel-body">
+              <form method="get" action="{% url 'refresh_list'%}" id="form_search_learning_units">
             <div class="row">
-              <div class="col-md-4">
-                <div class="form-group">
-                  {% if note.tutor %}
-                    <label>{% trans 'tutor' %}</label><br>{{ note.tutor }}
-                  {% else %}
-                    <label>{% trans 'faculty' %}</label><br> {{ note.structure.acronym  }}
-                  {% endif %}
-                </div>
-              </div>
               <div class="col-md-4">
                 <div class="form-group">
                   <label>{% trans 'academic_year' %}</label><br>
                   {{ academic_year }}
                 </div>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-3">
+                <div class="form-group">
+                  {% if tutor_list %}
+                    <label>{% trans 'tutor' %}</label><br>
+                    <select id="slt_tutor" name="tutor">
+                        <option value="">{% trans 'all' %}</option>
+                        {%for t in tutor_list%}
+                            <option value="{{t.id}}" {% if tutor.id == t.id %}selected{%endif%}>{{t}}</option>
+                        {%endfor%}
+                    </select>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="col-md-3">
+                  {% if offer_list %}
+                    <label>{% trans 'offer' %} {{ offer_sel}}</label><br>
+                    <select id="slt_offer_list_selection" name="offer" >
+                        <option value="">{% trans 'all'%}</option>
+                        {%for o in offer_list%}
+                            <option value="{{o.id}}" {%if offer.id == o.id %}selected{%else%}{%endif%}>{{o}}</option>
+                        {%endfor%}
+                    </select>
+                  {% endif %}
 
               </div>
+                <div class="col-md-2">
+                   <br>
+                    <button type="submit" id="bt_submit_offer_search" class="btn btn-primary" role="button"
+                            title="{% trans 'refresh_list' %}">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                    &nbsp;&nbsp;
+                    </div>
             </div>
+              </form>
             <br>
             <p><b>{% trans 'select_an_encoding_type' %}</b></p>
             <div>
@@ -71,7 +91,7 @@
                 <li role="presentation"><a href="#tab_home_{{forloop.counter0}}" aria-controls="home" role="tab" data-toggle="tab" id="lnk_via_paper_{{forloop.counter0}}">{% trans 'via_paper' %}</a></li>
               </ul>
 
-              <div class="tab-content">
+              <div class="tab-content" id="pnl_learning_units">
                 <div role="tabpanel" class="tab-pane fade in active" id="tab_profile_{{forloop.counter0}}">
 
                   <table class="table table-hover">
@@ -79,6 +99,7 @@
                         <tr>
                             <th>{% trans 'code' %}</th>
                             <th>{% trans 'activity' %}</th>
+                            <th>{% trans 'tutor' %}</th>
                             <th>{% trans 'progress' %}</th>
                             <th></th>
                         </tr>
@@ -88,7 +109,8 @@
                       {% for note_detail in note.lu_list %}
                         <tr>
                           <td>{{ note_detail.lu.acronym }}</td>
-                          <td>{%if note_detail.completed%}{{ note_detail.lu.title }}{%else%}<a href="{% url 'online_encoding' note_detail.lu.id tutor.id %}" id="lnk_{{ note_detail.lu.acronym }}" >{{ note_detail.lu.title }}</a>{% endif %}</td>
+                          <td><a href="{% url 'online_encoding' note_detail.lu.id %}" id="lnk_{{ note_detail.lu.acronym }}" >{{ note_detail.lu.title }}</a></td>
+                          <td>{{ note_detail.tutor.person.last_name }}, {{ note_detail.tutor.person.first_name }}</td>
                           <td>{{ note_detail.nb_notes_encoded}}/{{ note_detail.nb_student}}</td>
                           <td></td>
                         </tr>
@@ -111,13 +133,17 @@
                        {% for note_detail in note.lu_list %}
                         <tr>
                           <td>{{ note_detail.lu.acronym }}</td>
-                          <td>{%if note_detail.completed%}{{ note_detail.lu.title }}{%else%}<a href="{% url 'online_encoding' note_detail.lu.id tutor.id %}"
+                          <td><a href="{% url 'online_encoding' note_detail.lu.id %}"
                                  title="Visualiser/charger les notes pour le cours"
-                                 id="lnk_online_encoding_messages_{{note_detail.lu.id}}">{{ note_detail.lu.title }}</a>{%endif%}</td>
+                                 id="lnk_online_encoding_messages_{{note_detail.lu.id}}">{{ note_detail.lu.title }}</a></td>
 
                           <td>{{ note_detail.nb_notes_encoded}}/{{ note_detail.nb_student}}</td>
-                          <td><a class="btn btn-default {% if note_detail.completed  %}disabled{% endif %}" href="{% url 'scores_encoding_download' note_detail.lu.id academic_year.id%}"
+                          <td>
+                                <a class="btn btn-default" href="{% url 'scores_encoding_download' note_detail.lu.id academic_year.id%}"
                                    role="button" title="{% trans 'Create a xls file while activity\'s scores'%}"
+                                   {% if note_detail.completed  %}
+                                   disabled
+                                   {% endif %}
                                    id="lnk_scores_encoding_download_{{lu.id}}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span> {% trans 'Get xls'%}</a>
 
                           </td>
@@ -127,15 +153,15 @@
                   </table>
                 </div>
                 <div role="tabpanel" class="tab-pane fade" id="tab_home_{{forloop.counter0}}">
-
+                  {% if sessions %}
                   <br>
                   <a class="btn btn-default"
                      href="{% url 'notes_printing_all' tutor.id %}"
-                     role="button" id="lnk_notes_printing_all_{{learning_unit_year.id}}">
+                     role="button" id="lnk_notes_printing_all_{{learning_unit.id}}">
                       <span class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'Print scores for all activities' %}</a>
 
                   <br><br>
-
+                  {% endif%}
                   <table class="table table-hover">
                     <thead>
                         <tr>
@@ -149,14 +175,16 @@
                     {% for note_detail in note.lu_list %}
                       <tr>
                         <td>{{ note_detail.lu.acronym }}</td>
-                        <td>{%if note_detail.completed%}{{ note_detail.lu.title }}{%else%}<a href="{% url 'online_encoding' note_detail.lu.id tutor.id %}"
+                        <td><a href="{% url 'online_encoding' note_detail.lu.id  %}"
                                title="Visualiser/charger les notes pour le cours"
-                               id="lnk_online_encoding_messages_{{note_detail.lu.id}}">{{ note_detail.lu.title }}</a>{%endif%}</td>
+                               id="lnk_online_encoding_messages_{{note_detail.lu.id}}">{{ note_detail.lu.title }}</a></td>
                         <td>{{ note_detail.nb_notes_encoded}}/{{ note_detail.nb_student}}</td>
                         <td>
-                                <a class="btn btn-default {% if note_detail.completed%}disabled{% endif %}" href="{% url 'notes_printing' note_detail.lu.id tutor.id %}"
-
-                                   role="button" id="lnk_notes_printing_{{note_detail.lu.id}}"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'Print' %}</a>
+                            <a class="btn btn-default" href="{% url 'notes_printing' note_detail.lu.id note_detail.tutor.id%}"
+                               {% if note_detail.completed%}
+                               disabled
+                               {% endif %}
+                               role="button" id="lnk_notes_printing_{{note_detail.lu.id}}"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'Print' %}</a>
 
                         </td>
                       </tr>

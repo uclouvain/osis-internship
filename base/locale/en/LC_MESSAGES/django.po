@@ -100,7 +100,7 @@ msgstr "Open"
 
 #: models/session_exam.py:44 templates/scores_encoding.html.py:94
 msgid "closed"
-msgstr ""
+msgstr "Closed"
 
 #: templates/academic_calendar.html:32
 #: templates/academic_calendar_form.html:34
