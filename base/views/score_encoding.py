@@ -444,8 +444,11 @@ def get_data(request):
 
 def get_data_online(learning_unit_id, tutor_id, request):
     tutor = None
+    program_mgr_list = None
+    coordinator = False
     if tutor_id:
         tutor = mdl.tutor.find_by_id(tutor_id)
+        coordinator = mdl.attribution.find_by_function(tutor, learning_unit_id, 'COORDINATOR')
     else:
         program_mgr_list = mdl.program_manager.find_by_user(request.user)
         if not program_mgr_list:
@@ -486,7 +489,8 @@ def get_data_online(learning_unit_id, tutor_id, request):
             'num_encoded_scores': tot_num_encoded_scores,
             'learning_unit':      learning_unit,
             'all_encoded':        all_encoded,
-            'learning_unit_year': learning_unit_year}
+            'learning_unit_year': learning_unit_year,
+            'coordinator':        coordinator}
 
 
 def get_data_online_double(learning_unit_id,tutor_id,request):
