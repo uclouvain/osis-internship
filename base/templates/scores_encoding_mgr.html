@@ -52,7 +52,7 @@
                 <div class="form-group">
                   {% if tutor_list %}
                     <label>{% trans 'tutor' %}</label><br>
-                    <select id="slt_tutor" name="tutor">
+                    <select id="slt_tutor" name="tutor" class="form-control" >
                         <option value="">{% trans 'all' %}</option>
                         {%for t in tutor_list%}
                             <option value="{{t.id}}" {% if tutor.id == t.id %}selected{%endif%}>{{t}}</option>
@@ -64,10 +64,10 @@
               <div class="col-md-3">
                   {% if offer_list %}
                     <label>{% trans 'offer' %} {{ offer_sel}}</label><br>
-                    <select id="slt_offer_list_selection" name="offer" >
+                    <select id="slt_offer_list_selection" name="offer" class="form-control" >
                         <option value="">{% trans 'all'%}</option>
                         {%for o in offer_list%}
-                            <option value="{{o.id}}" {%if offer.id == o.id %}selected{%else%}{%endif%}>{{o}}</option>
+                            <option value="{{o.id}}" {%if offer.id == o.id %}selected{%else%}{%endif%}>{{o.acronym}} - {{o.title}}</option>
                         {%endfor%}
                     </select>
                   {% endif %}
@@ -98,7 +98,7 @@
                       <thead>
                         <tr>
                             <th>{% trans 'code' %}</th>
-                            <th>{% trans 'activity' %}</th>
+                            <th>{% trans 'learning_unit' %}</th>
                             <th>{% trans 'tutor' %}</th>
                             <th>{% trans 'progress' %}</th>
                             <th></th>
@@ -124,7 +124,7 @@
                       <thead>
                         <tr>
                             <th>{% trans 'code' %}</th>
-                            <th>{% trans 'activity' %}</th>
+                            <th>{% trans 'learning_unit' %}</th>
                             <th>{% trans 'progress' %}</th>
                             <th></th>
                         </tr>
@@ -166,7 +166,7 @@
                     <thead>
                         <tr>
                           <th>{% trans 'code' %}</th>
-                          <th>{% trans 'activity' %}</th>
+                          <th>{% trans 'learning_unit' %}</th>
                           <th>{% trans 'progress' %}</th>
                           <th></th>
                         </tr>
