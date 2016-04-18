@@ -991,7 +991,7 @@ msgstr "Liste des choix"
 
 #: utils/pdf_utils.py:129
 msgid "scores_transcript"
-msgstr "Relevé de notes"
+msgstr "Feuille de notes"
 
 #: utils/pdf_utils.py:131
 msgid "ucl_denom_location"
