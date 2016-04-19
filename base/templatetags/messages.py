@@ -47,3 +47,13 @@ def as_messages_warning(context):
         if 'warning' in m.tags:
             return True
     return False
+
+@register.assignment_tag(takes_context=True)
+def as_messages_error(context):
+    request = context['request']
+    msgs = messages.get_messages(request)
+
+    for m in msgs:
+        if 'error' in m.tags:
+            return True
+    return False

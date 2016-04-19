@@ -50,23 +50,23 @@ def upload_scores_file(request, learning_unit_id=None,tutor_id=None):
                     is_fac = True
                     if tutor_id:
                         is_fac = False
-                    is_valid = __save_xls_scores(request, file_name, is_fac)
+                    is_valid = __save_xls_scores(request, file_name, is_fac, tutor_id, learning_unit_id)
                     if not is_valid:
                         message_validation = '%s' % _('invalid_file')
 
                 messages.add_message(request, messages.INFO, '%s' % message_validation)
                 if tutor_id:
-                    return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_id,tutor_id]))
+                    return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_id, tutor_id]))
                 else:
-                    return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_id,]))
+                    return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_id, ]))
         else:
             if tutor_id:
-                return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_id,tutor_id]))
+                return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_id, tutor_id]))
             else:
-                return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_id,]))
+                return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_id, ]))
 
 
-def __save_xls_scores(request, file_name, is_fac):
+def __save_xls_scores(request, file_name, is_fac, tutor_id, learning_unit_id):
     wb = load_workbook(file_name, read_only=True)
     ws = wb.active
     nb_row = 0
@@ -96,7 +96,6 @@ def __save_xls_scores(request, file_name, is_fac):
                     if not offer_year:
                         validation_error += "%s %s!" % (info_line, _('offer_year_not_exist') % (str(row[3].value), academic_year.year))
                     else:
-
                         offer_enrollment = mdl.offer_enrollment.find_by_student_offer(student, offer_year)
                         if not offer_enrollment:
                             validation_error += "%s %s!" % (info_line, _('offer_enrollment_not_exist'))
@@ -114,71 +113,87 @@ def __save_xls_scores(request, file_name, is_fac):
                                 else:
                                     session_number = int(row[1].value)
                                     exam_enrollment = mdl.exam_enrollment.find_by_enrollment_session(learning_unit_enrollment, session_number)
-                                    if session_exam is None:
-                                        session_exam = exam_enrollment.session_exam
-                                    notes_modifiable = False
-                                    if is_fac:
-                                        notes_modifiable = True
+                                    if row[2].value != exam_enrollment.id:
+                                        learning_unit = mdl.learning_unit.find_learning_unit_by_id(learning_unit_id)
+                                        messages.add_message(request, messages.ERROR, "%s %s for %s!" % (info_line, _('enrollment_exam_not_exists'), learning_unit.acronym))
                                     else:
-                                        if not exam_enrollment.score_final and not exam_enrollment.justification_final:
+                                        if session_exam is None:
+                                            session_exam = exam_enrollment.session_exam
+                                        if is_fac:
                                             notes_modifiable = True
                                         else:
-                                            notes_modifiable = False
-                                            messages.add_message(request, messages.WARNING, "%s %s!" % (info_line, _('Note already submitted')))
-
-
-                                    if notes_modifiable:
-                                        if row[7].value is None:
-                                            note = None
-                                        else:
-                                            note = float(row[7].value)
-                                        note_valide = True
-                                        if not note is None:
-                                            if note < 0 or note > 20:
-                                                validation_error += "%s %s!" % (info_line, _('scores_gt_0_lt_20'))
-                                                note_valide = False
+                                            if not exam_enrollment.score_final and not exam_enrollment.justification_final:
+                                                notes_modifiable = True
                                             else:
-                                                if not learning_unit_year is None and not learning_unit_year.decimal_scores and round(note) != note:
-                                                    validation_error += "%s %s!" % (info_line, _('score_decimal_not_allowed'))
+                                                notes_modifiable = False
+                                                messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('Note already submitted')))
+
+                                        if notes_modifiable:
+                                            if row[7].value is None:
+                                                note = None
+                                            else:
+                                                note = float(row[7].value)
+
+                                            note_valide = True
+                                            if not note is None:
+                                                if note < 0 or note > 20:
+                                                    validation_error += "%s %s!" % (info_line, _('scores_gt_0_lt_20'))
                                                     note_valide = False
-                                        else:
-                                            note_valide = False
-                                        # attention dans le xsl les choix pour la justification sont des libellés pas
-                                        # les valeurs BD
-                                        justification_xls = None
-                                        if row[8].value:
-                                            for k, v in dict(mdl.exam_enrollment.JUSTIFICATION_TYPES).items():
-                                                if v.lower() == str(row[8].value.lower()):
-                                                    justification_xls=k
-                                        justification_valide=True
-                                        if not note is None and (not justification_xls is None and not justification_xls=='CHEATING'):
-                                            note_valide = False
-                                            justification_valide = False
-                                            validation_error += "%s %s!" % (info_line, _('constraint_score_other_score'))
+                                                else:
+                                                    if not learning_unit_year is None and not learning_unit_year.decimal_scores and round(note) != note:
+                                                        validation_error += "%s %s!" % (info_line, _('score_decimal_not_allowed'))
+                                                        note_valide = False
+                                            else:
+                                                note_valide = False
+                                            # attention dans le xsl les choix pour la justification sont des libellés pas
+                                            # les valeurs BD
+                                            justification_xls = None
+                                            if row[8].value:
+                                                for k, v in dict(mdl.exam_enrollment.JUSTIFICATION_TYPES).items():
+                                                    if v.lower() == str(row[8].value.lower()):
+                                                        justification_xls=k
+                                            justification_valide=True
+                                            if not note is None and (not justification_xls is None and not justification_xls == 'CHEATING'):
+                                                note_valide = False
+                                                justification_valide = False
+                                                validation_error += "%s %s!" % (info_line, _('constraint_score_other_score'))
 
-                                        if note_valide:
-                                            if exam_enrollment.score_final != note:
-                                                new_scores_number = new_scores_number + 1
-                                                new_scores = True
-                                                new_score=True
+                                            if note_valide:
+                                                if is_fac:
+                                                    if exam_enrollment.score_final != note:
+                                                        new_scores_number = new_scores_number + 1
+                                                        new_scores = True
+                                                        new_score=True
 
+                                                    if (justification_valide and not justification_xls is None and exam_enrollment.justification_final != justification_xls) \
+                                                            or (not is_fac and exam_enrollment.justification_draft != justification_xls):
+                                                        new_scores_number = new_scores_number + 1
+                                                        new_scores = True
+                                                        new_score=True
+                                                        exam_enrollment.justification_final = justification_xls
 
-                                        if justification_valide and not justification_xls is None and exam_enrollment.justification_final != justification_xls:
-                                            new_scores_number = new_scores_number + 1
-                                            new_scores = True
-                                            new_score=True
-                                            exam_enrollment.justification_final = justification_xls
+                                                else:
+                                                    if note != exam_enrollment.score_draft:
+                                                        new_scores_number = new_scores_number + 1
+                                                        new_scores = True
+                                                        new_score=True
 
-                                        if new_score:
-                                            exam_enrollment.score_draft = note
-                                            exam_enrollment.justification_draft = justification_xls
-                                            if is_fac and note_valide:
-                                                exam_enrollment.score_final = note
-                                                exam_enrollment.justification_final = justification_xls
-                                            exam_enrollment.save()
-                                            mdl.exam_enrollment.create_exam_enrollment_historic(request.user,
-                                                                                                exam_enrollment,note,
-                                                                                                justification_xls)
+                                                    if justification_valide and not justification_xls is None and exam_enrollment.justification_draft != justification_xls:
+                                                        new_scores_number = new_scores_number + 1
+                                                        new_scores = True
+                                                        new_score=True
+                                                        exam_enrollment.justification_final = justification_xls
+
+                                            if new_score:
+                                                exam_enrollment.score_draft = note
+                                                exam_enrollment.justification_draft = justification_xls
+                                                if is_fac and note_valide:
+                                                    exam_enrollment.score_final = note
+                                                    exam_enrollment.justification_final = justification_xls
+                                                exam_enrollment.save()
+                                                mdl.exam_enrollment.create_exam_enrollment_historic(request.user,
+                                                                                                    exam_enrollment,note,
+                                                                                                    justification_xls)
 
             data_line_number=data_line_number+1
         else:
@@ -196,7 +211,7 @@ def __save_xls_scores(request, file_name, is_fac):
 
         nb_row = nb_row + 1
 
-    messages.add_message(request, messages.WARNING, validation_error)
+    messages.add_message(request, messages.ERROR, validation_error)
     if session_exam is not None:
         all_encoded = True
         enrollments = mdl.exam_enrollment.find_exam_enrollments_by_session(session_exam)
@@ -218,9 +233,15 @@ def __save_xls_scores(request, file_name, is_fac):
             }
 
             messages.add_message(request, messages.INFO, '%s' % text)
+            if not is_fac:
+                tutor = mdl.tutor.find_by_id(tutor_id)
+                if tutor and learning_unit_id:
+                    coordinator = mdl.attribution.find_by_function(tutor, learning_unit_id, 'COORDINATOR')
+                    if not coordinator:
+                        messages.add_message(request, messages.INFO, '%s' % _('the_coordinator_must_still_submit_scores'))
     else:
         if is_valid:
-            messages.add_message(request, messages.WARNING, '%s' % _('no_score_injected'))
+            messages.add_message(request, messages.ERROR, '%s' % _('no_score_injected'))
 
     return is_valid
 

@@ -29,7 +29,6 @@ from base import models as mdl
 
 def render(request, template, values):
     if 'subject' not in request.session and 'notice' not in request.session:
-        print('test')
         notice = mdl.application_notice.find_current_notice()
         if notice:
             request.session.set_expiry(3600)

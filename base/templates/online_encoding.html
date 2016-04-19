@@ -49,9 +49,8 @@
       <div class="row">
         <div class="col-md-3">
           <div class="form-group">
-            {% if tutor %}
-              <label>{% trans 'responsible' %}</label><br>{{ tutor }}
-            {% else %}
+            {% if tutor_responsible %}
+              <label>{% trans 'responsible' %}</label><br>{{ tutor_responsible }}
             {% endif %}
           </div>
         </div>
@@ -84,20 +83,22 @@
       </div>
         {% if enrollments and progress != 100 %}
           {% if tutor %}
-            <a class="btn btn-default" href="{%if tutor%}{% url 'online_encoding_form' learning_unit.id%}{%else%}{% url 'online_encoding_form_pgmer' learning_unit.id tutor.id%}{%endif%}" role="button" id="lnk_encode"><i class="fa fa-hashtag"></i> {% trans 'Encode' %}</a>
-            <a class="btn btn-default" href="{% url 'online_double_encoding_form' learning_unit.id tutor.id %}" role="button" id="lnk_online_double_encoding"><i class="fa fa-hashtag"></i><i class="fa fa-hashtag"></i> {% trans 'Double encoding' %}</a>
+            <a class="btn btn-default" href="{%if tutor%}{% url 'online_encoding_form' learning_unit.id%}{%else%}{% url 'online_encoding_form_pgmer' learning_unit.id tutor.id%}{%endif%}" role="button" id="lnk_encode"><i class="fa fa-hashtag"></i> {% trans 'encode' %}</a>
+            <a class="btn btn-default" href="{% url 'online_double_encoding_form' learning_unit.id tutor.id %}" role="button" id="lnk_online_double_encoding"><i class="fa fa-hashtag"></i><i class="fa fa-hashtag"></i> {% trans 'double_encoding' %}</a>
           {%else%}
-            <a class="btn btn-default" href="{% url 'online_encoding_form' learning_unit.id  %}" role="button" id="lnk_encode"><i class="fa fa-hashtag"></i> {% trans 'Encode' %}</a>
-            <a class="btn btn-default" href="{% url 'online_double_encoding_form' learning_unit.id  %}" role="button" id="lnk_online_double_encoding"><i class="fa fa-hashtag"></i><i class="fa fa-hashtag"></i> {% trans 'Double encoding' %}</a>
+            <a class="btn btn-default" href="{% url 'online_encoding_form' learning_unit.id  %}" role="button" id="lnk_encode"><i class="fa fa-hashtag"></i> {% trans 'encode' %}</a>
+            <a class="btn btn-default" href="{% url 'online_double_encoding_form' learning_unit.id  %}" role="button" id="lnk_online_double_encoding"><i class="fa fa-hashtag"></i><i class="fa fa-hashtag"></i> {% trans 'double_encoding' %}</a>
           {%endif%}
-          <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#pnl_submission_scores_modal" i
-                  d="bt_score_submission_modal" {%if tutor and coordinator = False %} disabled{%endif%}><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'Submission' %}</button>
-          <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#pnl_upload_score_modal" title="{% trans 'Select a xls file from which to injec scores' %}" id="bt_upload_score_modal"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> {% trans 'Submit xls file' %}</button>
+          {%if tutor%}
+              <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#pnl_submission_scores_modal"
+                      id="bt_score_submission_modal" {%if coordinator = False %} disabled{%endif%}><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'submission' %}</button>
+          {%endif%}
+          <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#pnl_upload_score_modal" title="{% trans 'select_a_xls_file_from_which_to_inject_scores' %}" id="bt_upload_score_modal"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> {% trans 'inject_xls_file' %}</button>
 
         {% as_messages_info as messages_info %}
         {%if messages_info%}
-          <br><br>
-          <div id="div_info_messages">
+            <br><br>
+            <div id="div_info_messages">
               <ul class="alert alert-success">
                   {% for message in messages %}
                       {% if 'info' in message.tags %}
@@ -105,12 +106,24 @@
                       {%endif%}
                   {% endfor %}
               </ul>
-          </div>
+            </div>
         {%else%}
-        <br><br>
+            <br><br>
         {%endif%}
 
+          {% as_messages_warning as messages_warning %}
 
+          {% if messages_warning %}
+
+                  <ul class="alert alert-danger">
+                      {% for message in messages %}
+                          {% if 'warning' in message.tags %}
+                          <li {%  if message.tags %}{% endif %}>{{ message }}</li>
+                          {%endif%}
+                      {% endfor %}
+                  </ul>
+
+            {% endif %}
         {%endif%}
       <table class="table table-hover">
           <thead>
@@ -147,34 +160,41 @@
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
                 <td>{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}</td>
-                <td>{% if enrollment.justification_draft %}
-                        {{ enrollment.get_justification_draft_display }}
-                    {% else %}
-                        -
-                    {% endif %}
+                <td>{%if not is_pgmer %}
+                        {% if enrollment.justification_draft %}
+                            {{ enrollment.get_justification_draft_display }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    {%else%}
+                        {% if enrollment.justification_final %}
+                            {{ enrollment.get_justification_final_display }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    {%endif%}
                 </td>
                 <td>{{ enrollment.session_exam.offer_year_calendar.end_date | default_if_none:'' |date:"j/m/Y" }}</td>
             </tr>
           {% endfor %}
           </tbody>
       </table>
-      {% as_messages_warning as messages_warning %}
-        <div id="div_warning_messages">
-          {% if messages_warning %}
+      {% as_messages_error as messages_error %}
+
+      {% if messages_error %}
+          <div id="div_error_messages">
               <ul class="alert alert-danger">
                   {% for message in messages %}
-
-                      {% if 'warning' in message.tags %}
+                      {% if 'error' in message.tags %}
                       <li {%  if message.tags %}{% endif %}>{{ message }}</li>
                       {%endif%}
                   {% endfor %}
               </ul>
-            {% endif %}
-        </div>
-
-        <input type="button" value="{% trans 'print_messages'%}"
-               onclick="printdiv('div_warning_messages','div_info_messages');"
-               title="{% trans 'print_warning_and_info_messages%}"/>
+           </div>
+            <input type="button" value="{% trans 'print_messages'%}"
+                   onclick="printdiv('div_error_messages','div_info_messages');"
+                   title="{% trans 'print_warning_and_info_messages' %}"/>
+        {% endif %}
 
 
     </div>
