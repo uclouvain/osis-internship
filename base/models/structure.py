@@ -35,10 +35,16 @@ class StructureAdmin(admin.ModelAdmin):
     search_fields = ['acronym']
 
 
-ENTITY_TYPE = (('SECTOR', 'Sector'),
-               ('FACULTY', 'Faculty'),
-               ('INSTITUTE', 'Institute'),
-               ('POLE', 'Pole'))
+ENTITY_TYPE = (('SECTOR', 'sector'),
+               ('FACULTY', 'faculty'),
+               ('INSTITUTE', 'institute'),
+               ('POLE', 'pole'),
+               ('DOCTORAL_COMMISSION', 'doctoral_commission'),
+               ('PROGRAM_COMMISSION', 'program_commission'),
+               ('LOGISTIC', 'logistic'),
+               ('UNDEFINED', 'undefined'),
+               ('RESEARCH_CENTER', 'research_center'),
+               ('TECHNOLOGIC_PLATFORM', 'technologic_platform'))
 
 
 class Structure(models.Model):

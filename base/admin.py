@@ -92,6 +92,9 @@ admin.site.register(program_manager.ProgrammeManager,
 admin.site.register(session_exam.SessionExam,
                     session_exam.SessionExamAdmin)
 
+admin.site.register(structure_address.StructureAddress,
+                    structure_address.StructureAddressAdmin)
+
 admin.site.register(structure.Structure,
                     structure.StructureAdmin)
 
