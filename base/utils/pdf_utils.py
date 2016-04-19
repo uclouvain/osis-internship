@@ -152,11 +152,11 @@ def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, s
                 current_learning_unit_year = rec_exam_enrollment.learning_unit_enrollment.learning_unit_year
 
             if o != old_pgm:
-                #Autre programme - 1. mettre les critères
+                # Autre programme - 1. mettre les critères
                 main_data(academic_year, rec_exam_enrollment.session_exam, styles, current_learning_unit_year,old_pgm, content)
-                #Autre programme - 2. il faut écrire le tableau
+                # Autre programme - 2. il faut écrire le tableau
 
-                t=Table(data, COLS_WIDTH, repeatRows=1)
+                t = Table(data, COLS_WIDTH, repeatRows=1)
                 t.setStyle(TableStyle([
                                    ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
                                    ('BOX', (0,0), (-1,-1), 0.25, colors.black),
@@ -164,10 +164,10 @@ def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, s
                                    ]))
 
                 content.append(t)
-                #Autre programme - 3. Imprimer légende
+                # Autre programme - 3. Imprimer légende
                 end_page_infos_building(content)
                 legend_building(current_learning_unit_year, is_fac, content)
-                #Autre programme - 4. il faut faire un saut de page
+                # Autre programme - 4. il faut faire un saut de page
                 content.append(PageBreak())
                 data = headers_table(styles)
                 old_pgm = o
@@ -185,15 +185,15 @@ def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, s
                 justification = dict(mdl.exam_enrollment.JUSTIFICATION_TYPES)[rec_exam_enrollment.justification_final]
             end_date = ""
             if rec_exam_enrollment.session_exam.offer_year_calendar.end_date:
-                end_date=rec_exam_enrollment.session_exam.offer_year_calendar.end_date.strftime('%d/%m/%Y')
-            sc = "%s" %(score)
+                end_date = rec_exam_enrollment.session_exam.offer_year_calendar.end_date.strftime('%d/%m/%Y')
+            sc = "%s" % score
             data.append([student.registration_id,
                          person.last_name,
                          person.first_name,
                          sc,
                          justification,
                          end_date])
-        cpt = cpt + 1
+        cpt += 1
         old_session_exam = rec_exam_enrollment.session_exam
 
     if not old_pgm is None:
@@ -325,7 +325,7 @@ def end_page_infos_building(content):
     p = ParagraphStyle('info')
     p.fontSize = 10
     p.alignment = TA_LEFT
-    content.append(Paragraph("Please return this document to the administrative office of the program administrator"
+    content.append(Paragraph(_("return_doc_to_administrator")
                              , p))
     content.append(Paragraph('''
                             <para spaceb=10>
