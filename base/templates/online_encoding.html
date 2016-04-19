@@ -89,12 +89,25 @@
             <a class="btn btn-default" href="{% url 'online_encoding_form' learning_unit.id  %}" role="button" id="lnk_encode"><i class="fa fa-hashtag"></i> {% trans 'encode' %}</a>
             <a class="btn btn-default" href="{% url 'online_double_encoding_form' learning_unit.id  %}" role="button" id="lnk_online_double_encoding"><i class="fa fa-hashtag"></i><i class="fa fa-hashtag"></i> {% trans 'double_encoding' %}</a>
           {%endif%}
-          {%if tutor%}
+          {%if tutor %}
+          <a class="btn btn-default" href="{% url 'notes_printing' learning_unit_id=learning_unit.id tutor_id=tutor.id %}"
+
+                                   role="button" id="lnk_notes_printing_{{learning_unit.id}}"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'Print' %}</a>
+          {%else%}
+          <a class="btn btn-default" href="{% url 'notes_printing' learning_unit_id=learning_unit.id  %}"
+
+                                   role="button" id="lnk_notes_printing_{{learning_unit.id}}"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'Print' %}</a>
+          {%endif%}
+        <a class="btn btn-default" href="{% url 'scores_encoding_download' learning_unit.id academic_year.id%}"
+                                   role="button" title="{% trans 'Create a xls file while activity\'s scores'%}"
+                                   id="lnk_scores_encoding_download_{{learning_unit.id}}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span> {% trans 'Get xls'%}</a>
+
+          <button type="button" class="btn btn-default" data-toggle="modal" data-target="#pnl_upload_score_modal" title="{% trans 'select_a_xls_file_from_which_to_inject_scores' %}" id="bt_upload_score_modal"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> {% trans 'inject_xls_file' %}</button>
+          &nbsp;&nbsp;
+            {%if tutor%}
               <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#pnl_submission_scores_modal"
                       id="bt_score_submission_modal" {%if coordinator = False %} disabled{%endif%}><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'submission' %}</button>
           {%endif%}
-          <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#pnl_upload_score_modal" title="{% trans 'select_a_xls_file_from_which_to_inject_scores' %}" id="bt_upload_score_modal"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> {% trans 'inject_xls_file' %}</button>
-
         {% as_messages_info as messages_info %}
         {%if messages_info%}
             <br><br>
@@ -125,6 +138,7 @@
 
             {% endif %}
         {%endif%}
+
       <table class="table table-hover">
           <thead>
             <tr>
@@ -153,22 +167,22 @@
                         <span class="glyphicon glyphicon-send" aria-hidden="true" style="color: green;" title="{% trans 'score_submitted' %}"></span>
                     {% endif %}
                 </td>
-                <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym }} {{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.structure.acronym }}</td>
+                <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
                 <td>{{ enrollment.session_exam.number_session}}</td>
 
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
-                <td>{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}</td>
-                <td>{%if not is_pgmer %}
-                        {% if enrollment.justification_draft %}
-                            {{ enrollment.get_justification_draft_display }}
+                <td>{%if is_pgmer %}{{ enrollment.score_final | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}{%else%}{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}{%endif%}</td>
+                <td>{%if is_pgmer %}
+                        {% if enrollment.justification_final %}
+                            {{ enrollment.get_justification_final_display }}
                         {% else %}
                             -
                         {% endif %}
                     {%else%}
-                        {% if enrollment.justification_final %}
-                            {{ enrollment.get_justification_final_display }}
+                        {% if enrollment.justification_draft %}
+                            {{ enrollment.get_justification_draft_display }}
                         {% else %}
                             -
                         {% endif %}

@@ -41,7 +41,7 @@ def scores_encoding(request):
     academic_yr = mdl.academic_year.current_academic_year()
     if tutor:
         data_dict = get_data(request)
-        sessions_list, faculties, notes_list = get_sessions(None, request, tutor, academic_yr)
+        sessions_list, faculties, notes_list = get_sessions(None, request, tutor, academic_yr, None)
         return layout.render(request, "scores_encoding.html",
                       {'section':            data_dict['section'],
                        'tutor':              tutor,
@@ -85,31 +85,44 @@ def online_encoding_form(request, learning_unit_id=None, tutor_id=None):
     enrollments = data['enrollments']
     if request.method == 'GET':
         return layout.render(request, "online_encoding_form.html",
-                              {'section': 'scores_encoding',
-                               'tutor': data['tutor'],
-                               'academic_year': data['academic_year'],
-                               'enrollments': enrollments,
-                               'learning_unit': data['learning_unit'],
-                               'justifications': mdl.exam_enrollment.JUSTIFICATION_TYPES,
-                               'all_encoded': data['all_encoded'],
-                               'tutor_responsible': data['tutor_responsible']
+                              {'section':           'scores_encoding',
+                               'tutor':             data['tutor'],
+                               'academic_year':     data['academic_year'],
+                               'enrollments':       enrollments,
+                               'learning_unit':     data['learning_unit'],
+                               'justifications':    mdl.exam_enrollment.JUSTIFICATION_TYPES,
+                               'all_encoded':       data['all_encoded'],
+                               'tutor_responsible': data['tutor_responsible'],
+                               'is_pgmer':          data['is_pgmer']
                                })
     elif request.method == 'POST':
+        print('ici')
         for enrollment in enrollments:
             score = request.POST.get('score_' + str(enrollment.id), None)
+            justification = request.POST.get('justification_' + str(enrollment.id), None)
+
             if score:
+                score = score.strip()
+
+            if score:
+                print('if')
                 if enrollment.session_exam.learning_unit_year.decimal_scores:
                     enrollment.score_draft = float(score)
                 else:
                     enrollment.score_draft = int(float(score))
             else:
-                enrollment.score_draft = enrollment.score_final
+                print('else')
+                if justification:
+                    print('if2')
+                    enrollment.score_draft = None
 
-            if request.POST.get('justification_' + str(enrollment.id), None) == "None":
-                enrollment.justification_draft = None
+            if justification and justification != "None":
+                print('ii')
+                enrollment.justification_draft = justification
             else:
-                enrollment.justification_draft = request.POST.get('justification_' + str(enrollment.id), None)
-            if not tutor_id:
+                enrollment.justification_draft = None
+
+            if data['is_pgmer']:
                 #pgmer draft must be save in final
                 enrollment.score_final = enrollment.score_draft
                 enrollment.justification_final = enrollment.justification_draft
@@ -182,7 +195,7 @@ def online_double_encoding_validation(request, learning_unit_id=None, tutor_id=N
     academic_year = mdl.academic_year.current_academic_year()
     if request.method == 'GET':
 
-        sessions_list, faculties, notes_list = get_sessions(learning_unit_id, request, tutor,academic_year)
+        sessions_list, faculties, notes_list = get_sessions(learning_unit_id, request, tutor,academic_year,None)
         all_enrollments = []
         if sessions_list:
             for sessions in sessions_list:
@@ -203,7 +216,7 @@ def online_double_encoding_validation(request, learning_unit_id=None, tutor_id=N
                        'is_pgmer':         is_pgmer})
 
     elif request.method == 'POST':
-        sessions_list, faculties, notes_list = get_sessions(learning_unit_id, request, tutor, academic_year)
+        sessions_list, faculties, notes_list = get_sessions(learning_unit_id, request, tutor, academic_year,None)
         if sessions_list:
             for sessions in sessions_list:
 
@@ -213,6 +226,12 @@ def online_double_encoding_validation(request, learning_unit_id=None, tutor_id=N
 
                         for enrollment in enrollments:
                             score = request.POST.get('score_' + str(enrollment.id), None)
+                            if score:
+                                score = score.strip()
+                            justification = request.POST.get('justification_' + str(enrollment.id), None)
+                            if justification == "None":
+                                justification = None
+
                             if is_pgmer:
                                 if score:
                                     if enrollment.session_exam.learning_unit_year.decimal_scores:
@@ -220,30 +239,37 @@ def online_double_encoding_validation(request, learning_unit_id=None, tutor_id=N
                                     else:
                                         enrollment.score_final = int(float(score))
                                     enrollment.score_draft = enrollment.score_final
+                                else:
+                                    if justification:
+                                        enrollment.score_draft = None
+                                        enrollment.score_final = None
                                 enrollment.score_reencoded = None
 
-                                justification = request.POST.get('justification_' + str(enrollment.id), None)
                                 if justification:
                                     enrollment.justification_final = justification
                                     enrollment.justification_draft = enrollment.justification_final
+
                                 if score or justification:
-                                    mdl.exam_enrollment.create_exam_enrollment_historic(request.user, enrollment, score, justification)
+                                    mdl.exam_enrollment.create_exam_enrollment_historic(request.user, enrollment, enrollment.score_final, enrollment.justification_final)
                                 enrollment.justification_reencoded = None
                                 enrollment.save()
                             else:
+                                # tutor
+                                print(score)
                                 if score:
                                     if enrollment.session_exam.learning_unit_year.decimal_scores:
                                         enrollment.score_draft = float(score)
                                     else:
                                         enrollment.score_draft = int(float(score))
+                                else:
+                                    if justification:
+                                        enrollment.score_draft = None
 
                                 enrollment.score_reencoded = None
 
-                                justification = request.POST.get('justification_' + str(enrollment.id), None)
                                 if justification:
                                     enrollment.justification_draft = justification
-                                if score or justification:
-                                    mdl.exam_enrollment.create_exam_enrollment_historic(request.user, enrollment, score, justification)
+
                                 enrollment.justification_reencoded = None
                                 enrollment.save()
 
@@ -272,7 +298,7 @@ def online_encoding_submission(request, learning_unit_id):
 
     learning_unit = mdl.learning_unit.find_learning_unit_by_id(learning_unit_id)
 
-    sessions_list, faculties, notes_list= get_sessions(learning_unit, request, tutor, academic_yr)
+    sessions_list, faculties, notes_list= get_sessions(learning_unit, request, tutor, academic_yr,None)
 
     if sessions_list:
         for sessions in sessions_list:
@@ -322,7 +348,8 @@ def upload_score_error(request):
 
 
 @login_required
-def notes_printing(request, learning_unit_id=None, tutor_id=None):
+def notes_printing(request, learning_unit_id=None, tutor_id=None, offer_id=None):
+    print('tutor',tutor_id)
     tutor = None
     if tutor_id:
         tutor = mdl.tutor.find_by_id(tutor_id)
@@ -338,16 +365,17 @@ def notes_printing(request, learning_unit_id=None, tutor_id=None):
             is_fac = True
             break
     if learning_unit_id == -1:
-        sessions_list, faculties, notes_list = get_sessions(None, request, tutor, academic_year)
+        sessions_list, faculties, notes_list = get_sessions(None, request, tutor, academic_year,offer_id)
     else:
-        sessions_list, faculties, notes_list = get_sessions(learning_unit_id, request, tutor, academic_year)
+        sessions_list, faculties, notes_list = get_sessions(learning_unit_id, request, tutor, academic_year,None)
 
     return pdf_utils.print_notes(request, tutor, academic_year, learning_unit_id, is_fac, sessions_list)
 
 
 @login_required
-def notes_printing_all(request, tutor_id=None):
-    return notes_printing(request, int(-1), tutor_id)
+def notes_printing_all(request, tutor_id=None, offer_id = None):
+    print('notes_printing_all', tutor_id , ",  " ,offer_id)
+    return notes_printing(request, int(-1), tutor_id, offer_id)
 
 
 @login_required
@@ -362,20 +390,25 @@ def export_xls(request, learning_unit_id, academic_year_id):
         for program_mgr in program_mgr_list:
             is_fac = True
             break
-    sessions_list, faculties,notes_list = get_sessions(learning_unit_id, request, tutor, academic_year)
+    sessions_list, faculties,notes_list = get_sessions(learning_unit_id, request, tutor, academic_year,None)
 
     return export_utils.export_xls(request, learning_unit_id, academic_year_id, is_fac, sessions_list)
 
 
-def get_sessions(learning_unit_param, request, tutor, academic_yr):
+def get_sessions(learning_unit_param, request, tutor, academic_yr, offer_id):
     sessions_list = []
     learning_unit_list = []
 
     faculties = []
     notes_list = []
     ss = []
-    if tutor:
-        sessions = mdl.session_exam.find_current_sessions_by_tutor(tutor, academic_yr, learning_unit_param)
+    if tutor or offer_id:
+        print('ici sdfsdf', tutor,offer_id)
+        if offer_id:
+            offer_year = mdl.offer_year.find_by_id(offer_id)
+        else:
+            offer_year = None
+        sessions = mdl.session_exam.find_current_sessions_by_tutor_offer(tutor, academic_yr, learning_unit_param, offer_year)
         sessions_list.append(sessions)
         learning_unit_list = []
         dict_progress = {}
@@ -488,7 +521,7 @@ def get_score_encoded(enrollments):
 def get_data(request):
     academic_yr = mdl.academic_year.current_academic_year()
     tutor = mdl.tutor.find_by_user(request.user)
-    sessions_list, faculties, notes_list = get_sessions(None, request, tutor, academic_yr)
+    sessions_list, faculties, notes_list = get_sessions(None, request, tutor, academic_yr,None)
 
     return {'section':       'scores_encoding',
             'tutor':         tutor,
@@ -518,7 +551,7 @@ def get_data_online(learning_unit_id, tutor_id, request):
     academic_yr = mdl.academic_year.current_academic_year()
     learning_unit = mdl.learning_unit.find_learning_unit_by_id(learning_unit_id)
     learning_unit_year = mdl.learning_unit_year.find_learning_unit_years_by_academic_year_learningunit(academic_yr,learning_unit)
-    sessions_list, faculties, notes_list = get_sessions(learning_unit, request, tutor, academic_yr)
+    sessions_list, faculties, notes_list = get_sessions(learning_unit, request, tutor, academic_yr,None)
 
     tot_enrollments = []
     tot_progress = []
@@ -555,7 +588,7 @@ def get_data_online(learning_unit_id, tutor_id, request):
 
 
 def get_data_online_double(learning_unit_id,tutor_id,request):
-
+    is_pgmer=False
     if tutor_id:
         tutor = mdl.tutor.find_by_id(tutor_id)
     else:
@@ -570,7 +603,7 @@ def get_data_online_double(learning_unit_id,tutor_id,request):
 
     learning_unit = mdl.learning_unit.find_learning_unit_by_id(learning_unit_id)
 
-    sessions_list, faculties, notes_list = get_sessions(learning_unit, request, tutor, academic_yr)
+    sessions_list, faculties, notes_list = get_sessions(learning_unit, request, tutor, academic_yr,None)
     tot_enrollments = []
     tot_progress = []
     tot_num_encoded_scores = 0

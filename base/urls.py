@@ -73,7 +73,7 @@ urlpatterns = [
     url(r'^studies/assessments/scores_encoding/online/(?P<learning_unit_id>[0-9]+)(?:/(?P<tutor_id>[0-9]+))?/double_form$', score_encoding.online_double_encoding_form, name='online_double_encoding_form'),
 
     url(r'^studies/assessments/scores_encoding/online/(?P<learning_unit_id>[0-9]+)(?:/(?P<tutor_id>[0-9]+))?/double_validation$', score_encoding.online_double_encoding_validation, name='online_double_encoding_validation'),
-    url(r'^studies/assessments/scores_encoding/notes_printing_all(?:/(?P<tutor_id>[0-9]+))?/$', score_encoding.notes_printing_all, name='notes_printing_all'),
+    url(r'^studies/assessments/scores_encoding/notes_printing_all(?:/(?P<tutor_id>[0-9]+))?(?:/(?P<offer_id>[0-9]+))?/$', score_encoding.notes_printing_all, name='notes_printing_all'),
     url(r'^studies/assessments/scores_encoding/notes_printing/(?P<learning_unit_id>[0-9]+)(?:/(?P<tutor_id>[0-9]+))?/$', score_encoding.notes_printing, name='notes_printing'),
     url(r'^studies/assessments/scores_encoding/xlsdownload/([0-9]+)/([0-9]+)/$',score_encoding.export_xls, name='scores_encoding_download'),
     url(r'^studies/assessments/scores_encoding/upload/(?P<learning_unit_id>[0-9]+)(?:/(?P<tutor_id>[0-9]+))?/$', upload_xls_utils.upload_scores_file,name='upload_encoding'),

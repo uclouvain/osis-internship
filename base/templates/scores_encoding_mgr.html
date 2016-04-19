@@ -156,7 +156,20 @@
 
                   <br>
                   <a class="btn btn-default"
-                     href="{% url 'notes_printing_all'  %}"
+                     href="{%if tutor and offer %}
+                                {% url 'notes_printing_all' tutor_id=tutor.id offer_id=offer.id %}
+                           {%else%}
+                                {%if tutor %}
+                                    {% url 'notes_printing_all' tutor_id=tutor.id %}
+                                {%else%}
+                                    {%if offer%}
+                                        {% url 'notes_printing_all' offer_id=offer.id %}
+                                    {%else%}
+                                        {% url 'notes_printing_all'  %}
+                                    {%endif%}
+                                {%endif%}
+                            {%endif%}"
+
                      role="button" id="lnk_notes_printing_all_{{learning_unit.id}}">
                       <span class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'Print scores for all activities' %}</a>
 
