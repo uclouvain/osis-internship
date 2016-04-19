@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-16 16:54+0200\n"
+"POT-Creation-Date: 2016-04-14 14:01+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -92,7 +92,7 @@ msgstr "Indéfini"
 
 #: models/session_exam.py:42 templates/scores_encoding.html.py:90
 msgid "idle"
-msgstr "????"
+msgstr "En attente"
 
 #: models/session_exam.py:43 templates/scores_encoding.html.py:92
 msgid "open"
@@ -122,7 +122,7 @@ msgstr "Catalogue de formation"
 #: templates/online_double_encoding_validation.html:56
 #: templates/online_encoding.html:57 templates/online_encoding_form.html:56
 #: templates/scores_encoding.html:54 utils/export_utils.py:36
-#: utils/pdf_utils.py:272
+#: utils/pdf_utils.py:273
 msgid "academic_year"
 msgstr "Année académique"
 
@@ -135,6 +135,14 @@ msgstr "Calendriers académique"
 #: templates/academic_calendar.html:35
 msgid "event"
 msgstr "Événement"
+
+#: templates/academic_calendar_form.html:37
+#: templates/academic_calendars.html:38 templates/academic_year.html.py:42
+#: templates/home.html:73 templates/offer.html.py:51
+#: templates/offer_year_calendar.html:42
+#: templates/offer_year_calendar_form.html:52
+msgid "academic_calendar"
+msgstr "Calendrier académique"
 
 #: templates/academic_calendar.html:49
 #: templates/academic_calendar_form.html:63
@@ -164,7 +172,7 @@ msgstr "Date de début"
 #: templates/offer_year_calendar_form.html:61
 #: templates/online_double_encoding_form.html:87
 #: templates/online_encoding.html:102 templates/online_encoding_form.html:96
-#: utils/export_utils.py:45 utils/pdf_utils.py:254
+#: utils/export_utils.py:45 utils/pdf_utils.py:255
 msgid "end_date"
 msgstr "Date de fin"
 
@@ -189,14 +197,6 @@ msgstr "Avancer"
 #: templates/organization_address.html:71
 msgid "edit"
 msgstr "Éditer"
-
-#: templates/academic_calendar_form.html:37
-#: templates/academic_calendars.html:38 templates/academic_year.html.py:42
-#: templates/home.html:73 templates/offer.html.py:51
-#: templates/offer_year_calendar.html:42
-#: templates/offer_year_calendar_form.html:52
-msgid "academic_calendar"
-msgstr "Calendrier académique"
 
 #: templates/academic_calendar_form.html:90
 msgid "highlight_title"
@@ -228,17 +228,17 @@ msgstr "Sauvegarder"
 #: templates/online_double_encoding_validation.html:143
 #: templates/online_encoding.html:163 templates/online_encoding.html.py:184
 #: templates/online_encoding_form.html:141
-#: templates/organization_address_form.html:80
-#: templates/organization_address_form.html:81
-#: templates/organization_address_form.html:84
-#: templates/organization_address_form.html:85
-#: templates/organization_form.html:80
+#: templates/organization_address_form.html:86
+#: templates/organization_address_form.html:87
+#: templates/organization_address_form.html:90
+#: templates/organization_address_form.html:91
+#: templates/organization_form.html:78
 msgid "cancel"
 msgstr "Annuler"
 
 #: templates/academic_calendars.html:70 templates/admin/files.html.py:66
 #: templates/learning_units.html:73 templates/offers.html.py:73
-#: templates/organizations.html:98 templates/structures.html.py:84
+#: templates/organizations.html:82 templates/structures.html.py:84
 msgid "no_result"
 msgstr "Aucun résultat!"
 
@@ -612,7 +612,7 @@ msgstr "Noma"
 #: templates/online_double_encoding_validation.html:85
 #: templates/online_encoding.html:98 templates/online_encoding_form.html:92
 #: templates/profile.html.py:63 utils/export_utils.py:41
-#: utils/pdf_utils.py:250
+#: utils/pdf_utils.py:251
 msgid "lastname"
 msgstr "Nom"
 
@@ -620,7 +620,7 @@ msgstr "Nom"
 #: templates/online_double_encoding_validation.html:86
 #: templates/online_encoding.html:99 templates/online_encoding_form.html:93
 #: templates/profile.html.py:59 utils/export_utils.py:42
-#: utils/pdf_utils.py:251
+#: utils/pdf_utils.py:252
 msgid "firstname"
 msgstr "Prénom"
 
@@ -965,7 +965,7 @@ msgstr "Gestion des stages des étudiants."
 msgid "activity_code"
 msgstr "Activité"
 
-#: utils/export_utils.py:43 utils/pdf_utils.py:252
+#: utils/export_utils.py:43 utils/pdf_utils.py:253
 msgid "numbered_score"
 msgstr "Note chiffrée"
 
@@ -991,7 +991,7 @@ msgstr "Liste des choix"
 
 #: utils/pdf_utils.py:129
 msgid "scores_transcript"
-msgstr "Relevé de notes"
+msgstr "Feuille de notes"
 
 #: utils/pdf_utils.py:131
 msgid "ucl_denom_location"
@@ -1004,35 +1004,39 @@ msgstr ""
 msgid "scores_sheet"
 msgstr "Feuille de notes"
 
-#: utils/pdf_utils.py:236
+#: utils/pdf_utils.py:237
 msgid "other_score_legend"
 msgstr "Légende pour le champ 'autre note'"
 
-#: utils/pdf_utils.py:238
+#: utils/pdf_utils.py:239
 msgid "unauthorized_decimal_for_this_activity"
 msgstr "Attention : décimales non autorisées pour ce cours"
 
-#: utils/pdf_utils.py:309
+#: utils/pdf_utils.py:310
 msgid "deliberation_date"
 msgstr "Date de délibération"
 
-#: utils/pdf_utils.py:310
+#: utils/pdf_utils.py:311
 msgid "chair_of_the_exam_board"
 msgstr "Président du jury"
 
-#: utils/pdf_utils.py:311
+#: utils/pdf_utils.py:312
 msgid "exam_board_secretary"
 msgstr "Secrétaire du jury"
 
-#: utils/pdf_utils.py:355
+#: utils/pdf_utils.py:341
+msgid "return_doc_to_administrator"
+msgstr "Veuillez renvoyer ce document au bureau administratif de la faculté responsable du programme."
+
+#: utils/pdf_utils.py:357
 msgid "done_at"
 msgstr "Fait à"
 
-#: utils/pdf_utils.py:355
+#: utils/pdf_utils.py:357
 msgid "the"
 msgstr "Le"
 
-#: utils/pdf_utils.py:355
+#: utils/pdf_utils.py:357
 msgid "signature"
 msgstr "Signature"
 

@@ -122,7 +122,7 @@ msgstr "Formation catalogue"
 #: templates/online_double_encoding_validation.html:56
 #: templates/online_encoding.html:57 templates/online_encoding_form.html:56
 #: templates/scores_encoding.html:54 utils/export_utils.py:36
-#: utils/pdf_utils.py:272
+#: utils/pdf_utils.py:273
 msgid "academic_year"
 msgstr "Academic year"
 
@@ -133,6 +133,14 @@ msgid "academic_calendars"
 msgstr "Academic calendars"
 
 #: templates/academic_calendar.html:35
+#: templates/academic_calendar_form.html:37
+#: templates/academic_calendars.html:38 templates/academic_year.html.py:42
+#: templates/home.html:73 templates/offer.html.py:51
+#: templates/offer_year_calendar.html:42
+#: templates/offer_year_calendar_form.html:52
+msgid "academic_calendar"
+msgstr "Academic calendar"
+
 msgid "event"
 msgstr "Event"
 
@@ -164,7 +172,7 @@ msgstr "Start date"
 #: templates/offer_year_calendar_form.html:61
 #: templates/online_double_encoding_form.html:87
 #: templates/online_encoding.html:102 templates/online_encoding_form.html:96
-#: utils/export_utils.py:45 utils/pdf_utils.py:254
+#: utils/export_utils.py:45 utils/pdf_utils.py:255
 msgid "end_date"
 msgstr "End date"
 
@@ -190,16 +198,6 @@ msgstr "Go"
 msgid "edit"
 msgstr "Edit"
 
-#: templates/academic_calendar_form.html:37
-#: templates/academic_calendars.html:38 templates/academic_year.html.py:42
-#: templates/home.html:73 templates/offer.html.py:51
-#: templates/offer_year_calendar.html:42
-#: templates/offer_year_calendar_form.html:52
-#, fuzzy
-#| msgid "academic_calendars"
-msgid "academic_calendar"
-msgstr "Academic calendars"
-
 #: templates/academic_calendar_form.html:90
 msgid "highlight_title"
 msgstr "Highlight title"
@@ -217,8 +215,8 @@ msgstr "Highlight description"
 #: templates/offer_year_calendar_form.html:69
 #: templates/offer_year_calendar_form.html:70
 #: templates/online_encoding_form.html:139
-#: templates/organization_address_form.html:77
-#: templates/organization_form.html:78 templates/profile.html.py:182
+#: templates/organization_address_form.html:83
+#: templates/organization_form.html:77 templates/profile.html.py:182
 #: templates/profile.html:183
 msgid "save"
 msgstr "Save"
@@ -230,17 +228,17 @@ msgstr "Save"
 #: templates/online_double_encoding_validation.html:143
 #: templates/online_encoding.html:163 templates/online_encoding.html.py:184
 #: templates/online_encoding_form.html:141
-#: templates/organization_address_form.html:80
-#: templates/organization_address_form.html:81
-#: templates/organization_address_form.html:84
-#: templates/organization_address_form.html:85
-#: templates/organization_form.html:80
+#: templates/organization_address_form.html:86
+#: templates/organization_address_form.html:87
+#: templates/organization_address_form.html:90
+#: templates/organization_address_form.html:91
+#: templates/organization_form.html:78
 msgid "cancel"
 msgstr "Cancel"
 
 #: templates/academic_calendars.html:70 templates/admin/files.html.py:66
 #: templates/learning_units.html:73 templates/offers.html.py:73
-#: templates/organizations.html:98 templates/structures.html.py:84
+#: templates/organizations.html:82 templates/structures.html.py:84
 msgid "no_result"
 msgstr "No result!"
 
@@ -476,7 +474,7 @@ msgstr "General informations"
 #: templates/offer.html:232 templates/offer.html.py:252
 #: templates/offer.html:280 templates/offers.html.py:57
 #: templates/offers.html:58 templates/offers.html.py:80
-#: templates/organization.html:49 templates/organization_form.html.py:49
+#: templates/organization.html:49 templates/organization_form.html.py:53
 #: templates/organizations.html:42 templates/organizations.html.py:43
 #: templates/organizations.html:85 templates/structure.html.py:60
 #: templates/structure.html:93 templates/structure.html.py:119
@@ -611,7 +609,7 @@ msgstr "Registration number"
 #: templates/online_double_encoding_validation.html:85
 #: templates/online_encoding.html:98 templates/online_encoding_form.html:92
 #: templates/profile.html.py:63 utils/export_utils.py:41
-#: utils/pdf_utils.py:250
+#: utils/pdf_utils.py:251
 msgid "lastname"
 msgstr "Lastname"
 
@@ -619,7 +617,7 @@ msgstr "Lastname"
 #: templates/online_double_encoding_validation.html:86
 #: templates/online_encoding.html:99 templates/online_encoding_form.html:93
 #: templates/profile.html.py:59 utils/export_utils.py:42
-#: utils/pdf_utils.py:251
+#: utils/pdf_utils.py:252
 msgid "firstname"
 msgstr "Firstname"
 
@@ -643,7 +641,7 @@ msgstr "Scores"
 
 #: templates/online_double_encoding_validation.html:80
 #: templates/online_encoding.html:101 utils/export_utils.py:44
-#: utils/pdf_utils.py:253
+#: utils/pdf_utils.py:254
 msgid "other_score"
 msgstr "Other scores"
 
@@ -693,7 +691,7 @@ msgid "submit_xls_file"
 msgstr "Submit XLS file"
 
 #: templates/online_encoding.html:96 templates/profile.html.py:138
-#: utils/export_utils.py:39 utils/pdf_utils.py:307
+#: utils/export_utils.py:39 utils/pdf_utils.py:308
 msgid "program"
 msgstr "Program"
 
@@ -961,7 +959,7 @@ msgstr "This process controls students internships."
 msgid "activity_code"
 msgstr "Activity code"
 
-#: utils/export_utils.py:43 utils/pdf_utils.py:252
+#: utils/export_utils.py:43 utils/pdf_utils.py:253
 msgid "numbered_score"
 msgstr "Numbered scores"
 
@@ -1000,35 +998,39 @@ msgstr ""
 msgid "scores_sheet"
 msgstr "Scores sheet"
 
-#: utils/pdf_utils.py:236
+#: utils/pdf_utils.py:237
 msgid "other_score_legend"
 msgstr "Other scores legend"
 
-#: utils/pdf_utils.py:238
+#: utils/pdf_utils.py:239
 msgid "unauthorized_decimal_for_this_activity"
 msgstr "Unauthorized decimal for this activity"
 
-#: utils/pdf_utils.py:309
+#: utils/pdf_utils.py:310
 msgid "deliberation_date"
 msgstr "Deliberation date"
 
-#: utils/pdf_utils.py:310
+#: utils/pdf_utils.py:311
 msgid "chair_of_the_exam_board"
 msgstr "Chair of the exam board"
 
-#: utils/pdf_utils.py:311
+#: utils/pdf_utils.py:312
 msgid "exam_board_secretary"
 msgstr "Exam board secretary"
 
-#: utils/pdf_utils.py:355
+#: utils/pdf_utils.py:341
+msgid "return_doc_to_administrator"
+msgstr "Please return this document to the administrative office of the program administrator"
+
+#: utils/pdf_utils.py:357
 msgid "done_at"
 msgstr "Done at"
 
-#: utils/pdf_utils.py:355
+#: utils/pdf_utils.py:357
 msgid "the"
 msgstr "The"
 
-#: utils/pdf_utils.py:355
+#: utils/pdf_utils.py:357
 msgid "signature"
 msgstr "Signature"
 
