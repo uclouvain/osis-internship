@@ -270,35 +270,40 @@ virtual environment:
 
     (venv)$ deactivate
 
+== Contributing to the Project
+
 [[installing-pycharm]]
 === Installing PyCharm IDE
 
-https://www.jetbrains.com/pycharm/[PyCharm] is python JetBrains IDE. +
-The community edition does not work out of the box with Django, but it is helpful for the pep8 code formating, completion,... +
+As the codebase grows and becomes more complex to navigate we face more issues
+with light weight Python editors. We decided to try out several tools in the 
+project and we came to the conclusion that https://www.jetbrains.com/pycharm/[PyCharm] 
+is the best Python IDE for our needs.
 
-==== Download and install PyCharm community edition
-Download and install PyCharm following the instructions on the web site : https://www.jetbrains.com/pycharm/
+We would like to ask all contributors to use PyCharm - at least the community 
+edition - to contribute to OSIS because it has a very good 
+https://www.python.org/dev/peps/pep-0008/[PEP 8] code verification, auto 
+completion, navigation and debugging, saving a lot of time in the process of
+pull requests evaluations.
 
-==== Configuration of PyCharm to code OSIS project
-===== Configure the python interpreter
+Please, follow the instructions on https://www.jetbrains.com/pycharm/[PyCharm's website]
+to install the IDE on your operating system.
+
+=== Configuration of PyCharm to contribute to OSIS
+
+==== Configuring the python interpreter
+
 1. Open OSIS project.
-2. Select `File -> Settings -> Project:osis -> Project Interpreter` .
-3. Click on the wheel at the top right , and choose `add Local` .
-4. Navigate to the python3.4 binary in your virtual environment (`$VENV/lib/python3.4`).
+2. Select `File -> Settings -> Project:osis -> Project Interpreter`
+3. Click on the wheel on the top right , and choose `add Local`
+4. Navigate to the python3.4 binary in your virtual environment (`VENV/bin/python3.4`)
 
 image::images/pycharm_osis_config_1.png["Pycharm VENV config",width=128,link="/images/pycharm_osis_config_1.png"]
 
-===== Configure the Django server to debug OSIS through PyCharm
-[NOTE]
-====
-Running the application output an error :
-django.core.exceptions.AppRegistryNotReady: Apps aren't loaded yet.
-
-This error is not present while debugging.
-====
+==== Configuring the Django server to debug OSIS through PyCharm
 
 1. Click on the drop down list at the top right of the ide , and choose `Edit Configuration` .
-2. Click on the `+` buton and add a python script.
+2. Click on the `+` button and add a python script.
 3. Fill in the name.
 4. In the `Script` field, choose the manage.py script in the root folder of OSIS.
 5. In the `Script parameters` field, add `runserver` .
@@ -307,7 +312,14 @@ This error is not present while debugging.
 
 image::images/pycharm_osis_config_2.png["Pycharm VENV config",width=128,link="/images/pycharm_osis_config_2.png"]
 
-== Contributing to the Project
+[NOTE]
+====
+Running the application outputs an error :
+    
+    django.core.exceptions.AppRegistryNotReady: Apps aren't loaded yet.
+
+This error is not present while debugging.
+====
 
 === Following the Git Workflow
 
