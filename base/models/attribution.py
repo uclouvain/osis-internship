@@ -69,3 +69,12 @@ def find_by_learning_unit(a_learning_unit):
     attributions = Attribution.objects.filter(learning_unit=a_learning_unit) \
                               .order_by('tutor__person__last_name','tutor__person__first_name')
     return attributions
+
+
+def find_by_function(tutor, a_learning_unit, function):
+    attributions_coord = Attribution.objects.filter(learning_unit=a_learning_unit) \
+                                     .filter(tutor=tutor.id)\
+                                     .filter(function=function)
+    if attributions_coord:
+        return True
+    return False

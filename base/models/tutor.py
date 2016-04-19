@@ -73,7 +73,7 @@ def find_by_id(tutor_id):
     return Tutor.objects.get(id=tutor_id)
 
 
-def find_main_tutor(a_learning_unit):
+def find_responsible(a_learning_unit):
     # S'il y a un seul enseignant => c'est cet enseignant
     # S'il y a plusieurs enseignants et un coordinateur => c'est le coordinateur
     # S'il y a plusieurs enseignants et pas de coordinateur => premier enseignant par l'ordre alphabétique
@@ -90,13 +90,13 @@ def find_main_tutor(a_learning_unit):
     return None
 
 
-def find_tutors_by_user(user):
+def find_by_program_manager(programme_manager):
     """
     To find all the tutors managed by a program manager
     """
     academic_yr = academic_year.current_academic_year()
-    program_mgr_list= program_manager.find_by_user(user)
-    tutor_list=[]
+    program_mgr_list= program_manager.find_by_user(programme_manager)
+    tutor_list = []
     for program_mgr in program_mgr_list:
         if program_mgr.offer_year:
             sessions = session_exam.find_sessions_by_offer(program_mgr.offer_year, academic_yr, None)
@@ -104,9 +104,21 @@ def find_tutors_by_user(user):
                 learning_unit = session.learning_unit_year.learning_unit
                 enrollments = exam_enrollment.find_exam_enrollments_drafts_by_session(session)
                 if enrollments and len(enrollments) > 0:
-                    main_tutor = find_main_tutor(learning_unit)
-                    if main_tutor is not None:
-                        if main_tutor not in tutor_list:
-                            tutor_list.append(main_tutor)
+                    responsible_tutor = find_responsible(learning_unit)
+                    if responsible_tutor is not None:
+                        if responsible_tutor not in tutor_list:
+                            tutor_list.append(responsible_tutor)
+    return find_by_list(tutor_list)
 
-    return tutor_list
+
+def find_by_list(list):
+    """
+    To order tutors by name
+    """
+    ids =  []
+    for t in list:
+        ids.append(t.id)
+
+    return  Tutor.objects.filter(id__in=ids).order_by('person__last_name', 'person__first_name')
+
+

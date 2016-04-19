@@ -27,6 +27,7 @@ from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 from base.models import person
+from django.utils import timezone
 
 
 JUSTIFICATION_TYPES = (
@@ -40,7 +41,7 @@ JUSTIFICATION_TYPES = (
 class ExamEnrollmentAdmin(admin.ModelAdmin):
     list_display = ('student', 'session_exam', 'score_final', 'justification_final', 'encoding_status', 'changed')
     list_filter = ('encoding_status', 'session_exam__number_session')
-    fieldsets = ((None, {'fields': ('session_exam','learning_unit_enrollment')}),)
+    fieldsets = ((None, {'fields': ('session_exam','learning_unit_enrollment','score_draft','justification_draft','score_final','justification_final')}),)
     raw_id_fields = ('session_exam', 'learning_unit_enrollment')
     search_fields = ['learning_unit_enrollment__offer_enrollment__student__person__first_name',
                      'learning_unit_enrollment__offer_enrollment__student__person__last_name']
@@ -200,6 +201,8 @@ def find_exam_enrollments_by_session_learningunit(session_exm, learning_unt):
 def find_exam_enrollments_by_session_structure(session_exm, structure):
     enrollments = ExamEnrollment.objects.filter(session_exam=session_exm) \
         .filter(learning_unit_enrollment__offer_enrollment__offer_year__structure=structure) \
+        .filter(session_exam__offer_year_calendar__start_date__lte=timezone.now()) \
+        .filter(session_exam__offer_year_calendar__end_date__gte=timezone.now())\
         .order_by('learning_unit_enrollment__offer_enrollment__offer_year__acronym',
                   'learning_unit_enrollment__offer_enrollment__student__person__last_name',
                   'learning_unit_enrollment__offer_enrollment__student__person__first_name')
@@ -214,8 +217,47 @@ def find_exam_enrollments_by_session_pgm(session_exm,program_mgr_list):
 
     enrollments = ExamEnrollment.objects.filter(session_exam=session_exm) \
                 .filter(learning_unit_enrollment__offer_enrollment__offer_year__structure__in=offer_year_structures)\
+                .filter(session_exam__offer_year_calendar__start_date__lte=timezone.now()) \
+                .filter(session_exam__offer_year_calendar__end_date__gte=timezone.now())\
                 .order_by('learning_unit_enrollment__offer_enrollment__offer_year__acronym',
                           'learning_unit_enrollment__offer_enrollment__student__person__last_name',
                           'learning_unit_enrollment__offer_enrollment__student__person__first_name')
 
     return enrollments
+
+
+
+def find_exam_enrollments_drafts_existing_by_session(session_exam):
+    """ Return the enrollments of a session but not the ones already submitted. """
+    enrolls = ExamEnrollment.objects.filter(session_exam=session_exam) \
+                                    .filter(score_final__isnull=True) \
+                                    .filter(models.Q(justification_draft__isnull=False) |
+                                        models.Q(score_draft__isnull=False)) \
+                                    .filter(models.Q(justification_final__isnull=True) |
+                                            models.Q(justification_final='')) \
+                                    .order_by('learning_unit_enrollment__offer_enrollment__offer_year__acronym',
+                                              'learning_unit_enrollment__offer_enrollment__student__person__last_name',
+                                              'learning_unit_enrollment__offer_enrollment__student__person__first_name')
+    return enrolls
+
+def find_exam_enrollments_drafts_existing_pgmer_by_session(session_exam):
+    """ Return the enrollments of a session but not the ones already submitted. """
+    enrolls = ExamEnrollment.objects.filter(session_exam=session_exam) \
+                                    .filter(models.Q(justification_draft__isnull=False) |
+                                        models.Q(score_draft__isnull=False)) \
+                                    .order_by('learning_unit_enrollment__offer_enrollment__offer_year__acronym',
+                                              'learning_unit_enrollment__offer_enrollment__student__person__last_name',
+                                              'learning_unit_enrollment__offer_enrollment__student__person__first_name')
+    return enrolls
+
+def find_exam_enrollments_double_pgmer_by_session(session_exam):
+    """ Return the enrollments of a session but not the ones already submitted. """
+    enrolls = ExamEnrollment.objects.filter(session_exam=session_exam) \
+                                    .filter(models.Q(justification_draft__isnull=False) |
+                                        models.Q(score_draft__isnull=False)) \
+                                    .filter(models.Q(justification_reencoded__isnull=False) |
+                                    models.Q(score_reencoded__isnull=False)) \
+                                    .order_by('learning_unit_enrollment__offer_enrollment__offer_year__acronym',
+                                              'learning_unit_enrollment__offer_enrollment__student__person__last_name',
+                                              'learning_unit_enrollment__offer_enrollment__student__person__first_name')
+    return enrolls
