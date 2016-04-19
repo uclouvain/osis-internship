@@ -96,37 +96,36 @@ def online_encoding_form(request, learning_unit_id=None, tutor_id=None):
                                'is_pgmer':          data['is_pgmer']
                                })
     elif request.method == 'POST':
-        print('ici')
+
         for enrollment in enrollments:
             score = request.POST.get('score_' + str(enrollment.id), None)
             justification = request.POST.get('justification_' + str(enrollment.id), None)
+            modification_possible = True
+            if not data['is_pgmer'] and (enrollment.score_final or enrollment.justification_final):
+                modification_possible = False
+            if modification_possible:
+                if score:
+                    score = score.strip()
 
-            if score:
-                score = score.strip()
-
-            if score:
-                print('if')
-                if enrollment.session_exam.learning_unit_year.decimal_scores:
-                    enrollment.score_draft = float(score)
+                if score:
+                    if enrollment.session_exam.learning_unit_year.decimal_scores:
+                        enrollment.score_draft = float(score)
+                    else:
+                        enrollment.score_draft = int(float(score))
                 else:
-                    enrollment.score_draft = int(float(score))
-            else:
-                print('else')
-                if justification:
-                    print('if2')
-                    enrollment.score_draft = None
+                    if justification:
+                        enrollment.score_draft = None
 
-            if justification and justification != "None":
-                print('ii')
-                enrollment.justification_draft = justification
-            else:
-                enrollment.justification_draft = None
+                if justification and justification != "None":
+                    enrollment.justification_draft = justification
+                else:
+                    enrollment.justification_draft = None
 
-            if data['is_pgmer']:
-                #pgmer draft must be save in final
-                enrollment.score_final = enrollment.score_draft
-                enrollment.justification_final = enrollment.justification_draft
-            enrollment.save()
+                if data['is_pgmer']:
+                    #pgmer draft must be save in final
+                    enrollment.score_final = enrollment.score_draft
+                    enrollment.justification_final = enrollment.justification_draft
+                enrollment.save()
         if tutor_id:
             return HttpResponseRedirect(reverse('online_encoding', args=(learning_unit_id, tutor_id)))
         else:
