@@ -85,17 +85,42 @@
             <p><b>{% trans 'select_an_encoding_type' %}</b></p>
             <div>
                 <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation" class="active"><a href="#tab_via_paper_{{forloop.counter0}}" aria-controls="via_paper" role="tab"
-                                               data-toggle="tab" id="lnk_via_paper_{{forloop.counter0}}">{% trans 'via_paper' %}</a></li>
-                    <li role="presentation"><a href="#tab_online_{{forloop.counter0}}"
+                    <li role="presentation" class="active"><a href="#tab_online_{{forloop.counter0}}"
                                                               aria-controls="online" role="tab" data-toggle="tab"
                                                               id="lnk_online_{{forloop.counter0}}">{% trans 'online' %}</a></li>
+                    <li role="presentation"><a href="#tab_via_paper_{{forloop.counter0}}" aria-controls="via_paper" role="tab"
+                                               data-toggle="tab" id="lnk_via_paper_{{forloop.counter0}}">{% trans 'via_paper' %}</a></li>
                     <li role="presentation"><a href="#tab_via_xls_{{forloop.counter0}}" aria-controls="via_xls" role="tab"
                                                data-toggle="tab" id="lnk_via_xls_{{forloop.counter0}}">{% trans 'via_xls' %}</a></li>
                 </ul>
 
                 <div class="tab-content" id="pnl_learning_units">
-                    <div role="tabpanel" class="tab-pane fade in active" id="tab_via_paper_{{forloop.counter0}}">
+                    <div role="tabpanel" class="tab-pane fade in active" id="tab_online_{{forloop.counter0}}">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>{% trans 'code' %}</th>
+                                    <th>{% trans 'activity' %}</th>
+                                    <th>{% trans 'tutor' %}</th>
+                                    <th>{% trans 'progress' %}</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                                <tbody>
+                                {% for note_detail in note.lu_list %}
+                                <tr>
+                                    <td>{{ note_detail.lu.acronym }}</td>
+                                    <td><a href="{% url 'online_encoding' note_detail.lu.id %}"
+                                           id="lnk_{{ note_detail.lu.acronym }}">{{ note_detail.lu.title }}</a></td>
+                                    <td>{{ note_detail.tutor.person.last_name }}, {{ note_detail.tutor.person.first_name }}</td>
+                                    <td>{{ note_detail.nb_notes_encoded}}/{{ note_detail.nb_student}}</td>
+                                    <td></td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                        </table>
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade" id="tab_via_paper_{{forloop.counter0}}">
                         {% if sessions %}
                         <br>
                         <a class="btn btn-default"
@@ -131,31 +156,6 @@
                                        role="button" id="lnk_notes_printing_{{note_detail.lu.id}}"><span
                                             class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'Print' %}</a>
                                 </td>
-                            </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    <div role="tabpanel" class="tab-pane fade" id="tab_online_{{forloop.counter0}}">
-                        <table class="table table-hover">
-                            <thead>
-                            <tr>
-                                <th>{% trans 'code' %}</th>
-                                <th>{% trans 'activity' %}</th>
-                                <th>{% trans 'tutor' %}</th>
-                                <th>{% trans 'progress' %}</th>
-                                <th></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for note_detail in note.lu_list %}
-                            <tr>
-                                <td>{{ note_detail.lu.acronym }}</td>
-                                <td><a href="{% url 'online_encoding' note_detail.lu.id %}"
-                                       id="lnk_{{ note_detail.lu.acronym }}">{{ note_detail.lu.title }}</a></td>
-                                <td>{{ note_detail.tutor.person.last_name }}, {{ note_detail.tutor.person.first_name }}</td>
-                                <td>{{ note_detail.nb_notes_encoded}}/{{ note_detail.nb_student}}</td>
-                                <td></td>
                             </tr>
                             {% endfor %}
                             </tbody>
