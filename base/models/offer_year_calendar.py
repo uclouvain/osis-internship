@@ -44,8 +44,8 @@ class OfferYearCalendar(models.Model):
     changed = models.DateTimeField(null=True)
     academic_calendar = models.ForeignKey('AcademicCalendar')
     offer_year = models.ForeignKey('OfferYear')
-    start_date = models.DateField(default=timezone.now)
-    end_date = models.DateField(default=timezone.now)
+    start_date = models.DateField(blank=True, null=True)
+    end_date = models.DateField(blank=True, null=True)
     customized = models.BooleanField(default=False)
 
     def __str__(self):
