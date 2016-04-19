@@ -27,6 +27,7 @@ from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 from base.models import person
+from django.utils import timezone
 
 
 JUSTIFICATION_TYPES = (
@@ -200,6 +201,8 @@ def find_exam_enrollments_by_session_learningunit(session_exm, learning_unt):
 def find_exam_enrollments_by_session_structure(session_exm, structure):
     enrollments = ExamEnrollment.objects.filter(session_exam=session_exm) \
         .filter(learning_unit_enrollment__offer_enrollment__offer_year__structure=structure) \
+        .filter(session_exam__offer_year_calendar__start_date__lte=timezone.now()) \
+        .filter(session_exam__offer_year_calendar__end_date__gte=timezone.now())\
         .order_by('learning_unit_enrollment__offer_enrollment__offer_year__acronym',
                   'learning_unit_enrollment__offer_enrollment__student__person__last_name',
                   'learning_unit_enrollment__offer_enrollment__student__person__first_name')
@@ -214,6 +217,8 @@ def find_exam_enrollments_by_session_pgm(session_exm,program_mgr_list):
 
     enrollments = ExamEnrollment.objects.filter(session_exam=session_exm) \
                 .filter(learning_unit_enrollment__offer_enrollment__offer_year__structure__in=offer_year_structures)\
+                .filter(session_exam__offer_year_calendar__start_date__lte=timezone.now()) \
+                .filter(session_exam__offer_year_calendar__end_date__gte=timezone.now())\
                 .order_by('learning_unit_enrollment__offer_enrollment__offer_year__acronym',
                           'learning_unit_enrollment__offer_enrollment__student__person__last_name',
                           'learning_unit_enrollment__offer_enrollment__student__person__first_name')

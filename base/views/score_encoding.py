@@ -63,7 +63,7 @@ def scores_encoding(request):
             offer_sel_id = request.POST.get('offer', None)
             if offer_sel_id:
                 offer_sel = mdl.offer_year.find_by_id(offer_sel_id)
-            data_dict = get_data_pgmer(request,None,None)
+            data_dict = get_data_pgmer(request, None, None)
             return layout.render(request, "scores_encoding_mgr.html",
                           {'notes_list':    data_dict['notes_list'],
                            'offer_list':    mdl.offer_year.find_by_user(request.user),
@@ -384,6 +384,7 @@ def get_sessions(learning_unit_param, request, tutor, academic_yr):
         for session in sessions:
             learning_unit=session.learning_unit_year.learning_unit
             enrollments = list(mdl.exam_enrollment.find_exam_enrollments_by_session(session))
+
             if learning_unit in learning_unit_list:
                 dict_progress[learning_unit.acronym] = dict_progress[learning_unit.acronym]+ len(enrollments)
             else:
@@ -435,7 +436,9 @@ def get_sessions(learning_unit_param, request, tutor, academic_yr):
                 dict_progress_ok = {}
                 for session in sessions:
                     learning_unit = session.learning_unit_year.learning_unit
-                    enrollments = list(mdl.exam_enrollment.find_exam_enrollments_by_session_structure(session, session.offer_year_calendar.offer_year.structure))
+                    #enrollments = list(mdl.exam_enrollment.find_exam_enrollments_by_session_structure(session, session.offer_year_calendar.offer_year.structure))
+                    enrollments = list(mdl.exam_enrollment.find_exam_enrollments_by_session(session))
+
                     if enrollments:
                         all_enrollments = all_enrollments + enrollments
 
@@ -485,7 +488,7 @@ def get_score_encoded(enrollments):
 def get_data(request):
     academic_yr = mdl.academic_year.current_academic_year()
     tutor = mdl.tutor.find_by_user(request.user)
-    sessions_list, faculties,notes_list = get_sessions(None, request, tutor, academic_yr)
+    sessions_list, faculties, notes_list = get_sessions(None, request, tutor, academic_yr)
 
     return {'section':       'scores_encoding',
             'tutor':         tutor,
@@ -495,7 +498,6 @@ def get_data(request):
 
 def get_data_online(learning_unit_id, tutor_id, request):
     tutor = None
-    tutor_responsible = None
     program_mgr_list = None
     coordinator = False
     a_learning_unit = mdl.learning_unit.find_learning_unit_by_id(learning_unit_id)
@@ -506,7 +508,6 @@ def get_data_online(learning_unit_id, tutor_id, request):
 
         tutor_responsible = mdl.tutor.find_responsible(a_learning_unit)
     else:
-
         program_mgr_list = mdl.program_manager.find_by_user(request.user)
         if not program_mgr_list:
             tutor = mdl.tutor.find_by_user(request.user)
@@ -526,7 +527,6 @@ def get_data_online(learning_unit_id, tutor_id, request):
     if sessions_list:
         for sessions in sessions_list:
             for session in sessions:
-
                 if program_mgr_list:
                     enrollments = mdl.exam_enrollment.find_exam_enrollments_by_session_pgm(session,program_mgr_list)
                 else:
@@ -597,7 +597,6 @@ def get_data_online_double(learning_unit_id,tutor_id,request):
 
 
 def get_data_pgmer(request, tutor_sel, offer_sel):
-
     academic_yr = mdl.academic_year.current_academic_year()
     faculties = []
     learning_unit_list = []
@@ -620,8 +619,7 @@ def get_data_pgmer(request, tutor_sel, offer_sel):
 
             for session in sessions:
                 learning_unit = session.learning_unit_year.learning_unit
-
-                enrollments = list(mdl.exam_enrollment.find_exam_enrollments_by_session_structure(session, session.offer_year_calendar.offer_year.structure))
+                enrollments = list(mdl.exam_enrollment.find_exam_enrollments_by_session(session))
 
                 if enrollments and len(enrollments) > 0:
                     #print('learning_unit.acronym',learning_unit.acronym)
@@ -713,8 +711,7 @@ def get_data_pgmer_by_offer(tutor_sel, offer_sel):
 
     for session in sessions:
         learning_unit = session.learning_unit_year.learning_unit
-        enrollments = list(mdl.exam_enrollment.find_exam_enrollments_by_session_structure(session, session.offer_year_calendar.offer_year.structure))
-
+        enrollments = list(mdl.exam_enrollment.find_exam_enrollments_by_session(session))
         if len(enrollments) > 0:
             all_enrollments = all_enrollments + enrollments
             in_list=False
