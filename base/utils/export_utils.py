@@ -96,7 +96,7 @@ def export_xls(request, learning_unit_id,academic_year_id, is_fac, sessions_list
 
                     cptr += 1
                     __coloring_non_editable(ws, cptr, rec_exam_enrollment.encoding_status,score,rec_exam_enrollment.justification_final)
-    ws.append([str(_('Values allowed for \'other score\'')),mdl.exam_enrollment.justification_label_authorized(is_fac)])
+    ws.append([str(_('Legend : values allowed for \'other score\'')), mdl.exam_enrollment.justification_label_authorized(is_fac)])
 
 
     response = HttpResponse(content=save_virtual_workbook(wb, as_template=True))

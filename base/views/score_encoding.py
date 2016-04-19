@@ -26,6 +26,7 @@
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.messages import get_messages
 
 from base import models as mdl
 from base.utils import send_mail, pdf_utils, export_utils
@@ -242,6 +243,7 @@ def online_encoding_submission(request, learning_unit_id):
                             enrollment.score_final = enrollment.score_draft
                         if enrollment.justification_draft:
                             enrollment.justification_final = enrollment.justification_draft
+                        enrollment.encoding_status = "SUBMITTED"
                         enrollment.save()
                         mdl.exam_enrollment.create_exam_enrollment_historic(request.user, enrollment,
                                                                             enrollment.score_final,
@@ -700,3 +702,9 @@ def get_data_pgmer_by_offer(tutor_sel, offer_sel):
 @login_required
 def online_double_encoding_form_pgmer(request, learning_unit_id):
     return online_double_encoding_form_pgmer(request, learning_unit_id, None)
+
+
+def message_print(request):
+    print('message_print')
+    return HttpResponseRedirect(reverse('message_print'))
+
