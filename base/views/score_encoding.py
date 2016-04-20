@@ -41,7 +41,7 @@ def scores_encoding(request):
     if tutor:
         data_dict = get_data(request)
         sessions_list, faculties, notes_list = get_sessions(None, request, tutor, academic_yr)
-        return layout.render(request, "scores_encoding.html",
+        return layout.render(request, "assessments/scores_encoding.html",
                       {'section':            data_dict['section'],
                        'tutor':              tutor,
                        'academic_year':      academic_yr,
@@ -62,8 +62,8 @@ def scores_encoding(request):
             offer_sel_id = request.POST.get('offer', None)
             if offer_sel_id:
                 offer_sel = mdl.offer_year.find_by_id(offer_sel_id)
-            data_dict = get_data_pgmer(request,None,None)
-            return layout.render(request, "scores_encoding_mgr.html",
+            data_dict = get_data_pgmer(request, None, None)
+            return layout.render(request, "assessments/scores_encoding_mgr.html",
                           {'notes_list':    data_dict['notes_list'],
                            'offer_list':    mdl.offer_year.find_by_user(request.user),
                            'tutor_list':    mdl.tutor.find_tutors_by_user(request.user),
@@ -75,7 +75,7 @@ def scores_encoding(request):
 @login_required
 def online_encoding(request, learning_unit_id=None, tutor_id=None):
     data_dict = get_data_online(learning_unit_id, tutor_id, request)
-    return layout.render(request, "online_encoding.html",data_dict)
+    return layout.render(request, "assessments/online_encoding.html",data_dict)
 
 
 @login_required
@@ -83,14 +83,14 @@ def online_encoding_form(request, learning_unit_id=None, tutor_id=None):
     data = get_data_online(learning_unit_id, tutor_id, request)
     enrollments = data['enrollments']
     if request.method == 'GET':
-        return layout.render(request, "online_encoding_form.html",
-                              {'section': 'scores_encoding',
-                               'tutor': data['tutor'],
-                               'academic_year': data['academic_year'],
-                               'enrollments': enrollments,
-                               'learning_unit': data['learning_unit'],
-                               'justifications': mdl.exam_enrollment.JUSTIFICATION_TYPES,
-                               'all_encoded': data['all_encoded']})
+        return layout.render(request, "assessments/online_encoding_form.html",
+                                      {'section': 'scores_encoding',
+                                       'tutor': data['tutor'],
+                                       'academic_year': data['academic_year'],
+                                       'enrollments': enrollments,
+                                       'learning_unit': data['learning_unit'],
+                                       'justifications': mdl.exam_enrollment.JUSTIFICATION_TYPES,
+                                       'all_encoded': data['all_encoded']})
     elif request.method == 'POST':
         for enrollment in enrollments:
             score = request.POST.get('score_' + str(enrollment.id), None)
@@ -111,13 +111,14 @@ def online_encoding_form(request, learning_unit_id=None, tutor_id=None):
         else:
             return HttpResponseRedirect(reverse('online_encoding', args=(learning_unit_id, )))
 
+
 @login_required
 def online_double_encoding_form(request, learning_unit_id=None, tutor_id=None):
     data = get_data_online_double(learning_unit_id, tutor_id, request)
     enrollments = data['enrollments']
     learning_unit = data['learning_unit']
     if request.method == 'GET':
-        return layout.render(request, "online_double_encoding_form.html",
+        return layout.render(request, "assessments/online_double_encoding_form.html",
                       {'section':        data['section'],
                        'tutor':          data['tutor'],
                        'academic_year':  data['academic_year'],
@@ -168,7 +169,7 @@ def online_double_encoding_validation(request, learning_unit_id=None, tutor_id=N
                     if enrollments:
                         all_enrollments = all_enrollments + enrollments
 
-        return layout.render(request, "online_double_encoding_validation.html",
+        return layout.render(request, "assessments/online_double_encoding_validation.html",
                       {'section':        'scores_encoding',
                        'tutor':          tutor,
                        'academic_year':  academic_year,
@@ -273,11 +274,6 @@ def notes_printing(request, session_exam_id, learning_unit_year_id):
 
 
 @login_required
-def upload_score_error(request):
-    return layout.render(request, "upload_score_error.html", {})
-
-
-@login_required
 def notes_printing(request, learning_unit_id=None, tutor_id=None):
     tutor = None
     if tutor_id:
@@ -351,9 +347,9 @@ def get_sessions(learning_unit_param, request, tutor, academic_yr):
                 dict_progress_ok[learning_unit.acronym] = value
 
         notes = Notes()
-        notes.tutor= tutor
+        notes.tutor = tutor
         l_lu_detail = []
-        notes_list=[]
+        notes_list = []
         for l in learning_unit_list:
             notes_detail = NotesDetail()
             notes_detail.lu = l
@@ -367,10 +363,7 @@ def get_sessions(learning_unit_param, request, tutor, academic_yr):
         program_mgr_list = mdl.program_manager.find_by_user(request.user)
         all_enrollments = []
         for program_mgr in program_mgr_list:
-
-
             if program_mgr.offer_year:
-
                 notes = Notes()
                 sessions = mdl.session_exam.find_sessions_by_offer(program_mgr.offer_year, academic_yr, learning_unit_param)
                 sessions_list.append(sessions)
@@ -389,7 +382,7 @@ def get_sessions(learning_unit_param, request, tutor, academic_yr):
                         all_enrollments = all_enrollments + enrollments
 
                     if session.learning_unit_year.learning_unit in learning_unit_list:
-                        dict_progress[learning_unit.acronym] = dict_progress[learning_unit.acronym]+ len(enrollments)
+                        dict_progress[learning_unit.acronym] += len(enrollments)
                     else:
                         learning_unit=session.learning_unit_year.learning_unit
                         dict_progress[learning_unit.acronym]  = len(enrollments)
@@ -415,7 +408,7 @@ def get_sessions(learning_unit_param, request, tutor, academic_yr):
             notes_detail.nb_notes_encoded = dict_progress_ok[l.acronym]
             notes_detail.nb_student = dict_progress[l.acronym]
             l_lu_detail.append(notes_detail)
-        notes.lu_list=l_lu_detail
+        notes.lu_list = l_lu_detail
         notes_list = []
         notes_list.append(notes)
 
@@ -456,8 +449,8 @@ def get_data_online(learning_unit_id, tutor_id, request):
     learning_unit_year = mdl.learning_unit_year.find_learning_unit_years_by_academic_year_learningunit(academic_yr,learning_unit)
     sessions_list, faculties, notes_list = get_sessions(learning_unit, request, tutor, academic_yr)
 
-    tot_enrollments=[]
-    tot_progress=[]
+    tot_enrollments = []
+    tot_progress = []
     tot_num_encoded_scores=0
     all_encoded = True
     if sessions_list:
@@ -516,17 +509,16 @@ def get_data_online_double(learning_unit_id,tutor_id,request):
                 tot_progress.extend(tot_progress)
                 tot_num_encoded_scores=tot_num_encoded_scores+num_encoded_scores
 
-    return {'section':'scores_encoding',
-            'tutor' : tutor,
+    return {'section': 'scores_encoding',
+            'tutor': tutor,
             'academic_year': academic_yr,
             'enrollments': tot_enrollments,
-            'num_encoded_scores':tot_num_encoded_scores,
-            'learning_unit':learning_unit,
+            'num_encoded_scores': tot_num_encoded_scores,
+            'learning_unit': learning_unit,
             'justifications': mdl.exam_enrollment.JUSTIFICATION_TYPES}
 
 
 def get_data_pgmer(request, tutor_sel, offer_sel):
-
     academic_yr = mdl.academic_year.current_academic_year()
     faculties = []
     learning_unit_list = []
@@ -553,7 +545,6 @@ def get_data_pgmer(request, tutor_sel, offer_sel):
                 enrollments = list(mdl.exam_enrollment.find_exam_enrollments_by_session_structure(session, session.offer_year_calendar.offer_year.structure))
 
                 if enrollments and len(enrollments) > 0:
-                    #print('learning_unit.acronym',learning_unit.acronym)
                     all_enrollments = all_enrollments + enrollments
                     in_list = False
                     for ll in learning_unit_list:
@@ -563,7 +554,7 @@ def get_data_pgmer(request, tutor_sel, offer_sel):
                     if in_list:
                         n = dict_progress.get(learning_unit.acronym)
                         if n is not None:
-                            n = n + len(enrollments)
+                            n += len(enrollments)
                             dict_progress[learning_unit.acronym] = n
                     else:
                         dict_progress[learning_unit.acronym] = len(enrollments)
@@ -617,7 +608,7 @@ def refresh_list(request):
     else:
         data_dict = get_data_pgmer(request, tutor_sel, offer_sel)
 
-    return layout.render(request, "scores_encoding_mgr.html",
+    return layout.render(request, "assessments/scores_encoding_mgr.html",
                   {'notes_list':    data_dict['notes_list'],
                    'offer_list':    mdl.offer_year.find_by_user(request.user),
                    'tutor_list':    mdl.tutor.find_tutors_by_user(request.user),
@@ -654,7 +645,7 @@ def get_data_pgmer_by_offer(tutor_sel, offer_sel):
             if in_list:
                 n = dict_progress.get(learning_unit.acronym)
                 if n is not None:
-                    n = n + len(enrollments)
+                    n += len(enrollments)
                     dict_progress[learning_unit.acronym] = n
             else:
                 dict_progress[learning_unit.acronym] = len(enrollments)
@@ -690,7 +681,6 @@ def get_data_pgmer_by_offer(tutor_sel, offer_sel):
     return {'section':       'scores_encoding',
             'academic_year': academic_yr,
             'notes_list':    notes_list}
-
 
 
 @login_required
