@@ -161,8 +161,3 @@ div.tree > ul > li > a {
 .tree li a:hover+ul ul::before{
 	border-color:  #aaa;
 }
-
-input[type=number] {
-    -moz-appearance:textfield;
-    -webkit-appearance: none;
-}

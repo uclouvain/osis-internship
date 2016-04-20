@@ -25,3 +25,8 @@ body {
 .invisible{
   visibility: hidden;
 }
+
+input[type=number] {
+    -moz-appearance:textfield;
+    -webkit-appearance: none;
+}
