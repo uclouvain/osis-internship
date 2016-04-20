@@ -23,28 +23,18 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from base.models import academic_year
-from base.models import academic_calendar
-from base.models import application_notice
-from base.models import attribution
-from base.models import document_file
-from base.models import domain
-from base.models import exam_enrollment
-from base.models import learning_unit
-from base.models import learning_unit_enrollment
-from base.models import learning_unit_year
-from base.models import message_template
-from base.models import offer
-from base.models import offer_enrollment
-from base.models import offer_year
-from base.models import offer_year_calendar
-from base.models import organization
-from base.models import organization_address
-from base.models import person
-from base.models import person_address
-from base.models import program_manager
-from base.models import session_exam
-from base.models import structure
-from base.models import structure_address
-from base.models import student
-from base.models import tutor
+from django.db import models
+from django.contrib import admin
+
+
+class ContinentAdmin(admin.ModelAdmin):
+    list_display = ('name', 'code',)
+    ordering = ('name',)
+
+
+class Continent(models.Model):
+    code = models.CharField(max_length=2, unique=True)
+    name = models.CharField(max_length=30)
+
+    def __str__(self):
+        return self.name

@@ -68,8 +68,12 @@
                     <input class="form-control" value="{{ organization_address.city | default_if_none:'' }}" name="organization_address_city" id="txt_organization_address_city" maxlength="255" required>
                 </div>
                 <div class="col-md-4">
-                    <label for="address_country">{% trans 'country' %}</label>
-                    <input class="form-control" value="{{ organization_address.country | default_if_none:'' }}" name="organization_address_country" id="txt_address_country" maxlength="255" required>
+                    <label for="country">{% trans 'country'%}</label><br>
+                    <select class="form-control" id="country" name="country">
+                        {% for country in countries %}
+                            <option value="{{ country.id }}" {% if organization_address.country.id == country.id %}selected{% endif %}>{{ country.name }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
             </div>
             <br>

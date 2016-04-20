@@ -24,21 +24,29 @@
 #
 ##############################################################################
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
 
+
+LABELS = (
+    ('RESIDENTIAL', _('residential')),
+    ('PROFESSIONAL', _('professional'))
+)
 
 class PersonAddressAdmin(admin.ModelAdmin):
     list_display = ('person', 'label', 'location', 'postal_code', 'city', 'country')
     fieldsets = ((None, {'fields': ('person', 'label', 'location', 'postal_code', 'city', 'country')}),)
+    raw_id_fields = ('person',)
 
 
 class PersonAddress(models.Model):
+    external_id = models.CharField(max_length=100, blank=True, null=True)
     person = models.ForeignKey('Person')
-    label = models.CharField(max_length=20)
+    label = models.CharField(max_length=20, choices=LABELS)
     location = models.CharField(max_length=255)
     postal_code = models.CharField(max_length=20)
     city = models.CharField(max_length=255)
-    country = models.CharField(max_length=255)
+    country = models.ForeignKey('reference.Country')
 
 
 def find_by_person(a_person):
