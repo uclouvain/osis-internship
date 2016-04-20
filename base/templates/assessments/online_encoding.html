@@ -248,7 +248,9 @@
                   <h4 class="modal-title" id="submissionScoresLabel">{% trans 'submission' %}</h4>
               </div>
               <div class="modal-body">
-                  <p class="help-block">{% trans 'help_submission_scores_label' as help_submission_scores_label%}{{help_submission_scores_label|format:num_encoded_scores}}</p>
+                  {% if num_encoded_scores %}
+                    <p class="help-block">{% trans 'help_submission_scores_label' as help_submission_scores_label %}{{ help_submission_scores_label | format:num_encoded_scores}}</p>
+                  {% endif %}
               </div>
               <div class="modal-footer">
                   <a class="btn btn-warning" href="{% url 'online_encoding_submission' learning_unit.id %}" role="button" id="lnk_post_scores_submission_btn"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'Submission' %}</a>

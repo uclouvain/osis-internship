@@ -555,7 +555,7 @@ def get_data_online(learning_unit_id, tutor_id, request):
 
     tot_enrollments = []
     tot_progress = []
-    tot_num_encoded_scores=0
+    tot_num_encoded_scores = 0
     all_encoded = True
     if sessions_list:
         for sessions in sessions_list:
@@ -568,7 +568,7 @@ def get_data_online(learning_unit_id, tutor_id, request):
                 num_encoded_scores = mdl.exam_enrollment.count_encoded_scores(enrollments)
                 tot_enrollments.extend(enrollments)
                 tot_progress.extend(tot_progress)
-                tot_num_encoded_scores = tot_num_encoded_scores+num_encoded_scores
+                tot_num_encoded_scores += num_encoded_scores
                 if session.status == 'OPEN':
                     all_encoded = False
 
