@@ -34,10 +34,16 @@ class Migration(migrations.Migration):
             name='external_id',
             field=models.CharField(blank=True, max_length=100, null=True),
         ),
+        migrations.RunSQL(
+            "delete from base_organizationaddress;"
+        ),
         migrations.AlterField(
             model_name='organizationaddress',
             name='country',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='reference.Country'),
+        ),
+        migrations.RunSQL(
+            "delete from base_personaddress;"
         ),
         migrations.AlterField(
             model_name='personaddress',

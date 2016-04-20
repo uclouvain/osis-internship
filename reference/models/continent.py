@@ -23,13 +23,18 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.db import models
 from django.contrib import admin
-from reference.models import *
 
-admin.site.register(continent.Continent, continent.ContinentAdmin)
 
-admin.site.register(currency.Currency, currency.CurrencyAdmin)
+class ContinentAdmin(admin.ModelAdmin):
+    list_display = ('name', 'code',)
+    ordering = ('name',)
 
-admin.site.register(country.Country, country.CountryAdmin)
 
-admin.site.register(language.Language, language.LanguageAdmin)
+class Continent(models.Model):
+    code = models.CharField(max_length=2, unique=True)
+    name = models.CharField(max_length=30)
+
+    def __str__(self):
+        return self.name

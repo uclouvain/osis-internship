@@ -23,13 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib import admin
-from reference.models import *
-
-admin.site.register(continent.Continent, continent.ContinentAdmin)
-
-admin.site.register(currency.Currency, currency.CurrencyAdmin)
-
-admin.site.register(country.Country, country.CountryAdmin)
-
-admin.site.register(language.Language, language.LanguageAdmin)
+from reference.models import continent
+from reference.models import country
+from reference.models import currency
+from reference.models import language
