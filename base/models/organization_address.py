@@ -47,3 +47,4 @@ def find_by_organization(organization):
 
 def find_by_id(organization_address_id):
     return OrganizationAddress.objects.get(pk=organization_address_id)
+

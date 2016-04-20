@@ -93,3 +93,11 @@ class Language(models.Model):
 
     def __str__(self):
         return self.name
+
+
+def find_all_country():
+    return Country.objects.all()
+
+
+def find_by_id_country(country_id):
+    return Country.objects.get(pk=country_id)
