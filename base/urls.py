@@ -23,14 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.conf.urls import url, include
+from django.conf.urls import url
 from django.contrib.auth.views import logout
 
 from base.utils import upload_xls_utils
-from base.views import learning_unit, offer, common, score_encoding, institution, organization,academic_calendar, offer_year
+from base.views import learning_unit, offer, common, score_encoding, institution, organization,academic_calendar
 
-
-#app_name = 'base'
 
 urlpatterns = [
     url(r'^$', common.home, name='home'),
@@ -102,9 +100,9 @@ urlpatterns = [
     url(r'^academic_calendars/save/$', academic_calendar.academic_calendar_new, name='academic_calendar_save_new'),
     url(r'^academic_calendars/create/$', academic_calendar.academic_calendar_create, name='academic_calendar_create'),
 
-    url(r'^offer_year_calendars/([0-9]+)/$', offer_year.offer_year_calendar_read, name='offer_year_calendar_read'),
-    url(r'^offer_year_calendars/edit/([0-9]+)/$', offer_year.offer_year_calendar_edit, name='offer_year_calendar_edit'),
-    url(r'^offer_year_calendars/save/([0-9]+)/$', offer_year.offer_year_calendar_save, name='offer_year_calendar_save'),
+    url(r'^offer_year_calendars/([0-9]+)/$', offer.offer_year_calendar_read, name='offer_year_calendar_read'),
+    url(r'^offer_year_calendars/edit/([0-9]+)/$', offer.offer_year_calendar_edit, name='offer_year_calendar_edit'),
+    url(r'^offer_year_calendars/save/([0-9]+)/$', offer.offer_year_calendar_save, name='offer_year_calendar_save'),
 
     url(r'^organization_address/read/([0-9]+)/$', organization.organization_address_read, name='organization_address_read'),
     url(r'^organization_address/edit/([0-9]+)/$', organization.organization_address_edit, name='organization_address_edit'),
@@ -112,4 +110,4 @@ urlpatterns = [
     url(r'^organization_address/save/$', organization.organization_address_new, name='organization_address_save_new'),
     url(r'^organization_address/create/([0-9]+)/$', organization.organization_address_create, name='organization_address_create'),
     url(r'^organization_address/delete/([0-9]+)/$', organization.organization_address_delete, name='organization_address_delete'),
-    ]
+]

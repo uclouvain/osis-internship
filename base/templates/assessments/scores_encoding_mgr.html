@@ -34,7 +34,7 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h2>{% trans 'scores_encoding' %} mgm</h2>
+    <h2>{% trans 'scores_encoding' %}</h2>
 </div>
 {% if notes_list%}
 {% for note in notes_list %}
@@ -122,7 +122,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div role="tabpanel" class="tab-pane fade" id="tab_via_paper_{{forloop.counter0}}">
+                <div role="tabpanel" class="tab-pane fade" id="tab_via_xls_{{forloop.counter0}}">
                     <table class="table table-hover">
                         <thead>
                         <tr>
@@ -155,7 +155,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div role="tabpanel" class="tab-pane fade" id="tab_via_xls_{{forloop.counter0}}">
+                <div role="tabpanel" class="tab-pane fade" id="tab_via_paper_{{forloop.counter0}}">
                     <br>
                     <a class="btn btn-default"
                        href="{%if tutor and offer %}
@@ -189,7 +189,7 @@
                             <td>{{ note_detail.lu.acronym }}</td>
                             <td><a href="{% url 'online_encoding' note_detail.lu.id  %}"
                                    title="Visualiser/charger les notes pour le cours"
-                                   id="lnk_online_encoding_messages_{{note_detail.lu.id}}">{{ note_detail.lu.title }}</a></td>
+                                   id="lnk_paper_encoding_messages_{{note_detail.lu.id}}">{{ note_detail.lu.title }}</a></td>
                             <td>{{ note_detail.nb_notes_encoded}}/{{ note_detail.nb_student}}</td>
                             <td>
                                 <a class="btn btn-default"

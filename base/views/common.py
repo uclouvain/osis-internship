@@ -44,10 +44,8 @@ def access_denied(request):
     return layout.render(request, 'access_denied.html')
 
 
-
-
 def login(request):
-    if request.method == 'POST' :
+    if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(username=username, password=password)
@@ -77,7 +75,7 @@ def studies(request):
 
 @login_required
 def assessments(request):
-    return layout.render(request, "assessments.html", {'section': 'assessments'})
+    return layout.render(request, "assessments/assessments.html", {'section': 'assessments'})
 
 
 @login_required
