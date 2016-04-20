@@ -41,8 +41,12 @@ JUSTIFICATION_TYPES = (
 class ExamEnrollmentAdmin(admin.ModelAdmin):
     list_display = ('student', 'session_exam', 'score_final', 'justification_final', 'encoding_status', 'changed')
     list_filter = ('encoding_status', 'session_exam__number_session')
+<<<<<<< HEAD
     fieldsets = ((None, {'fields': ('session_exam','learning_unit_enrollment','score_draft','justification_draft',
                                     'score_final','justification_final')}),)
+=======
+    fieldsets = ((None, {'fields': ('session_exam','learning_unit_enrollment','score_draft','justification_draft','score_final','justification_final')}),)
+>>>>>>> 836ca8904efedb353665fdaa9d61dab965565d88
     raw_id_fields = ('session_exam', 'learning_unit_enrollment')
     search_fields = ['learning_unit_enrollment__offer_enrollment__student__person__first_name',
                      'learning_unit_enrollment__offer_enrollment__student__person__last_name']
@@ -226,12 +230,20 @@ def find_exam_enrollments_by_session_pgm(session_exm,program_mgr_list):
     return enrollments
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 836ca8904efedb353665fdaa9d61dab965565d88
 def find_exam_enrollments_drafts_existing_by_session(session_exam):
     """ Return the enrollments of a session but not the ones already submitted. """
     enrolls = ExamEnrollment.objects.filter(session_exam=session_exam) \
                                     .filter(score_final__isnull=True) \
                                     .filter(models.Q(justification_draft__isnull=False) |
+<<<<<<< HEAD
                                             models.Q(score_draft__isnull=False)) \
+=======
+                                        models.Q(score_draft__isnull=False)) \
+>>>>>>> 836ca8904efedb353665fdaa9d61dab965565d88
                                     .filter(models.Q(justification_final__isnull=True) |
                                             models.Q(justification_final='')) \
                                     .order_by('learning_unit_enrollment__offer_enrollment__offer_year__acronym',
@@ -239,22 +251,33 @@ def find_exam_enrollments_drafts_existing_by_session(session_exam):
                                               'learning_unit_enrollment__offer_enrollment__student__person__first_name')
     return enrolls
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 836ca8904efedb353665fdaa9d61dab965565d88
 def find_exam_enrollments_drafts_existing_pgmer_by_session(session_exam):
     """ Return the enrollments of a session but not the ones already submitted. """
     enrolls = ExamEnrollment.objects.filter(session_exam=session_exam) \
                                     .filter(models.Q(justification_draft__isnull=False) |
+<<<<<<< HEAD
                                             models.Q(score_draft__isnull=False)) \
+=======
+                                        models.Q(score_draft__isnull=False)) \
+>>>>>>> 836ca8904efedb353665fdaa9d61dab965565d88
                                     .order_by('learning_unit_enrollment__offer_enrollment__offer_year__acronym',
                                               'learning_unit_enrollment__offer_enrollment__student__person__last_name',
                                               'learning_unit_enrollment__offer_enrollment__student__person__first_name')
     return enrolls
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 836ca8904efedb353665fdaa9d61dab965565d88
 def find_exam_enrollments_double_pgmer_by_session(session_exam):
     """ Return the enrollments of a session but not the ones already submitted. """
     enrolls = ExamEnrollment.objects.filter(session_exam=session_exam) \
                                     .filter(models.Q(justification_draft__isnull=False) |
+<<<<<<< HEAD
                                             models.Q(score_draft__isnull=False)) \
                                     .filter(models.Q(justification_reencoded__isnull=False) |
                                             models.Q(score_reencoded__isnull=False)) \
@@ -262,3 +285,12 @@ def find_exam_enrollments_double_pgmer_by_session(session_exam):
                                               'learning_unit_enrollment__offer_enrollment__student__person__last_name',
                                               'learning_unit_enrollment__offer_enrollment__student__person__first_name')
     return enrolls
+=======
+                                        models.Q(score_draft__isnull=False)) \
+                                    .filter(models.Q(justification_reencoded__isnull=False) |
+                                    models.Q(score_reencoded__isnull=False)) \
+                                    .order_by('learning_unit_enrollment__offer_enrollment__offer_year__acronym',
+                                              'learning_unit_enrollment__offer_enrollment__student__person__last_name',
+                                              'learning_unit_enrollment__offer_enrollment__student__person__first_name')
+    return enrolls
+>>>>>>> 836ca8904efedb353665fdaa9d61dab965565d88

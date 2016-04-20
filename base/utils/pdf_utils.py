@@ -60,7 +60,7 @@ def add_header_footer(canvas, doc):
     canvas.restoreState()
 
 
-def print_notes(request, tutor, academic_year, learning_unit_id, is_fac,sessions_list):
+def print_notes(request, tutor, academic_year, learning_unit_id, is_fac, sessions_list):
     """
     Create a multi-page document
     :param request:
@@ -128,7 +128,7 @@ def footer_building(canvas, doc, styles):
     footer.drawOn(canvas, doc.leftMargin, h)
 
 
-def list_notes_building(learning_unit_year_id, academic_year, list_exam_enrollment, styles,
+def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, styles,
                         is_fac, content):
 
     content.append(Paragraph('''
@@ -142,19 +142,21 @@ def list_notes_building(learning_unit_year_id, academic_year, list_exam_enrollme
     current_learning_unit_year= None
     cpt = 1
     for rec_exam_enrollment in list_exam_enrollment:
-        if (int(rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.id) == int(learning_unit_year_id)) \
-                or int(learning_unit_year_id) == -1:
+        if (int(rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.id) == int(learning_unit_id)) \
+                or int(learning_unit_id) == -1:
+
             student = rec_exam_enrollment.learning_unit_enrollment.student
             o = rec_exam_enrollment.learning_unit_enrollment.offer
             if old_pgm is None:
                 old_pgm = o
                 current_learning_unit_year = rec_exam_enrollment.learning_unit_enrollment.learning_unit_year
-            if o != old_pgm:
-                #Autre programme - 1. mettre les critères
-                main_data(academic_year, rec_exam_enrollment.session_exam, styles, current_learning_unit_year,old_pgm, content)
-                #Autre programme - 2. il faut écrire le tableau
 
-                t=Table(data, COLS_WIDTH, repeatRows=1)
+            if o != old_pgm:
+                # Autre programme - 1. mettre les critères
+                main_data(academic_year, rec_exam_enrollment.session_exam, styles, current_learning_unit_year,old_pgm, content)
+                # Autre programme - 2. il faut écrire le tableau
+
+                t = Table(data, COLS_WIDTH, repeatRows=1)
                 t.setStyle(TableStyle([
                                    ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
                                    ('BOX', (0,0), (-1,-1), 0.25, colors.black),
@@ -162,33 +164,37 @@ def list_notes_building(learning_unit_year_id, academic_year, list_exam_enrollme
                                    ]))
 
                 content.append(t)
-                #Autre programme - 3. Imprimer légende
+                # Autre programme - 3. Imprimer légende
                 end_page_infos_building(content)
                 legend_building(current_learning_unit_year, is_fac, content)
-                #Autre programme - 4. il faut faire un saut de page
+                # Autre programme - 4. il faut faire un saut de page
                 content.append(PageBreak())
                 data = headers_table(styles)
-                old_pgm =o
+                old_pgm = o
                 current_learning_unit_year = rec_exam_enrollment.learning_unit_enrollment.learning_unit_year
 
             person = mdl.person.find_by_id(student.person.id)
             score = None
             if not (rec_exam_enrollment.score_final is None):
-                if rec_exam_enrollment.session_exam.learning_unit_year.decimal_scores :
+                if rec_exam_enrollment.session_exam.learning_unit_year.decimal_scores:
                     score = "{0:.2f}".format(rec_exam_enrollment.score_final)
                 else:
                     score = "{0:.0f}".format(rec_exam_enrollment.score_final)
             justification = ""
             if rec_exam_enrollment.justification_final:
                 justification = dict(mdl.exam_enrollment.JUSTIFICATION_TYPES)[rec_exam_enrollment.justification_final]
-            end_date=rec_exam_enrollment.session_exam.offer_year_calendar.end_date.strftime('%d/%m/%Y')
+            end_date = ""
+            if rec_exam_enrollment.session_exam.offer_year_calendar.end_date:
+                end_date = rec_exam_enrollment.session_exam.offer_year_calendar.end_date.strftime('%d/%m/%Y')
+            sc = "%s" % score
             data.append([student.registration_id,
                          person.last_name,
                          person.first_name,
-                         score,
+                         sc,
                          justification,
-                         end_date.strftime('%d/%m/%Y')])
+                         end_date])
         cpt += 1
+        old_session_exam = rec_exam_enrollment.session_exam
 
     if not old_pgm is None:
         main_data(academic_year, rec_exam_enrollment.session_exam, styles, current_learning_unit_year, old_pgm, content)

@@ -23,20 +23,37 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django import shortcuts
-from base import models as mdl
+from django import template
+from django.contrib import messages
 
+register = template.Library()
 
-def render(request, template, values):
-    if 'subject' not in request.session and 'notice' not in request.session:
-        notice = mdl.application_notice.find_current_notice()
-        if notice:
-            request.session.set_expiry(3600)
-            request.session['subject'] = notice.subject
-            request.session['notice'] = notice.notice
-    
-    if 'subject' in request.session and 'notice' in request.session:
-        values['subject'] = request.session['subject']
-        values['notice'] = request.session['notice']
+@register.assignment_tag(takes_context=True)
+def as_messages_info(context):
+    request = context['request']
+    msgs = messages.get_messages(request)
 
-    return shortcuts.render(request, template, values)
+    for m in msgs:
+        if 'info' in m.tags:
+            return True
+    return False
+
+@register.assignment_tag(takes_context=True)
+def as_messages_warning(context):
+    request = context['request']
+    msgs = messages.get_messages(request)
+
+    for m in msgs:
+        if 'warning' in m.tags:
+            return True
+    return False
+
+@register.assignment_tag(takes_context=True)
+def as_messages_error(context):
+    request = context['request']
+    msgs = messages.get_messages(request)
+
+    for m in msgs:
+        if 'error' in m.tags:
+            return True
+    return False

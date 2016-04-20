@@ -48,7 +48,7 @@
         <div class="col-md-6">
           <div class="form-group">
             <label>{% trans 'responsible' %}</label><br>
-            {{ tutor }}
+            {{ tutor_responsible }}
           </div>
         </div>
         <div class="col-md-3">
@@ -77,7 +77,6 @@
       </div>
       <form class="form-inline" method="POST" action="{%if tutor%}{% url 'online_encoding_form' learning_unit.id tutor.id %}{%else%}{% url 'online_encoding_form' learning_unit.id %}{%endif%}" id="form_online_encoding">
         {% csrf_token %}
-
         <table class="table table-hover">
             <thead>
                 <tr>
@@ -103,27 +102,53 @@
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
-                <td><input type="number" min="0" max="20" step="any" name="score_{{ enrollment.id }}" id="num_score_{{ enrollment.id }}" tabindex="{{ forloop.counter }}"
-                           value="{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}"
-                           class="form-control" {% if enrollment.score_final or enrollment.justification_final %} disabled {% endif %}
+                <td>{%if is_pgmer %}
+                    <input type="number" min="0" max="20" step="any" name="score_{{ enrollment.id }}" id="num_score_{{ enrollment.id }}" tabindex="{{ forloop.counter }}"
+                           value="{{ enrollment.score_final | score_display:enrollment.session_exam.learning_unit_year.decimal_scores}}"
+                           class="form-control" {% if tutor and enrollment.score_final or tutor and enrollment.justification_final%} disabled {% endif %}
                            title="{% if enrollment.session_exam.learning_unit_year.decimal_scores %}
                                         {%trans 'decimal_score_allowed'%}
                                   {% else %}
                                         {%trans 'decimal_score_not_allowed'%}
-                                  {%endif%}"></td>
-                <td><select class="form-control" name="justification_{{ enrollment.id }}" id="slt_justification_score_{{ enrollment.id }}"
+                                  {%endif%}">
+                    {%else%}
+                    <input type="number" min="0" max="20" step="any" name="score_{{ enrollment.id }}" id="num_score_{{ enrollment.id }}" tabindex="{{ forloop.counter }}"
+                           value="{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}"
+                           class="form-control" {% if tutor and enrollment.score_final or tutor and enrollment.justification_final%} disabled {% endif %}
+                           title="{% if enrollment.session_exam.learning_unit_year.decimal_scores %}
+                                        {%trans 'decimal_score_allowed'%}
+                                  {% else %}
+                                        {%trans 'decimal_score_not_allowed'%}
+                                  {%endif%}">
+                    {%endif%}
+                </td>
+
+                <td>{%if is_pgmer %}
+                    <select class="form-control" name="justification_{{ enrollment.id }}" id="slt_justification_score_{{ enrollment.id }}"
                             tabindex="{{ enrollments|length|sum:forloop.counter }}"
-                            {% if enrollment.score_final or enrollment.justification_final %} disabled {% endif %}>
+                            {% if tutor and enrollment.score_final or tutor and enrollment.justification_final %} disabled {% endif %}>
+                      <option value="None"></option>
+                      <option value="ABSENT" {% if enrollment.justification_final == 'ABSENT' %}selected="selected"{% endif %}>{% trans 'absent' %}</option>
+                      <option value="CHEATING" {% if enrollment.justification_final == 'CHEATING' %}selected="selected"{% endif %}>{% trans 'cheating' %}</option>
+                      <option value="SCORE_MISSING" {% if enrollment.justification_final == 'SCORE_MISSING' %}selected="selected"{% endif %}>{% trans 'score_missing' %}</option>
+                      {% programme_manager as pm %}
+                      {% if pm %}
+                      <option value="ILL" {% if enrollment.justification_final == 'ILL' %}selected="selected"{% endif %}>{% trans 'ill' %}</option>
+                      <option value="JUSTIFIED_ABSENCE" {% if enrollment.justification_final == 'JUSTIFIED_ABSENCE' %}selected="selected"{% endif %}>{% trans 'justified_absence' %}</option>)
+                      {% endif %}
+                    </select>
+                    {%else%}
+                    <select class="form-control" name="justification_{{ enrollment.id }}" id="slt_justification_score_{{ enrollment.id }}"
+                            tabindex="{{ enrollments|length|sum:forloop.counter }}"
+                            {% if tutor and enrollment.score_final or tutor and enrollment.justification_final %} disabled {% endif %}>
                       <option value="None"></option>
                       <option value="ABSENT" {% if enrollment.justification_draft == 'ABSENT' %}selected="selected"{% endif %}>{% trans 'absent' %}</option>
                       <option value="CHEATING" {% if enrollment.justification_draft == 'CHEATING' %}selected="selected"{% endif %}>{% trans 'cheating' %}</option>
                       <option value="SCORE_MISSING" {% if enrollment.justification_draft == 'SCORE_MISSING' %}selected="selected"{% endif %}>{% trans 'score_missing' %}</option>
-                      {% programme_manager as pm %}
-                      {% if pm %}
-                      <option value="ILL" {% if enrollment.justification_draft == 'ILL' %}selected="selected"{% endif %}>{% trans 'ill' %}</option>
-                      <option value="JUSTIFIED_ABSENCE" {% if enrollment.justification_draft == 'JUSTIFIED_ABSENCE' %}selected="selected"{% endif %}>{% trans 'justified_absence' %}</option>)
-                      {% endif %}
-                    </select></td>
+
+                    </select>
+                    {%endif%}
+                </td>
                 <td>{{ enrollment.session_exam.offer_year_calendar.end_date | default_if_none:''|date:"j/m/Y" }}</td>
               </tr>
             {% endfor %}

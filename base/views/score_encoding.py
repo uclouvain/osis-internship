@@ -43,10 +43,11 @@ def scores_encoding(request):
         data_dict = get_data(request)
         sessions_list, faculties, notes_list = get_sessions(None, request, tutor, academic_yr, None)
         return layout.render(request, "assessments/scores_encoding.html",
-                      {'section':            data_dict['section'],
-                       'tutor':              tutor,
-                       'academic_year':      academic_yr,
-                       'notes_list': notes_list})
+                                      {'section': data_dict['section'],
+                                       'tutor': tutor,
+                                       'academic_year': academic_yr,
+                                       'notes_list': notes_list})
+
     # In case the user is not a tutor we check whether it is a program manager for the offer.
     else:
         is_pgmer = False
@@ -85,18 +86,16 @@ def online_encoding_form(request, learning_unit_id=None, tutor_id=None):
     enrollments = data['enrollments']
     if request.method == 'GET':
         return layout.render(request, "assessments/online_encoding_form.html",
-                              {'section':           'scores_encoding',
-                               'tutor':             data['tutor'],
-                               'academic_year':     data['academic_year'],
-                               'enrollments':       enrollments,
-                               'learning_unit':     data['learning_unit'],
-                               'justifications':    mdl.exam_enrollment.JUSTIFICATION_TYPES,
-                               'all_encoded':       data['all_encoded'],
-                               'tutor_responsible': data['tutor_responsible'],
-                               'is_pgmer':          data['is_pgmer']
-                               })
+                                      {'section':           'scores_encoding',
+                                       'tutor':             data['tutor'],
+                                       'academic_year':     data['academic_year'],
+                                       'enrollments':       enrollments,
+                                       'learning_unit':     data['learning_unit'],
+                                       'justifications':    mdl.exam_enrollment.JUSTIFICATION_TYPES,
+                                       'all_encoded':       data['all_encoded'],
+                                       'tutor_responsible': data['tutor_responsible'],
+                                       'is_pgmer':          data['is_pgmer']})
     elif request.method == 'POST':
-
         for enrollment in enrollments:
             score = request.POST.get('score_' + str(enrollment.id), None)
             justification = request.POST.get('justification_' + str(enrollment.id), None)
@@ -146,12 +145,12 @@ def online_double_encoding_form(request, learning_unit_id=None, tutor_id=None):
     if request.method == 'GET':
         if len(enrollments) > 0:
             return layout.render(request, "assessments/online_double_encoding_form.html",
-                          {'section':        data['section'],
-                           'tutor':          data['tutor'],
-                           'academic_year':  data['academic_year'],
-                           'enrollments':    enrollments,
-                           'learning_unit':  learning_unit,
-                           'justifications': data['justifications']})
+                                          {'section':        data['section'],
+                                           'tutor':          data['tutor'],
+                                           'academic_year':  data['academic_year'],
+                                           'enrollments':    enrollments,
+                                           'learning_unit':  learning_unit,
+                                           'justifications': data['justifications']})
         else:
             messages.add_message(request, messages.WARNING, "%s !" % _('No score encoded yet!  Double encoding impossible.'))
             return online_encoding(request, learning_unit_id, tutor_id)
