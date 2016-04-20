@@ -25,7 +25,8 @@
 ##############################################################################
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from internship.models import InternshipOffer
+from internship.models import InternshipOffer, InternshipChoice
+from internship.forms import InternshipChoiceForm
 from pprint import pprint
 
 @login_required
@@ -54,8 +55,24 @@ def internships(request):
 
 @login_required
 def internships_save(request):
+    form = InternshipChoiceForm(data=request.POST)
+    if request.POST['learning_unit_year']:
+        learning_unit_year_list = request.POST.getlist('learning_unit_year')
+        print(learning_unit_year_list)
+
+    if request.POST['organization']:
+        organization_list = request.POST.getlist('organization')
+        print(organization_list)
+
+    if request.POST['preference']:
+        preference_list = request.POST.getlist('preference')
+        print(preference_list)
+
+
+    print(request.user)
 
     return render(request, "internships.html", {'section': 'internship',
+                                                'form': form
                                                 #'all_internships': query,
                                                 #'all_organizations':internship_organizations,
                                                 #'organization_sort_value':organization_sort_value

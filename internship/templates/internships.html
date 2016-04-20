@@ -64,7 +64,8 @@
         <ul class="nav nav-tabs">
             <li class="active"><a data-toggle="tab" href="#tab_MI">{% trans 'Stage de Médecine Interne'%}</a></li>
         </ul>
-        <form  method="get" action="{% url 'internships_save_record'%}" >
+        <form  method="post" action="{% url 'internships_save_record'%}" >
+        {% csrf_token %}
         <div class="tab-content">
             <div id="tab_MI" class="tab-pane fade in active">
               <div class="panel panel-default">
@@ -82,7 +83,6 @@
                         </thead>
                         <tbody>
                           {% for internship in all_internships %}
-                          {% if internship.learning_unit_year.title = "Stage en Chirurgie"%}
                             <tr>
                                 <td>
                                   {{ internship.title }}
@@ -106,7 +106,6 @@
                                   </select>
                                 <td>
                             </tr>
-                          {% endif %}
                           {% endfor %}
                         </tbody>
                     </table>
