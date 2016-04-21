@@ -106,7 +106,7 @@
           &nbsp;&nbsp;
             {%if tutor%}
               <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#pnl_submission_scores_modal"
-                      id="bt_score_submission_modal" {%if coordinator = False %} disabled{%endif%}><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'submission' %}</button>
+                      id="bt_score_submission_modal" {%if coordinator = False%} disabled{%endif%}><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'submission' %}</button>
           {%endif%}
         {% as_messages_info as messages_info %}
         {%if messages_info%}
