@@ -26,7 +26,6 @@
 from django.http import HttpResponse
 from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
-from openpyxl.worksheet.datavalidation import DataValidation
 from openpyxl.styles import Color, Style, PatternFill
 from django.utils.translation import ugettext_lazy as _
 
@@ -45,7 +44,7 @@ HEADER = [str(_('academic_year')),
           str(_('ID'))]
 
 
-def export_xls(request, learning_unit_id,academic_year_id, is_fac, sessions_list):
+def export_xls(request, learning_unit_id, academic_year_id, is_fac, sessions_list):
     academic_year = mdl.academic_year.find_academic_year_by_id(academic_year_id)
 
     wb = Workbook()
