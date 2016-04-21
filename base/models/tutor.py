@@ -99,6 +99,7 @@ def find_by_program_manager(programme_manager):
     tutor_list = []
     for program_mgr in program_mgr_list:
         if program_mgr.offer_year:
+
             sessions = session_exam.find_sessions_by_offer(program_mgr.offer_year, academic_yr, None)
             for session in sessions:
                 learning_unit = session.learning_unit_year.learning_unit

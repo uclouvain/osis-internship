@@ -39,6 +39,7 @@ from base.views.notes import NotesDetail
 def scores_encoding(request):
     tutor = mdl.attribution.get_assigned_tutor(request.user)
     academic_yr = mdl.academic_year.current_academic_year()
+    data_dict={}
     if tutor:
         data_dict = get_data(request)
         sessions_list, faculties, notes_list = get_sessions(None, request, tutor, academic_yr, None)
@@ -55,6 +56,9 @@ def scores_encoding(request):
         for program_mgr in program_mgr_list:
             is_pgmer = True
             break
+
+        notes_list=None
+
         if is_pgmer:
             tutor_sel = None
             offer_sel = None
@@ -65,13 +69,14 @@ def scores_encoding(request):
             if offer_sel_id:
                 offer_sel = mdl.offer_year.find_by_id(offer_sel_id)
             data_dict = get_data_pgmer(request, None, None)
+            notes_list = data_dict['notes_list']
         return layout.render(request, "assessments/scores_encoding_mgr.html",
-                      {'notes_list':    data_dict['notes_list'],
+                      {'notes_list':    notes_list,
                        'offer_list':    mdl.offer_year.find_by_user(request.user),
                        'tutor_list':    mdl.tutor.find_by_program_manager(request.user),
                        'tutor':         tutor_sel,
                        'offer':         offer_sel,
-                       'academic_year': data_dict['academic_year']})
+                       'academic_year': academic_yr})
 
 
 @login_required
@@ -255,7 +260,6 @@ def online_double_encoding_validation(request, learning_unit_id=None, tutor_id=N
                                 enrollment.save()
                             else:
                                 # tutor
-                                print(score)
                                 if score:
                                     if enrollment.session_exam.learning_unit_year.decimal_scores:
                                         enrollment.score_draft = float(score)
@@ -349,7 +353,6 @@ def upload_score_error(request):
 
 @login_required
 def notes_printing(request, learning_unit_id=None, tutor_id=None, offer_id=None):
-    print('tutor',tutor_id)
     tutor = None
     if tutor_id:
         tutor = mdl.tutor.find_by_id(tutor_id)
@@ -374,7 +377,6 @@ def notes_printing(request, learning_unit_id=None, tutor_id=None, offer_id=None)
 
 @login_required
 def notes_printing_all(request, tutor_id=None, offer_id = None):
-    print('notes_printing_all', tutor_id , ",  " ,offer_id)
     return notes_printing(request, int(-1), tutor_id, offer_id)
 
 
@@ -449,9 +451,7 @@ def get_sessions(learning_unit_param, request, tutor, academic_yr, offer_id):
         for program_mgr in program_mgr_list:
             if program_mgr.offer_year:
                 notes = Notes()
-                print('learning_unit_param ',learning_unit_param)
                 sessions = mdl.session_exam.find_sessions_by_offer(program_mgr.offer_year, academic_yr, learning_unit_param)
-                print(len(sessions))
                 sessions_list.append(sessions)
 
                 faculty = program_mgr.offer_year.structure
@@ -466,8 +466,7 @@ def get_sessions(learning_unit_param, request, tutor, academic_yr, offer_id):
                     learning_unit = session.learning_unit_year.learning_unit
                     #enrollments = list(mdl.exam_enrollment.find_exam_enrollments_by_session_structure(session, session.offer_year_calendar.offer_year.structure))
                     enrollments = list(mdl.exam_enrollment.find_exam_enrollments_by_session(session))
-                    if learning_unit.acronym=="LCOMU2250":
-                        print('session z' ,session.id , " " ,len(enrollments))
+
                     if enrollments:
                         all_enrollments = all_enrollments + enrollments
 
@@ -640,7 +639,6 @@ def get_data_pgmer(request, tutor_sel, offer_sel):
                 sessions = mdl.session_exam.find_sessions_by_offer_tutor(offer_sel, academic_yr, tutor_sel)
             else:
                 sessions = mdl.session_exam.find_sessions_by_offer(program_mgr.offer_year, academic_yr, None)
-            print(program_mgr.offer_year.acronym, 'sessions',len(sessions))
             faculty = program_mgr.offer_year.structure
             faculties.append(faculty)
 
@@ -648,8 +646,7 @@ def get_data_pgmer(request, tutor_sel, offer_sel):
                 learning_unit = session.learning_unit_year.learning_unit
 
                 enrollments = list(mdl.exam_enrollment.find_exam_enrollments_by_session(session))
-                if learning_unit.acronym=="LCOMU2250":
-                    print('session',session.id , " " ,len(enrollments))
+
                 if enrollments and len(enrollments) > 0:
                     #print('learning_unit.acronym',learning_unit.acronym)
                     all_enrollments = all_enrollments + enrollments
