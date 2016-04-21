@@ -187,7 +187,7 @@ def online_double_encoding_form(request, learning_unit_id=None, tutor_id=None):
 
 @login_required
 def online_double_encoding_validation(request, learning_unit_id=None, tutor_id=None):
-    learning_unit = mdl.learning_unit.find_learning_unit_by_id(learning_unit_id)
+    learning_unit = mdl.learning_unit.find_by_id(learning_unit_id)
     is_pgmer = False
 
     if tutor_id:
@@ -300,7 +300,7 @@ def online_encoding_submission(request, learning_unit_id):
 
     academic_yr = mdl.academic_year.current_academic_year()
 
-    learning_unit = mdl.learning_unit.find_learning_unit_by_id(learning_unit_id)
+    learning_unit = mdl.learning_unit.find_by_id(learning_unit_id)
 
     sessions_list, faculties, notes_list= get_sessions(learning_unit, request, tutor, academic_yr,None)
 
@@ -328,7 +328,7 @@ def online_encoding_submission(request, learning_unit_id):
                     session.save()
 
     # Send mail to all the teachers of the submitted learning unit on any submission
-    learning_unit = mdl.learning_unit.find_learning_unit_by_id(learning_unit_id)
+    learning_unit = mdl.learning_unit.find_by_id(learning_unit_id)
     attributions = mdl.attribution.Attribution.objects.filter(learning_unit=learning_unit)
     persons = [attribution.tutor.person for attribution in attributions if attribution.function == 'PROFESSOR']
     send_mail.send_mail_after_scores_submission(persons, learning_unit.acronym)
@@ -528,7 +528,7 @@ def get_data(request):
 def get_data_online(learning_unit_id, tutor_id, request):
     tutor = None
     coordinator = False
-    a_learning_unit = mdl.learning_unit.find_learning_unit_by_id(learning_unit_id)
+    a_learning_unit = mdl.learning_unit.find_by_id(learning_unit_id)
     is_programme_manager = False
     if tutor_id:
         tutor = mdl.tutor.find_by_id(tutor_id)
@@ -544,10 +544,10 @@ def get_data_online(learning_unit_id, tutor_id, request):
         tutor_responsible = mdl.tutor.find_responsible(a_learning_unit)
 
     academic_yr = mdl.academic_year.current_academic_year()
-    learning_unit = mdl.learning_unit.find_learning_unit_by_id(learning_unit_id)
+    learning_unit = mdl.learning_unit.find_by_id(learning_unit_id)
     learning_unit_year = mdl.learning_unit_year.find_learning_unit_years_by_academic_year_learningunit(academic_yr,
                                                                                                        learning_unit)
-    sessions_list, faculties, notes_list = get_sessions(learning_unit, request, tutor, academic_yr,None)
+    sessions_list, faculties, notes_list = get_sessions(learning_unit, request, tutor, academic_yr, None)
 
     tot_enrollments = []
     tot_progress = []
@@ -594,7 +594,7 @@ def get_data_online_double(learning_unit_id,tutor_id,request):
 
     academic_yr = mdl.academic_year.current_academic_year()
 
-    learning_unit = mdl.learning_unit.find_learning_unit_by_id(learning_unit_id)
+    learning_unit = mdl.learning_unit.find_by_id(learning_unit_id)
 
     sessions_list, faculties, notes_list = get_sessions(learning_unit, request, tutor, academic_yr,None)
     tot_enrollments = []

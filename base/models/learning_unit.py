@@ -47,7 +47,7 @@ class LearningUnit(models.Model):
         return u"%s - %s" % (self.acronym, self.title)
 
 
-def find_learning_unit_by_id(learning_unit_id):
+def find_by_id(learning_unit_id):
     return LearningUnit.objects.get(pk=learning_unit_id)
 
 
