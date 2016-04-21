@@ -30,15 +30,16 @@ from base.models import person
 from django.core.exceptions import ObjectDoesNotExist
 
 
-class ProgrammeManagerAdmin(admin.ModelAdmin):
+class ProgramManagerAdmin(admin.ModelAdmin):
     list_display = ('person', 'offer_year')
     raw_id_fields = ('person', 'offer_year')
 
 
-class ProgrammeManager(models.Model):
+class ProgramManager(models.Model):
+    external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     person = models.ForeignKey('Person')
-    offer_year = models.ForeignKey('OfferYear', blank=True, null=True)
+    offer_year = models.ForeignKey('OfferYear')
 
     @property
     def name(self):
@@ -49,7 +50,7 @@ class ProgrammeManager(models.Model):
 
 
 def find_by_person(a_person):
-    programs_managed = ProgrammeManager.objects.filter(person=a_person)
+    programs_managed = ProgramManager.objects.filter(person=a_person)
     return programs_managed
 
 
@@ -57,7 +58,7 @@ def is_programme_manager(user, offer_yr):
     try:
         pers = person.Person.objects.get(user=user)
         if user:
-            programme_manager = ProgrammeManager.objects.filter(person=pers.id, offer_year=offer_yr)
+            programme_manager = ProgramManager.objects.filter(person=pers.id, offer_year=offer_yr)
             if programme_manager:
                 return True
     except ObjectDoesNotExist:
@@ -65,8 +66,8 @@ def is_programme_manager(user, offer_yr):
 
 
 def find_by_offer_year(offer_yr):
-    return ProgrammeManager.objects.filter(offer_year=offer_yr)
+    return ProgramManager.objects.filter(offer_year=offer_yr)
 
 
 def find_by_user(user):
-    return ProgrammeManager.objects.filter(person__user=user)
+    return ProgramManager.objects.filter(person__user=user)
