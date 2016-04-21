@@ -50,28 +50,24 @@ def scores_encoding(request):
 
     # In case the user is not a tutor we check whether it is a program manager for the offer.
     else:
-        is_pgmer = False
         program_mgr_list = mdl.program_manager.find_by_user(request.user)
-        for program_mgr in program_mgr_list:
-            is_pgmer = True
-            break
-        if is_pgmer:
-            tutor_sel = None
-            offer_sel = None
+        tutor_sel = None
+        offer_sel = None
+        if program_mgr_list:
             tutor_sel_id = request.POST.get('tutor', None)
             if tutor_sel_id:
                 tutor_sel = mdl.tutor.find_by_id(tutor_sel_id)
             offer_sel_id = request.POST.get('offer', None)
             if offer_sel_id:
                 offer_sel = mdl.offer_year.find_by_id(offer_sel_id)
-            data_dict = get_data_pgmer(request, None, None)
+        data_dict = get_data_pgmer(request, None, None)
         return layout.render(request, "assessments/scores_encoding_mgr.html",
-                      {'notes_list':    data_dict['notes_list'],
-                       'offer_list':    mdl.offer_year.find_by_user(request.user),
-                       'tutor_list':    mdl.tutor.find_by_program_manager(request.user),
-                       'tutor':         tutor_sel,
-                       'offer':         offer_sel,
-                       'academic_year': data_dict['academic_year']})
+                                      {'notes_list':    data_dict['notes_list'],
+                                       'offer_list':    mdl.offer_year.find_by_user(request.user),
+                                       'tutor_list':    mdl.tutor.find_by_program_manager(request.user),
+                                       'tutor':         tutor_sel,
+                                       'offer':         offer_sel,
+                                       'academic_year': data_dict['academic_year']})
 
 
 @login_required
