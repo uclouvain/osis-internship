@@ -69,4 +69,5 @@ def find_by_offer_year(offer_yr):
 
 
 def find_by_user(user):
-    return ProgrammeManager.objects.filter(person__user=user)
+    return ProgrammeManager.objects.filter(person__user=user)\
+                                   .order_by('offer_year__acronym')
