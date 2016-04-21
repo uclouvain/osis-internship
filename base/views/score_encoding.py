@@ -403,7 +403,6 @@ def get_sessions(learning_unit_param, request, tutor, academic_yr, offer_id):
     notes_list = []
     ss = []
     if tutor or offer_id:
-        print('ici sdfsdf', tutor,offer_id)
         if offer_id:
             offer_year = mdl.offer_year.find_by_id(offer_id)
         else:
@@ -430,9 +429,10 @@ def get_sessions(learning_unit_param, request, tutor, academic_yr, offer_id):
                 dict_progress_ok[learning_unit.acronym] = value
 
         notes = Notes()
-        notes.tutor= tutor
+        notes.tutor = tutor
         l_lu_detail = []
-        notes_list=[]
+        notes_list = []
+        learning_unit_list = order_learning_unit_list_by_acronym(learning_unit_list)
         for l in learning_unit_list:
             notes_detail = NotesDetail()
             notes_detail.lu = l
@@ -496,6 +496,7 @@ def get_sessions(learning_unit_param, request, tutor, academic_yr, offer_id):
                 notes.lu_list = l_lu_detail
                 notes_list.append(notes)
         notes = Notes()
+        learning_unit_list = order_learning_unit_list_by_acronym(learning_unit_list)
         for l in learning_unit_list:
             notes_detail = NotesDetail()
             notes_detail.lu = l
@@ -683,6 +684,9 @@ def get_data_pgmer(request, tutor_sel, offer_sel):
     notes_list = []
     notes = Notes()
     l_lu_detail = []
+
+    learning_unit_list = order_learning_unit_list_by_acronym(learning_unit_list)
+
     for l in learning_unit_list:
         notes_detail = NotesDetail()
         notes_detail.lu = l
@@ -791,3 +795,12 @@ def get_data_pgmer_by_offer(tutor_sel, offer_sel):
     return {'section':       'scores_encoding',
             'academic_year': academic_yr,
             'notes_list':    notes_list}
+
+
+def order_learning_unit_list_by_acronym(learning_unit_list):
+    list_ids = []
+    for l in learning_unit_list:
+        list_ids.append(l.id)
+    if list_ids and len(list_ids) > 0:
+        return mdl.learning_unit.find_by_ids(list_ids).order_by('acronym')
+    return learning_unit_list
