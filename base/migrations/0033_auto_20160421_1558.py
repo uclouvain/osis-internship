@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunSQL(
-            "delete from base_programmemanager;"
+            "delete from base_programmemanager where offer_year_id is null;"
         ),
         migrations.RenameModel('ProgrammeManager', 'ProgramManager'),
         migrations.AddField(
