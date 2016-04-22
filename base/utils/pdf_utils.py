@@ -33,7 +33,6 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import mm
 from reportlab.lib import colors
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.staticfiles.templatetags.staticfiles import static
 
 from base import models as mdl
 
@@ -68,9 +67,9 @@ def print_notes(request, tutor, academic_year, learning_unit_id, is_fac, session
     :param academic_year:
     :param learning_unit_year_id:
     """
-
+    filename = "%s.pdf" % _('note_sheet')
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="feuillesNotes.pdf"'
+    response['Content-Disposition'] = 'attachment; filename="%s"' % filename
 
     buffer = BytesIO()
     doc = SimpleDocTemplate(buffer,
@@ -82,7 +81,6 @@ def print_notes(request, tutor, academic_year, learning_unit_id, is_fac, session
 
     styles = getSampleStyleSheet()
     styles.add(ParagraphStyle(name='Justify', alignment=TA_JUSTIFY))
-
     content = []
 
     list_exam_enrollment = []
@@ -95,7 +93,6 @@ def print_notes(request, tutor, academic_year, learning_unit_id, is_fac, session
     list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, styles, is_fac, content)
 
     doc.build(content, onFirstPage=add_header_footer, onLaterPages=add_header_footer)
-    # doc.build(content)
     pdf = buffer.getvalue()
     buffer.close()
     response.write(pdf)
@@ -103,7 +100,7 @@ def print_notes(request, tutor, academic_year, learning_unit_id, is_fac, session
 
 
 def header_building(canvas, doc, styles):
-    a = Image(settings.LOGO_INSTITUTION_URL,width=15*mm,height=20*mm)
+    a = Image(settings.LOGO_INSTITUTION_URL, width=15*mm, height=20*mm)
 
     p = Paragraph('''
                     <para align=center>
@@ -112,10 +109,9 @@ def header_building(canvas, doc, styles):
 
     data_header = [[a, '%s' % _('ucl_denom_location'), p], ]
 
-    t_header=Table(data_header, [30*mm, 100*mm,50*mm])
+    t_header=Table(data_header, [30*mm, 100*mm, 50*mm])
 
-    t_header.setStyle(TableStyle([
-                       ]))
+    t_header.setStyle(TableStyle([]))
 
     w, h = t_header.wrap(doc.width, doc.topMargin)
     t_header.drawOn(canvas, doc.leftMargin, doc.height + doc.topMargin - h)
@@ -152,9 +148,13 @@ def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, s
                 current_learning_unit_year = rec_exam_enrollment.learning_unit_enrollment.learning_unit_year
 
             if o != old_pgm:
-                # Autre programme - 1. mettre les critères
-                main_data(academic_year, rec_exam_enrollment.session_exam, styles, current_learning_unit_year,old_pgm, content)
-                # Autre programme - 2. il faut écrire le tableau
+                # Other programme - 1. manage criteria
+                main_data(academic_year,
+                          rec_exam_enrollment.session_exam,
+                          styles,
+                          current_learning_unit_year,
+                          old_pgm, content)
+                # Other programme - 2. write table
 
                 t = Table(data, COLS_WIDTH, repeatRows=1)
                 t.setStyle(TableStyle([
@@ -164,10 +164,10 @@ def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, s
                                    ]))
 
                 content.append(t)
-                # Autre programme - 3. Imprimer légende
+                # Other programme - 3. Write legend
                 end_page_infos_building(content)
                 legend_building(current_learning_unit_year, is_fac, content)
-                # Autre programme - 4. il faut faire un saut de page
+                # Other programme - 4. page break
                 content.append(PageBreak())
                 data = headers_table(styles)
                 old_pgm = o
@@ -206,10 +206,10 @@ def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, s
         content.append(t)
         end_page_infos_building(content)
         legend_building(current_learning_unit_year, is_fac, content)
+    t.setStyle(TableStyle([('BACKGROUND', (0, 0), (-1, 0), colors.grey)]))
 
 
 def legend_building(learning_unit_year, is_fac, content):
-
     p = ParagraphStyle('legend')
     p.textColor = 'grey'
     p.borderColor = 'grey'
@@ -234,22 +234,21 @@ def legend_building(learning_unit_year, is_fac, content):
 
 
 def headers_table(styles):
-    data = []
-    data.append([Paragraph('''%s''' % _('registration_number'), styles['BodyText']),
-                 Paragraph('''%s''' % _('lastname'), styles['BodyText']),
-                 Paragraph('''%s''' % _('firstname'), styles['BodyText']),
-                 Paragraph('''%s''' % _('numbered_score'), styles['BodyText']),
-                 Paragraph('''%s''' % _('other_score'), styles['BodyText']),
-                 Paragraph('''%s''' % _('end_date'), styles['BodyText'])])
+    data = [[Paragraph('''%s''' % _('registration_number'), styles['BodyText']),
+             Paragraph('''%s''' % _('lastname'), styles['BodyText']),
+             Paragraph('''%s''' % _('firstname'), styles['BodyText']),
+             Paragraph('''%s''' % _('numbered_score'), styles['BodyText']),
+             Paragraph('''%s''' % _('other_score'), styles['BodyText']),
+             Paragraph('''%s''' % _('end_date'), styles['BodyText'])]]
     return data
 
 
 def main_data(academic_year, session_exam, styles, learning_unit_year, pgm, content):
-    p_structure = ParagraphStyle('entete_structure')
+    p_structure = ParagraphStyle('structure_header')
     p_structure.alignment = TA_LEFT
     p_structure.fontSize = 10
 
-    p = ParagraphStyle('entete_droite')
+    p = ParagraphStyle('right_page_header')
     p.alignment = TA_RIGHT
     p.fontSize = 10
 
