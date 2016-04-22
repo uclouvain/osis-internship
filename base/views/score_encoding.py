@@ -427,11 +427,11 @@ def get_sessions(learning_unit_param, request, tutor, academic_yr, offer_id):
         l_lu_detail = []
         notes_list = []
         learning_unit_list = order_learning_unit_list_by_acronym(learning_unit_list)
-        for learning_unit in learning_unit_list:
+        for learning_unit_elt in learning_unit_list:
             notes_detail = NotesDetail()
-            notes_detail.lu = learning_unit
-            notes_detail.nb_notes_encoded = dict_progress_ok[learning_unit.acronym]
-            notes_detail.nb_student = dict_progress[learning_unit.acronym]
+            notes_detail.lu = learning_unit_elt
+            notes_detail.nb_notes_encoded = dict_progress_ok[learning_unit_elt.acronym]
+            notes_detail.nb_student = dict_progress[learning_unit_elt.acronym]
             l_lu_detail.append(notes_detail)
         notes.lu_list = l_lu_detail
         notes_list.append(notes)
@@ -474,21 +474,21 @@ def get_sessions(learning_unit_param, request, tutor, academic_yr, offer_id):
                     else:
                         dict_progress_ok[learning_unit.acronym]=value
                 l_lu_detail = []
-                for learning_unit in learning_unit_list:
+                for learning_unit_elt in learning_unit_list:
                     notes_detail = NotesDetail()
-                    notes_detail.lu = learning_unit
-                    notes_detail.nb_notes_encoded = dict_progress_ok[learning_unit.acronym]
-                    notes_detail.nb_student = dict_progress[learning_unit.acronym]
+                    notes_detail.lu = learning_unit_elt
+                    notes_detail.nb_notes_encoded = dict_progress_ok[learning_unit_elt.acronym]
+                    notes_detail.nb_student = dict_progress[learning_unit_elt.acronym]
                     l_lu_detail.append(notes_detail)
                 notes.lu_list = l_lu_detail
                 notes_list.append(notes)
         notes = Notes()
         learning_unit_list = order_learning_unit_list_by_acronym(learning_unit_list)
-        for learning_unit in learning_unit_list:
+        for learning_unit_elt in learning_unit_list:
             notes_detail = NotesDetail()
-            notes_detail.lu = learning_unit
-            notes_detail.nb_notes_encoded = dict_progress_ok[learning_unit.acronym]
-            notes_detail.nb_student = dict_progress[learning_unit.acronym]
+            notes_detail.lu = learning_unit_elt
+            notes_detail.nb_notes_encoded = dict_progress_ok[learning_unit_elt.acronym]
+            notes_detail.nb_student = dict_progress[learning_unit_elt.acronym]
             l_lu_detail.append(notes_detail)
         notes.lu_list=l_lu_detail
         notes_list = [notes]
@@ -641,8 +641,8 @@ def get_data_pgmer(request, tutor_sel, offer_sel):
                 if enrollments and len(enrollments) > 0:
                     all_enrollments = all_enrollments + enrollments
                     in_list = False
-                    for learning_unit in learning_unit_list:
-                        if learning_unit.acronym == learning_unit.acronym:
+                    for learning_unit_elt in learning_unit_list:
+                        if learning_unit.acronym == learning_unit_elt.acronym:
                             in_list = True
                             break
                     if in_list:
@@ -669,12 +669,12 @@ def get_data_pgmer(request, tutor_sel, offer_sel):
 
     learning_unit_list = order_learning_unit_list_by_acronym(learning_unit_list)
 
-    for learning_unit in learning_unit_list:
+    for learning_unit_elt in learning_unit_list:
         notes_detail = NotesDetail()
-        notes_detail.lu = learning_unit
-        notes_detail.nb_notes_encoded = dict_progress_ok.get(learning_unit.acronym)
-        notes_detail.nb_student = dict_progress.get(learning_unit.acronym)
-        notes_detail.tutor = mdl.tutor.find_responsible(learning_unit)
+        notes_detail.lu = learning_unit_elt
+        notes_detail.nb_notes_encoded = dict_progress_ok.get(learning_unit_elt.acronym)
+        notes_detail.nb_student = dict_progress.get(learning_unit_elt.acronym)
+        notes_detail.tutor = mdl.tutor.find_responsible(learning_unit_elt)
         if notes_detail.tutor:
             l_lu_detail.append(notes_detail)
     notes.lu_list = l_lu_detail
@@ -734,8 +734,8 @@ def get_data_pgmer_by_offer(tutor_sel, offer_sel):
         if len(enrollments) > 0:
             all_enrollments = all_enrollments + enrollments
             in_list=False
-            for learning_unit in learning_unit_list:
-                if learning_unit.acronym == learning_unit.acronym:
+            for learning_unit_elt in learning_unit_list:
+                if learning_unit.acronym == learning_unit_elt.acronym:
                     in_list = True
                     break
             if in_list:
@@ -762,12 +762,12 @@ def get_data_pgmer_by_offer(tutor_sel, offer_sel):
     notes_list.append(notes)
     notes_list = []
     notes = Notes()
-    for learning_unit in learning_unit_list:
+    for learning_unit_elt in learning_unit_list:
         notes_detail = NotesDetail()
-        notes_detail.lu = learning_unit
-        notes_detail.nb_notes_encoded = dict_progress_ok.get(learning_unit.acronym, 0)
-        notes_detail.nb_student = dict_progress.get(learning_unit.acronym, 0)
-        notes_detail.tutor = mdl.tutor.find_responsible(learning_unit)
+        notes_detail.lu = learning_unit_elt
+        notes_detail.nb_notes_encoded = dict_progress_ok.get(learning_unit_elt.acronym, 0)
+        notes_detail.nb_student = dict_progress.get(learning_unit_elt.acronym, 0)
+        notes_detail.tutor = mdl.tutor.find_responsible(learning_unit_elt)
         if notes_detail.tutor:
             l_lu_detail.append(notes_detail)
     notes.lu_list = l_lu_detail
@@ -781,8 +781,8 @@ def get_data_pgmer_by_offer(tutor_sel, offer_sel):
 
 def order_learning_unit_list_by_acronym(learning_unit_list):
     list_ids = []
-    for learning_unit in learning_unit_list:
-        list_ids.append(learning_unit.id)
+    for learning_unit_elt in learning_unit_list:
+        list_ids.append(learning_unit_elt.id)
     if list_ids and len(list_ids) > 0:
         return mdl.learning_unit.find_by_ids(list_ids).order_by('acronym')
     return learning_unit_list
