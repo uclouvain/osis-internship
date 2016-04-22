@@ -124,17 +124,16 @@ def footer_building(canvas, doc, styles):
     footer.drawOn(canvas, doc.leftMargin, h)
 
 
-def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, styles,
-                        is_fac, content):
+def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, styles, is_programme_manager, content):
 
     content.append(Paragraph('''
                             <para spaceb=5>
                                 &nbsp;
                             </para>
-                            ''' , ParagraphStyle('normal')))
+                            ''', ParagraphStyle('normal')))
     data = headers_table(styles)
 
-    old_pgm = None
+    old_offer_programme = None
     current_learning_unit_year= None
     cpt = 1
     for rec_exam_enrollment in list_exam_enrollment:
@@ -142,18 +141,18 @@ def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, s
                 or int(learning_unit_id) == -1:
 
             student = rec_exam_enrollment.learning_unit_enrollment.student
-            o = rec_exam_enrollment.learning_unit_enrollment.offer
-            if old_pgm is None:
-                old_pgm = o
+            offer_programme = rec_exam_enrollment.learning_unit_enrollment.offer
+            if old_offer_programme is None:
+                old_offer_programme = offer_programme
                 current_learning_unit_year = rec_exam_enrollment.learning_unit_enrollment.learning_unit_year
 
-            if o != old_pgm:
+            if offer_programme != old_offer_programme:
                 # Other programme - 1. manage criteria
                 main_data(academic_year,
                           rec_exam_enrollment.session_exam,
                           styles,
                           current_learning_unit_year,
-                          old_pgm, content)
+                          old_offer_programme, content)
                 # Other programme - 2. write table
 
                 t = Table(data, COLS_WIDTH, repeatRows=1)
@@ -166,11 +165,11 @@ def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, s
                 content.append(t)
                 # Other programme - 3. Write legend
                 end_page_infos_building(content)
-                legend_building(current_learning_unit_year, is_fac, content)
+                legend_building(current_learning_unit_year, is_programme_manager, content)
                 # Other programme - 4. page break
                 content.append(PageBreak())
                 data = headers_table(styles)
-                old_pgm = o
+                old_offer_programme = offer_programme
                 current_learning_unit_year = rec_exam_enrollment.learning_unit_enrollment.learning_unit_year
 
             person = mdl.person.find_by_id(student.person.id)
@@ -196,8 +195,8 @@ def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, s
         cpt += 1
         old_session_exam = rec_exam_enrollment.session_exam
 
-    if not old_pgm is None:
-        main_data(academic_year, rec_exam_enrollment.session_exam, styles, current_learning_unit_year, old_pgm, content)
+    if not old_offer_programme is None:
+        main_data(academic_year, rec_exam_enrollment.session_exam, styles, current_learning_unit_year, old_offer_programme, content)
         t = Table(data,COLS_WIDTH)
         t.setStyle(TableStyle([('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
                                ('BOX', (0, 0), (-1,-1), 0.25, colors.black),
@@ -205,7 +204,7 @@ def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, s
 
         content.append(t)
         end_page_infos_building(content)
-        legend_building(current_learning_unit_year, is_fac, content)
+        legend_building(current_learning_unit_year, is_programme_manager, content)
     t.setStyle(TableStyle([('BACKGROUND', (0, 0), (-1, 0), colors.grey)]))
 
 
@@ -243,10 +242,10 @@ def headers_table(styles):
     return data
 
 
-def main_data(academic_year, session_exam, styles, learning_unit_year, pgm, content):
-    p_structure = ParagraphStyle('structure_header')
-    p_structure.alignment = TA_LEFT
-    p_structure.fontSize = 10
+def main_data(academic_year, session_exam, styles, learning_unit_year, offer, content):
+    faculty_paragraph_style = ParagraphStyle('structure_header')
+    faculty_paragraph_style.alignment = TA_LEFT
+    faculty_paragraph_style.fontSize = 10
 
     p = ParagraphStyle('right_page_header')
     p.alignment = TA_RIGHT
@@ -265,8 +264,13 @@ def main_data(academic_year, session_exam, styles, learning_unit_year, pgm, cont
                             </para>
                             ''',  ParagraphStyle('normal')))
 
-    if pgm.structure is not None:
-        content.append(Paragraph('%s' % pgm.structure, p_structure))
+    if offer.structure is not None:
+        structure_display = offer.structure
+        faculty = mdl.structure.find_faculty(offer.structure)
+        if faculty:
+            structure_display = faculty
+
+        content.append(Paragraph('%s' % structure_display, faculty_paragraph_style))
         content.append(Paragraph('''
                                 <para spaceb=5>
                                     &nbsp;
@@ -292,7 +296,7 @@ def main_data(academic_year, session_exam, styles, learning_unit_year, pgm, cont
                   [''],
                   ['']]
     table_tutor=Table(data_tutor)
-    p_pgm = Paragraph('''<b>%s : %s</b>''' % (_('program'), pgm.acronym), styles["Normal"])
+    p_pgm = Paragraph('''<b>%s : %s</b>''' % (_('program'), offer.acronym), styles["Normal"])
     data_pgm= [[p_pgm],
                [_('deliberation_date') + ' : '],
                [_('chair_of_the_exam_board') + ' : '],
