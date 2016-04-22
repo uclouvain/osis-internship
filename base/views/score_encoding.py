@@ -39,7 +39,7 @@ from base.views.notes import NotesDetail
 def scores_encoding(request):
     tutor = mdl.attribution.get_assigned_tutor(request.user)
     academic_yr = mdl.academic_year.current_academic_year()
-    data_dict={}
+  
     if tutor:
         data_dict = get_data(request)
         sessions_list, faculties, notes_list = get_sessions(None, request, tutor, academic_yr, None)
