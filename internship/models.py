@@ -111,7 +111,7 @@ class InternshipMaster(models.Model):
         return masters
 
 class InternshipChoice(models.Model):
-    organization        = models.ForeignKey('base.Organization')
-    learning_unit_year  = models.ForeignKey('base.LearningUnitYear')
     student             = models.ForeignKey('base.Student')
+    organization        = models.CharField(max_length=50, blank=True, null=True)
+    learning_unit_year  = models.CharField(max_length=50, blank=True, null=True)
     choice              = models.IntegerField()

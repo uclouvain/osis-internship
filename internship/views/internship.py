@@ -27,7 +27,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from internship.models import InternshipOffer, InternshipChoice
 from internship.forms import InternshipChoiceForm
-from pprint import pprint
+
 
 @login_required
 def internships(request):
@@ -56,20 +56,34 @@ def internships(request):
 @login_required
 def internships_save(request):
     form = InternshipChoiceForm(data=request.POST)
-    if request.POST['learning_unit_year']:
-        learning_unit_year_list = request.POST.getlist('learning_unit_year')
-        print(learning_unit_year_list)
+    new_choice = InternshipChoice()
 
     if request.POST['organization']:
         organization_list = request.POST.getlist('organization')
-        print(organization_list)
+
+    if request.POST['learning_unit_year']:
+        learning_unit_year_list = request.POST.getlist('learning_unit_year')
 
     if request.POST['preference']:
         preference_list = request.POST.getlist('preference')
-        print(preference_list)
 
+    index = 0
+    for r in preference_list:
+        if r == "0":
+            learning_unit_year_list[index] = 0
+            organization_list[index] = 0
+        index += 1
 
-    print(request.user)
+    organization_list = [x for x in organization_list if x != 0]
+    learning_unit_year_list = [x for x in learning_unit_year_list if x != 0]
+    preference_list = [x for x in preference_list if x != 0]
+
+    index = learning_unit_year_list.__len__()
+    for x in range(0, index):
+        new_choice.organization = organization_list[x]
+        new_choice.learning_unit_year = learning_unit_year_list[x]
+        new_choice.choice = preference_list[x]
+        new_choice.save()
 
     return render(request, "internships.html", {'section': 'internship',
                                                 'form': form
