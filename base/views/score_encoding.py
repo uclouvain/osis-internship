@@ -39,7 +39,7 @@ from base.views.notes import NotesDetail
 def scores_encoding(request):
     tutor = mdl.attribution.get_assigned_tutor(request.user)
     academic_yr = mdl.academic_year.current_academic_year()
-  
+
     if tutor:
         data_dict = get_data(request)
         sessions_list, faculties, notes_list = get_sessions(None, request, tutor, academic_yr, None)
@@ -51,15 +51,15 @@ def scores_encoding(request):
 
     # In case the user is not a tutor we check whether it is a program manager for the offer.
     else:
-        is_pgmer = False
+        is_programme_manager = False
         program_mgr_list = mdl.program_manager.find_by_user(request.user)
         for program_mgr in program_mgr_list:
-            is_pgmer = True
+            is_programme_manager = True
             break
 
         notes_list=None
 
-        if is_pgmer:
+        if is_programme_manager:
             tutor_sel = None
             offer_sel = None
             tutor_sel_id = request.POST.get('tutor', None)
