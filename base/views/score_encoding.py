@@ -44,20 +44,20 @@ def scores_encoding(request):
         data_dict = get_data(request)
         sessions_list, faculties, notes_list = get_sessions(None, request, tutor, academic_yr, None)
         return layout.render(request, "assessments/scores_encoding.html",
-                                      {'section': data_dict['section'],
-                                       'tutor': tutor,
+                                      {'section':       data_dict['section'],
+                                       'tutor':         tutor,
                                        'academic_year': academic_yr,
-                                       'notes_list': notes_list})
+                                       'notes_list':    notes_list})
 
     # In case the user is not a tutor we check whether it is a program manager for the offer.
     else:
         is_programme_manager = False
         program_mgr_list = mdl.program_manager.find_by_user(request.user)
-        for program_mgr in program_mgr_list:
+        for programme_manager in program_mgr_list:
             is_programme_manager = True
             break
 
-        notes_list=None
+        notes_list = None
 
         if is_programme_manager:
             tutor_sel = None
@@ -71,12 +71,12 @@ def scores_encoding(request):
             data_dict = get_data_pgmer(request, None, None)
             notes_list = data_dict['notes_list']
         return layout.render(request, "assessments/scores_encoding_mgr.html",
-                      {'notes_list':    notes_list,
-                       'offer_list':    mdl.offer_year.find_by_user(request.user),
-                       'tutor_list':    mdl.tutor.find_by_program_manager(request.user),
-                       'tutor':         tutor_sel,
-                       'offer':         offer_sel,
-                       'academic_year': academic_yr})
+                             {'notes_list':    notes_list,
+                              'offer_list':    mdl.offer_year.find_by_user(request.user),
+                              'tutor_list':    mdl.tutor.find_by_program_manager(request.user),
+                              'tutor':         tutor_sel,
+                              'offer':         offer_sel,
+                              'academic_year': academic_yr})
 
 
 @login_required
@@ -160,7 +160,7 @@ def online_double_encoding_form(request, learning_unit_id=None, tutor_id=None):
             messages.add_message(request, messages.WARNING, "%s !" % _('No score encoded yet!  Double encoding impossible.'))
             return online_encoding(request, learning_unit_id, tutor_id)
     elif request.method == 'POST':
-        # programme managaer encoding
+        # programme manager encoding
         for enrollment in enrollments:
             score = request.POST.get('score_' + str(enrollment.id), None)
             if score:
@@ -216,7 +216,7 @@ def online_double_encoding_validation(request, learning_unit_id=None, tutor_id=N
                                        'learning_unit':  learning_unit,
                                        'enrollments':    all_enrollments,
                                        'justifications': mdl.exam_enrollment.JUSTIFICATION_TYPES,
-                                       'is_pgmer':         is_pgmer})
+                                       'is_pgmer':       is_pgmer})
 
     elif request.method == 'POST':
         sessions_list, faculties, notes_list = get_sessions(learning_unit_id, request, tutor, academic_year,None)
@@ -420,9 +420,9 @@ def get_sessions(learning_unit_param, request, tutor, academic_yr, offer_id):
             enrollments = list(mdl.exam_enrollment.find_exam_enrollments_by_session(session))
 
             if learning_unit in learning_unit_list:
-                dict_progress[learning_unit.acronym] = dict_progress[learning_unit.acronym]+ len(enrollments)
+                dict_progress[learning_unit.acronym] += len(enrollments)
             else:
-                dict_progress[learning_unit.acronym]  = len(enrollments)
+                dict_progress[learning_unit.acronym] = len(enrollments)
                 learning_unit_list.append(learning_unit)
             value = get_score_encoded(enrollments)
             if learning_unit.acronym in dict_progress_ok:
@@ -471,10 +471,10 @@ def get_sessions(learning_unit_param, request, tutor, academic_yr, offer_id):
                         all_enrollments = all_enrollments + enrollments
 
                     if session.learning_unit_year.learning_unit in learning_unit_list:
-                        dict_progress[learning_unit.acronym] = dict_progress[learning_unit.acronym]+ len(enrollments)
+                        dict_progress[learning_unit.acronym] += len(enrollments)
                     else:
                         learning_unit=session.learning_unit_year.learning_unit
-                        dict_progress[learning_unit.acronym]  = len(enrollments)
+                        dict_progress[learning_unit.acronym] = len(enrollments)
                         learning_unit_list.append(learning_unit)
                     value = get_score_encoded(enrollments)
                     if learning_unit.acronym in dict_progress_ok:
@@ -499,8 +499,7 @@ def get_sessions(learning_unit_param, request, tutor, academic_yr, offer_id):
             notes_detail.nb_student = dict_progress[learning_unit.acronym]
             l_lu_detail.append(notes_detail)
         notes.lu_list=l_lu_detail
-        notes_list = []
-        notes_list.append(notes)
+        notes_list = [notes]
 
     return sessions_list, faculties, notes_list
 
@@ -547,7 +546,7 @@ def get_data_online(learning_unit_id, tutor_id, request):
     learning_unit = mdl.learning_unit.find_learning_unit_by_id(learning_unit_id)
     learning_unit_year = mdl.learning_unit_year.find_learning_unit_years_by_academic_year_learningunit(academic_yr,
                                                                                                        learning_unit)
-    sessions_list, faculties, notes_list = get_sessions(learning_unit, request, tutor, academic_yr,None)
+    sessions_list, faculties, notes_list = get_sessions(learning_unit, request, tutor, academic_yr, None)
 
     tot_enrollments = []
     tot_progress = []
@@ -580,8 +579,8 @@ def get_data_online(learning_unit_id, tutor_id, request):
             'is_pgmer':           is_programme_manager}
 
 
-def get_data_online_double(learning_unit_id,tutor_id,request):
-    is_pgmer=False
+def get_data_online_double(learning_unit_id, tutor_id,request):
+    is_programme_manager=False
     if tutor_id:
         tutor = mdl.tutor.find_by_id(tutor_id)
     else:
@@ -590,7 +589,7 @@ def get_data_online_double(learning_unit_id,tutor_id,request):
         if not program_mgr_list:
             tutor = mdl.tutor.find_by_user(request.user)
         else:
-            is_pgmer = True
+            is_programme_manager = True
 
     academic_yr = mdl.academic_year.current_academic_year()
 
@@ -604,7 +603,7 @@ def get_data_online_double(learning_unit_id,tutor_id,request):
     if sessions_list:
         for sessions in sessions_list:
             for session in sessions:
-                if is_pgmer:
+                if is_programme_manager:
                     enrollments = mdl.exam_enrollment.find_exam_enrollments_drafts_existing_pgmer_by_session(session)
                 else:
                     enrollments = mdl.exam_enrollment.find_exam_enrollments_drafts_existing_by_session(session)
@@ -650,14 +649,14 @@ def get_data_pgmer(request, tutor_sel, offer_sel):
                 if enrollments and len(enrollments) > 0:
                     all_enrollments = all_enrollments + enrollments
                     in_list = False
-                    for ll in learning_unit_list:
-                        if ll.acronym == learning_unit.acronym:
+                    for learning_unit in learning_unit_list:
+                        if learning_unit.acronym == learning_unit.acronym:
                             in_list = True
                             break
                     if in_list:
                         n = dict_progress.get(learning_unit.acronym)
                         if n is not None:
-                            n = n + len(enrollments)
+                            n += len(enrollments)
                             dict_progress[learning_unit.acronym] = n
                     else:
                         dict_progress[learning_unit.acronym] = len(enrollments)
@@ -743,8 +742,8 @@ def get_data_pgmer_by_offer(tutor_sel, offer_sel):
         if len(enrollments) > 0:
             all_enrollments = all_enrollments + enrollments
             in_list=False
-            for ll in learning_unit_list:
-                if ll.acronym == learning_unit.acronym:
+            for learning_unit in learning_unit_list:
+                if learning_unit.acronym == learning_unit.acronym:
                     in_list = True
                     break
             if in_list:
@@ -774,8 +773,8 @@ def get_data_pgmer_by_offer(tutor_sel, offer_sel):
     for learning_unit in learning_unit_list:
         notes_detail = NotesDetail()
         notes_detail.lu = learning_unit
-        notes_detail.nb_notes_encoded = dict_progress_ok.get(learning_unit.acronym,0)
-        notes_detail.nb_student = dict_progress.get(learning_unit.acronym,0)
+        notes_detail.nb_notes_encoded = dict_progress_ok.get(learning_unit.acronym, 0)
+        notes_detail.nb_student = dict_progress.get(learning_unit.acronym, 0)
         notes_detail.tutor = mdl.tutor.find_responsible(learning_unit)
         if notes_detail.tutor:
             l_lu_detail.append(notes_detail)
