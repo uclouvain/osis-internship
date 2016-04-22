@@ -27,7 +27,6 @@ from django.db import models
 from django.contrib import admin
 
 
-
 class StructureAddressAdmin(admin.ModelAdmin):
     list_display = ('structure', 'label', 'location', 'postal_code', 'city', 'country')
     fieldsets = ((None, {'fields': ('structure', 'label', 'location', 'postal_code', 'city', 'country')}),)
@@ -46,4 +45,8 @@ class StructureAddress(models.Model):
     email = models.EmailField(max_length=255, blank=True, null=True)
 
 
-
+def find_structure_address(a_structure):
+    if a_structure:
+        return StructureAddress.objects.filter(structure=a_structure).first()
+    else:
+        return None

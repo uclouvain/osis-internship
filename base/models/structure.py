@@ -130,7 +130,7 @@ def find_by_acronym(acronym):
 
 
 def find_faculty(a_structure):
-    
+
     if a_structure.type == 'FACULTY':
         return a_structure
     else:

@@ -134,7 +134,7 @@ def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, s
     data = headers_table(styles)
 
     old_offer_programme = None
-    current_learning_unit_year= None
+    current_learning_unit_year = None
     cpt = 1
     for rec_exam_enrollment in list_exam_enrollment:
         if (int(rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.id) == int(learning_unit_id)) \
@@ -270,13 +270,41 @@ def main_data(academic_year, session_exam, styles, learning_unit_year, offer, co
         if faculty:
             structure_display = faculty
 
-        content.append(Paragraph('%s' % structure_display, faculty_paragraph_style))
-        content.append(Paragraph('''
-                                <para spaceb=5>
-                                    &nbsp;
-                                </para>
-                                ''',  ParagraphStyle('normal')))
+        structure_address = mdl.structure_address.find_structure_address(structure_display)
 
+        content.append(Paragraph('%s' % structure_display, faculty_paragraph_style))
+
+    #         label = models.CharField(max_length=20)
+    # location = models.CharField(max_length=255)
+    # postal_code = models.CharField(max_length=20)
+    # city = models.CharField(max_length=255)
+    # country = models.ForeignKey('reference.Country')
+    # phone = models.CharField(max_length=30, blank=True, null=True)
+    # fax = models.CharField(max_length=255, blank=True, null=True)
+    # email = models.EmailField(max_length=255, blank=True, null=True)
+        if structure_address:
+            if structure_address.label:
+                content.append(Paragraph('%s' % structure_address.label, faculty_paragraph_style))
+            if structure_address.location:
+                content.append(Paragraph('%s' % structure_address.location, faculty_paragraph_style))
+            if structure_address.postal_code and structure_address.city:
+                content.append(Paragraph('%s %s' % (structure_address.postal_code, structure_address.city),
+                                         faculty_paragraph_style))
+            phone_informations = ""
+            if structure_address.phone:
+                phone_informations += _('phone') + " : " + structure_address.phone 
+            if structure_address.fax:
+                if structure_address.phone:
+                    phone_informations += " ; "
+                phone_informations += _('fax') + " : " + structure_address.fax
+            if len(phone_informations) > 0:
+                content.append(Paragraph('%s' % phone_informations,
+                                         faculty_paragraph_style))
+    content.append(Paragraph('''
+                    <para spaceb=5>
+                        &nbsp;
+                    </para>
+                    ''',  ParagraphStyle('normal')))
     content.append(Paragraph("<strong>%s : %s</strong>" % (learning_unit_year.acronym,learning_unit_year.title)
                               , styles["Normal"]) )
     content.append(Paragraph('''
