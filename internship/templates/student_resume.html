@@ -1,0 +1,147 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+ * OSIS stands for Open Student Information System. It's an application
+ * designed to manage the core business of higher education institutions,
+ * such as universities, faculties, institutes and professional schools.
+ * The core business involves the administration of students, teachers,
+ * courses, programs and so on.
+ *
+ * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * A copy of this license - GNU General Public License - is available
+ * at the root of the source code of this program.  If not,
+ * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block breadcrumb %}
+  <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+  <li><a href="{% url 'internships_home' %}">Stages</a></li>
+  <li><a href="{% url 'internships_student_resume' %}">{% trans 'Students' %}</a></li>
+  <li class="active">{% trans 'Student' %}</li>
+{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h2>{{ student.person.last_name }} {{ student.person.first_name }}</h2>
+</div>
+  <div class="panel panel-default">
+      <div class="panel-body">
+        <br>
+        <div class="row">
+            <div class="col-md-4">
+                <label>{% trans 'Name' %}</label><br>
+                {{ student.person.last_name | default_if_none:'-' }}
+            </div>
+            <div class="col-md-4">
+                <label>{% trans 'Forname'%}</label><br>
+                {{ student.person.first_name | default_if_none:'-' }}
+            </div>
+            <div class="col-md-4">
+                <label>{% trans 'Noma'%}</label><br>
+                {{ student.registration_id | default_if_none:'-' }}
+            </div>
+        </div>
+        <br>
+
+        <div class="row">
+            <div class="col-md-4">
+                <label>{% trans 'Gender' %}</label><br>
+                {{ student.person.gender | default_if_none:'-' }}
+            </div>
+            <div class="col-md-4">
+                <label>{% trans 'Email' %}</label><br>
+                {{ student.person.email | default_if_none:'-' }}
+            </div>
+        </div>
+        <br>
+
+        <div class="row">
+            <div class="col-md-4">
+                <label>{% trans 'Phone / Mobile' %}</label><br>
+                {{ student.person.phone | default_if_none:'-' }} /
+                {{ student.person.phone_mobile | default_if_none:'-' }}
+            </div>
+            <div class="col-md-4">
+                <label>{% trans 'Language' %}</label><br>
+                {{ student.person.language | default_if_none:'-' }}
+            </div>
+            <div class="col-md-4">
+                <label>{% trans 'Address' %}</label><br>
+                {%if student.address%}
+                  {% for ad in student.address %}
+                    {{ ad.location | default_if_none:'-' }} {{ ad.postal_code | default_if_none:'-' }}
+                    {{ ad.city | default_if_none:'-' }}<br>
+                  {% endfor %}
+                {%endif%}
+            </div>
+        </div>
+        <br>
+
+        <div class="row">
+            <div class="col-md-10">
+                <label>{% trans 'Stage(s)' %}</label>
+            </div>
+        </div>
+        <br>
+
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <ul class="nav nav-tabs">
+              <li class="active"><a data-toggle="tab" href="#tab_choice">{% trans 'Choix de l\'étudiant' %}</a></li>
+              <li><a data-toggle="tab" href="#tab_rep">{% trans 'Répartition de l\'étudiant' %}</a></li>
+            </ul>
+            <div class="tab-content">
+              <div id="tab_choice" class="tab-pane fade in active">
+                <div class="panel panel-default">
+              	<div class="tab-content">
+              		<div role="tabpanel" class="tab-pane fade in active" id="profile">
+              			<label> Stage de Chirurgie </label><br/>
+                    <label> Stage de Médecine Interne </label><br/>
+                    <label> Stage de Ginéco-Obsétrique </label><br/>
+                    <label> Stage de Pédiatrie </label><br/>
+                    <label> Stage d'Urgence </label><br/>
+                    <label> Stage de Gériatrie </label><br/>
+                    <label> Stage au choix 1 </label><br/>
+                    <label> Stage au choix 2 </label><br/>
+                    <label> Stage au choix 3 </label><br/>
+                    <label> Stage au choix 4 </label><br/>
+              		</div>
+              	</div>
+                </div>
+              </div>
+              <div id="tab_rep" class="tab-pane fade">
+                <div class="panel panel-default">
+                	<div class="tab-content">
+                	  <div role="tabpanel" class="tab-pane fade in active" id="profile">
+                      <label> Stage de Chirurgie </label><br/>
+                      <label> Stage de Médecine Interne </label><br/>
+                      <label> Stage de Ginéco-Obsétrique </label><br/>
+                      <label> Stage de Pédiatrie </label><br/>
+                      <label> Stage d'Urgence </label><br/>
+                      <label> Stage de Gériatrie </label><br/>
+                      <label> Stage au choix 1 </label><br/>
+                      <label> Stage au choix 2 </label><br/>
+                      <label> Stage au choix 3 </label><br/>
+                      <label> Stage au choix 4 </label><br/>
+                	  </div>
+                	</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+  {% endblock %}

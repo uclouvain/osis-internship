@@ -27,9 +27,9 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'catalog' %}" id="lnk_catalog">{% trans 'Catalog' %}</a></li>
-  <li><a href="{% url 'offers' %}" id="lnk_offers">{% trans 'Offers' %}</a></li>
-  <li class="active">{% trans 'Offer year calendar' %}</li>
+  <li><a href="{% url 'catalog' %}" id="lnk_catalog">{% trans 'catalogue' %}</a></li>
+  <li><a href="{% url 'offers' %}" id="lnk_offers">{% trans 'offers' %}</a></li>
+  <li class="active">{% trans 'offer_year_calendar' %}</li>
 {% endblock %}
 {% block content %}
 <div class="page-header">
@@ -39,15 +39,15 @@
   <div class="panel-body">
     <div class="row">
       <div class="col-md-8">
-        <label for="academic_year">{% trans 'Academic calendar'%}</label><br>
+        <label for="academic_year">{% trans 'academic_calendar'%}</label><br>
         {{ offer_year_calendar.academic_calendar }}
       </div>
       <div class="col-md-2">
-        <label for="start_date">{% trans 'Start date'%}</label><br>
+        <label for="start_date">{% trans 'start_date'%}</label><br>
         {{ offer_year_calendar.start_date| default_if_none:''|date:"j/m/Y" }}
       </div>
       <div class="col-md-2">
-        <label for="end_date">{% trans 'End date' %}</label><br>
+        <label for="end_date">{% trans 'end_date' %}</label><br>
         {{ offer_year_calendar.end_date| default_if_none:''|date:"j/m/Y" }}
       </div>
     </div>
@@ -55,11 +55,11 @@
     {% if is_programme_manager %}
         <div class="row">
           <div class="col-md-4">
-            <a href="{% url 'offer_year_calendar_edit' offer_year_calendar.id %}" title="{%trans 'Edit'%}" class="btn btn-primary" role="button" id="bt_offer_year_calendar_edit">
-              <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> {% trans 'Edit'%}
+            <a href="{% url 'offer_year_calendar_edit' offer_year_calendar.id %}" title="{%trans 'edit'%}" class="btn btn-primary" role="button" id="bt_offer_year_calendar_edit">
+              <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> {% trans 'edit'%}
             </a>
-            <a href="{% url 'offer_read' offer_year_calendar.offer_year.id %}" title="{%trans 'Cancel'%}" class="btn btn-default" role="button" id="bt_cancel">
-              <span class="glyphicon glyphicon-cancel" aria-hidden="true"></span> {% trans 'Cancel'%}
+            <a href="{% url 'offer_read' offer_year_calendar.offer_year.id %}" title="{%trans 'cancel'%}" class="btn btn-default" role="button" id="bt_cancel">
+              <span class="glyphicon glyphicon-cancel" aria-hidden="true"></span> {% trans 'cancel'%}
             </a>
           </div>
           <div class="col-md-8">

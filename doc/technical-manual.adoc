@@ -272,6 +272,55 @@ virtual environment:
 
 == Contributing to the Project
 
+[[installing-pycharm]]
+=== Installing PyCharm IDE
+
+As the codebase grows and becomes more complex to navigate we face more issues
+with light weight Python editors. We decided to try out several tools in the
+project and we came to the conclusion that https://www.jetbrains.com/pycharm/[PyCharm]
+is the best Python IDE for our needs.
+
+We would like to ask all contributors to use PyCharm - at least the community
+edition - to contribute to OSIS because it has a very good
+https://www.python.org/dev/peps/pep-0008/[PEP 8] code verification, auto
+completion, navigation and debugging, saving a lot of time in the process of
+pull requests evaluations.
+
+Please, follow the instructions on https://www.jetbrains.com/pycharm/[PyCharm's website]
+to install the IDE on your operating system.
+
+=== Configuration of PyCharm to contribute to OSIS
+
+==== Configuring the Python Interpreter
+
+1. Open OSIS project.
+2. Select `File -> Settings -> Project:osis -> Project Interpreter`
+3. Click on the wheel on the top right , and choose `add Local`
+4. Navigate to the python3.4 binary in your virtual environment (`VENV/bin/python3.4`)
+
+image::images/pycharm_osis_config_1.png[Pycharm Python Interpreter Config]
+
+==== Configuring PyCharm to Debug the Project
+
+1. Click on the drop down list at the top right of the ide , and choose `Edit Configuration` .
+2. Click on the `+` button and add a python script.
+3. Fill in the name.
+4. In the `Script` field, choose the manage.py script in the root folder of OSIS.
+5. In the `Script parameters` field, add `runserver` .
+6. Apply and Ok.
+7. To launch the server in debug mode, click on the bug in the right corner.
+
+image::images/pycharm_osis_config_2.png[Pycharm Debug Config]
+
+[NOTE]
+====
+Running the application outputs an error :
+
+    django.core.exceptions.AppRegistryNotReady: Apps aren't loaded yet.
+
+This error is not present while debugging.
+====
+
 === Following the Git Workflow
 
 The code repository is organized in three fixed branches:

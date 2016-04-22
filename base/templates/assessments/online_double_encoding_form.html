@@ -31,60 +31,58 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'Studies' %}</a></li>
-  <li><a href="{% url 'assessments' %}" id="lnk_assesments">{% trans 'Evaluations' %}</a></li>
-  <li><a href="{% url 'scores_encoding' %}" id="lnk_scores_encoding">{% trans 'Scores encoding' %}</a></li>
-  <li><a href="{% url 'online_encoding' session.id %}" id="lnk_online_encoding">{% trans 'Online scores encoding' %}</a></li>
-  <li class="active">{% trans 'Dubble online scores encoding' %}</li>
+  <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'studies' %}</a></li>
+  <li><a href="{% url 'assessments' %}" id="lnk_assesments">{% trans 'evaluations' %}</a></li>
+  <li><a href="{% url 'scores_encoding' %}" id="lnk_scores_encoding">{% trans 'scores_encoding' %}</a></li>
+  <li><a href="{%if tutor%}{% url 'online_encoding' learning_unit.id tutor.id %}{%else%}{% url 'online_encoding' learning_unit.id %}{%endif%}" id="lnk_online_encoding">{% trans 'online_scores_encoding' %}</a></li>
+  <li class="active">{% trans 'dubble_online_scores_encoding' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'Dubble online scores encoding' %}</h2>
+    <h2>{% trans 'dubble_online_scores_encoding' %}</h2>
   </div>
   <div class="panel panel-default">
     <div class="panel-heading">
-      <h3 class="panel-title" style="font-size: 150%; color: #3399CC;">{{ session.learning_unit_year }}</h3>
+      <h3 class="panel-title" style="font-size: 150%; color: #3399CC;">{{ learning_unit }}</h3>
     </div>
     <div class="panel-body">
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label>{% trans 'Responsible' %}</label><br>
+            <label>{% trans 'responsible' %}</label><br>
             {{ tutor | default_if_none:'' }}
           </div>
         </div>
         <div class="col-md-3">
           <div class="form-group">
-            <label>{% trans 'Academic year' %}</label><br>
+            <label>{% trans 'academic_year' %}</label><br>
             {{ academic_year }}
           </div>
         </div>
         <div class="col-md-2">
-          <div class="form-group">
-            <label>{% trans 'Session' %}</label><br>
-            {{ session.number_session }}
-          </div>
+
         </div>
         <div class="col-md-3">
           <div class="form-group">
-            <label>{%trans 'Number of enrollments' %}</label><br>
+            <label>{% trans 'number_of_enrollments' %}</label><br>
             {{ enrollments|length }}
           </div>
         </div>
       </div>
       <hr>
-      <form class="form-inline" method="POST" action="{% url 'online_double_encoding_form' session.id %}" id="form_online_double_encoding">
+      <form class="form-inline" method="POST"
+            action="{%if tutor%}{% url 'online_double_encoding_form' learning_unit.id tutor.id %}{%else%}{% url 'online_double_encoding_form' learning_unit.id  %}{%endif%}" id="form_online_double_encoding">
         {% csrf_token %}
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th>{% trans 'Offer' %}</th>
-                    <th>{% trans 'Registration number' %}</th>
-                    <th>{% trans 'Lastname' %}</th>
-                    <th>{% trans 'Firstname' %}</th>
-                    <th>{% trans 'Score' %}</th>
-                    <th>{% trans 'Justification' %}</th>
-                    <th>{% trans 'End date' %}</th>
+                    <th>{% trans 'offer' %}</th>
+                    <th>{% trans 'registration_number' %}</th>
+                    <th>{% trans 'lastname' %}</th>
+                    <th>{% trans 'firstname' %}</th>
+                    <th>{% trans 'score' %}</th>
+                    <th>{% trans 'justification' %}</th>
+                    <th>{% trans 'end_date' %}</th>
                 </tr>
             </thead>
             <tbody>
@@ -105,31 +103,31 @@
                           value="{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}">
                    <input type="number" min="0" max="20" step="any" name="score_{{ enrollment.id }}" id="num_double_score_{{ enrollment.id }}"
                           tabindex="{{ forloop.counter }}" class="form-control"
-                          {% if enrollment.score_final or enrollment.justification_final %} disabled {% endif %}>
+                          {% if tutor and enrollment.score_final or tutor and enrollment.justification_final %} disabled {% endif %}>
                 </td>
                 <td>
                    <input type="hidden" id="hdn_justification_draft_{{ enrollment.id }}" value="{{ enrollment.justification_draft }}">
                    <select class="form-control" name="justification_{{ enrollment.id }}" id="slt_double_justification_score_{{ enrollment.id }}"
                            tabindex="{{ enrollments|length|sum:forloop.counter }}"
-                           {% if enrollment.score_final or enrollment.justification_final %} disabled {% endif %}>
+                           {% if tutor and enrollment.score_final or tutor and enrollment.justification_final %} disabled {% endif %}>
                       <option value="None"></option>
-                      <option value="ABSENT">{% trans 'Absent' %}</option>
-                      <option value="CHEATING">{% trans 'Cheating' %}</option>
-                      <option value="SCORE_MISSING">{% trans 'Score missing' %}</option>
+                      <option value="ABSENT">{% trans 'absent' %}</option>
+                      <option value="CHEATING">{% trans 'cheating' %}</option>
+                      <option value="SCORE_MISSING">{% trans 'score_missing' %}</option>
                       {% programme_manager as pm %}
                       {% if pm %}
-                      <option value="ILL" >{% trans 'Ill' %}</option>
-                      <option value="JUSTIFIED_ABSENCE">{% trans 'Justified absence' %}</option>)
+                      <option value="ILL" >{% trans 'ill' %}</option>
+                      <option value="JUSTIFIED_ABSENCE">{% trans 'justified_absence' %}</option>)
                       {% endif %}
                    </select>
                 </td>
-                <td>{{ enrollment.session_exam.offer_year_calendar.end_date }}</td>
+                <td>{{ enrollment.session_exam.offer_year_calendar.end_date | default_if_none:''|date:"j/m/Y" }}</td>
               </tr>
             {% endfor %}
             </tbody>
         </table>
-        <button type="submit" class="btn btn-primary" id="bt_compare"><span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> {% trans 'Compare' %}</button>
-        <a class="btn btn-default" href="{% url 'online_encoding' session.id %}" role="button" id="bt_cancel_online_double_encoding"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'Cancel' %}</a>
+        <button type="submit" class="btn btn-primary" id="bt_compare"><span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> {% trans 'compare' %}</button>
+        <a class="btn btn-default" href="{%if tutor%}{% url 'online_encoding' learning_unit.id tutor.id %}{%else%}{% url 'online_encoding' learning_unit.id %}{%endif%}" role="button" id="bt_cancel_online_double_encoding"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
       </form>
     </div>
   </div>

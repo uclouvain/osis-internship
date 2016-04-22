@@ -26,28 +26,36 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-<li class="active">Institution</li>
+<li class="active">{% trans 'institution' %}</li>
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h2>Institution</h2>
+    <h2>{% trans 'institution' %}</h2>
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
         <div class="row">
-            <div class="col-md-1"><i class="fa fa-sitemap" style="font-size: 400%; color: #6699FF;"></i></div>
+            <div class="col-md-1"><i class="fa fa-university" style="font-size: 400%; color: #6699FF;"></i></div>
             <div class="col-md-5">
                 <h4 class="media-heading"><a href="{% url 'organizations' %}" id="lnk_organizations">
-                    {% trans 'Organizations'%}</a></h4>
-                <p>Gestion des organizations.</p>
+                    {% trans 'organizations'%}</a></h4>
+                <p>{% trans 'desc_lnk_organizations' %}</p>
             </div>
             <div class="col-md-1"><i class="fa fa-sitemap" style="font-size: 400%; color: #6699FF;"></i></div>
             <div class="col-md-5">
-                <h4 class="media-heading"><a href="{% url 'structures' %}" id="lnk_entities">Entities</a></h4>
-                <p>Gestion des la structure organisationnel.</p>
+                <h4 class="media-heading"><a href="{% url 'structures' %}" id="lnk_entities">{% trans 'entities'%}</a></h4>
+                <p>{% trans 'desc_lnk_entities' %}</p>
             </div>
         </div>
-
+        <br>
+        <div class="row">
+            <div class="col-md-1"><i class="fa fa-sitemap" style="font-size: 400%; color: #6699FF;"></i></div>
+            <div class="col-md-11">
+                <h4 class="media-heading"><a href="{% url 'mandates' %}" id="lnk_mandates">
+                    {% trans 'mandates'%}</a></h4>
+                <p>{% trans 'desc_lnk_organizations' %}</p>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

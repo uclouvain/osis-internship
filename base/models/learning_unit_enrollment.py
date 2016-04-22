@@ -25,7 +25,6 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-from base.models import learning_unit_year, offer_enrollment
 
 
 class LearningUnitEnrollmentAdmin(admin.ModelAdmin):
@@ -36,11 +35,11 @@ class LearningUnitEnrollmentAdmin(admin.ModelAdmin):
 
 
 class LearningUnitEnrollment(models.Model):
-    external_id        = models.CharField(max_length=100, blank=True, null=True)
-    changed            = models.DateTimeField(null=True)
-    date_enrollment    = models.DateField()
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    changed = models.DateTimeField(null=True)
+    date_enrollment = models.DateField()
     learning_unit_year = models.ForeignKey('LearningUnitYear')
-    offer_enrollment   = models.ForeignKey('OfferEnrollment')
+    offer_enrollment = models.ForeignKey('OfferEnrollment')
 
     @property
     def student(self):
@@ -52,3 +51,8 @@ class LearningUnitEnrollment(models.Model):
 
     def __str__(self):
         return u"%s - %s" % (self.learning_unit_year, self.offer_enrollment.student)
+
+
+def find_by_learningunit_enrollment(learning_unit_year, offer_enrollment):
+    return LearningUnitEnrollment.objects.filter(learning_unit_year=learning_unit_year,
+                                                 offer_enrollment=offer_enrollment)

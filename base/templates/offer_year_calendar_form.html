@@ -29,9 +29,9 @@
 <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker3.min.css' %}" type='text/css'>
 {% endblock %}
 {% block breadcrumb %}
-<li><a href="{% url 'catalog' %}" id="lnk_catalog">{% trans 'Catalog' %}</a></li>
-  <li><a href="{% url 'offers' %}" id="lnk_offers">{% trans 'Offers' %}</a></li>
-<li class="active">{% trans 'Offer year calendar' %}</li>
+<li><a href="{% url 'catalog' %}" id="lnk_catalog">{% trans 'catalogue' %}</a></li>
+  <li><a href="{% url 'offers' %}" id="lnk_offers">{% trans 'offers' %}</a></li>
+<li class="active">{% trans 'offer_year_calendar' %}</li>
 {% endblock %}
 {% block content %}
 <div class="page-header">
@@ -49,31 +49,25 @@
       {% csrf_token %}
       <div class="row">
         <div class="col-md-8">
-          <label for="academic_calendar">{% trans 'Academic calendar'%}</label><br>
+          <label>{% trans 'academic_calendar'%}</label><br>
             {{ offer_year_calendar.academic_calendar }}
           <input type="hidden" name="academic_calendar" id="hdn_academic_calendar" value="{{ offer_year_calendar.academic_calendar.id }}">
         </div>
         <div class="col-md-2">
-          <label for="start_date">{% trans 'Start date'%}</label>
-          <input type="text" class="form-control" value="{{ offer_year_calendar.start_date| default_if_none:''|date:"j/m/Y" }}" name="start_date" id="txt_start_date"><font class="error">{{ form.start_date.errors }}</font>
+          <label for="txt_start_date">{% trans 'start_date'%}</label>
+          <input type="text" id="txt_start_date" class="form-control" value="{{ offer_year_calendar.start_date| default_if_none:''|date:"j/m/Y" }}" name="start_date" id="txt_start_date"><font class="error">{{ form.start_date.errors }}</font>
         </div>
         <div class="col-md-2">
-          <label for="end_date">{% trans 'End date' %}</label>
-          <input type="text" class="form-control" value="{{ offer_year_calendar.end_date| default_if_none:''|date:"j/m/Y" }}" name="end_date" id="txt_end_date"><font class="error">{{ form.end_date.errors }}</font>
+          <label for="txt_end_date">{% trans 'end_date' %}</label>
+          <input type="text" id="txt_end_date" class="form-control" value="{{ offer_year_calendar.end_date| default_if_none:''|date:"j/m/Y" }}" name="end_date" id="txt_end_date"><font class="error">{{ form.end_date.errors }}</font>
         </div>
       </div>
-
       <br>
-      <div class="row">
-        <div class="col-md-4">
-          <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_offer_year_calendar_save"><span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'Save'%}</button>
-          <a class="btn btn-default" href="{% url 'offer_read' offer_year_calendar.offer_year.id %}" role="button" id="lnk_cancel_offer_year_calendar"><span class="glyphicon glyphicon-cancel" aria-hidden="true"></span> {% trans 'Cancel' %}</a>
-        </div>
-        <div class="col-md-8">
-            {{ form.errors }}
-        </div>
-      </div>
-
+      <button type="submit" class="btn btn-primary" title="{% trans 'save'%}" id="bt_offer_year_calendar_save">
+        <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}
+      </button>
+      <a class="btn btn-default" href="{% url 'offer_read' offer_year_calendar.offer_year.id %}" role="button" id="lnk_cancel_offer_year_calendar">
+        <span class="glyphicon glyphicon-cancel" aria-hidden="true"></span> {% trans 'cancel' %}</a>
     </form>
   </div>
 </div>
