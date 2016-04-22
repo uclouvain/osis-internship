@@ -92,8 +92,8 @@
                 <li role="presentation"><a href="#tab_via_paper_{{forloop.counter0}}" aria-controls="via_paper"
                                            role="tab"
                                            data-toggle="tab" id="lnk_via_paper_{{forloop.counter0}}">{% trans 'via_paper' %}</a></li>
-                <li role="presentation"><a href="#tab_via_xls_{{forloop.counter0}}" aria-controls="via_xls" role="tab"
-                                           data-toggle="tab" id="lnk_via_xls_{{forloop.counter0}}">{% trans 'via_xls' %}</a></li>
+                <li role="presentation"><a href="#tab_via_excel_{{forloop.counter0}}" aria-controls="via_excel" role="tab"
+                                           data-toggle="tab" id="lnk_via_excel_{{forloop.counter0}}">{% trans 'via_excel' %}</a></li>
             </ul>
             <div class="tab-content" id="pnl_learning_units">
                 <div role="tabpanel" class="tab-pane fade in active" id="tab_online_{{forloop.counter0}}">
@@ -122,7 +122,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div role="tabpanel" class="tab-pane fade" id="tab_via_xls_{{forloop.counter0}}">
+                <div role="tabpanel" class="tab-pane fade" id="tab_via_excel_{{forloop.counter0}}">
                     <table class="table table-hover">
                         <thead>
                         <tr>
@@ -143,12 +143,12 @@
                             <td>
                                 <a class="btn btn-default"
                                    href="{% url 'scores_encoding_download' note_detail.lu.id academic_year.id%}"
-                                   role="button" title="{% trans 'Create a xls file while activity\'s scores'%}"
+                                   role="button" title="{% trans 'hint_get_excel_file'%}"
                                    {% if note_detail.completed %}
                                    disabled
                                    {% endif %}
                                    id="lnk_scores_encoding_download_{{lu.id}}"><span
-                                        class="glyphicon glyphicon-download" aria-hidden="true"></span> {% trans 'Get xls'%}</a>
+                                        class="glyphicon glyphicon-download" aria-hidden="true"></span> {% trans 'get_excel_file'%}</a>
                             </td>
                         </tr>
                         {% endfor %}
@@ -172,7 +172,7 @@
                                 {%endif%}
                             {%endif%}"
                        role="button" id="lnk_notes_printing_all_{{learning_unit.id}}">
-                        <span class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'Print scores for all activities' %}</a>
+                        <span class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'print_all_courses' %}</a>
                     <br><br>
                     <table class="table table-hover">
                         <thead>

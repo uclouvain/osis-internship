@@ -126,7 +126,7 @@ def __save_xls_scores(request, file_name, is_fac, tutor_id, learning_unit_id):
                                                 notes_modifiable = True
                                             else:
                                                 notes_modifiable = False
-                                                messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('Note already submitted')))
+                                                messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('score_already_submitted')))
 
                                         if notes_modifiable:
                                             if row[7].value is None:
