@@ -72,6 +72,7 @@ class AssistantMandate(models.Model):
         ('NO_APPEAL', _('No appeal')))
     
     assistant = models.ForeignKey(AcademicAssistant)
+    academic_year = models.ForeignKey('base.AcademicYear')
     absences = models.TextField(null=True, blank=True)
     comment = models.TextField(null=True, blank=True)
     other_status = models.CharField(max_length=50, null=True, blank=True)
