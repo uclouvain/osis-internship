@@ -67,9 +67,9 @@ def print_notes(request, tutor, academic_year, learning_unit_id, is_fac, session
     :param academic_year:
     :param learning_unit_year_id:
     """
-
+    filename = "%s.pdf" % _('note_sheet')
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="feuillesNotes.pdf"'
+    response['Content-Disposition'] = 'attachment; filename="%s"' % filename
 
     buffer = BytesIO()
     doc = SimpleDocTemplate(buffer,
@@ -81,7 +81,6 @@ def print_notes(request, tutor, academic_year, learning_unit_id, is_fac, session
 
     styles = getSampleStyleSheet()
     styles.add(ParagraphStyle(name='Justify', alignment=TA_JUSTIFY))
-
     content = []
 
     list_exam_enrollment = []
@@ -94,7 +93,6 @@ def print_notes(request, tutor, academic_year, learning_unit_id, is_fac, session
     list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, styles, is_fac, content)
 
     doc.build(content, onFirstPage=add_header_footer, onLaterPages=add_header_footer)
-    # doc.build(content)
     pdf = buffer.getvalue()
     buffer.close()
     response.write(pdf)
@@ -102,7 +100,7 @@ def print_notes(request, tutor, academic_year, learning_unit_id, is_fac, session
 
 
 def header_building(canvas, doc, styles):
-    a = Image(settings.LOGO_INSTITUTION_URL,width=15*mm,height=20*mm)
+    a = Image(settings.LOGO_INSTITUTION_URL, width=15*mm, height=20*mm)
 
     p = Paragraph('''
                     <para align=center>
@@ -111,10 +109,9 @@ def header_building(canvas, doc, styles):
 
     data_header = [[a, '%s' % _('ucl_denom_location'), p], ]
 
-    t_header=Table(data_header, [30*mm, 100*mm,50*mm])
+    t_header=Table(data_header, [30*mm, 100*mm, 50*mm])
 
-    t_header.setStyle(TableStyle([
-                       ]))
+    t_header.setStyle(TableStyle([]))
 
     w, h = t_header.wrap(doc.width, doc.topMargin)
     t_header.drawOn(canvas, doc.leftMargin, doc.height + doc.topMargin - h)
@@ -127,33 +124,36 @@ def footer_building(canvas, doc, styles):
     footer.drawOn(canvas, doc.leftMargin, h)
 
 
-def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, styles,
-                        is_fac, content):
+def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, styles, is_programme_manager, content):
 
     content.append(Paragraph('''
                             <para spaceb=5>
                                 &nbsp;
                             </para>
-                            ''' , ParagraphStyle('normal')))
+                            ''', ParagraphStyle('normal')))
     data = headers_table(styles)
 
-    old_pgm = None
-    current_learning_unit_year= None
+    old_offer_programme = None
+    current_learning_unit_year = None
     cpt = 1
     for rec_exam_enrollment in list_exam_enrollment:
         if (int(rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.id) == int(learning_unit_id)) \
                 or int(learning_unit_id) == -1:
 
             student = rec_exam_enrollment.learning_unit_enrollment.student
-            o = rec_exam_enrollment.learning_unit_enrollment.offer
-            if old_pgm is None:
-                old_pgm = o
+            offer_programme = rec_exam_enrollment.learning_unit_enrollment.offer
+            if old_offer_programme is None:
+                old_offer_programme = offer_programme
                 current_learning_unit_year = rec_exam_enrollment.learning_unit_enrollment.learning_unit_year
 
-            if o != old_pgm:
-                # Autre programme - 1. mettre les critères
-                main_data(academic_year, rec_exam_enrollment.session_exam, styles, current_learning_unit_year,old_pgm, content)
-                # Autre programme - 2. il faut écrire le tableau
+            if offer_programme != old_offer_programme:
+                # Other programme - 1. manage criteria
+                main_data(academic_year,
+                          rec_exam_enrollment.session_exam,
+                          styles,
+                          current_learning_unit_year,
+                          old_offer_programme, content)
+                # Other programme - 2. write table
 
                 t = Table(data, COLS_WIDTH, repeatRows=1)
                 t.setStyle(TableStyle([
@@ -162,13 +162,13 @@ def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, s
                                    ('VALIGN',(0,0), (-1,-1), 'TOP')]))
 
                 content.append(t)
-                # Autre programme - 3. Imprimer légende
+                # Other programme - 3. Write legend
                 end_page_infos_building(content)
-                legend_building(current_learning_unit_year, is_fac, content)
-                # Autre programme - 4. il faut faire un saut de page
+                legend_building(current_learning_unit_year, is_programme_manager, content)
+                # Other programme - 4. page break
                 content.append(PageBreak())
                 data = headers_table(styles)
-                old_pgm = o
+                old_offer_programme = offer_programme
                 current_learning_unit_year = rec_exam_enrollment.learning_unit_enrollment.learning_unit_year
 
             person = mdl.person.find_by_id(student.person.id)
@@ -184,7 +184,9 @@ def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, s
             end_date = ""
             if rec_exam_enrollment.session_exam.offer_year_calendar.end_date:
                 end_date = rec_exam_enrollment.session_exam.offer_year_calendar.end_date.strftime('%d/%m/%Y')
-            sc = "%s" % score
+            sc = ""
+            if score:
+                sc = "%s" % score
             data.append([student.registration_id,
                          person.last_name,
                          person.first_name,
@@ -194,8 +196,8 @@ def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, s
         cpt += 1
         old_session_exam = rec_exam_enrollment.session_exam
 
-    if not old_pgm is None:
-        main_data(academic_year, rec_exam_enrollment.session_exam, styles, current_learning_unit_year, old_pgm, content)
+    if not old_offer_programme is None:
+        main_data(academic_year, rec_exam_enrollment.session_exam, styles, current_learning_unit_year, old_offer_programme, content)
         t = Table(data,COLS_WIDTH)
         t.setStyle(TableStyle([('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
                                ('BOX', (0, 0), (-1,-1), 0.25, colors.black),
@@ -203,11 +205,11 @@ def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, s
 
         content.append(t)
         end_page_infos_building(content)
-        legend_building(current_learning_unit_year, is_fac, content)
+        legend_building(current_learning_unit_year, is_programme_manager, content)
+    t.setStyle(TableStyle([('BACKGROUND', (0, 0), (-1, 0), colors.grey)]))
 
 
 def legend_building(learning_unit_year, is_fac, content):
-
     p = ParagraphStyle('legend')
     p.textColor = 'grey'
     p.borderColor = 'grey'
@@ -232,22 +234,21 @@ def legend_building(learning_unit_year, is_fac, content):
 
 
 def headers_table(styles):
-    data = []
-    data.append([Paragraph('''%s''' % _('registration_number'), styles['BodyText']),
-                 Paragraph('''%s''' % _('lastname'), styles['BodyText']),
-                 Paragraph('''%s''' % _('firstname'), styles['BodyText']),
-                 Paragraph('''%s''' % _('numbered_score'), styles['BodyText']),
-                 Paragraph('''%s''' % _('other_score'), styles['BodyText']),
-                 Paragraph('''%s''' % _('end_date'), styles['BodyText'])])
+    data = [[Paragraph('''%s''' % _('registration_number'), styles['BodyText']),
+             Paragraph('''%s''' % _('lastname'), styles['BodyText']),
+             Paragraph('''%s''' % _('firstname'), styles['BodyText']),
+             Paragraph('''%s''' % _('numbered_score'), styles['BodyText']),
+             Paragraph('''%s''' % _('other_score'), styles['BodyText']),
+             Paragraph('''%s''' % _('end_date'), styles['BodyText'])]]
     return data
 
 
-def main_data(academic_year, session_exam, styles, learning_unit_year, pgm, content):
-    p_structure = ParagraphStyle('entete_structure')
-    p_structure.alignment = TA_LEFT
-    p_structure.fontSize = 10
+def main_data(academic_year, session_exam, styles, learning_unit_year, offer, content):
+    faculty_paragraph_style = ParagraphStyle('structure_header')
+    faculty_paragraph_style.alignment = TA_LEFT
+    faculty_paragraph_style.fontSize = 10
 
-    p = ParagraphStyle('entete_droite')
+    p = ParagraphStyle('right_page_header')
     p.alignment = TA_RIGHT
     p.fontSize = 10
 
@@ -264,53 +265,90 @@ def main_data(academic_year, session_exam, styles, learning_unit_year, pgm, cont
                             </para>
                             ''',  ParagraphStyle('normal')))
 
-    if pgm.structure is not None:
-        content.append(Paragraph('%s' % pgm.structure, p_structure))
-        content.append(Paragraph('''
-                                <para spaceb=5>
-                                    &nbsp;
-                                </para>
-                                ''',  ParagraphStyle('normal')))
+    if offer.structure is not None:
+        structure_display = offer.structure
+        faculty = mdl.structure.find_faculty(offer.structure)
+        if faculty:
+            structure_display = faculty
 
-    content.append(Paragraph("<strong>%s : %s</strong>" % (learning_unit_year.acronym,learning_unit_year.title)
-                              , styles["Normal"]) )
+        structure_address = mdl.structure_address.find_structure_address(structure_display)
+
+        content.append(Paragraph('%s' % structure_display, faculty_paragraph_style))
+
+        if structure_address:
+            if structure_address.label:
+                content.append(Paragraph('%s' % structure_address.label, faculty_paragraph_style))
+            if structure_address.location:
+                content.append(Paragraph('%s' % structure_address.location, faculty_paragraph_style))
+            if structure_address.postal_code and structure_address.city:
+                content.append(Paragraph('%s %s' % (structure_address.postal_code, structure_address.city),
+                                         faculty_paragraph_style))
+            phone_fax_data = ""
+            if structure_address.phone:
+                phone_fax_data += _('phone') + " : " + structure_address.phone
+            if structure_address.fax:
+                if structure_address.phone:
+                    phone_fax_data += " ; "
+                phone_fax_data += _('fax') + " : " + structure_address.fax
+            if len(phone_fax_data) > 0:
+                content.append(Paragraph('%s' % phone_fax_data,
+                                         faculty_paragraph_style))
     content.append(Paragraph('''
-                            <para spaceb=5>
-                                &nbsp;
-                            </para>
-                            ''',  ParagraphStyle('normal')))
+                    <para spaceb=5>
+                        &nbsp;
+                    </para>
+                    ''',  ParagraphStyle('normal')))
 
-    tutor = None
-    if tutor is None:
-        p_tutor = Paragraph(''' ''', styles["Normal"])
-    else:
+    learning_unit_paragraph = Paragraph("<strong>%s : %s</strong>" % (learning_unit_year.acronym,
+                                                                      learning_unit_year.title), styles["Normal"])
+    tutor = mdl.tutor.find_responsible(learning_unit_year.learning_unit)
+
+    tutor_location = ""
+    tutor_city_data = ""
+
+    if tutor:
         p_tutor = Paragraph('''<b>%s %s</b>''' % (tutor.person.last_name, tutor.person.first_name), styles["Normal"])
+        tutor_address = mdl.person_address.find_by_person_label(tutor.person, 'PROFESSIONAL')
+        if tutor_address:
+            tutor_location = Paragraph('''<b>%s</b>''' % tutor_address.location, styles["Normal"])
+            if tutor_address.postal_code or tutor_address.city:
+                tutor_city_data = Paragraph('''<b>%s %s</b>''' % (tutor_address.postal_code, tutor_address.city),
+                                            styles["Normal"])
+    else:
+        p_tutor = Paragraph(''' ''', styles["Normal"])
 
     data_tutor = [[p_tutor],
-                  [''],
-                  [''],
-                  ['']]
-    table_tutor=Table(data_tutor)
-    p_pgm = Paragraph('''<b>%s : %s</b>''' % (_('program'), pgm.acronym), styles["Normal"])
-    data_pgm= [[p_pgm],
+                  [tutor_location],
+                  [tutor_city_data]]
+    table_tutor = Table(data_tutor)
+    p_pgm = Paragraph('''<b>%s : %s</b>''' % (_('program'), offer.acronym), styles["Normal"])
+    data_pgm = [[learning_unit_paragraph],
+                [p_pgm]
+              ]
+    table_pgm = Table(data_pgm)
+    table_pgm.setStyle(TableStyle([
+                                ('LEFTPADDING', (0,0), (-1,-1), 0),
+                                ('RIGHTPADDING', (0, 0), (-1, -1), 0),
+                                ('VALIGN', (0, 0), (-1, -1), 'TOP')
+    ]))
+
+    data_header = [[table_pgm, table_tutor]]
+
+    data_session = [
                [_('deliberation_date') + ' : '],
                [_('chair_of_the_exam_board') + ' : '],
                [_('exam_board_secretary') + ' : '],
               ]
-    table_pgm=Table(data_pgm)
-    table_pgm.setStyle(TableStyle([
-    ('LEFTPADDING', (0,0), (-1,-1), 0),
-                         ('RIGHTPADDING', (0,0), (-1,-1), 0),
-                         ('VALIGN', (0,0), (-1,-1), 'TOP')
-                       ]))
-    data_header = [[table_pgm,table_tutor]]
+    table_session = Table(data_session, colWidths='*')
+    table_session.setStyle(TableStyle([('LEFTPADDING', (0, 0), (-1, -1), 0)]))
 
     tt = Table(data_header, colWidths='*')
-    tt.setStyle(TableStyle([('LEFTPADDING', (0,0), (-1,-1), 0),
-                            ('RIGHTPADDING', (0,0), (-1,-1), 0),
-                            ('VALIGN', (0,0), (-1,-1), 'TOP')
+    tt.setStyle(TableStyle([('LEFTPADDING', (0, 0), (-1, -1), 0),
+                            ('RIGHTPADDING', (0, 0), (-1, -1), 0),
+                            ('VALIGN', (0, 0), (-1, -1), 'TOP')
                            ]))
     content.append(tt)
+    content.append(table_session)
     content.append(Spacer(1, 12))
 
 
