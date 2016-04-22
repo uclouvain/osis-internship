@@ -99,7 +99,7 @@ msgstr ""
 
 #: models/person_address.py:33
 msgid "professional"
-msgstr "Session"
+msgstr "Professionnel"
 
 #: models/session_exam.py:34
 msgid "idle"
