@@ -99,10 +99,10 @@
                                    role="button" id="lnk_notes_printing_{{learning_unit.id}}"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'print' %}</a>
           {%endif%}
         <a class="btn btn-default" href="{% url 'scores_encoding_download' learning_unit.id academic_year.id%}"
-                                   role="button" title="{% trans 'Create a xls file while activity\'s scores'%}"
-                                   id="lnk_scores_encoding_download_{{learning_unit.id}}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span> {% trans 'Get xls'%}</a>
+                                   role="button" title="{% trans 'hint_create_excel_file'%}"
+                                   id="lnk_scores_encoding_download_{{learning_unit.id}}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span> {% trans 'get_excel_file'%}</a>
 
-          <button type="button" class="btn btn-default" data-toggle="modal" data-target="#pnl_upload_score_modal" title="{% trans 'select_a_xls_file_from_which_to_inject_scores' %}" id="bt_upload_score_modal"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> {% trans 'inject_xls_file' %}</button>
+          <button type="button" class="btn btn-default" data-toggle="modal" data-target="#pnl_upload_score_modal" title="{% trans 'hint_select_excel_file_to_inject_scores' %}" id="bt_upload_score_modal"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> {% trans 'inject_xls_file' %}</button>
           &nbsp;&nbsp;
             {%if tutor%}
               <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#pnl_submission_scores_modal"
@@ -207,7 +207,7 @@
            </div>
             <input type="button" value="{% trans 'print'%}"
                    onclick="printdiv('div_error_messages','div_info_messages');"
-                   title="{% trans 'print_warning_and_info_messages' %}"/>
+                   title="{% trans 'hint_print_error_messages' %}"/>
         {% endif %}
     </div>
   </div>

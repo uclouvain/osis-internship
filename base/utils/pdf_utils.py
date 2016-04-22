@@ -159,8 +159,7 @@ def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, s
                 t.setStyle(TableStyle([
                                    ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
                                    ('BOX', (0,0), (-1,-1), 0.25, colors.black),
-                                   ('VALIGN',(0,0), (-1,-1), 'TOP')
-                                   ]))
+                                   ('VALIGN',(0,0), (-1,-1), 'TOP')]))
 
                 content.append(t)
                 # Other programme - 3. Write legend

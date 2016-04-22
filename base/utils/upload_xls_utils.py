@@ -114,7 +114,7 @@ def __save_xls_scores(request, file_name, is_fac, tutor_id, learning_unit_id):
                                     session_number = int(row[1].value)
                                     exam_enrollment = mdl.exam_enrollment.find_by_enrollment_session(learning_unit_enrollment, session_number)
                                     if row[2].value != exam_enrollment.id:
-                                        learning_unit = mdl.learning_unit.find_learning_unit_by_id(learning_unit_id)
+                                        learning_unit = mdl.learning_unit.find_by_id(learning_unit_id)
                                         messages.add_message(request, messages.ERROR, "%s %s for %s!" % (info_line, _('enrollment_exam_not_exists'), learning_unit.acronym))
                                     else:
                                         if session_exam is None:
@@ -126,7 +126,7 @@ def __save_xls_scores(request, file_name, is_fac, tutor_id, learning_unit_id):
                                                 notes_modifiable = True
                                             else:
                                                 notes_modifiable = False
-                                                messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('Note already submitted')))
+                                                messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('score_already_submitted')))
 
                                         if notes_modifiable:
                                             if row[7].value is None:
