@@ -70,4 +70,5 @@ def find_by_offer_year(offer_yr):
 
 
 def find_by_user(user):
-    return ProgramManager.objects.filter(person__user=user)
+    return ProgramManager.objects.filter(person__user=user)\
+                                 .order_by('offer_year__acronym')
