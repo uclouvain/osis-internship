@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-22 10:47+0200\n"
+"POT-Creation-Date: 2016-04-22 11:54+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -98,10 +98,8 @@ msgid "residential"
 msgstr ""
 
 #: models/person_address.py:33
-#, fuzzy
-#| msgid "session"
 msgid "professional"
-msgstr "Session"
+msgstr "Professionnel"
 
 #: models/session_exam.py:34
 msgid "idle"
@@ -489,22 +487,21 @@ msgstr "Encoder"
 
 #: templates/assessments/online_encoding.html:87
 #: templates/assessments/online_encoding.html:90
-#, fuzzy
-#| msgid "dubble_encoding"
 msgid "double_encoding"
 msgstr "Double encodage"
 
+#: templates/assessments/online_encoding.html:95
+#: templates/assessments/online_encoding.html:99
+msgid "print"
+msgstr "Imprimer"
+
 #: templates/assessments/online_encoding.html:102
-#, fuzzy
-#| msgid "submit_xls_file"
 msgid "hint_create_excel_file"
 msgstr "Soumettre fichier xls"
 
 #: templates/assessments/online_encoding.html:103
 #: templates/assessments/scores_encoding.html:157
 #: templates/assessments/scores_encoding_mgr.html:151
-#, fuzzy
-#| msgid "submit_xls_file"
 msgid "get_excel_file"
 msgstr "Obtenir Excel"
 
@@ -513,8 +510,6 @@ msgid "hint_select_excel_file_to_inject_scores"
 msgstr ""
 
 #: templates/assessments/online_encoding.html:105
-#, fuzzy
-#| msgid "submit_xls_file"
 msgid "inject_xls_file"
 msgstr "Soumettre fichier xls"
 
@@ -537,20 +532,14 @@ msgid "session"
 msgstr "Session"
 
 #: templates/assessments/online_encoding.html:167
-#, fuzzy
-#| msgid "submitted"
 msgid "score_submitted"
 msgstr "Soumis"
 
 #: templates/assessments/online_encoding.html:208
-#, fuzzy
-#| msgid "print_all_scores"
 msgid "print_messages"
 msgstr "Imprimer feuilles de notes pour toutes les activités"
 
 #: templates/assessments/online_encoding.html:210
-#, fuzzy
-#| msgid "print_all_scores"
 msgid "hint_print_error_messages"
 msgstr "Imprimer feuilles de notes pour toutes les activités"
 
@@ -575,15 +564,11 @@ msgid "help_submission_scores_label"
 msgstr "Vous êtes en train de soumettre %s note(s)."
 
 #: templates/assessments/online_encoding.html:256
-#, fuzzy
-#| msgid "submission"
 msgid "Submission"
 msgstr "Soumettre"
 
 #: templates/assessments/online_encoding.html:257
 #: templates/assessments/online_encoding_form.html:159
-#, fuzzy
-#| msgid "cancel"
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -634,8 +619,6 @@ msgstr "Sur papier"
 
 #: templates/assessments/scores_encoding.html:67
 #: templates/assessments/scores_encoding_mgr.html:96
-#, fuzzy
-#| msgid "via_xls"
 msgid "via_excel"
 msgstr "Via fichier xls"
 
@@ -656,14 +639,12 @@ msgstr "Unité d'enseignement"
 
 #: templates/assessments/scores_encoding.html:101
 #: templates/assessments/scores_encoding_mgr.html:175
-#, fuzzy
-#| msgid "print_all_scores"
 msgid "print_all_courses"
 msgstr "Imprimer feuilles de notes pour toutes les cours"
 
 #: templates/assessments/scores_encoding.html:126
 #: templates/assessments/scores_encoding_mgr.html:201
-msgid "print"
+msgid "Print"
 msgstr "Imprimer"
 
 #: templates/assessments/scores_encoding.html:155
@@ -673,8 +654,6 @@ msgstr "Cliquez pour télécharger le fichier excel"
 
 #: templates/assessments/scores_encoding_mgr.html:56
 #: templates/assessments/scores_encoding_mgr.html:68
-#, fuzzy
-#| msgid "ill"
 msgid "all"
 msgstr "Malade"
 
@@ -852,8 +831,6 @@ msgid "identification"
 msgstr "Identification"
 
 #: templates/offer.html:52
-#, fuzzy
-#| msgid "programs"
 msgid "program_managers"
 msgstr "Programmes"
 
@@ -900,8 +877,6 @@ msgid "offer_year_calendar"
 msgstr "Calendrier des offres"
 
 #: templates/offers.html:43
-#, fuzzy
-#| msgid "academic_year"
 msgid "Academic Year"
 msgstr "Année académique"
 
@@ -1201,14 +1176,10 @@ msgid "enrollment_activity_not_exist"
 msgstr "l'inscription à l'activité %s n'existe pas"
 
 #: utils/upload_xls_utils.py:118
-#, fuzzy
-#| msgid "enrollment_activity_not_exist"
 msgid "enrollment_exam_not_exists"
 msgstr "l'inscription à l'activité %s n'existe pas"
 
 #: utils/upload_xls_utils.py:129
-#, fuzzy
-#| msgid "submitted"
 msgid "score_already_submitted"
 msgstr "Soumis"
 
@@ -1234,14 +1205,10 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: utils/upload_xls_utils.py:231
-#, fuzzy
-#| msgid "scores"
 msgid "score_saved"
 msgstr "Notes"
 
 #: utils/upload_xls_utils.py:232
-#, fuzzy
-#| msgid "scores_sheet"
 msgid "scores_saved"
 msgstr "Feuille de notes"
 
