@@ -149,7 +149,7 @@ def online_double_encoding_form(request, learning_unit_id=None, tutor_id=None):
                                            'learning_unit':  learning_unit,
                                            'justifications': data['justifications']})
         else:
-            messages.add_message(request, messages.WARNING, "%s !" % _('No score encoded yet!  Double encoding impossible.'))
+            messages.add_message(request, messages.WARNING, "%s !" % _('no_score_encoded_double_encoding_impossible'))
             return online_encoding(request, learning_unit_id, tutor_id)
     elif request.method == 'POST':
         # programme manager encoding
@@ -508,7 +508,7 @@ def get_score_encoded(enrollments):
 def get_data(request):
     academic_yr = mdl.academic_year.current_academic_year()
     tutor = mdl.tutor.find_by_user(request.user)
-    sessions_list, faculties, notes_list = get_sessions(None, request, tutor, academic_yr,None)
+    sessions_list, faculties, notes_list = get_sessions(None, request, tutor, academic_yr, None)
 
     return {'section':       'scores_encoding',
             'tutor':         tutor,
