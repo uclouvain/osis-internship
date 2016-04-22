@@ -3,12 +3,9 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
-msgid ""
-msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-22 11:54+0200\n"
+"POT-Creation-Date: 2016-04-22 15:14+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -95,7 +92,7 @@ msgstr "Unknown"
 
 #: models/person_address.py:32
 msgid "residential"
-msgstr "Residential"
+msgstr ""
 
 #: models/person_address.py:33
 msgid "professional"
@@ -227,7 +224,6 @@ msgstr "Highlight description"
 #: templates/academic_calendar_form.html:115
 #: templates/assessments/online_double_encoding_form.html:130
 #: templates/assessments/online_double_encoding_validation.html:140
-#: templates/assessments/online_encoding_form.html:158
 #: templates/offer_year_calendar_form.html:66
 #: templates/offer_year_calendar_form.html:67
 #: templates/organization_address_form.html:81
@@ -490,22 +486,26 @@ msgstr "Dubble encoding"
 
 #: templates/assessments/online_encoding.html:95
 #: templates/assessments/online_encoding.html:99
+#: templates/assessments/scores_encoding.html:126
+#: templates/assessments/scores_encoding_mgr.html:201
 msgid "print"
 msgstr "Print"
 
 #: templates/assessments/online_encoding.html:102
-msgid "hint_create_excel_file"
-msgstr "Create Excel file"
+#: templates/assessments/scores_encoding.html:156
+#: templates/assessments/scores_encoding_mgr.html:146
+msgid "Create a xls file while activity\\"
+msgstr ""
 
 #: templates/assessments/online_encoding.html:103
-#: templates/assessments/scores_encoding.html:157
+#: templates/assessments/scores_encoding.html:158
 #: templates/assessments/scores_encoding_mgr.html:151
-msgid "get_excel_file"
-msgstr "Submit XLS file"
+msgid "Get xls"
+msgstr ""
 
 #: templates/assessments/online_encoding.html:105
-msgid "hint_select_excel_file_to_inject_scores"
-msgstr "Select Excel file to inject scores"
+msgid "select_a_xls_file_from_which_to_inject_scores"
+msgstr ""
 
 #: templates/assessments/online_encoding.html:105
 msgid "inject_xls_file"
@@ -521,7 +521,7 @@ msgid "status"
 msgstr "Status"
 
 #: templates/assessments/online_encoding.html:146 templates/profile.html:138
-#: utils/export_utils.py:37 utils/pdf_utils.py:296
+#: utils/export_utils.py:37 utils/pdf_utils.py:325
 msgid "program"
 msgstr "Program"
 
@@ -533,13 +533,9 @@ msgstr "Session"
 msgid "score_submitted"
 msgstr "Submitted"
 
-#: templates/assessments/online_encoding.html:208
-msgid "print_messages"
-msgstr "Print scores for all activities"
-
 #: templates/assessments/online_encoding.html:210
-msgid "hint_print_error_messages"
-msgstr "Print error messages"
+msgid "print_warning_and_info_messages"
+msgstr ""
 
 #: templates/assessments/online_encoding.html:224
 msgid "scores_injection"
@@ -561,13 +557,9 @@ msgstr "Inject"
 msgid "help_submission_scores_label"
 msgstr "You will submit %s notes."
 
-#: templates/assessments/online_encoding.html:256
-msgid "Submission"
-msgstr "Submission"
-
 #: templates/assessments/online_encoding.html:257
 #: templates/assessments/online_encoding_form.html:159
-msgid "Cancel"
+msgid "cancel"
 msgstr "Cancel"
 
 #: templates/assessments/online_encoding_form.html:72
@@ -589,6 +581,10 @@ msgstr "Decimal score allowed"
 #: templates/assessments/online_encoding_form.html:121
 msgid "decimal_score_not_allowed"
 msgstr "Decimal score NOT allowed"
+
+#: templates/assessments/online_encoding_form.html:158
+msgid "Save"
+msgstr ""
 
 #: templates/assessments/scores_encoding.html:48
 #: templates/assessments/scores_encoding_mgr.html:54
@@ -617,7 +613,7 @@ msgstr "Via paper"
 
 #: templates/assessments/scores_encoding.html:67
 #: templates/assessments/scores_encoding_mgr.html:96
-msgid "via_excel"
+msgid "via_xls"
 msgstr "Via xls"
 
 #: templates/assessments/scores_encoding.html:75
@@ -632,32 +628,22 @@ msgstr "Code"
 #: templates/assessments/scores_encoding.html:76
 #: templates/assessments/scores_encoding.html:107
 #: templates/assessments/scores_encoding.html:138
-msgid "course"
-msgstr "Course"
+msgid "activity"
+msgstr "Activity"
 
 #: templates/assessments/scores_encoding.html:101
 #: templates/assessments/scores_encoding_mgr.html:175
-msgid "print_all_courses"
-msgstr "Print scores for all activities"
-
-#: templates/assessments/scores_encoding.html:126
-#: templates/assessments/scores_encoding_mgr.html:201
-msgid "Print"
-msgstr "Print"
-
-#: templates/assessments/scores_encoding.html:155
-#: templates/assessments/scores_encoding_mgr.html:146
-msgid "hint_get_excel_file"
-msgstr "Download Excel File"
+msgid "Print scores for all activities"
+msgstr ""
 
 #: templates/assessments/scores_encoding_mgr.html:56
 #: templates/assessments/scores_encoding_mgr.html:68
 msgid "all"
-msgstr "Ill"
+msgstr "All"
 
 #: templates/assessments/scores_encoding_mgr.html:78
 msgid "refresh_list"
-msgstr "Refresh List"
+msgstr ""
 
 #: templates/assessments/scores_encoding_mgr.html:104
 #: templates/assessments/scores_encoding_mgr.html:130
@@ -816,7 +802,7 @@ msgstr "Learning unit search"
 
 #: templates/mandates.html:42
 msgid "assistants"
-msgstr "Assistants"
+msgstr ""
 
 #: templates/mandates.html:43
 msgid "desc_assistants"
@@ -829,7 +815,7 @@ msgstr "Identification"
 
 #: templates/offer.html:52
 msgid "program_managers"
-msgstr "Programs"
+msgstr "Program Managers"
 
 #: templates/offer.html:67 templates/organization.html.py:42
 #: templates/structure.html:53
@@ -854,7 +840,7 @@ msgstr "Grade"
 
 #: templates/offer.html:134
 msgid "person"
-msgstr "Person"
+msgstr ""
 
 #: templates/offer.html:161 templates/offer.html.py:243
 msgid "focuses"
@@ -874,7 +860,7 @@ msgid "offer_year_calendar"
 msgstr "Offer year calendar"
 
 #: templates/offers.html:43
-msgid "Academic Year"
+msgid "academic_year"
 msgstr "Academic year"
 
 #: templates/offers.html:51 templates/offers.html.py:52
@@ -1069,56 +1055,68 @@ msgstr "ID"
 msgid "Legend : values allowed for 'other score'"
 msgstr ""
 
-#: utils/pdf_utils.py:111
+#: utils/pdf_utils.py:70
+msgid "scores_sheet"
+msgstr "Scores sheet"
+
+#: utils/pdf_utils.py:108
 msgid "scores_transcript"
 msgstr "Scores transcript"
 
-#: utils/pdf_utils.py:113
+#: utils/pdf_utils.py:110
 msgid "ucl_denom_location"
 msgstr ""
 "University Catholic Louvain\n"
 "Louvain-la-Neuve\n"
 "Belgium"
 
-#: utils/pdf_utils.py:125
+#: utils/pdf_utils.py:121
 msgid "scores_sheet"
 msgstr "Scores sheet"
 
-#: utils/pdf_utils.py:225
+#: utils/pdf_utils.py:226
 msgid "other_score_legend"
 msgstr "Other scores legend"
 
-#: utils/pdf_utils.py:227
+#: utils/pdf_utils.py:228
 msgid "unauthorized_decimal_for_this_activity"
 msgstr "Unauthorized decimal for this activity"
 
-#: utils/pdf_utils.py:298
+#: utils/pdf_utils.py:289
+msgid "phone"
+msgstr ""
+
+#: utils/pdf_utils.py:293
+msgid "fax"
+msgstr ""
+
+#: utils/pdf_utils.py:339
 msgid "deliberation_date"
 msgstr "Deliberation date"
 
-#: utils/pdf_utils.py:299
+#: utils/pdf_utils.py:340
 msgid "chair_of_the_exam_board"
 msgstr "Chair of the exam board"
 
-#: utils/pdf_utils.py:300
+#: utils/pdf_utils.py:341
 msgid "exam_board_secretary"
 msgstr "Exam board secretary"
 
-#: utils/pdf_utils.py:328
+#: utils/pdf_utils.py:365
 msgid "return_doc_to_administrator"
 msgstr ""
 "Please return this document to the administrative office of the program "
 "administrator"
 
-#: utils/pdf_utils.py:344
+#: utils/pdf_utils.py:381
 msgid "done_at"
 msgstr "Done at"
 
-#: utils/pdf_utils.py:344
+#: utils/pdf_utils.py:381
 msgid "the"
 msgstr "The"
 
-#: utils/pdf_utils.py:344
+#: utils/pdf_utils.py:381
 msgid "signature"
 msgstr "Signature"
 
@@ -1175,8 +1173,8 @@ msgid "enrollment_exam_not_exists"
 msgstr "The enrollment to the activity %s doesn't exist"
 
 #: utils/upload_xls_utils.py:129
-msgid "score_already_submitted"
-msgstr "Score already submitted"
+msgid "Note already submitted"
+msgstr ""
 
 #: utils/upload_xls_utils.py:140
 msgid "scores_gt_0_lt_20"
@@ -1201,17 +1199,15 @@ msgstr[1] ""
 
 #: utils/upload_xls_utils.py:231
 msgid "score_saved"
-msgstr "Scores"
+msgstr "Score Saved"
 
 #: utils/upload_xls_utils.py:232
 msgid "scores_saved"
-msgstr "Scores sheet"
+msgstr "Scores Saved"
 
 #: utils/upload_xls_utils.py:241
 msgid "the_coordinator_must_still_submit_scores"
-msgstr ""
-"The scores are not submitted yet. The coordinator is responsible for the "
-"submission"
+msgstr "The coordinator must still submit the scores"
 
 #: utils/upload_xls_utils.py:244
 msgid "no_score_injected"
@@ -1225,18 +1221,15 @@ msgstr "The start date must be equals or lower than the end date"
 msgid "minimum_one_criteria"
 msgstr "Please choose at least one criteria!"
 
-#: views/score_encoding.py:152
-msgid "no_score_encoded_double_encoding_impossible"
-msgstr "No score encoded yet!  Double encoding impossible."
+#: views/score_encoding.py:151
+msgid "No score encoded yet!  Double encoding impossible."
+msgstr ""
 
 #~ msgid "title_btn_upload_score"
 #~ msgstr "Select your xls file from which to inject scores"
 
 #~ msgid "submit"
 #~ msgstr "Submit"
-
-#~ msgid "activity"
-#~ msgstr "Activity"
 
 #~ msgid "download_xls_file"
 #~ msgstr "Download xls file"

@@ -205,12 +205,10 @@
                   {% endfor %}
               </ul>
            </div>
-            <input type="button" value="{% trans 'print_messages'%}"
+            <input type="button" value="{% trans 'print'%}"
                    onclick="printdiv('div_error_messages','div_info_messages');"
                    title="{% trans 'hint_print_error_messages' %}"/>
         {% endif %}
-
-
     </div>
   </div>
   <!-- UploadFile modal -->
@@ -253,8 +251,8 @@
                   {% endif %}
               </div>
               <div class="modal-footer">
-                  <a class="btn btn-warning" href="{% url 'online_encoding_submission' learning_unit.id %}" role="button" id="lnk_post_scores_submission_btn"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'Submission' %}</a>
-                  <button type="button" class="btn btn-default" data-dismiss="modal" id="bt_cancel_submission_score_modal">{% trans 'Cancel' %}</button>
+                  <a class="btn btn-warning" href="{% url 'online_encoding_submission' learning_unit.id %}" role="button" id="lnk_post_scores_submission_btn"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'submission' %}</a>
+                  <button type="button" class="btn btn-default" data-dismiss="modal" id="bt_cancel_submission_score_modal">{% trans 'cancel' %}</button>
 
               </div>
           </div>
