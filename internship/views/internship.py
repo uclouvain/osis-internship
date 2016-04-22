@@ -85,6 +85,7 @@ def internships_save(request):
         new_choice.organization = organization_list[x]
         new_choice.learning_unit_year = learning_unit_year_list[x]
         new_choice.choice = preference_list[x]
+        new_choice.save()
 
     return render(request, "internships.html", {'section': 'internship',
                                                 'form': form
