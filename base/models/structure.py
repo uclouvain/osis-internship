@@ -27,6 +27,7 @@ from django.db import models
 from django.contrib import admin
 from django.core.exceptions import ObjectDoesNotExist
 
+
 class StructureAdmin(admin.ModelAdmin):
     list_display = ('acronym', 'title', 'part_of', 'organization', 'type')
     fieldsets = ((None, {'fields': ('acronym', 'title', 'part_of', 'organization', 'type')}),)
@@ -34,20 +35,26 @@ class StructureAdmin(admin.ModelAdmin):
     search_fields = ['acronym']
 
 
-ENTITY_TYPE = (('SECTOR', 'Sector'),
-               ('FACULTY', 'Faculty'),
-               ('INSTITUTE', 'Institute'),
-               ('POLE', 'Pole'))
+ENTITY_TYPE = (('SECTOR', 'sector'),
+               ('FACULTY', 'faculty'),
+               ('INSTITUTE', 'institute'),
+               ('POLE', 'pole'),
+               ('DOCTORAL_COMMISSION', 'doctoral_commission'),
+               ('PROGRAM_COMMISSION', 'program_commission'),
+               ('LOGISTIC', 'logistic'),
+               ('UNDEFINED', 'undefined'),
+               ('RESEARCH_CENTER', 'research_center'),
+               ('TECHNOLOGIC_PLATFORM', 'technologic_platform'))
 
 
 class Structure(models.Model):
-    external_id  = models.CharField(max_length=100, blank=True, null=True)
-    changed      = models.DateTimeField(null=True)
-    acronym      = models.CharField(max_length=15)
-    title        = models.CharField(max_length=255)
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    changed = models.DateTimeField(null=True)
+    acronym = models.CharField(max_length=15)
+    title = models.CharField(max_length=255)
     organization = models.ForeignKey('Organization', null=True)
-    part_of      = models.ForeignKey('self', null=True, blank=True)
-    type         = models.CharField(max_length=30, blank=True, null=True, choices=ENTITY_TYPE)
+    part_of = models.ForeignKey('self', null=True, blank=True)
+    type = models.CharField(max_length=30, blank=True, null=True, choices=ENTITY_TYPE)
 
     def children(self):
         return Structure.objects.filter(part_of=self.pk)
@@ -120,3 +127,15 @@ def find_by_acronym(acronym):
         return Structure.objects.get(acronym__iexact=acronym.strip())
     except ObjectDoesNotExist:
         return None
+
+
+def find_faculty(a_structure):
+
+    if a_structure.type == 'FACULTY':
+        return a_structure
+    else:
+        if a_structure.part_of:
+            if a_structure.part_of.type != 'FACULTY':
+                find_faculty(a_structure.part_of)
+        return None
+

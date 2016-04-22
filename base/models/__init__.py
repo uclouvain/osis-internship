@@ -25,8 +25,10 @@
 ##############################################################################
 from base.models import academic_year
 from base.models import academic_calendar
+from base.models import application_notice
 from base.models import attribution
 from base.models import document_file
+from base.models import domain
 from base.models import exam_enrollment
 from base.models import learning_unit
 from base.models import learning_unit_enrollment
@@ -43,6 +45,6 @@ from base.models import person_address
 from base.models import program_manager
 from base.models import session_exam
 from base.models import structure
+from base.models import structure_address
 from base.models import student
-from base.models import supported_languages
 from base.models import tutor

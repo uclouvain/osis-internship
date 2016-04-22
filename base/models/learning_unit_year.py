@@ -25,7 +25,6 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-from base.models import academic_year, learning_unit
 
 
 class LearningUnitYearAdmin(admin.ModelAdmin):
@@ -36,14 +35,14 @@ class LearningUnitYearAdmin(admin.ModelAdmin):
 
 
 class LearningUnitYear(models.Model):
-    external_id    = models.CharField(max_length=100, blank=True, null=True)
-    changed        = models.DateTimeField(null=True)
-    acronym        = models.CharField(max_length=15)
-    title          = models.CharField(max_length=255)
-    credits        = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    changed = models.DateTimeField(null=True)
+    acronym = models.CharField(max_length=15)
+    title = models.CharField(max_length=255)
+    credits = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     decimal_scores = models.BooleanField(default=False)
-    academic_year  = models.ForeignKey('AcademicYear')
-    learning_unit  = models.ForeignKey('LearningUnit')
+    academic_year = models.ForeignKey('AcademicYear')
+    learning_unit = models.ForeignKey('LearningUnit')
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year,self.learning_unit)
@@ -58,7 +57,6 @@ def find_learning_unit_year_by_id(learning_unit_id):
 
 
 def search(academic_year_id=None, acronym=None):
-    print('search, ', academic_year_id , ',' , acronym)
     queryset = LearningUnitYear.objects
 
     if academic_year_id:
@@ -68,3 +66,8 @@ def search(academic_year_id=None, acronym=None):
         queryset = queryset.filter(acronym__icontains=acronym)
 
     return queryset
+
+
+def find_learning_unit_years_by_academic_year_learningunit(academic_yr, learning_unit):
+    return LearningUnitYear.objects.filter(academic_year=academic_yr) \
+                                   .filter(learning_unit=learning_unit).first()

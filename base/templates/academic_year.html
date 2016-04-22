@@ -27,20 +27,20 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'catalog' %}" id="lnk_catalog">Catalogue de formation</a></li>
-  <li class="active">{%trans 'Academic year'%}</li>
+  <li><a href="{% url 'catalog' %}" id="lnk_catalog">{% trans 'formation_catalogue'%}</a></li>
+  <li class="active">{% trans 'academic_year' %}</li>
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h2>{% trans 'Academic year'%}</h2>
+    <h2>{% trans 'academic_year'%}</h2>
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
         <div class="row">
             <div class="col-md-1"><i class="fa fa-map" style="font-size: 400%; color: #6699FF;"></i></div>
             <div class="col-md-5">
-                <h4 class="media-heading"><a href="{% url 'academic_calendars' %}" id="lnk_academic_calendars">{% trans 'Academic calendar'%}</a></h4>
-                <p>{% trans 'Academic calendar managment'%}</p>
+                <h4 class="media-heading"><a href="{% url 'academic_calendars' %}" id="lnk_academic_calendars">{% trans 'academic_calendar'%}</a></h4>
+                <p>{% trans 'academic_calendar_management'%}</p>
             </div>
             <div class="col-md-6">
 

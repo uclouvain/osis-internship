@@ -30,7 +30,6 @@ register = template.Library()
 
 @register.assignment_tag(takes_context=True)
 def programme_manager(context):
-    print('programme_manager')
     request = context['request']
     enrollment = context['enrollment']
     return is_programme_manager(request.user, enrollment.learning_unit_enrollment.offer_enrollment.offer_year)

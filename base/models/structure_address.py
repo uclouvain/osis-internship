@@ -23,7 +23,30 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.db import models
+from django.contrib import admin
 
-from django.shortcuts import render
 
-# Create your views here.
+class StructureAddressAdmin(admin.ModelAdmin):
+    list_display = ('structure', 'label', 'location', 'postal_code', 'city', 'country')
+    fieldsets = ((None, {'fields': ('structure', 'label', 'location', 'postal_code', 'city', 'country')}),)
+
+
+class StructureAddress(models.Model):
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    structure = models.ForeignKey('Structure')
+    label = models.CharField(max_length=20)
+    location = models.CharField(max_length=255)
+    postal_code = models.CharField(max_length=20)
+    city = models.CharField(max_length=255)
+    country = models.ForeignKey('reference.Country')
+    phone = models.CharField(max_length=30, blank=True, null=True)
+    fax = models.CharField(max_length=255, blank=True, null=True)
+    email = models.EmailField(max_length=255, blank=True, null=True)
+
+
+def find_structure_address(a_structure):
+    if a_structure:
+        return StructureAddress.objects.filter(structure=a_structure).first()
+    else:
+        return None

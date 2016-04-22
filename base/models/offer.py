@@ -35,8 +35,8 @@ class OfferAdmin(admin.ModelAdmin):
 
 class Offer(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed     = models.DateTimeField(null=True)
-    title       = models.CharField(max_length=255)
+    changed = models.DateTimeField(null=True)
+    title = models.CharField(max_length=255)
 
     def __str__(self):
         return self.title
