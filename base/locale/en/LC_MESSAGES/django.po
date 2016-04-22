@@ -3,6 +3,8 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+msgid ""
+msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-04-22 15:14+0200\n"
@@ -132,6 +134,7 @@ msgstr "Formation catalogue"
 #: templates/layout.html.py:75 templates/learning_unit.html:48
 #: templates/learning_units.html.py:48 templates/offer.html:59
 #: templates/offers.html.py:79 utils/export_utils.py:34 utils/pdf_utils.py:261
+#: templates/offers.html:43
 msgid "academic_year"
 msgstr "Academic year"
 
@@ -243,6 +246,8 @@ msgstr "Save"
 #: templates/organization_address_form.html:88
 #: templates/organization_address_form.html:89
 #: templates/organization_form.html:80
+#: templates/assessments/online_encoding.html:257
+#: templates/assessments/online_encoding_form.html:159
 msgid "cancel"
 msgstr "Cancel"
 
@@ -557,11 +562,6 @@ msgstr "Inject"
 msgid "help_submission_scores_label"
 msgstr "You will submit %s notes."
 
-#: templates/assessments/online_encoding.html:257
-#: templates/assessments/online_encoding_form.html:159
-msgid "cancel"
-msgstr "Cancel"
-
 #: templates/assessments/online_encoding_form.html:72
 msgid "decimal_values_accepted"
 msgstr "Decimal values in scores are accepted."
@@ -859,10 +859,6 @@ msgstr "Other sibling orientations"
 msgid "offer_year_calendar"
 msgstr "Offer year calendar"
 
-#: templates/offers.html:43
-msgid "academic_year"
-msgstr "Academic year"
-
 #: templates/offers.html:51 templates/offers.html.py:52
 #: templates/offers.html:82 templates/structure.html.py:32
 msgid "entity"
@@ -1056,6 +1052,7 @@ msgid "Legend : values allowed for 'other score'"
 msgstr ""
 
 #: utils/pdf_utils.py:70
+#: utils/pdf_utils.py:121
 msgid "scores_sheet"
 msgstr "Scores sheet"
 
@@ -1069,10 +1066,6 @@ msgstr ""
 "University Catholic Louvain\n"
 "Louvain-la-Neuve\n"
 "Belgium"
-
-#: utils/pdf_utils.py:121
-msgid "scores_sheet"
-msgstr "Scores sheet"
 
 #: utils/pdf_utils.py:226
 msgid "other_score_legend"
