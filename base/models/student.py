@@ -59,3 +59,6 @@ def find_by_registration_id_name(registration_id, s_name) :
 
 def find_by_registration_id(registration_id):
     return Student.objects.filter(registration_id__icontains=registration_id)
+
+def find_by_username_of_person(s_username):
+    return Student.objects.get(person__user=s_username)

@@ -27,7 +27,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from internship.models import InternshipOffer, InternshipChoice
 from internship.forms import InternshipChoiceForm
-
+from base import models as mdl
 
 @login_required
 def internships(request):
@@ -77,10 +77,11 @@ def internships_save(request):
     organization_list = [x for x in organization_list if x != 0]
     learning_unit_year_list = [x for x in learning_unit_year_list if x != 0]
     preference_list = [x for x in preference_list if x != 0]
-    print(request.user)
+    student = mdl.student.find_by_username_of_person(request.user)
 
     index = learning_unit_year_list.__len__()
     for x in range(0, index):
+        new_choice.student = student
         new_choice.organization = organization_list[x]
         new_choice.learning_unit_year = learning_unit_year_list[x]
         new_choice.choice = preference_list[x]
