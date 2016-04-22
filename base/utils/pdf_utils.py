@@ -67,7 +67,7 @@ def print_notes(request, tutor, academic_year, learning_unit_id, is_fac, session
     :param academic_year:
     :param learning_unit_year_id:
     """
-    filename = "%s.pdf" % _('note_sheet')
+    filename = "%s.pdf" % _('scores_sheet')
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="%s"' % filename
 
