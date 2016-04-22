@@ -352,7 +352,7 @@ def main_data(academic_year, session_exam, styles, learning_unit_year, offer, co
     content.append(table_session)
     content.append(Spacer(1, 12))
 
-t 
+
 def end_page_infos_building(content):
     content.append(Paragraph('''
                             <para spaceb=5>
