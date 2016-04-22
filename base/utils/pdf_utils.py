@@ -33,7 +33,6 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import mm
 from reportlab.lib import colors
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.staticfiles.templatetags.staticfiles import static
 
 from base import models as mdl
 
@@ -160,8 +159,7 @@ def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, s
                 t.setStyle(TableStyle([
                                    ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
                                    ('BOX', (0,0), (-1,-1), 0.25, colors.black),
-                                   ('VALIGN',(0,0), (-1,-1), 'TOP')
-                                   ]))
+                                   ('VALIGN',(0,0), (-1,-1), 'TOP')]))
 
                 content.append(t)
                 # Autre programme - 3. Imprimer légende

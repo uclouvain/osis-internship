@@ -92,9 +92,9 @@ def export_xls(academic_year_id, is_fac, sessions_list):
                     __coloring_non_editable(ws, enrollment_counter, score, rec_exam_enrollment.justification_final)
     ws.append([str(_('Legend : values allowed for \'other score\'')),
                mdl.exam_enrollment.justification_label_authorized(is_fac)])
-    filename = "%s_%s_%s.xls" % (str(academic_year.year),
-                             str(session_exam.number_session),
-                             session_exam.learning_unit_year.acronym)
+    filename = "session_%s_%s_%s.xls" % (str(academic_year.year),
+                                         str(session_exam.number_session),
+                                         session_exam.learning_unit_year.acronym)
     response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.ms-excel')
     response['Content-Disposition'] = 'attachment; filename=%s' % filename
     return response
