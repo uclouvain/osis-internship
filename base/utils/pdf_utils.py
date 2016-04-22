@@ -185,7 +185,9 @@ def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, s
             end_date = ""
             if rec_exam_enrollment.session_exam.offer_year_calendar.end_date:
                 end_date = rec_exam_enrollment.session_exam.offer_year_calendar.end_date.strftime('%d/%m/%Y')
-            sc = "%s" % score
+            sc = ""
+            if score:
+                sc = "%s" % score
             data.append([student.registration_id,
                          person.last_name,
                          person.first_name,
@@ -274,14 +276,6 @@ def main_data(academic_year, session_exam, styles, learning_unit_year, offer, co
 
         content.append(Paragraph('%s' % structure_display, faculty_paragraph_style))
 
-    #         label = models.CharField(max_length=20)
-    # location = models.CharField(max_length=255)
-    # postal_code = models.CharField(max_length=20)
-    # city = models.CharField(max_length=255)
-    # country = models.ForeignKey('reference.Country')
-    # phone = models.CharField(max_length=30, blank=True, null=True)
-    # fax = models.CharField(max_length=255, blank=True, null=True)
-    # email = models.EmailField(max_length=255, blank=True, null=True)
         if structure_address:
             if structure_address.label:
                 content.append(Paragraph('%s' % structure_address.label, faculty_paragraph_style))
@@ -290,63 +284,75 @@ def main_data(academic_year, session_exam, styles, learning_unit_year, offer, co
             if structure_address.postal_code and structure_address.city:
                 content.append(Paragraph('%s %s' % (structure_address.postal_code, structure_address.city),
                                          faculty_paragraph_style))
-            phone_informations = ""
+            phone_fax_data = ""
             if structure_address.phone:
-                phone_informations += _('phone') + " : " + structure_address.phone 
+                phone_fax_data += _('phone') + " : " + structure_address.phone
             if structure_address.fax:
                 if structure_address.phone:
-                    phone_informations += " ; "
-                phone_informations += _('fax') + " : " + structure_address.fax
-            if len(phone_informations) > 0:
-                content.append(Paragraph('%s' % phone_informations,
+                    phone_fax_data += " ; "
+                phone_fax_data += _('fax') + " : " + structure_address.fax
+            if len(phone_fax_data) > 0:
+                content.append(Paragraph('%s' % phone_fax_data,
                                          faculty_paragraph_style))
     content.append(Paragraph('''
                     <para spaceb=5>
                         &nbsp;
                     </para>
                     ''',  ParagraphStyle('normal')))
-    content.append(Paragraph("<strong>%s : %s</strong>" % (learning_unit_year.acronym,learning_unit_year.title)
-                              , styles["Normal"]) )
-    content.append(Paragraph('''
-                            <para spaceb=5>
-                                &nbsp;
-                            </para>
-                            ''',  ParagraphStyle('normal')))
 
-    tutor = None
-    if tutor is None:
-        p_tutor = Paragraph(''' ''', styles["Normal"])
-    else:
+    learning_unit_paragraph = Paragraph("<strong>%s : %s</strong>" % (learning_unit_year.acronym,
+                                                                      learning_unit_year.title), styles["Normal"])
+    tutor = mdl.tutor.find_responsible(learning_unit_year.learning_unit)
+
+    tutor_location = ""
+    tutor_city_data = ""
+
+    if tutor:
         p_tutor = Paragraph('''<b>%s %s</b>''' % (tutor.person.last_name, tutor.person.first_name), styles["Normal"])
+        tutor_address = mdl.person_address.find_by_person_label(tutor.person, 'PROFESSIONAL')
+        if tutor_address:
+            tutor_location = Paragraph('''<b>%s</b>''' % tutor_address.location, styles["Normal"])
+            if tutor_address.postal_code or tutor_address.city:
+                tutor_city_data = Paragraph('''<b>%s %s</b>''' % (tutor_address.postal_code, tutor_address.city),
+                                            styles["Normal"])
+    else:
+        p_tutor = Paragraph(''' ''', styles["Normal"])
 
     data_tutor = [[p_tutor],
-                  [''],
-                  [''],
-                  ['']]
-    table_tutor=Table(data_tutor)
+                  [tutor_location],
+                  [tutor_city_data]]
+    table_tutor = Table(data_tutor)
     p_pgm = Paragraph('''<b>%s : %s</b>''' % (_('program'), offer.acronym), styles["Normal"])
-    data_pgm= [[p_pgm],
+    data_pgm = [[learning_unit_paragraph],
+                [p_pgm]
+              ]
+    table_pgm = Table(data_pgm)
+    table_pgm.setStyle(TableStyle([
+                                ('LEFTPADDING', (0,0), (-1,-1), 0),
+                                ('RIGHTPADDING', (0, 0), (-1, -1), 0),
+                                ('VALIGN', (0, 0), (-1, -1), 'TOP')
+    ]))
+
+    data_header = [[table_pgm, table_tutor]]
+
+    data_session = [
                [_('deliberation_date') + ' : '],
                [_('chair_of_the_exam_board') + ' : '],
                [_('exam_board_secretary') + ' : '],
               ]
-    table_pgm=Table(data_pgm)
-    table_pgm.setStyle(TableStyle([
-    ('LEFTPADDING', (0,0), (-1,-1), 0),
-                         ('RIGHTPADDING', (0,0), (-1,-1), 0),
-                         ('VALIGN', (0,0), (-1,-1), 'TOP')
-                       ]))
-    data_header = [[table_pgm,table_tutor]]
+    table_session = Table(data_session, colWidths='*')
+    table_session.setStyle(TableStyle([('LEFTPADDING', (0, 0), (-1, -1), 0)]))
 
     tt = Table(data_header, colWidths='*')
-    tt.setStyle(TableStyle([('LEFTPADDING', (0,0), (-1,-1), 0),
-                            ('RIGHTPADDING', (0,0), (-1,-1), 0),
-                            ('VALIGN', (0,0), (-1,-1), 'TOP')
+    tt.setStyle(TableStyle([('LEFTPADDING', (0, 0), (-1, -1), 0),
+                            ('RIGHTPADDING', (0, 0), (-1, -1), 0),
+                            ('VALIGN', (0, 0), (-1, -1), 'TOP')
                            ]))
     content.append(tt)
+    content.append(table_session)
     content.append(Spacer(1, 12))
 
-
+t 
 def end_page_infos_building(content):
     content.append(Paragraph('''
                             <para spaceb=5>
