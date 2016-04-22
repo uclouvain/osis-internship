@@ -63,6 +63,13 @@
     <div class="panel-body">
         <ul class="nav nav-tabs">
             <li class="active"><a data-toggle="tab" href="#tab_MI">{% trans 'Stage de Médecine Interne'%}</a></li>
+            <li><a data-toggle="tab" href="#tab_CH">{% trans 'Stage de Chirurgie'%}</a></li>
+            <li><a data-toggle="tab" href="#tab_GO">{% trans 'Stage de Ginécologie-Obsétrique'%}</a></li>
+            <li><a data-toggle="tab" href="#tab_PED">{% trans 'Stage de Pédiatrie'%}</a></li>
+            <li><a data-toggle="tab" href="#tab_URG">{% trans 'Stage d\'Urgence'%}</a></li>
+            <li><a data-toggle="tab" href="#tab_GER">{% trans 'Stage de Gériatrie'%}</a></li>
+            <li><a data-toggle="tab" href="#tab_CHOIX1">{% trans 'Stage au choix 1'%}</a></li>
+            <li><a data-toggle="tab" href="#tab_CHOIX2">{% trans 'Stage au choix 2'%}</a></li>
         </ul>
         <form  method="post" action="{% url 'internships_save_record'%}" >
         {% csrf_token %}
@@ -83,6 +90,7 @@
                         </thead>
                         <tbody>
                           {% for internship in all_internships %}
+                          {% if internship.learning_unit_year.title = "Stage en Médecine interne"%}
                             <tr>
                                 <td>
                                   {{ internship.title }}
@@ -106,6 +114,7 @@
                                   </select>
                                 <td>
                             </tr>
+                          {% endif %}
                           {% endfor %}
                         </tbody>
                     </table>
@@ -113,7 +122,343 @@
                 </div>
               </div>
             </div>
-
+            <div id="tab_CH" class="tab-pane fade"> 
+              <div class="panel panel-default">
+                <div class="tab-content">
+                  <div role="tabpanel" class="tab-pane fade in active" id="profile">
+                    <table class="table table-hover">
+                        <thead>
+                          <tr>
+                              <th>{% trans 'Name' %}</th>
+                              <th>{% trans 'learning unit year' %}</th>
+                              <th>{% trans 'Student max' %}</th>
+                              <th>{% trans 'organization' %}</th>
+                              <th>{% trans 'Preference' %}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for internship in all_internships %}
+                          {% if internship.learning_unit_year.title = "Stage en Chirurgie"%}
+                          <tr>
+                              <td>
+                                {{ internship.title }}
+                              </td>
+                              <td>
+                                <input type="hidden" name="learning_unit_year" value="{{ internship.learning_unit_year.title }}"/>{{ internship.learning_unit_year.title }}</label>
+                              </td>
+                              <td>
+                                {{ internship.maximum_enrollments }}
+                              </td>
+                              <td>
+                                <input type="hidden" name="organization" value="{{ internship.organization }}"/>{{ internship.organization }}</input>
+                              </td>
+                              <td>
+                                <select name="preference">
+                                 <option value=0>0</option>
+                                 <option value=1>Choix préféré</option>
+                                 <option value=2>2ème choix</option>
+                                 <option value=3>3ème choix</option>
+                                 <option value=4>4ème choix</option>
+                                </select>
+                              <td>
+                          </tr>
+                          {% endif %}
+                          {% endfor %}
+                        </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="tab_GO" class="tab-pane fade">
+              <div class="panel panel-default">
+                <div class="tab-content">
+                  <div role="tabpanel" class="tab-pane fade in active" id="profile">
+                    <table class="table table-hover">
+                        <thead>
+                          <tr>
+                              <th>{% trans 'Name' %}</th>
+                              <th>{% trans 'learning unit year' %}</th>
+                              <th>{% trans 'Student max' %}</th>
+                              <th>{% trans 'organization' %}</th>
+                              <th>{% trans 'Preference' %}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for internship in all_internships %}
+                          {% if internship.learning_unit_year.title = "Stage en Gynécologie-Obsétrique"%}
+                          <tr>
+                              <td>
+                                {{ internship.title }}
+                              </td>
+                              <td>
+                                <input type="hidden" name="learning_unit_year" value="{{ internship.learning_unit_year.title }}"/>{{ internship.learning_unit_year.title }}</label>
+                              </td>
+                              <td>
+                                {{ internship.maximum_enrollments }}
+                              </td>
+                              <td>
+                                <input type="hidden" name="organization" value="{{ internship.organization }}"/>{{ internship.organization }}</input>
+                              </td>
+                              <td>
+                                <select name="preference">
+                                 <option value=0>0</option>
+                                 <option value=1>Choix préféré</option>
+                                 <option value=2>2ème choix</option>
+                                 <option value=3>3ème choix</option>
+                                 <option value=4>4ème choix</option>
+                                </select>
+                              <td>
+                          </tr>
+                          {% endif %}
+                          {% endfor %}
+                        </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="tab_PED" class="tab-pane fade">
+              <div class="panel panel-default">
+                <div class="tab-content">
+                  <div role="tabpanel" class="tab-pane fade in active" id="profile">
+                    <table class="table table-hover">
+                        <thead>
+                          <tr>
+                              <th>{% trans 'Name' %}</th>
+                              <th>{% trans 'learning unit year' %}</th>
+                              <th>{% trans 'Student max' %}</th>
+                              <th>{% trans 'organization' %}</th>
+                              <th>{% trans 'Preference' %}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for internship in all_internships %}
+                          {% if internship.learning_unit_year.title = "Stage en Pédiatrie"%}
+                          <tr>
+                              <td>
+                                {{ internship.title }}
+                              </td>
+                              <td>
+                                <input type="hidden" name="learning_unit_year" value="{{ internship.learning_unit_year.title }}"/>{{ internship.learning_unit_year.title }}</label>
+                              </td>
+                              <td>
+                                {{ internship.maximum_enrollments }}
+                              </td>
+                              <td>
+                                <input type="hidden" name="organization" value="{{ internship.organization }}"/>{{ internship.organization }}</input>
+                              </td>
+                              <td>
+                                <select name="preference">
+                                 <option value=0>0</option>
+                                 <option value=1>Choix préféré</option>
+                                 <option value=2>2ème choix</option>
+                                 <option value=3>3ème choix</option>
+                                 <option value=4>4ème choix</option>
+                                </select>
+                              <td>
+                          </tr>
+                          {% endif %}
+                          {% endfor %}
+                        </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="tab_URG" class="tab-pane fade">
+              <div class="panel panel-default">
+                <div class="tab-content">
+                  <div role="tabpanel" class="tab-pane fade in active" id="profile">
+                    <table class="table table-hover">
+                        <thead>
+                          <tr>
+                              <th>{% trans 'Name' %}</th>
+                              <th>{% trans 'learning unit year' %}</th>
+                              <th>{% trans 'Student max' %}</th>
+                              <th>{% trans 'organization' %}</th>
+                              <th>{% trans 'Preference' %}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for internship in all_internships %}
+                          {% if internship.learning_unit_year.title = "Stage en Urgence"%}
+                          <tr>
+                              <td>
+                                {{ internship.title }}
+                              </td>
+                              <td>
+                                <input type="hidden" name="learning_unit_year" value="{{ internship.learning_unit_year.title }}"/>{{ internship.learning_unit_year.title }}</label>
+                              </td>
+                              <td>
+                                {{ internship.maximum_enrollments }}
+                              </td>
+                              <td>
+                                <input type="hidden" name="organization" value="{{ internship.organization }}"/>{{ internship.organization }}</input>
+                              </td>
+                              <td>
+                                <select name="preference">
+                                 <option value=0>0</option>
+                                 <option value=1>Choix préféré</option>
+                                 <option value=2>2ème choix</option>
+                                 <option value=3>3ème choix</option>
+                                 <option value=4>4ème choix</option>
+                                </select>
+                              <td>
+                          </tr>
+                          {% endif %}
+                          {% endfor %}
+                        </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="tab_GER" class="tab-pane fade">
+              <div class="panel panel-default">
+                <div class="tab-content">
+                  <div role="tabpanel" class="tab-pane fade in active" id="profile">
+                    <table class="table table-hover">
+                        <thead>
+                          <tr>
+                              <th>{% trans 'Name' %}</th>
+                              <th>{% trans 'learning unit year' %}</th>
+                              <th>{% trans 'Student max' %}</th>
+                              <th>{% trans 'organization' %}</th>
+                              <th>{% trans 'Preference' %}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for internship in all_internships %}
+                          {% if internship.learning_unit_year.title = "Stage en Gériatrie"%}
+                          <tr>
+                              <td>
+                                {{ internship.title }}
+                              </td>
+                              <td>
+                                <input type="hidden" name="learning_unit_year" value="{{ internship.learning_unit_year.title }}"/>{{ internship.learning_unit_year.title }}</label>
+                              </td>
+                              <td>
+                                {{ internship.maximum_enrollments }}
+                              </td>
+                              <td>
+                                <input type="hidden" name="organization" value="{{ internship.organization }}"/>{{ internship.organization }}</input>
+                              </td>
+                              <td>
+                                <select name="preference">
+                                 <option value=0>0</option>
+                                 <option value=1>Choix préféré</option>
+                                 <option value=2>2ème choix</option>
+                                 <option value=3>3ème choix</option>
+                                 <option value=4>4ème choix</option>
+                                </select>
+                              <td>
+                          </tr>
+                          {% endif %}
+                          {% endfor %}
+                        </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="tab_CHOIX1" class="tab-pane fade">
+              <div class="panel panel-default">
+                <div class="tab-content">
+                  <div role="tabpanel" class="tab-pane fade in active" id="profile">
+                    <table class="table table-hover">
+                        <thead>
+                          <tr>
+                              <th>{% trans 'Name' %}</th>
+                              <th>{% trans 'learning unit year' %}</th>
+                              <th>{% trans 'Student max' %}</th>
+                              <th>{% trans 'organization' %}</th>
+                              <th>{% trans 'Preference' %}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for internship in all_internships %}
+                          {% if internship.learning_unit_year.title = "Stage au choix"%}
+                          <tr>
+                              <td>
+                                {{ internship.title }}
+                              </td>
+                              <td>
+                                <input type="hidden" name="learning_unit_year" value="{{ internship.learning_unit_year.title }}"/>{{ internship.learning_unit_year.title }}</label>
+                              </td>
+                              <td>
+                                {{ internship.maximum_enrollments }}
+                              </td>
+                              <td>
+                                <input type="hidden" name="organization" value="{{ internship.organization }}"/>{{ internship.organization }}</input>
+                              </td>
+                              <td>
+                                <select name="preference">
+                                 <option value=0>0</option>
+                                 <option value=1>Choix préféré</option>
+                                 <option value=2>2ème choix</option>
+                                 <option value=3>3ème choix</option>
+                                 <option value=4>4ème choix</option>
+                                </select>
+                              <td>
+                          </tr>
+                          {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="tab_CHOIX2" class="tab-pane fade">
+              <div class="panel panel-default">
+              <div class="tab-content">
+                  <div role="tabpanel" class="tab-pane fade in active" id="profile">
+                    <table class="table table-hover">
+                        <thead>
+                          <tr>
+                              <th>{% trans 'Name' %}</th>
+                              <th>{% trans 'learning unit year' %}</th>
+                              <th>{% trans 'Student max' %}</th>
+                              <th>{% trans 'organization' %}</th>
+                              <th>{% trans 'Preference' %}</th>
+                          </tr>
+                      </thead>
+                        <tbody>
+                          {% for internship in all_internships %}
+                          {% if internship.learning_unit_year.title = "Stage au choix"%}
+                          <tr>
+                              <td>
+                                {{ internship.title }}
+                              </td>
+                              <td>
+                                <input type="hidden" name="learning_unit_year" value="{{ internship.learning_unit_year.title }}"/>{{ internship.learning_unit_year.title }}</label>
+                              </td>
+                              <td>
+                                {{ internship.maximum_enrollments }}
+                              </td>
+                              <td>
+                                <input type="hidden" name="organization" value="{{ internship.organization }}"/>{{ internship.organization }}</input>
+                              </td>
+                              <td>
+                                <select name="preference">
+                                 <option value=0>0</option>
+                                 <option value=1>Choix préféré</option>
+                                 <option value=2>2ème choix</option>
+                                 <option value=3>3ème choix</option>
+                                 <option value=4>4ème choix</option>
+                                </select>
+                              <td>
+                          </tr>
+                          {% endif %}
+                          {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_academic_calendar_save">
               <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'Save'%}
           </button>
