@@ -494,13 +494,6 @@ msgstr "Encoder"
 msgid "double_encoding"
 msgstr "Double encodage"
 
-#: templates/assessments/online_encoding.html:95
-#: templates/assessments/online_encoding.html:99
-#, fuzzy
-#| msgid "print"
-msgid "print"
-msgstr "Imprimer"
-
 #: templates/assessments/online_encoding.html:102
 #, fuzzy
 #| msgid "submit_xls_file"
@@ -513,7 +506,7 @@ msgstr "Soumettre fichier xls"
 #, fuzzy
 #| msgid "submit_xls_file"
 msgid "get_excel_file"
-msgstr "Soumettre fichier xls"
+msgstr "Obtenir Excel"
 
 #: templates/assessments/online_encoding.html:105
 msgid "hint_select_excel_file_to_inject_scores"
@@ -618,7 +611,7 @@ msgstr "Note décimale non autorisée"
 #: templates/assessments/scores_encoding_mgr.html:54
 #: templates/assessments/scores_encoding_mgr.html:105
 msgid "tutor"
-msgstr "Tuteur"
+msgstr "Enseignant"
 
 #: templates/assessments/scores_encoding.html:50
 msgid "faculty"
@@ -659,26 +652,24 @@ msgstr "Code"
 #: templates/assessments/scores_encoding.html:107
 #: templates/assessments/scores_encoding.html:138
 msgid "course"
-msgstr ""
+msgstr "Unité d'enseignement"
 
 #: templates/assessments/scores_encoding.html:101
 #: templates/assessments/scores_encoding_mgr.html:175
 #, fuzzy
 #| msgid "print_all_scores"
 msgid "print_all_courses"
-msgstr "Imprimer feuilles de notes pour toutes les activités"
+msgstr "Imprimer feuilles de notes pour toutes les cours"
 
 #: templates/assessments/scores_encoding.html:126
 #: templates/assessments/scores_encoding_mgr.html:201
-#, fuzzy
-#| msgid "print"
-msgid "Print"
+msgid "print"
 msgstr "Imprimer"
 
 #: templates/assessments/scores_encoding.html:155
 #: templates/assessments/scores_encoding_mgr.html:146
 msgid "hint_get_excel_file"
-msgstr ""
+msgstr "Cliquez pour télécharger le fichier excel"
 
 #: templates/assessments/scores_encoding_mgr.html:56
 #: templates/assessments/scores_encoding_mgr.html:68
