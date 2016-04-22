@@ -388,7 +388,7 @@ def export_xls(request, learning_unit_id, academic_year_id):
             break
     sessions_list, faculties,notes_list = get_sessions(learning_unit_id, request, tutor, academic_year,None)
 
-    return export_utils.export_xls(request, learning_unit_id, academic_year_id, is_fac, sessions_list)
+    return export_utils.export_xls( academic_year_id, is_fac, sessions_list)
 
 
 def get_sessions(learning_unit_param, request, tutor, academic_yr, offer_id):

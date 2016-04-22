@@ -44,16 +44,13 @@ HEADER = [str(_('academic_year')),
           str(_('ID'))]
 
 
-def export_xls(request, learning_unit_id, academic_year_id, is_fac, sessions_list):
+def export_xls(academic_year_id, is_fac, sessions_list):
     academic_year = mdl.academic_year.find_academic_year_by_id(academic_year_id)
 
     wb = Workbook()
     ws = wb.active
 
     __columns_resizing(ws)
-
-    # masquage de la colonne avec l'id exam enrollment
-
     ws.append(HEADER)
 
     enrollment_counter = 1
@@ -95,8 +92,11 @@ def export_xls(request, learning_unit_id, academic_year_id, is_fac, sessions_lis
                     __coloring_non_editable(ws, enrollment_counter, score, rec_exam_enrollment.justification_final)
     ws.append([str(_('Legend : values allowed for \'other score\'')),
                mdl.exam_enrollment.justification_label_authorized(is_fac)])
+    filename = "%s_%s_%s" % (str(academic_year.year),
+                             str(session_exam.number_session),
+                             session_exam.learning_unit_year.acronym)
     response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.ms-excel')
-    response['Content-Disposition'] = 'attachment; filename=score_encoding.xlsx'
+    response['Content-Disposition'] = 'attachment; filename=%s' % filename
     return response
 
 
@@ -119,6 +119,7 @@ def __columns_resizing(ws):
     col_note = ws.column_dimensions['I']
     col_note.width = 20
     col_id_exam_enrollment = ws.column_dimensions['K']
+    # Hide the exam_enrollment_id column
     col_id_exam_enrollment.hidden = True
 
 
