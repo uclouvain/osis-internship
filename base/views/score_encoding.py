@@ -44,39 +44,31 @@ def scores_encoding(request):
         data_dict = get_data(request)
         sessions_list, faculties, notes_list = get_sessions(None, request, tutor, academic_yr, None)
         return layout.render(request, "assessments/scores_encoding.html",
-                                      {'section':       data_dict['section'],
-                                       'tutor':         tutor,
+                                      {'section': data_dict['section'],
+                                       'tutor': tutor,
                                        'academic_year': academic_yr,
-                                       'notes_list':    notes_list})
+                                       'notes_list': notes_list})
 
     # In case the user is not a tutor we check whether it is a program manager for the offer.
     else:
-        is_programme_manager = False
         program_mgr_list = mdl.program_manager.find_by_user(request.user)
-        for programme_manager in program_mgr_list:
-            is_programme_manager = True
-            break
-
-        notes_list = None
-
-        if is_programme_manager:
-            tutor_sel = None
-            offer_sel = None
+        tutor_sel = None
+        offer_sel = None
+        if program_mgr_list:
             tutor_sel_id = request.POST.get('tutor', None)
             if tutor_sel_id:
                 tutor_sel = mdl.tutor.find_by_id(tutor_sel_id)
             offer_sel_id = request.POST.get('offer', None)
             if offer_sel_id:
                 offer_sel = mdl.offer_year.find_by_id(offer_sel_id)
-            data_dict = get_data_pgmer(request, None, None)
-            notes_list = data_dict['notes_list']
+        data_dict = get_data_pgmer(request, None, None)
         return layout.render(request, "assessments/scores_encoding_mgr.html",
-                             {'notes_list':    notes_list,
-                              'offer_list':    mdl.offer_year.find_by_user(request.user),
-                              'tutor_list':    mdl.tutor.find_by_program_manager(request.user),
-                              'tutor':         tutor_sel,
-                              'offer':         offer_sel,
-                              'academic_year': academic_yr})
+                                      {'notes_list':    data_dict['notes_list'],
+                                       'offer_list':    mdl.offer_year.find_by_user(request.user),
+                                       'tutor_list':    mdl.tutor.find_by_program_manager(request.user),
+                                       'tutor':         tutor_sel,
+                                       'offer':         offer_sel,
+                                       'academic_year': academic_yr})
 
 
 @login_required
@@ -126,7 +118,7 @@ def online_encoding_form(request, learning_unit_id=None, tutor_id=None):
                     enrollment.justification_draft = None
 
                 if data['is_pgmer']:
-                    #pgmer draft must be save in final
+                    # pgmer draft must be save in final
                     enrollment.score_final = enrollment.score_draft
                     enrollment.justification_final = enrollment.justification_draft
                 enrollment.save()
@@ -210,13 +202,13 @@ def online_double_encoding_validation(request, learning_unit_id=None, tutor_id=N
                     if enrollments:
                         all_enrollments = all_enrollments + enrollments
         return layout.render(request, "assessments/online_double_encoding_validation.html",
-                                      {'section':        'scores_encoding',
-                                       'tutor':          tutor,
-                                       'academic_year':  academic_year,
-                                       'learning_unit':  learning_unit,
-                                       'enrollments':    all_enrollments,
+                                      {'section': 'scores_encoding',
+                                       'tutor': tutor,
+                                       'academic_year': academic_year,
+                                       'learning_unit': learning_unit,
+                                       'enrollments': all_enrollments,
                                        'justifications': mdl.exam_enrollment.JUSTIFICATION_TYPES,
-                                       'is_pgmer':       is_pgmer})
+                                       'is_pgmer': is_pgmer})
 
     elif request.method == 'POST':
         sessions_list, faculties, notes_list = get_sessions(learning_unit_id, request, tutor, academic_year,None)
@@ -612,13 +604,13 @@ def get_data_online_double(learning_unit_id, tutor_id,request):
                 tot_progress.extend(tot_progress)
                 tot_num_encoded_scores=tot_num_encoded_scores+num_encoded_scores
 
-    return {'section':            'scores_encoding',
-            'tutor' :             tutor,
-            'academic_year':      academic_yr,
-            'enrollments':        tot_enrollments,
+    return {'section': 'scores_encoding',
+            'tutor': tutor,
+            'academic_year': academic_yr,
+            'enrollments': tot_enrollments,
             'num_encoded_scores': tot_num_encoded_scores,
-            'learning_unit':      learning_unit,
-            'justifications':     mdl.exam_enrollment.JUSTIFICATION_TYPES}
+            'learning_unit': learning_unit,
+            'justifications': mdl.exam_enrollment.JUSTIFICATION_TYPES}
 
 
 def get_data_pgmer(request, tutor_sel, offer_sel):
