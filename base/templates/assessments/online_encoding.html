@@ -60,16 +60,11 @@
             {{ academic_year }}
           </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-6">
           <div class="form-group">
-
             <label>{% trans 'number_of_enrollments' %}</label><br>
             {{ enrollments|length }}
           </div>
-        </div>
-        <div class="col-md-3">
-        </div>
-        <div class="col-md-3">
         </div>
       </div>
 
@@ -81,6 +76,7 @@
           </div>
         </div>
       </div>
+
         {% if enrollments and progress != 100 %}
           {% if tutor %}
             <a class="btn btn-default" href="{%if tutor%}{% url 'online_encoding_form' learning_unit.id%}{%else%}{% url 'online_encoding_form_pgmer' learning_unit.id tutor.id%}{%endif%}" role="button" id="lnk_encode"><i class="fa fa-hashtag"></i> {% trans 'encode' %}</a>
@@ -91,7 +87,6 @@
           {%endif%}
           {%if tutor %}
           <a class="btn btn-default" href="{% url 'notes_printing' learning_unit_id=learning_unit.id tutor_id=tutor.id %}"
-
                                    role="button" id="lnk_notes_printing_{{learning_unit.id}}"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'print' %}</a>
           {%else%}
           <a class="btn btn-default" href="{% url 'notes_printing' learning_unit_id=learning_unit.id  %}"
@@ -110,7 +105,6 @@
           {%endif%}
         {% as_messages_info as messages_info %}
         {%if messages_info%}
-            <br><br>
             <div id="div_info_messages">
               <ul class="alert alert-success">
                   {% for message in messages %}
@@ -120,23 +114,19 @@
                   {% endfor %}
               </ul>
             </div>
-        {%else%}
-            <br><br>
         {%endif%}
+        <br><br>
+        {% as_messages_warning as messages_warning %}
 
-          {% as_messages_warning as messages_warning %}
-
-          {% if messages_warning %}
-
-                  <ul class="alert alert-danger">
-                      {% for message in messages %}
-                          {% if 'warning' in message.tags %}
-                          <li {%  if message.tags %}{% endif %}>{{ message }}</li>
-                          {%endif%}
-                      {% endfor %}
-                  </ul>
-
-            {% endif %}
+        {% if messages_warning %}
+          <ul class="alert alert-danger">
+              {% for message in messages %}
+                  {% if 'warning' in message.tags %}
+                  <li {%  if message.tags %}{% endif %}>{{ message }}</li>
+                  {%endif%}
+              {% endfor %}
+          </ul>
+        {% endif %}
         {%endif%}
 
       <table class="table table-hover">
@@ -149,7 +139,7 @@
                 <th>{% trans 'lastname' %}</th>
                 <th>{% trans 'firstname' %}</th>
                 <th>{% trans 'score' %}</th>
-                <th>{% trans 'other_score' %}</th>
+                <th>{% trans 'justification' %}</th>
                 <th>{% trans 'end_date' %}</th>
             </tr>
           </thead>
