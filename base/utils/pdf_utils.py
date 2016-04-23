@@ -239,7 +239,7 @@ def headers_table():
              '''%s''' % _('lastname'),
              '''%s''' % _('firstname'),
              '''%s''' % _('numbered_score'),
-             '''%s''' % _('other_score'),
+             '''%s''' % _('justification'),
              '''%s''' % _('end_date')]]
     return data
 

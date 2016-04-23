@@ -39,7 +39,7 @@ HEADER = [str(_('academic_year')),
           str(_('lastname')),
           str(_('firstname')),
           str(_('numbered_score')),
-          str(_('other_score')),
+          str(_('justification')),
           str(_('end_date')),
           str(_('ID'))]
 
@@ -90,7 +90,7 @@ def export_xls(academic_year_id, is_fac, sessions_list):
 
                     enrollment_counter += 1
                     __coloring_non_editable(ws, enrollment_counter, score, rec_exam_enrollment.justification_final)
-    ws.append([str(_('Legend : values allowed for \'other score\'')),
+    ws.append([str(_('other_score_legend')),
                mdl.exam_enrollment.justification_label_authorized(is_fac)])
     filename = "session_%s_%s_%s.xls" % (str(academic_year.year),
                                          str(session_exam.number_session),
