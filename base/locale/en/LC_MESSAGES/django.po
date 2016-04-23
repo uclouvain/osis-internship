@@ -1051,7 +1051,7 @@ msgid "ID"
 msgstr "ID"
 
 #: utils/export_utils.py:96
-msgid "Legend : values allowed for 'other score'"
+msgid "Legend : values allowed for 'justification'"
 msgstr ""
 
 #: utils/pdf_utils.py:70
@@ -1072,7 +1072,7 @@ msgstr ""
 
 #: utils/pdf_utils.py:226
 msgid "other_score_legend"
-msgstr "Other scores legend"
+msgstr "Justification legend"
 
 #: utils/pdf_utils.py:228
 msgid "unauthorized_decimal_for_this_activity"
@@ -1080,11 +1080,11 @@ msgstr "Unauthorized decimal for this activity"
 
 #: utils/pdf_utils.py:289
 msgid "phone"
-msgstr ""
+msgstr "Phone"
 
 #: utils/pdf_utils.py:293
 msgid "fax"
-msgstr ""
+msgstr "Fax"
 
 #: utils/pdf_utils.py:339
 msgid "deliberation_date"
@@ -1183,8 +1183,7 @@ msgstr "The score seems to be incorrect. Decimales NOT allowed"
 #: utils/upload_xls_utils.py:159
 msgid "constraint_score_other_score"
 msgstr ""
-"You can't encode a 'score' AND an 'other score' together (unless the 'other "
-"score' is CHEATING)"
+"You can't encode a 'score' AND an 'justification' together (unless the 'justification' is CHEATING)"
 
 #: utils/upload_xls_utils.py:226
 #, python-format

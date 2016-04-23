@@ -50,7 +50,7 @@ msgstr "Absence justifiée"
 #: templates/assessments/online_encoding_form.html:133
 #: templates/assessments/online_encoding_form.html:147
 msgid "score_missing"
-msgstr "Encodage de notes"
+msgstr "Notes manquante"
 
 #: models/exam_enrollment.py:53
 msgid "saved"
@@ -1056,7 +1056,7 @@ msgid "ID"
 msgstr "ID"
 
 #: utils/export_utils.py:96
-msgid "Legend : values allowed for 'other score'"
+msgid "Legend : values allowed for 'justification'"
 msgstr ""
 
 #: utils/pdf_utils.py:70
@@ -1066,7 +1066,7 @@ msgstr "Feuille de notes"
 
 #: utils/pdf_utils.py:108
 msgid "scores_transcript"
-msgstr "Transcription des notes"
+msgstr "Feuille de notes"
 
 #: utils/pdf_utils.py:110
 msgid "ucl_denom_location"
@@ -1077,7 +1077,7 @@ msgstr ""
 
 #: utils/pdf_utils.py:226
 msgid "other_score_legend"
-msgstr "Légende pour le champ 'autre note'"
+msgstr "Légende pour le champ 'justification'"
 
 #: utils/pdf_utils.py:228
 msgid "unauthorized_decimal_for_this_activity"
@@ -1085,7 +1085,7 @@ msgstr "Attention : décimales non autorisées pour ce cours"
 
 #: utils/pdf_utils.py:289
 msgid "phone"
-msgstr ""
+msgstr "Tél."
 
 #: utils/pdf_utils.py:293
 msgid "fax"
@@ -1188,8 +1188,8 @@ msgstr "La note entrée est incorrecte ; décimales NON autorisées"
 #: utils/upload_xls_utils.py:159
 msgid "constraint_score_other_score"
 msgstr ""
-"Vous ne pouvez pas remplir le champs 'note' ET 'autre note' tous les deux "
-"(sauf si 'autre note' est 'Tricherie')"
+"Vous ne pouvez pas remplir le champs 'note' ET 'justification' tous les deux "
+"(sauf si 'justification' est 'Tricherie')"
 
 #: utils/upload_xls_utils.py:226
 #, python-format
