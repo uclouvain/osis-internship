@@ -540,6 +540,9 @@ msgstr "Session"
 msgid "score_submitted"
 msgstr "Soumis"
 
+msgid "print_all_courses"
+msgstr "Imprimer tous les cours"
+
 #: templates/assessments/online_encoding.html:210
 msgid "print_warning_and_info_messages"
 msgstr ""
@@ -615,8 +618,8 @@ msgstr "Sur papier"
 
 #: templates/assessments/scores_encoding.html:67
 #: templates/assessments/scores_encoding_mgr.html:96
-msgid "via_xls"
-msgstr "Via fichier xls"
+msgid "via_excel"
+msgstr "Via fichier Excel"
 
 #: templates/assessments/scores_encoding.html:75
 #: templates/assessments/scores_encoding.html:106
@@ -1232,10 +1235,10 @@ msgstr ""
 #~ msgstr "Envoyer"
 
 #~ msgid "download_xls_file"
-#~ msgstr "Télécharger le fichier excel"
+#~ msgstr "Télécharger le fichier Excel"
 
-#~ msgid "get_xls"
-#~ msgstr "Obtenir le fichier xls"
+#~ msgid "get_excel_file"
+#~ msgstr "Obtenir le fichier Excel"
 
 #~ msgid "not_in_choices_list"
 #~ msgstr "Le choix entré ne se trouve pas dans la liste proposée"
