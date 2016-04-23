@@ -542,6 +542,9 @@ msgstr "Submitted"
 msgid "print_warning_and_info_messages"
 msgstr ""
 
+msgid "print_all_courses"
+msgstr "Print all courses"
+
 #: templates/assessments/online_encoding.html:224
 msgid "scores_injection"
 msgstr "Scores injection"
@@ -613,8 +616,8 @@ msgstr "Via paper"
 
 #: templates/assessments/scores_encoding.html:67
 #: templates/assessments/scores_encoding_mgr.html:96
-msgid "via_xls"
-msgstr "Via xls"
+msgid "via_excel"
+msgstr "Via Excel"
 
 #: templates/assessments/scores_encoding.html:75
 #: templates/assessments/scores_encoding.html:106
@@ -1225,10 +1228,10 @@ msgstr ""
 #~ msgstr "Submit"
 
 #~ msgid "download_xls_file"
-#~ msgstr "Download xls file"
+#~ msgstr "Download Excel File"
 
-#~ msgid "get_xls"
-#~ msgstr "Get xls"
+#~ msgid "get_excel_file"
+#~ msgstr "Get Excel File"
 
 #~ msgid "not_in_choices_list"
 #~ msgstr "Invalid entry, not in the list of choices"

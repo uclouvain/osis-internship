@@ -72,7 +72,7 @@
                             <table class="table table-hover">
                                 <thead>
                                 <tr>
-                                    <th>{% trans 'code' %}</th>
+                                    <th>{% trans 'acronym' %}</th>
                                     <th>{% trans 'course' %}</th>
                                     <th>{% trans 'progress' %}</th>
                                     <th></th>
@@ -82,12 +82,16 @@
                                 {% for note_detail in note.lu_list %}
                                 <tr>
                                     <td>{{ note_detail.lu.acronym }}</td>
-                                    <td>{%if note_detail.completed%}{{ note_detail.lu.title }}{%else%}<a
-                                            href="{% url 'online_encoding' note_detail.lu.id tutor.id %}"
-                                            id="lnk_{{ note_detail.lu.acronym }}">{{ note_detail.lu.title }}</a>{% endif %}
+                                    <td>{%if note_detail.completed%}
+                                            {{ note_detail.lu.title }}
+                                        {%else%}
+                                            <a href="{% url 'online_encoding' note_detail.lu.id tutor.id %}"
+                                               id="lnk_{{ note_detail.lu.acronym }}">{{ note_detail.lu.title }}</a>
+                                        {% endif %}
                                     </td>
                                     <td>{{ note_detail.nb_notes_encoded}}/{{ note_detail.nb_student}}</td>
-                                    <td></td>
+                                    <td><a class="btn btn-default"
+                                           href="{% url 'online_encoding_form' note_detail.lu.id%}" role="button" id="lnk_encode"><i class="fa fa-hashtag"></i> {% trans 'encode' %}</a></td>
                                 </tr>
                                 {% endfor %}
                                 </tbody>
@@ -103,7 +107,7 @@
                             <table class="table table-hover">
                                 <thead>
                                 <tr>
-                                    <th>{% trans 'code' %}</th>
+                                    <th>{% trans 'acronym' %}</th>
                                     <th>{% trans 'course' %}</th>
                                     <th>{% trans 'progress' %}</th>
                                     <th></th>
@@ -134,7 +138,7 @@
                             <table class="table table-hover">
                                 <thead>
                                 <tr>
-                                    <th>{% trans 'code' %}</th>
+                                    <th>{% trans 'acronym' %}</th>
                                     <th>{% trans 'course' %}</th>
                                     <th>{% trans 'progress' %}</th>
                                     <th></th>
