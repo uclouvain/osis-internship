@@ -116,7 +116,8 @@
                                    id="lnk_{{ note_detail.lu.acronym }}">{{ note_detail.lu.title }}</a></td>
                             <td>{{ note_detail.tutor.person.last_name }}, {{ note_detail.tutor.person.first_name }}</td>
                             <td>{{ note_detail.nb_notes_encoded}}/{{ note_detail.nb_student}}</td>
-                            <td></td>
+                            <td><a class="btn btn-default"
+                                           href="{% url 'online_encoding_form' note_detail.lu.id%}" role="button" id="lnk_encode"><i class="fa fa-hashtag"></i> {% trans 'encode' %}</a></td>
                         </tr>
                         {% endfor %}
                         </tbody>
@@ -128,6 +129,7 @@
                         <tr>
                             <th>{% trans 'acronym' %}</th>
                             <th>{% trans 'learning_unit' %}</th>
+                            <th>{% trans 'tutor' %}</th>
                             <th>{% trans 'progress' %}</th>
                             <th></th>
                         </tr>
@@ -139,6 +141,7 @@
                             <td><a href="{% url 'online_encoding' note_detail.lu.id %}"
                                    title="Visualiser/charger les notes pour le cours"
                                    id="lnk_online_encoding_messages_{{note_detail.lu.id}}">{{ note_detail.lu.title }}</a></td>
+                            <td>{{ note_detail.tutor.person.last_name }}, {{ note_detail.tutor.person.first_name }}</td>
                             <td>{{ note_detail.nb_notes_encoded}}/{{ note_detail.nb_student}}</td>
                             <td>
                                 <a class="btn btn-default"
@@ -179,6 +182,7 @@
                         <tr>
                             <th>{% trans 'acronym' %}</th>
                             <th>{% trans 'learning_unit' %}</th>
+                            <th>{% trans 'tutor' %}</th>
                             <th>{% trans 'progress' %}</th>
                             <th></th>
                         </tr>
@@ -190,6 +194,7 @@
                             <td><a href="{% url 'online_encoding' note_detail.lu.id  %}"
                                    title="Visualiser/charger les notes pour le cours"
                                    id="lnk_paper_encoding_messages_{{note_detail.lu.id}}">{{ note_detail.lu.title }}</a></td>
+                            <td>{{ note_detail.tutor.person.last_name }}, {{ note_detail.tutor.person.first_name }}</td>
                             <td>{{ note_detail.nb_notes_encoded}}/{{ note_detail.nb_student}}</td>
                             <td>
                                 <a class="btn btn-default"

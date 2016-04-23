@@ -60,16 +60,11 @@
             {{ academic_year }}
           </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-6">
           <div class="form-group">
-
             <label>{% trans 'number_of_enrollments' %}</label><br>
             {{ enrollments|length }}
           </div>
-        </div>
-        <div class="col-md-3">
-        </div>
-        <div class="col-md-3">
         </div>
       </div>
 
@@ -81,6 +76,7 @@
           </div>
         </div>
       </div>
+
         {% if enrollments and progress != 100 %}
           {% if tutor %}
             <a class="btn btn-default" href="{%if tutor%}{% url 'online_encoding_form' learning_unit.id%}{%else%}{% url 'online_encoding_form_pgmer' learning_unit.id tutor.id%}{%endif%}" role="button" id="lnk_encode"><i class="fa fa-hashtag"></i> {% trans 'encode' %}</a>
@@ -91,26 +87,24 @@
           {%endif%}
           {%if tutor %}
           <a class="btn btn-default" href="{% url 'notes_printing' learning_unit_id=learning_unit.id tutor_id=tutor.id %}"
-
                                    role="button" id="lnk_notes_printing_{{learning_unit.id}}"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'print' %}</a>
           {%else%}
           <a class="btn btn-default" href="{% url 'notes_printing' learning_unit_id=learning_unit.id  %}"
 
                                    role="button" id="lnk_notes_printing_{{learning_unit.id}}"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'print' %}</a>
           {%endif%}
-        <a class="btn btn-default" href="{% url 'scores_encoding_download' learning_unit.id academic_year.id%}"
+          <a class="btn btn-default" href="{% url 'scores_encoding_download' learning_unit.id academic_year.id%}"
                                    role="button" title="{% trans 'hint_create_excel_file'%}"
                                    id="lnk_scores_encoding_download_{{learning_unit.id}}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span> {% trans 'get_excel_file'%}</a>
 
           <button type="button" class="btn btn-default" data-toggle="modal" data-target="#pnl_upload_score_modal" title="{% trans 'hint_select_excel_file_to_inject_scores' %}" id="bt_upload_score_modal"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> {% trans 'inject_xls_file' %}</button>
           &nbsp;&nbsp;
             {%if tutor%}
-              <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#pnl_submission_scores_modal"
+              <button type="button" class="btn btn-warning pull-right" data-toggle="modal" data-target="#pnl_submission_scores_modal"
                       id="bt_score_submission_modal" {%if coordinator = False or num_encoded_scores = 0  %} disabled{%endif%}><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'submission' %}</button>
           {%endif%}
         {% as_messages_info as messages_info %}
         {%if messages_info%}
-            <br><br>
             <div id="div_info_messages">
               <ul class="alert alert-success">
                   {% for message in messages %}
@@ -120,23 +114,19 @@
                   {% endfor %}
               </ul>
             </div>
-        {%else%}
-            <br><br>
         {%endif%}
+        <br><br>
+        {% as_messages_warning as messages_warning %}
 
-          {% as_messages_warning as messages_warning %}
-
-          {% if messages_warning %}
-
-                  <ul class="alert alert-danger">
-                      {% for message in messages %}
-                          {% if 'warning' in message.tags %}
-                          <li {%  if message.tags %}{% endif %}>{{ message }}</li>
-                          {%endif%}
-                      {% endfor %}
-                  </ul>
-
-            {% endif %}
+        {% if messages_warning %}
+          <ul class="alert alert-danger">
+              {% for message in messages %}
+                  {% if 'warning' in message.tags %}
+                  <li {%  if message.tags %}{% endif %}>{{ message }}</li>
+                  {%endif%}
+              {% endfor %}
+          </ul>
+        {% endif %}
         {%endif%}
 
       <table class="table table-hover">
@@ -149,7 +139,7 @@
                 <th>{% trans 'lastname' %}</th>
                 <th>{% trans 'firstname' %}</th>
                 <th>{% trans 'score' %}</th>
-                <th>{% trans 'other_score' %}</th>
+                <th>{% trans 'justification' %}</th>
                 <th>{% trans 'end_date' %}</th>
             </tr>
           </thead>
