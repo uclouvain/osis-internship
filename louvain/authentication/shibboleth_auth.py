@@ -30,7 +30,7 @@ from django.contrib import auth
 from django.contrib.auth import backends
 from django.core.exceptions import ImproperlyConfigured
 
-from base.models.person import Person
+from base.models.person import Person, find_by_global_id, find_by_user
 
 
 class ShibbolethAuthBackend(RemoteUserBackend):
@@ -86,15 +86,17 @@ class ShibbolethAuthBackend(RemoteUserBackend):
         return user
 
     def __update_person(self, user, user_infos):
-        persons = Person.objects.filter(user=user)
-        if not persons:
+        person = find_by_global_id(user_infos['USER_FGS'])
+        if not person:
+            person = find_by_user(user)
+        if not person:
             person = Person(user=user, global_id=user_infos['USER_FGS'], first_name=user_infos['USER_FIRST_NAME'],
-                            last_name=user_infos['USER_LAST_NAME'],email=user_infos['USER_EMAIL'])
+                            last_name=user_infos['USER_LAST_NAME'], email=user_infos['USER_EMAIL'])
         else:
-            person = persons[0]
             person.first_name = user.first_name
             person.last_name = user.last_name
             person.email = user.email
+            person.global_id = user_infos['USER_FGS']
         person.save()
 
 
@@ -149,5 +151,5 @@ class ShibbolethAuthMiddleware(RemoteUserMiddleware):
                       'USER_FGS': user_fgs}
         return user_infos
 
-    def clean_string(self,string):
+    def clean_string(self, string):
         return string.encode('raw_unicode_escape').decode("utf-8")
