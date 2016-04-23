@@ -93,3 +93,7 @@ def change_language(user, new_language):
         person = Person.objects.get(user=user)
         person.language = new_language
         person.save()
+
+
+def find_by_global_id(global_id):
+    return Person.objects.filter(global_id=global_id).first()
