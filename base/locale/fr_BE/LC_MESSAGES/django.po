@@ -595,7 +595,7 @@ msgstr ""
 #: templates/assessments/scores_encoding_mgr.html:54
 #: templates/assessments/scores_encoding_mgr.html:105
 msgid "tutor"
-msgstr "Tuteur"
+msgstr "Enseignant(e)"
 
 #: templates/assessments/scores_encoding.html:50
 msgid "faculty"
