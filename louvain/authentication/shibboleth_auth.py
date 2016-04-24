@@ -93,6 +93,7 @@ class ShibbolethAuthBackend(RemoteUserBackend):
             person = Person(user=user, global_id=user_infos['USER_FGS'], first_name=user_infos['USER_FIRST_NAME'],
                             last_name=user_infos['USER_LAST_NAME'], email=user_infos['USER_EMAIL'])
         else:
+            person.user = user
             person.first_name = user.first_name
             person.last_name = user.last_name
             person.email = user.email
