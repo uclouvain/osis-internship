@@ -61,10 +61,11 @@ def scores_encoding(request):
             offer_sel_id = request.POST.get('offer', None)
             if offer_sel_id:
                 offer_sel = mdl.offer_year.find_by_id(offer_sel_id)
-        data_dict = get_data_pgmer(request, None, None)
+        offer_list = mdl.offer_year.find_by_user(request.user)
+        data_dict = get_data_pgmer(request, None, None, offer_list)
         return layout.render(request, "assessments/scores_encoding_mgr.html",
                                       {'notes_list':    data_dict['notes_list'],
-                                       'offer_list':    mdl.offer_year.find_by_user(request.user),
+                                       'offer_list':    offer_list,
                                        'tutor_list':    mdl.tutor.find_by_program_manager(request.user),
                                        'tutor':         tutor_sel,
                                        'offer':         offer_sel,
@@ -613,7 +614,7 @@ def get_data_online_double(learning_unit_id, tutor_id,request):
             'justifications': mdl.exam_enrollment.JUSTIFICATION_TYPES}
 
 
-def get_data_pgmer(request, tutor_sel, offer_sel):
+def get_data_pgmer(request, tutor_sel, offer_sel, offer_list):
     academic_yr = mdl.academic_year.current_academic_year()
     faculties = []
     learning_unit_list = []
@@ -630,6 +631,13 @@ def get_data_pgmer(request, tutor_sel, offer_sel):
                 sessions = mdl.session_exam.find_sessions_by_offer_tutor(offer_sel, academic_yr, tutor_sel)
             else:
                 sessions = mdl.session_exam.find_sessions_by_offer(program_mgr.offer_year, academic_yr, None)
+
+            filtered_sessions = []  # Sessions filtered by program_manager's offers
+            for session in sessions:
+                if session.offer_year_calendar.offer_year in offer_list:
+                    filtered_sessions.append(session)
+            sessions = filtered_sessions
+
             faculty = program_mgr.offer_year.structure
             faculties.append(faculty)
 
@@ -690,6 +698,7 @@ def refresh_list(request):
     tutor_sel = None
     offer_sel = None
 
+    offer_list = mdl.offer_year.find_by_user(request.user)
     tutor_sel_id = request.GET.get('tutor', None)
 
     if tutor_sel_id:
@@ -701,20 +710,20 @@ def refresh_list(request):
         if offer_sel_id != 'all':
             offer_sel = mdl.offer_year.find_by_id(offer_sel_id)
     if offer_sel or tutor_sel:
-        data_dict = get_data_pgmer_by_offer(tutor_sel, offer_sel)
+        data_dict = get_data_pgmer_by_offer(tutor_sel, offer_sel, offer_list)
     else:
-        data_dict = get_data_pgmer(request, tutor_sel, offer_sel)
+        data_dict = get_data_pgmer(request, tutor_sel, offer_sel, offer_list)
 
     return layout.render(request, "assessments/scores_encoding_mgr.html",
                   {'notes_list':    data_dict['notes_list'],
-                   'offer_list':    mdl.offer_year.find_by_user(request.user),
+                   'offer_list':    offer_list,
                    'tutor_list':    mdl.tutor.find_by_program_manager(request.user),
                    'tutor':     tutor_sel,
                    'offer':     offer_sel,
                    'academic_year': data_dict['academic_year']})
 
 
-def get_data_pgmer_by_offer(tutor_sel, offer_sel):
+def get_data_pgmer_by_offer(tutor_sel, offer_sel, offer_list):
     academic_yr = mdl.academic_year.current_academic_year()
 
     notes_list = []
@@ -724,6 +733,11 @@ def get_data_pgmer_by_offer(tutor_sel, offer_sel):
     notes = Notes()
 
     sessions = mdl.session_exam.find_sessions_by_offer_tutor(offer_sel, academic_yr, tutor_sel)
+    filtered_sessions = [] # Sessions filtered by program_manager's offers
+    for session in sessions:
+        if session.offer_year_calendar.offer_year in offer_list:
+            filtered_sessions.append(session)
+    sessions = filtered_sessions
 
     dict_progress = {}
     dict_progress_ok = {}
