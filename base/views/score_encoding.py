@@ -129,14 +129,11 @@ def online_encoding_form(request, learning_unit_id=None, tutor_id=None):
 
 
 @login_required
-def online_double_encoding_form(request, learning_unit_id=None, tutor_id=None):
-
-    if tutor_id:
-        is_pgmer = False
-    else:
-        is_pgmer = True
-
-    data = get_data_online_double(learning_unit_id, tutor_id, request)
+def online_double_encoding_form(request, learning_unit_id=None):
+    learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_id)
+    is_program_manager = mdl.program_manager.is_program_manager(request.user, learning_unit_year=learning_unit_year)
+    tutor = mdl.tutor.find_by_user(request.user)
+    data = get_data_online_double(learning_unit_id, tutor.id, request)
     enrollments = data['enrollments']
     learning_unit = data['learning_unit']
     if request.method == 'GET':
@@ -147,7 +144,8 @@ def online_double_encoding_form(request, learning_unit_id=None, tutor_id=None):
                                            'academic_year':  data['academic_year'],
                                            'enrollments':    enrollments,
                                            'learning_unit':  learning_unit,
-                                           'justifications': data['justifications']})
+                                           'justifications': data['justifications'],
+                                           'is_program_manager': is_program_manager})
         else:
             messages.add_message(request, messages.WARNING, "%s !" % _('no_score_encoded_double_encoding_impossible'))
             return online_encoding(request, learning_unit_id, tutor_id)
@@ -537,8 +535,8 @@ def get_data_online(learning_unit_id, tutor_id, request):
 
     academic_yr = mdl.academic_year.current_academic_year()
     learning_unit = mdl.learning_unit.find_by_id(learning_unit_id)
-    learning_unit_year = mdl.learning_unit_year.find_learning_unit_years_by_academic_year_learningunit(academic_yr,
-                                                                                                       learning_unit)
+    learning_unit_year = mdl.learning_unit_year.search(academic_year_id=academic_yr,
+                                                       learning_unit=learning_unit).first()
     sessions_list, faculties, notes_list = get_sessions(learning_unit, request, tutor, academic_yr, None)
 
     tot_enrollments = []
