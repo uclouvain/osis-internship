@@ -147,15 +147,20 @@ def calculate_session_exam_progress(session_exam):
 
 def justification_label_authorized(is_fac):
     if is_fac:
-        return '%s, %s, %s, %s, %s' % (_('absent'),
-                                       _('cheating'),
-                                       _('ill'),
-                                       _('justified_absence'),
-                                       _('score_missing'))
+        return "%s, %s, %s, %s, %s" % (_('absent_pdf_legend'),
+                                       _('cheating_pdf_legend'),
+                                       _('ill_pdf_legend'),
+                                       _('justified_absence_pdf_legend'),
+                                       _('score_missing_pdf_legend'))
     else:
-        return '%s, %s, %s' % (_('absent'),
-                               _('cheating'),
-                               _('score_missing'))
+        return "%s, %s, %s" % (_('absent_pdf_legend'),
+                               _('cheating_pdf_legend'),
+                               _('score_missing_pdf_legend'))
+
+
+def score_label_authorized():
+    return "%s, %s" % (_('presence_note_pdf_legend'),
+                       _('empty_note_pdf_legend'))
 
 
 class ExamEnrollmentHistoryAdmin(admin.ModelAdmin):
