@@ -124,29 +124,24 @@
                 </td>
 
                 <td>{%if is_pgmer %}
-                    <select class="form-control" name="justification_{{ enrollment.id }}" id="slt_justification_score_{{ enrollment.id }}"
-                            tabindex="{{ enrollments|length|sum:forloop.counter }}"
-                            {% if tutor and enrollment.score_final or tutor and enrollment.justification_final %} disabled {% endif %}>
-                      <option value="None"></option>
-                      <option value="ABSENT" {% if enrollment.justification_final == 'ABSENT' %}selected="selected"{% endif %}>{% trans 'absent' %}</option>
-                      <option value="CHEATING" {% if enrollment.justification_final == 'CHEATING' %}selected="selected"{% endif %}>{% trans 'cheating' %}</option>
-                      <option value="SCORE_MISSING" {% if enrollment.justification_final == 'SCORE_MISSING' %}selected="selected"{% endif %}>{% trans 'score_missing' %}</option>
-                      {% programme_manager as pm %}
-                      {% if pm %}
-                      <option value="ILL" {% if enrollment.justification_final == 'ILL' %}selected="selected"{% endif %}>{% trans 'ill' %}</option>
-                      <option value="JUSTIFIED_ABSENCE" {% if enrollment.justification_final == 'JUSTIFIED_ABSENCE' %}selected="selected"{% endif %}>{% trans 'justified_absence' %}</option>)
-                      {% endif %}
-                    </select>
+                        <select class="form-control" name="justification_{{ enrollment.id }}" id="slt_justification_score_{{ enrollment.id }}"
+                                tabindex="{{ enrollments|length|sum:forloop.counter }}">
+                          <option value="None"></option>
+                          <option value="ABSENT" {% if enrollment.justification_final == 'ABSENT' %}selected{% endif %}>{% trans 'absent' %}</option>
+                          <option value="CHEATING" {% if enrollment.justification_final == 'CHEATING' %}selected{% endif %}>{% trans 'cheating' %}</option>
+                          <option value="SCORE_MISSING" {% if enrollment.justification_final == 'SCORE_MISSING' %}selected{% endif %}>{% trans 'score_missing' %}</option>
+                          <option value="ILL" {% if enrollment.justification_final == 'ILL' %}selected{% endif %}>{% trans 'ill' %}</option>
+                          <option value="JUSTIFIED_ABSENCE" {% if enrollment.justification_final == 'JUSTIFIED_ABSENCE' %}selected{% endif %}>{% trans 'justified_absence' %}</option>
+                        </select>
                     {%else%}
-                    <select class="form-control" name="justification_{{ enrollment.id }}" id="slt_justification_score_{{ enrollment.id }}"
-                            tabindex="{{ enrollments|length|sum:forloop.counter }}"
-                            {% if tutor and enrollment.score_final or tutor and enrollment.justification_final %} disabled {% endif %}>
-                      <option value="None"></option>
-                      <option value="ABSENT" {% if enrollment.justification_draft == 'ABSENT' %}selected="selected"{% endif %}>{% trans 'absent' %}</option>
-                      <option value="CHEATING" {% if enrollment.justification_draft == 'CHEATING' %}selected="selected"{% endif %}>{% trans 'cheating' %}</option>
-                      <option value="SCORE_MISSING" {% if enrollment.justification_draft == 'SCORE_MISSING' %}selected="selected"{% endif %}>{% trans 'score_missing' %}</option>
-
-                    </select>
+                        <select class="form-control" name="justification_{{ enrollment.id }}" id="slt_justification_score_{{ enrollment.id }}"
+                                tabindex="{{ enrollments|length|sum:forloop.counter }}"
+                                {% if tutor and enrollment.score_final or tutor and enrollment.justification_final %} disabled {% endif %}>
+                          <option value="None"></option>
+                          <option value="ABSENT" {% if enrollment.justification_draft == 'ABSENT' %}selected{% endif %}>{% trans 'absent' %}</option>
+                          <option value="CHEATING" {% if enrollment.justification_draft == 'CHEATING' %}selected{% endif %}>{% trans 'cheating' %}</option>
+                          <option value="SCORE_MISSING" {% if enrollment.justification_draft == 'SCORE_MISSING' %}selected{% endif %}>{% trans 'score_missing' %}</option>
+                        </select>
                     {%endif%}
                 </td>
                 <td>{{ enrollment.session_exam.offer_year_calendar.end_date | default_if_none:''|date:"j/m/Y" }}</td>

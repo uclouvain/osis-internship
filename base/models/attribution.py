@@ -25,6 +25,7 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
+from .learning_unit_year import LearningUnitYear
 
 
 class AttributionAdmin(admin.ModelAdmin):
@@ -77,4 +78,24 @@ def find_by_function(tutor, a_learning_unit, function):
                                      .filter(function=function)
     if attributions_coord:
         return True
+    return False
+
+
+def is_coordinator(user, learning_unit_year):
+    attributions = Attribution.objects.filter(tutor__user=user,
+                                              learning_unit=learning_unit_year.learning_unit,
+                                              function='COORDINATOR')
+    if attributions:
+        return True
+
+    return False
+
+
+def is_professor(user, learning_unit_year):
+    attributions = Attribution.objects.filter(tutor__user=user,
+                                              learning_unit=learning_unit_year.learning_unit,
+                                              function='PROFESSOR')
+    if attributions:
+        return True
+
     return False

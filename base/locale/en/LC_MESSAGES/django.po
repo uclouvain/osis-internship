@@ -1220,6 +1220,9 @@ msgstr "Please choose at least one criteria!"
 msgid "No score encoded yet!  Double encoding impossible."
 msgstr ""
 
+msgid "get_excel_file"
+msgstr "Get Excel File"
+
 #~ msgid "title_btn_upload_score"
 #~ msgstr "Select your xls file from which to inject scores"
 
@@ -1228,9 +1231,6 @@ msgstr ""
 
 #~ msgid "download_xls_file"
 #~ msgstr "Download Excel File"
-
-#~ msgid "get_excel_file"
-#~ msgstr "Get Excel File"
 
 #~ msgid "not_in_choices_list"
 #~ msgstr "Invalid entry, not in the list of choices"

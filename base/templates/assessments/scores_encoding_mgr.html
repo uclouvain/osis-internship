@@ -198,10 +198,8 @@
                             <td>{{ note_detail.nb_notes_encoded}}/{{ note_detail.nb_student}}</td>
                             <td>
                                 <a class="btn btn-default"
-                                   href="{% url 'notes_printing' note_detail.lu.id note_detail.tutor.id%}"
-                                   {% if note_detail.completed%}
-                                   disabled
-                                   {% endif %}
+                                   href="{% url 'notes_printing' note_detail.lu.id%}"
+                                   {% if note_detail.completed%} disabled{% endif %}
                                    role="button" id="lnk_notes_printing_{{note_detail.lu.id}}"><span
                                         class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'print' %}</a>
                             </td>

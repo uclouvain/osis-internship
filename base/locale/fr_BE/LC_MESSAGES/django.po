@@ -1226,6 +1226,9 @@ msgstr "Veuillez remplir au moins 1 critère"
 msgid "No score encoded yet!  Double encoding impossible."
 msgstr ""
 
+msgid "get_excel_file"
+msgstr "Obtenir le fichier Excel"
+
 #~ msgid "title_btn_upload_score"
 #~ msgstr ""
 #~ "Sélectionnez votre fichier excel à partir duquel il faut injecter les "
@@ -1236,9 +1239,6 @@ msgstr ""
 
 #~ msgid "download_xls_file"
 #~ msgstr "Télécharger le fichier Excel"
-
-#~ msgid "get_excel_file"
-#~ msgstr "Obtenir le fichier Excel"
 
 #~ msgid "not_in_choices_list"
 #~ msgstr "Le choix entré ne se trouve pas dans la liste proposée"

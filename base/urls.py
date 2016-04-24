@@ -68,7 +68,7 @@ urlpatterns = [
 
     url(r'^studies/assessments/scores_encoding/online/(?P<learning_unit_id>[0-9]+)(?:/(?P<tutor_id>[0-9]+))?/form$', score_encoding.online_encoding_form, name='online_encoding_form'),
     url(r'^studies/assessments/scores_encoding/online/([0-9]+)/submission$', score_encoding.online_encoding_submission, name='online_encoding_submission'),
-    url(r'^studies/assessments/scores_encoding/online/(?P<learning_unit_id>[0-9]+)(?:/(?P<tutor_id>[0-9]+))?/double_form$', score_encoding.online_double_encoding_form, name='online_double_encoding_form'),
+    url(r'^studies/assessments/scores_encoding/online/(?P<learning_unit_id>[0-9]+)/double_form$', score_encoding.online_double_encoding_form, name='online_double_encoding_form'),
 
     url(r'^studies/assessments/scores_encoding/online/(?P<learning_unit_id>[0-9]+)(?:/(?P<tutor_id>[0-9]+))?/double_validation$', score_encoding.online_double_encoding_validation, name='online_double_encoding_validation'),
     url(r'^studies/assessments/scores_encoding/notes_printing_all(?:/(?P<tutor_id>[0-9]+))?(?:/(?P<offer_id>[0-9]+))?/$', score_encoding.notes_printing_all, name='notes_printing_all'),
