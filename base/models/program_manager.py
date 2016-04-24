@@ -26,13 +26,14 @@
 
 from django.db import models
 from django.contrib import admin
-from base.models import person
+from .learning_unit_enrollment import LearningUnitEnrollment
 from django.core.exceptions import ObjectDoesNotExist
 
 
 class ProgramManagerAdmin(admin.ModelAdmin):
     list_display = ('person', 'offer_year')
     raw_id_fields = ('person', 'offer_year')
+    fieldsets = ((None, {'fields': ('person', 'offer_year')}),)
     search_fields = ['person__first_name', 'person__last_name', 'offer_year__acronym']
 
 
@@ -55,14 +56,23 @@ def find_by_person(a_person):
     return programs_managed
 
 
-def is_programme_manager(user, offer_yr):
-    try:
-        pers = person.Person.objects.get(user=user)
-        if user:
-            programme_manager = ProgramManager.objects.filter(person=pers.id, offer_year=offer_yr)
+def is_program_manager(user, offer_year=None, learning_unit_year=None):
+    if offer_year:
+        try:
+            programme_manager = ProgramManager.objects.filter(person__user=user, offer_year=offer_year)
             if programme_manager:
                 return True
-    except ObjectDoesNotExist:
+        except ObjectDoesNotExist:
+            return False
+    elif learning_unit_year:
+        offers_user = ProgramManager.objects.filter(person__user=user).values('offer_year')
+        enrollments = LearningUnitEnrollment.objects.filter(learning_unit_year=learning_unit_year)\
+                                                    .filter(offer_enrollment__offer_year__in=offers_user)
+        if enrollments:
+            return True
+        else:
+            return False
+    else:
         return False
 
 

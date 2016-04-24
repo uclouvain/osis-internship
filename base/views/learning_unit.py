@@ -66,5 +66,5 @@ def learning_units_search(request):
 
 
 def learning_unit_read(request, learning_unit_id):
-    learning_unit_year = mdl.learning_unit_year.find_learning_unit_year_by_id(learning_unit_id)
+    learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_id)
     return layout.render(request, "learning_unit.html", {'learning_unit_year': learning_unit_year})

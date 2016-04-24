@@ -301,7 +301,7 @@ def main_data(academic_year, session_exam, styles, learning_unit_year, offer, co
     learning_unit_paragraph = Paragraph("<strong>%s : %s</strong>" % (learning_unit_year.acronym,
                                                                       learning_unit_year.title), styles["Normal"])
 
-    if mdl.program_manager.is_programme_manager(user, offer):
+    if mdl.program_manager.is_program_manager(user, offer_year=offer):
         tutor = mdl.tutor.find_responsible(learning_unit_year.learning_unit)
     else:
         tutor = mdl.tutor.find_by_user(user)
