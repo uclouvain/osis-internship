@@ -193,7 +193,7 @@ def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, s
                          Paragraph(person.last_name, styles['Normal']),
                          Paragraph(person.first_name, styles['Normal']),
                          sc,
-                         justification,
+                         Paragraph(justification, styles['Normal']),
                          end_date])
         cpt += 1
 
@@ -224,6 +224,7 @@ def legend_building(learning_unit_year, is_fac, content):
                         </para>
                         ''' , ParagraphStyle('normal')))
     legend_text = "%s : %s" % (_('other_score_legend'), mdl.exam_enrollment.justification_label_authorized(is_fac))
+    legend_text += "<br/>%s : %s" % (_('score_legend'), mdl.exam_enrollment.score_label_authorized())
     if not learning_unit_year.decimal_scores:
         legend_text += "<br/><font color=red>%s</font>" % _('unauthorized_decimal_for_this_activity')
 
@@ -240,7 +241,7 @@ def headers_table():
              '''%s''' % _('firstname'),
              '''%s''' % _('numbered_score'),
              '''%s''' % _('justification'),
-             '''%s''' % _('end_date')]]
+             '''%s''' % _('submission_date')]]
     return data
 
 

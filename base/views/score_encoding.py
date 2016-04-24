@@ -134,7 +134,10 @@ def online_double_encoding_form(request, learning_unit_id=None):
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_id)
     is_program_manager = mdl.program_manager.is_program_manager(request.user, learning_unit_year=learning_unit_year)
     tutor = mdl.tutor.find_by_user(request.user)
-    data = get_data_online_double(learning_unit_id, tutor.id, request)
+    tutor_id = None
+    if tutor:
+        tutor_id = tutor.id
+    data = get_data_online_double(learning_unit_id, tutor_id, request)
     enrollments = data['enrollments']
     learning_unit = data['learning_unit']
     if request.method == 'GET':
@@ -148,8 +151,8 @@ def online_double_encoding_form(request, learning_unit_id=None):
                                            'justifications': data['justifications'],
                                            'is_program_manager': is_program_manager})
         else:
-            messages.add_message(request, messages.WARNING, "%s !" % _('no_score_encoded_double_encoding_impossible'))
-            return online_encoding(request, learning_unit_id, tutor.id)
+            messages.add_message(request, messages.WARNING, "%s" % _('no_score_encoded_double_encoding_impossible'))
+            return online_encoding(request, learning_unit_id, tutor_id)
     elif request.method == 'POST':
         # programme manager encoding
         for enrollment in enrollments:
@@ -174,7 +177,7 @@ def online_double_encoding_form(request, learning_unit_id=None):
         if is_program_manager:
             return HttpResponseRedirect(reverse('online_double_encoding_validation', args=(learning_unit.id,)))
         else:
-            return HttpResponseRedirect(reverse('online_double_encoding_validation', args=(learning_unit.id, tutor.id)))
+            return HttpResponseRedirect(reverse('online_double_encoding_validation', args=(learning_unit.id, tutor_id)))
 
 
 @login_required
