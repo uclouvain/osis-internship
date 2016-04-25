@@ -31,11 +31,11 @@ from django.utils import timezone
 
 
 JUSTIFICATION_TYPES = (
-    ('ABSENT', _('absent')),
-    ('CHEATING', _('cheating')),
-    ('ILL', _('ill')),
-    ('JUSTIFIED_ABSENCE', _('justified_absence')),
-    ('SCORE_MISSING', _('score_missing')))
+    ('ABSENT', _('absent')), # A
+    ('CHEATING', _('cheating')), # T
+    ('ILL', _('ill')), # I
+    ('JUSTIFIED_ABSENCE', _('justified_absence')), # AJ
+    ('SCORE_MISSING', _('score_missing'))) # ?
 
 
 class ExamEnrollmentAdmin(admin.ModelAdmin):
