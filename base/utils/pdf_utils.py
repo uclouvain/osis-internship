@@ -59,7 +59,7 @@ def add_header_footer(canvas, doc):
     canvas.restoreState()
 
 
-def print_notes(user, academic_year, learning_unit_id, is_programme_manager, sessions_list):
+def print_notes(user, academic_year, learning_unit_id, is_programme_manager, sessions_list, tutor=None):
     """
     Create a multi-page document
     :param user: The user who's asking for printing the notes sheet
@@ -90,6 +90,16 @@ def print_notes(user, academic_year, learning_unit_id, is_programme_manager, ses
             enrollments = list(mdl.exam_enrollment.find_exam_enrollments_by_session(session))
             if enrollments:
                 list_exam_enrollment = list_exam_enrollment + enrollments
+
+    if tutor: # Case ProgramManager wants to print notes for one Tutor
+        learning_unit_years = mdl.learning_unit_year.find_by_tutor(tutor.id)
+        offer_years = mdl.offer_year.find_by_user(user)
+        filtered_exam_enrollments = []
+        for exam_enrollment in list_exam_enrollment:
+            if exam_enrollment.learning_unit_enrollment.learning_unit_year in learning_unit_years:
+                if exam_enrollment.session_exam.offer_year_calendar.offer_year in offer_years:
+                    filtered_exam_enrollments.append(exam_enrollment)
+        list_exam_enrollment = filtered_exam_enrollments
 
     list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, styles, is_programme_manager, content, user)
 

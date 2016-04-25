@@ -160,7 +160,7 @@
                 </div>
                 <div role="tabpanel" class="tab-pane fade" id="tab_via_paper_{{forloop.counter0}}">
                     <br>
-                    <a class="btn btn-default"
+                    <a class="btn btn-default {% if not tutor.id %}disabled{%endif%}"
                        href="{%if tutor and offer %}
                                 {% url 'notes_printing_all' tutor_id=tutor.id offer_id=offer.id %}
                              {%else%}
