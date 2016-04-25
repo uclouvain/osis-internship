@@ -37,7 +37,7 @@ msgid "cheating"
 msgstr "Cheating"
 
 msgid "cheating_pdf_legend"
-msgstr "C=Cheating"
+msgstr "T=Cheating"
 
 #: models/exam_enrollment.py:36 models/exam_enrollment.py:150
 #: templates/assessments/online_double_encoding_form.html:119

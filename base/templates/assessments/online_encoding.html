@@ -84,12 +84,14 @@
                 <a class="btn btn-default" href="{% url 'online_double_encoding_form' learning_unit.id  %}" role="button" id="lnk_online_double_encoding"><i class="fa fa-hashtag"></i><i class="fa fa-hashtag"></i> {% trans 'double_encoding' %}</a>
                 <a  id="lnk_score_printing" class="btn btn-default" href="{% url 'notes_printing' learning_unit_id=learning_unit.id %}" role="button"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'print' %}</a>
             {%endif%}
+            &nbsp;&nbsp;
             <a id="lnk_scores_excel" class="btn btn-default" href="{% url 'scores_encoding_download' learning_unit.id academic_year.id%}" role="button" title="{% trans 'hint_create_excel_file'%}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span> {% trans 'get_excel_file'%}</a>
             <button type="button" class="btn btn-default" data-toggle="modal" data-target="#pnl_upload_score_modal" title="{% trans 'hint_select_excel_file_to_inject_scores' %}" id="bt_upload_score_modal"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> {% trans 'inject_xls_file' %}</button>
             {%if tutor%}
                 <button type="button" class="btn btn-warning pull-right" data-toggle="modal" data-target="#pnl_submission_scores_modal"
                           id="bt_score_submission_modal" {%if coordinator = False or num_encoded_scores = 0  %} disabled{%endif%}><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'submission' %}</button>
             {%endif%}
+            <br><br>
             {% as_messages_info as messages_info %}
             {%if messages_info %}
                 <div id="div_info_messages">
@@ -102,7 +104,6 @@
                     </ul>
                 </div>
             {% endif %}
-            <br><br>
             {% as_messages_warning as messages_warning %}
             {% if messages_warning %}
                 <ul class="alert alert-danger">
@@ -114,7 +115,18 @@
                 </ul>
             {% endif %}
         {% endif %}
-
+        {% as_messages_error as messages_error %}
+        {% if messages_error %}
+            <div id="div_error_messages">
+                <ul class="alert alert-danger">
+                    {% for message in messages %}
+                        {% if 'error' in message.tags %}
+                            <li {%  if message.tags %}{% endif %}>{{ message }}</li>
+                        {%endif%}
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
         <table class="table table-hover">
             <thead>
                 <tr>
@@ -165,21 +177,6 @@
                 {% endfor %}
             </tbody>
         </table>
-        {% as_messages_error as messages_error %}
-        {% if messages_error %}
-            <div id="div_error_messages">
-                <ul class="alert alert-danger">
-                    {% for message in messages %}
-                        {% if 'error' in message.tags %}
-                            <li {%  if message.tags %}{% endif %}>{{ message }}</li>
-                        {%endif%}
-                    {% endfor %}
-                </ul>
-            </div>
-            <input type="button" value="{% trans 'print'%}"
-                       onclick="printdiv('div_error_messages','div_info_messages');"
-                       title="{% trans 'hint_print_error_messages' %}"/>
-        {% endif %}
     </div>
 </div>
 
