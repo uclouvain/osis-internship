@@ -183,13 +183,13 @@ def online_double_encoding_form(request, learning_unit_id=None):
 @login_required
 def online_double_encoding_validation(request, learning_unit_id=None, tutor_id=None):
     learning_unit = mdl.learning_unit.find_by_id(learning_unit_id)
-    is_pgmer = False
+    is_program_manager = False
 
     if tutor_id:
         tutor = mdl.tutor.find_by_id(tutor_id)
     else:
-        is_pgmer = True
-        tutor = mdl.tutor.find_by_user(request.user)
+        is_program_manager = True
+        tutor = mdl.attribution.get_assigned_tutor(request.user)
     academic_year = mdl.academic_year.current_academic_year()
     if request.method == 'GET':
 
@@ -198,7 +198,7 @@ def online_double_encoding_validation(request, learning_unit_id=None, tutor_id=N
         if sessions_list:
             for sessions in sessions_list:
                 for session in sessions:
-                    if is_pgmer:
+                    if is_program_manager:
                         enrollments = list(mdl.exam_enrollment.find_exam_enrollments_double_pgmer_by_session(session))
                     else:
                         enrollments = list(mdl.exam_enrollment.find_exam_enrollments_drafts_existing_by_session(session))
@@ -211,17 +211,15 @@ def online_double_encoding_validation(request, learning_unit_id=None, tutor_id=N
                                        'learning_unit': learning_unit,
                                        'enrollments': all_enrollments,
                                        'justifications': mdl.exam_enrollment.JUSTIFICATION_TYPES,
-                                       'is_pgmer': is_pgmer})
+                                       'is_pgmer': is_program_manager})
 
     elif request.method == 'POST':
         sessions_list, faculties, notes_list = get_sessions(learning_unit_id, request, tutor, academic_year, None)
         if sessions_list:
             for sessions in sessions_list:
-
                 for session in sessions:
                     enrollments = list(mdl.exam_enrollment.find_exam_enrollments_by_session(session))
                     if enrollments:
-
                         for enrollment in enrollments:
                             score = request.POST.get('score_' + str(enrollment.id), None)
                             if score:
@@ -230,7 +228,7 @@ def online_double_encoding_validation(request, learning_unit_id=None, tutor_id=N
                             if justification == "None":
                                 justification = None
 
-                            if is_pgmer:
+                            if is_program_manager:
                                 if score:
                                     if enrollment.session_exam.learning_unit_year.decimal_scores:
                                         enrollment.score_final = float(score)
@@ -310,7 +308,6 @@ def online_encoding_submission(request, learning_unit_id):
                             enrollment.score_final = enrollment.score_draft
                         if enrollment.justification_draft:
                             enrollment.justification_final = enrollment.justification_draft
-                        enrollment.encoding_status = "SUBMITTED"
                         enrollment.save()
                         mdl.exam_enrollment.create_exam_enrollment_historic(request.user, enrollment,
                                                                             enrollment.score_final,
