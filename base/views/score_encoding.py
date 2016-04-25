@@ -350,14 +350,14 @@ def notes_printing(request, learning_unit_id=None, tutor_id=None, offer_id=None)
 
     academic_year = mdl.academic_year.current_academic_year()
 
-    if tutor:
-        is_fac = False
+    # if tutor:
+    is_fac = False
     # In case the user is not a tutor we check whether it is a program manager for the offer.
-    else:
-        program_mgr_list = mdl.program_manager.find_by_user(request.user)
-        for program_mgr in program_mgr_list:
-            is_fac = True
-            break
+    # else:
+    program_mgr_list = mdl.program_manager.find_by_user(request.user)
+    for program_mgr in program_mgr_list:
+        is_fac = True
+        break
     if learning_unit_id == -1:
         sessions_list, faculties, notes_list = get_sessions(None, request, tutor, academic_year, offer_id)
     else:
@@ -368,7 +368,18 @@ def notes_printing(request, learning_unit_id=None, tutor_id=None, offer_id=None)
 
 @login_required
 def notes_printing_all(request, tutor_id=None, offer_id=None):
-    return notes_printing(request, int(-1), tutor_id, offer_id)
+    academic_year = mdl.academic_year.current_academic_year()
+    is_fac = False
+    program_mgr_list = mdl.program_manager.find_by_user(request.user)
+    for program_mgr in program_mgr_list:
+        is_fac = True
+        break
+    tutor = None
+    if tutor_id:
+        tutor = mdl.tutor.find_by_id(tutor_id)
+    sessions_list, faculties, notes_list = get_sessions(None, request, tutor, academic_year, offer_id)
+    return pdf_utils.print_notes(request.user, academic_year, int(-1), is_fac, sessions_list, tutor=tutor)
+    # return notes_printing(request, int(-1), tutor_id, offer_id)
 
 
 @login_required

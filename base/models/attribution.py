@@ -25,7 +25,6 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-from .learning_unit_year import LearningUnitYear
 
 
 class AttributionAdmin(admin.ModelAdmin):
