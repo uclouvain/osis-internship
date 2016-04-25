@@ -23,6 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from dissertation.views import dissertation
-from dissertation.views import subject
-from dissertation.views import information
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from pprint import pprint
+from dissertation.models.adviser import Adviser
+from base import models as mdl
+
+@login_required
+def informations(request):
+    person = mdl.person.find_by_user(request.user)
+    return render(request, "informations.html", {'person': person})

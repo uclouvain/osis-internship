@@ -27,7 +27,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
-from base.models import person
+from dissertation.models import adviser
 
 class PropositionDissertation(models.Model):
     TYPES_CHOICES = (
@@ -48,7 +48,7 @@ class PropositionDissertation(models.Model):
         ('FORBIDDEN', _('Forbidden')),
         )
 
-    author = models.ForeignKey(person.Person)
+    author = models.ForeignKey(adviser.Adviser)
     collaboration = models.CharField(max_length=12, choices=COLLABORATION_CHOICES, default='FORBIDDEN')
     description = models.TextField(blank=True, null=True)
     level = models.CharField(max_length=12, choices=LEVELS_CHOICES, default='DOMAIN')

@@ -28,7 +28,7 @@ from django.utils import timezone
 from django.contrib import admin
 
 class Adviser(models.Model):
-    person           = models.OneToOneField('base.Person',on_delete=models.CASCADE)
+    person = models.OneToOneField('base.Person',on_delete=models.CASCADE)
 
     def __str__(self):
         # We retrieve related person's informations (adaptation of __str__ method of base.Person)
