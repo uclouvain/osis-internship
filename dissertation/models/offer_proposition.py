@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -23,21 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.conf.urls import include, url
+from django.db import models
+from django.utils import timezone
 from django.contrib import admin
-from django.conf import settings
+from dissertation.models import proposition_dissertation
+from base.models import offer_year
 
-urlpatterns = [
-    url(r'^'+settings.ADMIN_URL, admin.site.urls),
-    url(r'', include('base.urls')),
-    url(r'^assistants/', include('assistant.urls')),
-    url(r'^internships/', include('internship.urls')),
-    url(r'^dissertation/', include('dissertation.urls')),
-]
+class OfferProposition(models.Model):
+    title = models.CharField(max_length=200)
+    proposition_dissertation = models.ForeignKey(proposition_dissertation.PropositionDissertation)
+    offer_year = models.ForeignKey(offer_year.OfferYear)
 
-handler404 = 'base.views.common.page_not_found'
-handler403 = 'base.views.common.access_denied'
-
-admin.site.site_header = 'OSIS'
-admin.site.site_title  = 'OSIS'
-admin.site.index_title = 'Louvain'
+    def __str__(self):
+        return self.title

@@ -23,21 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.conf.urls import include, url
-from django.contrib import admin
-from django.conf import settings
+from django.conf.urls import url
+from dissertation.views import dissertation, subject
 
 urlpatterns = [
-    url(r'^'+settings.ADMIN_URL, admin.site.urls),
-    url(r'', include('base.urls')),
-    url(r'^assistants/', include('assistant.urls')),
-    url(r'^internships/', include('internship.urls')),
-    url(r'^dissertation/', include('dissertation.urls')),
+    url(r'^$', dissertation.dissertations, name='dissertations'),
+    url(r'^subjects/$', subject.subjects, name='subjects'),
+    url(r'^subject_new$', subject.subject_new, name='subject_new'),
+    url(r'^search$', subject.subjects_search, name='subjects_search'),
 ]
-
-handler404 = 'base.views.common.page_not_found'
-handler403 = 'base.views.common.access_denied'
-
-admin.site.site_header = 'OSIS'
-admin.site.site_title  = 'OSIS'
-admin.site.index_title = 'Louvain'

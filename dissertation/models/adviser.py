@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -23,21 +23,23 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.conf.urls import include, url
+from django.db import models
+from django.utils import timezone
 from django.contrib import admin
-from django.conf import settings
 
-urlpatterns = [
-    url(r'^'+settings.ADMIN_URL, admin.site.urls),
-    url(r'', include('base.urls')),
-    url(r'^assistants/', include('assistant.urls')),
-    url(r'^internships/', include('internship.urls')),
-    url(r'^dissertation/', include('dissertation.urls')),
-]
+class Adviser(models.Model):
+    person           = models.OneToOneField('base.Person',on_delete=models.CASCADE)
 
-handler404 = 'base.views.common.page_not_found'
-handler403 = 'base.views.common.access_denied'
+    def __str__(self):
+        # We retrieve related person's informations (adaptation of __str__ method of base.Person)
+        first_name = ""
+        middle_name = ""
+        last_name = ""
+        if self.person.first_name :
+            first_name = self.person.first_name
+        if self.person.middle_name :
+            middle_name = self.person.middle_name
+        if self.person.last_name :
+            last_name = self.person.last_name + ","
 
-admin.site.site_header = 'OSIS'
-admin.site.site_title  = 'OSIS'
-admin.site.index_title = 'Louvain'
+        return u"%s %s %s" % (last_name.upper(), first_name, middle_name)

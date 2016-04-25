@@ -1,0 +1,90 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+ * OSIS stands for Open Student Information System. It's an application
+ * designed to manage the core business of higher education institutions,
+ * such as universities, faculties, institutes and professional schools.
+ * The core business involves the administration of students, teachers,
+ * courses, programs and so on.
+ *
+ * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * A copy of this license - GNU General Public License - is available
+ * at the root of the source code of this program.  If not,
+ * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block breadcrumb %}
+  <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'Studies' %}</a></li>
+  <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'Dissertations' %}</a></li>
+  <li class="active">{% trans 'Subjects' %}</li>
+{% endblock %}
+{% block content %}
+  <div class="page-header">
+    <h2>{% trans 'Subjects' %}</h2>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <form method="get" action="{% url 'subjects_search'%}">
+        <div class="row">
+          <div class="col-md-10">
+            <label for="txt_title">{% trans 'Title'%}</label>
+            <input class="form-control" id="txt_title" placeholder="{% trans 'Title' %}" name="title"
+            value="{{ request.GET.title }}" style="text-transform:uppercase">
+          </div>
+          <div class="col-md-2">
+            <br>
+            <button type="submit" id="bt_submit_subject_search" class="btn btn-primary" role="button"
+            title="{% trans 'Search for a subject' %}"><span class="glyphicon glyphicon-search"
+            aria-hidden="true"></span></button>
+            <a href="{% url 'subject_new' %}" id="lnk_subject_new" class="btn btn-default"
+            role="button" title="{% trans 'Create a subject'%}"><span class="glyphicon glyphicon-plus"
+            aria-hidden="true"></span></a>
+          </div>
+        </div>
+      </form>
+      <div>
+        <br>
+        {% if message %}
+          <div>
+              <label class="alert alert-warning" style="margin:5px">{{message}}</label>
+          </div>
+        {% else %}
+          <div>
+            {% if subjects|length == 0 %}
+                <label class="alert alert-info" style="margin:5px">{% trans 'No result!' %}</label>
+            {% else %}
+              <table class="table table-hover">
+                <thead>
+                  <th>{% trans 'Title'%}</th>
+                  <th>{% trans 'Author'%}</th>
+                  <th>{% trans 'Type'%}</th>
+                  <th>{% trans 'Visibility'%}</th>
+                </thead>
+                {% for subject in subjects %}
+                  <tr>
+                    <td>{{ subject.title }}</td>
+                    <td>{{ subject.author }}</td>
+                    <td>{{ subject.type }}</td>
+                    <td>{{ subject.visibility|yesno:"Yes,No" }}</td>
+                  </tr>
+                {% endfor %}
+              </table>
+            {% endif %}
+          </div>
+        {% endif %}
+    </div>
+  </div>
+{% endblock %}
