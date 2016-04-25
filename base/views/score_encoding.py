@@ -133,7 +133,7 @@ def online_encoding_form(request, learning_unit_id=None, tutor_id=None):
 def online_double_encoding_form(request, learning_unit_id=None):
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_id)
     is_program_manager = mdl.program_manager.is_program_manager(request.user, learning_unit_year=learning_unit_year)
-    tutor = mdl.tutor.find_by_user(request.user)
+    tutor = mdl.attribution.get_assigned_tutor(request.user)
     tutor_id = None
     if tutor:
         tutor_id = tutor.id
@@ -576,6 +576,7 @@ def get_data_online(learning_unit_id, tutor_id, request):
 
 def get_data_online_double(learning_unit_id, tutor_id, request):
     is_programme_manager = False
+    print(tutor_id)
     if tutor_id:
         tutor = mdl.tutor.find_by_id(tutor_id)
     else:
@@ -599,8 +600,10 @@ def get_data_online_double(learning_unit_id, tutor_id, request):
         for sessions in sessions_list:
             for session in sessions:
                 if is_programme_manager:
+                    print("oui")
                     enrollments = mdl.exam_enrollment.find_exam_enrollments_drafts_existing_pgmer_by_session(session)
                 else:
+                    print("no")
                     enrollments = mdl.exam_enrollment.find_exam_enrollments_drafts_existing_by_session(session)
                 num_encoded_scores = mdl.exam_enrollment.count_encoded_scores(enrollments)
                 tot_enrollments.extend(enrollments)

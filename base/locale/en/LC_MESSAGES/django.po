@@ -560,6 +560,9 @@ msgstr "Program"
 msgid "session"
 msgstr "Session"
 
+msgid "number_session"
+msgstr "No. Session"
+
 #: templates/assessments/online_encoding.html:167
 msgid "score_submitted"
 msgstr "Submitted"
@@ -1242,12 +1245,11 @@ msgid "begin_date_lt_end_date"
 msgstr "The start date must be equals or lower than the end date"
 
 msgid "no_score_encoded_double_encoding_impossible"
-msgstr "No scores encoded ; double encoding is not possible."
+msgstr "No new scores encoded. The double encoding needs new scores."
 
 #: views/common.py:162
 msgid "minimum_one_criteria"
 msgstr "Please choose at least one criteria!"
-
 
 msgid "get_excel_file"
 msgstr "Get Excel File"

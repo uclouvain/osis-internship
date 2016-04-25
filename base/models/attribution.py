@@ -82,7 +82,7 @@ def find_by_function(tutor, a_learning_unit, function):
 
 
 def is_coordinator(user, learning_unit_year):
-    attributions = Attribution.objects.filter(tutor__user=user,
+    attributions = Attribution.objects.filter(tutor__person__user=user,
                                               learning_unit=learning_unit_year.learning_unit,
                                               function='COORDINATOR')
     if attributions:
@@ -92,7 +92,7 @@ def is_coordinator(user, learning_unit_year):
 
 
 def is_professor(user, learning_unit_year):
-    attributions = Attribution.objects.filter(tutor__user=user,
+    attributions = Attribution.objects.filter(tutor__person__user=user,
                                               learning_unit=learning_unit_year.learning_unit,
                                               function='PROFESSOR')
     if attributions:

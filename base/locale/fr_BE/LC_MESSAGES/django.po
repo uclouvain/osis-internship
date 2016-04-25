@@ -560,6 +560,9 @@ msgstr "Programme"
 msgid "session"
 msgstr "Session"
 
+msgid "number_session"
+msgstr "No. session"
+
 #: templates/assessments/online_encoding.html:167
 msgid "score_submitted"
 msgstr "Soumis"
@@ -1246,12 +1249,11 @@ msgid "begin_date_lt_end_date"
 msgstr "La date de début doit etre égale ou inferieure à la date de fin"
 
 msgid "no_score_encoded_double_encoding_impossible"
-msgstr "Aucune note encodée ; le double encodage n'est donc pas possible."
+msgstr "Aucune nouvelle note encodé. Le double encodage besoin des nouvelles notes."
 
 #: views/common.py:162
 msgid "minimum_one_criteria"
 msgstr "Veuillez remplir au moins 1 critère"
-
 
 msgid "get_excel_file"
 msgstr "Obtenir le fichier Excel"
