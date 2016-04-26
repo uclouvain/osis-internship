@@ -27,33 +27,35 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li class="active" id="lnk_studies">{% trans 'student_path' %}</li>
+  <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'Studies' %}</a></li>
+  <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'Dissertations' %}</a></li>
+  <li class="active">{% trans 'My informations' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'student_path' %}</h2>
+    <h2>{% trans 'My informations' %}</h2>
   </div>
-
   <div class="panel panel-default">
     <div class="panel-body">
       <div class="row">
-        <div class="col-md-1"><i class="fa fa-tachometer" style="font-size: 400%; color: #6699FF;"></i></div>
-        <div class="col-md-5">
-          <h4 class="media-heading"><a href="{% url 'assessments' %}" id="lnk_assessments" >{% trans 'evaluations' %}</a></h4>
-          <p>{% trans 'desc_lnk_assessments' %}</p>
-        </div>
-        <div class="col-md-1"><i class="fa fa-user-md" style="font-size: 400%; color: #6699FF;"></i></div>
-        <div class="col-md-5">
-          <h4 class="media-heading"><a href="{% url 'internships_home' %}" id="lnk_internships">{% trans 'stages' %}</a></h4>
-          <p>{% trans 'desc_lnk_internships' %}</p>
+        <div class="col-md-4">
+            <label>{% trans 'Name' %}</label><br>
+            {{ person.first_name }} {{ person.last_name }}
         </div>
       </div>
       <br>
       <div class="row">
-        <div class="col-md-1"><i class="fa fa-graduation-cap" style="font-size: 400%; color: #6699FF;"></i></div>
-        <div class="col-md-5">
-          <h4 class="media-heading"><a href="{% url 'dissertations' %}" id="lnk_dissertations" >{% trans 'Dissertations' %}</a></h4>
-          <p>{% trans 'This process helps tutors while scores encoding.' %}</p>
+        <div class="col-md-4">
+            <label>{% trans 'Email' %}</label><br>
+            {{ person.email }}
+        </div>
+        <div class="col-md-2">
+            <label>{% trans 'Phone' %}</label><br>
+            {{ person.phone }}
+        </div>
+        <div class="col-md-2">
+            <label>{% trans 'Mobile Phone' %}</label><br>
+            {{ person.phone_mobile }}
         </div>
       </div>
     </div>
