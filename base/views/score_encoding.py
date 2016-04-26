@@ -103,25 +103,36 @@ def online_encoding_form(request, learning_unit_id=None, tutor_id=None):
             if modification_possible:
                 if score:
                     score = score.strip().replace(',', '.')
-
-                if score:
                     if enrollment.session_exam.learning_unit_year.decimal_scores:
-                        enrollment.score_draft = float(score)
+                        if data['is_pgmer']:
+                            enrollment.score_final = float(score)
+                            enrollment.score_draft = float(score)
+                        else:
+                            enrollment.score_draft = float(score)
                     else:
-                        enrollment.score_draft = int(float(score))
+                        if data['is_pgmer']:
+                            enrollment.score_final = int(float(score))
+                            enrollment.score_draft = int(float(score))
+                        else:
+                            enrollment.score_draft = int(float(score))
                 else:
-                    if justification:
-                        enrollment.score_draft = None
+                    if justification == 'None':
+                        if data['is_pgmer']:
+                            enrollment.score_final = None
+                        else:
+                            enrollment.score_draft = None
 
                 if justification and justification != "None":
-                    enrollment.justification_draft = justification
+                    if data['is_pgmer']:
+                        enrollment.justification_final = justification
+                        enrollment.justification_draft = justification
+                    else:
+                        enrollment.justification_draft = justification
                 else:
-                    enrollment.justification_draft = None
-
-                if data['is_pgmer']:
-                    # pgmer draft must be save in final
-                    enrollment.score_final = enrollment.score_draft
-                    enrollment.justification_final = enrollment.justification_draft
+                    if data['is_pgmer']:
+                        enrollment.justification_final = None
+                    else:
+                        enrollment.justification_draft = None
                 enrollment.save()
         if tutor_id:
             return HttpResponseRedirect(reverse('online_encoding', args=(learning_unit_id, tutor_id)))
@@ -191,8 +202,8 @@ def online_double_encoding_validation(request, learning_unit_id=None, tutor_id=N
         is_program_manager = True
         tutor = mdl.attribution.get_assigned_tutor(request.user)
     academic_year = mdl.academic_year.current_academic_year()
-    if request.method == 'GET':
 
+    if request.method == 'GET':
         sessions_list, faculties, notes_list = get_sessions(learning_unit_id, request, tutor, academic_year, None)
         all_enrollments = []
         if sessions_list:
@@ -212,7 +223,6 @@ def online_double_encoding_validation(request, learning_unit_id=None, tutor_id=N
                                        'enrollments': all_enrollments,
                                        'justifications': mdl.exam_enrollment.JUSTIFICATION_TYPES,
                                        'is_pgmer': is_program_manager})
-
     elif request.method == 'POST':
         sessions_list, faculties, notes_list = get_sessions(learning_unit_id, request, tutor, academic_year, None)
         if sessions_list:
@@ -584,7 +594,6 @@ def get_data_online(learning_unit_id, tutor_id, request):
 
 def get_data_online_double(learning_unit_id, tutor_id, request):
     is_programme_manager = False
-    print(tutor_id)
     if tutor_id:
         tutor = mdl.tutor.find_by_id(tutor_id)
     else:
@@ -608,10 +617,8 @@ def get_data_online_double(learning_unit_id, tutor_id, request):
         for sessions in sessions_list:
             for session in sessions:
                 if is_programme_manager:
-                    print("oui")
-                    enrollments = mdl.exam_enrollment.find_exam_enrollments_drafts_existing_pgmer_by_session(session)
+                    enrollments = mdl.exam_enrollment.find_exam_enrollments_final_existing_pgmer_by_session(session)
                 else:
-                    print("no")
                     enrollments = mdl.exam_enrollment.find_exam_enrollments_drafts_existing_by_session(session)
                 num_encoded_scores = mdl.exam_enrollment.count_encoded_scores(enrollments)
                 tot_enrollments.extend(enrollments)

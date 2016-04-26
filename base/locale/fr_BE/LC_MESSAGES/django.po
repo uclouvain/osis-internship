@@ -1173,7 +1173,7 @@ msgstr "Fichier invalide"
 
 #: utils/upload_xls_utils.py:87
 msgid "Line"
-msgstr ""
+msgstr "Ligne"
 
 #: utils/upload_xls_utils.py:89
 msgid "student_not_exist"
