@@ -91,7 +91,7 @@ def print_notes(user, academic_year, learning_unit_id, is_programme_manager, ses
             if enrollments:
                 list_exam_enrollment = list_exam_enrollment + enrollments
 
-    if tutor: # Case ProgramManager wants to print notes for one Tutor
+    if tutor and is_programme_manager: # Case ProgramManager wants to print notes for one Tutor
         learning_unit_years = mdl.learning_unit_year.find_by_tutor(tutor.id)
         offer_years = mdl.offer_year.find_by_user(user)
         filtered_exam_enrollments = []
