@@ -29,6 +29,8 @@ from django.contrib import admin
 
 class Adviser(models.Model):
     person = models.OneToOneField('base.Person',on_delete=models.CASCADE)
+    email_accept = models.BooleanField(default=False)
+    phone_accept = models.BooleanField(default=False)
 
     def __str__(self):
         # We retrieve related person's informations (adaptation of __str__ method of base.Person)
