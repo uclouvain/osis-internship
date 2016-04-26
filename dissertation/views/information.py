@@ -28,7 +28,6 @@ from django.contrib.auth.decorators import login_required
 from pprint import pprint
 from dissertation.models.adviser import Adviser
 from base import models as mdl
-from dissertation.forms import AdviserForm
 
 @login_required
 def informations(request):
