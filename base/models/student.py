@@ -38,7 +38,7 @@ class StudentAdmin(admin.ModelAdmin):
 class Student(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
-    registration_id = models.CharField(max_length=10)
+    registration_id = models.CharField(max_length=10, unique=True)
     person = models.ForeignKey('Person')
 
     def __str__(self):

@@ -1185,7 +1185,7 @@ msgstr "L'année académique (%d) n'existe pas"
 
 #: utils/upload_xls_utils.py:97
 msgid "offer_year_not_exist"
-msgstr "L'offre annualisée (%d) (%d) - n'existe pas"
+msgstr "L'offre annualisée (%s) (%d) - n'existe pas"
 
 #: utils/upload_xls_utils.py:101
 msgid "offer_enrollment_not_exist"
@@ -1231,6 +1231,9 @@ msgstr[1] ""
 #: utils/upload_xls_utils.py:231
 msgid "score_saved"
 msgstr "Notes"
+
+msgid "score_invalid"
+msgstr "Note invalide"
 
 #: utils/upload_xls_utils.py:232
 msgid "scores_saved"

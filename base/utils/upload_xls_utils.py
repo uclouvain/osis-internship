@@ -137,14 +137,18 @@ def __save_xls_scores(request, file_name, is_fac, tutor_id, learning_unit_id):
                                             else:
                                                 notes_modifiable = False
                                                 messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('score_already_submitted')))
-
+                                        score = None
                                         if notes_modifiable:
-                                            if row[col_score].value is None:
-                                                score = None
+                                            if row[col_score].value:
+                                                try:
+                                                    score = float(str(row[col_score].value).strip().replace(',', '.'))
+                                                except ValueError:
+                                                    messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('score_invalid')))
                                             else:
-                                                score = float(row[col_score].value)
+                                                score = None
 
                                             score_valid = True
+
                                             if score:
                                                 if score < 0 or score > 20:
                                                     validation_error += "%s %s!" % (info_line, _('scores_gt_0_lt_20'))

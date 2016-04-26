@@ -1182,7 +1182,7 @@ msgstr "Academic year (%d) doesn't exist"
 
 #: utils/upload_xls_utils.py:97
 msgid "offer_year_not_exist"
-msgstr "The offer year (%d) (%d) - doesn't exist"
+msgstr "The offer year (%s) (%d) - doesn't exist"
 
 #: utils/upload_xls_utils.py:101
 msgid "offer_enrollment_not_exist"
@@ -1231,6 +1231,9 @@ msgstr "Score Saved"
 #: utils/upload_xls_utils.py:232
 msgid "scores_saved"
 msgstr "Scores Saved"
+
+msgid "score_invalid"
+msgstr "Score invalid"
 
 #: utils/upload_xls_utils.py:241
 msgid "the_coordinator_must_still_submit_scores"
