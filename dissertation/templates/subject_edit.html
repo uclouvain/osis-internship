@@ -37,7 +37,7 @@
   </div>
   <div class="panel panel-default">
     <div class="panel-body">
-      <form method="POST" >
+      <form method="POST" class="post-form">
         {% csrf_token %}
         {% for field in form %}
           <div class="row {% if field.errors %}error{% endif %}">

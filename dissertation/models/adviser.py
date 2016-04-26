@@ -26,6 +26,7 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib import admin
+from base.models import person
 
 class Adviser(models.Model):
     person = models.OneToOneField('base.Person',on_delete=models.CASCADE)
@@ -45,3 +46,7 @@ class Adviser(models.Model):
             last_name = self.person.last_name + ","
 
         return u"%s %s %s" % (last_name.upper(), first_name, middle_name)
+
+    def find_by_person(a_person):
+        adviser = Adviser.objects.get(person=a_person)
+        return adviser

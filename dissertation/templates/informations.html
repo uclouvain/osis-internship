@@ -38,6 +38,13 @@
   <div class="panel panel-default">
     <div class="panel-body">
       <div class="row">
+        <div class="col-md-1 pull-right">
+          <a href="{% url 'informations' %}" id="lnk_informations_edit" class="btn btn-default btn-primary"
+          role="button" title="{% trans 'Edit my informations'%}"><span class="glyphicon glyphicon-edit"
+          aria-hidden="true"></span></a>
+        </div>
+      </div>
+      <div class="row">
         <div class="col-md-3">
             <label>{% trans 'Name' %}</label><br>
             {{ person.first_name }} {{ person.last_name }}
@@ -53,6 +60,17 @@
         <div class="col-md-3">
             <label>{% trans 'Mobile Phone' %}</label><br>
             {{ person.phone_mobile }}
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-3">
+          <label>{% trans 'Email Accept' %}</label><br>
+          {{ adviser.email_accept|yesno:"Yes,No"  }}
+        </div>
+        <div class="col-md-3">
+          <label>{% trans 'Phone Accept' %}</label><br>
+          {{ adviser.phone_accept|yesno:"Yes,No" }}
         </div>
       </div>
     </div>

@@ -26,8 +26,14 @@
 from django import forms
 from django.forms import ModelForm
 from dissertation.models.proposition_dissertation import PropositionDissertation
+from dissertation.models.adviser import Adviser
 
 class SubjectForm(ModelForm):
     class Meta:
         model = PropositionDissertation
-        fields = ['visibility','author','title','description','type','level','collaboration','max_number_student']
+        fields = ('visibility','author','title','description','type','level','collaboration','max_number_student')
+
+class AdviserForm(ModelForm):
+    class Meta:
+        model = Adviser
+        fields = ('email_accept','phone_accept')

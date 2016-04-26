@@ -24,7 +24,7 @@
 #
 ##############################################################################
 from django.conf.urls import url
-from dissertation.views import dissertation, subject,information
+from dissertation.views import dissertation,subject,information
 
 urlpatterns = [
     url(r'^$', dissertation.dissertations, name='dissertations'),
