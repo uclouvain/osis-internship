@@ -28,13 +28,14 @@ from django.utils import timezone
 from django.contrib import admin
 from base.models import person
 
+
 class Adviser(models.Model):
     person = models.OneToOneField('base.Person',on_delete=models.CASCADE)
     email_accept = models.BooleanField(default=False)
     phone_accept = models.BooleanField(default=False)
     office_accept = models.BooleanField(default=False)
-    
-	
+    comment=models.TextField(default='')
+
     def __str__(self):
         # We retrieve related person's informations (adaptation of __str__ method of base.Person)
         first_name = ""

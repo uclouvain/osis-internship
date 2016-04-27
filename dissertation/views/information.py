@@ -23,11 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from pprint import pprint
 from dissertation.models.adviser import Adviser
 from base import models as mdl
+from dissertation.forms import AdviserForm
 
 @login_required
 def informations(request):
@@ -38,5 +39,17 @@ def informations(request):
         adviser = Adviser.find_by_person(person)
     except :
         adviser = Adviser.find_by_person(person)
-
     return render(request, "informations.html", {'person':person,'adviser': adviser})
+
+def informations_edit(request):
+    person = mdl.person.find_by_user(request.user)
+    adviser = Adviser.find_by_person(person)
+    if request.method == "POST":
+        form = AdviserForm(request.POST, instance=adviser)
+        if form.is_valid():
+            adviser = form.save(commit=False)
+            adviser.save()
+            return redirect('informations')
+    else:
+        form = AdviserForm(instance=adviser)
+    return render(request, "informations_edit.html", {'form':form,'person':person})

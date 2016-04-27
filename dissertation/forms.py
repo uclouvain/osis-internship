@@ -32,3 +32,8 @@ class SubjectForm(ModelForm):
     class Meta:
         model = PropositionDissertation
         fields = ('visibility','author','title','description','type','level','collaboration','max_number_student')
+
+class AdviserForm(ModelForm):
+    class Meta:
+        model = Adviser
+        fields = ('email_accept','phone_accept','office_accept','comment')

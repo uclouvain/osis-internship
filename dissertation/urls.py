@@ -30,7 +30,8 @@ urlpatterns = [
     url(r'^$', dissertation.dissertations, name='dissertations'),
 
     url(r'^informations/$', information.informations, name='informations'),
-
+    url(r'^informations_edit/$', information.informations_edit, name='informations_edit'),
+    
     url(r'^subjects/$', subject.subjects, name='subjects'),
     url(r'^subject_new$', subject.subject_new, name='subject_new'),
 
