@@ -24,16 +24,18 @@
 #
 ##############################################################################
 from django.conf.urls import url
-from dissertation.views import dissertation,subject,information
+from dissertation.views import dissertation,proposition_dissertation,information
 
 urlpatterns = [
     url(r'^$', dissertation.dissertations, name='dissertations'),
 
     url(r'^informations/$', information.informations, name='informations'),
     url(r'^informations_edit/$', information.informations_edit, name='informations_edit'),
-    
-    url(r'^subjects/$', subject.subjects, name='subjects'),
-    url(r'^subject_new$', subject.subject_new, name='subject_new'),
 
-    url(r'^search$', subject.subjects_search, name='subjects_search'),
+    url(r'^proposition_dissertations/$', proposition_dissertation.proposition_dissertations, name='proposition_dissertations'),
+    url(r'^proposition_dissertation/(?P<pk>[0-9]+)/edit/$', proposition_dissertation.proposition_dissertation_edit, name='proposition_dissertation_edit'),
+    url(r'^proposition_dissertation_detail/(?P<pk>[0-9]+)/$', proposition_dissertation.proposition_dissertation_detail, name='proposition_dissertation_detail'),
+    url(r'^proposition_dissertation_new$', proposition_dissertation.proposition_dissertation_new, name='proposition_dissertation_new'),
+
+    url(r'^search$', proposition_dissertation.proposition_dissertations_search, name='proposition_dissertations_search'),
 ]

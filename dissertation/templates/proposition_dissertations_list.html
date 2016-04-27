@@ -37,7 +37,7 @@
   </div>
   <div class="panel panel-default">
     <div class="panel-body">
-      <form method="get" action="{% url 'subjects_search'%}">
+      <form method="get" action="{% url 'proposition_dissertations_search'%}">
         <div class="row">
           <div class="col-md-10">
             <label for="txt_title">{% trans 'Title'%}</label>
@@ -46,11 +46,11 @@
           </div>
           <div class="col-md-2">
             <br>
-            <button type="submit" id="bt_submit_subject_search" class="btn btn-primary" role="button"
-            title="{% trans 'Search for a subject' %}"><span class="glyphicon glyphicon-search"
+            <button type="submit" id="bt_submit_proposition_dissertation_search" class="btn btn-primary" role="button"
+            title="{% trans 'Search for a proposition dissertation' %}"><span class="glyphicon glyphicon-search"
             aria-hidden="true"></span></button>
-            <a href="{% url 'subject_new' %}" id="lnk_subject_new" class="btn btn-default"
-            role="button" title="{% trans 'Create a subject'%}"><span class="glyphicon glyphicon-plus"
+            <a href="{% url 'proposition_dissertation_new' %}" id="lnk_proposition_dissertation_new" class="btn btn-default"
+            role="button" title="{% trans 'Create a proposition dissertation'%}"><span class="glyphicon glyphicon-plus"
             aria-hidden="true"></span></a>
           </div>
         </div>
@@ -63,7 +63,7 @@
           </div>
         {% else %}
           <div>
-            {% if subjects|length == 0 %}
+            {% if proposition_dissertations|length == 0 %}
                 <label class="alert alert-info" style="margin:5px">{% trans 'No result!' %}</label>
             {% else %}
               <table class="table table-hover">
@@ -73,12 +73,12 @@
                   <th>{% trans 'Type'%}</th>
                   <th>{% trans 'Visibility'%}</th>
                 </thead>
-                {% for subject in subjects %}
+                {% for proposition_dissertation in proposition_dissertations %}
                   <tr>
-                    <td>{{ subject.title }}</td>
-                    <td>{{ subject.author }}</td>
-                    <td>{{ subject.type }}</td>
-                    <td>{{ subject.visibility|yesno:"Yes,No" }}</td>
+                    <td><a href="{% url 'proposition_dissertation_detail' pk=proposition_dissertation.pk %}">{{ proposition_dissertation.title }}</a></td>
+                    <td>{{ proposition_dissertation.author }}</td>
+                    <td>{{ proposition_dissertation.type }}</td>
+                    <td>{{ proposition_dissertation.visibility|yesno:"Yes,No" }}</td>
                   </tr>
                 {% endfor %}
               </table>

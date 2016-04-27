@@ -24,5 +24,5 @@
 #
 ##############################################################################
 from dissertation.views import dissertation
-from dissertation.views import subject
+from dissertation.views import proposition_dissertation
 from dissertation.views import information
