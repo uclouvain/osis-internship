@@ -26,7 +26,7 @@
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
-from base.models import offer, structure
+from base.models import offer, structure, program_manager
 
 
 class OfferYearAdmin(admin.ModelAdmin):
@@ -38,9 +38,9 @@ class OfferYearAdmin(admin.ModelAdmin):
 
 
 GRADE_TYPES = (
-    ('BACHELOR', _('Bachelor')),
-    ('MASTER', _('Master')),
-    ('DOCTORATE', _('Ph.D')))
+    ('BACHELOR', _('bachelor')),
+    ('MASTER', _('master')),
+    ('DOCTORATE', _('ph_d')))
 
 
 class OfferYear(models.Model):
@@ -92,37 +92,51 @@ class OfferYear(models.Model):
         return None
 
 
-def find_offer_years_by_academic_year(academic_yr):
+def find_by_academic_year(academic_yr):
     return OfferYear.objects.filter(academic_year=int(academic_yr))
 
 
-def find_offer_years_by_academic_year_structure(academic_yr, struct):
-    return OfferYear.objects.filter(academic_year=academic_yr, structure=struct).order_by('acronym')
-
-
-def find_offer_years_by_structure(struct):
+def find_by_structure(struct):
     return OfferYear.objects.filter(structure=struct).order_by('academic_year', 'acronym')
 
 
-def find_offer_year_by_id(offer_year_id):
+def find_by_id(offer_year_id):
     return OfferYear.objects.get(pk=offer_year_id)
 
 
 def search_root_offers(entity=None, academic_yr=None, acronym=None):
+    """
+    Offers are organized hierarchically. This function returns only root offers.
+    """
+    has_criteria = False
     queryset = OfferYear.objects
 
     if entity:
-        queryset = queryset.filter(structure=entity)
+        queryset = queryset.filter(structure__acronym__icontains=entity)
+        has_criteria = True
 
     if academic_yr:
         queryset = queryset.filter(academic_year=academic_yr)
+        has_criteria = True
 
     if acronym:
         queryset = queryset.filter(acronym__icontains=acronym)
+        has_criteria = True
 
-    queryset = queryset.filter(parent=None)    # on ne doit prendre que les offres racines (pas les finalités)
-    return queryset
+    if has_criteria:
+        queryset = queryset.filter(parent=None)
+        return queryset
+    else:
+        return None
 
 
 def find_by_academicyear_acronym(academic_yr, acronym):
     return OfferYear.objects.filter(academic_year=academic_yr, acronym=acronym)
+
+
+def find_by_user(user):
+    offer_year_list = []
+    program_mgr_list = program_manager.find_by_user(user)
+    for program in program_mgr_list:
+        offer_year_list.append(program.offer_year)
+    return offer_year_list

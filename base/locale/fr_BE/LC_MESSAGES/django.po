@@ -3,12 +3,11 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-16 12:45+0100\n"
+"POT-Creation-Date: 2016-04-22 15:14+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,769 +16,1281 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: export_utils.py:40 pdf_utils.py:238 templates/learning_unit.html.py:48
-#: templates/offer.html:51 templates/online_double_encoding_form.html.py:58
-#: templates/online_double_encoding_validation.html:56
-#: templates/online_encoding.html:57 templates/online_encoding_form.html:56
-#: templates/scores_encoding.html:52
-msgid "Academic year"
+#: models/exam_enrollment.py:34 models/exam_enrollment.py:148
+#: models/exam_enrollment.py:154
+#: templates/assessments/online_double_encoding_form.html:114
+#: templates/assessments/online_encoding_form.html:131
+#: templates/assessments/online_encoding_form.html:145
+msgid "absent"
+msgstr "Absent"
+
+msgid "absent_pdf_legend"
+msgstr "A=Absent"
+
+#: models/exam_enrollment.py:35 models/exam_enrollment.py:149
+#: models/exam_enrollment.py:155
+#: templates/assessments/online_double_encoding_form.html:115
+#: templates/assessments/online_encoding_form.html:132
+#: templates/assessments/online_encoding_form.html:146
+msgid "cheating"
+msgstr "Tricherie"
+
+msgid "cheating_pdf_legend"
+msgstr "T=Tricherie"
+
+#: models/exam_enrollment.py:36 models/exam_enrollment.py:150
+#: templates/assessments/online_double_encoding_form.html:119
+#: templates/assessments/online_encoding_form.html:136
+msgid "ill"
+msgstr "Malade"
+
+msgid "ill_pdf_legend"
+msgstr "M=Malade"
+
+#: models/exam_enrollment.py:37 models/exam_enrollment.py:151
+#: templates/assessments/online_double_encoding_form.html:120
+#: templates/assessments/online_encoding_form.html:137
+msgid "justified_absence"
+msgstr "Absence justifiée"
+
+msgid "justified_absence_pdf_legend"
+msgstr "AJ=Absence justifiée"
+
+#: models/exam_enrollment.py:38 models/exam_enrollment.py:152
+#: models/exam_enrollment.py:156
+#: templates/assessments/online_double_encoding_form.html:116
+#: templates/assessments/online_encoding_form.html:133
+#: templates/assessments/online_encoding_form.html:147
+msgid "score_missing"
+msgstr "Note manquante"
+
+msgid "score_missing_pdf_legend"
+msgstr "?=Note manquante"
+
+msgid "presence_note_pdf_legend"
+msgstr "0=Cote de présence"
+
+msgid "empty_note_pdf_legend"
+msgstr "(vide)=Pas encore de note"
+
+#: models/exam_enrollment.py:53
+msgid "saved"
+msgstr "Enregistré"
+
+#: models/exam_enrollment.py:54
+msgid "submitted"
+msgstr "Soumis"
+
+#: models/message_template.py:38
+msgid "plain"
+msgstr "Plain"
+
+#: models/message_template.py:40
+msgid "plain_and_html"
+msgstr "Plain et HTML"
+
+#: models/offer_year.py:41
+msgid "bachelor"
+msgstr "Bachelier"
+
+#: models/offer_year.py:42
+msgid "master"
+msgstr "Master"
+
+#: models/offer_year.py:43
+msgid "ph_d"
+msgstr "Ph.D"
+
+#: models/person.py:45
+msgid "female"
+msgstr "Féminin"
+
+#: models/person.py:46
+msgid "male"
+msgstr "Masculin"
+
+#: models/person.py:47
+msgid "unknown"
+msgstr "Indéfini"
+
+#: models/person_address.py:32
+msgid "residential"
+msgstr ""
+
+#: models/person_address.py:33
+msgid "professional"
+msgstr "Professionnel"
+
+#: models/session_exam.py:34
+msgid "idle"
+msgstr "En attente"
+
+#: models/session_exam.py:35
+msgid "open"
+msgstr "Ouvert"
+
+#: models/session_exam.py:36
+msgid "closed"
+msgstr "Fermé"
+
+#: templates/academic_calendar.html:32
+#: templates/academic_calendar_form.html:34
+#: templates/academic_calendars.html:31 templates/academic_year.html.py:30
+#: templates/catalog.html:30 templates/catalog.html.py:34
+#: templates/home.html:49 templates/layout.html.py:71 templates/offers.html:30
+msgid "formation_catalogue"
+msgstr "Catalogue de formation"
+
+#: templates/academic_calendar.html:33 templates/academic_calendar.html:45
+#: templates/academic_calendar_form.html:35
+#: templates/academic_calendar_form.html:51
+#: templates/academic_calendars.html:32 templates/academic_calendars.html:45
+#: templates/academic_year.html.py:31 templates/academic_year.html:35
+#: templates/assessments/online_double_encoding_form.html:58
+#: templates/assessments/online_double_encoding_validation.html:56
+#: templates/assessments/online_encoding.html:59
+#: templates/assessments/online_encoding_form.html:56
+#: templates/assessments/scores_encoding.html:56
+#: templates/assessments/scores_encoding_mgr.html:47 templates/catalog.html:54
+#: templates/layout.html.py:75 templates/learning_unit.html:48
+#: templates/learning_units.html.py:48 templates/offer.html:59
+#: templates/offers.html.py:79 utils/export_utils.py:34 utils/pdf_utils.py:261
+#: templates/offers.html:43
+msgid "academic_year"
 msgstr "Année académique"
 
-#: export_utils.py:41 templates/online_double_encoding_form.html.py:64
-#: templates/online_double_encoding_validation.html:62
-#: templates/online_encoding.html:63 templates/online_encoding_form.html:62
-#: templates/scores_encoding.html:58
-msgid "Session"
-msgstr "Session"
+#: templates/academic_calendar.html:34
+#: templates/academic_calendar_form.html:36
+#: templates/academic_calendars.html:33
+msgid "academic_calendars"
+msgstr "Calendriers académique"
 
-#: export_utils.py:42
-#, fuzzy
-msgid "Activity code"
-msgstr "Activité"
+#: templates/academic_calendar.html:35
+msgid "event"
+msgstr "Événement"
 
-#: export_utils.py:43 pdf_utils.py:260 templates/online_encoding.html.py:96
-#, fuzzy
-msgid "Program"
-msgstr "Programme"
+#: templates/academic_calendar.html:49
+#: templates/academic_calendar_form.html:63
+#: templates/academic_calendars.html:75 templates/learning_units.html.py:80
+#: templates/offer.html:108 templates/offer.html.py:169
+#: templates/offer.html:189 templates/offer.html.py:216
+#: templates/offer.html:251 templates/offer.html.py:271
+#: templates/offer.html:299 templates/offers.html.py:81
+#: templates/structure.html:64 templates/structure.html.py:94
+#: templates/structure.html:120 templates/structures.html.py:47
+#: templates/structures.html:48 templates/structures.html.py:89
+msgid "title"
+msgstr "Intitulé"
 
-#: export_utils.py:44 pdf_utils.py:219
-#: templates/online_double_encoding_form.html:81
-#: templates/online_double_encoding_validation.html:84
-#: templates/online_encoding.html:97 templates/online_encoding_form.html:81
-msgid "Registration number"
-msgstr "Noma"
+#: templates/academic_calendar.html:53
+#: templates/academic_calendar_form.html:68
+#: templates/academic_calendars.html:76 templates/offer.html.py:110
+#: templates/offer_year_calendar.html:46
+#: templates/offer_year_calendar_form.html:57
+msgid "start_date"
+msgstr "Date de début"
 
-#: export_utils.py:45 pdf_utils.py:220 templates/online_encoding.html.py:98
-#, fuzzy
-msgid "Last name"
-msgstr "Nom"
+#: templates/academic_calendar.html:57
+#: templates/academic_calendar_form.html:74
+#: templates/academic_calendars.html:77
+#: templates/assessments/online_double_encoding_form.html:85
+#: templates/assessments/online_encoding.html:153
+#: templates/assessments/online_encoding_form.html:89 templates/offer.html:111
+#: templates/offer_year_calendar.html.py:50
+#: templates/offer_year_calendar_form.html:61 utils/export_utils.py:43
+#: utils/pdf_utils.py:243
+msgid "end_date"
+msgstr "Date de fin"
 
-#: export_utils.py:46 pdf_utils.py:221 templates/online_encoding.html.py:99
-#, fuzzy
-msgid "First name"
-msgstr "Prénom"
-
-#: export_utils.py:47 pdf_utils.py:222
-msgid "Numbered score"
-msgstr "Note chiffrée"
-
-#: export_utils.py:48 pdf_utils.py:223
-#: templates/online_double_encoding_validation.html:80
-#: templates/online_encoding.html:101
-msgid "Other score"
-msgstr "Autre note"
-
-#: export_utils.py:49 pdf_utils.py:224
-#: templates/online_double_encoding_form.html:86
-#: templates/online_encoding.html:102 templates/online_encoding_form.html:86
-msgid "End date"
+msgid "submission_date"
 msgstr "Date de remise"
 
-#: export_utils.py:50
+#: templates/academic_calendar.html:64
+#: templates/academic_calendar_form.html:83 templates/admin/file.html.py:64
+#: templates/admin/files.html:75 templates/offer.html.py:109
+msgid "description"
+msgstr "Description"
+
+#: templates/academic_calendar.html:69
+msgid "label_jumbotron_details_academic_cal"
+msgstr "Comme présenté sur la page d'accueil"
+
+#: templates/academic_calendar.html:75 templates/home.html.py:40
+msgid "go"
+msgstr "Avancer"
+
+#: templates/academic_calendar.html:79 templates/academic_calendar.html:81
+#: templates/offer_year_calendar.html:58 templates/offer_year_calendar.html:59
+#: templates/organization.html.py:108 templates/organization.html:110
+#: templates/organization_address.html:69
+#: templates/organization_address.html:71
+msgid "edit"
+msgstr "Éditer"
+
+#: templates/academic_calendar_form.html:37
+#: templates/academic_calendars.html:38 templates/academic_year.html.py:42
+#: templates/home.html:73 templates/offer.html.py:51
+#: templates/offer_year_calendar.html:42
+#: templates/offer_year_calendar_form.html:52
+msgid "academic_calendar"
+msgstr "Calendrier académique"
+
+#: templates/academic_calendar_form.html:90
+msgid "highlight_title"
+msgstr "Titre de l'événement"
+
+#: templates/academic_calendar_form.html:96
+msgid "highlight_shortcut"
+msgstr "Titre raccourcis de l'événement"
+
+#: templates/academic_calendar_form.html:104
+msgid "highlight_description"
+msgstr "Description de l'événement"
+
+#: templates/academic_calendar_form.html:114
+#: templates/academic_calendar_form.html:115
+#: templates/assessments/online_double_encoding_form.html:130
+#: templates/assessments/online_double_encoding_validation.html:140
+#: templates/offer_year_calendar_form.html:66
+#: templates/offer_year_calendar_form.html:67
+#: templates/organization_address_form.html:81
+#: templates/organization_form.html:78 templates/profile.html.py:182
+#: templates/profile.html:183
+msgid "save"
+msgstr "Sauvegarder"
+
+#: templates/academic_calendar_form.html:118
+#: templates/assessments/online_double_encoding_form.html:134
+#: templates/assessments/online_double_encoding_validation.html:142
+#: templates/assessments/online_encoding.html:233
+#: templates/offer_year_calendar.html:61 templates/offer_year_calendar.html:62
+#: templates/offer_year_calendar_form.html:70
+#: templates/organization_address_form.html:84
+#: templates/organization_address_form.html:85
+#: templates/organization_address_form.html:88
+#: templates/organization_address_form.html:89
+#: templates/organization_form.html:80
+#: templates/assessments/online_encoding.html:257
+#: templates/assessments/online_encoding_form.html:159
+msgid "cancel"
+msgstr "Annuler"
+
+#: templates/academic_calendars.html:70 templates/admin/files.html.py:66
+#: templates/learning_units.html:73 templates/offers.html.py:73
+#: templates/organizations.html:98 templates/structures.html.py:84
+msgid "no_result"
+msgstr "Aucun résultat!"
+
+#: templates/academic_year.html:43
+msgid "academic_calendar_management"
+msgstr "Gestion du calendrier académique"
+
+#: templates/access_denied.html:34
+msgid "acces_denied"
+msgstr "Accès refusé!"
+
+#: templates/admin/file.html:30 templates/admin/files.html.py:30
+#: templates/admin/storage.html:30 templates/admin/storage.html.py:34
+#: templates/layout.html:114
+msgid "storage"
+msgstr "Stockage"
+
+#: templates/admin/file.html:31 templates/admin/files.html.py:31
+#: templates/admin/files.html:35 templates/admin/storage.html.py:64
+msgid "files"
+msgstr "Fichiers"
+
+#: templates/admin/file.html:32 templates/admin/file.html.py:39
+#: templates/admin/file.html:57
+msgid "file"
+msgstr "Fichier"
+
+#: templates/admin/file.html:43 templates/organization.html.py:68
+#: templates/organization_form.html:68 templates/organizations.html.py:52
+#: templates/organizations.html:87 templates/structure.html.py:75
+#: templates/structures.html:53 templates/structures.html.py:90
+msgid "type"
+msgstr "Type"
+
+#: templates/admin/file.html:50 templates/admin/files.html.py:46
+#: templates/admin/files.html:48
+msgid "creation_date"
+msgstr "Date de création"
+
+#: templates/admin/file.html:71 templates/admin/files.html.py:42
+#: templates/admin/files.html:43 templates/admin/files.html.py:76
+#: templates/registration/login.html:40
+msgid "user"
+msgstr "Utilisateur"
+
+#: templates/admin/files.html:52
+msgid "search_for_a_file"
+msgstr "Recherche d'un fichier"
+
+#: templates/admin/files.html:71 templates/organization.html.py:53
+#: templates/organization_form.html:53 templates/organizations.html.py:47
+#: templates/organizations.html:48 templates/organizations.html.py:86
+msgid "name"
+msgstr "Nom"
+
+#: templates/admin/files.html:72
+msgid "date"
+msgstr "Date de remise"
+
+#: templates/admin/files.html:73
+msgid "size"
+msgstr "Taille"
+
+#: templates/admin/files.html:74
+msgid "storage_duration"
+msgstr "Temps de stockage"
+
+#: templates/admin/storage.html:65
+msgid "desc_lnk_files"
+msgstr "Consultation des fichiers gérés par l'application."
+
+#: templates/assessments/assessments.html:30
+#: templates/assessments/online_double_encoding_validation.html:32
+#: templates/assessments/online_encoding.html:34
+#: templates/assessments/online_encoding_form.html:33
+#: templates/assessments/scores_encoding.html:31 templates/home.html.py:53
+#: templates/layout.html:80 templates/studies.html.py:30
+#: templates/studies.html:34
+msgid "student_path"
+msgstr "Parcours de l'étudiant"
+
+#: templates/assessments/assessments.html:31
+#: templates/assessments/assessments.html:35
+#: templates/assessments/online_double_encoding_form.html:35
+#: templates/assessments/online_double_encoding_validation.html:33
+#: templates/assessments/online_encoding.html:35
+#: templates/assessments/online_encoding_form.html:34
+#: templates/assessments/scores_encoding.html:32
+#: templates/assessments/scores_encoding_mgr.html:32 templates/layout.html:82
+#: templates/studies.html.py:42
+msgid "evaluations"
+msgstr "Évaluations"
+
+#: templates/assessments/assessments.html:43
+#: templates/assessments/online_double_encoding_form.html:36
+#: templates/assessments/online_double_encoding_validation.html:34
+#: templates/assessments/online_encoding.html:36
+#: templates/assessments/online_encoding.html:42
+#: templates/assessments/online_encoding_form.html:35
+#: templates/assessments/scores_encoding.html:33
+#: templates/assessments/scores_encoding.html:38
+#: templates/assessments/scores_encoding_mgr.html:33
+#: templates/assessments/scores_encoding_mgr.html:37
+msgid "scores_encoding"
+msgstr "Encodage des notes"
+
+#: templates/assessments/assessments.html:44
+msgid "desc_lnk_score_encoding"
+msgstr ""
+"Ce processus aide les tuteurs à encoder les notes pendant les sessions "
+"d'examen."
+
+#: templates/assessments/online_double_encoding_form.html:34
+#: templates/assessments/scores_encoding_mgr.html:31
+msgid "studies"
+msgstr "Études"
+
+#: templates/assessments/online_double_encoding_form.html:37
+#: templates/assessments/online_double_encoding_validation.html:35
+msgid "online_scores_encoding"
+msgstr "Encodage de notes en ligne"
+
+#: templates/assessments/online_double_encoding_form.html:38
+#: templates/assessments/online_double_encoding_form.html:42
+#: templates/assessments/online_double_encoding_validation.html:36
+#: templates/assessments/online_double_encoding_validation.html:40
+msgid "dubble_online_scores_encoding"
+msgstr "Double encodage de notes en ligne"
+
+#: templates/assessments/online_double_encoding_form.html:52
+#: templates/assessments/online_double_encoding_validation.html:50
+#: templates/assessments/online_encoding.html:53
+#: templates/assessments/online_encoding_form.html:50
+msgid "responsible"
+msgstr "Responsable"
+
+#: templates/assessments/online_double_encoding_form.html:67
+#: templates/assessments/online_double_encoding_validation.html:64
+#: templates/assessments/online_encoding.html:66
+#: templates/assessments/online_encoding_form.html:62
+msgid "number_of_enrollments"
+msgstr "Nombre d'inscrits"
+
+#: templates/assessments/online_double_encoding_form.html:79
+#: templates/assessments/online_double_encoding_validation.html:79
+#: templates/assessments/online_encoding_form.html:83
+#: templates/assessments/scores_encoding_mgr.html:66 templates/offer.html:35
+msgid "offer"
+msgstr "Offre"
+
+#: templates/assessments/online_double_encoding_form.html:80
+#: templates/assessments/online_double_encoding_validation.html:80
+#: templates/assessments/online_encoding.html:148
+#: templates/assessments/online_encoding_form.html:84 utils/export_utils.py:38
+#: utils/pdf_utils.py:238
+msgid "registration_number"
+msgstr "Noma"
+
+#: templates/assessments/online_double_encoding_form.html:81
+#: templates/assessments/online_double_encoding_validation.html:81
+#: templates/assessments/online_encoding.html:149
+#: templates/assessments/online_encoding_form.html:85
+#: templates/profile.html:63 utils/export_utils.py:39 utils/pdf_utils.py:239
+msgid "lastname"
+msgstr "Nom"
+
+#: templates/assessments/online_double_encoding_form.html:82
+#: templates/assessments/online_double_encoding_validation.html:82
+#: templates/assessments/online_encoding.html:150
+#: templates/assessments/online_encoding_form.html:86
+#: templates/profile.html:59 utils/export_utils.py:40 utils/pdf_utils.py:240
+msgid "firstname"
+msgstr "Prénom"
+
+#: templates/assessments/online_double_encoding_form.html:83
+#: templates/assessments/online_encoding.html:151
+#: templates/assessments/online_encoding_form.html:87
+msgid "score"
+msgstr "Note"
+
+#: templates/assessments/online_double_encoding_form.html:84
+#: templates/assessments/online_encoding_form.html:88
+msgid "justification"
+msgstr "Justification"
+
+#: templates/assessments/online_double_encoding_form.html:132
+msgid "compare"
+msgstr "Comparer"
+
+#: templates/assessments/online_double_encoding_validation.html:76
+msgid "scores"
+msgstr "Notes"
+
+#: templates/assessments/online_double_encoding_validation.html:76
+#: templates/assessments/online_encoding.html:152 utils/export_utils.py:42
+#: utils/pdf_utils.py:242
+msgid "other_score"
+msgstr "Autre note"
+
+#: templates/assessments/online_double_encoding_validation.html:83
+msgid "encoding"
+msgstr "Encodage"
+
+#: templates/assessments/online_double_encoding_validation.html:84
+msgid "dubble_encoding"
+msgstr "Double encodage"
+
+#: templates/assessments/online_double_encoding_validation.html:85
+msgid "final"
+msgstr "Final"
+
+#: templates/assessments/online_encoding.html:37
+#: templates/assessments/online_encoding_form.html:36
+#: templates/assessments/online_encoding_form.html:40
+msgid "online_encoding"
+msgstr "Encodage en ligne"
+
+#: templates/assessments/online_encoding.html:77
+#: templates/assessments/scores_encoding.html:77
+#: templates/assessments/scores_encoding.html:108
+#: templates/assessments/scores_encoding.html:139
+#: templates/assessments/scores_encoding_mgr.html:106
+#: templates/assessments/scores_encoding_mgr.html:131
+#: templates/assessments/scores_encoding_mgr.html:182
+msgid "progress"
+msgstr "Progression"
+
+#: templates/assessments/online_encoding.html:86
+#: templates/assessments/online_encoding.html:89
+msgid "encode"
+msgstr "Encoder"
+
+#: templates/assessments/online_encoding.html:87
+#: templates/assessments/online_encoding.html:90
+msgid "double_encoding"
+msgstr "Double encodage"
+
+#: templates/assessments/online_encoding.html:95
+#: templates/assessments/online_encoding.html:99
+#: templates/assessments/scores_encoding.html:126
+#: templates/assessments/scores_encoding_mgr.html:201
+msgid "print"
+msgstr "Imprimer"
+
+#: templates/assessments/online_encoding.html:102
+#: templates/assessments/scores_encoding.html:156
+#: templates/assessments/scores_encoding_mgr.html:146
+msgid "Create a xls file while activity\\"
+msgstr ""
+
+#: templates/assessments/online_encoding.html:103
+#: templates/assessments/scores_encoding.html:158
+#: templates/assessments/scores_encoding_mgr.html:151
+msgid "Get xls"
+msgstr ""
+
+#: templates/assessments/online_encoding.html:105
+msgid "select_a_xls_file_from_which_to_inject_scores"
+msgstr ""
+
+#: templates/assessments/online_encoding.html:105
+msgid "inject_xls_file"
+msgstr "Soumettre fichier excel"
+
+#: templates/assessments/online_encoding.html:109
+#: templates/assessments/online_encoding.html:248
+msgid "submission"
+msgstr "Soumettre"
+
+#: templates/assessments/online_encoding.html:145
+msgid "status"
+msgstr "Statut"
+
+#: templates/assessments/online_encoding.html:146 templates/profile.html:138
+#: utils/export_utils.py:37 utils/pdf_utils.py:325
+msgid "program"
+msgstr "Programme"
+
+#: templates/assessments/online_encoding.html:147 utils/export_utils.py:35
+msgid "session"
+msgstr "Session"
+
+msgid "number_session"
+msgstr "No. session"
+
+#: templates/assessments/online_encoding.html:167
+msgid "score_submitted"
+msgstr "Soumis"
+
+msgid "print_all_courses"
+msgstr "Imprimer tous les cours"
+
+#: templates/assessments/online_encoding.html:210
+msgid "print_warning_and_info_messages"
+msgstr ""
+
+#: templates/assessments/online_encoding.html:224
+msgid "scores_injection"
+msgstr "Injection des notes"
+
+#: templates/assessments/online_encoding.html:227
+msgid "choose_file"
+msgstr "Parcourir"
+
+#: templates/assessments/online_encoding.html:230
+msgid "help_pnl_selectedfiles"
+msgstr "Veuillez sélectionner un fichier xls pour l'injection des notes"
+
+#: templates/assessments/online_encoding.html:234
+msgid "inject"
+msgstr "Injecter"
+
+#: templates/assessments/online_encoding.html:252
+msgid "help_submission_scores_label"
+msgstr "Vous êtes en train de soumettre %s note(s)."
+
+#: templates/assessments/online_encoding_form.html:72
+msgid "decimal_values_accepted"
+msgstr "Les valeurs décimales dans les notes sont acceptées. "
+
+#: templates/assessments/online_encoding_form.html:74
+msgid "decimal_values_ignored"
+msgstr ""
+"Les valeurs décimales dans les notes ne sont PAS acceptées. Si vous entrez "
+"des valeurs décimales, elles seront ignorées."
+
+#: templates/assessments/online_encoding_form.html:110
+#: templates/assessments/online_encoding_form.html:119
+msgid "decimal_score_allowed"
+msgstr "Note décimale autorisée"
+
+#: templates/assessments/online_encoding_form.html:112
+#: templates/assessments/online_encoding_form.html:121
+msgid "decimal_score_not_allowed"
+msgstr "Note décimale non autorisée"
+
+#: templates/assessments/online_encoding_form.html:158
+msgid "Save"
+msgstr ""
+
+#: templates/assessments/scores_encoding.html:48
+#: templates/assessments/scores_encoding_mgr.html:54
+#: templates/assessments/scores_encoding_mgr.html:105
+msgid "tutor"
+msgstr "Enseignant(e)"
+
+#: templates/assessments/scores_encoding.html:50
+msgid "faculty"
+msgstr "Faculté"
+
+#: templates/assessments/scores_encoding.html:62
+#: templates/assessments/scores_encoding_mgr.html:85
+msgid "select_an_encoding_type"
+msgstr "Sélectionnez un type d'encodage"
+
+#: templates/assessments/scores_encoding.html:65
+#: templates/assessments/scores_encoding_mgr.html:90
+msgid "online"
+msgstr "En ligne"
+
+#: templates/assessments/scores_encoding.html:66
+#: templates/assessments/scores_encoding_mgr.html:94
+msgid "via_paper"
+msgstr "Sur papier"
+
+#: templates/assessments/scores_encoding.html:67
+#: templates/assessments/scores_encoding_mgr.html:96
+msgid "via_excel"
+msgstr "Via fichier Excel"
+
+#: templates/assessments/scores_encoding.html:75
+#: templates/assessments/scores_encoding.html:106
+#: templates/assessments/scores_encoding.html:137
+#: templates/assessments/scores_encoding_mgr.html:103
+#: templates/assessments/scores_encoding_mgr.html:129
+#: templates/assessments/scores_encoding_mgr.html:180
+msgid "code"
+msgstr "Code"
+
+#: templates/assessments/scores_encoding.html:76
+#: templates/assessments/scores_encoding.html:107
+#: templates/assessments/scores_encoding.html:138
+msgid "activity"
+msgstr "Activité"
+
+#: templates/assessments/scores_encoding.html:101
+#: templates/assessments/scores_encoding_mgr.html:175
+msgid "Print scores for all activities"
+msgstr ""
+
+#: templates/assessments/scores_encoding_mgr.html:56
+#: templates/assessments/scores_encoding_mgr.html:68
+msgid "all"
+msgstr "Tout"
+
+#: templates/assessments/scores_encoding_mgr.html:78
+msgid "refresh_list"
+msgstr ""
+
+#: templates/assessments/scores_encoding_mgr.html:104
+#: templates/assessments/scores_encoding_mgr.html:130
+#: templates/assessments/scores_encoding_mgr.html:181
+#: templates/learning_unit.html:32 templates/profile.html.py:119
+msgid "learning_unit"
+msgstr "Unité d'enseignement"
+
+#: templates/catalog.html:41 templates/layout.html.py:73
+#: templates/offer.html:34 templates/offer_year_calendar.html.py:31
+#: templates/offer_year_calendar_form.html:33 templates/offers.html.py:31
+#: templates/offers.html:36 templates/structure.html.py:51
+msgid "offers"
+msgstr "Offres"
+
+#: templates/catalog.html:42
+msgid "desc_lnk_offers"
+msgstr "Gestion des offres qui composent le programme."
+
+#: templates/catalog.html:46 templates/layout.html.py:74
+#: templates/learning_unit.html:31 templates/learning_units.html.py:31
+#: templates/learning_units.html:36
+msgid "learning_units"
+msgstr "Unités d'enseignement"
+
+#: templates/catalog.html:47
+msgid "desc_lnk_learning_units"
+msgstr ""
+"Gestion des cours, des formations et d'autres activités qui composent le "
+"programme."
+
+#: templates/catalog.html:55
+msgid "desc_lnk_academic_year"
+msgstr "Gestion du programme annualisé."
+
+#: templates/home.html:50
+msgid "desc_lnk_home_catalog"
+msgstr "Elaboration et gestion du catalogue de formation."
+
+#: templates/home.html:55
+msgid "desc_lnk_home_studies"
+msgstr ""
+"Gestion du parcours des étudiants depuis leur inscription jusqu'à leur "
+"diplôme."
+
+#: templates/home.html:62 templates/institution.html.py:29
+#: templates/institution.html:33 templates/layout.html.py:88
+#: templates/mandates.html:29 templates/organization.html.py:30
+#: templates/organization_address.html:30
+#: templates/organization_address_form.html:32
+#: templates/organization_form.html:32 templates/organizations.html.py:30
+#: templates/structure.html:30 templates/structures.html.py:30
+msgid "institution"
+msgstr "Institution"
+
+#: templates/home.html:63
+msgid "desc_lnk_home_institution"
+msgstr "Gestion de l'institution."
+
+#: templates/institution.html:41 templates/layout.html.py:91
+#: templates/organization.html:31 templates/organization_address.html.py:31
+#: templates/organization_address_form.html:33
+#: templates/organization_form.html:33 templates/organizations.html.py:31
+#: templates/organizations.html:35
+msgid "organizations"
+msgstr "Organisations"
+
+#: templates/institution.html:42 templates/institution.html.py:56
+msgid "desc_lnk_organizations"
+msgstr "Gestion des organisations."
+
+#: templates/institution.html:46 templates/layout.html.py:92
+#: templates/structure.html:31 templates/structures.html.py:31
+#: templates/structures.html:35
+msgid "entities"
+msgstr "Entités"
+
+#: templates/institution.html:47
+msgid "desc_lnk_entities"
+msgstr "Gestion des la structure organisationnelle."
+
+#: templates/institution.html:55 templates/layout.html.py:93
+#: templates/mandates.html:30 templates/mandates.html.py:34
+msgid "mandates"
+msgstr "Mandates"
+
+#: templates/layout.html:83
+msgid "internships"
+msgstr "Stages"
+
+#: templates/layout.html:105
+msgid "administration"
+msgstr "Administration"
+
+#: templates/layout.html:110
+msgid "data"
+msgstr "Données"
+
+#: templates/layout.html:127
+msgid "logout"
+msgstr "Logout"
+
+#: templates/layout.html:130
+msgid "profile"
+msgstr "Profil"
+
+#: templates/layout.html:135
+msgid "login"
+msgstr "Login"
+
+#: templates/layout.html:175
+msgid "documentation"
+msgstr "Justification"
+
+#: templates/layout.html:176 templates/organization.html.py:64
+#: templates/organization_form.html:60
+msgid "website"
+msgstr "Site internet"
+
+#: templates/layout.html:177
+msgid "source_code"
+msgstr "Code source"
+
+#: templates/learning_unit.html:30 templates/learning_units.html.py:30
+#: templates/offer.html:33 templates/offer_year_calendar.html.py:30
+#: templates/offer_year_calendar_form.html:32
+msgid "catalogue"
+msgstr "Catalogue de formation"
+
+#: templates/learning_unit.html:41
+msgid "general_informations"
+msgstr "Informations générales"
+
+#: templates/learning_unit.html:52 templates/learning_units.html.py:43
+#: templates/learning_units.html:44 templates/learning_units.html.py:79
+#: templates/offer.html:63 templates/offer.html.py:168
+#: templates/offer.html:188 templates/offer.html.py:215
+#: templates/offer.html:250 templates/offer.html.py:270
+#: templates/offer.html:298 templates/offers.html.py:57
+#: templates/offers.html:58 templates/offers.html.py:80
+#: templates/organization.html:49 templates/organization_form.html.py:49
+#: templates/organizations.html:42 templates/organizations.html.py:43
+#: templates/organizations.html:85 templates/structure.html.py:60
+#: templates/structure.html:93 templates/structure.html.py:119
+#: templates/structures.html:42 templates/structures.html.py:43
+#: templates/structures.html:88
+msgid "acronym"
+msgstr "Sigle"
+
+#: templates/learning_unit.html:56 templates/learning_units.html.py:81
+msgid "credits"
+msgstr "Crédits"
+
+#: templates/learning_units.html:64
+msgid "learning_unit_search"
+msgstr "Recherche d'unités d'enseignement"
+
+#: templates/mandates.html:42
+msgid "assistants"
+msgstr "Assistants"
+
+#: templates/mandates.html:43
+msgid "desc_assistants"
+msgstr "Processus visant à aider les tuteurs pour l'encodage des notes."
+
+#: templates/offer.html:50 templates/organization.html.py:41
+#: templates/profile.html:37 templates/structure.html.py:49
+msgid "identification"
+msgstr "Identification"
+
+#: templates/offer.html:52
+msgid "program_managers"
+msgstr "Program managers"
+
+#: templates/offer.html:67 templates/organization.html.py:42
+#: templates/structure.html:53
+msgid "structure"
+msgstr "Structure"
+
+#: templates/offer.html:74
+msgid "international_title"
+msgstr "Titre international"
+
+#: templates/offer.html:81
+msgid "short_title"
+msgstr "Titre abrégé"
+
+#: templates/offer.html:88
+msgid "printable_title"
+msgstr "Titre imprimable"
+
+#: templates/offer.html:95
+msgid "grade"
+msgstr "Niveau"
+
+#: templates/offer.html:134
+msgid "person"
+msgstr ""
+
+#: templates/offer.html:161 templates/offer.html.py:243
+msgid "focuses"
+msgstr "Finalités"
+
+#: templates/offer.html:181 templates/offer.html.py:263
+msgid "other_sibling_offers"
+msgstr "Autres finalités associées"
+
+#: templates/offer.html:207 templates/offer.html.py:290
+msgid "other_sibling_orientations"
+msgstr "Autres orientations associées"
+
+#: templates/offer_year_calendar.html:32
+#: templates/offer_year_calendar_form.html:34
+msgid "offer_year_calendar"
+msgstr "Calendrier des offres"
+
+#: templates/offers.html:51 templates/offers.html.py:52
+#: templates/offers.html:82 templates/structure.html.py:32
+msgid "entity"
+msgstr "Entité"
+
+#: templates/offers.html:66
+msgid "offer_year_search"
+msgstr "Recherche d'offres annualisées"
+
+#: templates/organization.html:32 templates/organization_address.html.py:32
+#: templates/organization_address_form.html:34
+#: templates/organization_form.html:34 templates/structure.html.py:71
+msgid "organization"
+msgstr "Organisation"
+
+#: templates/organization.html:57 templates/organization_form.html.py:64
+msgid "reference"
+msgstr "Référence"
+
+#: templates/organization.html:75
+msgid "address(ses)"
+msgstr "Adresse(s)"
+
+#: templates/organization.html:79
+msgid "add_an_address_to_the_organization"
+msgstr "Ajouter une adresse à l'organisation"
+
+#: templates/organization_address.html:33
+#: templates/organization_address_form.html:35
+msgid "organization_address"
+msgstr "Adresse de l'organisation"
+
+#: templates/organization_address.html:44
+#: templates/organization_address_form.html:52
+msgid "label"
+msgstr "Label"
+
+#: templates/organization_address.html:48
+#: templates/organization_address_form.html:56
+msgid "location"
+msgstr "Rue et numéro"
+
+#: templates/organization_address.html:54
+#: templates/organization_address_form.html:63
+msgid "postal_code"
+msgstr "Code postal"
+
+#: templates/organization_address.html:58
+#: templates/organization_address_form.html:67
+msgid "city"
+msgstr "Ville"
+
+#: templates/organization_address.html:62
+#: templates/organization_address_form.html:71
+msgid "country"
+msgstr "Pays"
+
+#: templates/organization_address.html:73
+#: templates/organization_address.html:75
+msgid "delete"
+msgstr "Supprimer"
+
+#: templates/organization_address.html:78
+#: templates/organization_address.html:79
+msgid "back"
+msgstr "Retour"
+
+#: templates/organization_form.html:70 templates/organizations.html.py:54
+#: templates/structures.html:56
+msgid "types"
+msgstr "Types"
+
+#: templates/organizations.html:65
+msgid "search_for_an_organization"
+msgstr "Recherche d'organisations"
+
+#: templates/organizations.html:69
+msgid "create_an_organization"
+msgstr "Créer une organisation"
+
+#: templates/page_not_found.html:34
+msgid "page_not_found"
+msgstr "Page inexistante"
+
+#: templates/profile.html:39
+msgid "attributions"
+msgstr "Attributions"
+
+#: templates/profile.html:42
+msgid "my_studies"
+msgstr "Mes études"
+
+#: templates/profile.html:45
+msgid "programs"
+msgstr "Programmes"
+
+#: templates/profile.html:47
+msgid "preferences"
+msgstr "Préférences"
+
+#: templates/profile.html:55
+msgid "global_identifiant"
+msgstr "Identifiant global"
+
+#: templates/profile.html:67
+msgid "gender"
+msgstr "Genre"
+
+#: templates/profile.html:71
+msgid "national_register"
+msgstr "Numéro de registre nationnal"
+
+#: templates/profile.html:78
+msgid "email"
+msgstr "Email"
+
+#: templates/profile.html:82
+msgid "fixed_line_phone"
+msgstr "Téléphone fixe"
+
+#: templates/profile.html:86
+msgid "mobile_phone"
+msgstr "Téléphone mobile (GSM)"
+
+#: templates/profile.html:90
+msgid "language"
+msgstr "Langue"
+
+#: templates/profile.html:96
+msgid "addresses"
+msgstr "Adresses"
+
+#: templates/profile.html:157
+msgid "managed_programs"
+msgstr "Programmes gérés"
+
+#: templates/profile.html:174
+msgid "user_interface_language"
+msgstr "Langue de l'interface utilisateur"
+
+#: templates/registration/login.html:29
+msgid "log-in"
+msgstr "Log-in"
+
+#: templates/registration/login.html:32
+msgid "msg_error_username_password_not_matching"
+msgstr ""
+"La combinaison login/mot de passe entrée n'est pas valide. Veuillez "
+"réessayer."
+
+#: templates/registration/login.html:44
+msgid "password"
+msgstr "Mot de passe"
+
+#: templates/structure.html:85
+msgid "child_entities"
+msgstr "Entités 'enfant'"
+
+#: templates/structure_organogram.html:32
+msgid "OSIS"
+msgstr "OSIS"
+
+#: templates/structures.html:69
+msgid "search_for_an_entity"
+msgstr "Rechercher une entité"
+
+#: templates/studies.html:43
+msgid "desc_lnk_assessments"
+msgstr "Processus visant à aider les tuteurs pour l'encodage des notes."
+
+#: templates/studies.html:47
+msgid "stages"
+msgstr "Stages"
+
+#: templates/studies.html:48
+msgid "desc_lnk_internships"
+msgstr "Gestion des stages des étudiants."
+
+#: utils/export_utils.py:36
+msgid "activity_code"
+msgstr "Activité"
+
+#: utils/export_utils.py:41 utils/pdf_utils.py:241
+msgid "numbered_score"
+msgstr "Note chiffrée"
+
+#: utils/export_utils.py:44
 msgid "ID"
 msgstr "ID"
 
-#: export_utils.py:141
-msgid "Invalid entry, not in the list of choices"
-msgstr "Votre entrée n'est pas dans la liste"
-
-#: export_utils.py:142
-msgid "Invalid entry"
-msgstr "Entrée invalide"
-
-#: export_utils.py:144
-msgid "Please choose in the list"
-msgstr "Merci de sélectionner dans la liste"
-
-#: export_utils.py:145
-msgid "List of choices"
-msgstr "Liste de choix"
-
-#: models.py:36
-msgid "Female"
-msgstr "Féminin"
-
-#: models.py:37
-msgid "Male"
-msgstr "Masculin"
-
-#: models.py:38
-msgid "Unknown"
-msgstr "Indéfini"
-
-#: models.py:412
-msgid "Idle"
-msgstr "Idle"
-
-#: models.py:413
-msgid "Open"
-msgstr "Ouvert"
-
-#: models.py:414
-msgid "Closed"
-msgstr "Fermé"
-
-#: models.py:470 models.py:547 models.py:549
-#: templates/online_double_encoding_form.html:109
-#: templates/online_encoding_form.html:106
-msgid "Absent"
-msgstr "Absent"
-
-#: models.py:471 models.py:547 models.py:549
-#: templates/online_double_encoding_form.html:110
-#: templates/online_encoding_form.html:107
-msgid "Cheating"
-msgstr "Tricherie"
-
-#: models.py:472 models.py:547 templates/online_double_encoding_form.html:113
-#: templates/online_encoding_form.html:111
-msgid "Ill"
-msgstr "Malade"
-
-#: models.py:473 models.py:547 templates/online_double_encoding_form.html:114
-#: templates/online_encoding_form.html:112
-#, fuzzy
-msgid "Justified absence"
-msgstr "Absence justifiée"
-
-#: models.py:474 models.py:547 models.py:549
-#: templates/online_double_encoding_form.html:111
-#: templates/online_encoding_form.html:108
-#, fuzzy
-msgid "Score missing"
-msgstr "Encodage de notes"
-
-#: models.py:479
-msgid "Saved"
-msgstr "Enregistré"
-
-#: models.py:480
-msgid "Submitted"
-msgstr "Soumis"
-
-#: pdf_utils.py:115
-#, fuzzy
-msgid "Scores transcript"
-msgstr "Encodage de notes"
-
-#: pdf_utils.py:116
-msgid ""
-"University Catholic Louvain\n"
-"Louvain-la-Neuve\n"
-"Belgium"
+#: utils/export_utils.py:96
+msgid "Legend : values allowed for 'justification'"
 msgstr ""
-"Université Catholique Louvain\n"
+
+#: utils/pdf_utils.py:70
+#: utils/pdf_utils.py:121
+msgid "scores_sheet"
+msgstr "Feuille de notes"
+
+#: utils/pdf_utils.py:108
+msgid "scores_transcript"
+msgstr "Feuille de notes"
+
+#: utils/pdf_utils.py:110
+msgid "ucl_denom_location"
+msgstr ""
+"Université Catholique de Louvain\n"
 "Louvain-la-Neuve\n"
 "Belgique"
 
-#: pdf_utils.py:206
-msgid "Other score legend"
-msgstr "Légende pour le champ 'autre note'"
+#: utils/pdf_utils.py:226
+msgid "other_score_legend"
+msgstr "Légende pour le champ 'Justification'"
 
-#: pdf_utils.py:208
-msgid "UnAuthorized decimal for this activity"
-msgstr "Attention décimale non-autorisée pour ce cours"
+msgid "score_legend"
+msgstr "Légende pour le champ 'Note chiffrée'"
 
-#: pdf_utils.py:262
-#, fuzzy
-msgid "Deliberation date"
-msgstr "Deliberations"
+#: utils/pdf_utils.py:228
+msgid "unauthorized_decimal_for_this_activity"
+msgstr "Attention : décimales non autorisées pour ce cours"
 
-#: pdf_utils.py:263
-msgid "Chair of the exam board"
+#: utils/pdf_utils.py:289
+msgid "phone"
+msgstr "Tél."
+
+#: utils/pdf_utils.py:293
+msgid "fax"
+msgstr ""
+
+#: utils/pdf_utils.py:339
+msgid "deliberation_date"
+msgstr "Date de délibération"
+
+#: utils/pdf_utils.py:340
+msgid "chair_of_the_exam_board"
 msgstr "Président du jury"
 
-#: pdf_utils.py:264
-msgid "Exam board secretary"
+#: utils/pdf_utils.py:341
+msgid "exam_board_secretary"
 msgstr "Secrétaire du jury"
 
-#: pdf_utils.py:300
-msgid "Done at"
+#: utils/pdf_utils.py:365
+msgid "return_doc_to_administrator"
+msgstr ""
+"Veuillez renvoyer ce document au bureau administratif de la faculté "
+"responsable du programme."
+
+#: utils/pdf_utils.py:381
+msgid "done_at"
 msgstr "Fait à"
 
-#: pdf_utils.py:300
-msgid "The"
+#: utils/pdf_utils.py:381
+msgid "the"
 msgstr "Le"
 
-#: pdf_utils.py:300
-msgid "Signature"
+#: utils/pdf_utils.py:381
+msgid "signature"
 msgstr "Signature"
 
-#: send_mail.py:43
-#, python-brace-format
-msgid "Sumbmission of scores for {0}."
+#: utils/send_mail.py:43
+msgid "submission_of_scores_for"
 msgstr "Soumission des score pour {0}"
 
-#: send_mail.py:45
-msgid "<p>Hi, </p>"
-msgstr "Bonjour, "
-
-#: send_mail.py:46
-#, fuzzy, python-brace-format
-#| msgid ""
-#| "We inform you that the scores encoding of {learning_unit_name} has "
-#| "ended.\n"
-#| "\n"
-msgid ""
-"<p>We inform you that a scores submission was made for {learning_unit_name}."
-"</p></br>"
-msgstr ""
-"<p>Nous vous informons qu'une soumission d'encodage de points viens d'être "
-"effectué pour {learning_unit_name}.</p></br>"
-
-#: send_mail.py:48
-msgid "The OSIS Team<br>"
-msgstr "L'équipe OSIS"
-
-#: send_mail.py:52
-msgid "Hi, \n"
-msgstr "Bonjour, \n"
-
-#: send_mail.py:53
-#, fuzzy, python-brace-format
-#| msgid ""
-#| "We inform you that the scores encoding of {learning_unit_name} has "
-#| "ended.\n"
-#| "\n"
-msgid ""
-"We inform you that a scores submission was made for {learning_unit_name}.\n"
-"\n"
-msgstr ""
-"Nous vous informons qu'une soumission d'encodage de points viens d'être "
-"effectué pour {learning_unit_name}.\n"
-"\n"
-
-#: send_mail.py:55
-msgid "The OSIS Team."
-msgstr "L'équipe OSIS"
-
-#: send_mail.py:62
-msgid "Mister"
+#: utils/send_mail.py:92
+msgid "mister"
 msgstr "Monsieur"
 
-#: send_mail.py:63
-msgid "Miss"
+#: utils/send_mail.py:93
+msgid "miss"
 msgstr "Madame"
 
-#: templates/acces_denied.html:34
-msgid "Acces denied!"
-msgstr "Accès refusé!"
-
-#: templates/assessments.html:30 templates/home.html.py:48
-#: templates/online_double_encoding_form.html:34
-#: templates/online_double_encoding_validation.html:32
-#: templates/online_encoding.html:31 templates/online_encoding_form.html:33
-#: templates/scores_encoding.html:29 templates/studies.html.py:30
-#: templates/studies.html:34
-msgid "Studies"
-msgstr "Les études"
-
-#: templates/assessments.html:31 templates/assessments.html.py:35
-#: templates/layout.html:78 templates/online_double_encoding_form.html:35
-#: templates/online_double_encoding_validation.html:33
-#: templates/online_encoding.html:32 templates/online_encoding_form.html:34
-#: templates/scores_encoding.html:30 templates/studies.html.py:42
-msgid "Evaluations"
-msgstr "Evaluations"
-
-#: templates/assessments.html:43 templates/online_double_encoding_form.html:36
-#: templates/online_double_encoding_validation.html:34
-#: templates/online_encoding.html:33 templates/online_encoding.html.py:38
-#: templates/online_encoding_form.html:35 templates/scores_encoding.html:31
-#: templates/scores_encoding.html.py:35
-msgid "Scores encoding"
-msgstr "Encodage de notes"
-
-#: templates/assessments.html:44
-#, fuzzy
-msgid "This process helps tutor while encoding notes for the exams sessions."
-msgstr ""
-"Ce processus aide les enseignants à coder leurs notes pour chaque session "
-"d'examens."
-
-#: templates/layout.html:92
-msgid "Logout"
-msgstr "Logout"
-
-#: templates/layout.html:93
-msgid "Profile"
-msgstr "Profil"
-
-#: templates/layout.html:97
-msgid "Login"
-msgstr "Login"
-
-#: templates/learning_unit.html:30 templates/learning_units.html.py:30
-#: templates/offer.html:31
-msgid "Catalog"
-msgstr "Catalogue de formation"
-
-#: templates/learning_unit.html:31 templates/learning_units.html.py:31
-#: templates/learning_units.html:36
-msgid "Learning units"
-msgstr "Unités d'enseignement"
-
-#: templates/learning_unit.html:32
-msgid "Learning unit"
-msgstr "Unité d'enseignement"
-
-#: templates/learning_unit.html:41
-#, fuzzy
-#| msgid "Informations"
-msgid "General informations"
-msgstr "Informations"
-
-#: templates/learning_unit.html:52 templates/learning_units.html.py:43
-#: templates/learning_units.html:44 templates/learning_units.html.py:76
-#: templates/offer.html:55 templates/offer.html.py:88 templates/offer.html:108
-#: templates/offer.html.py:136 templates/offer.html:171
-#: templates/offer.html.py:191 templates/offer.html:219
-#: templates/offers.html.py:59 templates/offers.html:60
-#: templates/offers.html.py:96
-msgid "Acronym"
-msgstr "Sigle"
-
-#: templates/learning_unit.html:56 templates/learning_units.html.py:78
-msgid "Credits"
-msgstr "Crédits"
-
-#: templates/learning_units.html:47 templates/offers.html.py:65
-#, fuzzy
-msgid "Academic Year"
-msgstr "Année académique"
-
-#: templates/learning_units.html:70 templates/offers.html.py:90
-msgid "No result!"
-msgstr "Aucun résultat!"
-
-#: templates/learning_units.html:77 templates/offer.html.py:89
-#: templates/offer.html:109 templates/offer.html.py:137
-#: templates/offer.html:172 templates/offer.html.py:192
-#: templates/offer.html:220 templates/offers.html.py:97
-msgid "Title"
-msgstr "Intitulé"
-
-#: templates/offer.html:32 templates/offers.html.py:31
-#: templates/offers.html:36
-#, fuzzy
-msgid "Offers"
-msgstr "Offre"
-
-#: templates/offer.html:33 templates/online_double_encoding_form.html.py:80
-#: templates/online_double_encoding_validation.html:83
-#: templates/online_encoding_form.html:80
-msgid "Offer"
-msgstr "Offre"
-
-#: templates/offer.html:44
-#, fuzzy
-#| msgid "Justification"
-msgid "Identification"
-msgstr "Justification"
-
-#: templates/offer.html:59
-msgid "Structure"
-msgstr "Structure"
-
-#: templates/offer.html:81 templates/offer.html.py:164
-msgid "Focuses"
-msgstr "Finalités"
-
-#: templates/offer.html:101 templates/offer.html.py:184
-msgid "Other sibling offers"
-msgstr "Autres finalités associés"
-
-#: templates/offer.html:128 templates/offer.html.py:211
-msgid "Other sibling orientations"
-msgstr "Autres orientations associées"
-
-#: templates/offers.html:45 templates/online_encoding.html.py:51
-#: templates/scores_encoding.html:46
-msgid "Faculty"
-msgstr "Faculté"
-
-#: templates/online_double_encoding_form.html:37
-#: templates/online_double_encoding_validation.html:35
-#, fuzzy
-msgid "Online scores encoding"
-msgstr "Encodage de notes"
-
-#: templates/online_double_encoding_form.html:38
-#: templates/online_double_encoding_form.html:42
-#: templates/online_double_encoding_validation.html:36
-#: templates/online_double_encoding_validation.html:40
-#, fuzzy
-msgid "Dubble online scores encoding"
-msgstr "Encodage de notes"
-
-#: templates/online_double_encoding_form.html:52
-#: templates/online_double_encoding_validation.html:50
-#: templates/online_encoding.html:49 templates/online_encoding_form.html:50
-msgid "Responsible"
-msgstr "Responsable"
-
-#: templates/online_double_encoding_form.html:70
-#: templates/online_double_encoding_validation.html:68
-#: templates/online_encoding_form.html:68
-msgid "Number of enrollments"
-msgstr "Nombre d'inscrits"
-
-#: templates/online_double_encoding_form.html:82
-#: templates/online_double_encoding_validation.html:85
-#: templates/online_encoding_form.html:82
-#, fuzzy
-msgid "Lastname"
-msgstr "Nom"
-
-#: templates/online_double_encoding_form.html:83
-#: templates/online_double_encoding_validation.html:86
-#: templates/online_encoding_form.html:83
-#, fuzzy
-msgid "Firstname"
-msgstr "Prénom"
-
-#: templates/online_double_encoding_form.html:84
-#: templates/online_encoding.html:100 templates/online_encoding_form.html:84
-msgid "Score"
-msgstr "Note"
-
-#: templates/online_double_encoding_form.html:85
-#: templates/online_encoding_form.html:85
-msgid "Justification"
-msgstr "Justification"
-
-#: templates/online_double_encoding_form.html:123
-msgid "Compare"
-msgstr "Comparer"
-
-#: templates/online_double_encoding_form.html:124
-#: templates/online_double_encoding_validation.html:136
-#: templates/online_encoding.html:164 templates/online_encoding.html.py:185
-#: templates/online_encoding_form.html:122
-msgid "Cancel"
-msgstr "Annuler"
-
-#: templates/online_double_encoding_validation.html:80
-#, fuzzy
-msgid "Scores"
-msgstr "Note"
-
-#: templates/online_double_encoding_validation.html:87
-#: templates/scores_encoding.html:98
-#, fuzzy
-msgid "Encoding"
-msgstr "Encodage de notes"
-
-#: templates/online_double_encoding_validation.html:88
-#, fuzzy
-msgid "Dubble encoding"
-msgstr "Encodage de notes"
-
-#: templates/online_double_encoding_validation.html:89
-msgid "Final"
-msgstr "Final"
-
-#: templates/online_double_encoding_validation.html:135
-#: templates/online_encoding.html:87
-#, fuzzy
-msgid "Submission"
-msgstr "Session"
-
-#: templates/online_encoding.html:34 templates/online_encoding_form.html:36
-#: templates/online_encoding_form.html:40
-#, fuzzy
-msgid "Online encoding"
-msgstr "Encodage de notes"
-
-#: templates/online_encoding.html:69
-#, fuzzy
-msgid "Number of enrollments "
-msgstr "Nombre d'inscrits"
-
-#: templates/online_encoding.html:85
-#, fuzzy
-msgid "Encode"
-msgstr "encoder"
-
-#: templates/online_encoding.html:86
-#, fuzzy
-msgid "Double encoding"
-msgstr "Encodage de notes"
-
-#: templates/online_encoding.html:88
-msgid "Select a xls file from which to injec scores"
-msgstr "Sélectionner un fichier xls à partir duquel injecter des notes"
-
-#: templates/online_encoding.html:88
-msgid "Submit xls file"
-msgstr "Soumettre fichier xls"
-
-#: templates/online_encoding.html:154
-#, fuzzy
-msgid "Scores injection"
-msgstr "Encodage de notes"
-
-#: templates/online_encoding.html:157
-msgid "Choose file"
-msgstr "Parcourir"
-
-#: templates/online_encoding.html:161
-msgid "Please select an xls file for injection"
-msgstr "Sélectionner un fichier xls pour l'injection de notes"
-
-#: templates/online_encoding.html:165
-msgid "Inject"
-msgstr "Injecter"
-
-#: templates/online_encoding_form.html:103
-msgid "Decimal score allowed"
-msgstr "Note décimale acceptée"
-
-#: templates/online_encoding_form.html:103
-msgid "Decimal score NOT allowed"
-msgstr "Note décimale NON-acceptée"
-
-#: templates/online_encoding_form.html:121
-#, fuzzy
-msgid "Save"
-msgstr "Enregistré"
-
-#: templates/page_not_found.html:34
-msgid "Page not Found"
-msgstr "Page innexistante"
-
-#: templates/scores_encoding.html:44
-msgid "Tutor"
-msgstr "Enseignant"
-
-#: templates/scores_encoding.html:64
-msgid "Select an encoding type"
-msgstr "Sélectionner un type d'encodage"
-
-#: templates/scores_encoding.html:67
-msgid "Online"
-msgstr "En ligne"
-
-#: templates/scores_encoding.html:68
-msgid "With xls"
-msgstr "En Feuille de calcul"
-
-#: templates/scores_encoding.html:69
-msgid "Via paper"
-msgstr "En papier"
-
-#: templates/scores_encoding.html:77 templates/scores_encoding.html.py:111
-#: templates/scores_encoding.html:149
-msgid "Status"
-msgstr "Statut"
-
-#: templates/scores_encoding.html:78 templates/scores_encoding.html.py:112
-#: templates/scores_encoding.html:150
-msgid "Code"
-msgstr "Sigle"
-
-#: templates/scores_encoding.html:79 templates/scores_encoding.html.py:113
-#: templates/scores_encoding.html:151
-msgid "Activity"
-msgstr "Activité"
-
-#: templates/scores_encoding.html:80 templates/scores_encoding.html.py:114
-#: templates/scores_encoding.html:152
-msgid "Progress"
-msgstr "Progression"
-
-#: templates/scores_encoding.html:132
-#, fuzzy
-msgid "Create a xls file while activity\\"
-msgstr "Télécharger un fichier xls avec les notes pour le cours"
-
-#: templates/scores_encoding.html:132
-#, fuzzy
-msgid "Get xls"
-msgstr "En Feuille de calcul"
-
-#: templates/scores_encoding.html:143
-msgid "Print scores for all activities"
-msgstr "Imprimer tous les cours"
-
-#: templates/studies.html:43
-msgid "This process helps tutors while scores encoding."
-msgstr ""
-"Ce processus aide les enseignants à coder leurs notes pour chaque session "
-"d'examens."
-
-#: templates/studies.html:48
-msgid "This process controls students internships."
-msgstr ""
-
-#: upload_xls_utils.py:52
-msgid "No file selected"
-msgstr "Aucun fichier sélectionné"
-
-#: upload_xls_utils.py:57
-msgid "The file must be a XLS"
-msgstr "Le fichier doit être de type XLS"
-
-#: upload_xls_utils.py:62
-#, fuzzy
-msgid "Invalid file"
-msgstr "Entrée invalide"
-
-#: upload_xls_utils.py:85
+#: utils/upload_xls_utils.py:48
+msgid "file_must_be_xls"
+msgstr "Le fichier doit être un XLS"
+
+#: utils/upload_xls_utils.py:55
+msgid "invalid_file"
+msgstr "Fichier invalide"
+
+#: utils/upload_xls_utils.py:87
 msgid "Line"
-msgstr "Ligne"
-
-#: upload_xls_utils.py:87
-msgid "the student"
-msgstr "L'étudiant"
-
-#: upload_xls_utils.py:87 upload_xls_utils.py:91 upload_xls_utils.py:95
-#: upload_xls_utils.py:99 upload_xls_utils.py:105 upload_xls_utils.py:109
-msgid "does not exists"
-msgstr "n'existe pas"
-
-#: upload_xls_utils.py:91
-#, fuzzy
-msgid "the academic year"
-msgstr "Année académique"
-
-#: upload_xls_utils.py:95
-msgid "the offer year"
-msgstr "l'offre annualisée"
-
-#: upload_xls_utils.py:99
-#, fuzzy
-msgid "the offer enrollment"
-msgstr "Nombre d'inscrits"
-
-#: upload_xls_utils.py:105
-#, fuzzy
-msgid "the activity"
-msgstr "Activité"
-
-#: upload_xls_utils.py:109
-msgid "the enrollment to the activity"
-msgstr "l'inscription à l'activité"
-
-#: upload_xls_utils.py:122
-msgid "the score seems to be incorrect (it must be >=0 and <=20)"
-msgstr "la note semble incorrecte, est dans être >=0 ou <=20"
-
-#: upload_xls_utils.py:126
-#, fuzzy
-#| msgid ""
-#| "the score seems to be incorrect. When activity's credits < 15 decimales "
-#| "are not allowed!"
-msgid "the score seems to be incorrect. Decimales NOT allowed!"
-msgstr ""
-"la note semble incorrecte. Quand les crédits d'une activité sont < 15 les "
-"décimales ne sont pas autorisées"
-
-#: upload_xls_utils.py:140
-msgid ""
-"You can't encode a 'score' AND an 'other score' together (unless the 'other "
-"score' is CHEATING)!"
 msgstr ""
 
-#: upload_xls_utils.py:196
+#: utils/upload_xls_utils.py:89
+msgid "student_not_exist"
+msgstr "L'étudiant (%s) n'existe pas"
+
+#: utils/upload_xls_utils.py:93
+msgid "academic_year_not_exist"
+msgstr "L'année académique (%d) n'existe pas"
+
+#: utils/upload_xls_utils.py:97
+msgid "offer_year_not_exist"
+msgstr "L'offre annualisée (%d) (%d) - n'existe pas"
+
+#: utils/upload_xls_utils.py:101
+msgid "offer_enrollment_not_exist"
+msgstr "L'inscription à cette offre n'existe pas"
+
+#: utils/upload_xls_utils.py:108
+msgid "activity_not_exit"
+msgstr "L'activité %s n'existe pas"
+
+#: utils/upload_xls_utils.py:112
+msgid "enrollment_activity_not_exist"
+msgstr "l'inscription à l'activité %s n'existe pas"
+
+#: utils/upload_xls_utils.py:118
+msgid "enrollment_exam_not_exists"
+msgstr "l'inscription à l'unité d'enseignement %s n'existe pas"
+
+#: utils/upload_xls_utils.py:129
+msgid "Note already submitted"
+msgstr ""
+
+#: utils/upload_xls_utils.py:140
+msgid "scores_gt_0_lt_20"
+msgstr "La note entrée est incorrecte (elle doit être entre 0 et 20 compris)"
+
+#: utils/upload_xls_utils.py:144
+msgid "score_decimal_not_allowed"
+msgstr "La note entrée est incorrecte ; décimales NON autorisées"
+
+#: utils/upload_xls_utils.py:159
+msgid "constraint_score_other_score"
+msgstr ""
+"Vous ne pouvez pas remplir le champs 'note' ET 'justification' tous les deux "
+"(sauf si 'justification' est 'Tricherie')"
+
+#: utils/upload_xls_utils.py:226
 #, python-format
 msgid "%(count)d %(name)s."
 msgid_plural "%(count)d %(plural_name)s."
 msgstr[0] ""
 msgstr[1] ""
 
-#: upload_xls_utils.py:201
-#, fuzzy
-msgid "score injected"
+#: utils/upload_xls_utils.py:231
+msgid "score_saved"
+msgstr "Notes"
+
+#: utils/upload_xls_utils.py:232
+msgid "scores_saved"
+msgstr "Scores enregistré"
+
+#: utils/upload_xls_utils.py:241
+msgid "the_coordinator_must_still_submit_scores"
+msgstr ""
+
+#: utils/upload_xls_utils.py:244
+msgid "no_score_injected"
 msgstr "Aucune note injectée"
 
-#: upload_xls_utils.py:202
-#, fuzzy
-msgid "scores injected"
-msgstr "Aucune note injectée"
+#: views/academic_calendar.py:132 views/offer.py:109
+msgid "begin_date_lt_end_date"
+msgstr "La date de début doit etre égale ou inferieure à la date de fin"
 
-#: upload_xls_utils.py:208
-msgid "No score injected"
-msgstr "Aucune note injectée"
+msgid "no_score_encoded_double_encoding_impossible"
+msgstr "Aucune nouvelle note encodé. Le double encodage besoin des nouvelles notes."
 
-#~ msgid "Informations"
-#~ msgstr "Informations"
+#: views/common.py:162
+msgid "minimum_one_criteria"
+msgstr "Veuillez remplir au moins 1 critère"
 
-#~ msgid "End of the encoding process for the scores of {0}."
-#~ msgstr "Fin de l'encodage des points de {0}"
+msgid "get_excel_file"
+msgstr "Obtenir le fichier Excel"
 
-#~ msgid "<h3>Dear {title} {name},</h3>"
-#~ msgstr "<h3>Cher {title} {name},</h3>"
-
-#~ msgid "Dear {title} {name}, \n"
-#~ msgstr "Cher {title} {name}, \n"
-
-#~ msgid "Print"
-#~ msgstr "Imprimer"
-
-#~ msgid "Validity"
-#~ msgstr "Validité"
-
-#, fuzzy
-#~| msgid "Session"
-#~ msgid "Session Exams 1"
-#~ msgstr "Session"
-
-#, fuzzy
-#~| msgid "Session"
-#~ msgid "Session Exams 2"
-#~ msgstr "Session"
-
-#, fuzzy
-#~| msgid "Session"
-#~ msgid "Session Exams 3"
-#~ msgstr "Session"
-
-#~ msgid "Coordinator"
-#~ msgstr "Coordinateur"
-
-#, fuzzy
-#~| msgid "Profile"
-#~ msgid "Professor"
-#~ msgstr "Professeur"
-
-#~ msgid "Exams enrollment"
-#~ msgstr "Inscriptions aux examens"
-
-#, fuzzy
-#~| msgid "This process helps tutors while scores encoding."
-#~ msgid "This process helps the exams enrollments management"
+#~ msgid "title_btn_upload_score"
 #~ msgstr ""
-#~ "Ce processus aide les enseignants à coder leurs notes pour chaque session "
-#~ "d'examens."
+#~ "Sélectionnez votre fichier excel à partir duquel il faut injecter les "
+#~ "notes"
 
-#~ msgid "Deliberations"
-#~ msgstr "Deliberations"
+#~ msgid "submit"
+#~ msgstr "Envoyer"
 
-#, fuzzy
-#~| msgid "This process helps tutors while scores encoding."
-#~ msgid "This process helps for the deliberations"
+#~ msgid "download_xls_file"
+#~ msgstr "Télécharger le fichier Excel"
+
+#~ msgid "not_in_choices_list"
+#~ msgstr "Le choix entré ne se trouve pas dans la liste proposée"
+
+#~ msgid "invalid_entry"
+#~ msgstr "Entrée invalide"
+
+#~ msgid "please_choose_in_the_list"
+#~ msgstr "Veuillez sélectionner un élément de la liste"
+
+#~ msgid "choices_list"
+#~ msgstr "Liste des choix"
+
+#~ msgid "changes_on_offer_year_and_academic_calendar"
 #~ msgstr ""
-#~ "Ce processus aide les enseignants à coder leurs notes pour chaque session "
-#~ "d'examens."
+#~ "Attention - Des changements ont été effectués sur %s, calendrier "
+#~ "académique %s"
 
-#~ msgid "Domain"
-#~ msgstr "Domaine"
+#~ msgid "score_injected"
+#~ msgstr "Note injectée"
 
-#~ msgid "Injection"
-#~ msgstr "Injection"
+#~ msgid "scores_injected"
+#~ msgstr "Notes injectées"
 
-#, fuzzy
-#~| msgid "Numbered score"
-#~ msgid "Injected score"
-#~ msgstr "Note chiffrée"
-
-#, fuzzy
-#~| msgid "Numbered score"
-#~ msgid "Injected scores"
-#~ msgstr "Note chiffrée"
-
-#, fuzzy
-#~| msgid "End date"
-#~ msgid "End_date"
-#~ msgstr "Date de remise"
+#~ msgid "add_address"
+#~ msgstr "Ajouter une adresse"

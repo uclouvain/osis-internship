@@ -1,0 +1,267 @@
+{% extends "layout.html" %}
+{% load format %}
+{% load i18n %}
+{% load score_display %}
+{% load get_at_index %}
+{% load messages %}
+
+{% comment "License" %}
+ * OSIS stands for Open Student Information System. It's an application
+ * designed to manage the core business of higher education institutions,
+ * such as universities, faculties, institutes and professional schools.
+ * The core business involves the administration of students, teachers,
+ * courses, programs and so on.
+ *
+ * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * A copy of this license - GNU General Public License - is available
+ * at the root of the source code of this program.  If not,
+ * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block breadcrumb %}
+<li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
+<li><a href="{% url 'assessments' %}" id="lnk_evaluations">{% trans 'evaluations' %}</a></li>
+<li><a href="{% url 'scores_encoding' %}" id="lnk_scores_encoding">{% trans 'scores_encoding' %}</a></li>
+<li class="active">{% trans 'online_encoding' %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>{% trans 'scores_encoding' %}</h2>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title" style="font-size: 150%; color: #3399CC;">{{ learning_unit_year }}</h3>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    {% if tutor_responsible %}
+                        <label>{% trans 'responsible' %}</label><br>{{ tutor_responsible }}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>{% trans 'academic_year' %}</label><br>
+                    {{ academic_year }}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>{% trans 'number_of_enrollments' %}</label><br>
+                    {{ enrollments|length }}
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>{% trans 'progress' %}</label><br>
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ progress }}%;">
+                   {{ progress }}%
+                </div>
+            </div>
+        </div>
+        {% if enrollments and progress != 100 %}
+            {% if tutor %}
+                <a id="lnk_online_encoding" class="btn btn-default" href="{%if tutor%}{% url 'online_encoding_form' learning_unit.id%}{%else%}{% url 'online_encoding_form_pgmer' learning_unit.id tutor.id%}{%endif%}" role="button"><i class="fa fa-hashtag"></i> {% trans 'encode' %}</a>
+                <a id="lnk_online_double_encoding" class="btn btn-default" href="{% url 'online_double_encoding_form' learning_unit.id %}" role="button"><i class="fa fa-hashtag"></i><i class="fa fa-hashtag"></i> {% trans 'double_encoding' %}</a>
+                <a id="lnk_score_printing" class="btn btn-default" href="{% url 'notes_printing' learning_unit_id=learning_unit.id tutor_id=tutor.id %}" role="button"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'print' %}</a>
+            {%else%}
+                <a class="btn btn-default" href="{% url 'online_encoding_form' learning_unit.id  %}" role="button" id="lnk_encode"><i class="fa fa-hashtag"></i> {% trans 'encode' %}</a>
+                <a class="btn btn-default" href="{% url 'online_double_encoding_form' learning_unit.id  %}" role="button" id="lnk_online_double_encoding"><i class="fa fa-hashtag"></i><i class="fa fa-hashtag"></i> {% trans 'double_encoding' %}</a>
+                <a  id="lnk_score_printing" class="btn btn-default" href="{% url 'notes_printing' learning_unit_id=learning_unit.id %}" role="button"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'print' %}</a>
+            {%endif%}
+            <a id="lnk_scores_excel" class="btn btn-default" href="{% url 'scores_encoding_download' learning_unit.id academic_year.id%}" role="button" title="{% trans 'hint_create_excel_file'%}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span> {% trans 'get_excel_file'%}</a>
+            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#pnl_upload_score_modal" title="{% trans 'hint_select_excel_file_to_inject_scores' %}" id="bt_upload_score_modal"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> {% trans 'inject_xls_file' %}</button>
+            {%if tutor%}
+                <button type="button" class="btn btn-warning pull-right" data-toggle="modal" data-target="#pnl_submission_scores_modal"
+                          id="bt_score_submission_modal" {%if coordinator = False or num_encoded_scores = 0  %} disabled{%endif%}><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'submission' %}</button>
+            {%endif%}
+            {% as_messages_info as messages_info %}
+            {%if messages_info %}
+                <div id="div_info_messages">
+                    <ul class="alert alert-success">
+                        {% for message in messages %}
+                            {% if 'info' in message.tags %}
+                                <li {% if message.tags%}{% endif %}>{{ message }}</li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            <br><br>
+            {% as_messages_warning as messages_warning %}
+            {% if messages_warning %}
+                <ul class="alert alert-danger">
+                    {% for message in messages %}
+                        {% if 'warning' in message.tags %}
+                            <li {%  if message.tags %}{% endif %}>{{ message }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endif %}
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>{% trans 'status' %}</th>
+                    <th>{% trans 'program' %}</th>
+                    <th>{% trans 'number_session' %}</th>
+                    <th>{% trans 'registration_number' %}</th>
+                    <th>{% trans 'lastname' %}</th>
+                    <th>{% trans 'firstname' %}</th>
+                    <th>{% trans 'score' %}</th>
+                    <th>{% trans 'justification' %}</th>
+                    <th>{% trans 'end_date' %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for enrollment in enrollments %}
+                    <tr style="background-color:
+                                {% ifchanged enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym %}
+                                    {% cycle "white" "#E5F2FF" as rowcolors %}
+                                {% else %}
+                                    {{ rowcolors }}
+                                {% endifchanged %}">
+                        <td>{% if enrollment.score_final or enrollment.justification_final %}
+                                <span class="glyphicon glyphicon-send" aria-hidden="true" style="color: green;" title="{% trans 'score_submitted' %}"></span>
+                            {% endif %}</td>
+                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
+                        <td>{{ enrollment.session_exam.number_session}}</td>
+                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
+                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
+                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
+                        <td>{%if is_pgmer %}{{ enrollment.score_final | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}{%else%}{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}{%endif%}</td>
+                        <td>{%if is_pgmer %}
+                                {% if enrollment.justification_final %}
+                                    {{ enrollment.get_justification_final_display }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            {% else %}
+                                {% if enrollment.justification_draft %}
+                                    {{ enrollment.get_justification_draft_display }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                        <td>{{ enrollment.session_exam.offer_year_calendar.end_date | default_if_none:'' |date:"j/m/Y" }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% as_messages_error as messages_error %}
+        {% if messages_error %}
+            <div id="div_error_messages">
+                <ul class="alert alert-danger">
+                    {% for message in messages %}
+                        {% if 'error' in message.tags %}
+                            <li {%  if message.tags %}{% endif %}>{{ message }}</li>
+                        {%endif%}
+                    {% endfor %}
+                </ul>
+            </div>
+            <input type="button" value="{% trans 'print'%}"
+                       onclick="printdiv('div_error_messages','div_info_messages');"
+                       title="{% trans 'hint_print_error_messages' %}"/>
+        {% endif %}
+    </div>
+</div>
+
+<!-- UploadFile modal -->
+<div class="modal fade" id="pnl_upload_score_modal" tabindex="-1" role="dialog" aria-labelledby="uploadScoresLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form method="post" enctype="multipart/form-data" action="{%if tutor%}{% url 'upload_encoding' learning_unit.id tutor.id%}{%else%}{% url 'upload_encoding' learning_unit.id %}{%endif%}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="bt_close_upload_score_modal"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="uploadScroresLabel">{% trans 'scores_injection' %}</h4>
+                </div>
+                <div class="modal-body">
+                    <label for="fle_scores_input_file" class="btn btn-default" >{% trans 'choose_file' %}</label>
+                    <input type="file" id="fle_scores_input_file" name="file" style="display:none" />
+                    <div id="pnl_selectedFiles"></div>
+                    <p class="help-block">{% trans 'help_pnl_selectedfiles' %}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="bt_cancel_upload_score_modal">{% trans 'cancel' %}</button>
+                    <input type="submit" class="btn btn-primary" value="{% trans 'inject'%}" onclick="document.getElementById('files').style.visibility='visible'" id="bt_submit_upload_score_modal"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Submission modal -->
+<div class="modal fade" id="pnl_submission_scores_modal" tabindex="-1" role="dialog" aria-labelledby="submissionScoresLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="bt_close_submission_score_modal"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="submissionScoresLabel">{% trans 'submission' %}</h4>
+            </div>
+            <div class="modal-body">
+                {% if num_encoded_scores %}
+                    <p class="help-block">{% trans 'help_submission_scores_label' as help_submission_scores_label %}{{ help_submission_scores_label | format:num_encoded_scores}}</p>
+                {% endif %}
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-warning" href="{% url 'online_encoding_submission' learning_unit.id %}" role="button" id="lnk_post_scores_submission_btn"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'submission' %}</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="bt_cancel_submission_score_modal">{% trans 'cancel' %}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script language="javascript">
+    var selDiv = "";
+
+	document.addEventListener("DOMContentLoaded", init, false);
+
+	function init() {
+		document.querySelector('#fle_scores_input_file').addEventListener('change', handleFileSelect, false);
+		selDiv = document.querySelector("#pnl_selectedFiles");
+	}
+
+	function handleFileSelect(e) {
+		if(!e.target.files) return;
+
+		selDiv.innerHTML = "";
+
+		var files = e.target.files;
+		for(var i=0; i<files.length; i++) {
+			var f = files[i];
+
+			selDiv.innerHTML += f.name + "<br/>";
+		}
+	}
+
+    function printdiv(div_warning,div_info){
+        var headstr = "<html><head><title></title></head><body>";
+        var footstr = "</body>";
+        var newstr = document.all.item(div_warning).innerHTML;
+        newstr += document.all.item(div_info).innerHTML;
+        var oldstr = document.body.innerHTML;
+        document.body.innerHTML = headstr+newstr+footstr;
+        window.print();
+        document.body.innerHTML = oldstr;
+        return false;
+    }
+</script>
+{% endblock %}

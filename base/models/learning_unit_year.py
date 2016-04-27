@@ -35,28 +35,24 @@ class LearningUnitYearAdmin(admin.ModelAdmin):
 
 
 class LearningUnitYear(models.Model):
-    external_id    = models.CharField(max_length=100, blank=True, null=True)
-    changed        = models.DateTimeField(null=True)
-    acronym        = models.CharField(max_length=15)
-    title          = models.CharField(max_length=255)
-    credits        = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    changed = models.DateTimeField(null=True)
+    acronym = models.CharField(max_length=15)
+    title = models.CharField(max_length=255)
+    credits = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     decimal_scores = models.BooleanField(default=False)
-    academic_year  = models.ForeignKey('AcademicYear')
-    learning_unit  = models.ForeignKey('LearningUnit')
+    academic_year = models.ForeignKey('AcademicYear')
+    learning_unit = models.ForeignKey('LearningUnit')
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year,self.learning_unit)
 
 
-def find_learning_unit_years_by_academic_year(academic_yr):
-    return LearningUnitYear.objects.filter(academic_year=int(academic_yr))
-
-
-def find_learning_unit_year_by_id(learning_unit_id):
+def find_by_id(learning_unit_id):
     return LearningUnitYear.objects.get(pk=learning_unit_id)
 
 
-def search(academic_year_id=None, acronym=None):
+def search(academic_year_id=None, acronym=None, learning_unit=None):
     queryset = LearningUnitYear.objects
 
     if academic_year_id:
@@ -65,4 +61,12 @@ def search(academic_year_id=None, acronym=None):
     if acronym:
         queryset = queryset.filter(acronym__icontains=acronym)
 
+    if learning_unit:
+        queryset = queryset.filter(learning_unit=learning_unit)
+
     return queryset
+
+
+def find_by_academic_year_learningunit(academic_yr, learning_unit):
+    return LearningUnitYear.objects.filter(academic_year=academic_yr) \
+                                   .filter(learning_unit=learning_unit).first()

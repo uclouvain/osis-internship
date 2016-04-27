@@ -32,6 +32,9 @@ admin.site.register(academic_calendar.AcademicCalendar,
 admin.site.register(academic_year.AcademicYear,
                     academic_year.AcademicYearAdmin)
 
+admin.site.register(application_notice.ApplicationNotice,
+                    application_notice.ApplicationNoticeAdmin)
+
 admin.site.register(attribution.Attribution,
                     attribution.AttributionAdmin)
 
@@ -59,6 +62,9 @@ admin.site.register(message_template.MessageTemplate,
 admin.site.register(offer_enrollment.OfferEnrollment,
                     offer_enrollment.OfferEnrollmentAdmin)
 
+admin.site.register(domain.Domain,
+                    domain.DomainAdmin)
+
 admin.site.register(offer.Offer,
                     offer.OfferAdmin)
 
@@ -80,11 +86,14 @@ admin.site.register(person.Person,
 admin.site.register(person_address.PersonAddress,
                     person_address.PersonAddressAdmin)
 
-admin.site.register(program_manager.ProgrammeManager,
-                    program_manager.ProgrammeManagerAdmin)
+admin.site.register(program_manager.ProgramManager,
+                    program_manager.ProgramManagerAdmin)
 
 admin.site.register(session_exam.SessionExam,
                     session_exam.SessionExamAdmin)
+
+admin.site.register(structure_address.StructureAddress,
+                    structure_address.StructureAddressAdmin)
 
 admin.site.register(structure.Structure,
                     structure.StructureAdmin)

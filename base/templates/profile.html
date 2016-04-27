@@ -34,17 +34,17 @@
 <br>
 <div>
     <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active"><a href="#identification" aria-controls="identification" role="tab" data-toggle="tab">Identification</a></li>
+        <li role="presentation" class="active"><a href="#identification" aria-controls="identification" role="tab" data-toggle="tab">{% trans 'identification' %}</a></li>
         {% if tutor %}
-            <li role="presentation"><a href="#attributions" aria-controls="attributions" role="tab" data-toggle="tab">Attributions</a></li>
+            <li role="presentation"><a href="#attributions" aria-controls="attributions" role="tab" data-toggle="tab">{% trans 'attributions' %}</a></li>
         {% endif %}
         {% if student %}
-            <li role="presentation"><a href="#enrollments" aria-controls="enrollments" role="tab" data-toggle="tab">Mes études</a></li>
+            <li role="presentation"><a href="#enrollments" aria-controls="enrollments" role="tab" data-toggle="tab">{% trans 'my_studies' %}</a></li>
         {% endif %}
         {% if programs_managed %}
-            <li role="presentation"><a href="#program" aria-controls="program" role="tab" data-toggle="tab">Programmes</a></li>
+            <li role="presentation"><a href="#program" aria-controls="program" role="tab" data-toggle="tab">{% trans 'programs' %}</a></li>
         {% endif %}
-        <li role="presentation"><a href="#preferences" aria-controls="preferences" role="tab" data-toggle="tab">Préférences</a></li>
+        <li role="presentation"><a href="#preferences" aria-controls="preferences" role="tab" data-toggle="tab">{% trans 'preferences' %}</a></li>
     </ul>
 
     <div class="tab-content">
@@ -52,48 +52,48 @@
             <br>
             <div class="row">
                 <div class="col-md-2">
-                    <label>Identifiant globale</label><br>
+                    <label>{% trans 'global_identifiant' %}</label><br>
                     {{ person.global_id }}
                 </div>
                 <div class="col-md-3">
-                    <label>Prénom</label><br>
+                    <label>{% trans 'firstname' %}</label><br>
                     {{ person.first_name }} {{ person.middle_name }}
                 </div>
                 <div class="col-md-3">
-                    <label>Nom</label><br>
+                    <label>{% trans 'lastname' %}</label><br>
                     {{ person.last_name }}
                 </div>
                 <div class="col-md-2">
-                    <label>Genre</label><br>
+                    <label>{% trans 'gender' %}</label><br>
                     {{ person.gender }}
                 </div>
                 <div class="col-md-2">
-                    <label>Registre national</label><br>
+                    <label>{% trans 'national_register' %}</label><br>
                     {{ person.national_id }}
                 </div>
             </div>
             <br>
             <div class="row">
                 <div class="col-md-5">
-                    <label>Email</label><br>
+                    <label>{% trans 'email' %}</label><br>
                     {{ person.email | default_if_none:'-' }}
                 </div>
                 <div class="col-md-3">
-                    <label>Téléphone fixe</label><br>
+                    <label>{% trans 'fixed_line_phone' %}</label><br>
                     {{ person.phone | default_if_none:'-' }}
                 </div>
                 <div class="col-md-2">
-                    <label>Téléphone mobile</label><br>
+                    <label>{% trans 'mobile_phone' %}</label><br>
                     {{ person.phone_mobile | default_if_none:'-' }}
                 </div>
                 <div class="col-md-2">
-                    <label>Langue</label><br>
+                    <label>{% trans 'language' %}</label><br>
                     {{ person.language | default_if_none:'-' }}
                 </div>
             </div>
             {% if addresses %}
                 <br>
-                <label>Adresses</label>
+                <label>{% trans 'addresses' %}</label>
                 <div class="list-group">
                     {% for address in addresses %}
                         <a href="#" class="list-group-item">
@@ -116,7 +116,7 @@
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr>
-                            <th>Unité d'ensignement</th>
+                            <th>{% trans 'learning_unit' %}</th>
                         </tr>
                     </thead>
                     {% for attribution in attributions %}
@@ -135,7 +135,7 @@
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr>
-                            <th>Programme</th>
+                            <th>{% trans 'program' %}</th>
                         </tr>
                     </thead>
                     {% for enrollment in offer_enrollments %}
@@ -154,7 +154,7 @@
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr>
-                            <th>Programme géré</th>
+                            <th>{% trans 'managed_programs' %}</th>
                         </tr>
                     </thead>
                     {% for program_managed in programs_managed %}
@@ -171,7 +171,7 @@
             <br>
             <form method="post" action="{% url 'profile_lang' %}">
                 {% csrf_token %}
-                <label for="slt_ui_language">Langue d'interface utilisateur</label>
+                <label for="slt_ui_language">{% trans 'user_interface_language' %}</label>
                 <select class="form-control" id="slt_ui_language"  name="ui_language"
                         onchange="">
                     {% for lang in supported_languages %}
@@ -179,8 +179,8 @@
                     {% endfor %}
                 </select>
                 <br>
-                <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_organization_save">
-                    <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'Save'%}
+                <button type="submit" class="btn btn-primary" title="{% trans 'save'%}" id="bt_organization_save">
+                    <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}
                 </button>
             </form>
         </div>

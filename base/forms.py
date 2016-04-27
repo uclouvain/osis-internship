@@ -46,10 +46,10 @@ class OrganizationForm(ModelForm):
 class AcademicCalendarForm(ModelForm):
     start_date = forms.DateField(widget=forms.DateInput(format = '%d/%m/%Y'),
                                  input_formats=('%d/%m/%Y',),
-                                 required=False)
+                                 required=True)
     end_date = forms.DateField(widget=forms.DateInput(format = '%d/%m/%Y'),
                                input_formats=('%d/%m/%Y',),
-                               required=False)
+                               required=True)
 
     class Meta:
         model = mdl.academic_calendar.AcademicCalendar
@@ -59,10 +59,10 @@ class AcademicCalendarForm(ModelForm):
 class OfferYearCalendarForm(ModelForm):
     start_date = forms.DateField(widget=forms.DateInput(format = '%d/%m/%Y'),
                                  input_formats=('%d/%m/%Y',),
-                                 required=False)
+                                 required=True)
     end_date = forms.DateField(widget=forms.DateInput(format = '%d/%m/%Y'),
                                input_formats=('%d/%m/%Y',),
-                               required=False)
+                               required=True)
 
     class Meta:
         model = mdl.offer_year_calendar.OfferYearCalendar

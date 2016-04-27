@@ -41,7 +41,7 @@ def internships(request):
         else :
             query = InternshipOffer.find_internships()
 
-    #Create the options for the selected list, delete dubblons
+    # Create the options for the selected list, delete duplicated
     query_organizations = InternshipOffer.find_internships()
     internship_organizations = []
     for internship in query_organizations:
@@ -55,6 +55,7 @@ def internships(request):
 
 @login_required
 def internships_save(request):
+    print ("test 123")
     form = InternshipChoiceForm(data=request.POST)
     new_choice = InternshipChoice()
 
@@ -85,7 +86,7 @@ def internships_save(request):
         new_choice.organization = organization_list[x]
         new_choice.learning_unit_year = learning_unit_year_list[x]
         new_choice.choice = preference_list[x]
-        new_choice.save()
+        #new_choice.save()
 
     return render(request, "internships.html", {'section': 'internship',
                                                 'form': form

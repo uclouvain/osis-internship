@@ -25,3 +25,9 @@ body {
 .invisible{
   visibility: hidden;
 }
+
+/* Hides the spinner of number fields. */
+input[type=number] {
+    -moz-appearance:textfield;
+    -webkit-appearance: none;
+}

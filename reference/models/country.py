@@ -27,35 +27,6 @@ from django.db import models
 from django.contrib import admin
 
 
-class ContinentAdmin(admin.ModelAdmin):
-    list_display = ('name', 'code',)
-    ordering = ('name',)
-
-
-class Continent(models.Model):
-    code = models.CharField(max_length=2, unique=True)
-    name = models.CharField(max_length=30)
-
-    def __str__(self):
-        return self.name
-
-
-class CurrencyAdmin(admin.ModelAdmin):
-    list_display = ('name', 'code', 'symbol')
-    ordering = ('name',)
-    search_fields = ['code', 'name']
-    fieldsets = ((None, {'fields': ('name', 'code', 'symbol')}),)
-
-
-class Currency(models.Model):
-    name = models.CharField(max_length=80, unique=True)
-    code = models.CharField(max_length=4, blank=True, null=True)
-    symbol = models.CharField(max_length=6, blank=True, null=True)
-
-    def __str__(self):
-        return self.name
-
-
 class CountryAdmin(admin.ModelAdmin):
     list_display = ('name', 'iso_code', 'nationality', 'european_union', 'dialing_code', 'cref_code', 'currency',
                     'continent')
@@ -66,6 +37,7 @@ class CountryAdmin(admin.ModelAdmin):
 
 
 class Country(models.Model):
+    external_id = models.CharField(max_length=100, blank=True, null=True)
     iso_code = models.CharField(max_length=2, unique=True)
     name = models.CharField(max_length=80, unique=True)
     nationality = models.CharField(max_length=80, blank=True, null=True)
@@ -73,22 +45,15 @@ class Country(models.Model):
     dialing_code = models.CharField(max_length=3, blank=True, null=True)
     cref_code = models.CharField(max_length=3, blank=True, null=True)
     currency = models.ForeignKey('Currency', blank=True, null=True, on_delete=models.CASCADE)
-    continent = models.ForeignKey('Continent', on_delete=models.CASCADE)
+    continent = models.ForeignKey('Continent', blank=True, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
 
 
-class LanguageAdmin(admin.ModelAdmin):
-    list_display = ('code', 'name')
-    ordering = ('code',)
-    search_fields = ['code', 'name']
-    fieldsets = ((None, {'fields': ('code', 'name')}),)
+def find_all():
+    return Country.objects.order_by('name')
 
 
-class Language(models.Model):
-    code = models.CharField(max_length=4, unique=True)
-    name = models.CharField(max_length=80, unique=True)
-
-    def __str__(self):
-        return self.name
+def find_by_id(country_id):
+    return Country.objects.get(pk=country_id)
