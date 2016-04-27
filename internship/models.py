@@ -112,6 +112,6 @@ class InternshipMaster(models.Model):
 
 class InternshipChoice(models.Model):
     student             = models.ForeignKey('base.Student')
-    organization        = models.CharField(max_length=50, blank=True, null=True)
-    learning_unit_year  = models.CharField(max_length=50, blank=True, null=True)
+    organization        = models.ForeignKey('base.Organization')
+    learning_unit_year  = models.ForeignKey('base.LearningUnitYear')
     choice              = models.IntegerField()

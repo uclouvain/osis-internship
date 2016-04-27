@@ -78,14 +78,15 @@ def internships_save(request):
     learning_unit_year_list = [x for x in learning_unit_year_list if x != 0]
     preference_list = [x for x in preference_list if x != 0]
     student = mdl.student.find_by(person_username=request.user)
-    for s in student:
-        current_student = s
 
     index = learning_unit_year_list.__len__()
     for x in range(0, index):
-        new_choice.student = current_student
-        new_choice.organization = organization_list[x]
-        new_choice.learning_unit_year = learning_unit_year_list[x]
+        print (organization_list[x])
+        new_choice.student = student[0]
+        organistation = mdl.organization.search(name=organization_list[x])
+        new_choice.organization = organistation[0]
+        learning_unit_year = mdl.learning_unit_year.search(title=learning_unit_year_list[x])
+        new_choice.learning_unit_year = learning_unit_year[0]
         new_choice.choice = preference_list[x]
         new_choice.save()
 
