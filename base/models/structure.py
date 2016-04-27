@@ -127,3 +127,18 @@ def find_by_acronym(acronym):
         return Structure.objects.get(acronym__iexact=acronym.strip())
     except ObjectDoesNotExist:
         return None
+
+
+def find_faculty(a_structure):
+
+    if a_structure.type == 'FACULTY':
+        return a_structure
+    else:
+        parent = a_structure.part_of
+        if parent:
+            if parent.type != 'FACULTY':
+                find_faculty(parent)
+            else:
+                return parent
+        return None
+

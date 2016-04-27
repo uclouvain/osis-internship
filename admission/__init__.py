@@ -23,33 +23,3 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
-
-
-class LearningUnitAdmin(admin.ModelAdmin):
-    list_display = ('acronym', 'title', 'start_year', 'end_year', 'changed')
-    fieldsets = ((None, {'fields': ('acronym','title','description','start_year','end_year')}),)
-    search_fields = ['acronym']
-
-
-class LearningUnit(models.Model):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed = models.DateTimeField(null=True)
-    acronym = models.CharField(max_length=15)
-    title = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
-    start_year = models.IntegerField()
-    end_year = models.IntegerField(blank=True, null=True)
-    progress = None
-
-    def __str__(self):
-        return u"%s - %s" % (self.acronym, self.title)
-
-
-def find_by_id(learning_unit_id):
-    return LearningUnit.objects.get(pk=learning_unit_id)
-
-
-def find_by_ids(learning_unit_ids):
-    return LearningUnit.objects.filter(pk__in=learning_unit_ids)

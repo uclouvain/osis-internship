@@ -26,12 +26,10 @@
 from django.http import HttpResponse
 from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
-from openpyxl.worksheet.datavalidation import DataValidation
 from openpyxl.styles import Color, Style, PatternFill
 from django.utils.translation import ugettext_lazy as _
 
 from base import models as mdl
-
 
 HEADER = [str(_('academic_year')),
           str(_('session')),
@@ -41,25 +39,21 @@ HEADER = [str(_('academic_year')),
           str(_('lastname')),
           str(_('firstname')),
           str(_('numbered_score')),
-          str(_('other_score')),
+          str(_('justification')),
           str(_('end_date')),
           str(_('ID'))]
 
 
-def export_xls(request, learning_unit_id,academic_year_id, is_fac, sessions_list):
+def export_xls(academic_year_id, is_fac, sessions_list):
     academic_year = mdl.academic_year.find_academic_year_by_id(academic_year_id)
 
     wb = Workbook()
     ws = wb.active
 
-    __columns_ajusting(ws)
-
-    # masquage de la colonne avec l'id exam enrollment
-
+    __columns_resizing(ws)
     ws.append(HEADER)
 
-
-    cptr = 1
+    enrollment_counter = 1
     if sessions_list:
         for sessions in sessions_list:
 
@@ -94,20 +88,21 @@ def export_xls(request, learning_unit_id,academic_year_id, is_fac, sessions_list
                                end_date,
                                rec_exam_enrollment.id])
 
-                    cptr += 1
-                    __coloring_non_editable(ws, cptr, rec_exam_enrollment.encoding_status,score,rec_exam_enrollment.justification_final)
-    ws.append([str(_('Legend : values allowed for \'other score\'')), mdl.exam_enrollment.justification_label_authorized(is_fac)])
-
-
-    response = HttpResponse(content=save_virtual_workbook(wb, as_template=True))
-    response['Content-Disposition'] = 'attachment; filename=score_encoding.xlsx'
-    response['Content-type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                    enrollment_counter += 1
+                    __coloring_non_editable(ws, enrollment_counter, score, rec_exam_enrollment.justification_final)
+    ws.append([str(_('other_score_legend')),
+               mdl.exam_enrollment.justification_label_authorized(is_fac)])
+    filename = "session_%s_%s_%s.xls" % (str(academic_year.year),
+                                         str(session_exam.number_session),
+                                         session_exam.learning_unit_year.acronym)
+    response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.ms-excel')
+    response['Content-Disposition'] = 'attachment; filename=%s' % filename
     return response
 
 
-def __columns_ajusting(ws):
+def __columns_resizing(ws):
     """
-    ajustement des colonnes à la bonne dimension
+    Definition of the columns sizes
     """
     col_academic_year = ws.column_dimensions['A']
     col_academic_year.width = 18
@@ -124,37 +119,22 @@ def __columns_ajusting(ws):
     col_note = ws.column_dimensions['I']
     col_note.width = 20
     col_id_exam_enrollment = ws.column_dimensions['K']
+    # Hide the exam_enrollment_id column
     col_id_exam_enrollment.hidden = True
 
 
-def __create_data_list_for_justification(is_fac):
+def __coloring_non_editable(ws, enrollment_counter, score, justification):
     """
-    Création de la liste de choix pour la justification
-    """
-    dv = DataValidation(type="list", formula1='"%s"' % mdl.exam_enrollment.justification_label_authorized(is_fac),
-                        allow_blank=True)
-    dv.error = str(_('not_in_choices_list'))
-    dv.errorTitle = str(_('invalid_entry'))
-
-    dv.prompt = str(_('please_choose_in_the_list'))
-    dv.promptTitle = str(_('choices_list'))
-    return dv
-
-
-def __coloring_non_editable(ws, cptr, encoding_status, score, justification):
-    """
-    définition du style pour les colonnes qu'on ne doit pas modifier
+    Coloring of the non-editable columns
     """
     style_no_modification = Style(fill=PatternFill(patternType='solid', fgColor=Color('C1C1C1')))
-
-    # coloration des colonnes qu'on ne doit pas modifier
-    i = 1
-    while i < 12:
-        if i < 8 or i > 9:
-            ws.cell(row=cptr, column=i).style = style_no_modification
+    column_number = 1
+    while column_number < 12:
+        if column_number < 8 or column_number > 9:
+            ws.cell(row=enrollment_counter, column=column_number).style = style_no_modification
         else:
             if not(score is None and justification is None):
-                ws.cell(row=cptr, column=8).style = style_no_modification
-                ws.cell(row=cptr, column=9).style = style_no_modification
+                ws.cell(row=enrollment_counter, column=8).style = style_no_modification
+                ws.cell(row=enrollment_counter, column=9).style = style_no_modification
 
-        i += 1
+        column_number += 1

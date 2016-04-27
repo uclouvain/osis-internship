@@ -67,7 +67,7 @@ def get_assigned_tutor(user):
 
 def find_by_learning_unit(a_learning_unit):
     attributions = Attribution.objects.filter(learning_unit=a_learning_unit) \
-                              .order_by('tutor__person__last_name','tutor__person__first_name')
+                              .order_by('tutor__person__last_name', 'tutor__person__first_name')
     return attributions
 
 
@@ -77,4 +77,24 @@ def find_by_function(tutor, a_learning_unit, function):
                                      .filter(function=function)
     if attributions_coord:
         return True
+    return False
+
+
+def is_coordinator(user, learning_unit_year):
+    attributions = Attribution.objects.filter(tutor__person__user=user,
+                                              learning_unit=learning_unit_year.learning_unit,
+                                              function='COORDINATOR')
+    if attributions:
+        return True
+
+    return False
+
+
+def is_professor(user, learning_unit_year):
+    attributions = Attribution.objects.filter(tutor__person__user=user,
+                                              learning_unit=learning_unit_year.learning_unit,
+                                              function='PROFESSOR')
+    if attributions:
+        return True
+
     return False

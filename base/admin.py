@@ -86,8 +86,8 @@ admin.site.register(person.Person,
 admin.site.register(person_address.PersonAddress,
                     person_address.PersonAddressAdmin)
 
-admin.site.register(program_manager.ProgrammeManager,
-                    program_manager.ProgrammeManagerAdmin)
+admin.site.register(program_manager.ProgramManager,
+                    program_manager.ProgramManagerAdmin)
 
 admin.site.register(session_exam.SessionExam,
                     session_exam.SessionExamAdmin)

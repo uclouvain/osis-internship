@@ -31,11 +31,11 @@ from django.utils import timezone
 
 
 JUSTIFICATION_TYPES = (
-    ('ABSENT', _('absent')),
-    ('CHEATING', _('cheating')),
-    ('ILL', _('ill')),
-    ('JUSTIFIED_ABSENCE', _('justified_absence')),
-    ('SCORE_MISSING', _('score_missing')))
+    ('ABSENT', _('absent')), # A
+    ('CHEATING', _('cheating')), # T
+    ('ILL', _('ill')), # I
+    ('JUSTIFIED_ABSENCE', _('justified_absence')), # AJ
+    ('SCORE_MISSING', _('score_missing'))) # ?
 
 
 class ExamEnrollmentAdmin(admin.ModelAdmin):
@@ -45,7 +45,9 @@ class ExamEnrollmentAdmin(admin.ModelAdmin):
                                     'score_final','justification_final')}),)
     raw_id_fields = ('session_exam', 'learning_unit_enrollment')
     search_fields = ['learning_unit_enrollment__offer_enrollment__student__person__first_name',
-                     'learning_unit_enrollment__offer_enrollment__student__person__last_name']
+                     'learning_unit_enrollment__offer_enrollment__student__person__last_name',
+                     'learning_unit_enrollment__offer_enrollment__student__registration_id',
+                     'learning_unit_enrollment__learning_unit_year__acronym']
 
 
 class ExamEnrollment(models.Model):
@@ -145,15 +147,20 @@ def calculate_session_exam_progress(session_exam):
 
 def justification_label_authorized(is_fac):
     if is_fac:
-        return '%s, %s, %s, %s, %s' % (_('absent'),
-                                       _('cheating'),
-                                       _('ill'),
-                                       _('justified_absence'),
-                                       _('score_missing'))
+        return "%s, %s, %s, %s, %s" % (_('absent_pdf_legend'),
+                                       _('cheating_pdf_legend'),
+                                       _('ill_pdf_legend'),
+                                       _('justified_absence_pdf_legend'),
+                                       _('score_missing_pdf_legend'))
     else:
-        return '%s, %s, %s' % (_('absent'),
-                               _('cheating'),
-                               _('score_missing'))
+        return "%s, %s, %s" % (_('absent_pdf_legend'),
+                               _('cheating_pdf_legend'),
+                               _('score_missing_pdf_legend'))
+
+
+def score_label_authorized():
+    return "%s, %s" % (_('presence_note_pdf_legend'),
+                       _('empty_note_pdf_legend'))
 
 
 class ExamEnrollmentHistoryAdmin(admin.ModelAdmin):
@@ -240,11 +247,11 @@ def find_exam_enrollments_drafts_existing_by_session(session_exam):
     return enrolls
 
 
-def find_exam_enrollments_drafts_existing_pgmer_by_session(session_exam):
+def find_exam_enrollments_final_existing_pgmer_by_session(session_exam):
     """ Return the enrollments of a session but not the ones already submitted. """
     enrolls = ExamEnrollment.objects.filter(session_exam=session_exam) \
-                                    .filter(models.Q(justification_draft__isnull=False) |
-                                            models.Q(score_draft__isnull=False)) \
+                                    .filter(models.Q(justification_final__isnull=False) |
+                                            models.Q(score_final__isnull=False)) \
                                     .order_by('learning_unit_enrollment__offer_enrollment__offer_year__acronym',
                                               'learning_unit_enrollment__offer_enrollment__student__person__last_name',
                                               'learning_unit_enrollment__offer_enrollment__student__person__first_name')

@@ -39,7 +39,7 @@ class TutorAdmin(admin.ModelAdmin):
 class Tutor(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
-    person = models.ForeignKey('Person')
+    person = models.OneToOneField('Person')
 
     def __str__(self):
         return u"%s" % self.person
@@ -99,6 +99,7 @@ def find_by_program_manager(programme_manager):
     tutor_list = []
     for program_mgr in program_mgr_list:
         if program_mgr.offer_year:
+
             sessions = session_exam.find_sessions_by_offer(program_mgr.offer_year, academic_yr, None)
             for session in sessions:
                 learning_unit = session.learning_unit_year.learning_unit

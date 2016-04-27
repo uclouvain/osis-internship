@@ -164,7 +164,7 @@ def find_current_sessions_by_tutor_offer(tutor, academic_year,  learning_unit ,o
                 if offer_year and tutor:
                     learning_units = attribution.Attribution.objects.filter(tutor=tutor).values('learning_unit')
                     return SessionExam.objects.filter(learning_unit_year__academic_year=academic_year) \
-                             .filter(offer_year_calendar__offer_year=offer_year) \
+                            .filter(offer_year_calendar__offer_year=offer_year) \
                             .filter(learning_unit_year__learning_unit__in=learning_units) \
                             .filter(offer_year_calendar__start_date__lte=timezone.now()) \
                             .filter(offer_year_calendar__end_date__gte=timezone.now())
