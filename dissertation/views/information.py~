@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -23,32 +23,20 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.utils import timezone
-from django.contrib import admin
-from base.models import person
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from pprint import pprint
+from dissertation.models.adviser import Adviser
+from base import models as mdl
 
-class Adviser(models.Model):
-    person = models.OneToOneField('base.Person',on_delete=models.CASCADE)
-    email_accept = models.BooleanField(default=False)
-    phone_accept = models.BooleanField(default=False)
-    office_accept = models.BooleanField(default=False)
-    
-	
-    def __str__(self):
-        # We retrieve related person's informations (adaptation of __str__ method of base.Person)
-        first_name = ""
-        middle_name = ""
-        last_name = ""
-        if self.person.first_name :
-            first_name = self.person.first_name
-        if self.person.middle_name :
-            middle_name = self.person.middle_name
-        if self.person.last_name :
-            last_name = self.person.last_name + ","
+@login_required
+def informations(request):
+    person = mdl.person.find_by_user(request.user)
+    try:
+        p = Adviser(person=person, email_accept=False, phone_accept=False)
+        p.save()
+        adviser = Adviser.find_by_person(person)
+    except :
+        adviser = Adviser.find_by_person(person)
 
-        return u"%s %s %s" % (last_name.upper(), first_name, middle_name)
-
-    def find_by_person(a_person):
-        adviser = Adviser.objects.get(person=a_person)
-        return adviser
+    return render(request, "informations.html", {'person':person,'adviser': adviser})

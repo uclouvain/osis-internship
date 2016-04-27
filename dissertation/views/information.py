@@ -33,7 +33,7 @@ from base import models as mdl
 def informations(request):
     person = mdl.person.find_by_user(request.user)
     try:
-        p = Adviser(person=person, email_accept=False, phone_accept=False)
+        p = Adviser(person=person, email_accept=False, phone_accept=False, office_accept=False)
         p.save()
         adviser = Adviser.find_by_person(person)
     except :
