@@ -30,8 +30,8 @@ from internship.views import home, internship, master, period, place, student, s
 urlpatterns = [
     # S'il vous plaît, organiser les urls par ordre alphabétique.
     url(r'^$', home.internships_home, name='internships_home'),
-    url(r'^internships', internship.internships, name='internships'),
-    url(r'^internships/save/$', internship.internships_save, name='internships_save_record'),
+    url(r'^internships/$', internship.internships, name='internships'),
+    url(r'^internships/save/$', internship.internships_save, name='internships_save'),
     url(r'^internships_masters/$', master.interships_masters, name='interships_masters'),
     url(r'^periods/$', period.internships_periods, name='internships_periods'),
     url(r'^places/$', place.internships_places, name='internships_places'),

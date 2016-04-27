@@ -71,7 +71,7 @@
             <li><a data-toggle="tab" href="#tab_CHOIX1">{% trans 'Stage au choix 1'%}</a></li>
             <li><a data-toggle="tab" href="#tab_CHOIX2">{% trans 'Stage au choix 2'%}</a></li>
         </ul>
-        <form  method="post" action="{% url 'internships_save_record'%}" >
+        <form  method="post" action="{% url 'internships_save' %}" >
         {% csrf_token %}
         <div class="tab-content">
             <div id="tab_MI" class="tab-pane fade in active">

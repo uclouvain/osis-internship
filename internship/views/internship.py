@@ -55,7 +55,6 @@ def internships(request):
 
 @login_required
 def internships_save(request):
-    print ("test 123")
     form = InternshipChoiceForm(data=request.POST)
     new_choice = InternshipChoice()
 
@@ -78,15 +77,17 @@ def internships_save(request):
     organization_list = [x for x in organization_list if x != 0]
     learning_unit_year_list = [x for x in learning_unit_year_list if x != 0]
     preference_list = [x for x in preference_list if x != 0]
-    student = mdl.student.find_by_username_of_person(request.user)
+    student = mdl.student.find_by(person_username=request.user)
+    for s in student:
+        current_student = s
 
     index = learning_unit_year_list.__len__()
     for x in range(0, index):
-        new_choice.student = student
+        new_choice.student = current_student
         new_choice.organization = organization_list[x]
         new_choice.learning_unit_year = learning_unit_year_list[x]
         new_choice.choice = preference_list[x]
-        #new_choice.save()
+        new_choice.save()
 
     return render(request, "internships.html", {'section': 'internship',
                                                 'form': form
