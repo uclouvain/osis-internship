@@ -42,9 +42,9 @@ ENTITY_TYPE = (('SECTOR', 'sector'),
                ('DOCTORAL_COMMISSION', 'doctoral_commission'),
                ('PROGRAM_COMMISSION', 'program_commission'),
                ('LOGISTIC', 'logistic'),
-               ('UNDEFINED', 'undefined'),
                ('RESEARCH_CENTER', 'research_center'),
-               ('TECHNOLOGIC_PLATFORM', 'technologic_platform'))
+               ('TECHNOLOGIC_PLATFORM', 'technologic_platform'),
+               ('UNDEFINED', 'undefined'))
 
 
 class Structure(models.Model):

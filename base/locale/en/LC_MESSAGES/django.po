@@ -1292,3 +1292,31 @@ msgstr "Get Excel File"
 
 #~ msgid "registration_date"
 #~ msgstr "Registration date"
+
+msgid "sector"
+msgstr "Sector"
+
+
+msgid "institute"
+msgstr "Institute"
+
+msgid "pole"
+msgstr "Pole"
+
+msgid "doctoral_commission"
+msgstr "Doctoral commmission"
+
+msgid "program_commission"
+msgstr "Program commission"
+
+msgid "logistic"
+msgstr "Logistic"
+
+msgid "research_center"
+msgstr "Research center"
+
+msgid "technologic_platform"
+msgstr "Technologic platform"
+
+msgid "undefined"
+msgstr "Undefined"
