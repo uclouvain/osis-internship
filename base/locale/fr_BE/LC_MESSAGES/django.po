@@ -1252,7 +1252,7 @@ msgid "begin_date_lt_end_date"
 msgstr "La date de début doit etre égale ou inferieure à la date de fin"
 
 msgid "no_score_encoded_double_encoding_impossible"
-msgstr "Aucune nouvelle note encodé. Le double encodage besoin des nouvelles notes."
+msgstr "Aucune nouvelle note encodé. Le double encodage nécessite de nouvelles notes."
 
 #: views/common.py:162
 msgid "minimum_one_criteria"
@@ -1297,3 +1297,19 @@ msgstr "Obtenir le fichier Excel"
 
 #~ msgid "add_address"
 #~ msgstr "Ajouter une adresse"
+
+msgid "mail_greeting"
+msgstr "Bonjour, "
+
+msgid "mail_score_submission_content"
+msgstr "Nous vous informons qu'une soummission de notes à été effectuée pour {{learning_unit_name}}."
+
+msgid "mail_osis_team"
+msgstr "L'équipe OSIS"
+
+msgid "mail_academic_calendar_change_subject"
+msgstr "Attention! Changements effectués sur {{offer_year}}, academic calendar {{academic_calendar}}"
+
+msgid "mail_academic_calendar_changes_content"
+msgstr "Nous vous informons que des changements on été effectués sur '{{offer_year}}' ({{acronym}}), academic calendar ({{academic_calendar}})."
+

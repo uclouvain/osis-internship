@@ -1,0 +1,4 @@
+{% load i18n %}
+{% trans 'mail_greeting' %}\n
+{% trans 'mail_academic_calendar_changes_content' | offer_year acronym academic_calendar %}\n\n
+{% trans 'mail_osis_team' %}

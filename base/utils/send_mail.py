@@ -28,6 +28,7 @@
 Utility files for mail sending
 """
 from django.core.mail import send_mail
+from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 
 from backoffice.settings import DEFAULT_FROM_EMAIL
@@ -41,21 +42,10 @@ def send_mail_after_scores_submission(persons, learning_unit_name):
     """
 
     subject = _('submission_of_scores_for').format(learning_unit_name)
-    html_message = ''.join([
-        '<p>Hi, </p>',
-        '<p>We inform you that a scores submission was made for {learning_unit_name}.</p></br>'.format(
-            learning_unit_name=learning_unit_name),
-        'The OSIS Team<br>',
-        EMAIL_SIGNATURE,
-    ])
-    message = ''.join([
-        'Hi, \n',
-        'We inform you that a scores submission was made for {learning_unit_name}.\n\n'.format(
-            learning_unit_name=learning_unit_name),
-        'The OSIS Team.',
-    ])
-
-    send_mail(subject=subject,message=message,recipient_list=[person.email for person in persons],html_message=html_message,from_email=DEFAULT_FROM_EMAIL)
+    html_message = render_to_string('emails/scores_submission.html', {'learning_unit_name': learning_unit_name})
+    message = render_to_string('emails/scores_submission.txt', {'learning_unit_name': learning_unit_name})
+    send_mail(subject=subject, message=message,recipient_list=[person.email for person in persons],
+              html_message=html_message, from_email=DEFAULT_FROM_EMAIL)
 
 
 def send_mail_after_academic_calendar_changes(academic_calendar, offer_year_calendar, programme_managers):
@@ -65,53 +55,18 @@ def send_mail_after_academic_calendar_changes(academic_calendar, offer_year_cale
     :param academic_calendar:
     :param offer_year_calendar:
     """
-
-    subject = "Watch out - Changes has been made on %s, academic calendar (%s)" % (offer_year_calendar.offer_year, academic_calendar)
-    html_message = ''.join([
-        '<p>Hi, </p>',
-        '<p>We inform you that changes has been made on \'{offer_year}\'({acronym}), academic calendar ({academic_calendar}).</p></br>'.format(
-            offer_year=offer_year_calendar.offer_year.title, acronym=offer_year_calendar.offer_year.acronym, academic_calendar=academic_calendar),
-        'The OSIS Team<br>',
-        EMAIL_SIGNATURE,
-    ])
-    message = ''.join([
-        'Hi, \n',
-        'We inform you that changes has been made on \'{offer_year}\'({acronym}), academic calendar ({academic_calendar}).\n\n'.format(
-            offer_year=offer_year_calendar.offer_year.title, acronym=offer_year_calendar.offer_year.acronym, academic_calendar=academic_calendar),
-        'The OSIS Team.',
-    ])
-
+    subject = _('mail_academic_calendar_change_subject').format(offer_year=offer_year_calendar.offer_year,
+                                                                academic_calendar=academic_calendar)
+    data = {
+        'offer_year': offer_year_calendar.offer_year.title,
+        'acronym': offer_year_calendar.offer_year.acronym,
+        'academic_calendar' : academic_calendar
+    }
+    html_message = render_to_string('email/academic_calendar_changes.html', data)
+    message = render_to_string('email/academic_calendar_changes.txt', data)
     send_mail(subject=subject,
               message=message,
               recipient_list=[programme_manager.person.email for programme_manager in programme_managers],
               html_message=html_message,
               from_email='DEFAULT_FROM_EMAIL')
 
-
-GENDER_TITLE_MAP={
-    'M': _('mister'),
-    'F': _('miss'),
-    'U': ''
-}
-
-EMAIL_SIGNATURE = """
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"><title>signature</title>
-    </head>
-    <body>
-        <table cellpadding="5" cellspacing="5">
-            <tbody>
-                <tr>
-                    <td width="60">
-                        <img src="http://www.uclouvain.be/cps/ucl/doc/ac-arec/images/logo-signature.png">
-                    </td>
-                    <td>
-                        <img src="https://osis.uclouvain.be/static/img/logo_osis.png">
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </body>
-</html>
-"""
