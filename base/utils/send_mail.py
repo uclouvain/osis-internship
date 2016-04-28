@@ -38,6 +38,7 @@ base_data = {
     'logo_osis_url': LOGO_EMAIL_SIGNATURE_URL,
 }
 
+
 def send_mail_after_scores_submission(persons, learning_unit_name):
     """
     Send an email to all the teachers after the scores submission for a learning unit
@@ -61,7 +62,8 @@ def send_mail_after_academic_calendar_changes(academic_calendar, offer_year_cale
     :param offer_year_calendar:
     :param programm_managers:
     """
-    subject = _('mail_academic_calendar_change_subject').format(str(offer_year_calendar.offer_year),str(academic_calendar))
+    subject = _('mail_academic_calendar_change_subject').format(str(offer_year_calendar.offer_year),
+                                                                str(academic_calendar))
     format_args = '|'.join([offer_year_calendar.offer_year.title, offer_year_calendar.offer_year.acronym,
                             str(academic_calendar)])
     html_message = render_to_string('emails/academic_calendar_changes.html',
@@ -70,7 +72,7 @@ def send_mail_after_academic_calendar_changes(academic_calendar, offer_year_cale
 
     send_mail(subject=subject,
               message=message,
-              recipient_list= [manager.person.email for manager in list(programm_managers) if manager.person.email],
+              recipient_list=[manager.person.email for manager in list(programm_managers) if manager.person.email],
               html_message=html_message,
               from_email='DEFAULT_FROM_EMAIL')
 

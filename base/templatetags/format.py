@@ -27,9 +27,11 @@ from django import template
 
 register = template.Library()
 
+
 @register.filter
 def format(value, arg):
     return value % arg
+
 
 @register.filter
 def str_format(value, args):
@@ -37,5 +39,3 @@ def str_format(value, args):
         return value
     args_list = args.split('|')
     return value.format(*args_list)
-
-
