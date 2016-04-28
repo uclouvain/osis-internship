@@ -41,7 +41,7 @@ class Adviser(models.Model):
     email_accept = models.BooleanField(default=False)
     phone_accept = models.BooleanField(default=False)
     office_accept = models.BooleanField(default=False)
-    comment=models.TextField(default='')
+    comment=models.TextField(default='', blank=True)
 
     def __str__(self):
         # We retrieve related person's informations (adaptation of __str__ method of base.Person)
