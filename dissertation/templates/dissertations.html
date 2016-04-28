@@ -57,44 +57,26 @@
             <h4 class="media-heading"><a href="{% url 'proposition_dissertations' %}" id="lnk_propositions_dissertations" >{% trans 'Subjects (Manager)' %}</a></h4>
             <p>{% trans 'This process helps persons while subjects encoding.' %}</p>
           </div>
-          <div class="col-md-1"><i class="fa fa-cogs" style="font-size: 400%; color: #6699FF;"></i></div>
+          <div class="col-md-1"><i class="fa fa-user" style="font-size: 400%; color: #6699FF;"></i></div>
           <div class="col-md-5">
             <h4 class="media-heading"><a href="{% url 'informations' %}" id="lnk_informations" >{% trans 'My informations (Manager)' %}</a></h4>
             <p>{% trans 'This process helps persons while informations encoding.' %}</p>
           </div>
         </div>
+        <br>
+        <div class="row">
+          <div class="col-md-1"><i class="fa fa-cogs" style="font-size: 400%; color: #6699FF;"></i></div>
+          <div class="col-md-5">
+            <h4 class="media-heading"><a href="{% url 'proposition_dissertations' %}" id="lnk_proposition_dissertations" >{% trans 'Parameters' %}</a></h4>
+            <p>{% trans 'This process helps persons while parameters encoding.' %}</p>
+          </div>
+          <div class="col-md-1"><i class="fa fa-users" style="font-size: 400%; color: #6699FF;"></i></div>
+          <div class="col-md-5">
+            <h4 class="media-heading"><a href="{% url 'proposition_dissertations' %}" id="lnk_proposition_dissertations" >{% trans 'Teachers' %}</a></h4>
+            <p>{% trans 'This process helps persons while teachers listing.' %}</p>
+          </div>
+        </div>
       {% endif %}
-      <br>
-      <br>
-      <br>
-      <h3>Old menu :</h3>
-      <br>
-      <div class="row">
-        <div class="col-md-1"><i class="fa fa-check-circle" style="font-size: 400%; color: #6699FF;"></i></div>
-        <div class="col-md-5">
-          <h4 class="media-heading"><a href="{% url 'proposition_dissertations' %}" id="lnk_proposition_dissertations" >{% trans 'Projects' %}</a></h4>
-          <p>{% trans 'This process helps persons while projects listing.' %}</p>
-        </div>
-        <div class="col-md-1"><i class="fa fa-users" style="font-size: 400%; color: #6699FF;"></i></div>
-        <div class="col-md-5">
-          <h4 class="media-heading"><a href="{% url 'proposition_dissertations' %}" id="lnk_proposition_dissertations" >{% trans 'Teachers' %}</a></h4>
-          <p>{% trans 'This process helps persons while teachers listing.' %}</p>
-        </div>
-      </div>
-      <br>
-      <div class="row">
-        <div class="col-md-1"><i class="fa fa-user-secret" style="font-size: 400%; color: #6699FF;"></i></div>
-        <div class="col-md-5">
-          <h4 class="media-heading"><a href="{% url 'proposition_dissertations' %}" id="lnk_proposition_dissertations" >{% trans 'My profile' %}</a></h4>
-          <p>{% trans 'This process helps persons while my profile encoding.' %}</p>
-        </div>
-        <div class="col-md-1"><i class="fa fa-cogs" style="font-size: 400%; color: #6699FF;"></i></div>
-        <div class="col-md-5">
-          <h4 class="media-heading"><a href="{% url 'proposition_dissertations' %}" id="lnk_proposition_dissertations" >{% trans 'Parameters' %}</a></h4>
-          <p>{% trans 'This process helps persons while parameters encoding.' %}</p>
-        </div>
-      </div>
-      <br>
     </div>
   </div>
 {% endblock %}
