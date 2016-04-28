@@ -31,6 +31,7 @@ from base import models as mdl
 
 import urllib.request
 import unicodedata
+from xml.dom import minidom
 
 def geocode(addr):
     #Transform the address for a good url and delete all accents
@@ -45,13 +46,16 @@ def geocode(addr):
     with urllib.request.urlopen(req) as response:
         data = response.read().decode('utf-8')
 
+    #Parse the xml to have the latitude and longitude of the address
+    xmldoc = minidom.parseString(data)
+    lat = xmldoc.getElementsByTagName('location')
 
     return "test"
 
 def strip_accents(s):
    return ''.join(c for c in unicodedata.normalize('NFD', s)
                   if unicodedata.category(c) != 'Mn')
-                  
+
 @login_required
 def internships(request):
     #First get the value of the option's value for the sort
