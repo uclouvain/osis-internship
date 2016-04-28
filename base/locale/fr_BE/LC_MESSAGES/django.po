@@ -1313,3 +1313,31 @@ msgstr "Attention! Changements effectués sur {{ offer_year }}, academic calenda
 msgid "mail_academic_calendar_changes_content"
 msgstr "Nous vous informons que des changements on été effectués sur '{{ offer_year }}' ({{ acronym }}), academic calendar ({{ academic_calendar }})."
 
+msgid "sector"
+msgstr "Secteur"
+
+msgid "institute"
+msgstr "Institut"
+
+msgid "pole"
+msgstr "Pole"
+
+msgid "doctoral_commission"
+msgstr "Commision doctorale"
+
+msgid "program_commission"
+msgstr "Commison d'enseignement/programme"
+
+msgid "logistic"
+msgstr "Logistique"
+
+msgid "research_center"
+msgstr "Centre de recherche"
+
+msgid "technologic_platform"
+msgstr "Plateforme technologique"
+
+msgid "undefined"
+msgstr "Non défini"
+
+
