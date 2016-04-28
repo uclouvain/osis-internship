@@ -39,7 +39,9 @@ def proposition_dissertations(request):
 @login_required
 def proposition_dissertation_detail(request, pk):
     proposition_dissertation = get_object_or_404(PropositionDissertation, pk=pk)
-    return render(request, 'proposition_dissertation_detail.html', {'proposition_dissertation': proposition_dissertation})
+    person = mdl.person.find_by_user(request.user)
+    adviser = Adviser.find_by_person(person)
+    return render(request, 'proposition_dissertation_detail.html', {'proposition_dissertation': proposition_dissertation, 'adviser': adviser})
 
 @login_required
 def proposition_dissertation_edit(request, pk):

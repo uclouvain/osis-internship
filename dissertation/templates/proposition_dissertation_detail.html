@@ -39,10 +39,12 @@
   <div class="panel panel-default">
     <div class="panel-body">
       <div class="row">
-        <div class="col-md-1 pull-right">
-          <a class="btn btn-default btn-primary" href="{% url 'proposition_dissertation_edit' pk=proposition_dissertation.pk %}">
-          <span class="glyphicon glyphicon-edit"></span></a>
-        </div>
+        {% if proposition_dissertation.author == adviser %}
+          <div class="col-md-1 pull-right">
+            <a class="btn btn-default btn-primary" href="{% url 'proposition_dissertation_edit' pk=proposition_dissertation.pk %}">
+            <span class="glyphicon glyphicon-edit"></span></a>
+          </div>
+        {% endif %}
       </div>
       <div class="row">
         <div class="col-md-3">
