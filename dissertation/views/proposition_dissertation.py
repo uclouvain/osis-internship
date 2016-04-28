@@ -57,6 +57,7 @@ def proposition_dissertation_edit(request, pk):
                 return redirect('proposition_dissertation_detail', pk=proposition_dissertation.pk)
         else:
             form = PropositionDissertationForm(instance=proposition_dissertation)
+            form.fields['author'].widget.attrs['disabled'] = True
         return render(request, 'proposition_dissertation_edit.html', {'form': form})
     else:
         return render(request, 'proposition_dissertations_list.html', {'proposition_dissertations': proposition_dissertations})
