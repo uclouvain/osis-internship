@@ -32,6 +32,7 @@ from base import models as mdl
 import urllib.request
 import unicodedata
 from xml.dom import minidom
+from math import sin, cos, radians, degrees, acos
 
 def geocode(addr):
     lat_long = [None]*2
@@ -61,6 +62,14 @@ def geocode(addr):
 def strip_accents(s):
    return ''.join(c for c in unicodedata.normalize('NFD', s)
                   if unicodedata.category(c) != 'Mn')
+
+def calc_dist(lat_a, long_a, lat_b, long_b):
+    lat_a = radians(lat_a)
+    lat_b = radians(lat_b)
+    long_diff = radians(long_a - long_b)
+    distance = (sin(lat_a) * sin(lat_b) +
+                cos(lat_a) * cos(lat_b) * cos(long_diff))
+    return (degrees(acos(distance)) * 69.09)
 
 @login_required
 def internships(request):
