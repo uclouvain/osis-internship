@@ -29,6 +29,21 @@ from internship.models import InternshipOffer, InternshipChoice
 from internship.forms import InternshipChoiceForm
 from base import models as mdl
 
+import urllib.request
+import unicodedata
+
+def geocode(addr):
+    #get the complete url
+    url = "https://maps.googleapis.com/maps/api/geocode/xml?address=%s&key=AIzaSyCWeZdraxzqRTMxXxbXY3bncaD6Ijq_EvE" % (addr)
+
+    #using urllib get the xml
+    req = urllib.request.Request(url)
+    with urllib.request.urlopen(req) as response:
+        data = response.read().decode('utf-8')
+
+
+    return "test"
+
 @login_required
 def internships(request):
     #First get the value of the option's value for the sort
