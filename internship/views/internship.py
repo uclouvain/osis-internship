@@ -71,8 +71,12 @@ def calc_dist(lat_a, long_a, lat_b, long_b):
     long_diff = radians(long_a - long_b)
     distance = (sin(lat_a) * sin(lat_b) +
                 cos(lat_a) * cos(lat_b) * cos(long_diff))
-    return (degrees(acos(distance)) * 69.09)
+    #for distance in miles use this
+    #return (degrees(acos(distance)) * 69.09)
+    #for distance in kilometers use this
+    return (degrees(acos(distance)) * 69.09)/0.621371
 
+    
 @login_required
 def internships(request):
     #First get the value of the option's value for the sort
