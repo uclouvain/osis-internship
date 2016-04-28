@@ -75,9 +75,11 @@ def proposition_dissertation_new(request):
             proposition_dissertations = PropositionDissertation.objects.all()
             return render(request, 'proposition_dissertations_list.html', {'proposition_dissertations': proposition_dissertations})
     else:
-        form = PropositionDissertationForm()
+        person = mdl.person.find_by_user(request.user)
+        adviser = Adviser.find_by_person(person)
+        form = PropositionDissertationForm(initial={'author': adviser})
+        form.fields['author'].widget.attrs['disabled'] = True
     return render(request, 'proposition_dissertation_edit.html', {'form': form})
-
 
 @login_required
 def proposition_dissertation_my(request):
