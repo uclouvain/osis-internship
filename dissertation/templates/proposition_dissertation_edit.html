@@ -29,11 +29,12 @@
 {% block breadcrumb %}
   <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'Studies' %}</a></li>
   <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'Dissertations' %}</a></li>
-  <li class="active">{% trans 'Subjects' %}</li>
+  <li><a href="{% url 'proposition_dissertations' %}" id="lnk_propositions">{% trans 'Subjects' %}</a></li>
+  <li class="active">{% trans 'New-Edit Subject' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'New Subject' %}</h2>
+    <h2>{% trans 'New-Edit Subject' %}</h2>
   </div>
   <div class="panel panel-default">
     <div class="panel-body">
