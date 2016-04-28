@@ -32,8 +32,8 @@ from django.utils.translation import ugettext_lazy as _
 
 class Adviser(models.Model):
     TYPES_CHOICES = (
-        ('MGR', _('Manager')),
         ('PRF', _('Professor')),
+        ('MGR', _('Manager')),
         )
 
     person = models.OneToOneField('base.Person',on_delete=models.CASCADE)
