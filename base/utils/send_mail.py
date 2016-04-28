@@ -74,5 +74,5 @@ def send_mail_after_academic_calendar_changes(academic_calendar, offer_year_cale
               message=message,
               recipient_list=[manager.person.email for manager in list(programm_managers) if manager.person.email],
               html_message=html_message,
-              from_email='DEFAULT_FROM_EMAIL')
+              from_email=DEFAULT_FROM_EMAIL)
 
