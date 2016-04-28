@@ -1,4 +1,7 @@
 {% load i18n %}
+{% load format %}
+{% autoescape off %}
 {% trans 'mail_greeting' %}
-{% trans 'mail_score_submission_content' as mail_content %} {{ mail_content }}
+{% trans 'mail_score_submission_content' as mail_content %}{{ mail_content|str_format:format_args }}
 {% trans 'mail_osis_team' %}
+{% endautoescape %}

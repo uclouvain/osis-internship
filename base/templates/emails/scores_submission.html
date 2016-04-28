@@ -1,15 +1,18 @@
 {% load i18n %}
+{% load format %}
 <html>
 <head>
     <meta charset="UTF-8">
     <title>Score Submission mail</title>
 </head>
+{% autoescape off %}
 <body>
 <div>
-    <p>{% trans 'mail_greeting' %}</p>,
-    <p>{% trans 'mail_score_submission_content' as mail_content %} {{ mail_content }}</p><br/>
+    <p>{% trans 'mail_greeting' %}</p>
+    <p>{% trans 'mail_score_submission_content' as mail_content %}{{ mail_content|str_format:format_args }}</p><br/>
     <div>{% trans 'mail_osis_team' %}<br/></div>
 </div>
-{% include "signature.html" %}
+{% include "emails/signature.html" %}
 </body>
+{% endautoescape %}
 </html>

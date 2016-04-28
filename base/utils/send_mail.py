@@ -42,8 +42,8 @@ def send_mail_after_scores_submission(persons, learning_unit_name):
     """
 
     subject = _('submission_of_scores_for').format(learning_unit_name)
-    html_message = render_to_string('emails/scores_submission.html', {'learning_unit_name': learning_unit_name})
-    message = render_to_string('emails/scores_submission.txt', {'learning_unit_name': learning_unit_name})
+    html_message = render_to_string('emails/scores_submission.html', {'format_args': learning_unit_name})
+    message = render_to_string('emails/scores_submission.txt', {'format_args': learning_unit_name})
     send_mail(subject=subject, message=message,recipient_list=[person.email for person in persons],
               html_message=html_message, from_email=DEFAULT_FROM_EMAIL)
 
@@ -55,15 +55,12 @@ def send_mail_after_academic_calendar_changes(academic_calendar, offer_year_cale
     :param academic_calendar:
     :param offer_year_calendar:
     """
-    subject = _('mail_academic_calendar_change_subject').format(offer_year=offer_year_calendar.offer_year,
-                                                                academic_calendar=academic_calendar)
-    data = {
-        'offer_year': offer_year_calendar.offer_year.title,
-        'acronym': offer_year_calendar.offer_year.acronym,
-        'academic_calendar' : academic_calendar
-    }
-    html_message = render_to_string('email/academic_calendar_changes.html', data)
-    message = render_to_string('email/academic_calendar_changes.txt', data)
+    subject = _('mail_academic_calendar_change_subject').format(str(offer_year_calendar.offer_year),
+                                                                str(academic_calendar))
+    format_args = ','.join([offer_year_calendar.offer_year.title, offer_year_calendar.offer_year.acronym,
+                            str(academic_calendar)])
+    html_message = render_to_string('emails/academic_calendar_changes.html', {'format_args': format_args})
+    message = render_to_string('emails/academic_calendar_changes.txt', {'format_args': format_args})
     send_mail(subject=subject,
               message=message,
               recipient_list=[programme_manager.person.email for programme_manager in programme_managers],

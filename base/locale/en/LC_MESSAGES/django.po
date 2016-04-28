@@ -1257,56 +1257,20 @@ msgstr "Please choose at least one criteria!"
 msgid "get_excel_file"
 msgstr "Get Excel File"
 
-#~ msgid "title_btn_upload_score"
-#~ msgstr "Select your xls file from which to inject scores"
-
-#~ msgid "submit"
-#~ msgstr "Submit"
-
-#~ msgid "download_xls_file"
-#~ msgstr "Download Excel File"
-
-#~ msgid "not_in_choices_list"
-#~ msgstr "Invalid entry, not in the list of choices"
-
-#~ msgid "invalid_entry"
-#~ msgstr "Invalid entry"
-
-#~ msgid "please_choose_in_the_list"
-#~ msgstr "Please choose in the list"
-
-#~ msgid "choices_list"
-#~ msgstr "List of choices"
-
-#~ msgid "changes_on_offer_year_and_academic_calendar"
-#~ msgstr "Watch out - Changes has been made on %s, academic calendar (%s)"
-
-#~ msgid "score_injected"
-#~ msgstr "Scores injected"
-
-#~ msgid "scores_injected"
-#~ msgstr "Scores injected"
-
-#~ msgid "add_address"
-#~ msgstr "Add address"
-
-#~ msgid "registration_date"
-#~ msgstr "Registration date"
-
 msgid "mail_greeting"
 msgstr "Hi, "
 
 msgid "mail_score_submission_content"
-msgstr "We inform you that a scores submission was made for {{ learning_unit_name }}."
+msgstr "We inform you that a scores submission was made for {}."
 
 msgid "mail_osis_team"
 msgstr "The OSIS Team"
 
 msgid "mail_academic_calendar_change_subject"
-msgstr "Watch out - Changes has been made on {{ offer_year }}, academic calendar {{ academic_calendar }}"
+msgstr "Watch out - Changes has been made on {}, academic calendar {}"
 
 msgid "mail_academic_calendar_changes_content"
-msgstr "We inform you that changes has been made on '{{ offer_year }}' ({{ acronym }}), academic calendar ({{ academic_calendar }})."
+msgstr "We inform you that changes has been made on '{}' ({}), academic calendar ({})."
 
 msgid "sector"
 msgstr "Sector"
