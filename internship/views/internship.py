@@ -33,6 +33,10 @@ import urllib.request
 import unicodedata
 
 def geocode(addr):
+    #Transform the address for a good url and delete all accents
+    addr = addr.replace (" ", "+")
+    addr = addr.replace ("'", "\'")
+    addr = strip_accents(addr)
     #get the complete url
     url = "https://maps.googleapis.com/maps/api/geocode/xml?address=%s&key=AIzaSyCWeZdraxzqRTMxXxbXY3bncaD6Ijq_EvE" % (addr)
 
@@ -44,6 +48,10 @@ def geocode(addr):
 
     return "test"
 
+def strip_accents(s):
+   return ''.join(c for c in unicodedata.normalize('NFD', s)
+                  if unicodedata.category(c) != 'Mn')
+                  
 @login_required
 def internships(request):
     #First get the value of the option's value for the sort
