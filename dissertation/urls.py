@@ -36,6 +36,7 @@ urlpatterns = [
     url(r'^proposition_dissertation/(?P<pk>[0-9]+)/edit/$', proposition_dissertation.proposition_dissertation_edit, name='proposition_dissertation_edit'),
     url(r'^proposition_dissertation_detail/(?P<pk>[0-9]+)/$', proposition_dissertation.proposition_dissertation_detail, name='proposition_dissertation_detail'),
     url(r'^proposition_dissertation_new$', proposition_dissertation.proposition_dissertation_new, name='proposition_dissertation_new'),
+    url(r'^proposition_dissertation_my$', proposition_dissertation.proposition_dissertation_my, name='proposition_dissertation_my'),
 
     url(r'^search$', proposition_dissertation.proposition_dissertations_search, name='proposition_dissertations_search'),
 ]

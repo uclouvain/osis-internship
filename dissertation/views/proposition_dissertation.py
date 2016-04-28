@@ -75,3 +75,11 @@ def proposition_dissertation_new(request):
     else:
         form = PropositionDissertationForm()
     return render(request, 'proposition_dissertation_edit.html', {'form': form})
+
+
+@login_required
+def proposition_dissertation_my(request):
+    person = mdl.person.find_by_user(request.user)
+    adviser = Adviser.find_by_person(person)
+    proposition_dissertations = PropositionDissertation.objects.filter(author=adviser)
+    return render(request, 'proposition_dissertations_list.html', {'proposition_dissertations': proposition_dissertations})

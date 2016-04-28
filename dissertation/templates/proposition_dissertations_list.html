@@ -39,19 +39,30 @@
     <div class="panel-body">
       <form method="get" action="{% url 'proposition_dissertations_search'%}">
         <div class="row">
-          <div class="col-md-10">
-            <label for="txt_title">{% trans 'Title'%}</label>
-            <input class="form-control" id="txt_title" placeholder="{% trans 'Title' %}" name="title"
-            value="{{ request.GET.title }}" style="text-transform:uppercase">
-          </div>
-          <div class="col-md-2">
+          <div class="col-md-4">
+            <label for="txt_title">{% trans 'Filter Propositions'%}</label>
             <br>
-            <button type="submit" id="bt_submit_proposition_dissertation_search" class="btn btn-primary" role="button"
-            title="{% trans 'Search for a proposition dissertation' %}"><span class="glyphicon glyphicon-search"
-            aria-hidden="true"></span></button>
+            <a href="{% url 'proposition_dissertations' %}" id="lnk_proposition_dissertation" class="btn btn-default"
+            role="button" title="{% trans 'All propositions dissertations'%}"><span class="glyphicon glyphicon-list"
+            aria-hidden="true"></span> {% trans 'All Propositions'%}</a>
+            <a href="{% url 'proposition_dissertation_my' %}" id="lnk_proposition_dissertation_my" class="btn btn-default"
+            role="button" title="{% trans 'My propositions dissertations'%}"><span class="glyphicon glyphicon-user"
+            aria-hidden="true"></span> {% trans 'My Propositions'%}</a>
+          </div>
+          <div class="col-md-4">
+            <label for="txt_title">{% trans 'Add Proposition'%}</label>
+            <br>
             <a href="{% url 'proposition_dissertation_new' %}" id="lnk_proposition_dissertation_new" class="btn btn-default"
             role="button" title="{% trans 'Create a proposition dissertation'%}"><span class="glyphicon glyphicon-plus"
             aria-hidden="true"></span></a>
+          </div>
+          <div class="col-md-4">
+            <label for="txt_title">{% trans 'Search by Title'%}</label>
+            <input class="form-control" id="txt_title" placeholder="{% trans 'Title' %}" name="title"
+            value="{{ request.GET.title }}" style="text-transform:uppercase">
+            <button type="submit" id="bt_submit_proposition_dissertation_search" class="btn btn-primary" role="button"
+            title="{% trans 'Search for a proposition dissertation' %}"><span class="glyphicon glyphicon-search"
+            aria-hidden="true"></span></button>
           </div>
         </div>
       </form>
