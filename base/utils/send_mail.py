@@ -29,10 +29,14 @@ Utility files for mail sending
 """
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 
-from backoffice.settings import DEFAULT_FROM_EMAIL
+from backoffice.settings import DEFAULT_FROM_EMAIL, LOGO_OSIS_URL, LOGO_EMAIL_SIGNATURE_URL
 
+base_data = {
+    'logo_mail_signature_url': LOGO_OSIS_URL,
+    'logo_osis_url': LOGO_EMAIL_SIGNATURE_URL,
+}
 
 def send_mail_after_scores_submission(persons, learning_unit_name):
     """
@@ -42,28 +46,31 @@ def send_mail_after_scores_submission(persons, learning_unit_name):
     """
 
     subject = _('submission_of_scores_for').format(learning_unit_name)
-    html_message = render_to_string('emails/scores_submission.html', {'format_args': learning_unit_name})
-    message = render_to_string('emails/scores_submission.txt', {'format_args': learning_unit_name})
-    send_mail(subject=subject, message=message,recipient_list=[person.email for person in persons],
+    html_message = render_to_string('emails/scores_submission.txt', {'format_args': learning_unit_name})
+    message = render_to_string('emails/scores_submission.html',
+                               dict(list(base_data.items()) + list({'format_args': learning_unit_name}.items())))
+    send_mail(subject=subject, message=message, recipient_list=[person.email for person in persons if person.email],
               html_message=html_message, from_email=DEFAULT_FROM_EMAIL)
 
 
-def send_mail_after_academic_calendar_changes(academic_calendar, offer_year_calendar, programme_managers):
+def send_mail_after_academic_calendar_changes(academic_calendar, offer_year_calendar, programm_managers):
     """
     Send an email to all the programme manager after changes has been made on a offer_year_calendar with customized
     = True
     :param academic_calendar:
     :param offer_year_calendar:
+    :param programm_managers:
     """
-    subject = _('mail_academic_calendar_change_subject').format(str(offer_year_calendar.offer_year),
-                                                                str(academic_calendar))
-    format_args = ','.join([offer_year_calendar.offer_year.title, offer_year_calendar.offer_year.acronym,
+    subject = _('mail_academic_calendar_change_subject').format(str(offer_year_calendar.offer_year),str(academic_calendar))
+    format_args = '|'.join([offer_year_calendar.offer_year.title, offer_year_calendar.offer_year.acronym,
                             str(academic_calendar)])
-    html_message = render_to_string('emails/academic_calendar_changes.html', {'format_args': format_args})
+    html_message = render_to_string('emails/academic_calendar_changes.html',
+                                    dict(list(base_data.items()) + list({'format_args': format_args}.items())))
     message = render_to_string('emails/academic_calendar_changes.txt', {'format_args': format_args})
+
     send_mail(subject=subject,
               message=message,
-              recipient_list=[programme_manager.person.email for programme_manager in programme_managers],
+              recipient_list= [manager.person.email for manager in list(programm_managers) if manager.person.email],
               html_message=html_message,
               from_email='DEFAULT_FROM_EMAIL')
 

@@ -1271,10 +1271,10 @@ msgid "mail_osis_team"
 msgstr "L'équipe OSIS"
 
 msgid "mail_academic_calendar_change_subject"
-msgstr "Attention! Changements effectués sur {}, academic calendar {}"
+msgstr "Attention! Changements effectués sur {}, {}"
 
 msgid "mail_academic_calendar_changes_content"
-msgstr "Nous vous informons que des changements on été effectués sur '{}' ({}), academic calendar ({})."
+msgstr "Nous vous informons que des changements on été effectués sur '{}'({}),calendrier académique : {}."
 
 msgid "sector"
 msgstr "Secteur"

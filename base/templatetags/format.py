@@ -35,7 +35,7 @@ def format(value, arg):
 def str_format(value, args):
     if args is None:
         return value
-    args_list = args.split(',')
+    args_list = args.split('|')
     return value.format(*args_list)
 
 

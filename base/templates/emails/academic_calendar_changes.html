@@ -12,7 +12,7 @@
     <p>{% trans 'mail_academic_calendar_changes_content' as mail_content %}{{ mail_content | str_format:format_args }}</p><br/>
     <div>{% trans 'mail_osis_team' %}<br/></div>
 </div>
-{% include "emails/signature.html" %}
+{% include "emails/signature.html" with logo_mail_signature_url=logo_mail_signature_url logo_osis_url=logo_osis_url %}
 </body>
 {% endautoescape %}
 </html>

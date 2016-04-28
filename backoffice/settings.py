@@ -154,7 +154,7 @@ SCREEN_SHOT_FOLDER = os.path.join(BASE_DIR, "base/tests/selenium/screenshots")
 FIREFOX_PROFILE_PATH = os.path.join(BASE_DIR, "base/tests/selenium/firefox_profile")
 JENKINS_TASKS = []
 
-PROPERTIES_FILE = ''
+
 
 QUEUE_URL = 'localhost'
 QUEUE_USER = 'guest'
@@ -167,6 +167,10 @@ QUEUE_CONTEXT_ROOT = '/'
 #Ex : LOGO_INSTITUTION_URL = 'https://www.google.be/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'
 #A relative URL will work on local , but not out of the box on the servers.
 LOGO_INSTITUTION_URL = os.path.join(BASE_DIR, "base/static/img/logo_institution.jpg")
+
+#Those urls have to be provided to be used for the emails signature templating.
+LOGO_EMAIL_SIGNATURE_URL = ''
+LOGO_OSIS_URL = ''
 
 try:
     from backoffice.server_settings import *
