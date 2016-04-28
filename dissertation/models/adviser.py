@@ -27,10 +27,17 @@ from django.db import models
 from django.utils import timezone
 from django.contrib import admin
 from base.models import person
+from django.utils.translation import ugettext_lazy as _
 
 
 class Adviser(models.Model):
+    TYPES_CHOICES = (
+        ('MGR', _('Manager')),
+        ('PRF', _('Professor')),
+        )
+
     person = models.OneToOneField('base.Person',on_delete=models.CASCADE)
+    type = models.CharField(max_length=3, choices=TYPES_CHOICES, default='PRF')
     email_accept = models.BooleanField(default=False)
     phone_accept = models.BooleanField(default=False)
     office_accept = models.BooleanField(default=False)
