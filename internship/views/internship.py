@@ -34,6 +34,7 @@ import unicodedata
 from xml.dom import minidom
 
 def geocode(addr):
+    lat_long = [None]*2
     #Transform the address for a good url and delete all accents
     addr = addr.replace (" ", "+")
     addr = addr.replace ("'", "\'")
@@ -49,8 +50,13 @@ def geocode(addr):
     #Parse the xml to have the latitude and longitude of the address
     xmldoc = minidom.parseString(data)
     lat = xmldoc.getElementsByTagName('location')
-
-    return "test"
+    for l in lat :
+        c = l.getElementsByTagName('lat')[0].firstChild.data
+        d = l.getElementsByTagName('lng')[0].firstChild.data
+        lat_long[0] = c
+        lat_long[1] = d
+    #return the value
+    return lat_long
 
 def strip_accents(s):
    return ''.join(c for c in unicodedata.normalize('NFD', s)
