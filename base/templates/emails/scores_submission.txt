@@ -1,4 +1,4 @@
 {% load i18n %}
-{% trans 'mail_greeting' %}\n
-{% trans 'mail_score_submission_content' | learning_unit_name%}\n\n
+{% trans 'mail_greeting' %}
+{% trans 'mail_score_submission_content' as mail_content %} {{ mail_content }}
 {% trans 'mail_osis_team' %}

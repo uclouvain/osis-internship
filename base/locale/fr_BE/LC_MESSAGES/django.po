@@ -1302,14 +1302,14 @@ msgid "mail_greeting"
 msgstr "Bonjour, "
 
 msgid "mail_score_submission_content"
-msgstr "Nous vous informons qu'une soummission de notes à été effectuée pour {{learning_unit_name}}."
+msgstr "Nous vous informons qu'une soummission de notes à été effectuée pour {{ learning_unit_name }}."
 
 msgid "mail_osis_team"
 msgstr "L'équipe OSIS"
 
 msgid "mail_academic_calendar_change_subject"
-msgstr "Attention! Changements effectués sur {{offer_year}}, academic calendar {{academic_calendar}}"
+msgstr "Attention! Changements effectués sur {{ offer_year }}, academic calendar {{ academic_calendar }}"
 
 msgid "mail_academic_calendar_changes_content"
-msgstr "Nous vous informons que des changements on été effectués sur '{{offer_year}}' ({{acronym}}), academic calendar ({{academic_calendar}})."
+msgstr "Nous vous informons que des changements on été effectués sur '{{ offer_year }}' ({{ acronym }}), academic calendar ({{ academic_calendar }})."
 
