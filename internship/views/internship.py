@@ -91,8 +91,10 @@ def internships(request):
         else :
             query = InternshipOffer.find_internships()
 
+    #Change the query into a list
     query=list(query)
     index = 0
+    #delete the internships in query when they are in the student's selection then rebuild the query
     for choice in student_choice:
         for internship in query :
             if internship.organization == choice.organization and \
@@ -101,8 +103,17 @@ def internships(request):
             index += 1
         query = [x for x in query if x != 0]
         index = 0
-
     query = [x for x in query if x != 0]
+
+    #insert the student choice into the global query, at first position,
+    #if they are in organization_sort_value (if it exist)
+    for choice in student_choice :
+        if organization_sort_value and organization_sort_value != "0" :
+            if choice.organization == organization_sort_value :
+                query.insert(0,choice)
+        else :
+            query.insert(0,choice)
+
     # Create the options for the selected list, delete duplicated
     query_organizations = InternshipOffer.find_internships()
     internship_organizations = []
