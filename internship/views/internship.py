@@ -79,6 +79,8 @@ def calc_dist(lat_a, long_a, lat_b, long_b):
 
 @login_required
 def internships(request):
+    student = mdl.student.find_by(person_username=request.user)
+    student_choice = InternshipChoice.find_by_student(student)
     #First get the value of the option's value for the sort
     if request.method == 'GET':
         organization_sort_value = request.GET.get('organization_sort')
@@ -89,6 +91,18 @@ def internships(request):
         else :
             query = InternshipOffer.find_internships()
 
+    query=list(query)
+    index = 0
+    for choice in student_choice:
+        for internship in query :
+            if internship.organization == choice.organization and \
+                internship.learning_unit_year == choice.learning_unit_year :
+                    query[index] = 0
+            index += 1
+        query = [x for x in query if x != 0]
+        index = 0
+
+    query = [x for x in query if x != 0]
     # Create the options for the selected list, delete duplicated
     query_organizations = InternshipOffer.find_internships()
     internship_organizations = []
@@ -97,9 +111,10 @@ def internships(request):
     internship_organizations = list(set(internship_organizations))
 
     return render(request, "internships.html", {'section': 'internship',
-                                                'all_internships': query,
-                                                'all_organizations':internship_organizations,
-                                                'organization_sort_value':organization_sort_value})
+                                                'all_internships' : query,
+                                                'all_organizations' : internship_organizations,
+                                                'organization_sort_value' : organization_sort_value,
+                                                 })
 
 @login_required
 def internships_save(request):
