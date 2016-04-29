@@ -26,6 +26,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from base import models as mdl
+from internship.models import InternshipChoice
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -83,5 +84,9 @@ def internships_student_read(request, registration_id):
             address = mdl.person_address.find_by_person(student.person)
             if address:
                 student.address = address
+        internship_choice = InternshipChoice.find_by_student(student)
 
-    return render(request, "student_resume.html", {'student': student})
+    return render(request, "student_resume.html",
+                            {'student': student,
+                             'internship_choice' : internship_choice,
+                            })
