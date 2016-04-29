@@ -103,6 +103,9 @@ def internships(request):
 
 @login_required
 def internships_save(request):
+    student = mdl.student.find_by(person_username=request.user)
+    InternshipChoice.objects.filter(student=student).delete()
+
     form = InternshipChoiceForm(data=request.POST)
 
     if request.POST['organization']:
@@ -124,7 +127,7 @@ def internships_save(request):
     organization_list = [x for x in organization_list if x != 0]
     learning_unit_year_list = [x for x in learning_unit_year_list if x != 0]
     preference_list = [x for x in preference_list if x != '0']
-    student = mdl.student.find_by(person_username=request.user)
+
 
     index = preference_list.__len__()
     for x in range(0, index):
