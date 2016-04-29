@@ -36,8 +36,15 @@ from dissertation.forms import PropositionDissertationForm
 def proposition_dissertations(request):
     person = mdl.person.find_by_user(request.user)
     adviser = Adviser.find_by_person(person)
-    proposition_dissertations = PropositionDissertation.objects.filter(Q(visibility=True) | Q(author=adviser))
+    proposition_dissertations = PropositionDissertation.objects.filter(Q(visibility=True) & Q(active=True))
     return render(request, 'proposition_dissertations_list.html', {'proposition_dissertations': proposition_dissertations})
+
+@login_required
+def proposition_dissertation_delete(request, pk):
+    proposition_dissertation = get_object_or_404(PropositionDissertation, pk=pk)
+    proposition_dissertation.active = False
+    proposition_dissertation.save()
+    return redirect('proposition_dissertations')
 
 @login_required
 def proposition_dissertation_detail(request, pk):
@@ -68,7 +75,7 @@ def proposition_dissertation_edit(request, pk):
 def proposition_dissertation_my(request):
     person = mdl.person.find_by_user(request.user)
     adviser = Adviser.find_by_person(person)
-    proposition_dissertations = PropositionDissertation.objects.filter(author=adviser)
+    proposition_dissertations = PropositionDissertation.objects.filter(Q(author=adviser) & Q(active=True))
     return render(request, 'proposition_dissertations_list.html', {'proposition_dissertations': proposition_dissertations})
 
 @login_required
@@ -82,12 +89,12 @@ def proposition_dissertation_new(request):
     else:
         person = mdl.person.find_by_user(request.user)
         adviser = Adviser.find_by_person(person)
-        form = PropositionDissertationForm(initial={'author': adviser})
+        form = PropositionDissertationForm(initial={'author': adviser, 'active':True})
     return render(request, 'proposition_dissertation_edit.html', {'form': form})
 
 @login_required
 def proposition_dissertations_search(request):
     person = mdl.person.find_by_user(request.user)
     adviser = Adviser.find_by_person(person)
-    proposition_dissertations = PropositionDissertation.search(title=request.GET['title']).filter(Q(visibility=True) | Q(author=adviser))
+    proposition_dissertations = PropositionDissertation.search(title=request.GET['title']).filter(Q(visibility=True) & Q(active=True))
     return render(request, "proposition_dissertations_list.html", {'proposition_dissertations': proposition_dissertations})

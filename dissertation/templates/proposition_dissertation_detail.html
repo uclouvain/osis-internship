@@ -40,9 +40,15 @@
     <div class="panel-body">
       <div class="row">
         {% if proposition_dissertation.author == adviser %}
-          <div class="col-md-1 pull-right">
-            <a class="btn btn-default btn-primary" href="{% url 'proposition_dissertation_edit' pk=proposition_dissertation.pk %}">
-            <span class="glyphicon glyphicon-edit"></span></a>
+          <div class="col-md-2 pull-right">
+            <div class="col-md-4 pull-right">
+              <a class="btn btn-default btn-danger" href="{% url 'proposition_dissertation_delete' pk=proposition_dissertation.pk %}">
+              <span class="glyphicon glyphicon-remove"></span></a>
+            </div>
+            <div class="col-md-4 pull-right">
+              <a class="btn btn-default btn-primary" href="{% url 'proposition_dissertation_edit' pk=proposition_dissertation.pk %}">
+              <span class="glyphicon glyphicon-edit"></span></a>
+            </div>
           </div>
         {% endif %}
       </div>

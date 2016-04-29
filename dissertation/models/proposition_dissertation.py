@@ -56,6 +56,7 @@ class PropositionDissertation(models.Model):
     title = models.CharField(max_length=200)
     type = models.CharField(max_length=12, choices=TYPES_CHOICES, default='RDL')
     visibility = models.BooleanField(default=True)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.title
