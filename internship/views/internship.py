@@ -76,7 +76,7 @@ def calc_dist(lat_a, long_a, lat_b, long_b):
     #for distance in kilometers use this
     return (degrees(acos(distance)) * 69.09)/0.621371
 
-    
+
 @login_required
 def internships(request):
     #First get the value of the option's value for the sort
@@ -139,6 +139,16 @@ def internships_save(request):
 
     return render(request, "internships.html", {'section': 'internship',
                                                 'form': form
+                                                #'all_internships': query,
+                                                #'all_organizations':internship_organizations,
+                                                #'organization_sort_value':organization_sort_value
+                                                })
+
+@login_required
+def internships_create(request):
+
+    return render(request, "internships_create.html", {'section': 'internship',
+                                                
                                                 #'all_internships': query,
                                                 #'all_organizations':internship_organizations,
                                                 #'organization_sort_value':organization_sort_value
