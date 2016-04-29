@@ -87,5 +87,7 @@ def proposition_dissertation_new(request):
 
 @login_required
 def proposition_dissertations_search(request):
-    proposition_dissertations = PropositionDissertation.search(title=request.GET['title']).filter(visibility=True)
+    person = mdl.person.find_by_user(request.user)
+    adviser = Adviser.find_by_person(person)
+    proposition_dissertations = PropositionDissertation.search(title=request.GET['title']).filter(Q(visibility=True) | Q(author=adviser))
     return render(request, "proposition_dissertations_list.html", {'proposition_dissertations': proposition_dissertations})

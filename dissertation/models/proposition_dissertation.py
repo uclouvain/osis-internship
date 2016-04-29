@@ -63,5 +63,5 @@ class PropositionDissertation(models.Model):
     def search(title=None):
         queryset = PropositionDissertation.objects
         if title:
-            queryset = queryset.filter(title=title)
+            queryset = queryset.filter(title__icontains=title)
         return queryset
