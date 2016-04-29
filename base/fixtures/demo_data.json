@@ -511,15 +511,6 @@
     }
   },
   {
-    "model": "base.programmemanager",
-    "pk": 1,
-    "fields": {
-      "changed": "2016-03-04T23:40:31Z",
-      "person": 1,
-      "offer_year": 1
-    }
-  },
-  {
     "model": "base.offeryearcalendar",
     "pk": 1,
     "fields": {
@@ -1266,30 +1257,6 @@
       "acronym": "UCL",
       "website": "http://www.uclouvain.be",
       "reference": null
-    }
-  },
-  {
-    "model": "base.organizationaddress",
-    "pk": 2,
-    "fields": {
-      "organization": 1,
-      "label": "Principal",
-      "location": "1, Place de l'Universit\u00e9",
-      "postal_code": "1348",
-      "city": "Louvain-la-Neuve",
-      "country": "Belgium"
-    }
-  },
-  {
-    "model": "base.personaddress",
-    "pk": 1,
-    "fields": {
-      "person": 1,
-      "label": "Residential",
-      "location": "Place des Pentres 2/102",
-      "postal_code": "1348",
-      "city": "Louvain-la-Neuve",
-      "country": "Belgium"
     }
   },
   {

@@ -27,7 +27,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
-from dissertation.models import adviser
+from dissertation.models import adviser, offer_proposition
 
 class PropositionDissertation(models.Model):
     TYPES_CHOICES = (
@@ -57,6 +57,8 @@ class PropositionDissertation(models.Model):
     type = models.CharField(max_length=12, choices=TYPES_CHOICES, default='RDL')
     visibility = models.BooleanField(default=True)
     active = models.BooleanField(default=True)
+    offer_proposition = models.ManyToManyField(offer_proposition.OfferProposition)
+    created_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.title

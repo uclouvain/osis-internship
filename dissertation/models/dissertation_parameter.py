@@ -26,11 +26,6 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib import admin
-from base.models import offer_year
+from dissertation.models import dissertation
 
-class OfferProposition(models.Model):
-    title = models.CharField(max_length=200)
-    offer_year = models.ForeignKey(offer_year.OfferYear)
-
-    def __str__(self):
-        return self.title
+class DissertationParameter(models.Model):
