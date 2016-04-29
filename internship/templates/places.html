@@ -43,8 +43,8 @@
               </tr>
             </thead>
             <tbody>
-              <form action="{%url 'internships_places' %}" method="get">
-                <tr>
+              <tr>
+                <form action="{%url 'internships_places' %}" method="get">
                   <td style="text-align:center; width:50%;">
                     <select name="city_sort" onChange="javascript: this.form.submit();">
                       <option value="0">--</option>
@@ -55,8 +55,13 @@
                       {% endfor %}
                     </select>
                   </td>
-                </tr>
-            </form>
+                </form>
+                <td>
+                  <a href="{% url 'organization_create' %}" id="lnk_organization_create" class="btn btn-default"
+                     role="button" title="{% trans 'create_an_organization'%}"><span class="glyphicon glyphicon-plus"
+                                                                                     aria-hidden="true"></span></a>
+                </td>
+              </tr>
             </tbody>
         </table>
   </div>
