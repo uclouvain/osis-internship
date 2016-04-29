@@ -82,7 +82,6 @@
                         <thead>
                           <tr>
                               <th>{% trans 'name' %}</th>
-                              <th>{% trans 'learning_unit_year' %}</th>
                               <th>{% trans 'student_max' %}</th>
                               <th>{% trans 'organization' %}</th>
                               <th>{% trans 'preference' %}</th>
@@ -92,9 +91,6 @@
                           {% for internship in all_internships %}
                           {% if internship.learning_unit_year.title = "Stage en Médecine interne"%}
                             <tr>
-                                <td>
-                                  {{ internship.title }}
-                                </td>
                                 <td>
                                   <input type="hidden" name="learning_unit_year" value="{{ internship.learning_unit_year.title }}"/>{{ internship.learning_unit_year.title }}</label>
                                 </td>
@@ -130,7 +126,6 @@
                         <thead>
                           <tr>
                               <th>{% trans 'Name' %}</th>
-                              <th>{% trans 'learning unit year' %}</th>
                               <th>{% trans 'Student max' %}</th>
                               <th>{% trans 'organization' %}</th>
                               <th>{% trans 'Preference' %}</th>
@@ -140,9 +135,6 @@
                           {% for internship in all_internships %}
                           {% if internship.learning_unit_year.title = "Stage en Chirurgie"%}
                           <tr>
-                              <td>
-                                {{ internship.title }}
-                              </td>
                               <td>
                                 <input type="hidden" name="learning_unit_year" value="{{ internship.learning_unit_year.title }}"/>{{ internship.learning_unit_year.title }}</label>
                               </td>
@@ -178,7 +170,6 @@
                         <thead>
                           <tr>
                               <th>{% trans 'Name' %}</th>
-                              <th>{% trans 'learning unit year' %}</th>
                               <th>{% trans 'Student max' %}</th>
                               <th>{% trans 'organization' %}</th>
                               <th>{% trans 'Preference' %}</th>
@@ -188,9 +179,6 @@
                           {% for internship in all_internships %}
                           {% if internship.learning_unit_year.title = "Stage en Gynécologie-Obsétrique"%}
                           <tr>
-                              <td>
-                                {{ internship.title }}
-                              </td>
                               <td>
                                 <input type="hidden" name="learning_unit_year" value="{{ internship.learning_unit_year.title }}"/>{{ internship.learning_unit_year.title }}</label>
                               </td>
@@ -226,7 +214,6 @@
                         <thead>
                           <tr>
                               <th>{% trans 'Name' %}</th>
-                              <th>{% trans 'learning unit year' %}</th>
                               <th>{% trans 'Student max' %}</th>
                               <th>{% trans 'organization' %}</th>
                               <th>{% trans 'Preference' %}</th>
@@ -236,9 +223,6 @@
                           {% for internship in all_internships %}
                           {% if internship.learning_unit_year.title = "Stage en Pédiatrie"%}
                           <tr>
-                              <td>
-                                {{ internship.title }}
-                              </td>
                               <td>
                                 <input type="hidden" name="learning_unit_year" value="{{ internship.learning_unit_year.title }}"/>{{ internship.learning_unit_year.title }}</label>
                               </td>
@@ -274,7 +258,6 @@
                         <thead>
                           <tr>
                               <th>{% trans 'Name' %}</th>
-                              <th>{% trans 'learning unit year' %}</th>
                               <th>{% trans 'Student max' %}</th>
                               <th>{% trans 'organization' %}</th>
                               <th>{% trans 'Preference' %}</th>
@@ -284,9 +267,6 @@
                           {% for internship in all_internships %}
                           {% if internship.learning_unit_year.title = "Stage en Urgence"%}
                           <tr>
-                              <td>
-                                {{ internship.title }}
-                              </td>
                               <td>
                                 <input type="hidden" name="learning_unit_year" value="{{ internship.learning_unit_year.title }}"/>{{ internship.learning_unit_year.title }}</label>
                               </td>
@@ -322,7 +302,6 @@
                         <thead>
                           <tr>
                               <th>{% trans 'Name' %}</th>
-                              <th>{% trans 'learning unit year' %}</th>
                               <th>{% trans 'Student max' %}</th>
                               <th>{% trans 'organization' %}</th>
                               <th>{% trans 'Preference' %}</th>
@@ -332,9 +311,6 @@
                           {% for internship in all_internships %}
                           {% if internship.learning_unit_year.title = "Stage en Gériatrie"%}
                           <tr>
-                              <td>
-                                {{ internship.title }}
-                              </td>
                               <td>
                                 <input type="hidden" name="learning_unit_year" value="{{ internship.learning_unit_year.title }}"/>{{ internship.learning_unit_year.title }}</label>
                               </td>
