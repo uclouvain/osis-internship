@@ -39,6 +39,9 @@
     <div class="panel-body">
       <div class="row">
         <div class="col-md-3">
+          <img src="http://ultra16.sipr.ucl.ac.be/photos/photos_cp/photos/image{{ person.global_id |get_digit:"4" }}{{ person.global_id |get_digit:"3" }}/{{ person.global_id }}.jpg"height="10%" width="10%">
+        </div>
+        <div class="col-md-3">
           <label>{% trans 'Name' %}</label><br>
           {{ person.first_name }} {{ person.last_name }}
         </div>

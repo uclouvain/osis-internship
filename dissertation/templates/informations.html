@@ -44,7 +44,7 @@
           aria-hidden="true"></span></a>
         </div>
       </div>
-      <img src="http://ultra16.sipr.ucl.ac.be/photos/photos_cp/photos/image39/{{ person.global_id }}.jpg">
+      <img src="http://ultra16.sipr.ucl.ac.be/photos/photos_cp/photos/image{{ person.global_id |get_digit:"4" }}{{ person.global_id |get_digit:"3" }}/{{ person.global_id }}.jpg"height="10%" width="10%">
       <div class="row">
         <div class="col-md-3">
           <label>{% trans 'Name' %}</label><br>
