@@ -40,8 +40,6 @@
       <form method="get" action="{% url 'proposition_dissertations_search'%}">
         <div class="row">
           <div class="col-md-4">
-            <label for="txt_title">{% trans 'Filter Propositions'%}</label>
-            <br>
             <a href="{% url 'proposition_dissertations' %}" id="lnk_proposition_dissertation" class="btn btn-default"
             role="button" title="{% trans 'All propositions dissertations'%}"><span class="glyphicon glyphicon-list"
             aria-hidden="true"></span> {% trans 'All Propositions'%}</a>
@@ -49,17 +47,16 @@
             role="button" title="{% trans 'My propositions dissertations'%}"><span class="glyphicon glyphicon-user"
             aria-hidden="true"></span> {% trans 'My Propositions'%}</a>
           </div>
-          <div class="col-md-4">
-            <label for="txt_title">{% trans 'Add Proposition'%}</label>
-            <br>
+          <div class="col-md-1">
             <a href="{% url 'proposition_dissertation_new' %}" id="lnk_proposition_dissertation_new" class="btn btn-default"
             role="button" title="{% trans 'Create a proposition dissertation'%}"><span class="glyphicon glyphicon-plus"
             aria-hidden="true"></span></a>
           </div>
-          <div class="col-md-4">
-            <label for="txt_title">{% trans 'Search by Title'%}</label>
+          <div class="col-md-6">
             <input class="form-control" id="txt_title" placeholder="{% trans 'Title' %}" name="title"
             value="{{ request.GET.title }}" style="text-transform:uppercase">
+          </div>
+          <div class="col-md-1">
             <button type="submit" id="bt_submit_proposition_dissertation_search" class="btn btn-primary" role="button"
             title="{% trans 'Search for a proposition dissertation' %}"><span class="glyphicon glyphicon-search"
             aria-hidden="true"></span></button>
@@ -75,7 +72,8 @@
         {% else %}
           <div>
             {% if proposition_dissertations|length == 0 %}
-                <label class="alert alert-info" style="margin-left:20%;width:60%;text-align:center;">{% trans 'No result' %}</label>
+              <br>
+              <label class="alert alert-info" style="margin-left:10%;width:80%;text-align:center;">{% trans 'No result' %}</label>
             {% else %}
               <table class="table table-hover">
                 <thead>
