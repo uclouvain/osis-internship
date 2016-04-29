@@ -158,5 +158,8 @@ def internships_create(request):
                                                         'all_organization':organizations,
                                                 })
 @login_required
-def internships_save(request):
+def internships_new(request):
     form = InternshipOfferForm(data=request.POST)
+    
+
+    return render(request, "internships_create.html", {'section': 'internship',})
