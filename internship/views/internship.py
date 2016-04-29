@@ -130,7 +130,7 @@ def internships_save(request):
     for x in range(0, index):
         new_choice = InternshipChoice()
         new_choice.student = student[0]
-        organization = mdl.organization.search(name=organization_list[x])
+        organization = mdl.organization.search(reference=organization_list[x])
         new_choice.organization = organization[0]
         learning_unit_year = mdl.learning_unit_year.search(title=learning_unit_year_list[x])
         new_choice.learning_unit_year = learning_unit_year[0]
@@ -160,6 +160,25 @@ def internships_create(request):
 @login_required
 def internships_new(request):
     form = InternshipOfferForm(data=request.POST)
-    
 
-    return render(request, "internships_create.html", {'section': 'internship',})
+    internship = InternshipOffer()
+
+    print(request.POST['organization'])
+    if request.POST['organization']:
+        organization = mdl.organization.search(reference=request.POST['organization'])
+        internship.organization = organization[0]
+
+    if request.POST['learning_unit_year']:
+        learning_unit_year = mdl.learning_unit_year.search(title=request.POST['learning_unit_year'])
+        internship.learning_unit_year = learning_unit_year[0]
+
+
+    if request.POST['title']:
+        learning_unit_year = mdl.learning_unit_year.search(title=request.POST['learning_unit_year'])
+        internship.title = learning_unit_year[0].title
+
+    if request.POST['maximum_enrollments']:
+        internship.maximum_enrollments = request.POST['maximum_enrollments']
+
+    internship.save()
+    return internships(request)
