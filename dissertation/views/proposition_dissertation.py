@@ -85,7 +85,7 @@ def proposition_dissertation_new(request):
         if form.is_valid():
             form.save()
             proposition_dissertations = PropositionDissertation.objects.all()
-            return render(request, 'proposition_dissertations_list.html', {'proposition_dissertations': proposition_dissertations})
+            return redirect('proposition_dissertations')
     else:
         person = mdl.person.find_by_user(request.user)
         adviser = Adviser.find_by_person(person)
