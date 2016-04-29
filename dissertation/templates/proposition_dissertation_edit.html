@@ -43,7 +43,9 @@
         {% for field in form %}
           <div class="row {% if field.errors %}error{% endif %}">
             <div class="col-md-4" style="text-align: right">
+              {% if not field.is_hidden %}
                 <label>{{ field.label }}</label>
+              {% endif %}
             </div>
             <div class="col-md-5">
               {{ field }}

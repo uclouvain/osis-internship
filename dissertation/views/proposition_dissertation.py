@@ -57,15 +57,9 @@ def proposition_dissertation_edit(request, pk):
                 return redirect('proposition_dissertation_detail', pk=proposition_dissertation.pk)
         else:
             form = PropositionDissertationForm(instance=proposition_dissertation)
-            form.fields['author'].widget.attrs['disabled'] = True
         return render(request, 'proposition_dissertation_edit.html', {'form': form})
     else:
         return render(request, 'proposition_dissertations_list.html', {'proposition_dissertations': proposition_dissertations})
-
-@login_required
-def proposition_dissertations_search(request):
-    proposition_dissertations = PropositionDissertation.search(title=request.GET['title'])
-    return render(request, "proposition_dissertations_list.html", {'proposition_dissertations': proposition_dissertations})
 
 @login_required
 def proposition_dissertation_new(request):
@@ -79,7 +73,6 @@ def proposition_dissertation_new(request):
         person = mdl.person.find_by_user(request.user)
         adviser = Adviser.find_by_person(person)
         form = PropositionDissertationForm(initial={'author': adviser})
-        form.fields['author'].widget.attrs['disabled'] = True
     return render(request, 'proposition_dissertation_edit.html', {'form': form})
 
 @login_required
@@ -88,3 +81,8 @@ def proposition_dissertation_my(request):
     adviser = Adviser.find_by_person(person)
     proposition_dissertations = PropositionDissertation.objects.filter(author=adviser)
     return render(request, 'proposition_dissertations_list.html', {'proposition_dissertations': proposition_dissertations})
+
+@login_required
+def proposition_dissertations_search(request):
+    proposition_dissertations = PropositionDissertation.search(title=request.GET['title'])
+    return render(request, "proposition_dissertations_list.html", {'proposition_dissertations': proposition_dissertations})

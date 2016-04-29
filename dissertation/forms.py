@@ -31,7 +31,8 @@ from dissertation.models.adviser import Adviser
 class PropositionDissertationForm(ModelForm):
     class Meta:
         model = PropositionDissertation
-        fields = ('visibility','author','title','description','type','level','collaboration','max_number_student')
+        fields = ('author','visibility','title','description','type','level','collaboration','max_number_student')
+        widgets = {'author': forms.HiddenInput()}
 
 class AdviserForm(ModelForm):
     class Meta:
