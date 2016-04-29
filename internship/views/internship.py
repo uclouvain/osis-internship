@@ -26,7 +26,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from internship.models import InternshipOffer, InternshipChoice
-from internship.forms import InternshipChoiceForm
+from internship.forms import InternshipChoiceForm, InternshipOfferForm
 from base import models as mdl
 
 import urllib.request
@@ -146,10 +146,17 @@ def internships_save(request):
 
 @login_required
 def internships_create(request):
+    #Select all the organisation (service partner)
+    organizations = mdl.organization.find_by_type("SERVICE_PARTNER", order_by=['reference'])
 
+    #select all the learning_unit_year which contain the word stage
+    learning_unit_years = mdl.learning_unit_year.search(title="Stage")
+
+    #Send them to the page
     return render(request, "internships_create.html", {'section': 'internship',
-                                                
-                                                #'all_internships': query,
-                                                #'all_organizations':internship_organizations,
-                                                #'organization_sort_value':organization_sort_value
+                                                        'all_learning_unit_year': learning_unit_years,
+                                                        'all_organization':organizations,
                                                 })
+@login_required
+def internships_save(request):
+    form = InternshipOfferForm(data=request.POST)

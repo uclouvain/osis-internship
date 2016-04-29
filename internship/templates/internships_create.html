@@ -33,11 +33,58 @@
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'Internships' %}</h2>
+    <h2>{% trans 'Internships Creation' %}</h2>
   </div>
-    <form>
-
-      <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_interships_save">
+  <table style="height:100%; width:100%;">
+      <thead>
+        <tr>
+            <th style="text-align:center;">{% trans 'organization' %}</th>
+            <th style="text-align:center;">{% trans 'learning_unit_year' %}</th>
+            <th style="text-align:center;">{% trans 'title' %}</th>
+            <th style="text-align:center;">{% trans 'maximum_enrollments' %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <form action="{%url 'internships_save' %}" method="get">
+          <tr>
+            <td style="text-align:center;">
+              <select name="organization">
+               <option value="0">--</option>
+               {% for organization in all_organization %}
+                  <option value={{ organization }}>
+                      {{ organization.reference }} - {{ organization.name }}
+                  </option>
+               {% endfor %}
+              </select>
+            </td>
+            <td style="text-align:center;">
+              <select name="learning_unit_year">
+               <option value="0">--</option>
+               {% for learning_unit_year in all_learning_unit_year %}
+                  <option value={{ learning_unit_year }}>
+                      {{ learning_unit_year.acronym }} - {{ learning_unit_year.title }} - {{learning_unit_year.academic_year}}
+                  </option>
+               {% endfor %}
+              </select>
+            </td>
+            <td style="text-align:center;">
+              <select name="learning_unit_year">
+               <option value="0">--</option>
+               {% for learning_unit_year in all_learning_unit_year %}
+                  <option value={{ learning_unit_year.title }}>
+                      {{ learning_unit_year.title }}
+                  </option>
+               {% endfor %}
+              </select>
+            </td>
+            <td style="text-align:center;">
+              <input type="number" name="maximum_enrollments">
+            </td>
+          </tr>
+      </tbody>
+  </table>
+  <br/>
+      <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_interships_create">
           <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'Save'%}
       </button>
     </form>
