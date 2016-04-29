@@ -25,6 +25,7 @@
 ##############################################################################
 from django.shortcuts import render, get_object_or_404,redirect
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from pprint import pprint
 from base import models as mdl
 from dissertation.models.proposition_dissertation import PropositionDissertation
@@ -33,7 +34,9 @@ from dissertation.forms import PropositionDissertationForm
 
 @login_required
 def proposition_dissertations(request):
-    proposition_dissertations = PropositionDissertation.objects.all()
+    person = mdl.person.find_by_user(request.user)
+    adviser = Adviser.find_by_person(person)
+    proposition_dissertations = PropositionDissertation.objects.filter(Q(visibility=True) | Q(author=adviser))
     return render(request, 'proposition_dissertations_list.html', {'proposition_dissertations': proposition_dissertations})
 
 @login_required
@@ -62,6 +65,13 @@ def proposition_dissertation_edit(request, pk):
         return render(request, 'proposition_dissertations_list.html', {'proposition_dissertations': proposition_dissertations})
 
 @login_required
+def proposition_dissertation_my(request):
+    person = mdl.person.find_by_user(request.user)
+    adviser = Adviser.find_by_person(person)
+    proposition_dissertations = PropositionDissertation.objects.filter(author=adviser)
+    return render(request, 'proposition_dissertations_list.html', {'proposition_dissertations': proposition_dissertations})
+
+@login_required
 def proposition_dissertation_new(request):
     if request.method == "POST":
         form = PropositionDissertationForm(request.POST)
@@ -76,13 +86,6 @@ def proposition_dissertation_new(request):
     return render(request, 'proposition_dissertation_edit.html', {'form': form})
 
 @login_required
-def proposition_dissertation_my(request):
-    person = mdl.person.find_by_user(request.user)
-    adviser = Adviser.find_by_person(person)
-    proposition_dissertations = PropositionDissertation.objects.filter(author=adviser)
-    return render(request, 'proposition_dissertations_list.html', {'proposition_dissertations': proposition_dissertations})
-
-@login_required
 def proposition_dissertations_search(request):
-    proposition_dissertations = PropositionDissertation.search(title=request.GET['title'])
+    proposition_dissertations = PropositionDissertation.search(title=request.GET['title']).filter(visibility=True)
     return render(request, "proposition_dissertations_list.html", {'proposition_dissertations': proposition_dissertations})
