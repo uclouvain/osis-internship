@@ -29,12 +29,18 @@
 {% block breadcrumb %}
   <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
   <li><a href="{% url 'internships_home' %}">Stages</a></li>
-  <li class="active">{% trans 'Internships' %}</li>
+  <li><a href="{% url 'internships' %}">Tous les Stages</a></li>
+  <li class="active">Nouveau Stage</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
     <h2>{% trans 'Internships Creation' %}</h2>
   </div>
+  {% if message %}
+    <script language="javascript" type="text/javascript">
+      alert("Stage correctement créé");
+    </script>
+  {% endif %}
   <table style="height:100%; width:100%;">
       <thead>
         <tr>

@@ -181,4 +181,16 @@ def internships_new(request):
         internship.maximum_enrollments = request.POST['maximum_enrollments']
 
     internship.save()
-    return internships(request)
+
+    #Select all the organisation (service partner)
+    organizations = mdl.organization.find_by_type("SERVICE_PARTNER", order_by=['reference'])
+
+    #select all the learning_unit_year which contain the word stage
+    learning_unit_years = mdl.learning_unit_year.search(title="Stage")
+
+    #Send them to the page
+    return render(request, "internships_create.html", {'section': 'internship',
+                                                        'all_learning_unit_year': learning_unit_years,
+                                                        'all_organization':organizations,
+                                                        'message':"Stage correctement créé"
+                                                })
