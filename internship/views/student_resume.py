@@ -78,15 +78,13 @@ def internships_student_search(request):
 @login_required
 def internships_student_read(request, registration_id):
     student = mdl.student.find_by(registration_id=registration_id)
-    if student:
-        for student in student:
-            student.address = ""
-            address = mdl.person_address.find_by_person(student.person)
-            if address:
-                student.address = address
-        internship_choice = InternshipChoice.find_by_student(student)
+    student[0].address = ""
+    address = mdl.person_address.find_by_person(student[0].person)
+    if address:
+        student[0].address = address
+    internship_choice = InternshipChoice.find_by_student(student[0])
 
     return render(request, "student_resume.html",
-                            {'student': student,
+                            {'student': student[0],
                              'internship_choice' : internship_choice,
                             })
