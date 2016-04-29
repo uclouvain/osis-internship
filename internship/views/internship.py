@@ -80,7 +80,8 @@ def calc_dist(lat_a, long_a, lat_b, long_b):
 @login_required
 def internships(request):
     student = mdl.student.find_by(person_username=request.user)
-    student_choice = InternshipChoice.find_by_student(student)
+    #get in order descending to have the first choices in first lines in the insert (line 114)
+    student_choice = InternshipChoice.find_by_student_desc(student)
     #First get the value of the option's value for the sort
     if request.method == 'GET':
         organization_sort_value = request.GET.get('organization_sort')
@@ -93,8 +94,8 @@ def internships(request):
 
     #Change the query into a list
     query=list(query)
-    index = 0
     #delete the internships in query when they are in the student's selection then rebuild the query
+    index = 0
     for choice in student_choice:
         for internship in query :
             if internship.organization == choice.organization and \

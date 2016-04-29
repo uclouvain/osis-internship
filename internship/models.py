@@ -120,3 +120,8 @@ class InternshipChoice(models.Model):
     def find_by_student(s_student):
         internships = InternshipChoice.objects.filter(student = s_student).order_by('choice')
         return internships
+
+    @staticmethod
+    def find_by_student_desc(s_student):
+        internships = InternshipChoice.objects.filter(student = s_student).order_by('-choice')
+        return internships
