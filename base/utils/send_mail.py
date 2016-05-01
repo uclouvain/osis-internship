@@ -29,6 +29,8 @@ Utility files for mail sending
 """
 from django.core.mail import send_mail
 from django.template import Template, Context
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 from django.utils.translation import ugettext as _
 
 from backoffice.settings import DEFAULT_FROM_EMAIL, LOGO_OSIS_URL, LOGO_EMAIL_SIGNATURE_URL
@@ -49,43 +51,52 @@ def send_mail_after_scores_submission(persons, learning_unit_name, submitted_enr
     subject = str(html_message_template.subject).format(learning_unit_name=learning_unit_name)
 
     submitted_enrollments_data = [
-        {
-            'offer_year_acronym':   enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym,
-            'session':              enrollment.session_exam.number_session,
-            'std_registration_id':  enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id,
-            'std_last_name':        enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name,
-            'std_first_name':       enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name,
-            'final_score':          enrollment.score_final,
-            'justification_final':  enrollment.justification_final,
-        } for enrollment in submitted_enrollments]
+        (
+            enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym,
+            enrollment.session_exam.number_session,
+            enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id,
+            enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name,
+            enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name,
+            enrollment.score_final,
+            enrollment.justification_final,
+        ) for enrollment in submitted_enrollments]
+    submitted_enrollment_header = (
+        _('acronym'),
+        _('session'),
+        _('registration_number'),
+        _('lastname'),
+        _('firstname'),
+        _('score'),
+        _('documentation')
+    )
 
     data = {
-        'learning_unit_name':       learning_unit_name,
-        'submitted_enrollments':    submitted_enrollments_data,
-        'all_encoded':              all_encoded,
-        'logo_mail_signature_url':  LOGO_OSIS_URL,
-        'logo_osis_url':            LOGO_EMAIL_SIGNATURE_URL,
+        'learning_unit_name':   learning_unit_name,
+        'encoding_status':      _('encoding_status_ended') if all_encoded else _('encoding_status_notended'),
+        'signature':            render_to_string('email/html_email_signature.html', {
+            'logo_mail_signature_url': LOGO_OSIS_URL,
+            'logo_osis_url': LOGO_EMAIL_SIGNATURE_URL,
+            })
     }
 
+    submitted_enrollments_table_html = render_table_template_as_string(
+        submitted_enrollment_header,
+        submitted_enrollments_data,
+        True
+    )
+    data['submitted_enrollments'] = submitted_enrollments_table_html
     html_message = Template(html_message_template.template).render(Context(data))
-    txt_changes = '\n\n'.join([
-        " - ".join([
-            str(enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym),
-            str(enrollment.session_exam.number_session),
-            str(enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id),
-            str(enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name),
-            str(enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name),
-            str(enrollment.score_final),
-            str(enrollment.justification_final)
-        ])
-        for enrollment in submitted_enrollments])
-    if all_encoded:
-        txt_encoding_status = _('encoding_status_ended')
-    else:
-        txt_encoding_status = _('encoding_status_notended')
-    txt_message = txt_message_template.template.format(changes=txt_changes, encoding_status=txt_encoding_status, **data)
 
-    send_mail(subject=subject, message=txt_message, recipient_list=[person.email for person in persons if person.email],
+    submitted_enrollments_table_txt = render_table_template_as_string(
+        submitted_enrollment_header,
+        submitted_enrollments_data,
+        False
+    )
+    data['submitted_enrollments'] = submitted_enrollments_table_txt
+    txt_message = Template(txt_message_template.template).render(Context(data))
+
+    send_mail(subject=subject, message=strip_tags(txt_message), recipient_list=[person.email for person in persons
+                                                                                if person.email],
               html_message=html_message, from_email=DEFAULT_FROM_EMAIL)
 
 
@@ -97,7 +108,6 @@ def send_mail_after_academic_calendar_changes(academic_calendar, offer_year_cale
     :param offer_year_calendar:
     :param programm_managers:
     """
-
     txt_message_template = message_template.find_by_reference('academic_calendar_changes_txt_fr')
     html_message_template = message_template.find_by_reference('academic_calendar_changes_html_fr')
     subject = str(html_message_template.subject).format(offer_year=str(offer_year_calendar.offer_year.acronym),
@@ -107,16 +117,38 @@ def send_mail_after_academic_calendar_changes(academic_calendar, offer_year_cale
         'offer_year_title':         offer_year_calendar.offer_year.title,
         'offer_year_acronym':       offer_year_calendar.offer_year.acronym,
         'academic_calendar':        str(academic_calendar),
-        'logo_mail_signature_url':  LOGO_OSIS_URL,
-        'logo_osis_url':            LOGO_EMAIL_SIGNATURE_URL,
+        'signature':                render_to_string('email/html_email_signature.html', {
+            'logo_mail_signature_url': LOGO_OSIS_URL,
+            'logo_osis_url': LOGO_EMAIL_SIGNATURE_URL,
+            })
     }
 
     html_message = Template(html_message_template.template).render(Context(data))
-    message = txt_message_template.template.format(**data)
+    message = Template(txt_message_template.template).render(Context(data))
     recipient_list = [manager.person.email for manager in programm_managers if manager.person.email]
-    send_mail(subject=subject,
-              message=message,
-              recipient_list=recipient_list,
-              html_message=html_message,
-              from_email=DEFAULT_FROM_EMAIL)
+    if recipient_list:
+        send_mail(subject=subject,
+                  message=strip_tags(message),
+                  recipient_list=recipient_list,
+                  html_message=html_message,
+                  from_email=DEFAULT_FROM_EMAIL)
 
+
+def render_table_template_as_string(table_headers, table_rows, html_format):
+    """
+     Render the table template as a string.
+     If htmlformat is True , render the html table template , else the txt table template
+     Used to create dynamically a table of data to insert into email template.
+     :param table_headers: The header of the table as a list of Strings
+     :param table_rows: The content of each row as a list of item list
+     :param html_format True if you want the html template , False if you want the txt template
+    """
+    if html_format:
+        template = 'email/html_email_table_template.html'
+    else:
+        template = 'email/txt_email_table_template.html'
+    data = {
+        'table_headers': table_headers,
+        'table_rows': table_rows
+    }
+    return render_to_string(template, data)

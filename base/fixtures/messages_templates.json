@@ -5,7 +5,7 @@
     "fields": {
         "reference": "assessments_scores_submission_html_fr",
         "subject": "Soumission de notes pour {learning_unit_name}",
-        "template": "<html>\r\n<head>\r\n    <meta charset=\"UTF-8\">\r\n    <title>Soumission de notes</title>\r\n</head>\r\n{% autoescape off %}\r\n<body>\r\n<div>\r\n    <p>Bonjour, </p>\r\n    <p>Nous vous informons qu'une soumission de notes \u00e0 \u00e9t\u00e9 effectu\u00e9e pour {{ learning_unit_name }}</p><br/>\r\n    <div>\r\n         <p>Notes soumises : </p>\r\n        <table>\r\n                <thead>\r\n                    <tr>\r\n                        <th>Prog.</th>\r\n                        <th>Sess.</th>\r\n                        <th>Noma</th>\r\n                        <th>Nom</th>\r\n                        <th>Prenom</th>\r\n                        <th>Note</th>\r\n                        <th>Justification</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    {% for enrollment in submitted_enrollments %}\r\n                        <tr>\r\n                            <td>{{ enrollment.offer_year_acronym }}</td>\r\n                            <td>{{ enrollment.session}}</td>\r\n                            <td>{{ enrollment.std_registration_id }}</td>\r\n                            <td>{{ enrollment.std_last_name }}</td>\r\n                            <td>{{ enrollment.std_first_name }}</td>\r\n                            <td>{{ enrollment.final_score|default:\"-\" }}</td>\r\n                            <td>{{ enrollment.justification_final|default:\"-\" }}</td>\r\n                        </tr>\r\n                    {% endfor %}\r\n                </tbody>\r\n            </table>\r\n    </div>\r\n    <p>Status de l'encodage : {% if all_encoded %}Toutes les notes sont encod\u00e9es.{% else %}Il este encore des notes \u00e0 encoder.{% endif %}</p></br>\r\n    <p>Cordialement,</p>\r\n    <p>L'\u00e9quipe Osis</p>\r\n</div>\r\n<div>\r\n    <table cellpadding=\"5\" cellspacing=\"5\">\r\n        <tbody>\r\n        <tr>\r\n            <td width=\"60\">\r\n                <img src=\"{{ logo_mail_signature_url }}\" alt=\"Mail Signature Logo\">\r\n            </td>\r\n            <td>\r\n                <img src=\"{{ logo_osis_url }}\" alt=\"Osis Logo\">\r\n            </td>\r\n        </tr>\r\n        </tbody>\r\n    </table>\r\n</div>\r\n</body>\r\n{% endautoescape %}\r\n</html>",
+        "template": "<p>{% autoescape off %}</p>\r\n\r\n<h3>Soumission de notes</h3>\r\n\r\n<p>Bonjour,<br />\r\nNous vous informons qu'une soumission de notes \u00e0 \u00e9t\u00e9 effectu\u00e9e pour <strong>{{ learning_unit_name }}</strong></p>\r\n\r\n<p>{{ submitted_enrollments }}</p>\r\n\r\n<p>{{ encoding_status }}</p>\r\n\r\n<p>Cordialement,</p>\r\n\r\n<p>L'\u00e9quipe Osis</p>\r\n\r\n<p>{{ signature }}</p>\r\n\r\n<p>{% endautoescape %}</p>",
         "format": "HTML",
         "language": "fr-be"
     }
@@ -16,7 +16,7 @@
     "fields": {
         "reference": "assessments_scores_submission_txt_fr",
         "subject": "Soumission de notes pour {learning_unit_name}",
-        "template": "Bonjour,\r\nNous vous informons qu'une soumission de notes \u00e0 \u00e9t\u00e9 effectu\u00e9e pour {learning_unit_name}\r\n\r\nNotes soumises:\r\n---------------\r\n\r\n{changes}\r\n\r\nStatus de l'encodage : {encoding_status}\r\n\r\nCordialement,\r\nL'\u00e9quipe OSIS.",
+        "template": "<p>Bonjour,<br />\r\nNous vous informons qu'une soumission de notes \u00e0 \u00e9t\u00e9 effectu\u00e9e pour {{ learning_unit_name }}</p>\r\n\r\n<p>{{ submitted_enrollments }}</p>\r\n\r\n<p>{{ encoding_status }}</p>\r\n\r\n<p>Cordialement,<br />\r\nL'\u00e9quipe Osis.</p>",
         "format": "PLAIN",
         "language": "fr-be"
     }
@@ -27,7 +27,7 @@
     "fields": {
         "reference": "academic_calendar_changes_html_fr",
         "subject": "Modification du calendrier acad\u00e9mique : {offer_year} - {academic_calendar}",
-        "template": "{% autoescape off %}\r\n<body>\r\n<div>\r\n    <p>Bonjour,</p>\r\n    <p>Nous vous informons que des changements on \u00e9t\u00e9 effectu\u00e9s sur '{{ offer_year_title }}'({{ offer_year_acronym }}),calendrier acad\u00e9mique : {{ academic_calendar }}</p><br/>\r\n    <div>Cordialement,<br/>L'\u00e9quipe Osis.\r\n   </div>\r\n</div>\r\n<div>\r\n    <table cellpadding=\"5\" cellspacing=\"5\">\r\n        <tbody>\r\n        <tr>\r\n            <td width=\"60\">\r\n                <img src=\"{{ logo_mail_signature_url }}\" alt=\"Mail Signature Logo\">\r\n            </td>\r\n            <td>\r\n                <img src=\"{{ logo_osis_url }}\" alt=\"Osis Logo\">\r\n            </td>\r\n        </tr>\r\n        </tbody>\r\n    </table>\r\n</div>\r\n</body>\r\n{% endautoescape %}",
+        "template": "<p>{% autoescape off %}</p>\r\n\r\n<p>Bonjour,<br />\r\nNous vous informons que des changements on \u00e9t\u00e9 effectu\u00e9s sur <strong>{{ offer_year_title }}</strong>({{ offer_year_acronym }}),calendrier acad\u00e9mique : {{ academic_calendar }}</p>\r\n\r\n<div>\r\n<div>Cordialement,<br />\r\nL'\u00e9quipe Osis.</div>\r\n\r\n<div>&nbsp;</div>\r\n\r\n<div>{{ signature }}</div>\r\n\r\n<div>&nbsp;</div>\r\n\r\n<div>{% endautoescape %}</div>\r\n</div>",
         "format": "HTML",
         "language": "fr-be"
     }
@@ -38,7 +38,7 @@
     "fields": {
         "reference": "academic_calendar_changes_txt_fr",
         "subject": "Modification du calendrier acad\u00e9mique : {offer_year} - {academic_calendar}",
-        "template": "Bonjour,\r\nNous vous informons que des changements on \u00e9t\u00e9 effectu\u00e9s sur '{offer_year_title}'({offer_year_acronym}),calendrier acad\u00e9mique : {academic_calendar}</p><br/>\r\n\r\nL'\u00e9quipe OSIS.",
+        "template": "<p>Bonjour,<br />\r\nNous vous informons que des changements on \u00e9t\u00e9 effectu\u00e9s sur <strong>{{ offer_year_title }}</strong>({{ offer_year_acronym }}),calendrier acad\u00e9mique : {{ academic_calendar }}</p>\r\n\r\n<div>\r\n<div>Cordialement,<br />\r\nL'\u00e9quipe Osis.</div>\r\n</div>",
         "format": "PLAIN",
         "language": "fr-be"
     }
