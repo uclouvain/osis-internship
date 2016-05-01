@@ -102,28 +102,29 @@
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
                 <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
-                <td>{%if is_pgmer %}
-                    <input type="number" min="0" max="20" step="any" name="score_{{ enrollment.id }}" id="num_score_{{ enrollment.id }}" tabindex="{{ forloop.counter }}"
-                           value="{{ enrollment.score_final | score_display:enrollment.session_exam.learning_unit_year.decimal_scores}}"
-                           class="form-control" {% if tutor and enrollment.score_final or tutor and enrollment.justification_final%} disabled {% endif %}
-                           title="{% if enrollment.session_exam.learning_unit_year.decimal_scores %}
-                                        {%trans 'decimal_score_allowed'%}
-                                  {% else %}
-                                        {%trans 'decimal_score_not_allowed'%}
-                                  {%endif%}">
-                    {%else%}
-                    <input type="number" min="0" max="20" step="any" name="score_{{ enrollment.id }}" id="num_score_{{ enrollment.id }}" tabindex="{{ forloop.counter }}"
-                           value="{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}"
-                           class="form-control" {% if tutor and enrollment.score_final or tutor and enrollment.justification_final%} disabled {% endif %}
-                           title="{% if enrollment.session_exam.learning_unit_year.decimal_scores %}
-                                        {%trans 'decimal_score_allowed'%}
-                                  {% else %}
-                                        {%trans 'decimal_score_not_allowed'%}
-                                  {%endif%}">
-                    {%endif%}
+                <td>
+                    <input type="number" min="0" max="20" name="score_{{ enrollment.id }}"
+                           id="num_score_{{ enrollment.id }}" tabindex="{{ forloop.counter }}"
+                           class="form-control"
+                           {% if is_pgmer %}
+                                value="{{ enrollment.score_final | score_display:enrollment.session_exam.learning_unit_year.decimal_scores}}"
+                           {% else %}
+                                value="{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}"
+                           {% endif %}
+                           {% if tutor and enrollment.score_final or tutor and enrollment.justification_final%}
+                                disabled
+                           {% endif %}
+                           {% if enrollment.session_exam.learning_unit_year.decimal_scores %}
+                                step="any"
+                           {% else %}
+                                step="1"
+                                oninvalid="this.setCustomValidity('{%trans 'decimal_score_not_allowed'%}')"
+                                onchange="this.setCustomValidity('')"
+                           {% endif %}
+                    >
                 </td>
-
-                <td>{%if is_pgmer %}
+                <td>
+                    {%if is_pgmer %}
                         <select class="form-control" name="justification_{{ enrollment.id }}" id="slt_justification_score_{{ enrollment.id }}"
                                 tabindex="{{ enrollments|length|sum:forloop.counter }}">
                           <option value="None"></option>
