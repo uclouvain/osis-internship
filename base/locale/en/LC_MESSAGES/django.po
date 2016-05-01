@@ -1257,21 +1257,6 @@ msgstr "Please choose at least one criteria!"
 msgid "get_excel_file"
 msgstr "Get Excel File"
 
-msgid "mail_greeting"
-msgstr "Hi, "
-
-msgid "mail_score_submission_content"
-msgstr "We inform you that a scores submission was made for {}."
-
-msgid "mail_osis_team"
-msgstr "The OSIS Team"
-
-msgid "mail_academic_calendar_change_subject"
-msgstr "Watch out - Changes has been made on {}, academic calendar {}"
-
-msgid "mail_academic_calendar_changes_content"
-msgstr "We inform you that changes has been made on '{}' ({}), academic calendar ({})."
-
 msgid "sector"
 msgstr "Sector"
 
@@ -1298,3 +1283,24 @@ msgstr "Technologic platform"
 
 msgid "undefined"
 msgstr "Undefined"
+
+msgid "messages"
+msgstr "Messages"
+
+msgid "messages_templates"
+msgstr "Messages templates"
+
+msgid "desc_messages_template"
+msgstr "Messages templating allow you to edit email messages dynamically"
+
+msgid "messages_history"
+msgstr "Messages History"
+
+msgid "desc_messages_history"
+msgstr "Message history allow you to access sent emails"
+
+msgid "encoding_status_ended"
+msgstr "Toutes les notes ont été soumises."
+
+msgid "encoding_status_notended"
+msgstr "Il reste encore des notes à encoder."

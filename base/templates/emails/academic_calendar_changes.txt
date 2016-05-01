@@ -1,7 +1,0 @@
-{% load i18n %}
-{% load format %}
-{% autoescape off %}
-{% trans 'mail_greeting' %}
-{% trans 'mail_academic_calendar_changes_content' as mail_content %}{{ mail_content | str_format:format_args }}
-{% trans 'mail_osis_team' %}
-{% endautoescape %}

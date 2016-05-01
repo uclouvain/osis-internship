@@ -28,29 +28,64 @@
 Utility files for mail sending
 """
 from django.core.mail import send_mail
-from django.template.loader import render_to_string
+from django.template import Template, Context
 from django.utils.translation import ugettext as _
 
 from backoffice.settings import DEFAULT_FROM_EMAIL, LOGO_OSIS_URL, LOGO_EMAIL_SIGNATURE_URL
-
-base_data = {
-    'logo_mail_signature_url': LOGO_OSIS_URL,
-    'logo_osis_url': LOGO_EMAIL_SIGNATURE_URL,
-}
+from base.models import message_template
 
 
-def send_mail_after_scores_submission(persons, learning_unit_name):
+def send_mail_after_scores_submission(persons, learning_unit_name, submitted_enrollments, all_encoded):
     """
     Send an email to all the teachers after the scores submission for a learning unit
     :param persons: The list of the teachers of the leaning unit
-    :param learning_unit_name: The name of the learning unit for wihch scores were submitted
+    :param learning_unit_name: The name of the learning unit for which scores were submitted
+    :param submitted_enrollments : The list of newly sibmitted enrollments
+    :param all_encoded : Tell if all the scores are encoded and submitted
     """
 
-    subject = _('submission_of_scores_for').format(learning_unit_name)
-    html_message = render_to_string('emails/scores_submission.txt', {'format_args': learning_unit_name})
-    message = render_to_string('emails/scores_submission.html',
-                               dict(list(base_data.items()) + list({'format_args': learning_unit_name}.items())))
-    send_mail(subject=subject, message=message, recipient_list=[person.email for person in persons if person.email],
+    txt_message_template = message_template.find_by_reference('assessments_scores_submission_txt_fr')
+    html_message_template = message_template.find_by_reference('assessments_scores_submission_html_fr')
+    subject = str(html_message_template.subject).format(learning_unit_name=learning_unit_name)
+
+    submitted_enrollments_data = [
+        {
+            'offer_year_acronym':   enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym,
+            'session':              enrollment.session_exam.number_session,
+            'std_registration_id':  enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id,
+            'std_last_name':        enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name,
+            'std_first_name':       enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name,
+            'final_score':          enrollment.score_final,
+            'justification_final':  enrollment.justification_final,
+        } for enrollment in submitted_enrollments]
+
+    data = {
+        'learning_unit_name':       learning_unit_name,
+        'submitted_enrollments':    submitted_enrollments_data,
+        'all_encoded':              all_encoded,
+        'logo_mail_signature_url':  LOGO_OSIS_URL,
+        'logo_osis_url':            LOGO_EMAIL_SIGNATURE_URL,
+    }
+
+    html_message = Template(html_message_template.template).render(Context(data))
+    txt_changes = '\n\n'.join([
+        " - ".join([
+            str(enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym),
+            str(enrollment.session_exam.number_session),
+            str(enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id),
+            str(enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name),
+            str(enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name),
+            str(enrollment.score_final),
+            str(enrollment.justification_final)
+        ])
+        for enrollment in submitted_enrollments])
+    if all_encoded:
+        txt_encoding_status = _('encoding_status_ended')
+    else:
+        txt_encoding_status = _('encoding_status_notended')
+    txt_message = txt_message_template.template.format(changes=txt_changes, encoding_status=txt_encoding_status, **data)
+
+    send_mail(subject=subject, message=txt_message, recipient_list=[person.email for person in persons if person.email],
               html_message=html_message, from_email=DEFAULT_FROM_EMAIL)
 
 
@@ -62,17 +97,26 @@ def send_mail_after_academic_calendar_changes(academic_calendar, offer_year_cale
     :param offer_year_calendar:
     :param programm_managers:
     """
-    subject = _('mail_academic_calendar_change_subject').format(str(offer_year_calendar.offer_year),
-                                                                str(academic_calendar))
-    format_args = '|'.join([offer_year_calendar.offer_year.title, offer_year_calendar.offer_year.acronym,
-                            str(academic_calendar)])
-    html_message = render_to_string('emails/academic_calendar_changes.html',
-                                    dict(list(base_data.items()) + list({'format_args': format_args}.items())))
-    message = render_to_string('emails/academic_calendar_changes.txt', {'format_args': format_args})
 
+    txt_message_template = message_template.find_by_reference('academic_calendar_changes_txt_fr')
+    html_message_template = message_template.find_by_reference('academic_calendar_changes_html_fr')
+    subject = str(html_message_template.subject).format(offer_year=str(offer_year_calendar.offer_year.acronym),
+                                                        academic_calendar=str(academic_calendar))
+
+    data = {
+        'offer_year_title':         offer_year_calendar.offer_year.title,
+        'offer_year_acronym':       offer_year_calendar.offer_year.acronym,
+        'academic_calendar':        str(academic_calendar),
+        'logo_mail_signature_url':  LOGO_OSIS_URL,
+        'logo_osis_url':            LOGO_EMAIL_SIGNATURE_URL,
+    }
+
+    html_message = Template(html_message_template.template).render(Context(data))
+    message = txt_message_template.template.format(**data)
+    recipient_list = [manager.person.email for manager in programm_managers if manager.person.email]
     send_mail(subject=subject,
               message=message,
-              recipient_list=[manager.person.email for manager in list(programm_managers) if manager.person.email],
+              recipient_list=recipient_list,
               html_message=html_message,
               from_email=DEFAULT_FROM_EMAIL)
 

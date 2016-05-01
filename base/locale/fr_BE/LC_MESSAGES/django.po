@@ -1261,21 +1261,6 @@ msgstr "Veuillez remplir au moins 1 critère"
 msgid "get_excel_file"
 msgstr "Obtenir le fichier Excel"
 
-msgid "mail_greeting"
-msgstr "Bonjour, "
-
-msgid "mail_score_submission_content"
-msgstr "Nous vous informons qu'une soummission de notes à été effectuée pour {}."
-
-msgid "mail_osis_team"
-msgstr "L'équipe OSIS"
-
-msgid "mail_academic_calendar_change_subject"
-msgstr "Attention! Changements effectués sur {}, {}"
-
-msgid "mail_academic_calendar_changes_content"
-msgstr "Nous vous informons que des changements on été effectués sur '{}'({}),calendrier académique : {}."
-
 msgid "sector"
 msgstr "Secteur"
 
@@ -1303,4 +1288,23 @@ msgstr "Plateforme technologique"
 msgid "undefined"
 msgstr "Non défini"
 
+msgid "messages"
+msgstr "Messages"
 
+msgid "messages_templates"
+msgstr "Modèles de messages"
+
+msgid "desc_messages_template"
+msgstr "Le modèles de message permet la personnalisation dynamique des e-mails."
+
+msgid "messages_histor"
+msgstr "Historique des messages"
+
+msgid "desc_messages_history"
+msgstr "L'historique des messages vous permet d'accéder aux messages envoyés par courier électronique"
+
+msgid "encoding_status_ended"
+msgstr "Toutes les notes ont été soumises."
+
+msgid "encoding_status_notended"
+msgstr "Il reste encore des notes à encoder."
