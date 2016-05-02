@@ -62,14 +62,18 @@
   <div class="panel panel-default">
     <div class="panel-body">
         <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#tab_MI">{% trans 'Stage de Médecine Interne'%}</a></li>
-            <li><a data-toggle="tab" href="#tab_CH">{% trans 'Stage de Chirurgie'%}</a></li>
+            <li class="active"><a data-toggle="tab" href="#tab_MI">{% trans 'Stage en Chirurgie'%}</a></li>
+            <li><a data-toggle="tab" href="#tab_CH">{% trans 'Stage en Gériatrie'%}</a></li>
             <li><a data-toggle="tab" href="#tab_GO">{% trans 'Stage de Gynécologie-Obstétrique'%}</a></li>
-            <li><a data-toggle="tab" href="#tab_PED">{% trans 'Stage de Pédiatrie'%}</a></li>
-            <li><a data-toggle="tab" href="#tab_URG">{% trans 'Stage d\'Urgence'%}</a></li>
-            <li><a data-toggle="tab" href="#tab_GER">{% trans 'Stage de Gériatrie'%}</a></li>
+            <li><a data-toggle="tab" href="#tab_PED">{% trans 'Stage en Médecine interne'%}</a></li>
+            <li><a data-toggle="tab" href="#tab_URG">{% trans 'Stage en Pédiatrie'%}</a></li>
+            <li><a data-toggle="tab" href="#tab_GER">{% trans 'Stage en Urgence'%}</a></li>
             <li><a data-toggle="tab" href="#tab_CHOIX1">{% trans 'Stage au choix 1'%}</a></li>
             <li><a data-toggle="tab" href="#tab_CHOIX2">{% trans 'Stage au choix 2'%}</a></li>
+            <li><a data-toggle="tab" href="#tab_CHOIX2">{% trans 'Stage au choix 3'%}</a></li>
+            <li><a data-toggle="tab" href="#tab_CHOIX2">{% trans 'Stage au choix 4'%}</a></li>
+            <li><a data-toggle="tab" href="#tab_CHOIX2">{% trans 'Stage au choix 5'%}</a></li>
+            <li><a data-toggle="tab" href="#tab_CHOIX2">{% trans 'Stage au choix 6'%}</a></li>
         </ul>
         <form  method="post" action="{% url 'internships_save' %}" >
         <input type="hidden" name="organization_sort" value="{{ organization.name }}"/>
@@ -91,7 +95,7 @@
                         </thead>
                         <tbody>
                           {% for internship in all_internships %}
-                          {% if internship.learning_unit_year.title = "Stage en Médecine interne"%}
+                          {% if internship.learning_unit_year.title = "Stage en Chirurgie"%}
                             <tr>
                                 <td>
                                   <input type="hidden" name="learning_unit_year" value="{{ internship.learning_unit_year.title }}"/>{{ internship.learning_unit_year.title }}</label>
@@ -139,7 +143,7 @@
                         </thead>
                         <tbody>
                           {% for internship in all_internships %}
-                          {% if internship.learning_unit_year.title = "Stage en Chirurgie"%}
+                          {% if internship.learning_unit_year.title = "Stage en Gériatrie"%}
                           <tr>
                               <td>
                                 <input type="hidden" name="learning_unit_year" value="{{ internship.learning_unit_year.title }}"/>{{ internship.learning_unit_year.title }}</label>
@@ -235,7 +239,7 @@
                         </thead>
                         <tbody>
                           {% for internship in all_internships %}
-                          {% if internship.learning_unit_year.title = "Stage en Pédiatrie"%}
+                          {% if internship.learning_unit_year.title = "Stage en Médecine interne"%}
                           <tr>
                               <td>
                                 <input type="hidden" name="learning_unit_year" value="{{ internship.learning_unit_year.title }}"/>{{ internship.learning_unit_year.title }}</label>
@@ -283,7 +287,7 @@
                         </thead>
                         <tbody>
                           {% for internship in all_internships %}
-                          {% if internship.learning_unit_year.title = "Stage en Urgence"%}
+                          {% if internship.learning_unit_year.title = "Stage en Pédiatrie"%}
                           <tr>
                               <td>
                                 <input type="hidden" name="learning_unit_year" value="{{ internship.learning_unit_year.title }}"/>{{ internship.learning_unit_year.title }}</label>
@@ -331,7 +335,7 @@
                         </thead>
                         <tbody>
                           {% for internship in all_internships %}
-                          {% if internship.learning_unit_year.title = "Stage en Gériatrie"%}
+                          {% if internship.learning_unit_year.title = "Stage en Urgence"%}
                           <tr>
                               <td>
                                 <input type="hidden" name="learning_unit_year" value="{{ internship.learning_unit_year.title }}"/>{{ internship.learning_unit_year.title }}</label>
