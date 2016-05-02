@@ -1,0 +1,90 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block breadcrumb %}
+<li><a href="{% url 'messages' %}" id="lnk_messages">{% trans 'messages' %}</a></li>
+<li class="active">{% trans 'messages_history' %}</li>
+{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h2>{{ message_history.subject }}</h2>
+</div>
+<div class="row">
+    <div><label class="control-label"></label></div>
+    <div class="col-md-3">
+        <div><label class="control-label">{% trans 'recipient' %}</label></div>
+        {{ message_history.person.first_name }} {{ message_history.person.last_name }}<br/>
+        {{ message_history.person.email | default:"" }}
+    </div>
+    <div class="col-md-3">
+        <div><label class="control-label">{% trans 'origin' %}</label></div>
+        {{ message_history.origin }}
+    </div>
+    <div class="col-md-2">
+        <div><label class="control-label">{% trans 'creation_date' %}</label></div>
+        {{ message_history.created }}
+    </div>
+    <div class="col-md-3">
+        <div align="center"><label class="control-label">{% trans 'sent' %}</label></div>
+        <div class="row">
+            <div class="col-md-6"><b>{% trans 'email' %}</b><br/>
+                {% if message_history.sent_by_mail_date %}
+                {{ message_history.sent_by_mail_date }}
+                {% else %}
+                <i class="fa fa-times" aria-hidden="true"></i>
+                {% endif %}
+            </div>
+            <div class="col-md-6"><b>{% trans 'myosis' %}</b><br/>
+                {% if message_history.sent_to_myosis_date %}
+                {{ message_history.sent_to_myosis_date }}
+                {% else %}
+                <i class="fa fa-times" aria-hidden="true"></i>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-1">
+        <div><label class="control-label">{% trans 'language' %}</label></div>
+        {{ message_history.template.language }}
+    </div>
+</div>
+<br/>
+<div class="row">
+    <div class="col-md-11">
+        <div><label class="control-label">{% trans 'message' %}</label></div>
+        {% autoescape off %}{{ message_history.content }}{% endautoescape %}
+    </div>
+</div>
+<br/>
+<div class="row">
+    <div class="col-md-2">
+        <a href="{% url 'send_message_again' message_history.id %}" class="btn btn-default" id="btn_send_message_again"
+           role="button" title="btn_send_message_again_title">{% trans 'send_message_again' %}</a>
+    </div>
+</div>
+{% endblock %}

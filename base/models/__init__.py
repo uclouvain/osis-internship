@@ -48,3 +48,4 @@ from base.models import structure
 from base.models import structure_address
 from base.models import student
 from base.models import tutor
+from base.models import message_history

@@ -32,13 +32,14 @@ from html import unescape
 from django.core.mail import send_mail
 from django.template import Template, Context
 from django.template.loader import render_to_string
-from django.utils import translation
+from django.utils import translation, timezone
 from django.utils.html import strip_tags
 from django.utils.translation import ugettext as _
 
 from backoffice import settings
 from backoffice.settings import DEFAULT_FROM_EMAIL, LOGO_OSIS_URL, LOGO_EMAIL_SIGNATURE_URL
-from base.models import message_template
+from base.models import message_history as message_history_mdl, \
+    message_template as message_template_mdl
 
 
 def send_mail_after_scores_submission(persons, learning_unit_name, submitted_enrollments, all_encoded):
@@ -51,9 +52,9 @@ def send_mail_after_scores_submission(persons, learning_unit_name, submitted_enr
     """
 
     txt_message_templates = {template.language: template for template in
-                             message_template.find_by_reference('assessments_scores_submission_txt')}
+                             message_template_mdl.find_by_reference('assessments_scores_submission_txt')}
     html_message_templates = {template.language: template for template in
-                              message_template.find_by_reference('assessments_scores_submission_html')}
+                              message_template_mdl.find_by_reference('assessments_scores_submission_html')}
 
     submitted_enrollments_data = [
         (
@@ -74,9 +75,8 @@ def send_mail_after_scores_submission(persons, learning_unit_name, submitted_enr
         })
     }
 
-    dest_by_lang = map_persons_emails_by_languages([person for person in persons if person.email])
-    for lang_code, emails in dest_by_lang.items():
-        if emails:
+    dest_by_lang = map_persons_by_languages(persons)
+    for lang_code, person in dest_by_lang.items():
             if lang_code in html_message_templates:
                 html_message_template = html_message_templates[lang_code]
             else:
@@ -111,10 +111,11 @@ def send_mail_after_scores_submission(persons, learning_unit_name, submitted_enr
                 )
                 data['submitted_enrollments'] = submitted_enrollments_table_txt
                 txt_message = Template(txt_message_template.template).render(Context(data))
-                send_mail(subject=unescape(strip_tags(subject)),
-                          message=unescape(strip_tags(txt_message)),
-                          recipient_list=[email for email in emails if email],
-                          html_message=html_message, from_email=DEFAULT_FROM_EMAIL)
+                send_and_save(template=html_message_template,
+                              persons=person,
+                              subject=unescape(strip_tags(subject)),
+                              message=unescape(strip_tags(txt_message)),
+                              html_message=html_message, from_email=DEFAULT_FROM_EMAIL)
 
 
 def send_mail_after_academic_calendar_changes(academic_calendar, offer_year_calendar, programm_managers):
@@ -126,9 +127,9 @@ def send_mail_after_academic_calendar_changes(academic_calendar, offer_year_cale
     :param programm_managers:
     """
     txt_message_templates = {template.language: template for template in
-                             message_template.find_by_reference('academic_calendar_changes_txt')}
+                             message_template_mdl.find_by_reference('academic_calendar_changes_txt')}
     html_message_templates = {template.language: template for template in
-                              message_template.find_by_reference('academic_calendar_changes_html')}
+                              message_template_mdl.find_by_reference('academic_calendar_changes_html')}
 
     data = {
         'offer_year_title':         offer_year_calendar.offer_year.title,
@@ -140,9 +141,9 @@ def send_mail_after_academic_calendar_changes(academic_calendar, offer_year_cale
             })
     }
 
-    dest_by_lang = map_persons_emails_by_languages([manager.person for manager in programm_managers
-                                                    if manager.person.email])
-    for lang_code, emails in dest_by_lang.items():
+    dest_by_lang = map_persons_by_languages([manager.person for manager in programm_managers
+                                             if manager.person])
+    for lang_code, persons in dest_by_lang.items():
         if lang_code in html_message_templates:
             html_message_template = html_message_templates[lang_code]
         else:
@@ -156,11 +157,12 @@ def send_mail_after_academic_calendar_changes(academic_calendar, offer_year_cale
             message = Template(txt_message_template.template).render(Context(data))
             subject = str(html_message_template.subject).format(offer_year=str(offer_year_calendar.offer_year.acronym),
                                                                 academic_calendar=str(academic_calendar))
-            send_mail(subject=unescape(strip_tags(subject)),
-                      message=unescape(strip_tags(message)),
-                      recipient_list=emails,
-                      html_message=html_message,
-                      from_email=DEFAULT_FROM_EMAIL)
+            send_and_save(template=html_message_template,
+                          persons=persons,
+                          subject=unescape(strip_tags(subject)),
+                          message=unescape(strip_tags(message)),
+                          html_message=html_message,
+                          from_email=DEFAULT_FROM_EMAIL)
 
 
 def render_table_template_as_string(table_headers, table_rows, html_format):
@@ -183,7 +185,7 @@ def render_table_template_as_string(table_headers, table_rows, html_format):
     return render_to_string(template, data)
 
 
-def map_persons_emails_by_languages(persons):
+def map_persons_by_languages(persons):
     """
     Convert a list of persons into a dictionnary langage_code: list_of_emails ,
     according to the language of the person.
@@ -192,7 +194,50 @@ def map_persons_emails_by_languages(persons):
     lang_dict = {lang[0]: [] for lang in settings.LANGUAGES}
     for person in persons:
         if person.language in lang_dict.keys():
-            lang_dict[person.language].append(person.email)
+            lang_dict[person.language].append(person)
         else:
             lang_dict[settings.LANGUAGE_CODE].append(person)
     return lang_dict
+
+
+def send_again(message_history_id):
+    """
+    send a message from message history again
+    :param message_history_id The id of the message history to send again
+    :return the sent message
+    """
+    message_history = message_history_mdl.find_by_id(message_history_id)
+    send_and_save(template=message_history.template,
+                  persons=[message_history.person],
+                  subject=message_history.subject,
+                  message='',
+                  html_message=message_history.content,
+                  from_email=message_history.origin)
+    return message_history
+
+
+def send_and_save(template, persons, **kwargs):
+    """
+    Send the message :
+    - by mail if person.mail exists
+    Save the message in message_history table
+    :param template The message_template used to create the message
+    :param persons List of the persons to send the message
+    :param kwargs List of arguments used by the django send_mail method.
+    The recipient_list argument is taken form the persons list.
+    """
+    recipient_list = []
+    if persons:
+        for person in persons:
+            if person.email:
+                recipient_list.append(person.email)
+            message_history = message_history_mdl.MessageHistory(
+                person=person,
+                template=template,
+                subject=kwargs['subject'],
+                content=kwargs['html_message'],
+                origin=kwargs['from_email'],
+                sent_by_mail_date=timezone.now() if person.email else None
+            )
+            message_history.save()
+        send_mail(recipient_list=recipient_list, **kwargs)

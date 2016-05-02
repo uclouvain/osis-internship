@@ -25,9 +25,47 @@
 ##############################################################################
 from django.contrib.auth.decorators import login_required
 
+from base import models
+from base.forms import MessageHistorySearchForm
+from base.utils import send_mail
 from base.views import layout
 
 
 @login_required
 def messages(request):
     return layout.render(request, "messages.html", {})
+
+
+@login_required
+def messages_history_index(request):
+    return layout.render(request, "messages_history.html", {'form': MessageHistorySearchForm()})
+
+
+@login_required
+def message_history_read(request, message_history_id):
+    message_history = models.message_history.find_by_id(message_history_id)
+    return layout.render(request, "message_history.html", {"message_history": message_history})
+
+
+@login_required
+def send_message_again(request, message_history_id):
+    message_history = send_mail.send_again(message_history_id)
+    return layout.render(request, "message_history.html", {'message_history': message_history})
+
+
+@login_required
+def find_messages_history(request):
+    form = MessageHistorySearchForm(request.POST)
+    messages_history = []
+    if form.is_valid():
+        messages_history = models.message_history.find(**form.cleaned_data)
+    data = {
+        'form':             form,
+        'messages_history': messages_history,
+    }
+    return layout.render_to_response(request, "messages_history.html", data)
+
+
+
+
+

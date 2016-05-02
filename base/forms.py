@@ -77,3 +77,12 @@ class MessageTemplateForm(ModelForm):
     class Meta:
         model = mdl.message_template.MessageTemplate
         fields = ['reference', 'subject', 'template', 'format', 'language']
+
+
+class MessageHistorySearchForm(forms.Form):
+    subject = forms.CharField(max_length=50, required=False)
+    reference = forms.CharField(max_length=50, required=False)
+    recipient = forms.CharField(max_length=25, required=False)
+    origin = forms.CharField(max_length=25, required=False)
+    sent_by_mail = forms.BooleanField(initial=True, required=False)
+    sent_to_myosis = forms.BooleanField(initial=False, required=False)
