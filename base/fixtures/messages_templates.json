@@ -3,9 +3,9 @@
     "model": "base.messagetemplate",
     "pk": 1,
     "fields": {
-        "reference": "assessments_scores_submission_html_fr",
+        "reference": "assessments_scores_submission_html",
         "subject": "Soumission de notes pour {learning_unit_name}",
-        "template": "<p>{% autoescape off %}</p>\r\n\r\n<h3>Soumission de notes</h3>\r\n\r\n<p>Bonjour,<br />\r\nNous vous informons qu'une soumission de notes \u00e0 \u00e9t\u00e9 effectu\u00e9e pour <strong>{{ learning_unit_name }}</strong></p>\r\n\r\n<p>{{ submitted_enrollments }}</p>\r\n\r\n<p>{{ encoding_status }}</p>\r\n\r\n<p>Cordialement,</p>\r\n\r\n<p>L'\u00e9quipe Osis</p>\r\n\r\n<p>{{ signature }}</p>\r\n\r\n<p>{% endautoescape %}</p>",
+        "template": "<p>{% autoescape off %}</p>\r\n\r\n<h3>Soumission de notes</h3>\r\n\r\n<p>Bonjour,<br />\r\nNous vous informons qu&#39;une soumission de notes &agrave; &eacute;t&eacute; effectu&eacute;e pour <strong>{{ learning_unit_name }}</strong></p>\r\n\r\n<p>{{ submitted_enrollments }}</p>\r\n\r\n<p>Status : {{ encoding_status }}</p>\r\n\r\n<p>Cordialement,<br />\r\nL&#39;&eacute;quipe Osis</p>\r\n\r\n<p>{{ signature }}</p>\r\n\r\n<p>{% endautoescape %}</p>",
         "format": "HTML",
         "language": "fr-be"
     }
@@ -14,9 +14,9 @@
     "model": "base.messagetemplate",
     "pk": 2,
     "fields": {
-        "reference": "assessments_scores_submission_txt_fr",
+        "reference": "assessments_scores_submission_txt",
         "subject": "Soumission de notes pour {learning_unit_name}",
-        "template": "<p>Bonjour,<br />\r\nNous vous informons qu'une soumission de notes \u00e0 \u00e9t\u00e9 effectu\u00e9e pour {{ learning_unit_name }}</p>\r\n\r\n<p>{{ submitted_enrollments }}</p>\r\n\r\n<p>{{ encoding_status }}</p>\r\n\r\n<p>Cordialement,<br />\r\nL'\u00e9quipe Osis.</p>",
+        "template": "<p>Bonjour,<br />\r\nNous vous informons qu&#39;une soumission de notes &agrave; &eacute;t&eacute; effectu&eacute;e pour {{ learning_unit_name }}</p>\r\n\r\n<p>{{ submitted_enrollments }}</p>\r\n\r\n<p>Status : {{ encoding_status }}</p>\r\n\r\n<p>Cordialement,<br />\r\nL&#39;&eacute;quipe Osis.</p>",
         "format": "PLAIN",
         "language": "fr-be"
     }
@@ -25,9 +25,9 @@
     "model": "base.messagetemplate",
     "pk": 3,
     "fields": {
-        "reference": "academic_calendar_changes_html_fr",
+        "reference": "academic_calendar_changes_html",
         "subject": "Modification du calendrier acad\u00e9mique : {offer_year} - {academic_calendar}",
-        "template": "<p>{% autoescape off %}</p>\r\n\r\n<p>Bonjour,<br />\r\nNous vous informons que des changements on \u00e9t\u00e9 effectu\u00e9s sur <strong>{{ offer_year_title }}</strong>({{ offer_year_acronym }}),calendrier acad\u00e9mique : {{ academic_calendar }}</p>\r\n\r\n<div>\r\n<div>Cordialement,<br />\r\nL'\u00e9quipe Osis.</div>\r\n\r\n<div>&nbsp;</div>\r\n\r\n<div>{{ signature }}</div>\r\n\r\n<div>&nbsp;</div>\r\n\r\n<div>{% endautoescape %}</div>\r\n</div>",
+        "template": "<p>{% autoescape off %}</p>\r\n\r\n<p>Bonjour,<br />\r\nNous vous informons que des changements on &eacute;t&eacute; effectu&eacute;s sur <strong>{{ offer_year_title }}</strong>({{ offer_year_acronym }}),calendrier acad&eacute;mique : {{ academic_calendar }}</p>\r\n\r\n<div>\r\n<div>Cordialement,<br />\r\nL&#39;&eacute;quipe Osis.</div>\r\n\r\n<div>&nbsp;</div>\r\n\r\n<div>{{ signature }}</div>\r\n\r\n<div>&nbsp;</div>\r\n\r\n<div>{% endautoescape %}</div>\r\n</div>",
         "format": "HTML",
         "language": "fr-be"
     }
@@ -36,11 +36,33 @@
     "model": "base.messagetemplate",
     "pk": 4,
     "fields": {
-        "reference": "academic_calendar_changes_txt_fr",
+        "reference": "academic_calendar_changes_txt",
         "subject": "Modification du calendrier acad\u00e9mique : {offer_year} - {academic_calendar}",
-        "template": "<p>Bonjour,<br />\r\nNous vous informons que des changements on \u00e9t\u00e9 effectu\u00e9s sur <strong>{{ offer_year_title }}</strong>({{ offer_year_acronym }}),calendrier acad\u00e9mique : {{ academic_calendar }}</p>\r\n\r\n<div>\r\n<div>Cordialement,<br />\r\nL'\u00e9quipe Osis.</div>\r\n</div>",
+        "template": "<p>Bonjour,<br />\r\nNous vous informons que des changements on &eacute;t&eacute; effectu&eacute;s sur <strong>{{ offer_year_title }}</strong>({{ offer_year_acronym }}),calendrier acad&eacute;mique : {{ academic_calendar }}</p>\r\n\r\n<div>\r\n<div>Cordialement,<br />\r\nL&#39;&eacute;quipe Osis.</div>\r\n</div>",
         "format": "PLAIN",
         "language": "fr-be"
+    }
+},
+{
+    "model": "base.messagetemplate",
+    "pk": 5,
+    "fields": {
+        "reference": "assessments_scores_submission_txt",
+        "subject": "Scores submission for  {learning_unit_name}",
+        "template": "<p>Hi,<br />\r\nWe inform tou that scores have been submitted for&nbsp; {{ learning_unit_name }}</p>\r\n\r\n<p>{{ submitted_enrollments }}</p>\r\n\r\n<p>Status : {{ encoding_status }}</p>\r\n\r\n<p>Kind regars,<br />\r\nThe Osis team.</p>",
+        "format": "PLAIN",
+        "language": "en"
+    }
+},
+{
+    "model": "base.messagetemplate",
+    "pk": 6,
+    "fields": {
+        "reference": "assessments_scores_submission_html",
+        "subject": "Scores submission for {learning_unit_name}",
+        "template": "<p>{% autoescape off %}</p>\r\n\r\n<h3>Scores submission</h3>\r\n\r\n<p>Hi,<br />\r\nWe inform you that scores have been submitted for <strong>{{ learning_unit_name }}</strong></p>\r\n\r\n<p>{{ submitted_enrollments }}</p>\r\n\r\n<p>Status : {{ encoding_status }}</p>\r\n\r\n<p>Kind Regards,<br />\r\nThe Osis team</p>\r\n\r\n<p>{{ signature }}</p>\r\n\r\n<p>{% endautoescape %}</p>",
+        "format": "HTML",
+        "language": "en"
     }
 }
 ]
