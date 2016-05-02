@@ -44,44 +44,28 @@
           aria-hidden="true"></span></a>
         </div>
       </div>
-      <img src="http://ultra16.sipr.ucl.ac.be/photos/photos_cp/photos/image{{ person.global_id |get_digit:"4" }}{{ person.global_id |get_digit:"3" }}/{{ person.global_id }}.jpg"height="10%" width="10%">
       <div class="row">
-        <div class="col-md-3">
-          <label>{% trans 'Name' %}</label><br>
-          {{ person.first_name }} {{ person.last_name }}
+        <div class="col-md-4 pull-right">
+          <img src="http://ultra16.sipr.ucl.ac.be/photos/photos_cp/photos/image{{ person.global_id |get_digit:"4" }}{{ person.global_id |get_digit:"3" }}/{{ person.global_id }}.jpg"height="40%" width="40%">
         </div>
-        <div class="col-md-3">
-          <label>{% trans 'Email' %}</label><br>
-          {{ person.email }}
+        <div class="col-md-4">
+          <label>{% trans 'Name' %}</label><br>{{ person.first_name }} {{ person.last_name }}
+          <br><br>
+          <label>{% trans 'Email' %}</label><br>{{ person.email }}
+          <br><br>
+          <label>{% trans 'Phone' %}</label><br>{{ person.phone }}
+          <br><br>
+          <label>{% trans 'Mobile Phone' %}</label><br>{{ person.phone_mobile }}
         </div>
-        <div class="col-md-3">
-          <label>{% trans 'Phone' %}</label><br>
-          {{ person.phone }}
+        <div class="col-md-4">
+          <label>{% trans 'Email Accept' %}</label><br>{{ adviser.email_accept|yesno:"Yes,No"  }}
+          <br><br>
+          <label>{% trans 'Phone Accept' %}</label><br>{{ adviser.phone_accept|yesno:"Yes,No" }}
+          <br><br>
+          <label>{% trans 'Office visite Accept' %}</label><br>{{ adviser.office_accept|yesno:"Yes,No" }}
+          <br><br>
+          <label>{% trans 'Comment' %}</label><br>{{ adviser.comment }}
         </div>
-        <div class="col-md-3">
-          <label>{% trans 'Mobile Phone' %}</label><br>
-          {{ person.phone_mobile }}
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-3">
-          <label>{% trans 'Email Accept' %}</label><br>
-          {{ adviser.email_accept|yesno:"Yes,No"  }}
-        </div>
-        <div class="col-md-3">
-          <label>{% trans 'Phone Accept' %}</label><br>
-          {{ adviser.phone_accept|yesno:"Yes,No" }}
-        </div>
-        <div class="col-md-3">
-          <label>{% trans 'Office visite Accept' %}</label><br>
-          {{ adviser.office_accept|yesno:"Yes,No" }}
-        </div>
-        <div class="col-md-9">
-            <label>{% trans 'Comment' %}</label><br>
-            {{ adviser.comment }}
-        </div>
-        <br>
-        <br>
       </div>
     </div>
   </div>
