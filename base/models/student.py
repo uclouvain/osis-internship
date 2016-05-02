@@ -45,7 +45,7 @@ class Student(models.Model):
         return u"%s (%s)" % (self.person, self.registration_id)
 
 
-def find_by(registration_id=None, person_name=None, person_username=None):
+def find_by(registration_id=None, person_name=None, person_username=None, person_first_name=None):
     """
     Find students by optional arguments. At least one argument should be informed
     otherwise it returns empty.
@@ -63,6 +63,10 @@ def find_by(registration_id=None, person_name=None, person_username=None):
 
     if person_username:
         queryset = queryset.filter(person__user=person_username)
+        has_criteria = True
+
+    if person_first_name:
+        queryset = queryset.filter(person__first_name__icontains=person_first_name)
         has_criteria = True
 
     if has_criteria:
