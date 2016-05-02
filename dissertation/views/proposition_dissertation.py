@@ -30,7 +30,64 @@ from pprint import pprint
 from base import models as mdl
 from dissertation.models.proposition_dissertation import PropositionDissertation
 from dissertation.models.adviser import Adviser
-from dissertation.forms import PropositionDissertationForm
+from dissertation.forms import PropositionDissertationForm, ManagerPropositionDissertationForm
+
+@login_required
+def manager_proposition_dissertations(request):
+    person = mdl.person.find_by_user(request.user)
+    adviser = Adviser.find_by_person(person)
+    proposition_dissertations = PropositionDissertation.objects.filter(Q(active=True))
+    return render(request, 'manager_proposition_dissertations_list.html', {'proposition_dissertations': proposition_dissertations})
+
+@login_required
+def manager_proposition_dissertation_delete(request, pk):
+    proposition_dissertation = get_object_or_404(PropositionDissertation, pk=pk)
+    proposition_dissertation.active = False
+    proposition_dissertation.save()
+    return redirect('manager_proposition_dissertations')
+
+@login_required
+def manager_proposition_dissertation_detail(request, pk):
+    proposition_dissertation = get_object_or_404(PropositionDissertation, pk=pk)
+    person = mdl.person.find_by_user(request.user)
+    adviser = Adviser.find_by_person(person)
+    return render(request, 'manager_proposition_dissertation_detail.html', {'proposition_dissertation': proposition_dissertation, 'adviser': adviser})
+
+@login_required
+def manage_proposition_dissertation_edit(request, pk):
+    proposition_dissertation = get_object_or_404(PropositionDissertation, pk=pk)
+    person = mdl.person.find_by_user(request.user)
+    adviser = Adviser.find_by_person(person)
+    if request.method == "POST":
+        form = ManagerPropositionDissertationForm(request.POST, instance=proposition_dissertation)
+        if form.is_valid():
+            proposition_dissertation = form.save(commit=False)
+            proposition_dissertation.save()
+            return redirect('manager_proposition_dissertation_detail', pk=proposition_dissertation.pk)
+    else:
+        form = ManagerPropositionDissertationForm(instance=proposition_dissertation)
+    return render(request, 'manager_proposition_dissertation_edit.html', {'form': form})
+
+@login_required
+def manager_proposition_dissertation_new(request):
+    if request.method == "POST":
+        form = ManagerPropositionDissertationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            proposition_dissertations = PropositionDissertation.objects.all()
+            return redirect('manager_proposition_dissertations')
+    else:
+        person = mdl.person.find_by_user(request.user)
+        adviser = Adviser.find_by_person(person)
+        form = ManagerPropositionDissertationForm(initial={'active':True})
+    return render(request, 'manager_proposition_dissertation_edit.html', {'form': form})
+
+@login_required
+def manager_proposition_dissertations_search(request):
+    person = mdl.person.find_by_user(request.user)
+    adviser = Adviser.find_by_person(person)
+    proposition_dissertations = PropositionDissertation.search(title=request.GET['title']).filter(Q(active=True))
+    return render(request, "manager_proposition_dissertations_list.html", {'proposition_dissertations': proposition_dissertations})
 
 @login_required
 def proposition_dissertations(request):

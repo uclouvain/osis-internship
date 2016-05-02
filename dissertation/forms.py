@@ -28,6 +28,11 @@ from django.forms import ModelForm
 from dissertation.models.proposition_dissertation import PropositionDissertation
 from dissertation.models.adviser import Adviser
 
+class ManagerPropositionDissertationForm(ModelForm):
+    class Meta:
+        model = PropositionDissertation
+        fields = ('author','visibility','title','description','type','level','collaboration','max_number_student','offer_proposition')
+
 class PropositionDissertationForm(ModelForm):
     class Meta:
         model = PropositionDissertation

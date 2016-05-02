@@ -32,6 +32,12 @@ urlpatterns = [
     url(r'^informations/$', information.informations, name='informations'),
     url(r'^informations_edit/$', information.informations_edit, name='informations_edit'),
 
+    url(r'^manager_proposition_dissertations/$', proposition_dissertation.manager_proposition_dissertations, name='manager_proposition_dissertations'),
+    url(r'^manager_proposition_dissertation_new$', proposition_dissertation.manager_proposition_dissertation_new, name='manager_proposition_dissertation_new'),
+    url(r'^manager_proposition_dissertation_detail/(?P<pk>[0-9]+)/$', proposition_dissertation.manager_proposition_dissertation_detail, name='manager_proposition_dissertation_detail'),
+    url(r'^manager_proposition_dissertation/(?P<pk>[0-9]+)/delete/$', proposition_dissertation.manager_proposition_dissertation_delete, name='manager_proposition_dissertation_delete'),
+    url(r'^manager_proposition_dissertation/(?P<pk>[0-9]+)/edit/$', proposition_dissertation.manage_proposition_dissertation_edit, name='manager_proposition_dissertation_edit'),
+
     url(r'^proposition_dissertations/$', proposition_dissertation.proposition_dissertations, name='proposition_dissertations'),
     url(r'^proposition_dissertation/(?P<pk>[0-9]+)/delete/$', proposition_dissertation.proposition_dissertation_delete, name='proposition_dissertation_delete'),
     url(r'^proposition_dissertation/(?P<pk>[0-9]+)/edit/$', proposition_dissertation.proposition_dissertation_edit, name='proposition_dissertation_edit'),
@@ -39,5 +45,6 @@ urlpatterns = [
     url(r'^proposition_dissertation_new$', proposition_dissertation.proposition_dissertation_new, name='proposition_dissertation_new'),
     url(r'^proposition_dissertation_my$', proposition_dissertation.proposition_dissertation_my, name='proposition_dissertation_my'),
 
+    url(r'^manager_search$', proposition_dissertation.manager_proposition_dissertations_search, name='manager_proposition_dissertations_search'),
     url(r'^search$', proposition_dissertation.proposition_dissertations_search, name='proposition_dissertations_search'),
 ]

@@ -28,37 +28,31 @@
 
 {% block breadcrumb %}
   <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'Studies' %}</a></li>
-  <li class="active">{% trans 'Dissertations' %}</li>
+  <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'Dissertations' %}</a></li>
+  <li><a href="{% url 'manager_proposition_dissertations' %}" id="lnk_propositions">{% trans 'Subjects' %}</a></li>
+  <li class="active">{% trans 'New-Edit Subject' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'Dissertations' %}</h2>
+    <h2>{% trans 'New-Edit Subject' %}</h2>
   </div>
-
   <div class="panel panel-default">
     <div class="panel-body">
-      {% if adviser.type == 'PRF' %}
-        <div class="row">
-          <div class="col-md-1"><i class="fa fa-lightbulb-o" style="font-size: 400%; color: #6699FF;"></i></div>
-          <div class="col-md-5">
-            <h4 class="media-heading"><a href="{% url 'proposition_dissertations' %}" id="lnk_propositions_dissertations" >{% trans 'Subjects (Prof)' %}</a></h4>
-            <p>{% trans 'This process helps persons while subjects encoding.' %}</p>
+      <form method="POST" class="post-form">
+        {% csrf_token %}
+        {% for field in form %}
+          <div class="row {% if field.errors %}error{% endif %}">
+            <div class="col-md-4" style="text-align: right">
+              <label>{{ field.label }}</label>
+            </div>
+            <div class="col-md-5">
+              {{ field }}
+            </div>
           </div>
-          <div class="col-md-1"><i class="fa fa-cogs" style="font-size: 400%; color: #6699FF;"></i></div>
-          <div class="col-md-5">
-            <h4 class="media-heading"><a href="{% url 'informations' %}" id="lnk_informations" >{% trans 'My informations (Prof)' %}</a></h4>
-            <p>{% trans 'This process helps persons while informations encoding.' %}</p>
-          </div>
-        </div>
-      {% elif adviser.type == 'MGR' %}
-        <div class="row">
-          <div class="col-md-1"><i class="fa fa-lightbulb-o" style="font-size: 400%; color: #6699FF;"></i></div>
-          <div class="col-md-5">
-            <h4 class="media-heading"><a href="{% url 'manager_proposition_dissertations' %}" id="lnk_manager_proposition_dissertations" >{% trans 'Subjects (Manager)' %}</a></h4>
-            <p>{% trans 'This process helps persons while subjects encoding.' %}</p>
-          </div>
-        </div>
-      {% endif %}
+          <br>
+        {% endfor %}
+        <button type="submit" class="save btn btn-default">Save</button>
+      </form>
     </div>
   </div>
 {% endblock %}
