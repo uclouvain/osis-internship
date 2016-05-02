@@ -1300,7 +1300,7 @@ msgid "desc_messages_history"
 msgstr "Message history allow you to access sent emails"
 
 msgid "encoding_status_ended"
-msgstr "Toutes les notes ont été soumises."
+msgstr "All the scores are encoded."
 
 msgid "encoding_status_notended"
-msgstr "Il reste encore des notes à encoder."
+msgstr "It remains notes to encode."

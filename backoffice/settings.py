@@ -170,8 +170,6 @@ CKEDITOR_CONFIGS = {
                        'HiddenField']},
             {'name': 'about', 'items': ['About']},
         ],
-        'entities' : False,
-        'entities_latin' : False,
     },
 }
 
