@@ -44,18 +44,8 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterField(
             model_name='person',
-            name='global_id',
-            field=models.CharField(blank=True, max_length=10, null=True, unique=True),
-        ),
-        migrations.AlterField(
-            model_name='person',
             name='last_name',
             field=models.CharField(blank=True, db_index=True, max_length=50, null=True),
-        ),
-        migrations.AlterField(
-            model_name='person',
-            name='national_id',
-            field=models.CharField(blank=True, max_length=25, null=True, unique=True),
         ),
         migrations.AlterField(
             model_name='student',
