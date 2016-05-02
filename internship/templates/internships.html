@@ -84,6 +84,7 @@
                           <tr>
                               <th>{% trans 'name' %}</th>
                               <th>{% trans 'student_max' %}</th>
+                              <th>{% trans 'Étudiants inscrits' %}</th>
                               <th>{% trans 'organization' %}</th>
                               <th>{% trans 'preference' %}</th>
                           </tr>
@@ -97,6 +98,9 @@
                                 </td>
                                 <td>
                                   {{ internship.maximum_enrollments }}
+                                </td>
+                                <td>
+                                  {{ internship.number }}
                                 </td>
                                 <td>
                                   <input type="hidden" name="organization" value="{{ internship.organization.reference }}"/>{{ internship.organization }}</input>
@@ -128,6 +132,7 @@
                           <tr>
                               <th>{% trans 'Name' %}</th>
                               <th>{% trans 'Student max' %}</th>
+                              <th>{% trans 'Étudiants inscrits' %}</th>
                               <th>{% trans 'organization' %}</th>
                               <th>{% trans 'Preference' %}</th>
                           </tr>
@@ -141,6 +146,9 @@
                               </td>
                               <td>
                                 {{ internship.maximum_enrollments }}
+                              </td>
+                              <td>
+                                  {{ internship.number }}
                               </td>
                               <td>
                                 <input type="hidden" name="organization" value="{{ internship.organization.reference }}"/>{{ internship.organization }}</input>
@@ -172,6 +180,7 @@
                           <tr>
                               <th>{% trans 'Name' %}</th>
                               <th>{% trans 'Student max' %}</th>
+                              <th>{% trans 'Étudiants inscrits' %}</th>
                               <th>{% trans 'organization' %}</th>
                               <th>{% trans 'Preference' %}</th>
                           </tr>
@@ -185,6 +194,9 @@
                               </td>
                               <td>
                                 {{ internship.maximum_enrollments }}
+                              </td>
+                              <td>
+                                  {{ internship.number }}
                               </td>
                               <td>
                                 <input type="hidden" name="organization" value="{{ internship.organization.reference }}"/>{{ internship.organization }}</input>
@@ -214,8 +226,9 @@
                     <table class="table table-hover">
                         <thead>
                           <tr>
-                              <th>{% trans 'Name' %}</th>
+                            <th>{% trans 'Name' %}</th>
                               <th>{% trans 'Student max' %}</th>
+                              <th>{% trans 'Étudiants inscrits' %}</th>
                               <th>{% trans 'organization' %}</th>
                               <th>{% trans 'Preference' %}</th>
                           </tr>
@@ -229,6 +242,9 @@
                               </td>
                               <td>
                                 {{ internship.maximum_enrollments }}
+                              </td>
+                              <td>
+                                  {{ internship.number }}
                               </td>
                               <td>
                                 <input type="hidden" name="organization" value="{{ internship.organization.reference }}"/>{{ internship.organization }}</input>
@@ -260,6 +276,7 @@
                           <tr>
                               <th>{% trans 'Name' %}</th>
                               <th>{% trans 'Student max' %}</th>
+                              <th>{% trans 'Étudiants inscrits' %}</th>
                               <th>{% trans 'organization' %}</th>
                               <th>{% trans 'Preference' %}</th>
                           </tr>
@@ -273,6 +290,9 @@
                               </td>
                               <td>
                                 {{ internship.maximum_enrollments }}
+                              </td>
+                              <td>
+                                  {{ internship.number }}
                               </td>
                               <td>
                                 <input type="hidden" name="organization" value="{{ internship.organization.reference }}"/>{{ internship.organization }}</input>
@@ -304,6 +324,7 @@
                           <tr>
                               <th>{% trans 'Name' %}</th>
                               <th>{% trans 'Student max' %}</th>
+                              <th>{% trans 'Étudiants inscrits' %}</th>
                               <th>{% trans 'organization' %}</th>
                               <th>{% trans 'Preference' %}</th>
                           </tr>
@@ -317,6 +338,9 @@
                               </td>
                               <td>
                                 {{ internship.maximum_enrollments }}
+                              </td>
+                              <td>
+                                  {{ internship.number }}
                               </td>
                               <td>
                                 <input type="hidden" name="organization" value="{{ internship.organization.reference }}"/>{{ internship.organization }}</input>

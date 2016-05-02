@@ -115,6 +115,10 @@ def internships(request):
         else :
             query.insert(0,choice)
 
+    for internship in query:
+        number = len(InternshipChoice.find_by(internship.organization, internship.learning_unit_year))
+        internship.number = number
+
     # Create the options for the selected list, delete duplicated
     query_organizations = InternshipOffer.find_internships()
     internship_organizations = []
