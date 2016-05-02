@@ -64,7 +64,7 @@
         <ul class="nav nav-tabs">
             <li class="active"><a data-toggle="tab" href="#tab_MI">{% trans 'Stage de Médecine Interne'%}</a></li>
             <li><a data-toggle="tab" href="#tab_CH">{% trans 'Stage de Chirurgie'%}</a></li>
-            <li><a data-toggle="tab" href="#tab_GO">{% trans 'Stage de Ginécologie-Obsétrique'%}</a></li>
+            <li><a data-toggle="tab" href="#tab_GO">{% trans 'Stage de Gynécologie-Obstétrique'%}</a></li>
             <li><a data-toggle="tab" href="#tab_PED">{% trans 'Stage de Pédiatrie'%}</a></li>
             <li><a data-toggle="tab" href="#tab_URG">{% trans 'Stage d\'Urgence'%}</a></li>
             <li><a data-toggle="tab" href="#tab_GER">{% trans 'Stage de Gériatrie'%}</a></li>
@@ -443,6 +443,9 @@
         </form>
   </div>
   <a href="{% url 'internships_create' %}" id="lnk_organization_create" class="btn btn-default"
-     role="button" title="{% trans 'create_an_organization'%}">{% trans 'add_an_internship' %}
+     role="button" title="{% trans 'create_an_organization'%}">{% trans 'Ajouter un stage' %}
      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+     <a id="lnk_organization_create" class="btn btn-default"
+        role="button" title="{% trans 'create_an_organization'%}">{% trans 'Supprimer un stage' %}
+        <span class="glyphicon glyphicon-minus" aria-hidden="true"></span></a>
 {% endblock %}

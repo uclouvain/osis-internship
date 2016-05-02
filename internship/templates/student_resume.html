@@ -127,10 +127,10 @@
                           {% endif %}
                         {% endfor %}
                       </ul>
-                    <label> Stage de Ginéco-Obsétrique </label><br/>
+                    <label> Stage de Gynécologie-Obstétrique </label><br/>
                       <ul>
                         {% for choice in internship_choice %}
-                          {% if choice.learning_unit_year.title == "Stage en Gynécologie-Obsétrique" %}
+                          {% if choice.learning_unit_year.title == "Stage en Gynécologie-Obstétrique" %}
                             <li> {% trans 'Hôpital' %} :
                                     {{ choice.organization.reference }} - {{ choice.organization.name }} |
                                     Choix : {{ choice.choice }}
@@ -181,7 +181,7 @@
                 	  <div role="tabpanel" class="tab-pane fade in active" id="profile">
                       <label> Stage de Chirurgie </label><br/>
                       <label> Stage de Médecine Interne </label><br/>
-                      <label> Stage de Ginéco-Obsétrique </label><br/>
+                      <label> Stage de Gynécologie-Obstétrique </label><br/>
                       <label> Stage de Pédiatrie </label><br/>
                       <label> Stage d'Urgence </label><br/>
                       <label> Stage de Gériatrie </label><br/>
