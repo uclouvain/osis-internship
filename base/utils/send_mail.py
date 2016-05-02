@@ -81,7 +81,7 @@ def send_mail_after_scores_submission(persons, learning_unit_name, submitted_enr
                 html_message_template = html_message_templates[lang_code]
             else:
                 html_message_template = html_message_templates[settings.LANGUAGE_CODE]
-            if txt_message_templates[lang_code]:
+            if lang_code in txt_message_templates:
                 txt_message_template = txt_message_templates[lang_code]
             else:
                 txt_message_template = txt_message_templates[settings.LANGUAGE_CODE]
