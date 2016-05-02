@@ -41,6 +41,7 @@ def informations(request):
         adviser = Adviser.find_by_person(person)
     return render(request, "informations.html", {'person':person,'adviser': adviser})
 
+@login_required
 def informations_edit(request):
     person = mdl.person.find_by_user(request.user)
     adviser = Adviser.find_by_person(person)
@@ -53,3 +54,8 @@ def informations_edit(request):
     else:
         form = AdviserForm(instance=adviser)
     return render(request, "informations_edit.html", {'form':form,'person':person})
+
+@login_required
+def manager_informations(request):
+    advisers = Adviser.find_all().filter(type='PRF')
+    return render(request, 'manager_informations.html', {'advisers': advisers})

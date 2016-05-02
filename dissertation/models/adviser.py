@@ -60,3 +60,6 @@ class Adviser(models.Model):
     def find_by_person(a_person):
         adviser = Adviser.objects.get(person=a_person)
         return adviser
+
+    def find_all():
+        return Adviser.objects.order_by('person')
