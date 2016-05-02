@@ -48,7 +48,7 @@ class OfferYear(models.Model):
     changed = models.DateTimeField(null=True)
     offer = models.ForeignKey('Offer')
     academic_year = models.ForeignKey('AcademicYear')
-    acronym = models.CharField(max_length=15)
+    acronym = models.CharField(max_length=15, db_index=True)
     title = models.CharField(max_length=255)
     title_international = models.CharField(max_length=255, blank=True, null=True)
     title_short = models.CharField(max_length=255, blank=True, null=True)
