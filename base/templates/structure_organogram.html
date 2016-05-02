@@ -77,12 +77,12 @@
                 var sub_nodes = $("<ul></ul>");
                 var json_data = JSON.parse(data);
                 show_nodes(sub_nodes, json_data);
-
+                var escaped_structure = "{{ structure }}".replace(/&#39;/g, "'");
                 $('#organogram').append($("<ul></ul>")
                                           .append($("<li></li>")
                                              .append($("<a></a>").attr("href","{% url 'structure_read' structure.id %}")
                                                                  .attr("target","_parent")
-                                                                 .text('{{structure}}'))
+                                                                 .text(escaped_structure))
                                              .append(sub_nodes)));
             }
 

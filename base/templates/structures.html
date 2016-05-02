@@ -54,9 +54,9 @@
                     <select class="form-control" id="slt_type" name="type_choices"
                             value="{{ type | default_if_none:'' }}"> 
                         <option value="">{% trans 'types' %}...</option>
-                          {% for type in types %} 
-                            <option value="{{ type.0 }}" {% if request.GET.type_choices == type.0 %}selected{% endif %}>
-                                {{ type.1 }}
+                          {% for type_val,type_str in types %} 
+                            <option value="{{ type_val }}" {% if request.GET.type_choices == type_val %}selected{% endif %}>
+                                {% trans type_str %}
                             </option>
                           {% endfor %} 
                     </select> 

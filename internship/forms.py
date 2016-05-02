@@ -23,6 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import TestCase
 
-# Create your tests here.
+from django import forms
+from django.forms import ModelForm
+from internship.models import InternshipChoice
+
+class InternshipChoiceForm(ModelForm):
+    class Meta :
+        model = InternshipChoice
+        fields = ['organization', 'learning_unit_year', 'student', 'choice']
