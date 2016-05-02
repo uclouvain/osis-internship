@@ -29,6 +29,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 from base import models as mdl
+from base.models import learning_unit_year
 from base.utils import send_mail, pdf_utils, export_utils
 from . import layout
 from base.views.notes import Notes
@@ -40,6 +41,7 @@ def scores_encoding(request):
     tutor = mdl.attribution.get_assigned_tutor(request.user)
     academic_yr = mdl.academic_year.current_academic_year()
 
+    # In case the user is a Tutor
     if tutor:
         data_dict = get_data(request)
         sessions_list, faculties, notes_list = get_sessions(None, request, tutor, academic_yr, None)
@@ -51,25 +53,26 @@ def scores_encoding(request):
 
     # In case the user is not a tutor we check whether it is a program manager for the offer.
     else:
-        program_mgr_list = mdl.program_manager.find_by_user(request.user)
-        tutor_sel = None
-        offer_sel = None
-        if program_mgr_list:
-            tutor_sel_id = request.POST.get('tutor', None)
-            if tutor_sel_id:
-                tutor_sel = mdl.tutor.find_by_id(tutor_sel_id)
-            offer_sel_id = request.POST.get('offer', None)
-            if offer_sel_id:
-                offer_sel = mdl.offer_year.find_by_id(offer_sel_id)
-        offer_list = mdl.offer_year.find_by_user(request.user)
-        data_dict = get_data_pgmer(request, None, None, offer_list)
-        return layout.render(request, "assessments/scores_encoding_mgr.html",
-                                      {'notes_list':    data_dict['notes_list'],
-                                       'offer_list':    offer_list,
-                                       'tutor_list':    mdl.tutor.find_by_program_manager(request.user),
-                                       'tutor':         tutor_sel,
-                                       'offer':         offer_sel,
-                                       'academic_year': academic_yr})
+        # program_mgr_list = mdl.program_manager.find_by_user(request.user)
+        # tutor_sel = None
+        # offer_sel = None
+        # if program_mgr_list:
+        #     tutor_sel_id = request.POST.get('tutor', None)
+        #     if tutor_sel_id:
+        #         tutor_sel = mdl.tutor.find_by_id(tutor_sel_id)
+        #     offer_sel_id = request.POST.get('offer', None)
+        #     if offer_sel_id:
+        #         offer_sel = mdl.offer_year.find_by_id(offer_sel_id)
+        # offer_list = mdl.offer_year.find_by_user(request.user)
+        # offer_years_managed = mdl.offer_year.find_by_user(request.user, academic_year=academic_yr)
+        return get_data_pgmer(request)
+        # return layout.render(request, "assessments/scores_encoding_mgr.html",
+        #                               {'notes_list':    data,
+        #                                'offer_list':    offer_years_managed,
+        #                                'tutor_list':    tutors,
+        #                                # 'tutor':         tutor_sel,
+        #                                # 'offer':         offer_sel,
+        #                                'academic_year': academic_yr})
 
 
 @login_required
@@ -341,6 +344,11 @@ def online_encoding_submission(request, learning_unit_id):
 
 
 @login_required
+def print_notes(request, learning_unit_year_id=None, tutor_id=None, offer_id=None):
+    pass
+
+
+@login_required
 def notes_printing(request, session_exam_id, learning_unit_year_id):
     academic_year = mdl.academic_year.current_academic_year()
     session_exam = mdl.session_exam.find_session_by_id(session_exam_id)
@@ -521,7 +529,7 @@ def get_score_encoded(enrollments):
     progress = 0
     if enrollments:
         for e in enrollments:
-            if e.score_final is not None or e.justification_final is not None:
+            if e.score_final or e.justification_final:
                 progress += 1
     return progress
 
@@ -634,184 +642,60 @@ def get_data_online_double(learning_unit_id, tutor_id, request):
             'justifications': mdl.exam_enrollment.JUSTIFICATION_TYPES}
 
 
-def get_data_pgmer(request, tutor_sel, offer_sel, offer_list):
+def get_data_pgmer(request, offer_year_id=None, tutor_id=None):
     academic_yr = mdl.academic_year.current_academic_year()
-    faculties = []
-    learning_unit_list = []
+    offer_years_managed = request.session.get('offer_years_managed',
+                                              mdl.offer_year.find_by_user(request.user, academic_year=academic_yr))
 
-    program_mgr_list = mdl.program_manager.find_by_user(request.user)
-    all_enrollments = []
+    all_tutors = request.session.get('all_tutors',
+                                     mdl.tutor.find_by_program_manager(offer_years_managed))
 
-    dict_progress = {}
-    dict_progress_ok = {}
+    if not offer_year_id:
+        scores_encodings = list(mdl.scores_encoding.search(request.user))
+        # Adding exam_enrollments_encoded & total_exam_enrollments
+        # from each offers year for a matching learning_unit_year
+        group_by_learning_unit = {}
+        for score_encoding in scores_encodings:
+            try:
+                group_by_learning_unit[score_encoding.learning_unit_year_id].exam_enrollments_encoded\
+                    += score_encoding.exam_enrollments_encoded
+                group_by_learning_unit[score_encoding.learning_unit_year_id].total_exam_enrollments\
+                    += score_encoding.total_exam_enrollments
+            except KeyError:
+                group_by_learning_unit[score_encoding.learning_unit_year_id] = score_encoding
+                pass
+                scores_encodings = group_by_learning_unit.values()
+    else:
+        # Filter list by offer_year
+        offer_year_id = int(offer_year_id)  # The offer_year_id received in session is a String, not an Int
+        scores_encodings = list(mdl.scores_encoding.search(request.user))
+        scores_encodings = [score_encoding for score_encoding in scores_encodings
+                            if score_encoding.offer_year_id == offer_year_id]
 
-    for program_mgr in program_mgr_list:
-        if program_mgr.offer_year:
-            if offer_sel or tutor_sel:
-                sessions = mdl.session_exam.find_sessions_by_offer_tutor(offer_sel, academic_yr, tutor_sel)
-            else:
-                sessions = mdl.session_exam.find_sessions_by_offer(program_mgr.offer_year, academic_yr, None)
+    if tutor_id:
+        # Filter list by tutor
+        tutor_id = int(tutor_id) # The tutor_id received in session is a String, not an Int
+        learning_unit_years = list(learning_unit_year.find_by_tutor(tutor_id))
+        learning_unit_year_ids = set([learn_unit_year.id for learn_unit_year in learning_unit_years])
+        scores_encodings = [score_encoding for score_encoding in scores_encodings
+                            if score_encoding.learning_unit_year_id in learning_unit_year_ids]
 
-            filtered_sessions = []  # Sessions filtered by program_manager's offers
-            for session in sessions:
-                if session.offer_year_calendar.offer_year in offer_list:
-                    filtered_sessions.append(session)
-            sessions = filtered_sessions
+    # Ordering by learning_unit_year.acronym
+    scores_encodings = sorted(scores_encodings, key=lambda k: k.learning_unit_year.acronym)
 
-            faculty = program_mgr.offer_year.structure
-            faculties.append(faculty)
-
-            for session in sessions:
-                learning_unit = session.learning_unit_year.learning_unit
-
-                enrollments = list(mdl.exam_enrollment.find_exam_enrollments_by_session(session))
-
-                if enrollments and len(enrollments) > 0:
-                    all_enrollments = all_enrollments + enrollments
-                    in_list = False
-                    for learning_unit_elt in learning_unit_list:
-                        if learning_unit.acronym == learning_unit_elt.acronym:
-                            in_list = True
-                            break
-                    if in_list:
-                        n = dict_progress.get(learning_unit.acronym)
-                        if n is not None:
-                            n += len(enrollments)
-                            dict_progress[learning_unit.acronym] = n
-                    else:
-                        dict_progress[learning_unit.acronym] = len(enrollments)
-                        learning_unit_list.append(learning_unit)
-                if enrollments:
-                    value = get_score_encoded(enrollments)
-                else:
-                    value = 0
-
-                if learning_unit.acronym in dict_progress_ok:
-                    dict_progress_ok[learning_unit.acronym] = dict_progress_ok.get(learning_unit.acronym)+value
-                else:
-                    dict_progress_ok[learning_unit.acronym] = value
-
-    notes_list = []
-    notes = Notes()
-    l_lu_detail = []
-
-    learning_unit_list = order_learning_unit_list_by_acronym(learning_unit_list)
-
-    for learning_unit_elt in learning_unit_list:
-        notes_detail = NotesDetail()
-        notes_detail.lu = learning_unit_elt
-        notes_detail.nb_notes_encoded = dict_progress_ok.get(learning_unit_elt.acronym)
-        notes_detail.nb_student = dict_progress.get(learning_unit_elt.acronym)
-        notes_detail.tutor = mdl.tutor.find_responsible(learning_unit_elt)
-        if notes_detail.tutor:
-            l_lu_detail.append(notes_detail)
-    notes.lu_list = l_lu_detail
-
-    notes_list.append(notes)
-    return {'section':       'scores_encoding',
-            'faculties':     faculties,
-            'academic_year': academic_yr,
-            'notes_list':    notes_list}
+    return layout.render(request, "assessments/scores_encoding_mgr.html",
+                         {'notes_list': scores_encodings,
+                          'offer_list': offer_years_managed,
+                          'tutor_list': all_tutors,
+                          'offer_year_id': offer_year_id,
+                          'tutor_id': tutor_id,
+                          'academic_year': academic_yr})
 
 
 def refresh_list(request):
-    tutor_sel = None
-    offer_sel = None
-
-    offer_list = mdl.offer_year.find_by_user(request.user)
-    tutor_sel_id = request.GET.get('tutor', None)
-
-    if tutor_sel_id:
-        if tutor_sel_id != 'all':
-            tutor_sel = mdl.tutor.find_by_id(tutor_sel_id)
-    offer_sel_id = request.GET.get('offer', None)
-
-    if offer_sel_id:
-        if offer_sel_id != 'all':
-            offer_sel = mdl.offer_year.find_by_id(offer_sel_id)
-    if offer_sel or tutor_sel:
-        data_dict = get_data_pgmer_by_offer(tutor_sel, offer_sel, offer_list)
-    else:
-        data_dict = get_data_pgmer(request, tutor_sel, offer_sel, offer_list)
-
-    return layout.render(request,
-                         "assessments/scores_encoding_mgr.html",
-                         {'notes_list':      data_dict['notes_list'],
-                          'offer_list':      offer_list,
-                          'tutor_list':      mdl.tutor.find_by_program_manager(request.user),
-                          'tutor':           tutor_sel,
-                          'offer':           offer_sel,
-                          'academic_year':   data_dict['academic_year']})
-
-
-def get_data_pgmer_by_offer(tutor_sel, offer_sel, offer_list):
-    academic_yr = mdl.academic_year.current_academic_year()
-
-    notes_list = []
-    learning_unit_list = []
-
-    all_enrollments = []
-    notes = Notes()
-
-    sessions = mdl.session_exam.find_sessions_by_offer_tutor(offer_sel, academic_yr, tutor_sel)
-    filtered_sessions = []  # Sessions filtered by program_manager's offers
-    for session in sessions:
-        if session.offer_year_calendar.offer_year in offer_list:
-            filtered_sessions.append(session)
-    sessions = filtered_sessions
-
-    dict_progress = {}
-    dict_progress_ok = {}
-
-    for session in sessions:
-        learning_unit = session.learning_unit_year.learning_unit
-        enrollments = list(mdl.exam_enrollment.find_exam_enrollments_by_session(session))
-        if len(enrollments) > 0:
-            all_enrollments = all_enrollments + enrollments
-            in_list = False
-            for learning_unit_elt in learning_unit_list:
-                if learning_unit.acronym == learning_unit_elt.acronym:
-                    in_list = True
-                    break
-            if in_list:
-                n = dict_progress.get(learning_unit.acronym)
-                if n is not None:
-                    n += len(enrollments)
-                    dict_progress[learning_unit.acronym] = n
-            else:
-                dict_progress[learning_unit.acronym] = len(enrollments)
-                learning_unit_list.append(learning_unit)
-        if enrollments and len(enrollments) > 0:
-            value = get_score_encoded(enrollments)
-        else:
-            value = 0
-
-        if learning_unit.acronym in dict_progress_ok:
-            dict_progress_ok[learning_unit.acronym] = dict_progress_ok.get(learning_unit.acronym)+value
-        else:
-            dict_progress_ok[learning_unit.acronym] = value
-    l_lu_detail = []
-
-    notes.lu_list = l_lu_detail
-
-    notes_list.append(notes)
-    notes_list = []
-    notes = Notes()
-    for learning_unit_elt in learning_unit_list:
-        notes_detail = NotesDetail()
-        notes_detail.lu = learning_unit_elt
-        notes_detail.nb_notes_encoded = dict_progress_ok.get(learning_unit_elt.acronym, 0)
-        notes_detail.nb_student = dict_progress.get(learning_unit_elt.acronym, 0)
-        notes_detail.tutor = mdl.tutor.find_responsible(learning_unit_elt)
-        if notes_detail.tutor:
-            l_lu_detail.append(notes_detail)
-    notes.lu_list = l_lu_detail
-
-    notes_list.append(notes)
-
-    return {'section':       'scores_encoding',
-            'academic_year': academic_yr,
-            'notes_list':    notes_list}
+    return get_data_pgmer(request,
+                          offer_year_id=request.GET.get('offer', None),
+                          tutor_id=request.GET.get('tutor', None))
 
 
 def order_learning_unit_list_by_acronym(learning_unit_list):

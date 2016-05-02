@@ -1261,6 +1261,15 @@ msgstr "Veuillez remplir au moins 1 critère"
 msgid "get_excel_file"
 msgstr "Obtenir le fichier Excel"
 
+msgid "no_exam_session_opened_for_the_moment"
+msgstr "Aucune session d'examen ouverte pour le moment."
+
+msgid "you_manage"
+msgstr "Vous gérez"
+
+msgid "learning_units_in"
+msgstr "unités d'enseignement dans"
+
 #~ msgid "title_btn_upload_score"
 #~ msgstr ""
 #~ "Sélectionnez votre fichier excel à partir duquel il faut injecter les "

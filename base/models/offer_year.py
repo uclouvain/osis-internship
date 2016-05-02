@@ -26,7 +26,7 @@
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
-from base.models import offer, structure, program_manager
+from base.models import offer, structure, program_manager, academic_year
 
 
 class OfferYearAdmin(admin.ModelAdmin):
@@ -134,9 +134,12 @@ def find_by_academicyear_acronym(academic_yr, acronym):
     return OfferYear.objects.filter(academic_year=academic_yr, acronym=acronym)
 
 
-def find_by_user(user):
-    offer_year_list = []
-    program_mgr_list = program_manager.find_by_user(user)
-    for program in program_mgr_list:
-        offer_year_list.append(program.offer_year)
-    return offer_year_list
+def find_by_user(user, academic_year=academic_year.current_academic_year()):
+    """
+    :param user: User from which we get the offerYears.
+    :param academic_year: The academic year (takes the current academic year by default).
+    :return: All OfferYears where the user is a program manager for a given year.
+    """
+    program_manager_queryset = program_manager.find_by_user(user, academic_year=academic_year)
+    offer_year_ids = program_manager_queryset.values_list('offer_year', flat=True).distinct('offer_year')
+    return OfferYear.objects.filter(pk__in=offer_year_ids).order_by('acronym')

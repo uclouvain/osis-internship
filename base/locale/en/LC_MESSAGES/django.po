@@ -1257,6 +1257,15 @@ msgstr "Please choose at least one criteria!"
 msgid "get_excel_file"
 msgstr "Get Excel File"
 
+msgid "no_exam_session_opened_for_the_moment"
+msgstr "No session exam opened for the moment."
+
+msgid "you_manage"
+msgstr "You manage"
+
+msgid "learning_units_in"
+msgstr "learning units in"
+
 #~ msgid "title_btn_upload_score"
 #~ msgstr "Select your xls file from which to inject scores"
 
