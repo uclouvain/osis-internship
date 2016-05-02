@@ -239,10 +239,6 @@ def internships_new(request):
     if request.POST['learning_unit_year']:
         learning_unit_year = mdl.learning_unit_year.search(title=request.POST['learning_unit_year'])
         internship.learning_unit_year = learning_unit_year[0]
-
-
-    if request.POST['title']:
-        learning_unit_year = mdl.learning_unit_year.search(title=request.POST['learning_unit_year'])
         internship.title = learning_unit_year[0].title
 
     if request.POST['maximum_enrollments']:
