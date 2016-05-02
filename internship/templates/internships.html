@@ -98,7 +98,9 @@
                           {% if internship.learning_unit_year.title = "Stage en Chirurgie"%}
                             <tr>
                                 <td>
-                                  <input type="hidden" name="learning_unit_year" value="{{ internship.learning_unit_year.title }}"/>{{ internship.learning_unit_year.title }}</label>
+                                  <input type="hidden" name="learning_unit_year"
+                                  value="{{ internship.learning_unit_year.title }}"/>
+                                    {{ internship.learning_unit_year.title }}
                                 </td>
                                 <td>
                                   {{ internship.maximum_enrollments }}
@@ -107,17 +109,27 @@
                                   {{ internship.number }}
                                 </td>
                                 <td>
-                                  <input type="hidden" name="organization" value="{{ internship.organization.reference }}"/>{{ internship.organization }}</input>
+                                  <input type="hidden" name="organization"
+                                  value="{{ internship.organization.reference }}"/>
+                                    {{ internship.organization.reference }} - {{ internship.organization }}
                                 </td>
                                 <td>
                                   <select name="preference">
                                    <option value=0>0</option>
-                                   <option value=1 {% if internship.choice == 1 %} selected{%endif%}>Choix préféré</option>
-                                   <option value=2 {% if internship.choice == 2 %} selected{%endif%}>2ème choix</option>
-                                   <option value=3 {% if internship.choice == 3 %} selected{%endif%}>3ème choix</option>
-                                   <option value=4 {% if internship.choice == 4 %} selected{%endif%}>4ème choix</option>
+                                   <option value=1 {% if internship.choice == 1 %} selected{%endif%}>
+                                     Choix préféré
+                                   </option>
+                                   <option value=2 {% if internship.choice == 2 %} selected{%endif%}>
+                                     2ème choix
+                                   </option>
+                                   <option value=3 {% if internship.choice == 3 %} selected{%endif%}>
+                                     3ème choix
+                                   </option>
+                                   <option value=4 {% if internship.choice == 4 %} selected{%endif%}>
+                                     4ème choix
+                                   </option>
                                   </select>
-                                <td>
+                                </td>
                             </tr>
                           {% endif %}
                           {% endfor %}
@@ -146,26 +158,38 @@
                           {% if internship.learning_unit_year.title = "Stage en Gériatrie"%}
                           <tr>
                               <td>
-                                <input type="hidden" name="learning_unit_year" value="{{ internship.learning_unit_year.title }}"/>{{ internship.learning_unit_year.title }}</label>
+                                <input type="hidden" name="learning_unit_year"
+                                value="{{ internship.learning_unit_year.title }}"/>
+                                  {{ internship.learning_unit_year.title }}
                               </td>
                               <td>
                                 {{ internship.maximum_enrollments }}
                               </td>
                               <td>
-                                  {{ internship.number }}
+                                {{ internship.number }}
                               </td>
                               <td>
-                                <input type="hidden" name="organization" value="{{ internship.organization.reference }}"/>{{ internship.organization }}</input>
+                                <input type="hidden" name="organization"
+                                value="{{ internship.organization.reference }}"/>
+                                  {{ internship.organization.reference }} - {{ internship.organization }}
                               </td>
                               <td>
                                 <select name="preference">
                                  <option value=0>0</option>
-                                 <option value=1 {% if internship.choice == 1 %} selected{%endif%}>Choix préféré</option>
-                                 <option value=2 {% if internship.choice == 2 %} selected{%endif%}>2ème choix</option>
-                                 <option value=3 {% if internship.choice == 3 %} selected{%endif%}>3ème choix</option>
-                                 <option value=4 {% if internship.choice == 4 %} selected{%endif%}>4ème choix</option>
+                                 <option value=1 {% if internship.choice == 1 %} selected{%endif%}>
+                                   Choix préféré
+                                 </option>
+                                 <option value=2 {% if internship.choice == 2 %} selected{%endif%}>
+                                   2ème choix
+                                 </option>
+                                 <option value=3 {% if internship.choice == 3 %} selected{%endif%}>
+                                   3ème choix
+                                 </option>
+                                 <option value=4 {% if internship.choice == 4 %} selected{%endif%}>
+                                   4ème choix
+                                 </option>
                                 </select>
-                              <td>
+                              </td>
                           </tr>
                           {% endif %}
                           {% endfor %}
@@ -194,26 +218,38 @@
                           {% if internship.learning_unit_year.title = "Stage en Gynécologie-Obsétrique"%}
                           <tr>
                               <td>
-                                <input type="hidden" name="learning_unit_year" value="{{ internship.learning_unit_year.title }}"/>{{ internship.learning_unit_year.title }}</label>
+                                <input type="hidden" name="learning_unit_year"
+                                value="{{ internship.learning_unit_year.title }}"/>
+                                  {{ internship.learning_unit_year.title }}
                               </td>
                               <td>
                                 {{ internship.maximum_enrollments }}
                               </td>
                               <td>
-                                  {{ internship.number }}
+                                {{ internship.number }}
                               </td>
                               <td>
-                                <input type="hidden" name="organization" value="{{ internship.organization.reference }}"/>{{ internship.organization }}</input>
+                                <input type="hidden" name="organization"
+                                value="{{ internship.organization.reference }}"/>
+                                  {{ internship.organization.reference }} - {{ internship.organization }}
                               </td>
                               <td>
                                 <select name="preference">
                                  <option value=0>0</option>
-                                 <option value=1 {% if internship.choice == 1 %} selected{%endif%}>Choix préféré</option>
-                                 <option value=2 {% if internship.choice == 2 %} selected{%endif%}>2ème choix</option>
-                                 <option value=3 {% if internship.choice == 3 %} selected{%endif%}>3ème choix</option>
-                                 <option value=4 {% if internship.choice == 4 %} selected{%endif%}>4ème choix</option>
+                                 <option value=1 {% if internship.choice == 1 %} selected{%endif%}>
+                                   Choix préféré
+                                 </option>
+                                 <option value=2 {% if internship.choice == 2 %} selected{%endif%}>
+                                   2ème choix
+                                 </option>
+                                 <option value=3 {% if internship.choice == 3 %} selected{%endif%}>
+                                   3ème choix
+                                 </option>
+                                 <option value=4 {% if internship.choice == 4 %} selected{%endif%}>
+                                   4ème choix
+                                 </option>
                                 </select>
-                              <td>
+                              </td>
                           </tr>
                           {% endif %}
                           {% endfor %}
@@ -242,26 +278,38 @@
                           {% if internship.learning_unit_year.title = "Stage en Médecine interne"%}
                           <tr>
                               <td>
-                                <input type="hidden" name="learning_unit_year" value="{{ internship.learning_unit_year.title }}"/>{{ internship.learning_unit_year.title }}</label>
+                                <input type="hidden" name="learning_unit_year"
+                                value="{{ internship.learning_unit_year.title }}"/>
+                                  {{ internship.learning_unit_year.title }}
                               </td>
                               <td>
                                 {{ internship.maximum_enrollments }}
                               </td>
                               <td>
-                                  {{ internship.number }}
+                                {{ internship.number }}
                               </td>
                               <td>
-                                <input type="hidden" name="organization" value="{{ internship.organization.reference }}"/>{{ internship.organization }}</input>
+                                <input type="hidden" name="organization"
+                                value="{{ internship.organization.reference }}"/>
+                                  {{ internship.organization.reference }} - {{ internship.organization }}
                               </td>
                               <td>
                                 <select name="preference">
                                  <option value=0>0</option>
-                                 <option value=1 {% if internship.choice == 1 %} selected{%endif%}>Choix préféré</option>
-                                 <option value=2 {% if internship.choice == 2 %} selected{%endif%}>2ème choix</option>
-                                 <option value=3 {% if internship.choice == 3 %} selected{%endif%}>3ème choix</option>
-                                 <option value=4 {% if internship.choice == 4 %} selected{%endif%}>4ème choix</option>
+                                 <option value=1 {% if internship.choice == 1 %} selected{%endif%}>
+                                   Choix préféré
+                                 </option>
+                                 <option value=2 {% if internship.choice == 2 %} selected{%endif%}>
+                                   2ème choix
+                                 </option>
+                                 <option value=3 {% if internship.choice == 3 %} selected{%endif%}>
+                                   3ème choix
+                                 </option>
+                                 <option value=4 {% if internship.choice == 4 %} selected{%endif%}>
+                                   4ème choix
+                                 </option>
                                 </select>
-                              <td>
+                              </td>
                           </tr>
                           {% endif %}
                           {% endfor %}
@@ -290,26 +338,38 @@
                           {% if internship.learning_unit_year.title = "Stage en Pédiatrie"%}
                           <tr>
                               <td>
-                                <input type="hidden" name="learning_unit_year" value="{{ internship.learning_unit_year.title }}"/>{{ internship.learning_unit_year.title }}</label>
+                                <input type="hidden" name="learning_unit_year"
+                                value="{{ internship.learning_unit_year.title }}"/>
+                                  {{ internship.learning_unit_year.title }}
                               </td>
                               <td>
                                 {{ internship.maximum_enrollments }}
                               </td>
                               <td>
-                                  {{ internship.number }}
+                                {{ internship.number }}
                               </td>
                               <td>
-                                <input type="hidden" name="organization" value="{{ internship.organization.reference }}"/>{{ internship.organization }}</input>
+                                <input type="hidden" name="organization"
+                                value="{{ internship.organization.reference }}"/>
+                                  {{ internship.organization.reference }} - {{ internship.organization }}
                               </td>
                               <td>
                                 <select name="preference">
                                  <option value=0>0</option>
-                                 <option value=1 {% if internship.choice == 1 %} selected{%endif%}>Choix préféré</option>
-                                 <option value=2 {% if internship.choice == 2 %} selected{%endif%}>2ème choix</option>
-                                 <option value=3 {% if internship.choice == 3 %} selected{%endif%}>3ème choix</option>
-                                 <option value=4 {% if internship.choice == 4 %} selected{%endif%}>4ème choix</option>
+                                 <option value=1 {% if internship.choice == 1 %} selected{%endif%}>
+                                   Choix préféré
+                                 </option>
+                                 <option value=2 {% if internship.choice == 2 %} selected{%endif%}>
+                                   2ème choix
+                                 </option>
+                                 <option value=3 {% if internship.choice == 3 %} selected{%endif%}>
+                                   3ème choix
+                                 </option>
+                                 <option value=4 {% if internship.choice == 4 %} selected{%endif%}>
+                                   4ème choix
+                                 </option>
                                 </select>
-                              <td>
+                              </td>
                           </tr>
                           {% endif %}
                           {% endfor %}
@@ -338,26 +398,38 @@
                           {% if internship.learning_unit_year.title = "Stage en Urgence"%}
                           <tr>
                               <td>
-                                <input type="hidden" name="learning_unit_year" value="{{ internship.learning_unit_year.title }}"/>{{ internship.learning_unit_year.title }}</label>
+                                <input type="hidden" name="learning_unit_year"
+                                value="{{ internship.learning_unit_year.title }}"/>
+                                  {{ internship.learning_unit_year.title }}
                               </td>
                               <td>
                                 {{ internship.maximum_enrollments }}
                               </td>
                               <td>
-                                  {{ internship.number }}
+                                {{ internship.number }}
                               </td>
                               <td>
-                                <input type="hidden" name="organization" value="{{ internship.organization.reference }}"/>{{ internship.organization }}</input>
+                                <input type="hidden" name="organization"
+                                value="{{ internship.organization.reference }}"/>
+                                  {{ internship.organization.reference }} - {{ internship.organization }}
                               </td>
                               <td>
                                 <select name="preference">
                                  <option value=0>0</option>
-                                 <option value=1 {% if internship.choice == 1 %} selected{%endif%}>Choix préféré</option>
-                                 <option value=2 {% if internship.choice == 2 %} selected{%endif%}>2ème choix</option>
-                                 <option value=3 {% if internship.choice == 3 %} selected{%endif%}>3ème choix</option>
-                                 <option value=4 {% if internship.choice == 4 %} selected{%endif%}>4ème choix</option>
+                                 <option value=1 {% if internship.choice == 1 %} selected{%endif%}>
+                                   Choix préféré
+                                 </option>
+                                 <option value=2 {% if internship.choice == 2 %} selected{%endif%}>
+                                   2ème choix
+                                 </option>
+                                 <option value=3 {% if internship.choice == 3 %} selected{%endif%}>
+                                   3ème choix
+                                 </option>
+                                 <option value=4 {% if internship.choice == 4 %} selected{%endif%}>
+                                   4ème choix
+                                 </option>
                                 </select>
-                              <td>
+                              </td>
                           </tr>
                           {% endif %}
                           {% endfor %}
