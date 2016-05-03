@@ -321,6 +321,44 @@ Running the application outputs an error :
 This error is not present while debugging.
 ====
 
+==== Internationalization
+
+OSIS has adopted a different approach when it comes to internationalization
+(I18N). Text messages within Python code and template files are keywords instead
+of text in plain English. Hardcoding keywords forces us to create a translation
+file for each supported language, instead of relying on hardcoded messages for
+the default language. For example, instead of:
+
+    <p>{% trans 'Hello World' %}</p>
+
+we use:
+
+    <p>{% trans 'hello_world' %}</p>
+
+which is translated into English and French respectively:
+
+    locale/en/LC_MESSAGES/django.po
+    msgid "hello_world"
+    msgstr "Hello World!"
+
+    locale/fr_BE/LC_MESSAGES/django.po
+    msgid "hello_world"
+    msgstr "Salut monde!"
+
+It is important to add that we add translations manually in the translation
+files instead of using `./manage.py makemessages`. We have noticed some
+strange beheviors, such as confusing "all" with "ill", and the translation files
+are changed much more than necessary, causing lots of conflicts when multiple
+developers contribute to the translations.
+
+Once the translations are done, we finally compile the messages into `.mo`
+files:
+
+    $ ./manage.py compilemessages
+
+Only `.po` files are committed to the repository. `.mo` files are ignored in the
+`.gitignore` file.
+
 === Following the Git Workflow
 
 The code repository is organized in three fixed branches:
