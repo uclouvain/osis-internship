@@ -86,7 +86,7 @@ def manager_proposition_dissertation_new(request):
 def manager_proposition_dissertations_search(request):
     person = mdl.person.find_by_user(request.user)
     adviser = Adviser.find_by_person(person)
-    proposition_dissertations = PropositionDissertation.search(title=request.GET['title']).filter(Q(active=True))
+    proposition_dissertations = PropositionDissertation.search(terms=request.GET['search']).filter(Q(active=True))
     return render(request, "manager_proposition_dissertations_list.html", {'proposition_dissertations': proposition_dissertations})
 
 @login_required
@@ -153,5 +153,5 @@ def proposition_dissertation_new(request):
 def proposition_dissertations_search(request):
     person = mdl.person.find_by_user(request.user)
     adviser = Adviser.find_by_person(person)
-    proposition_dissertations = PropositionDissertation.search(title=request.GET['title']).filter(Q(visibility=True) & Q(active=True))
+    proposition_dissertations = PropositionDissertation.search(terms=request.GET['search']).filter(Q(visibility=True) & Q(active=True))
     return render(request, "proposition_dissertations_list.html", {'proposition_dissertations': proposition_dissertations})

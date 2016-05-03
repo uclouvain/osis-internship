@@ -39,27 +39,37 @@
     <div class="panel-body">
       {% if adviser.type == 'PRF' %}
         <div class="row">
+          <div class="col-md-12">
+            <h3>Menu Prof</h3>
+          </div>
+        </div>
+        <div class="row">
           <div class="col-md-1"><i class="fa fa-lightbulb-o" style="font-size: 400%; color: #6699FF;"></i></div>
           <div class="col-md-5">
-            <h4 class="media-heading"><a href="{% url 'proposition_dissertations' %}" id="lnk_propositions_dissertations" >{% trans 'Subjects (Prof)' %}</a></h4>
+            <h4 class="media-heading"><a href="{% url 'proposition_dissertations' %}" id="lnk_propositions_dissertations" >{% trans 'Subjects' %}</a></h4>
             <p>{% trans 'This process helps persons while subjects encoding.' %}</p>
           </div>
           <div class="col-md-1"><i class="fa fa-cogs" style="font-size: 400%; color: #6699FF;"></i></div>
           <div class="col-md-5">
-            <h4 class="media-heading"><a href="{% url 'informations' %}" id="lnk_informations" >{% trans 'My informations (Prof)' %}</a></h4>
+            <h4 class="media-heading"><a href="{% url 'informations' %}" id="lnk_informations" >{% trans 'My informations' %}</a></h4>
             <p>{% trans 'This process helps persons while informations encoding.' %}</p>
           </div>
         </div>
       {% elif adviser.type == 'MGR' %}
         <div class="row">
+          <div class="col-md-12">
+            <h3>Menu Manager</h3>
+          </div>
+        </div>
+        <div class="row">
           <div class="col-md-1"><i class="fa fa-lightbulb-o" style="font-size: 400%; color: #6699FF;"></i></div>
           <div class="col-md-5">
-            <h4 class="media-heading"><a href="{% url 'manager_proposition_dissertations' %}" id="lnk_manager_proposition_dissertations" >{% trans 'Subjects (Manager)' %}</a></h4>
+            <h4 class="media-heading"><a href="{% url 'manager_proposition_dissertations' %}" id="lnk_manager_proposition_dissertations" >{% trans 'Subjects' %}</a></h4>
             <p>{% trans 'This process helps persons while subjects encoding.' %}</p>
           </div>
           <div class="col-md-1"><i class="fa fa-users" style="font-size: 400%; color: #6699FF;"></i></div>
           <div class="col-md-5">
-            <h4 class="media-heading"><a href="{% url 'manager_informations' %}" id="lnk_manager_informations" >{% trans 'Teachers (Prof)' %}</a></h4>
+            <h4 class="media-heading"><a href="{% url 'manager_informations' %}" id="lnk_manager_informations" >{% trans 'Teachers' %}</a></h4>
             <p>{% trans 'This process helps persons while informations encoding.' %}</p>
           </div>
         </div>
