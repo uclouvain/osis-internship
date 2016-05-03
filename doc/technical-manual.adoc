@@ -581,11 +581,15 @@ below:
 |Form
 |num_
 |Numeric field
+|
+|
 
 |hdn_
 |Hidden field
 |slt_
 |Combobox
+|
+|
 
 Some examples of use:
 
