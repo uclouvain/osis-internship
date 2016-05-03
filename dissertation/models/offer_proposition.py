@@ -51,7 +51,7 @@ class OfferProposition(models.Model):
     #True : la visibilité est active dés la création de la commission
     #False : elle n'est visible qu'après l'encodage du titre définitif
 
-    
+
 
     def __str__(self):
         return self.title

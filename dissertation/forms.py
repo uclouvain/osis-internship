@@ -27,6 +27,7 @@ from django import forms
 from django.forms import ModelForm
 from dissertation.models.proposition_dissertation import PropositionDissertation
 from dissertation.models.adviser import Adviser
+from dissertation.models.offer_proposition import OfferProposition
 
 class ManagerPropositionDissertationForm(ModelForm):
     class Meta:
@@ -44,3 +45,9 @@ class AdviserForm(ModelForm):
     class Meta:
         model = Adviser
         fields = ('email_accept','phone_accept','office_accept','comment')
+
+class OfferPropositionForm(ModelForm):
+    class Meta:
+        model = OfferProposition
+        fields = ('title','offer_year','adviser_reader','commission_validation','commission_readers','evaluation_first_cicle','visibility_commission_readers')
+        widgets = {'offer_proposition': forms.CheckboxSelectMultiple()}
