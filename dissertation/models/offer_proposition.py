@@ -29,8 +29,29 @@ from django.contrib import admin
 from base.models import offer_year
 
 class OfferProposition(models.Model):
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=200)#Nom du programme de cours
     offer_year = models.ForeignKey(offer_year.OfferYear)
+
+    adviser_reader = models.BooleanField(default=False)
+    # L enseignant peut il proposer un lecteur
+
+    commission_validation = models.BooleanField(default=False)
+    #Y a t il une commision de validation
+
+    commission_readers = models.BooleanField(default=True)
+    #la commission de lecture est elle gérée par le secrétariat ?
+    #True pour Oui. Flase par l'étudiant (exemple :FOPA)
+
+    evaluation_first_cicle = models.BooleanField(default=False)
+    #la commission de lecture est-elle gérée par le secrétariat ? True pour Oui.
+    #Flase pour géré par l'étudiant (exemple : requis FOPA)
+
+    visibility_commission_readers = models.BooleanField(default=False)
+    #Quelle visibilité pour la commission :
+    #True : la visibilité est active dés la création de la commission
+    #False : elle n'est visible qu'après l'encodage du titre définitif
+
+    
 
     def __str__(self):
         return self.title
