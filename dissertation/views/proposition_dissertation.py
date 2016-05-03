@@ -31,8 +31,18 @@ from base import models as mdl
 from dissertation.models.proposition_dissertation import PropositionDissertation
 from dissertation.models.adviser import Adviser
 from dissertation.forms import PropositionDissertationForm, ManagerPropositionDissertationForm
+from django.contrib.auth.decorators import user_passes_test
+
+
+# Used by decorator @user_passes_test(is_manager) to secure manager views
+def is_manager(user):
+    person = mdl.person.find_by_user(user)
+    adviser = Adviser.find_by_person(person)
+    return adviser.type == 'MGR'
+
 
 @login_required
+@user_passes_test(is_manager)
 def manager_proposition_dissertations(request):
     person = mdl.person.find_by_user(request.user)
     adviser = Adviser.find_by_person(person)
@@ -40,6 +50,7 @@ def manager_proposition_dissertations(request):
     return render(request, 'manager_proposition_dissertations_list.html', {'proposition_dissertations': proposition_dissertations})
 
 @login_required
+@user_passes_test(is_manager)
 def manager_proposition_dissertation_delete(request, pk):
     proposition_dissertation = get_object_or_404(PropositionDissertation, pk=pk)
     proposition_dissertation.active = False
@@ -47,6 +58,7 @@ def manager_proposition_dissertation_delete(request, pk):
     return redirect('manager_proposition_dissertations')
 
 @login_required
+@user_passes_test(is_manager)
 def manager_proposition_dissertation_detail(request, pk):
     proposition_dissertation = get_object_or_404(PropositionDissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
@@ -54,6 +66,7 @@ def manager_proposition_dissertation_detail(request, pk):
     return render(request, 'manager_proposition_dissertation_detail.html', {'proposition_dissertation': proposition_dissertation, 'adviser': adviser})
 
 @login_required
+@user_passes_test(is_manager)
 def manage_proposition_dissertation_edit(request, pk):
     proposition_dissertation = get_object_or_404(PropositionDissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
@@ -69,6 +82,7 @@ def manage_proposition_dissertation_edit(request, pk):
     return render(request, 'manager_proposition_dissertation_edit.html', {'form': form})
 
 @login_required
+@user_passes_test(is_manager)
 def manager_proposition_dissertation_new(request):
     if request.method == "POST":
         form = ManagerPropositionDissertationForm(request.POST)
@@ -83,6 +97,7 @@ def manager_proposition_dissertation_new(request):
     return render(request, 'manager_proposition_dissertation_edit.html', {'form': form})
 
 @login_required
+@user_passes_test(is_manager)
 def manager_proposition_dissertations_search(request):
     person = mdl.person.find_by_user(request.user)
     adviser = Adviser.find_by_person(person)
