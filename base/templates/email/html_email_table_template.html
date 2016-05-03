@@ -21,17 +21,17 @@
 * at the root of the source code of this program.  If not,
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
-<table>
-    <thead>
+<table style="margin: 5px;padding: 5px;border: 1px solid black;">
+    <thead style="padding: 5px;border: 1px solid black;">
         {% for col_header in table_headers%}
-            <td>{{ col_header }}</td>
+            <td style="padding: 5px;border: 1px solid black;">{{ col_header }}</td>
         {% endfor %}
     </thead>
-    <tbody>
+    <tbody style="border: 1px solid black;">
     {% for row_items in table_rows %}
         <tr>
         {% for col_item in row_items %}
-            <td>{{ col_item }}</td>
+            <td style="padding: 5px;border: 1px solid black;">{{ col_item }}</td>
         {% endfor %}
         </tr>
     </tbody>
