@@ -81,5 +81,8 @@ def find_by_offer_year(offer_yr):
 
 
 def find_by_user(user, academic_year=None):
-    return ProgramManager.objects.filter(person__user=user)\
-                                 .filter(offer_year__academic_year=academic_year)
+    queryset = ProgramManager.objects
+    if academic_year:
+        queryset = queryset.filter(offer_year__academic_year=academic_year)
+
+    return queryset.filter(person__user=user)

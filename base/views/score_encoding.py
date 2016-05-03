@@ -344,11 +344,6 @@ def online_encoding_submission(request, learning_unit_id):
 
 
 @login_required
-def print_notes(request, learning_unit_year_id=None, tutor_id=None, offer_id=None):
-    pass
-
-
-@login_required
 def notes_printing(request, session_exam_id, learning_unit_year_id):
     academic_year = mdl.academic_year.current_academic_year()
     session_exam = mdl.session_exam.find_session_by_id(session_exam_id)
@@ -466,7 +461,7 @@ def get_sessions(learning_unit_param, request, tutor, academic_yr, offer_id):
         notes_list.append(notes)
     # In case the user is not a tutor we check whether it is a program manager for the offer.
     else:
-        program_mgr_list = mdl.program_manager.find_by_user(request.user)
+        program_mgr_list = mdl.program_manager.find_by_user(request.user, academic_year=academic_yr)
         all_enrollments = []
 
         for program_mgr in program_mgr_list:
