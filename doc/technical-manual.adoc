@@ -554,7 +554,7 @@ defined a list of prefixes, one for each type of element, listed in the table
 below:
 
 |===
-|Prefix|Element Type |Prefix|Element Type |Prefix|Element Type |
+|Prefix|Element Type |Prefix|Element Type |Prefix|Element Type
 
 |bt_
 |Button
@@ -590,6 +590,7 @@ below:
 |Combobox
 |
 |
+|===
 
 Some examples of use:
 
