@@ -39,20 +39,19 @@ from selenium.common.exceptions import NoSuchElementException
 from backoffice.settings import FIREFOX_PROFILE_PATH, SCREEN_SHOT_FOLDER
 
 
-class TestSendMailAfterSubmission(StaticLiveServerTestCase):
+class ScoreEncodingTests(StaticLiveServerTestCase):
     """
     This class test the sending of a message to all the tutors of a learning_unit , after the score encoding is submitted.
     All the previous states of this business feature are supposed to be done.
     We only test the fact that after the submission , a mail is sent
     """
 
-    fixtures = ['core/fixtures/send_mail_after_encoding.json']
+    fixtures = ['core/fixtures/score_encoding_base.json']
 
     def take_screen_shot(self, name):
         today = date.today().strftime("%d_%m_%y")
         screenshot_name = ''.join([name, '_', today, '.png'])
         self.selenium.save_screenshot(os.path.join(SCREEN_SHOT_FOLDER, screenshot_name))
-
 
     def getUrl(self, url):
         self.selenium.get('%s%s' % (self.live_server_url, url))
@@ -78,7 +77,7 @@ class TestSendMailAfterSubmission(StaticLiveServerTestCase):
         cls.selenium = webdriver.Firefox(profile)
         cls.selenium.implicitly_wait(10)
         cls.selenium.maximize_window()
-        super(TestSendMailAfterSubmission, cls).setUpClass()
+        super(ScoreEncodingTests, cls).setUpClass()
 
 
     def setUp(self):
@@ -93,37 +92,53 @@ class TestSendMailAfterSubmission(StaticLiveServerTestCase):
         - close selenium conexion
         """
         cls.selenium.quit()
-        super(TestSendMailAfterSubmission, cls).tearDownClass()
+        super(ScoreEncodingTests, cls).tearDownClass()
 
-    def test_send_mail_after_encoding_submission(self):
-        """
-        Test if a mail is sent after the submission of encoded scores
-        """
-        self.getUrl("/")
-        self.selenium.find_element_by_id('login_bt').click()
-        assert self.is_element_present('id_username')
-        assert self.is_element_present('id_password')
-        user_name_field = self.selenium.find_element_by_id('id_username')
-        user_name_field.send_keys('osis')
-        user_password_field = self.selenium.find_element_by_id('id_password')
-        user_password_field.send_keys('osis')
-        self.selenium.find_element_by_id('post_login_btn').click()
-        self.selenium.find_element_by_id('home_studies_btn').click()
-        self.take_screen_shot('submission_1')
-        assert self.is_element_present('studies_evaluation_btn')
-        self.selenium.find_element_by_id('studies_evaluation_btn').click()
-        self.take_screen_shot('submission_2')
-        assert self.is_element_present('score_encoding_btn')
-        self.selenium.find_element_by_id("score_encoding_btn").click()
-        self.take_screen_shot('submission_3')
-        assert self.is_element_present('DROI1000_link')
-        self.selenium.find_element_by_id("DROI1000_link").click()
-        self.take_screen_shot('submission_4')
-        assert self.is_element_present('score_submission_modal_btn')
-        self.selenium.find_element_by_id("score_submission_modal_btn").click()
-        self.take_screen_shot('submission_5')
-        assert self.is_element_present('post_scores_submission_btn')
-        self.selenium.find_element_by_id("post_scores_submission_btn").click()
-        self.take_screen_shot('submission_6')
+    def test_score_encoding(self):
+        test_no_decimal_allowed_submission(self)
+
+
+def test_no_decimal_allowed_submission (score_encoding):
+    """
+    Test if a mail is sent after the submission of encoded scores
+    """
+    score_encoding.getUrl("/")
+    score_encoding.selenium.find_element_by_id('login_bt').click()
+    assert score_encoding.is_element_present('id_username')
+    assert score_encoding.is_element_present('id_password')
+    user_name_field = score_encoding.selenium.find_element_by_id('id_username')
+    user_name_field.send_keys('prof3')
+    user_password_field = score_encoding.selenium.find_element_by_id('id_password')
+    user_password_field.send_keys('prof3')
+    score_encoding.selenium.find_element_by_id('post_login_btn').click()
+    assert score_encoding.is_element_present('lnk_home_dropdown_parcours')
+    score_encoding.selenium.find_element_by_id('lnk_home_dropdown_parcours').click()
+    assert score_encoding.is_element_present('lnk_dropdown_evaluations')
+    score_encoding.selenium.find_element_by_id('lnk_dropdown_evaluations').click()
+    assert score_encoding.is_element_present('lnk_score_encoding')
+    score_encoding.selenium.find_element_by_id("lnk_score_encoding").click()
+    assert score_encoding.is_element_present('lnk_encode')
+    score_encoding.selenium.find_element_by_id("lnk_encode").click()
+    assert score_encoding.is_element_present('num_score_14')
+    score_encoding.selenium.find_element_by_id("num_score_14").send_keys('7.9')
+    assert score_encoding.is_element_present('bt_submit_online_encoding')
+    score_encoding.selenium.find_element_by_id("bt_submit_online_encoding").click()
+    assert score_encoding.is_element_present('num_score_14')
+    score_encoding.selenium.find_element_by_id("num_score_14").send_keys('7')
+    assert score_encoding.is_element_present('bt_submit_online_encoding')
+    score_encoding.selenium.find_element_by_id("bt_submit_online_encoding").click()
+    score_encoding.selenium.find_element_by_id("lnk_online_double_encoding").click()
+    assert score_encoding.is_element_present('num_double_score_14')
+    score_encoding.selenium.find_element_by_id("num_double_score_14").send_keys('7.9')
+    assert score_encoding.is_element_present('bt_compare')
+    score_encoding.selenium.find_element_by_id("bt_compare").click()
+    assert score_encoding.is_element_present('num_double_score_14')
+    score_encoding.selenium.find_element_by_id("num_double_score_14").send_keys('8')
+    assert score_encoding.is_element_present('bt_compare')
+    score_encoding.selenium.find_element_by_id("bt_compare").click()
+    assert score_encoding.is_element_present('bt_take_reencoded_14')
+    score_encoding.selenium.find_element_by_id("bt_take_reencoded_14").click()
+    assert score_encoding.is_element_present('bt_submit_online_double_encoding_validation')
+    score_encoding.selenium.find_element_by_id("bt_submit_online_double_encoding_validation").click()
 
 
