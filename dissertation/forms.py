@@ -37,7 +37,7 @@ class PropositionDissertationForm(ModelForm):
     class Meta:
         model = PropositionDissertation
         fields = ('author','visibility','title','description','type','level','collaboration','max_number_student','offer_proposition')
-        widgets = {'author': forms.HiddenInput()}
+        widgets = {'author': forms.HiddenInput(),'offer_proposition': forms.CheckboxSelectMultiple()}
 
 class AdviserForm(ModelForm):
     class Meta:
