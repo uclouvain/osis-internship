@@ -29,32 +29,49 @@
 {% block breadcrumb %}
   <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'Studies' %}</a></li>
   <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'Dissertations' %}</a></li>
-  <li class="active">{% trans 'Teachers' %}</li>
+  <li class="active">{% trans 'My informations' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'Teachers' %}</h2>
+    <h2>{% trans 'Informations' %}</h2>
   </div>
   <div class="panel panel-default">
     <div class="panel-body">
-      <table class="table table-hover">
-        <thead>
-          <th>{% trans 'Person'%}</th>
-          <th>{% trans 'Type'%}</th>
-          <th>{% trans 'email_accept'%}</th>
-          <th>{% trans 'phone_accept'%}</th>
-          <th>{% trans 'office_accept'%}</th>
-        </thead>
-        {% for adviser in advisers %}
-          <tr>
-            <td><a href="{% url 'manager_informations_detail' pk=adviser.pk %}">{{ adviser.person }}</td>
-            <td>{{ adviser.type }}</td>
-            <td>{{ adviser.email_accept|yesno:"Yes,No" }}</td>
-            <td>{{ adviser.phone_accept|yesno:"Yes,No" }}</td>
-            <td>{{ adviser.office_accept|yesno:"Yes,No" }}</td>
-          </tr>
-        {% endfor %}
-      </table>
+      <div class="row">
+        <div class="col-md-3">
+          <label>{% trans 'Name' %}</label><br>
+          {{  adviser.person.first_name }} {{ adviser.person.last_name }}
+        </div>
+        <div class="col-md-3">
+          <label>{% trans 'Email' %}</label><br>
+          {{  adviser.person.email }}
+        </div>
+        <div class="col-md-3">
+          <label>{% trans 'Phone' %}</label><br>
+          {{  adviser.person.phone }}
+        </div>
+        <div class="col-md-3">
+          <label>{% trans 'Mobile Phone' %}</label><br>
+          {{  adviser.person.phone_mobile }}
+        </div>
+      </div>
+      <div class="panel-body">
+        <form method="POST" class="post-form">
+          {% csrf_token %}
+          {% for field in form %}
+            <div class="row {% if field.errors %}error{% endif %}">
+              <div class="col-md-4" style="text-align: right">
+                <label>{{ field.label }}</label>
+              </div>
+              <div class="col-md-5">
+                {{ field }}
+              </div>
+            </div>
+            <br>
+          {% endfor %}
+          <button type="submit" class="save btn btn-default">Save</button>
+        </form>
       </div>
     </div>
+  </div>
 {% endblock %}

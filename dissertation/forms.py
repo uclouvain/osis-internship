@@ -29,6 +29,16 @@ from dissertation.models.proposition_dissertation import PropositionDissertation
 from dissertation.models.adviser import Adviser
 from dissertation.models.offer_proposition import OfferProposition
 
+class AdviserForm(ModelForm):
+    class Meta:
+        model = Adviser
+        fields = ('email_accept','phone_accept','office_accept','comment')
+
+class ManagerAdviserForm(ModelForm):
+    class Meta:
+        model = Adviser
+        fields = ('email_accept','phone_accept','office_accept','comment')
+
 class ManagerPropositionDissertationForm(ModelForm):
     class Meta:
         model = PropositionDissertation
@@ -40,11 +50,6 @@ class PropositionDissertationForm(ModelForm):
         model = PropositionDissertation
         fields = ('author','visibility','title','description','type','level','collaboration','max_number_student','offer_proposition')
         widgets = {'author': forms.HiddenInput(),'offer_proposition': forms.CheckboxSelectMultiple()}
-
-class AdviserForm(ModelForm):
-    class Meta:
-        model = Adviser
-        fields = ('email_accept','phone_accept','office_accept','comment')
 
 class OfferPropositionForm(ModelForm):
     class Meta:

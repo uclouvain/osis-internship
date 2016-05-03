@@ -23,12 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.shortcuts import render,redirect
+from django.shortcuts import render, get_object_or_404,redirect
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from pprint import pprint
 from dissertation.models.adviser import Adviser
 from base import models as mdl
-from dissertation.forms import AdviserForm
+from dissertation.forms import AdviserForm, ManagerAdviserForm
+from django.contrib.auth.decorators import user_passes_test
+
+def is_manager(user):
+    person = mdl.person.find_by_user(user)
+    adviser = Adviser.find_by_person(person)
+    return adviser.type == 'MGR'
 
 @login_required
 def informations(request):
@@ -56,6 +63,27 @@ def informations_edit(request):
     return render(request, "informations_edit.html", {'form':form,'person':person})
 
 @login_required
+@user_passes_test(is_manager)
 def manager_informations(request):
     advisers = Adviser.find_all().filter(type='PRF')
     return render(request, 'manager_informations.html', {'advisers': advisers})
+
+@login_required
+@user_passes_test(is_manager)
+def manager_informations_detail(request, pk):
+    adviser = get_object_or_404(Adviser, pk=pk)
+    return render(request, 'manager_informations_detail.html', {'adviser': adviser})
+
+@login_required
+@user_passes_test(is_manager)
+def manager_informations_edit(request, pk):
+    adviser = get_object_or_404(Adviser, pk=pk)
+    if request.method == "POST":
+        form = ManagerAdviserForm(request.POST, instance=adviser)
+        if form.is_valid():
+            adviser = form.save(commit=False)
+            adviser.save()
+            return redirect('manager_informations')
+    else:
+        form = AdviserForm(instance=adviser)
+    return render(request, "manager_informations_edit.html", {'adviser':adviser,'form':form})

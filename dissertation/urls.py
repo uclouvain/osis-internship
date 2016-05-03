@@ -32,6 +32,10 @@ urlpatterns = [
     url(r'^informations/$', information.informations, name='informations'),
     url(r'^informations_edit/$', information.informations_edit, name='informations_edit'),
 
+    url(r'^manager_informations/$', information.manager_informations, name='manager_informations'),
+    url(r'^manager_informations_detail/(?P<pk>[0-9]+)/$', information.manager_informations_detail, name='manager_informations_detail'),
+    url(r'^manager_informations/(?P<pk>[0-9]+)/edit/$', information.manager_informations_edit, name='manager_informations_edit'),
+
     url(r'^manager_proposition_dissertations/$', proposition_dissertation.manager_proposition_dissertations, name='manager_proposition_dissertations'),
     url(r'^manager_proposition_dissertation_new$', proposition_dissertation.manager_proposition_dissertation_new, name='manager_proposition_dissertation_new'),
     url(r'^manager_proposition_dissertation_detail/(?P<pk>[0-9]+)/$', proposition_dissertation.manager_proposition_dissertation_detail, name='manager_proposition_dissertation_detail'),
@@ -45,8 +49,6 @@ urlpatterns = [
     url(r'^proposition_dissertation_new$', proposition_dissertation.proposition_dissertation_new, name='proposition_dissertation_new'),
     url(r'^proposition_dissertation_my$', proposition_dissertation.proposition_dissertation_my, name='proposition_dissertation_my'),
 
-    url(r'^manager_informations/$', information.manager_informations, name='manager_informations'),
-    
     url(r'^manager_search$', proposition_dissertation.manager_proposition_dissertations_search, name='manager_proposition_dissertations_search'),
     url(r'^search$', proposition_dissertation.proposition_dissertations_search, name='proposition_dissertations_search'),
 ]
