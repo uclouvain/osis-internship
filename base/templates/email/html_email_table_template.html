@@ -31,7 +31,7 @@
     {% for row_items in table_rows %}
         <tr>
         {% for col_item in row_items %}
-            <td style="padding: 5px;border: 1px solid black;">{{ col_item }}</td>
+            <td style="padding: 5px;border: 1px solid black;">{{ col_item | default_if_none:''}}</td>
         {% endfor %}
         </tr>
     </tbody>
