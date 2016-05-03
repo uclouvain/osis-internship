@@ -535,6 +535,69 @@ Deleting remote branches:
 
     $ git push origin --delete test
 
+= Tests
+
+== Automated Tests
+
+=== Testing The User Interface Using Selenium
+
+Selenium relies on HTML elements' ids to identify and interact with user
+interface elements. In other words, if an element doesn't have an id then
+Selenium cannot reference it in its test scripts. Therefore, it is important
+that every element the user interacts directly - such as text fields, links or
+buttons - must have an id.
+
+The amount of ids to be defined in a single page is not negligible. Since ids
+must not repeat in the same page, at some point we will lack creativity to think
+about more unique values to identify the elements. To help with this, we have
+defined a list of prefixes, one for each type of element, listed in the table
+below:
+
+|===
+|Prefix|Element Type |Prefix|Element Type |Prefix|Element Type |
+
+|bt_
+|Button
+|pnl_
+|Div
+|tab_
+|Tab
+
+|chb_
+|Checkbox
+|rdb_
+|Radio button
+|txa_
+|Text area
+
+|fil_
+|File field
+|lnk_
+|Link
+|txt_
+|Text field
+
+|form_
+|Form
+|num_
+|Numeric field
+
+|hdn_
+|Hidden field
+|slt_
+|Combobox
+
+Some examples of use:
+
+    <!-- Text field -->
+    <input type="text" id="txt_start_date">
+
+    <!-- Hidden field -->
+    <input type="hidden" id="hdn_academic_calendar">
+
+    <!-- Combobox field -->
+    <select id="slt_academic_year">
+
 == Adding the license to the source code
 
 OSIS is an open source project licensed under GPL v3. As such, it must respect
