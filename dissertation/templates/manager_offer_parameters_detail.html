@@ -33,43 +33,29 @@
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'My informations' %}</h2>
+    <h2>{% trans 'Parameters' %} {{ offer_proposition.title }}</h2>
   </div>
   <div class="panel panel-default">
     <div class="panel-body">
       <div class="row">
         <div class="col-md-1 pull-right">
-          <a href="{% url 'manager_informations_edit' pk=adviser.pk %}" id="lnk_informations_edit" class="btn btn-default btn-primary"
-          role="button" title="{% trans 'Edit my informations'%}"><span class="glyphicon glyphicon-edit"
+          <a href="{% url 'manager_offer_parameters_edit' pk=offer_proposition.pk %}" id="lnk_manager_offer_parameters_edit" class="btn btn-default btn-primary"
+          role="button" title="{% trans 'Edit Parameters'%}"><span class="glyphicon glyphicon-edit"
           aria-hidden="true"></span></a>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-4 pull-right">
-          <img src="http://ultra16.sipr.ucl.ac.be/photos/photos_cp/photos/image{{ person.global_id |get_digit:"4" }}{{ person.global_id |get_digit:"3" }}/{{ person.global_id }}.jpg"height="40%" width="40%">
-        </div>
         <div class="col-md-4">
-          <label>{% trans 'Name' %}</label> : {{ adviser.person.first_name }} {{ adviser.person.last_name }}
+          <label>{% trans 'Adviser Reader' %}</label> : {{ offer_proposition.adviser_reader|yesno:"Yes,No" }}
           <br><br>
-          <label>{% trans 'Email' %}</label> : {{ adviser.person.email }}
+          <label>{% trans 'Commission Validation' %}</label> : {{ offer_proposition.commission_validation|yesno:"Yes,No" }}
           <br><br>
-          <label>{% trans 'Phone' %}</label> : {{ adviser.person.phone }}
+          <label>{% trans 'Commission Readers' %}</label> : {{ offer_proposition.commission_readers|yesno:"Yes,No" }}
           <br><br>
-          <label>{% trans 'Mobile Phone' %}</label> : {{ adviser.person.phone_mobile }}
+          <label>{% trans 'Evaluation First Cicle' %}</label> : {{ offer_proposition.evaluation_first_cicle|yesno:"Yes,No" }}
+          <br><br>
+          <label>{% trans 'Visibility Commission Readers' %}</label> : {{ offer_proposition.visibility_commission_readers|yesno:"Yes,No" }}
         </div>
-        <div class="col-md-4">
-          <label>{% trans 'Email Accept' %}</label> : {{ adviser.email_accept|yesno:"Yes,No"  }}
-          <br><br>
-          <label>{% trans 'Phone Accept' %}</label> : {{ adviser.phone_accept|yesno:"Yes,No" }}
-          <br><br>
-          <label>{% trans 'Office visite Accept' %}</label> : {{ adviser.office_accept|yesno:"Yes,No" }}
-        </div>
-      </div>
-      <br>
-      <div class="col-md-10" style="padding:0;">
-        <label>{% trans 'Comment' %}</label> : {{ adviser.comment }}
-      </div>
-      <div class="row">
       </div>
     </div>
   </div>

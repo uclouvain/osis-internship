@@ -52,6 +52,8 @@ class OfferProposition(models.Model):
     #False : elle n'est visible qu'après l'encodage du titre définitif
 
 
-
     def __str__(self):
         return self.title
+
+    def find_all():
+        return OfferProposition.objects.order_by('title')

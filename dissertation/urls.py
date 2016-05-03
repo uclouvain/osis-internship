@@ -24,7 +24,7 @@
 #
 ##############################################################################
 from django.conf.urls import url
-from dissertation.views import dissertation,proposition_dissertation,information
+from dissertation.views import dissertation,proposition_dissertation,information, offer_proposition
 
 urlpatterns = [
     url(r'^$', dissertation.dissertations, name='dissertations'),
@@ -35,6 +35,10 @@ urlpatterns = [
     url(r'^manager_informations/$', information.manager_informations, name='manager_informations'),
     url(r'^manager_informations_detail/(?P<pk>[0-9]+)/$', information.manager_informations_detail, name='manager_informations_detail'),
     url(r'^manager_informations/(?P<pk>[0-9]+)/edit/$', information.manager_informations_edit, name='manager_informations_edit'),
+
+    url(r'^manager_offer_parameters/$', offer_proposition.manager_offer_parameters, name='manager_offer_parameters'),
+    url(r'^manager_offer_parameters_detail/(?P<pk>[0-9]+)/$', offer_proposition.manager_offer_parameters_detail, name='manager_offer_parameters_detail'),
+    url(r'^manager_offer_parameters/(?P<pk>[0-9]+)/edit/$', offer_proposition.manager_offer_parameters_edit, name='manager_offer_parameters_edit'),
 
     url(r'^manager_proposition_dissertations/$', proposition_dissertation.manager_proposition_dissertations, name='manager_proposition_dissertations'),
     url(r'^manager_proposition_dissertation_new$', proposition_dissertation.manager_proposition_dissertation_new, name='manager_proposition_dissertation_new'),

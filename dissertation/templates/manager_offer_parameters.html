@@ -29,32 +29,34 @@
 {% block breadcrumb %}
   <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'Studies' %}</a></li>
   <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'Dissertations' %}</a></li>
-  <li><a href="{% url 'proposition_dissertations' %}" id="lnk_propositions">{% trans 'Subjects' %}</a></li>
-  <li class="active">{% trans 'New-Edit Subject' %}</li>
+  <li class="active">{% trans 'Parameters' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'Edit Offer Proposition' %}</h2>
+    <h2>{% trans 'Parameters' %}</h2>
   </div>
   <div class="panel panel-default">
     <div class="panel-body">
-      <form method="POST" class="post-form">
-        {% csrf_token %}
-        {% for field in form %}
-          <div class="row {% if field.errors %}error{% endif %}">
-            <div class="col-md-4" style="text-align: right">
-              {% if not field.is_hidden %}
-                <label>{{ field.label }}</label>
-              {% endif %}
-            </div>
-            <div class="col-md-5">
-              {{ field }}
-            </div>
-          </div>
-          <br>
+      <table class="table table-hover">
+        <thead>
+          <th style="text-align:center">{% trans 'Title'%}</th>
+          <th style="text-align:center">{% trans 'Adviser Reader'%}</th>
+          <th style="text-align:center">{% trans 'Commission Validation'%}</th>
+          <th style="text-align:center">{% trans 'Commission Readers'%}</th>
+          <th style="text-align:center">{% trans 'Evaluation First Cicle'%}</th>
+          <th style="text-align:center">{% trans 'Visibility Commission Readers'%}</th>
+        </thead>
+        {% for offer_proposition in offer_propositions %}
+          <tr>
+            <td style="text-align:center"><a href="{% url 'manager_offer_parameters_detail' pk=offer_proposition.pk %}">{{ offer_proposition.title }}</td>
+            <td style="text-align:center">{{ offer_proposition.adviser_reader|yesno:"Yes,No" }}</td>
+            <td style="text-align:center">{{ offer_proposition.commission_validation|yesno:"Yes,No" }}</td>
+            <td style="text-align:center">{{ offer_proposition.commission_readers|yesno:"Yes,No" }}</td>
+            <td style="text-align:center">{{ offer_proposition.evaluation_first_cicle|yesno:"Yes,No" }}</td>
+            <td style="text-align:center">{{ offer_proposition.visibility_commission_readers|yesno:"Yes,No" }}</td>
+          </tr>
         {% endfor %}
-        <button type="submit" class="save btn btn-default">Save</button>
-      </form>
+      </table>
+      </div>
     </div>
-  </div>
 {% endblock %}

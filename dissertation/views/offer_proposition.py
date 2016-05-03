@@ -30,7 +30,7 @@ from pprint import pprint
 from base import models as mdl
 from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models.adviser import Adviser
-from dissertation.forms import  OfferPropositionForm
+from dissertation.forms import  ManagerOfferPropositionForm
 from django.contrib.auth.decorators import user_passes_test
 
 # Used by decorator @user_passes_test(is_manager) to secure manager views
@@ -41,24 +41,26 @@ def is_manager(user):
 
 @login_required
 @user_passes_test(is_manager)
-def offer_proposition_detail(request, pk):
-    offer_proposition = get_object_or_404(OfferProposition, pk=pk)
-    person = mdl.person.find_by_user(request.user)
-    adviser = Adviser.find_by_person(person)
-    return render(request, 'offer_proposition_detail.html', {'offer_proposition': offer_proposition, 'adviser': adviser})
+def manager_offer_parameters(request):
+    offer_propositions = OfferProposition.find_all()
+    return render(request, 'manager_offer_parameters.html', {'offer_propositions': offer_propositions})
 
 @login_required
 @user_passes_test(is_manager)
-def manage_proposition_dissertation_edit(request, pk):
+def manager_offer_parameters_detail(request, pk):
     offer_proposition = get_object_or_404(OfferProposition, pk=pk)
-    person = mdl.person.find_by_user(request.user)
-    adviser = Adviser.find_by_person(person)
+    return render(request, 'manager_offer_parameters_detail.html', {'offer_proposition': offer_proposition})
+
+@login_required
+@user_passes_test(is_manager)
+def manager_offer_parameters_edit(request, pk):
+    offer = get_object_or_404(OfferProposition, pk=pk)
     if request.method == "POST":
-        form = OfferPropositionForm(request.POST, instance=proposition_dissertation)
+        form = ManagerOfferPropositionForm(request.POST, instance=offer)
         if form.is_valid():
-            offer_proposition = form.save(commit=False)
-            offer_proposition.save()
-            return redirect('offer_proposition_detail', pk=offer_proposition.pk)
+            offer = form.save(commit=False)
+            offer.save()
+            return redirect('manager_offer_parameters')
     else:
-        form = OfferPropositionForm(instance=offer_proposition)
-    return render(request, 'offer_proposition_edit.html', {'form': form})
+        form = ManagerOfferPropositionForm(instance=offer)
+    return render(request, "manager_offer_parameters_edit.html", {'offer':offer,'form':form})
