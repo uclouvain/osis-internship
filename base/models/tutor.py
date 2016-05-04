@@ -98,19 +98,19 @@ def find_by_program_manager(offer_years_managed):
     """
     session_exam_queryset = session_exam.find_by_offer_years(offer_years_managed)
     learning_unit_year_ids = session_exam_queryset.values_list('learning_unit_year', flat=True)
-    attribution_queryset = attribution.find_by_learning_unit_years(learning_unit_year_ids)
+    attribution_queryset = attribution.find_by_learning_unit_year_ids(learning_unit_year_ids)
     tutor_ids = attribution_queryset.values_list('tutor').distinct('tutor')
     tutors = list(Tutor.objects.filter(pk__in=tutor_ids).order_by('person__last_name', 'person__first_name'))
     return tutors
 
 
-def find_by_list(list):
-    """
-    To order tutors by name
-    """
-    ids = []
-    for t in list:
-        ids.append(t.id)
-
-    return Tutor.objects.filter(id__in=ids).order_by('person__last_name', 'person__first_name')
+# def find_by_list(list):
+#     """
+#     To order tutors by name
+#     """
+#     ids = []
+#     for t in list:
+#         ids.append(t.id)
+#
+#     return Tutor.objects.filter(id__in=ids).order_by('person__last_name', 'person__first_name')
 

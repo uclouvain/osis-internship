@@ -50,6 +50,14 @@ class ScoresEncoding(models.Model):
         db_table = 'app_scores_encoding'
 
 
-def search(user):
-    return ScoresEncoding.objects.filter(program_manager__person__user=user)
+def search(user, learning_unit_year_id=None, offer_year_id=None):
+    queryset = ScoresEncoding.objects
+
+    if offer_year_id:
+        queryset = queryset.filter(offer_year_id=offer_year_id)
+
+    if learning_unit_year_id:
+        queryset = queryset.filter(learning_unit_year_id=learning_unit_year_id)
+
+    return queryset.filter(program_manager__person__user=user)
 

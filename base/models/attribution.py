@@ -100,7 +100,7 @@ def is_professor(user, learning_unit_year):
     return False
 
 
-def find_by_learning_unit_years(learning_unit_year_ids, function=None):
+def find_by_learning_unit_year_ids(learning_unit_year_ids, function=None):
     """
     :param learning_unit_year_ids: Ids from which to find attributions.
     :param function: Filter the resulset by Attribution.function

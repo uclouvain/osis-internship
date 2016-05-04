@@ -59,14 +59,14 @@ def add_header_footer(canvas, doc):
     canvas.restoreState()
 
 
-def print_notes(user, academic_year, learning_unit_id, is_programme_manager, sessions_list, tutor=None):
+def print_notes(user, academic_year, learning_unit_id, is_programme_manager, list_exam_enrollment, tutor=None):
     """
     Create a multi-page document
     :param user: The user who's asking for printing the notes sheet
     :param academic_year: An object AcademicYear
     :param learning_unit_id: The id of the learning unit (from which to create the PDF notes sheet)
     :param is_programme_manager : True only if it is a program_manager.
-    :param sessions_list: List of obejcts from the model SessionExam.
+    :param list_exam_enrollment: List of examEnrollments to print on the PDF.
     """
     filename = "%s.pdf" % _('scores_sheet')
     response = HttpResponse(content_type='application/pdf')
@@ -84,22 +84,22 @@ def print_notes(user, academic_year, learning_unit_id, is_programme_manager, ses
     styles.add(ParagraphStyle(name='Justify', alignment=TA_JUSTIFY))
     content = []
 
-    list_exam_enrollment = []
-    for sessions in sessions_list:
-        for session in sessions:
-            enrollments = list(mdl.exam_enrollment.find_exam_enrollments_by_session(session))
-            if enrollments:
-                list_exam_enrollment = list_exam_enrollment + enrollments
-
-    if tutor and is_programme_manager: # Case ProgramManager wants to print notes for one Tutor
-        learning_unit_years = mdl.learning_unit_year.find_by_tutor(tutor.id)
-        offer_years = mdl.offer_year.find_by_user(user)
-        filtered_exam_enrollments = []
-        for exam_enrollment in list_exam_enrollment:
-            if exam_enrollment.learning_unit_enrollment.learning_unit_year in learning_unit_years:
-                if exam_enrollment.session_exam.offer_year_calendar.offer_year in offer_years:
-                    filtered_exam_enrollments.append(exam_enrollment)
-        list_exam_enrollment = filtered_exam_enrollments
+    # list_exam_enrollment = []
+    # for sessions in sessions_list:
+    #     for session in sessions:
+    #         enrollments = list(mdl.exam_enrollment.find_exam_enrollments_by_session(session))
+    #         if enrollments:
+    #             list_exam_enrollment = list_exam_enrollment + enrollments
+    #
+    # if tutor and is_programme_manager: # Case ProgramManager wants to print notes for one Tutor
+    #     learning_unit_years = mdl.learning_unit_year.find_by_tutor(tutor.id)
+    #     offer_years = mdl.offer_year.find_by_user(user)
+    #     filtered_exam_enrollments = []
+    #     for exam_enrollment in list_exam_enrollment:
+    #         if exam_enrollment.learning_unit_enrollment.learning_unit_year in learning_unit_years:
+    #             if exam_enrollment.session_exam.offer_year_calendar.offer_year in offer_years:
+    #                 filtered_exam_enrollments.append(exam_enrollment)
+    #     list_exam_enrollment = filtered_exam_enrollments
 
     list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, styles, is_programme_manager, content, user)
 

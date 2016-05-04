@@ -37,7 +37,9 @@ from base.utils import export_utils
 
 
 @login_required
-def upload_scores_file(request, learning_unit_id=None, tutor_id=None):
+def upload_scores_file(request, learning_unit_year_id=None):
+    tutor_id = None
+    learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
     message_validation = ""
     if request.method == 'POST':
         form = ScoreFileForm(request.POST, request.FILES)
@@ -47,26 +49,27 @@ def upload_scores_file(request, learning_unit_id=None, tutor_id=None):
                 if ".xls" not in str(file_name):
                     message_validation = _('file_must_be_xls')
                 else:
-                    is_fac = True
-                    if tutor_id:
-                        is_fac = False
-                    is_valid = __save_xls_scores(request, file_name, is_fac, tutor_id, learning_unit_id)
+                    is_program_manager = mdl.program_manager.is_program_manager(request.user)
+                    # is_fac = True
+                    # if tutor_id:
+                    #     is_fac = False
+                    is_valid = __save_xls_scores(request, file_name, is_program_manager, request.user, learning_unit_year.learning_unit.id)
                     if not is_valid:
                         message_validation = '%s' % _('invalid_file')
 
                 messages.add_message(request, messages.INFO, '%s' % message_validation)
-                if tutor_id:
-                    return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_id, tutor_id]))
-                else:
-                    return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_id, ]))
-        else:
-            if tutor_id:
-                return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_id, tutor_id]))
-            else:
-                return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_id, ]))
+        #         if tutor_id:
+        #             return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_id, tutor_id]))
+        #         else:
+        #             return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_id, ]))
+        # else:
+        #     if tutor_id:
+        #         return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_id, tutor_id]))
+        #     else:
+        return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_year_id, ]))
 
 
-def __save_xls_scores(request, file_name, is_fac, tutor_id, learning_unit_id):
+def __save_xls_scores(request, file_name, is_program_manager, user, learning_unit_id):
     workbook = load_workbook(file_name, read_only=True)
     worksheet = workbook.active
     is_valid = True
@@ -129,7 +132,7 @@ def __save_xls_scores(request, file_name, is_fac, tutor_id, learning_unit_id):
                                     else:
                                         if session_exam is None:
                                             session_exam = exam_enrollment.session_exam
-                                        if is_fac:
+                                        if is_program_manager:
                                             notes_modifiable = True
                                         else:
                                             if not exam_enrollment.score_final and not exam_enrollment.justification_final:
@@ -180,14 +183,14 @@ def __save_xls_scores(request, file_name, is_fac, tutor_id, learning_unit_id):
                                                 validation_error += "%s %s!" % (info_line, _('constraint_score_other_score'))
 
                                             if score_valid or justification_valid:
-                                                if is_fac:
+                                                if is_program_manager:
                                                     if exam_enrollment.score_final != score:
                                                         new_scores_number += 1
                                                         new_scores = True
                                                         new_score = True
 
                                                     if (justification_valid and justification_xls and exam_enrollment.justification_final != justification_xls) \
-                                                            or (not is_fac and exam_enrollment.justification_draft != justification_xls):
+                                                            or (not is_program_manager and exam_enrollment.justification_draft != justification_xls):
                                                         new_scores_number += 1
                                                         new_scores = True
                                                         new_score = True
@@ -205,13 +208,13 @@ def __save_xls_scores(request, file_name, is_fac, tutor_id, learning_unit_id):
                                             if new_score:
                                                 exam_enrollment.score_draft = score
                                                 exam_enrollment.justification_draft = justification_xls
-                                                if is_fac:
+                                                if is_program_manager:
                                                     exam_enrollment.score_final = score
                                                     exam_enrollment.justification_final = justification_xls
 
                                                 exam_enrollment.save()
 
-                                                if is_fac:
+                                                if is_program_manager:
                                                     mdl.exam_enrollment.create_exam_enrollment_historic(request.user,
                                                                                                         exam_enrollment,
                                                                                                         score,
@@ -250,8 +253,8 @@ def __save_xls_scores(request, file_name, is_fac, tutor_id, learning_unit_id):
                                        'plural_name':  _('scores_saved')}
 
             messages.add_message(request, messages.INFO, '%s' % text)
-            if not is_fac:
-                tutor = mdl.tutor.find_by_id(tutor_id)
+            if not is_program_manager:
+                tutor = mdl.tutor.find_by_user(user)
                 if tutor and learning_unit_id:
                     coordinator = mdl.attribution.find_by_function(tutor, learning_unit_id, 'COORDINATOR')
                     if not coordinator:

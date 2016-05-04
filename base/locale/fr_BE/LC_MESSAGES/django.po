@@ -1270,6 +1270,9 @@ msgstr "Vous gérez"
 msgid "learning_units_in"
 msgstr "unités d'enseignement dans"
 
+msgid "no_dubble_score_encoded_comparison_impossible"
+msgstr "Aucune note n'a été double encodée ; aucune comparaison à effectuer."
+
 #~ msgid "title_btn_upload_score"
 #~ msgstr ""
 #~ "Sélectionnez votre fichier excel à partir duquel il faut injecter les "
