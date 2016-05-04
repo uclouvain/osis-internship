@@ -73,3 +73,78 @@ def internships_places(request):
                                            'all_organizations': l_organizations,
                                            'all_addresses': organization_addresses,
                                            'city_sort_get': city_sort_get})
+
+def organizations_search(request):
+    organizations = mdl.organization.search(acronym=request.GET['acronym'],
+                                            name=request.GET['name'],
+                                            type=request.GET['type_choices'])
+
+    return layout.render(request, "organizations.html", {'organizations': organizations,
+                                                         'types': mdl.organization.ORGANIZATION_TYPE})
+
+
+def organization_read(request, organization_id):
+    organization = mdl.organization.find_by_id(organization_id)
+    structures = mdl.structure.find_by_organization(organization)
+    organization_addresses = mdl.organization_address.find_by_organization(organization)
+    return layout.render(request, "organization.html", {'organization': organization,
+                                                        'organization_addresses': organization_addresses,
+                                                        'structures': structures})
+
+
+def organization_new(request):
+    return organization_save(request, None)
+
+
+def organization_save(request, organization_id):
+    form = OrganizationForm(data=request.POST)
+    if organization_id:
+        organization = mdl.organization.find_by_id(organization_id)
+    else:
+        organization = mdl.organization.Organization()
+
+    # get the screen modifications
+    if request.POST['acronym']:
+        organization.acronym = request.POST['acronym']
+    else:
+        organization.acronym = None
+
+    if request.POST['name']:
+        organization.name = request.POST['name']
+    else:
+        organization.name = None
+
+    if request.POST['website']:
+        organization.website = request.POST['website']
+    else:
+        organization.website = None
+
+    if request.POST['reference']:
+        organization.reference = request.POST['reference']
+    else:
+        organization.reference = None
+
+    if request.POST['type_choices']:
+        organization.type = request.POST['type_choices']
+    else:
+        organization.type = None
+
+    if form.is_valid():
+        organization.save()
+        return organization_read(request, organization.id)
+    else:
+
+        return layout.render(request, "organization_form.html", {'organization': organization,
+                                                                 'form': form})
+
+
+def organization_edit(request, organization_id):
+    organization = mdl.organization.find_by_id(organization_id)
+    return layout.render(request, "organization_form.html", {'organization': organization,
+                                                             'types': mdl.organization.ORGANIZATION_TYPE})
+
+
+def organization_create(request):
+    organization = mdl.organization.Organization()
+    return layout.render(request, "organization_form.html", {'organization': organization,
+                                                             'types': mdl.organization.ORGANIZATION_TYPE})
