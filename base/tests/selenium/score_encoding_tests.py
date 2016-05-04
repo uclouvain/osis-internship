@@ -46,7 +46,7 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
     We only test the fact that after the submission , a mail is sent
     """
 
-    fixtures = ['core/fixtures/score_encoding_base.json']
+    fixtures = ['base/fixtures/score_encoding_base.json']
 
     def take_screen_shot(self, name):
         today = date.today().strftime("%d_%m_%y")
@@ -103,7 +103,7 @@ def test_no_decimal_allowed_submission (score_encoding):
     Test if a mail is sent after the submission of encoded scores
     """
     score_encoding.getUrl("/")
-    score_encoding.selenium.find_element_by_id('login_bt').click()
+    score_encoding.selenium.find_element_by_id('lnk_login').click()
     assert score_encoding.is_element_present('id_username')
     assert score_encoding.is_element_present('id_password')
     user_name_field = score_encoding.selenium.find_element_by_id('id_username')
@@ -124,6 +124,7 @@ def test_no_decimal_allowed_submission (score_encoding):
     assert score_encoding.is_element_present('bt_submit_online_encoding')
     score_encoding.selenium.find_element_by_id("bt_submit_online_encoding").click()
     assert score_encoding.is_element_present('num_score_14')
+    score_encoding.selenium.find_element_by_id("num_score_14").clear()
     score_encoding.selenium.find_element_by_id("num_score_14").send_keys('7')
     assert score_encoding.is_element_present('bt_submit_online_encoding')
     score_encoding.selenium.find_element_by_id("bt_submit_online_encoding").click()
@@ -133,6 +134,7 @@ def test_no_decimal_allowed_submission (score_encoding):
     assert score_encoding.is_element_present('bt_compare')
     score_encoding.selenium.find_element_by_id("bt_compare").click()
     assert score_encoding.is_element_present('num_double_score_14')
+    score_encoding.selenium.find_element_by_id("num_double_score_14").clear()
     score_encoding.selenium.find_element_by_id("num_double_score_14").send_keys('8')
     assert score_encoding.is_element_present('bt_compare')
     score_encoding.selenium.find_element_by_id("bt_compare").click()
