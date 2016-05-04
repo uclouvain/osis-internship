@@ -46,7 +46,7 @@
       </div>
       <div class="row">
         <div class="col-md-4 pull-right">
-          <img src="http://ultra16.sipr.ucl.ac.be/photos/photos_cp/photos/image{{ person.global_id |get_digit:"4" }}{{ person.global_id |get_digit:"3" }}/{{ person.global_id }}.jpg"height="40%" width="40%">
+          <img src="http://ultra16.sipr.ucl.ac.be/photos/photos_cp/photos/image{{ adviser.person.global_id |get_digit:"4" }}{{ adviser.person.global_id |get_digit:"3" }}/{{ adviser.person.global_id }}.jpg"height="40%" width="40%">
         </div>
         <div class="col-md-4">
           <label>{% trans 'Name' %}</label> : {{ adviser.person.first_name }} {{ adviser.person.last_name }}
