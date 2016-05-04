@@ -44,8 +44,6 @@ def is_manager(user):
 @login_required
 @user_passes_test(is_manager)
 def manager_proposition_dissertations(request):
-    person = mdl.person.find_by_user(request.user)
-    adviser = Adviser.find_by_person(person)
     proposition_dissertations = PropositionDissertation.objects.filter(Q(active=True))
     return render(request, 'manager_proposition_dissertations_list.html', {'proposition_dissertations': proposition_dissertations})
 
@@ -69,8 +67,6 @@ def manager_proposition_dissertation_detail(request, pk):
 @user_passes_test(is_manager)
 def manage_proposition_dissertation_edit(request, pk):
     proposition_dissertation = get_object_or_404(PropositionDissertation, pk=pk)
-    person = mdl.person.find_by_user(request.user)
-    adviser = Adviser.find_by_person(person)
     if request.method == "POST":
         form = ManagerPropositionDissertationForm(request.POST, instance=proposition_dissertation)
         if form.is_valid():
@@ -91,23 +87,17 @@ def manager_proposition_dissertation_new(request):
             proposition_dissertations = PropositionDissertation.objects.all()
             return redirect('manager_proposition_dissertations')
     else:
-        person = mdl.person.find_by_user(request.user)
-        adviser = Adviser.find_by_person(person)
         form = ManagerPropositionDissertationForm(initial={'active':True})
     return render(request, 'manager_proposition_dissertation_edit.html', {'form': form})
 
 @login_required
 @user_passes_test(is_manager)
 def manager_proposition_dissertations_search(request):
-    person = mdl.person.find_by_user(request.user)
-    adviser = Adviser.find_by_person(person)
     proposition_dissertations = PropositionDissertation.search(terms=request.GET['search']).filter(Q(active=True))
     return render(request, "manager_proposition_dissertations_list.html", {'proposition_dissertations': proposition_dissertations})
 
 @login_required
 def proposition_dissertations(request):
-    person = mdl.person.find_by_user(request.user)
-    adviser = Adviser.find_by_person(person)
     proposition_dissertations = PropositionDissertation.objects.filter(Q(visibility=True) & Q(active=True))
     return render(request, 'proposition_dissertations_list.html', {'proposition_dissertations': proposition_dissertations})
 
@@ -166,7 +156,5 @@ def proposition_dissertation_new(request):
 
 @login_required
 def proposition_dissertations_search(request):
-    person = mdl.person.find_by_user(request.user)
-    adviser = Adviser.find_by_person(person)
     proposition_dissertations = PropositionDissertation.search(terms=request.GET['search']).filter(Q(visibility=True) & Q(active=True))
     return render(request, "proposition_dissertations_list.html", {'proposition_dissertations': proposition_dissertations})
