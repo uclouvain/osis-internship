@@ -98,3 +98,16 @@ def is_professor(user, learning_unit_year):
         return True
 
     return False
+
+
+def find_by_learning_unit_years(learning_unit_year_ids, function=None):
+    """
+    :param learning_unit_year_ids: Ids from which to find attributions.
+    :param function: Filter the resulset by Attribution.function
+    :return: Find all attributions for the learningUnitYears in parameter.
+    """
+    queryset = Attribution.objects
+    if function:
+        queryset = queryset.filter(function=function)
+    queryset = queryset.filter(learning_unit_id__in=learning_unit_year_ids)
+    return queryset
