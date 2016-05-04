@@ -115,3 +115,8 @@ class InternshipChoice(models.Model):
     organization        = models.ForeignKey('base.Organization')
     learning_unit_year  = models.ForeignKey('base.LearningUnitYear')
     choice              = models.IntegerField()
+
+    @staticmethod
+    def find_by_student(s_student):
+        internships = InternshipChoice.objects.filter(student = s_student)
+        return internships
