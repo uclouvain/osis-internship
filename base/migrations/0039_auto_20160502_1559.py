@@ -47,9 +47,4 @@ class Migration(migrations.Migration):
             name='last_name',
             field=models.CharField(blank=True, db_index=True, max_length=50, null=True),
         ),
-        migrations.AlterField(
-            model_name='student',
-            name='registration_id',
-            field=models.CharField(max_length=10, unique=True),
-        ),
     ]
