@@ -90,10 +90,8 @@ def find_all_order_by_reference():
 
 def find_by_type(type, order_by=None):
 
-
     if order_by:
-        for criteria in order_by:
-            queryset = Organization.objects.filter(type=type).order_by(criteria)
+        queryset = Organization.objects.filter(type=type).order_by(*order_by)
     else:
         queryset = Organization.objects.filter(type=type)
 
