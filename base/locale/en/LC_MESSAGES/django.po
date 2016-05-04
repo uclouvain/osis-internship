@@ -1257,45 +1257,8 @@ msgstr "Please choose at least one criteria!"
 msgid "get_excel_file"
 msgstr "Get Excel File"
 
-#~ msgid "title_btn_upload_score"
-#~ msgstr "Select your xls file from which to inject scores"
-
-#~ msgid "submit"
-#~ msgstr "Submit"
-
-#~ msgid "download_xls_file"
-#~ msgstr "Download Excel File"
-
-#~ msgid "not_in_choices_list"
-#~ msgstr "Invalid entry, not in the list of choices"
-
-#~ msgid "invalid_entry"
-#~ msgstr "Invalid entry"
-
-#~ msgid "please_choose_in_the_list"
-#~ msgstr "Please choose in the list"
-
-#~ msgid "choices_list"
-#~ msgstr "List of choices"
-
-#~ msgid "changes_on_offer_year_and_academic_calendar"
-#~ msgstr "Watch out - Changes has been made on %s, academic calendar (%s)"
-
-#~ msgid "score_injected"
-#~ msgstr "Scores injected"
-
-#~ msgid "scores_injected"
-#~ msgstr "Scores injected"
-
-#~ msgid "add_address"
-#~ msgstr "Add address"
-
-#~ msgid "registration_date"
-#~ msgstr "Registration date"
-
 msgid "sector"
 msgstr "Sector"
-
 
 msgid "institute"
 msgstr "Institute"
@@ -1320,3 +1283,24 @@ msgstr "Technologic platform"
 
 msgid "undefined"
 msgstr "Undefined"
+
+msgid "messages"
+msgstr "Messages"
+
+msgid "messages_templates"
+msgstr "Messages templates"
+
+msgid "desc_messages_template"
+msgstr "Messages templating allow you to edit email messages dynamically"
+
+msgid "messages_history"
+msgstr "Messages History"
+
+msgid "desc_messages_history"
+msgstr "Message history allow you to access sent emails"
+
+msgid "encoding_status_ended"
+msgstr "All the scores are encoded."
+
+msgid "encoding_status_notended"
+msgstr "It remains notes to encode."
