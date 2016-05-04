@@ -321,6 +321,44 @@ Running the application outputs an error :
 This error is not present while debugging.
 ====
 
+==== Internationalization
+
+OSIS has adopted a different approach when it comes to internationalization
+(I18N). Text messages within Python code and template files are keywords instead
+of text in plain English. Hardcoding keywords forces us to create a translation
+file for each supported language, instead of relying on hardcoded messages for
+the default language. For example, instead of:
+
+    <p>{% trans 'Hello World' %}</p>
+
+we use:
+
+    <p>{% trans 'hello_world' %}</p>
+
+which is translated into English and French respectively:
+
+    locale/en/LC_MESSAGES/django.po
+    msgid "hello_world"
+    msgstr "Hello World!"
+
+    locale/fr_BE/LC_MESSAGES/django.po
+    msgid "hello_world"
+    msgstr "Salut monde!"
+
+It is important to add that we add translations manually in the translation
+files instead of using `./manage.py makemessages`. We have noticed some
+strange beheviors, such as confusing "all" with "ill", and the translation files
+are changed much more than necessary, causing lots of conflicts when multiple
+developers contribute to the translations.
+
+Once the translations are done, we finally compile the messages into `.mo`
+files:
+
+    $ ./manage.py compilemessages
+
+Only `.po` files are committed to the repository. `.mo` files are ignored in the
+`.gitignore` file.
+
 === Following the Git Workflow
 
 The code repository is organized in three fixed branches:
@@ -496,6 +534,74 @@ Stop tracking a file without deleting it locally:
 Deleting remote branches:
 
     $ git push origin --delete test
+
+= Tests
+
+== Automated Tests
+
+=== Testing The User Interface Using Selenium
+
+Selenium relies on HTML elements' ids to identify and interact with user
+interface elements. In other words, if an element doesn't have an id then
+Selenium cannot reference it in its test scripts. Therefore, it is important
+that every element the user interacts directly - such as text fields, links or
+buttons - must have an id.
+
+The amount of ids to be defined in a single page is not negligible. Since ids
+must not repeat in the same page, at some point we will lack creativity to think
+about more unique values to identify the elements. To help with this, we have
+defined a list of prefixes, one for each type of element, listed in the table
+below:
+
+|===
+|Prefix|Element Type |Prefix|Element Type |Prefix|Element Type
+
+|bt_
+|Button
+|pnl_
+|Div
+|tab_
+|Tab
+
+|chb_
+|Checkbox
+|rdb_
+|Radio button
+|txa_
+|Text area
+
+|fil_
+|File field
+|lnk_
+|Link
+|txt_
+|Text field
+
+|form_
+|Form
+|num_
+|Numeric field
+|
+|
+
+|hdn_
+|Hidden field
+|slt_
+|Combobox
+|
+|
+|===
+
+Some examples of use:
+
+    <!-- Text field -->
+    <input type="text" id="txt_start_date">
+
+    <!-- Hidden field -->
+    <input type="hidden" id="hdn_academic_calendar">
+
+    <!-- Combobox field -->
+    <select id="slt_academic_year">
 
 == Adding the license to the source code
 

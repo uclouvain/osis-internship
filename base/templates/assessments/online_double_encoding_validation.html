@@ -109,7 +109,7 @@
                         <td><input type="hidden" id="hdn_justification_draft_{{ enrollment.id }}" value="{{ enrollment.justification_draft | default_if_none:'' }}">
                             <div id="show_justification_draft_{{ enrollment.id }}">{%if enrollment.justification_draft%}{{ enrollment.get_justification_draft_display}}{%else%}-{%endif%}</div></td>
                         <td>{% if enrollment.score_draft != enrollment.score_reencoded or enrollment.justification_draft != enrollment.justification_reencoded%}
-                                <button type="button" id="bt_take_draft_{{ enrollment.id }}" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-ok" style="color: green" aria-hidden="true"></span></button>
+                                <button type="button" id="bt_take_draft_{{ enrollment.id }}" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-ok" id="span_take_draft_{{ enrollment.id }}" style="color: black" aria-hidden="true"></span></button>
                             {% endif %}</td>
 
                         <td><input type="hidden" id="hdn_score_reencoded_{{ enrollment.id }}" value="{{ enrollment.score_reencoded | score_display:enrollment.session_exam.learning_unit_year.decimal_scores}}">
@@ -117,7 +117,7 @@
                         <td><input type="hidden" id="hdn_justification_reencoded_{{ enrollment.id }}" value="{{ enrollment.justification_reencoded | default_if_none:'' }}">
                             <div id="show_justification_reencoded_{{ enrollment.id }}">{%if enrollment.justification_reencoded%}{{ enrollment.get_justification_reencoded_display }}{%else%}-{%endif%}</div></td>
                         <td>{% if enrollment.score_draft != enrollment.score_reencoded or enrollment.justification_draft != enrollment.justification_reencoded%}
-                                <button type="button" id="bt_take_reencoded_{{ enrollment.id }}" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-ok" style="color: green" aria-hidden="true"></span></button>
+                                <button type="button" id="bt_take_reencoded_{{ enrollment.id }}" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-ok" id="span_take_reencoded_{{ enrollment.id }}" style="color: black" aria-hidden="true"></span></button>
                             {% endif %}</td>
 
                         <td><input type="hidden" name="score_{{ enrollment.id }}" id="hdn_score_final_{{ enrollment.id }}"
@@ -157,6 +157,9 @@ $("button[id^='bt_take_draft_']").click(function(event) {
     $("#hdn_score_final_"+ enrollmentId).val(score_draft);
     $("#pnl_justification_final_show_"+ enrollmentId).html(justification_draft_display);
     $("#hdn_justification_final_"+ enrollmentId).val(justification_draft);
+
+    $("#span_take_draft_" + enrollmentId).css('color', '#00FF00');
+    $("#span_take_reencoded_" + enrollmentId).css('color', 'black');
 });
 
 $("button[id^='bt_take_reencoded_']").click(function(event) {
@@ -176,6 +179,9 @@ $("button[id^='bt_take_reencoded_']").click(function(event) {
     $("#hdn_score_final_"+ enrollmentId).val(score_reencoded);
     $("#pnl_justification_final_show_"+ enrollmentId).html(justification_reencoded_display);
     $("#hdn_justification_final_"+ enrollmentId).val(justification_reencoded);
+
+    $("#span_take_draft_" + enrollmentId).css('color', 'black');
+    $("#span_take_reencoded_" + enrollmentId).css('color', '#00FF00');
 });
 </script>
 {% endblock %}

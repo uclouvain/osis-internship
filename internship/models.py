@@ -109,3 +109,14 @@ class InternshipMaster(models.Model):
     def find_masters_by_organization(organization):
         masters = InternshipMaster.objects.filter(organization__name=organization)
         return masters
+
+class InternshipChoice(models.Model):
+    student             = models.ForeignKey('base.Student')
+    organization        = models.ForeignKey('base.Organization')
+    learning_unit_year  = models.ForeignKey('base.LearningUnitYear')
+    choice              = models.IntegerField()
+
+    @staticmethod
+    def find_by_student(s_student):
+        internships = InternshipChoice.objects.filter(student = s_student)
+        return internships

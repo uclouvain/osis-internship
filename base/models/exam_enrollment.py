@@ -247,11 +247,11 @@ def find_exam_enrollments_drafts_existing_by_session(session_exam):
     return enrolls
 
 
-def find_exam_enrollments_drafts_existing_pgmer_by_session(session_exam):
+def find_exam_enrollments_final_existing_pgmer_by_session(session_exam):
     """ Return the enrollments of a session but not the ones already submitted. """
     enrolls = ExamEnrollment.objects.filter(session_exam=session_exam) \
-                                    .filter(models.Q(justification_draft__isnull=False) |
-                                            models.Q(score_draft__isnull=False)) \
+                                    .filter(models.Q(justification_final__isnull=False) |
+                                            models.Q(score_final__isnull=False)) \
                                     .order_by('learning_unit_enrollment__offer_enrollment__offer_year__acronym',
                                               'learning_unit_enrollment__offer_enrollment__student__person__last_name',
                                               'learning_unit_enrollment__offer_enrollment__student__person__first_name')

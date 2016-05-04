@@ -1173,7 +1173,7 @@ msgstr "Fichier invalide"
 
 #: utils/upload_xls_utils.py:87
 msgid "Line"
-msgstr ""
+msgstr "Ligne"
 
 #: utils/upload_xls_utils.py:89
 msgid "student_not_exist"
@@ -1185,7 +1185,7 @@ msgstr "L'année académique (%d) n'existe pas"
 
 #: utils/upload_xls_utils.py:97
 msgid "offer_year_not_exist"
-msgstr "L'offre annualisée (%d) (%d) - n'existe pas"
+msgstr "L'offre annualisée (%s) (%d) - n'existe pas"
 
 #: utils/upload_xls_utils.py:101
 msgid "offer_enrollment_not_exist"
@@ -1232,6 +1232,9 @@ msgstr[1] ""
 msgid "score_saved"
 msgstr "Notes"
 
+msgid "score_invalid"
+msgstr "Note invalide"
+
 #: utils/upload_xls_utils.py:232
 msgid "scores_saved"
 msgstr "Scores enregistré"
@@ -1249,7 +1252,7 @@ msgid "begin_date_lt_end_date"
 msgstr "La date de début doit etre égale ou inferieure à la date de fin"
 
 msgid "no_score_encoded_double_encoding_impossible"
-msgstr "Aucune nouvelle note encodé. Le double encodage besoin des nouvelles notes."
+msgstr "Aucune nouvelle note encodé. Le double encodage nécessite de nouvelles notes."
 
 #: views/common.py:162
 msgid "minimum_one_criteria"
@@ -1258,39 +1261,50 @@ msgstr "Veuillez remplir au moins 1 critère"
 msgid "get_excel_file"
 msgstr "Obtenir le fichier Excel"
 
-#~ msgid "title_btn_upload_score"
-#~ msgstr ""
-#~ "Sélectionnez votre fichier excel à partir duquel il faut injecter les "
-#~ "notes"
+msgid "sector"
+msgstr "Secteur"
 
-#~ msgid "submit"
-#~ msgstr "Envoyer"
+msgid "institute"
+msgstr "Institut"
 
-#~ msgid "download_xls_file"
-#~ msgstr "Télécharger le fichier Excel"
+msgid "pole"
+msgstr "Pole"
 
-#~ msgid "not_in_choices_list"
-#~ msgstr "Le choix entré ne se trouve pas dans la liste proposée"
+msgid "doctoral_commission"
+msgstr "Commision doctorale"
 
-#~ msgid "invalid_entry"
-#~ msgstr "Entrée invalide"
+msgid "program_commission"
+msgstr "Commison d'enseignement/programme"
 
-#~ msgid "please_choose_in_the_list"
-#~ msgstr "Veuillez sélectionner un élément de la liste"
+msgid "logistic"
+msgstr "Logistique"
 
-#~ msgid "choices_list"
-#~ msgstr "Liste des choix"
+msgid "research_center"
+msgstr "Centre de recherche"
 
-#~ msgid "changes_on_offer_year_and_academic_calendar"
-#~ msgstr ""
-#~ "Attention - Des changements ont été effectués sur %s, calendrier "
-#~ "académique %s"
+msgid "technologic_platform"
+msgstr "Plateforme technologique"
 
-#~ msgid "score_injected"
-#~ msgstr "Note injectée"
+msgid "undefined"
+msgstr "Non défini"
 
-#~ msgid "scores_injected"
-#~ msgstr "Notes injectées"
+msgid "messages"
+msgstr "Messages"
 
-#~ msgid "add_address"
-#~ msgstr "Ajouter une adresse"
+msgid "messages_templates"
+msgstr "Modèles de messages"
+
+msgid "desc_messages_template"
+msgstr "Le modèles de message permet la personnalisation dynamique des e-mails."
+
+msgid "messages_histor"
+msgstr "Historique des messages"
+
+msgid "desc_messages_history"
+msgstr "L'historique des messages vous permet d'accéder aux messages envoyés par courier électronique"
+
+msgid "encoding_status_ended"
+msgstr "Toutes les notes ont été soumises."
+
+msgid "encoding_status_notended"
+msgstr "Il reste encore des notes à encoder."
