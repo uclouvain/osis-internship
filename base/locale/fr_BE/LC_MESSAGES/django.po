@@ -1252,7 +1252,7 @@ msgid "begin_date_lt_end_date"
 msgstr "La date de début doit etre égale ou inferieure à la date de fin"
 
 msgid "no_score_encoded_double_encoding_impossible"
-msgstr "Aucune nouvelle note encodé. Le double encodage besoin des nouvelles notes."
+msgstr "Aucune nouvelle note encodé. Le double encodage nécessite de nouvelles notes."
 
 #: views/common.py:162
 msgid "minimum_one_criteria"
@@ -1260,6 +1260,15 @@ msgstr "Veuillez remplir au moins 1 critère"
 
 msgid "get_excel_file"
 msgstr "Obtenir le fichier Excel"
+
+msgid "no_exam_session_opened_for_the_moment"
+msgstr "Aucune session d'examen ouverte pour le moment."
+
+msgid "you_manage"
+msgstr "Vous gérez"
+
+msgid "learning_units_in"
+msgstr "unités d'enseignement dans"
 
 #~ msgid "title_btn_upload_score"
 #~ msgstr ""
@@ -1325,4 +1334,23 @@ msgstr "Plateforme technologique"
 msgid "undefined"
 msgstr "Non défini"
 
+msgid "messages"
+msgstr "Messages"
 
+msgid "messages_templates"
+msgstr "Modèles de messages"
+
+msgid "desc_messages_template"
+msgstr "Le modèles de message permet la personnalisation dynamique des e-mails."
+
+msgid "messages_histor"
+msgstr "Historique des messages"
+
+msgid "desc_messages_history"
+msgstr "L'historique des messages vous permet d'accéder aux messages envoyés par courier électronique"
+
+msgid "encoding_status_ended"
+msgstr "Toutes les notes ont été soumises."
+
+msgid "encoding_status_notended"
+msgstr "Il reste encore des notes à encoder."

@@ -44,8 +44,8 @@ class OfferYearCalendar(models.Model):
     changed = models.DateTimeField(null=True)
     academic_calendar = models.ForeignKey('AcademicCalendar')
     offer_year = models.ForeignKey('OfferYear')
-    start_date = models.DateField(blank=True, null=True)
-    end_date = models.DateField(blank=True, null=True)
+    start_date = models.DateField(blank=True, null=True, db_index=True)
+    end_date = models.DateField(blank=True, null=True, db_index=True)
     customized = models.BooleanField(default=False)
 
     def __str__(self):
@@ -70,7 +70,6 @@ def save(academic_cal):
 
 def update(academic_cal):
     offer_year_calendar_list = find_by_academic_calendar(academic_cal)
-
     if offer_year_calendar_list:
         for offer_year_calendar in offer_year_calendar_list:
             if offer_year_calendar.customized:

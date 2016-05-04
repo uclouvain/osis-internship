@@ -39,7 +39,7 @@ class LearningUnitYearAdmin(admin.ModelAdmin):
 class LearningUnitYear(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
-    acronym = models.CharField(max_length=15)
+    acronym = models.CharField(max_length=15, db_index=True)
     title = models.CharField(max_length=255)
     credits = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     decimal_scores = models.BooleanField(default=False)
@@ -76,11 +76,10 @@ def find_by_academic_year_learningunit(academic_yr, learning_unit):
     return LearningUnitYear.objects.filter(academic_year=academic_yr) \
                                    .filter(learning_unit=learning_unit).first()
 
+
 def find_by_tutor(tutor_id):
     if tutor_id:
         learning_unit_ids = attribution.Attribution.objects.filter(tutor_id=tutor_id).values('learning_unit_id')
-        result = LearningUnitYear.objects.filter(learning_unit_id__in=learning_unit_ids)
-        print(list(result))
-        return result
+        return LearningUnitYear.objects.filter(learning_unit_id__in=learning_unit_ids)
     else:
         return None

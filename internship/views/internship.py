@@ -29,6 +29,54 @@ from internship.models import InternshipOffer, InternshipChoice
 from internship.forms import InternshipChoiceForm
 from base import models as mdl
 
+import urllib.request
+import unicodedata
+from xml.dom import minidom
+from math import sin, cos, radians, degrees, acos
+
+def geocode(addr):
+    lat_long = [None]*2
+    #Transform the address for a good url and delete all accents
+    addr = addr.replace (" ", "+")
+    addr = addr.replace ("'", "\'")
+    addr = strip_accents(addr)
+    #get the complete url
+    url = "https://maps.googleapis.com/maps/api/geocode/xml?address=%s&key=AIzaSyCWeZdraxzqRTMxXxbXY3bncaD6Ijq_EvE" % (addr)
+
+    #using urllib get the xml
+    req = urllib.request.Request(url)
+    with urllib.request.urlopen(req) as response:
+        data = response.read().decode('utf-8')
+
+    #Parse the xml to have the latitude and longitude of the address
+    xmldoc = minidom.parseString(data)
+    lat = xmldoc.getElementsByTagName('location')
+    for l in lat :
+        c = l.getElementsByTagName('lat')[0].firstChild.data
+        d = l.getElementsByTagName('lng')[0].firstChild.data
+        lat_long[0] = c
+        lat_long[1] = d
+    #return the value
+    return lat_long
+
+def strip_accents(s):
+   return ''.join(c for c in unicodedata.normalize('NFD', s)
+                  if unicodedata.category(c) != 'Mn')
+
+def calc_dist(lat_a, long_a, lat_b, long_b):
+    lat_a = radians(float(lat_a))
+    lat_b = radians(float(lat_b))
+    long_a = float(long_a)
+    long_b = float(long_b)
+    long_diff = radians(long_a - long_b)
+    distance = (sin(lat_a) * sin(lat_b) +
+                cos(lat_a) * cos(lat_b) * cos(long_diff))
+    #for distance in miles use this
+    #return (degrees(acos(distance)) * 69.09)
+    #for distance in kilometers use this
+    return (degrees(acos(distance)) * 69.09)/0.621371
+
+    
 @login_required
 def internships(request):
     #First get the value of the option's value for the sort

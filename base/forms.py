@@ -23,8 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from ckeditor.widgets import CKEditorWidget
 from django import forms
 from django.forms import ModelForm
+
 from base import models as mdl
 
 
@@ -44,11 +46,11 @@ class OrganizationForm(ModelForm):
 
 
 class AcademicCalendarForm(ModelForm):
-    start_date = forms.DateField(widget=forms.DateInput(format = '%d/%m/%Y'),
+    start_date = forms.DateField(widget=forms.DateInput(format='%d/%m/%Y'),
                                  input_formats=('%d/%m/%Y',),
                                  required=True)
-    end_date = forms.DateField(widget=forms.DateInput(format = '%d/%m/%Y'),
-                               input_formats=('%d/%m/%Y',),
+    end_date = forms.DateField(widget=forms.DateInput(format='%d/%m/%Y'),
+                               input_formats=('%d/%m/%Y', ),
                                required=True)
 
     class Meta:
@@ -57,14 +59,21 @@ class AcademicCalendarForm(ModelForm):
 
 
 class OfferYearCalendarForm(ModelForm):
-    start_date = forms.DateField(widget=forms.DateInput(format = '%d/%m/%Y'),
-                                 input_formats=('%d/%m/%Y',),
+    start_date = forms.DateField(widget=forms.DateInput(format='%d/%m/%Y'),
+                                 input_formats=('%d/%m/%Y', ),
                                  required=True)
-    end_date = forms.DateField(widget=forms.DateInput(format = '%d/%m/%Y'),
-                               input_formats=('%d/%m/%Y',),
+    end_date = forms.DateField(widget=forms.DateInput(format='%d/%m/%Y'),
+                               input_formats=('%d/%m/%Y', ),
                                required=True)
 
     class Meta:
         model = mdl.offer_year_calendar.OfferYearCalendar
         fields = ['offer_year', 'start_date', 'end_date', 'customized']
 
+
+class MessageTemplateForm(ModelForm):
+    template = forms.CharField(widget=CKEditorWidget)
+
+    class Meta:
+        model = mdl.message_template.MessageTemplate
+        fields = ['reference', 'subject', 'template', 'format', 'language']

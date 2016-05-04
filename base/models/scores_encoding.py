@@ -23,29 +23,33 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from base.models import academic_year
-from base.models import academic_calendar
-from base.models import application_notice
-from base.models import attribution
-from base.models import document_file
-from base.models import domain
-from base.models import exam_enrollment
-from base.models import learning_unit
-from base.models import learning_unit_enrollment
-from base.models import learning_unit_year
-from base.models import message_template
-from base.models import scores_encoding
-from base.models import offer
-from base.models import offer_enrollment
-from base.models import offer_year
-from base.models import offer_year_calendar
-from base.models import organization
-from base.models import organization_address
-from base.models import person
-from base.models import person_address
-from base.models import program_manager
-from base.models import session_exam
-from base.models import structure
-from base.models import structure_address
-from base.models import student
-from base.models import tutor
+from django.db import models
+from django.contrib import admin
+
+
+class ScoresEncodingAdmin(admin.ModelAdmin):
+    list_display = ('pgm_manager_person', 'tutor_person', 'offer_year', 'learning_unit_year', 'total_exam_enrollments', 'exam_enrollments_encoded')
+    search_fields = ['pgm_manager_person__last_name', 'pgm_manager_person__first_name']
+
+
+class ScoresEncoding(models.Model):
+    id = models.BigIntegerField(primary_key=True)
+    program_manager = models.ForeignKey('ProgramManager', on_delete=models.DO_NOTHING)
+    pgm_manager_person = models.ForeignKey('Person', related_name='pgm_manager_person', on_delete=models.DO_NOTHING)
+    tutor_person = models.ForeignKey('Person', related_name='tutor_person', on_delete=models.DO_NOTHING)
+    offer_year = models.ForeignKey('OfferYear', on_delete=models.DO_NOTHING)
+    learning_unit_year = models.ForeignKey('LearningUnitYear', on_delete=models.DO_NOTHING)
+    total_exam_enrollments = models.IntegerField()
+    exam_enrollments_encoded = models.IntegerField()
+
+    # def __str__(self):
+    #     return u"%s - %s" % (self.acronym, self.title)
+
+    class Meta:
+        managed = False
+        db_table = 'app_scores_encoding'
+
+
+def search(user):
+    return ScoresEncoding.objects.filter(program_manager__person__user=user)
+

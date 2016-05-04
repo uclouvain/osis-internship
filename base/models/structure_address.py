@@ -30,6 +30,7 @@ from django.contrib import admin
 class StructureAddressAdmin(admin.ModelAdmin):
     list_display = ('structure', 'label', 'location', 'postal_code', 'city', 'country')
     fieldsets = ((None, {'fields': ('structure', 'label', 'location', 'postal_code', 'city', 'country')}),)
+    search_fields = ['structure__acronym']
 
 
 class StructureAddress(models.Model):
