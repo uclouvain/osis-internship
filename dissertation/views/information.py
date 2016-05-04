@@ -46,7 +46,7 @@ def informations(request):
         adviser = Adviser.find_by_person(person)
     except :
         adviser = Adviser.find_by_person(person)
-    return render(request, "informations.html", {'person':person,'adviser': adviser})
+    return render(request, "informations.html", {'adviser': adviser})
 
 @login_required
 def informations_edit(request):
