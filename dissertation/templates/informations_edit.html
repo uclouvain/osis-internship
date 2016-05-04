@@ -39,23 +39,20 @@
     <div class="panel-body">
       <div class="row">
         <div class="col-md-3">
-          <img src="http://ultra16.sipr.ucl.ac.be/photos/photos_cp/photos/image{{ person.global_id |get_digit:"4" }}{{ person.global_id |get_digit:"3" }}/{{ person.global_id }}.jpg"height="10%" width="10%">
-        </div>
-        <div class="col-md-3">
           <label>{% trans 'Name' %}</label><br>
-          {{ person.first_name }} {{ person.last_name }}
+          {{  person.first_name }} {{ person.last_name }}
         </div>
         <div class="col-md-3">
           <label>{% trans 'Email' %}</label><br>
-          {{ person.email }}
+          {{  person.email }}
         </div>
         <div class="col-md-3">
           <label>{% trans 'Phone' %}</label><br>
-          {{ person.phone }}
+          {{  person.phone }}
         </div>
         <div class="col-md-3">
           <label>{% trans 'Mobile Phone' %}</label><br>
-          {{ person.phone_mobile }}
+          {{  person.phone_mobile }}
         </div>
       </div>
       <div class="panel-body">
