@@ -53,3 +53,16 @@ class InternshipChoiceAdmin(admin.ModelAdmin):
     fieldsets = ((None, {'fields': ('student', 'organization', 'learning_unit_year', 'choice')}),)
 
 admin.site.register(InternshipChoice, InternshipChoiceAdmin)
+
+class OrganizationAdmin(admin.ModelAdmin):
+    list_display = ('name', 'acronym', 'reference', 'type', 'changed')
+    fieldsets = ((None, {'fields': ('name', 'acronym', 'reference', 'website', 'type')}),)
+    search_fields = ['acronym']
+
+admin.site.register(Organization, OrganizationAdmin)
+
+class OrganizationAddressAdmin(admin.ModelAdmin):
+    list_display = ('organization', 'label', 'location', 'postal_code', 'city', 'country')
+    fieldsets = ((None, {'fields': ('organization', 'label', 'location', 'postal_code', 'city', 'country')}),)
+
+admin.site.register(OrganizationAddress, OrganizationAddressAdmin)
