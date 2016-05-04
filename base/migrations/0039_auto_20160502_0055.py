@@ -28,11 +28,6 @@ class Migration(migrations.Migration):
             name='template',
             field=ckeditor.fields.RichTextField(),
         ),
-        migrations.AlterField(
-            model_name='student',
-            name='registration_id',
-            field=models.CharField(max_length=10, unique=True),
-        ),
         migrations.AlterUniqueTogether(
             name='messagetemplate',
             unique_together=set([('reference', 'language')]),
