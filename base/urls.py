@@ -27,8 +27,8 @@ from django.conf.urls import url
 from django.contrib.auth.views import logout
 
 from base.utils import upload_xls_utils
-from base.views import learning_unit, offer, common, score_encoding, institution, organization,academic_calendar
-
+from base.views import learning_unit, offer, common, score_encoding, institution, organization,academic_calendar, \
+    message
 
 urlpatterns = [
     url(r'^$', common.home, name='home'),
@@ -110,4 +110,6 @@ urlpatterns = [
     url(r'^organization_address/save/$', organization.organization_address_new, name='organization_address_save_new'),
     url(r'^organization_address/create/([0-9]+)/$', organization.organization_address_create, name='organization_address_create'),
     url(r'^organization_address/delete/([0-9]+)/$', organization.organization_address_delete, name='organization_address_delete'),
+
+    url(r'^messages/$',message.messages,name='messages'),
 ]

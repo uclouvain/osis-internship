@@ -23,19 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django import template
+from django.contrib.auth.decorators import login_required
 
-register = template.Library()
-
-
-@register.filter
-def format(value, arg):
-    return value % arg
+from base.views import layout
 
 
-@register.filter
-def str_format(value, args):
-    if args is None:
-        return value
-    args_list = args.split('|')
-    return value.format(*args_list)
+@login_required
+def messages(request):
+    return layout.render(request, "messages.html", {})

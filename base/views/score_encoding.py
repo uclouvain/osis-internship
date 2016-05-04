@@ -311,11 +311,15 @@ def online_encoding_submission(request, learning_unit_id):
     sessions_list, faculties, notes_list = get_sessions(learning_unit, request, tutor, academic_yr, None)
 
     if sessions_list:
+        submitted_enrollments = []
+        all_encoded = True
         for sessions in sessions_list:
             for session in sessions:
                 enrollments = mdl.exam_enrollment.find_exam_enrollments_drafts_by_session(session)
-                all_encoded = True
                 for enrollment in enrollments:
+                    if (enrollment.score_draft and not enrollment.score_final)\
+                            or (enrollment.justification_draft and not enrollment.justification_final):
+                        submitted_enrollments.append(enrollment)
                     if enrollment.score_draft or enrollment.justification_draft:
                         if enrollment.score_draft:
                             enrollment.score_final = enrollment.score_draft
@@ -336,7 +340,7 @@ def online_encoding_submission(request, learning_unit_id):
     learning_unit = mdl.learning_unit.find_by_id(learning_unit_id)
     attributions = mdl.attribution.Attribution.objects.filter(learning_unit=learning_unit)
     persons = [attribution.tutor.person for attribution in attributions if attribution.function == 'PROFESSOR']
-    send_mail.send_mail_after_scores_submission(persons, learning_unit.acronym)
+    send_mail.send_mail_after_scores_submission(persons, learning_unit.acronym, submitted_enrollments, all_encoded)
     if tutor:
         return HttpResponseRedirect(reverse('online_encoding', args=(learning_unit_id, tutor.id)))
     else:

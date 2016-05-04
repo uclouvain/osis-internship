@@ -51,5 +51,5 @@ class Migration(migrations.Migration):
             model_name='student',
             name='registration_id',
             field=models.CharField(max_length=10, unique=True),
-        ),
+        )
     ]

@@ -70,7 +70,6 @@ def save(academic_cal):
 
 def update(academic_cal):
     offer_year_calendar_list = find_by_academic_calendar(academic_cal)
-
     if offer_year_calendar_list:
         for offer_year_calendar in offer_year_calendar_list:
             if offer_year_calendar.customized:

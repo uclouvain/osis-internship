@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from ckeditor.fields import RichTextField
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
@@ -39,16 +40,24 @@ class MessageTemplate(models.Model):
                       ('HTML', 'HTML'),
                       ('PLAIN_HTML', _('plain_and_html')))
 
-    reference = models.CharField(max_length=50, unique=True)
+    reference = models.CharField(max_length=50)
     subject = models.CharField(max_length=255)
-    template = models.TextField()
+    template = RichTextField()
     format = models.CharField(max_length=15, choices=FORMAT_CHOICES)
-    language = models.CharField(max_length=30, null=True, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE)
+    language = models.CharField(max_length=30, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE)
 
     def __str__(self):
         return self.subject
 
+    class Meta:
+        unique_together = ('reference', 'language')
+
 
 def find_by_reference(reference):
-    message_template = MessageTemplate.objects.get(reference=reference)
+    message_template = MessageTemplate.objects.filter(reference=reference)
+    return message_template
+
+
+def find_by_reference_and_language(reference, language=settings.LANGUAGE_CODE):
+    message_template = MessageTemplate.objects.get(reference=reference, language=language)
     return message_template
