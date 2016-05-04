@@ -25,7 +25,7 @@
 ##############################################################################
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from base import models as mdl
+from internship.models import Organization, OrganizationAddress
 
 
 @login_required
@@ -35,11 +35,11 @@ def internships_places(request):
         city_sort_get = request.GET.get('city_sort')
 
     # Second, import all the organizations with their address(es if they have more than one)
-    organizations = mdl.organization.find_by_type("SERVICE_PARTNER", order_by=['reference'])
+    organizations = Organization.find_by_type("service partner", order_by=['reference'])
     if organizations:
         for organization in organizations:
             organization.address = ""
-            address = mdl.organization_address.find_by_organization(organization)
+            address = OrganizationAddress.find_by_organization(organization)
             if address:
                 organization.address = address
 

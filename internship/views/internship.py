@@ -25,7 +25,7 @@
 ##############################################################################
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from internship.models import InternshipOffer, InternshipChoice
+from internship.models import InternshipOffer, InternshipChoice, Organization
 from internship.forms import InternshipChoiceForm, InternshipOfferForm
 from base import models as mdl
 
@@ -164,7 +164,7 @@ def internships_save(request):
     for x in range(0, index):
         new_choice = InternshipChoice()
         new_choice.student = student[0]
-        organization = mdl.organization.search(reference=organization_list[x])
+        organization = Organization.search(reference=organization_list[x])
         new_choice.organization = organization[0]
         learning_unit_year = mdl.learning_unit_year.search(title=learning_unit_year_list[x])
         new_choice.learning_unit_year = learning_unit_year[0]
@@ -219,7 +219,7 @@ def internships_save(request):
 @login_required
 def internships_create(request):
     #Select all the organisation (service partner)
-    organizations = mdl.organization.find_by_type("SERVICE_PARTNER", order_by=['reference'])
+    organizations = Organization.find_by_type("SERVICE_PARTNER", order_by=['reference'])
 
     #select all the learning_unit_year which contain the word stage
     learning_unit_years = mdl.learning_unit_year.search(title="Stage")
@@ -237,7 +237,7 @@ def internships_new(request):
 
     print(request.POST['organization'])
     if request.POST['organization']:
-        organization = mdl.organization.search(reference=request.POST['organization'])
+        organization = Organization.search(reference=request.POST['organization'])
         internship.organization = organization[0]
 
     if request.POST['learning_unit_year']:
@@ -251,7 +251,7 @@ def internships_new(request):
     internship.save()
 
     #Select all the organisation (service partner)
-    organizations = mdl.organization.find_by_type("SERVICE_PARTNER", order_by=['reference'])
+    organizations = Organization.find_by_type("SERVICE_PARTNER", order_by=['reference'])
 
     #select all the learning_unit_year which contain the word stage
     learning_unit_years = mdl.learning_unit_year.search(title="Stage")

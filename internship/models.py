@@ -175,7 +175,7 @@ class Organization(models.Model):
 
 
     @staticmethod
-    def find_by_type(type="SERVICE_PARTNER", order_by=None):
+    def find_by_type(type=None, order_by=None):
         if order_by:
             queryset = Organization.objects.filter(type=type).order_by(*order_by)
         else:
