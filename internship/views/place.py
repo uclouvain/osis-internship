@@ -145,7 +145,9 @@ def organization_save(request, organization_id, organization_address_id):
 
     return render(request, "place_form.html", {'organization': organization,
                                                 'organization_address':organization_address,
-                                                                 'form': form})
+                                                'form': form
+                                                'message':"Hôpital correctement créé"
+                                                })
 
 def organization_new(request):
     return organization_save(request, None, None)
