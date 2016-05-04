@@ -41,9 +41,8 @@ def is_manager(user):
 def informations(request):
     person = mdl.person.find_by_user(request.user)
     try:
-        p = Adviser(person=person, email_accept=False, phone_accept=False, office_accept=False)
-        p.save()
-        adviser = Adviser.find_by_person(person)
+        adviser = Adviser(person=person, email_accept=False, phone_accept=False, office_accept=False)
+        adviser.save()
     except :
         adviser = Adviser.find_by_person(person)
     return render(request, "informations.html", {'adviser': adviser})
