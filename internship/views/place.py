@@ -26,7 +26,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from internship.models import Organization, OrganizationAddress
-
+from internship.forms import OrganizationForm
 
 @login_required
 def internships_places(request):
@@ -74,34 +74,12 @@ def internships_places(request):
                                            'all_addresses': organization_addresses,
                                            'city_sort_get': city_sort_get})
 
-def organizations_search(request):
-    organizations = mdl.organization.search(acronym=request.GET['acronym'],
-                                            name=request.GET['name'],
-                                            type=request.GET['type_choices'])
-
-    return layout.render(request, "organizations.html", {'organizations': organizations,
-                                                         'types': mdl.organization.ORGANIZATION_TYPE})
-
-
-def organization_read(request, organization_id):
-    organization = mdl.organization.find_by_id(organization_id)
-    structures = mdl.structure.find_by_organization(organization)
-    organization_addresses = mdl.organization_address.find_by_organization(organization)
-    return layout.render(request, "organization.html", {'organization': organization,
-                                                        'organization_addresses': organization_addresses,
-                                                        'structures': structures})
-
-
-def organization_new(request):
-    return organization_save(request, None)
-
-
-def organization_save(request, organization_id):
+def organization_save(request, organization_id, organization_address_id):
     form = OrganizationForm(data=request.POST)
     if organization_id:
-        organization = mdl.organization.find_by_id(organization_id)
+        organization = Organization.find_by_id(organization_id)
     else:
-        organization = mdl.organization.Organization()
+        organization = Organization()
 
     # get the screen modifications
     if request.POST['acronym']:
@@ -117,34 +95,66 @@ def organization_save(request, organization_id):
     if request.POST['website']:
         organization.website = request.POST['website']
     else:
-        organization.website = None
+        organization.website = ""
 
     if request.POST['reference']:
         organization.reference = request.POST['reference']
     else:
         organization.reference = None
 
-    if request.POST['type_choices']:
-        organization.type = request.POST['type_choices']
-    else:
-        organization.type = None
+    organization.type = "service partner"
 
     if form.is_valid():
         organization.save()
-        return organization_read(request, organization.id)
-    else:
 
-        return layout.render(request, "organization_form.html", {'organization': organization,
+    if organization_address_id:
+        organization_address = OrganizationAddress.find_by_id(organization_address_id)
+    else:
+        organization_address = OrganizationAddress()
+
+    organization_address.organization = organization
+    if request.POST['organization_address_label']:
+        organization_address.label = request.POST['organization_address_label']
+    else:
+        organization_address.label = None
+
+    if request.POST['organization_address_location']:
+        organization_address.location = request.POST['organization_address_location']
+    else:
+        organization_address.location = None
+
+    if request.POST['organization_address_postal_code']:
+        organization_address.postal_code = request.POST['organization_address_postal_code']
+    else:
+        organization_address.postal_code = None
+
+    if request.POST['organization_address_city']:
+        organization_address.city = request.POST['organization_address_city']
+    else:
+        organization_address.city = None
+
+    if request.POST['organization_address_country']:
+        organization_address.country = request.POST['organization_address_country']
+    else:
+        organization_address.country = None
+
+    if request.POST['organization_id']:
+        organization_address.organization = mdl.organization.find_by_id(int(request.POST['organization_id']))
+
+    organization_address.save()
+
+    return render(request, "place_form.html", {'organization': organization,
+                                                'organization_address':organization_address,
                                                                  'form': form})
 
+def organization_new(request):
+    return organization_save(request, None, None)
 
 def organization_edit(request, organization_id):
-    organization = mdl.organization.find_by_id(organization_id)
-    return layout.render(request, "organization_form.html", {'organization': organization,
-                                                             'types': mdl.organization.ORGANIZATION_TYPE})
+    organization = Organization.find_by_id(organization_id)
+    return render(request, "place_form.html", {'organization': organization})
 
 
 def organization_create(request):
-    organization = mdl.organization.Organization()
-    return layout.render(request, "organization_form.html", {'organization': organization,
-                                                             'types': mdl.organization.ORGANIZATION_TYPE})
+    organization = Organization()
+    return render(request, "place_form.html", {'organization': organization})

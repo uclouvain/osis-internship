@@ -235,7 +235,6 @@ def internships_new(request):
 
     internship = InternshipOffer()
 
-    print(request.POST['organization'])
     if request.POST['organization']:
         organization = Organization.search(reference=request.POST['organization'])
         internship.organization = organization[0]
