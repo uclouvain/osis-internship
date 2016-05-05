@@ -38,7 +38,6 @@ from base.utils import export_utils
 
 @login_required
 def upload_scores_file(request, learning_unit_year_id=None):
-    tutor_id = None
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
     message_validation = ""
     if request.method == 'POST':
@@ -50,22 +49,11 @@ def upload_scores_file(request, learning_unit_year_id=None):
                     message_validation = _('file_must_be_xls')
                 else:
                     is_program_manager = mdl.program_manager.is_program_manager(request.user)
-                    # is_fac = True
-                    # if tutor_id:
-                    #     is_fac = False
                     is_valid = __save_xls_scores(request, file_name, is_program_manager, request.user, learning_unit_year.learning_unit.id)
                     if not is_valid:
                         message_validation = '%s' % _('invalid_file')
 
                 messages.add_message(request, messages.INFO, '%s' % message_validation)
-        #         if tutor_id:
-        #             return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_id, tutor_id]))
-        #         else:
-        #             return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_id, ]))
-        # else:
-        #     if tutor_id:
-        #         return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_id, tutor_id]))
-        #     else:
         return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_year_id, ]))
 
 

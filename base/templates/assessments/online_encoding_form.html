@@ -48,7 +48,7 @@
         <div class="col-md-6">
           <div class="form-group">
             <label>{% trans 'responsible' %}</label><br>
-            {{ tutor_responsible }}
+            {{ coordinator }}
           </div>
         </div>
         <div class="col-md-3">
@@ -151,7 +151,7 @@
         </table>
 
         <button type="submit" class="btn btn-primary" id="bt_submit_online_encoding"><span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'save' %}</button>
-        <a class="btn btn-default" href="{%if tutor%}{% url 'online_encoding' learning_unit_year.id tutor.id%}{%else%}{% url 'online_encoding' learning_unit_year.id %}{%endif%}" role="button" id="lnk_cancel_online_encoding"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
+        <a class="btn btn-default" href="{% url 'online_encoding' learning_unit_year.id %}" role="button" id="lnk_cancel_online_encoding"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
 
       </form>
     </div>

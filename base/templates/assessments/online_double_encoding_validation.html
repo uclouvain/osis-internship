@@ -32,7 +32,7 @@
 <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
 <li><a href="{% url 'assessments' %}" id="lnk_evaluations">{% trans 'evaluations' %}</a></li>
 <li><a href="{% url 'scores_encoding' %}" id="lnk_scores_encoding">{% trans 'scores_encoding' %}</a></li>
-<li><a href="{%if tutor%}{% url 'online_encoding' learning_unit_year.id tutor.id%}{%else%}{% url 'online_encoding' learning_unit_year.id %}{%endif%}" id="lnk_online_scores_encoding">{% trans 'online_scores_encoding' %}</a></li>
+<li><a href="{% url 'online_encoding' learning_unit_year.id %}" id="lnk_online_scores_encoding">{% trans 'online_scores_encoding' %}</a></li>
 <li class="active">{% trans 'dubble_online_scores_encoding' %}</li>
 {% endblock %}
 
@@ -49,7 +49,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label>{% trans 'responsible' %}</label><br>
-                    {{ tutor }}
+                    {{ coordinator }}
                 </div>
             </div>
             <div class="col-md-3">
@@ -130,7 +130,7 @@
             </table>
 
             <button type="submit" class="btn btn-primary" id="bt_submit_online_double_encoding_validation"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'save' %}</button>
-            <a class="btn btn-default" id="lnk_cancel" href="{%if tutor%}{% url 'online_encoding' learning_unit_year.id tutor.id %}{%else%}{% url 'online_encoding' learning_unit_year.id %}{%endif%}" role="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
+            <a class="btn btn-default" id="lnk_cancel" href="{% url 'online_encoding' learning_unit_year.id %}" role="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
         </form>
     </div>
 </div>

@@ -62,13 +62,6 @@ def find_by_person(a_person):
         return None
 
 
-def find_by_learning_unit(a_learning_unit):
-    tutor_list = []
-    for at in attribution.find_by_learning_unit(a_learning_unit):
-        tutor_list.append(at.tutor)
-    return tutor_list
-
-
 def find_by_id(tutor_id):
     return Tutor.objects.get(id=tutor_id)
 
@@ -103,14 +96,4 @@ def find_by_program_manager(offer_years_managed):
     tutors = list(Tutor.objects.filter(pk__in=tutor_ids).order_by('person__last_name', 'person__first_name'))
     return tutors
 
-
-# def find_by_list(list):
-#     """
-#     To order tutors by name
-#     """
-#     ids = []
-#     for t in list:
-#         ids.append(t.id)
-#
-#     return Tutor.objects.filter(id__in=ids).order_by('person__last_name', 'person__first_name')
 

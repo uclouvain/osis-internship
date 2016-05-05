@@ -42,9 +42,6 @@ class ScoresEncoding(models.Model):
     total_exam_enrollments = models.IntegerField()
     exam_enrollments_encoded = models.IntegerField()
 
-    # def __str__(self):
-    #     return u"%s - %s" % (self.acronym, self.title)
-
     class Meta:
         managed = False
         db_table = 'app_scores_encoding'
