@@ -27,7 +27,7 @@ from django.conf.urls import url
 from django.contrib.auth.views import logout
 
 from base.utils import upload_xls_utils
-from base.views import learning_unit, offer, common, score_encoding, institution, organization,academic_calendar, \
+from base.views import learning_unit, offer, common, score_encoding, institution, organization, academic_calendar, \
     message
 
 urlpatterns = [
@@ -104,12 +104,22 @@ urlpatterns = [
     url(r'^offer_year_calendars/edit/([0-9]+)/$', offer.offer_year_calendar_edit, name='offer_year_calendar_edit'),
     url(r'^offer_year_calendars/save/([0-9]+)/$', offer.offer_year_calendar_save, name='offer_year_calendar_save'),
 
-    url(r'^organization_address/read/([0-9]+)/$', organization.organization_address_read, name='organization_address_read'),
-    url(r'^organization_address/edit/([0-9]+)/$', organization.organization_address_edit, name='organization_address_edit'),
-    url(r'^organization_address/save/([0-9]+)/$', organization.organization_address_save, name='organization_address_save'),
+    url(r'^organization_address/read/([0-9]+)/$', organization.organization_address_read,
+        name='organization_address_read'),
+    url(r'^organization_address/edit/([0-9]+)/$', organization.organization_address_edit,
+        name='organization_address_edit'),
+    url(r'^organization_address/save/([0-9]+)/$', organization.organization_address_save,
+        name='organization_address_save'),
     url(r'^organization_address/save/$', organization.organization_address_new, name='organization_address_save_new'),
-    url(r'^organization_address/create/([0-9]+)/$', organization.organization_address_create, name='organization_address_create'),
-    url(r'^organization_address/delete/([0-9]+)/$', organization.organization_address_delete, name='organization_address_delete'),
+    url(r'^organization_address/create/([0-9]+)/$', organization.organization_address_create,
+        name='organization_address_create'),
+    url(r'^organization_address/delete/([0-9]+)/$', organization.organization_address_delete,
+        name='organization_address_delete'),
 
-    url(r'^messages/$',message.messages,name='messages'),
+    url(r'^messages/$', message.messages, name='messages'),
+    url(r'^messages/messages_history/$', message.messages_history_index, name='messages_history_index'),
+    url(r'^messages/message_history/read/([0-9]+)/$', message.message_history_read, name='message_history_read'),
+    url(r'^messages/messages_history/send_message_again/([0-9]+)/$', message.send_message_again,
+        name='send_message_again'),
+    url(r'^messages/messages_history/search$', message.find_messages_history, name="messages_history_search"),
 ]
