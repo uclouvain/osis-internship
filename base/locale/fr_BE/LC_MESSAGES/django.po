@@ -1270,6 +1270,9 @@ msgstr "Vous gérez"
 msgid "learning_units_in"
 msgstr "unités d'enseignement dans"
 
+msgid "no_dubble_score_encoded_comparison_impossible"
+msgstr "Aucune note n'a été double encodée ; aucune comparaison à effectuer."
+
 #~ msgid "title_btn_upload_score"
 #~ msgstr ""
 #~ "Sélectionnez votre fichier excel à partir duquel il faut injecter les "
@@ -1343,7 +1346,7 @@ msgstr "Modèles de messages"
 msgid "desc_messages_template"
 msgstr "Le modèles de message permet la personnalisation dynamique des e-mails."
 
-msgid "messages_histor"
+msgid "messages_history"
 msgstr "Historique des messages"
 
 msgid "desc_messages_history"
@@ -1354,3 +1357,48 @@ msgstr "Toutes les notes ont été soumises."
 
 msgid "encoding_status_notended"
 msgstr "Il reste encore des notes à encoder."
+
+msgid "origin"
+msgstr "Origine"
+
+msgid "recipient"
+msgstr "Destinataire"
+
+msgid "subject"
+msgstr "Sujet"
+
+msgid "myosis"
+msgstr "MyOsis"
+
+msgid "sent"
+msgstr "Envoyé"
+
+msgid "not_sent"
+msgstr "Pas envoyé"
+
+msgid "message"
+msgstr "Message"
+
+msgid "send_message_again"
+msgstr "Réenvoyer"
+
+msgid "btn_send_message_again_title"
+msgstr "Réenvoie le message au destinataire"
+
+msgid "lnk_message_history_read_title"
+msgstr "Afficher le message"
+
+msgid "txt_origin_title"
+msgstr "Origine du message"
+
+msgid "txt_recipient_title"
+msgstr "Destinataire du message (email ou nom ou nom d'utilisateur)"
+
+msgid "txt_subject_title"
+msgstr "Sujet du message"
+
+msgid "txt_reference_title"
+msgstr "Référence du template du message"
+
+msgid "btn_messages_history_search"
+msgstr "Recherche dans l'historique des messages"

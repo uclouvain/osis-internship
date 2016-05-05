@@ -68,107 +68,18 @@ def find_session_by_id(session_exam_id):
     return SessionExam.objects.get(pk=session_exam_id)
 
 
-def find_sessions_by_tutor(tutor, academic_year, learning_unit_id):
-    if learning_unit_id:
-        learning_units = attribution.Attribution.objects.filter(tutor=tutor).values('learning_unit')
-        return SessionExam.objects \
-            .filter(learning_unit_year__academic_year=academic_year) \
-            .filter(learning_unit_year__learning_unit__in=learning_units) \
-            .filter(offer_year_calendar__start_date__lte=timezone.now()) \
-            .filter(offer_year_calendar__end_date__gte=timezone.now())
-    else:
-        learning_units = attribution.Attribution.objects.filter(tutor=tutor).values('learning_unit')
-        return SessionExam.objects \
-            .filter(learning_unit_year__academic_year=academic_year) \
-            .filter(learning_unit_year__learning_unit__in=learning_units) \
-            .filter(offer_year_calendar__start_date__lte=timezone.now()) \
-            .filter(offer_year_calendar__end_date__gte=timezone.now())
-
-
-def find_sessions_by_offer(offer_year, academic_year, learning_unit_id):
-    if learning_unit_id:
-        return SessionExam.objects \
-            .filter(offer_year_calendar__offer_year__academic_year=academic_year) \
-            .filter(offer_year_calendar__offer_year=offer_year)\
-            .filter(learning_unit_year__learning_unit=learning_unit_id)\
-            .filter(offer_year_calendar__start_date__lte=timezone.now()) \
-            .filter(offer_year_calendar__end_date__gte=timezone.now())
-    else:
-        return SessionExam.objects \
-            .filter(offer_year_calendar__offer_year__academic_year=academic_year) \
-            .filter(offer_year_calendar__offer_year=offer_year) \
-            .filter(offer_year_calendar__start_date__lte=timezone.now()) \
-            .filter(offer_year_calendar__end_date__gte=timezone.now())
-
-
-def find_current_sessions_by_tutor(tutor, academic_year, learning_unit):
-    if learning_unit:
-
-        return SessionExam.objects.filter(learning_unit_year__academic_year=academic_year) \
-            .filter(learning_unit_year__learning_unit=learning_unit) \
-            .filter(offer_year_calendar__start_date__lte=timezone.now()) \
-            .filter(offer_year_calendar__end_date__gte=timezone.now())
-    else:
-        learning_units = attribution.Attribution.objects.filter(tutor=tutor).values('learning_unit')
-        return SessionExam.objects.filter(learning_unit_year__academic_year=academic_year) \
-            .filter(learning_unit_year__learning_unit__in=learning_units) \
-            .filter(offer_year_calendar__start_date__lte=timezone.now()) \
-            .filter(offer_year_calendar__end_date__gte=timezone.now())
-
-
-def find_sessions_by_offer_tutor(offer_year, academic_year, a_tutor):
-    if offer_year and a_tutor is None:
-        return SessionExam.objects \
-            .filter(offer_year_calendar__offer_year__academic_year=academic_year) \
-            .filter(offer_year_calendar__offer_year=offer_year)\
-            .filter(offer_year_calendar__start_date__lte=timezone.now()) \
-            .filter(offer_year_calendar__end_date__gte=timezone.now())
-
-    if a_tutor and offer_year is None:
-        learning_units = attribution.Attribution.objects.filter(tutor=a_tutor).values('learning_unit')
-        return SessionExam.objects.filter(learning_unit_year__academic_year=academic_year) \
-            .filter(learning_unit_year__learning_unit__in=learning_units) \
-            .filter(offer_year_calendar__start_date__lte=timezone.now()) \
-            .filter(offer_year_calendar__end_date__gte=timezone.now())
-
-    if a_tutor and offer_year:
-        learning_units = attribution.Attribution.objects.filter(tutor=a_tutor).values('learning_unit')
-        return SessionExam.objects.filter(learning_unit_year__academic_year=academic_year) \
-            .filter(learning_unit_year__learning_unit__in=learning_units) \
-            .filter(offer_year_calendar__start_date__lte=timezone.now()) \
-            .filter(offer_year_calendar__end_date__gte=timezone.now()) \
-            .filter(offer_year_calendar__offer_year=offer_year)
-
-
-def find_current_sessions_by_tutor_offer(tutor, academic_year,  learning_unit ,offer_year):
-     if learning_unit:
-
-        return SessionExam.objects.filter(learning_unit_year__academic_year=academic_year) \
-            .filter(learning_unit_year__learning_unit=learning_unit) \
-            .filter(offer_year_calendar__start_date__lte=timezone.now()) \
-            .filter(offer_year_calendar__end_date__gte=timezone.now())
-     else:
-        if tutor and not offer_year:
-            learning_units = attribution.Attribution.objects.filter(tutor=tutor).values('learning_unit')
-            return SessionExam.objects.filter(learning_unit_year__academic_year=academic_year) \
-                .filter(learning_unit_year__learning_unit__in=learning_units) \
-                .filter(offer_year_calendar__start_date__lte=timezone.now()) \
-                .filter(offer_year_calendar__end_date__gte=timezone.now())
-        else:
-            if offer_year and not tutor:
-
-                return SessionExam.objects.filter(learning_unit_year__academic_year=academic_year) \
-                    .filter(offer_year_calendar__offer_year=offer_year) \
-                    .filter(offer_year_calendar__start_date__lte=timezone.now()) \
-                    .filter(offer_year_calendar__end_date__gte=timezone.now())
-            else:
-                if offer_year and tutor:
-                    learning_units = attribution.Attribution.objects.filter(tutor=tutor).values('learning_unit')
-                    return SessionExam.objects.filter(learning_unit_year__academic_year=academic_year) \
-                            .filter(offer_year_calendar__offer_year=offer_year) \
-                            .filter(learning_unit_year__learning_unit__in=learning_units) \
-                            .filter(offer_year_calendar__start_date__lte=timezone.now()) \
-                            .filter(offer_year_calendar__end_date__gte=timezone.now())
+def find_session_exam_number():
+    """
+    :return: The current sessionExam number (based on the datetime.now() in offerYearCalendar).
+    """
+    sess_exam_number = SessionExam.objects.filter(offer_year_calendar__start_date__lte=timezone.now())\
+                                          .filter(offer_year_calendar__end_date__gte=timezone.now())\
+                                          .distinct('number_session')\
+                                          .values('number_session')
+    sess_exam_number = list(sess_exam_number) # Force evaluation of the queryset
+    if len(sess_exam_number) > 1:
+        raise Exception("There are multiple exam sessions opened at this moment !")
+    return sess_exam_number[0].get('number_session')
 
 
 def find_by_offer_years(offer_years):

@@ -26,7 +26,6 @@
 from ckeditor.widgets import CKEditorWidget
 from django import forms
 from django.forms import ModelForm
-
 from base import models as mdl
 
 
@@ -77,3 +76,11 @@ class MessageTemplateForm(ModelForm):
     class Meta:
         model = mdl.message_template.MessageTemplate
         fields = ['reference', 'subject', 'template', 'format', 'language']
+
+
+class MessageHistorySearchForm(forms.Form):
+    subject = forms.CharField(max_length=50, required=False)
+    reference = forms.CharField(max_length=50, required=False)
+    recipient = forms.CharField(max_length=25, required=False)
+    origin = forms.CharField(max_length=25, required=False)
+    not_sent = forms.BooleanField(initial=False, required=False)
