@@ -23,6 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+
+# Statements in alphabetic order.
 from base.models import academic_year
 from base.models import academic_calendar
 from base.models import application_notice
@@ -33,6 +35,7 @@ from base.models import exam_enrollment
 from base.models import learning_unit
 from base.models import learning_unit_enrollment
 from base.models import learning_unit_year
+from base.models import message_history
 from base.models import message_template
 from base.models import scores_encoding
 from base.models import offer

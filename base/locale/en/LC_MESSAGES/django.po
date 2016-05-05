@@ -1349,3 +1349,48 @@ msgstr "All the scores are encoded."
 
 msgid "encoding_status_notended"
 msgstr "It remains notes to encode."
+
+msgid "origin"
+msgstr "From"
+
+msgid "recipient"
+msgstr "Recipient"
+
+msgid "subject"
+msgstr "Subject"
+
+msgid "myosis"
+msgstr "MyOsis"
+
+msgid "sent"
+msgstr "Sent"
+
+msgid "not_sent"
+msgstr "Not Sent"
+
+msgid "message"
+msgstr "Message"
+
+msgid "send_message_again"
+msgstr "Send again"
+
+msgid "btn_send_message_again_title"
+msgstr "Send again the message to the recipient"
+
+msgid "lnk_message_history_read_title"
+msgstr "See the message"
+
+msgid "txt_origin_title"
+msgstr "Sender of the message"
+
+msgid "txt_recipient_title"
+msgstr "Recipient of the message (email or last name or username)"
+
+msgid "txt_subject_title"
+msgstr "Subject of the messages"
+
+msgid "txt_reference_title"
+msgstr "Template reference of the message"
+
+msgid "btn_messages_history_search"
+msgstr "Search in the messages history"
