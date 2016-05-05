@@ -9,7 +9,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('base', '0038_auto_20160502_0055'),
+        ('base', '0040_scoresencoding'),
     ]
 
     operations = [

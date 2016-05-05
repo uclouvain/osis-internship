@@ -66,7 +66,7 @@ def search(limit=100, **kwargs):
                                        Q(person__last_name__icontains=kwargs.get('recipient')) |
                                        Q(person__user__username__icontains=kwargs.get('recipient')))
         if kwargs.get('not_sent'):
-            queryset = queryset.exclude(sent__isnull=True)
+            queryset = queryset.filter(sent__isnull=True)
 
         queryset = queryset.order_by('created')
         messages_history = queryset[:limit]

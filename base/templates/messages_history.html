@@ -71,12 +71,11 @@
                            title="{% trans 'txt_reference_title' %}">
                 </div>
                 <div class="col-md-2">
-                    <label class="control-label">{% trans 'not_sent'%}</label>
-                    <div class="row checkbox" style="margin-top:-5px">
+                    <div class="row checkbox" style="margin-top:25px">
                         <div class="col-md-12">
                             <label>
                                 <input type="checkbox" id="chk_not_sent" name="not_sent"
-                                       value="{{ form.not_sent.value }}"/>{% trans 'email' %}
+                                       {% if form.not_sent.value %}checked{%endif%}/>&nbsp;<b>{% trans 'not_sent'%}</b>
                             </label>
                         </div>
                     </div>
@@ -99,9 +98,7 @@
         <th>{% trans 'subject'%}</th>
         <th>{% trans 'origin'%}</th>
         <th>{% trans 'recipient'%}</th>
-        <th>{% trans 'email' %}</th>
-        <th>{% trans 'myosis' %}</th>
-        <th>{% trans 'language' %}</th>
+        <th>{% trans 'sent' %}</th>
     </tr>
     </thead>
     {% for message_history in messages_history %}
@@ -110,19 +107,11 @@
                id="lnk_message_history_read_{{ message_history.id }}" title="lnk_message_history_read_title">{{ message_history.subject }}</a></td>
         <td>{{ message_history.origin }}</td>
         <td>{{ message_history.person.first_name }} {{ message_history.person.last_name }}</td>
-        <td>{% if message_history.sent_by_mail_date %}
-                {{ message_history.sent_by_mail_date }}
+        <td>{% if message_history.sent %}
+                {{ message_history.sent }}
             {% else %}
-            <i class="fa fa-times" aria-hidden="true"></i>
-            {% endif %}
-        </td>
-        <td>{% if message_history.sent_to_myosis_date %}
-                {{ message_history.sent_by_myosis_date }}
-            {% else %}
-            <i class="fa fa-times" aria-hidden="true"></i>
-            {% endif %}
-        </td>
-        <td>{{ message_history.template.language }}</td>
+                <i class="fa fa-times" aria-hidden="true"></i>
+            {% endif %}</td>
     </tr>
     {% endfor %}
 </table>
