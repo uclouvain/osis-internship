@@ -42,9 +42,9 @@ ENTITY_TYPE = (('SECTOR', 'sector'),
                ('DOCTORAL_COMMISSION', 'doctoral_commission'),
                ('PROGRAM_COMMISSION', 'program_commission'),
                ('LOGISTIC', 'logistic'),
-               ('UNDEFINED', 'undefined'),
                ('RESEARCH_CENTER', 'research_center'),
-               ('TECHNOLOGIC_PLATFORM', 'technologic_platform'))
+               ('TECHNOLOGIC_PLATFORM', 'technologic_platform'),
+               ('UNDEFINED', 'undefined'))
 
 
 class Structure(models.Model):
@@ -134,8 +134,11 @@ def find_faculty(a_structure):
     if a_structure.type == 'FACULTY':
         return a_structure
     else:
-        if a_structure.part_of:
-            if a_structure.part_of.type != 'FACULTY':
-                find_faculty(a_structure.part_of)
+        parent = a_structure.part_of
+        if parent:
+            if parent.type != 'FACULTY':
+                find_faculty(parent)
+            else:
+                return parent
         return None
 

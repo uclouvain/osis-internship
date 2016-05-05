@@ -25,25 +25,65 @@
 ##############################################################################
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from internship.models import InternshipOffer
+from internship.models import InternshipOffer, InternshipChoice
+from internship.forms import InternshipChoiceForm
+from base import models as mdl
 
+import urllib.request
+import unicodedata
+from xml.dom import minidom
+from math import sin, cos, radians, degrees, acos
 
+def geocode(addr):
+    lat_long = [None]*2
+    #Transform the address for a good url and delete all accents
+    addr = addr.replace (" ", "+")
+    addr = addr.replace ("'", "\'")
+    addr = strip_accents(addr)
+    #get the complete url
+    url = "https://maps.googleapis.com/maps/api/geocode/xml?address=%s&key=AIzaSyCWeZdraxzqRTMxXxbXY3bncaD6Ijq_EvE" % (addr)
+
+    #using urllib get the xml
+    req = urllib.request.Request(url)
+    with urllib.request.urlopen(req) as response:
+        data = response.read().decode('utf-8')
+
+    #Parse the xml to have the latitude and longitude of the address
+    xmldoc = minidom.parseString(data)
+    lat = xmldoc.getElementsByTagName('location')
+    for l in lat :
+        c = l.getElementsByTagName('lat')[0].firstChild.data
+        d = l.getElementsByTagName('lng')[0].firstChild.data
+        lat_long[0] = c
+        lat_long[1] = d
+    #return the value
+    return lat_long
+
+def strip_accents(s):
+   return ''.join(c for c in unicodedata.normalize('NFD', s)
+                  if unicodedata.category(c) != 'Mn')
+
+def calc_dist(lat_a, long_a, lat_b, long_b):
+    lat_a = radians(float(lat_a))
+    lat_b = radians(float(lat_b))
+    long_a = float(long_a)
+    long_b = float(long_b)
+    long_diff = radians(long_a - long_b)
+    distance = (sin(lat_a) * sin(lat_b) +
+                cos(lat_a) * cos(lat_b) * cos(long_diff))
+    #for distance in miles use this
+    #return (degrees(acos(distance)) * 69.09)
+    #for distance in kilometers use this
+    return (degrees(acos(distance)) * 69.09)/0.621371
+
+    
 @login_required
 def internships(request):
-    # First get the value of the 2 options for the sort
+    #First get the value of the option's value for the sort
     if request.method == 'GET':
-        learning_unit_year_sort_value = request.GET.get('learning_unit_year_sort')
         organization_sort_value = request.GET.get('organization_sort')
 
-    # Then select Internship Offer depending of the options
-    # If both exist / if just LearningUnitYear exist / if just organization exist / if none exist
-    if learning_unit_year_sort_value and learning_unit_year_sort_value != "0":
-        if organization_sort_value and organization_sort_value != "0":
-            query = InternshipOffer.find_interships_by_learning_unit_organization(learning_unit_year_sort_value,
-                                                                                  organization_sort_value)
-        else:
-            query = InternshipOffer.find_interships_by_learning_unit(learning_unit_year_sort_value)
-    else:
+    #Then select Internship Offer depending of the option
         if organization_sort_value and organization_sort_value != "0":
             query = InternshipOffer.find_interships_by_organization(organization_sort_value)
         else :
@@ -51,17 +91,55 @@ def internships(request):
 
     # Create the options for the selected list, delete duplicated
     query_organizations = InternshipOffer.find_internships()
-    internship_learning_unit_year = []
     internship_organizations = []
     for internship in query_organizations:
-        internship_learning_unit_year.append(internship.learning_unit_year)
         internship_organizations.append(internship.organization)
-    internship_learning_unit_year = list(set(internship_learning_unit_year))
     internship_organizations = list(set(internship_organizations))
 
     return render(request, "internships.html", {'section': 'internship',
                                                 'all_internships': query,
-                                                'all_learning_unit_year': internship_learning_unit_year,
-                                                'all_organizations': internship_organizations,
-                                                'learning_unit_year_sort_value': learning_unit_year_sort_value,
-                                                'organization_sort_value': organization_sort_value})
+                                                'all_organizations':internship_organizations,
+                                                'organization_sort_value':organization_sort_value})
+
+@login_required
+def internships_save(request):
+    form = InternshipChoiceForm(data=request.POST)
+
+    if request.POST['organization']:
+        organization_list = request.POST.getlist('organization')
+
+    if request.POST['learning_unit_year']:
+        learning_unit_year_list = request.POST.getlist('learning_unit_year')
+
+    if request.POST['preference']:
+        preference_list = request.POST.getlist('preference')
+
+    index = 0
+    for r in preference_list:
+        if r == "0":
+            learning_unit_year_list[index] = 0
+            organization_list[index] = 0
+        index += 1
+
+    organization_list = [x for x in organization_list if x != 0]
+    learning_unit_year_list = [x for x in learning_unit_year_list if x != 0]
+    preference_list = [x for x in preference_list if x != '0']
+    student = mdl.student.find_by(person_username=request.user)
+
+    index = preference_list.__len__()
+    for x in range(0, index):
+        new_choice = InternshipChoice()
+        new_choice.student = student[0]
+        organization = mdl.organization.search(name=organization_list[x])
+        new_choice.organization = organization[0]
+        learning_unit_year = mdl.learning_unit_year.search(title=learning_unit_year_list[x])
+        new_choice.learning_unit_year = learning_unit_year[0]
+        new_choice.choice = preference_list[x]
+        new_choice.save()
+
+    return render(request, "internships.html", {'section': 'internship',
+                                                'form': form
+                                                #'all_internships': query,
+                                                #'all_organizations':internship_organizations,
+                                                #'organization_sort_value':organization_sort_value
+                                                })

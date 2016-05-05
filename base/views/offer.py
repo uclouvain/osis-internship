@@ -76,7 +76,7 @@ def offer_read(request, offer_year_id):
 
 def offer_year_calendar_read(request, id):
     offer_year_calendar = mdl.offer_year_calendar.find_by_id(id)
-    is_programme_manager = mdl.program_manager.is_programme_manager(request.user,offer_year_calendar.offer_year)
+    is_programme_manager = mdl.program_manager.is_program_manager(request.user, offer_year=offer_year_calendar.offer_year)
     return layout.render(request, "offer_year_calendar.html", {'offer_year_calendar':   offer_year_calendar,
                                                                'is_programme_manager' : is_programme_manager})
 

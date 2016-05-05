@@ -53,6 +53,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_jenkins',
+    'ckeditor',
     'reference',
     'base',
     'assistant',
@@ -86,13 +87,12 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                ],
-            },
+            ],
         },
-    ]
+    },
+]
 
 WSGI_APPLICATION = 'backoffice.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
@@ -107,7 +107,6 @@ DATABASES = {
         'PORT': '5432',
     },
 }
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
@@ -149,12 +148,30 @@ EMAIL_FILE_PATH = os.path.join(BASE_DIR, "base/tests/sent_mails")
 DEFAULT_FROM_EMAIL = 'osis@localhost.be'
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
-
 SCREEN_SHOT_FOLDER = os.path.join(BASE_DIR, "base/tests/selenium/screenshots")
 FIREFOX_PROFILE_PATH = os.path.join(BASE_DIR, "base/tests/selenium/firefox_profile")
 JENKINS_TASKS = []
 
-PROPERTIES_FILE = ''
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'Custom',
+        'toolbar_Custom': [
+            {'name': 'basicstyles', 'items': ['Bold', 'Italic', 'Underline', 'Strike', '-', 'RemoveFormat']},
+            {'name': 'links', 'items': ['Link']},
+            {'name': 'styles', 'items': ['Styles', 'Format', 'Font', 'FontSize', 'Source']},
+            {'name': 'colors', 'items': ['TextColor', 'BGColor']},
+            '/',
+            {'name': 'insert', 'items': ['Table']},
+            {'name': 'paragraph',
+             'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-',
+                       'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']},
+            {'name': 'forms',
+             'items': ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton',
+                       'HiddenField']},
+            {'name': 'about', 'items': ['About']},
+        ],
+    },
+}
 
 QUEUE_URL = 'localhost'
 QUEUE_USER = 'guest'
@@ -162,14 +179,19 @@ QUEUE_PASSWORD = 'guest'
 QUEUE_PORT = 5672
 QUEUE_CONTEXT_ROOT = '/'
 
-#This has to be replaced by the actual url where you institution logo can be found.
-#The best choici is to set an external url.
-#Ex : LOGO_INSTITUTION_URL = 'https://www.google.be/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'
-#A relative URL will work on local , but not out of the box on the servers.
+# This has to be replaced by the actual url where you institution logo can be found.
+# The best choici is to set an external url.
+# Ex : LOGO_INSTITUTION_URL = 'https://www.google.be/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'
+# A relative URL will work on local , but not out of the box on the servers.
 LOGO_INSTITUTION_URL = os.path.join(BASE_DIR, "base/static/img/logo_institution.jpg")
+
+# Those urls have to be provided to be used for the emails signature templating.
+LOGO_EMAIL_SIGNATURE_URL = ''
+LOGO_OSIS_URL = ''
 
 try:
     from backoffice.server_settings import *
+
     try:
         INSTALLED_APPS = INSTALLED_APPS + SERVER_APPS
     except NameError:
