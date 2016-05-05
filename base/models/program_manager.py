@@ -80,6 +80,9 @@ def find_by_offer_year(offer_yr):
     return ProgramManager.objects.filter(offer_year=offer_yr)
 
 
-def find_by_user(user):
-    return ProgramManager.objects.filter(person__user=user)\
-                                 .order_by('offer_year__acronym')
+def find_by_user(user, academic_year=None):
+    queryset = ProgramManager.objects
+    if academic_year:
+        queryset = queryset.filter(offer_year__academic_year=academic_year)
+
+    return queryset.filter(person__user=user)
