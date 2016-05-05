@@ -84,5 +84,4 @@ class MessageHistorySearchForm(forms.Form):
     reference = forms.CharField(max_length=50, required=False)
     recipient = forms.CharField(max_length=25, required=False)
     origin = forms.CharField(max_length=25, required=False)
-    sent_by_mail = forms.BooleanField(initial=True, required=False)
-    sent_to_myosis = forms.BooleanField(initial=False, required=False)
+    not_sent = forms.BooleanField(initial=True, required=False)

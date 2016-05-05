@@ -71,18 +71,12 @@
                            title="{% trans 'txt_reference_title' %}">
                 </div>
                 <div class="col-md-2">
-                    <label class="control-label">{% trans 'sent'%}</label>
+                    <label class="control-label">{% trans 'not_sent'%}</label>
                     <div class="row checkbox" style="margin-top:-5px">
                         <div class="col-md-12">
                             <label>
-                                <input type="checkbox" id="chk_sent_by_mail" name="sent_by_mail"
-                                       value="{{ form.sent_by_mail.value }}" title="{% trans 'chk_sent_by_mail_title' %}"/>{% trans 'email' %}
-                            </label>
-                        </div>
-                        <div class="col-md-12">
-                            <label>
-                                <input type="checkbox" id="chk_sent_to_myosis" name="sent_to_myosis"
-                                       value="{{ form.sent_to_my_osis.value }}" title="{% trans 'chk_sent_to_myosis_title' %}"/>{% trans 'myosis' %}
+                                <input type="checkbox" id="chk_not_sent" name="not_sent"
+                                       value="{{ form.not_sent.value }}"/>{% trans 'email' %}
                             </label>
                         </div>
                     </div>

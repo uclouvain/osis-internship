@@ -30,6 +30,7 @@
 <li><a href="{% url 'messages' %}" id="lnk_messages">{% trans 'messages' %}</a></li>
 <li class="active">{% trans 'messages_history' %}</li>
 {% endblock %}
+
 {% block content %}
 <div class="page-header">
     <h2>{{ message_history.subject }}</h2>
@@ -45,46 +46,25 @@
         <div><label class="control-label">{% trans 'origin' %}</label></div>
         {{ message_history.origin }}
     </div>
-    <div class="col-md-2">
+    <div class="col-md-3">
         <div><label class="control-label">{% trans 'creation_date' %}</label></div>
         {{ message_history.created }}
     </div>
     <div class="col-md-3">
-        <div align="center"><label class="control-label">{% trans 'sent' %}</label></div>
-        <div class="row">
-            <div class="col-md-6"><b>{% trans 'email' %}</b><br/>
-                {% if message_history.sent_by_mail_date %}
-                {{ message_history.sent_by_mail_date }}
-                {% else %}
-                <i class="fa fa-times" aria-hidden="true"></i>
-                {% endif %}
-            </div>
-            <div class="col-md-6"><b>{% trans 'myosis' %}</b><br/>
-                {% if message_history.sent_to_myosis_date %}
-                {{ message_history.sent_to_myosis_date }}
-                {% else %}
-                <i class="fa fa-times" aria-hidden="true"></i>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-    <div class="col-md-1">
-        <div><label class="control-label">{% trans 'language' %}</label></div>
-        {{ message_history.template.language }}
+        <label class="control-label">{% trans 'sent' %}</label><br/>
+        {% if message_history.sent %}
+            {{ message_history.sent }}
+        {% else %}
+            <i class="fa fa-times" aria-hidden="true"></i>
+        {% endif %}
     </div>
 </div>
+
 <br/>
-<div class="row">
-    <div class="col-md-11">
-        <div><label class="control-label">{% trans 'message' %}</label></div>
-        {% autoescape off %}{{ message_history.content }}{% endautoescape %}
-    </div>
-</div>
+<label class="control-label">{% trans 'message' %}</label><br/>
+{% autoescape off %}{{ message_history.content }}{% endautoescape %}
+
 <br/>
-<div class="row">
-    <div class="col-md-2">
-        <a href="{% url 'send_message_again' message_history.id %}" class="btn btn-default" id="btn_send_message_again"
+<a href="{% url 'send_message_again' message_history.id %}" class="btn btn-default" id="btn_send_message_again"
            role="button" title="btn_send_message_again_title">{% trans 'send_message_again' %}</a>
-    </div>
-</div>
 {% endblock %}

@@ -21,10 +21,8 @@ class Migration(migrations.Migration):
                 ('content', models.TextField()),
                 ('origin', models.EmailField(max_length=254)),
                 ('created', models.DateTimeField(editable=False)),
-                ('sent_by_mail_date', models.DateTimeField(null=True)),
-                ('sent_to_myosis_date', models.DateTimeField(null=True)),
+                ('sent', models.DateTimeField(null=True)),
                 ('person', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='base.Person')),
-                ('template', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='base.MessageTemplate')),
             ],
         ),
     ]

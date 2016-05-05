@@ -29,22 +29,20 @@ from django.utils import timezone
 
 
 class MessageHistory(models.Model):
-    template = models.ForeignKey('MessageTemplate')
     subject = models.CharField(max_length=255)
     content = models.TextField()
     origin = models.EmailField()
     person = models.ForeignKey('Person')
     created = models.DateTimeField(editable=False)
-    sent_by_mail_date = models.DateTimeField(null=True)
-    sent_to_myosis_date = models.DateTimeField(null=True)
-
-    def __str__(self):
-        return self.subject
+    sent = models.DateTimeField(null=True)
 
     def save(self, *args, **kwargs):
         if not self.id:
             self.created = timezone.now()
         return super(MessageHistory, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.subject
 
 
 def find_by_id(message_history_id):
@@ -52,30 +50,24 @@ def find_by_id(message_history_id):
     return message_history
 
 
-def find(limit=100, **kwargs):
+def search(limit=100, **kwargs):
     if not kwargs:
         messages_history = MessageHistory.objects.all().order_by('created')[:limit]
     else:
         queryset = MessageHistory.objects
-        if 'reference' in kwargs and kwargs['reference']:
-            queryset = queryset.filter(template__reference__icontains=kwargs['reference'])
-        if 'language' in kwargs and kwargs['language']:
-            queryset = queryset.filter(template__language=kwargs['language'])
-        if 'subject' in kwargs and kwargs['subject']:
-            queryset = queryset.filter(subject__icontains=kwargs['subject'])
-        if 'origin' in kwargs and kwargs['origin']:
-            queryset = queryset.filter(origin__icontains=kwargs['origin'])
-        if 'recipient' in kwargs and kwargs['recipient']:
-            queryset = queryset.filter(Q(person__email__icontains=kwargs['recipient']) |
-                                       Q(person__last_name__icontains=kwargs['recipient']) |
-                                       Q(person__user__username__icontains=kwargs['recipient']))
-        if 'sent_by_mail' in kwargs and kwargs['sent_by_mail']:
-            queryset = queryset.exclude(sent_by_mail_date__isnull=True)
-        if 'sent_to_myosis' in kwargs and kwargs['sent_to_myosis']:
-            queryset = queryset.exclude(sent_to_myosis_date__isnull=True)
-        if 'orber_by' in kwargs and kwargs['order_by']:
-            queryset = queryset.order_by(kwargs['order_by'])
-        else:
-            queryset = queryset.order_by('created')
+        if kwargs.get('reference'):
+            queryset = queryset.filter(template__reference__icontains=kwargs.get('reference'))
+        if kwargs.get('subject'):
+            queryset = queryset.filter(subject__icontains=kwargs.get('subject'))
+        if kwargs.get('origin'):
+            queryset = queryset.filter(origin__icontains=kwargs.get('origin'))
+        if kwargs.get('recipient'):
+            queryset = queryset.filter(Q(person__email__icontains=kwargs.get('recipient')) |
+                                       Q(person__last_name__icontains=kwargs.get('recipient')) |
+                                       Q(person__user__username__icontains=kwargs.get('recipient')))
+        if kwargs.get('not_sent'):
+            queryset = queryset.exclude(sent__isnull=True)
+
+        queryset = queryset.order_by('created')
         messages_history = queryset[:limit]
     return messages_history

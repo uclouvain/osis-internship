@@ -1320,6 +1320,9 @@ msgstr "MyOsis"
 msgid "sent"
 msgstr "Sent"
 
+msgid "not_sent"
+msgstr "Not Sent"
+
 msgid "message"
 msgstr "Message"
 
@@ -1343,12 +1346,6 @@ msgstr "Subject of the messages"
 
 msgid "txt_reference_title"
 msgstr "Template reference of the message"
-
-msgid "chk_sent_by_mail_title"
-msgstr "Sent by email"
-
-msgid "chk_sent_to_myosis_title"
-msgstr "Sent to MyOsis"
 
 msgid "btn_messages_history_search"
 msgstr "Search in the messages history"

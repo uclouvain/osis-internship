@@ -1324,6 +1324,9 @@ msgstr "MyOsis"
 msgid "sent"
 msgstr "Envoyé"
 
+msgid "not_sent"
+msgstr "Pas envoyé"
+
 msgid "message"
 msgstr "Message"
 
@@ -1347,12 +1350,6 @@ msgstr "Sujet du message"
 
 msgid "txt_reference_title"
 msgstr "Référence du template du message"
-
-msgid "chk_sent_by_mail_title"
-msgstr "Envoyé par email"
-
-msgid "chk_sent_to_myosis_title"
-msgstr "Envoyé dans MyOsis"
 
 msgid "btn_messages_history_search"
 msgstr "Recherche dans l'historique des messages"

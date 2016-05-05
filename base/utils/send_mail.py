@@ -50,7 +50,6 @@ def send_mail_after_scores_submission(persons, learning_unit_name, submitted_enr
     :param submitted_enrollments : The list of newly sibmitted enrollments
     :param all_encoded : Tell if all the scores are encoded and submitted
     """
-
     txt_message_templates = {template.language: template for template in
                              message_template_mdl.find_by_reference('assessments_scores_submission_txt')}
     html_message_templates = {template.language: template for template in
@@ -71,8 +70,7 @@ def send_mail_after_scores_submission(persons, learning_unit_name, submitted_enr
         'learning_unit_name': learning_unit_name,
         'signature': render_to_string('email/html_email_signature.html', {
             'logo_mail_signature_url': LOGO_OSIS_URL,
-            'logo_osis_url': LOGO_EMAIL_SIGNATURE_URL,
-        })
+            'logo_osis_url': LOGO_EMAIL_SIGNATURE_URL})
     }
 
     dest_by_lang = map_persons_by_languages(persons)
@@ -111,8 +109,7 @@ def send_mail_after_scores_submission(persons, learning_unit_name, submitted_enr
                 )
                 data['submitted_enrollments'] = submitted_enrollments_table_txt
                 txt_message = Template(txt_message_template.template).render(Context(data))
-                send_and_save(template=html_message_template,
-                              persons=person,
+                send_and_save(persons=person,
                               subject=unescape(strip_tags(subject)),
                               message=unescape(strip_tags(txt_message)),
                               html_message=html_message, from_email=DEFAULT_FROM_EMAIL)
@@ -132,14 +129,12 @@ def send_mail_after_academic_calendar_changes(academic_calendar, offer_year_cale
                               message_template_mdl.find_by_reference('academic_calendar_changes_html')}
 
     data = {
-        'offer_year_title':         offer_year_calendar.offer_year.title,
-        'offer_year_acronym':       offer_year_calendar.offer_year.acronym,
-        'academic_calendar':        str(academic_calendar),
-        'signature':                render_to_string('email/html_email_signature.html', {
+        'offer_year_title': offer_year_calendar.offer_year.title,
+        'offer_year_acronym': offer_year_calendar.offer_year.acronym,
+        'academic_calendar': str(academic_calendar),
+        'signature': render_to_string('email/html_email_signature.html', {
             'logo_mail_signature_url': LOGO_OSIS_URL,
-            'logo_osis_url': LOGO_EMAIL_SIGNATURE_URL,
-            })
-    }
+            'logo_osis_url': LOGO_EMAIL_SIGNATURE_URL})}
 
     dest_by_lang = map_persons_by_languages([manager.person for manager in programm_managers
                                              if manager.person])
@@ -157,8 +152,7 @@ def send_mail_after_academic_calendar_changes(academic_calendar, offer_year_cale
             message = Template(txt_message_template.template).render(Context(data))
             subject = str(html_message_template.subject).format(offer_year=str(offer_year_calendar.offer_year.acronym),
                                                                 academic_calendar=str(academic_calendar))
-            send_and_save(template=html_message_template,
-                          persons=persons,
+            send_and_save(persons=persons,
                           subject=unescape(strip_tags(subject)),
                           message=unescape(strip_tags(message)),
                           html_message=html_message,
@@ -207,8 +201,7 @@ def send_again(message_history_id):
     :return the sent message
     """
     message_history = message_history_mdl.find_by_id(message_history_id)
-    send_and_save(template=message_history.template,
-                  persons=[message_history.person],
+    send_and_save(persons=[message_history.person],
                   subject=message_history.subject,
                   message='',
                   html_message=message_history.content,
@@ -216,12 +209,11 @@ def send_again(message_history_id):
     return message_history
 
 
-def send_and_save(template, persons, **kwargs):
+def send_and_save(persons, **kwargs):
     """
     Send the message :
     - by mail if person.mail exists
     Save the message in message_history table
-    :param template The message_template used to create the message
     :param persons List of the persons to send the message
     :param kwargs List of arguments used by the django send_mail method.
     The recipient_list argument is taken form the persons list.
@@ -233,11 +225,10 @@ def send_and_save(template, persons, **kwargs):
                 recipient_list.append(person.email)
             message_history = message_history_mdl.MessageHistory(
                 person=person,
-                template=template,
                 subject=kwargs['subject'],
                 content=kwargs['html_message'],
                 origin=kwargs['from_email'],
-                sent_by_mail_date=timezone.now() if person.email else None
+                sent=timezone.now() if person.email else None
             )
             message_history.save()
         send_mail(recipient_list=recipient_list, **kwargs)

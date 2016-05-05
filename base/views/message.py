@@ -58,11 +58,9 @@ def find_messages_history(request):
     form = MessageHistorySearchForm(request.POST)
     messages_history = []
     if form.is_valid():
-        messages_history = models.message_history.find(**form.cleaned_data)
-    data = {
-        'form':             form,
-        'messages_history': messages_history,
-    }
+        messages_history = models.message_history.search(**form.cleaned_data)
+    data = {'form': form,
+            'messages_history': messages_history}
     return layout.render_to_response(request, "messages_history.html", data)
 
 
