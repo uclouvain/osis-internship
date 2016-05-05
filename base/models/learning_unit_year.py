@@ -50,8 +50,8 @@ class LearningUnitYear(models.Model):
         return u"%s - %s" % (self.academic_year,self.learning_unit)
 
 
-def find_by_id(learning_unit_id):
-    return LearningUnitYear.objects.get(pk=learning_unit_id)
+def find_by_id(learning_unit_year_id):
+    return LearningUnitYear.objects.get(pk=learning_unit_year_id)
 
 
 def search(academic_year_id=None, acronym=None, learning_unit=None, title=None):
@@ -70,11 +70,6 @@ def search(academic_year_id=None, acronym=None, learning_unit=None, title=None):
         queryset = queryset.filter(title=title)
 
     return queryset
-
-
-def find_by_academic_year_learningunit(academic_yr, learning_unit):
-    return LearningUnitYear.objects.filter(academic_year=academic_yr) \
-                                   .filter(learning_unit=learning_unit).first()
 
 
 def find_by_tutor(tutor_id):

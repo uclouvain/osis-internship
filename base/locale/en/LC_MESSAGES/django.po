@@ -1266,6 +1266,9 @@ msgstr "You manage"
 msgid "learning_units_in"
 msgstr "learning units in"
 
+msgid "no_dubble_score_encoded_comparison_impossible"
+msgstr "No dubble score encoded ; nothing to compare."
+
 #~ msgid "title_btn_upload_score"
 #~ msgstr "Select your xls file from which to inject scores"
 

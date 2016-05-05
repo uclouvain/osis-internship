@@ -44,7 +44,7 @@ HEADER = [str(_('academic_year')),
           str(_('ID'))]
 
 
-def export_xls(academic_year_id, is_fac, sessions_list):
+def export_xls(academic_year_id, is_fac, exam_enrollments):
     academic_year = mdl.academic_year.find_academic_year_by_id(academic_year_id)
 
     wb = Workbook()
@@ -54,47 +54,47 @@ def export_xls(academic_year_id, is_fac, sessions_list):
     ws.append(HEADER)
 
     enrollment_counter = 1
-    if sessions_list:
-        for sessions in sessions_list:
+    for exam_enroll in exam_enrollments:
+        student = exam_enroll.learning_unit_enrollment.student
+        o = exam_enroll.learning_unit_enrollment.offer
+        person = mdl.person.find_by_id(student.person.id)
 
-            for session_exam in sessions:
-                for rec_exam_enrollment in mdl.exam_enrollment.find_exam_enrollments_by_session(session_exam):
-                    student = rec_exam_enrollment.learning_unit_enrollment.student
-                    o = rec_exam_enrollment.learning_unit_enrollment.offer
-                    person = mdl.person.find_by_id(student.person.id)
+        if exam_enroll.session_exam.offer_year_calendar.end_date is None:
+            end_date = "-"
+        else:
+            end_date = exam_enroll.session_exam.offer_year_calendar.end_date.strftime('%d/%m/%Y')
+        score = None
+        if exam_enroll.score_final:
+            if exam_enroll.session_exam.learning_unit_year.decimal_scores:
+                score = "{0:.2f}".format(exam_enroll.score_final)
+            else:
+                score = "{0:.0f}".format(exam_enroll.score_final)
+        justification = ""
+        if exam_enroll.justification_final:
+            justification = dict(mdl.exam_enrollment.JUSTIFICATION_TYPES)[exam_enroll.justification_final]
+        ws.append([str(academic_year),
+                   str(exam_enroll.session_exam.number_session),
+                   exam_enroll.session_exam.learning_unit_year.acronym,
+                   o.acronym,
+                   student.registration_id,
+                   person.last_name,
+                   person.first_name,
+                   score,
+                   str(justification),
+                   end_date,
+                   exam_enroll.id])
 
-                    if session_exam.offer_year_calendar.end_date is None:
-                        end_date = "-"
-                    else:
-                        end_date = session_exam.offer_year_calendar.end_date.strftime('%d/%m/%Y')
-                    score = None
-                    if rec_exam_enrollment.score_final:
-                        if rec_exam_enrollment.session_exam.learning_unit_year.decimal_scores:
-                            score = "{0:.2f}".format(rec_exam_enrollment.score_final)
-                        else:
-                            score = "{0:.0f}".format(rec_exam_enrollment.score_final)
-                    justification = ""
-                    if rec_exam_enrollment.justification_final:
-                        justification = dict(mdl.exam_enrollment.JUSTIFICATION_TYPES)[rec_exam_enrollment.justification_final]
-                    ws.append([str(academic_year),
-                               str(session_exam.number_session),
-                               session_exam.learning_unit_year.acronym,
-                               o.acronym,
-                               student.registration_id,
-                               person.last_name,
-                               person.first_name,
-                               score,
-                               str(justification),
-                               end_date,
-                               rec_exam_enrollment.id])
+        enrollment_counter += 1
+        __coloring_non_editable(ws, enrollment_counter, score, exam_enroll.justification_final)
 
-                    enrollment_counter += 1
-                    __coloring_non_editable(ws, enrollment_counter, score, rec_exam_enrollment.justification_final)
+    number_session = list(exam_enrollments)[0].session_exam.number_session
+    learn_unit_acronym = list(exam_enrollments)[0].session_exam.learning_unit_year.acronym
+
     ws.append([str(_('other_score_legend')),
                mdl.exam_enrollment.justification_label_authorized(is_fac)])
     filename = "session_%s_%s_%s.xls" % (str(academic_year.year),
-                                         str(session_exam.number_session),
-                                         session_exam.learning_unit_year.acronym)
+                                         str(number_session),
+                                         learn_unit_acronym)
     response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.ms-excel')
     response['Content-Disposition'] = 'attachment; filename=%s' % filename
     return response
