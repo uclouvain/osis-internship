@@ -23,17 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.db import models
 
-from django import forms
-from django.forms import ModelForm
-from internship.models import InternshipChoice, InternshipOffer
 
-class InternshipChoiceForm(ModelForm):
-    class Meta :
-        model = InternshipChoice
-        fields = ['organization', 'learning_unit_year', 'student', 'choice']
-
-class InternshipOfferForm(ModelForm):
-    class Meta :
-        model = InternshipOffer
-        fields = ['organization', 'learning_unit_year', 'title', 'maximum_enrollments']
+class TutoringLearningUnitYear(models.Model):
+    mandate = models.ForeignKey('AssistantMandate')
+    sessions_duration = models.PositiveIntegerField(null=True, blank=True)
+    sessions_number = models.PositiveIntegerField(null=True, blank=True)
+    series_number = models.PositiveIntegerField(null=True, blank=True)
+    face_to_face_duration = models.PositiveIntegerField(null=True, blank=True)
+    attendees = models.PositiveIntegerField(null=True, blank=True)
+    preparation_duration = models.PositiveIntegerField(null=True, blank=True)
+    exams_supervision_duration = models.PositiveIntegerField(null=True, blank=True)
+    others_delivery = models.TextField(null=True, blank=True)

@@ -24,16 +24,9 @@
 #
 ##############################################################################
 
-from django import forms
-from django.forms import ModelForm
-from internship.models import InternshipChoice, InternshipOffer
-
-class InternshipChoiceForm(ModelForm):
-    class Meta :
-        model = InternshipChoice
-        fields = ['organization', 'learning_unit_year', 'student', 'choice']
-
-class InternshipOfferForm(ModelForm):
-    class Meta :
-        model = InternshipOffer
-        fields = ['organization', 'learning_unit_year', 'title', 'maximum_enrollments']
+# Statements in alphabetic order.
+from assistant.models import academic_assistant
+from assistant.models import assistant_document
+from assistant.models import assistant_mandate
+from assistant.models import review
+from assistant.models import tutoring_learning_unit_year

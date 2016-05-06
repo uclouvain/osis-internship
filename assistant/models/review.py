@@ -23,17 +23,24 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.db import models
+from django.utils.translation import ugettext_lazy as _
 
-from django import forms
-from django.forms import ModelForm
-from internship.models import InternshipChoice, InternshipOffer
 
-class InternshipChoiceForm(ModelForm):
-    class Meta :
-        model = InternshipChoice
-        fields = ['organization', 'learning_unit_year', 'student', 'choice']
+class Review(models.Model):
+    ADVICE_CHOICES = (
+        ('FAVORABLE', _('Favorable')),
+        ('CONDITIONAL', _('Conditional')),
+        ('UNFAVOURABLE', _('Unfavourable')))
 
-class InternshipOfferForm(ModelForm):
-    class Meta :
-        model = InternshipOffer
-        fields = ['organization', 'learning_unit_year', 'title', 'maximum_enrollments']
+    REVIEW_STATUS = (
+        ('IN_PROGRESS', _('In progress')),
+        ('DONE', _('Done')))
+
+    mandate = models.ForeignKey('AssistantMandate')
+    advice = models.CharField(max_length=20, choices=ADVICE_CHOICES)
+    status = models.CharField(max_length=10, choices=REVIEW_STATUS, null=True)
+    justification = models.TextField(null=True, blank=True)
+    remark = models.TextField(null=True, blank=True)
+    confidential = models.TextField(null=True, blank=True)
+    changed = models.DateTimeField(null=True)

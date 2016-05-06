@@ -23,17 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.db import models
+from django.utils.translation import ugettext_lazy as _
 
-from django import forms
-from django.forms import ModelForm
-from internship.models import InternshipChoice, InternshipOffer
 
-class InternshipChoiceForm(ModelForm):
-    class Meta :
-        model = InternshipChoice
-        fields = ['organization', 'learning_unit_year', 'student', 'choice']
+class AssistantDocument(models.Model):
+    DOC_TYPE_CHOICES = (
+        ('PHD', _('PhD')),
+        ('TUTORING', _('Tutoring')),
+        ('RESEARCH', _('Research')))
 
-class InternshipOfferForm(ModelForm):
-    class Meta :
-        model = InternshipOffer
-        fields = ['organization', 'learning_unit_year', 'title', 'maximum_enrollments']
+    assistant = models.ForeignKey('AcademicAssistant')
+    mandate = models.ForeignKey('AssistantMandate')
+    doc_type = models.CharField(max_length=20, choices=DOC_TYPE_CHOICES)

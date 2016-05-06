@@ -82,7 +82,6 @@
                         <thead>
                           <tr>
                               <th>{% trans 'name' %}</th>
-                              <th>{% trans 'learning_unit_year' %}</th>
                               <th>{% trans 'student_max' %}</th>
                               <th>{% trans 'organization' %}</th>
                               <th>{% trans 'preference' %}</th>
@@ -93,16 +92,13 @@
                           {% if internship.learning_unit_year.title = "Stage en Médecine interne"%}
                             <tr>
                                 <td>
-                                  {{ internship.title }}
-                                </td>
-                                <td>
                                   <input type="hidden" name="learning_unit_year" value="{{ internship.learning_unit_year.title }}"/>{{ internship.learning_unit_year.title }}</label>
                                 </td>
                                 <td>
                                   {{ internship.maximum_enrollments }}
                                 </td>
                                 <td>
-                                  <input type="hidden" name="organization" value="{{ internship.organization }}"/>{{ internship.organization }}</input>
+                                  <input type="hidden" name="organization" value="{{ internship.organization.reference }}"/>{{ internship.organization }}</input>
                                 </td>
                                 <td>
                                   <select name="preference">
@@ -130,7 +126,6 @@
                         <thead>
                           <tr>
                               <th>{% trans 'Name' %}</th>
-                              <th>{% trans 'learning unit year' %}</th>
                               <th>{% trans 'Student max' %}</th>
                               <th>{% trans 'organization' %}</th>
                               <th>{% trans 'Preference' %}</th>
@@ -141,16 +136,13 @@
                           {% if internship.learning_unit_year.title = "Stage en Chirurgie"%}
                           <tr>
                               <td>
-                                {{ internship.title }}
-                              </td>
-                              <td>
                                 <input type="hidden" name="learning_unit_year" value="{{ internship.learning_unit_year.title }}"/>{{ internship.learning_unit_year.title }}</label>
                               </td>
                               <td>
                                 {{ internship.maximum_enrollments }}
                               </td>
                               <td>
-                                <input type="hidden" name="organization" value="{{ internship.organization }}"/>{{ internship.organization }}</input>
+                                <input type="hidden" name="organization" value="{{ internship.organization.reference }}"/>{{ internship.organization }}</input>
                               </td>
                               <td>
                                 <select name="preference">
@@ -178,7 +170,6 @@
                         <thead>
                           <tr>
                               <th>{% trans 'Name' %}</th>
-                              <th>{% trans 'learning unit year' %}</th>
                               <th>{% trans 'Student max' %}</th>
                               <th>{% trans 'organization' %}</th>
                               <th>{% trans 'Preference' %}</th>
@@ -189,16 +180,13 @@
                           {% if internship.learning_unit_year.title = "Stage en Gynécologie-Obsétrique"%}
                           <tr>
                               <td>
-                                {{ internship.title }}
-                              </td>
-                              <td>
                                 <input type="hidden" name="learning_unit_year" value="{{ internship.learning_unit_year.title }}"/>{{ internship.learning_unit_year.title }}</label>
                               </td>
                               <td>
                                 {{ internship.maximum_enrollments }}
                               </td>
                               <td>
-                                <input type="hidden" name="organization" value="{{ internship.organization }}"/>{{ internship.organization }}</input>
+                                <input type="hidden" name="organization" value="{{ internship.organization.reference }}"/>{{ internship.organization }}</input>
                               </td>
                               <td>
                                 <select name="preference">
@@ -226,7 +214,6 @@
                         <thead>
                           <tr>
                               <th>{% trans 'Name' %}</th>
-                              <th>{% trans 'learning unit year' %}</th>
                               <th>{% trans 'Student max' %}</th>
                               <th>{% trans 'organization' %}</th>
                               <th>{% trans 'Preference' %}</th>
@@ -237,16 +224,13 @@
                           {% if internship.learning_unit_year.title = "Stage en Pédiatrie"%}
                           <tr>
                               <td>
-                                {{ internship.title }}
-                              </td>
-                              <td>
                                 <input type="hidden" name="learning_unit_year" value="{{ internship.learning_unit_year.title }}"/>{{ internship.learning_unit_year.title }}</label>
                               </td>
                               <td>
                                 {{ internship.maximum_enrollments }}
                               </td>
                               <td>
-                                <input type="hidden" name="organization" value="{{ internship.organization }}"/>{{ internship.organization }}</input>
+                                <input type="hidden" name="organization" value="{{ internship.organization.reference }}"/>{{ internship.organization }}</input>
                               </td>
                               <td>
                                 <select name="preference">
@@ -274,7 +258,6 @@
                         <thead>
                           <tr>
                               <th>{% trans 'Name' %}</th>
-                              <th>{% trans 'learning unit year' %}</th>
                               <th>{% trans 'Student max' %}</th>
                               <th>{% trans 'organization' %}</th>
                               <th>{% trans 'Preference' %}</th>
@@ -285,16 +268,13 @@
                           {% if internship.learning_unit_year.title = "Stage en Urgence"%}
                           <tr>
                               <td>
-                                {{ internship.title }}
-                              </td>
-                              <td>
                                 <input type="hidden" name="learning_unit_year" value="{{ internship.learning_unit_year.title }}"/>{{ internship.learning_unit_year.title }}</label>
                               </td>
                               <td>
                                 {{ internship.maximum_enrollments }}
                               </td>
                               <td>
-                                <input type="hidden" name="organization" value="{{ internship.organization }}"/>{{ internship.organization }}</input>
+                                <input type="hidden" name="organization" value="{{ internship.organization.reference }}"/>{{ internship.organization }}</input>
                               </td>
                               <td>
                                 <select name="preference">
@@ -322,7 +302,6 @@
                         <thead>
                           <tr>
                               <th>{% trans 'Name' %}</th>
-                              <th>{% trans 'learning unit year' %}</th>
                               <th>{% trans 'Student max' %}</th>
                               <th>{% trans 'organization' %}</th>
                               <th>{% trans 'Preference' %}</th>
@@ -333,16 +312,13 @@
                           {% if internship.learning_unit_year.title = "Stage en Gériatrie"%}
                           <tr>
                               <td>
-                                {{ internship.title }}
-                              </td>
-                              <td>
                                 <input type="hidden" name="learning_unit_year" value="{{ internship.learning_unit_year.title }}"/>{{ internship.learning_unit_year.title }}</label>
                               </td>
                               <td>
                                 {{ internship.maximum_enrollments }}
                               </td>
                               <td>
-                                <input type="hidden" name="organization" value="{{ internship.organization }}"/>{{ internship.organization }}</input>
+                                <input type="hidden" name="organization" value="{{ internship.organization.reference }}"/>{{ internship.organization }}</input>
                               </td>
                               <td>
                                 <select name="preference">
@@ -390,7 +366,7 @@
                                 {{ internship.maximum_enrollments }}
                               </td>
                               <td>
-                                <input type="hidden" name="organization" value="{{ internship.organization }}"/>{{ internship.organization }}</input>
+                                <input type="hidden" name="organization" value="{{ internship.organization.reference }}"/>{{ internship.organization }}</input>
                               </td>
                               <td>
                                 <select name="preference">
@@ -438,7 +414,7 @@
                                 {{ internship.maximum_enrollments }}
                               </td>
                               <td>
-                                <input type="hidden" name="organization" value="{{ internship.organization }}"/>{{ internship.organization }}</input>
+                                <input type="hidden" name="organization" value="{{ internship.organization.reference }}"/>{{ internship.organization }}</input>
                               </td>
                               <td>
                                 <select name="preference">
@@ -465,4 +441,7 @@
         </div>
         </form>
   </div>
+  <a href="{% url 'internships_create' %}" id="lnk_organization_create" class="btn btn-default"
+     role="button" title="{% trans 'create_an_organization'%}">{% trans 'add_an_internship' %}
+     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
 {% endblock %}
