@@ -28,42 +28,29 @@ msgstr "Absent"
 msgid "absent_pdf_legend"
 msgstr "A=Absent"
 
-#: models/exam_enrollment.py:35 models/exam_enrollment.py:149
-#: models/exam_enrollment.py:155
-#: templates/assessments/online_double_encoding_form.html:115
-#: templates/assessments/online_encoding_form.html:132
-#: templates/assessments/online_encoding_form.html:146
 msgid "cheating"
 msgstr "Cheating"
 
 msgid "cheating_pdf_legend"
 msgstr "T=Cheating"
 
-#: models/exam_enrollment.py:36 models/exam_enrollment.py:150
-#: templates/assessments/online_double_encoding_form.html:119
-#: templates/assessments/online_encoding_form.html:136
 msgid "ill"
 msgstr "Ill"
 
 msgid "ill_pdf_legend"
 msgstr "I=Ill"
 
-#: models/exam_enrollment.py:37 models/exam_enrollment.py:151
-#: templates/assessments/online_double_encoding_form.html:120
-#: templates/assessments/online_encoding_form.html:137
 msgid "justified_absence"
 msgstr "Justified absence"
 
 msgid "justified_absence_pdf_legend"
 msgstr "JA=Justified absence"
 
-#: models/exam_enrollment.py:38 models/exam_enrollment.py:152
-#: models/exam_enrollment.py:156
-#: templates/assessments/online_double_encoding_form.html:116
-#: templates/assessments/online_encoding_form.html:133
-#: templates/assessments/online_encoding_form.html:147
 msgid "score_missing"
 msgstr "Score missing"
+
+msgid "score_already_submitted"
+msgstr "Score already submitted"
 
 msgid "score_missing_pdf_legend"
 msgstr "?=Score missing"
