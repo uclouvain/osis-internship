@@ -28,7 +28,7 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class InternshipOffer(models.Model):
-    organization        = models.ForeignKey('base.Organization')
+    organization        = models.ForeignKey('internship.Organization')
     learning_unit_year  = models.ForeignKey('base.LearningUnitYear')
     title               = models.CharField(max_length=255)
     maximum_enrollments = models.IntegerField()
@@ -79,7 +79,7 @@ class InternshipMaster(models.Model):
                         ('EMERGENCY',_('Emergency')),
                         ('GERIATRICS',_('Geriatrics')))
 
-    organization     = models.ForeignKey('base.Organization')
+    organization     = models.ForeignKey('internship.Organization')
     internship_offer = models.ForeignKey(InternshipOffer)
     person           = models.ForeignKey('base.Person')
     reference        = models.CharField(max_length=30, blank=True, null=True)
@@ -112,7 +112,7 @@ class InternshipMaster(models.Model):
 
 class InternshipChoice(models.Model):
     student             = models.ForeignKey('base.Student')
-    organization        = models.ForeignKey('base.Organization')
+    organization        = models.ForeignKey('internship.Organization')
     learning_unit_year  = models.ForeignKey('base.LearningUnitYear')
     choice              = models.IntegerField()
 
@@ -127,9 +127,27 @@ class InternshipChoice(models.Model):
         return internships
 
     @staticmethod
-    def find_by(s_organization, s_learning_unit_year):
-        internships = InternshipChoice.objects.filter(organization = s_organization, learning_unit_year=s_learning_unit_year)
-        return internships
+    def find_by(s_organization=None, s_learning_unit_year=None, s_organization_ref=None):
+        has_criteria = False
+        queryset = InternshipChoice.objects
+
+        if s_organization:
+            queryset = queryset.filter(organization=s_organization)
+            has_criteria = True
+
+        if s_learning_unit_year:
+            queryset = queryset.filter(learning_unit_year=s_learning_unit_year)
+            has_criteria = True
+
+        if s_organization_ref:
+            queryset = queryset.filter(organization__reference=s_organization_ref).order_by('choice')
+            has_criteria = True
+
+        if has_criteria:
+            return queryset
+        else:
+            return None
+
 
 class Organization(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)

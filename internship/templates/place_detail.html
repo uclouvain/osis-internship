@@ -1,0 +1,93 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+ * OSIS stands for Open Student Information System. It's an application
+ * designed to manage the core business of higher education institutions,
+ * such as universities, faculties, institutes and professional schools.
+ * The core business involves the administration of students, teachers,
+ * courses, programs and so on.
+ *
+ * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * A copy of this license - GNU General Public License - is available
+ * at the root of the source code of this program.  If not,
+ * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block breadcrumb %}
+<li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+<li><a href="{% url 'internships_home' %}">Stages</a></li>
+<li><a href="{% url 'internships_places' %}">{% trans 'Places' %}</a></li>
+<li class="active">{{ organization.name }}</li>
+{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h2>{{ organization.name }}</h2>
+</div>
+<div class="panel panel-default">
+    <div class="panel-body">
+      <label> Stage en Chirurgie </label><br/>
+      <ul>
+        {% for choice in organization_choice %}
+          {% if choice.learning_unit_year.title == "Stage en Chirurgie" %}
+            <li> {% trans 'Etudiant' %} : {{ choice.student }} | Choix : {{ choice.choice }}
+          {% endif %}
+        {% endfor %}
+      </ul>
+      <label> Stage en Gériatrie </label><br/>
+      <ul>
+        {% for choice in organization_choice %}
+          {% if choice.learning_unit_year.title == "Stage en Gériatrie" %}
+            <li> {% trans 'Etudiant' %} : {{ choice.student }} | Choix : {{ choice.choice }}
+          {% endif %}
+        {% endfor %}
+      </ul>
+      <label> Stage en Gynécologie-Obstétrique </label><br/>
+      <ul>
+        {% for choice in organization_choice %}
+          {% if choice.learning_unit_year.title == "Stage en Gynécologie-Obstétrique" %}
+            <li> {% trans 'Etudiant' %} : {{ choice.student }} | Choix : {{ choice.choice }}
+          {% endif %}
+        {% endfor %}
+      </ul>
+      <label> Stage en Médecine Interne </label><br/>
+      <ul>
+        {% for choice in organization_choice %}
+          {% if choice.learning_unit_year.title == "Stage en Médecine interne" %}
+            <li> {% trans 'Etudiant' %} : {{ choice.student }} | Choix : {{ choice.choice }}
+          {% endif %}
+        {% endfor %}
+      </ul>
+      <label> Stage en Pédiatrie </label><br/>
+      <ul>
+        {% for choice in organization_choice %}
+          {% if choice.learning_unit_year.title == "Stage en Pédiatrie" %}
+            <li> {% trans 'Etudiant' %} : {{ choice.student }} | Choix : {{ choice.choice }}
+          {% endif %}
+        {% endfor %}
+      </ul>
+      <label> Stage en Urgence </label><br/>
+      <ul>
+        {% for choice in organization_choice %}
+          {% if choice.learning_unit_year.title == "Stage en Urgence" %}
+            <li> {% trans 'Etudiant' %} : {{ choice.student }} | Choix : {{ choice.choice }}
+          {% endif %}
+        {% endfor %}
+      </ul>
+      <label> Stage au choix</label><br/>
+	</div>
+</div>
+
+  {% endblock %}

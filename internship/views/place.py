@@ -25,7 +25,7 @@
 ##############################################################################
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from internship.models import Organization, OrganizationAddress
+from internship.models import Organization, OrganizationAddress, InternshipChoice
 from internship.forms import OrganizationForm
 
 @login_required
@@ -145,7 +145,7 @@ def organization_save(request, organization_id, organization_address_id):
 
     return render(request, "place_form.html", {'organization': organization,
                                                 'organization_address':organization_address,
-                                                'form': form
+                                                'form': form,
                                                 'message':"Hôpital correctement créé"
                                                 })
 
@@ -156,7 +156,17 @@ def organization_edit(request, organization_id):
     organization = Organization.find_by_id(organization_id)
     return render(request, "place_form.html", {'organization': organization})
 
-
 def organization_create(request):
     organization = Organization()
     return render(request, "place_form.html", {'organization': organization})
+
+def student_choice(request, reference):
+    organization_choice = InternshipChoice.find_by(s_organization_ref=reference)
+
+    for r in organization_choice:
+        print(r.choice)
+    organization = Organization.search(reference=reference)
+
+    return render(request, "place_detail.html", {'organization': organization[0],
+                                                'organization_choice':organization_choice
+                                                })
