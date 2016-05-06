@@ -202,19 +202,21 @@ def send_again(message_history_id):
     """
     message_history = message_history_mdl.find_by_id(message_history_id)
     send_and_save(persons=[message_history.person],
+                  reference=message_history.reference,
                   subject=message_history.subject,
                   message='',
                   html_message=message_history.content,
-                  from_email=message_history.origin)
+                  from_email=DEFAULT_FROM_EMAIL)
     return message_history
 
 
-def send_and_save(persons, **kwargs):
+def send_and_save(persons, reference=None, **kwargs):
     """
     Send the message :
     - by mail if person.mail exists
     Save the message in message_history table
     :param persons List of the persons to send the message
+    :param reference business reference of the message
     :param kwargs List of arguments used by the django send_mail method.
     The recipient_list argument is taken form the persons list.
     """
@@ -225,9 +227,9 @@ def send_and_save(persons, **kwargs):
                 recipient_list.append(person.email)
             message_history = message_history_mdl.MessageHistory(
                 person=person,
+                reference=reference,
                 subject=kwargs['subject'],
                 content=kwargs['html_message'],
-                origin=kwargs['from_email'],
                 sent=timezone.now() if person.email else None
             )
             message_history.save()

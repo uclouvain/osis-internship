@@ -97,7 +97,6 @@
     <tr>
         <td><a href="{% url 'message_history_read' message_history.id %}"
                id="lnk_message_history_read_{{ message_history.id }}" title="lnk_message_history_read_title">{{ message_history.subject }}</a></td>
-        <td>{{ message_history.origin }}</td>
         <td>{{ message_history.person.first_name }} {{ message_history.person.last_name }}</td>
         <td>{% if message_history.sent %}
                 {{ message_history.sent }}
