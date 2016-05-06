@@ -84,10 +84,6 @@ def search(acronym=None, name=None, type=None, reference=None):
         return None
 
 
-def find_all_order_by_reference():
-    return Organization.objects.all().order_by('reference')
-
-
 def find_by_type(type, order_by=None):
 
     if order_by:
