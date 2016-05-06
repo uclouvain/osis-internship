@@ -76,13 +76,13 @@ def send_mail_after_scores_submission(persons, learning_unit_name, submitted_enr
     dest_by_lang = map_persons_by_languages(persons)
     for lang_code, person in dest_by_lang.items():
             if lang_code in html_message_templates:
-                html_message_template = html_message_templates[lang_code]
+                html_message_template = html_message_templates.get(lang_code)
             else:
-                html_message_template = html_message_templates[settings.LANGUAGE_CODE]
+                html_message_template = html_message_templates.get(settings.LANGUAGE_CODE)
             if lang_code in txt_message_templates:
-                txt_message_template = txt_message_templates[lang_code]
+                txt_message_template = txt_message_templates.get(lang_code)
             else:
-                txt_message_template = txt_message_templates[settings.LANGUAGE_CODE]
+                txt_message_template = txt_message_templates.get(settings.LANGUAGE_CODE)
             with translation.override(lang_code):
                 submitted_enrollment_header = (
                     _('acronym'),
@@ -140,13 +140,13 @@ def send_mail_after_academic_calendar_changes(academic_calendar, offer_year_cale
                                              if manager.person])
     for lang_code, persons in dest_by_lang.items():
         if lang_code in html_message_templates:
-            html_message_template = html_message_templates[lang_code]
+            html_message_template = html_message_templates.get(lang_code)
         else:
-            html_message_template = html_message_templates[settings.LANGUAGE_CODE]
+            html_message_template = html_message_templates.get(settings.LANGUAGE_CODE)
         if lang_code in txt_message_templates:
-            txt_message_template = txt_message_templates[lang_code]
+            txt_message_template = txt_message_templates.get(lang_code)
         else:
-            txt_message_template = txt_message_templates[settings.LANGUAGE_CODE]
+            txt_message_template = txt_message_templates.get(settings.LANGUAGE_CODE)
         with translation.override(lang_code):
             html_message = Template(html_message_template.template).render(Context(data))
             message = Template(txt_message_template.template).render(Context(data))
@@ -204,8 +204,8 @@ def send_again(message_history_id):
     send_and_save(persons=[message_history.person],
                   reference=message_history.reference,
                   subject=message_history.subject,
-                  message='',
-                  html_message=message_history.content,
+                  message=message_history.content_txt,
+                  html_message=message_history.content_html,
                   from_email=DEFAULT_FROM_EMAIL)
     return message_history
 
@@ -228,8 +228,9 @@ def send_and_save(persons, reference=None, **kwargs):
             message_history = message_history_mdl.MessageHistory(
                 person=person,
                 reference=reference,
-                subject=kwargs['subject'],
-                content=kwargs['html_message'],
+                subject=kwargs.get('subject'),
+                content_txt=kwargs.get('message'),
+                content_html=kwargs.get('html_message'),
                 sent=timezone.now() if person.email else None
             )
             message_history.save()

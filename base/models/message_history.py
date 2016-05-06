@@ -30,11 +30,12 @@ from django.utils import timezone
 
 class MessageHistory(models.Model):
     subject = models.CharField(max_length=255)
-    content = models.TextField()
+    content_txt = models.TextField()
+    content_html = models.TextField()
     person = models.ForeignKey('Person')
     created = models.DateTimeField(editable=False)
     sent = models.DateTimeField(null=True)
-    reference = models.CharField(max_length=100, null=True)
+    reference = models.CharField(max_length=100, null=True, db_index=True)
 
     def save(self, *args, **kwargs):
         if not self.id:

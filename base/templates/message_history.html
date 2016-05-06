@@ -60,8 +60,14 @@
         </div>
 
         <br/>
-        <label class="control-label">{% trans 'message' %}</label><br/>
-        {% autoescape off %}{{ message_history.content }}{% endautoescape %}
+        <div class="row"></div>
+            <label class="control-label">{% trans 'html_message' %}</label><br/>
+            {% autoescape off %}{{ message_history.content_html }}{% endautoescape %}
+        </div>
+        <div class="row"></div>
+            <label class="control-label">{% trans 'txt_message' %}</label><br/>
+            {% autoescape off %}{{ message_history.content_txt }}{% endautoescape %}
+        </div>
     </div>
 </div>
 
