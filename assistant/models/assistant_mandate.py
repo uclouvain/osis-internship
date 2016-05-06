@@ -28,34 +28,11 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 
-class AcademicAssistant(models.Model):
-    PHD_INSCRIPTION_CHOICES = (
-        ('YES', _('Yes')),
-        ('NO', _('No')),
-        ('IN_PROGRESS', _('In progress')))
-    
-    person = models.ForeignKey('base.Person')
-    supervisor = models.ForeignKey('base.Person', blank=True, null=True, related_name='person_supervisor')
-    position_id = models.CharField(max_length=12)
-    fulltime_equivalent = models.DecimalField(max_digits=3, decimal_places=2)
-    sap_id = models.CharField(max_length=12)
-    entry_date = models.DateField()
-    end_date = models.DateField()
-    scale = models.CharField(max_length=3)
-    thesis_title = models.CharField(max_length=255, null=True, blank=True)
-    phd_inscription_date = models.DateField(null=True, blank=True)
-    confirmation_test_date = models.DateField(null=True, blank=True)
-    thesis_date = models.DateField(null=True, blank=True)
-    expected_phd_date = models.DateField(null=True, blank=True)
-    remark = models.TextField(null=True, blank=True)
-    inscription = models.CharField(max_length=12, choices=PHD_INSCRIPTION_CHOICES, default='YES')
-    
-
 class AssistantMandate(models.Model):
     RENEWAL_TYPE_CHOICES = (
         ('NORMAL', _('Normal')),
         ('EXCEPTIONAL', _('Exceptional')))
-    
+
     STATE_CHOICES = (
         ('TO_DO', _('To do')),
         ('TRTS', _('Trts')),
@@ -63,15 +40,15 @@ class AssistantMandate(models.Model):
         ('RESEARCH', _('Research')),
         ('SUPERVISION', _('Supervision')),
         ('VICE_RECTOR', _('Vice rector')))
-    
+
     APPEAL_CHOICES = (
         ('NONE', _('N/A')),
         ('POSITIVE_APPEAL', _('Positive appeal')),
         ('NEGATIVE_APPEAL', _('Negative appeal')),
         ('APPEAL_IN_PROGRESS', _('Appeal in progress')),
         ('NO_APPEAL', _('No appeal')))
-    
-    assistant = models.ForeignKey(AcademicAssistant)
+
+    assistant = models.ForeignKey('AcademicAssistant')
     academic_year = models.ForeignKey('base.AcademicYear')
     absences = models.TextField(null=True, blank=True)
     comment = models.TextField(null=True, blank=True)
@@ -110,45 +87,3 @@ class AssistantMandate(models.Model):
     contract_duration = models.CharField(max_length=30)
     contract_duration_fte = models.CharField(max_length=30)
     service_activities_remark = models.TextField(null=True, blank=True)
-    
-
-class AssistantDocument(models.Model):
-    DOC_TYPE_CHOICES = (
-        ('PHD', _('PhD')),
-        ('TUTORING', _('Tutoring')),
-        ('RESEARCH', _('Research')))
-    
-    assistant = models.ForeignKey(AcademicAssistant)
-    mandate = models.ForeignKey(AssistantMandate)
-    doc_type = models.CharField(max_length=20, choices=DOC_TYPE_CHOICES)
-    
-
-class TutoringLearningUnitYear(models.Model):
-    mandate = models.ForeignKey(AssistantMandate)
-    sessions_duration = models.PositiveIntegerField(null=True, blank=True)
-    sessions_number = models.PositiveIntegerField(null=True, blank=True)
-    series_number = models.PositiveIntegerField(null=True, blank=True)
-    face_to_face_duration = models.PositiveIntegerField(null=True, blank=True)
-    attendees = models.PositiveIntegerField(null=True, blank=True)
-    preparation_duration = models.PositiveIntegerField(null=True, blank=True)
-    exams_supervision_duration = models.PositiveIntegerField(null=True, blank=True)
-    others_delivery = models.TextField(null=True, blank=True)
-
-    
-class Review(models.Model):
-    ADVICE_CHOICES = (
-        ('FAVORABLE', _('Favorable')),
-        ('CONDITIONAL', _('Conditional')),
-        ('UNFAVOURABLE', _('Unfavourable')))
-    
-    REVIEW_STATUS = (
-        ('IN_PROGRESS', _('In progress')),
-        ('DONE', _('Done')))
-    
-    mandate = models.ForeignKey(AssistantMandate)
-    advice = models.CharField(max_length=20, choices=ADVICE_CHOICES)
-    status = models.CharField(max_length=10,choices=REVIEW_STATUS)
-    justification = models.TextField(null=True, blank=True)
-    remark = models.TextField(null=True, blank=True)
-    confidential = models.TextField(null=True, blank=True)
-    changed = models.DateTimeField(null=True)
