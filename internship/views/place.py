@@ -39,9 +39,11 @@ def internships_places(request):
     if organizations:
         for organization in organizations:
             organization.address = ""
+            organization.student_choice = 0
             address = OrganizationAddress.find_by_organization(organization)
             if address:
                 organization.address = address
+            organization.student_choice = len(InternshipChoice.find_by(s_organization=organization))
 
     # Next, if there is a value for the sort, browse all the organizations and put which have the same city
     # in the address than the sort option

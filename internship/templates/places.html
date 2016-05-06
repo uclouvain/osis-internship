@@ -29,11 +29,11 @@
 {% block breadcrumb %}
   <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
   <li><a href="{% url 'internships_home' %}">Stages</a></li>
-  <li class="active">{% trans 'Places' %}</li>
+  <li class="active">{% trans 'all_hospital' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'Places' %}</h2>
+    <h2>{% trans 'list_of_all_hospital' %}</h2>
   </div>
   <div class="panel panel-default">
         <table style="height:100%; width:100%;">
@@ -66,7 +66,7 @@
         <table class="table table-hover">
             <thead>
               <tr>
-                  <th>{% trans 'Number' %}</th>
+                  <th>{% trans 'reference' %}</th>
                   <th>{% trans 'name' %}</th>
                   <th>{% trans 'student_choice' %}</th>
                   <th>{% trans 'affectation_result' %}</th>
@@ -84,12 +84,16 @@
                     {{ organization.reference }}
                   </td>
                   <td>
-                    <a href="{% url 'internships' %}?organization_sort={{ organization.name }}">{{ organization.name }}</a>
+                    <a href="{% url 'internships' %}?organization_sort={{ organization.name }}">
+                      {{ organization.name }}
+                    </a>
                   </td>
                   <td align="center">
                     <a class="btn btn-primary" target="_blank" id="lnk_students_choice{{organization.reference}}"
                         href="{% url 'place_detail_student_choice' organization.reference %}">
-                      <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                      <span class="glyphicon glyphicon-search" aria-hidden="true">
+                        {{ organization.student_choice }}
+                      </span>
                     </a>
                   </td>
                   <td align="center">
