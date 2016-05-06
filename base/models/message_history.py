@@ -31,10 +31,10 @@ from django.utils import timezone
 class MessageHistory(models.Model):
     subject = models.CharField(max_length=255)
     content = models.TextField()
-    origin = models.EmailField()
     person = models.ForeignKey('Person')
     created = models.DateTimeField(editable=False)
     sent = models.DateTimeField(null=True)
+    reference = models.CharField(max_length=100, null=True)
 
     def save(self, *args, **kwargs):
         if not self.id:
@@ -56,11 +56,9 @@ def search(limit=100, **kwargs):
     else:
         queryset = MessageHistory.objects
         if kwargs.get('reference'):
-            queryset = queryset.filter(template__reference__icontains=kwargs.get('reference'))
+            queryset = queryset.filter(reference__icontains=kwargs.get('reference'))
         if kwargs.get('subject'):
             queryset = queryset.filter(subject__icontains=kwargs.get('subject'))
-        if kwargs.get('origin'):
-            queryset = queryset.filter(origin__icontains=kwargs.get('origin'))
         if kwargs.get('recipient'):
             queryset = queryset.filter(Q(person__email__icontains=kwargs.get('recipient')) |
                                        Q(person__last_name__icontains=kwargs.get('recipient')) |

@@ -39,14 +39,7 @@
         <div class="row">
             <form method="POST" action="{% url 'messages_history_search' %}">
                 {% csrf_token %}
-                <div class="col-md-2">
-                    <label for="txt_origin">{% trans 'origin'%}</label>
-                    <input class="form-control" id="txt_origin" placeholder="{% trans 'origin' %}" name="origin"
-                           value="{{ form.origin.value  | default_if_none:'' }}"
-                           maxlength="25"
-                           title="{% trans 'txt_origin_title' %}">
-                </div>
-                <div class="col-md-2">
+                <div class="col-md-3">
                     <label for="txt_recipient">{% trans 'recipient'%}</label>
                     <input class="form-control" id="txt_recipient" placeholder="{% trans 'recipient' %}"
                            name="recipient"
@@ -62,7 +55,7 @@
                            maxlength="50"
                            title="{% trans 'txt_subject_title' %}">
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-3">
                     <label for="txt_reference">{% trans 'reference'%}</label>
                     <input class="form-control" id="txt_reference" placeholder="{% trans 'reference' %}"
                            name="reference"
@@ -96,7 +89,6 @@
     <thead>
     <tr>
         <th>{% trans 'subject'%}</th>
-        <th>{% trans 'origin'%}</th>
         <th>{% trans 'recipient'%}</th>
         <th>{% trans 'sent' %}</th>
     </tr>
