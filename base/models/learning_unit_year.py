@@ -67,7 +67,7 @@ def search(academic_year_id=None, acronym=None, learning_unit=None, title=None):
         queryset = queryset.filter(learning_unit=learning_unit)
 
     if title:
-        queryset = queryset.filter(title=title)
+        queryset = queryset.filter(title__icontains=title)
 
     return queryset
 
