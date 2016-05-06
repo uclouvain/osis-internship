@@ -1374,6 +1374,12 @@ msgstr "Not Sent"
 msgid "message"
 msgstr "Message"
 
+msgid "html_message"
+msgstr "HTML Message"
+
+msgid "txt_message"
+msgstr "Text Message"
+
 msgid "send_message_again"
 msgstr "Send again"
 

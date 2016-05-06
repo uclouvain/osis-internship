@@ -1340,6 +1340,12 @@ msgstr "Non défini"
 msgid "messages"
 msgstr "Messages"
 
+msgid "html_message"
+msgstr "Message HTML"
+
+msgid "txt_message"
+msgstr "Message texte"
+
 msgid "messages_templates"
 msgstr "Modèles de messages"
 

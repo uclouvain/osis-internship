@@ -40,20 +40,16 @@
     <div class="panel-body">
         <div class="row">
             <div><label class="control-label"></label></div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div><label class="control-label">{% trans 'recipient' %}</label></div>
                 {{ message_history.person.first_name }} {{ message_history.person.last_name }}<br/>
                 {{ message_history.person.email | default:"" }}
             </div>
-            <div class="col-md-3">
-                <div><label class="control-label">{% trans 'origin' %}</label></div>
-                {{ message_history.origin }}
-            </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div><label class="control-label">{% trans 'creation_date' %}</label></div>
                 {{ message_history.created }}
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <label class="control-label">{% trans 'sent' %}</label><br/>
                 {% if message_history.sent %}
                     {{ message_history.sent }}
@@ -64,8 +60,14 @@
         </div>
 
         <br/>
-        <label class="control-label">{% trans 'message' %}</label><br/>
-        {% autoescape off %}{{ message_history.content }}{% endautoescape %}
+        <div class="row"></div>
+            <label class="control-label">{% trans 'html_message' %}</label><br/>
+            {% autoescape off %}{{ message_history.content_html }}{% endautoescape %}
+        </div>
+        <div class="row"></div>
+            <label class="control-label">{% trans 'txt_message' %}</label><br/>
+            {% autoescape off %}{{ message_history.content_txt }}{% endautoescape %}
+        </div>
     </div>
 </div>
 

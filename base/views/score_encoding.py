@@ -342,7 +342,7 @@ def get_data_online(learning_unit_year_id, request):
 def get_data_online_double(learning_unit_year_id, request):
     academic_yr = mdl.academic_year.current_academic_year()
     if mdl.program_manager.is_program_manager(request.user):
-        offer_years_managed = mdl.offer_year.find_by_user(request.user, academic_year=academic_yr)
+        offer_years_managed = mdl.offer_year.find_by_user(request.user, academic_yr=academic_yr)
         exam_enrollments = list(mdl.exam_enrollment.find_for_score_encodings(mdl.session_exam.find_session_exam_number(),
                                                                              learning_unit_year_id=learning_unit_year_id,
                                                                              with_justification_or_score_final=True,
@@ -371,7 +371,7 @@ def get_data_online_double(learning_unit_year_id, request):
 
 def get_data_pgmer(request, offer_year_id=None, tutor_id=None):
     academic_yr = mdl.academic_year.current_academic_year()
-    offer_years_managed = mdl.offer_year.find_by_user(request.user, academic_year=academic_yr)
+    offer_years_managed = mdl.offer_year.find_by_user(request.user, academic_yr=academic_yr)
 
     all_tutors = mdl.tutor.find_by_program_manager(offer_years_managed)
 
@@ -423,8 +423,8 @@ def refresh_list(request):
 
 
 def _get_exam_enrollments(user,
-                         learning_unit_year_id=None, tutor_id=None, offer_year_id=None,
-                         academic_year=mdl.academic_year.current_academic_year()):
+                          learning_unit_year_id=None, tutor_id=None, offer_year_id=None,
+                          academic_year=None):
     """
     :param user: The user who's asking for exam_enrollments (for scores' encoding).
     :param learning_unit_year_id: To filter ExamEnroll by learning_unit_year.
@@ -434,6 +434,8 @@ def _get_exam_enrollments(user,
     :return: All exam enrollments for the user passed in parameter (check if it is a program manager or a tutor) and
              a Boolean is_program_manager (True if the user is a program manager, False if the user is a Tutor/coord).
     """
+    if not academic_year:
+        academic_year = mdl.academic_year.current_academic_year()
     is_program_manager = False
     # Case the user is a program manager
     if mdl.program_manager.is_program_manager(user):
@@ -446,7 +448,7 @@ def _get_exam_enrollments(user,
             offers_year = [mdl.offer_year.find_by_id(offer_year_id)]
         else:
             # Get examEnrollments for all offers managed by the program manager
-            offers_year = list(mdl.offer_year.find_by_user(user, academic_year=academic_year))
+            offers_year = list(mdl.offer_year.find_by_user(user, academic_yr=academic_year))
         exam_enrollments = list(mdl.exam_enrollment\
                               .find_for_score_encodings(mdl.session_exam.find_session_exam_number(),
                                                         learning_unit_year_id=learning_unit_year_id,
