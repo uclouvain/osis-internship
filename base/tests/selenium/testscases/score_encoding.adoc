@@ -9,12 +9,11 @@
 3. Choisir un cours.
 4. Encoder des notes ou justifications (pas toutes).
 5. Sauvergarder les notes.
-7. Tant que toutes les notes ne sont pas encodées , on ne peut pas soumettre.
+7. Impossible de soumettre les notes partielles
 6. Tant que les note encodées ne sont pas soumises ,on peut les modifier.
 7. Test avec un autre professeur du cours.
-8. On encode les notes restantes et on soumet.
-9. Les notes ont été soumises, il n'est plus possible d'encoder des notes pour ce cours. +
-   On Vérifie que l'encodage de note ou de justification n'est plus possible.
+8. On encode les notes restantes.
+9. Impossible de soumettre les notes complètes
 
 ==== En tant que coordinateur
 1. S'authentitifier en tant que coordinateur.
@@ -25,6 +24,8 @@
 6. Verifier qu'il est possible de soumettre les notes partielles et les soumettre.
 7. Les notes partielles ont été encodées pour ce cours , il n'est plus possible de les encoder.
 8. Les notes non soumises sont toujours encodables (vérification faite pour prof également).
+9. Il est possible de soumettre les note complètes encodée par un professeur
+10. Le cours n'est plus encodable après submission complète (Le bouton 'encoder' n'est plus clickable)
 
 
 ==== En tant que gestionaire de programme

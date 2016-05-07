@@ -121,7 +121,7 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         get_element_by_id(self, 'bt_save_online_encoding').click()
         assert_is_element_present(self, False, 'bt_save_online_encoding')
 
-        # All the scores are not encoded ,the professor cannot submit scores
+        # Professor cannot submit partial scores
         assert_is_enabled(self, False,'bt_score_submission_modal')
 
         # #While sores are not submited, they can be changed
@@ -156,33 +156,8 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         get_element_by_id(self, 'num_score_104').send_keys('14')
         get_element_by_id(self, 'num_score_119').send_keys('14')
         get_element_by_id(self, 'bt_save_online_encoding').click()
-        # #Assert submission is enabled and submit
-        assert_is_enabled(self,True,'bt_score_submission_modal')
-        get_element_by_id(self, 'bt_score_submission_modal').click()
-        get_element_by_id(self, 'lnk_post_scores_submission_btn').click()
-
-        # Once the all the scores are submitted ,the score encoding for this learning_unit is no more availlable
-        get_element_by_id(self, 'lnk_home_dropdown_parcours').click()
-        get_element_by_id(self, 'lnk_dropdown_evaluations').click()
-        get_element_by_id(self, 'lnk_score_encoding').click()
-        get_element_by_id(self, 'lnk_encode_LBIR1320B').click()
-        assert_is_enabled(self, False, 'num_score_14')
-        assert_is_enabled(self, False, 'slt_justification_score_14')
-        assert_is_enabled(self, False, 'num_score_29')
-        assert_is_enabled(self, False, 'slt_justification_score_29')
-        assert_is_enabled(self, False, 'num_score_44')
-        assert_is_enabled(self, False, 'slt_justification_score_44')
-        assert_is_enabled(self, False, 'num_score_59')
-        assert_is_enabled(self, False, 'slt_justification_score_59')
-        assert_is_enabled(self, False, 'num_score_74')
-        assert_is_enabled(self, False, 'slt_justification_score_74')
-        assert_is_enabled(self, False, 'num_score_89')
-        assert_is_enabled(self, False, 'slt_justification_score_89')
-        assert_is_enabled(self, False, 'num_score_104')
-        assert_is_enabled(self, False, 'slt_justification_score_104')
-        assert_is_enabled(self, False, 'num_score_119')
-        assert_is_enabled(self, False, 'slt_justification_score_119')
-
+        # #Professor cannot submit complete scores
+        assert_is_enabled(self, False, 'bt_score_submission_modal')
         log_out(self)
 
     def _test_encode_as_coordinator(self):
@@ -240,8 +215,23 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         get_element_by_id(self, 'num_score_8').send_keys('12')
         get_element_by_id(self, 'bt_save_online_encoding').click()
         assert_is_element_present(self, False, 'bt_save_online_encoding')
-
         log_out(self)
+
+        # Test if scores encoded by professor are submitable
+        login_as('coord3')
+        # Submitt the scores
+        get_element_by_id(self, 'lnk_home_dropdown_parcours').click()
+        get_element_by_id(self, 'lnk_dropdown_evaluations').click()
+        get_element_by_id(self, 'lnk_score_encoding').click()
+        get_element_by_id(self, 'lnk_LBIR1320B').click()
+        get_element_by_id(self, 'bt_score_submission_modal').click()
+        get_element_by_id(self, 'lnk_post_scores_submission_btn').click()
+
+        #Once scores are submitted it is not possible to encode scores
+        get_element_by_id(self, 'lnk_home_dropdown_parcours').click()
+        get_element_by_id(self, 'lnk_dropdown_evaluations').click()
+        get_element_by_id(self, 'lnk_score_encoding').click()
+        assert_is_enabled(self,False,'lnk_encode_LBIR1320B')
 
     def _test_double_encoding(self):
         """
