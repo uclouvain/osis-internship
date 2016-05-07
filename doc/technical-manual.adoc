@@ -604,6 +604,10 @@ Some examples of use:
     <select id="slt_academic_year">
 
 === Launch tests locally
+[NOTE]
+====
+To run tests, the db_user must be granted with CREATEDB permission.
+====
 
 ==== Create Firefox profile
 Open firefox with new prile path
