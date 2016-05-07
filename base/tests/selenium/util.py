@@ -39,8 +39,8 @@ def take_screen_shot(test_class, name):
     test_class.selenium.save_screenshot(os.path.join(SCREEN_SHOT_FOLDER, screenshot_name))
 
 
-def getUrl(self, url):
-    self.selenium.get('%s%s' % (self.live_server_url, url))
+def getUrl(test_class, url):
+    test_class.selenium.get('%s%s' % (test_class.live_server_url, url))
 
 
 def assert_is_element_present(test_class, assertion, element_id):
@@ -54,13 +54,13 @@ def assert_is_element_present(test_class, assertion, element_id):
     except NoSuchElementException:
         is_present = False
     try:
-        return test_class.assertEqual(assertion, is_present,
-                                "Element {} is {} present".format(
+        test_class.assertEqual(assertion, is_present,
+                               "Element {} is {} present".format(
                                     element_id,
-                                    'not' if not assertion else ''
+                                    'not' if assertion else ''
                                 ))
     except AssertionError as ae:
-        test_class.take_screen_shot(element_id)
+        take_screen_shot(test_class, element_id)
         raise ae
 
 
@@ -74,7 +74,7 @@ def get_element_by_id(test_class, element_id):
     try:
         return test_class.selenium.find_element_by_id(element_id)
     except NoSuchElementException as nsee:
-        test_class.take_screen_shot(element_id)
+        take_screen_shot(test_class, element_id)
         raise nsee
 
 
@@ -94,10 +94,10 @@ def assert_is_enabled(test_class, assertion, element_id):
         return test_class.assertEqual(assertion, is_enabled,
                                       "Element {} is {} enabled".format(
                                           element_id,
-                                          'not' if not assertion else ''
+                                          'not' if assertion else ''
                                       ))
     except AssertionError as ae:
-        test_class.take_screen_shot(element_id)
+        take_screen_shot(test_class, element_id)
         raise ae
 
 
@@ -107,7 +107,7 @@ def login_as(test_class, user):
     :param test_class: The test class
     :param user_name: The user username
     """
-    getUrl("/")
+    getUrl(test_class,"/")
     user_username = users.get(user).get('username')
     user_passwd = users.get(user).get('password')
     get_element_by_id(test_class,'lnk_login').click()
@@ -146,11 +146,11 @@ def assert_txt_contain(test_class, assertion, element_id, text):
             text in element_txt,
             "Element {} text should {} contains {}".format(
                 element_id,
-                'not' if assertion else '',
+                'not' if not assertion else '',
                 text
         ))
     except AssertionError as ae:
-        test_class.take_screen_shot(element_id)
+        take_screen_shot(test_class,element_id)
         raise ae
 
 

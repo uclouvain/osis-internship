@@ -59,7 +59,7 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         }
         profile = webdriver.FirefoxProfile(FIREFOX_PROFILE_PATH)
         cls.selenium = webdriver.Firefox(firefox_profile=profile,capabilities=capabilities)
-        cls.selenium.implicitly_wait(10)
+        cls.selenium.implicitly_wait(3)
         cls.selenium.maximize_window()
         super(ScoreEncodingTests, cls).setUpClass()
 
@@ -75,7 +75,7 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         - close selenium conexion
         """
         cls.selenium.quit()
-        dump_data_after_tests(['auth','base'],'score_encoding')
+        # dump_data_after_tests(['auth','base'],'score_encoding')
         super(ScoreEncodingTests, cls).tearDownClass()
 
     def test_score_encoding(self):
@@ -87,13 +87,13 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         - Test decimal encoding
         - Test message sending after submission
         """
-        self._test_encode_as_professor()
-        self._test_encode_as_coordinator()
-        self._test_double_encoding()
-        self._test_decimal_encoding()
-        self._sent_message_after_submission()
+        self.__test_encode_as_professor()
+        self.__test_encode_as_coordinator()
+        self.__test_double_encoding()
+        self.__test_decimal_encoding()
+        self.__sent_message_after_submission()
 
-    def _test_encode_as_professor(self):
+    def __test_encode_as_professor(self):
         """
         Test the encoding of scores as a professor
         :param self: The class used to make the tests
@@ -118,7 +118,7 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         get_element_by_id(self, 'num_score_14').send_keys('15')
         Select(get_element_by_id(self, 'slt_justification_score_29')).select_by_value('ABSENT')
         # #Save and assert it's done (button save is not present anymore)
-        get_element_by_id(self, 'bt_save_online_encoding').click()
+        get_element_by_id(self, 'bt_save_online_encoding').submit()
         assert_is_element_present(self, False, 'bt_save_online_encoding')
 
         # Professor cannot submit partial scores
@@ -129,7 +129,7 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         get_element_by_id(self, 'lnk_encode').click()
         get_element_by_id(self, 'num_score_14').clear()
         get_element_by_id(self, 'num_score_14').send_keys('13')
-        get_element_by_id(self, 'bt_save_online_encoding').click()
+        get_element_by_id(self, 'bt_save_online_encoding').submit()
         # #Then we test with another professor
         log_out(self)
         login_as(self,'prof5')
@@ -144,7 +144,7 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         # #We test that he can encode not already encoded score
         get_element_by_id(self, 'num_score_44').send_keys('14')
         # #Save and assert it's done (button save is not present anymore)
-        get_element_by_id(self, 'bt_save_online_encoding').click()
+        get_element_by_id(self, 'bt_save_online_encoding').submit()
         assert_is_element_present(self, False, 'bt_save_online_encoding')
 
         #Encode all scores and submit scores (with one justification)
@@ -155,16 +155,16 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         Select(get_element_by_id(self, 'slt_justification_score_89')).select_by_value('CHEATING')
         get_element_by_id(self, 'num_score_104').send_keys('14')
         get_element_by_id(self, 'num_score_119').send_keys('14')
-        get_element_by_id(self, 'bt_save_online_encoding').click()
+        get_element_by_id(self, 'bt_save_online_encoding').submit()
         # #Professor cannot submit complete scores
         assert_is_enabled(self, False, 'bt_score_submission_modal')
         log_out(self)
 
-    def _test_encode_as_coordinator(self):
+    def __test_encode_as_coordinator(self):
         """
         Test the encoding of score as coordinator
         """
-        login_as('coord2')
+        login_as(self,'coord2')
 
         # Go to encoding page
         get_element_by_id(self, 'lnk_home_dropdown_parcours').click()
@@ -181,12 +181,12 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         get_element_by_id(self, 'num_score_83').send_keys('15')
         Select(get_element_by_id(self, 'slt_justification_score_113')).select_by_value('SCORE_MISSING')
         # #Save and assert it's done (button save is not present anymore)
-        get_element_by_id(self, 'bt_save_online_encoding').click()
+        get_element_by_id(self, 'bt_save_online_encoding').submit()
         assert_is_element_present(self, False, 'bt_save_online_encoding')
 
         # As a coordinator ,i can submit partial encoding
         assert_is_enabled(self, True, 'bt_score_submission_modal')
-        get_element_by_id(self, 'bt_score_submission_modal').click()
+        get_element_by_id(self, 'bt_score_submission_modal').submit()
         get_element_by_id(self, 'lnk_post_scores_submission_btn').click()
 
         # Once scores are partially submitted , the already submitted scores can not be encoded anymore
@@ -199,7 +199,7 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         # #We can still encode not submitted notes
         # #As a coordinator
         get_element_by_id(self, 'num_score_68').send_keys('15')
-        get_element_by_id(self, 'bt_save_online_encoding').click()
+        get_element_by_id(self, 'bt_save_online_encoding').submit()
         assert_is_element_present(self, False, 'bt_save_online_encoding')
         log_out(self)
         # #And as a professor
@@ -213,32 +213,33 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         assert_is_enabled(self, False, 'slt_justification_score_113')
         # #Encode not submitted
         get_element_by_id(self, 'num_score_8').send_keys('12')
-        get_element_by_id(self, 'bt_save_online_encoding').click()
+        get_element_by_id(self, 'bt_save_online_encoding').submit()
         assert_is_element_present(self, False, 'bt_save_online_encoding')
         log_out(self)
 
         # Test if scores encoded by professor are submitable
-        login_as('coord3')
+        login_as(self,'coord3')
         # Submitt the scores
         get_element_by_id(self, 'lnk_home_dropdown_parcours').click()
         get_element_by_id(self, 'lnk_dropdown_evaluations').click()
         get_element_by_id(self, 'lnk_score_encoding').click()
         get_element_by_id(self, 'lnk_LBIR1320B').click()
-        get_element_by_id(self, 'bt_score_submission_modal').click()
+        get_element_by_id(self, 'bt_score_submission_modal').submit()
         get_element_by_id(self, 'lnk_post_scores_submission_btn').click()
 
         #Once scores are submitted it is not possible to encode scores
         get_element_by_id(self, 'lnk_home_dropdown_parcours').click()
         get_element_by_id(self, 'lnk_dropdown_evaluations').click()
         get_element_by_id(self, 'lnk_score_encoding').click()
-        assert_is_enabled(self,False,'lnk_encode_LBIR1320B')
+        assert_is_enabled(self,False, 'lnk_encode_LBIR1320B')
+        log_out()
 
-    def _test_double_encoding(self):
+    def __test_double_encoding(self):
         """
         Test the double encoding mechanism
         """
         # Log as coordinator
-        login_as('coord3')
+        login_as(self,'coord3')
 
         # Go to encoding page
         get_element_by_id(self, 'lnk_home_dropdown_parcours').click()
@@ -251,17 +252,17 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         get_element_by_id(self, 'num_score_92').send_keys('14,3')
         Select(get_element_by_id(self, 'slt_justification_score_137')).select_by_value('SCORE_MISSING')
         # #Save and assert it's done (button save is not present anymore)
-        get_element_by_id(self, 'bt_save_online_encoding').click()
+        get_element_by_id(self, 'bt_save_online_encoding').submit()
         assert_is_element_present(self, False, 'bt_save_online_encoding')
 
         # Submit partilally encoded scores
-        get_element_by_id(self, 'bt_score_submission_modal').click()
+        get_element_by_id(self, 'bt_score_submission_modal').submit()
         get_element_by_id(self, 'lnk_post_scores_submission_btn').click()
 
         log_out(self)
 
         # Log as professor
-        login_as('prof3')
+        login_as(self,'prof3')
         # Go to encoding page
         get_element_by_id(self, 'lnk_home_dropdown_parcours').click()
         get_element_by_id(self, 'lnk_dropdown_evaluations').click()
@@ -281,11 +282,11 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         get_element_by_id(self, 'num_score_92').send_keys('14,8')
         Select(get_element_by_id(self, 'slt_justification_score_137')).select_by_value('ABSENT')
         # #Compare and save
-        get_element_by_id(self, 'bt_compare').click()
-        get_element_by_id(self, 'bt_submit_online_double_encoding_validation').click()
+        get_element_by_id(self, 'bt_compare').submit()
+        get_element_by_id(self, 'bt_submit_online_double_encoding_validation').submit()
+        log_out()
 
-
-    def _test_decimal_encoding(self):
+    def __test_decimal_encoding(self):
         # Encode non decimal learning unit
         login_as(self,'coord1')
         # #Go to encoding page
@@ -297,14 +298,14 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         # #Fill one score with decimal
         get_element_by_id(self, 'num_score_2').send_keys('13,8')
         # #Try to save and assert is not possible (button save remain present)
-        get_element_by_id(self, 'bt_save_online_encoding').click()
+        get_element_by_id(self, 'bt_save_online_encoding').submit()
         assert_is_element_present(self, True, 'bt_save_online_encoding')
         # #Change the decimal score to non decimal score
         get_element_by_id(self, 'num_score_2').clear()
         # #Fill one score with non decimal
         get_element_by_id(self, 'num_score_2').send_keys('14')
         # #Save and assert is ok (button save not present)
-        get_element_by_id(self, 'bt_save_online_encoding').click()
+        get_element_by_id(self, 'bt_save_online_encoding').submit()
         assert_is_element_present(self, False, 'bt_save_online_encoding')
         log_out(self)
 
@@ -321,22 +322,21 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         # #Fill one score with decimal
         get_element_by_id(self, 'num_double_score_2').send_keys('12,6')
         # #Try to compare and assert is not possible
-        get_element_by_id(self, 'bt_compare').click()
+        get_element_by_id(self, 'bt_compare').submit()
         assert_is_element_present(self, True, 'bt_compare')
         # #Fil in a non decimal score
         get_element_by_id(self, 'num_double_score_2').send_keys('13')
         # #Try to compare and assert it is ok
-        get_element_by_id(self, 'bt_compare').click()
-        assert_is_element_present(self, False, 'bt_compare')
+        get_element_by_id(self, 'bt_compare').submit()
         # #validate second note
-        get_element_by_id(self, 'bt_take_reencoded_2').clikc()
+        get_element_by_id(self, 'bt_take_reencoded_2').submit()
         # #Save and assert it's done
-        get_element_by_id(self, 'bt_submit_online_double_encoding_validation').click()
+        get_element_by_id(self, 'bt_submit_online_double_encoding_validation').submit()
         assert_is_element_present(self, False, 'bt_submit_online_double_encoding_validation')
         log_out(self)
 
         # Encode for decimal learning unit
-        login_as('coord5')
+        login_as(self,'coord5')
         # #Go to encoding page
         get_element_by_id(self, 'lnk_home_dropdown_parcours').click()
         get_element_by_id(self, 'lnk_dropdown_evaluations').click()
@@ -346,7 +346,7 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         # #Fill one score with decimal
         get_element_by_id(self, 'num_score_146').send_keys('13,8')
         # #Save and assert is ok (button save not present)
-        get_element_by_id(self, 'bt_save_online_encoding').click()
+        get_element_by_id(self, 'bt_save_online_encoding').submit()
         assert_is_element_present(self, False, 'bt_save_online_encoding')
         log_out(self)
 
@@ -363,16 +363,16 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         # #Fill one score decimal
         get_element_by_id(self, 'num_double_score_2').send_keys('12,6')
         # #Try to compare and assert it is ok
-        get_element_by_id(self, 'bt_compare').click()
+        get_element_by_id(self, 'bt_compare').submit()
         assert_is_element_present(self, False, 'bt_compare')
         # #validate second note
-        get_element_by_id(self, 'bt_take_reencoded_146').click()
+        get_element_by_id(self, 'bt_take_reencoded_146').submit()
         # #Save and assert it's done
-        get_element_by_id(self, 'bt_submit_online_double_encoding_validation').click()
+        get_element_by_id(self, 'bt_submit_online_double_encoding_validation').submit()
         assert_is_element_present(self, False, 'bt_submit_online_double_encoding_validation')
         log_out(self)
 
-    def _sent_message_after_submission(self):
+    def __sent_message_after_submission(self):
         """
         Each time scores are submitted, a message is sent to all the professors of the learning unit
         """
@@ -387,11 +387,11 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         get_element_by_id(self, 'num_score_140').send_keys('15')
         Select(get_element_by_id(self, 'slt_justification_score_155')).select_by_value('ABSENT')
         # #Save and assert it's done (button save is not present anymore)
-        get_element_by_id(self, 'bt_save_online_encoding').click()
+        get_element_by_id(self, 'bt_save_online_encoding').submit()
         assert_is_element_present(self, False, 'bt_save_online_encoding')
         # As a coordinator ,i can submit partial encoding
         assert_is_enabled(self, True, 'bt_score_submission_modal')
-        get_element_by_id(self, 'bt_score_submission_modal').click()
+        get_element_by_id(self, 'bt_score_submission_modal').submit()
         get_element_by_id(self, 'lnk_post_scores_submission_btn').click()
         log_out(self)
 
