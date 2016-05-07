@@ -26,7 +26,8 @@
 """
 File that contains all the selenium tests for the scores encoding.
 Each class represent a specific feature to test.
-Most of the time a feature need tata to be on a specific state; for that reason the database is reconstructed on the class level.
+Most of the time a feature need tata to be on a specific state; for that reason the database
+is reconstructed on the class level.
 Data will be injected for specific state.
 """
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
@@ -35,17 +36,18 @@ from selenium.webdriver.support.select import Select
 
 from backoffice.settings import FIREFOX_PROFILE_PATH
 from base.tests.selenium.util import get_element_by_id, assert_is_element_present, assert_is_enabled, login_as,\
-    log_out, assert_txt_contain, dump_data_after_tests
+    log_out
 
 
 class ScoreEncodingTests(StaticLiveServerTestCase):
     """
-    This class test the sending of a message to all the tutors of a learning_unit , after the score encoding is submitted.
+    This class test the sending of a message to all the tutors of a learning_unit ,
+     after the score encoding is submitted.
     All the previous states of this business feature are supposed to be done.
     We only test the fact that after the submission , a mail is sent
     """
 
-    fixtures = ['base/fixtures/score_encoding_base.json','base/fixtures/messages_templates.json']
+    fixtures = ['base/fixtures/score_encoding_base.json', 'base/fixtures/messages_templates.json']
 
     @classmethod
     def setUpClass(cls):
@@ -58,7 +60,7 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
             'javascriptEnabled': True,
         }
         profile = webdriver.FirefoxProfile(FIREFOX_PROFILE_PATH)
-        cls.selenium = webdriver.Firefox(firefox_profile=profile,capabilities=capabilities)
+        cls.selenium = webdriver.Firefox(firefox_profile=profile, capabilities=capabilities)
         cls.selenium.implicitly_wait(3)
         cls.selenium.maximize_window()
         super(ScoreEncodingTests, cls).setUpClass()
@@ -99,8 +101,8 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         :param self: The class used to make the tests
         """
 
-        #Log in as prof3
-        login_as(self,'prof3')
+        # Log in as prof3
+        login_as(self, 'prof3')
 
         # Go to encoding page
         get_element_by_id(self, 'lnk_home_dropdown_parcours').click()
@@ -122,7 +124,7 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         assert_is_element_present(self, False, 'bt_save_online_encoding')
 
         # Professor cannot submit partial scores
-        assert_is_enabled(self, False,'bt_score_submission_modal')
+        assert_is_enabled(self, False, 'bt_score_submission_modal')
 
         # #While sores are not submited, they can be changed
         # #First we test with the same user
@@ -132,7 +134,7 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         get_element_by_id(self, 'bt_save_online_encoding').submit()
         # #Then we test with another professor
         log_out(self)
-        login_as(self,'prof5')
+        login_as(self, 'prof5')
         # #Go to encoding page
         get_element_by_id(self, 'lnk_home_dropdown_parcours').click()
         get_element_by_id(self, 'lnk_dropdown_evaluations').click()
@@ -147,7 +149,7 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         get_element_by_id(self, 'bt_save_online_encoding').submit()
         assert_is_element_present(self, False, 'bt_save_online_encoding')
 
-        #Encode all scores and submit scores (with one justification)
+        # Encode all scores and submit scores (with one justification)
         # #Encode all scores
         get_element_by_id(self, 'lnk_encode').click()
         get_element_by_id(self, 'num_score_59').send_keys('14')
@@ -164,7 +166,7 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         """
         Test the encoding of score as coordinator
         """
-        login_as(self,'coord2')
+        login_as(self, 'coord2')
 
         # Go to encoding page
         get_element_by_id(self, 'lnk_home_dropdown_parcours').click()
@@ -194,7 +196,7 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         get_element_by_id(self, 'lnk_dropdown_evaluations').click()
         get_element_by_id(self, 'lnk_score_encoding').click()
         get_element_by_id(self, 'lnk_encode_LDUAL4367').click()
-        assert_is_enabled(self, False,'num_score_83')
+        assert_is_enabled(self, False, 'num_score_83')
         assert_is_enabled(self, False, 'slt_justification_score_113')
         # #We can still encode not submitted notes
         # #As a coordinator
@@ -203,7 +205,7 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         assert_is_element_present(self, False, 'bt_save_online_encoding')
         log_out(self)
         # #And as a professor
-        login_as(self,'prof2')
+        login_as(self, 'prof2')
         get_element_by_id(self, 'lnk_home_dropdown_parcours').click()
         get_element_by_id(self, 'lnk_dropdown_evaluations').click()
         get_element_by_id(self, 'lnk_score_encoding').click()
@@ -218,7 +220,7 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         log_out(self)
 
         # Test if scores encoded by professor are submitable
-        login_as(self,'coord3')
+        login_as(self, 'coord3')
         # Submitt the scores
         get_element_by_id(self, 'lnk_home_dropdown_parcours').click()
         get_element_by_id(self, 'lnk_dropdown_evaluations').click()
@@ -227,19 +229,19 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         get_element_by_id(self, 'bt_score_submission_modal').submit()
         get_element_by_id(self, 'lnk_post_scores_submission_btn').click()
 
-        #Once scores are submitted it is not possible to encode scores
+        # Once scores are submitted it is not possible to encode scores
         get_element_by_id(self, 'lnk_home_dropdown_parcours').click()
         get_element_by_id(self, 'lnk_dropdown_evaluations').click()
         get_element_by_id(self, 'lnk_score_encoding').click()
-        assert_is_enabled(self,False, 'lnk_encode_LBIR1320B')
-        log_out()
+        assert_is_enabled(self, False, 'lnk_encode_LBIR1320B')
+        log_out(self)
 
     def __test_double_encoding(self):
         """
         Test the double encoding mechanism
         """
         # Log as coordinator
-        login_as(self,'coord3')
+        login_as(self, 'coord3')
 
         # Go to encoding page
         get_element_by_id(self, 'lnk_home_dropdown_parcours').click()
@@ -262,7 +264,7 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         log_out(self)
 
         # Log as professor
-        login_as(self,'prof3')
+        login_as(self, 'prof3')
         # Go to encoding page
         get_element_by_id(self, 'lnk_home_dropdown_parcours').click()
         get_element_by_id(self, 'lnk_dropdown_evaluations').click()
@@ -284,11 +286,11 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         # #Compare and save
         get_element_by_id(self, 'bt_compare').submit()
         get_element_by_id(self, 'bt_submit_online_double_encoding_validation').submit()
-        log_out()
+        log_out(self)
 
     def __test_decimal_encoding(self):
         # Encode non decimal learning unit
-        login_as(self,'coord1')
+        login_as(self, 'coord1')
         # #Go to encoding page
         get_element_by_id(self, 'lnk_home_dropdown_parcours').click()
         get_element_by_id(self, 'lnk_dropdown_evaluations').click()
@@ -336,7 +338,7 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         log_out(self)
 
         # Encode for decimal learning unit
-        login_as(self,'coord5')
+        login_as(self, 'coord5')
         # #Go to encoding page
         get_element_by_id(self, 'lnk_home_dropdown_parcours').click()
         get_element_by_id(self, 'lnk_dropdown_evaluations').click()
@@ -377,7 +379,7 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         Each time scores are submitted, a message is sent to all the professors of the learning unit
         """
         # Encode and submit partial scores as coordinator
-        login_as(self,'coord4')
+        login_as(self, 'coord4')
         # #Go to encoding page
         get_element_by_id(self, 'lnk_home_dropdown_parcours').click()
         get_element_by_id(self, 'lnk_dropdown_evaluations').click()
@@ -395,7 +397,7 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         get_element_by_id(self, 'lnk_post_scores_submission_btn').click()
         log_out(self)
 
-        #Login as admin and check message history
+        # Login as admin and check message history
         login_as(self, 'osis')
         # #Go to mesage_history page
         get_element_by_id(self, 'bt_administration').click()
@@ -405,5 +407,5 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         get_element_by_id(self, 'lnk_messages_history').click()
         assert_is_element_present(self, True, '')
         assert_is_element_present(self, True, '')
-        log_out()
+        log_out(self)
 

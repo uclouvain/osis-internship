@@ -39,7 +39,7 @@ def take_screen_shot(test_class, name):
     test_class.selenium.save_screenshot(os.path.join(SCREEN_SHOT_FOLDER, screenshot_name))
 
 
-def getUrl(test_class, url):
+def get_url(test_class, url):
     test_class.selenium.get('%s%s' % (test_class.live_server_url, url))
 
 
@@ -68,7 +68,8 @@ def get_element_by_id(test_class, element_id):
     """
     Return the element deisgned by the id.
     If the element is not present , take a screenshot and raise an exception
-    :param elemen_id: The id of the element we are looking for
+    :param element_id: The id of the element we are looking for
+    :param test_class
     :return: The element if found
     """
     try:
@@ -105,15 +106,15 @@ def login_as(test_class, user):
     """
     Log into the application as a user
     :param test_class: The test class
-    :param user_name: The user username
+    :param user: The user
     """
-    getUrl(test_class,"/")
+    get_url(test_class, "/")
     user_username = users.get(user).get('username')
     user_passwd = users.get(user).get('password')
-    get_element_by_id(test_class,'lnk_login').click()
-    get_element_by_id(test_class,'id_username').send_keys(user_username)
-    get_element_by_id(test_class,'id_password').send_keys(user_passwd)
-    get_element_by_id(test_class,'post_login_btn').click()
+    get_element_by_id(test_class, 'lnk_login').click()
+    get_element_by_id(test_class, 'id_username').send_keys(user_username)
+    get_element_by_id(test_class, 'id_password').send_keys(user_passwd)
+    get_element_by_id(test_class, 'post_login_btn').click()
 
 
 def log_out(test_class):
@@ -148,20 +149,20 @@ def assert_txt_contain(test_class, assertion, element_id, text):
                 element_id,
                 'not' if not assertion else '',
                 text
-        ))
+            ))
     except AssertionError as ae:
-        take_screen_shot(test_class,element_id)
+        take_screen_shot(test_class, element_id)
         raise ae
 
 
 def dump_data_after_tests(apps_name_list, fixture_name):
     apps_models = [model for app_name in apps_name_list for model in apps.get_app_config(app_name).get_models()]
     query_sets = [list(model.objects.all()) for model in apps_models]
-    fixture = serialize('json',query_sets)
+    fixture = serialize('json', query_sets)
     file_path = os.path.join(BASE_DIR,
                              "base/tests/selenium/data_after_tests/{}_{}.json"
-                             .format(fixture_name,date.today()
+                             .format(fixture_name, date.today()
                                      .strftime("%d_%m_%H_%M")))
-    file = open(file_path,'w')
+    file = open(file_path, 'w')
     file.write(fixture)
     file.close()
