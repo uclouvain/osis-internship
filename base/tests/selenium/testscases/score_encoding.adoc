@@ -29,6 +29,20 @@
 
 
 ==== En tant que gestionaire de programme
+1. S'authentifier en tant que gestionnaire de programme.
+2. Verifier que les cours faisant partie des programmes gérés sont présents.
+3. Encoder les notes d'un cours (pas toutes)
+4. Valider l'encodage.
+5. S'authentifier en tant que proffesseur (du cours encodé)
+6. Vérifier que les notes encodées par le programme manager ne sont plus encodables.
+7. Vérifier que les notes encodées par le programme manager sont double encodables.
+8. S'authentifier en tant que programme manager.
+9. Choisir un cours qui n'aparait que dans le programme géré par le pgm manager.
+10. Encoder toutes les notes.
+11. Valider l'encodage.
+12. S'authentifier en tant que profeseur.
+13. Vérifier que ce cours ne fait plus partie de la liste des cours encodable.
+
 
 === Double Encodage
 1. S'authentitifier en tant que coordinateur.
@@ -77,4 +91,7 @@ Pour le moment on teste l'historique des message , le temp de mettre en place My
 5. Naviguer jusqu'à l'histopriques des messages.
 6. Vérifier que tous les professeurs du cours on reçu un message.
 
-===== Test du niveau de progression
+===== Verifier que seul les cours qui possèdent des inscriptions font partie des cours encodable.
+1. S'authentifier an tant que proffesseur (Le professeur doit avoir pour attribution un cours qui ne possède pas d'inscripion.
+2. Aller vers l'encodage des notes.
+. Véfifier que seul les cours qui possèdent des inscriptions sont affichés.

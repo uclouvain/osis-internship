@@ -157,8 +157,12 @@ def assert_txt_contain(test_class, assertion, element_id, text):
 
 def dump_data_after_tests(apps_name_list, fixture_name):
     apps_models = [model for app_name in apps_name_list for model in apps.get_app_config(app_name).get_models()]
-    query_sets = [list(model.objects.all()) for model in apps_models]
-    fixture = serialize('json', query_sets)
+    [print(model) for model in apps_models]
+    query_sets = [model.objects.all() for model in apps_models]
+    l = list()
+    for q in query_sets:
+        l = l + list(q)
+    fixture = serialize('json', l)
     file_path = os.path.join(BASE_DIR,
                              "base/tests/selenium/data_after_tests/{}_{}.json"
                              .format(fixture_name, date.today()

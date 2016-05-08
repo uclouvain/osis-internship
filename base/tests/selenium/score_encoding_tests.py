@@ -36,7 +36,7 @@ from selenium.webdriver.support.select import Select
 
 from backoffice.settings import FIREFOX_PROFILE_PATH
 from base.tests.selenium.util import get_element_by_id, assert_is_element_present, assert_is_enabled, login_as,\
-    log_out
+    log_out, dump_data_after_tests
 
 
 class ScoreEncodingTests(StaticLiveServerTestCase):
@@ -77,7 +77,7 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         - close selenium conexion
         """
         cls.selenium.quit()
-        # dump_data_after_tests(['auth','base'],'score_encoding')
+        dump_data_after_tests(['auth','base'],'score_encoding')
         super(ScoreEncodingTests, cls).tearDownClass()
 
     def test_score_encoding(self):
@@ -408,4 +408,10 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         assert_is_element_present(self, True, '')
         assert_is_element_present(self, True, '')
         log_out(self)
+
+    def __test_only_learning_unit_with_inscription_ancoded(self):
+        """
+        Learning units without inscrption cannot be present in the list of learning units that can be encoded.
+        """
+        
 
