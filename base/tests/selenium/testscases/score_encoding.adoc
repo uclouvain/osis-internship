@@ -5,7 +5,7 @@
 ==== En tant que professeur
 
 1. S'authentitifier en tant que professeur.
-2. Verifier que les cours donnés sont présents pour encodage.
+2. Verifier que tous les cours du professeur possèdant des inscriptions sont présents pour encodage.
 3. Choisir un cours.
 4. Encoder des notes ou justifications (pas toutes).
 5. Sauvergarder les notes.
@@ -17,7 +17,7 @@
 
 ==== En tant que coordinateur
 1. S'authentitifier en tant que coordinateur.
-2. Verifier que les cours donnés sont présents pour encodage.
+2. Verifier que tous les cours du coordinateur possèdant des inscriptions sont présents pour encodage.
 3. Choisir un cours.
 4. Encoder des notes ou justifications (pas toutes).
 5. Sauvergarder les notes.
@@ -30,7 +30,7 @@
 
 ==== En tant que gestionaire de programme
 1. S'authentifier en tant que gestionnaire de programme.
-2. Verifier que les cours faisant partie des programmes gérés sont présents.
+2. Verifier que les cours possèdant des inscriptions et faisant partie des programmes gérés sont présents.
 3. Encoder les notes d'un cours (pas toutes)
 4. Valider l'encodage.
 5. S'authentifier en tant que proffesseur (du cours encodé)
@@ -90,8 +90,3 @@ Pour le moment on teste l'historique des message , le temp de mettre en place My
 4. S'authentifier en tant qu'administrateur.
 5. Naviguer jusqu'à l'histopriques des messages.
 6. Vérifier que tous les professeurs du cours on reçu un message.
-
-===== Verifier que seul les cours qui possèdent des inscriptions font partie des cours encodable.
-1. S'authentifier an tant que proffesseur (Le professeur doit avoir pour attribution un cours qui ne possède pas d'inscripion.
-2. Aller vers l'encodage des notes.
-. Véfifier que seul les cours qui possèdent des inscriptions sont affichés.

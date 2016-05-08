@@ -30,7 +30,11 @@ Most of the time a feature need tata to be on a specific state; for that reason 
 is reconstructed on the class level.
 Data will be injected for specific state.
 """
+import logging
+import re
+
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from django.utils.translation import ugettext as _
 from selenium import webdriver
 from selenium.webdriver.support.select import Select
 
@@ -89,6 +93,10 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         - Test decimal encoding
         - Test message sending after submission
         """
+        print('\n')
+        print(re.sub(".", "-", str(_('scores_encoding_tests'))))
+        print(_('scores_encoding_tests'))
+        print(re.sub(".", "-", str(_('scores_encoding_tests'))))
         self.__test_encode_as_professor()
         self.__test_encode_as_coordinator()
         self.__test_double_encoding()
@@ -100,7 +108,9 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         Test the encoding of scores as a professor
         :param self: The class used to make the tests
         """
-
+        print('\n')
+        print(_('encode_as_professor'))
+        print(re.sub(".", "-", str(_('encode_as_professor'))))
         # Log in as prof3
         login_as(self, 'prof3')
 
@@ -109,11 +119,16 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         get_element_by_id(self, 'lnk_dropdown_evaluations').click()
         get_element_by_id(self, 'lnk_score_encoding').click()
 
-        # Check if all the learning units are there
-        assert_is_element_present(self, True, 'lnk_encode_LBIR1320B')
-        assert_is_element_present(self, True, 'lnk_encode_LSINF1211')
-        assert_is_element_present(self, True, 'lnk_encode_LPSPG1021')
-
+        # Check if all the learning units with inscriptions are shown
+        assert_is_element_present(self, True, 'lnk_encode_LBIR1320B',
+                                  _('learning_units_with_inscription_must_be_shown'))
+        assert_is_element_present(self, True, 'lnk_encode_LSINF1211',
+                                  _('learning_units_with_inscription_must_be_shown'))
+        assert_is_element_present(self, True, 'lnk_encode_LPSPG1021',
+                                  _('learning_units_with_inscription_must_be_shown'))
+        # Check if learning unit without inscription are not shown
+        assert_is_element_present(self, False, 'lnk_encode_LBIR1320A',
+                                  _('learning_units_without_inscription_must_not_be_shown'))
         # Encode on a learning unit
         get_element_by_id(self, 'lnk_encode_LBIR1320B').click()
         # #Fill one score
@@ -121,10 +136,10 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         Select(get_element_by_id(self, 'slt_justification_score_29')).select_by_value('ABSENT')
         # #Save and assert it's done (button save is not present anymore)
         get_element_by_id(self, 'bt_save_online_encoding').submit()
-        assert_is_element_present(self, False, 'bt_save_online_encoding')
+        assert_is_element_present(self, False, 'bt_save_online_encoding', _('scores_saved_cannot_be_saved_anymore'))
 
         # Professor cannot submit partial scores
-        assert_is_enabled(self, False, 'bt_score_submission_modal')
+        assert_is_enabled(self, False, 'bt_score_submission_modal', _('professors_must_not_submit_scores'))
 
         # #While sores are not submited, they can be changed
         # #First we test with the same user
@@ -147,7 +162,7 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         get_element_by_id(self, 'num_score_44').send_keys('14')
         # #Save and assert it's done (button save is not present anymore)
         get_element_by_id(self, 'bt_save_online_encoding').submit()
-        assert_is_element_present(self, False, 'bt_save_online_encoding')
+        assert_is_element_present(self, False, 'bt_save_online_encoding', _('scores_saved_cannot_be_saved_anymore'))
 
         # Encode all scores and submit scores (with one justification)
         # #Encode all scores
@@ -159,23 +174,31 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         get_element_by_id(self, 'num_score_119').send_keys('14')
         get_element_by_id(self, 'bt_save_online_encoding').submit()
         # #Professor cannot submit complete scores
-        assert_is_enabled(self, False, 'bt_score_submission_modal')
+        assert_is_enabled(self, False, 'bt_score_submission_modal',_('professors_must_not_submit_scores'))
         log_out(self)
 
     def __test_encode_as_coordinator(self):
         """
         Test the encoding of score as coordinator
         """
-        login_as(self, 'coord2')
+        print('\n')
+        print(_('encode_as_coordinator'))
+        print(re.sub(".", "-", str(_('encode_as_coordinator'))))
 
+        login_as(self, 'coord2')
         # Go to encoding page
         get_element_by_id(self, 'lnk_home_dropdown_parcours').click()
         get_element_by_id(self, 'lnk_dropdown_evaluations').click()
         get_element_by_id(self, 'lnk_score_encoding').click()
 
-        # Check if all the learning units are there
-        assert_is_element_present(self, True, 'lnk_encode_LDUAL4367')
-        assert_is_element_present(self, True, 'lnk_encode_LBIR2000A')
+        # Check if all the learning units with inscription are there
+        assert_is_element_present(self, True, 'lnk_encode_LDUAL4367',
+                                  _('learning_units_with_inscription_must_be_shown'))
+        assert_is_element_present(self, True, 'lnk_encode_LBIR2000A',
+                                  _('learning_units_with_inscription_must_be_shown'))
+        # Check if learning units without inscrptions are not there
+        assert_is_element_present(self, False, 'lnk_encode_LBIR2000B',
+                                  _('learning_units_without_inscription_must_not_be_shown'))
 
         # Encode on a learning unit
         get_element_by_id(self, 'lnk_encode_LDUAL4367').click()
@@ -184,10 +207,10 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         Select(get_element_by_id(self, 'slt_justification_score_113')).select_by_value('SCORE_MISSING')
         # #Save and assert it's done (button save is not present anymore)
         get_element_by_id(self, 'bt_save_online_encoding').submit()
-        assert_is_element_present(self, False, 'bt_save_online_encoding')
+        assert_is_element_present(self, False, 'bt_save_online_encoding', _('scores_saved_cannot_be_saved_anymore'))
 
         # As a coordinator ,i can submit partial encoding
-        assert_is_enabled(self, True, 'bt_score_submission_modal')
+        assert_is_enabled(self, True, 'bt_score_submission_modal', _('coordinators_can_submit_partial_encoding'))
         get_element_by_id(self, 'bt_score_submission_modal').submit()
         get_element_by_id(self, 'lnk_post_scores_submission_btn').click()
 
@@ -196,13 +219,13 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         get_element_by_id(self, 'lnk_dropdown_evaluations').click()
         get_element_by_id(self, 'lnk_score_encoding').click()
         get_element_by_id(self, 'lnk_encode_LDUAL4367').click()
-        assert_is_enabled(self, False, 'num_score_83')
-        assert_is_enabled(self, False, 'slt_justification_score_113')
+        assert_is_enabled(self, False, 'num_score_83', _('submitted_scores_cannot_be_encoded_anymore'))
+        assert_is_enabled(self, False, 'slt_justification_score_113', _('submitted_scores_cannot_be_encoded_anymore'))
         # #We can still encode not submitted notes
         # #As a coordinator
         get_element_by_id(self, 'num_score_68').send_keys('15')
         get_element_by_id(self, 'bt_save_online_encoding').submit()
-        assert_is_element_present(self, False, 'bt_save_online_encoding')
+        assert_is_element_present(self, False, 'bt_save_online_encoding', _('scores_saved_cannot_be_saved_anymore'))
         log_out(self)
         # #And as a professor
         login_as(self, 'prof2')
@@ -211,12 +234,12 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         get_element_by_id(self, 'lnk_score_encoding').click()
         get_element_by_id(self, 'lnk_encode_LDUAL4367').click()
         # #Assert submitted scores are not enabled
-        assert_is_enabled(self, False, 'num_score_83')
-        assert_is_enabled(self, False, 'slt_justification_score_113')
+        assert_is_enabled(self, False, 'num_score_83',_('submitted_scores_cannot_be_encoded_anymore'))
+        assert_is_enabled(self, False, 'slt_justification_score_113', _('submitted_scores_cannot_be_encoded_anymore'))
         # #Encode not submitted
         get_element_by_id(self, 'num_score_8').send_keys('12')
         get_element_by_id(self, 'bt_save_online_encoding').submit()
-        assert_is_element_present(self, False, 'bt_save_online_encoding')
+        assert_is_element_present(self, False, 'bt_save_online_encoding', _('scores_saved_cannot_be_saved_anymore'))
         log_out(self)
 
         # Test if scores encoded by professor are submitable
@@ -233,13 +256,17 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         get_element_by_id(self, 'lnk_home_dropdown_parcours').click()
         get_element_by_id(self, 'lnk_dropdown_evaluations').click()
         get_element_by_id(self, 'lnk_score_encoding').click()
-        assert_is_enabled(self, False, 'lnk_encode_LBIR1320B')
+        assert_is_enabled(self, False, 'lnk_encode_LBIR1320B', _('submitted_scores_cannot_be_encoded_anymore'))
         log_out(self)
 
     def __test_double_encoding(self):
         """
         Test the double encoding mechanism
         """
+        print('\n')
+        print(_('double_encoding_test'))
+        print(re.sub(".", "-", str(_('double_encoding_test'))))
+
         # Log as coordinator
         login_as(self, 'coord3')
 
@@ -255,7 +282,8 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         Select(get_element_by_id(self, 'slt_justification_score_137')).select_by_value('SCORE_MISSING')
         # #Save and assert it's done (button save is not present anymore)
         get_element_by_id(self, 'bt_save_online_encoding').submit()
-        assert_is_element_present(self, False, 'bt_save_online_encoding')
+        assert_is_element_present(self, False, 'bt_save_online_encoding',
+                                  _('scores_saved_cannot_be_saved_anymore'))
 
         # Submit partilally encoded scores
         get_element_by_id(self, 'bt_score_submission_modal').submit()
@@ -274,12 +302,12 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         # Double Encode on a learning unit
         get_element_by_id(self, 'lnk_online_double_encoding').click()
         # #Check that only the submitted scores are available
-        assert_is_element_present(self, False, 'num_double_score_215')
-        assert_is_element_present(self, False, 'num_double_score_152')
-        assert_is_element_present(self, False, 'num_double_score_167')
-        assert_is_element_present(self, False, 'num_double_score_182')
-        assert_is_element_present(self, False, 'num_double_score_200')
-        assert_is_element_present(self, False, 'num_double_score_122')
+        assert_is_element_present(self, False, 'num_double_score_215', _('only_submited_scores_can_be_double_encoded'))
+        assert_is_element_present(self, False, 'num_double_score_152', _('only_submited_scores_can_be_double_encoded'))
+        assert_is_element_present(self, False, 'num_double_score_167', _('only_submited_scores_can_be_double_encoded'))
+        assert_is_element_present(self, False, 'num_double_score_182', _('only_submited_scores_can_be_double_encoded'))
+        assert_is_element_present(self, False, 'num_double_score_200', _('only_submited_scores_can_be_double_encoded'))
+        assert_is_element_present(self, False, 'num_double_score_122', _('only_submited_scores_can_be_double_encoded'))
         # #Double encode scores
         get_element_by_id(self, 'num_score_92').send_keys('14,8')
         Select(get_element_by_id(self, 'slt_justification_score_137')).select_by_value('ABSENT')
@@ -289,6 +317,10 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         log_out(self)
 
     def __test_decimal_encoding(self):
+        """
+        Test if a leanit unit year should or should not contain decimal score
+        """
+
         # Encode non decimal learning unit
         login_as(self, 'coord1')
         # #Go to encoding page
@@ -301,14 +333,14 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         get_element_by_id(self, 'num_score_2').send_keys('13,8')
         # #Try to save and assert is not possible (button save remain present)
         get_element_by_id(self, 'bt_save_online_encoding').submit()
-        assert_is_element_present(self, True, 'bt_save_online_encoding')
+        assert_is_element_present(self, True, 'bt_save_online_encoding', _('lu_must_not_contain_decimal_scores'))
         # #Change the decimal score to non decimal score
         get_element_by_id(self, 'num_score_2').clear()
         # #Fill one score with non decimal
         get_element_by_id(self, 'num_score_2').send_keys('14')
         # #Save and assert is ok (button save not present)
         get_element_by_id(self, 'bt_save_online_encoding').submit()
-        assert_is_element_present(self, False, 'bt_save_online_encoding')
+        assert_is_element_present(self, False, 'bt_save_online_encoding', _('scores_saved_cannot_be_saved_anymore'))
         log_out(self)
 
         # DoubleEncode non decimal learning unit
@@ -325,7 +357,7 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         get_element_by_id(self, 'num_double_score_2').send_keys('12,6')
         # #Try to compare and assert is not possible
         get_element_by_id(self, 'bt_compare').submit()
-        assert_is_element_present(self, True, 'bt_compare')
+        assert_is_element_present(self, True, 'bt_compare', _('lu_must_not_contain_decimal_scores'))
         # #Fil in a non decimal score
         get_element_by_id(self, 'num_double_score_2').send_keys('13')
         # #Try to compare and assert it is ok
@@ -334,7 +366,8 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         get_element_by_id(self, 'bt_take_reencoded_2').submit()
         # #Save and assert it's done
         get_element_by_id(self, 'bt_submit_online_double_encoding_validation').submit()
-        assert_is_element_present(self, False, 'bt_submit_online_double_encoding_validation')
+        assert_is_element_present(self, False, 'bt_submit_online_double_encoding_validation',
+                                  _('validated_double_encoding_cannot_be_validated_anymore'))
         log_out(self)
 
         # Encode for decimal learning unit
@@ -349,7 +382,7 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         get_element_by_id(self, 'num_score_146').send_keys('13,8')
         # #Save and assert is ok (button save not present)
         get_element_by_id(self, 'bt_save_online_encoding').submit()
-        assert_is_element_present(self, False, 'bt_save_online_encoding')
+        assert_is_element_present(self, False, 'bt_save_online_encoding', _('lu_could_contain_decimal_scores'))
         log_out(self)
 
         # DoubleEncode decimal learning unit
@@ -363,15 +396,16 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         get_element_by_id(self, 'lnk_online_double_encoding').click()
         get_element_by_id(self, 'lnk_encode_LMEM2110').click()
         # #Fill one score decimal
-        get_element_by_id(self, 'num_double_score_2').send_keys('12,6')
+        get_element_by_id(self, 'num_double_score_2').send_keys('12,6',)
         # #Try to compare and assert it is ok
         get_element_by_id(self, 'bt_compare').submit()
-        assert_is_element_present(self, False, 'bt_compare')
+        assert_is_element_present(self, False, 'bt_compare', _('lu_could_contain_decimal_scores'))
         # #validate second note
         get_element_by_id(self, 'bt_take_reencoded_146').submit()
         # #Save and assert it's done
         get_element_by_id(self, 'bt_submit_online_double_encoding_validation').submit()
-        assert_is_element_present(self, False, 'bt_submit_online_double_encoding_validation')
+        assert_is_element_present(self, False, 'bt_submit_online_double_encoding_validation',
+                                  _('validated_double_encoding_cannot_be_validated_anymore'))
         log_out(self)
 
     def __sent_message_after_submission(self):
@@ -390,9 +424,9 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         Select(get_element_by_id(self, 'slt_justification_score_155')).select_by_value('ABSENT')
         # #Save and assert it's done (button save is not present anymore)
         get_element_by_id(self, 'bt_save_online_encoding').submit()
-        assert_is_element_present(self, False, 'bt_save_online_encoding')
+        assert_is_element_present(self, False, 'bt_save_online_encoding',_('scores_saved_cannot_be_saved_anymore'))
         # As a coordinator ,i can submit partial encoding
-        assert_is_enabled(self, True, 'bt_score_submission_modal')
+        assert_is_enabled(self, True, 'bt_score_submission_modal',_('coordinators_can_submit_partial_encoding'))
         get_element_by_id(self, 'bt_score_submission_modal').submit()
         get_element_by_id(self, 'lnk_post_scores_submission_btn').click()
         log_out(self)
@@ -405,13 +439,8 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         get_element_by_id(self, 'lnk_messages_history').click()
         get_element_by_id(self, 'txt_subject').send_keys('LELTR7911')
         get_element_by_id(self, 'lnk_messages_history').click()
-        assert_is_element_present(self, True, '')
-        assert_is_element_present(self, True, '')
+        assert_is_element_present(self, True, '',_('after_submission_a_message_must_be_sent'))
+        assert_is_element_present(self, True, '',_('after_submission_a_message_must_be_sent'))
         log_out(self)
-
-    def __test_only_learning_unit_with_inscription_ancoded(self):
-        """
-        Learning units without inscrption cannot be present in the list of learning units that can be encoded.
-        """
         
 
