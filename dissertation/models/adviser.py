@@ -27,6 +27,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib import admin
 from base.models import person
+from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -63,3 +64,10 @@ class Adviser(models.Model):
 
     def find_all():
         return Adviser.objects.order_by('person')
+
+    def search(terms):
+        queryset = Adviser.objects.order_by('last_name')
+        if terms:
+            queryset = queryset.filter(Q(person__first_name__icontains=terms))
+            #Q(person__first_name__icontains=terms)| Q(adviser__person__middle_name__icontains=terms)| Q(adviser__person__last_name__icontains=terms)| Q(adviser__person__email__icontains=terms))
+        return queryset

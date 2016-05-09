@@ -86,3 +86,9 @@ def manager_informations_edit(request, pk):
     else:
         form = AdviserForm(instance=adviser)
     return render(request, "manager_informations_edit.html", {'adviser':adviser,'form':form})
+
+@login_required
+@user_passes_test(is_manager)
+def manager_information_search(request):
+    adviser= Adviser.search(terms=request.GET['search'])
+    return render(request, "manager_informations.html", {'adviser': adviser})

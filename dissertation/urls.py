@@ -54,5 +54,6 @@ urlpatterns = [
     url(r'^proposition_dissertation_my$', proposition_dissertation.proposition_dissertation_my, name='proposition_dissertation_my'),
 
     url(r'^manager_search$', proposition_dissertation.manager_proposition_dissertations_search, name='manager_proposition_dissertations_search'),
+    url(r'^manager_information$', information.manager_information_search, name='manager_information_search'),
     url(r'^search$', proposition_dissertation.proposition_dissertations_search, name='proposition_dissertations_search'),
 ]
