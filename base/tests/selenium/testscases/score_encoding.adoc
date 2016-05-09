@@ -7,21 +7,20 @@
 1. S'authentitifier en tant que professeur.
 2. Verifier que tous les cours du professeur possèdant des inscriptions sont présents pour encodage.
 3. Choisir un cours.
-4. Encoder des notes ou justifications (pas toutes).
+4. Encoder une partie des notes ou justifications.
 5. Sauvergarder les notes.
-7. Impossible de soumettre les notes partielles
 6. Tant que les note encodées ne sont pas soumises ,on peut les modifier.
 7. Test avec un autre professeur du cours.
 8. On encode les notes restantes.
-9. Impossible de soumettre les notes complètes
+9. Impossible de soumettre les notes.
 
 ==== En tant que coordinateur
 1. S'authentitifier en tant que coordinateur.
 2. Verifier que tous les cours du coordinateur possèdant des inscriptions sont présents pour encodage.
 3. Choisir un cours.
-4. Encoder des notes ou justifications (pas toutes).
+4. Encoder une partie des notes ou justifications.
 5. Sauvergarder les notes.
-6. Verifier qu'il est possible de soumettre les notes partielles et les soumettre.
+6. Verifier qu'il est possible de soumettre les notes partielles.
 7. Les notes partielles ont été encodées pour ce cours , il n'est plus possible de les encoder.
 8. Les notes non soumises sont toujours encodables (vérification faite pour prof également).
 9. Il est possible de soumettre les note complètes encodée par un professeur
@@ -31,17 +30,15 @@
 ==== En tant que gestionaire de programme
 1. S'authentifier en tant que gestionnaire de programme.
 2. Verifier que les cours possèdant des inscriptions et faisant partie des programmes gérés sont présents.
-3. Encoder les notes d'un cours (pas toutes)
-4. Valider l'encodage.
-5. S'authentifier en tant que proffesseur (du cours encodé)
+3. Encoder une partie des notes d'un cours
+4. Sauvergarder l'encodage.
+5. S'authentifier en tant que proffesseur du cours encodé
 6. Vérifier que les notes encodées par le programme manager ne sont plus encodables.
 7. Vérifier que les notes encodées par le programme manager sont double encodables.
 8. S'authentifier en tant que programme manager.
 9. Choisir un cours qui n'aparait que dans le programme géré par le pgm manager.
 10. Encoder toutes les notes.
 11. Valider l'encodage.
-12. S'authentifier en tant que profeseur.
-13. Vérifier que ce cours ne fait plus partie de la liste des cours encodable.
 
 
 === Double Encodage
@@ -52,14 +49,14 @@
 5. Soumettre les notes partielle.
 6. S'authentitifier en tant que professeur.
 7. Choisir le même cours.
-8. Choisr de double encoder.
+8. Choisir de double encoder.
 9. Verifier que seules les notes soumises peuvent être double encodées.
 10. Double encoder des notes
 11. Sauvergarder
 
 === Divers
 
-===== Encodage et double encodage de notes avec décimales
+==== Encodage et double encodage de notes avec décimales
 1. Choisir un cours qui ne permet pas les décimales
 2. Encoder une note décimale
 3. Sauvegarder et vérifier que ce n'est pas possible
@@ -75,7 +72,7 @@
 13. Double encoder une note decimale
 14. Sauvegarder
 
-===== Envoi du message après soumission
+==== Envoi du message après soumission
 
 [NOTE]
 ====
