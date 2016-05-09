@@ -1400,3 +1400,6 @@ msgstr "Référence du template du message"
 
 msgid "btn_messages_history_search"
 msgstr "Recherche dans l'historique des messages"
+
+msgid "learning_unit_responsible"
+msgstr "Responsable du cours"

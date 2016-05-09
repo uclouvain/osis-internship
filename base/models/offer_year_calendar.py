@@ -110,3 +110,13 @@ def find_offer_year_calendars_by_academic_year(academic_yr):
 
 def find_by_id(offer_year_calendar_id):
     return OfferYearCalendar.objects.get(pk=offer_year_calendar_id)
+
+
+def find_deliberation_date(offer_year, session_number):
+    title = 'Deliberations - exam session ' + str(session_number)
+    queryset = OfferYearCalendar.objects.filter(academic_calendar__title=title)\
+                                        .filter(offer_year=offer_year)\
+                                        .values('start_date')
+    if len(queryset) == 1:
+        return queryset[0].get('start_date')
+    return None

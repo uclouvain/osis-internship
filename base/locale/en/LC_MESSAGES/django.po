@@ -1390,3 +1390,6 @@ msgstr "Template reference of the message"
 
 msgid "btn_messages_history_search"
 msgstr "Search in the messages history"
+
+msgid "learning_unit_responsible"
+msgstr "Learning unit's responsible"
