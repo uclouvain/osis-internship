@@ -327,7 +327,7 @@ def get_data_online(learning_unit_year_id, request):
     coordinator = mdl.tutor.find_responsible(learning_unit_year.learning_unit)
     progress = mdl.exam_enrollment.calculate_exam_enrollment_progress(exam_enrollments)
     nb_scores_encoded = len([exam_enrol for exam_enrol in exam_enrollments
-                             if exam_enrol.justification_final or exam_enrol.score_final])
+                             if exam_enrol.justification_draft or exam_enrol.score_draft])
 
     return {'section': 'scores_encoding',
             'academic_year': academic_yr,
