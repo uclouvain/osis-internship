@@ -256,7 +256,14 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         get_element_by_id(self, 'lnk_home_dropdown_parcours').click()
         get_element_by_id(self, 'lnk_dropdown_evaluations').click()
         get_element_by_id(self, 'lnk_score_encoding').click()
-        assert_is_enabled(self, False, 'lnk_encode_LBIR1320B', _('submitted_scores_cannot_be_encoded_anymore'))
+        assert_is_enabled(self, False, 'num_score_14', _('submitted_scores_cannot_be_encoded_anymore'))
+        assert_is_enabled(self, False, 'num_score_29', _('submitted_scores_cannot_be_encoded_anymore'))
+        assert_is_enabled(self, False, 'num_score_44', _('submitted_scores_cannot_be_encoded_anymore'))
+        assert_is_enabled(self, False, 'num_score_59', _('submitted_scores_cannot_be_encoded_anymore'))
+        assert_is_enabled(self, False, 'num_score_74', _('submitted_scores_cannot_be_encoded_anymore'))
+        assert_is_enabled(self, False, 'num_score_89', _('submitted_scores_cannot_be_encoded_anymore'))
+        assert_is_enabled(self, False, 'num_score_104', _('submitted_scores_cannot_be_encoded_anymore'))
+        assert_is_enabled(self, False, 'num_score_119', _('submitted_scores_cannot_be_encoded_anymore'))
         log_out(self)
 
     def __test_double_encoding(self):
@@ -309,7 +316,7 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         assert_is_element_present(self, False, 'num_double_score_200', _('only_submited_scores_can_be_double_encoded'))
         assert_is_element_present(self, False, 'num_double_score_122', _('only_submited_scores_can_be_double_encoded'))
         # #Double encode scores
-        get_element_by_id(self, 'num_score_92').send_keys('14,8')
+        get_element_by_id(self, 'num_double_score_99').send_keys('14,8')
         Select(get_element_by_id(self, 'slt_justification_score_137')).select_by_value('ABSENT')
         # #Compare and save
         get_element_by_id(self, 'bt_compare').submit()
