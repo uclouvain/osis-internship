@@ -211,7 +211,7 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
 
         # As a coordinator ,i can submit partial encoding
         assert_is_enabled(self, True, 'bt_score_submission_modal', _('coordinators_can_submit_partial_encoding'))
-        get_element_by_id(self, 'bt_score_submission_modal').submit()
+        get_element_by_id(self, 'bt_score_submission_modal').click()
         get_element_by_id(self, 'lnk_post_scores_submission_btn').click()
 
         # Once scores are partially submitted , the already submitted scores can not be encoded anymore
@@ -249,7 +249,7 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         get_element_by_id(self, 'lnk_dropdown_evaluations').click()
         get_element_by_id(self, 'lnk_score_encoding').click()
         get_element_by_id(self, 'lnk_LBIR1320B').click()
-        get_element_by_id(self, 'bt_score_submission_modal').submit()
+        get_element_by_id(self, 'bt_score_submission_modal').click()
         get_element_by_id(self, 'lnk_post_scores_submission_btn').click()
 
         # Once scores are submitted it is not possible to encode scores
@@ -286,7 +286,7 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
                                   _('scores_saved_cannot_be_saved_anymore'))
 
         # Submit partilally encoded scores
-        get_element_by_id(self, 'bt_score_submission_modal').submit()
+        get_element_by_id(self, 'bt_score_submission_modal').click()
         get_element_by_id(self, 'lnk_post_scores_submission_btn').click()
 
         log_out(self)
@@ -427,7 +427,7 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         assert_is_element_present(self, False, 'bt_save_online_encoding',_('scores_saved_cannot_be_saved_anymore'))
         # As a coordinator ,i can submit partial encoding
         assert_is_enabled(self, True, 'bt_score_submission_modal',_('coordinators_can_submit_partial_encoding'))
-        get_element_by_id(self, 'bt_score_submission_modal').submit()
+        get_element_by_id(self, 'bt_score_submission_modal').click()
         get_element_by_id(self, 'lnk_post_scores_submission_btn').click()
         log_out(self)
 
