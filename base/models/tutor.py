@@ -97,3 +97,14 @@ def find_by_program_manager(offer_years_managed):
     return tutors
 
 
+def is_coordinator(user, learning_unit_id):
+    """
+    :param user:
+    :param learning_unit_id:
+    :return: True is the user is coordinator for the learningUnit passed in parameter.
+    """
+    attributions = attribution.Attribution.objects.filter(learning_unit_id=learning_unit_id)\
+                                      .filter(function='COORDINATOR')\
+                                      .filter(tutor__person__user=user)\
+                                      .count()
+    return attributions > 0

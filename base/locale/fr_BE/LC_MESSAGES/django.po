@@ -1229,7 +1229,7 @@ msgstr "Note invalide"
 
 #: utils/upload_xls_utils.py:232
 msgid "scores_saved"
-msgstr "Scores enregistré"
+msgstr "note(s) enregistrée(s)"
 
 #: utils/upload_xls_utils.py:241
 msgid "the_coordinator_must_still_submit_scores"

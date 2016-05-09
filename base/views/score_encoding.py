@@ -336,7 +336,8 @@ def get_data_online(learning_unit_year_id, request):
             'num_encoded_scores': nb_scores_encoded,
             'learning_unit_year': learning_unit_year,
             'coordinator': coordinator,
-            'is_program_manager': mdl.program_manager.is_program_manager(request.user)}
+            'is_program_manager': is_program_manager,
+            'is_coordinator': mdl.tutor.is_coordinator(request.user, learning_unit_year.learning_unit.id)}
 
 
 def get_data_online_double(learning_unit_year_id, request):
