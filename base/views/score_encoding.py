@@ -80,7 +80,6 @@ def _truncate_decimals(new_score, new_justification, decimal_scores_authorized):
 @login_required
 def online_encoding_form(request, learning_unit_year_id=None):
     data = get_data_online(learning_unit_year_id, request)
-    enrollments = data['enrollments']
 
     if request.method == 'GET':
         return layout.render(request, "assessments/online_encoding_form.html", data)
@@ -88,7 +87,7 @@ def online_encoding_form(request, learning_unit_year_id=None):
     elif request.method == 'POST':
         # Case the user submit his first online scores encodings
         decimal_scores_authorized = data['learning_unit_year'].decimal_scores
-        for enrollment in enrollments:
+        for enrollment in data['enrollments']:
             score = request.POST.get('score_' + str(enrollment.id), None)
             justification = request.POST.get('justification_' + str(enrollment.id), None)
             modification_possible = True
@@ -110,6 +109,7 @@ def online_encoding_form(request, learning_unit_year_id=None):
                     enrollment.score_draft = new_score
                     enrollment.justification_draft = new_justification
                 enrollment.save()
+        data = get_data_online(learning_unit_year_id, request)
         return layout.render(request, "assessments/online_encoding.html", data)
 
 
