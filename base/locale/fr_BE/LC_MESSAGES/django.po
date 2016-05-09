@@ -1425,7 +1425,7 @@ msgstr "Encoder en tant que professeur"
 msgid "encode_as_pgm"
 msgstr "Encoder en tant que gestionnaire de programme"
 
-msgid "coordinators_can_submit_partial_encoding"y
+msgid "coordinators_can_submit_partial_encoding"
 msgstr "Les coordinateurs peuvent soumettre des encodages partiels"
 
 msgid "submitted_scores_cannot_be_encoded_anymore"
