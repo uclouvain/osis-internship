@@ -111,8 +111,10 @@
                            {% else %}
                                 value="{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}"
                            {% endif %}
-                           {% if not is_program_manager and (enrollment.score_final or enrollment.justification_final) %}
+                           {% if not is_program_manager %}
+                            {% if enrollment.score_final or enrollment.justification_final %}
                                 disabled
+                            {% endif %}
                            {% endif %}
                            {% if enrollment.session_exam.learning_unit_year.decimal_scores %}
                                 step="any"

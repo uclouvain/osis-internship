@@ -43,12 +43,7 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        {% if note.tutor %}
-                        <label>{% trans 'tutor' %}</label><br>{{ note.tutor }}
-                        {% else %}
-                        <label>{% trans 'faculty' %}</label><br> {{ note.structure.acronym }}
-                        {% endif %}
-                        <label>{% trans 'tutor' %}</label><br>{{ coordinator }}
+                        <label>{% trans 'tutor' %}</label><br>{{ tutor }}
                     </div>
                 </div>
                 <div class="col-md-8">

@@ -1390,3 +1390,6 @@ msgstr "Template reference of the message"
 
 msgid "btn_messages_history_search"
 msgstr "Search in the messages history"
+
+msgid "none"
+msgstr "None"
