@@ -65,7 +65,7 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         }
         profile = webdriver.FirefoxProfile(FIREFOX_PROFILE_PATH)
         cls.selenium = webdriver.Firefox(firefox_profile=profile, capabilities=capabilities)
-        cls.selenium.implicitly_wait(3)
+        cls.selenium.implicitly_wait(1)
         cls.selenium.maximize_window()
         super(ScoreEncodingTests, cls).setUpClass()
 
@@ -316,7 +316,7 @@ class ScoreEncodingTests(StaticLiveServerTestCase):
         assert_is_element_present(self, False, 'num_double_score_200', _('only_submited_scores_can_be_double_encoded'))
         assert_is_element_present(self, False, 'num_double_score_122', _('only_submited_scores_can_be_double_encoded'))
         # #Double encode scores
-        get_element_by_id(self, 'num_double_score_99').send_keys('14,8')
+        get_element_by_id(self, 'num_double_score_92').send_keys('14,8')
         Select(get_element_by_id(self, 'slt_justification_score_137')).select_by_value('ABSENT')
         # #Compare and save
         get_element_by_id(self, 'bt_compare').submit()
