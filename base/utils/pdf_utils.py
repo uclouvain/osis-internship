@@ -222,6 +222,8 @@ def legend_building(learning_unit_year, is_fac, content):
     if not learning_unit_year.decimal_scores:
         legend_text += "<br/><font color=red>%s</font>" % _('unauthorized_decimal_for_this_activity')
 
+    legend_text += '''<br/> %s : <a href="%s"><font color=blue><u>%s</u></font></a>''' \
+                   % (_("in_accordance_to_regulation"), _("link_to_RGEE"), _("link_to_RGEE"))
     content.append(Paragraph('''
                             <para>
                                 %s

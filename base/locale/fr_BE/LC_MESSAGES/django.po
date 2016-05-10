@@ -1439,6 +1439,12 @@ msgstr "Les notes soumises ne peuvent plus être encodées"
 msgid "double_encoding_test"
 msgstr "Double encodage des notes"
 
+msgid "in_accordance_to_regulation"
+msgstr "Conformément aux articles 104, 109 et 111 RGEE (Règlement Général des Examens) disponible au lien suivant"
+
+msgid "link_to_RGEE"
+msgstr "https://www.uclouvain.be/enseignement-reglements.html"
+
 msgid "only_submited_scores_can_be_double_encoded"
 msgstr "Seules les notes soumises peuvent être double encodées"
 
