@@ -321,8 +321,9 @@ def main_data(academic_year, session_exam, styles, learning_unit_year, offer, co
                              styles["Normal"]))
     content.append(Paragraph('''<b>%s : %s</b>''' % (_('program'), offer.acronym), styles["Normal"]))
     deliberation_date = mdl.offer_year_calendar.find_deliberation_date(offer, session_exam.number_session)
-    deliberation_date = deliberation_date.strftime("%d/%m/%Y")
-    if not deliberation_date:
+    if deliberation_date:
+        deliberation_date = deliberation_date.strftime("%d/%m/%Y")
+    else:
         deliberation_date = '-'
     content.append(Paragraph('%s : %s' % (_('deliberation_date'), deliberation_date), styles["Normal"]))
 
