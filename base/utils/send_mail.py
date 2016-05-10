@@ -132,9 +132,9 @@ def send_mail_after_academic_calendar_changes(academic_calendar, offer_year_cale
     """
     sent_error_message = None
     txt_message_templates = {template.language: template for template in
-                             message_template_mdl.find_by_reference('academic_calendar_changes_txt')}
+                             list(message_template_mdl.find_by_reference('academic_calendar_changes_txt'))}
     html_message_templates = {template.language: template for template in
-                              message_template_mdl.find_by_reference('academic_calendar_changes_html')}
+                              list(message_template_mdl.find_by_reference('academic_calendar_changes_html'))}
     if not html_message_templates:
         sent_error_message = _('template_error').format('academic_calendar_changes_html')
     else:
