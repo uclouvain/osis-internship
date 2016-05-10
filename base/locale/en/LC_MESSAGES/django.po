@@ -1436,6 +1436,15 @@ msgstr "In accordance to regulation's rules 104, 109 and 111. Complete rules ava
 msgid "link_to_RGEE"
 msgstr "https://www.uclouvain.be/enseignement-reglements.html"
 
+msgid "warning_all_scores_not_sumitted_yet"
+msgstr "Warning : some registered scores have not been submitted yet"
+
+msgid "definitive_save"
+msgstr "Definitive submission (Submit to faculty)"
+
+msgid "temporary_save"
+msgstr "Temporary save (not submitted to the faculty yet)"
+
 msgid "only_submited_scores_can_be_double_encoded"
 msgstr "Only submitted scores can be bouble encoded"
 

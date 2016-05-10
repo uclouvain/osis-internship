@@ -152,8 +152,14 @@
             {% endfor %}
             </tbody>
         </table>
-
-        <button type="submit" class="btn btn-primary" id="bt_save_online_encoding"><span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'save' %}</button>
+        {% if not is_program_manager %}
+            <button type="submit" class="btn btn-primary" id="bt_save_online_encoding"
+                    data-toggle="tooltip" data-placement="left" title="{% trans 'temporary_save' %}">
+                <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'save' %}</button>
+        {% else %}
+          <button type="submit" class="btn btn-primary" id="bt_save_online_encoding">
+                <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'save' %}</button>
+        {% endif %}
         <a class="btn btn-default" href="{% url 'online_encoding' learning_unit_year.id %}" role="button" id="lnk_cancel_online_encoding"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
 
       </form>
