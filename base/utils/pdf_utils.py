@@ -33,7 +33,6 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import mm
 from reportlab.lib import colors
 from django.utils.translation import ugettext_lazy as _
-import datetime
 
 from base import models as mdl
 
@@ -327,16 +326,6 @@ def main_data(academic_year, session_exam, styles, learning_unit_year, offer, co
         deliberation_date = '-'
     content.append(Paragraph('%s : %s' % (_('deliberation_date'), deliberation_date), styles["Normal"]))
 
-
-    # data_header_test = [[data_structure, data_structure]]
-    # tableTest = Table(data_header_test, colWidths='*')
-    # tableTest.setStyle(TableStyle([
-    #     ('LEFTPADDING', (0, 0), (-1, -1), 0),
-    #     ('RIGHTPADDING', (0, 0), (-1, -1), 0),
-    #     ('VALIGN', (0, 0), (-1, -1), 'TOP')
-    # ]))
-    #
-    # content.append(tableTest)
     content.append(Spacer(1, 12))
 
 

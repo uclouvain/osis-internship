@@ -67,10 +67,9 @@ def find_by_id(tutor_id):
 
 
 def find_responsible(a_learning_unit):
-    # S'il y a un seul enseignant => c'est cet enseignant
-    # S'il y a plusieurs enseignants et un coordinateur => c'est le coordinateur
-    # S'il y a plusieurs enseignants et pas de coordinateur => premier enseignant par l'ordre alphabétique
-    attribution_list = attribution.find_by_learning_unit(a_learning_unit)
+    # If there are more than 1 coordinator, we take the first in alphabetic order
+    attribution_list = attribution.Attribution.objects.filter(learning_unit=a_learning_unit)\
+                                                      .filter(function='COORDINATOR')
 
     if attribution_list and len(attribution_list) > 0:
         if len(attribution_list) == 1:
