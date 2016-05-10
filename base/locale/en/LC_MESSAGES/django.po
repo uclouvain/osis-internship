@@ -1415,6 +1415,9 @@ msgstr "Encode as coordinator"
 msgid "encode_as_professor"
 msgstr "Encode as professor"
 
+msgid "coordinator"
+msgstr "Coordinator"
+
 msgid "encode_as_pgm"
 msgstr "Encode as program manager"
 
