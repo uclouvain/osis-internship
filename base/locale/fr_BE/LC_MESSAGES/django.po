@@ -1427,6 +1427,9 @@ msgstr "Encoder en tant que coordinateur"
 msgid "encode_as_professor"
 msgstr "Encoder en tant que professeur"
 
+msgid "coordinator"
+msgstr "Coordinateur(trice)"
+
 msgid "encode_as_pgm"
 msgstr "Encoder en tant que gestionnaire de programme"
 
