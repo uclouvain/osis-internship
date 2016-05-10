@@ -1430,6 +1430,12 @@ msgstr "Submitted scores cannot be encoded anymore"
 msgid "double_encoding_test"
 msgstr "Scores double encoding"
 
+msgid "in_accordance_to_regulation"
+msgstr "In accordance to regulation's rules 104, 109 and 111. Complete rules avalaible here"
+
+msgid "link_to_RGEE"
+msgstr "https://www.uclouvain.be/enseignement-reglements.html"
+
 msgid "only_submited_scores_can_be_double_encoded"
 msgstr "Only submitted scores can be bouble encoded"
 
