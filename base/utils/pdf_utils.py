@@ -33,13 +33,12 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import mm
 from reportlab.lib import colors
 from django.utils.translation import ugettext_lazy as _
-import datetime
 
 from base import models as mdl
 
 PAGE_SIZE = A4
 MARGIN_SIZE = 20 * mm
-COLS_WIDTH = [25*mm,35*mm,30*mm,25*mm,25*mm,27*mm]
+COLS_WIDTH = [25*mm,45*mm,45*mm,25*mm,25*mm]
 
 
 def add_header_footer(canvas, doc):
@@ -158,7 +157,10 @@ def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, s
 
                 content.append(t)
                 # Other programme - 3. Write legend
-                end_page_infos_building(content)
+                end_date = ""
+                if rec_exam_enrollment.session_exam.offer_year_calendar.end_date:
+                    end_date = rec_exam_enrollment.session_exam.offer_year_calendar.end_date.strftime('%d/%m/%Y')
+                end_page_infos_building(content, end_date)
                 legend_building(current_learning_unit_year, content)
                 # Other programme - 4. page break
                 content.append(PageBreak())
@@ -176,9 +178,6 @@ def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, s
             justification = ""
             if rec_exam_enrollment.justification_final:
                 justification = dict(mdl.exam_enrollment.JUSTIFICATION_TYPES)[rec_exam_enrollment.justification_final]
-            end_date = ""
-            if rec_exam_enrollment.session_exam.offer_year_calendar.end_date:
-                end_date = rec_exam_enrollment.session_exam.offer_year_calendar.end_date.strftime('%d/%m/%Y')
             sc = ""
             if score:
                 sc = "%s" % score
@@ -186,11 +185,10 @@ def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, s
                          Paragraph(person.last_name, styles['Normal']),
                          Paragraph(person.first_name, styles['Normal']),
                          sc,
-                         Paragraph(justification, styles['Normal']),
-                         end_date])
+                         Paragraph(justification, styles['Normal'])])
         cpt += 1
 
-    if not old_offer_programme is None:
+    if old_offer_programme :
         main_data(academic_year, rec_exam_enrollment.session_exam, styles, current_learning_unit_year, old_offer_programme, content)
         t = Table(data,COLS_WIDTH)
         t.setStyle(TableStyle([('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
@@ -199,7 +197,10 @@ def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, s
                                ('BACKGROUND', (0, 0), (-1, 0), colors.grey)]))
 
         content.append(t)
-        end_page_infos_building(content)
+        end_date = ""
+        if rec_exam_enrollment.session_exam.offer_year_calendar.end_date:
+            end_date = rec_exam_enrollment.session_exam.offer_year_calendar.end_date.strftime('%d/%m/%Y')
+        end_page_infos_building(content, end_date)
         legend_building(current_learning_unit_year, is_programme_manager, content)
 
 
@@ -233,8 +234,7 @@ def headers_table():
              '''%s''' % _('lastname'),
              '''%s''' % _('firstname'),
              '''%s''' % _('numbered_score'),
-             '''%s''' % _('justification'),
-             '''%s''' % _('submission_date')]]
+             '''%s''' % _('justification')]]
     return data
 
 
@@ -261,9 +261,16 @@ def get_data_coordinator(learning_unit_year, styles):
 
 
 def main_data(academic_year, session_exam, styles, learning_unit_year, offer, content):
-    coordinator_paragraph_style = ParagraphStyle('structure_header')
-    coordinator_paragraph_style.alignment = TA_LEFT
-    coordinator_paragraph_style.fontSize = 10
+    # We add first a blank line
+    content.append(Paragraph('''
+        <para spaceb=10>
+            &nbsp;
+        </para>
+        ''', ParagraphStyle('normal')))
+
+    text_left_style = ParagraphStyle('structure_header')
+    text_left_style.alignment = TA_LEFT
+    text_left_style.fontSize = 10
     p_struct_name = ""
     p_struct_location = ""
     p_struct_address = ""
@@ -314,12 +321,6 @@ def main_data(academic_year, session_exam, styles, learning_unit_year, offer, co
     p.alignment = TA_RIGHT
     p.fontSize = 10
 
-    content.append(Paragraph('%s : %s' % (_('academic_year'), str(academic_year)), coordinator_paragraph_style))
-    content.append(Paragraph('Session : %d' % session_exam.number_session, coordinator_paragraph_style))
-
-    content.append(Paragraph("<strong>%s : %s</strong>" % (learning_unit_year.acronym, learning_unit_year.title),
-                             styles["Normal"]))
-    content.append(Paragraph('''<b>%s : %s</b>''' % (_('program'), offer.acronym), styles["Normal"]))
     deliberation_date = mdl.offer_year_calendar.find_deliberation_date(offer, session_exam.number_session)
     if deliberation_date:
         deliberation_date = deliberation_date.strftime("%d/%m/%Y")
@@ -327,20 +328,17 @@ def main_data(academic_year, session_exam, styles, learning_unit_year, offer, co
         deliberation_date = '-'
     content.append(Paragraph('%s : %s' % (_('deliberation_date'), deliberation_date), styles["Normal"]))
 
+    content.append(Paragraph('%s : %s' % (_('academic_year'), str(academic_year)), text_left_style))
+    content.append(Paragraph('Session : %d' % session_exam.number_session, text_left_style))
 
-    # data_header_test = [[data_structure, data_structure]]
-    # tableTest = Table(data_header_test, colWidths='*')
-    # tableTest.setStyle(TableStyle([
-    #     ('LEFTPADDING', (0, 0), (-1, -1), 0),
-    #     ('RIGHTPADDING', (0, 0), (-1, -1), 0),
-    #     ('VALIGN', (0, 0), (-1, -1), 'TOP')
-    # ]))
-    #
-    # content.append(tableTest)
+    content.append(Paragraph("<strong>%s : %s</strong>" % (learning_unit_year.acronym, learning_unit_year.title),
+                             styles["Normal"]))
+    content.append(Paragraph('''<b>%s : %s</b>''' % (_('program'), offer.acronym), styles["Normal"]))
+
     content.append(Spacer(1, 12))
 
 
-def end_page_infos_building(content):
+def end_page_infos_building(content, end_date):
     content.append(Paragraph('''
                             <para spaceb=5>
                                 &nbsp;
@@ -349,7 +347,7 @@ def end_page_infos_building(content):
     p = ParagraphStyle('info')
     p.fontSize = 10
     p.alignment = TA_LEFT
-    content.append(Paragraph(_("return_doc_to_administrator")
+    content.append(Paragraph(_("return_doc_to_administrator") % end_date
                              , p))
     content.append(Paragraph('''
                             <para spaceb=10>
