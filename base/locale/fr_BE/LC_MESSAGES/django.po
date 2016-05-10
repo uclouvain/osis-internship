@@ -1401,6 +1401,9 @@ msgstr "Référence du template du message"
 msgid "btn_messages_history_search"
 msgstr "Recherche dans l'historique des messages"
 
+msgid "learning_unit_responsible"
+msgstr "Responsable du cours"
+
 msgid "learning_units_with_inscription_must_be_shown"
 msgstr "Tous les cours du professeur qui possèdent des inscriptions doivent être présents"
 

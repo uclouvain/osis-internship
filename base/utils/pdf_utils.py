@@ -33,6 +33,7 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import mm
 from reportlab.lib import colors
 from django.utils.translation import ugettext_lazy as _
+import datetime
 
 from base import models as mdl
 
@@ -59,10 +60,9 @@ def add_header_footer(canvas, doc):
     canvas.restoreState()
 
 
-def print_notes(user, academic_year, learning_unit_id, is_programme_manager, list_exam_enrollment, tutor=None):
+def print_notes(academic_year, learning_unit_id, is_programme_manager, list_exam_enrollment):
     """
     Create a multi-page document
-    :param user: The user who's asking for printing the notes sheet
     :param academic_year: An object AcademicYear
     :param learning_unit_id: The id of the learning unit (from which to create the PDF notes sheet)
     :param is_programme_manager : True only if it is a program_manager.
@@ -84,7 +84,7 @@ def print_notes(user, academic_year, learning_unit_id, is_programme_manager, lis
     styles.add(ParagraphStyle(name='Justify', alignment=TA_JUSTIFY))
     content = []
 
-    list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, styles, is_programme_manager, content, user)
+    list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, styles, is_programme_manager, content)
 
     doc.build(content, onFirstPage=add_header_footer, onLaterPages=add_header_footer)
     pdf = buffer.getvalue()
@@ -118,7 +118,7 @@ def footer_building(canvas, doc, styles):
     footer.drawOn(canvas, doc.leftMargin, h)
 
 
-def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, styles, is_programme_manager, content, user):
+def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, styles, is_programme_manager, content):
 
     content.append(Paragraph('''
                             <para spaceb=5>
@@ -146,7 +146,7 @@ def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, s
                           rec_exam_enrollment.session_exam,
                           styles,
                           current_learning_unit_year,
-                          old_offer_programme, content, user, is_programme_manager)
+                          old_offer_programme, content)
                 # Other programme - 2. write table
 
                 t = Table(data, COLS_WIDTH, repeatRows=1)
@@ -159,7 +159,7 @@ def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, s
                 content.append(t)
                 # Other programme - 3. Write legend
                 end_page_infos_building(content)
-                legend_building(current_learning_unit_year, is_programme_manager, content)
+                legend_building(current_learning_unit_year, content)
                 # Other programme - 4. page break
                 content.append(PageBreak())
                 data = headers_table()
@@ -191,7 +191,7 @@ def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, s
         cpt += 1
 
     if not old_offer_programme is None:
-        main_data(academic_year, rec_exam_enrollment.session_exam, styles, current_learning_unit_year, old_offer_programme, content, user, is_programme_manager)
+        main_data(academic_year, rec_exam_enrollment.session_exam, styles, current_learning_unit_year, old_offer_programme, content)
         t = Table(data,COLS_WIDTH)
         t.setStyle(TableStyle([('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
                                ('BOX', (0, 0), (-1,-1), 0.25, colors.black),
@@ -238,29 +238,37 @@ def headers_table():
     return data
 
 
-def main_data(academic_year, session_exam, styles, learning_unit_year, offer, content, user, is_programme_manager):
-    faculty_paragraph_style = ParagraphStyle('structure_header')
-    faculty_paragraph_style.alignment = TA_LEFT
-    faculty_paragraph_style.fontSize = 10
+def get_data_coordinator(learning_unit_year, styles):
+    coordinator = mdl.tutor.find_responsible(learning_unit_year.learning_unit)
+    p_coord_location = ""
+    p_coord_address = ""
+    p_responsible = Paragraph('<b>%s :</b>' % _('learning_unit_responsible'), styles["Normal"])
+    if coordinator:
+        p_coord_name = Paragraph(
+            '%s %s' % (coordinator.person.last_name, coordinator.person.first_name),
+            styles["Normal"])
+        coordinator_address = mdl.person_address.find_by_person_label(coordinator.person, 'PROFESSIONAL')
+        if coordinator_address:
+            p_coord_location = Paragraph('''%s''' % coordinator_address.location, styles["Normal"])
+            if coordinator_address.postal_code or coordinator_address.city:
+                p_coord_address = Paragraph(
+                    '''%s %s''' % (coordinator_address.postal_code, coordinator_address.city),
+                    styles["Normal"])
+    else:
+        p_coord_name = Paragraph('%s' % _('none'), styles["Normal"])
 
-    p = ParagraphStyle('right_page_header')
-    p.alignment = TA_RIGHT
-    p.fontSize = 10
+    return [[p_responsible], [p_coord_name], [p_coord_location], [p_coord_address]]
 
-    content.append(Paragraph('''
-                            <para spaceb=5>
-                                &nbsp;
-                            </para>
-                            ''' , ParagraphStyle('normal')))
-    content.append(Paragraph('%s : %s' % (_('academic_year'), str(academic_year)), p))
-    content.append(Paragraph('Session : %d' % session_exam.number_session, p))
-    content.append(Paragraph('''
-                            <para spaceb=10>
-                                &nbsp;
-                            </para>
-                            ''',  ParagraphStyle('normal')))
 
-    if offer.structure is not None:
+def main_data(academic_year, session_exam, styles, learning_unit_year, offer, content):
+    coordinator_paragraph_style = ParagraphStyle('structure_header')
+    coordinator_paragraph_style.alignment = TA_LEFT
+    coordinator_paragraph_style.fontSize = 10
+    p_struct_name = ""
+    p_struct_location = ""
+    p_struct_address = ""
+    p_phone_fax_data = ""
+    if offer.structure:
         structure_display = offer.structure
         faculty = mdl.structure.find_faculty(offer.structure)
         if faculty:
@@ -268,14 +276,14 @@ def main_data(academic_year, session_exam, styles, learning_unit_year, offer, co
 
         structure_address = mdl.structure_address.find_structure_address(structure_display)
 
-        content.append(Paragraph('%s' % structure_display, faculty_paragraph_style))
+        p_struct_name = Paragraph('%s' % structure_display, styles["Normal"])
 
         if structure_address:
             if structure_address.location:
-                content.append(Paragraph('%s' % structure_address.location, faculty_paragraph_style))
+                p_struct_location = Paragraph('%s' % structure_address.location, styles["Normal"])
             if structure_address.postal_code and structure_address.city:
-                content.append(Paragraph('%s %s' % (structure_address.postal_code, structure_address.city),
-                                         faculty_paragraph_style))
+                p_struct_address = Paragraph('%s %s' % (structure_address.postal_code, structure_address.city),
+                                             styles["Normal"])
             phone_fax_data = ""
             if structure_address.phone:
                 phone_fax_data += _('phone') + " : " + structure_address.phone
@@ -284,68 +292,51 @@ def main_data(academic_year, session_exam, styles, learning_unit_year, offer, co
                     phone_fax_data += " - "
                 phone_fax_data += _('fax') + " : " + structure_address.fax
             if len(phone_fax_data) > 0:
-                content.append(Paragraph('%s' % phone_fax_data,
-                                         faculty_paragraph_style))
-    content.append(Paragraph('''
-                    <para spaceb=5>
-                        &nbsp;
-                    </para>
-                    ''',  ParagraphStyle('normal')))
+                p_phone_fax_data = Paragraph('%s' % phone_fax_data,
+                                             styles["Normal"])
 
-    learning_unit_paragraph = Paragraph("<strong>%s : %s</strong>" % (learning_unit_year.acronym,
-                                                                      learning_unit_year.title), styles["Normal"])
+    data_structure = [[p_struct_name],
+                  [p_struct_location],
+                  [p_struct_address],
+                  [p_phone_fax_data]]
 
-    if mdl.program_manager.is_program_manager(user, offer_year=offer):
-        tutor = mdl.tutor.find_responsible(learning_unit_year.learning_unit)
-    else:
-        tutor = mdl.tutor.find_by_user(user)
-    if tutor is None:
-        tutor = mdl.tutor.find_responsible(learning_unit_year.learning_unit)
-
-    tutor_location = ""
-    tutor_city_data = ""
-
-    if tutor:
-        p_tutor = Paragraph('''<b>%s %s</b>''' % (tutor.person.last_name, tutor.person.first_name), styles["Normal"])
-        tutor_address = mdl.person_address.find_by_person_label(tutor.person, 'PROFESSIONAL')
-        if tutor_address:
-            tutor_location = Paragraph('''<b>%s</b>''' % tutor_address.location, styles["Normal"])
-            if tutor_address.postal_code or tutor_address.city:
-                tutor_city_data = Paragraph('''<b>%s %s</b>''' % (tutor_address.postal_code, tutor_address.city),
-                                            styles["Normal"])
-    else:
-        p_tutor = Paragraph(''' ''', styles["Normal"])
-
-    data_tutor = [[p_tutor],
-                  [tutor_location],
-                  [tutor_city_data]]
-    table_tutor = Table(data_tutor)
-    p_pgm = Paragraph('''<b>%s : %s</b>''' % (_('program'), offer.acronym), styles["Normal"])
-    data_pgm = [[learning_unit_paragraph],
-                [p_pgm]
-              ]
-    table_pgm = Table(data_pgm)
-    table_pgm.setStyle(TableStyle([
-                                ('LEFTPADDING', (0,0), (-1,-1), 0),
-                                ('RIGHTPADDING', (0, 0), (-1, -1), 0),
-                                ('VALIGN', (0, 0), (-1, -1), 'TOP')
+    header_coordinator_structure = [[get_data_coordinator(learning_unit_year, styles), data_structure]]
+    table_header = Table(header_coordinator_structure, colWidths='*')
+    table_header.setStyle(TableStyle([
+        ('LEFTPADDING', (0, 0), (-1, -1), 0),
+        ('RIGHTPADDING', (0, 0), (-1, -1), 0),
+        ('VALIGN', (0, 0), (-1, -1), 'TOP')
     ]))
 
-    data_header = [[table_pgm, table_tutor]]
+    content.append(table_header)
 
-    data_session = [
-               [_('deliberation_date') + ' : '],
-              ]
-    table_session = Table(data_session, colWidths='*')
-    table_session.setStyle(TableStyle([('LEFTPADDING', (0, 0), (-1, -1), 0)]))
+    p = ParagraphStyle('right_page_header')
+    p.alignment = TA_RIGHT
+    p.fontSize = 10
 
-    tt = Table(data_header, colWidths='*')
-    tt.setStyle(TableStyle([('LEFTPADDING', (0, 0), (-1, -1), 0),
-                            ('RIGHTPADDING', (0, 0), (-1, -1), 0),
-                            ('VALIGN', (0, 0), (-1, -1), 'TOP')
-                           ]))
-    content.append(tt)
-    content.append(table_session)
+    content.append(Paragraph('%s : %s' % (_('academic_year'), str(academic_year)), coordinator_paragraph_style))
+    content.append(Paragraph('Session : %d' % session_exam.number_session, coordinator_paragraph_style))
+
+    content.append(Paragraph("<strong>%s : %s</strong>" % (learning_unit_year.acronym, learning_unit_year.title),
+                             styles["Normal"]))
+    content.append(Paragraph('''<b>%s : %s</b>''' % (_('program'), offer.acronym), styles["Normal"]))
+    deliberation_date = mdl.offer_year_calendar.find_deliberation_date(offer, session_exam.number_session)
+    if deliberation_date:
+        deliberation_date = deliberation_date.strftime("%d/%m/%Y")
+    else:
+        deliberation_date = '-'
+    content.append(Paragraph('%s : %s' % (_('deliberation_date'), deliberation_date), styles["Normal"]))
+
+
+    # data_header_test = [[data_structure, data_structure]]
+    # tableTest = Table(data_header_test, colWidths='*')
+    # tableTest.setStyle(TableStyle([
+    #     ('LEFTPADDING', (0, 0), (-1, -1), 0),
+    #     ('RIGHTPADDING', (0, 0), (-1, -1), 0),
+    #     ('VALIGN', (0, 0), (-1, -1), 'TOP')
+    # ]))
+    #
+    # content.append(tableTest)
     content.append(Spacer(1, 12))
 
 
