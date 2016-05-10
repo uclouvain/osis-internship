@@ -243,7 +243,9 @@ def online_encoding_submission(request, learning_unit_year_id):
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
     attributions = mdl.attribution.Attribution.objects.filter(learning_unit=learning_unit_year.learning_unit)
     persons = [attribution.tutor.person for attribution in attributions if attribution.function == 'PROFESSOR']
-    send_mail.send_mail_after_scores_submission(persons, learning_unit_year.acronym, submitted_enrollments, all_encoded)
+    sent_error_message = send_mail.send_mail_after_scores_submission(persons, learning_unit_year.acronym, submitted_enrollments, all_encoded)
+    if sent_error_message:
+        messages.add_message(request, messages.ERROR, "%s" % sent_error_message)
     return HttpResponseRedirect(reverse('online_encoding', args=(learning_unit_year_id,)))
 
 

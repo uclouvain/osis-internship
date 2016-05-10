@@ -69,6 +69,7 @@ def save(academic_cal):
 
 
 def update(academic_cal):
+    sent_message_error = None
     offer_year_calendar_list = find_by_academic_calendar(academic_cal)
     if offer_year_calendar_list:
         for offer_year_calendar in offer_year_calendar_list:
@@ -76,15 +77,18 @@ def update(academic_cal):
                 # an email must be sent to the program manager
                 program_managers = program_manager.find_by_offer_year(offer_year_calendar.offer_year)
                 if program_managers and len(program_managers) > 0:
-                    send_mail.send_mail_after_academic_calendar_changes(academic_cal,
-                                                                        offer_year_calendar,
-                                                                        program_managers)
+                    error_message = send_mail.send_mail_after_academic_calendar_changes(academic_cal,
+                                                                                        offer_year_calendar,
+                                                                                        program_managers)
+                    if error_message and not sent_message_error:
+                        sent_message_error = error_message
             else:
                 offer_year_calendar.start_date = academic_cal.start_date
                 offer_year_calendar.end_date = academic_cal.end_date
                 offer_year_calendar.save()
     else:
         save(academic_cal)
+    return sent_message_error
 
 
 def offer_year_calendar_by_current_session_exam():
