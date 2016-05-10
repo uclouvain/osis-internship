@@ -174,8 +174,10 @@
                              {%else%}
                                 {%if tutor_id %}
                                     {% url 'notes_printing_all' tutor_id=tutor_id %}
-                                {%else%}
+                                {%elif offer_year_id %}
                                     {% url 'notes_printing_all' offer_id=offer_year_id %}
+                                {% else %}
+                                    {% url 'notes_printing_all' %}
                                 {%endif%}
                             {%endif%}"
                        role="button" id="lnk_notes_printing_all_{{learning_unit.id}}">

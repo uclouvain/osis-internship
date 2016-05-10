@@ -1403,3 +1403,51 @@ msgstr "Recherche dans l'historique des messages"
 
 msgid "learning_unit_responsible"
 msgstr "Responsable du cours"
+
+msgid "learning_units_with_inscription_must_be_shown"
+msgstr "Tous les cours du professeur qui possèdent des inscriptions doivent être présents"
+
+msgid "learning_units_without_inscription_must_not_be_shown"
+msgstr "Les cours qui ne possèdent pas d'inscriptions ne devraient pas être présents"
+
+msgid "scores_saved_cannot_be_saved_anymore"
+msgstr "Notes sauvegardées, le bouton sauvegarder n'est plus présent"
+
+msgid "professors_must_not_submit_scores"
+msgstr "Les professeurs ne peuvent pas soumettre de notes"
+
+msgid "scores_encoding_tests"
+msgstr "Tests de l'encodage des notes"
+
+msgid "encode_as_coordinator"
+msgstr "Encoder en tant que coordinateur"
+
+msgid "encode_as_professor"
+msgstr "Encoder en tant que professeur"
+
+msgid "encode_as_pgm"
+msgstr "Encoder en tant que gestionnaire de programme"
+
+msgid "coordinators_can_submit_partial_encoding"
+msgstr "Les coordinateurs peuvent soumettre des encodages partiels"
+
+msgid "submitted_scores_cannot_be_encoded_anymore"
+msgstr "Les notes soumises ne peuvent plus être encodées"
+
+msgid "double_encoding_test"
+msgstr "Double encodage des notes"
+
+msgid "only_submited_scores_can_be_double_encoded"
+msgstr "Seules les notes soumises peuvent être double encodées"
+
+msgid "lu_must_not_contain_decimal_scores"
+msgstr "Cette année d'étude n'accepte pas les notes décimales"
+
+msgid "lu_could_contain_decimal_scores"
+msgstr "Cette année d'étude accepte les notes décimales"
+
+msgid "validated_double_encoding_cannot_be_validated_anymore"
+msgstr "Un double encodage validé ne peut l'être une seconde fois"
+
+msgid "after_submission_a_message_must_be_sent"
+msgstr "Si un encodage est soumis , um message est envoyé au professeur de ce cours"
