@@ -121,10 +121,10 @@
                                    {% endif %}
                                    {% if enrollment.session_exam.learning_unit_year.decimal_scores %}
                                         step="any"
+                                        oninvalid="InvalidScoreMsg(this,true)"
                                    {% else %}
                                         step="1"
-                                        oninvalid="this.setCustomValidity('{%trans 'decimal_score_not_allowed'%}')"
-                                        onchange="this.setCustomValidity('')"
+                                        oninvalid="InvalidScoreMsg(this,false)"
                                    {% endif %} >
                         </td>
                         <td>
@@ -172,6 +172,7 @@
         if(target.val() != "" && $("#slt_double_justification_score_"+ enrollmentId).val() != "CHEATING") {
             $("#slt_double_justification_score_" + enrollmentId).val('');
         }
+        this.setCustomValidity('');
     });
 
     $("select[id^='slt_double_justification_score_']" ).change(function(event) {
@@ -250,5 +251,17 @@
             double_score_field.css("border", "1px solid lightgrey");
         }
     });
+
+    function InvalidScoreMsg(input,decimal_allowed){
+    if (input.value > 20){
+        input.setCustomValidity("{% trans 'scores_gt_0_lt_20' %}")
+    }
+    else if (input.value != Math.floor(input.value) && !decimal_allowed){
+        input.setCustomValidity("{% trans 'decimal_score_not_allowed' %}")
+    }
+    else{
+         input.setCustomValidity('');
+    }
+}
 </script>
 {% endblock %}
