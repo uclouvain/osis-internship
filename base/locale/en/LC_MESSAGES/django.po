@@ -1217,7 +1217,7 @@ msgstr "Score Saved"
 
 #: utils/upload_xls_utils.py:232
 msgid "scores_saved"
-msgstr "Scores Saved"
+msgstr "score(s) saved"
 
 msgid "score_invalid"
 msgstr "Score invalid"
