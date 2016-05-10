@@ -1128,8 +1128,7 @@ msgstr "Secrétaire du jury"
 #: utils/pdf_utils.py:365
 msgid "return_doc_to_administrator"
 msgstr ""
-"Veuillez renvoyer ce document au bureau administratif de la faculté "
-"responsable du programme."
+"Veuillez envoyer ce formulaire au secrétariat de l'entité gestionnaire avant le %s."
 
 #: utils/pdf_utils.py:381
 msgid "done_at"
