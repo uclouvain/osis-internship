@@ -80,7 +80,6 @@ def _truncate_decimals(new_score, new_justification, decimal_scores_authorized):
 @login_required
 def online_encoding_form(request, learning_unit_year_id=None):
     data = get_data_online(learning_unit_year_id, request)
-    enrollments = data['enrollments']
 
     if request.method == 'GET':
         return layout.render(request, "assessments/online_encoding_form.html", data)
@@ -88,7 +87,7 @@ def online_encoding_form(request, learning_unit_year_id=None):
     elif request.method == 'POST':
         # Case the user submit his first online scores encodings
         decimal_scores_authorized = data['learning_unit_year'].decimal_scores
-        for enrollment in enrollments:
+        for enrollment in data['enrollments']:
             score = request.POST.get('score_' + str(enrollment.id), None)
             justification = request.POST.get('justification_' + str(enrollment.id), None)
             modification_possible = True
@@ -110,6 +109,7 @@ def online_encoding_form(request, learning_unit_year_id=None):
                     enrollment.score_draft = new_score
                     enrollment.justification_draft = new_justification
                 enrollment.save()
+        data = get_data_online(learning_unit_year_id, request)
         return layout.render(request, "assessments/online_encoding.html", data)
 
 
@@ -266,7 +266,7 @@ def notes_printing(request, learning_unit_year_id=None, tutor_id=None, offer_id=
                                                                  academic_year=academic_year,
                                                                  tutor_id=tutor_id,
                                                                  offer_year_id=offer_id)
-    return pdf_utils.print_notes(request.user, academic_year, learning_unit_id, is_program_manager, exam_enrollments)
+    return pdf_utils.print_notes(academic_year, learning_unit_id, is_program_manager, exam_enrollments)
 
 
 @login_required
@@ -327,7 +327,7 @@ def get_data_online(learning_unit_year_id, request):
     coordinator = mdl.tutor.find_responsible(learning_unit_year.learning_unit)
     progress = mdl.exam_enrollment.calculate_exam_enrollment_progress(exam_enrollments)
     nb_scores_encoded = len([exam_enrol for exam_enrol in exam_enrollments
-                             if exam_enrol.justification_final or exam_enrol.score_final])
+                             if exam_enrol.justification_draft or exam_enrol.score_draft])
 
     return {'section': 'scores_encoding',
             'academic_year': academic_yr,
@@ -336,7 +336,8 @@ def get_data_online(learning_unit_year_id, request):
             'num_encoded_scores': nb_scores_encoded,
             'learning_unit_year': learning_unit_year,
             'coordinator': coordinator,
-            'is_program_manager': mdl.program_manager.is_program_manager(request.user)}
+            'is_program_manager': is_program_manager,
+            'is_coordinator': mdl.tutor.is_coordinator(request.user, learning_unit_year.learning_unit.id)}
 
 
 def get_data_online_double(learning_unit_year_id, request):
