@@ -40,6 +40,7 @@
 <div class="page-header">
     <h2>{% trans 'scores_encoding' %}</h2>
 </div>
+{% include "template_messages.html" %}
 <div class="panel panel-default">
     <div class="panel-heading">
         <h3 class="panel-title" style="font-size: 150%; color: #3399CC;">{{ learning_unit_year }}</h3>
@@ -84,40 +85,6 @@
                           id="bt_score_submission_modal" {%if num_encoded_scores == 0 or not is_coordinator %} disabled{%endif%}><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'submission' %}</button>
             {% endif %}
             <br><br>
-            {% as_messages_info as messages_info %}
-            {%if messages_info %}
-                <div id="div_info_messages">
-                    <ul class="alert alert-success">
-                        {% for message in messages %}
-                            {% if 'info' in message.tags %}
-                                <li {% if message.tags%}{% endif %}>{{ message }}</li>
-                            {% endif %}
-                        {% endfor %}
-                    </ul>
-                </div>
-            {% endif %}
-            {% as_messages_warning as messages_warning %}
-            {% if messages_warning %}
-                <ul class="alert alert-danger">
-                    {% for message in messages %}
-                        {% if 'warning' in message.tags %}
-                            <li {%  if message.tags %}{% endif %}>{{ message }}</li>
-                        {% endif %}
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        {% endif %}
-        {% as_messages_error as messages_error %}
-        {% if messages_error %}
-            <div id="div_error_messages">
-                <ul class="alert alert-danger">
-                    {% for message in messages %}
-                        {% if 'error' in message.tags %}
-                            <li {%  if message.tags %}{% endif %}>{{ message }}</li>
-                        {%endif%}
-                    {% endfor %}
-                </ul>
-            </div>
         {% endif %}
         <table class="table table-hover">
             <thead>

@@ -1450,3 +1450,6 @@ msgstr "Validated double encoding cannot be validated anymore"
 
 msgid "after_submission_a_message_must_be_sent"
 msgstr "If scores are submitted , a message is sent to all the professors of the learning unit"
+
+msgid "template_error"
+msgstr "No message was sent : the message template {} does not exist."
