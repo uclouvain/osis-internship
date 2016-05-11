@@ -79,7 +79,9 @@ def find_session_exam_number():
     sess_exam_number = list(sess_exam_number) # Force evaluation of the queryset
     if len(sess_exam_number) > 1:
         raise Exception("There are multiple exam sessions opened at this moment !")
-    return sess_exam_number[0].get('number_session')
+    elif len(sess_exam_number) == 1:
+        return sess_exam_number[0].get('number_session')
+    return None
 
 
 def find_by_offer_years(offer_years):

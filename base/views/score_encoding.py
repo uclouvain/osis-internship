@@ -220,7 +220,10 @@ def online_encoding_submission(request, learning_unit_year_id):
     sessions_exam_still_open = set()
     # contains all sessions exams in exam_enrollments list
     all_sessions_exam = set()
-    for exam_enroll in exam_enrollments:
+    draft_scores_not_sumitted_yet = [exam_enrol for exam_enrol in exam_enrollments
+                                     if (exam_enrol.justification_draft or exam_enrol.score_draft)
+                                     and not exam_enrol.justification_final and not exam_enrol.score_final]
+    for exam_enroll in draft_scores_not_sumitted_yet:
         if (exam_enroll.score_draft and not exam_enroll.score_final) \
                 or (exam_enroll.justification_draft and not exam_enroll.justification_final):
             submitted_enrollments.append(exam_enroll)
@@ -234,10 +237,11 @@ def online_encoding_submission(request, learning_unit_year_id):
                                                                 exam_enroll.score_final,
                                                                 exam_enroll.justification_final)
 
+    # Closing session_exam if all scores are encoded
+    for exam_enroll in exam_enrollments:
         if not exam_enroll.score_final and not exam_enroll.justification_final:
             sessions_exam_still_open.add(exam_enroll.session_exam)
         all_sessions_exam.add(exam_enroll.session_exam)
-
     sessions_exam_to_close = all_sessions_exam - sessions_exam_still_open
     for session_exam in sessions_exam_to_close:
         session_exam.status = 'CLOSED'
@@ -334,8 +338,6 @@ def get_data_online(learning_unit_year_id, request):
 
     coordinator = mdl.tutor.find_responsible(learning_unit_year.learning_unit)
     progress = mdl.exam_enrollment.calculate_exam_enrollment_progress(exam_enrollments)
-    nb_scores_encoded = len([exam_enrol for exam_enrol in exam_enrollments
-                             if exam_enrol.justification_draft or exam_enrol.score_draft])
 
     draft_scores_not_sumitted = len([exam_enrol for exam_enrol in exam_enrollments
                                     if (exam_enrol.justification_draft or exam_enrol.score_draft)
@@ -345,7 +347,6 @@ def get_data_online(learning_unit_year_id, request):
             'academic_year': academic_yr,
             'progress': "{0:.0f}".format(progress),
             'enrollments': exam_enrollments,
-            'num_encoded_scores': nb_scores_encoded,
             'learning_unit_year': learning_unit_year,
             'coordinator': coordinator,
             'is_program_manager': is_program_manager,
