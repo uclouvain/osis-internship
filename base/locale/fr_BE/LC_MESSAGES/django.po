@@ -1471,3 +1471,6 @@ msgstr "Un double encodage validé ne peut l'être une seconde fois"
 
 msgid "after_submission_a_message_must_be_sent"
 msgstr "Si un encodage est soumis , um message est envoyé au professeur de ce cours"
+
+msgid "template_error"
+msgstr "Aucun message n'a été envoyé : le modèle de message {} n'existe pas."

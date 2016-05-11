@@ -25,6 +25,7 @@
 ##############################################################################
 from datetime import datetime
 
+from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from base.forms import AcademicCalendarForm
 from base import models as mdl
@@ -138,7 +139,9 @@ def academic_calendar_save(request, id):
         if new_academic_calendar:
             mdl.offer_year_calendar.save(academic_calendar)
         else:
-            mdl.offer_year_calendar.update(academic_calendar)
+            sent_error_message = mdl.offer_year_calendar.update(academic_calendar)
+            if sent_error_message:
+                messages.add_message(request, messages.ERROR, "%s" % sent_error_message)
 
         return layout.render(request, "academic_calendars.html", {'academic_year': academic_year,
                                                                   'academic_years': academic_years,
