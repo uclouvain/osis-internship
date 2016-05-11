@@ -65,7 +65,7 @@ def informations_edit(request):
 @user_passes_test(is_manager)
 def manager_informations(request):
     advisers = Adviser.find_all().filter(type='PRF')
-    return render(request, 'manager_informations.html', {'advisers': advisers})
+    return render(request, 'manager_informations_list.html', {'advisers': advisers})
 
 @login_required
 @user_passes_test(is_manager)
@@ -90,5 +90,5 @@ def manager_informations_edit(request, pk):
 @login_required
 @user_passes_test(is_manager)
 def manager_information_search(request):
-    adviser= Adviser.search(terms=request.GET['search'])
-    return render(request, "manager_informations.html", {'adviser': adviser})
+    advisers = Adviser.search(terms=request.GET['search'])
+    return render(request, "manager_informations_list.html", {'advisers': advisers})

@@ -45,7 +45,6 @@ class Adviser(models.Model):
     comment=models.TextField(default='', blank=True)
 
     def __str__(self):
-        # We retrieve related person's informations (adaptation of __str__ method of base.Person)
         first_name = ""
         middle_name = ""
         last_name = ""
@@ -55,7 +54,6 @@ class Adviser(models.Model):
             middle_name = self.person.middle_name
         if self.person.last_name :
             last_name = self.person.last_name + ","
-
         return u"%s %s %s" % (last_name.upper(), first_name, middle_name)
 
     def find_by_person(a_person):
@@ -66,8 +64,7 @@ class Adviser(models.Model):
         return Adviser.objects.order_by('person')
 
     def search(terms):
-        queryset = Adviser.objects.order_by('last_name')
+        queryset = Adviser.objects.all().filter(type='PRF')
         if terms:
-            queryset = queryset.filter(Q(person__first_name__icontains=terms))
-            #Q(person__first_name__icontains=terms)| Q(adviser__person__middle_name__icontains=terms)| Q(adviser__person__last_name__icontains=terms)| Q(adviser__person__email__icontains=terms))
+            queryset = queryset.filter((Q(person__first_name__icontains=terms)|Q(person__last_name__icontains=terms))&Q(type='PRF'))
         return queryset
