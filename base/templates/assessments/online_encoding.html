@@ -83,7 +83,7 @@
             {% if not is_program_manager %}
             <button type="button" class="btn btn-warning pull-right" data-toggle="modal" data-target="#pnl_submission_scores_modal"
                     title="{% trans 'definitive_save' %}"
-                    id="bt_score_submission_modal" {%if draft_scores_not_sumitted == 0 or not is_coordinator %} disabled{%endif%}><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'submission' %}</button>
+                    id="bt_score_submission_modal" {%if not draft_scores_not_sumitted or not is_coordinator %} disabled{%endif%}><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'submission' %}</button>
             {% endif %}
             <br><br>
             {% if not is_program_manager and draft_scores_not_sumitted > 0 %}
