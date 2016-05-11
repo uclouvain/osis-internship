@@ -57,6 +57,13 @@ def find_by_person(a_person):
 
 
 def is_program_manager(user, offer_year=None, learning_unit_year=None):
+    """
+
+    :param user:
+    :param offer_year: Check if the user is program manager of this offerYear.
+    :param learning_unit_year: Check if the offer of this learningUnitYear is in the managed offers of the user.
+    :return: True if the user manage at least 1 offer.
+    """
     if offer_year:
         try:
             programme_manager = ProgramManager.objects.filter(person__user=user, offer_year=offer_year)
@@ -73,13 +80,16 @@ def is_program_manager(user, offer_year=None, learning_unit_year=None):
         else:
             return False
     else:
-        return False
+        return ProgramManager.objects.filter(person__user=user).count() > 0
 
 
 def find_by_offer_year(offer_yr):
     return ProgramManager.objects.filter(offer_year=offer_yr)
 
 
-def find_by_user(user):
-    return ProgramManager.objects.filter(person__user=user)\
-                                 .order_by('offer_year__acronym')
+def find_by_user(user, academic_year=None):
+    queryset = ProgramManager.objects
+    if academic_year:
+        queryset = queryset.filter(offer_year__academic_year=academic_year)
+
+    return queryset.filter(person__user=user)

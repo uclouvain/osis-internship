@@ -34,7 +34,7 @@
 <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'studies' %}</a></li>
 <li><a href="{% url 'assessments' %}" id="lnk_assesments">{% trans 'evaluations' %}</a></li>
 <li><a href="{% url 'scores_encoding' %}" id="lnk_scores_encoding">{% trans 'scores_encoding' %}</a></li>
-<li><a href="{%if tutor%}{% url 'online_encoding' learning_unit.id tutor.id %}{%else%}{% url 'online_encoding' learning_unit.id %}{%endif%}" id="lnk_online_encoding">{% trans 'online_scores_encoding' %}</a></li>
+<li><a href="{% url 'online_encoding' learning_unit_year.id %}" id="lnk_online_encoding">{% trans 'online_scores_encoding' %}</a></li>
 <li class="active">{% trans 'dubble_online_scores_encoding' %}</li>
 {% endblock %}
 {% block content %}
@@ -48,9 +48,13 @@
     <div class="panel-body">
         <div class="row">
             <div class="col-md-4">
-                <div class="form-group">
+                <div class="form-group" id="pnl_responsable_name" >
                     <label>{% trans 'responsible' %}</label><br>
-                    {{ tutor | default_if_none:'' }}
+                    {% if coordinator %}
+                        {{ coordinator }}
+                    {% else %}
+                        {% trans 'none' %}
+                    {% endif %}
                 </div>
             </div>
             <div class="col-md-4">
@@ -62,16 +66,24 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label>{% trans 'number_of_enrollments' %}</label><br>
-                    {{ enrollments|length }}
+                    {{ count_total_enrollments }}
                 </div>
             </div>
         </div>
         <hr>
-        <form class="form-inline" method="POST" action="{%if tutor%}
-                                                            {% url 'online_double_encoding_form' learning_unit.id %}
-                                                        {%else%}
-                                                            {% url 'online_double_encoding_form' learning_unit.id  %}
-                                                        {%endif%}" id="form_online_double_encoding">
+        <div class="row">
+            <div class="alert alert-warning">
+                {% get_current_language as LANGUAGE_CODE %}
+                {% if enrollments.0.session_exam.learning_unit_year.decimal_scores %}
+                  {% trans 'decimal_values_accepted' %}
+                {% else %}
+                  {% trans 'decimal_values_ignored' %}
+                {% endif %}
+            </div>
+        </div>
+        <form class="form-inline" method="POST"
+              action="{% url 'online_double_encoding_form' learning_unit_year.id %}"
+              id="form_online_double_encoding">
             {% csrf_token %}
             <table class="table table-hover">
                 <thead>
@@ -100,15 +112,30 @@
                         <td>
                             <input type="hidden" id="hdn_score_draft_{{ enrollment.id }}"
                                    value="{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}">
-                            <input type="number" min="0" max="20" step="any" name="score_{{ enrollment.id }}" id="num_double_score_{{ enrollment.id }}"
+                            <input type="number" min="0" max="20" name="score_{{ enrollment.id }}" id="num_double_score_{{ enrollment.id }}"
                                    tabindex="{{ forloop.counter }}" class="form-control"
-                                      {% if tutor and enrollment.score_final or tutor and enrollment.justification_final %} disabled {% endif %}>
+                                   {% if not is_program_manager %}
+                                     {% if enrollment.score_final or enrollment.justification_final %}
+                                       disabled
+                                     {% endif %}
+                                   {% endif %}
+                                   {% if enrollment.session_exam.learning_unit_year.decimal_scores %}
+                                        step="any"
+                                   {% else %}
+                                        step="1"
+                                        oninvalid="this.setCustomValidity('{%trans 'decimal_score_not_allowed'%}')"
+                                        onchange="this.setCustomValidity('')"
+                                   {% endif %} >
                         </td>
                         <td>
                             <input type="hidden" id="hdn_justification_draft_{{ enrollment.id }}" value="{{ enrollment.justification_draft }}">
                             <select class="form-control" name="justification_{{ enrollment.id }}" id="slt_double_justification_score_{{ enrollment.id }}"
                                    tabindex="{{ enrollments|length|sum:forloop.counter }}"
-                                   {% if tutor and enrollment.score_final or tutor and enrollment.justification_final %} disabled {% endif %}>
+                                   {% if not is_program_manager %}
+                                     {% if enrollment.score_final or enrollment.justification_final %}
+                                        disabled
+                                    {% endif %}
+                                   {% endif %}>
                                 <option value="None"></option>
                                 <option value="ABSENT">{% trans 'absent' %}</option>
                                 <option value="CHEATING">{% trans 'cheating' %}</option>
@@ -125,7 +152,7 @@
                 </tbody>
             </table>
             <button type="submit" class="btn btn-primary" id="bt_compare"><span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> {% trans 'compare' %}</button>
-            <a class="btn btn-default" href="{%if tutor%}{% url 'online_encoding' learning_unit.id tutor.id %}{%else%}{% url 'online_encoding' learning_unit.id %}{%endif%}" role="button" id="bt_cancel_online_double_encoding"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
+            <a class="btn btn-default" href="{% url 'online_encoding' learning_unit_year.id %}" role="button" id="bt_cancel_online_double_encoding"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
         </form>
     </div>
 </div>

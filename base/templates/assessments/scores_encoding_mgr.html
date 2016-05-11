@@ -37,10 +37,9 @@
     <h2>{% trans 'scores_encoding' %}</h2>
 </div>
 {% if notes_list%}
-{% for note in notes_list %}
 <div class="panel panel-default">
     <div class="panel-body">
-        <form method="get" action="{% url 'refresh_list'%}" id="form_search_learning_units">
+        <form method="get" action="{% url 'refresh_list' %}" id="form_search_learning_units">
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
@@ -55,7 +54,7 @@
                         <select id="slt_tutor" name="tutor" class="form-control">
                             <option value="">{% trans 'all' %}</option>
                             {%for t in tutor_list%}
-                            <option value="{{t.id}}" {% if tutor.id == t.id %}selected{%endif%}>{{t}}</option>
+                                <option value="{{t.id}}" {% if tutor_id == t.id %}selected{%endif%}>{{t.person.last_name}} {{t.person.first_name}}</option>
                             {%endfor%}
                         </select>
                         {% endif %}
@@ -67,7 +66,7 @@
                     <select id="slt_offer_list_selection" name="offer" class="form-control">
                         <option value="">{% trans 'all'%}</option>
                         {%for o in offer_list%}
-                        <option value="{{o.id}}" {%if offer.id == o.id %}selected{%else%}{%endif%}>{{o.acronym}} - {{o.title}}</option>
+                        <option value="{{o.id}}" {%if offer_year_id == o.id %}selected{%else%}{%endif%}>{{o.acronym}} - {{o.title}}</option>
                         {%endfor%}
                     </select>
                     {% endif %}
@@ -82,7 +81,16 @@
             </div>
         </form>
         <br>
-        <p><b>{% trans 'select_an_encoding_type' %}</b></p>
+        <div class="row">
+            <div class="col-md-6">
+                <b>{% trans 'select_an_encoding_type' %}</b>
+            </div>
+            <div class="col-md-6">
+                <div class="pull-right">
+                    <b>{% trans 'you_manage' %} <span class="badge">{{ notes_list|length }}</span> {% trans 'learning_units_in' %} <span class="badge">{{ offer_list|length }}</span> {% trans 'programs' %}.</b>
+                </div>
+            </div>
+        </div>
         <div>
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active"><a href="#tab_online_{{forloop.counter0}}"
@@ -102,22 +110,22 @@
                         <tr>
                             <th>{% trans 'acronym' %}</th>
                             <th>{% trans 'learning_unit' %}</th>
-                            <th>{% trans 'tutor' %}</th>
+                            <th>{% trans 'coordinator' %}</th>
                             <th>{% trans 'progress' %}</th>
                             <th></th>
                         </tr>
                         </thead>
                         <tbody>
 
-                        {% for note_detail in note.lu_list %}
+                        {% for note_detail in notes_list %}
                         <tr>
-                            <td>{{ note_detail.lu.acronym }}</td>
-                            <td><a href="{% url 'online_encoding' note_detail.lu.id %}"
-                                   id="lnk_{{ note_detail.lu.acronym }}">{{ note_detail.lu.title }}</a></td>
-                            <td>{{ note_detail.tutor.person.last_name }}, {{ note_detail.tutor.person.first_name }}</td>
-                            <td>{{ note_detail.nb_notes_encoded}}/{{ note_detail.nb_student}}</td>
+                            <td>{{ note_detail.learning_unit_year.acronym }}</td>
+                            <td><a href="{% url 'online_encoding' note_detail.learning_unit_year.id %}"
+                                   id="lnk_{{ note_detail.learning_unit_year.acronym }}">{{ note_detail.learning_unit_year.title }}</a></td>
+                            <td>{{ note_detail.tutor_person.last_name }} {{ note_detail.tutor_person.first_name }}</td>
+                            <td>{{ note_detail.exam_enrollments_encoded}}/{{ note_detail.total_exam_enrollments}}</td>
                             <td><a class="btn btn-default"
-                                           href="{% url 'online_encoding_form' note_detail.lu.id%}" role="button" id="lnk_encode"><i class="fa fa-hashtag"></i> {% trans 'encode' %}</a></td>
+                                           href="{% url 'online_encoding_form' note_detail.learning_unit_year.id %}" role="button" id="lnk_encode"><i class="fa fa-hashtag"></i> {% trans 'encode' %}</a></td>
                         </tr>
                         {% endfor %}
                         </tbody>
@@ -129,28 +137,28 @@
                         <tr>
                             <th>{% trans 'acronym' %}</th>
                             <th>{% trans 'learning_unit' %}</th>
-                            <th>{% trans 'tutor' %}</th>
+                            <th>{% trans 'coordinator' %}</th>
                             <th>{% trans 'progress' %}</th>
                             <th></th>
                         </tr>
                         </thead>
                         <tbody>
-                        {% for note_detail in note.lu_list %}
+                        {% for note_detail in notes_list %}
                         <tr>
-                            <td>{{ note_detail.lu.acronym }}</td>
-                            <td><a href="{% url 'online_encoding' note_detail.lu.id %}"
+                            <td>{{ note_detail.learning_unit_year.acronym }}</td>
+                            <td><a href="{% url 'online_encoding' note_detail.learning_unit_year.id %}"
                                    title="Visualiser/charger les notes pour le cours"
-                                   id="lnk_online_encoding_messages_{{note_detail.lu.id}}">{{ note_detail.lu.title }}</a></td>
-                            <td>{{ note_detail.tutor.person.last_name }}, {{ note_detail.tutor.person.first_name }}</td>
-                            <td>{{ note_detail.nb_notes_encoded}}/{{ note_detail.nb_student}}</td>
+                                   id="lnk_online_encoding_messages_{{note_detail.learning_unit_year.id}}">{{ note_detail.learning_unit_year.title }}</a></td>
+                            <td>{{ note_detail.tutor_person.last_name }}, {{ note_detail.tutor_person.first_name }}</td>
+                            <td>{{ note_detail.exam_enrollments_encoded}}/{{ note_detail.total_exam_enrollments}}</td>
                             <td>
-                                <a class="btn btn-default"
-                                   href="{% url 'scores_encoding_download' note_detail.lu.id academic_year.id%}"
+                                <a class="btn btn-default
+                                        {% if note_detail.exam_enrollments_encoded ==  note_detail.total_exam_enrollments%}
+                                          disabled
+                                        {% endif %}"
+                                   href="{% url 'scores_encoding_download' note_detail.learning_unit_year.id academic_year.id%}"
                                    role="button" title="{% trans 'hint_get_excel_file'%}"
-                                   {% if note_detail.completed %}
-                                   disabled
-                                   {% endif %}
-                                   id="lnk_scores_encoding_download_{{lu.id}}"><span
+                                   id="lnk_scores_encoding_download_{{learning_unit_year.id}}"><span
                                         class="glyphicon glyphicon-download" aria-hidden="true"></span> {% trans 'get_excel_file'%}</a>
                             </td>
                         </tr>
@@ -160,18 +168,16 @@
                 </div>
                 <div role="tabpanel" class="tab-pane fade" id="tab_via_paper_{{forloop.counter0}}">
                     <br>
-                    <a class="btn btn-default {% if not tutor.id %}disabled{%endif%}"
-                       href="{%if tutor and offer %}
-                                {% url 'notes_printing_all' tutor_id=tutor.id offer_id=offer.id %}
+                    <a class="btn btn-default {% if not tutor_id %}disabled{%endif%}"
+                       href="{%if tutor_id and offer_year_id %}
+                                {% url 'notes_printing_all' tutor_id=tutor_id offer_id=offer_year_id %}
                              {%else%}
-                                {%if tutor %}
-                                    {% url 'notes_printing_all' tutor_id=tutor.id %}
-                                {%else%}
-                                    {%if offer%}
-                                        {% url 'notes_printing_all' offer_id=offer.id %}
-                                    {%else%}
-                                        {% url 'notes_printing_all'  %}
-                                    {%endif%}
+                                {%if tutor_id %}
+                                    {% url 'notes_printing_all' tutor_id=tutor_id %}
+                                {%elif offer_year_id %}
+                                    {% url 'notes_printing_all' offer_id=offer_year_id %}
+                                {% else %}
+                                    {% url 'notes_printing_all' %}
                                 {%endif%}
                             {%endif%}"
                        role="button" id="lnk_notes_printing_all_{{learning_unit.id}}">
@@ -182,25 +188,25 @@
                         <tr>
                             <th>{% trans 'acronym' %}</th>
                             <th>{% trans 'learning_unit' %}</th>
-                            <th>{% trans 'tutor' %}</th>
+                            <th>{% trans 'coordinator' %}</th>
                             <th>{% trans 'progress' %}</th>
                             <th></th>
                         </tr>
                         </thead>
                         <tbody>
-                        {% for note_detail in note.lu_list %}
+                        {% for note_detail in notes_list %}
                         <tr>
-                            <td>{{ note_detail.lu.acronym }}</td>
-                            <td><a href="{% url 'online_encoding' note_detail.lu.id  %}"
+                            <td>{{ note_detail.learning_unit_year.acronym }}</td>
+                            <td><a href="{% url 'online_encoding' note_detail.learning_unit_year.id  %}"
                                    title="Visualiser/charger les notes pour le cours"
-                                   id="lnk_paper_encoding_messages_{{note_detail.lu.id}}">{{ note_detail.lu.title }}</a></td>
-                            <td>{{ note_detail.tutor.person.last_name }}, {{ note_detail.tutor.person.first_name }}</td>
-                            <td>{{ note_detail.nb_notes_encoded}}/{{ note_detail.nb_student}}</td>
+                                   id="lnk_paper_encoding_messages_{{note_detail.learning_unit_year.id}}">{{ note_detail.learning_unit_year.title }}</a></td>
+                            <td>{{ note_detail.tutor_person.last_name }}, {{ note_detail.tutor_person.first_name }}</td>
+                            <td>{{ note_detail.exam_enrollments_encoded}}/{{ note_detail.total_exam_enrollments}}</td>
                             <td>
                                 <a class="btn btn-default"
-                                   href="{% url 'notes_printing' note_detail.lu.id%}"
+                                   href="{% url 'notes_printing' note_detail.learning_unit_year.id%}"
                                    {% if note_detail.completed%} disabled{% endif %}
-                                   role="button" id="lnk_notes_printing_{{note_detail.lu.id}}"><span
+                                   role="button" id="lnk_notes_printing_{{note_detail.learning_unit_year.id}}"><span
                                         class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'print' %}</a>
                             </td>
                         </tr>
@@ -212,8 +218,7 @@
         </div>
     </div>
 </div>
-{% endfor %}
 {% else %}
-    <p class="text-info" style="font-size: 130%">Aucune session d'examen ouverte pour le moment.</p>
+    <p class="text-info" style="font-size: 130%">{% trans 'no_exam_session_opened_for_the_moment' %}</p>
 {% endif %}
 {% endblock %}

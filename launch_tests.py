@@ -11,8 +11,7 @@ UNIT_TESTS_CLASSES = []
 
 # Selenium tests classes
 SELENIUM_TESTS_CLASSES = [
-    'core.tests.selenium.health_tests',
-    'core.tests.selenium.score_encoding_tests',
+    'base.tests.selenium.score_encoding_tests',
 ]
 
 # All tests classes

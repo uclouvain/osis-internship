@@ -26,9 +26,14 @@
 
 from django import forms
 from django.forms import ModelForm
-from internship.models import InternshipChoice
+from internship.models import InternshipChoice, InternshipOffer
 
 class InternshipChoiceForm(ModelForm):
     class Meta :
         model = InternshipChoice
         fields = ['organization', 'learning_unit_year', 'student', 'choice']
+
+class InternshipOfferForm(ModelForm):
+    class Meta :
+        model = InternshipOffer
+        fields = ['organization', 'learning_unit_year', 'title', 'maximum_enrollments']

@@ -37,12 +37,13 @@
 <div class="page-header">
   <h2>{% trans 'academic_calendar' %}</h2>
 </div>
+{% include "template_messages.html" %}
 <div class="panel panel-default">
   <div class="panel-body">
     <div class="row">
       <form  method="get" action="{% url 'academic_calendars_search'%}" >
         <div class="col-md-2">
-          <label for="academic_year" >{% trans 'academic_year'%}</label>
+          <label for="slt_academic_year" >{% trans 'academic_year'%}</label>
           <select class="form-control" id="slt_academic_year"  name="academic_year" value="{{ academic_year }}">
             {% for v in academic_years %}
               {% if v.id == academic_year %}

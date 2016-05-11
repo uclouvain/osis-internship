@@ -54,7 +54,7 @@ class DocumentFile(models.Model):
 
     name = models.CharField(max_length=100)
     content_type = models.CharField(max_length=50, choices=CONTENT_TYPE_CHOICES)
-    creation_date = models.DateTimeField(auto_now=True, editable=False)
+    creation_date = models.DateTimeField(auto_now_add=True, editable=False)
     storage_duration = models.IntegerField()
     full_path = models.CharField(max_length=255)
     physical_name = models.UUIDField(default=uuid.uuid4, editable=False)

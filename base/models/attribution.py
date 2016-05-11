@@ -80,21 +80,14 @@ def find_by_function(tutor, a_learning_unit, function):
     return False
 
 
-def is_coordinator(user, learning_unit_year):
-    attributions = Attribution.objects.filter(tutor__person__user=user,
-                                              learning_unit=learning_unit_year.learning_unit,
-                                              function='COORDINATOR')
-    if attributions:
-        return True
-
-    return False
-
-
-def is_professor(user, learning_unit_year):
-    attributions = Attribution.objects.filter(tutor__person__user=user,
-                                              learning_unit=learning_unit_year.learning_unit,
-                                              function='PROFESSOR')
-    if attributions:
-        return True
-
-    return False
+def find_by_learning_unit_year_ids(learning_unit_year_ids, function=None):
+    """
+    :param learning_unit_year_ids: Ids from which to find attributions.
+    :param function: Filter the resulset by Attribution.function
+    :return: Find all attributions for the learningUnitYears in parameter.
+    """
+    queryset = Attribution.objects
+    if function:
+        queryset = queryset.filter(function=function)
+    queryset = queryset.filter(learning_unit_id__in=learning_unit_year_ids)
+    return queryset

@@ -38,34 +38,26 @@ msgstr "Tricherie"
 msgid "cheating_pdf_legend"
 msgstr "T=Tricherie"
 
-#: models/exam_enrollment.py:36 models/exam_enrollment.py:150
-#: templates/assessments/online_double_encoding_form.html:119
-#: templates/assessments/online_encoding_form.html:136
 msgid "ill"
 msgstr "Malade"
 
 msgid "ill_pdf_legend"
 msgstr "M=Malade"
 
-#: models/exam_enrollment.py:37 models/exam_enrollment.py:151
-#: templates/assessments/online_double_encoding_form.html:120
-#: templates/assessments/online_encoding_form.html:137
 msgid "justified_absence"
 msgstr "Absence justifiée"
 
 msgid "justified_absence_pdf_legend"
 msgstr "AJ=Absence justifiée"
 
-#: models/exam_enrollment.py:38 models/exam_enrollment.py:152
-#: models/exam_enrollment.py:156
-#: templates/assessments/online_double_encoding_form.html:116
-#: templates/assessments/online_encoding_form.html:133
-#: templates/assessments/online_encoding_form.html:147
 msgid "score_missing"
 msgstr "Note manquante"
 
 msgid "score_missing_pdf_legend"
 msgstr "?=Note manquante"
+
+msgid "score_already_submitted"
+msgstr "Note déjà soumis"
 
 msgid "presence_note_pdf_legend"
 msgstr "0=Cote de présence"
@@ -1136,8 +1128,7 @@ msgstr "Secrétaire du jury"
 #: utils/pdf_utils.py:365
 msgid "return_doc_to_administrator"
 msgstr ""
-"Veuillez renvoyer ce document au bureau administratif de la faculté "
-"responsable du programme."
+"Veuillez envoyer ce formulaire au secrétariat de l'entité gestionnaire avant le %s."
 
 #: utils/pdf_utils.py:381
 msgid "done_at"
@@ -1237,7 +1228,7 @@ msgstr "Note invalide"
 
 #: utils/upload_xls_utils.py:232
 msgid "scores_saved"
-msgstr "Scores enregistré"
+msgstr "note(s) enregistrée(s)"
 
 #: utils/upload_xls_utils.py:241
 msgid "the_coordinator_must_still_submit_scores"
@@ -1260,6 +1251,55 @@ msgstr "Veuillez remplir au moins 1 critère"
 
 msgid "get_excel_file"
 msgstr "Obtenir le fichier Excel"
+
+msgid "no_exam_session_opened_for_the_moment"
+msgstr "Aucune session d'examen ouverte pour le moment."
+
+msgid "you_manage"
+msgstr "Vous gérez"
+
+msgid "learning_units_in"
+msgstr "unités d'enseignement dans"
+
+msgid "no_dubble_score_encoded_comparison_impossible"
+msgstr "Aucune note n'a été double encodée ; aucune comparaison à effectuer."
+
+#~ msgid "title_btn_upload_score"
+#~ msgstr ""
+#~ "Sélectionnez votre fichier excel à partir duquel il faut injecter les "
+#~ "notes"
+
+#~ msgid "submit"
+#~ msgstr "Envoyer"
+
+#~ msgid "download_xls_file"
+#~ msgstr "Télécharger le fichier Excel"
+
+#~ msgid "not_in_choices_list"
+#~ msgstr "Le choix entré ne se trouve pas dans la liste proposée"
+
+#~ msgid "invalid_entry"
+#~ msgstr "Entrée invalide"
+
+#~ msgid "please_choose_in_the_list"
+#~ msgstr "Veuillez sélectionner un élément de la liste"
+
+#~ msgid "choices_list"
+#~ msgstr "Liste des choix"
+
+#~ msgid "changes_on_offer_year_and_academic_calendar"
+#~ msgstr ""
+#~ "Attention - Des changements ont été effectués sur %s, calendrier "
+#~ "académique %s"
+
+#~ msgid "score_injected"
+#~ msgstr "Note injectée"
+
+#~ msgid "scores_injected"
+#~ msgstr "Notes injectées"
+
+#~ msgid "add_address"
+#~ msgstr "Ajouter une adresse"
 
 msgid "sector"
 msgstr "Secteur"
@@ -1291,13 +1331,19 @@ msgstr "Non défini"
 msgid "messages"
 msgstr "Messages"
 
+msgid "html_message"
+msgstr "Message HTML"
+
+msgid "txt_message"
+msgstr "Message texte"
+
 msgid "messages_templates"
 msgstr "Modèles de messages"
 
 msgid "desc_messages_template"
 msgstr "Le modèles de message permet la personnalisation dynamique des e-mails."
 
-msgid "messages_histor"
+msgid "messages_history"
 msgstr "Historique des messages"
 
 msgid "desc_messages_history"
@@ -1308,3 +1354,114 @@ msgstr "Toutes les notes ont été soumises."
 
 msgid "encoding_status_notended"
 msgstr "Il reste encore des notes à encoder."
+
+msgid "origin"
+msgstr "Origine"
+
+msgid "recipient"
+msgstr "Destinataire"
+
+msgid "subject"
+msgstr "Sujet"
+
+msgid "myosis"
+msgstr "MyOsis"
+
+msgid "sent"
+msgstr "Envoyé"
+
+msgid "not_sent"
+msgstr "Pas envoyé"
+
+msgid "message"
+msgstr "Message"
+
+msgid "send_message_again"
+msgstr "Réenvoyer"
+
+msgid "btn_send_message_again_title"
+msgstr "Réenvoie le message au destinataire"
+
+msgid "lnk_message_history_read_title"
+msgstr "Afficher le message"
+
+msgid "txt_origin_title"
+msgstr "Origine du message"
+
+msgid "txt_recipient_title"
+msgstr "Destinataire du message (email ou nom ou nom d'utilisateur)"
+
+msgid "txt_subject_title"
+msgstr "Sujet du message"
+
+msgid "txt_reference_title"
+msgstr "Référence du template du message"
+
+msgid "btn_messages_history_search"
+msgstr "Recherche dans l'historique des messages"
+
+msgid "none"
+msgstr "Aucun"
+
+msgid "learning_unit_responsible"
+msgstr "Responsable du cours"
+
+msgid "learning_units_with_inscription_must_be_shown"
+msgstr "Tous les cours du professeur qui possèdent des inscriptions doivent être présents"
+
+msgid "learning_units_without_inscription_must_not_be_shown"
+msgstr "Les cours qui ne possèdent pas d'inscriptions ne devraient pas être présents"
+
+msgid "scores_saved_cannot_be_saved_anymore"
+msgstr "Notes sauvegardées, le bouton sauvegarder n'est plus présent"
+
+msgid "professors_must_not_submit_scores"
+msgstr "Les professeurs ne peuvent pas soumettre de notes"
+
+msgid "scores_encoding_tests"
+msgstr "Tests de l'encodage des notes"
+
+msgid "encode_as_coordinator"
+msgstr "Encoder en tant que coordinateur"
+
+msgid "encode_as_professor"
+msgstr "Encoder en tant que professeur"
+
+msgid "coordinator"
+msgstr "Coordinateur(trice)"
+
+msgid "encode_as_pgm"
+msgstr "Encoder en tant que gestionnaire de programme"
+
+msgid "coordinators_can_submit_partial_encoding"
+msgstr "Les coordinateurs peuvent soumettre des encodages partiels"
+
+msgid "submitted_scores_cannot_be_encoded_anymore"
+msgstr "Les notes soumises ne peuvent plus être encodées"
+
+msgid "double_encoding_test"
+msgstr "Double encodage des notes"
+
+msgid "in_accordance_to_regulation"
+msgstr "Conformément aux articles 104, 109 et 111 RGEE (Règlement Général des Examens) disponible au lien suivant"
+
+msgid "link_to_RGEE"
+msgstr "https://www.uclouvain.be/enseignement-reglements.html"
+
+msgid "only_submited_scores_can_be_double_encoded"
+msgstr "Seules les notes soumises peuvent être double encodées"
+
+msgid "lu_must_not_contain_decimal_scores"
+msgstr "Cette année d'étude n'accepte pas les notes décimales"
+
+msgid "lu_could_contain_decimal_scores"
+msgstr "Cette année d'étude accepte les notes décimales"
+
+msgid "validated_double_encoding_cannot_be_validated_anymore"
+msgstr "Un double encodage validé ne peut l'être une seconde fois"
+
+msgid "after_submission_a_message_must_be_sent"
+msgstr "Si un encodage est soumis , um message est envoyé au professeur de ce cours"
+
+msgid "template_error"
+msgstr "Aucun message n'a été envoyé : le modèle de message {} n'existe pas."

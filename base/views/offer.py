@@ -27,6 +27,7 @@ from base import models as mdl
 from . import layout
 from datetime import datetime
 from base.forms import OfferYearCalendarForm
+from django.utils.translation import ugettext_lazy as _
 
 
 def offers(request):
