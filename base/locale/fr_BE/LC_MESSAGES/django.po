@@ -379,7 +379,7 @@ msgstr "Encodage des notes"
 #: templates/assessments/assessments.html:44
 msgid "desc_lnk_score_encoding"
 msgstr ""
-"Ce processus aide les tuteurs à encoder les notes pendant les sessions "
+"Ce processus aide les enseignants à encoder les notes pendant les sessions "
 "d'examen."
 
 #: templates/assessments/online_double_encoding_form.html:34
@@ -831,7 +831,7 @@ msgstr "Assistants"
 
 #: templates/mandates.html:43
 msgid "desc_assistants"
-msgstr "Processus visant à aider les tuteurs pour l'encodage des notes."
+msgstr "Processus visant à aider les enseignants pour l'encodage des notes."
 
 #: templates/offer.html:50 templates/organization.html.py:41
 #: templates/profile.html:37 templates/structure.html.py:49
@@ -1052,7 +1052,7 @@ msgstr "Rechercher une entité"
 
 #: templates/studies.html:43
 msgid "desc_lnk_assessments"
-msgstr "Processus visant à aider les tuteurs pour l'encodage des notes."
+msgstr "Processus visant à aider les enseignants pour l'encodage des notes."
 
 #: templates/studies.html:47
 msgid "stages"
