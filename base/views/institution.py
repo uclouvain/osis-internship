@@ -66,21 +66,7 @@ def structure_read(request, structure_id):
                                                      'offers_years': offers_years})
 
 
-def structure_read_by_acronym(request, name):
-    structure = mdl.structure.find_by_acronym(name)
-    return layout.render(request, "structure.html", {'structure': structure})
-
-
-def structure_diagram(request, organization_id):
-    organization = mdl.organization.find_by_id(organization_id)
-    structure = organization.find_structure()
-    tags = organization.find_structure_tree()
-    data = json.dumps(tags)
-    return layout.render(request, "structure_organogram.html", {'structure': structure,
-                                                                'data': data})
-
-
-def structure_diagram_by_parent(request, parent_id):
+def structure_diagram(request, parent_id):
     structure = mdl.structure.find_by_id(parent_id)
     tags = mdl.structure.find_structure_hierarchy(structure)
     data = json.dumps(tags)

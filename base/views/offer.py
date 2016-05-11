@@ -32,15 +32,12 @@ from django.utils.translation import ugettext_lazy as _
 
 def offers(request):
     academic_yr = None
-
-    faculties = mdl.structure.find_by_type('FACULTY')
     academic_years = mdl.academic_year.find_academic_years()
 
     academic_year_calendar = mdl.academic_year.current_academic_year()
     if academic_year_calendar:
         academic_yr = academic_year_calendar.id
-    return layout.render(request, "offers.html", {'faculties': faculties,
-                                                  'academic_year': academic_yr,
+    return layout.render(request, "offers.html", {'academic_year': academic_yr,
                                                   'academic_years': academic_years,
                                                   'offers': [],
                                                   'init': "1"})

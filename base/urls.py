@@ -75,13 +75,11 @@ urlpatterns = [
     url(r'^studies/assessments/scores_encoding/notes_printing/(?P<learning_unit_year_id>[0-9]+)(?:/(?P<tutor_id>[0-9]+))?/$', score_encoding.notes_printing, name='notes_printing'),
     url(r'^studies/assessments/scores_encoding/xlsdownload/([0-9]+)/([0-9]+)/$',score_encoding.export_xls, name='scores_encoding_download'),
     url(r'^studies/assessments/scores_encoding/upload/(?P<learning_unit_year_id>[0-9]+)/$', upload_xls_utils.upload_scores_file,name='upload_encoding'),
+
     url(r'^structures/$', institution.structures, name='structures'),
     url(r'^structures/search$', institution.structures_search, name='structures_search'),
     url(r'^structures/([0-9]+)/$', institution.structure_read, name='structure_read'),
-
-    url(r'^structures/([0-9]+)/diagram/$', institution.structure_diagram, name='structure_diagram'),
-    url(r'^structure/([0-9]+)/diagram/$', institution.structure_diagram_by_parent, name='structure_diagram_by_parent'),
-    url(r'^structures/name/([A-Z]+)/$', institution.structure_read_by_acronym, name='structure_read_by_acronym'),
+    url(r'^structure/([0-9]+)/diagram/$', institution.structure_diagram, name='structure_diagram'),
 
     url(r'^organizations/$', organization.organizations, name='organizations'),
     url(r'^organizations/search$', organization.organizations_search, name='organizations_search'),
