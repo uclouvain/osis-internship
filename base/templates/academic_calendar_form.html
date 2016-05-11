@@ -98,6 +98,7 @@
                            value="{{ academic_calendar.highlight_shortcut | default_if_none:'' }}"
                            name="highlight_shortcut" id="txt_highlight_shortcut">
                     <font class="error">{{ form.highlight_shortcut.errors }}</font>
+                    <p style="margin-top: 5px;">http://osis.uclouvain.be/<span id="url"></span></p>
                 </div>
             </div>
             <br>
@@ -151,6 +152,7 @@
                                                   .attr("target", "_blank")
                                                   .attr("class", "btn btn-primary btn-lg")
                                                   .attr("role", "button").text('Avancer'));
+            $('#url').text($(this).val());
         }
     });
 
