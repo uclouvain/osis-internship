@@ -121,10 +121,10 @@
                                    {% endif %}
                                    {% if enrollment.session_exam.learning_unit_year.decimal_scores %}
                                         step="any"
-                                        oninvalid="InvalidScoreMsg(this,true)"
+                                        oninvalid="invalidScoreMsg(this,true,'{% trans 'decimal_score_not_allowed' %}','{% trans 'scores_gt_0_lt_20' %}')"
                                    {% else %}
                                         step="1"
-                                        oninvalid="InvalidScoreMsg(this,false)"
+                                        oninvalid="invalidScoreMsg(this,false,'{% trans 'decimal_score_not_allowed' %}','{% trans 'scores_gt_0_lt_20' %}')"
                                    {% endif %} >
                         </td>
                         <td>
@@ -251,17 +251,5 @@
             double_score_field.css("border", "1px solid lightgrey");
         }
     });
-
-    function InvalidScoreMsg(input,decimal_allowed){
-    if (input.value > 20){
-        input.setCustomValidity("{% trans 'scores_gt_0_lt_20' %}")
-    }
-    else if (input.value != Math.floor(input.value) && !decimal_allowed){
-        input.setCustomValidity("{% trans 'decimal_score_not_allowed' %}")
-    }
-    else{
-         input.setCustomValidity('');
-    }
-}
 </script>
 {% endblock %}
