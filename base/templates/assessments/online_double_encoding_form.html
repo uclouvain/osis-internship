@@ -43,7 +43,7 @@
 </div>
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h3 class="panel-title" style="font-size: 150%; color: #3399CC;">{{ learning_unit }}</h3>
+        <h3 class="panel-title" style="font-size: 150%; color: #3399CC;">{{ learning_unit_year }}</h3>
     </div>
     <div class="panel-body">
         <div class="row">
@@ -85,6 +85,10 @@
               action="{% url 'online_double_encoding_form' learning_unit_year.id %}"
               id="form_online_double_encoding">
             {% csrf_token %}
+            <button type="button" class="btn btn-primary" id="bt_compare_up">
+                <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> {% trans 'compare' %}</button>
+            <a class="btn btn-default" href="{% url 'online_encoding' learning_unit_year.id %}" role="button" id="bt_cancel_online_double_encoding_up">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
             <table class="table table-hover">
                 <thead>
                     <tr>
@@ -151,8 +155,10 @@
                 {% endfor %}
                 </tbody>
             </table>
-            <button type="submit" class="btn btn-primary" id="bt_compare"><span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> {% trans 'compare' %}</button>
-            <a class="btn btn-default" href="{% url 'online_encoding' learning_unit_year.id %}" role="button" id="bt_cancel_online_double_encoding"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
+            <button type="button" class="btn btn-primary" id="bt_compare_down">
+                <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> {% trans 'compare' %}</button>
+            <a class="btn btn-default" href="{% url 'online_encoding' learning_unit_year.id %}" role="button" id="bt_cancel_online_double_encoding_down">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
         </form>
     </div>
 </div>
@@ -250,6 +256,14 @@
         } else {
             double_score_field.css("border", "1px solid lightgrey");
         }
+    });
+
+    $("#bt_compare_up").click(function() {
+        $("#form_online_double_encoding").submit();
+    });
+
+    $("#bt_compare_down").click(function() {
+        $("#form_online_double_encoding").submit();
     });
 </script>
 {% endblock %}
