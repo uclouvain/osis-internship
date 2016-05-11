@@ -17,3 +17,11 @@ function invalidScoreMsg(input,decimal_allowed,message_decimal,message_max_score
          input.setCustomValidity('');
     }
 }
+
+function disable_enter(e) {
+    var keyCode = e.keyCode || e.which;
+    if (keyCode === 13) {
+        e.preventDefault();
+    }
+    return false;
+}

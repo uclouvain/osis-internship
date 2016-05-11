@@ -85,7 +85,7 @@
               action="{% url 'online_double_encoding_form' learning_unit_year.id %}"
               id="form_online_double_encoding">
             {% csrf_token %}
-            <button type="button" class="btn btn-primary" id="bt_compare_up">
+            <button type="submit" class="btn btn-primary" id="bt_compare_up">
                 <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> {% trans 'compare' %}</button>
             <a class="btn btn-default" href="{% url 'online_encoding' learning_unit_year.id %}" role="button" id="bt_cancel_online_double_encoding_up">
                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
@@ -155,7 +155,7 @@
                 {% endfor %}
                 </tbody>
             </table>
-            <button type="button" class="btn btn-primary" id="bt_compare_down">
+            <button type="submit" class="btn btn-primary" id="bt_compare_down">
                 <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> {% trans 'compare' %}</button>
             <a class="btn btn-default" href="{% url 'online_encoding' learning_unit_year.id %}" role="button" id="bt_cancel_online_double_encoding_down">
                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
@@ -258,12 +258,8 @@
         }
     });
 
-    $("#bt_compare_up").click(function() {
-        $("#form_online_double_encoding").submit();
-    });
-
-    $("#bt_compare_down").click(function() {
-        $("#form_online_double_encoding").submit();
+    $('#form_online_double_encoding').on('keyup keypress', function(e) {
+        disable_enter(e);
     });
 </script>
 {% endblock %}
