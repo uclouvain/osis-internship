@@ -59,12 +59,11 @@ def add_header_footer(canvas, doc):
     canvas.restoreState()
 
 
-def print_notes(academic_year, learning_unit_id, is_program_manager, list_exam_enrollment):
+def print_notes(academic_year, learning_unit_id, list_exam_enrollment):
     """
     Create a multi-page document
     :param academic_year: An object AcademicYear
     :param learning_unit_id: The id of the learning unit (from which to create the PDF notes sheet)
-    :param is_program_manager : True only if it is a program_manager.
     :param list_exam_enrollment: List of examEnrollments to print on the PDF.
     """
     filename = "%s.pdf" % _('scores_sheet')
@@ -83,7 +82,7 @@ def print_notes(academic_year, learning_unit_id, is_program_manager, list_exam_e
     styles.add(ParagraphStyle(name='Justify', alignment=TA_JUSTIFY))
     content = []
 
-    list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, styles, is_program_manager, content)
+    list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, styles, content)
 
     doc.build(content, onFirstPage=add_header_footer, onLaterPages=add_header_footer)
     pdf = buffer.getvalue()
@@ -117,7 +116,7 @@ def footer_building(canvas, doc, styles):
     footer.drawOn(canvas, doc.leftMargin, h)
 
 
-def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, styles, is_program_manager, content):
+def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, styles, content):
 
     content.append(Paragraph('''
                             <para spaceb=5>
@@ -161,7 +160,7 @@ def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, s
                 if rec_exam_enrollment.session_exam.offer_year_calendar.end_date:
                     end_date = rec_exam_enrollment.session_exam.offer_year_calendar.end_date.strftime('%d/%m/%Y')
                 end_page_infos_building(content, end_date)
-                legend_building(current_learning_unit_year, is_program_manager, content)
+                legend_building(current_learning_unit_year, content)
                 # Other programme - 4. page break
                 content.append(PageBreak())
                 data = headers_table()
@@ -201,10 +200,10 @@ def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, s
         if rec_exam_enrollment.session_exam.offer_year_calendar.end_date:
             end_date = rec_exam_enrollment.session_exam.offer_year_calendar.end_date.strftime('%d/%m/%Y')
         end_page_infos_building(content, end_date)
-        legend_building(current_learning_unit_year, is_program_manager, content)
+        legend_building(current_learning_unit_year, content)
 
 
-def legend_building(learning_unit_year, is_fac, content):
+def legend_building(learning_unit_year, content):
     p = ParagraphStyle('legend')
     p.textColor = 'grey'
     p.borderColor = 'grey'
@@ -217,7 +216,7 @@ def legend_building(learning_unit_year, is_fac, content):
                             &nbsp;
                         </para>
                         ''' , ParagraphStyle('normal')))
-    legend_text = "%s : %s" % (_('other_score_legend'), mdl.exam_enrollment.justification_label_authorized(is_fac))
+    legend_text = "%s : %s" % (_('other_score_legend'), mdl.exam_enrollment.justification_label_authorized())
     legend_text += "<br/>%s : %s" % (_('score_legend'), mdl.exam_enrollment.score_label_authorized())
     if not learning_unit_year.decimal_scores:
         legend_text += "<br/><font color=red>%s</font>" % _('unauthorized_decimal_for_this_activity')
