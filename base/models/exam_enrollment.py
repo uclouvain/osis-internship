@@ -29,19 +29,11 @@ from django.utils.translation import ugettext_lazy as _
 from base.models import person, learning_unit_year
 
 
-JUSTIFICATION_TYPES = (
-    ('ABSENT', _('absent')), # A
-    ('CHEATING', _('cheating')), # T
-    ('ILL', _('ill')), # I
-    ('JUSTIFIED_ABSENCE', _('justified_absence')), # AJ
-    ('SCORE_MISSING', _('score_missing'))) # ?
-
-
 class ExamEnrollmentAdmin(admin.ModelAdmin):
-    list_display = ('student', 'session_exam', 'score_final', 'justification_final', 'encoding_status', 'changed')
-    list_filter = ('encoding_status', 'session_exam__number_session')
-    fieldsets = ((None, {'fields': ('session_exam','learning_unit_enrollment','score_draft','justification_draft',
-                                    'score_final','justification_final')}),)
+    list_display = ('student', 'session_exam', 'score_final', 'justification_final', 'changed')
+    list_filter = ('session_exam__number_session',)
+    fieldsets = ((None, {'fields': ('session_exam', 'learning_unit_enrollment', 'score_draft', 'justification_draft',
+                                    'score_final', 'justification_final')}),)
     raw_id_fields = ('session_exam', 'learning_unit_enrollment')
     search_fields = ['learning_unit_enrollment__offer_enrollment__student__person__first_name',
                      'learning_unit_enrollment__offer_enrollment__student__person__last_name',
@@ -49,11 +41,20 @@ class ExamEnrollmentAdmin(admin.ModelAdmin):
                      'learning_unit_enrollment__learning_unit_year__acronym']
 
 
-class ExamEnrollment(models.Model):
-    ENCODING_STATUS_LIST = (
-        ('SAVED', _('saved')),
-        ('SUBMITTED', _('submitted')))
+# When the user inform 'A', we have to convert it to 'ABSENCE_UNJUSTIFIED'
+# When exporting the data to EPC, we have to convert:
+#    'ABSENCE_UNJUSTIFIED' => 'S'
+#    'ABSENCE_JUSTIFIED'   => 'M'
+#    'CHEATING'            => 'T'
+#    'SCORE_MISSING'       => '?'
+JUSTIFICATION_TYPES = (
+    ('ABSENCE_UNJUSTIFIED', _('absence_unjustified')),  # A -> S
+    ('ABSENCE_JUSTIFIED', _('absence_justified')),      # M
+    ('CHEATING', _('cheating')),                        # T
+    ('SCORE_MISSING', _('score_missing')))              # ?
 
+
+class ExamEnrollment(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     score_draft = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
@@ -62,7 +63,6 @@ class ExamEnrollment(models.Model):
     justification_draft = models.CharField(max_length=20, blank=True, null=True, choices=JUSTIFICATION_TYPES)
     justification_reencoded = models.CharField(max_length=20, blank=True, null=True, choices=JUSTIFICATION_TYPES)
     justification_final = models.CharField(max_length=20, blank=True, null=True, choices=JUSTIFICATION_TYPES)
-    encoding_status = models.CharField(max_length=9, blank=True, null=True, choices=ENCODING_STATUS_LIST)
     session_exam = models.ForeignKey('SessionExam')
     learning_unit_enrollment = models.ForeignKey('LearningUnitEnrollment')
 
@@ -71,6 +71,19 @@ class ExamEnrollment(models.Model):
 
     def __str__(self):
         return u"%s - %s" % (self.session_exam, self.learning_unit_enrollment)
+
+
+def get_letter_justication_type(justification_type):
+    if JUSTIFICATION_TYPES[0][0] == justification_type:
+        return 'A'
+    elif JUSTIFICATION_TYPES[1][0] == justification_type:
+        return 'M'
+    elif JUSTIFICATION_TYPES[2][0] == justification_type:
+        return 'T'
+    elif JUSTIFICATION_TYPES[3][0] == justification_type:
+        return '?'
+    else:
+        return ''
 
 
 def find_exam_enrollments_by_session(session_exm):

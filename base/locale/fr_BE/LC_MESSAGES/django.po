@@ -44,11 +44,11 @@ msgstr "Malade"
 msgid "ill_pdf_legend"
 msgstr "M=Malade"
 
-msgid "justified_absence"
-msgstr "Absence justifiée"
+msgid "absence_unjustified"
+msgstr "Absence unjustifiée"
 
-msgid "justified_absence_pdf_legend"
-msgstr "AJ=Absence justifiée"
+msgid "absence_justified"
+msgstr "Absence justifiée"
 
 msgid "score_missing"
 msgstr "Note manquante"
@@ -1095,8 +1095,8 @@ msgstr ""
 "Belgique"
 
 #: utils/pdf_utils.py:226
-msgid "other_score_legend"
-msgstr "Légende pour le champ 'Justification'"
+msgid "justification_legend"
+msgstr "Légende pour le champ 'Justification': %s"
 
 msgid "score_legend"
 msgstr "Légende pour le champ 'Note chiffrée'"
