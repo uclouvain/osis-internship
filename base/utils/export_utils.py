@@ -71,7 +71,7 @@ def export_xls(academic_year_id, is_fac, exam_enrollments):
                 score = "{0:.0f}".format(exam_enroll.score_final)
         justification = ""
         if exam_enroll.justification_final:
-            justification = dict(mdl.exam_enrollment.JUSTIFICATION_TYPES)[exam_enroll.justification_final]
+            justification = mdl.exam_enrollment.get_letter_justication_type(exam_enroll.justification_final)
         ws.append([str(academic_year),
                    str(exam_enroll.session_exam.number_session),
                    exam_enroll.session_exam.learning_unit_year.acronym,
@@ -90,8 +90,8 @@ def export_xls(academic_year_id, is_fac, exam_enrollments):
     number_session = list(exam_enrollments)[0].session_exam.number_session
     learn_unit_acronym = list(exam_enrollments)[0].session_exam.learning_unit_year.acronym
 
-    ws.append([str(_('other_score_legend')),
-               mdl.exam_enrollment.justification_label_authorized(is_fac)])
+    ws.append([str(_('justification_legend')), mdl.exam_enrollment.justification_label_authorized()])
+
     filename = "session_%s_%s_%s.xls" % (str(academic_year.year),
                                          str(number_session),
                                          learn_unit_acronym)

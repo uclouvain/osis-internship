@@ -34,11 +34,11 @@ msgstr "Ill"
 msgid "ill_pdf_legend"
 msgstr "I=Ill"
 
-msgid "justified_absence"
-msgstr "Justified absence"
+msgid "absence_unjustified"
+msgstr "Unjustified Absence"
 
-msgid "justified_absence_pdf_legend"
-msgstr "JA=Justified absence"
+msgid "absence_justified"
+msgstr "Justified absence"
 
 msgid "score_missing"
 msgstr "Score missing"
@@ -913,8 +913,8 @@ msgstr ""
 "Belgium"
 
 #: utils/pdf_utils.py:226
-msgid "other_score_legend"
-msgstr "Justification legend"
+msgid "justification_legend"
+msgstr "Justification legend: %s."
 
 msgid "score_legend"
 msgstr "Score legend"
@@ -945,9 +945,7 @@ msgstr "Exam board secretary"
 
 #: utils/pdf_utils.py:365
 msgid "return_doc_to_administrator"
-msgstr ""
-"Please return this document to the administrative office of the program "
-"administrator"
+msgstr "Please return this document to the administrative office before %s."
 
 #: utils/pdf_utils.py:381
 msgid "done_at"

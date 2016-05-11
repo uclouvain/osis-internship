@@ -141,13 +141,14 @@
                                     {% endif %}
                                    {% endif %}>
                                 <option value="None"></option>
-                                <option value="ABSENT">{% trans 'absent' %}</option>
+                                {% if is_program_manager %}
+                                    <option value="ABSENCE_UNJUSTIFIED">{% trans 'absent' %}</option>
+                                    <option value="ABSENCE_JUSTIFIED">{% trans 'absence_justified' %}</option>
+                                {% else %}
+                                    <option value="ABSENCE_UNJUSTIFIED">{% trans 'absence_unjustified' %}</option>
+                                {% endif %}
                                 <option value="CHEATING">{% trans 'cheating' %}</option>
                                 <option value="SCORE_MISSING">{% trans 'score_missing' %}</option>
-                                {% if is_program_manager %}
-                                    <option value="ILL" >{% trans 'ill' %}</option>
-                                    <option value="JUSTIFIED_ABSENCE">{% trans 'justified_absence' %}</option>)
-                                {% endif %}
                             </select>
                         </td>
                         <td>{{ enrollment.session_exam.offer_year_calendar.end_date | default_if_none:''|date:"j/m/Y" }}</td>
@@ -175,7 +176,7 @@
         }
         var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
 
-        if(target.val() != "" && $("#slt_double_justification_score_"+ enrollmentId).val() != "CHEATING") {
+        if(target.val() != "") {
             $("#slt_double_justification_score_" + enrollmentId).val('');
         }
         this.setCustomValidity('');
@@ -193,7 +194,7 @@
         var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
 
         // Checks whether the object contains an id.
-        if(target.val() != "CHEATING" && target.val() != "None") {
+        if(target.val() != "None") {
             $("#num_double_score_" + enrollmentId).val('');
         }
     });

@@ -176,7 +176,7 @@ def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, s
                     score = "{0:.0f}".format(rec_exam_enrollment.score_final)
             justification = ""
             if rec_exam_enrollment.justification_final:
-                justification = dict(mdl.exam_enrollment.JUSTIFICATION_TYPES)[rec_exam_enrollment.justification_final]
+                justification = mdl.exam_enrollment.get_letter_justication_type(rec_exam_enrollment.justification_final)
             sc = ""
             if score:
                 sc = "%s" % score
@@ -209,7 +209,7 @@ def legend_building(learning_unit_year, content):
     p.borderColor = 'grey'
     p.borderWidth = 1
     p.alignment = TA_CENTER
-    p.fontSize =8
+    p.fontSize = 8
     p.borderPadding = 5
     content.append(Paragraph('''
                         <para spaceb=5>
@@ -272,10 +272,10 @@ def main_data(academic_year, session_exam, styles, learning_unit_year, offer, co
     text_left_style = ParagraphStyle('structure_header')
     text_left_style.alignment = TA_LEFT
     text_left_style.fontSize = 10
-    p_struct_name = ""
-    p_struct_location = ""
-    p_struct_address = ""
-    p_phone_fax_data = ""
+    p_struct_name = Paragraph('''''', styles["Normal"])
+    p_struct_location = Paragraph('''''', styles["Normal"])
+    p_struct_address = Paragraph('''''', styles["Normal"])
+    p_phone_fax_data = Paragraph('''''', styles["Normal"])
     if offer.structure:
         structure_display = offer.structure
         faculty = mdl.structure.find_faculty(offer.structure)
@@ -328,14 +328,11 @@ def main_data(academic_year, session_exam, styles, learning_unit_year, offer, co
     else:
         deliberation_date = '-'
     content.append(Paragraph('%s : %s' % (_('deliberation_date'), deliberation_date), styles["Normal"]))
-
     content.append(Paragraph('%s : %s' % (_('academic_year'), str(academic_year)), text_left_style))
     content.append(Paragraph('Session : %d' % session_exam.number_session, text_left_style))
-
     content.append(Paragraph("<strong>%s : %s</strong>" % (learning_unit_year.acronym, learning_unit_year.title),
                              styles["Normal"]))
     content.append(Paragraph('''<b>%s : %s</b>''' % (_('program'), offer.acronym), styles["Normal"]))
-
     content.append(Spacer(1, 12))
 
 

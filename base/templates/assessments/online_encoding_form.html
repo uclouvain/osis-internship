@@ -132,18 +132,17 @@
                                 <select class="form-control" name="justification_{{ enrollment.id }}" id="slt_justification_score_{{ enrollment.id }}"
                                     tabindex="{{ enrollments|length|sum:forloop.counter }}">
                                     <option value="None"></option>
-                                    <option value="ABSENT" {% if enrollment.justification_final == 'ABSENT' %}selected{% endif %}>{% trans 'absent' %}</option>
+                                    <option value="ABSENCE_UNJUSTIFIED" {% if enrollment.justification_final == 'ABSENCE_UNJUSTIFIED' %}selected{% endif %}>{% trans 'absence_unjustified' %}</option>
+                                    <option value="ABSENCE_JUSTIFIED" {% if enrollment.justification_final == 'ABSENCE_JUSTIFIED' %}selected{% endif %}>{% trans 'absence_justified' %}</option>
                                     <option value="CHEATING" {% if enrollment.justification_final == 'CHEATING' %}selected{% endif %}>{% trans 'cheating' %}</option>
                                     <option value="SCORE_MISSING" {% if enrollment.justification_final == 'SCORE_MISSING' %}selected{% endif %}>{% trans 'score_missing' %}</option>
-                                    <option value="ILL" {% if enrollment.justification_final == 'ILL' %}selected{% endif %}>{% trans 'ill' %}</option>
-                                    <option value="JUSTIFIED_ABSENCE" {% if enrollment.justification_final == 'JUSTIFIED_ABSENCE' %}selected{% endif %}>{% trans 'justified_absence' %}</option>
                                 </select>
                             {%else%}
                                 <select class="form-control" name="justification_{{ enrollment.id }}" id="slt_justification_score_{{ enrollment.id }}"
                                         tabindex="{{ enrollments|length|sum:forloop.counter }}"
                                         {% if enrollment.score_final or enrollment.justification_final %} disabled {% endif %}>
                                   <option value="None"></option>
-                                  <option value="ABSENT" {% if enrollment.justification_draft == 'ABSENT' %}selected{% endif %}>{% trans 'absent' %}</option>
+                                  <option value="ABSENCE_UNJUSTIFIED" {% if enrollment.justification_draft == 'ABSENCE_UNJUSTIFIED' %}selected{% endif %}>{% trans 'absent' %}</option>
                                   <option value="CHEATING" {% if enrollment.justification_draft == 'CHEATING' %}selected{% endif %}>{% trans 'cheating' %}</option>
                                   <option value="SCORE_MISSING" {% if enrollment.justification_draft == 'SCORE_MISSING' %}selected{% endif %}>{% trans 'score_missing' %}</option>
                                 </select>
@@ -176,7 +175,7 @@ $("input[id^='num_score_']" ).change(function(event) {
     }
     var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
 
-    if(target.val() != "" && $("#slt_justification_score_"+ enrollmentId).val() != "CHEATING") {
+    if(target.val() != "") {
         $("#slt_justification_score_" + enrollmentId).val('');
     }
     this.setCustomValidity('');
@@ -192,11 +191,7 @@ $("select[id^='slt_justification_score_']" ).change(function(event) {
     }
 
     var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
-
-    // Checks whether the object contains an id.
-    if(target.val() != "CHEATING") {
-        $("#num_score_" + enrollmentId).val('');
-    }
+    $("#num_score_" + enrollmentId).val('');
 });
 
 $('#form_online_encoding').on('keyup keypress', function(e) {
