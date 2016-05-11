@@ -73,15 +73,12 @@ def update(academic_cal):
     offer_year_calendar_list = find_by_academic_calendar(academic_cal)
     if offer_year_calendar_list:
         for offer_year_calendar in offer_year_calendar_list:
-            if offer_year_calendar.customized:
-                # an email must be sent to the program manager
-                program_managers = program_manager.find_by_offer_year(offer_year_calendar.offer_year)
-                if program_managers and len(program_managers) > 0:
-                    error_message = send_mail.send_mail_after_academic_calendar_changes(academic_cal,
-                                                                                        offer_year_calendar,
-                                                                                        program_managers)
-                    if error_message and not sent_message_error:
-                        sent_message_error = error_message
+            if offer_year_calendar.customized: # case offerYearCalendar is already customized
+                # We update the new start date
+                # WARNING : this is TEMPORARY ; a solution for the sync from EPC to OSIS
+                #           because the start_date for scores_encodings doesn't exist in EPC
+                offer_year_calendar.start_date = academic_cal.start_date
+                offer_year_calendar.save()
             else:
                 offer_year_calendar.start_date = academic_cal.start_date
                 offer_year_calendar.end_date = academic_cal.end_date
