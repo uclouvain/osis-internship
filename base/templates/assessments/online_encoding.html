@@ -83,10 +83,10 @@
             {% if not is_program_manager %}
             <button type="button" class="btn btn-warning pull-right" data-toggle="modal" data-target="#pnl_submission_scores_modal"
                     title="{% trans 'definitive_save' %}"
-                    id="bt_score_submission_modal" {%if num_encoded_scores == 0 or not is_coordinator %} disabled{%endif%}><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'submission' %}</button>
+                    id="bt_score_submission_modal" {%if draft_scores_not_sumitted == 0 or not is_coordinator %} disabled{%endif%}><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'submission' %}</button>
             {% endif %}
             <br><br>
-            {% if draft_scores_not_sumitted > 0 %}
+            {% if not is_program_manager and draft_scores_not_sumitted > 0 %}
                 <div class="col-md-12">
                     <div class="form-group">
                         <div class="alert alert-dismissible alert-warning">
@@ -100,40 +100,6 @@
                     </div>
                 </div>
             {% endif %}
-            {% as_messages_info as messages_info %}
-            {%if messages_info %}
-                <div id="div_info_messages">
-                    <ul class="alert alert-success">
-                        {% for message in messages %}
-                            {% if 'info' in message.tags %}
-                                <li {% if message.tags%}{% endif %}>{{ message }}</li>
-                            {% endif %}
-                        {% endfor %}
-                    </ul>
-                </div>
-            {% endif %}
-            {% as_messages_warning as messages_warning %}
-            {% if messages_warning %}
-                <ul class="alert alert-danger">
-                    {% for message in messages %}
-                        {% if 'warning' in message.tags %}
-                            <li {%  if message.tags %}{% endif %}>{{ message }}</li>
-                        {% endif %}
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        {% endif %}
-        {% as_messages_error as messages_error %}
-        {% if messages_error %}
-            <div id="div_error_messages">
-                <ul class="alert alert-danger">
-                    {% for message in messages %}
-                        {% if 'error' in message.tags %}
-                            <li {%  if message.tags %}{% endif %}>{{ message }}</li>
-                        {%endif%}
-                    {% endfor %}
-                </ul>
-            </div>
         {% endif %}
         <table class="table table-hover">
             <thead>
@@ -222,7 +188,7 @@
                 <h4 class="modal-title" id="submissionScoresLabel">{% trans 'submission' %}</h4>
             </div>
             <div class="modal-body">
-                    <p class="help-block">{% trans 'help_submission_scores_label' as help_submission_scores_label %}{{ help_submission_scores_label | format:num_encoded_scores}}</p>
+                    <p class="help-block">{% trans 'help_submission_scores_label' as help_submission_scores_label %}{{ help_submission_scores_label | format:draft_scores_not_sumitted}}</p>
             </div>
             <div class="modal-footer">
                 <a class="btn btn-warning" href="{% url 'online_encoding_submission' learning_unit_year.id %}"
