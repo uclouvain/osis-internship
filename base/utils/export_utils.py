@@ -54,6 +54,7 @@ def export_xls(academic_year_id, is_fac, exam_enrollments):
     worksheet.append([str('Session: %s' % exam_enrollments[0].session_exam.number_session)])
     worksheet.append([str('')])
     worksheet.append([str(_('justification_legend') % mdl.exam_enrollment.justification_label_authorized())])
+    worksheet.append([str(_('score_legend') % "0 - 20")])
     worksheet.append([str('')])
 
     __columns_resizing(worksheet)

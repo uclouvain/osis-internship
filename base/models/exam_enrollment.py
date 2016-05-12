@@ -134,8 +134,8 @@ def calculate_exam_enrollment_progress(enrollments):
 
 def justification_label_authorized():
     return "%s, %s, %s" % (_('absent_pdf_legend'),
-                               _('cheating_pdf_legend'),
-                               _('score_missing_pdf_legend'))
+                           _('cheating_pdf_legend'),
+                           _('score_missing_pdf_legend'))
 
 
 def score_label_authorized():
