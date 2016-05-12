@@ -1474,3 +1474,21 @@ msgstr "Si un encodage est soumis , um message est envoyé au professeur de ce c
 
 msgid "template_error"
 msgstr "Aucun message n'a été envoyé : le modèle de message {} n'existe pas."
+
+msgid "tooltip_encode_for"
+msgstr "Encoder les notes"
+
+msgid "tooltip_encode_no_more_possible_for"
+msgstr "Toutes les notes ont été soumises.Il n'est plus possible d'encoder de notes pour ce cours."
+
+msgid "tooltip_inject_excel_no_more_possible_for"
+msgstr "Toutes les notes ont été soumises.Il n'est plus possible de soumettre de fichier excel pour ce cours."
+
+msgid "tooltip_double_encode_no_more_possible_for"
+msgstr "Toutes les notes ont été soumises.Il n'est plus possible de double encoder des notes pour ce cours."
+
+msgid "tooltip_double_encode_for"
+msgstr "Double encoder les notes"
+
+msgid "tooltip_select_excel_file_to_inject_scores"
+msgstr "Séclectionnez le fichier excel à soumettre"
