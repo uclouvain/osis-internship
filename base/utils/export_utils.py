@@ -71,7 +71,7 @@ def export_xls(academic_year_id, is_fac, exam_enrollments):
         else:
             end_date = exam_enroll.session_exam.offer_year_calendar.end_date.strftime('%d/%m/%Y')
         score = None
-        if exam_enroll.score_final:
+        if exam_enroll.score_final is not None:
             if exam_enroll.session_exam.learning_unit_year.decimal_scores:
                 score = "{0:.2f}".format(exam_enroll.score_final)
             else:
