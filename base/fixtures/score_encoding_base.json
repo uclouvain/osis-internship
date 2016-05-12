@@ -3078,7 +3078,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 1,
         "learning_unit_enrollment": 1
     }
@@ -3095,7 +3095,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 2,
         "learning_unit_enrollment": 1
     }
@@ -3112,7 +3112,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 3,
         "learning_unit_enrollment": 1
     }
@@ -3129,7 +3129,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 4,
         "learning_unit_enrollment": 2
     }
@@ -3146,7 +3146,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 5,
         "learning_unit_enrollment": 2
     }
@@ -3163,7 +3163,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 6,
         "learning_unit_enrollment": 2
     }
@@ -3180,7 +3180,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 7,
         "learning_unit_enrollment": 3
     }
@@ -3197,7 +3197,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 8,
         "learning_unit_enrollment": 3
     }
@@ -3214,7 +3214,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 9,
         "learning_unit_enrollment": 3
     }
@@ -3231,7 +3231,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 10,
         "learning_unit_enrollment": 4
     }
@@ -3248,7 +3248,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 11,
         "learning_unit_enrollment": 4
     }
@@ -3265,7 +3265,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 12,
         "learning_unit_enrollment": 4
     }
@@ -3282,7 +3282,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 13,
         "learning_unit_enrollment": 5
     }
@@ -3299,7 +3299,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 14,
         "learning_unit_enrollment": 5
     }
@@ -3316,7 +3316,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 15,
         "learning_unit_enrollment": 5
     }
@@ -3333,7 +3333,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 1,
         "learning_unit_enrollment": 6
     }
@@ -3350,7 +3350,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 2,
         "learning_unit_enrollment": 6
     }
@@ -3367,7 +3367,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 3,
         "learning_unit_enrollment": 6
     }
@@ -3384,7 +3384,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 4,
         "learning_unit_enrollment": 7
     }
@@ -3401,7 +3401,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 5,
         "learning_unit_enrollment": 7
     }
@@ -3418,7 +3418,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 6,
         "learning_unit_enrollment": 7
     }
@@ -3435,7 +3435,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 7,
         "learning_unit_enrollment": 8
     }
@@ -3452,7 +3452,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 8,
         "learning_unit_enrollment": 8
     }
@@ -3469,7 +3469,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 9,
         "learning_unit_enrollment": 8
     }
@@ -3486,7 +3486,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 10,
         "learning_unit_enrollment": 9
     }
@@ -3503,7 +3503,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 11,
         "learning_unit_enrollment": 9
     }
@@ -3520,7 +3520,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 12,
         "learning_unit_enrollment": 9
     }
@@ -3537,7 +3537,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 13,
         "learning_unit_enrollment": 10
     }
@@ -3554,7 +3554,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 14,
         "learning_unit_enrollment": 10
     }
@@ -3571,7 +3571,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 15,
         "learning_unit_enrollment": 10
     }
@@ -3588,7 +3588,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 1,
         "learning_unit_enrollment": 11
     }
@@ -3605,7 +3605,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 2,
         "learning_unit_enrollment": 11
     }
@@ -3622,7 +3622,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 3,
         "learning_unit_enrollment": 11
     }
@@ -3639,7 +3639,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 4,
         "learning_unit_enrollment": 12
     }
@@ -3656,7 +3656,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 5,
         "learning_unit_enrollment": 12
     }
@@ -3673,7 +3673,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 6,
         "learning_unit_enrollment": 12
     }
@@ -3690,7 +3690,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 7,
         "learning_unit_enrollment": 13
     }
@@ -3707,7 +3707,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 8,
         "learning_unit_enrollment": 13
     }
@@ -3724,7 +3724,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 9,
         "learning_unit_enrollment": 13
     }
@@ -3741,7 +3741,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 10,
         "learning_unit_enrollment": 14
     }
@@ -3758,7 +3758,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 11,
         "learning_unit_enrollment": 14
     }
@@ -3775,7 +3775,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 12,
         "learning_unit_enrollment": 14
     }
@@ -3792,7 +3792,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 13,
         "learning_unit_enrollment": 15
     }
@@ -3809,7 +3809,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 14,
         "learning_unit_enrollment": 15
     }
@@ -3826,7 +3826,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 15,
         "learning_unit_enrollment": 15
     }
@@ -3843,7 +3843,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 1,
         "learning_unit_enrollment": 16
     }
@@ -3860,7 +3860,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 2,
         "learning_unit_enrollment": 16
     }
@@ -3877,7 +3877,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 3,
         "learning_unit_enrollment": 16
     }
@@ -3894,7 +3894,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 4,
         "learning_unit_enrollment": 17
     }
@@ -3911,7 +3911,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 5,
         "learning_unit_enrollment": 17
     }
@@ -3928,7 +3928,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 6,
         "learning_unit_enrollment": 17
     }
@@ -3945,7 +3945,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 7,
         "learning_unit_enrollment": 18
     }
@@ -3962,7 +3962,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 8,
         "learning_unit_enrollment": 18
     }
@@ -3979,7 +3979,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 9,
         "learning_unit_enrollment": 18
     }
@@ -3996,7 +3996,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 10,
         "learning_unit_enrollment": 19
     }
@@ -4013,7 +4013,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 11,
         "learning_unit_enrollment": 19
     }
@@ -4030,7 +4030,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 12,
         "learning_unit_enrollment": 19
     }
@@ -4047,7 +4047,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 13,
         "learning_unit_enrollment": 20
     }
@@ -4064,7 +4064,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 14,
         "learning_unit_enrollment": 20
     }
@@ -4081,7 +4081,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 15,
         "learning_unit_enrollment": 20
     }
@@ -4098,7 +4098,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 1,
         "learning_unit_enrollment": 16
     }
@@ -4115,7 +4115,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 2,
         "learning_unit_enrollment": 16
     }
@@ -4132,7 +4132,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 3,
         "learning_unit_enrollment": 16
     }
@@ -4149,7 +4149,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 4,
         "learning_unit_enrollment": 22
     }
@@ -4166,7 +4166,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 5,
         "learning_unit_enrollment": 22
     }
@@ -4183,7 +4183,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 6,
         "learning_unit_enrollment": 22
     }
@@ -4200,7 +4200,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 7,
         "learning_unit_enrollment": 23
     }
@@ -4217,7 +4217,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 8,
         "learning_unit_enrollment": 23
     }
@@ -4234,7 +4234,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 9,
         "learning_unit_enrollment": 23
     }
@@ -4251,7 +4251,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 10,
         "learning_unit_enrollment": 24
     }
@@ -4268,7 +4268,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 11,
         "learning_unit_enrollment": 24
     }
@@ -4285,7 +4285,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 12,
         "learning_unit_enrollment": 24
     }
@@ -4302,7 +4302,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 13,
         "learning_unit_enrollment": 25
     }
@@ -4319,7 +4319,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 14,
         "learning_unit_enrollment": 25
     }
@@ -4336,7 +4336,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 15,
         "learning_unit_enrollment": 25
     }
@@ -4353,7 +4353,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 1,
         "learning_unit_enrollment": 31
     }
@@ -4370,7 +4370,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 2,
         "learning_unit_enrollment": 31
     }
@@ -4387,7 +4387,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 3,
         "learning_unit_enrollment": 31
     }
@@ -4404,7 +4404,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 4,
         "learning_unit_enrollment": 32
     }
@@ -4421,7 +4421,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 5,
         "learning_unit_enrollment": 32
     }
@@ -4438,7 +4438,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 6,
         "learning_unit_enrollment": 32
     }
@@ -4455,7 +4455,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 7,
         "learning_unit_enrollment": 33
     }
@@ -4472,7 +4472,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 8,
         "learning_unit_enrollment": 33
     }
@@ -4489,7 +4489,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 9,
         "learning_unit_enrollment": 33
     }
@@ -4506,7 +4506,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 10,
         "learning_unit_enrollment": 34
     }
@@ -4523,7 +4523,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 11,
         "learning_unit_enrollment": 34
     }
@@ -4540,7 +4540,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 12,
         "learning_unit_enrollment": 34
     }
@@ -4557,7 +4557,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 13,
         "learning_unit_enrollment": 35
     }
@@ -4574,7 +4574,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 14,
         "learning_unit_enrollment": 35
     }
@@ -4591,7 +4591,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 15,
         "learning_unit_enrollment": 35
     }
@@ -4608,7 +4608,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 1,
         "learning_unit_enrollment": 36
     }
@@ -4625,7 +4625,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 18,
         "learning_unit_enrollment": 36
     }
@@ -4642,7 +4642,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 3,
         "learning_unit_enrollment": 36
     }
@@ -4659,7 +4659,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 4,
         "learning_unit_enrollment": 37
     }
@@ -4676,7 +4676,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 5,
         "learning_unit_enrollment": 37
     }
@@ -4693,7 +4693,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 6,
         "learning_unit_enrollment": 37
     }
@@ -4710,7 +4710,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 7,
         "learning_unit_enrollment": 38
     }
@@ -4727,7 +4727,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 8,
         "learning_unit_enrollment": 38
     }
@@ -4744,7 +4744,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 9,
         "learning_unit_enrollment": 38
     }
@@ -4761,7 +4761,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 10,
         "learning_unit_enrollment": 39
     }
@@ -4778,7 +4778,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 11,
         "learning_unit_enrollment": 39
     }
@@ -4795,7 +4795,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 12,
         "learning_unit_enrollment": 39
     }
@@ -4812,7 +4812,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 13,
         "learning_unit_enrollment": 40
     }
@@ -4829,7 +4829,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 14,
         "learning_unit_enrollment": 40
     }
@@ -4846,7 +4846,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 15,
         "learning_unit_enrollment": 40
     }
@@ -4863,7 +4863,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 1,
         "learning_unit_enrollment": 41
     }
@@ -4880,7 +4880,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 2,
         "learning_unit_enrollment": 41
     }
@@ -4897,7 +4897,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 3,
         "learning_unit_enrollment": 41
     }
@@ -4914,7 +4914,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 4,
         "learning_unit_enrollment": 42
     }
@@ -4931,7 +4931,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 5,
         "learning_unit_enrollment": 42
     }
@@ -4948,7 +4948,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 6,
         "learning_unit_enrollment": 42
     }
@@ -4965,7 +4965,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 7,
         "learning_unit_enrollment": 43
     }
@@ -4982,7 +4982,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 8,
         "learning_unit_enrollment": 43
     }
@@ -4999,7 +4999,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 9,
         "learning_unit_enrollment": 43
     }
@@ -5016,7 +5016,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 10,
         "learning_unit_enrollment": 44
     }
@@ -5033,7 +5033,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 11,
         "learning_unit_enrollment": 44
     }
@@ -5050,7 +5050,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 12,
         "learning_unit_enrollment": 44
     }
@@ -5067,7 +5067,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 13,
         "learning_unit_enrollment": 45
     }
@@ -5084,7 +5084,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 14,
         "learning_unit_enrollment": 45
     }
@@ -5101,7 +5101,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 15,
         "learning_unit_enrollment": 45
     }
@@ -5118,7 +5118,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 17,
         "learning_unit_enrollment": 46
     }
@@ -5135,7 +5135,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 18,
         "learning_unit_enrollment": 46
     }
@@ -5152,7 +5152,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 19,
         "learning_unit_enrollment": 46
     }
@@ -5169,7 +5169,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 20,
         "learning_unit_enrollment": 47
     }
@@ -5186,7 +5186,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 21,
         "learning_unit_enrollment": 47
     }
@@ -5203,7 +5203,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 22,
         "learning_unit_enrollment": 47
     }
@@ -5220,7 +5220,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 23,
         "learning_unit_enrollment": 48
     }
@@ -5237,7 +5237,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 24,
         "learning_unit_enrollment": 48
     }
@@ -5254,7 +5254,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 25,
         "learning_unit_enrollment": 48
     }
@@ -5271,7 +5271,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 26,
         "learning_unit_enrollment": 49
     }
@@ -5288,7 +5288,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 27,
         "learning_unit_enrollment": 49
     }
@@ -5305,7 +5305,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 28,
         "learning_unit_enrollment": 49
     }
@@ -5322,7 +5322,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 29,
         "learning_unit_enrollment": 50
     }
@@ -5339,7 +5339,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 30,
         "learning_unit_enrollment": 50
     }
@@ -5356,7 +5356,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 31,
         "learning_unit_enrollment": 50
     }
@@ -5373,7 +5373,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 17,
         "learning_unit_enrollment": 51
     }
@@ -5390,7 +5390,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 18,
         "learning_unit_enrollment": 51
     }
@@ -5407,7 +5407,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 19,
         "learning_unit_enrollment": 51
     }
@@ -5424,7 +5424,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 20,
         "learning_unit_enrollment": 52
     }
@@ -5441,7 +5441,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 21,
         "learning_unit_enrollment": 52
     }
@@ -5458,7 +5458,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 22,
         "learning_unit_enrollment": 52
     }
@@ -5475,7 +5475,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 23,
         "learning_unit_enrollment": 53
     }
@@ -5492,7 +5492,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 24,
         "learning_unit_enrollment": 53
     }
@@ -5509,7 +5509,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 25,
         "learning_unit_enrollment": 53
     }
@@ -5526,7 +5526,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 26,
         "learning_unit_enrollment": 54
     }
@@ -5543,7 +5543,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 27,
         "learning_unit_enrollment": 54
     }
@@ -5560,7 +5560,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 28,
         "learning_unit_enrollment": 54
     }
@@ -5577,7 +5577,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 29,
         "learning_unit_enrollment": 55
     }
@@ -5594,7 +5594,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 30,
         "learning_unit_enrollment": 55
     }
@@ -5611,7 +5611,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 31,
         "learning_unit_enrollment": 55
     }
@@ -5628,7 +5628,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 17,
         "learning_unit_enrollment": 56
     }
@@ -5645,7 +5645,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 18,
         "learning_unit_enrollment": 56
     }
@@ -5662,7 +5662,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 19,
         "learning_unit_enrollment": 56
     }
@@ -5679,7 +5679,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 20,
         "learning_unit_enrollment": 57
     }
@@ -5696,7 +5696,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 21,
         "learning_unit_enrollment": 57
     }
@@ -5713,7 +5713,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 22,
         "learning_unit_enrollment": 57
     }
@@ -5730,7 +5730,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 23,
         "learning_unit_enrollment": 58
     }
@@ -5747,7 +5747,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 24,
         "learning_unit_enrollment": 58
     }
@@ -5764,7 +5764,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 25,
         "learning_unit_enrollment": 58
     }
@@ -5781,7 +5781,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 26,
         "learning_unit_enrollment": 59
     }
@@ -5798,7 +5798,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 27,
         "learning_unit_enrollment": 59
     }
@@ -5815,7 +5815,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 28,
         "learning_unit_enrollment": 59
     }
@@ -5832,7 +5832,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 29,
         "learning_unit_enrollment": 60
     }
@@ -5849,7 +5849,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 30,
         "learning_unit_enrollment": 60
     }
@@ -5866,7 +5866,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 31,
         "learning_unit_enrollment": 60
     }
@@ -5883,7 +5883,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 17,
         "learning_unit_enrollment": 61
     }
@@ -5900,7 +5900,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 18,
         "learning_unit_enrollment": 61
     }
@@ -5917,7 +5917,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 19,
         "learning_unit_enrollment": 61
     }
@@ -5934,7 +5934,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 20,
         "learning_unit_enrollment": 62
     }
@@ -5951,7 +5951,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 21,
         "learning_unit_enrollment": 62
     }
@@ -5968,7 +5968,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 22,
         "learning_unit_enrollment": 62
     }
@@ -5985,7 +5985,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 23,
         "learning_unit_enrollment": 63
     }
@@ -6002,7 +6002,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 24,
         "learning_unit_enrollment": 63
     }
@@ -6019,7 +6019,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 25,
         "learning_unit_enrollment": 63
     }
@@ -6036,7 +6036,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 26,
         "learning_unit_enrollment": 64
     }
@@ -6053,7 +6053,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 27,
         "learning_unit_enrollment": 64
     }
@@ -6070,7 +6070,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 28,
         "learning_unit_enrollment": 64
     }
@@ -6087,7 +6087,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 29,
         "learning_unit_enrollment": 65
     }
@@ -6104,7 +6104,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 30,
         "learning_unit_enrollment": 65
     }
@@ -6121,7 +6121,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 31,
         "learning_unit_enrollment": 65
     }
@@ -6138,7 +6138,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 17,
         "learning_unit_enrollment": 66
     }
@@ -6155,7 +6155,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 18,
         "learning_unit_enrollment": 66
     }
@@ -6172,7 +6172,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 19,
         "learning_unit_enrollment": 66
     }
@@ -6189,7 +6189,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 20,
         "learning_unit_enrollment": 67
     }
@@ -6206,7 +6206,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 21,
         "learning_unit_enrollment": 67
     }
@@ -6223,7 +6223,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 22,
         "learning_unit_enrollment": 67
     }
@@ -6240,7 +6240,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 23,
         "learning_unit_enrollment": 68
     }
@@ -6257,7 +6257,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 24,
         "learning_unit_enrollment": 68
     }
@@ -6274,7 +6274,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 25,
         "learning_unit_enrollment": 68
     }
@@ -6291,7 +6291,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 26,
         "learning_unit_enrollment": 69
     }
@@ -6308,7 +6308,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 27,
         "learning_unit_enrollment": 69
     }
@@ -6325,7 +6325,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 28,
         "learning_unit_enrollment": 69
     }
@@ -6342,7 +6342,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 29,
         "learning_unit_enrollment": 70
     }
@@ -6359,7 +6359,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 30,
         "learning_unit_enrollment": 70
     }
@@ -6376,7 +6376,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 31,
         "learning_unit_enrollment": 70
     }
@@ -6393,7 +6393,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 29,
         "learning_unit_enrollment": 71
     }
@@ -6410,7 +6410,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 30,
         "learning_unit_enrollment": 71
     }
@@ -6427,7 +6427,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 31,
         "learning_unit_enrollment": 71
     }
@@ -6444,7 +6444,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 17,
         "learning_unit_enrollment": 72
     }
@@ -6461,7 +6461,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 18,
         "learning_unit_enrollment": 72
     }
@@ -6478,7 +6478,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 19,
         "learning_unit_enrollment": 72
     }
@@ -6495,7 +6495,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 20,
         "learning_unit_enrollment": 73
     }
@@ -6512,7 +6512,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 21,
         "learning_unit_enrollment": 73
     }
@@ -6529,7 +6529,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 22,
         "learning_unit_enrollment": 73
     }
@@ -6546,7 +6546,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 23,
         "learning_unit_enrollment": 74
     }
@@ -6563,7 +6563,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 24,
         "learning_unit_enrollment": 74
     }
@@ -6580,7 +6580,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 25,
         "learning_unit_enrollment": 74
     }
@@ -6597,7 +6597,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 26,
         "learning_unit_enrollment": 75
     }
@@ -6614,7 +6614,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 27,
         "learning_unit_enrollment": 75
     }
@@ -6631,7 +6631,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 28,
         "learning_unit_enrollment": 75
     }
@@ -6648,7 +6648,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 29,
         "learning_unit_enrollment": 76
     }
@@ -6665,7 +6665,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 30,
         "learning_unit_enrollment": 76
     }
@@ -6682,7 +6682,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 31,
         "learning_unit_enrollment": 76
     }
@@ -6699,7 +6699,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 17,
         "learning_unit_enrollment": 77
     }
@@ -6716,7 +6716,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 18,
         "learning_unit_enrollment": 77
     }
@@ -6733,7 +6733,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 19,
         "learning_unit_enrollment": 77
     }
@@ -6750,7 +6750,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 20,
         "learning_unit_enrollment": 67
     }
@@ -6767,7 +6767,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 21,
         "learning_unit_enrollment": 67
     }
@@ -6784,7 +6784,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 22,
         "learning_unit_enrollment": 67
     }
@@ -6801,7 +6801,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 23,
         "learning_unit_enrollment": 79
     }
@@ -6818,7 +6818,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 24,
         "learning_unit_enrollment": 79
     }
@@ -6835,7 +6835,7 @@
         "justification_draft": null,
         "justification_reencoded": null,
         "justification_final": null,
-        "encoding_status": null,
+        
         "session_exam": 25,
         "learning_unit_enrollment": 79
     }
