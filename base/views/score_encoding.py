@@ -91,7 +91,7 @@ def online_encoding_form(request, learning_unit_year_id=None):
             score = request.POST.get('score_' + str(enrollment.id), None)
             justification = request.POST.get('justification_' + str(enrollment.id), None)
             modification_possible = True
-            if not data['is_program_manager'] and (enrollment.score_final is not None or enrollment.justification_final):
+            if not data['is_program_manager'] and (enrollment.score_final >= 0 or enrollment.justification_final):
                 modification_possible = False
             if modification_possible:
                 new_score, new_justification = _truncate_decimals(score, justification, decimal_scores_authorized)
@@ -142,7 +142,7 @@ def online_double_encoding_form(request, learning_unit_year_id=None):
 
         # Needs to filter by examEnrollments where the score_reencoded and justification_reencoded are not None
         exam_enrollments = [exam_enrol for exam_enrol in exam_enrollments
-                            if exam_enrol.score_reencoded is not None or exam_enrol.justification_reencoded]
+                            if exam_enrol.score_reencoded >= 0 or exam_enrol.justification_reencoded]
         data['enrollments'] = exam_enrollments
 
         if len(exam_enrollments) == 0:
@@ -187,7 +187,7 @@ def online_double_encoding_validation(request, learning_unit_year_id=None, tutor
             exam_enrol.justification_reencoded = None
 
             # A choice must be done between the first and the dubble encoding to save new changes.
-            if new_score is not None or new_justification:
+            if new_score >= 0 or new_justification:
                 # Case it is the program manager who validates the dubble encoding
                 if is_program_manager:
                     exam_enrol.score_final = new_score
@@ -221,14 +221,14 @@ def online_encoding_submission(request, learning_unit_year_id):
     # contains all sessions exams in exam_enrollments list
     all_sessions_exam = set()
     draft_scores_not_sumitted_yet = [exam_enrol for exam_enrol in exam_enrollments
-                                     if (exam_enrol.justification_draft or exam_enrol.score_draft is not None) and
+                                     if (exam_enrol.justification_draft or exam_enrol.score_draft >= 0) and
                                      not exam_enrol.justification_final and exam_enrol.score_final is None]
     for exam_enroll in draft_scores_not_sumitted_yet:
-        if (exam_enroll.score_draft is not None and exam_enroll.score_final is None) \
+        if (exam_enroll.score_draft >= 0 and exam_enroll.score_final is None) \
                 or (exam_enroll.justification_draft and not exam_enroll.justification_final):
             submitted_enrollments.append(exam_enroll)
-        if exam_enroll.score_draft is not None or exam_enroll.justification_draft:
-            if exam_enroll.score_draft is not None:
+        if exam_enroll.score_draft >= 0 or exam_enroll.justification_draft:
+            if exam_enroll.score_draft >= 0:
                 exam_enroll.score_final = exam_enroll.score_draft
             if exam_enroll.justification_draft:
                 exam_enroll.justification_final = exam_enroll.justification_draft
@@ -300,7 +300,7 @@ def get_score_encoded(enrollments):
     progress = 0
     if enrollments:
         for e in enrollments:
-            if e.score_final is not None or e.justification_final:
+            if e.score_final >= 0 or e.justification_final:
                 progress += 1
     return progress
 
@@ -314,11 +314,11 @@ def get_data(tutor):
         learn_unit_year = exam_enrol.session_exam.learning_unit_year
         score_encoding = group_by_learn_unit_year.get(learn_unit_year.id)
         if score_encoding:
-            if exam_enrol.score_final is not None or exam_enrol.justification_final:
+            if exam_enrol.score_final >= 0 or exam_enrol.justification_final:
                 score_encoding['exam_enrollments_encoded'] += 1
             score_encoding['total_exam_enrollments'] += 1
         else:
-            if exam_enrol.score_final is not None or exam_enrol.justification_final:
+            if exam_enrol.score_final >= 0 or exam_enrol.justification_final:
                 exam_enrollments_encoded = 1
             else:
                 exam_enrollments_encoded = 0
@@ -341,7 +341,7 @@ def get_data_online(learning_unit_year_id, request):
     progress = mdl.exam_enrollment.calculate_exam_enrollment_progress(exam_enrollments)
 
     draft_scores_not_sumitted = len([exam_enrol for exam_enrol in exam_enrollments
-                                    if (exam_enrol.justification_draft or exam_enrol.score_draft is not None) and
+                                    if (exam_enrol.justification_draft or exam_enrol.score_draft >= 0) and
                                     not exam_enrol.justification_final and exam_enrol.score_final is None])
 
     return {'section': 'scores_encoding',
@@ -365,18 +365,18 @@ def get_data_online_double(learning_unit_year_id, request):
                                                                 offers_year=offer_years_managed))
         # We must know the total count of enrollments (not only the encoded one)
         encoded_exam_enrollments = [enrollment for enrollment in total_exam_enrollments
-                                    if enrollment.justification_final or enrollment.score_final is not None]
+                                    if enrollment.justification_final or enrollment.score_final >= 0]
     else:
         total_exam_enrollments = list(mdl.exam_enrollment
                                       .find_for_score_encodings(mdl.session_exam.find_session_exam_number(),
                                                                 learning_unit_year_id=learning_unit_year_id))
         encoded_exam_enrollments = [enrollment for enrollment in total_exam_enrollments if
-                                    (enrollment.justification_draft or enrollment.score_draft is not None) and
+                                    (enrollment.justification_draft or enrollment.score_draft >= 0) and
                                     not enrollment.justification_final and enrollment.score_final is None]
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
 
     nb_final_scores = len([exam_enrol for exam_enrol in encoded_exam_enrollments
-                          if exam_enrol.justification_final or exam_enrol.score_final is not None])
+                          if exam_enrol.justification_final or exam_enrol.score_final >= 0])
     coordinator = mdl.tutor.find_responsible(learning_unit_year.learning_unit)
 
     return {'section': 'scores_encoding',
