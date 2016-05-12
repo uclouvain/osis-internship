@@ -123,7 +123,7 @@
                                 {% else %}
                                     {{ rowcolors }}
                                 {% endifchanged %}">
-                        <td>{% if enrollment.score_final or enrollment.justification_final %}
+                        <td>{% if enrollment.score_final != None or enrollment.justification_final %}
                                 <span class="glyphicon glyphicon-send" aria-hidden="true" style="color: green;" title="{% trans 'score_submitted' %}"></span>
                             {% endif %}</td>
                         <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>

@@ -64,14 +64,15 @@ def _truncate_decimals(new_score, new_justification, decimal_scores_authorized):
     :param new_justification:
     :return:
     """
-    if new_score:
-        new_score = new_score.strip().replace(',', '.')
-        if decimal_scores_authorized:
-            new_score = float(new_score)
+    if new_score is not None:
+        if new_score == '' or new_score == 'None':
+            new_score = None
         else:
-            new_score = int(float(new_score))
-    elif new_score == '':
-        new_score = None
+            new_score = new_score.strip().replace(',', '.')
+            if decimal_scores_authorized:
+                new_score = float(new_score)
+            else:
+                new_score = int(float(new_score))
     if new_justification == "None":
         new_justification = None
     return new_score, new_justification
