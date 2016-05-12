@@ -47,16 +47,23 @@ HEADER = [str(_('academic_year')),
 def export_xls(academic_year_id, is_fac, exam_enrollments):
     academic_year = mdl.academic_year.find_academic_year_by_id(academic_year_id)
 
-    wb = Workbook()
-    ws = wb.active
+    workbook = Workbook()
+    worksheet = workbook.active
 
-    __columns_resizing(ws)
-    ws.append(HEADER)
+    worksheet.append([str(exam_enrollments[0].learning_unit_enrollment.learning_unit_year)])
+    worksheet.append([str('Session: %s' % exam_enrollments[0].session_exam.number_session)])
+    worksheet.append([str('')])
+    worksheet.append([str(_('justification_legend') % mdl.exam_enrollment.justification_label_authorized())])
+    worksheet.append([str(_('score_legend') % "0 - 20")])
+    worksheet.append([str('')])
 
-    enrollment_counter = 1
+    __columns_resizing(worksheet)
+    worksheet.append(HEADER)
+
+    row_number = 7
     for exam_enroll in exam_enrollments:
         student = exam_enroll.learning_unit_enrollment.student
-        o = exam_enroll.learning_unit_enrollment.offer
+        offer = exam_enroll.learning_unit_enrollment.offer
         person = mdl.person.find_by_id(student.person.id)
 
         if exam_enroll.session_exam.offer_year_calendar.end_date is None:
@@ -72,10 +79,10 @@ def export_xls(academic_year_id, is_fac, exam_enrollments):
         justification = ""
         if exam_enroll.justification_final:
             justification = mdl.exam_enrollment.get_letter_justication_type(exam_enroll.justification_final)
-        ws.append([str(academic_year),
+        worksheet.append([str(academic_year),
                    str(exam_enroll.session_exam.number_session),
                    exam_enroll.session_exam.learning_unit_year.acronym,
-                   o.acronym,
+                   offer.acronym,
                    student.registration_id,
                    person.last_name,
                    person.first_name,
@@ -84,18 +91,16 @@ def export_xls(academic_year_id, is_fac, exam_enrollments):
                    end_date,
                    exam_enroll.id])
 
-        enrollment_counter += 1
-        __coloring_non_editable(ws, enrollment_counter, score, exam_enroll.justification_final)
+        row_number += 1
+        __coloring_non_editable(worksheet, row_number, score, exam_enroll.justification_final)
 
     number_session = list(exam_enrollments)[0].session_exam.number_session
     learn_unit_acronym = list(exam_enrollments)[0].session_exam.learning_unit_year.acronym
 
-    ws.append([str(_('justification_legend')), mdl.exam_enrollment.justification_label_authorized()])
-
     filename = "session_%s_%s_%s.xls" % (str(academic_year.year),
                                          str(number_session),
                                          learn_unit_acronym)
-    response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.ms-excel')
+    response = HttpResponse(save_virtual_workbook(workbook), content_type='application/vnd.ms-excel')
     response['Content-Disposition'] = 'attachment; filename=%s' % filename
     return response
 
@@ -123,7 +128,7 @@ def __columns_resizing(ws):
     col_id_exam_enrollment.hidden = True
 
 
-def __coloring_non_editable(ws, enrollment_counter, score, justification):
+def __coloring_non_editable(ws, row_number, score, justification):
     """
     Coloring of the non-editable columns
     """
@@ -131,10 +136,10 @@ def __coloring_non_editable(ws, enrollment_counter, score, justification):
     column_number = 1
     while column_number < 12:
         if column_number < 8 or column_number > 9:
-            ws.cell(row=enrollment_counter, column=column_number).style = style_no_modification
+            ws.cell(row=row_number, column=column_number).style = style_no_modification
         else:
             if not(score is None and justification is None):
-                ws.cell(row=enrollment_counter, column=8).style = style_no_modification
-                ws.cell(row=enrollment_counter, column=9).style = style_no_modification
+                ws.cell(row=row_number, column=8).style = style_no_modification
+                ws.cell(row=row_number, column=9).style = style_no_modification
 
         column_number += 1

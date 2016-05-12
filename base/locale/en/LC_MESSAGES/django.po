@@ -914,10 +914,10 @@ msgstr ""
 
 #: utils/pdf_utils.py:226
 msgid "justification_legend"
-msgstr "Justification legend: %s."
+msgstr "Justification legend: %s"
 
 msgid "score_legend"
-msgstr "Score legend"
+msgstr "Score legend: %s"
 
 #: utils/pdf_utils.py:228
 msgid "unauthorized_decimal_for_this_activity"
@@ -1281,8 +1281,36 @@ msgstr "This learning unit year could contain decimal scores"
 msgid "validated_double_encoding_cannot_be_validated_anymore"
 msgstr "Validated double encoding cannot be validated anymore"
 
+msgid "validation_dubble_encoding_mandatory"
+msgstr "Please enter a final validation for scores' differences detected after the dubble encoding "
+       "(below). If you leave, your dubble encoding will be lost."
+
 msgid "after_submission_a_message_must_be_sent"
 msgstr "If scores are submitted , a message is sent to all the professors of the learning unit"
 
 msgid "template_error"
 msgstr "No message was sent : the message template {} does not exist."
+
+msgid "tooltip_encode_for"
+msgstr "Encode scores"
+
+msgid "tooltip_encode_no_more_possible_for"
+msgstr "All the scores were submitted.It is not possible to encode scores anymore"
+
+msgid "tooltip_inject_excel_no_more_possible_for"
+msgstr "All the scores were submitted.It is not possible inject excell file anymore"
+
+msgid "tooltip_double_encode_no_more_possible_for"
+msgstr "All the scores were submitted.It is not possible to double encode scores anymore"
+
+msgid "tooltip_double_encode_for"
+msgstr "Double encode scores"
+
+msgid "tooltip_select_excel_file_to_inject_scores"
+msgstr "Select an excel file to inject scores."
+
+msgid "tooltip_dowload_excel_file"
+msgstr "Download the excel file"
+
+msgid "tooltip_print_scores"
+msgstr "Print the scores"

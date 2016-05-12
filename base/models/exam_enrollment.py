@@ -126,7 +126,7 @@ def find_by_enrollment_session(learning_unit_enrollment, session_exam_number_ses
 
 def calculate_exam_enrollment_progress(enrollments):
     if enrollments:
-        progress = len([e for e in enrollments if e.score_final is not None or e.justification_final]) / len(enrollments)
+        progress = len([e for e in enrollments if e.score_final or e.justification_final]) / len(enrollments)
     else:
         progress = 0
     return progress * 100
@@ -134,8 +134,8 @@ def calculate_exam_enrollment_progress(enrollments):
 
 def justification_label_authorized():
     return "%s, %s, %s" % (_('absent_pdf_legend'),
-                               _('cheating_pdf_legend'),
-                               _('score_missing_pdf_legend'))
+                           _('cheating_pdf_legend'),
+                           _('score_missing_pdf_legend'))
 
 
 def score_label_authorized():
