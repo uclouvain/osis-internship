@@ -60,7 +60,7 @@ def export_xls(academic_year_id, is_fac, exam_enrollments):
     __columns_resizing(worksheet)
     worksheet.append(HEADER)
 
-    row_number = 6
+    row_number = 7
     for exam_enroll in exam_enrollments:
         student = exam_enroll.learning_unit_enrollment.student
         offer = exam_enroll.learning_unit_enrollment.offer
