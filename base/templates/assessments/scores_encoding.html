@@ -4,6 +4,7 @@
 {% load list %}
 {% load get_at_index %}
 {% load dictionnary %}
+{% load format %}
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
 * designed to manage the core business of higher education institutions,
@@ -77,18 +78,22 @@
                             {% for note_detail in notes_list %}
                             <tr>
                                 <td>{{ note_detail.learning_unit_year.acronym }}</td>
-                                <td>{% if note_detail.exam_enrollments_encoded == note_detail.total_exam_enrollments %}
-                                        {{ note_detail.learning_unit_year.title }}
-                                    {%else%}
-                                        <a href="{% url 'online_encoding' note_detail.learning_unit_year.id %}"
+                                <td><a href="{% url 'online_encoding' note_detail.learning_unit_year.id %}"
                                            id="lnk_{{ note_detail.learning_unit_year.acronym }}">{{ note_detail.learning_unit_year.title }}</a>
-                                    {% endif %}
                                 </td>
                                 <td id="txt_progress_{{ note_detail.learning_unit_year.acronym }}" >{{ note_detail.exam_enrollments_encoded}}/{{ note_detail.total_exam_enrollments}}</td>
                                 <td><a class="btn btn-default"
                                        href="{% url 'online_encoding_form' note_detail.learning_unit_year.id%}"
                                        role="button"
-                                       id="lnk_encode_{{ note_detail.learning_unit_year.acronym }}">
+                                       id="lnk_encode_{{ note_detail.learning_unit_year.acronym }}"
+                                       data-toggle="tooltip" data-placement="right"
+                                       {% if note_detail.exam_enrollments_encoded == note_detail.total_exam_enrollments %}
+                                        disabled
+                                        title="{% trans 'tooltip_encode_no_more_possible_for' %}"
+                                       {% else %}
+                                        title="{% trans 'tooltip_encode_for' %}"
+                                       {% endif %}
+                                    >
                                     <i class="fa fa-hashtag"></i> {% trans 'encode' %}
                                 </a></td>
                             </tr>
@@ -116,17 +121,19 @@
                             {% for note_detail in notes_list %}
                             <tr>
                                 <td>{{ note_detail.learning_unit_year.acronym }}</td>
-                                <td>{% if note_detail.exam_enrollments_encoded == note_detail.total_exam_enrollments %}{{ note_detail.learning_unit_year.title }}{%else%}<a
+                                <td><a
                                         href="{% url 'online_encoding' note_detail.learning_unit_year.id %}"
                                         title="Visualiser/charger les notes pour le cours"
-                                        id="lnk_paper_encoding_messages_{{note_detail.learning_unit_year.id}}">{{ note_detail.learning_unit_year.title }}</a>{%endif%}
+                                        id="lnk_paper_encoding_messages_{{note_detail.learning_unit_year.id}}">{{ note_detail.learning_unit_year.title }}</a>
                                 </td>
                                 <td>{{ note_detail.exam_enrollments_encoded}}/{{ note_detail.total_exam_enrollments}}</td>
                                 <td>
-                                    <a class="btn btn-default {% if note_detail.exam_enrollments_encoded == note_detail.total_exam_enrollments %}disabled{% endif %}"
+                                    <a class="btn btn-default"
                                        href="{% url 'notes_printing' note_detail.learning_unit_year.id %}"
-                                       role="button" id="lnk_notes_printing_{{note_detail.learning_unit_year.id}}"><span
-                                            class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'print' %}</a>
+                                       role="button" id="lnk_notes_printing_{{note_detail.learning_unit_year.id}}"
+                                       data-toggle="tooltip" data-placement="right"
+                                       title="{% trans 'tooltip_print_scores' %}"
+                                    ><span class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'print' %}</a>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -147,16 +154,19 @@
                             {% for note_detail in notes_list %}
                             <tr>
                                 <td>{{ note_detail.learning_unit_year.acronym }}</td>
-                                <td>{%if note_detail.exam_enrollments_encoded == note_detail.total_exam_enrollments %}{{ note_detail.learning_unit_year.title }}{%else%}<a
+                                <td><a
                                         href="{% url 'online_encoding' note_detail.learning_unit_year.id %}"
                                         title="Visualiser/charger les notes pour le cours"
-                                        id="lnk_online_encoding_messages_{{note_detail.learning_unit_year.id}}">{{ note_detail.learning_unit_year.title }}</a>{%endif%}
+                                        id="lnk_online_encoding_messages_{{note_detail.learning_unit_year.id}}">{{ note_detail.learning_unit_year.title }}</a>
                                 </td>
                                 <td>{{ note_detail.exam_enrollments_encoded}}/{{ note_detail.total_exam_enrollments}}</td>
-                                <td><a class="btn btn-default {% if note_detail.exam_enrollments_encoded == note_detail.total_exam_enrollments %}disabled{% endif %}"
+                                <td><a class="btn btn-default"
                                        href="{% url 'scores_encoding_download' note_detail.learning_unit_year.id academic_year.id%}"
                                        role="button" title="{% trans 'hint_get_excel_file'%}"
-                                       id="lnk_scores_encoding_download_{{lu.id}}"><span
+                                       id="lnk_scores_encoding_download_{{lu.id}}"
+                                       data-toggle="tooltip" data-placement="right"
+                                       title="{% trans 'tooltip_dowload_excel_file' %}"
+                                ><span
                                         class="glyphicon glyphicon-download" aria-hidden="true"></span> {% trans 'get_excel_file'%}</a>
                                 </td>
                             </tr>

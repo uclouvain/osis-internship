@@ -1290,3 +1290,27 @@ msgstr "If scores are submitted , a message is sent to all the professors of the
 
 msgid "template_error"
 msgstr "No message was sent : the message template {} does not exist."
+
+msgid "tooltip_encode_for"
+msgstr "Encode scores"
+
+msgid "tooltip_encode_no_more_possible_for"
+msgstr "All the scores were submitted.It is not possible to encode scores anymore"
+
+msgid "tooltip_inject_excel_no_more_possible_for"
+msgstr "All the scores were submitted.It is not possible inject excell file anymore"
+
+msgid "tooltip_double_encode_no_more_possible_for"
+msgstr "All the scores were submitted.It is not possible to double encode scores anymore"
+
+msgid "tooltip_double_encode_for"
+msgstr "Double encode scores"
+
+msgid "tooltip_select_excel_file_to_inject_scores"
+msgstr "Select an excel file to inject scores."
+
+msgid "tooltip_dowload_excel_file"
+msgstr "Download the excel file"
+
+msgid "tooltip_print_scores"
+msgstr "Print the scores"
