@@ -60,4 +60,4 @@ class OfferProposition(models.Model):
         return self.structure.acronym
 
     def find_all():
-        return OfferProposition.objects.order_by('structure')
+        return OfferProposition.objects.order_by('structure').distinct()

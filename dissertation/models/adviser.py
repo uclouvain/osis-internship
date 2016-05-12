@@ -69,5 +69,5 @@ class Adviser(models.Model):
         queryset = Adviser.objects.all().filter(type='PRF')
         if terms:
             queryset = queryset.filter(
-                (Q(person__first_name__icontains=terms) | Q(person__last_name__icontains=terms)) & Q(type='PRF'))
+                (Q(person__first_name__icontains=terms) | Q(person__last_name__icontains=terms)) & Q(type='PRF')).distinct()
         return queryset
