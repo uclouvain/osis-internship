@@ -141,7 +141,7 @@
                                         {% endif %}
                                     {% endif %}>
                             <option value="None"></option>
-                            {% if is_program_manager or enrollment.score_final or enrollment.justification_final%}
+                            {% if is_program_manager or enrollment.score_final != None or enrollment.justification_final%}
                                 <option value="ABSENCE_JUSTIFIED" {% if enrollment.justification_final == 'ABSENCE_JUSTIFIED' %}selected{% endif %}>{% trans 'absence_justified' %}</option>
                             {% endif %}
                             <option value="ABSENCE_UNJUSTIFIED" {% if enrollment.justification_draft == 'ABSENCE_UNJUSTIFIED' or enrollment.justification_final == 'ABSENCE_UNJUSTIFIED' %}selected{% endif %}>
