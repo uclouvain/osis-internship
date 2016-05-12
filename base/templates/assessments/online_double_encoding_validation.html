@@ -238,7 +238,7 @@ $("button[id^='bt_take_draft_']").click(function(event) {
     }
 
     var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
-    var score_draft = $("#hdn_score_draft_"+ enrollmentId).val().trim();
+    var score_draft = $("#hdn_score_draft_"+ enrollmentId).val();
     var justification_draft = $("#hdn_justification_draft_"+ enrollmentId).val().trim();
     var justification_draft_display = $("#show_justification_draft_"+ enrollmentId).html();
 
