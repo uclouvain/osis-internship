@@ -914,10 +914,10 @@ msgstr ""
 
 #: utils/pdf_utils.py:226
 msgid "justification_legend"
-msgstr "Justification legend: %s."
+msgstr "Justification legend: %s"
 
 msgid "score_legend"
-msgstr "Score legend"
+msgstr "Score legend: %s"
 
 #: utils/pdf_utils.py:228
 msgid "unauthorized_decimal_for_this_activity"
