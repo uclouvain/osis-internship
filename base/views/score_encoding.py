@@ -143,6 +143,7 @@ def online_double_encoding_form(request, learning_unit_year_id=None):
         # Needs to filter by examEnrollments where the score_reencoded and justification_reencoded are not None
         exam_enrollments = [exam_enrol for exam_enrol in exam_enrollments
                             if exam_enrol.score_reencoded or exam_enrol.justification_reencoded]
+        exam_enrollments = _sort_for_encodings(exam_enrollments)
         data['enrollments'] = exam_enrollments
 
         if len(exam_enrollments) == 0:
@@ -378,6 +379,8 @@ def get_data_online_double(learning_unit_year_id, request):
                           if exam_enrol.justification_final or exam_enrol.score_final])
     coordinator = mdl.tutor.find_responsible(learning_unit_year.learning_unit)
 
+    encoded_exam_enrollments = _sort_for_encodings(encoded_exam_enrollments)
+
     return {'section': 'scores_encoding',
             'academic_year': academic_yr,
             'enrollments': encoded_exam_enrollments,
@@ -444,6 +447,21 @@ def refresh_list(request):
                           tutor_id=request.GET.get('tutor', None))
 
 
+def _sort_for_encodings(exam_enrollments):
+    """
+    Sort the list by
+     1. offerYear.acronym
+     2. student.lastname
+     3. sutdent.firstname
+    :param exam_enrollments: List of examEnrollments to sort
+    :return:
+    """
+    return sorted(exam_enrollments, key=lambda k:
+                k.learning_unit_enrollment.offer_enrollment.offer_year.acronym +
+                k.learning_unit_enrollment.offer_enrollment.student.person.last_name +
+                k.learning_unit_enrollment.offer_enrollment.student.person.first_name)
+
+
 def _get_exam_enrollments(user,
                           learning_unit_year_id=None, tutor_id=None, offer_year_id=None,
                           academic_year=None):
@@ -486,8 +504,5 @@ def _get_exam_enrollments(user,
                                                           tutor=tutor))
 
     # Ordering by offerear.acronym, then person.lastname & firstname
-    exam_enrollments = sorted(exam_enrollments, key=lambda k:
-                              k.learning_unit_enrollment.offer_enrollment.offer_year.acronym +
-                              k.learning_unit_enrollment.offer_enrollment.student.person.last_name +
-                              k.learning_unit_enrollment.offer_enrollment.student.person.first_name)
+    exam_enrollments = _sort_for_encodings(exam_enrollments)
     return exam_enrollments, is_program_manager

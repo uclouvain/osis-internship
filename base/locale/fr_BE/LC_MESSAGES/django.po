@@ -1243,7 +1243,7 @@ msgid "begin_date_lt_end_date"
 msgstr "La date de début doit etre égale ou inferieure à la date de fin"
 
 msgid "no_score_encoded_double_encoding_impossible"
-msgstr "Aucune nouvelle note encodé. Le double encodage nécessite de nouvelles notes."
+msgstr "Aucune nouvelle note encodée. Le double encodage nécessite de nouvelles notes."
 
 #: views/common.py:162
 msgid "minimum_one_criteria"
