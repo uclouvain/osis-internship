@@ -130,7 +130,7 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                                     if is_program_manager:
                                         notes_modifiable = True
                                     else:
-                                        if not exam_enrollment.score_final and not exam_enrollment.justification_final:
+                                        if exam_enrollment.score_final is None and not exam_enrollment.justification_final:
                                             notes_modifiable = True
                                         else:
                                             notes_modifiable = False
@@ -218,7 +218,7 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
         all_encoded = True
         enrollments = mdl.exam_enrollment.find_exam_enrollments_by_session(session_exam)
         for enrollment in enrollments:
-            if not enrollment.score_final and not enrollment.justification_final:
+            if enrollment.score_final is None and not enrollment.justification_final:
                 all_encoded = False
 
     if new_scores:

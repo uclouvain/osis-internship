@@ -28,7 +28,7 @@ from django.http import HttpResponse
 from django.conf import settings
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.enums import TA_JUSTIFY, TA_RIGHT, TA_CENTER, TA_LEFT
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, PageBreak, Table,TableStyle
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, PageBreak, Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import mm
 from reportlab.lib import colors
@@ -38,7 +38,7 @@ from base import models as mdl
 
 PAGE_SIZE = A4
 MARGIN_SIZE = 20 * mm
-COLS_WIDTH = [25*mm,45*mm,45*mm,25*mm,25*mm]
+COLS_WIDTH = [25*mm, 45*mm, 45*mm, 25*mm, 25*mm]
 
 
 def add_header_footer(canvas, doc):
@@ -101,7 +101,7 @@ def header_building(canvas, doc, styles):
 
     data_header = [[a, '%s' % _('ucl_denom_location'), p], ]
 
-    t_header=Table(data_header, [30*mm, 100*mm, 50*mm])
+    t_header = Table(data_header, [30*mm, 100*mm, 50*mm])
 
     t_header.setStyle(TableStyle([]))
 
@@ -149,9 +149,9 @@ def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, s
 
                 t = Table(data, COLS_WIDTH, repeatRows=1)
                 t.setStyle(TableStyle([
-                                   ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
-                                   ('BOX', (0,0), (-1,-1), 0.25, colors.black),
-                                   ('VALIGN',(0,0), (-1,-1), 'TOP'),
+                                   ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+                                   ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+                                   ('VALIGN', (0, 0), (-1, -1), 'TOP'),
                                    ('BACKGROUND', (0, 0), (-1, 0), colors.grey)]))
 
                 content.append(t)
@@ -187,11 +187,12 @@ def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, s
                          Paragraph(justification, styles['Normal'])])
         cpt += 1
 
-    if old_offer_programme :
-        main_data(academic_year, rec_exam_enrollment.session_exam, styles, current_learning_unit_year, old_offer_programme, content)
-        t = Table(data,COLS_WIDTH)
+    if old_offer_programme:
+        main_data(academic_year, rec_exam_enrollment.session_exam, styles, current_learning_unit_year,
+                  old_offer_programme, content)
+        t = Table(data, COLS_WIDTH)
         t.setStyle(TableStyle([('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
-                               ('BOX', (0, 0), (-1,-1), 0.25, colors.black),
+                               ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
                                ('VALIGN', (0, 0), (-1, -1), 'TOP'),
                                ('BACKGROUND', (0, 0), (-1, 0), colors.grey)]))
 
@@ -215,7 +216,7 @@ def legend_building(learning_unit_year, content):
                         <para spaceb=5>
                             &nbsp;
                         </para>
-                        ''' , ParagraphStyle('normal')))
+                        ''', ParagraphStyle('normal')))
     legend_text = _('justification_legend') % mdl.exam_enrollment.justification_label_authorized()
     legend_text += "<br/>%s" % (str(_('score_legend') % mdl.exam_enrollment.score_label_authorized()))
     if not learning_unit_year.decimal_scores:
@@ -304,9 +305,9 @@ def main_data(academic_year, session_exam, styles, learning_unit_year, offer, co
                                              styles["Normal"])
 
     data_structure = [[p_struct_name],
-                  [p_struct_location],
-                  [p_struct_address],
-                  [p_phone_fax_data]]
+                      [p_struct_location],
+                      [p_struct_address],
+                      [p_phone_fax_data]]
 
     header_coordinator_structure = [[get_data_coordinator(learning_unit_year, styles), data_structure]]
     table_header = Table(header_coordinator_structure, colWidths='*')
