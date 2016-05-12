@@ -119,7 +119,7 @@
                             <input type="number" min="0" max="20" name="score_{{ enrollment.id }}" id="num_double_score_{{ enrollment.id }}"
                                    tabindex="{{ forloop.counter }}" class="form-control"
                                    {% if not is_program_manager %}
-                                     {% if enrollment.score_final >= 0 or enrollment.justification_final %}
+                                     {% if enrollment.score_final is not None or enrollment.justification_final %}
                                        disabled
                                      {% endif %}
                                    {% endif %}
@@ -136,7 +136,7 @@
                             <select class="form-control" name="justification_{{ enrollment.id }}" id="slt_double_justification_score_{{ enrollment.id }}"
                                    tabindex="{{ enrollments|length|sum:forloop.counter }}"
                                    {% if not is_program_manager %}
-                                     {% if enrollment.score_final >= 0 or enrollment.justification_final %}
+                                     {% if enrollment.score_final is not None or enrollment.justification_final %}
                                         disabled
                                     {% endif %}
                                    {% endif %}>
