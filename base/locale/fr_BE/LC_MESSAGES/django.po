@@ -45,7 +45,7 @@ msgid "ill_pdf_legend"
 msgstr "M=Malade"
 
 msgid "absence_unjustified"
-msgstr "Absence unjustifiée"
+msgstr "Absence injustifiée"
 
 msgid "absence_justified"
 msgstr "Absence justifiée"
@@ -1468,6 +1468,10 @@ msgstr "Cette année d'étude accepte les notes décimales"
 
 msgid "validated_double_encoding_cannot_be_validated_anymore"
 msgstr "Un double encodage validé ne peut l'être une seconde fois"
+
+msgid "validation_dubble_encoding_mandatory"
+msgstr "Veuillez entrer une note finale pour toutes les différences détectées entre le premier encodage et le "
+       "double encodage (ci-dessous). Si vous choisissez d'annuler, votre double encodage sera perdu."
 
 msgid "after_submission_a_message_must_be_sent"
 msgstr "Si un encodage est soumis , um message est envoyé au professeur de ce cours"

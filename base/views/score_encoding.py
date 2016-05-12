@@ -152,6 +152,15 @@ def online_double_encoding_form(request, learning_unit_year_id=None):
         return layout.render(request, "assessments/online_double_encoding_validation.html", data)
 
 
+def _all_scores_are_validated(request, exam_enrollments):
+    for exam_enrol in exam_enrollments:
+        score_validated = request.POST.get('score_' + str(exam_enrol.id), None)
+        justification_validated = request.POST.get('justification_' + str(exam_enrol.id), None)
+        if (score_validated is None or score_validated == '') and not justification_validated:
+            return False
+    return True
+
+
 @login_required
 def online_double_encoding_validation(request, learning_unit_year_id=None, tutor_id=None):
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
@@ -171,6 +180,19 @@ def online_double_encoding_validation(request, learning_unit_year_id=None, tutor
 
     # Case the user validate his choice between the first and the dubble encoding
     elif request.method == 'POST':
+        # Needs to filter by examEnrollments where the score_reencoded and justification_reencoded are not None
+        exam_enrollments = [exam_enrol for exam_enrol in exam_enrollments
+                            if exam_enrol.score_reencoded or exam_enrol.justification_reencoded]
+        if not _all_scores_are_validated(request, exam_enrollments):
+            messages.add_message(request, messages.ERROR, "%s" % _('validation_dubble_encoding_mandatory'))
+            return layout.render(request, "assessments/online_double_encoding_validation.html",
+                                 {'section': 'scores_encoding',
+                                  'academic_year': academic_year,
+                                  'learning_unit_year': learning_unit_year,
+                                  'enrollments': exam_enrollments,
+                                  'justifications': mdl.exam_enrollment.JUSTIFICATION_TYPES,
+                                  'is_program_manager': is_program_manager})
+
         # contains all SessionExams where the encoding is not terminated (progression < 100%)
         sessions_exam_still_open = set()
         # contains all sessions exams in exam_enrollments list
