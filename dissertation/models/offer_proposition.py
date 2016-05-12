@@ -24,33 +24,38 @@
 #
 ##############################################################################
 from django.db import models
-from django.utils import timezone
-from django.contrib import admin
 from base.models import offer_year
 
+
 class OfferProposition(models.Model):
-    title = models.CharField(max_length=200)#Nom du programme de cours
+    title = models.CharField(max_length=200)  # Nom du programme de cours
     offer_year = models.ForeignKey(offer_year.OfferYear)
 
-    adviser_reader = models.BooleanField(default=False)
-    # L enseignant peut il proposer un lecteur
+    ####################
+    # READERS PARAMETERS
+    ####################
 
-    commission_validation = models.BooleanField(default=False)
-    #Y a t il une commision de validation
+    # Do the students manage their readers ?
+    # True = students can manage their readers
+    # False = students cannot manage their readers, only the managers can
+    student_can_manage_readers = models.BooleanField(default=True)
 
-    commission_readers = models.BooleanField(default=True)
-    #la commission de lecture est elle gérée par le secrétariat ?
-    #True pour Oui. Flase par l'étudiant (exemple :FOPA)
+    # Can students always see readers ?
+    # True = Yes
+    # False = No, only when the date is ok
+    readers_visibility_date_for_students = models.BooleanField(default=False)
 
-    evaluation_first_cicle = models.BooleanField(default=False)
-    #la commission de lecture est-elle gérée par le secrétariat ? True pour Oui.
-    #Flase pour géré par l'étudiant (exemple : requis FOPA)
+    # Can advisers suggest readers when creating proposition_dissertation ?
+    adviser_can_suggest_reader = models.BooleanField(default=False)
 
-    visibility_commission_readers = models.BooleanField(default=False)
-    #Quelle visibilité pour la commission :
-    #True : la visibilité est active dés la création de la commission
-    #False : elle n'est visible qu'après l'encodage du titre définitif
+    ##################
+    # STEPS PARAMETERS
+    ##################
+    # Is there a first year evaluation ?
+    evaluation_first_year = models.BooleanField(default=False)
 
+    # Is there a validation commission ?
+    validation_commission_exists = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title

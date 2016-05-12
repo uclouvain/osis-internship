@@ -24,35 +24,37 @@
 #
 ##############################################################################
 from django.db import models
-from django.utils import timezone
-from django.contrib import admin
-from base.models import person
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
+from django.contrib import admin
+
+
+class AdviserAdmin(admin.ModelAdmin):
+    list_display = ('person', 'type')
 
 
 class Adviser(models.Model):
     TYPES_CHOICES = (
         ('PRF', _('Professor')),
         ('MGR', _('Manager')),
-        )
+    )
 
-    person = models.OneToOneField('base.Person',on_delete=models.CASCADE)
+    person = models.OneToOneField('base.Person', on_delete=models.CASCADE)
     type = models.CharField(max_length=3, choices=TYPES_CHOICES, default='PRF')
     email_accept = models.BooleanField(default=False)
     phone_accept = models.BooleanField(default=False)
     office_accept = models.BooleanField(default=False)
-    comment=models.TextField(default='', blank=True)
+    comment = models.TextField(default='', blank=True)
 
     def __str__(self):
         first_name = ""
         middle_name = ""
         last_name = ""
-        if self.person.first_name :
+        if self.person.first_name:
             first_name = self.person.first_name
-        if self.person.middle_name :
+        if self.person.middle_name:
             middle_name = self.person.middle_name
-        if self.person.last_name :
+        if self.person.last_name:
             last_name = self.person.last_name + ","
         return u"%s %s %s" % (last_name.upper(), first_name, middle_name)
 
@@ -66,5 +68,6 @@ class Adviser(models.Model):
     def search(terms):
         queryset = Adviser.objects.all().filter(type='PRF')
         if terms:
-            queryset = queryset.filter((Q(person__first_name__icontains=terms)|Q(person__last_name__icontains=terms))&Q(type='PRF'))
+            queryset = queryset.filter(
+                (Q(person__first_name__icontains=terms) | Q(person__last_name__icontains=terms)) & Q(type='PRF'))
         return queryset

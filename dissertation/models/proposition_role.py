@@ -24,9 +24,8 @@
 #
 ##############################################################################
 from django.db import models
-from django.utils import timezone
-from django.contrib import admin
 from dissertation.models import proposition_dissertation, adviser
+
 
 class PropositionRole(models.Model):
     title = models.CharField(max_length=200)

@@ -24,11 +24,10 @@
 #
 ##############################################################################
 from django.db import models
-from django.utils import timezone
-from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 from dissertation.models import proposition_dissertation
 from base.models import academic_year, learning_unit_enrollment
+
 
 class Dissertation(models.Model):
     STATUS_CHOICES = (
@@ -46,17 +45,17 @@ class Dissertation(models.Model):
         ('TO_DEFEND', _('To be defended')),
         ('DEFENDED', _('Defended')),
         ('ENDED', _('Ended')),
-        )
+    )
 
-    title                       = models.CharField(max_length=200)
-    status                      = models.CharField(max_length=12, choices=STATUS_CHOICES, default='DRAFT')
-    academic_year               = models.ForeignKey(academic_year.AcademicYear)
-    learning_unit_enrollment    = models.ForeignKey(learning_unit_enrollment.LearningUnitEnrollment)
-    proposition_dissertation    = models.ForeignKey(proposition_dissertation.PropositionDissertation)
-    description                 = models.TextField(blank=True, null=True)
-    active                      = models.BooleanField(default=True)
-    creation_date               = models.DateTimeField(auto_now_add=True, editable=False)
-    modification_date           = models.DateTimeField(auto_now=True, editable=False)
+    title = models.CharField(max_length=200)
+    status = models.CharField(max_length=12, choices=STATUS_CHOICES, default='DRAFT')
+    academic_year = models.ForeignKey(academic_year.AcademicYear)
+    learning_unit_enrollment = models.ForeignKey(learning_unit_enrollment.LearningUnitEnrollment)
+    proposition_dissertation = models.ForeignKey(proposition_dissertation.PropositionDissertation)
+    description = models.TextField(blank=True, null=True)
+    active = models.BooleanField(default=True)
+    creation_date = models.DateTimeField(auto_now_add=True, editable=False)
+    modification_date = models.DateTimeField(auto_now=True, editable=False)
 
     def __str__(self):
         return self.title

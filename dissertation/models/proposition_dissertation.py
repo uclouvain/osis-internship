@@ -25,10 +25,10 @@
 ##############################################################################
 from django.db import models
 from django.utils import timezone
-from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 from dissertation.models import adviser, offer_proposition
 from django.db.models import Q
+
 
 class PropositionDissertation(models.Model):
     TYPES_CHOICES = (
@@ -67,11 +67,12 @@ class PropositionDissertation(models.Model):
     def search(terms=None):
         queryset = PropositionDissertation.objects.all()
         if terms:
-            queryset = queryset.filter( Q(title__icontains=terms)
-                                      | Q(description__icontains=terms)
-                                      | Q(author__person__first_name__icontains=terms)
-                                      | Q(author__person__middle_name__icontains=terms)
-                                      | Q(author__person__last_name__icontains=terms)
-                                      | Q(offer_proposition__title__icontains=terms)
-                                      )
+            queryset = queryset.filter(
+                Q(title__icontains=terms) |
+                Q(description__icontains=terms) |
+                Q(author__person__first_name__icontains=terms) |
+                Q(author__person__middle_name__icontains=terms) |
+                Q(author__person__last_name__icontains=terms) |
+                Q(offer_proposition__title__icontains=terms)
+            )
         return queryset

@@ -41,34 +41,34 @@
         <div class="row">
           <div class="col-md-1"><i class="fa fa-lightbulb-o" style="font-size: 400%; color: #6699FF;"></i></div>
           <div class="col-md-5">
-            <h4 class="media-heading"><a href="{% url 'proposition_dissertations' %}" id="lnk_propositions_dissertations" >{% trans 'Subjects' %}</a></h4>
-            <p>{% trans 'This process helps persons while subjects encoding.' %}</p>
+            <h4 class="media-heading"><a href="{% url 'proposition_dissertations' %}" id="lnk_propositions_dissertations" >{% trans 'subjects' %}</a></h4>
+            <p>{% trans 'desc_lnk_propositions_dissertations' %}</p>
           </div>
           <div class="col-md-1"><i class="fa fa-cogs" style="font-size: 400%; color: #6699FF;"></i></div>
           <div class="col-md-5">
-            <h4 class="media-heading"><a href="{% url 'informations' %}" id="lnk_informations" >{% trans 'My informations' %}</a></h4>
-            <p>{% trans 'This process helps persons while informations encoding.' %}</p>
+            <h4 class="media-heading"><a href="{% url 'informations' %}" id="lnk_informations" >{% trans 'my_informations' %}</a></h4>
+            <p>{% trans 'desc_lnk_informations' %}</p>
           </div>
         </div>
       {% elif adviser.type == 'MGR' %}
         <div class="row">
           <div class="col-md-1"><i class="fa fa-lightbulb-o" style="font-size: 400%; color: #6699FF;"></i></div>
           <div class="col-md-5">
-            <h4 class="media-heading"><a href="{% url 'manager_proposition_dissertations' %}" id="lnk_manager_proposition_dissertations" >{% trans 'Subjects' %}</a></h4>
-            <p>{% trans 'This process helps persons while subjects encoding.' %}</p>
+            <h4 class="media-heading"><a href="{% url 'manager_proposition_dissertations' %}" id="lnk_manager_proposition_dissertations" >{% trans 'subjects' %}</a></h4>
+            <p>{% trans 'desc_lnk_manager_proposition_dissertations' %}</p>
           </div>
           <div class="col-md-1"><i class="fa fa-users" style="font-size: 400%; color: #6699FF;"></i></div>
           <div class="col-md-5">
-            <h4 class="media-heading"><a href="{% url 'manager_informations' %}" id="lnk_manager_informations" >{% trans 'Teachers' %}</a></h4>
-            <p>{% trans 'This process helps persons while informations encoding.' %}</p>
+            <h4 class="media-heading"><a href="{% url 'manager_informations' %}" id="lnk_manager_informations" >{% trans 'teachers' %}</a></h4>
+            <p>{% trans 'desc_lnk_manager_informations' %}</p>
           </div>
         </div>
         <br>
         <div class="row">
           <div class="col-md-1"><i class="fa fa-cog" style="font-size: 400%; color: #6699FF;"></i></div>
           <div class="col-md-5">
-            <h4 class="media-heading"><a href="{% url 'manager_offer_parameters' %}" id="lnk_manager_offer_parameters" >{% trans 'Parameters' %}</a></h4>
-            <p>{% trans 'This process helps persons while parameters encoding.' %}</p>
+            <h4 class="media-heading"><a href="{% url 'manager_offer_parameters' %}" id="lnk_manager_offer_parameters" >{% trans 'parameters' %}</a></h4>
+            <p>{% trans 'desc_lnk_manager_offer_parameters' %}</p>
           </div>
         </div>
       {% endif %}

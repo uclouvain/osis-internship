@@ -29,7 +29,8 @@
 {% block breadcrumb %}
   <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'Studies' %}</a></li>
   <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'Dissertations' %}</a></li>
-  <li class="active">{% trans 'My informations' %}</li>
+  <li><a href="{% url 'manager_offer_parameters' %}" id="lnk_parameters">{% trans 'Parameters' %}</a></li>
+  <li class="active">{% trans 'Parameters' %} {{ offer_proposition.title }}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
@@ -46,15 +47,42 @@
       </div>
       <div class="row">
         <div class="col-md-4">
-          <label>{% trans 'Adviser Reader' %}</label> : {{ offer_proposition.adviser_reader|yesno:"Yes,No" }}
-          <br><br>
-          <label>{% trans 'Commission Validation' %}</label> : {{ offer_proposition.commission_validation|yesno:"Yes,No" }}
-          <br><br>
-          <label>{% trans 'Commission Readers' %}</label> : {{ offer_proposition.commission_readers|yesno:"Yes,No" }}
-          <br><br>
-          <label>{% trans 'Evaluation First Cicle' %}</label> : {{ offer_proposition.evaluation_first_cicle|yesno:"Yes,No" }}
-          <br><br>
-          <label>{% trans 'Visibility Commission Readers' %}</label> : {{ offer_proposition.visibility_commission_readers|yesno:"Yes,No" }}
+          <label>{% trans 'student_can_manage_readers' %}</label> :
+        </div>
+        <div class="col-md-2">
+          {{ offer_proposition.student_can_manage_readers|yesno:"Yes,No" }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <label>{% trans 'readers_visibility_date_for_students' %}</label> :
+        </div>
+        <div class="col-md-2">
+          {{ offer_proposition.readers_visibility_date_for_students|yesno:"Yes,No" }}
+        </div>
+      </div>
+       <div class="row">
+        <div class="col-md-4">
+          <label>{% trans 'adviser_can_suggest_reader' %}</label> :
+        </div>
+        <div class="col-md-2">
+          {{ offer_proposition.adviser_can_suggest_reader|yesno:"Yes,No" }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <label>{% trans 'evaluation_first_year' %}</label> :
+        </div>
+        <div class="col-md-2">
+           {{ offer_proposition.evaluation_first_year|yesno:"Yes,No" }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <label>{% trans 'validation_commission_exists' %}</label> :
+        </div>
+        <div class="col-md-2">
+           {{ offer_proposition.validation_commission_exists|yesno:"Yes,No" }}
         </div>
       </div>
     </div>

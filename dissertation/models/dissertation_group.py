@@ -24,9 +24,8 @@
 #
 ##############################################################################
 from django.db import models
-from django.utils import timezone
-from django.contrib import admin
 from dissertation.models import dissertation
+
 
 class DissertationGroup(models.Model):
     dissertation = models.ForeignKey(dissertation.Dissertation)
