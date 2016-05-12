@@ -125,7 +125,11 @@
                             <td>{{ note_detail.tutor_person.last_name }} {{ note_detail.tutor_person.first_name }}</td>
                             <td>{{ note_detail.exam_enrollments_encoded}}/{{ note_detail.total_exam_enrollments}}</td>
                             <td><a class="btn btn-default"
-                                           href="{% url 'online_encoding_form' note_detail.learning_unit_year.id %}" role="button" id="lnk_encode"><i class="fa fa-hashtag"></i> {% trans 'encode' %}</a></td>
+                                   href="{% url 'online_encoding_form' note_detail.learning_unit_year.id %}"
+                                   role="button" id="lnk_encode"
+                                   data-toggle="tooltip" data-placement="right"
+                                   title="{% trans 'tooltip_encode_for' %}"
+                            ><i class="fa fa-hashtag"></i> {% trans 'encode' %}</a></td>
                         </tr>
                         {% endfor %}
                         </tbody>
@@ -152,14 +156,13 @@
                             <td>{{ note_detail.tutor_person.last_name }}, {{ note_detail.tutor_person.first_name }}</td>
                             <td>{{ note_detail.exam_enrollments_encoded}}/{{ note_detail.total_exam_enrollments}}</td>
                             <td>
-                                <a class="btn btn-default
-                                        {% if note_detail.exam_enrollments_encoded ==  note_detail.total_exam_enrollments%}
-                                          disabled
-                                        {% endif %}"
+                                <a class="btn btn-default"
                                    href="{% url 'scores_encoding_download' note_detail.learning_unit_year.id academic_year.id%}"
-                                   role="button" title="{% trans 'hint_get_excel_file'%}"
-                                   id="lnk_scores_encoding_download_{{learning_unit_year.id}}"><span
-                                        class="glyphicon glyphicon-download" aria-hidden="true"></span> {% trans 'get_excel_file'%}</a>
+                                   role="button"
+                                   id="lnk_scores_encoding_download_{{learning_unit_year.id}}"
+                                   data-toggle="tooltip" data-placement="right"
+                                   title="{% trans 'tooltip_dowload_excel_file' %}"
+                                ><span class="glyphicon glyphicon-download" aria-hidden="true"></span> {% trans 'get_excel_file'%}</a>
                             </td>
                         </tr>
                         {% endfor %}
@@ -205,9 +208,10 @@
                             <td>
                                 <a class="btn btn-default"
                                    href="{% url 'notes_printing' note_detail.learning_unit_year.id%}"
-                                   {% if note_detail.completed%} disabled{% endif %}
-                                   role="button" id="lnk_notes_printing_{{note_detail.learning_unit_year.id}}"><span
-                                        class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'print' %}</a>
+                                   role="button" id="lnk_notes_printing_{{note_detail.learning_unit_year.id}}"
+                                   data-toggle="tooltip" data-placement="right"
+                                   title="{% trans 'tooltip_print_scores' %}"
+                                ><span class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'print' %}</a>
                             </td>
                         </tr>
                         {% endfor %}

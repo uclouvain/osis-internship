@@ -1304,3 +1304,9 @@ msgstr "Double encode scores"
 
 msgid "tooltip_select_excel_file_to_inject_scores"
 msgstr "Select an excel file to inject scores."
+
+msgid "tooltip_dowload_excel_file"
+msgstr "Download the excel file"
+
+msgid "tooltip_print_scores"
+msgstr "Print the scores"

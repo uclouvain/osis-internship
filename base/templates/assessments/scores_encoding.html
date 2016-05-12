@@ -128,10 +128,12 @@
                                 </td>
                                 <td>{{ note_detail.exam_enrollments_encoded}}/{{ note_detail.total_exam_enrollments}}</td>
                                 <td>
-                                    <a class="btn btn-default {% if note_detail.exam_enrollments_encoded == note_detail.total_exam_enrollments %}disabled{% endif %}"
+                                    <a class="btn btn-default"
                                        href="{% url 'notes_printing' note_detail.learning_unit_year.id %}"
-                                       role="button" id="lnk_notes_printing_{{note_detail.learning_unit_year.id}}"><span
-                                            class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'print' %}</a>
+                                       role="button" id="lnk_notes_printing_{{note_detail.learning_unit_year.id}}"
+                                       data-toggle="tooltip" data-placement="right"
+                                       title="{% trans 'tooltip_print_scores' %}"
+                                    ><span class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'print' %}</a>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -158,10 +160,13 @@
                                         id="lnk_online_encoding_messages_{{note_detail.learning_unit_year.id}}">{{ note_detail.learning_unit_year.title }}</a>
                                 </td>
                                 <td>{{ note_detail.exam_enrollments_encoded}}/{{ note_detail.total_exam_enrollments}}</td>
-                                <td><a class="btn btn-default {% if note_detail.exam_enrollments_encoded == note_detail.total_exam_enrollments %}disabled{% endif %}"
+                                <td><a class="btn btn-default"
                                        href="{% url 'scores_encoding_download' note_detail.learning_unit_year.id academic_year.id%}"
                                        role="button" title="{% trans 'hint_get_excel_file'%}"
-                                       id="lnk_scores_encoding_download_{{lu.id}}"><span
+                                       id="lnk_scores_encoding_download_{{lu.id}}"
+                                       data-toggle="tooltip" data-placement="right"
+                                       title="{% trans 'tooltip_dowload_excel_file' %}"
+                                ><span
                                         class="glyphicon glyphicon-download" aria-hidden="true"></span> {% trans 'get_excel_file'%}</a>
                                 </td>
                             </tr>
