@@ -146,9 +146,9 @@
                                         tabindex="{{ enrollments|length|sum:forloop.counter }}"
                                         {% if enrollment.score_final or enrollment.justification_final %} disabled {% endif %}>
                                   <option value="None"></option>
-                                  <option value="ABSENCE_UNJUSTIFIED" {% if enrollment.justification_draft == 'ABSENCE_UNJUSTIFIED' %}selected{% endif %}>{% trans 'absent' %}</option>
-                                  <option value="CHEATING" {% if enrollment.justification_draft == 'CHEATING' %}selected{% endif %}>{% trans 'cheating' %}</option>
-                                  <option value="SCORE_MISSING" {% if enrollment.justification_draft == 'SCORE_MISSING' %}selected{% endif %}>{% trans 'score_missing' %}</option>
+                                  <option value="ABSENCE_UNJUSTIFIED" {% if enrollment.justification_draft or enrollment.justification_final == 'ABSENCE_UNJUSTIFIED' %}selected{% endif %}>{% trans 'absent' %}</option>
+                                  <option value="CHEATING" {% if enrollment.justification_draft or enrollment.justification_final == 'CHEATING' %}selected{% endif %}>{% trans 'cheating' %}</option>
+                                  <option value="SCORE_MISSING" {% if enrollment.justification_draft or enrollment.justification_final == 'SCORE_MISSING' %}selected{% endif %}>{% trans 'score_missing' %}</option>
                                 </select>
                             {%endif%}</td>
                         <td>{{ enrollment.session_exam.offer_year_calendar.end_date | default_if_none:''|date:"j/m/Y" }}</td>
