@@ -24,12 +24,11 @@
 #
 ##############################################################################
 from django.db import models
-from base.models import offer_year
+from base.models import structure
 
 
 class OfferProposition(models.Model):
-    title = models.CharField(max_length=200)  # Nom du programme de cours
-    offer_year = models.ForeignKey(offer_year.OfferYear)
+    structure = models.ForeignKey(structure.Structure)
 
     ####################
     # READERS PARAMETERS
@@ -58,7 +57,7 @@ class OfferProposition(models.Model):
     validation_commission_exists = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.title
+        return self.structure.acronym
 
     def find_all():
-        return OfferProposition.objects.order_by('title')
+        return OfferProposition.objects.order_by('structure')

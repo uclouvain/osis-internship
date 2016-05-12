@@ -73,6 +73,6 @@ class PropositionDissertation(models.Model):
                 Q(author__person__first_name__icontains=terms) |
                 Q(author__person__middle_name__icontains=terms) |
                 Q(author__person__last_name__icontains=terms) |
-                Q(offer_proposition__title__icontains=terms)
+                Q(offer_proposition__structure__acronym__icontains=terms)
             )
         return queryset

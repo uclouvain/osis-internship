@@ -26,8 +26,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from base import models as mdl
-from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models.adviser import Adviser
+from dissertation.models.faculty_adviser import FacultyAdviser
+from dissertation.models.offer_proposition import OfferProposition
 from dissertation.forms import ManagerOfferPropositionForm
 from django.contrib.auth.decorators import user_passes_test
 
@@ -42,7 +43,10 @@ def is_manager(user):
 @login_required
 @user_passes_test(is_manager)
 def manager_offer_parameters(request):
-    offer_propositions = OfferProposition.find_all()
+    person = mdl.person.find_by_user(request.user)
+    adviser = Adviser.find_by_person(person)
+    faculty_adviser = FacultyAdviser.find_by_adviser(adviser)
+    offer_propositions = OfferProposition.find_all().filter(structure=faculty_adviser)
     return render(request, 'manager_offer_parameters.html', {'offer_propositions': offer_propositions})
 
 
