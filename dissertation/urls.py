@@ -24,7 +24,7 @@
 #
 ##############################################################################
 from django.conf.urls import url
-from dissertation.views import dissertation,proposition_dissertation,information, offer_proposition
+from dissertation.views import dissertation, proposition_dissertation, information, offer_proposition
 
 urlpatterns = [
     url(r'^$', dissertation.dissertations, name='dissertations'),
@@ -33,28 +33,47 @@ urlpatterns = [
     url(r'^informations_edit/$', information.informations_edit, name='informations_edit'),
 
     url(r'^manager_informations/$', information.manager_informations, name='manager_informations'),
-    url(r'^manager_informations_detail/(?P<pk>[0-9]+)/$', information.manager_informations_detail, name='manager_informations_detail'),
+    url(r'^manager_informations_detail/(?P<pk>[0-9]+)/$', information.manager_informations_detail,
+        name='manager_informations_detail'),
     url(r'^manager_information_search$', information.manager_information_search, name='manager_information_search'),
 
-    url(r'^manager_informations/(?P<pk>[0-9]+)/edit/$', information.manager_informations_edit, name='manager_informations_edit'),
+    url(r'^manager_informations/(?P<pk>[0-9]+)/edit/$', information.manager_informations_edit,
+        name='manager_informations_edit'),
 
     url(r'^manager_offer_parameters/$', offer_proposition.manager_offer_parameters, name='manager_offer_parameters'),
-    url(r'^manager_offer_parameters_detail/(?P<pk>[0-9]+)/$', offer_proposition.manager_offer_parameters_detail, name='manager_offer_parameters_detail'),
-    url(r'^manager_offer_parameters/(?P<pk>[0-9]+)/edit/$', offer_proposition.manager_offer_parameters_edit, name='manager_offer_parameters_edit'),
+    url(r'^manager_offer_parameters_detail/(?P<pk>[0-9]+)/$', offer_proposition.manager_offer_parameters_detail,
+        name='manager_offer_parameters_detail'),
+    url(r'^manager_offer_parameters/(?P<pk>[0-9]+)/edit/$', offer_proposition.manager_offer_parameters_edit,
+        name='manager_offer_parameters_edit'),
 
-    url(r'^manager_proposition_dissertations/$', proposition_dissertation.manager_proposition_dissertations, name='manager_proposition_dissertations'),
-    url(r'^manager_proposition_dissertation_new$', proposition_dissertation.manager_proposition_dissertation_new, name='manager_proposition_dissertation_new'),
-    url(r'^manager_proposition_dissertation_detail/(?P<pk>[0-9]+)/$', proposition_dissertation.manager_proposition_dissertation_detail, name='manager_proposition_dissertation_detail'),
-    url(r'^manager_proposition_dissertation/(?P<pk>[0-9]+)/delete/$', proposition_dissertation.manager_proposition_dissertation_delete, name='manager_proposition_dissertation_delete'),
-    url(r'^manager_proposition_dissertation/(?P<pk>[0-9]+)/edit/$', proposition_dissertation.manage_proposition_dissertation_edit, name='manager_proposition_dissertation_edit'),
+    url(r'^manager_proposition_dissertations/$', proposition_dissertation.manager_proposition_dissertations,
+        name='manager_proposition_dissertations'),
+    url(r'^manager_proposition_dissertation_new$', proposition_dissertation.manager_proposition_dissertation_new,
+        name='manager_proposition_dissertation_new'),
+    url(r'^manager_proposition_dissertation_detail/(?P<pk>[0-9]+)/$',
+        proposition_dissertation.manager_proposition_dissertation_detail,
+        name='manager_proposition_dissertation_detail'),
+    url(r'^manager_proposition_dissertation/(?P<pk>[0-9]+)/delete/$',
+        proposition_dissertation.manager_proposition_dissertation_delete,
+        name='manager_proposition_dissertation_delete'),
+    url(r'^manager_proposition_dissertation/(?P<pk>[0-9]+)/edit/$',
+        proposition_dissertation.manage_proposition_dissertation_edit, name='manager_proposition_dissertation_edit'),
 
-    url(r'^manager_search$', proposition_dissertation.manager_proposition_dissertations_search, name='manager_proposition_dissertations_search'),
+    url(r'^manager_search$', proposition_dissertation.manager_proposition_dissertations_search,
+        name='manager_proposition_dissertations_search'),
 
-    url(r'^proposition_dissertations/$', proposition_dissertation.proposition_dissertations, name='proposition_dissertations'),
-    url(r'^proposition_dissertation/(?P<pk>[0-9]+)/delete/$', proposition_dissertation.proposition_dissertation_delete, name='proposition_dissertation_delete'),
-    url(r'^proposition_dissertation/(?P<pk>[0-9]+)/edit/$', proposition_dissertation.proposition_dissertation_edit, name='proposition_dissertation_edit'),
-    url(r'^proposition_dissertation_detail/(?P<pk>[0-9]+)/$', proposition_dissertation.proposition_dissertation_detail, name='proposition_dissertation_detail'),
-    url(r'^proposition_dissertation_my$', proposition_dissertation.proposition_dissertation_my, name='proposition_dissertation_my'),
-    url(r'^proposition_dissertation_new$', proposition_dissertation.proposition_dissertation_new, name='proposition_dissertation_new'),
-    url(r'^proposition_dissertations_search$', proposition_dissertation.proposition_dissertations_search, name='proposition_dissertations_search'),
+    url(r'^proposition_dissertations/$', proposition_dissertation.proposition_dissertations,
+        name='proposition_dissertations'),
+    url(r'^proposition_dissertation/(?P<pk>[0-9]+)/delete/$', proposition_dissertation.proposition_dissertation_delete,
+        name='proposition_dissertation_delete'),
+    url(r'^proposition_dissertation/(?P<pk>[0-9]+)/edit/$', proposition_dissertation.proposition_dissertation_edit,
+        name='proposition_dissertation_edit'),
+    url(r'^proposition_dissertation_detail/(?P<pk>[0-9]+)/$', proposition_dissertation.proposition_dissertation_detail,
+        name='proposition_dissertation_detail'),
+    url(r'^proposition_dissertation_my$', proposition_dissertation.proposition_dissertation_my,
+        name='proposition_dissertation_my'),
+    url(r'^proposition_dissertation_new$', proposition_dissertation.proposition_dissertation_new,
+        name='proposition_dissertation_new'),
+    url(r'^proposition_dissertations_search$', proposition_dissertation.proposition_dissertations_search,
+        name='proposition_dissertations_search'),
 ]

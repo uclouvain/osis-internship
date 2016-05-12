@@ -29,30 +29,40 @@ from dissertation.models.proposition_dissertation import PropositionDissertation
 from dissertation.models.adviser import Adviser
 from dissertation.models.offer_proposition import OfferProposition
 
+
 class AdviserForm(ModelForm):
     class Meta:
         model = Adviser
-        fields = ('available_by_email','available_by_phone','available_at_office','comment')
+        fields = ('available_by_email', 'available_by_phone', 'available_at_office', 'comment')
+
 
 class ManagerAdviserForm(ModelForm):
     class Meta:
         model = Adviser
-        fields = ('available_by_email','available_by_phone','available_at_office','comment')
+        fields = ('available_by_email', 'available_by_phone', 'available_at_office', 'comment')
+
 
 class ManagerPropositionDissertationForm(ModelForm):
     class Meta:
         model = PropositionDissertation
-        fields = ('author','visibility','title','description','type','level','collaboration','max_number_student','offer_proposition')
+        fields = (
+            'author', 'visibility', 'title', 'description', 'type', 'level', 'collaboration', 'max_number_student',
+            'offer_proposition')
         widgets = {'offer_proposition': forms.CheckboxSelectMultiple()}
+
 
 class ManagerOfferPropositionForm(ModelForm):
     class Meta:
         model = OfferProposition
-        fields = ('title','adviser_can_suggest_reader','validation_commission_exists','student_can_manage_readers','evaluation_first_year','readers_visibility_date_for_students','offer_year')
-        widgets = {'offer_year': forms.HiddenInput(),'offer_proposition': forms.CheckboxSelectMultiple()}
+        fields = ('title', 'adviser_can_suggest_reader', 'validation_commission_exists', 'student_can_manage_readers',
+                  'evaluation_first_year', 'readers_visibility_date_for_students', 'offer_year')
+        widgets = {'offer_year': forms.HiddenInput(), 'offer_proposition': forms.CheckboxSelectMultiple()}
+
 
 class PropositionDissertationForm(ModelForm):
     class Meta:
         model = PropositionDissertation
-        fields = ('author','visibility','title','description','type','level','collaboration','max_number_student','offer_proposition')
-        widgets = {'author': forms.HiddenInput(),'offer_proposition': forms.CheckboxSelectMultiple()}
+        fields = (
+            'author', 'visibility', 'title', 'description', 'type', 'level', 'collaboration', 'max_number_student',
+            'offer_proposition')
+        widgets = {'author': forms.HiddenInput(), 'offer_proposition': forms.CheckboxSelectMultiple()}

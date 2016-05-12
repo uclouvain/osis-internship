@@ -23,15 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.shortcuts import render, get_object_or_404,redirect
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
-from pprint import pprint
 from base import models as mdl
 from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models.adviser import Adviser
-from dissertation.forms import  ManagerOfferPropositionForm
+from dissertation.forms import ManagerOfferPropositionForm
 from django.contrib.auth.decorators import user_passes_test
+
 
 # Used by decorator @user_passes_test(is_manager) to secure manager views
 def is_manager(user):
@@ -39,17 +38,20 @@ def is_manager(user):
     adviser = Adviser.find_by_person(person)
     return adviser.type == 'MGR'
 
+
 @login_required
 @user_passes_test(is_manager)
 def manager_offer_parameters(request):
     offer_propositions = OfferProposition.find_all()
     return render(request, 'manager_offer_parameters.html', {'offer_propositions': offer_propositions})
 
+
 @login_required
 @user_passes_test(is_manager)
 def manager_offer_parameters_detail(request, pk):
     offer_proposition = get_object_or_404(OfferProposition, pk=pk)
     return render(request, 'manager_offer_parameters_detail.html', {'offer_proposition': offer_proposition})
+
 
 @login_required
 @user_passes_test(is_manager)
@@ -63,4 +65,4 @@ def manager_offer_parameters_edit(request, pk):
             return redirect('manager_offer_parameters')
     else:
         form = ManagerOfferPropositionForm(instance=offer)
-    return render(request, "manager_offer_parameters_edit.html", {'offer':offer,'form':form})
+    return render(request, "manager_offer_parameters_edit.html", {'offer': offer, 'form': form})
