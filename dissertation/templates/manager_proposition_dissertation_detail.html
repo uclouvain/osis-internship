@@ -27,9 +27,9 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'Studies' %}</a></li>
-  <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'Dissertations' %}</a></li>
-  <li><a href="{% url 'manager_proposition_dissertations' %}" id="lnk_propositions">{% trans 'Subjects' %}</a></li>
+  <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
+  <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'dissertations' %}</a></li>
+  <li><a href="{% url 'manager_proposition_dissertations' %}" id="lnk_propositions">{% trans 'subjects' %}</a></li>
   <li class="active">{{ proposition_dissertation.title }}</li>
 {% endblock %}
 {% block content %}
@@ -52,19 +52,19 @@
       </div>
       <div class="row">
         <div class="col-md-3">
-          <label>{% trans 'Author' %}</label><br>
+          <label>{% trans 'author' %}</label><br>
           {{ proposition_dissertation.author }}
         </div>
         <div class="col-md-3">
-          <label>{% trans 'Title' %}</label><br>
+          <label>{% trans 'title' %}</label><br>
           {{ proposition_dissertation.title }}
         </div>
         <div class="col-md-3">
-          <label>{% trans 'Creation Date' %}</label><br>
+          <label>{% trans 'creation_date' %}</label><br>
           {{ proposition_dissertation.created_date }}
         </div>
         <div class="col-md-3">
-          <label>{% trans 'Collaboration' %}</label><br>
+          <label>{% trans 'offer_propositions' %}</label><br>
             {% for offer_proposition in proposition_dissertation.offer_proposition.all %}
               {{ offer_proposition }}
             {% endfor %}
@@ -73,26 +73,26 @@
       <br>
       <div class="row">
         <div class="col-md-3">
-          <label>{% trans 'Level' %}</label><br>
+          <label>{% trans 'level' %}</label><br>
           {{ proposition_dissertation.level }}
         </div>
         <div class="col-md-3">
-          <label>{% trans 'Max Number Student' %}</label><br>
+          <label>{% trans 'max_students_number' %}</label><br>
           {{ proposition_dissertation.max_number_student }}
         </div>
         <div class="col-md-3">
-          <label>{% trans 'Type' %}</label><br>
+          <label>{% trans 'type' %}</label><br>
           {{ proposition_dissertation.type }}
         </div>
         <div class="col-md-3">
-          <label>{% trans 'Collaboration' %}</label><br>
+          <label>{% trans 'collaboration' %}</label><br>
           {{ proposition_dissertation.collaboration }}
         </div>
       </div>
       <br>
       <div class="row">
         <div class="col-md-12">
-          <label>{% trans 'Description' %}</label><br>
+          <label>{% trans 'description' %}</label><br>
           {{ proposition_dissertation.description }}
         </div>
       </div>

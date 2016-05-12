@@ -27,21 +27,21 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'Studies' %}</a></li>
-  <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'Dissertations' %}</a></li>
-  <li><a href="{% url 'manager_offer_parameters' %}" id="lnk_parameters">{% trans 'Parameters' %}</a></li>
-  <li class="active">{% trans 'Parameters' %} {{ offer_proposition.title }}</li>
+  <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
+  <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'dissertations' %}</a></li>
+  <li><a href="{% url 'manager_offer_parameters' %}" id="lnk_parameters">{% trans 'parameters' %}</a></li>
+  <li class="active">{% trans 'parameters' %} {{ offer_proposition.title }}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'Parameters' %} {{ offer_proposition.title }}</h2>
+    <h2>{% trans 'parameters' %} {{ offer_proposition.title }}</h2>
   </div>
   <div class="panel panel-default">
     <div class="panel-body">
       <div class="row">
         <div class="col-md-1 pull-right">
           <a href="{% url 'manager_offer_parameters_edit' pk=offer_proposition.pk %}" id="lnk_manager_offer_parameters_edit" class="btn btn-default btn-primary"
-          role="button" title="{% trans 'Edit Parameters'%}"><span class="glyphicon glyphicon-edit"
+          role="button" title="{% trans 'edit_parameters'%}"><span class="glyphicon glyphicon-edit"
           aria-hidden="true"></span></a>
         </div>
       </div>

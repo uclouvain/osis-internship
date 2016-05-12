@@ -27,13 +27,13 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'Studies' %}</a></li>
-  <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'Dissertations' %}</a></li>
-  <li class="active">{% trans 'Subjects' %}</li>
+  <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
+  <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'dissertations' %}</a></li>
+  <li class="active">{% trans 'subjects' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'Subjects' %}</h2>
+    <h2>{% trans 'subjects' %}</h2>
   </div>
   <div class="panel panel-default">
     <div class="panel-body">
@@ -41,22 +41,22 @@
         <div class="row">
           <div class="col-md-6">
             <a href="{% url 'proposition_dissertations' %}" id="lnk_proposition_dissertation" class="btn btn-default"
-            role="button" title="{% trans 'All propositions dissertations'%}"><span class="glyphicon glyphicon-list"
-            aria-hidden="true"></span> {% trans 'All Propositions'%}</a>
+            role="button" title="{% trans 'all_propositions_dissertations'%}"><span class="glyphicon glyphicon-list"
+            aria-hidden="true"></span> {% trans 'all_propositions'%}</a>
             <a href="{% url 'proposition_dissertation_my' %}" id="lnk_proposition_dissertation_my" class="btn btn-default"
-            role="button" title="{% trans 'My propositions dissertations'%}"><span class="glyphicon glyphicon-user"
-            aria-hidden="true"></span> {% trans 'My Propositions'%}</a>
+            role="button" title="{% trans 'my_propositions_dissertations'%}"><span class="glyphicon glyphicon-user"
+            aria-hidden="true"></span> {% trans 'my_propositions'%}</a>
             <a href="{% url 'proposition_dissertation_new' %}" id="lnk_proposition_dissertation_new" class="btn btn-default"
-            role="button" title="{% trans 'Create a proposition dissertation'%}"><span class="glyphicon glyphicon-plus"
-            aria-hidden="true"></span> {% trans 'Add Proposition'%}</a>
+            role="button" title="{% trans 'create_proposition_dissertation'%}"><span class="glyphicon glyphicon-plus"
+            aria-hidden="true"></span> {% trans 'add_proposition'%}</a>
           </div>
           <div class="col-md-5">
-            <input class="form-control" id="txt_search" placeholder="{% trans 'Search' %}" name="search"
+            <input class="form-control" id="txt_search" placeholder="{% trans 'search' %}" name="search"
             value="{{ request.GET.search }}">
           </div>
           <div class="col-md-1">
             <button type="submit" id="bt_submit_proposition_dissertation_search" class="btn btn-primary" role="button"
-            title="{% trans 'Search for a proposition dissertation' %}"><span class="glyphicon glyphicon-search"
+            title="{% trans 'search_proposition_dissertation' %}"><span class="glyphicon glyphicon-search"
             aria-hidden="true"></span></button>
           </div>
         </div>

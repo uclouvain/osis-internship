@@ -27,13 +27,13 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'Studies' %}</a></li>
-  <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'Dissertations' %}</a></li>
-  <li class="active">{% trans 'Teachers' %}</li>
+  <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
+  <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'dissertations' %}</a></li>
+  <li class="active">{% trans 'teachers' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'Teachers' %}</h2>
+    <h2>{% trans 'teachers' %}</h2>
   </div>
   <div class="panel panel-default">
     <div class="panel-body">
@@ -41,11 +41,11 @@
         <div class="row">
           <div class="col-md-1 pull-right">
             <button type="submit" id="bt_submit_manager_information_search" class="btn btn-primary" role="button"
-            title="{% trans 'Search for a teatcher' %}"><span class="glyphicon glyphicon-search"
+            title="{% trans 'search_teacher' %}"><span class="glyphicon glyphicon-search"
             aria-hidden="true"></span></button>
           </div>
           <div class="col-md-5 pull-right">
-            <input class="form-control" id="txt_search" placeholder="{% trans 'Search' %}" name="search"
+            <input class="form-control" id="txt_search" placeholder="{% trans 'search' %}" name="search"
             value="{{ request.GET.search }}">
           </div>
         </div>
@@ -53,21 +53,21 @@
       <br>
       <table class="table table-hover">
         <thead>
-          <th style="text-align:center">{% trans 'First name'%}</th>
-          <th style="text-align:center">{% trans 'Last name'%}</th>
-          <th style="text-align:center">{% trans 'Type'%}</th>
-          <th style="text-align:center">{% trans 'Contact by email'%}</th>
-          <th style="text-align:center">{% trans 'Contact by phone'%}</th>
-          <th style="text-align:center">{% trans 'Come to my office'%}</th>
+          <th style="text-align:center">{% trans 'first_name'%}</th>
+          <th style="text-align:center">{% trans 'last_name'%}</th>
+          <th style="text-align:center">{% trans 'adviser_type'%}</th>
+          <th style="text-align:center">{% trans 'available_by_email'%}</th>
+          <th style="text-align:center">{% trans 'available_by_phone'%}</th>
+          <th style="text-align:center">{% trans 'available_at_office'%}</th>
         </thead>
         {% for adviser in advisers %}
           <tr>
             <td style="text-align:center"><a href="{% url 'manager_informations_detail' pk=adviser.pk %}">{{ adviser.person.first_name }}</td>
             <td style="text-align:center"><a href="{% url 'manager_informations_detail' pk=adviser.pk %}">{{ adviser.person.last_name }}</td>
             <td style="text-align:center">{{ adviser.type }}</td>
-            <td style="text-align:center">{{ adviser.email_accept|yesno:"Yes,No" }}</td>
-            <td style="text-align:center">{{ adviser.phone_accept|yesno:"Yes,No" }}</td>
-            <td style="text-align:center">{{ adviser.office_accept|yesno:"Yes,No" }}</td>
+            <td style="text-align:center">{{ adviser.available_by_email|yesno:"Yes,No" }}</td>
+            <td style="text-align:center">{{ adviser.available_by_phone|yesno:"Yes,No" }}</td>
+            <td style="text-align:center">{{ adviser.available_at_office|yesno:"Yes,No" }}</td>
           </tr>
         {% endfor %}
       </table>

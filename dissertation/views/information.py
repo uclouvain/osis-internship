@@ -41,7 +41,7 @@ def is_manager(user):
 def informations(request):
     person = mdl.person.find_by_user(request.user)
     try:
-        adviser = Adviser(person=person, email_accept=False, phone_accept=False, office_accept=False)
+        adviser = Adviser(person=person, available_by_email=False, available_by_phone=False, available_at_office=False)
         adviser.save()
     except :
         adviser = Adviser.find_by_person(person)

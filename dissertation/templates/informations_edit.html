@@ -27,31 +27,31 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'Studies' %}</a></li>
-  <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'Dissertations' %}</a></li>
-  <li class="active">{% trans 'My informations' %}</li>
+  <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
+  <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'dissertations' %}</a></li>
+  <li class="active">{% trans 'my_informations' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'My informations' %}</h2>
+    <h2>{% trans 'my_informations' %}</h2>
   </div>
   <div class="panel panel-default">
     <div class="panel-body">
       <div class="row">
         <div class="col-md-3">
-          <label>{% trans 'Name' %}</label><br>
+          <label>{% trans 'name' %}</label><br>
           {{  person.first_name }} {{ person.last_name }}
         </div>
         <div class="col-md-3">
-          <label>{% trans 'Email' %}</label><br>
+          <label>{% trans 'email' %}</label><br>
           {{  person.email }}
         </div>
         <div class="col-md-3">
-          <label>{% trans 'Phone' %}</label><br>
+          <label>{% trans 'phone' %}</label><br>
           {{  person.phone }}
         </div>
         <div class="col-md-3">
-          <label>{% trans 'Mobile Phone' %}</label><br>
+          <label>{% trans 'mobile_phone' %}</label><br>
           {{  person.phone_mobile }}
         </div>
       </div>

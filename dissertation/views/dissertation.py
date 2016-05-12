@@ -34,7 +34,7 @@ def dissertations(request):
     # if logged user is not an adviser, create linked adviser
     person = mdl.person.find_by_user(request.user)
     try:
-        p = Adviser(person=person, email_accept=False, phone_accept=False, office_accept=False)
+        p = Adviser(person=person, available_by_email=False, available_by_phone=False, available_at_office=False)
         p.save()
         adviser = Adviser.find_by_person(person)
     except :

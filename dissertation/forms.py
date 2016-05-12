@@ -32,12 +32,12 @@ from dissertation.models.offer_proposition import OfferProposition
 class AdviserForm(ModelForm):
     class Meta:
         model = Adviser
-        fields = ('email_accept','phone_accept','office_accept','comment')
+        fields = ('available_by_email','available_by_phone','available_at_office','comment')
 
 class ManagerAdviserForm(ModelForm):
     class Meta:
         model = Adviser
-        fields = ('email_accept','phone_accept','office_accept','comment')
+        fields = ('available_by_email','available_by_phone','available_at_office','comment')
 
 class ManagerPropositionDissertationForm(ModelForm):
     class Meta:

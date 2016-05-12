@@ -27,20 +27,20 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'Studies' %}</a></li>
-  <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'Dissertations' %}</a></li>
-  <li class="active">{% trans 'My informations' %}</li>
+  <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
+  <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'dissertations' %}</a></li>
+  <li class="active">{% trans 'my_informations' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'My informations' %}</h2>
+    <h2>{% trans 'my_informations' %}</h2>
   </div>
   <div class="panel panel-default">
     <div class="panel-body">
       <div class="row">
         <div class="col-md-1 pull-right">
           <a href="{% url 'manager_informations_edit' pk=adviser.pk %}" id="lnk_informations_edit" class="btn btn-default btn-primary"
-          role="button" title="{% trans 'Edit my informations'%}"><span class="glyphicon glyphicon-edit"
+          role="button" title="{% trans 'edit_my_informations'%}"><span class="glyphicon glyphicon-edit"
           aria-hidden="true"></span></a>
         </div>
       </div>
@@ -49,25 +49,27 @@
           <img src="http://ultra16.sipr.ucl.ac.be/photos/photos_cp/photos/image{{ adviser.person.global_id |get_digit:"4" }}{{ adviser.person.global_id |get_digit:"3" }}/{{ adviser.person.global_id }}.jpg"height="40%" width="40%">
         </div>
         <div class="col-md-4">
-          <label>{% trans 'Name' %}</label> : {{ adviser.person.first_name }} {{ adviser.person.last_name }}
+          <label>{% trans 'name' %}</label> : {{ adviser.person.first_name }} {{ adviser.person.last_name }}
           <br><br>
-          <label>{% trans 'Email' %}</label> : {{ adviser.person.email }}
+          <label>{% trans 'email' %}</label> : {{ adviser.person.email }}
           <br><br>
-          <label>{% trans 'Phone' %}</label> : {{ adviser.person.phone }}
+          <label>{% trans 'phone' %}</label> : {{ adviser.person.phone }}
           <br><br>
-          <label>{% trans 'Mobile Phone' %}</label> : {{ adviser.person.phone_mobile }}
+          <label>{% trans 'mobile_phone' %}</label> : {{ adviser.person.phone_mobile }}
         </div>
         <div class="col-md-4">
-          <label>{% trans 'Email Accept' %}</label> : {{ adviser.email_accept|yesno:"Yes,No"  }}
+          <label>{% trans 'available_by_email' %}</label> : {{ adviser.available_by_email|yesno:"Yes,No"  }}
           <br><br>
-          <label>{% trans 'Phone Accept' %}</label> : {{ adviser.phone_accept|yesno:"Yes,No" }}
+          <label>{% trans 'available_by_phone' %}</label> : {{ adviser.available_by_phone|yesno:"Yes,No" }}
           <br><br>
-          <label>{% trans 'Office visite Accept' %}</label> : {{ adviser.office_accept|yesno:"Yes,No" }}
+          <label>{% trans 'available_at_office' %}</label> : {{ adviser.available_at_office|yesno:"Yes,No" }}
         </div>
       </div>
       <br>
-      <div class="col-md-10" style="padding:0;">
-        <label>{% trans 'Comment' %}</label> : {{ adviser.comment }}
+      <div class="row">
+        <div class="col-md-12">
+          <label>{% trans 'comment' %}</label> : {{ adviser.comment }}
+        </div>
       </div>
     </div>
   </div>

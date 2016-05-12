@@ -41,9 +41,9 @@ class Adviser(models.Model):
 
     person = models.OneToOneField('base.Person', on_delete=models.CASCADE)
     type = models.CharField(max_length=3, choices=TYPES_CHOICES, default='PRF')
-    email_accept = models.BooleanField(default=False)
-    phone_accept = models.BooleanField(default=False)
-    office_accept = models.BooleanField(default=False)
+    available_by_email = models.BooleanField(default=False)
+    available_by_phone = models.BooleanField(default=False)
+    available_at_office = models.BooleanField(default=False)
     comment = models.TextField(default='', blank=True)
 
     def __str__(self):
