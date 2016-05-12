@@ -1281,6 +1281,10 @@ msgstr "This learning unit year could contain decimal scores"
 msgid "validated_double_encoding_cannot_be_validated_anymore"
 msgstr "Validated double encoding cannot be validated anymore"
 
+msgid "validation_dubble_encoding_mandatory"
+msgstr "Please enter a final validation for scores' differences detected after the dubble encoding "
+       "(below). If you leave, your dubble encoding will be lost."
+
 msgid "after_submission_a_message_must_be_sent"
 msgstr "If scores are submitted , a message is sent to all the professors of the learning unit"
 
