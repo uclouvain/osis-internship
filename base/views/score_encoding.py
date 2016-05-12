@@ -245,8 +245,8 @@ def online_encoding_submission(request, learning_unit_year_id):
     # contains all sessions exams in exam_enrollments list
     all_sessions_exam = set()
     draft_scores_not_sumitted_yet = [exam_enrol for exam_enrol in exam_enrollments
-                                     if (exam_enrol.justification_draft or exam_enrol.score_draft is not None)
-                                     and not exam_enrol.justification_final and exam_enrol.score_final is None]
+                                     if (exam_enrol.justification_draft or exam_enrol.score_draft is not None) and
+                                     not exam_enrol.justification_final and exam_enrol.score_final is None]
     for exam_enroll in draft_scores_not_sumitted_yet:
         if (exam_enroll.score_draft is not None and exam_enroll.score_final is None) \
                 or (exam_enroll.justification_draft and not exam_enroll.justification_final):
@@ -276,7 +276,8 @@ def online_encoding_submission(request, learning_unit_year_id):
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
     attributions = mdl.attribution.Attribution.objects.filter(learning_unit=learning_unit_year.learning_unit)
     persons = [attribution.tutor.person for attribution in attributions if attribution.function == 'PROFESSOR']
-    sent_error_message = send_mail.send_mail_after_scores_submission(persons, learning_unit_year.acronym, submitted_enrollments, all_encoded)
+    sent_error_message = send_mail.send_mail_after_scores_submission(persons, learning_unit_year.acronym,
+                                                                     submitted_enrollments, all_encoded)
     if sent_error_message:
         messages.add_message(request, messages.ERROR, "%s" % sent_error_message)
     return HttpResponseRedirect(reverse('online_encoding', args=(learning_unit_year_id,)))
@@ -364,8 +365,8 @@ def get_data_online(learning_unit_year_id, request):
     progress = mdl.exam_enrollment.calculate_exam_enrollment_progress(exam_enrollments)
 
     draft_scores_not_sumitted = len([exam_enrol for exam_enrol in exam_enrollments
-                                    if (exam_enrol.justification_draft or exam_enrol.score_draft is not None)
-                                    and not exam_enrol.justification_final and exam_enrol.score_final is None])
+                                    if (exam_enrol.justification_draft or exam_enrol.score_draft is not None) and
+                                     not exam_enrol.justification_final and exam_enrol.score_final is None])
 
     return {'section': 'scores_encoding',
             'academic_year': academic_yr,
@@ -480,9 +481,9 @@ def _sort_for_encodings(exam_enrollments):
     :return:
     """
     return sorted(exam_enrollments, key=lambda k:
-                k.learning_unit_enrollment.offer_enrollment.offer_year.acronym +
-                k.learning_unit_enrollment.offer_enrollment.student.person.last_name +
-                k.learning_unit_enrollment.offer_enrollment.student.person.first_name)
+                  k.learning_unit_enrollment.offer_enrollment.offer_year.acronym +
+                  k.learning_unit_enrollment.offer_enrollment.student.person.last_name +
+                  k.learning_unit_enrollment.offer_enrollment.student.person.first_name)
 
 
 def _get_exam_enrollments(user,
