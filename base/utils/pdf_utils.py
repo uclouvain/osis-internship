@@ -38,7 +38,7 @@ from base import models as mdl
 
 PAGE_SIZE = A4
 MARGIN_SIZE = 15 * mm
-COLS_WIDTH = [25*mm,45*mm,45*mm,25*mm,25*mm]
+COLS_WIDTH = [25*mm,50*mm,50*mm,25*mm,25*mm]
 STUDENTS_PER_PAGE = 24
 
 
@@ -139,7 +139,7 @@ def list_notes_building(learning_unit_year_id, academic_year, list_exam_enrollme
                 old_offer_programme = offer_programme
                 current_learning_unit_year = rec_exam_enrollment.learning_unit_enrollment.learning_unit_year
 
-            if offer_programme != old_offer_programme or students_printed > STUDENTS_PER_PAGE:
+            if offer_programme != old_offer_programme or students_printed == STUDENTS_PER_PAGE:
                 students_printed = 0
                 # Other programme - 1. manage criteria
                 main_data(academic_year,
@@ -327,11 +327,16 @@ def main_data(academic_year, session_exam, styles, learning_unit_year, offer, co
     else:
         deliberation_date = '-'
     content.append(Paragraph('%s : %s' % (_('deliberation_date'), deliberation_date), styles["Normal"]))
-    content.append(Paragraph('%s : %s' % (_('academic_year'), str(academic_year)), text_left_style))
-    content.append(Paragraph('Session : %d' % session_exam.number_session, text_left_style))
+    content.append(Paragraph('%s : %s  - Session : %d' % (_('academic_year'), str(academic_year), session_exam.number_session), text_left_style))
+    # content.append(Paragraph('Session : %d' % session_exam.number_session, text_left_style))
     content.append(Paragraph("<strong>%s : %s</strong>" % (learning_unit_year.acronym, learning_unit_year.title),
                              styles["Normal"]))
     content.append(Paragraph('''<b>%s : %s</b>''' % (_('program'), offer.acronym), styles["Normal"]))
+    content.append(Paragraph('''
+        <para spaceb=2>
+            &nbsp;
+        </para>
+        ''', ParagraphStyle('normal')))
 
 
 def end_page_infos_building(content, end_date):
