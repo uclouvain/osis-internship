@@ -26,9 +26,8 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
-from base.models import attribution, offer_year_calendar
+from base.models import  offer_year_calendar
 from django.utils import timezone
-from django.db.models import Count
 
 
 SESSION_STATUS = (
@@ -83,18 +82,3 @@ def find_session_exam_number():
         return sess_exam_number[0].get('number_session')
     return None
 
-
-def find_by_offer_years(offer_years):
-    """
-    :param offer_years: List of offer year from which to find the session_exams.
-    :return: All session_exams, having minimum 1 exam_enrollment, for all offer years and for learning units passed in
-             parameter.
-    """
-    queryset = SessionExam.objects
-
-    queryset = queryset.annotate(number_of_exam_enrollments=Count('examenrollment')) \
-                    .filter(number_of_exam_enrollments__gt=0) \
-                    .filter(offer_year_calendar__offer_year__in=offer_years) \
-                    .filter(offer_year_calendar__start_date__lte=timezone.now()) \
-                    .filter(offer_year_calendar__end_date__gte=timezone.now())
-    return queryset

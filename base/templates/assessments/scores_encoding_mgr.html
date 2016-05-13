@@ -54,7 +54,7 @@
                         <select id="slt_tutor" name="tutor" class="form-control">
                             <option value="">{% trans 'all' %}</option>
                             {%for t in tutor_list%}
-                                <option value="{{t.id}}" {% if tutor_id == t.id %}selected{%endif%}>{{t.person.last_name}} {{t.person.first_name}}</option>
+                                <option value="{{t.id}}" {% if tutor_id == t.id %}selected{%endif%}>{{t.last_name}} {{t.first_name}}</option>
                             {%endfor%}
                         </select>
                         {% endif %}
@@ -122,7 +122,13 @@
                             <td>{{ note_detail.learning_unit_year.acronym }}</td>
                             <td><a href="{% url 'online_encoding' note_detail.learning_unit_year.id %}"
                                    id="lnk_{{ note_detail.learning_unit_year.acronym }}">{{ note_detail.learning_unit_year.title }}</a></td>
-                            <td>{{ note_detail.tutor_person.last_name }} {{ note_detail.tutor_person.first_name }}</td>
+                            <td>
+                                {% if note_detail.tutor_person %}
+                                    {{ note_detail.tutor_person.last_name }} {{ note_detail.tutor_person.first_name }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
                             <td>{{ note_detail.exam_enrollments_encoded}}/{{ note_detail.total_exam_enrollments}}</td>
                             <td><a class="btn btn-default"
                                    href="{% url 'online_encoding_form' note_detail.learning_unit_year.id %}"
@@ -153,7 +159,13 @@
                             <td><a href="{% url 'online_encoding' note_detail.learning_unit_year.id %}"
                                    title="Visualiser/charger les notes pour le cours"
                                    id="lnk_online_encoding_messages_{{note_detail.learning_unit_year.id}}">{{ note_detail.learning_unit_year.title }}</a></td>
-                            <td>{{ note_detail.tutor_person.last_name }}, {{ note_detail.tutor_person.first_name }}</td>
+                            <td>
+                                {% if note_detail.tutor_person %}
+                                    {{ note_detail.tutor_person.last_name }} {{ note_detail.tutor_person.first_name }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
                             <td>{{ note_detail.exam_enrollments_encoded}}/{{ note_detail.total_exam_enrollments}}</td>
                             <td>
                                 <a class="btn btn-default"
@@ -203,7 +215,13 @@
                             <td><a href="{% url 'online_encoding' note_detail.learning_unit_year.id  %}"
                                    title="Visualiser/charger les notes pour le cours"
                                    id="lnk_paper_encoding_messages_{{note_detail.learning_unit_year.id}}">{{ note_detail.learning_unit_year.title }}</a></td>
-                            <td>{{ note_detail.tutor_person.last_name }}, {{ note_detail.tutor_person.first_name }}</td>
+                            <td>
+                                {% if note_detail.tutor_person %}
+                                    {{ note_detail.tutor_person.last_name }} {{ note_detail.tutor_person.first_name }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
                             <td>{{ note_detail.exam_enrollments_encoded}}/{{ note_detail.total_exam_enrollments}}</td>
                             <td>
                                 <a class="btn btn-default"

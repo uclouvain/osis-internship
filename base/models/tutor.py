@@ -26,7 +26,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.contrib import admin
-from base.models import person, attribution, session_exam, exam_enrollment, program_manager
+from base.models import person, attribution, session_exam
 
 
 class TutorAdmin(admin.ModelAdmin):
@@ -80,20 +80,6 @@ def find_responsible(a_learning_unit):
                     return lu_attribution.tutor
             return attribution_list[0].tutor
     return None
-
-
-def find_by_program_manager(offer_years_managed):
-    """
-    To find all the tutors from offers managed by a program manager
-    :param offer_years_managed: All offer years managed by a program manager
-    :return: All tutors for all learning units of all offers managed by a program manager (passed in parameter).
-    """
-    session_exam_queryset = session_exam.find_by_offer_years(offer_years_managed)
-    learning_unit_year_ids = session_exam_queryset.values_list('learning_unit_year', flat=True)
-    attribution_queryset = attribution.find_by_learning_unit_year_ids(learning_unit_year_ids)
-    tutor_ids = attribution_queryset.values_list('tutor').distinct('tutor')
-    tutors = list(Tutor.objects.filter(pk__in=tutor_ids).order_by('person__last_name', 'person__first_name'))
-    return tutors
 
 
 def is_coordinator(user, learning_unit_id):
