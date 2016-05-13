@@ -117,7 +117,7 @@
                                 {% else %}
                                    {% if enrollment.score_final != None %}
                                         value="{{ enrollment.score_final | score_display:enrollment.session_exam.learning_unit_year.decimal_scores}}"
-                                   {% else %}
+                                   {% elif not enrollment.justification_final %}
                                         value="{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}"
                                    {% endif %}
                                 {% endif %}
