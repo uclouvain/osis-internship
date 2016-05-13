@@ -33,7 +33,6 @@ from django.utils.translation import ugettext_lazy as _
 
 from base.forms import ScoreFileForm
 from base import models as mdl
-from base.utils import export_utils
 
 
 @login_required
@@ -110,6 +109,7 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                     else:
                         learning_unit_year_lists = mdl.learning_unit_year.search(academic_year,
                                                                                  row[col_learning_unit].value)
+                        learning_unit_year = None
                         if len(learning_unit_year_lists) == 1:
                             learning_unit_year = learning_unit_year_lists[0]
                         if not learning_unit_year:
@@ -151,7 +151,7 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                                             if score < 0 or score > 20:
                                                 validation_error += "%s %s!" % (info_line, _('scores_gt_0_lt_20'))
                                                 score_valid = False
-                                            elif learning_unit_year and not learning_unit_year.decimal_scores and round(score) != score:
+                                            elif not learning_unit_year.decimal_scores and round(score) != score:
                                                 validation_error += "%s %s!" % (info_line, _('score_decimal_not_allowed'))
                                                 score_valid = False
                                         else:
@@ -198,11 +198,12 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                                                     new_score = True
 
                                         if new_score:
-                                            exam_enrollment.score_draft = score
-                                            exam_enrollment.justification_draft = justification_xls
                                             if is_program_manager:
                                                 exam_enrollment.score_final = score
                                                 exam_enrollment.justification_final = justification_xls
+                                            else:
+                                                exam_enrollment.score_draft = score
+                                                exam_enrollment.justification_draft = justification_xls
 
                                             exam_enrollment.save()
 
