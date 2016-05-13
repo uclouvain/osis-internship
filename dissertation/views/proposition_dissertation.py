@@ -50,7 +50,7 @@ def manager_proposition_dissertations(request):
 
 @login_required
 @user_passes_test(is_manager)
-def manager_proposition_dissertation_delete(pk):
+def manager_proposition_dissertation_delete(request, pk):
     proposition_dissertation = get_object_or_404(PropositionDissertation, pk=pk)
     proposition_dissertation.active = False
     proposition_dissertation.save()
@@ -112,7 +112,7 @@ def proposition_dissertations(request):
 
 
 @login_required
-def proposition_dissertation_delete(pk):
+def proposition_dissertation_delete(request, pk):
     proposition_dissertation = get_object_or_404(PropositionDissertation, pk=pk)
     proposition_dissertation.active = False
     proposition_dissertation.save()
