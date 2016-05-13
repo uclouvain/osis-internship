@@ -162,7 +162,7 @@
                                 <td>{{ note_detail.exam_enrollments_encoded}}/{{ note_detail.total_exam_enrollments}}</td>
                                 <td><a class="btn btn-default"
                                        href="{% url 'scores_encoding_download' note_detail.learning_unit_year.id academic_year.id%}"
-                                       role="button" title="{% trans 'hint_get_excel_file'%}"
+                                       role="button"
                                        id="lnk_scores_encoding_download_{{lu.id}}"
                                        data-toggle="tooltip" data-placement="right"
                                        title="{% trans 'tooltip_dowload_excel_file' %}"
