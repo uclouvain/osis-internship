@@ -24,11 +24,12 @@
 #
 ##############################################################################
 from django.db import models
-from base.models import structure
+from base.models import offer
 
 
 class OfferProposition(models.Model):
-    structure = models.ForeignKey(structure.Structure)
+    acronym = models.CharField(max_length=200)
+    offer = models.ForeignKey(offer.Offer)
 
     ####################
     # READERS PARAMETERS
@@ -57,7 +58,7 @@ class OfferProposition(models.Model):
     validation_commission_exists = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.structure.acronym
+        return self.offer.title
 
     def find_all():
-        return OfferProposition.objects.order_by('structure').distinct()
+        return OfferProposition.objects.order_by('offer').distinct()

@@ -55,8 +55,8 @@ class ManagerOfferPropositionForm(ModelForm):
     class Meta:
         model = OfferProposition
         fields = ('adviser_can_suggest_reader', 'validation_commission_exists', 'student_can_manage_readers',
-                  'evaluation_first_year', 'readers_visibility_date_for_students', 'structure')
-        widgets = {'structure': forms.HiddenInput(), 'offer_proposition': forms.CheckboxSelectMultiple()}
+                  'evaluation_first_year', 'readers_visibility_date_for_students', 'offer')
+        widgets = {'offer': forms.HiddenInput(), 'offer_proposition': forms.CheckboxSelectMultiple()}
 
 
 class PropositionDissertationForm(ModelForm):
