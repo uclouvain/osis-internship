@@ -52,6 +52,13 @@
                                                         value="{{ s_name | default_if_none:'' }}"
                                                         style="text-transform:uppercase">
           </div>
+          <div class="col-md-3">
+              <label for="name" >{% trans 'Firstname'%}</label>
+              <input class="form-control" id="txt_firstname" placeholder="{% trans 'Firstname' %}"
+                                                        name="s_firstname"
+                                                        value="{{ s_firstname | default_if_none:'' }}"
+                                                        style="text-transform:uppercase">
+          </div>
           <div class="col-md-2">
             <br>
             <button type="submit" id="bt_submit_student_search" class="btn btn-primary"

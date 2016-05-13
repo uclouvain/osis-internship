@@ -24,12 +24,13 @@
 #
 ##############################################################################
 from django import template
-from base.models.program_manager import is_programme_manager
+from base.models.program_manager import is_program_manager
 
 register = template.Library()
+
 
 @register.assignment_tag(takes_context=True)
 def programme_manager(context):
     request = context['request']
     enrollment = context['enrollment']
-    return is_programme_manager(request.user, enrollment.learning_unit_enrollment.offer_enrollment.offer_year)
+    return is_program_manager(request.user, offer_year=enrollment.learning_unit_enrollment.offer_enrollment.offer_year)

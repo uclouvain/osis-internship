@@ -27,6 +27,15 @@ from django import template
 
 register = template.Library()
 
+
 @register.filter
 def format(value, arg):
     return value % arg
+
+
+@register.filter
+def str_format(value, args):
+    if args is None:
+        return value
+    args_list = args.split('|')
+    return value.format(*args_list)

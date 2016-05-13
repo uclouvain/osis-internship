@@ -26,33 +26,35 @@
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
-from base.models import person
-from django.utils import timezone
-
-
-JUSTIFICATION_TYPES = (
-    ('ABSENT', _('absent')),
-    ('CHEATING', _('cheating')),
-    ('ILL', _('ill')),
-    ('JUSTIFIED_ABSENCE', _('justified_absence')),
-    ('SCORE_MISSING', _('score_missing')))
+from base.models import person, learning_unit_year
 
 
 class ExamEnrollmentAdmin(admin.ModelAdmin):
-    list_display = ('student', 'session_exam', 'score_final', 'justification_final', 'encoding_status', 'changed')
-    list_filter = ('encoding_status', 'session_exam__number_session')
-    fieldsets = ((None, {'fields': ('session_exam','learning_unit_enrollment','score_draft','justification_draft',
-                                    'score_final','justification_final')}),)
+    list_display = ('student', 'session_exam', 'score_final', 'justification_final', 'changed')
+    list_filter = ('session_exam__number_session',)
+    fieldsets = ((None, {'fields': ('session_exam', 'learning_unit_enrollment', 'score_draft', 'justification_draft',
+                                    'score_final', 'justification_final')}),)
     raw_id_fields = ('session_exam', 'learning_unit_enrollment')
     search_fields = ['learning_unit_enrollment__offer_enrollment__student__person__first_name',
-                     'learning_unit_enrollment__offer_enrollment__student__person__last_name']
+                     'learning_unit_enrollment__offer_enrollment__student__person__last_name',
+                     'learning_unit_enrollment__offer_enrollment__student__registration_id',
+                     'learning_unit_enrollment__learning_unit_year__acronym']
+
+
+# When the user inform 'A', we have to convert it to 'ABSENCE_UNJUSTIFIED'
+# When exporting the data to EPC, we have to convert:
+#    'ABSENCE_UNJUSTIFIED' => 'S'
+#    'ABSENCE_JUSTIFIED'   => 'M'
+#    'CHEATING'            => 'T'
+#    'SCORE_MISSING'       => '?'
+JUSTIFICATION_TYPES = (
+    ('ABSENCE_UNJUSTIFIED', _('absence_unjustified')),  # A -> S
+    ('ABSENCE_JUSTIFIED', _('absence_justified')),      # M
+    ('CHEATING', _('cheating')),                        # T
+    ('SCORE_MISSING', _('score_missing')))              # ?
 
 
 class ExamEnrollment(models.Model):
-    ENCODING_STATUS_LIST = (
-        ('SAVED', _('saved')),
-        ('SUBMITTED', _('submitted')))
-
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     score_draft = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
@@ -61,7 +63,6 @@ class ExamEnrollment(models.Model):
     justification_draft = models.CharField(max_length=20, blank=True, null=True, choices=JUSTIFICATION_TYPES)
     justification_reencoded = models.CharField(max_length=20, blank=True, null=True, choices=JUSTIFICATION_TYPES)
     justification_final = models.CharField(max_length=20, blank=True, null=True, choices=JUSTIFICATION_TYPES)
-    encoding_status = models.CharField(max_length=9, blank=True, null=True, choices=ENCODING_STATUS_LIST)
     session_exam = models.ForeignKey('SessionExam')
     learning_unit_enrollment = models.ForeignKey('LearningUnitEnrollment')
 
@@ -70,6 +71,19 @@ class ExamEnrollment(models.Model):
 
     def __str__(self):
         return u"%s - %s" % (self.session_exam, self.learning_unit_enrollment)
+
+
+def get_letter_justication_type(justification_type):
+    if JUSTIFICATION_TYPES[0][0] == justification_type:
+        return 'A'
+    elif JUSTIFICATION_TYPES[1][0] == justification_type:
+        return 'M'
+    elif JUSTIFICATION_TYPES[2][0] == justification_type:
+        return 'T'
+    elif JUSTIFICATION_TYPES[3][0] == justification_type:
+        return '?'
+    else:
+        return ''
 
 
 def find_exam_enrollments_by_session(session_exm):
@@ -110,50 +124,23 @@ def find_by_enrollment_session(learning_unit_enrollment, session_exam_number_ses
                                  .filter(session_exam__number_session=session_exam_number_session).first()
 
 
-def count_encoded_scores(enrollments):
-    """ Count the scores that were already encoded but not submitted yet. """
-    counter = 0
-    for enrollment in enrollments:
-        if (enrollment.score_draft or enrollment.justification_draft) \
-                and not enrollment.score_final \
-                and not enrollment.justification_final:
-            counter += 1
-
-    return counter
-
-
 def calculate_exam_enrollment_progress(enrollments):
     if enrollments:
-        progress = len([e for e in enrollments if e.score_final or e.justification_final]) / len(enrollments)
+        progress = len([e for e in enrollments if e.score_final is not None or e.justification_final]) / len(enrollments)
     else:
         progress = 0
     return progress * 100
 
 
-def calculate_session_exam_progress(session_exam):
-    enrollments = list(find_exam_enrollments_by_session(session_exam))
-
-    if enrollments:
-        progress = 0
-        for e in enrollments:
-            if e.score_final is not None or e.justification_final is not None:
-                progress += 1
-        return str(progress) + "/" + str(len(enrollments))
-    else:
-        return "0/0"
+def justification_label_authorized():
+    return "%s, %s, %s" % (_('absent_pdf_legend'),
+                           _('cheating_pdf_legend'),
+                           _('score_missing_pdf_legend'))
 
 
-def justification_label_authorized(is_fac):
-    if is_fac:
-        return '%s, %s, %s, %s, %s' % (_('absent'),
-                                       _('cheating'),
-                                       _('ill'),
-                                       _('justified_absence'),
-                                       _('score_missing'))
-    else:
-        return '%s, %s, %s' % (_('absent'),
-                               _('cheating'),
-                               _('score_missing'))
+def score_label_authorized():
+    return "%s, %s" % (_('presence_note_pdf_legend'),
+                       _('empty_note_pdf_legend'))
 
 
 class ExamEnrollmentHistoryAdmin(admin.ModelAdmin):
@@ -199,66 +186,45 @@ def find_exam_enrollments_by_session_learningunit(session_exm, learning_unt):
     return enrollments
 
 
-def find_exam_enrollments_by_session_structure(session_exm, structure):
-    enrollments = ExamEnrollment.objects.filter(session_exam=session_exm) \
-        .filter(learning_unit_enrollment__offer_enrollment__offer_year__structure=structure) \
-        .filter(session_exam__offer_year_calendar__start_date__lte=timezone.now()) \
-        .filter(session_exam__offer_year_calendar__end_date__gte=timezone.now())\
-        .order_by('learning_unit_enrollment__offer_enrollment__offer_year__acronym',
-                  'learning_unit_enrollment__offer_enrollment__student__person__last_name',
-                  'learning_unit_enrollment__offer_enrollment__student__person__first_name')
-    return enrollments
+def find_for_score_encodings(session_exam_number,
+                             learning_unit_year_id=None,
+                             learning_unit_year_ids=None,
+                             tutor=None, offers_year=None,
+                             with_justification_or_score_final=False,
+                             with_justification_or_score_draft=False):
+    """
+    :param session_exam_number: Integer represents the number_session of the Session_exam (1,2,3,4 or 5).
+    :param learning_unit_year_id: Filter OfferEnrollments by learning_unit_year.
+    :param learning_unit_year_ids: Filter OfferEnrollments by a list of learning_unit_year.
+    :param tutor: Filter OfferEnrollments by Tutor.
+    :param offers_year: Filter OfferEnrollments by OfferYear.
+    :param with_justification_or_score_final: If True, only examEnrollments with a score_final or a justification_final
+                                              are returned.
+    :param with_justification_or_score_draft: If True, only examEnrollments with a score_draft or a justification_draft
+                                              are returned.
+    :return: All examEnrollments filtered.
+    """
+    queryset = ExamEnrollment.objects.filter(session_exam__number_session=session_exam_number)
 
+    if learning_unit_year_id:
+        queryset = queryset.filter(session_exam__learning_unit_year_id=learning_unit_year_id)
+    elif learning_unit_year_ids:
+        queryset = queryset.filter(session_exam__learning_unit_year_id__in=learning_unit_year_ids)
 
-def find_exam_enrollments_by_session_pgm(session_exm,program_mgr_list):
-    offer_year_structures = []
-    for p in program_mgr_list:
-        if p.offer_year.structure not in offer_year_structures:
-            offer_year_structures.append(p.offer_year.structure)
+    if tutor:
+        # Filter by Tutor is like filter by a list of learningUnits
+        # It's not necessary to add a filter if learningUnitYear or learningUnitYearIds are already defined
+        if not learning_unit_year_id and not learning_unit_year_ids:
+            learning_unit_year_ids = learning_unit_year.find_by_tutor(tutor).values_list('id')
+            queryset = queryset.filter(session_exam__learning_unit_year_id__in=learning_unit_year_ids)
 
-    enrollments = ExamEnrollment.objects.filter(session_exam=session_exm) \
-                .filter(learning_unit_enrollment__offer_enrollment__offer_year__structure__in=offer_year_structures)\
-                .filter(session_exam__offer_year_calendar__start_date__lte=timezone.now()) \
-                .filter(session_exam__offer_year_calendar__end_date__gte=timezone.now())\
-                .order_by('learning_unit_enrollment__offer_enrollment__offer_year__acronym',
-                          'learning_unit_enrollment__offer_enrollment__student__person__last_name',
-                          'learning_unit_enrollment__offer_enrollment__student__person__first_name')
-    return enrollments
+    if offers_year:
+        queryset = queryset.filter(session_exam__offer_year_calendar__offer_year__in=offers_year)
 
+    if with_justification_or_score_final:
+        queryset = queryset.exclude(score_final=None, justification_final=None)
 
-def find_exam_enrollments_drafts_existing_by_session(session_exam):
-    """ Return the enrollments of a session but not the ones already submitted. """
-    enrolls = ExamEnrollment.objects.filter(session_exam=session_exam) \
-                                    .filter(score_final__isnull=True) \
-                                    .filter(models.Q(justification_draft__isnull=False) |
-                                            models.Q(score_draft__isnull=False)) \
-                                    .filter(models.Q(justification_final__isnull=True) |
-                                            models.Q(justification_final='')) \
-                                    .order_by('learning_unit_enrollment__offer_enrollment__offer_year__acronym',
-                                              'learning_unit_enrollment__offer_enrollment__student__person__last_name',
-                                              'learning_unit_enrollment__offer_enrollment__student__person__first_name')
-    return enrolls
+    if with_justification_or_score_draft:
+        queryset = queryset.exclude(score_draft=None, justification_draft=None)
 
-
-def find_exam_enrollments_drafts_existing_pgmer_by_session(session_exam):
-    """ Return the enrollments of a session but not the ones already submitted. """
-    enrolls = ExamEnrollment.objects.filter(session_exam=session_exam) \
-                                    .filter(models.Q(justification_draft__isnull=False) |
-                                            models.Q(score_draft__isnull=False)) \
-                                    .order_by('learning_unit_enrollment__offer_enrollment__offer_year__acronym',
-                                              'learning_unit_enrollment__offer_enrollment__student__person__last_name',
-                                              'learning_unit_enrollment__offer_enrollment__student__person__first_name')
-    return enrolls
-
-
-def find_exam_enrollments_double_pgmer_by_session(session_exam):
-    """ Return the enrollments of a session but not the ones already submitted. """
-    enrolls = ExamEnrollment.objects.filter(session_exam=session_exam) \
-                                    .filter(models.Q(justification_draft__isnull=False) |
-                                            models.Q(score_draft__isnull=False)) \
-                                    .filter(models.Q(justification_reencoded__isnull=False) |
-                                            models.Q(score_reencoded__isnull=False)) \
-                                    .order_by('learning_unit_enrollment__offer_enrollment__offer_year__acronym',
-                                              'learning_unit_enrollment__offer_enrollment__student__person__last_name',
-                                              'learning_unit_enrollment__offer_enrollment__student__person__first_name')
-    return enrolls
+    return queryset

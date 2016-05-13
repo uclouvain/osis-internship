@@ -27,19 +27,17 @@ from base import models as mdl
 from . import layout
 from datetime import datetime
 from base.forms import OfferYearCalendarForm
+from django.utils.translation import ugettext_lazy as _
 
 
 def offers(request):
     academic_yr = None
-
-    faculties = mdl.structure.find_by_type('FACULTY')
     academic_years = mdl.academic_year.find_academic_years()
 
     academic_year_calendar = mdl.academic_year.current_academic_year()
     if academic_year_calendar:
         academic_yr = academic_year_calendar.id
-    return layout.render(request, "offers.html", {'faculties': faculties,
-                                                  'academic_year': academic_yr,
+    return layout.render(request, "offers.html", {'academic_year': academic_yr,
                                                   'academic_years': academic_years,
                                                   'offers': [],
                                                   'init': "1"})
@@ -76,7 +74,7 @@ def offer_read(request, offer_year_id):
 
 def offer_year_calendar_read(request, id):
     offer_year_calendar = mdl.offer_year_calendar.find_by_id(id)
-    is_programme_manager = mdl.program_manager.is_programme_manager(request.user,offer_year_calendar.offer_year)
+    is_programme_manager = mdl.program_manager.is_program_manager(request.user, offer_year=offer_year_calendar.offer_year)
     return layout.render(request, "offer_year_calendar.html", {'offer_year_calendar':   offer_year_calendar,
                                                                'is_programme_manager' : is_programme_manager})
 

@@ -52,9 +52,9 @@ class Person(models.Model):
     global_id = models.CharField(max_length=10, blank=True, null=True)
     gender = models.CharField(max_length=1, blank=True, null=True, choices=GENDER_CHOICES, default='U')
     national_id = models.CharField(max_length=25, blank=True, null=True)
-    first_name = models.CharField(max_length=50, blank=True, null=True)
+    first_name = models.CharField(max_length=50, blank=True, null=True, db_index=True)
     middle_name = models.CharField(max_length=50, blank=True, null=True)
-    last_name = models.CharField(max_length=50, blank=True, null=True)
+    last_name = models.CharField(max_length=50, blank=True, null=True, db_index=True)
     email = models.EmailField(max_length=255, blank=True, null=True)
     phone = models.CharField(max_length=30, blank=True, null=True)
     phone_mobile = models.CharField(max_length=30, blank=True, null=True)
@@ -93,3 +93,7 @@ def change_language(user, new_language):
         person = Person.objects.get(user=user)
         person.language = new_language
         person.save()
+
+
+def find_by_global_id(global_id):
+    return Person.objects.filter(global_id=global_id).first()
