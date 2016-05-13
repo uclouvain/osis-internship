@@ -114,12 +114,17 @@
                         <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
                         <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
                         <td>
+                            {% if is_program_manager %}
                             <input type="hidden" id="hdn_score_draft_{{ enrollment.id }}"
-                                   value="{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}">
+                                   value="{{ enrollment.score_final | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}"/>
+                            {% else %}
+                            <input type="hidden" id="hdn_score_draft_{{ enrollment.id }}"
+                                   value="{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}"/>
+                            {% endif %}
                             <input type="number" min="0" max="20" name="score_{{ enrollment.id }}" id="num_double_score_{{ enrollment.id }}"
                                    tabindex="{{ forloop.counter }}" class="form-control"
                                    {% if not is_program_manager %}
-                                     {% if enrollment.score_final or enrollment.justification_final %}
+                                     {% if enrollment.score_final != None or enrollment.justification_final %}
                                        disabled
                                      {% endif %}
                                    {% endif %}
@@ -132,11 +137,15 @@
                                    {% endif %} >
                         </td>
                         <td>
-                            <input type="hidden" id="hdn_justification_draft_{{ enrollment.id }}" value="{{ enrollment.justification_draft }}">
+                            {% if is_program_manager %}
+                                <input type="hidden" id="hdn_justification_draft_{{ enrollment.id }}" value="{{ enrollment.justification_final }}">
+                            {% else %}
+                                <input type="hidden" id="hdn_justification_draft_{{ enrollment.id }}" value="{{ enrollment.justification_draft }}">
+                            {% endif %}
                             <select class="form-control" name="justification_{{ enrollment.id }}" id="slt_double_justification_score_{{ enrollment.id }}"
                                    tabindex="{{ enrollments|length|sum:forloop.counter }}"
                                    {% if not is_program_manager %}
-                                     {% if enrollment.score_final or enrollment.justification_final %}
+                                     {% if enrollment.score_final != None or enrollment.justification_final %}
                                         disabled
                                     {% endif %}
                                    {% endif %}>

@@ -71,7 +71,7 @@ def export_xls(academic_year_id, is_fac, exam_enrollments):
         else:
             end_date = exam_enroll.session_exam.offer_year_calendar.end_date.strftime('%d/%m/%Y')
         score = None
-        if exam_enroll.score_final:
+        if exam_enroll.score_final is not None:
             if exam_enroll.session_exam.learning_unit_year.decimal_scores:
                 score = "{0:.2f}".format(exam_enroll.score_final)
             else:
@@ -80,16 +80,16 @@ def export_xls(academic_year_id, is_fac, exam_enrollments):
         if exam_enroll.justification_final:
             justification = mdl.exam_enrollment.get_letter_justication_type(exam_enroll.justification_final)
         worksheet.append([str(academic_year),
-                   str(exam_enroll.session_exam.number_session),
-                   exam_enroll.session_exam.learning_unit_year.acronym,
-                   offer.acronym,
-                   student.registration_id,
-                   person.last_name,
-                   person.first_name,
-                   score,
-                   str(justification),
-                   end_date,
-                   exam_enroll.id])
+                          str(exam_enroll.session_exam.number_session),
+                          exam_enroll.session_exam.learning_unit_year.acronym,
+                          offer.acronym,
+                          student.registration_id,
+                          person.last_name,
+                          person.first_name,
+                          score,
+                          str(justification),
+                          end_date,
+                          exam_enroll.id])
 
         row_number += 1
         __coloring_non_editable(worksheet, row_number, score, exam_enroll.justification_final)
