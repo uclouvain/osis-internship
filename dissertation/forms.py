@@ -25,9 +25,10 @@
 ##############################################################################
 from django import forms
 from django.forms import ModelForm
-from dissertation.models.proposition_dissertation import PropositionDissertation
 from dissertation.models.adviser import Adviser
+from dissertation.models.dissertation import Dissertation
 from dissertation.models.offer_proposition import OfferProposition
+from dissertation.models.proposition_dissertation import PropositionDissertation
 
 
 class AdviserForm(ModelForm):
@@ -40,6 +41,12 @@ class ManagerAdviserForm(ModelForm):
     class Meta:
         model = Adviser
         fields = ('available_by_email', 'available_by_phone', 'available_at_office', 'comment')
+
+
+class ManagerDissertationForm(ModelForm):
+    class Meta:
+        model = Dissertation
+        fields = ('title', 'offer_year_start', 'proposition_dissertation', 'description')
 
 
 class ManagerPropositionDissertationForm(ModelForm):

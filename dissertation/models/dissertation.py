@@ -26,7 +26,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from dissertation.models import proposition_dissertation
-from base.models import academic_year, learning_unit_enrollment
+from base.models import offer_year
 
 
 class Dissertation(models.Model):
@@ -49,13 +49,12 @@ class Dissertation(models.Model):
 
     title = models.CharField(max_length=200)
     status = models.CharField(max_length=12, choices=STATUS_CHOICES, default='DRAFT')
-    academic_year = models.ForeignKey(academic_year.AcademicYear)
-    learning_unit_enrollment = models.ForeignKey(learning_unit_enrollment.LearningUnitEnrollment)
+    offer_year_start = models.ForeignKey(offer_year.OfferYear)
     proposition_dissertation = models.ForeignKey(proposition_dissertation.PropositionDissertation)
     description = models.TextField(blank=True, null=True)
     active = models.BooleanField(default=True)
     creation_date = models.DateTimeField(auto_now_add=True, editable=False)
-    modification_date = models.DateTimeField(auto_now=True, editable=False)
+    modification_date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title

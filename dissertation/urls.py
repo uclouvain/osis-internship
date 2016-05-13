@@ -32,6 +32,9 @@ urlpatterns = [
     url(r'^informations/$', information.informations, name='informations'),
     url(r'^informations_edit/$', information.informations_edit, name='informations_edit'),
 
+    url(r'^manager_dissertations/$', dissertation.manager_dissertations,
+        name='manager_dissertations'),
+
     url(r'^manager_informations/$', information.manager_informations, name='manager_informations'),
     url(r'^manager_informations_detail/(?P<pk>[0-9]+)/$', information.manager_informations_detail,
         name='manager_informations_detail'),

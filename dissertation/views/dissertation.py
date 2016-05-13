@@ -23,11 +23,20 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.db import IntegrityError
+from django.db.models import Q
 from base import models as mdl
 from dissertation.models.adviser import Adviser
-from django.db import IntegrityError
+from dissertation.models.dissertation import Dissertation
+
+
+# Used by decorator @user_passes_test(is_manager) to secure manager views
+def is_manager(user):
+    person = mdl.person.find_by_user(user)
+    adviser = Adviser.find_by_person(person)
+    return adviser.type == 'MGR'
 
 
 @login_required
@@ -41,3 +50,11 @@ def dissertations(request):
     except IntegrityError:
         adviser = Adviser.find_by_person(person)
     return render(request, "dissertations.html", {'section': 'dissertations', 'person': person, 'adviser': adviser})
+
+
+@login_required
+@user_passes_test(is_manager)
+def manager_dissertations(request):
+    dissertations = Dissertation.objects.filter(Q(active=True))
+    return render(request, 'manager_dissertations_list.html',
+                  {'dissertations': dissertations})
