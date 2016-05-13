@@ -27,8 +27,7 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib import admin
-from base.models import offer_year, program_manager
-from base.utils import send_mail
+from base.models import offer_year
 
 
 class OfferYearCalendarAdmin(admin.ModelAdmin):

@@ -52,9 +52,22 @@ class Attribution(models.Model):
         return u"%s - %s" % (self.tutor.person, self.function)
 
 
-def find_by_tutor(a_tutor):
-    attributions = Attribution.objects.filter(tutor=a_tutor)
-    return attributions
+def search(tutor=None, learning_unit_id=None, function=None, learning_unit_ids=None):
+    queryset = Attribution.objects
+
+    if tutor:
+        queryset = queryset.filter(tutor=tutor)
+
+    if learning_unit_id:
+        queryset = queryset.filter(learning_unit_id=learning_unit_id)
+
+    if function:
+        queryset = queryset.filter(function=function)
+
+    if learning_unit_ids:
+        queryset = queryset.filter(learning_unit_id__in=learning_unit_ids)
+
+    return queryset
 
 
 def get_assigned_tutor(user):
@@ -63,31 +76,3 @@ def get_assigned_tutor(user):
         return attribution.tutor
     else:
         return None
-
-
-def find_by_learning_unit(a_learning_unit):
-    attributions = Attribution.objects.filter(learning_unit=a_learning_unit) \
-                              .order_by('tutor__person__last_name', 'tutor__person__first_name')
-    return attributions
-
-
-def find_by_function(tutor, a_learning_unit, function):
-    attributions_coord = Attribution.objects.filter(learning_unit=a_learning_unit) \
-                                     .filter(tutor=tutor.id)\
-                                     .filter(function=function)
-    if attributions_coord:
-        return True
-    return False
-
-
-def find_by_learning_unit_year_ids(learning_unit_year_ids, function=None):
-    """
-    :param learning_unit_year_ids: Ids from which to find attributions.
-    :param function: Filter the resulset by Attribution.function
-    :return: Find all attributions for the learningUnitYears in parameter.
-    """
-    queryset = Attribution.objects
-    if function:
-        queryset = queryset.filter(function=function)
-    queryset = queryset.filter(learning_unit_id__in=learning_unit_year_ids)
-    return queryset

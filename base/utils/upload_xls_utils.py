@@ -235,7 +235,9 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
             if not is_program_manager:
                 tutor = mdl.tutor.find_by_user(user)
                 if tutor and learning_unit_id:
-                    coordinator = mdl.attribution.find_by_function(tutor, learning_unit_id, 'COORDINATOR')
+                    coordinator = mdl.attribution.search(tutor=tutor,
+                                                         learning_unit_id=learning_unit_id,
+                                                         function='COORDINATOR')
                     if not coordinator:
                         messages.add_message(request, messages.INFO, '%s' % _('the_coordinator_must_still_submit_scores'))
         return True
