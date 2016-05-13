@@ -953,7 +953,7 @@ msgstr "Done at"
 
 #: utils/pdf_utils.py:381
 msgid "the"
-msgstr "The"
+msgstr "the"
 
 #: utils/pdf_utils.py:381
 msgid "signature"

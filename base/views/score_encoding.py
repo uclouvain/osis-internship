@@ -292,18 +292,12 @@ def upload_score_error(request):
 def notes_printing(request, learning_unit_year_id=None, tutor_id=None, offer_id=None):
 
     academic_year = mdl.academic_year.current_academic_year()
-    # To refactor in PdfUtils...
-    learning_unit_id = int(-1)
-    if learning_unit_year_id:
-        learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
-        learning_unit_id = learning_unit_year.learning_unit.id
-
     exam_enrollments, is_program_manager = _get_exam_enrollments(request.user,
                                                                  learning_unit_year_id=learning_unit_year_id,
                                                                  academic_year=academic_year,
                                                                  tutor_id=tutor_id,
                                                                  offer_year_id=offer_id)
-    return pdf_utils.print_notes(academic_year, learning_unit_id, exam_enrollments)
+    return pdf_utils.print_notes(academic_year, learning_unit_year_id, exam_enrollments)
 
 
 @login_required
@@ -480,10 +474,16 @@ def _sort_for_encodings(exam_enrollments):
     :param exam_enrollments: List of examEnrollments to sort
     :return:
     """
-    return sorted(exam_enrollments, key=lambda k:
-                  k.learning_unit_enrollment.offer_enrollment.offer_year.acronym +
-                  k.learning_unit_enrollment.offer_enrollment.student.person.last_name +
-                  k.learning_unit_enrollment.offer_enrollment.student.person.first_name)
+    def _sort(key):
+        off_enroll = key.learning_unit_enrollment.offer_enrollment
+        acronym = off_enroll.offer_year.acronym
+        last_name = off_enroll.student.person.last_name
+        first_name = off_enroll.student.person.first_name
+        return "%s %s %s" %(acronym if acronym else '',
+                            last_name.upper() if last_name else '',
+                            first_name.upper() if first_name else '')
+
+    return sorted(exam_enrollments, key=lambda k: _sort(k))
 
 
 def _get_exam_enrollments(user,

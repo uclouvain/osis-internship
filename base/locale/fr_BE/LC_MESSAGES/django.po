@@ -832,7 +832,7 @@ msgstr "Fait à"
 
 #: utils/pdf_utils.py:381
 msgid "the"
-msgstr "Le"
+msgstr "le"
 
 #: utils/pdf_utils.py:381
 msgid "signature"

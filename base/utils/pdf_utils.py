@@ -37,8 +37,9 @@ from django.utils.translation import ugettext_lazy as _
 from base import models as mdl
 
 PAGE_SIZE = A4
-MARGIN_SIZE = 20 * mm
-COLS_WIDTH = [25*mm, 45*mm, 45*mm, 25*mm, 25*mm]
+MARGIN_SIZE = 15 * mm
+COLS_WIDTH = [25*mm,50*mm,50*mm,25*mm,25*mm]
+STUDENTS_PER_PAGE = 24
 
 
 def add_header_footer(canvas, doc):
@@ -59,11 +60,11 @@ def add_header_footer(canvas, doc):
     canvas.restoreState()
 
 
-def print_notes(academic_year, learning_unit_id, list_exam_enrollment):
+def print_notes(academic_year, learning_unit_year_id, list_exam_enrollment):
     """
     Create a multi-page document
     :param academic_year: An object AcademicYear
-    :param learning_unit_id: The id of the learning unit (from which to create the PDF notes sheet)
+    :param learning_unit_year_id: The id of the learning unit (from which to create the PDF notes sheet)
     :param list_exam_enrollment: List of examEnrollments to print on the PDF.
     """
     filename = "%s.pdf" % _('scores_sheet')
@@ -82,7 +83,7 @@ def print_notes(academic_year, learning_unit_id, list_exam_enrollment):
     styles.add(ParagraphStyle(name='Justify', alignment=TA_JUSTIFY))
     content = []
 
-    list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, styles, content)
+    list_notes_building(learning_unit_year_id, academic_year, list_exam_enrollment, styles, content)
 
     doc.build(content, onFirstPage=add_header_footer, onLaterPages=add_header_footer)
     pdf = buffer.getvalue()
@@ -116,7 +117,7 @@ def footer_building(canvas, doc, styles):
     footer.drawOn(canvas, doc.leftMargin, h)
 
 
-def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, styles, content):
+def list_notes_building(learning_unit_year_id, academic_year, list_exam_enrollment, styles, content):
 
     content.append(Paragraph('''
                             <para spaceb=5>
@@ -127,10 +128,10 @@ def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, s
 
     old_offer_programme = None
     current_learning_unit_year = None
-    cpt = 1
+    students_printed = 0
     for rec_exam_enrollment in list_exam_enrollment:
-        if (int(rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.id) == int(learning_unit_id)) \
-                or int(learning_unit_id) == -1:
+        if not learning_unit_year_id \
+                or (int(rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.id) == int(learning_unit_year_id)):
 
             student = rec_exam_enrollment.learning_unit_enrollment.student
             offer_programme = rec_exam_enrollment.learning_unit_enrollment.offer
@@ -138,7 +139,8 @@ def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, s
                 old_offer_programme = offer_programme
                 current_learning_unit_year = rec_exam_enrollment.learning_unit_enrollment.learning_unit_year
 
-            if offer_programme != old_offer_programme:
+            if offer_programme != old_offer_programme or students_printed == STUDENTS_PER_PAGE:
+                students_printed = 0
                 # Other programme - 1. manage criteria
                 main_data(academic_year,
                           rec_exam_enrollment.session_exam,
@@ -185,7 +187,7 @@ def list_notes_building(learning_unit_id, academic_year, list_exam_enrollment, s
                          Paragraph(person.first_name, styles['Normal']),
                          sc,
                          Paragraph(justification, styles['Normal'])])
-        cpt += 1
+        students_printed += 1
 
     if old_offer_programme:
         main_data(academic_year, rec_exam_enrollment.session_exam, styles, current_learning_unit_year,
@@ -212,11 +214,7 @@ def legend_building(learning_unit_year, content):
     p.alignment = TA_CENTER
     p.fontSize = 8
     p.borderPadding = 5
-    content.append(Paragraph('''
-                        <para spaceb=5>
-                            &nbsp;
-                        </para>
-                        ''', ParagraphStyle('normal')))
+
     legend_text = _('justification_legend') % mdl.exam_enrollment.justification_label_authorized()
     legend_text += "<br/>%s" % (str(_('score_legend') % mdl.exam_enrollment.score_label_authorized()))
     if not learning_unit_year.decimal_scores:
@@ -329,38 +327,39 @@ def main_data(academic_year, session_exam, styles, learning_unit_year, offer, co
     else:
         deliberation_date = '-'
     content.append(Paragraph('%s : %s' % (_('deliberation_date'), deliberation_date), styles["Normal"]))
-    content.append(Paragraph('%s : %s' % (_('academic_year'), str(academic_year)), text_left_style))
-    content.append(Paragraph('Session : %d' % session_exam.number_session, text_left_style))
+    content.append(Paragraph('%s : %s  - Session : %d' % (_('academic_year'), str(academic_year), session_exam.number_session), text_left_style))
+    # content.append(Paragraph('Session : %d' % session_exam.number_session, text_left_style))
     content.append(Paragraph("<strong>%s : %s</strong>" % (learning_unit_year.acronym, learning_unit_year.title),
                              styles["Normal"]))
     content.append(Paragraph('''<b>%s : %s</b>''' % (_('program'), offer.acronym), styles["Normal"]))
-    content.append(Spacer(1, 12))
+    content.append(Paragraph('''
+        <para spaceb=2>
+            &nbsp;
+        </para>
+        ''', ParagraphStyle('normal')))
 
 
 def end_page_infos_building(content, end_date):
-    content.append(Paragraph('''
-                            <para spaceb=5>
-                                &nbsp;
-                            </para>
-                            ''', ParagraphStyle('normal')))
     p = ParagraphStyle('info')
     p.fontSize = 10
     p.alignment = TA_LEFT
     content.append(Paragraph(_("return_doc_to_administrator") % end_date
                              , p))
     content.append(Paragraph('''
-                            <para spaceb=10>
+                            <para spaceb=5>
                                 &nbsp;
                             </para>
                             ''', ParagraphStyle('normal')))
     p_signature = ParagraphStyle('info')
     p_signature.fontSize = 10
-    p_signature.leftIndent = 330
     paragraph_signature = Paragraph('''
-                    <font size=10>%s ....................................</font>
-                    <br/>
-                    <font size=10>%s ..../..../........</font>
-                    <br/>
+                    <font size=10>%s ...................................... , </font>
+                    <font size=10>%s ..../..../.......... &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font>
                     <font size=10>%s</font>
                    ''' % (_('done_at'), _('the'), _('signature')), p_signature)
     content.append(paragraph_signature)
+    content.append(Paragraph('''
+        <para spaceb=2>
+            &nbsp;
+        </para>
+        ''', ParagraphStyle('normal')))
