@@ -37,7 +37,7 @@ from django.utils.translation import ugettext_lazy as _
 from base import models as mdl
 
 PAGE_SIZE = A4
-MARGIN_SIZE = 10 * mm
+MARGIN_SIZE = 15 * mm
 COLS_WIDTH = [25*mm,45*mm,45*mm,25*mm,25*mm]
 STUDENTS_PER_PAGE = 24
 
@@ -128,11 +128,10 @@ def list_notes_building(learning_unit_year_id, academic_year, list_exam_enrollme
 
     old_offer_programme = None
     current_learning_unit_year = None
-    cpt = 1
     students_printed = 0
     for rec_exam_enrollment in list_exam_enrollment:
-        if (int(rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.id) == int(learning_unit_year_id)) \
-                or int(learning_unit_year_id) == -1:
+        if not learning_unit_year_id \
+                or (int(rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.id) == int(learning_unit_year_id)):
 
             student = rec_exam_enrollment.learning_unit_enrollment.student
             offer_programme = rec_exam_enrollment.learning_unit_enrollment.offer
@@ -332,7 +331,6 @@ def main_data(academic_year, session_exam, styles, learning_unit_year, offer, co
     content.append(Paragraph("<strong>%s : %s</strong>" % (learning_unit_year.acronym, learning_unit_year.title),
                              styles["Normal"]))
     content.append(Paragraph('''<b>%s : %s</b>''' % (_('program'), offer.acronym), styles["Normal"]))
-    content.append(Spacer(1, 12))
 
 
 def end_page_infos_building(content, end_date):
