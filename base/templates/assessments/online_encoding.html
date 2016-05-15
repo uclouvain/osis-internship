@@ -47,12 +47,27 @@
     </div>
     <div class="panel-body">
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="form-group">
-                        <label>{% trans 'coordinator' %}</label><br>{{ coordinator }}
+                    <label>{% trans 'coordinator' %}</label><br>
+                    {{ coordinator }}
+                    {% if tutors %}
+                        <a role="button" data-toggle="collapse" data-target="#tutors_by_course" aria-expanded="false" aria-controls="tutors_by_course">
+                          <!--<span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>-->
+                            [...]
+                        </a>
+                    {% endif %}
+                    <div class="collapse" id="tutors_by_course">
+                        <label>{% trans 'tutors' %}</label><br>
+                        <ul>
+                            {% for prof in tutors %}
+                                <li>{{ prof }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <div class="form-group">
                     <label>{% trans 'academic_year' %}</label><br>
                     {{ academic_year }}

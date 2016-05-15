@@ -431,11 +431,8 @@ msgstr "Decimal score NOT allowed"
 msgid "Save"
 msgstr ""
 
-#: templates/assessments/scores_encoding.html:48
-#: templates/assessments/scores_encoding_mgr.html:54
-#: templates/assessments/scores_encoding_mgr.html:105
-msgid "tutor"
-msgstr "Tutor"
+msgid "tutors"
+msgstr "Tutors"
 
 #: templates/assessments/scores_encoding.html:50
 msgid "faculty"

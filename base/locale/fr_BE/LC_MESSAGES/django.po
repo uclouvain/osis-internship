@@ -349,6 +349,9 @@ msgstr ""
 msgid "tutor"
 msgstr "Enseignant(e)"
 
+msgid "tutors"
+msgstr "Enseignants"
+
 msgid "faculty"
 msgstr "Faculté"
 
