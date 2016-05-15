@@ -77,7 +77,7 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
             continue
 
         student = mdl.student.find_by(registration_id=row[col_registration_id].value)
-        info_line = "%s %d :" % (_('Line'), count + 1)
+        info_line = "%s %d (NOMA %s):" % (_('Line'), count + 1, row[col_registration_id].value)
         if not student:
             validation_error += "%s %s!" % (info_line, _('student_not_exist') % (str(row[col_registration_id].value)))
         else:
