@@ -795,7 +795,7 @@ msgid "justification_legend"
 msgstr "Légende pour le champ 'Justification': %s"
 
 msgid "score_legend"
-msgstr "Légende pour le champ 'Note chiffrée': %s"
+msgstr "Légende pour le champ 'Note chiffrée': %s (0=Cote de présence)"
 
 #: utils/pdf_utils.py:228
 msgid "unauthorized_decimal_for_this_activity"

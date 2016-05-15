@@ -222,7 +222,7 @@ def legend_building(learning_unit_year, content):
     p.borderPadding = 5
 
     legend_text = _('justification_legend') % mdl.exam_enrollment.justification_label_authorized()
-    legend_text += "<br/>%s" % (str(_('score_legend') % mdl.exam_enrollment.score_label_authorized()))
+    legend_text += "<br/>%s" % (str(_('score_legend') % "0 - 20"))
     if not learning_unit_year.decimal_scores:
         legend_text += "<br/><font color=red>%s</font>" % _('unauthorized_decimal_for_this_activity')
 
