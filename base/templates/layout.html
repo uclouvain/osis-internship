@@ -123,12 +123,13 @@
                             {{ request.user.first_name }}
                             <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{% url 'logout' %}?next=/" id="lnk_logout">
-                                <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
-                                {% trans 'logout' %}</a></li>
                             <li><a href="{% url 'profile' %}" id="lnk_profile">
                                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                                 {% trans 'profile' %}</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="{% url 'logout' %}?next=/" id="lnk_logout">
+                                <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                                {% trans 'logout' %}</a></li>
                         </ul>
                     </li>
                 {% else %}
@@ -174,7 +175,7 @@
         <p class="navbar-text pull-left"><a
                 href="http://uclouvain.github.io/osis-louvain-documentation/doc/business/user-manual_fr.html"
                 target="_blank" id="lnk_user_manual">{% trans 'documentation' %}</a> |
-            <a href="http://uclouvain.github.io/osis-louvain/" target="_blank" id="lnk_osis_website">{% trans 'website' %}</a> |
+            <a href="http://uclouvain.github.io/osis/" target="_blank" id="lnk_osis_website">{% trans 'website' %}</a> |
             <a href="https://github.com/uclouvain/osis-louvain" target="_blank" id="lnk_osis_source_code">{% trans 'source_code' %}
             </a></p>
         <p class="navbar-text pull-right"><span class="glyphicon glyphicon-copyright-mark"></span> 2016 <a

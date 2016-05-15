@@ -1025,8 +1025,7 @@ msgstr "The score seems to be incorrect. Decimales NOT allowed"
 
 #: utils/upload_xls_utils.py:159
 msgid "constraint_score_other_score"
-msgstr ""
-"You can't encode a 'score' AND an 'justification' together (unless the 'justification' is CHEATING)"
+msgstr "You can't encode a 'score' and a 'justification' together"
 
 #: utils/upload_xls_utils.py:226
 #, python-format
