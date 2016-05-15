@@ -450,8 +450,11 @@ def get_data_pgmer(request, offer_year_id=None, tutor_id=None):
     # Adding coordinator for each learningUnit
     learning_unit_ids = [score_encoding.learning_unit_year.learning_unit.id for score_encoding in scores_encodings]
     all_attributions = list(mdl.attribution.search(learning_unit_ids=learning_unit_ids))
-    coord_grouped_by_learning_unit = {attrib.learning_unit.id: attrib.tutor.person for attrib in all_attributions
-                                      if attrib.function == 'COORDINATOR'}
+    coord_grouped_by_learning_unit = {}
+    for attrib in all_attributions:
+        if attrib.function == 'COORDINATOR' and attrib.learning_unit.id not in coord_grouped_by_learning_unit.keys():
+            coord_grouped_by_learning_unit[attrib.learning_unit.id] = attrib.tutor.person
+
     data = []
     for score_encoding in scores_encodings:
         line = {}
