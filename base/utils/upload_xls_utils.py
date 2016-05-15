@@ -37,38 +37,25 @@ from base import models as mdl
 
 @login_required
 def upload_scores_file(request, learning_unit_year_id=None):
-    learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
-    message_validation = ""
     if request.method == 'POST':
         form = ScoreFileForm(request.POST, request.FILES)
         if form.is_valid():
             file_name = request.FILES['file']
             if file_name is not None:
                 if ".xls" not in str(file_name):
-                    message_validation = _('file_must_be_xls')
+                    messages.add_message(request, messages.INFO, _('file_must_be_xls'))
                 else:
+                    learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
                     is_program_manager = mdl.program_manager.is_program_manager(request.user)
-                    is_valid = __save_xls_scores(request, file_name, is_program_manager, request.user, learning_unit_year.learning_unit.id)
-                    if not is_valid:
-                        message_validation = '%s' % _('invalid_file')
+                    __save_xls_scores(request, file_name, is_program_manager, request.user, learning_unit_year.learning_unit.id)
 
-                messages.add_message(request, messages.INFO, '%s' % message_validation)
         return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_year_id, ]))
-
-
-def _is_registration_id(registration_id):
-    try:
-        int(registration_id)
-        return True
-    except ValueError:
-        return False
 
 
 def __save_xls_scores(request, file_name, is_program_manager, user, learning_unit_id):
     workbook = load_workbook(file_name, read_only=True)
     worksheet = workbook.active
     validation_error = ""
-    data_line_number = 1
     new_scores_number = 0
     new_scores = False
     session_exam = None
@@ -90,7 +77,7 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
             continue
 
         student = mdl.student.find_by(registration_id=row[col_registration_id].value)
-        info_line = "%s %d :" % (_('Line'), data_line_number)
+        info_line = "%s %d (NOMA %s):" % (_('Line'), count + 1, row[col_registration_id].value)
         if not student:
             validation_error += "%s %s!" % (info_line, _('student_not_exist') % (str(row[col_registration_id].value)))
         else:
@@ -172,7 +159,7 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                                         if score and justification_xls:
                                             score_valid = False
                                             justification_valid = False
-                                            validation_error += "%s %s!" % (info_line, _('constraint_score_other_score'))
+                                            messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('constraint_score_other_score')))
 
                                         if score_valid or justification_valid:
                                             if is_program_manager:
@@ -212,7 +199,6 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                                                                                                     exam_enrollment,
                                                                                                     score,
                                                                                                     justification_xls)
-        data_line_number += 1
 
     messages.add_message(request, messages.ERROR, validation_error)
     if session_exam is not None:
@@ -243,4 +229,12 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
         return True
     else:
         messages.add_message(request, messages.ERROR, '%s' % _('no_score_injected'))
+        return False
+
+
+def _is_registration_id(registration_id):
+    try:
+        int(registration_id)
+        return True
+    except ValueError:
         return False

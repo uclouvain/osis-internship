@@ -904,9 +904,7 @@ msgstr "La note entrée est incorrecte ; décimales NON autorisées"
 
 #: utils/upload_xls_utils.py:159
 msgid "constraint_score_other_score"
-msgstr ""
-"Vous ne pouvez pas remplir le champs 'note' ET 'justification' tous les deux "
-"(sauf si 'justification' est 'Tricherie')"
+msgstr "Vous ne pouvez pas remplir le champs 'Note chiffrée' e 'justification' tous les deux"
 
 #: utils/upload_xls_utils.py:226
 #, python-format
