@@ -26,14 +26,14 @@
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
-from base.models import offer, structure, program_manager, academic_year
+from base.models import offer, program_manager, academic_year
 
 
 class OfferYearAdmin(admin.ModelAdmin):
     list_display = ('acronym', 'offer', 'parent', 'title', 'academic_year', 'changed')
-    fieldsets = ((None, {'fields': ('offer', 'academic_year', 'structure', 'acronym', 'title', 'parent',
+    fieldsets = ((None, {'fields': ('offer', 'academic_year', 'entity_management', 'acronym', 'title', 'parent',
                                     'title_international', 'title_short', 'title_printable', 'grade')}),)
-    raw_id_fields = ('offer', 'structure', 'parent')
+    raw_id_fields = ('offer', 'parent')
     search_fields = ['acronym']
 
 
@@ -53,9 +53,16 @@ class OfferYear(models.Model):
     title_international = models.CharField(max_length=255, blank=True, null=True)
     title_short = models.CharField(max_length=255, blank=True, null=True)
     title_printable = models.CharField(max_length=255, blank=True, null=True)
-    structure = models.ForeignKey(structure.Structure)
     parent = models.ForeignKey('self', blank=True, null=True, related_name='children', db_index=True)
     grade = models.CharField(max_length=20, blank=True, null=True, choices=GRADE_TYPES)
+    entity_administration = models.CharField(max_length=15, null=True)
+    entity_administration_fac = models.CharField(max_length=15, null=True)
+    entity_management = models.CharField(max_length=15,null=True)
+    entity_management_fac = models.CharField(max_length=15, null=True)
+    location = models.CharField(max_length=255, null=True) # Address for scores cheets
+    postal_code = models.CharField(max_length=20, null=True)
+    city = models.CharField(max_length=255, null=True)
+    country = models.ForeignKey('reference.Country', null=True)
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.acronym)
@@ -97,7 +104,7 @@ def find_by_academic_year(academic_yr):
 
 
 def find_by_structure(struct):
-    return OfferYear.objects.filter(structure=struct).order_by('academic_year', 'acronym')
+    return OfferYear.objects.filter(entity_management=struct.acronym).order_by('academic_year', 'acronym')
 
 
 def find_by_id(offer_year_id):
@@ -112,7 +119,7 @@ def search_root_offers(entity=None, academic_yr=None, acronym=None):
     queryset = OfferYear.objects
 
     if entity:
-        queryset = queryset.filter(structure__acronym__icontains=entity)
+        queryset = queryset.filter(entity_management__icontains=entity)
         has_criteria = True
 
     if academic_yr:
