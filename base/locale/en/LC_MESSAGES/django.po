@@ -917,7 +917,7 @@ msgid "justification_legend"
 msgstr "Justification legend: %s"
 
 msgid "score_legend"
-msgstr "Score legend: %s"
+msgstr "Score legend: %s (0=Score of presence)"
 
 #: utils/pdf_utils.py:228
 msgid "unauthorized_decimal_for_this_activity"
