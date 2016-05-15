@@ -30,7 +30,8 @@ from base.models import person, learning_unit_year
 
 
 class ExamEnrollmentAdmin(admin.ModelAdmin):
-    list_display = ('student', 'session_exam', 'score_final', 'justification_final', 'score_reencoded', 'justification_reencoded', 'changed')
+    list_display = ('student', 'session_exam', 'score_draft', 'justification_draft',
+                    'score_final', 'justification_final', 'score_reencoded', 'justification_reencoded', 'changed')
     list_filter = ('session_exam__number_session',)
     fieldsets = ((None, {'fields': ('session_exam', 'learning_unit_enrollment', 'score_draft', 'justification_draft',
                                     'score_final', 'justification_final')}),)
