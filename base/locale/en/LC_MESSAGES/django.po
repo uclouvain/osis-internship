@@ -488,7 +488,7 @@ msgstr "All"
 
 #: templates/assessments/scores_encoding_mgr.html:78
 msgid "refresh_list"
-msgstr ""
+msgstr "Search/update the list"
 
 #: templates/assessments/scores_encoding_mgr.html:104
 #: templates/assessments/scores_encoding_mgr.html:130
@@ -800,6 +800,9 @@ msgstr "My studies"
 msgid "programs"
 msgstr "Programs"
 
+msgid "program_s"
+msgstr "program(s)"
+
 #: templates/profile.html:47
 msgid "preferences"
 msgstr "Preferences"
@@ -1068,7 +1071,7 @@ msgid "get_excel_file"
 msgstr "Get Excel File"
 
 msgid "no_exam_session_opened_for_the_moment"
-msgstr "No session exam opened for the moment."
+msgstr "No scores' encoding session opened for the moment."
 
 msgid "you_manage"
 msgstr "You manage"

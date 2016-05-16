@@ -447,23 +447,22 @@ def get_data_pgmer(request, offer_year_id=None, tutor_id=None):
         scores_encodings = [score_encoding for score_encoding in scores_encodings
                             if score_encoding.learning_unit_year_id in learning_unit_year_ids]
 
-    # Adding coordinator for each learningUnit
-    learning_unit_ids = [score_encoding.learning_unit_year.learning_unit.id for score_encoding in scores_encodings]
-    all_attributions = list(mdl.attribution.search(learning_unit_ids=learning_unit_ids))
-    coord_grouped_by_learning_unit = {}
-    for attrib in all_attributions:
-        if attrib.function == 'COORDINATOR' and attrib.learning_unit.id not in coord_grouped_by_learning_unit.keys():
-            coord_grouped_by_learning_unit[attrib.learning_unit.id] = attrib.tutor.person
-
     data = []
-    for score_encoding in scores_encodings:
-        line = {}
-        line['learning_unit_year'] = score_encoding.learning_unit_year
-        line['exam_enrollments_encoded'] = score_encoding.exam_enrollments_encoded
-        line['total_exam_enrollments'] = score_encoding.total_exam_enrollments
-        line['tutor_person'] = coord_grouped_by_learning_unit.get(score_encoding.learning_unit_year.learning_unit.id,
-                                                                   None)
-        data.append(line)
+    all_attributions = []
+    if scores_encodings: # Empty in case there isn't any score to encode (not inside the period of scores' encoding)
+        # Adding coordinator for each learningUnit
+        learning_unit_ids = [score_encoding.learning_unit_year.learning_unit.id for score_encoding in scores_encodings]
+        all_attributions = list(mdl.attribution.search(learning_unit_ids=learning_unit_ids))
+        coord_grouped_by_learning_unit = {attrib.learning_unit.id: attrib.tutor.person for attrib in all_attributions
+                                          if attrib.function == 'COORDINATOR'}
+        for score_encoding in scores_encodings:
+            line = {}
+            line['learning_unit_year'] = score_encoding.learning_unit_year
+            line['exam_enrollments_encoded'] = score_encoding.exam_enrollments_encoded
+            line['total_exam_enrollments'] = score_encoding.total_exam_enrollments
+            line['tutor_person'] = coord_grouped_by_learning_unit.get(score_encoding.learning_unit_year.learning_unit.id,
+                                                                       None)
+            data.append(line)
 
     # Creating list of all tutors
     all_tutors = request.session.get('all_tutors', None)
