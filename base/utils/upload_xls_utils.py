@@ -55,7 +55,6 @@ def upload_scores_file(request, learning_unit_year_id=None):
 def __save_xls_scores(request, file_name, is_program_manager, user, learning_unit_id):
     workbook = load_workbook(file_name, read_only=True)
     worksheet = workbook.active
-    validation_error = ""
     new_scores_number = 0
     new_scores = False
     session_exam = None
@@ -79,20 +78,19 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
         student = mdl.student.find_by(registration_id=row[col_registration_id].value)
         info_line = "%s %d (NOMA %s):" % (_('Line'), count + 1, row[col_registration_id].value)
         if not student:
-            validation_error += "%s %s!" % (info_line, _('student_not_exist') % (str(row[col_registration_id].value)))
+            messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('student_not_exist') % (str(row[col_registration_id].value))))
         else:
             academic_year = mdl.academic_year.find_academic_year_by_year(int(row[col_academic_year].value[:4]))
             if not academic_year:
-                validation_error += "%s %s!" % (info_line, _('academic_year_not_exist') % row[col_academic_year].value)
+                messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('academic_year_not_exist') % row[col_academic_year].value))
             else:
                 offer_year = mdl.offer_year.find_by_academicyear_acronym(academic_year, row[col_offer].value)
                 if not offer_year:
-                    validation_error += "%s %s!" % (info_line, _('offer_year_not_exist') % (str(row[col_offer].value),
-                                                                                            academic_year.year))
+                    messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('offer_year_not_exist') % (str(row[col_offer].value), academic_year.year)))
                 else:
                     offer_enrollment = mdl.offer_enrollment.find_by_student_offer(student, offer_year)
                     if not offer_enrollment:
-                        validation_error += "%s %s!" % (info_line, _('offer_enrollment_not_exist'))
+                        messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('offer_enrollment_not_exist')))
                     else:
                         learning_unit_year_lists = mdl.learning_unit_year.search(academic_year,
                                                                                  row[col_learning_unit].value)
@@ -100,11 +98,11 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                         if len(learning_unit_year_lists) == 1:
                             learning_unit_year = learning_unit_year_lists[0]
                         if not learning_unit_year:
-                            validation_error += "%s %s!" % (info_line, _('activity_not_exit') % (str(row[col_learning_unit].value)))
+                            messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('activity_not_exit') % (str(row[col_learning_unit].value))))
                         else:
                             learning_unit_enrollment = mdl.learning_unit_enrollment.find_by_learningunit_enrollment(learning_unit_year, offer_enrollment)
                             if not learning_unit_enrollment:
-                                validation_error += "%s %s!" % (info_line, _('enrollment_activity_not_exist') % (str(row[col_learning_unit].value)))
+                                messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('enrollment_activity_not_exist') % (str(row[col_learning_unit].value))))
                             else:
                                 session_number = int(row[col_session].value)
                                 exam_enrollment = mdl.exam_enrollment.find_by_enrollment_session(learning_unit_enrollment, session_number)
@@ -136,10 +134,10 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
 
                                         if score is not None:
                                             if score < 0 or score > 20:
-                                                validation_error += "%s %s!" % (info_line, _('scores_gt_0_lt_20'))
+                                                messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('scores_gt_0_lt_20')))
                                                 score_valid = False
                                             elif not learning_unit_year.decimal_scores and round(score) != score:
-                                                validation_error += "%s %s!" % (info_line, _('score_decimal_not_allowed'))
+                                                messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('score_decimal_not_allowed')))
                                                 score_valid = False
                                         else:
                                             score_valid = False
@@ -200,7 +198,6 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                                                                                                     score,
                                                                                                     justification_xls)
 
-    messages.add_message(request, messages.ERROR, validation_error)
     if session_exam is not None:
         all_encoded = True
         enrollments = mdl.exam_enrollment.find_exam_enrollments_by_session(session_exam)
