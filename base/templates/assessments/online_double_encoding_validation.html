@@ -115,7 +115,7 @@
                         {% if is_program_manager %}
                             <td>
                                 <input type="hidden" id="hdn_justification_draft_{{ enrollment.id }}"
-                                       value="{{ enrollment.justification_draft | default_if_none:'' }}"/>
+                                       value="{{ enrollment.justification_final | default_if_none:'' }}"/>
                                 <div id="show_justification_draft_{{ enrollment.id }}">
                                     {%if enrollment.justification_final%}
                                         {{ enrollment.get_justification_final_display}}
