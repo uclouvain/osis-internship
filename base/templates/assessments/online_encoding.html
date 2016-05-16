@@ -47,7 +47,7 @@
     </div>
     <div class="panel-body">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label>{% trans 'coordinator' %}</label><br>
                     {{ coordinator }}
@@ -67,16 +67,22 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label>{% trans 'academic_year' %}</label><br>
                     {{ academic_year }}
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label>{% trans 'number_of_enrollments' %}</label><br>
                     {{ enrollments|length }}
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>{% trans 'number_session' %}</label><br>
+                    {{ number_session }}
                 </div>
             </div>
         </div>
@@ -154,7 +160,6 @@
                 <tr>
                     <th>{% trans 'status' %}</th>
                     <th>{% trans 'program' %}</th>
-                    <th>{% trans 'number_session' %}</th>
                     <th>{% trans 'registration_number' %}</th>
                     <th>{% trans 'lastname' %}</th>
                     <th>{% trans 'firstname' %}</th>
@@ -175,7 +180,6 @@
                                 <span class="glyphicon glyphicon-send" aria-hidden="true" style="color: green;" title="{% trans 'score_submitted' %}"></span>
                             {% endif %}</td>
                         <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
-                        <td>{{ enrollment.session_exam.number_session}}</td>
                         <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
                         <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
                         <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>

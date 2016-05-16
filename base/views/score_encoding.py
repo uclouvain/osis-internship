@@ -363,7 +363,6 @@ def get_data_online(learning_unit_year_id, request):
     draft_scores_not_sumitted = len([exam_enrol for exam_enrol in exam_enrollments
                                     if (exam_enrol.justification_draft or exam_enrol.score_draft is not None) and
                                      not exam_enrol.justification_final and exam_enrol.score_final is None])
-
     return {'section': 'scores_encoding',
             'academic_year': academic_yr,
             'progress': "{0:.0f}".format(progress),
@@ -373,7 +372,8 @@ def get_data_online(learning_unit_year_id, request):
             'is_program_manager': is_program_manager,
             'is_coordinator': mdl.tutor.is_coordinator(request.user, learning_unit_year.learning_unit.id),
             'draft_scores_not_sumitted': draft_scores_not_sumitted,
-            'tutors': mdl.tutor.find_by_learning_unit(learning_unit_year.learning_unit_id)}
+            'number_session': exam_enrollments[0].session_exam.number_session if len(exam_enrollments) > 0 else _('none'),
+            'tutors': mdl.tutor.find_by_learning_unit(learning_unit_year.learning_unit_id),}
 
 
 def get_data_online_double(learning_unit_year_id, request):
@@ -451,8 +451,11 @@ def get_data_pgmer(request, offer_year_id=None, tutor_id=None):
     # Adding coordinator for each learningUnit
     learning_unit_ids = [score_encoding.learning_unit_year.learning_unit.id for score_encoding in scores_encodings]
     all_attributions = list(mdl.attribution.search(learning_unit_ids=learning_unit_ids))
-    coord_grouped_by_learning_unit = {attrib.learning_unit.id: attrib.tutor.person for attrib in all_attributions
-                                      if attrib.function == 'COORDINATOR'}
+    coord_grouped_by_learning_unit = {}
+    for attrib in all_attributions:
+        if attrib.function == 'COORDINATOR' and attrib.learning_unit.id not in coord_grouped_by_learning_unit.keys():
+            coord_grouped_by_learning_unit[attrib.learning_unit.id] = attrib.tutor.person
+
     data = []
     for score_encoding in scores_encodings:
         line = {}
