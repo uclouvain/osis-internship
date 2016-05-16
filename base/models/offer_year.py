@@ -59,10 +59,13 @@ class OfferYear(models.Model):
     entity_administration_fac = models.CharField(max_length=15, null=True)
     entity_management = models.CharField(max_length=15,null=True)
     entity_management_fac = models.CharField(max_length=15, null=True)
+    recipient = models.CharField(max_length=15, null=True) # Recipient of scores cheets (Structure)
     location = models.CharField(max_length=255, null=True) # Address for scores cheets
     postal_code = models.CharField(max_length=20, null=True)
     city = models.CharField(max_length=255, null=True)
     country = models.ForeignKey('reference.Country', null=True)
+    phone = models.CharField(max_length=30, blank=True, null=True)
+    fax = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.acronym)
