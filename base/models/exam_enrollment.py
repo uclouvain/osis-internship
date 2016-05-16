@@ -146,11 +146,6 @@ def justification_label_authorized():
                            _('score_missing_pdf_legend'))
 
 
-def score_label_authorized():
-    return "%s, %s" % (_('presence_note_pdf_legend'),
-                       _('empty_note_pdf_legend'))
-
-
 class ExamEnrollmentHistoryAdmin(admin.ModelAdmin):
     list_display = ('exam_enrollment', 'person', 'score_final', 'justification_final', 'modification_date')
     fieldsets = ((None, {'fields': ('exam_enrollment', 'person', 'score_final', 'justification_final')}),)
