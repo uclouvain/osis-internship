@@ -363,7 +363,6 @@ def get_data_online(learning_unit_year_id, request):
     draft_scores_not_sumitted = len([exam_enrol for exam_enrol in exam_enrollments
                                     if (exam_enrol.justification_draft or exam_enrol.score_draft is not None) and
                                      not exam_enrol.justification_final and exam_enrol.score_final is None])
-
     return {'section': 'scores_encoding',
             'academic_year': academic_yr,
             'progress': "{0:.0f}".format(progress),
@@ -372,7 +371,8 @@ def get_data_online(learning_unit_year_id, request):
             'coordinator': coordinator,
             'is_program_manager': is_program_manager,
             'is_coordinator': mdl.tutor.is_coordinator(request.user, learning_unit_year.learning_unit.id),
-            'draft_scores_not_sumitted': draft_scores_not_sumitted}
+            'draft_scores_not_sumitted': draft_scores_not_sumitted,
+            'number_session': exam_enrollments[0].session_exam.number_session if len(exam_enrollments) > 0 else _('none')}
 
 
 def get_data_online_double(learning_unit_year_id, request):
