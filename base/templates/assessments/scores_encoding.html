@@ -179,6 +179,8 @@
         </div>
     </div>
 {% else %}
-    <p class="text-info" style="font-size: 130%">Aucune session d'examen ouverte pour le moment.</p>
+    <div class="alert alert-warning">
+      <p class="text-info" style="font-size: 130%">{% trans 'no_exam_session_opened_for_the_moment' %} </p>
+    </div>
 {% endif %}
 {% endblock %}

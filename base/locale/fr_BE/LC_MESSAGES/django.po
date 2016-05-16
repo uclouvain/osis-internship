@@ -377,7 +377,7 @@ msgid "all"
 msgstr "Tout"
 
 msgid "refresh_list"
-msgstr ""
+msgstr "Rechercher/mettre à jour la liste"
 
 msgid "learning_unit"
 msgstr "Unité d'enseignement"
@@ -676,6 +676,9 @@ msgstr "Mes études"
 msgid "programs"
 msgstr "Programmes"
 
+msgid "program_s"
+msgstr "programme(s)"
+
 #: templates/profile.html:47
 msgid "preferences"
 msgstr "Préférences"
@@ -947,7 +950,7 @@ msgid "get_excel_file"
 msgstr "Produire le fichier Excel"
 
 msgid "no_exam_session_opened_for_the_moment"
-msgstr "Aucune session d'examen ouverte pour le moment."
+msgstr "Aucune session d'encodage de notes ouverte pour le moment. "
 
 msgid "you_manage"
 msgstr "Vous gérez"
