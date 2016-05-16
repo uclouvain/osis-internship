@@ -50,12 +50,27 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='offeryear',
+            name='fax',
+            field=models.CharField(blank=True, max_length=255, null=True),
+        ),
+        migrations.AddField(
+            model_name='offeryear',
             name='location',
             field=models.CharField(max_length=255, null=True),
         ),
         migrations.AddField(
             model_name='offeryear',
+            name='phone',
+            field=models.CharField(blank=True, max_length=30, null=True),
+        ),
+        migrations.AddField(
+            model_name='offeryear',
             name='postal_code',
             field=models.CharField(max_length=20, null=True),
+        ),
+        migrations.AddField(
+            model_name='offeryear',
+            name='recipient',
+            field=models.CharField(max_length=15, null=True),
         ),
     ]
