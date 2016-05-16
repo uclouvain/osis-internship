@@ -60,8 +60,8 @@ class OfferYear(models.Model):
     entity_administration_fac = models.ForeignKey('Structure', related_name='admministration_fac', blank=True, null=True)
     entity_management = models.ForeignKey('Structure', related_name='management', blank=True, null=True)
     entity_management_fac = models.ForeignKey('Structure', related_name='management_fac', blank=True, null=True)
-    recipient = models.CharField(max_length=15, blank=True, null=True) # Recipient of scores cheets (Structure)
-    location = models.CharField(max_length=255, blank=True, null=True) # Address for scores cheets
+    recipient = models.CharField(max_length=255, blank=True, null=True)  # Recipient of scores cheets (Structure)
+    location = models.CharField(max_length=255, blank=True, null=True)  # Address for scores cheets
     postal_code = models.CharField(max_length=20, blank=True, null=True)
     city = models.CharField(max_length=255, blank=True, null=True)
     country = models.ForeignKey('reference.Country', blank=True, null=True)
@@ -124,7 +124,7 @@ def find_by_academic_year(academic_yr):
 
 
 def find_by_structure(struct):
-    return OfferYear.objects.filter(entity_management=struct.acronym).order_by('academic_year', 'acronym')
+    return OfferYear.objects.filter(entity_management=struct).order_by('academic_year', 'acronym')
 
 
 def find_by_id(offer_year_id):

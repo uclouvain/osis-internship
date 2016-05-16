@@ -67,9 +67,11 @@ def offer_read(request, offer_year_id):
     offer_yr = mdl.offer_year.find_by_id(offer_year_id)
     offer_yr_events = mdl.offer_year_calendar.find_offer_year_calendar(offer_yr)
     program_managers = mdl.program_manager.find_by_offer_year(offer_yr)
+
     return layout.render(request, "offer.html", {'offer_year': offer_yr,
                                                  'offer_year_events': offer_yr_events,
-                                                 'program_managers': program_managers})
+                                                 'program_managers': program_managers,
+                                                 'tab': 0})
 
 
 def offer_year_calendar_read(request, id):
