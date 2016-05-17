@@ -372,7 +372,8 @@ def get_data_online(learning_unit_year_id, request):
             'is_program_manager': is_program_manager,
             'is_coordinator': mdl.tutor.is_coordinator(request.user, learning_unit_year.learning_unit.id),
             'draft_scores_not_sumitted': draft_scores_not_sumitted,
-            'number_session': exam_enrollments[0].session_exam.number_session if len(exam_enrollments) > 0 else _('none')}
+            'number_session': exam_enrollments[0].session_exam.number_session if len(exam_enrollments) > 0 else _('none'),
+            'tutors': mdl.tutor.find_by_learning_unit(learning_unit_year.learning_unit_id),}
 
 
 def get_data_online_double(learning_unit_year_id, request):

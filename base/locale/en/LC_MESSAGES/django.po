@@ -389,11 +389,8 @@ msgstr "Decimal score NOT allowed"
 msgid "Save"
 msgstr ""
 
-#: templates/assessments/scores_encoding.html:48
-#: templates/assessments/scores_encoding_mgr.html:54
-#: templates/assessments/scores_encoding_mgr.html:105
-msgid "tutor"
-msgstr "Tutor"
+msgid "tutors"
+msgstr "Tutors"
 
 #: templates/assessments/scores_encoding.html:50
 msgid "faculty"
@@ -1269,6 +1266,9 @@ msgstr "Double encode scores"
 
 msgid "tooltip_select_excel_file_to_inject_scores"
 msgstr "Select an excel file to inject scores."
+
+msgid "display_tutors"
+msgstr "Display all tutors for this learning unit"
 
 msgid "tooltip_dowload_excel_file"
 msgstr "Download the excel file"
