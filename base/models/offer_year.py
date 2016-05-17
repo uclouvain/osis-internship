@@ -139,7 +139,7 @@ def search_root_offers(entity=None, academic_yr=None, acronym=None):
     queryset = OfferYear.objects
 
     if entity:
-        queryset = queryset.filter(entity_management__icontains=entity)
+        queryset = queryset.filter(entity_management__acronym__icontains=entity)
         has_criteria = True
 
     if academic_yr:
