@@ -66,7 +66,7 @@
           {{ proposition_dissertation.created_date }}
         </div>
         <div class="col-md-3">
-          <label>{% trans 'collaboration' %}</label><br>
+          <label>{% trans 'offer_propositions' %}</label><br>
             {% for offer_proposition in proposition_dissertation.offer_proposition.all %}
               {{ offer_proposition }} 
             {% endfor %}

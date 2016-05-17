@@ -58,7 +58,7 @@ class OfferProposition(models.Model):
     validation_commission_exists = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.offer.title
+        return self.acronym
 
     def find_all():
         return OfferProposition.objects.order_by('offer').distinct()

@@ -74,7 +74,7 @@ def manage_proposition_dissertation_edit(request, pk):
     if request.method == "POST":
         form = ManagerPropositionDissertationForm(request.POST, instance=proposition_dissertation)
         if form.is_valid():
-            proposition_dissertation = form.save(commit=False)
+            proposition_dissertation = form.save()
             proposition_dissertation.save()
             return redirect('manager_proposition_dissertation_detail', pk=proposition_dissertation.pk)
     else:
@@ -137,7 +137,7 @@ def proposition_dissertation_edit(request, pk):
         if request.method == "POST":
             form = PropositionDissertationForm(request.POST, instance=proposition_dissertation)
             if form.is_valid():
-                proposition_dissertation = form.save(commit=False)
+                proposition_dissertation = form.save()
                 proposition_dissertation.save()
                 return redirect('proposition_dissertation_detail', pk=proposition_dissertation.pk)
         else:
