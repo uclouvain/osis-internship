@@ -46,13 +46,13 @@ class ManagerAdviserForm(ModelForm):
 class DissertationForm(ModelForm):
     class Meta:
         model = Dissertation
-        fields = ('title', 'offer_year_start', 'proposition_dissertation', 'description')
+        fields = ('title', 'author', 'offer_year_start', 'proposition_dissertation', 'description')
 
 
 class ManagerDissertationForm(ModelForm):
     class Meta:
         model = Dissertation
-        fields = ('title', 'offer_year_start', 'proposition_dissertation', 'description')
+        fields = ('title', 'author', 'offer_year_start', 'proposition_dissertation', 'description')
 
 
 class ManagerPropositionDissertationForm(ModelForm):

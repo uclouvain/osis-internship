@@ -51,9 +51,28 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-4">
+          <label>{% trans 'author' %}</label><br>
+          {{ dissertation.author }}
+        </div>
+        <div class="col-md-4">
           <label>{% trans 'title' %}</label><br>
           {{ dissertation.title }}
+        </div>
+        <div class="col-md-4">
+          <label>{% trans 'status' %}</label><br>
+          {{ dissertation.status }}
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-4">
+          <label>{% trans 'proposition_dissertation' %}</label><br>
+          {{ dissertation.proposition_dissertation }}
+        </div>
+        <div class="col-md-4">
+          <label>{% trans 'proposition_dissertation_author' %}</label><br>
+          {{ dissertation.proposition_dissertation.author }}
         </div>
       </div>
       <br>
