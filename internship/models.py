@@ -28,7 +28,7 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class InternshipOffer(models.Model):
-    organization = models.ForeignKey('base.Organization')
+    organization        = models.ForeignKey('internship.Organization')
     learning_unit_year = models.ForeignKey('base.LearningUnitYear')
     title = models.CharField(max_length=255)
     maximum_enrollments = models.IntegerField()
@@ -79,7 +79,7 @@ class InternshipMaster(models.Model):
                         ('EMERGENCY',_('Emergency')),
                         ('GERIATRICS',_('Geriatrics')))
 
-    organization = models.ForeignKey('base.Organization')
+    organization     = models.ForeignKey('internship.Organization')
     internship_offer = models.ForeignKey(InternshipOffer)
     person = models.ForeignKey('base.Person')
     reference = models.CharField(max_length=30, blank=True, null=True)
@@ -112,10 +112,10 @@ class InternshipMaster(models.Model):
 
 
 class InternshipChoice(models.Model):
-    student = models.ForeignKey('base.Student')
-    organization = models.ForeignKey('base.Organization')
-    learning_unit_year = models.ForeignKey('base.LearningUnitYear')
-    choice = models.IntegerField()
+    student             = models.ForeignKey('base.Student')
+    organization        = models.ForeignKey('internship.Organization')
+    learning_unit_year  = models.ForeignKey('base.LearningUnitYear')
+    choice              = models.IntegerField()
 
     @staticmethod
     def find_by_student(s_student):
