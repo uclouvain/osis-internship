@@ -352,6 +352,15 @@ msgstr "Enseignant(e)"
 msgid "faculty"
 msgstr "Faculté"
 
+msgid "select"
+msgstr "Sélectionnez"
+
+msgid "message_address_papersheet"
+msgstr "Réutiliser l'adresse d'une entité liée au programme ou informez l'adresse d'affichage pour la feuille des notes"
+
+msgid "reuse_address_entity"
+msgstr "Réutiliser l'adresse de"
+
 msgid "select_an_encoding_type"
 msgstr "Sélectionnez un type d'encodage"
 
@@ -399,49 +408,29 @@ msgstr ""
 msgid "desc_lnk_academic_year"
 msgstr "Gestion du programme annualisé."
 
-#: templates/home.html:50
 msgid "desc_lnk_home_catalog"
 msgstr "Elaboration et gestion du catalogue de formation."
 
-#: templates/home.html:55
 msgid "desc_lnk_home_studies"
 msgstr ""
 "Gestion du parcours des étudiants depuis leur inscription jusqu'à leur "
 "diplôme."
 
-#: templates/home.html:62 templates/institution.html.py:29
-#: templates/institution.html:33 templates/layout.html.py:88
-#: templates/mandates.html:29 templates/organization.html.py:30
-#: templates/organization_address.html:30
-#: templates/organization_address_form.html:32
-#: templates/organization_form.html:32 templates/organizations.html.py:30
-#: templates/structure.html:30 templates/structures.html.py:30
 msgid "institution"
 msgstr "Institution"
 
-#: templates/home.html:63
 msgid "desc_lnk_home_institution"
 msgstr "Gestion de l'institution."
 
-#: templates/institution.html:41 templates/layout.html.py:91
-#: templates/organization.html:31 templates/organization_address.html.py:31
-#: templates/organization_address_form.html:33
-#: templates/organization_form.html:33 templates/organizations.html.py:31
-#: templates/organizations.html:35
 msgid "organizations"
 msgstr "Organisations"
 
-#: templates/institution.html:42 templates/institution.html.py:56
 msgid "desc_lnk_organizations"
 msgstr "Gestion des organisations."
 
-#: templates/institution.html:46 templates/layout.html.py:92
-#: templates/structure.html:31 templates/structures.html.py:31
-#: templates/structures.html:35
 msgid "entities"
 msgstr "Entités"
 
-#: templates/institution.html:47
 msgid "desc_lnk_entities"
 msgstr "Gestion des la structure organisationnelle."
 
@@ -497,19 +486,6 @@ msgstr "Catalogue de formation"
 msgid "general_informations"
 msgstr "Informations générales"
 
-#: templates/learning_unit.html:52 templates/learning_units.html.py:43
-#: templates/learning_units.html:44 templates/learning_units.html.py:79
-#: templates/offer.html:63 templates/offer.html.py:168
-#: templates/offer.html:188 templates/offer.html.py:215
-#: templates/offer.html:250 templates/offer.html.py:270
-#: templates/offer.html:298 templates/offers.html.py:57
-#: templates/offers.html:58 templates/offers.html.py:80
-#: templates/organization.html:49 templates/organization_form.html.py:49
-#: templates/organizations.html:42 templates/organizations.html.py:43
-#: templates/organizations.html:85 templates/structure.html.py:60
-#: templates/structure.html:93 templates/structure.html.py:119
-#: templates/structures.html:42 templates/structures.html.py:43
-#: templates/structures.html:88
 msgid "acronym"
 msgstr "Sigle"
 
@@ -806,7 +782,7 @@ msgstr "Attention : décimales non autorisées pour ce cours"
 
 #: utils/pdf_utils.py:289
 msgid "phone"
-msgstr "Tél."
+msgstr "téléphone"
 
 #: utils/pdf_utils.py:293
 msgid "fax"

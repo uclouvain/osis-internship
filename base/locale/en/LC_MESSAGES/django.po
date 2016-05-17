@@ -276,138 +276,96 @@ msgstr "Score"
 msgid "justification"
 msgstr "Justification"
 
-#: templates/assessments/online_double_encoding_form.html:132
 msgid "compare"
 msgstr "Compare"
 
-#: templates/assessments/online_double_encoding_validation.html:76
 msgid "scores"
 msgstr "Scores"
 
-#: templates/assessments/online_double_encoding_validation.html:76
-#: templates/assessments/online_encoding.html:152 utils/export_utils.py:42
-#: utils/pdf_utils.py:242
 msgid "other_score"
 msgstr "Other scores"
 
-#: templates/assessments/online_double_encoding_validation.html:83
 msgid "encoding"
 msgstr "Encoding"
 
-#: templates/assessments/online_double_encoding_validation.html:84
 msgid "dubble_encoding"
 msgstr "Dubble encoding"
 
-#: templates/assessments/online_double_encoding_validation.html:85
 msgid "final"
 msgstr "Final"
 
-#: templates/assessments/online_encoding.html:37
-#: templates/assessments/online_encoding_form.html:36
-#: templates/assessments/online_encoding_form.html:40
 msgid "online_encoding"
 msgstr "Online encoding"
 
-#: templates/assessments/online_encoding.html:77
-#: templates/assessments/scores_encoding.html:77
-#: templates/assessments/scores_encoding.html:108
-#: templates/assessments/scores_encoding.html:139
-#: templates/assessments/scores_encoding_mgr.html:106
-#: templates/assessments/scores_encoding_mgr.html:131
-#: templates/assessments/scores_encoding_mgr.html:182
 msgid "progress"
 msgstr "Progress"
 
-#: templates/assessments/online_encoding.html:86
-#: templates/assessments/online_encoding.html:89
 msgid "encode"
 msgstr "Encode"
 
-#: templates/assessments/online_encoding.html:87
-#: templates/assessments/online_encoding.html:90
 msgid "double_encoding"
 msgstr "Dubble encoding"
 
-#: templates/assessments/online_encoding.html:95
-#: templates/assessments/online_encoding.html:99
-#: templates/assessments/scores_encoding.html:126
-#: templates/assessments/scores_encoding_mgr.html:201
 msgid "print"
 msgstr "Print"
 
-#: templates/assessments/online_encoding.html:102
-#: templates/assessments/scores_encoding.html:156
-#: templates/assessments/scores_encoding_mgr.html:146
 msgid "Create a xls file while activity\\"
 msgstr ""
 
-#: templates/assessments/online_encoding.html:103
-#: templates/assessments/scores_encoding.html:158
-#: templates/assessments/scores_encoding_mgr.html:151
 msgid "Get xls"
 msgstr ""
 
-#: templates/assessments/online_encoding.html:105
 msgid "select_a_xls_file_from_which_to_inject_scores"
 msgstr ""
 
-#: templates/assessments/online_encoding.html:105
 msgid "inject_xls_file"
 msgstr "Submit XLS file"
 
-#: templates/assessments/online_encoding.html:109
-#: templates/assessments/online_encoding.html:248
+msgid "message_address_papersheet"
+msgstr "Reuse the address of an entity linked to the program or inform the posting address for the papersheet."
+
+msgid "reuse_address_entity"
+msgstr "Reuse the address of"
+
 msgid "submission"
 msgstr "Submission"
 
-#: templates/assessments/online_encoding.html:145
 msgid "status"
 msgstr "Status"
 
-#: templates/assessments/online_encoding.html:146 templates/profile.html:138
-#: utils/export_utils.py:37 utils/pdf_utils.py:325
 msgid "program"
 msgstr "Program"
 
-#: templates/assessments/online_encoding.html:147 utils/export_utils.py:35
 msgid "session"
 msgstr "Session"
 
 msgid "number_session"
 msgstr "No. Session"
 
-#: templates/assessments/online_encoding.html:167
 msgid "score_submitted"
 msgstr "Submitted"
 
-#: templates/assessments/online_encoding.html:210
 msgid "print_warning_and_info_messages"
 msgstr ""
 
 msgid "print_all_courses"
 msgstr "Print all courses"
 
-#: templates/assessments/online_encoding.html:224
 msgid "scores_injection"
 msgstr "Scores injection"
 
-#: templates/assessments/online_encoding.html:227
 msgid "choose_file"
 msgstr "Choose file"
 
-#: templates/assessments/online_encoding.html:230
 msgid "help_pnl_selectedfiles"
 msgstr "Please select an XLS file for injection"
 
-#: templates/assessments/online_encoding.html:234
 msgid "inject"
 msgstr "Inject"
 
-#: templates/assessments/online_encoding.html:252
 msgid "help_submission_scores_label"
 msgstr "You will submit %s notes."
 
-#: templates/assessments/online_encoding_form.html:72
 msgid "decimal_values_accepted"
 msgstr "Decimal values in scores are accepted."
 
@@ -441,8 +399,9 @@ msgstr "Tutor"
 msgid "faculty"
 msgstr "Faculty"
 
-#: templates/assessments/scores_encoding.html:62
-#: templates/assessments/scores_encoding_mgr.html:85
+msgid "select"
+msgstr "Select"
+
 msgid "select_an_encoding_type"
 msgstr "Select an encoding type"
 
