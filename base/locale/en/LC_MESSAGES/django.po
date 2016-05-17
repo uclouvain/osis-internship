@@ -324,6 +324,9 @@ msgstr "Submit XLS file"
 msgid "message_address_papersheet"
 msgstr "Reuse the address of an entity linked to the program or inform the posting address for the papersheet."
 
+msgid "reuse_address_entity"
+msgstr "Reuse the address of"
+
 msgid "submission"
 msgstr "Submission"
 

@@ -358,6 +358,9 @@ msgstr "Sélectionnez"
 msgid "message_address_papersheet"
 msgstr "Réutiliser l'adresse d'une entité liée au programme ou informez l'adresse d'affichage pour la feuille des notes"
 
+msgid "reuse_address_entity"
+msgstr "Réutiliser l'adresse de"
+
 msgid "select_an_encoding_type"
 msgstr "Sélectionnez un type d'encodage"
 
@@ -776,7 +779,7 @@ msgstr "Attention : décimales non autorisées pour ce cours"
 
 #: utils/pdf_utils.py:289
 msgid "phone"
-msgstr "Tél."
+msgstr "téléphone"
 
 #: utils/pdf_utils.py:293
 msgid "fax"

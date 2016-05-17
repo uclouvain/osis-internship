@@ -136,6 +136,7 @@
                     <br>
                     <p>{% trans 'message_address_papersheet' %}.</p>
 
+                    <label for="slt_related_entities">{% trans 'reuse_address_entity' %}...</label>
                     <select class="form-control" id="slt_related_entities" name="related_entity">
                         <option value="">{% trans 'select' %}...</option>
                         {% for entity in offer_year.related_entities %}
@@ -153,26 +154,47 @@
                         <div class="col-md-6">
                             <label for="txt_score_encoding_location">{% trans 'location' %}</label>
                             <input class="form-control" value="{{ offer_year.location }}" name="score_encoding_location"
-                                   id="txt_score_encoding_location" maxlength="255" required>
+                                   id="txt_score_encoding_location" maxlength="255">
                         </div>
                     </div>
                     <br>
                     <div class="row">
-                        <div class="col-md-4">
-                            <label for="address_postal_code">{% trans 'postal_code' %}</label>
-                            <input class="form-control" value="{{ organization_address.postal_code | default_if_none:'' }}" name="organization_address_postal_code" id="txt_organization_address_postal_code" maxlength="20" required>
+                        <div class="col-md-3">
+                            <label for="txt_score_encoding_postal_code">{% trans 'postal_code' %}</label>
+                            <input class="form-control" value="{{ offer_year.postal_code | default_if_none:'' }}"
+                                   name="score_encoding_postal_code" id="txt_score_encoding_postal_code"
+                                   maxlength="20">
+                        </div>
+                        <div class="col-md-5">
+                            <label for="txt_score_encoding_city">{% trans 'city' %}</label>
+                            <input class="form-control" value="{{ offer_year.city | default_if_none:'' }}"
+                                   name="score_encoding_city" id="txt_score_encoding_city" maxlength="255">
                         </div>
                         <div class="col-md-4">
-                            <label for="address_city">{% trans 'city' %}</label>
-                            <input class="form-control" value="{{ organization_address.city | default_if_none:'' }}" name="organization_address_city" id="txt_organization_address_city" maxlength="255" required>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="country">{% trans 'country'%}</label><br>
-                            <select class="form-control" id="country" name="country">
+                            <label for="slt_score_encoding_country">{% trans 'country'%}</label>
+                            <select class="form-control" id="slt_score_encoding_country" name="score_encoding_country">
+                                <option value="">{% trans 'select' %}...</option>
                                 {% for country in countries %}
                                     <option value="{{ country.id }}" {% if organization_address.country.id == country.id %}selected{% endif %}>{{ country.name }}</option>
                                 {% endfor %}
                             </select>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="txt_score_encoding_phone">{% trans 'phone' %}</label>
+                            <input class="form-control" value="{{ offer_year.phone | default_if_none:'' }}"
+                                   name="score_encoding_phone" id="txt_score_encoding_phone"
+                                   maxlength="20">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="txt_score_encoding_fax">{% trans 'fax' %}</label>
+                            <input class="form-control" value="{{ offer_year.fax | default_if_none:'' }}"
+                                   name="score_encoding_fax" id="txt_score_encoding_fax" maxlength="255">
+                        </div>
+                        <div class="col-md-6">
+
                         </div>
                     </div>
                 </div>
@@ -362,13 +384,13 @@
 {% block script %}
 <script type="text/javascript">
     $('#tabs a').click(function (e) {
-        e.preventDefault()
+        e.preventDefault();
         var href = $(this).prop('href');
         var idTab = document.getElementById("form:tab");
         var hash = href.substring(href.indexOf("#"));
         window.location.hash = hash;
         idTab.value = hash;
-        $(this).tab('show')
+        $(this).tab('show');
     })
 
     function selectTab() {
@@ -386,5 +408,13 @@
     }
 
     selectTab();
+
+    $('#slt_related_entities').change(function(e) {
+        $.ajax({
+            url: "/structure/" + $("#slt_related_entities").val() + "/address";
+        }).then(function(data) {
+            console.log(data);
+        }
+    })
 </script>
 {% endblock %}
