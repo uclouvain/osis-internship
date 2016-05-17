@@ -1173,6 +1173,9 @@ msgstr "Double encoder les notes"
 msgid "tooltip_select_excel_file_to_inject_scores"
 msgstr "Séclectionnez le fichier excel à soumettre"
 
+msgid "display_tutors"
+msgstr "Afficher tous les enseignants pour ce cours"
+
 msgid "tooltip_dowload_excel_file"
 msgstr "Télécharger le fichier excel"
 

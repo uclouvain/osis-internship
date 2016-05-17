@@ -52,9 +52,11 @@
                     <label>{% trans 'coordinator' %}</label><br>
                     {{ coordinator }}
                     {% if tutors %}
-                        <a role="button" data-toggle="collapse" data-target="#tutors_by_course" aria-expanded="false" aria-controls="tutors_by_course">
-                          <!--<span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>-->
-                            [...]
+                        <a role="button" data-toggle="collapse" data-target="#tutors_by_course"
+                           aria-expanded="false"
+                           aria-controls="tutors_by_course"
+                           title="{% trans 'display_tutors' %}">
+                          <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
                         </a>
                     {% endif %}
                     <div class="collapse" id="tutors_by_course">
