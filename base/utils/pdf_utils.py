@@ -278,14 +278,8 @@ def main_data(academic_year, session_exam, styles, offer, content):
     text_left_style = ParagraphStyle('structure_header')
     text_left_style.alignment = TA_LEFT
     text_left_style.fontSize = 10
-    if offer.recipient:
-        structures = mdl.structure.search(acronym=offer.recipient)
-        structure = structures[0] if len(structures) > 0 else None
-        p_struct_name = Paragraph('%s' % str(structure) if structure else '',
-                                  styles["Normal"])
-    else:
-        p_struct_name = Paragraph('''''',
-                                  styles["Normal"])
+    p_struct_name = Paragraph('%s' % offer.recipient if offer.recipient else '',
+                              styles["Normal"])
 
     p_struct_location = Paragraph('%s' % offer.location if offer.location else '',
                                   styles["Normal"])

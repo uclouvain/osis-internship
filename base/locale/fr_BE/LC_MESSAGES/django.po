@@ -55,6 +55,9 @@ msgstr "0=Cote de présence"
 msgid "empty_note_pdf_legend"
 msgstr "(vide)=Pas encore de note"
 
+msgid "saving"
+msgstr "Sauvegarde en cours"
+
 msgid "saved"
 msgstr "Enregistré"
 
