@@ -37,8 +37,16 @@
   </div>
   <div class="panel panel-default">
     <div class="panel-body">
-      <form method="get" action="{% url 'manager_proposition_dissertations_search'%}">
+      <form method="get" action="{% url 'manager_dissertations_search'%}">
         <div class="row">
+          <div class="col-md-6">
+            <a href="{% url 'manager_dissertations_list' %}" id="lnk_manager_dissertations" class="btn btn-default"
+            role="button" title="{% trans 'all_dissertations'%}"><span class="glyphicon glyphicon-list"
+            aria-hidden="true"></span> {% trans 'all_dissertations'%}</a>
+            <a href="{% url 'manager_dissertation_new' %}" id="lnk_manager_dissertation_new" class="btn btn-default"
+            role="button" title="{% trans 'create_dissertation'%}"><span class="glyphicon glyphicon-plus"
+            aria-hidden="true"></span> {% trans 'add_dissertation'%}</a>
+          </div>
           <div class="col-md-1 pull-right">
             <button type="submit" id="bt_submit_manager_information_search" class="btn btn-primary" role="button"
             title="{% trans 'search_teacher' %}"><span class="glyphicon glyphicon-search"

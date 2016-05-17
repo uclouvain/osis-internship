@@ -43,6 +43,12 @@ class ManagerAdviserForm(ModelForm):
         fields = ('available_by_email', 'available_by_phone', 'available_at_office', 'comment')
 
 
+class DissertationForm(ModelForm):
+    class Meta:
+        model = Dissertation
+        fields = ('title', 'offer_year_start', 'proposition_dissertation', 'description')
+
+
 class ManagerDissertationForm(ModelForm):
     class Meta:
         model = Dissertation

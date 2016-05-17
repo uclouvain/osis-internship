@@ -30,6 +30,8 @@ from django.db.models import Q
 from base import models as mdl
 from dissertation.models.adviser import Adviser
 from dissertation.models.dissertation import Dissertation
+from dissertation.models.proposition_dissertation import PropositionDissertation
+from dissertation.forms import DissertationForm, ManagerDissertationForm
 
 
 # Used by decorator @user_passes_test(is_manager) to secure manager views
@@ -54,7 +56,30 @@ def dissertations(request):
 
 @login_required
 @user_passes_test(is_manager)
-def manager_dissertations(request):
+def manager_dissertations_list(request):
+    dissertations = Dissertation.objects.filter(Q(active=True))
+    return render(request, 'manager_dissertations_list.html',
+                  {'dissertations': dissertations})
+
+
+@login_required
+@user_passes_test(is_manager)
+def manager_dissertation_new(request):
+    if request.method == "POST":
+        form = ManagerDissertationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('manager_dissertations_list')
+    else:
+        form = ManagerDissertationForm(initial={'active': True})
+        form.fields["proposition_dissertation"].queryset = PropositionDissertation.objects.filter(visibility=True,
+                                                                                                  active=True)
+    return render(request, 'manager_dissertation_edit.html', {'form': form})
+
+
+@login_required
+@user_passes_test(is_manager)
+def manager_dissertations_search(request):
     dissertations = Dissertation.objects.filter(Q(active=True))
     return render(request, 'manager_dissertations_list.html',
                   {'dissertations': dissertations})

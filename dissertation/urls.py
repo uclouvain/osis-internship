@@ -32,8 +32,12 @@ urlpatterns = [
     url(r'^informations/$', information.informations, name='informations'),
     url(r'^informations_edit/$', information.informations_edit, name='informations_edit'),
 
-    url(r'^manager_dissertations/$', dissertation.manager_dissertations,
-        name='manager_dissertations'),
+    url(r'^manager_dissertations_list$', dissertation.manager_dissertations_list,
+        name='manager_dissertations_list'),
+    url(r'^manager_dissertation_new$', dissertation.manager_dissertation_new,
+        name='manager_dissertation_new'),
+    url(r'^manager_dissertations_search$', dissertation.manager_dissertations_search,
+        name='manager_dissertations_search'),
 
     url(r'^manager_informations/$', information.manager_informations, name='manager_informations'),
     url(r'^manager_informations_detail/(?P<pk>[0-9]+)/$', information.manager_informations_detail,
