@@ -27,6 +27,7 @@ from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 from base.models import person, learning_unit_year
+from django.utils import timezone
 
 
 class ExamEnrollmentAdmin(admin.ModelAdmin):
@@ -231,4 +232,6 @@ def find_for_score_encodings(session_exam_number,
     if with_justification_or_score_draft:
         queryset = queryset.exclude(score_draft=None, justification_draft=None)
 
-    return queryset
+    now = timezone.now()
+    return queryset.filter(session_exam__offer_year_calendar__start_date__lte=now)\
+                   .filter(session_exam__offer_year_calendar__end_date__gte=now)

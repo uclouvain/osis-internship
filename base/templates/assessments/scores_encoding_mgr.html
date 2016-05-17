@@ -87,7 +87,12 @@
             </div>
             <div class="col-md-6">
                 <div class="pull-right">
-                    <b>{% trans 'you_manage' %} <span class="badge">{{ notes_list|length }}</span> {% trans 'learning_units_in' %} <span class="badge">{{ offer_list|length }}</span> {% trans 'programs' %}.</b>
+                    <b>{% trans 'you_manage' %}
+                        <span class="badge">{{ notes_list|length }}</span>
+                        {% trans 'learning_units_in' %}
+                        <span class="badge">{% if offer_year_id %} 1 {% else %} {{ offer_list|length }} {% endif %}</span>
+                        {% trans 'program_s' %}.
+                    </b>
                 </div>
             </div>
         </div>
@@ -241,6 +246,8 @@
     </div>
 </div>
 {% else %}
-    <p class="text-info" style="font-size: 130%">{% trans 'no_exam_session_opened_for_the_moment' %}</p>
+    <div class="alert alert-warning">
+      <p style="font-size: 130%">{% trans 'no_exam_session_opened_for_the_moment' %} </p>
+    </div>
 {% endif %}
 {% endblock %}
