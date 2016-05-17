@@ -151,7 +151,6 @@ def search_root_offers(entity=None, academic_yr=None, acronym=None):
         has_criteria = True
 
     if has_criteria:
-        queryset = queryset.filter(parent=None)
         return queryset
     else:
         return None
