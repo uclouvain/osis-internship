@@ -3,85 +3,128 @@
 {% load i18n %}
 
 {% comment "License" %}
- * OSIS stands for Open Student Information System. It's an application
- * designed to manage the core business of higher education institutions,
- * such as universities, faculties, institutes and professional schools.
- * The core business involves the administration of students, teachers,
- * courses, programs and so on.
- *
- * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * A copy of this license - GNU General Public License - is available
- * at the root of the source code of this program.  If not,
- * see http://www.gnu.org/licenses/.
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
-  <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'dissertations' %}</a></li>
-  <li><a href="{% url 'manager_dissertations_list' %}" id="lnk_propositions">{% trans 'dissertations' %}</a></li>
-  <li class="active">{{ dissertation.title }}</li>
+<li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
+<li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'dissertations' %}</a></li>
+<li><a href="{% url 'manager_dissertations_list' %}" id="lnk_propositions">{% trans 'dissertations' %}</a></li>
+<li class="active">{{ dissertation.title }}</li>
 {% endblock %}
 {% block content %}
-  <div class="page-header">
+<div class="page-header">
     <h2>{{ dissertation.title }}</h2>
-  </div>
-  <div class="panel panel-default">
+</div>
+<div class="panel panel-default">
     <div class="panel-body">
-      <div class="row">
-        <div class="col-md-2 pull-right">
-          <div class="col-md-4 pull-right">
-            <a class="btn btn-default btn-danger" href="{% url 'manager_dissertations_delete' pk=dissertation.pk %}">
-            <span class="glyphicon glyphicon-remove"></span></a>
-          </div>
-          <div class="col-md-4 pull-right">
-            <a class="btn btn-default btn-primary" href="{% url 'manager_dissertations_edit' pk=dissertation.pk %}">
-            <span class="glyphicon glyphicon-edit"></span></a>
-          </div>
+        <div class="row">
+            <div class="col-md-2 pull-right">
+                <div class="col-md-4 pull-right">
+                    <a class="btn btn-default btn-danger"
+                       href="{% url 'manager_dissertations_delete' pk=dissertation.pk %}">
+                        <span class="glyphicon glyphicon-remove"></span></a>
+                </div>
+                <div class="col-md-4 pull-right">
+                    <a class="btn btn-default btn-primary"
+                       href="{% url 'manager_dissertations_edit' pk=dissertation.pk %}">
+                        <span class="glyphicon glyphicon-edit"></span></a>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-4">
-          <label>{% trans 'author' %}</label><br>
-          {{ dissertation.author }}
+        <div class="row">
+            <div class="col-md-4">
+                <label>{% trans 'author' %}</label><br>
+                {{ dissertation.author }}
+            </div>
+            <div class="col-md-4">
+                <label>{% trans 'title' %}</label><br>
+                {{ dissertation.title }}
+            </div>
+            <div class="col-md-4">
+                <label>{% trans 'status' %}</label><br>
+                {{ dissertation.status }}
+            </div>
         </div>
-        <div class="col-md-4">
-          <label>{% trans 'title' %}</label><br>
-          {{ dissertation.title }}
+        <br>
+        <div class="row">
+            <div class="col-md-4">
+                <label>{% trans 'proposition_dissertation' %}</label><br>
+                {{ dissertation.proposition_dissertation }}
+            </div>
+            <div class="col-md-4">
+                <label>{% trans 'proposition_dissertation_author' %}</label><br>
+                {{ dissertation.proposition_dissertation.author }}
+            </div>
         </div>
-        <div class="col-md-4">
-          <label>{% trans 'status' %}</label><br>
-          {{ dissertation.status }}
+        <br>
+        <div class="row">
+            <div class="col-md-12">
+                 <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{% trans 'description' %}</h3>
+                    </div>
+                    <div class="panel-body">
+                        {{ dissertation.description }}
+                    </div>
+                 </div>
+            </div>
         </div>
-      </div>
-      <br>
-      <div class="row">
-        <div class="col-md-4">
-          <label>{% trans 'proposition_dissertation' %}</label><br>
-          {{ dissertation.proposition_dissertation }}
+        <br>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{% trans 'actions' %}</h3>
+                    </div>
+                    <div class="panel-body">
+                        {% if dissertation.status == 'DRAFT' %}
+                        <a href="{% url 'manager_dissertations_to_dir_submit' pk=dissertation.pk %}"
+                           id="lnk_manager_dissertations_to_dir_submit" class="btn btn-default"
+                           role="button" title="{% trans 'manager_dissertations_to_dir_submit'%}"><span
+                                class="glyphicon glyphicon-circle-arrow-right"
+                                aria-hidden="true"></span> {% trans 'manager_dissertations_to_dir_submit'%}</a>
+                        {% endif %}
+
+                        {% if dissertation.status == 'DIR_SUBMIT' or dissertation.status == 'DIR_KO' %}
+                        <a href="{% url 'manager_dissertations_to_dir_ok' pk=dissertation.pk %}"
+                           id="lnk_manager_dissertations_to_dir_ok" class="btn btn-default"
+                           role="button" title="{% trans 'manager_dissertations_to_dir_ok'%}"><span
+                                class="glyphicon glyphicon-ok-circle"
+                                aria-hidden="true"></span> {% trans 'manager_dissertations_to_dir_ok'%}</a>
+                        {% endif %}
+
+                        {% if dissertation.status == 'DIR_SUBMIT' or dissertation.status == 'DIR_OK' %}
+                        <a href="{% url 'manager_dissertations_to_dir_ko' pk=dissertation.pk %}"
+                           id="lnk_manager_dissertations_to_dir_ko" class="btn btn-default"
+                           role="button" title="{% trans 'manager_dissertations_to_dir_ko'%}"><span
+                                class="glyphicon glyphicon-remove-circle"
+                                aria-hidden="true"></span> {% trans 'manager_dissertations_to_dir_ko'%}</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-md-4">
-          <label>{% trans 'proposition_dissertation_author' %}</label><br>
-          {{ dissertation.proposition_dissertation.author }}
-        </div>
-      </div>
-      <br>
-      <div class="row">
-        <div class="col-md-12">
-          <label>{% trans 'description' %}</label><br>
-          {{ dissertation.description }}
-        </div>
-      </div>
     </div>
-  </div>
+</div>
 {% endblock %}

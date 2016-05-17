@@ -117,3 +117,29 @@ def manager_dissertations_delete(request, pk):
     dissertation.active = False
     dissertation.save()
     return redirect('manager_dissertations_list')
+
+@login_required
+@user_passes_test(is_manager)
+def manager_dissertations_to_dir_submit(request, pk):
+    dissertation = get_object_or_404(Dissertation, pk=pk)
+    dissertation.status = 'DIR_SUBMIT'
+    dissertation.save()
+    return redirect('manager_dissertations_detail', pk=pk)
+
+
+@login_required
+@user_passes_test(is_manager)
+def manager_dissertations_to_dir_ok(request, pk):
+    dissertation = get_object_or_404(Dissertation, pk=pk)
+    dissertation.status = 'DIR_OK'
+    dissertation.save()
+    return redirect('manager_dissertations_detail', pk=pk)
+
+
+@login_required
+@user_passes_test(is_manager)
+def manager_dissertations_to_dir_ko(request, pk):
+    dissertation = get_object_or_404(Dissertation, pk=pk)
+    dissertation.status = 'DIR_KO'
+    dissertation.save()
+    return redirect('manager_dissertations_detail', pk=pk)
