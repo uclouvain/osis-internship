@@ -776,7 +776,7 @@ msgstr "Feuille de notes"
 
 #: utils/pdf_utils.py:110
 msgid "ucl_denom_location"
-msgstr "Université catholique de Louvain\n\n"
+msgstr "Université catholique de Louvain"
 
 #: utils/pdf_utils.py:226
 msgid "justification_legend"
