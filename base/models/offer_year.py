@@ -151,6 +151,7 @@ def search_root_offers(entity=None, academic_yr=None, acronym=None):
         has_criteria = True
 
     if has_criteria:
+        queryset = queryset.order_by('acronym')
         return queryset
     else:
         return None
