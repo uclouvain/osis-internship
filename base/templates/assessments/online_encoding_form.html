@@ -36,126 +36,154 @@
   <li class="active">{% trans 'online_encoding' %}</li>
 {% endblock %}
 {% block content %}
-  <div class="page-header">
+<div class="page-header">
     <h2>{% trans 'online_encoding' %}</h2>
-  </div>
-  <div class="panel panel-default">
+</div>
+{% include "template_messages.html" %}
+<div class="panel panel-default">
     <div class="panel-heading">
-      <h3 class="panel-title" style="font-size: 150%; color: #3399CC;">{{ learning_unit }}</h3>
+        <h3 class="panel-title" style="font-size: 150%; color: #3399CC;">{{ learning_unit_year }}</h3>
     </div>
     <div class="panel-body">
-      <div class="row">
-        <div class="col-md-6">
-          <div class="form-group">
-            <label>{% trans 'responsible' %}</label><br>
-            {{ tutor_responsible }}
-          </div>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>{% trans 'coordinator' %}</label><br>
+                    {{ coordinator }}
+                    {% if tutors %}
+                        <a role="button" data-toggle="collapse" data-target="#tutors_by_course"
+                           aria-expanded="false"
+                           aria-controls="tutors_by_course"
+                           title="{% trans 'display_tutors' %}">
+                            <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+                        </a>
+                    {% endif %}
+                    <div class="collapse" id="tutors_by_course">
+                        <label>{% trans 'tutors' %}</label><br>
+                        <ul>
+                            {% for prof in tutors %}
+                                <li>{{ prof }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>{% trans 'academic_year' %}</label><br>
+                    {{ academic_year }}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>{%trans 'number_of_enrollments' %}</label><br>
+                    {{ enrollments|length }}
+                </div>
+            </div>
         </div>
-        <div class="col-md-3">
-          <div class="form-group">
-            <label>{% trans 'academic_year' %}</label><br>
-            {{ academic_year }}
-          </div>
+        <div class="row">
+            <div class="alert alert-warning">
+                {% get_current_language as LANGUAGE_CODE %}
+                {% if enrollments.0.session_exam.learning_unit_year.decimal_scores %}
+                    {% trans 'decimal_values_accepted' %}
+                {% else %}
+                    {% trans 'decimal_values_ignored' %}
+                {% endif %}
+            </div>
         </div>
-        <div class="col-md-3">
-          <div class="form-group">
-            <label>{%trans 'number_of_enrollments' %}</label><br>
-            {{ enrollments|length }}
-          </div>
-        </div>
-      </div>
-      <hr>
-      <div class="row">
-        <div class="alert alert-warning">
-            {% get_current_language as LANGUAGE_CODE %}
-            {% if enrollments.0.session_exam.learning_unit_year.decimal_scores %}
-              {% trans 'decimal_values_accepted' %}
-            {% else %}
-              {% trans 'decimal_values_ignored' %}
-            {% endif %}
-        </div>
-      </div>
-      <form class="form-inline" method="POST" action="{%if tutor%}{% url 'online_encoding_form' learning_unit.id tutor.id %}{%else%}{% url 'online_encoding_form' learning_unit.id %}{%endif%}" id="form_online_encoding">
-        {% csrf_token %}
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                  <th>{% trans 'offer' %}</th>
-                  <th>{% trans 'registration_number' %}</th>
-                  <th>{% trans 'lastname' %}</th>
-                  <th>{% trans 'firstname' %}</th>
-                  <th>{% trans 'score' %}</th>
-                  <th>{% trans 'justification' %}</th>
-                  <th>{% trans 'end_date' %}</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for enrollment in enrollments %}
-              <tr style="background-color:
-                      {% ifchanged enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym %}
-                             {% cycle "white" "#E5F2FF" as rowcolors %}
-                         {% else %}
-                             {{ rowcolors }}
-                         {% endifchanged %}
-                      ">
-                <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
-                <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
-                <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
-                <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
-                <td>{%if is_pgmer %}
-                    <input type="number" min="0" max="20" step="any" name="score_{{ enrollment.id }}" id="num_score_{{ enrollment.id }}" tabindex="{{ forloop.counter }}"
-                           value="{{ enrollment.score_final | score_display:enrollment.session_exam.learning_unit_year.decimal_scores}}"
-                           class="form-control" {% if tutor and enrollment.score_final or tutor and enrollment.justification_final%} disabled {% endif %}
-                           title="{% if enrollment.session_exam.learning_unit_year.decimal_scores %}
-                                        {%trans 'decimal_score_allowed'%}
-                                  {% else %}
-                                        {%trans 'decimal_score_not_allowed'%}
-                                  {%endif%}">
-                    {%else%}
-                    <input type="number" min="0" max="20" step="any" name="score_{{ enrollment.id }}" id="num_score_{{ enrollment.id }}" tabindex="{{ forloop.counter }}"
-                           value="{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}"
-                           class="form-control" {% if tutor and enrollment.score_final or tutor and enrollment.justification_final%} disabled {% endif %}
-                           title="{% if enrollment.session_exam.learning_unit_year.decimal_scores %}
-                                        {%trans 'decimal_score_allowed'%}
-                                  {% else %}
-                                        {%trans 'decimal_score_not_allowed'%}
-                                  {%endif%}">
-                    {%endif%}
-                </td>
-
-                <td>{%if is_pgmer %}
-                        <select class="form-control" name="justification_{{ enrollment.id }}" id="slt_justification_score_{{ enrollment.id }}"
-                                tabindex="{{ enrollments|length|sum:forloop.counter }}">
-                          <option value="None"></option>
-                          <option value="ABSENT" {% if enrollment.justification_final == 'ABSENT' %}selected{% endif %}>{% trans 'absent' %}</option>
-                          <option value="CHEATING" {% if enrollment.justification_final == 'CHEATING' %}selected{% endif %}>{% trans 'cheating' %}</option>
-                          <option value="SCORE_MISSING" {% if enrollment.justification_final == 'SCORE_MISSING' %}selected{% endif %}>{% trans 'score_missing' %}</option>
-                          <option value="ILL" {% if enrollment.justification_final == 'ILL' %}selected{% endif %}>{% trans 'ill' %}</option>
-                          <option value="JUSTIFIED_ABSENCE" {% if enrollment.justification_final == 'JUSTIFIED_ABSENCE' %}selected{% endif %}>{% trans 'justified_absence' %}</option>
-                        </select>
-                    {%else%}
-                        <select class="form-control" name="justification_{{ enrollment.id }}" id="slt_justification_score_{{ enrollment.id }}"
-                                tabindex="{{ enrollments|length|sum:forloop.counter }}"
-                                {% if tutor and enrollment.score_final or tutor and enrollment.justification_final %} disabled {% endif %}>
-                          <option value="None"></option>
-                          <option value="ABSENT" {% if enrollment.justification_draft == 'ABSENT' %}selected{% endif %}>{% trans 'absent' %}</option>
-                          <option value="CHEATING" {% if enrollment.justification_draft == 'CHEATING' %}selected{% endif %}>{% trans 'cheating' %}</option>
-                          <option value="SCORE_MISSING" {% if enrollment.justification_draft == 'SCORE_MISSING' %}selected{% endif %}>{% trans 'score_missing' %}</option>
-                        </select>
-                    {%endif%}
-                </td>
-                <td>{{ enrollment.session_exam.offer_year_calendar.end_date | default_if_none:''|date:"j/m/Y" }}</td>
-              </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-
-        <button type="submit" class="btn btn-primary" id="bt_submit_online_encoding"><span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'save' %}</button>
-        <a class="btn btn-default" href="{%if tutor%}{% url 'online_encoding' learning_unit.id tutor.id%}{%else%}{% url 'online_encoding' learning_unit.id %}{%endif%}" role="button" id="lnk_cancel_online_encoding"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
-
-      </form>
+        <form class="form-inline" method="POST" action="{% url 'online_encoding_form' learning_unit_year.id %}" id="form_online_encoding">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary" id="bt_save_online_encoding_up"
+                {% if not is_program_manager %}
+                    data-toggle="tooltip" data-placement="left" title="{% trans 'temporary_save' %}"
+                {% endif %}>
+                <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'save' %}</button>
+            <a class="btn btn-default" href="{% url 'online_encoding' learning_unit_year.id %}" role="button" id="lnk_cancel_online_encoding_up">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>{% trans 'offer' %}</th>
+                        <th>{% trans 'registration_number' %}</th>
+                        <th>{% trans 'lastname' %}</th>
+                        <th>{% trans 'firstname' %}</th>
+                        <th>{% trans 'score' %}</th>
+                        <th>{% trans 'justification' %}</th>
+                        <th>{% trans 'end_date' %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for enrollment in enrollments %}
+                    <tr style="background-color:
+                        {% ifchanged enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym %}
+                            {% cycle "white" "#E5F2FF" as rowcolors %}
+                        {% else %}
+                            {{ rowcolors }}
+                        {% endifchanged %}">
+                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
+                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
+                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
+                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
+                        <td><input type="number" min="0" max="20" name="score_{{ enrollment.id }}"
+                                id="num_score_{{ enrollment.id }}" tabindex="{{ forloop.counter }}"
+                                class="form-control"
+                                {% if is_program_manager %}
+                                    value="{{ enrollment.score_final | score_display:enrollment.session_exam.learning_unit_year.decimal_scores}}"
+                                {% else %}
+                                   {% if enrollment.score_final != None %}
+                                        value="{{ enrollment.score_final | score_display:enrollment.session_exam.learning_unit_year.decimal_scores}}"
+                                   {% elif not enrollment.justification_final %}
+                                        value="{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}"
+                                   {% endif %}
+                                {% endif %}
+                                {% if not is_program_manager %}
+                                    {% if enrollment.score_final != None or enrollment.justification_final %}
+                                        disabled
+                                    {% endif %}
+                                {% endif %}
+                                {% if enrollment.session_exam.learning_unit_year.decimal_scores %}
+                                    step="any"
+                                    oninvalid="invalidScoreMsg(this,true,'{% trans 'decimal_score_not_allowed' %}','{% trans 'scores_gt_0_lt_20' %}')"
+                                {% else %}
+                                    step="1"
+                                    oninvalid="invalidScoreMsg(this,false,'{% trans 'decimal_score_not_allowed' %}','{% trans 'scores_gt_0_lt_20' %}')"
+                                {% endif %}></td>
+                        <td><select class="form-control" name="justification_{{ enrollment.id }}" id="slt_justification_score_{{ enrollment.id }}"
+                                    tabindex="{{ enrollments|length|sum:forloop.counter }}"
+                                    {% if enrollment.score_final != None or enrollment.justification_final %}
+                                        {% if not is_program_manager %}
+                                            disabled
+                                        {% endif %}
+                                    {% endif %}>
+                            <option value="None"></option>
+                            {% if is_program_manager or enrollment.score_final != None or enrollment.justification_final%}
+                                <option value="ABSENCE_JUSTIFIED" {% if enrollment.justification_final == 'ABSENCE_JUSTIFIED' %}selected{% endif %}>{% trans 'absence_justified' %}</option>
+                            {% endif %}
+                            <option value="ABSENCE_UNJUSTIFIED" {% if enrollment.justification_draft == 'ABSENCE_UNJUSTIFIED' or enrollment.justification_final == 'ABSENCE_UNJUSTIFIED' %}selected{% endif %}>
+                                {% if is_program_manager %}
+                                    {% trans 'absence_unjustified' %}
+                                {% else %}
+                                    {% trans 'absent' %}
+                                {% endif %}
+                            </option>
+                            <option value="CHEATING" {% if enrollment.justification_draft == 'CHEATING' or enrollment.justification_final == 'CHEATING' %}selected{% endif %}>{% trans 'cheating' %}</option>
+                            <option value="SCORE_MISSING" {% if enrollment.justification_draft == 'SCORE_MISSING' or enrollment.justification_final == 'SCORE_MISSING' %}selected{% endif %}>{% trans 'score_missing' %}</option>
+                        </select></td>
+                        <td>{{ enrollment.session_exam.offer_year_calendar.end_date | default_if_none:''|date:"j/m/Y" }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <button type="submit" class="btn btn-primary" id="bt_save_online_encoding_down"
+                {% if not is_program_manager %}
+                    data-toggle="tooltip" data-placement="left" title="{% trans 'temporary_save' %}"
+                {% endif %}>
+                <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'save' %}</button>
+            <a class="btn btn-default" href="{% url 'online_encoding' learning_unit_year.id %}" role="button" id="lnk_cancel_online_encoding_down">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
+        </form>
     </div>
-  </div>
+</div>
 {% endblock %}
 {% block script %}
 <script>
@@ -169,9 +197,10 @@ $("input[id^='num_score_']" ).change(function(event) {
     }
     var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
 
-    if(target.val() != "" && $("#slt_justification_score_"+ enrollmentId).val() != "CHEATING") {
+    if(target.val() != "") {
         $("#slt_justification_score_" + enrollmentId).val('');
     }
+    this.setCustomValidity('');
 });
 
 $("select[id^='slt_justification_score_']" ).change(function(event) {
@@ -184,11 +213,11 @@ $("select[id^='slt_justification_score_']" ).change(function(event) {
     }
 
     var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
+    $("#num_score_" + enrollmentId).val('');
+});
 
-    // Checks whether the object contains an id.
-    if(target.val() != "CHEATING") {
-        $("#num_score_" + enrollmentId).val('');
-    }
+$('#form_online_encoding').on('keyup keypress', function(e) {
+    disable_enter(e);
 });
 </script>
 {% endblock %}

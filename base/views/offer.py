@@ -24,22 +24,21 @@
 #
 ##############################################################################
 from base import models as mdl
+from reference import models as mdl_ref
 from . import layout
 from datetime import datetime
 from base.forms import OfferYearCalendarForm
+from django.utils.translation import ugettext_lazy as _
 
 
 def offers(request):
     academic_yr = None
-
-    faculties = mdl.structure.find_by_type('FACULTY')
     academic_years = mdl.academic_year.find_academic_years()
 
     academic_year_calendar = mdl.academic_year.current_academic_year()
     if academic_year_calendar:
         academic_yr = academic_year_calendar.id
-    return layout.render(request, "offers.html", {'faculties': faculties,
-                                                  'academic_year': academic_yr,
+    return layout.render(request, "offers.html", {'academic_year': academic_yr,
                                                   'academic_years': academic_years,
                                                   'offers': [],
                                                   'init': "1"})
@@ -69,9 +68,12 @@ def offer_read(request, offer_year_id):
     offer_yr = mdl.offer_year.find_by_id(offer_year_id)
     offer_yr_events = mdl.offer_year_calendar.find_offer_year_calendar(offer_yr)
     program_managers = mdl.program_manager.find_by_offer_year(offer_yr)
+    countries = mdl_ref.country.find_all()
     return layout.render(request, "offer.html", {'offer_year': offer_yr,
                                                  'offer_year_events': offer_yr_events,
-                                                 'program_managers': program_managers})
+                                                 'program_managers': program_managers,
+                                                 'countries': countries,
+                                                 'tab': 0})
 
 
 def offer_year_calendar_read(request, id):

@@ -42,9 +42,9 @@ ENTITY_TYPE = (('SECTOR', 'sector'),
                ('DOCTORAL_COMMISSION', 'doctoral_commission'),
                ('PROGRAM_COMMISSION', 'program_commission'),
                ('LOGISTIC', 'logistic'),
-               ('UNDEFINED', 'undefined'),
                ('RESEARCH_CENTER', 'research_center'),
-               ('TECHNOLOGIC_PLATFORM', 'technologic_platform'))
+               ('TECHNOLOGIC_PLATFORM', 'technologic_platform'),
+               ('UNDEFINED', 'undefined'))
 
 
 class Structure(models.Model):
@@ -60,7 +60,7 @@ class Structure(models.Model):
         return Structure.objects.filter(part_of=self.pk)
 
     def serializable_object(self):
-        obj = {'name': self.acronym, 'children': []}
+        obj = {'id': self.id, 'name': self.acronym, 'children': []}
         for child in self.children():
             obj['children'].append(child.serializable_object())
         return obj
@@ -120,13 +120,6 @@ def find_structure_hierarchy(struc):
         for t in Structure.objects.filter(part_of=structure):
             tags.append(t.serializable_object())
     return tags
-
-
-def find_by_acronym(acronym):
-    try:
-        return Structure.objects.get(acronym__iexact=acronym.strip())
-    except ObjectDoesNotExist:
-        return None
 
 
 def find_faculty(a_structure):

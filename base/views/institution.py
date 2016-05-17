@@ -24,6 +24,7 @@
 #
 ##############################################################################
 import json
+from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from base import models as mdl
 from . import layout
@@ -42,14 +43,14 @@ def mandates(request):
 @login_required
 def structures(request):
     return layout.render(request, "structures.html", {'init': "1",
-                                               'types': mdl.structure.ENTITY_TYPE})
+                                                      'types': mdl.structure.ENTITY_TYPE})
 
 
 @login_required
 def structures_search(request):
     structure_type = None
     if request.GET['type_choices']:
-        structure_type = request.GET['type_choices'] #otherwise type is a blank
+        structure_type = request.GET['type_choices']  #otherwise type is a blank
     entities = mdl.structure.search(acronym=request.GET['acronym'],
                                     title=request.GET['title'],
                                     type=structure_type)
@@ -66,23 +67,16 @@ def structure_read(request, structure_id):
                                                      'offers_years': offers_years})
 
 
-def structure_read_by_acronym(request, name):
-    structure = mdl.structure.find_by_acronym(name)
-    return layout.render(request, "structure.html", {'structure': structure})
-
-
-def structure_diagram(request, organization_id):
-    organization = mdl.organization.find_by_id(organization_id)
-    structure = organization.find_structure()
-    tags = organization.find_structure_tree()
-    data = json.dumps(tags)
-    return layout.render(request, "structure_organogram.html", {'structure': structure,
-                                                                'data': data})
-
-
-def structure_diagram_by_parent(request, parent_id):
+def structure_diagram(request, parent_id):
     structure = mdl.structure.find_by_id(parent_id)
     tags = mdl.structure.find_structure_hierarchy(structure)
     data = json.dumps(tags)
     return layout.render(request, "structure_organogram.html", {'structure': structure,
                                                                 'data': data})
+
+
+def structure_address(request, structure_id):
+    structure = mdl.structure.find_by_id(structure_id)
+    struct_address = mdl.structure_address.find_structure_address(structure)
+    data = json.dumps(struct_address)
+    return HttpResponse(data, content_type='application/json')

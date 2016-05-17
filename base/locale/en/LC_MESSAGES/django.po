@@ -16,54 +16,35 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: models/exam_enrollment.py:34 models/exam_enrollment.py:148
-#: models/exam_enrollment.py:154
-#: templates/assessments/online_double_encoding_form.html:114
-#: templates/assessments/online_encoding_form.html:131
-#: templates/assessments/online_encoding_form.html:145
 msgid "absent"
 msgstr "Absent"
-
 
 msgid "absent_pdf_legend"
 msgstr "A=Absent"
 
-#: models/exam_enrollment.py:35 models/exam_enrollment.py:149
-#: models/exam_enrollment.py:155
-#: templates/assessments/online_double_encoding_form.html:115
-#: templates/assessments/online_encoding_form.html:132
-#: templates/assessments/online_encoding_form.html:146
 msgid "cheating"
 msgstr "Cheating"
 
 msgid "cheating_pdf_legend"
-msgstr "C=Cheating"
+msgstr "T=Cheating"
 
-#: models/exam_enrollment.py:36 models/exam_enrollment.py:150
-#: templates/assessments/online_double_encoding_form.html:119
-#: templates/assessments/online_encoding_form.html:136
 msgid "ill"
 msgstr "Ill"
 
 msgid "ill_pdf_legend"
 msgstr "I=Ill"
 
-#: models/exam_enrollment.py:37 models/exam_enrollment.py:151
-#: templates/assessments/online_double_encoding_form.html:120
-#: templates/assessments/online_encoding_form.html:137
-msgid "justified_absence"
+msgid "absence_unjustified"
+msgstr "Unjustified Absence"
+
+msgid "absence_justified"
 msgstr "Justified absence"
 
-msgid "justified_absence_pdf_legend"
-msgstr "JA=Justified absence"
-
-#: models/exam_enrollment.py:38 models/exam_enrollment.py:152
-#: models/exam_enrollment.py:156
-#: templates/assessments/online_double_encoding_form.html:116
-#: templates/assessments/online_encoding_form.html:133
-#: templates/assessments/online_encoding_form.html:147
 msgid "score_missing"
 msgstr "Score missing"
+
+msgid "score_already_submitted"
+msgstr "Score already submitted"
 
 msgid "score_missing_pdf_legend"
 msgstr "?=Score missing"
@@ -135,304 +116,136 @@ msgstr "Open"
 msgid "closed"
 msgstr "Closed"
 
-#: templates/academic_calendar.html:32
-#: templates/academic_calendar_form.html:34
-#: templates/academic_calendars.html:31 templates/academic_year.html.py:30
-#: templates/catalog.html:30 templates/catalog.html.py:34
-#: templates/home.html:49 templates/layout.html.py:71 templates/offers.html:30
 msgid "formation_catalogue"
 msgstr "Formation catalogue"
 
-#: templates/academic_calendar.html:33 templates/academic_calendar.html:45
-#: templates/academic_calendar_form.html:35
-#: templates/academic_calendar_form.html:51
-#: templates/academic_calendars.html:32 templates/academic_calendars.html:45
-#: templates/academic_year.html.py:31 templates/academic_year.html:35
-#: templates/assessments/online_double_encoding_form.html:58
-#: templates/assessments/online_double_encoding_validation.html:56
-#: templates/assessments/online_encoding.html:59
-#: templates/assessments/online_encoding_form.html:56
-#: templates/assessments/scores_encoding.html:56
-#: templates/assessments/scores_encoding_mgr.html:47 templates/catalog.html:54
-#: templates/layout.html.py:75 templates/learning_unit.html:48
-#: templates/learning_units.html.py:48 templates/offer.html:59
-#: templates/offers.html.py:79 utils/export_utils.py:34 utils/pdf_utils.py:261
-#: templates/offers.html:43
+
 msgid "academic_year"
 msgstr "Academic year"
 
-#: templates/academic_calendar.html:34
-#: templates/academic_calendar_form.html:36
-#: templates/academic_calendars.html:33
 msgid "academic_calendars"
 msgstr "Academic calendars"
 
-#: templates/academic_calendar.html:35
 msgid "event"
 msgstr "Event"
 
-#: templates/academic_calendar.html:49
-#: templates/academic_calendar_form.html:63
-#: templates/academic_calendars.html:75 templates/learning_units.html.py:80
-#: templates/offer.html:108 templates/offer.html.py:169
-#: templates/offer.html:189 templates/offer.html.py:216
-#: templates/offer.html:251 templates/offer.html.py:271
-#: templates/offer.html:299 templates/offers.html.py:81
-#: templates/structure.html:64 templates/structure.html.py:94
-#: templates/structure.html:120 templates/structures.html.py:47
-#: templates/structures.html:48 templates/structures.html.py:89
 msgid "title"
 msgstr "Title"
 
-#: templates/academic_calendar.html:53
-#: templates/academic_calendar_form.html:68
-#: templates/academic_calendars.html:76 templates/offer.html.py:110
-#: templates/offer_year_calendar.html:46
-#: templates/offer_year_calendar_form.html:57
 msgid "start_date"
 msgstr "Start date"
 
-#: templates/academic_calendar.html:57
-#: templates/academic_calendar_form.html:74
-#: templates/academic_calendars.html:77
-#: templates/assessments/online_double_encoding_form.html:85
-#: templates/assessments/online_encoding.html:153
-#: templates/assessments/online_encoding_form.html:89 templates/offer.html:111
-#: templates/offer_year_calendar.html.py:50
-#: templates/offer_year_calendar_form.html:61 utils/export_utils.py:43
-#: utils/pdf_utils.py:243
 msgid "end_date"
 msgstr "End date"
 
 msgid "submission_date"
 msgstr "Submission date"
 
-#: templates/academic_calendar.html:64
-#: templates/academic_calendar_form.html:83 templates/admin/file.html.py:64
-#: templates/admin/files.html:75 templates/offer.html.py:109
 msgid "description"
 msgstr "Description"
 
-#: templates/academic_calendar.html:69
 msgid "label_jumbotron_details_academic_cal"
 msgstr "As displayed on the home page"
 
-#: templates/academic_calendar.html:75 templates/home.html.py:40
 msgid "go"
 msgstr "Go"
 
-#: templates/academic_calendar.html:79 templates/academic_calendar.html:81
-#: templates/offer_year_calendar.html:58 templates/offer_year_calendar.html:59
-#: templates/organization.html.py:108 templates/organization.html:110
-#: templates/organization_address.html:69
-#: templates/organization_address.html:71
 msgid "edit"
 msgstr "Edit"
 
-#: templates/academic_calendar_form.html:37
-#: templates/academic_calendars.html:38 templates/academic_year.html.py:42
-#: templates/home.html:73 templates/offer.html.py:51
-#: templates/offer_year_calendar.html:42
-#: templates/offer_year_calendar_form.html:52
 msgid "academic_calendar"
 msgstr "Academic calendar"
 
-#: templates/academic_calendar_form.html:90
 msgid "highlight_title"
 msgstr "Highlight title"
 
-#: templates/academic_calendar_form.html:96
 msgid "highlight_shortcut"
 msgstr "Highlight shortcut"
 
-#: templates/academic_calendar_form.html:104
 msgid "highlight_description"
 msgstr "Highlight description"
 
-#: templates/academic_calendar_form.html:114
-#: templates/academic_calendar_form.html:115
-#: templates/assessments/online_double_encoding_form.html:130
-#: templates/assessments/online_double_encoding_validation.html:140
-#: templates/offer_year_calendar_form.html:66
-#: templates/offer_year_calendar_form.html:67
-#: templates/organization_address_form.html:81
-#: templates/organization_form.html:78 templates/profile.html.py:182
-#: templates/profile.html:183
 msgid "save"
 msgstr "Save"
 
-#: templates/academic_calendar_form.html:118
-#: templates/assessments/online_double_encoding_form.html:134
-#: templates/assessments/online_double_encoding_validation.html:142
-#: templates/assessments/online_encoding.html:233
-#: templates/offer_year_calendar.html:61 templates/offer_year_calendar.html:62
-#: templates/offer_year_calendar_form.html:70
-#: templates/organization_address_form.html:84
-#: templates/organization_address_form.html:85
-#: templates/organization_address_form.html:88
-#: templates/organization_address_form.html:89
-#: templates/organization_form.html:80
-#: templates/assessments/online_encoding.html:257
-#: templates/assessments/online_encoding_form.html:159
 msgid "cancel"
 msgstr "Cancel"
 
-#: templates/academic_calendars.html:70 templates/admin/files.html.py:66
-#: templates/learning_units.html:73 templates/offers.html.py:73
-#: templates/organizations.html:98 templates/structures.html.py:84
 msgid "no_result"
 msgstr "No result!"
 
-#: templates/academic_year.html:43
 msgid "academic_calendar_management"
 msgstr "Academic calendar management"
 
-#: templates/access_denied.html:34
 msgid "acces_denied"
 msgstr "Access denied"
 
-#: templates/admin/file.html:30 templates/admin/files.html.py:30
-#: templates/admin/storage.html:30 templates/admin/storage.html.py:34
-#: templates/layout.html:114
 msgid "storage"
 msgstr "Storage"
 
-#: templates/admin/file.html:31 templates/admin/files.html.py:31
-#: templates/admin/files.html:35 templates/admin/storage.html.py:64
 msgid "files"
 msgstr "Files"
 
-#: templates/admin/file.html:32 templates/admin/file.html.py:39
-#: templates/admin/file.html:57
 msgid "file"
 msgstr "File"
 
-#: templates/admin/file.html:43 templates/organization.html.py:68
-#: templates/organization_form.html:68 templates/organizations.html.py:52
-#: templates/organizations.html:87 templates/structure.html.py:75
-#: templates/structures.html:53 templates/structures.html.py:90
 msgid "type"
 msgstr "Type"
 
-#: templates/admin/file.html:50 templates/admin/files.html.py:46
-#: templates/admin/files.html:48
 msgid "creation_date"
 msgstr "Creation date"
 
-#: templates/admin/file.html:71 templates/admin/files.html.py:42
-#: templates/admin/files.html:43 templates/admin/files.html.py:76
-#: templates/registration/login.html:40
 msgid "user"
 msgstr "User"
 
-#: templates/admin/files.html:52
 msgid "search_for_a_file"
 msgstr "Search for a file"
 
-#: templates/admin/files.html:71 templates/organization.html.py:53
-#: templates/organization_form.html:53 templates/organizations.html.py:47
-#: templates/organizations.html:48 templates/organizations.html.py:86
 msgid "name"
 msgstr "Name"
 
-#: templates/admin/files.html:72
 msgid "date"
 msgstr "Date"
 
-#: templates/admin/files.html:73
 msgid "size"
 msgstr "Size"
 
-#: templates/admin/files.html:74
 msgid "storage_duration"
 msgstr "Storage duration"
 
-#: templates/admin/storage.html:65
 msgid "desc_lnk_files"
 msgstr "Consultation of files managed by the application"
 
-#: templates/assessments/assessments.html:30
-#: templates/assessments/online_double_encoding_validation.html:32
-#: templates/assessments/online_encoding.html:34
-#: templates/assessments/online_encoding_form.html:33
-#: templates/assessments/scores_encoding.html:31 templates/home.html.py:53
-#: templates/layout.html:80 templates/studies.html.py:30
-#: templates/studies.html:34
 msgid "student_path"
 msgstr "Students' path"
 
-#: templates/assessments/assessments.html:31
-#: templates/assessments/assessments.html:35
-#: templates/assessments/online_double_encoding_form.html:35
-#: templates/assessments/online_double_encoding_validation.html:33
-#: templates/assessments/online_encoding.html:35
-#: templates/assessments/online_encoding_form.html:34
-#: templates/assessments/scores_encoding.html:32
-#: templates/assessments/scores_encoding_mgr.html:32 templates/layout.html:82
-#: templates/studies.html.py:42
 msgid "evaluations"
 msgstr "Evaluations"
 
-#: templates/assessments/assessments.html:43
-#: templates/assessments/online_double_encoding_form.html:36
-#: templates/assessments/online_double_encoding_validation.html:34
-#: templates/assessments/online_encoding.html:36
-#: templates/assessments/online_encoding.html:42
-#: templates/assessments/online_encoding_form.html:35
-#: templates/assessments/scores_encoding.html:33
-#: templates/assessments/scores_encoding.html:38
-#: templates/assessments/scores_encoding_mgr.html:33
-#: templates/assessments/scores_encoding_mgr.html:37
 msgid "scores_encoding"
 msgstr "Scores encoding"
 
-#: templates/assessments/assessments.html:44
 msgid "desc_lnk_score_encoding"
 msgstr "This process helps tutor while encoding notes for the exams sessions."
 
-#: templates/assessments/online_double_encoding_form.html:34
-#: templates/assessments/scores_encoding_mgr.html:31
 msgid "studies"
 msgstr "Studies"
 
-#: templates/assessments/online_double_encoding_form.html:37
-#: templates/assessments/online_double_encoding_validation.html:35
 msgid "online_scores_encoding"
 msgstr "Online scores encoding"
 
-#: templates/assessments/online_double_encoding_form.html:38
-#: templates/assessments/online_double_encoding_form.html:42
-#: templates/assessments/online_double_encoding_validation.html:36
-#: templates/assessments/online_double_encoding_validation.html:40
 msgid "dubble_online_scores_encoding"
 msgstr "Dubble online scores encoding"
 
-#: templates/assessments/online_double_encoding_form.html:52
-#: templates/assessments/online_double_encoding_validation.html:50
-#: templates/assessments/online_encoding.html:53
-#: templates/assessments/online_encoding_form.html:50
 msgid "responsible"
 msgstr "Responsible"
 
-#: templates/assessments/online_double_encoding_form.html:67
-#: templates/assessments/online_double_encoding_validation.html:64
-#: templates/assessments/online_encoding.html:66
-#: templates/assessments/online_encoding_form.html:62
 msgid "number_of_enrollments"
 msgstr "Number of enrollments"
 
-#: templates/assessments/online_double_encoding_form.html:79
-#: templates/assessments/online_double_encoding_validation.html:79
-#: templates/assessments/online_encoding_form.html:83
-#: templates/assessments/scores_encoding_mgr.html:66 templates/offer.html:35
 msgid "offer"
 msgstr "Offer"
 
-#: templates/assessments/online_double_encoding_form.html:80
-#: templates/assessments/online_double_encoding_validation.html:80
-#: templates/assessments/online_encoding.html:148
-#: templates/assessments/online_encoding_form.html:84 utils/export_utils.py:38
-#: utils/pdf_utils.py:238
 msgid "registration_number"
 msgstr "Registration number"
 
@@ -463,138 +276,96 @@ msgstr "Score"
 msgid "justification"
 msgstr "Justification"
 
-#: templates/assessments/online_double_encoding_form.html:132
 msgid "compare"
 msgstr "Compare"
 
-#: templates/assessments/online_double_encoding_validation.html:76
 msgid "scores"
 msgstr "Scores"
 
-#: templates/assessments/online_double_encoding_validation.html:76
-#: templates/assessments/online_encoding.html:152 utils/export_utils.py:42
-#: utils/pdf_utils.py:242
 msgid "other_score"
 msgstr "Other scores"
 
-#: templates/assessments/online_double_encoding_validation.html:83
 msgid "encoding"
 msgstr "Encoding"
 
-#: templates/assessments/online_double_encoding_validation.html:84
 msgid "dubble_encoding"
 msgstr "Dubble encoding"
 
-#: templates/assessments/online_double_encoding_validation.html:85
 msgid "final"
 msgstr "Final"
 
-#: templates/assessments/online_encoding.html:37
-#: templates/assessments/online_encoding_form.html:36
-#: templates/assessments/online_encoding_form.html:40
 msgid "online_encoding"
 msgstr "Online encoding"
 
-#: templates/assessments/online_encoding.html:77
-#: templates/assessments/scores_encoding.html:77
-#: templates/assessments/scores_encoding.html:108
-#: templates/assessments/scores_encoding.html:139
-#: templates/assessments/scores_encoding_mgr.html:106
-#: templates/assessments/scores_encoding_mgr.html:131
-#: templates/assessments/scores_encoding_mgr.html:182
 msgid "progress"
 msgstr "Progress"
 
-#: templates/assessments/online_encoding.html:86
-#: templates/assessments/online_encoding.html:89
 msgid "encode"
 msgstr "Encode"
 
-#: templates/assessments/online_encoding.html:87
-#: templates/assessments/online_encoding.html:90
 msgid "double_encoding"
 msgstr "Dubble encoding"
 
-#: templates/assessments/online_encoding.html:95
-#: templates/assessments/online_encoding.html:99
-#: templates/assessments/scores_encoding.html:126
-#: templates/assessments/scores_encoding_mgr.html:201
 msgid "print"
 msgstr "Print"
 
-#: templates/assessments/online_encoding.html:102
-#: templates/assessments/scores_encoding.html:156
-#: templates/assessments/scores_encoding_mgr.html:146
 msgid "Create a xls file while activity\\"
 msgstr ""
 
-#: templates/assessments/online_encoding.html:103
-#: templates/assessments/scores_encoding.html:158
-#: templates/assessments/scores_encoding_mgr.html:151
 msgid "Get xls"
 msgstr ""
 
-#: templates/assessments/online_encoding.html:105
 msgid "select_a_xls_file_from_which_to_inject_scores"
 msgstr ""
 
-#: templates/assessments/online_encoding.html:105
 msgid "inject_xls_file"
 msgstr "Submit XLS file"
 
-#: templates/assessments/online_encoding.html:109
-#: templates/assessments/online_encoding.html:248
+msgid "message_address_papersheet"
+msgstr "Reuse the address of an entity linked to the program or inform the posting address for the papersheet."
+
+msgid "reuse_address_entity"
+msgstr "Reuse the address of"
+
 msgid "submission"
 msgstr "Submission"
 
-#: templates/assessments/online_encoding.html:145
 msgid "status"
 msgstr "Status"
 
-#: templates/assessments/online_encoding.html:146 templates/profile.html:138
-#: utils/export_utils.py:37 utils/pdf_utils.py:325
 msgid "program"
 msgstr "Program"
 
-#: templates/assessments/online_encoding.html:147 utils/export_utils.py:35
 msgid "session"
 msgstr "Session"
 
 msgid "number_session"
 msgstr "No. Session"
 
-#: templates/assessments/online_encoding.html:167
 msgid "score_submitted"
 msgstr "Submitted"
 
-#: templates/assessments/online_encoding.html:210
 msgid "print_warning_and_info_messages"
 msgstr ""
 
 msgid "print_all_courses"
 msgstr "Print all courses"
 
-#: templates/assessments/online_encoding.html:224
 msgid "scores_injection"
 msgstr "Scores injection"
 
-#: templates/assessments/online_encoding.html:227
 msgid "choose_file"
 msgstr "Choose file"
 
-#: templates/assessments/online_encoding.html:230
 msgid "help_pnl_selectedfiles"
 msgstr "Please select an XLS file for injection"
 
-#: templates/assessments/online_encoding.html:234
 msgid "inject"
 msgstr "Inject"
 
-#: templates/assessments/online_encoding.html:252
 msgid "help_submission_scores_label"
 msgstr "You will submit %s notes."
 
-#: templates/assessments/online_encoding_form.html:72
 msgid "decimal_values_accepted"
 msgstr "Decimal values in scores are accepted."
 
@@ -618,18 +389,16 @@ msgstr "Decimal score NOT allowed"
 msgid "Save"
 msgstr ""
 
-#: templates/assessments/scores_encoding.html:48
-#: templates/assessments/scores_encoding_mgr.html:54
-#: templates/assessments/scores_encoding_mgr.html:105
-msgid "tutor"
-msgstr "Tutor"
+msgid "tutors"
+msgstr "Tutors"
 
 #: templates/assessments/scores_encoding.html:50
 msgid "faculty"
 msgstr "Faculty"
 
-#: templates/assessments/scores_encoding.html:62
-#: templates/assessments/scores_encoding_mgr.html:85
+msgid "select"
+msgstr "Select"
+
 msgid "select_an_encoding_type"
 msgstr "Select an encoding type"
 
@@ -675,7 +444,7 @@ msgstr "All"
 
 #: templates/assessments/scores_encoding_mgr.html:78
 msgid "refresh_list"
-msgstr ""
+msgstr "Search/update the list"
 
 #: templates/assessments/scores_encoding_mgr.html:104
 #: templates/assessments/scores_encoding_mgr.html:130
@@ -987,6 +756,9 @@ msgstr "My studies"
 msgid "programs"
 msgstr "Programs"
 
+msgid "program_s"
+msgstr "program(s)"
+
 #: templates/profile.html:47
 msgid "preferences"
 msgstr "Preferences"
@@ -1100,11 +872,11 @@ msgstr ""
 "Belgium"
 
 #: utils/pdf_utils.py:226
-msgid "other_score_legend"
-msgstr "Justification legend"
+msgid "justification_legend"
+msgstr "Justification legend: %s"
 
 msgid "score_legend"
-msgstr "Score legend"
+msgstr "Score legend: %s (0=Score of presence)"
 
 #: utils/pdf_utils.py:228
 msgid "unauthorized_decimal_for_this_activity"
@@ -1132,9 +904,7 @@ msgstr "Exam board secretary"
 
 #: utils/pdf_utils.py:365
 msgid "return_doc_to_administrator"
-msgstr ""
-"Please return this document to the administrative office of the program "
-"administrator"
+msgstr "Please return this document to the administrative office before %s."
 
 #: utils/pdf_utils.py:381
 msgid "done_at"
@@ -1142,7 +912,7 @@ msgstr "Done at"
 
 #: utils/pdf_utils.py:381
 msgid "the"
-msgstr "The"
+msgstr "the"
 
 #: utils/pdf_utils.py:381
 msgid "signature"
@@ -1170,7 +940,7 @@ msgstr "Invalid file"
 
 #: utils/upload_xls_utils.py:87
 msgid "Line"
-msgstr "Ligne"
+msgstr "Row"
 
 #: utils/upload_xls_utils.py:89
 msgid "student_not_exist"
@@ -1182,7 +952,7 @@ msgstr "Academic year (%d) doesn't exist"
 
 #: utils/upload_xls_utils.py:97
 msgid "offer_year_not_exist"
-msgstr "The offer year (%d) (%d) - doesn't exist"
+msgstr "The offer year (%s) (%d) - doesn't exist"
 
 #: utils/upload_xls_utils.py:101
 msgid "offer_enrollment_not_exist"
@@ -1214,8 +984,7 @@ msgstr "The score seems to be incorrect. Decimales NOT allowed"
 
 #: utils/upload_xls_utils.py:159
 msgid "constraint_score_other_score"
-msgstr ""
-"You can't encode a 'score' AND an 'justification' together (unless the 'justification' is CHEATING)"
+msgstr "You can't encode a 'score' and a 'justification' together"
 
 #: utils/upload_xls_utils.py:226
 #, python-format
@@ -1230,7 +999,10 @@ msgstr "Score Saved"
 
 #: utils/upload_xls_utils.py:232
 msgid "scores_saved"
-msgstr "Scores Saved"
+msgstr "score(s) saved"
+
+msgid "score_invalid"
+msgstr "Score invalid"
 
 #: utils/upload_xls_utils.py:241
 msgid "the_coordinator_must_still_submit_scores"
@@ -1253,6 +1025,18 @@ msgstr "Please choose at least one criteria!"
 
 msgid "get_excel_file"
 msgstr "Get Excel File"
+
+msgid "no_exam_session_opened_for_the_moment"
+msgstr "No scores' encoding session opened for the moment."
+
+msgid "you_manage"
+msgstr "You manage"
+
+msgid "learning_units_in"
+msgstr "learning units in"
+
+msgid "no_dubble_score_encoded_comparison_impossible"
+msgstr "No dubble score encoded ; nothing to compare."
 
 #~ msgid "title_btn_upload_score"
 #~ msgstr "Select your xls file from which to inject scores"
@@ -1289,3 +1073,205 @@ msgstr "Get Excel File"
 
 #~ msgid "registration_date"
 #~ msgstr "Registration date"
+
+msgid "sector"
+msgstr "Sector"
+
+msgid "institute"
+msgstr "Institute"
+
+msgid "pole"
+msgstr "Pole"
+
+msgid "doctoral_commission"
+msgstr "Doctoral commmission"
+
+msgid "program_commission"
+msgstr "Program commission"
+
+msgid "logistic"
+msgstr "Logistic"
+
+msgid "research_center"
+msgstr "Research center"
+
+msgid "technologic_platform"
+msgstr "Technologic platform"
+
+msgid "undefined"
+msgstr "Undefined"
+
+msgid "messages"
+msgstr "Messages"
+
+msgid "messages_templates"
+msgstr "Messages templates"
+
+msgid "desc_messages_template"
+msgstr "Messages templating allow you to edit email messages dynamically"
+
+msgid "messages_history"
+msgstr "Messages History"
+
+msgid "desc_messages_history"
+msgstr "Message history allow you to access sent emails"
+
+msgid "encoding_status_ended"
+msgstr "All the scores are encoded."
+
+msgid "encoding_status_notended"
+msgstr "It remains notes to encode."
+
+msgid "origin"
+msgstr "From"
+
+msgid "recipient"
+msgstr "Recipient"
+
+msgid "subject"
+msgstr "Subject"
+
+msgid "myosis"
+msgstr "MyOsis"
+
+msgid "sent"
+msgstr "Sent"
+
+msgid "not_sent"
+msgstr "Not Sent"
+
+msgid "message"
+msgstr "Message"
+
+msgid "html_message"
+msgstr "HTML Message"
+
+msgid "txt_message"
+msgstr "Text Message"
+
+msgid "send_message_again"
+msgstr "Send again"
+
+msgid "btn_send_message_again_title"
+msgstr "Send again the message to the recipient"
+
+msgid "lnk_message_history_read_title"
+msgstr "See the message"
+
+msgid "txt_origin_title"
+msgstr "Sender of the message"
+
+msgid "txt_recipient_title"
+msgstr "Recipient of the message (email or last name or username)"
+
+msgid "txt_subject_title"
+msgstr "Subject of the messages"
+
+msgid "txt_reference_title"
+msgstr "Template reference of the message"
+
+msgid "btn_messages_history_search"
+msgstr "Search in the messages history"
+
+msgid "none"
+msgstr "None"
+
+msgid "learning_unit_responsible"
+msgstr "Learning unit's responsible"
+
+msgid "all_learning_units_must_be_shown"
+msgstr "All learning units must be shown"
+
+msgid "scores_saved_cannot_be_saved_anymore"
+msgstr "Sore saved, button save not available anymore"
+
+msgid "professors_must_not_submit_scores"
+msgstr "Proffessors must not submit scores"
+
+msgid "scores_encoding_tests"
+msgstr "Scores encoding tests"
+
+msgid "encode_as_coordinator"
+msgstr "Encode as coordinator"
+
+msgid "encode_as_professor"
+msgstr "Encode as professor"
+
+msgid "coordinator"
+msgstr "Coordinator"
+
+msgid "encode_as_pgm"
+msgstr "Encode as program manager"
+
+msgid "coordinators_can_submit_partial_encoding"
+msgstr "Coordinators can submit partial encoding"
+
+msgid "submitted_scores_cannot_be_encoded_anymore"
+msgstr "Submitted scores cannot be encoded anymore"
+
+msgid "double_encoding_test"
+msgstr "Scores double encoding"
+
+msgid "in_accordance_to_regulation"
+msgstr "In accordance to regulation's rules 104, 109 and 111. Complete rules avalaible here"
+
+msgid "link_to_RGEE"
+msgstr "https://www.uclouvain.be/enseignement-reglements.html"
+
+msgid "warning_all_scores_not_sumitted_yet"
+msgstr "Warning : some registered scores have not been submitted yet"
+
+msgid "definitive_save"
+msgstr "Definitive submission (Submit to faculty)"
+
+msgid "temporary_save"
+msgstr "Temporary save (not submitted to the faculty yet)"
+
+msgid "only_submited_scores_can_be_double_encoded"
+msgstr "Only submitted scores can be bouble encoded"
+
+msgid "lu_must_not_contain_decimal_scores"
+msgstr "This learning unit year must not contain decimal scores"
+
+msgid "lu_could_contain_decimal_scores"
+msgstr "This learning unit year could contain decimal scores"
+
+msgid "validated_double_encoding_cannot_be_validated_anymore"
+msgstr "Validated double encoding cannot be validated anymore"
+
+msgid "validation_dubble_encoding_mandatory"
+msgstr "Please enter a final validation for scores' differences detected after the dubble encoding "
+       "(below). If you leave, your dubble encoding will be lost."
+
+msgid "after_submission_a_message_must_be_sent"
+msgstr "If scores are submitted , a message is sent to all the professors of the learning unit"
+
+msgid "template_error"
+msgstr "No message was sent : the message template {} does not exist."
+
+msgid "tooltip_encode_for"
+msgstr "Encode scores"
+
+msgid "tooltip_encode_no_more_possible_for"
+msgstr "All the scores were submitted.It is not possible to encode scores anymore"
+
+msgid "tooltip_inject_excel_no_more_possible_for"
+msgstr "All the scores were submitted.It is not possible inject excell file anymore"
+
+msgid "tooltip_double_encode_no_more_possible_for"
+msgstr "All the scores were submitted.It is not possible to double encode scores anymore"
+
+msgid "tooltip_double_encode_for"
+msgstr "Double encode scores"
+
+msgid "tooltip_select_excel_file_to_inject_scores"
+msgstr "Select an excel file to inject scores."
+
+msgid "display_tutors"
+msgstr "Display all tutors for this learning unit"
+
+msgid "tooltip_dowload_excel_file"
+msgstr "Download the excel file"
+
+msgid "tooltip_print_scores"
+msgstr "Print the scores"

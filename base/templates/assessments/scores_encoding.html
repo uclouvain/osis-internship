@@ -4,6 +4,7 @@
 {% load list %}
 {% load get_at_index %}
 {% load dictionnary %}
+{% load format %}
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
 * designed to manage the core business of higher education institutions,
@@ -38,139 +39,148 @@
     <h2>{% trans 'scores_encoding' %}</h2>
 </div>
 {% if notes_list%}
-    {% for note in notes_list %}
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            {% if note.tutor %}
-                            <label>{% trans 'tutor' %}</label><br>{{ note.tutor }}
-                            {% else %}
-                            <label>{% trans 'faculty' %}</label><br> {{ note.structure.acronym }}
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="form-group">
-                            <label>{% trans 'academic_year' %}</label><br>
-                            {{ academic_year }}
-                        </div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>{% trans 'tutor' %}</label><br>{{ tutor }}
                     </div>
                 </div>
-                <br>
-                <p><b>{% trans 'select_an_encoding_type' %}</b></p>
-                <div>
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="active"><a href="#tab_online_{{forloop.counter0}}" aria-controls="online" role="tab" data-toggle="tab" id="lnk_online_{{forloop.counter0}}">{% trans 'online' %}</a></li>
-                        <li role="presentation"><a href="#tab_via_paper_{{forloop.counter0}}" aria-controls="via_paper" role="tab" data-toggle="tab" id="lnk_via_paper_{{forloop.counter0}}">{% trans 'via_paper' %}</a></li>
-                        <li role="presentation"><a href="#tab_via_excel_{{forloop.counter0}}" aria-controls="via_excel" role="tab" data-toggle="tab" id="lnk_via_excel_{{forloop.counter0}}">{% trans 'via_excel' %}</a></li>
-                    </ul>
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <label>{% trans 'academic_year' %}</label><br>
+                        {{ academic_year }}
+                    </div>
+                </div>
+            </div>
+            <br>
+            <p><b>{% trans 'select_an_encoding_type' %}</b></p>
+            <div>
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#tab_online_{{forloop.counter0}}" aria-controls="online" role="tab" data-toggle="tab" id="lnk_online_{{forloop.counter0}}">{% trans 'online' %}</a></li>
+                    <li role="presentation"><a href="#tab_via_paper_{{forloop.counter0}}" aria-controls="via_paper" role="tab" data-toggle="tab" id="lnk_via_paper_{{forloop.counter0}}">{% trans 'via_paper' %}</a></li>
+                    <li role="presentation"><a href="#tab_via_excel_{{forloop.counter0}}" aria-controls="via_excel" role="tab" data-toggle="tab" id="lnk_via_excel_{{forloop.counter0}}">{% trans 'via_excel' %}</a></li>
+                </ul>
 
-                    <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane fade in active" id="tab_online_{{forloop.counter0}}">
-                            <table class="table table-hover">
-                                <thead>
-                                <tr>
-                                    <th>{% trans 'acronym' %}</th>
-                                    <th>{% trans 'course' %}</th>
-                                    <th>{% trans 'progress' %}</th>
-                                    <th></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for note_detail in note.lu_list %}
-                                <tr>
-                                    <td>{{ note_detail.lu.acronym }}</td>
-                                    <td>{%if note_detail.completed%}
-                                            {{ note_detail.lu.title }}
-                                        {%else%}
-                                            <a href="{% url 'online_encoding' note_detail.lu.id tutor.id %}"
-                                               id="lnk_{{ note_detail.lu.acronym }}">{{ note_detail.lu.title }}</a>
-                                        {% endif %}
-                                    </td>
-                                    <td>{{ note_detail.nb_notes_encoded}}/{{ note_detail.nb_student}}</td>
-                                    <td><a class="btn btn-default"
-                                           href="{% url 'online_encoding_form' note_detail.lu.id%}" role="button" id="lnk_encode"><i class="fa fa-hashtag"></i> {% trans 'encode' %}</a></td>
-                                </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                        <div role="tabpanel" class="tab-pane fade" id="tab_via_paper_{{forloop.counter0}}">
-                            <br>
-                            <a class="btn btn-default"
-                               href="{% url 'notes_printing_all' tutor.id %}"
-                               role="button" id="lnk_notes_printing_all_{{learning_unit_year.id}}">
-                                <span class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'print_all_courses' %}</a>
-                            <br><br>
-                            <table class="table table-hover">
-                                <thead>
-                                <tr>
-                                    <th>{% trans 'acronym' %}</th>
-                                    <th>{% trans 'course' %}</th>
-                                    <th>{% trans 'progress' %}</th>
-                                    <th></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for note_detail in note.lu_list %}
-                                <tr>
-                                    <td>{{ note_detail.lu.acronym }}</td>
-                                    <td>{%if note_detail.completed%}{{ note_detail.lu.title }}{%else%}<a
-                                            href="{% url 'online_encoding' note_detail.lu.id tutor.id %}"
-                                            title="Visualiser/charger les notes pour le cours"
-                                            id="lnk_paper_encoding_messages_{{note_detail.lu.id}}">{{ note_detail.lu.title }}</a>{%endif%}
-                                    </td>
-                                    <td>{{ note_detail.nb_notes_encoded}}/{{ note_detail.nb_student}}</td>
-                                    <td>
-                                        <a class="btn btn-default {% if note_detail.completed%}disabled{% endif %}"
-                                           href="{% url 'notes_printing' note_detail.lu.id tutor.id %}"
-                                           role="button" id="lnk_notes_printing_{{note_detail.lu.id}}"><span
-                                                class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'Print' %}</a>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                        <div role="tabpanel" class="tab-pane fade" id="tab_via_excel_{{forloop.counter0}}">
-                            <table class="table table-hover">
-                                <thead>
-                                <tr>
-                                    <th>{% trans 'acronym' %}</th>
-                                    <th>{% trans 'course' %}</th>
-                                    <th>{% trans 'progress' %}</th>
-                                    <th></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for note_detail in note.lu_list %}
-                                <tr>
-                                    <td>{{ note_detail.lu.acronym }}</td>
-                                    <td>{%if note_detail.completed%}{{ note_detail.lu.title }}{%else%}<a
-                                            href="{% url 'online_encoding' note_detail.lu.id tutor.id %}"
-                                            title="Visualiser/charger les notes pour le cours"
-                                            id="lnk_online_encoding_messages_{{note_detail.lu.id}}">{{ note_detail.lu.title }}</a>{%endif%}
-                                    </td>
-                                    <td>{{ note_detail.nb_notes_encoded}}/{{ note_detail.nb_student}}</td>
-                                    <td><a class="btn btn-default {% if note_detail.completed  %}disabled{% endif %}"
-                                           href="{% url 'scores_encoding_download' note_detail.lu.id academic_year.id%}"
-                                           role="button" title="{% trans 'hint_get_excel_file'%}"
-                                           id="lnk_scores_encoding_download_{{lu.id}}"><span
-                                            class="glyphicon glyphicon-download" aria-hidden="true"></span> {% trans 'get_excel_file'%}</a>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane fade in active" id="tab_online_{{forloop.counter0}}">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>{% trans 'acronym' %}</th>
+                                <th>{% trans 'learning_unit' %}</th>
+                                <th>{% trans 'progress' %}</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for note_detail in notes_list %}
+                            <tr>
+                                <td>{{ note_detail.learning_unit_year.acronym }}</td>
+                                <td><a href="{% url 'online_encoding' note_detail.learning_unit_year.id %}"
+                                           id="lnk_{{ note_detail.learning_unit_year.acronym }}">{{ note_detail.learning_unit_year.title }}</a>
+                                </td>
+                                <td id="txt_progress_{{ note_detail.learning_unit_year.acronym }}" >{{ note_detail.exam_enrollments_encoded}}/{{ note_detail.total_exam_enrollments}}</td>
+                                <td><a class="btn btn-default"
+                                       href="{% url 'online_encoding_form' note_detail.learning_unit_year.id%}"
+                                       role="button"
+                                       id="lnk_encode_{{ note_detail.learning_unit_year.acronym }}"
+                                       data-toggle="tooltip" data-placement="right"
+                                       {% if note_detail.exam_enrollments_encoded == note_detail.total_exam_enrollments %}
+                                        disabled
+                                        title="{% trans 'tooltip_encode_no_more_possible_for' %}"
+                                       {% else %}
+                                        title="{% trans 'tooltip_encode_for' %}"
+                                       {% endif %}
+                                    >
+                                    <i class="fa fa-hashtag"></i> {% trans 'encode' %}
+                                </a></td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade" id="tab_via_paper_{{forloop.counter0}}">
+                        <br>
+                        <a class="btn btn-default"
+                           href="{% url 'notes_printing_all' %}"
+                           role="button" id="lnk_notes_printing_all_{{learning_unit_year.id}}">
+                            <span class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'print_all_courses' %}</a>
+                        <br><br>
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>{% trans 'acronym' %}</th>
+                                <th>{% trans 'learning_unit' %}</th>
+                                <th>{% trans 'progress' %}</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for note_detail in notes_list %}
+                            <tr>
+                                <td>{{ note_detail.learning_unit_year.acronym }}</td>
+                                <td><a
+                                        href="{% url 'online_encoding' note_detail.learning_unit_year.id %}"
+                                        title="Visualiser/charger les notes pour le cours"
+                                        id="lnk_paper_encoding_messages_{{note_detail.learning_unit_year.id}}">{{ note_detail.learning_unit_year.title }}</a>
+                                </td>
+                                <td>{{ note_detail.exam_enrollments_encoded}}/{{ note_detail.total_exam_enrollments}}</td>
+                                <td>
+                                    <a class="btn btn-default"
+                                       href="{% url 'notes_printing' note_detail.learning_unit_year.id %}"
+                                       role="button" id="lnk_notes_printing_{{note_detail.learning_unit_year.id}}"
+                                       data-toggle="tooltip" data-placement="right"
+                                       title="{% trans 'tooltip_print_scores' %}"
+                                    ><span class="glyphicon glyphicon-print" aria-hidden="true"></span> {% trans 'print' %}</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade" id="tab_via_excel_{{forloop.counter0}}">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>{% trans 'acronym' %}</th>
+                                <th>{% trans 'learning_unit' %}</th>
+                                <th>{% trans 'progress' %}</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for note_detail in notes_list %}
+                            <tr>
+                                <td>{{ note_detail.learning_unit_year.acronym }}</td>
+                                <td><a
+                                        href="{% url 'online_encoding' note_detail.learning_unit_year.id %}"
+                                        title="Visualiser/charger les notes pour le cours"
+                                        id="lnk_online_encoding_messages_{{note_detail.learning_unit_year.id}}">{{ note_detail.learning_unit_year.title }}</a>
+                                </td>
+                                <td>{{ note_detail.exam_enrollments_encoded}}/{{ note_detail.total_exam_enrollments}}</td>
+                                <td><a class="btn btn-default"
+                                       href="{% url 'scores_encoding_download' note_detail.learning_unit_year.id academic_year.id%}"
+                                       role="button"
+                                       id="lnk_scores_encoding_download_{{lu.id}}"
+                                       data-toggle="tooltip" data-placement="right"
+                                       title="{% trans 'tooltip_dowload_excel_file' %}"
+                                ><span
+                                        class="glyphicon glyphicon-download" aria-hidden="true"></span> {% trans 'get_excel_file'%}</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
-    {% endfor %}
+    </div>
 {% else %}
-    <p class="text-info" style="font-size: 130%">Aucune session d'examen ouverte pour le moment.</p>
+    <div class="alert alert-warning">
+      <p class="text-info" style="font-size: 130%">{% trans 'no_exam_session_opened_for_the_moment' %} </p>
+    </div>
 {% endif %}
 {% endblock %}

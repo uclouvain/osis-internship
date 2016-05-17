@@ -26,6 +26,8 @@
 from django.db import models
 from django.contrib import admin
 
+from base.models import attribution
+
 
 class LearningUnitYearAdmin(admin.ModelAdmin):
     list_display = ('acronym', 'title', 'academic_year', 'credits', 'changed')
@@ -37,7 +39,7 @@ class LearningUnitYearAdmin(admin.ModelAdmin):
 class LearningUnitYear(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
-    acronym = models.CharField(max_length=15)
+    acronym = models.CharField(max_length=15, db_index=True)
     title = models.CharField(max_length=255)
     credits = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     decimal_scores = models.BooleanField(default=False)
@@ -48,8 +50,8 @@ class LearningUnitYear(models.Model):
         return u"%s - %s" % (self.academic_year,self.learning_unit)
 
 
-def find_by_id(learning_unit_id):
-    return LearningUnitYear.objects.get(pk=learning_unit_id)
+def find_by_id(learning_unit_year_id):
+    return LearningUnitYear.objects.get(pk=learning_unit_year_id)
 
 
 def search(academic_year_id=None, acronym=None, learning_unit=None, title=None):
@@ -70,6 +72,9 @@ def search(academic_year_id=None, acronym=None, learning_unit=None, title=None):
     return queryset
 
 
-def find_by_academic_year_learningunit(academic_yr, learning_unit):
-    return LearningUnitYear.objects.filter(academic_year=academic_yr) \
-                                   .filter(learning_unit=learning_unit).first()
+def find_by_tutor(tutor_id):
+    if tutor_id:
+        learning_unit_ids = attribution.Attribution.objects.filter(tutor_id=tutor_id).values('learning_unit_id')
+        return LearningUnitYear.objects.filter(learning_unit_id__in=learning_unit_ids)
+    else:
+        return None
