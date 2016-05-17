@@ -64,7 +64,7 @@ def manager_dissertations_list(request):
 
 @login_required
 @user_passes_test(is_manager)
-def manager_dissertation_new(request):
+def manager_dissertations_new(request):
     if request.method == "POST":
         form = ManagerDissertationForm(request.POST)
         if form.is_valid():
@@ -74,7 +74,7 @@ def manager_dissertation_new(request):
         form = ManagerDissertationForm(initial={'active': True})
         form.fields["proposition_dissertation"].queryset = PropositionDissertation.objects.filter(visibility=True,
                                                                                                   active=True)
-    return render(request, 'manager_dissertation_edit.html', {'form': form})
+    return render(request, 'manager_dissertations_edit.html', {'form': form})
 
 
 @login_required
@@ -83,3 +83,37 @@ def manager_dissertations_search(request):
     dissertations = Dissertation.objects.filter(Q(active=True))
     return render(request, 'manager_dissertations_list.html',
                   {'dissertations': dissertations})
+
+
+@login_required
+@user_passes_test(is_manager)
+def manager_dissertations_detail(request, pk):
+    dissertation = get_object_or_404(Dissertation, pk=pk)
+    person = mdl.person.find_by_user(request.user)
+    adviser = Adviser.find_by_person(person)
+    return render(request, 'manager_dissertations_detail.html',
+                  {'dissertation': dissertation, 'adviser': adviser})
+
+
+@login_required
+@user_passes_test(is_manager)
+def manager_dissertations_edit(request, pk):
+    dissertation = get_object_or_404(Dissertation, pk=pk)
+    if request.method == "POST":
+        form = ManagerDissertationForm(request.POST, instance=dissertation)
+        if form.is_valid():
+            dissertation = form.save()
+            dissertation.save()
+            return redirect('manager_dissertations_detail', pk=dissertation.pk)
+    else:
+        form = ManagerDissertationForm(instance=dissertation)
+    return render(request, 'manager_dissertations_edit.html', {'form': form})
+
+
+@login_required
+@user_passes_test(is_manager)
+def manager_dissertations_delete(request, pk):
+    dissertation = get_object_or_404(Dissertation, pk=pk)
+    dissertation.active = False
+    dissertation.save()
+    return redirect('manager_dissertations_list')
