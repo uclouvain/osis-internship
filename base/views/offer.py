@@ -95,7 +95,7 @@ def score_encoding(request, offer_year_id):
     else:
         data = "nok"
 
-    return HttpResponse(data, content_type='application/json')
+    return HttpResponse(data, content_type='text/plain')
 
 
 def offer_year_calendar_read(request, id):

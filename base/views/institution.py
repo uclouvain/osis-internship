@@ -79,7 +79,7 @@ def structure_address(request, structure_id):
     structure = mdl.structure.find_by_id(structure_id)
     struct_address = mdl.structure_address.find_structure_address(structure)
     if struct_address:
-        data = json.dumps({'entity': structure.acronym,
+        data = json.dumps({'entity': u'%s - %s' % (structure.acronym, structure.title),
                            'location': struct_address.location,
                            'city': struct_address.city,
                            'postal_code': struct_address.postal_code,
@@ -87,5 +87,5 @@ def structure_address(request, structure_id):
                            'phone': struct_address.phone,
                            'fax': struct_address.fax})
     else:
-        data = json.dumps({'entity': structure.acronym})
+        data = json.dumps({'entity': u'%s - %s' % (structure.acronym, structure.title)})
     return HttpResponse(data, content_type='application/json')

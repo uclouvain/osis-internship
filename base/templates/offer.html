@@ -200,6 +200,7 @@
                     <br>
                     <button type="button" class="btn btn-primary" id="bt_save_score_encoding_address">
                         <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'save' %}</button>
+                    <span id="status_save"></span>
                 </div>
             </div>
             <input type="hidden" id="hdn_tab" value="{{ tab }}"/>
@@ -429,8 +430,10 @@
         });
     });
 
-    $('#bt_save_score_encoding_address').click(function(e) {
-        $.post('/offers/{{ offer_year.id }}/score_encoding',
+    $('#bt_save_score_encoding_address').click(function() {
+        $('#bt_save_score_encoding_address').prop('disabled', true);
+        $('#status_save').text('Saving...').fadeIn(100);
+        $.post("/offers/{{ offer_year.id }}/score_encoding",
             {
                 recipient: $("#txt_score_encoding_recipient").val(),
                 location: $("#txt_score_encoding_location").val(),
@@ -440,8 +443,10 @@
                 phone: $("#txt_score_encoding_phone").val(),
                 fax: $("#txt_score_encoding_fax").val()
             },
-            function(data, status){
-                alert("Data: " + data + "\nStatus: " + status);
+            function(data, status) {
+                console.log("Data: " + data + "\nStatus: " + status);
+                $('#bt_save_score_encoding_address').prop('disabled', false);
+                $('#status_save').text('Saved').css('color', 'green').fadeOut(2000);
             });
     });
 </script>
