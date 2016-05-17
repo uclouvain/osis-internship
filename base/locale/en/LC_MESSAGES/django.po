@@ -55,8 +55,9 @@ msgstr "0=Presence note"
 msgid "empty_note_pdf_legend"
 msgstr "(empty)=No score yet"
 
+msgid "saving"
+msgstr "Saving"
 
-#: models/exam_enrollment.py:53
 msgid "saved"
 msgstr "Saved"
 

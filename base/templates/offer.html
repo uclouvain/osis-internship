@@ -432,7 +432,7 @@
 
     $('#bt_save_score_encoding_address').click(function() {
         $('#bt_save_score_encoding_address').prop('disabled', true);
-        $('#status_save').text('Saving...').fadeIn(100);
+        $('#status_save').text('{% trans 'saving' %}...').fadeIn(100);
         $.post("/offers/{{ offer_year.id }}/score_encoding",
             {
                 recipient: $("#txt_score_encoding_recipient").val(),
@@ -446,7 +446,7 @@
             function(data, status) {
                 console.log("Data: " + data + "\nStatus: " + status);
                 $('#bt_save_score_encoding_address').prop('disabled', false);
-                $('#status_save').text('Saved').css('color', 'green').fadeOut(2000);
+                $('#status_save').text('{% trans 'saved' %}').css('color', 'green').fadeOut(2000);
             });
     });
 </script>
