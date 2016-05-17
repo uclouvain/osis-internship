@@ -40,6 +40,7 @@ urlpatterns = [
     url(r'^periods/$', period.internships_periods, name='internships_periods'),
 
     url(r'^places/$', place.internships_places, name='internships_places'),
+    url(r'^places/std/$', place.internships_places_stud, name='internships_places_stud'),
     url(r'^places/create/$', place.organization_create, name='place_create'),
     url(r'^places/([0-9]+)/students/choice/$', place.student_choice, name='place_detail_student_choice'),
     url(r'^places/edit/([0-9]+)/$', place.organization_edit, name='place_edit'),

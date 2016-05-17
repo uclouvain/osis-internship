@@ -1,0 +1,117 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+ * OSIS stands for Open Student Information System. It's an application
+ * designed to manage the core business of higher education institutions,
+ * such as universities, faculties, institutes and professional schools.
+ * The core business involves the administration of students, teachers,
+ * courses, programs and so on.
+ *
+ * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * A copy of this license - GNU General Public License - is available
+ * at the root of the source code of this program.  If not,
+ * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block breadcrumb %}
+  <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+  <li><a href="{% url 'internships_home' %}">Stages</a></li>
+  <li class="active">{% trans 'all_hospital' %}</li>
+{% endblock %}
+{% block content %}
+  <div class="page-header">
+    <h2>{% trans 'list_of_all_hospital' %}</h2>
+  </div>
+  <div class="panel panel-default">
+        <table style="height:100%; width:100%;">
+            <thead>
+              <tr>
+                  <th style="text-align:center; width:50%;">{% trans 'City' %}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <form action="{%url 'internships_places' %}" method="get">
+                  <td style="text-align:center; width:50%;">
+                    <select name="city_sort" onChange="javascript: this.form.submit();">
+                      <option value="0">--</option>
+                      {% for address in all_addresses %}
+                        <option value="{{ address }}" {% if address == city_sort_get %}selected{%endif%}>
+                          {{ address }}
+                        </option>
+                      {% endfor %}
+                    </select>
+                  </td>
+                </form>
+              </tr>
+            </tbody>
+        </table>
+  </div>
+  <div class="panel panel-default">
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="profile">
+        <table class="table table-hover">
+            <thead>
+              <tr>
+                  <th>{% trans 'reference' %}</th>
+                  <th>{% trans 'name' %}</th>
+                  <th>{% trans 'Address' %}</th>
+                  <th>{% trans 'Postal Code' %}</th>
+                  <th>{% trans 'City' %}</th>
+                  <th>{% trans 'Country' %}</th>
+                  <th>{% trans 'Url' %}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for organization in all_organizations %}
+              <tr>
+                  <td>
+                    {{ organization.reference }}
+                  </td>
+                  <td>
+                    {{ organization.name }}
+                  </td>
+                  <td>
+                    {% for address in organization.address %}
+                      {{address.location}} <br/>
+                    {% endfor %}
+                  </td>
+                  <td>
+                    {% for address in organization.address %}
+                      {{address.postal_code}} <br/>
+                    {% endfor %}
+                  </td>
+                  <td>
+                    {% for address in organization.address %}
+                      {{address.city}} <br/>
+                    {% endfor %}
+                  </td>
+                  <td>
+                    {% for address in organization.address %}
+                      {{address.country}} <br/>
+                    {% endfor %}
+                  </td>
+                <td>
+                  {{ organization.website }}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock %}
