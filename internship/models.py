@@ -28,15 +28,9 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class InternshipOffer(models.Model):
-<<<<<<< HEAD
-    organization        = models.ForeignKey('internship.Organization')
-    learning_unit_year  = models.ForeignKey('base.LearningUnitYear')
-    title               = models.CharField(max_length=255)
-=======
     organization = models.ForeignKey('base.Organization')
     learning_unit_year = models.ForeignKey('base.LearningUnitYear')
     title = models.CharField(max_length=255)
->>>>>>> dev
     maximum_enrollments = models.IntegerField()
 
     def __str__(self):
@@ -85,11 +79,7 @@ class InternshipMaster(models.Model):
                         ('EMERGENCY',_('Emergency')),
                         ('GERIATRICS',_('Geriatrics')))
 
-<<<<<<< HEAD
-    organization     = models.ForeignKey('internship.Organization')
-=======
     organization = models.ForeignKey('base.Organization')
->>>>>>> dev
     internship_offer = models.ForeignKey(InternshipOffer)
     person = models.ForeignKey('base.Person')
     reference = models.CharField(max_length=30, blank=True, null=True)
@@ -122,17 +112,10 @@ class InternshipMaster(models.Model):
 
 
 class InternshipChoice(models.Model):
-<<<<<<< HEAD
-    student             = models.ForeignKey('base.Student')
-    organization        = models.ForeignKey('internship.Organization')
-    learning_unit_year  = models.ForeignKey('base.LearningUnitYear')
-    choice              = models.IntegerField()
-=======
     student = models.ForeignKey('base.Student')
     organization = models.ForeignKey('base.Organization')
     learning_unit_year = models.ForeignKey('base.LearningUnitYear')
     choice = models.IntegerField()
->>>>>>> dev
 
     @staticmethod
     def find_by_student(s_student):
