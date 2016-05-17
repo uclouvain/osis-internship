@@ -58,6 +58,9 @@ msgstr "(vide)=Pas encore de note"
 msgid "saving"
 msgstr "Sauvegarde en cours"
 
+msgid "registration_id"
+msgstr "NOMA"
+
 msgid "saved"
 msgstr "Enregistré"
 
@@ -248,6 +251,9 @@ msgstr "Note"
 
 msgid "justification"
 msgstr "Justification"
+
+msgid "justifications"
+msgstr "Justifications"
 
 msgid "compare"
 msgstr "Comparer"
@@ -770,10 +776,7 @@ msgstr "Feuille de notes"
 
 #: utils/pdf_utils.py:110
 msgid "ucl_denom_location"
-msgstr ""
-"Université Catholique de Louvain\n"
-"Louvain-la-Neuve\n"
-"Belgique"
+msgstr "Université catholique de Louvain\n\n"
 
 #: utils/pdf_utils.py:226
 msgid "justification_legend"

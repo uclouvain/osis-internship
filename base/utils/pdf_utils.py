@@ -96,8 +96,7 @@ def print_notes(academic_year, list_exam_enrollment):
 def header_building(canvas, doc, styles):
     a = Image(settings.LOGO_INSTITUTION_URL, width=15*mm, height=20*mm)
 
-    p = Paragraph('''
-                    <para align=center>
+    p = Paragraph('''<para align=center>
                         <font size=16>%s</font>
                     </para>''' % (_('scores_transcript')), styles["BodyText"])
 

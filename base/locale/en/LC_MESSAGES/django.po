@@ -61,25 +61,23 @@ msgstr "Saving"
 msgid "saved"
 msgstr "Saved"
 
-#: models/exam_enrollment.py:54
 msgid "submitted"
 msgstr "Submitted"
 
-#: models/message_template.py:38
 msgid "plain"
 msgstr "Plain"
 
-#: models/message_template.py:40
 msgid "plain_and_html"
 msgstr "Plain and HTML"
 
-#: models/offer_year.py:41
 msgid "bachelor"
 msgstr "Bachelor"
 
-#: models/offer_year.py:42
 msgid "master"
 msgstr "Master"
+
+msgid "registration_id"
+msgstr "Registration ID"
 
 #: models/offer_year.py:43
 msgid "ph_d"
@@ -272,10 +270,11 @@ msgstr "Firstname"
 msgid "score"
 msgstr "Score"
 
-#: templates/assessments/online_double_encoding_form.html:84
-#: templates/assessments/online_encoding_form.html:88
 msgid "justification"
 msgstr "Justification"
+
+msgid "justifications"
+msgstr "Justifications"
 
 msgid "compare"
 msgstr "Compare"
@@ -868,9 +867,7 @@ msgstr "Scores transcript"
 #: utils/pdf_utils.py:110
 msgid "ucl_denom_location"
 msgstr ""
-"University Catholic Louvain\n"
-"Louvain-la-Neuve\n"
-"Belgium"
+"Université catholique de Louvain"
 
 #: utils/pdf_utils.py:226
 msgid "justification_legend"
