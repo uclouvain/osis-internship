@@ -44,7 +44,8 @@ def scores_encoding(request):
         return layout.render(request, "assessments/scores_encoding.html",
                                       {'tutor': tutor,
                                        'academic_year': academic_yr,
-                                       'notes_list': scores_encodings})
+                                       'notes_list': scores_encodings,
+                                       'number_session': mdl.session_exam.find_session_exam_number()})
 
     # In case the user is a program manager
     else:
@@ -179,7 +180,11 @@ def online_double_encoding_validation(request, learning_unit_year_id=None, tutor
                                        'learning_unit_year': learning_unit_year,
                                        'enrollments': exam_enrollments,
                                        'justifications': mdl.exam_enrollment.JUSTIFICATION_TYPES,
-                                       'is_program_manager': is_program_manager})
+                                       'is_program_manager': is_program_manager,
+                                       'number_session': exam_enrollments[0].session_exam.number_session
+                                       if len(exam_enrollments) > 0 else _('none'),
+                                       'tutors': mdl.tutor.find_by_learning_unit(learning_unit_year.learning_unit_id)
+                                       })
 
     # Case the user validate his choice between the first and the dubble encoding
     elif request.method == 'POST':
@@ -194,7 +199,11 @@ def online_double_encoding_validation(request, learning_unit_year_id=None, tutor
                                   'learning_unit_year': learning_unit_year,
                                   'enrollments': exam_enrollments,
                                   'justifications': mdl.exam_enrollment.JUSTIFICATION_TYPES,
-                                  'is_program_manager': is_program_manager})
+                                  'is_program_manager': is_program_manager,
+                                  'number_session': exam_enrollments[0].session_exam.number_session
+                                  if len(exam_enrollments) > 0 else _('none'),
+                                  'tutors': mdl.tutor.find_by_learning_unit(learning_unit_year.learning_unit_id)
+                                  })
 
         # contains all SessionExams where the encoding is not terminated (progression < 100%)
         sessions_exam_still_open = set()
@@ -373,7 +382,7 @@ def get_data_online(learning_unit_year_id, request):
             'is_coordinator': mdl.tutor.is_coordinator(request.user, learning_unit_year.learning_unit.id),
             'draft_scores_not_sumitted': draft_scores_not_sumitted,
             'number_session': exam_enrollments[0].session_exam.number_session if len(exam_enrollments) > 0 else _('none'),
-            'tutors': mdl.tutor.find_by_learning_unit(learning_unit_year.learning_unit_id),}
+            'tutors': mdl.tutor.find_by_learning_unit(learning_unit_year.learning_unit_id)}
 
 
 def get_data_online_double(learning_unit_year_id, request):
@@ -410,7 +419,10 @@ def get_data_online_double(learning_unit_year_id, request):
             'justifications': mdl.exam_enrollment.JUSTIFICATION_TYPES,
             'is_program_manager': mdl.program_manager.is_program_manager(request.user),
             'coordinator': coordinator,
-            'count_total_enrollments': len(total_exam_enrollments)
+            'count_total_enrollments': len(total_exam_enrollments),
+            'number_session': encoded_exam_enrollments[0].session_exam.number_session
+                              if len(encoded_exam_enrollments) > 0 else _('none'),
+            'tutors': mdl.tutor.find_by_learning_unit(learning_unit_year.learning_unit_id)
             }
 
 
@@ -490,7 +502,8 @@ def get_data_pgmer(request, offer_year_id=None, tutor_id=None):
                           'tutor_list': all_tutors,
                           'offer_year_id': offer_year_id,
                           'tutor_id': tutor_id,
-                          'academic_year': academic_yr})
+                          'academic_year': academic_yr,
+                          'number_session': mdl.session_exam.find_session_exam_number()})
 
 
 def refresh_list(request):

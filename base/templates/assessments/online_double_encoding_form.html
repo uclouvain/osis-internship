@@ -47,7 +47,7 @@
     </div>
     <div class="panel-body">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="form-group" id="pnl_responsable_name" >
                     <label>{% trans 'coordinator' %}</label><br>
                     {% if coordinator %}
@@ -55,18 +55,40 @@
                     {% else %}
                         {% trans 'none' %}
                     {% endif %}
+                    {% if tutors %}
+                        <a role="button" data-toggle="collapse" data-target="#tutors_by_course"
+                           aria-expanded="false"
+                           aria-controls="tutors_by_course"
+                           title="{% trans 'display_tutors' %}">
+                          <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+                        </a>
+                    {% endif %}
+                    <div class="collapse" id="tutors_by_course">
+                        <label>{% trans 'tutors' %}</label><br>
+                        <ul>
+                            {% for prof in tutors %}
+                                <li>{{ prof }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label>{% trans 'academic_year' %}</label><br>
                     {{ academic_year }}
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label>{% trans 'number_of_enrollments' %}</label><br>
                     {{ count_total_enrollments }}
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>{% trans 'number_session' %}</label><br>
+                    {{ number_session }}
                 </div>
             </div>
         </div>
