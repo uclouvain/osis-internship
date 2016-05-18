@@ -326,11 +326,13 @@ def get_score_encoded(enrollments):
     return progress
 
 
-def get_data(request):
+def get_data(request, offer_year_id=None):
+    offer_year_id = int(offer_year_id) if offer_year_id else None #offer_year_id is a string !
     academic_yr = mdl.academic_year.current_academic_year()
     tutor = mdl.attribution.get_assigned_tutor(request.user)
-    exam_enrollments = mdl.exam_enrollment.find_for_score_encodings(mdl.session_exam.find_session_exam_number(),
-                                                                    tutor=tutor)
+    exam_enrollments = list(mdl.exam_enrollment.find_for_score_encodings(mdl.session_exam.find_session_exam_number(),
+                                                                    tutor=tutor,
+                                                                    offer_year_id=offer_year_id))
     # Grouping by learningUnitYear
     group_by_learn_unit_year = {}
     for exam_enrol in exam_enrollments:
@@ -348,12 +350,28 @@ def get_data(request):
             group_by_learn_unit_year[learn_unit_year.id] = {'learning_unit_year': learn_unit_year,
                                                             'exam_enrollments_encoded': exam_enrollments_encoded,
                                                             'total_exam_enrollments': 1}
+    scores_list = group_by_learn_unit_year.values()
+    all_offers = request.session.get('all_offers', None)
+    if not all_offers:
+        offer_ids = []  # To know if a offer is already in the list
+        all_offers = []
+        for exam_enrol in exam_enrollments:
+            offer_year = exam_enrol.session_exam.offer_year_calendar.offer_year
+            if offer_year.id not in offer_ids:
+                offer_ids.append(offer_year.id)
+                all_offers.append({'id': offer_year.id,
+                                   'acronym': offer_year.acronym,
+                                   'title': offer_year.title})
+        all_offers = sorted(all_offers, key=lambda k: k['acronym'])
+        request.session['all_offers'] = all_offers
 
     return layout.render(request, "assessments/scores_encoding.html",
                          {'tutor': tutor,
                           'academic_year': academic_yr,
-                          'notes_list': group_by_learn_unit_year.values(),
-                          'number_session': mdl.session_exam.find_session_exam_number()})
+                          'notes_list': scores_list,
+                          'number_session': mdl.session_exam.find_session_exam_number(),
+                          'offer_year_list': all_offers,
+                          'offer_year_id': offer_year_id})
 
 
 def get_data_online(learning_unit_year_id, request):
@@ -533,7 +551,7 @@ def refresh_list(request):
 
     # In case the user is a Tutor
     else:
-        return get_data(request)
+        return get_data(request, offer_year_id=request.GET.get('offer_year_id', None))
 
 
 def _sort_for_encodings(exam_enrollments):
