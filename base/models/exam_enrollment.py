@@ -194,7 +194,9 @@ def find_exam_enrollments_by_session_learningunit(session_exm, learning_unt):
 def find_for_score_encodings(session_exam_number,
                              learning_unit_year_id=None,
                              learning_unit_year_ids=None,
-                             tutor=None, offers_year=None,
+                             tutor=None,
+                             offer_year_id=None,
+                             offers_year=None,
                              with_justification_or_score_final=False,
                              with_justification_or_score_draft=False):
     """
@@ -202,6 +204,7 @@ def find_for_score_encodings(session_exam_number,
     :param learning_unit_year_id: Filter OfferEnrollments by learning_unit_year.
     :param learning_unit_year_ids: Filter OfferEnrollments by a list of learning_unit_year.
     :param tutor: Filter OfferEnrollments by Tutor.
+    :param offer_year_id: Filter OfferEnrollments by Offer year ids
     :param offers_year: Filter OfferEnrollments by OfferYear.
     :param with_justification_or_score_final: If True, only examEnrollments with a score_final or a justification_final
                                               are returned.
@@ -223,7 +226,9 @@ def find_for_score_encodings(session_exam_number,
             learning_unit_year_ids = learning_unit_year.find_by_tutor(tutor).values_list('id')
             queryset = queryset.filter(session_exam__learning_unit_year_id__in=learning_unit_year_ids)
 
-    if offers_year:
+    if offer_year_id:
+        queryset = queryset.filter(session_exam__offer_year_calendar__offer_year_id=offer_year_id)
+    elif offers_year:
         queryset = queryset.filter(session_exam__offer_year_calendar__offer_year__in=offers_year)
 
     if with_justification_or_score_final:
