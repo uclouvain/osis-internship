@@ -31,6 +31,7 @@ urlpatterns = [
     # S'il vous plaît, organiser les urls par ordre alphabétique.
     url(r'^$', home.internships_home, name='internships_home'),
     url(r'^internships/$', internship.internships, name='internships'),
+    url(r'^internships/std/$', internship.internships_stud, name='internships_stud'),
     url(r'^internships/create/$', internship.internships_create, name='internships_create'),
     url(r'^internships/new/$', internship.internships_new, name='internships_new'),
     url(r'^internships/save/$', internship.internships_save, name='internships_save'),
