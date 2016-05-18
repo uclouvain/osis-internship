@@ -44,6 +44,6 @@ class DissertationRole(models.Model):
         adviser = ""
         if self.status:
             status = self.status
-        if self.person.adviser:
-            adviser = self.adviser.person
+        if self.adviser:
+            adviser = self.adviser
         return u"%s %s" % (status, adviser)

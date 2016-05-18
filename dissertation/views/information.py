@@ -26,6 +26,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from dissertation.models.adviser import Adviser
+from dissertation.models.dissertation_role import DissertationRole
 from base import models as mdl
 from dissertation.forms import AdviserForm, ManagerAdviserForm
 from django.contrib.auth.decorators import user_passes_test
@@ -46,7 +47,9 @@ def informations(request):
         adviser.save()
     except IntegrityError:
         adviser = Adviser.find_by_person(person)
-    return render(request, "informations.html", {'adviser': adviser})
+
+    count_advisers = DissertationRole.objects.filter(adviser=adviser).count()
+    return render(request, "informations.html", {'adviser': adviser, 'count_advisers':count_advisers})
 
 
 @login_required
@@ -61,7 +64,8 @@ def informations_edit(request):
             return redirect('informations')
     else:
         form = AdviserForm(instance=adviser)
-    return render(request, "informations_edit.html", {'form': form, 'person': person})
+    count_advisers = DissertationRole.objects.filter(adviser=adviser).count()
+    return render(request, "informations_edit.html", {'form': form, 'person': person, 'count_advisers':count_advisers})
 
 
 @login_required
@@ -75,13 +79,15 @@ def manager_informations(request):
 @user_passes_test(is_manager)
 def manager_informations_detail(request, pk):
     adviser = get_object_or_404(Adviser, pk=pk)
-    return render(request, 'manager_informations_detail.html', {'adviser': adviser})
+    count_advisers = DissertationRole.objects.filter(adviser=adviser).count()
+    return render(request, 'manager_informations_detail.html', {'adviser': adviser, 'count_advisers':count_advisers})
 
 
 @login_required
 @user_passes_test(is_manager)
 def manager_informations_edit(request, pk):
     adviser = get_object_or_404(Adviser, pk=pk)
+
     if request.method == "POST":
         form = ManagerAdviserForm(request.POST, instance=adviser)
         if form.is_valid():
@@ -90,7 +96,8 @@ def manager_informations_edit(request, pk):
             return redirect('manager_informations')
     else:
         form = AdviserForm(instance=adviser)
-    return render(request, "manager_informations_edit.html", {'adviser': adviser, 'form': form})
+    count_advisers = DissertationRole.objects.filter(adviser=adviser).count()
+    return render(request, "manager_informations_edit.html", {'adviser': adviser, 'form': form, 'count_advisers':count_advisers})
 
 
 @login_required

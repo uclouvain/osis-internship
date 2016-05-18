@@ -63,6 +63,9 @@
           <label>{% trans 'available_by_phone' %}</label> : {{ adviser.available_by_phone|yesno:"Yes,No" }}
           <br><br>
           <label>{% trans 'available_at_office' %}</label> : {{ adviser.available_at_office|yesno:"Yes,No" }}
+          <br><br>
+          <label>{% trans 'how_many_disertation' %}</label> : {{ count_advisers}} 
+
         </div>
       </div>
       <br>
