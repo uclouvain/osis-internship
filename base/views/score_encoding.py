@@ -479,8 +479,8 @@ def get_data_pgmer(request, offer_year_id=None, tutor_id=None):
 
     # Creating list of all tutors
     all_tutors = request.session.get('all_tutors', None)
-    ids_passed = [] # To know if a tutor is already in the list
     if all_tutors is None:
+        ids_passed = []  # To know if a tutor is already in the list
         all_tutors = []
         for attrib in all_attributions:
             if attrib.tutor.id not in ids_passed:
@@ -492,13 +492,26 @@ def get_data_pgmer(request, offer_year_id=None, tutor_id=None):
                                                       + k.get('first_name').upper() if k.get('first_name') else '')
         request.session['all_tutors'] = all_tutors
 
+    # Creating list of offer Years for the filter (offers year with minimum 1 record)
+    all_offers = request.session.get('all_offers', None)
+    if not all_offers:
+        offer_ids = []  # To know if a offer is already in the list
+        all_offers = []
+        for score_encoding in scores_encodings:
+            if score_encoding.offer_year.id not in offer_ids:
+                offer_ids.append(score_encoding.offer_year.id)
+                all_offers.append({'id': score_encoding.offer_year.id,
+                                   'acronym': score_encoding.offer_year.acronym,
+                                   'title': score_encoding.offer_year.title})
+        all_offers = sorted(all_offers, key=lambda k: k['acronym'])
+        request.session['all_offers'] = all_offers
 
     # Ordering by learning_unit_year.acronym
     data = sorted(data, key=lambda k: k['learning_unit_year'].acronym)
 
     return layout.render(request, "assessments/scores_encoding_mgr.html",
                          {'notes_list': data,
-                          'offer_list': offer_years_managed,
+                          'offer_list': all_offers,
                           'tutor_list': all_tutors,
                           'offer_year_id': offer_year_id,
                           'tutor_id': tutor_id,
