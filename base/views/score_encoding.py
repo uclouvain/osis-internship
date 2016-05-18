@@ -447,7 +447,7 @@ def get_data_pgmer(request, offer_year_id=None, tutor_id=None):
     else:
         # Filter list by offer_year
         offer_year_id = int(offer_year_id)  # The offer_year_id received in session is a String, not an Int
-        scores_encodings = list(mdl.scores_encoding.search(request.user))
+        scores_encodings = list(mdl.scores_encoding.search(request.user, offer_year_id=offer_year_id))
         scores_encodings = [score_encoding for score_encoding in scores_encodings
                             if score_encoding.offer_year_id == offer_year_id]
 

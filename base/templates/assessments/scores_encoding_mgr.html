@@ -41,7 +41,7 @@
     <div class="panel-body">
         <form method="get" action="{% url 'refresh_list' %}" id="form_search_learning_units">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="form-group">
                         <label>{% trans 'academic_year' %}</label><br>
                         {{ academic_year }}
@@ -60,7 +60,7 @@
                         {% endif %}
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     {% if offer_list %}
                     <label>{% trans 'offer' %} {{ offer_sel}}</label><br>
                     <select id="slt_offer_list_selection" name="offer" class="form-control">
@@ -87,8 +87,7 @@
             </div>
             <div class="col-md-6">
                 <div class="pull-right">
-                    <b>{% trans 'you_manage' %}
-                        <span class="badge">{{ notes_list|length }}</span>
+                    <b><span class="badge">{{ notes_list|length }}</span>
                         {% trans 'learning_units_in' %}
                         <span class="badge">{% if offer_year_id %} 1 {% else %} {{ offer_list|length }} {% endif %}</span>
                         {% trans 'program_s' %}.
