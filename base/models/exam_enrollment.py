@@ -27,10 +27,12 @@ from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 from base.models import person, learning_unit_year
+from django.utils import timezone
 
 
 class ExamEnrollmentAdmin(admin.ModelAdmin):
-    list_display = ('student', 'session_exam', 'score_final', 'justification_final', 'changed')
+    list_display = ('student', 'session_exam', 'score_draft', 'justification_draft',
+                    'score_final', 'justification_final', 'score_reencoded', 'justification_reencoded', 'changed')
     list_filter = ('session_exam__number_session',)
     fieldsets = ((None, {'fields': ('session_exam', 'learning_unit_enrollment', 'score_draft', 'justification_draft',
                                     'score_final', 'justification_final')}),)
@@ -68,6 +70,14 @@ class ExamEnrollment(models.Model):
 
     def student(self):
         return self.learning_unit_enrollment.student
+
+    def clean_scores_reencoded(self):
+        """
+        Set score_reencoded and justification_reencoded to None.
+        """
+        self.score_reencoded = None
+        self.justification_reencoded = None
+        self.save()
 
     def __str__(self):
         return u"%s - %s" % (self.session_exam, self.learning_unit_enrollment)
@@ -138,11 +148,6 @@ def justification_label_authorized():
                            _('score_missing_pdf_legend'))
 
 
-def score_label_authorized():
-    return "%s, %s" % (_('presence_note_pdf_legend'),
-                       _('empty_note_pdf_legend'))
-
-
 class ExamEnrollmentHistoryAdmin(admin.ModelAdmin):
     list_display = ('exam_enrollment', 'person', 'score_final', 'justification_final', 'modification_date')
     fieldsets = ((None, {'fields': ('exam_enrollment', 'person', 'score_final', 'justification_final')}),)
@@ -189,7 +194,9 @@ def find_exam_enrollments_by_session_learningunit(session_exm, learning_unt):
 def find_for_score_encodings(session_exam_number,
                              learning_unit_year_id=None,
                              learning_unit_year_ids=None,
-                             tutor=None, offers_year=None,
+                             tutor=None,
+                             offer_year_id=None,
+                             offers_year=None,
                              with_justification_or_score_final=False,
                              with_justification_or_score_draft=False):
     """
@@ -197,6 +204,7 @@ def find_for_score_encodings(session_exam_number,
     :param learning_unit_year_id: Filter OfferEnrollments by learning_unit_year.
     :param learning_unit_year_ids: Filter OfferEnrollments by a list of learning_unit_year.
     :param tutor: Filter OfferEnrollments by Tutor.
+    :param offer_year_id: Filter OfferEnrollments by Offer year ids
     :param offers_year: Filter OfferEnrollments by OfferYear.
     :param with_justification_or_score_final: If True, only examEnrollments with a score_final or a justification_final
                                               are returned.
@@ -218,7 +226,9 @@ def find_for_score_encodings(session_exam_number,
             learning_unit_year_ids = learning_unit_year.find_by_tutor(tutor).values_list('id')
             queryset = queryset.filter(session_exam__learning_unit_year_id__in=learning_unit_year_ids)
 
-    if offers_year:
+    if offer_year_id:
+        queryset = queryset.filter(session_exam__offer_year_calendar__offer_year_id=offer_year_id)
+    elif offers_year:
         queryset = queryset.filter(session_exam__offer_year_calendar__offer_year__in=offers_year)
 
     if with_justification_or_score_final:
@@ -227,4 +237,6 @@ def find_for_score_encodings(session_exam_number,
     if with_justification_or_score_draft:
         queryset = queryset.exclude(score_draft=None, justification_draft=None)
 
-    return queryset
+    now = timezone.now()
+    return queryset.filter(session_exam__offer_year_calendar__start_date__lte=now)\
+                   .filter(session_exam__offer_year_calendar__end_date__gte=now)

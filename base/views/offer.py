@@ -23,7 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+
+from django.http import HttpResponse
 from base import models as mdl
+from reference import models as mdl_ref
 from . import layout
 from datetime import datetime
 from base.forms import OfferYearCalendarForm
@@ -67,9 +70,32 @@ def offer_read(request, offer_year_id):
     offer_yr = mdl.offer_year.find_by_id(offer_year_id)
     offer_yr_events = mdl.offer_year_calendar.find_offer_year_calendar(offer_yr)
     program_managers = mdl.program_manager.find_by_offer_year(offer_yr)
+    countries = mdl_ref.country.find_all()
     return layout.render(request, "offer.html", {'offer_year': offer_yr,
                                                  'offer_year_events': offer_yr_events,
-                                                 'program_managers': program_managers})
+                                                 'program_managers': program_managers,
+                                                 'countries': countries,
+                                                 'tab': 0})
+
+
+def score_encoding(request, offer_year_id):
+    if request.method == 'POST':
+        offer_yr = mdl.offer_year.find_by_id(offer_year_id)
+        offer_yr.recipient = request.POST.get('recipient')
+        offer_yr.location = request.POST.get('location')
+        offer_yr.postal_code = request.POST.get('postal_code')
+        offer_yr.city = request.POST.get('city')
+        country_id = request.POST.get('country')
+        country = mdl_ref.country.find_by_id(country_id)
+        offer_yr.country = country
+        offer_yr.phone = request.POST.get('phone')
+        offer_yr.fax = request.POST.get('fax')
+        offer_yr.save()
+        data = "ok"
+    else:
+        data = "nok"
+
+    return HttpResponse(data, content_type='text/plain')
 
 
 def offer_year_calendar_read(request, id):

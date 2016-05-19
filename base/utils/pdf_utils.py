@@ -42,6 +42,8 @@ COLS_WIDTH = [25*mm,50*mm,50*mm,25*mm,25*mm]
 STUDENTS_PER_PAGE = 24
 
 
+
+
 def add_header_footer(canvas, doc):
     """
     Add the page number
@@ -60,11 +62,10 @@ def add_header_footer(canvas, doc):
     canvas.restoreState()
 
 
-def print_notes(academic_year, learning_unit_year_id, list_exam_enrollment):
+def print_notes(academic_year, list_exam_enrollment):
     """
     Create a multi-page document
     :param academic_year: An object AcademicYear
-    :param learning_unit_year_id: The id of the learning unit (from which to create the PDF notes sheet)
     :param list_exam_enrollment: List of examEnrollments to print on the PDF.
     """
     filename = "%s.pdf" % _('scores_sheet')
@@ -83,7 +84,7 @@ def print_notes(academic_year, learning_unit_year_id, list_exam_enrollment):
     styles.add(ParagraphStyle(name='Justify', alignment=TA_JUSTIFY))
     content = []
 
-    list_notes_building(learning_unit_year_id, academic_year, list_exam_enrollment, styles, content)
+    list_notes_building(academic_year, list_exam_enrollment, styles, content)
 
     doc.build(content, onFirstPage=add_header_footer, onLaterPages=add_header_footer)
     pdf = buffer.getvalue()
@@ -95,8 +96,7 @@ def print_notes(academic_year, learning_unit_year_id, list_exam_enrollment):
 def header_building(canvas, doc, styles):
     a = Image(settings.LOGO_INSTITUTION_URL, width=15*mm, height=20*mm)
 
-    p = Paragraph('''
-                    <para align=center>
+    p = Paragraph('''<para align=center>
                         <font size=16>%s</font>
                     </para>''' % (_('scores_transcript')), styles["BodyText"])
 
@@ -117,93 +117,97 @@ def footer_building(canvas, doc, styles):
     footer.drawOn(canvas, doc.leftMargin, h)
 
 
-def list_notes_building(learning_unit_year_id, academic_year, list_exam_enrollment, styles, content):
+def _write_table_of_students(content, data):
+    t = Table(data, COLS_WIDTH, repeatRows=1)
+    t.setStyle(TableStyle([
+        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+        ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey)]))
+    content.append(t)
 
-    content.append(Paragraph('''
-                            <para spaceb=5>
-                                &nbsp;
-                            </para>
-                            ''', ParagraphStyle('normal')))
-    data = headers_table()
 
-    old_offer_programme = None
-    current_learning_unit_year = None
-    students_printed = 0
-    for rec_exam_enrollment in list_exam_enrollment:
-        if not learning_unit_year_id \
-                or (int(rec_exam_enrollment.learning_unit_enrollment.learning_unit_year.id) == int(learning_unit_year_id)):
+def _write_legend(content, offer_year_calendar, learning_unit_year):
+    end_date = ""
+    if offer_year_calendar.end_date:
+        end_date = offer_year_calendar.end_date.strftime('%d/%m/%Y')
+    end_page_infos_building(content, end_date)
+    legend_building(learning_unit_year, content)
 
-            student = rec_exam_enrollment.learning_unit_enrollment.student
-            offer_programme = rec_exam_enrollment.learning_unit_enrollment.offer
-            if old_offer_programme is None:
-                old_offer_programme = offer_programme
-                current_learning_unit_year = rec_exam_enrollment.learning_unit_enrollment.learning_unit_year
 
-            if offer_programme != old_offer_programme or students_printed == STUDENTS_PER_PAGE:
-                students_printed = 0
-                # Other programme - 1. manage criteria
-                main_data(academic_year,
-                          rec_exam_enrollment.session_exam,
-                          styles,
-                          current_learning_unit_year,
-                          old_offer_programme, content)
-                # Other programme - 2. write table
+def _build_key(rec_exam_enrollment):
+    offer_year_id = rec_exam_enrollment.session_exam.offer_year_calendar.offer_year.id
+    learning_unit_year_id = rec_exam_enrollment.session_exam.learning_unit_year.id
+    return "%s %s" % (str(offer_year_id), str(learning_unit_year_id))
 
-                t = Table(data, COLS_WIDTH, repeatRows=1)
-                t.setStyle(TableStyle([
-                                   ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
-                                   ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
-                                   ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-                                   ('BACKGROUND', (0, 0), (-1, 0), colors.grey)]))
 
-                content.append(t)
-                # Other programme - 3. Write legend
-                end_date = ""
-                if rec_exam_enrollment.session_exam.offer_year_calendar.end_date:
-                    end_date = rec_exam_enrollment.session_exam.offer_year_calendar.end_date.strftime('%d/%m/%Y')
-                end_page_infos_building(content, end_date)
-                legend_building(current_learning_unit_year, content)
-                # Other programme - 4. page break
-                content.append(PageBreak())
-                data = headers_table()
-                old_offer_programme = offer_programme
-                current_learning_unit_year = rec_exam_enrollment.learning_unit_enrollment.learning_unit_year
+def list_notes_building(academic_year, list_exam_enrollment, styles, content):
+    # Will contain lists of examEnrollments splitted by learningUnitYear and by Offeryear
+    enrollments_by_learn_unit_and_offer = {} # {<learning_unit_year_id, offer_year_id> : <ExamEnrollment>}
+    for exam_enroll in list_exam_enrollment:
+        key = _build_key(exam_enroll)
+        if key not in enrollments_by_learn_unit_and_offer.keys():
+            enrollments_by_learn_unit_and_offer[key] = [exam_enroll]
+        else:
+            enrollments_by_learn_unit_and_offer[key].append(exam_enroll)
 
+    # Sort by learningUnitYear.acronym then by Offeryear.acronym
+    list_exam_enrollments = sorted(enrollments_by_learn_unit_and_offer.values(),
+                                  key=lambda k: "%s %s" % (k[0].session_exam.learning_unit_year.acronym,
+                                                           k[0].session_exam.offer_year_calendar.offer_year.acronym))
+
+    for exam_enrollments in list_exam_enrollments:
+        data = headers_table()
+        students_printed = 0
+        enrollments_to_print = len(exam_enrollments)
+        for exam_enroll in exam_enrollments:
+            # 1. Getting informations from the student (noma, firstname, etc...)
+            student = exam_enroll.learning_unit_enrollment.student
             person = mdl.person.find_by_id(student.person.id)
             score = None
-            if not (rec_exam_enrollment.score_final is None):
-                if rec_exam_enrollment.session_exam.learning_unit_year.decimal_scores:
-                    score = "{0:.2f}".format(rec_exam_enrollment.score_final)
+            if not (exam_enroll.score_final is None):
+                if exam_enroll.session_exam.learning_unit_year.decimal_scores:
+                    score = "{0:.2f}".format(exam_enroll.score_final)
                 else:
-                    score = "{0:.0f}".format(rec_exam_enrollment.score_final)
+                    score = "{0:.0f}".format(exam_enroll.score_final)
             justification = ""
-            if rec_exam_enrollment.justification_final:
-                justification = mdl.exam_enrollment.get_letter_justication_type(rec_exam_enrollment.justification_final)
+            if exam_enroll.justification_final:
+                justification = mdl.exam_enrollment.get_letter_justication_type(exam_enroll.justification_final)
             sc = ""
             if score:
                 sc = "%s" % score
+
+            # 2. Append the examEnrollment to the table 'data'
             data.append([student.registration_id,
                          Paragraph(person.last_name, styles['Normal']),
                          Paragraph(person.first_name, styles['Normal']),
                          sc,
                          Paragraph(justification, styles['Normal'])])
-        students_printed += 1
 
-    if old_offer_programme:
-        main_data(academic_year, rec_exam_enrollment.session_exam, styles, current_learning_unit_year,
-                  old_offer_programme, content)
-        t = Table(data, COLS_WIDTH)
-        t.setStyle(TableStyle([('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
-                               ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
-                               ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-                               ('BACKGROUND', (0, 0), (-1, 0), colors.grey)]))
+            students_printed += 1
+            enrollments_to_print -= 1
 
-        content.append(t)
-        end_date = ""
-        if rec_exam_enrollment.session_exam.offer_year_calendar.end_date:
-            end_date = rec_exam_enrollment.session_exam.offer_year_calendar.end_date.strftime('%d/%m/%Y')
-        end_page_infos_building(content, end_date)
-        legend_building(current_learning_unit_year, content)
+            if students_printed == STUDENTS_PER_PAGE or enrollments_to_print == 0:
+                students_printed = 0
+                offer_year_calendar = exam_enroll.session_exam.offer_year_calendar
+                # Print a complete PDF sheet
+                # 3. Write header
+                main_data(academic_year,
+                          exam_enroll.session_exam,
+                          styles,
+                          offer_year_calendar.offer_year, content)
+                # 4. Adding the complete table of examEnrollments to the PDF sheet
+                _write_table_of_students(content, data)
+
+                # 5. Write Legend
+                _write_legend(content, offer_year_calendar, exam_enroll.session_exam.learning_unit_year)
+
+                # 6. New Page
+                content.append(PageBreak())
+
+                # 7. New headers_table in variable 'data' with headers ('noma', 'firstname', 'lastname'...)
+                #    in case there's one more page after this one
+                data = headers_table()
 
 
 def legend_building(learning_unit_year, content):
@@ -216,7 +220,7 @@ def legend_building(learning_unit_year, content):
     p.borderPadding = 5
 
     legend_text = _('justification_legend') % mdl.exam_enrollment.justification_label_authorized()
-    legend_text += "<br/>%s" % (str(_('score_legend') % mdl.exam_enrollment.score_label_authorized()))
+    legend_text += "<br/>%s" % (str(_('score_legend') % "0 - 20"))
     if not learning_unit_year.decimal_scores:
         legend_text += "<br/><font color=red>%s</font>" % _('unauthorized_decimal_for_this_activity')
 
@@ -260,10 +264,12 @@ def get_data_coordinator(learning_unit_year, styles):
     return [[p_responsible], [p_coord_name], [p_coord_location], [p_coord_address]]
 
 
-def main_data(academic_year, session_exam, styles, learning_unit_year, offer, content):
+def main_data(academic_year, session_exam, styles, offer, content):
+    learning_unit_year = session_exam.learning_unit_year
+
     # We add first a blank line
     content.append(Paragraph('''
-        <para spaceb=10>
+        <para spaceb=20>
             &nbsp;
         </para>
         ''', ParagraphStyle('normal')))
@@ -271,36 +277,23 @@ def main_data(academic_year, session_exam, styles, learning_unit_year, offer, co
     text_left_style = ParagraphStyle('structure_header')
     text_left_style.alignment = TA_LEFT
     text_left_style.fontSize = 10
-    p_struct_name = Paragraph('''''', styles["Normal"])
-    p_struct_location = Paragraph('''''', styles["Normal"])
-    p_struct_address = Paragraph('''''', styles["Normal"])
-    p_phone_fax_data = Paragraph('''''', styles["Normal"])
-    if offer.structure:
-        structure_display = offer.structure
-        faculty = mdl.structure.find_faculty(offer.structure)
-        if faculty:
-            structure_display = faculty
+    p_struct_name = Paragraph('%s' % offer.recipient if offer.recipient else '',
+                              styles["Normal"])
 
-        structure_address = mdl.structure_address.find_structure_address(structure_display)
-
-        p_struct_name = Paragraph('%s' % structure_display, styles["Normal"])
-
-        if structure_address:
-            if structure_address.location:
-                p_struct_location = Paragraph('%s' % structure_address.location, styles["Normal"])
-            if structure_address.postal_code and structure_address.city:
-                p_struct_address = Paragraph('%s %s' % (structure_address.postal_code, structure_address.city),
-                                             styles["Normal"])
-            phone_fax_data = ""
-            if structure_address.phone:
-                phone_fax_data += _('phone') + " : " + structure_address.phone
-            if structure_address.fax:
-                if structure_address.phone:
-                    phone_fax_data += " - "
-                phone_fax_data += _('fax') + " : " + structure_address.fax
-            if len(phone_fax_data) > 0:
-                p_phone_fax_data = Paragraph('%s' % phone_fax_data,
-                                             styles["Normal"])
+    p_struct_location = Paragraph('%s' % offer.location if offer.location else '',
+                                  styles["Normal"])
+    p_struct_address = Paragraph('%s %s' % (offer.postal_code if offer.postal_code else '',
+                                            offer.city if offer.city else ''),
+                                 styles["Normal"])
+    phone_fax_data = ""
+    if offer.phone:
+        phone_fax_data += "%s : %s" % (_('phone'), offer.phone)
+    if offer.fax:
+        if offer.phone:
+            phone_fax_data += " - "
+        phone_fax_data += "%s : %s" % (_('fax'), offer.fax)
+    p_phone_fax_data = Paragraph('%s' % phone_fax_data,
+                                 styles["Normal"])
 
     data_structure = [[p_struct_name],
                       [p_struct_location],

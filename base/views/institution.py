@@ -24,6 +24,7 @@
 #
 ##############################################################################
 import json
+from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from base import models as mdl
 from . import layout
@@ -42,14 +43,14 @@ def mandates(request):
 @login_required
 def structures(request):
     return layout.render(request, "structures.html", {'init': "1",
-                                               'types': mdl.structure.ENTITY_TYPE})
+                                                      'types': mdl.structure.ENTITY_TYPE})
 
 
 @login_required
 def structures_search(request):
     structure_type = None
     if request.GET['type_choices']:
-        structure_type = request.GET['type_choices'] #otherwise type is a blank
+        structure_type = request.GET['type_choices']  #otherwise type is a blank
     entities = mdl.structure.search(acronym=request.GET['acronym'],
                                     title=request.GET['title'],
                                     type=structure_type)
@@ -72,3 +73,19 @@ def structure_diagram(request, parent_id):
     data = json.dumps(tags)
     return layout.render(request, "structure_organogram.html", {'structure': structure,
                                                                 'data': data})
+
+
+def structure_address(request, structure_id):
+    structure = mdl.structure.find_by_id(structure_id)
+    struct_address = mdl.structure_address.find_structure_address(structure)
+    if struct_address:
+        data = json.dumps({'entity': u'%s - %s' % (structure.acronym, structure.title),
+                           'location': struct_address.location,
+                           'city': struct_address.city,
+                           'postal_code': struct_address.postal_code,
+                           'country': struct_address.country.id,
+                           'phone': struct_address.phone,
+                           'fax': struct_address.fax})
+    else:
+        data = json.dumps({'entity': u'%s - %s' % (structure.acronym, structure.title)})
+    return HttpResponse(data, content_type='application/json')
