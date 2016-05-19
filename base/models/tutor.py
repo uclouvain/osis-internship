@@ -102,3 +102,11 @@ def find_by_learning_unit(learning_unit_id):
     """
     tutor_ids = attribution.search(learning_unit_id=learning_unit_id).values_list('tutor').distinct('tutor')
     return Tutor.objects.filter(pk__in=tutor_ids).order_by('person__last_name', 'person__first_name')
+
+
+def is_tutor(user):
+    """
+    :param user:
+    :return: True if the user is a tutor. False if the user is not a tutor.
+    """
+    return Tutor.objects.filter(person__user=user).count() > 0
