@@ -68,8 +68,8 @@
                     {{ person.gender }}
                 </div>
                 <div class="col-md-2">
-                    <label>{% trans 'birthdate' %}</label><br>
-                    {{ person.birthdate| default_if_none:''|date:"j/m/Y" }}
+                    <label>{% trans 'birth_date' %}</label><br>
+                    {{ person.birth_date | default_if_none:'' | date:"j/m/Y" }}
                 </div>
                 <div class="col-md-3">
                     <label>{% trans 'national_register' %}</label><br>

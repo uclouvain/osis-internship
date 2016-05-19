@@ -22,6 +22,9 @@ msgstr "Absent"
 msgid "absent_pdf_legend"
 msgstr "A=Absent"
 
+msgid "birth_date"
+msgstr "Date de naissance"
+
 msgid "cheating"
 msgstr "Tricherie"
 
