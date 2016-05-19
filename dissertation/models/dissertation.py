@@ -28,6 +28,11 @@ from django.utils.translation import ugettext_lazy as _
 from dissertation.models import proposition_dissertation
 from base.models import offer_year, student
 from django.db.models import Q
+from django.contrib import admin
+
+
+class DissertationAdmin(admin.ModelAdmin):
+    list_display = ('title', 'author', 'status','active')
 
 
 class Dissertation(models.Model):

@@ -28,6 +28,11 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from dissertation.models import adviser, offer_proposition
 from django.db.models import Q
+from django.contrib import admin
+
+
+class PropositionDissertationAdmin(admin.ModelAdmin):
+    list_display = ('title', 'author', 'visibility','active')
 
 
 class PropositionDissertation(models.Model):
