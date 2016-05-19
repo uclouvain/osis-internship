@@ -49,7 +49,7 @@ def informations(request):
         adviser = Adviser.find_by_person(person)
 
     count_advisers = DissertationRole.objects.filter(adviser=adviser).count()
-    return render(request, "informations.html", {'adviser': adviser, 'count_advisers':count_advisers})
+    return render(request, "informations.html", {'adviser': adviser, 'count_advisers': count_advisers})
 
 
 @login_required

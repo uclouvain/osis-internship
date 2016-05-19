@@ -50,6 +50,14 @@
             <p>{% trans 'desc_lnk_informations' %}</p>
           </div>
         </div>
+        <br>
+        <div class="row">
+          <div class="col-md-1"><i class="fa fa-pencil-square-o" style="font-size: 400%; color: #6699FF;"></i></div>
+          <div class="col-md-5">
+            <h4 class="media-heading"><a href="{% url 'dissertations_list' %}" id="lnk_dissertations" >{% trans 'dissertations' %}</a></h4>
+            <p>{% trans 'desc_lnk_dissertations' %}</p>
+          </div>
+        </div>
       {% elif adviser.type == 'MGR' %}
         <div class="row">
           <div class="col-md-1"><i class="fa fa-lightbulb-o" style="font-size: 400%; color: #6699FF;"></i></div>

@@ -27,6 +27,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from dissertation.models import proposition_dissertation
 from base.models import offer_year, student
+from django.db.models import Q
 
 
 class Dissertation(models.Model):
@@ -59,3 +60,19 @@ class Dissertation(models.Model):
 
     def __str__(self):
         return self.title
+
+    def search(terms=None):
+        queryset = Dissertation.objects.all()
+        if terms:
+            queryset = queryset.filter(
+                Q(title__icontains=terms) |
+                Q(description__icontains=terms) |
+                Q(author__person__first_name__icontains=terms) |
+                Q(author__person__middle_name__icontains=terms) |
+                Q(author__person__last_name__icontains=terms) |
+                Q(proposition_dissertation__title__icontains=terms) |
+                Q(proposition_dissertation__author__person__first_name__icontains=terms) |
+                Q(proposition_dissertation__author__person__middle_name__icontains=terms) |
+                Q(proposition_dissertation__author__person__last_name__icontains=terms)
+            ).distinct()
+        return queryset
