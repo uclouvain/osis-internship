@@ -52,52 +52,108 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-4">
-                <label>{% trans 'author' %}</label><br>
-                {{ dissertation.author }}
-            </div>
-            <div class="col-md-4">
-                <label>{% trans 'title' %}</label><br>
-                {{ dissertation.title }}
-            </div>
-            <div class="col-md-4">
-                <label>{% trans 'status' %}</label><br>
-                {{ dissertation.status }}
-            </div>
-        </div>
         <br>
-        <div class="row">
-            <div class="col-md-4">
-                <label>{% trans 'proposition_dissertation' %}</label><br>
-                {{ dissertation.proposition_dissertation }}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">{% trans 'dissertation_informations' %}</h3>
             </div>
-            <div class="col-md-4">
-                <label>{% trans 'proposition_dissertation_author' %}</label><br>
-                {{ dissertation.proposition_dissertation.author }}
-            </div>
-        </div>
-        <br>
-        <div class="row">
-            <div class="col-md-12">
-                 <div class="panel panel-info">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">{% trans 'description' %}</h3>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-3" style="text-align: right">
+                        <label>{% trans 'author' %}</label>
                     </div>
-                    <div class="panel-body">
+                    <div class="col-md-9">
+                        {{ dissertation.author }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3" style="text-align: right">
+                        <label>{% trans 'title' %}</label>
+                    </div>
+                    <div class="col-md-9">
+                        {{ dissertation.title }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3" style="text-align: right">
+                        <label>{% trans 'status' %}</label>
+                    </div>
+                    <div class="col-md-9">
+                        {% if dissertation.status == 'DRAFT' %}
+                        <span class="label label-default">
+                        {% elif dissertation.status == 'DIR_SUBMIT' %}
+                        <span class="label label-primary">
+                        {% elif dissertation.status == 'DIR_OK' %}
+                        <span class="label label-success">
+                        {% elif dissertation.status == 'DIR_KO' %}
+                        <span class="label label-danger">
+                        {% elif dissertation.status == 'COM_SUBMIT' %}
+                        <span class="label label-primary">
+                        {% elif dissertation.status == 'COM_OK' %}
+                        <span class="label label-default">
+                        {% elif dissertation.status == 'COM_KO' %}
+                        <span class="label label-default">
+                        {% elif dissertation.status == 'EVA_SUBMIT' %}
+                        <span class="label label-default">
+                        {% elif dissertation.status == 'EVA_OK' %}
+                        <span class="label label-default">
+                        {% elif dissertation.status == 'EVA_KO' %}
+                        <span class="label label-default">
+                        {% elif dissertation.status == 'TO_RECEIVE' %}
+                        <span class="label label-default">
+                        {% elif dissertation.status == 'TO_DEFEND' %}
+                        <span class="label label-default">
+                        {% elif dissertation.status == 'DEFENDED' %}
+                        <span class="label label-default">
+                        {% elif dissertation.status == 'ENDED' %}
+                        <span class="label label-default">
+                        {% endif %}
+                            {{ dissertation.status }}
+                        </span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3" style="text-align: right">
+                        <label>{% trans 'description' %}</label>
+                    </div>
+                    <div class="col-md-9" style="text-align: justify">
                         {{ dissertation.description }}
                     </div>
-                 </div>
+                </div>
             </div>
         </div>
         <br>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="panel panel-info">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">{% trans 'actions' %}</h3>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">{% trans 'proposition_dissertation_informations' %}</h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-3" style="text-align: right">
+                        <label>{% trans 'author' %}</label>
                     </div>
-                    <div class="panel-body">
+                    <div class="col-md-9">
+                        {{ dissertation.proposition_dissertation.author }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3" style="text-align: right">
+                        <label>{% trans 'title' %}</label>
+                    </div>
+                    <div class="col-md-9">
+                        {{ dissertation.proposition_dissertation.title }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">{% trans 'actions' %}</h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
                         {% if dissertation.status == 'DRAFT' %}
                         <a href="{% url 'dissertations_to_dir_submit' pk=dissertation.pk %}"
                            id="lnk_dissertations_to_dir_submit" class="btn btn-default"

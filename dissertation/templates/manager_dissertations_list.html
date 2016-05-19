@@ -76,7 +76,39 @@
               <tr>
                 <td style="text-align:center"><a href="{% url 'manager_dissertations_detail' pk=dissertation.pk %}">{{ dissertation.title }}</a></td>
                 <td style="text-align:center">{{ dissertation.author }}</td>
-                <td style="text-align:center">{{ dissertation.status }}</td>
+                <td style="text-align:center">
+                    {% if dissertation.status == 'DRAFT' %}
+                    <span class="label label-default">
+                    {% elif dissertation.status == 'DIR_SUBMIT' %}
+                    <span class="label label-primary">
+                    {% elif dissertation.status == 'DIR_OK' %}
+                    <span class="label label-success">
+                    {% elif dissertation.status == 'DIR_KO' %}
+                    <span class="label label-danger">
+                    {% elif dissertation.status == 'COM_SUBMIT' %}
+                    <span class="label label-primary">
+                    {% elif dissertation.status == 'COM_OK' %}
+                    <span class="label label-default">
+                    {% elif dissertation.status == 'COM_KO' %}
+                    <span class="label label-default">
+                    {% elif dissertation.status == 'EVA_SUBMIT' %}
+                    <span class="label label-default">
+                    {% elif dissertation.status == 'EVA_OK' %}
+                    <span class="label label-default">
+                    {% elif dissertation.status == 'EVA_KO' %}
+                    <span class="label label-default">
+                    {% elif dissertation.status == 'TO_RECEIVE' %}
+                    <span class="label label-default">
+                    {% elif dissertation.status == 'TO_DEFEND' %}
+                    <span class="label label-default">
+                    {% elif dissertation.status == 'DEFENDED' %}
+                    <span class="label label-default">
+                    {% elif dissertation.status == 'ENDED' %}
+                    <span class="label label-default">
+                    {% endif %}
+                        {{ dissertation.status }}
+                    </span>
+                </td>
                 <td style="text-align:center">{{ dissertation.offer_year_start }}</td>
                 <td style="text-align:center">{{ dissertation.proposition_dissertation }}<br>({{ dissertation.proposition_dissertation.author }})</td>
               </tr>
