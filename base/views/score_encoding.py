@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import json
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
@@ -49,6 +50,22 @@ def scores_encoding(request):
     # In case the user is a program manager
     else:
         return get_data_pgmer(request)
+
+
+def scores_encoding_justifications(request, registration_id):
+    student = mdl.student.find_by(registration_id=registration_id)
+    enrollments = mdl.exam_enrollment.find_by_student_registration_id(student)
+    if enrollments:
+        data = json.dumps({'student': u'%s - %s' % (student.structure.acronym, structure.title),
+                           'location': struct_address.location,
+                           'city': struct_address.city,
+                           'postal_code': struct_address.postal_code,
+                           'country': struct_address.country.id,
+                           'phone': struct_address.phone,
+                           'fax': struct_address.fax})
+    else:
+        data = json.dumps({'entity': u'%s - %s' % (structure.acronym, structure.title)})
+    return HttpResponse(data, content_type='application/json')
 
 
 @login_required
@@ -520,9 +537,7 @@ def _sort_for_encodings(exam_enrollments):
     return sorted(exam_enrollments, key=lambda k: _sort(k))
 
 
-def _get_exam_enrollments(user,
-                          learning_unit_year_id=None, tutor_id=None, offer_year_id=None,
-                          academic_year=None):
+def _get_exam_enrollments(user, learning_unit_year_id=None, tutor_id=None, offer_year_id=None, academic_year=None):
     """
     :param user: The user who's asking for exam_enrollments (for scores' encoding).
     :param learning_unit_year_id: To filter ExamEnroll by learning_unit_year.

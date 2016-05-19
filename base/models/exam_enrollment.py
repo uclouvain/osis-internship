@@ -134,6 +134,10 @@ def find_by_enrollment_session(learning_unit_enrollment, session_exam_number_ses
                                  .filter(session_exam__number_session=session_exam_number_session).first()
 
 
+def find_by_student(student):
+    return ExamEnrollment.objects.filter(learning_unit_enrollment__offer_enrollment__student=student)
+
+
 def calculate_exam_enrollment_progress(enrollments):
     if enrollments:
         progress = len([e for e in enrollments if e.score_final is not None or e.justification_final]) / len(enrollments)
@@ -146,28 +150,6 @@ def justification_label_authorized():
     return "%s, %s, %s" % (_('absent_pdf_legend'),
                            _('cheating_pdf_legend'),
                            _('score_missing_pdf_legend'))
-
-
-class ExamEnrollmentHistoryAdmin(admin.ModelAdmin):
-    list_display = ('exam_enrollment', 'person', 'score_final', 'justification_final', 'modification_date')
-    fieldsets = ((None, {'fields': ('exam_enrollment', 'person', 'score_final', 'justification_final')}),)
-
-
-class ExamEnrollmentHistory(models.Model):
-    exam_enrollment = models.ForeignKey(ExamEnrollment)
-    person = models.ForeignKey(person.Person)
-    score_final = models.DecimalField(max_digits=4, decimal_places=2, null=True)
-    justification_final = models.CharField(max_length=20, null=True, choices=JUSTIFICATION_TYPES)
-    modification_date = models.DateTimeField(auto_now=True)
-
-
-def create_exam_enrollment_historic(user, enrollment, score, justification):
-    exam_enrollment_history = ExamEnrollmentHistory()
-    exam_enrollment_history.exam_enrollment = enrollment
-    exam_enrollment_history.score_final = score
-    exam_enrollment_history.justification_final = justification
-    exam_enrollment_history.person = person.find_by_user(user)
-    exam_enrollment_history.save()
 
 
 def get_progress(session_exm_list, learning_unt):
@@ -235,3 +217,25 @@ def find_for_score_encodings(session_exam_number,
     now = timezone.now()
     return queryset.filter(session_exam__offer_year_calendar__start_date__lte=now)\
                    .filter(session_exam__offer_year_calendar__end_date__gte=now)
+
+
+class ExamEnrollmentHistoryAdmin(admin.ModelAdmin):
+    list_display = ('exam_enrollment', 'person', 'score_final', 'justification_final', 'modification_date')
+    fieldsets = ((None, {'fields': ('exam_enrollment', 'person', 'score_final', 'justification_final')}),)
+
+
+class ExamEnrollmentHistory(models.Model):
+    exam_enrollment = models.ForeignKey(ExamEnrollment)
+    person = models.ForeignKey(person.Person)
+    score_final = models.DecimalField(max_digits=4, decimal_places=2, null=True)
+    justification_final = models.CharField(max_length=20, null=True, choices=JUSTIFICATION_TYPES)
+    modification_date = models.DateTimeField(auto_now=True)
+
+
+def create_exam_enrollment_historic(user, enrollment, score, justification):
+    exam_enrollment_history = ExamEnrollmentHistory()
+    exam_enrollment_history.exam_enrollment = enrollment
+    exam_enrollment_history.score_final = score
+    exam_enrollment_history.justification_final = justification
+    exam_enrollment_history.person = person.find_by_user(user)
+    exam_enrollment_history.save()
