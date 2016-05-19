@@ -479,7 +479,6 @@ def get_data_pgmer(request, offer_year_id=None, tutor_id=None):
                                                       + k.get('first_name').upper() if k.get('first_name') else '')
         request.session['all_tutors'] = all_tutors
 
-
     # Ordering by learning_unit_year.acronym
     data = sorted(data, key=lambda k: k['learning_unit_year'].acronym)
 
