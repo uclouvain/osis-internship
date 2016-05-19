@@ -41,12 +41,20 @@
     <div class="panel-body">
         <form method="get" action="{% url 'refresh_list' %}" id="form_search_learning_units">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="form-group">
                         <label>{% trans 'academic_year' %}</label><br>
                         {{ academic_year }}
                     </div>
                 </div>
+                <div class="col-md-9">
+                    <div class="form-group">
+                        <label>{% trans 'number_session' %}</label><br>
+                        {{ number_session }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-md-3">
                     <div class="form-group">
                         {% if tutor_list %}
@@ -60,7 +68,7 @@
                         {% endif %}
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     {% if offer_list %}
                     <label>{% trans 'offer' %} {{ offer_sel}}</label><br>
                     <select id="slt_offer_list_selection" name="offer" class="form-control">
@@ -71,9 +79,17 @@
                     </select>
                     {% endif %}
                 </div>
+                <div class="col-md-3">
+                    <label for="txt_acronym">{% trans 'learning_unit'%}</label>
+                    <input class="form-control" id="txt_acronym" placeholder="{% trans 'acronym' %}"
+                           name="learning_unit_year_acronym"
+                           value="{{ learning_unit_year_acronym  | default_if_none:'' }}"
+                           style="text-transform:uppercase" maxlength="15">
+                </div>
                 <div class="col-md-2">
                     <br>
                     <button type="submit" id="bt_submit_offer_search" class="btn btn-primary" role="button"
+                            style="margin-top: 4px"
                             title="{% trans 'refresh_list' %}">
                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
                     &nbsp;&nbsp;
@@ -87,8 +103,7 @@
             </div>
             <div class="col-md-6">
                 <div class="pull-right">
-                    <b>{% trans 'you_manage' %}
-                        <span class="badge">{{ notes_list|length }}</span>
+                    <b><span class="badge">{{ notes_list|length }}</span>
                         {% trans 'learning_units_in' %}
                         <span class="badge">{% if offer_year_id %} 1 {% else %} {{ offer_list|length }} {% endif %}</span>
                         {% trans 'program_s' %}.
@@ -247,7 +262,7 @@
 </div>
 {% else %}
     <div class="alert alert-warning">
-      <p style="font-size: 130%">{% trans 'no_exam_session_opened_for_the_moment' %} </p>
+      <p style="font-size: 130%">{% trans 'no_score_to_encode' %} </p>
     </div>
 {% endif %}
 {% endblock %}

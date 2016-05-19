@@ -96,8 +96,7 @@ def print_notes(academic_year, list_exam_enrollment):
 def header_building(canvas, doc, styles):
     a = Image(settings.LOGO_INSTITUTION_URL, width=15*mm, height=20*mm)
 
-    p = Paragraph('''
-                    <para align=center>
+    p = Paragraph('''<para align=center>
                         <font size=16>%s</font>
                     </para>''' % (_('scores_transcript')), styles["BodyText"])
 
@@ -173,8 +172,7 @@ def list_notes_building(academic_year, list_exam_enrollment, styles, content):
                     score = "{0:.0f}".format(exam_enroll.score_final)
             justification = ""
             if exam_enroll.justification_final:
-                justification = mdl.exam_enrollment.get_letter_justication_type(
-                    exam_enroll.justification_final)
+                justification = mdl.exam_enrollment.get_letter_justication_type(exam_enroll.justification_final)
             sc = ""
             if score:
                 sc = "%s" % score
@@ -279,36 +277,23 @@ def main_data(academic_year, session_exam, styles, offer, content):
     text_left_style = ParagraphStyle('structure_header')
     text_left_style.alignment = TA_LEFT
     text_left_style.fontSize = 10
-    p_struct_name = Paragraph('''''', styles["Normal"])
-    p_struct_location = Paragraph('''''', styles["Normal"])
-    p_struct_address = Paragraph('''''', styles["Normal"])
-    p_phone_fax_data = Paragraph('''''', styles["Normal"])
-    if offer.structure:
-        structure_display = offer.structure
-        faculty = mdl.structure.find_faculty(offer.structure)
-        if faculty:
-            structure_display = faculty
+    p_struct_name = Paragraph('%s' % offer.recipient if offer.recipient else '',
+                              styles["Normal"])
 
-        structure_address = mdl.structure_address.find_structure_address(structure_display)
-
-        p_struct_name = Paragraph('%s' % structure_display, styles["Normal"])
-
-        if structure_address:
-            if structure_address.location:
-                p_struct_location = Paragraph('%s' % structure_address.location, styles["Normal"])
-            if structure_address.postal_code and structure_address.city:
-                p_struct_address = Paragraph('%s %s' % (structure_address.postal_code, structure_address.city),
-                                             styles["Normal"])
-            phone_fax_data = ""
-            if structure_address.phone:
-                phone_fax_data += _('phone') + " : " + structure_address.phone
-            if structure_address.fax:
-                if structure_address.phone:
-                    phone_fax_data += " - "
-                phone_fax_data += _('fax') + " : " + structure_address.fax
-            if len(phone_fax_data) > 0:
-                p_phone_fax_data = Paragraph('%s' % phone_fax_data,
-                                             styles["Normal"])
+    p_struct_location = Paragraph('%s' % offer.location if offer.location else '',
+                                  styles["Normal"])
+    p_struct_address = Paragraph('%s %s' % (offer.postal_code if offer.postal_code else '',
+                                            offer.city if offer.city else ''),
+                                 styles["Normal"])
+    phone_fax_data = ""
+    if offer.phone:
+        phone_fax_data += "%s : %s" % (_('phone'), offer.phone)
+    if offer.fax:
+        if offer.phone:
+            phone_fax_data += " - "
+        phone_fax_data += "%s : %s" % (_('fax'), offer.fax)
+    p_phone_fax_data = Paragraph('%s' % phone_fax_data,
+                                 styles["Normal"])
 
     data_structure = [[p_struct_name],
                       [p_struct_location],

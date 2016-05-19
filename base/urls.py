@@ -50,6 +50,7 @@ urlpatterns = [
     url(r'^offers/$', offer.offers, name='offers'),
     url(r'^offers/search$', offer.offers_search, name='offers_search'),
     url(r'^offers/([0-9]+)/$', offer.offer_read, name='offer_read'),
+    url(r'^offers/([0-9]+)/score_encoding$', offer.score_encoding, name='offer_score_encoding'),
 
     url(r'^profile/$', common.profile, name='profile'),
     url(r'^profile/lang$', common.profile_lang, name='profile_lang'),
@@ -80,6 +81,7 @@ urlpatterns = [
     url(r'^structures/search$', institution.structures_search, name='structures_search'),
     url(r'^structures/([0-9]+)/$', institution.structure_read, name='structure_read'),
     url(r'^structure/([0-9]+)/diagram/$', institution.structure_diagram, name='structure_diagram'),
+    url(r'^structure/([0-9]+)/address/$', institution.structure_address, name='structure_address'),
 
     url(r'^organizations/$', organization.organizations, name='organizations'),
     url(r'^organizations/search$', organization.organizations_search, name='organizations_search'),
