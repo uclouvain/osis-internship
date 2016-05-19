@@ -38,14 +38,14 @@ class StudentAdmin(admin.ModelAdmin):
 class Student(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
-    registration_id = models.CharField(max_length=10)
+    registration_id = models.CharField(max_length=10, unique=True)
     person = models.ForeignKey('Person')
 
     def __str__(self):
         return u"%s (%s)" % (self.person, self.registration_id)
 
 
-def find_by(registration_id=None, person_name=None):
+def find_by(registration_id=None, person_name=None, person_username=None, person_first_name=None):
     """
     Find students by optional arguments. At least one argument should be informed
     otherwise it returns empty.
@@ -54,11 +54,19 @@ def find_by(registration_id=None, person_name=None):
     queryset = Student.objects
 
     if registration_id:
-        queryset = queryset.filter(registration_id=registration_id)
+        queryset = queryset.filter(registration_id__icontains=registration_id)
         has_criteria = True
 
     if person_name:
         queryset = queryset.filter(person__last_name__icontains=person_name)
+        has_criteria = True
+
+    if person_username:
+        queryset = queryset.filter(person__user=person_username)
+        has_criteria = True
+
+    if person_first_name:
+        queryset = queryset.filter(person__first_name__icontains=person_first_name)
         has_criteria = True
 
     if has_criteria:

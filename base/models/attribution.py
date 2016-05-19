@@ -28,10 +28,10 @@ from django.contrib import admin
 
 
 class AttributionAdmin(admin.ModelAdmin):
-    list_display = ('tutor','function','learning_unit','start_date', 'end_date', 'changed')
+    list_display = ('tutor', 'function', 'learning_unit', 'start_date', 'end_date', 'changed')
     list_filter = ('function',)
-    fieldsets = ((None, {'fields': ('learning_unit','tutor','function','start_date','end_date')}),)
-    raw_id_fields = ('learning_unit', 'tutor' )
+    fieldsets = ((None, {'fields': ('learning_unit', 'tutor', 'function', 'start_date', 'end_date')}),)
+    raw_id_fields = ('learning_unit', 'tutor')
     search_fields = ['tutor__person__first_name', 'tutor__person__last_name', 'learning_unit__acronym']
 
 
@@ -44,7 +44,7 @@ class Attribution(models.Model):
     changed = models.DateTimeField(null=True)
     start_date = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
     end_date = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
-    function = models.CharField(max_length=15, blank=True, null=True, choices=FUNCTION_CHOICES, default='UNKNOWN')
+    function = models.CharField(max_length=15, blank=True, null=True, choices=FUNCTION_CHOICES, db_index=True)
     learning_unit = models.ForeignKey('LearningUnit')
     tutor = models.ForeignKey('Tutor')
 
@@ -52,9 +52,22 @@ class Attribution(models.Model):
         return u"%s - %s" % (self.tutor.person, self.function)
 
 
-def find_by_tutor(a_tutor):
-    attributions = Attribution.objects.filter(tutor=a_tutor)
-    return attributions
+def search(tutor=None, learning_unit_id=None, function=None, learning_unit_ids=None):
+    queryset = Attribution.objects
+
+    if tutor:
+        queryset = queryset.filter(tutor=tutor)
+
+    if learning_unit_id:
+        queryset = queryset.filter(learning_unit_id=learning_unit_id)
+
+    if function:
+        queryset = queryset.filter(function=function)
+
+    if learning_unit_ids:
+        queryset = queryset.filter(learning_unit_id__in=learning_unit_ids)
+
+    return queryset
 
 
 def get_assigned_tutor(user):
@@ -63,18 +76,3 @@ def get_assigned_tutor(user):
         return attribution.tutor
     else:
         return None
-
-
-def find_by_learning_unit(a_learning_unit):
-    attributions = Attribution.objects.filter(learning_unit=a_learning_unit) \
-                              .order_by('tutor__person__last_name', 'tutor__person__first_name')
-    return attributions
-
-
-def find_by_function(tutor, a_learning_unit, function):
-    attributions_coord = Attribution.objects.filter(learning_unit=a_learning_unit) \
-                                     .filter(tutor=tutor.id)\
-                                     .filter(function=function)
-    if attributions_coord:
-        return True
-    return False

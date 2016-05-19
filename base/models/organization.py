@@ -58,7 +58,7 @@ def find_by_id(organization_id):
     return Organization.objects.get(pk=organization_id)
 
 
-def search(acronym=None, name=None, type=None):
+def search(acronym=None, name=None, type=None, reference=None):
     has_criteria = False
     queryset = Organization.objects
 
@@ -74,21 +74,21 @@ def search(acronym=None, name=None, type=None):
         queryset = queryset.filter(type=type)
         has_criteria = True
 
+    if reference:
+        queryset = queryset.filter(reference=reference)
+        has_criteria = True
+
     if has_criteria:
         return queryset
     else:
         return None
 
 
-def find_all_order_by_reference():
-    return Organization.objects.all().order_by('reference')
-
-
 def find_by_type(type, order_by=None):
-    queryset = Organization.objects.filter(type=type)
 
     if order_by:
-        for criteria in order_by:
-            queryset.order_by(criteria)
+        queryset = Organization.objects.filter(type=type).order_by(*order_by)
+    else:
+        queryset = Organization.objects.filter(type=type)
 
     return queryset

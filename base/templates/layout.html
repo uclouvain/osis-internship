@@ -1,3 +1,4 @@
+<!doctype html>
 {% load staticfiles %}
 {% load i18n %}
 
@@ -24,8 +25,6 @@
 * at the root of the source code of this program.  If not,
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
-
-<!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -80,7 +79,7 @@
                        aria-expanded="false" id="lnk_home_dropdown_parcours">{% trans 'student_path' %}<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="{% url 'assessments' %}" id="lnk_dropdown_evaluations">{% trans 'evaluations' %}</a></li>
-                        <li><a href="{% url 'internships_home' %}" id="lnk_dropdown_internships">{% trans 'internships' %}</a></li>
+                        <!--<li><a href="{% url 'internships_home' %}" id="lnk_dropdown_internships">{% trans 'internships' %}</a></li>-->
                     </ul>
                 </li>
                 <li class="dropdown">
@@ -112,6 +111,8 @@
                                 </li>
                                 <li><a href="{% url 'storage' %}" id="lnk_files">
                                     <span class="glyphicon glyphicon-hdd" aria-hidden="true"></span> {% trans 'storage' %}</a></li>
+                                <li><a href="{% url 'messages' %}" id="lnk_messages">
+                                    <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {% trans 'messages' %}</a></li>
                             </ul>
                         </li>
                     {% endif %}
@@ -122,12 +123,13 @@
                             {{ request.user.first_name }}
                             <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{% url 'logout' %}?next=/" id="lnk_logout">
-                                <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
-                                {% trans 'logout' %}</a></li>
                             <li><a href="{% url 'profile' %}" id="lnk_profile">
                                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                                 {% trans 'profile' %}</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="{% url 'logout' %}?next=/" id="lnk_logout">
+                                <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                                {% trans 'logout' %}</a></li>
                         </ul>
                     </li>
                 {% else %}
@@ -173,7 +175,7 @@
         <p class="navbar-text pull-left"><a
                 href="http://uclouvain.github.io/osis-louvain-documentation/doc/business/user-manual_fr.html"
                 target="_blank" id="lnk_user_manual">{% trans 'documentation' %}</a> |
-            <a href="http://uclouvain.github.io/osis-louvain/" target="_blank" id="lnk_osis_website">{% trans 'website' %}</a> |
+            <a href="http://uclouvain.github.io/osis/" target="_blank" id="lnk_osis_website">{% trans 'website' %}</a> |
             <a href="https://github.com/uclouvain/osis-louvain" target="_blank" id="lnk_osis_source_code">{% trans 'source_code' %}
             </a></p>
         <p class="navbar-text pull-right"><span class="glyphicon glyphicon-copyright-mark"></span> 2016 <a

@@ -93,7 +93,7 @@ def profile(request):
     person = mdl.person.find_by_user(request.user)
     addresses = mdl.person_address.find_by_person(person)
     tutor = mdl.tutor.find_by_person(person)
-    attributions = mdl.attribution.find_by_tutor(tutor)
+    attributions = mdl.attribution.search(tutor=tutor)
     student = mdl.student.find_by_person(person)
     offer_enrollments = mdl.offer_enrollment.find_by_student(student)
     programs_managed = mdl.program_manager.find_by_person(person)

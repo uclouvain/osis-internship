@@ -28,9 +28,9 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class InternshipOffer(models.Model):
-    organization        = models.ForeignKey('base.Organization')
-    learning_unit_year  = models.ForeignKey('base.LearningUnitYear')
-    title               = models.CharField(max_length=255)
+    organization = models.ForeignKey('base.Organization')
+    learning_unit_year = models.ForeignKey('base.LearningUnitYear')
+    title = models.CharField(max_length=255)
     maximum_enrollments = models.IntegerField()
 
     def __str__(self):
@@ -59,9 +59,9 @@ class InternshipOffer(models.Model):
 
 class InternshipEnrollment(models.Model):
     learning_unit_enrollment = models.ForeignKey('base.LearningUnitEnrollment')
-    internship_offer         = models.ForeignKey(InternshipOffer)
-    start_date               = models.DateField()
-    end_date                 = models.DateField()
+    internship_offer = models.ForeignKey(InternshipOffer)
+    start_date = models.DateField()
+    end_date = models.DateField()
 
     def __str__(self):
         return u"%s" % self.learning_unit_enrollment.student
@@ -79,13 +79,13 @@ class InternshipMaster(models.Model):
                         ('EMERGENCY',_('Emergency')),
                         ('GERIATRICS',_('Geriatrics')))
 
-    organization     = models.ForeignKey('base.Organization')
+    organization = models.ForeignKey('base.Organization')
     internship_offer = models.ForeignKey(InternshipOffer)
-    person           = models.ForeignKey('base.Person')
-    reference        = models.CharField(max_length=30, blank=True, null=True)
-    civility         = models.CharField(max_length=20, blank=True, null=True, choices=CIVILITY_CHOICE)
-    type_mastery     = models.CharField(max_length=20, blank=True, null=True, choices=TYPE_CHOICE)
-    speciality       = models.CharField(max_length=20, blank=True, null=True, choices=SPECIALITY_CHOICE)
+    person = models.ForeignKey('base.Person')
+    reference = models.CharField(max_length=30, blank=True, null=True)
+    civility = models.CharField(max_length=20, blank=True, null=True, choices=CIVILITY_CHOICE)
+    type_mastery = models.CharField(max_length=20, blank=True, null=True, choices=TYPE_CHOICE)
+    speciality = models.CharField(max_length=20, blank=True, null=True, choices=SPECIALITY_CHOICE)
 
     @staticmethod
     def find_masters():
@@ -109,3 +109,15 @@ class InternshipMaster(models.Model):
     def find_masters_by_organization(organization):
         masters = InternshipMaster.objects.filter(organization__name=organization)
         return masters
+
+
+class InternshipChoice(models.Model):
+    student = models.ForeignKey('base.Student')
+    organization = models.ForeignKey('base.Organization')
+    learning_unit_year = models.ForeignKey('base.LearningUnitYear')
+    choice = models.IntegerField()
+
+    @staticmethod
+    def find_by_student(s_student):
+        internships = InternshipChoice.objects.filter(student = s_student).order_by('choice')
+        return internships

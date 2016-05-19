@@ -31,199 +31,267 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'studies' %}</a></li>
-  <li><a href="{% url 'assessments' %}" id="lnk_assesments">{% trans 'evaluations' %}</a></li>
-  <li><a href="{% url 'scores_encoding' %}" id="lnk_scores_encoding">{% trans 'scores_encoding' %}</a></li>
-  <li><a href="{%if tutor%}{% url 'online_encoding' learning_unit.id tutor.id %}{%else%}{% url 'online_encoding' learning_unit.id %}{%endif%}" id="lnk_online_encoding">{% trans 'online_scores_encoding' %}</a></li>
-  <li class="active">{% trans 'dubble_online_scores_encoding' %}</li>
+<li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'studies' %}</a></li>
+<li><a href="{% url 'assessments' %}" id="lnk_assesments">{% trans 'evaluations' %}</a></li>
+<li><a href="{% url 'scores_encoding' %}" id="lnk_scores_encoding">{% trans 'scores_encoding' %}</a></li>
+<li><a href="{% url 'online_encoding' learning_unit_year.id %}" id="lnk_online_encoding">{% trans 'online_scores_encoding' %}</a></li>
+<li class="active">{% trans 'dubble_online_scores_encoding' %}</li>
 {% endblock %}
 {% block content %}
-  <div class="page-header">
+<div class="page-header">
     <h2>{% trans 'dubble_online_scores_encoding' %}</h2>
-  </div>
-  <div class="panel panel-default">
+</div>
+<div class="panel panel-default">
     <div class="panel-heading">
-      <h3 class="panel-title" style="font-size: 150%; color: #3399CC;">{{ learning_unit }}</h3>
+        <h3 class="panel-title" style="font-size: 150%; color: #3399CC;">{{ learning_unit_year }}</h3>
     </div>
     <div class="panel-body">
-      <div class="row">
-        <div class="col-md-4">
-          <div class="form-group">
-            <label>{% trans 'responsible' %}</label><br>
-            {{ tutor | default_if_none:'' }}
-          </div>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group" id="pnl_responsable_name" >
+                    <label>{% trans 'coordinator' %}</label><br>
+                    {% if coordinator %}
+                        {{ coordinator }}
+                    {% else %}
+                        {% trans 'none' %}
+                    {% endif %}
+                    {% if tutors %}
+                        <a role="button" data-toggle="collapse" data-target="#tutors_by_course"
+                           aria-expanded="false"
+                           aria-controls="tutors_by_course"
+                           title="{% trans 'display_tutors' %}">
+                          <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+                        </a>
+                    {% endif %}
+                    <div class="collapse" id="tutors_by_course">
+                        <label>{% trans 'tutors' %}</label><br>
+                        <ul>
+                            {% for prof in tutors %}
+                                <li>{{ prof }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>{% trans 'academic_year' %}</label><br>
+                    {{ academic_year }}
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>{% trans 'number_session' %}</label><br>
+                    {{ number_session }}
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>{% trans 'number_of_enrollments' %}</label><br>
+                    {{ count_total_enrollments }}
+                </div>
+            </div>
         </div>
-        <div class="col-md-3">
-          <div class="form-group">
-            <label>{% trans 'academic_year' %}</label><br>
-            {{ academic_year }}
-          </div>
+        <hr>
+        <div class="row">
+            <div class="alert alert-warning">
+                {% get_current_language as LANGUAGE_CODE %}
+                {% if enrollments.0.session_exam.learning_unit_year.decimal_scores %}
+                  {% trans 'decimal_values_accepted' %}
+                {% else %}
+                  {% trans 'decimal_values_ignored' %}
+                {% endif %}
+            </div>
         </div>
-        <div class="col-md-2">
-
-        </div>
-        <div class="col-md-3">
-          <div class="form-group">
-            <label>{% trans 'number_of_enrollments' %}</label><br>
-            {{ enrollments|length }}
-          </div>
-        </div>
-      </div>
-      <hr>
-      <form class="form-inline" method="POST"
-            action="{%if tutor%}{% url 'online_double_encoding_form' learning_unit.id tutor.id %}{%else%}{% url 'online_double_encoding_form' learning_unit.id  %}{%endif%}" id="form_online_double_encoding">
-        {% csrf_token %}
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>{% trans 'offer' %}</th>
-                    <th>{% trans 'registration_number' %}</th>
-                    <th>{% trans 'lastname' %}</th>
-                    <th>{% trans 'firstname' %}</th>
-                    <th>{% trans 'score' %}</th>
-                    <th>{% trans 'justification' %}</th>
-                    <th>{% trans 'end_date' %}</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for enrollment in enrollments %}
-              <tr style="background-color:
-                      {% ifchanged enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym %}
-                             {% cycle "white" "#E5F2FF" as rowcolors %}
-                         {% else %}
-                             {{ rowcolors }}
-                         {% endifchanged %}
-                      ">
-                <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
-                <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
-                <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
-                <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
-                <td>
-                   <input type="hidden" id="hdn_score_draft_{{ enrollment.id }}"
-                          value="{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}">
-                   <input type="number" min="0" max="20" step="any" name="score_{{ enrollment.id }}" id="num_double_score_{{ enrollment.id }}"
-                          tabindex="{{ forloop.counter }}" class="form-control"
-                          {% if tutor and enrollment.score_final or tutor and enrollment.justification_final %} disabled {% endif %}>
-                </td>
-                <td>
-                   <input type="hidden" id="hdn_justification_draft_{{ enrollment.id }}" value="{{ enrollment.justification_draft }}">
-                   <select class="form-control" name="justification_{{ enrollment.id }}" id="slt_double_justification_score_{{ enrollment.id }}"
-                           tabindex="{{ enrollments|length|sum:forloop.counter }}"
-                           {% if tutor and enrollment.score_final or tutor and enrollment.justification_final %} disabled {% endif %}>
-                      <option value="None"></option>
-                      <option value="ABSENT">{% trans 'absent' %}</option>
-                      <option value="CHEATING">{% trans 'cheating' %}</option>
-                      <option value="SCORE_MISSING">{% trans 'score_missing' %}</option>
-                      {% programme_manager as pm %}
-                      {% if pm %}
-                      <option value="ILL" >{% trans 'ill' %}</option>
-                      <option value="JUSTIFIED_ABSENCE">{% trans 'justified_absence' %}</option>)
-                      {% endif %}
-                   </select>
-                </td>
-                <td>{{ enrollment.session_exam.offer_year_calendar.end_date | default_if_none:''|date:"j/m/Y" }}</td>
-              </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-        <button type="submit" class="btn btn-primary" id="bt_compare"><span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> {% trans 'compare' %}</button>
-        <a class="btn btn-default" href="{%if tutor%}{% url 'online_encoding' learning_unit.id tutor.id %}{%else%}{% url 'online_encoding' learning_unit.id %}{%endif%}" role="button" id="bt_cancel_online_double_encoding"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
-      </form>
+        <form class="form-inline" method="POST"
+              action="{% url 'online_double_encoding_form' learning_unit_year.id %}"
+              id="form_online_double_encoding">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary" id="bt_compare_up">
+                <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> {% trans 'compare' %}</button>
+            <a class="btn btn-default" href="{% url 'online_encoding' learning_unit_year.id %}" role="button" id="bt_cancel_online_double_encoding_up">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>{% trans 'offer' %}</th>
+                        <th>{% trans 'registration_number' %}</th>
+                        <th>{% trans 'lastname' %}</th>
+                        <th>{% trans 'firstname' %}</th>
+                        <th>{% trans 'score' %}</th>
+                        <th>{% trans 'justification' %}</th>
+                        <th>{% trans 'end_date' %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for enrollment in enrollments %}
+                    <tr style="background-color:
+                                  {% ifchanged enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym %}
+                                     {% cycle "white" "#E5F2FF" as rowcolors %}
+                                  {% else %}
+                                     {{ rowcolors }}
+                                  {% endifchanged %}">
+                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
+                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
+                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name|title }}</td>
+                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
+                        <td>
+                            {% if is_program_manager %}
+                            <input type="hidden" id="hdn_score_draft_{{ enrollment.id }}"
+                                   value="{{ enrollment.score_final | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}"/>
+                            {% else %}
+                            <input type="hidden" id="hdn_score_draft_{{ enrollment.id }}"
+                                   value="{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}"/>
+                            {% endif %}
+                            <input type="number" min="0" max="20" name="score_{{ enrollment.id }}" id="num_double_score_{{ enrollment.id }}"
+                                   tabindex="{{ forloop.counter }}" class="form-control"
+                                   {% if not is_program_manager %}
+                                     {% if enrollment.score_final != None or enrollment.justification_final %}
+                                       disabled
+                                     {% endif %}
+                                   {% endif %}
+                                   {% if enrollment.session_exam.learning_unit_year.decimal_scores %}
+                                        step="any"
+                                        oninvalid="invalidScoreMsg(this,true,'{% trans 'decimal_score_not_allowed' %}','{% trans 'scores_gt_0_lt_20' %}')"
+                                   {% else %}
+                                        step="1"
+                                        oninvalid="invalidScoreMsg(this,false,'{% trans 'decimal_score_not_allowed' %}','{% trans 'scores_gt_0_lt_20' %}')"
+                                   {% endif %} >
+                        </td>
+                        <td>
+                            {% if is_program_manager %}
+                                <input type="hidden" id="hdn_justification_draft_{{ enrollment.id }}" value="{{ enrollment.justification_final }}">
+                            {% else %}
+                                <input type="hidden" id="hdn_justification_draft_{{ enrollment.id }}" value="{{ enrollment.justification_draft }}">
+                            {% endif %}
+                            <select class="form-control" name="justification_{{ enrollment.id }}" id="slt_double_justification_score_{{ enrollment.id }}"
+                                   tabindex="{{ enrollments|length|sum:forloop.counter }}"
+                                   {% if not is_program_manager %}
+                                     {% if enrollment.score_final != None or enrollment.justification_final %}
+                                        disabled
+                                    {% endif %}
+                                   {% endif %}>
+                                <option value="None"></option>
+                                {% if is_program_manager %}
+                                    <option value="ABSENCE_UNJUSTIFIED">{% trans 'absence_unjustified' %}</option>
+                                    <option value="ABSENCE_JUSTIFIED">{% trans 'absence_justified' %}</option>
+                                {% else %}
+                                    <option value="ABSENCE_UNJUSTIFIED">{% trans 'absent' %}</option>
+                                {% endif %}
+                                <option value="CHEATING">{% trans 'cheating' %}</option>
+                                <option value="SCORE_MISSING">{% trans 'score_missing' %}</option>
+                            </select>
+                        </td>
+                        <td>{{ enrollment.session_exam.offer_year_calendar.end_date | default_if_none:''|date:"j/m/Y" }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <button type="submit" class="btn btn-primary" id="bt_compare_down">
+                <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> {% trans 'compare' %}</button>
+            <a class="btn btn-default" href="{% url 'online_encoding' learning_unit_year.id %}" role="button" id="bt_cancel_online_double_encoding_down">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
+        </form>
     </div>
-  </div>
+</div>
 {% endblock %}
 {% block script %}
 <script>
-$("input[id^='num_double_score_']" ).change(function(event) {
-    // Get the object that received the event.
-    var target = $(event.target);
-    var id = target.attr("id");
-    if (typeof id == 'undefined') {
-        target = target.parent();
-        id = target.attr("id");
-    }
-    var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
+    $("input[id^='num_double_score_']" ).change(function(event) {
+        // Get the object that received the event.
+        var target = $(event.target);
+        var id = target.attr("id");
+        if (typeof id == 'undefined') {
+            target = target.parent();
+            id = target.attr("id");
+        }
+        var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
 
-    if(target.val() != "" && $("#slt_double_justification_score_"+ enrollmentId).val() != "CHEATING") {
-        $("#slt_double_justification_score_" + enrollmentId).val('');
-    }
-});
+        if(target.val() != "") {
+            $("#slt_double_justification_score_" + enrollmentId).val('');
+        }
+        this.setCustomValidity('');
+    });
 
-$("select[id^='slt_double_justification_score_']" ).change(function(event) {
-    // Get the object that received the event.
-    var target = $(event.target);
-    var id = target.attr("id");
-    if (typeof id == 'undefined') {
-        target = target.parent();
-        id = target.attr("id");
-    }
+    $("select[id^='slt_double_justification_score_']" ).change(function(event) {
+        // Get the object that received the event.
+        var target = $(event.target);
+        var id = target.attr("id");
+        if (typeof id == 'undefined') {
+            target = target.parent();
+            id = target.attr("id");
+        }
 
-    var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
+        var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
 
-    // Checks whether the object contains an id.
-    if(target.val() != "CHEATING" && target.val() != "None") {
-        $("#num_double_score_" + enrollmentId).val('');
-    }
-});
+        // Checks whether the object contains an id.
+        if(target.val() != "None") {
+            $("#num_double_score_" + enrollmentId).val('');
+        }
+    });
 
-$("input[id^='num_double_score_']" ).blur(function(event) {
-    // Get the object that received the event.
-    var target = $(event.target);
-    var id = target.attr("id");
-    if (typeof id == 'undefined') {
-        target = target.parent();
-        id = target.attr("id");
-    }
+    $("input[id^='num_double_score_']" ).blur(function(event) {
+        // Get the object that received the event.
+        var target = $(event.target);
+        var id = target.attr("id");
+        if (typeof id == 'undefined') {
+            target = target.parent();
+            id = target.attr("id");
+        }
 
-    var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
-    var score_draft = Number($("#hdn_score_draft_" + enrollmentId).val());
+        var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
+        var score_draft = Number($("#hdn_score_draft_" + enrollmentId).val());
 
-    if (target.val() != score_draft) {
-        target.css("border", "1px solid #ff0000");
-    } else {
-        target.css("border", "1px solid lightgrey");
-    }
+        if (target.val() != score_draft) {
+            target.css("border", "1px solid #ff0000");
+        } else {
+            target.css("border", "1px solid lightgrey");
+        }
 
-    var double_justification_field = $("#slt_double_justification_score_"+ enrollmentId);
-    var justification_double = double_justification_field.val();
-    var justification_draft =  $("#hdn_justification_draft_" + enrollmentId).val();
+        var double_justification_field = $("#slt_double_justification_score_"+ enrollmentId);
+        var justification_double = double_justification_field.val();
+        var justification_draft =  $("#hdn_justification_draft_" + enrollmentId).val();
 
-    console.log(justification_double + " = " + justification_draft);
+        console.log(justification_double + " = " + justification_draft);
 
-    if ((justification_double != null || justification_draft != "None") && justification_double != justification_draft) {
-        double_justification_field.css("border", "1px solid #ff0000");
-    } else {
-        double_justification_field.css("border", "1px solid lightgrey");
-    }
-});
+        if ((justification_double != null || justification_draft != "None") && justification_double != justification_draft) {
+            double_justification_field.css("border", "1px solid #ff0000");
+        } else {
+            double_justification_field.css("border", "1px solid lightgrey");
+        }
+    });
 
-$("select[id^='slt_double_justification_score_']" ).blur(function(event) {
-    // Get the object that received the event.
-    var target = $(event.target);
-    var id = target.attr("id");
-    if (typeof id == 'undefined') {
-        target = target.parent();
-        id = target.attr("id");
-    }
+    $("select[id^='slt_double_justification_score_']" ).blur(function(event) {
+        // Get the object that received the event.
+        var target = $(event.target);
+        var id = target.attr("id");
+        if (typeof id == 'undefined') {
+            target = target.parent();
+            id = target.attr("id");
+        }
 
-    var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
-    var justification_draft =  $("#hdn_justification_draft_" + enrollmentId).val();
+        var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
+        var justification_draft =  $("#hdn_justification_draft_" + enrollmentId).val();
 
-    if (target.val() != justification_draft) {
-        target.css("border", "1px solid #ff0000");
-    } else {
-        target.css("border", "1px solid lightgrey");
-    }
+        if (target.val() != justification_draft) {
+            target.css("border", "1px solid #ff0000");
+        } else {
+            target.css("border", "1px solid lightgrey");
+        }
 
-    var double_score_field = $("#num_double_score_"+ enrollmentId);
-    var score_double = double_score_field.val();
-    var score_draft = $("#hdn_score_draft_"+ enrollmentId).val();
+        var double_score_field = $("#num_double_score_"+ enrollmentId);
+        var score_double = double_score_field.val();
+        var score_draft = $("#hdn_score_draft_"+ enrollmentId).val();
 
-    if(score_double != score_draft) {
-        double_score_field.css("border", "1px solid #ff0000");
-    } else {
-        double_score_field.css("border", "1px solid lightgrey");
-    }
-});
+        if(score_double != score_draft) {
+            double_score_field.css("border", "1px solid #ff0000");
+        } else {
+            double_score_field.css("border", "1px solid lightgrey");
+        }
+    });
+
+    $('#form_online_double_encoding').on('keyup keypress', function(e) {
+        disable_enter(e);
+    });
 </script>
 {% endblock %}

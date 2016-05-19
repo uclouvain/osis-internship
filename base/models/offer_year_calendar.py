@@ -27,8 +27,7 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib import admin
-from base.models import offer_year, program_manager
-from base.utils import send_mail
+from base.models import offer_year
 
 
 class OfferYearCalendarAdmin(admin.ModelAdmin):
@@ -44,8 +43,8 @@ class OfferYearCalendar(models.Model):
     changed = models.DateTimeField(null=True)
     academic_calendar = models.ForeignKey('AcademicCalendar')
     offer_year = models.ForeignKey('OfferYear')
-    start_date = models.DateField(blank=True, null=True)
-    end_date = models.DateField(blank=True, null=True)
+    start_date = models.DateField(blank=True, null=True, db_index=True)
+    end_date = models.DateField(blank=True, null=True, db_index=True)
     customized = models.BooleanField(default=False)
 
     def __str__(self):
@@ -69,23 +68,23 @@ def save(academic_cal):
 
 
 def update(academic_cal):
+    sent_message_error = None
     offer_year_calendar_list = find_by_academic_calendar(academic_cal)
-
     if offer_year_calendar_list:
         for offer_year_calendar in offer_year_calendar_list:
-            if offer_year_calendar.customized:
-                # an email must be sent to the program manager
-                program_managers = program_manager.find_by_offer_year(offer_year_calendar.offer_year)
-                if program_managers and len(program_managers) > 0:
-                    send_mail.send_mail_after_academic_calendar_changes(academic_cal,
-                                                                        offer_year_calendar,
-                                                                        program_managers)
+            if offer_year_calendar.customized: # case offerYearCalendar is already customized
+                # We update the new start date
+                # WARNING : this is TEMPORARY ; a solution for the sync from EPC to OSIS
+                #           because the start_date for scores_encodings doesn't exist in EPC
+                offer_year_calendar.start_date = academic_cal.start_date
+                offer_year_calendar.save()
             else:
                 offer_year_calendar.start_date = academic_cal.start_date
                 offer_year_calendar.end_date = academic_cal.end_date
                 offer_year_calendar.save()
     else:
         save(academic_cal)
+    return sent_message_error
 
 
 def offer_year_calendar_by_current_session_exam():
@@ -111,3 +110,13 @@ def find_offer_year_calendars_by_academic_year(academic_yr):
 
 def find_by_id(offer_year_calendar_id):
     return OfferYearCalendar.objects.get(pk=offer_year_calendar_id)
+
+
+def find_deliberation_date(offer_year, session_number):
+    title = 'Deliberations - exam session ' + str(session_number)
+    queryset = OfferYearCalendar.objects.filter(academic_calendar__title=title)\
+                                        .filter(offer_year=offer_year)\
+                                        .values('start_date')
+    if len(queryset) == 1:
+        return queryset[0].get('start_date')
+    return None

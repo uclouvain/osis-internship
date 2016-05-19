@@ -29,7 +29,8 @@ from django.contrib import admin
 
 class StructureAddressAdmin(admin.ModelAdmin):
     list_display = ('structure', 'label', 'location', 'postal_code', 'city', 'country')
-    fieldsets = ((None, {'fields': ('structure', 'label', 'location', 'postal_code', 'city', 'country')}),)
+    fieldsets = ((None, {'fields': ('structure', 'label', 'location', 'postal_code', 'city', 'country', 'phone', 'fax', 'email')}),)
+    search_fields = ['structure__acronym']
 
 
 class StructureAddress(models.Model):
@@ -46,7 +47,4 @@ class StructureAddress(models.Model):
 
 
 def find_structure_address(a_structure):
-    if a_structure:
-        return StructureAddress.objects.filter(structure=a_structure).first()
-    else:
-        return None
+    return StructureAddress.objects.filter(structure=a_structure).first()

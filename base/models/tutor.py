@@ -26,7 +26,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.contrib import admin
-from base.models import person, attribution, academic_year, program_manager, session_exam, exam_enrollment
+from base.models import person, attribution, session_exam
 
 
 class TutorAdmin(admin.ModelAdmin):
@@ -62,22 +62,14 @@ def find_by_person(a_person):
         return None
 
 
-def find_by_learning_unit(a_learning_unit):
-    tutor_list = []
-    for at in attribution.find_by_learning_unit(a_learning_unit):
-        tutor_list.append(at.tutor)
-    return tutor_list
-
-
 def find_by_id(tutor_id):
     return Tutor.objects.get(id=tutor_id)
 
 
 def find_responsible(a_learning_unit):
-    # S'il y a un seul enseignant => c'est cet enseignant
-    # S'il y a plusieurs enseignants et un coordinateur => c'est le coordinateur
-    # S'il y a plusieurs enseignants et pas de coordinateur => premier enseignant par l'ordre alphabétique
-    attribution_list = attribution.find_by_learning_unit(a_learning_unit)
+    # If there are more than 1 coordinator, we take the first in alphabetic order
+    attribution_list = attribution.Attribution.objects.filter(learning_unit=a_learning_unit)\
+                                                      .filter(function='COORDINATOR')
 
     if attribution_list and len(attribution_list) > 0:
         if len(attribution_list) == 1:
@@ -90,36 +82,23 @@ def find_responsible(a_learning_unit):
     return None
 
 
-def find_by_program_manager(programme_manager):
+def is_coordinator(user, learning_unit_id):
     """
-    To find all the tutors managed by a program manager
+    :param user:
+    :param learning_unit_id:
+    :return: True is the user is coordinator for the learningUnit passed in parameter.
     """
-    academic_yr = academic_year.current_academic_year()
-    program_mgr_list= program_manager.find_by_user(programme_manager)
-    tutor_list = []
-    for program_mgr in program_mgr_list:
-        if program_mgr.offer_year:
-
-            sessions = session_exam.find_sessions_by_offer(program_mgr.offer_year, academic_yr, None)
-            for session in sessions:
-                learning_unit = session.learning_unit_year.learning_unit
-                enrollments = exam_enrollment.find_exam_enrollments_drafts_by_session(session)
-                if enrollments and len(enrollments) > 0:
-                    responsible_tutor = find_responsible(learning_unit)
-                    if responsible_tutor is not None:
-                        if responsible_tutor not in tutor_list:
-                            tutor_list.append(responsible_tutor)
-    return find_by_list(tutor_list)
+    attributions = attribution.Attribution.objects.filter(learning_unit_id=learning_unit_id)\
+                                      .filter(function='COORDINATOR')\
+                                      .filter(tutor__person__user=user)\
+                                      .count()
+    return attributions > 0
 
 
-def find_by_list(list):
+def find_by_learning_unit(learning_unit_id):
     """
-    To order tutors by name
+    :param learning_unit_id:
+    :return: All tutors of the learningUnit passed in parameter.
     """
-    ids =  []
-    for t in list:
-        ids.append(t.id)
-
-    return  Tutor.objects.filter(id__in=ids).order_by('person__last_name', 'person__first_name')
-
-
+    tutor_ids = attribution.search(learning_unit_id=learning_unit_id).values_list('tutor').distinct('tutor')
+    return Tutor.objects.filter(pk__in=tutor_ids).order_by('person__last_name', 'person__first_name')
