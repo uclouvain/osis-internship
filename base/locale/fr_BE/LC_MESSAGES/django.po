@@ -1054,6 +1054,9 @@ msgstr "Séclectionnez le fichier excel à soumettre"
 msgid "display_tutors"
 msgstr "Afficher tous les enseignants pour ce cours"
 
+msgid "no_score_to_encode"
+msgstr "Vous n'avez aucune note à encoder."
+
 msgid "tooltip_dowload_excel_file"
 msgstr "Télécharger le fichier excel"
 

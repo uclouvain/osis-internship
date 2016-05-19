@@ -40,8 +40,10 @@ def scores_encoding(request, learning_unt_year_id=None):
         return get_data_pgmer(request)
 
     # In case the user is a Tutor
-    else:
+    elif mdl.tutor.is_tutor(request.user):
         return get_data(request)
+    else:
+        return layout.render(request, "assessments/scores_encoding.html", {})
 
 
 @login_required
@@ -412,13 +414,15 @@ def get_data_online_double(learning_unit_year_id, request):
         # We must know the total count of enrollments (not only the encoded one)
         encoded_exam_enrollments = [enrollment for enrollment in total_exam_enrollments
                                     if enrollment.justification_final or enrollment.score_final is not None]
-    else:
+    elif mdl.tutor.is_tutor(request.user):
         total_exam_enrollments = list(mdl.exam_enrollment
                                       .find_for_score_encodings(mdl.session_exam.find_session_exam_number(),
                                                                 learning_unit_year_id=learning_unit_year_id))
         encoded_exam_enrollments = [enrollment for enrollment in total_exam_enrollments if
                                     (enrollment.justification_draft or enrollment.score_draft is not None) and not
                                     enrollment.justification_final and enrollment.score_final is None]
+    else:
+        encoded_exam_enrollments = []
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
 
     nb_final_scores = len([exam_enrol for exam_enrol in encoded_exam_enrollments
@@ -608,14 +612,15 @@ def _get_exam_enrollments(user,
                                                           tutor=tutor,
                                                           offers_year=offers_year))
     # Case the user is a tutor
-    else:
+    elif mdl.tutor.is_tutor(user):
         # Note : The tutor can't filter by offerYear ; the offer_id is always None. Not necessary to check.
         tutor = mdl.tutor.find_by_user(user)
         exam_enrollments = list(mdl.exam_enrollment
                                 .find_for_score_encodings(mdl.session_exam.find_session_exam_number(),
                                                           learning_unit_year_id=learning_unit_year_id,
                                                           tutor=tutor))
-
+    else:
+        exam_enrollments = []
     # Ordering by offerear.acronym, then person.lastname & firstname
     exam_enrollments = _sort_for_encodings(exam_enrollments)
     return exam_enrollments, is_program_manager
