@@ -28,6 +28,9 @@ msgstr "Tricherie"
 msgid "cheating_pdf_legend"
 msgstr "T=Tricherie"
 
+msgid "function"
+msgstr "Fonction"
+
 msgid "ill"
 msgstr "Malade"
 

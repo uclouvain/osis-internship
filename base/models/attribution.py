@@ -59,13 +59,13 @@ def search(tutor=None, learning_unit_id=None, function=None, learning_unit_ids=N
         queryset = queryset.filter(tutor=tutor)
 
     if learning_unit_id:
-        queryset = queryset.filter(learning_unit_id=learning_unit_id)
+        queryset = queryset.filter(learning_unit__id=learning_unit_id)
 
     if function:
         queryset = queryset.filter(function=function)
 
     if learning_unit_ids:
-        queryset = queryset.filter(learning_unit_id__in=learning_unit_ids)
+        queryset = queryset.filter(learning_unit__id__in=learning_unit_ids)
 
     return queryset
 
