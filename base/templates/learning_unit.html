@@ -39,6 +39,7 @@
   <div class="panel-body">
     <ul class="nav nav-tabs">
       <li class="active"><a data-toggle="tab" href="#tab_informations" id="lnk_informations_tab">{% trans 'general_informations'%}</a></li>
+      <li><a data-toggle="tab" href="#tab_tutors" id="lnk_tutors_tab">{% trans 'tutors_informations'%}</a></li>
     </ul>
     <div class="tab-content">
         <div id="tab_informations" class="tab-pane fade in active">
@@ -58,6 +59,28 @@
             </div>
             <div class="col-md-4">
             </div>
+          </div>
+        </div>
+        <div id="tab_tutors" class="tab-pane fade in">
+        <br>
+          <div class="row">
+            <div class="col-md-12">
+                {% if attributions|length > 0%}
+                <table class="table table-striped table-hover">
+                    <thead>
+                    <th>{% trans 'tutor'%}</th>
+                    <th>{% trans 'function'%}</th>
+                    </thead>
+                    {% for attribution in attributions %}
+                    <tr>
+                        <td>{%if attribution.tutor.person %}{{ attribution.tutor.person.first_name }} {{ attribution.tutor.person.last_name }}{%endif%}</td>
+                        <td>{%if attribution.function %}{{ attribution.function }}{%endif%}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                {% endif %}
+            </div>
+
           </div>
         </div>
 
