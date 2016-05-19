@@ -1040,6 +1040,9 @@ msgstr "Select an excel file to inject scores."
 msgid "display_tutors"
 msgstr "Display all tutors for this learning unit"
 
+msgid "no_score_to_encode"
+msgstr "You haven't any score to encode."
+
 msgid "tooltip_dowload_excel_file"
 msgstr "Download the excel file"
 
