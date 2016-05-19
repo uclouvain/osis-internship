@@ -100,6 +100,7 @@ def internships(request):
         for internship in query :
             if internship.organization == choice.organization and \
                 internship.learning_unit_year == choice.learning_unit_year :
+                    choice.maximum_enrollments =  internship.maximum_enrollments
                     query[index] = 0
             index += 1
         query = [x for x in query if x != 0]
@@ -155,6 +156,7 @@ def internships_stud(request):
         for internship in query :
             if internship.organization == choice.organization and \
                 internship.learning_unit_year == choice.learning_unit_year :
+                    choice.maximum_enrollments =  internship.maximum_enrollments
                     query[index] = 0
             index += 1
         query = [x for x in query if x != 0]
@@ -243,6 +245,7 @@ def internships_save(request):
         for internship in query :
             if internship.organization == choice.organization and \
                 internship.learning_unit_year == choice.learning_unit_year :
+                    choice.maximum_enrollments =  internship.maximum_enrollments
                     query[index] = 0
             index += 1
         query = [x for x in query if x != 0]
@@ -264,6 +267,10 @@ def internships_save(request):
     for internship in query_organizations:
         internship_organizations.append(internship.organization)
     internship_organizations = list(set(internship_organizations))
+
+    for internship in query:
+        number = len(InternshipChoice.find_by(internship.organization, internship.learning_unit_year))
+        internship.number = number
 
     return render(request, "internships_stud.html", {'section': 'internship',
                                                 'all_internships' : query,
