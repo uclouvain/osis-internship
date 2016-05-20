@@ -87,3 +87,11 @@ class AssistantMandate(models.Model):
     contract_duration = models.CharField(max_length=30)
     contract_duration_fte = models.CharField(max_length=30)
     service_activities_remark = models.TextField(null=True, blank=True)
+    
+    
+def find_mandate_by_assistant_for_academic_year(assistant, this_academic_year):
+    return AssistantMandate.objects.filter(assistant=assistant, academic_year=this_academic_year)  
+
+
+def find_mandate_by_id(mandate_id):
+    return AssistantMandate.objects.get(id=mandate_id)  

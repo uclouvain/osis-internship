@@ -23,16 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView
-from assistant.views import mandate_read, home
+from django.shortcuts import render
 from assistant.models import assistant_mandate
 
-urlpatterns = [
-    # S'il vous plaît, organiser les urls par ordre alphabétique.
-    #url(r'^home$', home.assistant_home, name='assistants_home'),
-    url(r'^home$', home.assistant_home , name='assistants_home'),
-    url(r'^manager/mandates/$', login_required(ListView.as_view(model = assistant_mandate.AssistantMandate)), name='mandates_list'),
-    url(r'^manager/mandate/(?P<mandate_id>\d+)/$', mandate_read.mandate_read, name='mandate_read'),
-]
+
+
+@login_required
+def mandate_read(request, mandate_id):
+    this_mandate = assistant_mandate.find_mandate_by_id(mandate_id)
+    return render(request, 'mandate_read.html', {'mandate': this_mandate})
+
+
+
