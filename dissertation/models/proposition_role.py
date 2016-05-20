@@ -29,15 +29,9 @@ from dissertation.models import proposition_dissertation, adviser
 
 
 class PropositionRole(models.Model):
-    ROLES_CHOICES = (
-        ('PRO', _('Pro')),
-        ('CO', _('Co')),
-        ('RDR', _('Reader')),
-    )
-
-    role = models.CharField(max_length=3, choices=ROLES_CHOICES)
+    title = models.CharField(max_length=200)
     adviser = models.ForeignKey(adviser.Adviser)
     proposition_dissertation = models.ForeignKey(proposition_dissertation.PropositionDissertation)
 
     def __str__(self):
-        return self.role
+        return self.title

@@ -30,8 +30,8 @@ from dissertation.models import adviser, dissertation
 
 class DissertationRole(models.Model):
     STATUS_CHOICES = (
-        ('PRO', _('Pro')),
-        ('CO_PRO', _('CoPro')),
+        ('PROMOTEUR', _('Pro')),
+        ('CO_PROMOTEUR', _('CoPro')),
         ('READER', _('Reader')),
     )
 

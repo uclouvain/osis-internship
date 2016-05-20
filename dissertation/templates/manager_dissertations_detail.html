@@ -40,16 +40,16 @@
     <div class="panel-body">
         <div class="row">
             <div class="col-md-2 pull-right">
-                <div class="col-md-4 pull-right">
-                    <a class="btn btn-default btn-danger"
-                       href="{% url 'manager_dissertations_delete' pk=dissertation.pk %}">
-                        <span class="glyphicon glyphicon-remove"></span></a>
-                </div>
-                <div class="col-md-4 pull-right">
-                    <a class="btn btn-default btn-primary"
-                       href="{% url 'manager_dissertations_edit' pk=dissertation.pk %}">
-                        <span class="glyphicon glyphicon-edit"></span></a>
-                </div>
+              <div class="col-md-4 pull-right">
+                  <a class="btn btn-default btn-danger"
+                     href="{% url 'manager_dissertations_delete' pk=dissertation.pk %}">
+                      <span class="glyphicon glyphicon-remove"></span></a>
+              </div>
+              <div class="col-md-4 pull-right">
+                  <a class="btn btn-default btn-primary"
+                     href="{% url 'manager_dissertations_edit' pk=dissertation.pk %}">
+                      <span class="glyphicon glyphicon-edit"></span></a>
+              </div>
             </div>
         </div>
         <br>
@@ -120,6 +120,24 @@
                         {{ dissertation.description }}
                     </div>
                 </div>
+            </div>
+        </div>
+        <br>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">{% trans 'dissertation_jury' %}</h3>
+            </div>
+            <div class="panel-body">
+              <div class="row">
+                {% for dissertation_role in dissertation_roles %}
+                  <div class="col-md-3" style="text-align: right">
+                      <label>{{ dissertation_role.status }}</label>
+                  </div>
+                  <div class="col-md-9">
+                      {{ dissertation_role.adviser }}
+                  </div>
+                {% endfor %}
+              </div>
             </div>
         </div>
         <br>

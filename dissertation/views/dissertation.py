@@ -30,8 +30,9 @@ from django.db.models import Q
 from base import models as mdl
 from dissertation.models.adviser import Adviser
 from dissertation.models.dissertation import Dissertation
+from dissertation.models.dissertation_role import DissertationRole
 from dissertation.models.proposition_dissertation import PropositionDissertation
-from dissertation.forms import DissertationForm, ManagerDissertationForm
+from dissertation.forms import DissertationForm, ManagerDissertationForm, ManagerDissertationRoleForm
 
 
 # Used by decorator @user_passes_test(is_manager) to secure manager views
@@ -71,6 +72,36 @@ def dissertations(request):
 
 @login_required
 @user_passes_test(is_manager)
+def manager_dissertations_detail(request, pk):
+    dissertation = get_object_or_404(Dissertation, pk=pk)
+    person = mdl.person.find_by_user(request.user)
+    adviser = Adviser.find_by_person(person)
+    count_dissertation_role = DissertationRole.objects.filter(dissertation=dissertation).count()
+    if count_dissertation_role < 1:
+        pro = DissertationRole(status='Pro', adviser=dissertation.proposition_dissertation.author, dissertation=dissertation)
+        pro.save()
+    dissertation_roles = DissertationRole.objects.filter(dissertation=dissertation)
+    return render(request, 'manager_dissertations_detail.html',
+                  {'dissertation': dissertation, 'adviser': adviser, "dissertation_roles":dissertation_roles})
+
+
+@login_required
+@user_passes_test(is_manager)
+def manager_dissertations_edit(request, pk):
+    dissertation = get_object_or_404(Dissertation, pk=pk)
+    if request.method == "POST":
+        form = ManagerDissertationForm(request.POST, instance=dissertation)
+        if form.is_valid():
+            dissertation = form.save()
+            dissertation.save()
+            return redirect('manager_dissertations_detail', pk=dissertation.pk)
+    else:
+        form = ManagerDissertationForm(instance=dissertation)
+    return render(request, 'manager_dissertations_edit.html', {'form': form})
+
+
+@login_required
+@user_passes_test(is_manager)
 def manager_dissertations_list(request):
     dissertations = Dissertation.objects.filter(Q(active=True))
     return render(request, 'manager_dissertations_list.html',
@@ -98,31 +129,6 @@ def manager_dissertations_search(request):
     dissertations = Dissertation.search(terms=request.GET['search']).filter(Q(active=True))
     return render(request, "manager_dissertations_list.html",
                   {'dissertations': dissertations})
-
-
-@login_required
-@user_passes_test(is_manager)
-def manager_dissertations_detail(request, pk):
-    dissertation = get_object_or_404(Dissertation, pk=pk)
-    person = mdl.person.find_by_user(request.user)
-    adviser = Adviser.find_by_person(person)
-    return render(request, 'manager_dissertations_detail.html',
-                  {'dissertation': dissertation, 'adviser': adviser})
-
-
-@login_required
-@user_passes_test(is_manager)
-def manager_dissertations_edit(request, pk):
-    dissertation = get_object_or_404(Dissertation, pk=pk)
-    if request.method == "POST":
-        form = ManagerDissertationForm(request.POST, instance=dissertation)
-        if form.is_valid():
-            dissertation = form.save()
-            dissertation.save()
-            return redirect('manager_dissertations_detail', pk=dissertation.pk)
-    else:
-        form = ManagerDissertationForm(instance=dissertation)
-    return render(request, 'manager_dissertations_edit.html', {'form': form})
 
 
 @login_required

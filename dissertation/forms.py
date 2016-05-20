@@ -29,7 +29,7 @@ from dissertation.models.adviser import Adviser
 from dissertation.models.dissertation import Dissertation
 from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models.proposition_dissertation import PropositionDissertation
-from dissertation.models.proposition_role import PropositionRole
+from dissertation.models.dissertation_role import DissertationRole
 
 
 class AdviserForm(ModelForm):
@@ -65,6 +65,15 @@ class ManagerDissertationForm(ModelForm):
         fields = ('title', 'author', 'offer_year_start', 'proposition_dissertation', 'description')
 
 
+
+class ManagerDissertationRoleForm(ModelForm):
+    class Meta:
+        model = DissertationRole
+        fields = (
+            'dissertation', 'status', 'adviser')
+        widgets = {'dissertation': forms.HiddenInput()}
+
+
 class ManagerOfferPropositionForm(ModelForm):
     class Meta:
         model = OfferProposition
@@ -80,10 +89,3 @@ class ManagerPropositionDissertationForm(ModelForm):
             'author', 'visibility', 'title', 'description', 'type', 'level', 'collaboration', 'max_number_student',
             'offer_proposition')
         widgets = {'offer_proposition': forms.CheckboxSelectMultiple()}
-
-
-class ManagerPropositionRoleForm(ModelForm):
-    class Meta:
-        model = PropositionRole
-        fields = (
-            'role', 'adviser', 'proposition_dissertation')
