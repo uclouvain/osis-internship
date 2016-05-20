@@ -50,11 +50,13 @@
                      href="{% url 'manager_dissertations_edit' pk=dissertation.pk %}">
                       <span class="glyphicon glyphicon-edit"></span></a>
               </div>
-              <div class="col-md-4 pull-right">
-                  <a class="btn btn-warning btn-primary"
-                     href="{% url 'manager_dissertations_jury_new' pk=dissertation.pk %}">
-                      <span class="glyphicon glyphicon-plus"></span></a>
-              </div>
+              {% if count_dissertation_role < 4 %}
+                <div class="col-md-4 pull-right">
+                    <a class="btn btn-warning btn-primary"
+                       href="{% url 'manager_dissertations_jury_new' pk=dissertation.pk %}">
+                        <span class="glyphicon glyphicon-plus"></span></a>
+                </div>
+              {% endif %}
             </div>
         </div>
         <br>
@@ -136,7 +138,7 @@
               {% for dissertation_role in dissertation_roles %}
                 <div class="row">
                   <div class="col-md-3" style="text-align: right">
-                      <label>{{ dissertation_role.status }}</label>
+                      <label><a href="{% url 'manager_dissertations_jury_edit' pk=dissertation_role.pk %}">{{ dissertation_role.status }}</a></label>
                   </div>
                   <div class="col-md-9">
                       {{ dissertation_role.adviser }}

@@ -78,11 +78,11 @@ def manager_dissertations_detail(request, pk):
     adviser = Adviser.find_by_person(person)
     count_dissertation_role = DissertationRole.objects.filter(dissertation=dissertation).count()
     if count_dissertation_role < 1:
-        pro = DissertationRole(status='Pro', adviser=dissertation.proposition_dissertation.author, dissertation=dissertation)
+        pro = DissertationRole(status='PROMOTEUR', adviser=dissertation.proposition_dissertation.author, dissertation=dissertation)
         pro.save()
     dissertation_roles = DissertationRole.objects.filter(dissertation=dissertation)
     return render(request, 'manager_dissertations_detail.html',
-                  {'dissertation': dissertation, 'adviser': adviser, "dissertation_roles":dissertation_roles})
+                  {'dissertation': dissertation, 'adviser': adviser, 'dissertation_roles':dissertation_roles, 'count_dissertation_role':count_dissertation_role})
 
 
 @login_required
@@ -102,17 +102,35 @@ def manager_dissertations_edit(request, pk):
 
 @login_required
 @user_passes_test(is_manager)
+def manager_dissertations_jury_edit(request, pk):
+    dissertation_role = get_object_or_404(DissertationRole, pk=pk)
+    if request.method == "POST":
+        form = ManagerDissertationRoleForm(request.POST, instance=dissertation_role)
+        if form.is_valid():
+            dissertation = form.save()
+            dissertation.save()
+            return redirect('manager_dissertations_detail', pk=dissertation_role.dissertation.pk)
+    else:
+        form = ManagerDissertationRoleForm(instance=dissertation_role)
+    return render(request, 'manager_dissertations_jury_edit.html', {'form': form})
+
+
+@login_required
+@user_passes_test(is_manager)
 def manager_dissertations_jury_new(request, pk):
     dissertation = get_object_or_404(Dissertation, pk=pk)
-    if request.method == "POST":
-        form = ManagerDissertationRoleForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('manager_dissertations_detail', pk=dissertation.pk)
+    count_dissertation_role = DissertationRole.objects.filter(dissertation=dissertation).count()
+    if count_dissertation_role < 5:
+        if request.method == "POST":
+            form = ManagerDissertationRoleForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return redirect('manager_dissertations_detail', pk=dissertation.pk)
+        else:
+            form = ManagerDissertationRoleForm(initial={'dissertation': dissertation})
+            return render(request, 'manager_dissertations_jury_edit.html', {'form': form})
     else:
-        form = ManagerDissertationRoleForm(initial={'dissertation': dissertation})
-
-    return render(request, 'manager_dissertations_jury_edit.html', {'form': form})
+        return redirect('manager_dissertations_detail', pk=dissertation.pk)
 
 
 @login_required
