@@ -22,11 +22,17 @@ msgstr "Absent"
 msgid "absent_pdf_legend"
 msgstr "A=Absent"
 
+msgid "birth_date"
+msgstr "Date de naissance"
+
 msgid "cheating"
 msgstr "Tricherie"
 
 msgid "cheating_pdf_legend"
 msgstr "T=Tricherie"
+
+msgid "function"
+msgstr "Fonction"
 
 msgid "ill"
 msgstr "Malade"
@@ -137,7 +143,7 @@ msgid "label_jumbotron_details_academic_cal"
 msgstr "Comme présenté sur la page d'accueil"
 
 msgid "go"
-msgstr "Avancer"
+msgstr "Continuer"
 
 msgid "edit"
 msgstr "Éditer"
