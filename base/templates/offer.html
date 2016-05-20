@@ -198,8 +198,10 @@
                         </div>
                     </div>
                     <br>
-                    <button type="button" class="btn btn-primary" id="bt_save_score_encoding_address">
-                        <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'save' %}</button>
+                    {% if is_program_manager %}
+                        <button type="button" class="btn btn-primary" id="bt_save_score_encoding_address">
+                            <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'save' %}</button>
+                    {% endif %}
                     <span id="status_save"></span>
                 </div>
             </div>

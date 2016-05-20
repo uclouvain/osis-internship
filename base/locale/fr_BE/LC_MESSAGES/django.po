@@ -143,7 +143,7 @@ msgid "label_jumbotron_details_academic_cal"
 msgstr "Comme présenté sur la page d'accueil"
 
 msgid "go"
-msgstr "Avancer"
+msgstr "Continuer"
 
 msgid "edit"
 msgstr "Éditer"
