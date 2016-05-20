@@ -302,7 +302,8 @@ def notes_printing(request, learning_unit_year_id=None, tutor_id=None, offer_id=
                                                                  academic_year=academic_year,
                                                                  tutor_id=tutor_id,
                                                                  offer_year_id=offer_id)
-    return pdf_utils.print_notes(academic_year, exam_enrollments)
+    tutor = mdl.tutor.find_by_user(request.user) if not is_program_manager else None
+    return pdf_utils.print_notes(exam_enrollments, tutor=tutor)
 
 
 @login_required
