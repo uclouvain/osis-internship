@@ -170,7 +170,7 @@ def manager_dissertations_to_dir_ko(request, pk):
 def dissertations_list(request):
     person = mdl.person.find_by_user(request.user)
     adviser = Adviser.find_by_person(person)
-    dissertations = Dissertation.objects.filter(Q(active=True))
+    dissertations = Dissertation.objects.filter(Q(proposition_dissertation__author=adviser) & Q(active=True))
     return render(request, 'dissertations_list.html',
                   {'dissertations': dissertations})
 
@@ -193,7 +193,9 @@ def dissertations_new(request):
 @login_required
 @user_passes_test(is_teacher)
 def dissertations_search(request):
-    dissertations = Dissertation.search(terms=request.GET['search']).filter(Q(active=True))
+    person = mdl.person.find_by_user(request.user)
+    adviser = Adviser.find_by_person(person)
+    dissertations = Dissertation.search(terms=request.GET['search']).filter(Q(proposition_dissertation__author=adviser) & Q(active=True))
     return render(request, "dissertations_list.html",
                   {'dissertations': dissertations})
 

@@ -70,14 +70,15 @@ class Dissertation(models.Model):
         queryset = Dissertation.objects.all()
         if terms:
             queryset = queryset.filter(
-                Q(title__icontains=terms) |
-                Q(description__icontains=terms) |
                 Q(author__person__first_name__icontains=terms) |
                 Q(author__person__middle_name__icontains=terms) |
                 Q(author__person__last_name__icontains=terms) |
+                Q(description__icontains=terms) |
                 Q(proposition_dissertation__title__icontains=terms) |
                 Q(proposition_dissertation__author__person__first_name__icontains=terms) |
                 Q(proposition_dissertation__author__person__middle_name__icontains=terms) |
-                Q(proposition_dissertation__author__person__last_name__icontains=terms)
+                Q(proposition_dissertation__author__person__last_name__icontains=terms) |
+                Q(status__icontains=terms) |
+                Q(title__icontains=terms)
             ).distinct()
         return queryset
