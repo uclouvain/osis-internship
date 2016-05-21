@@ -22,6 +22,9 @@ msgstr "Absent"
 msgid "absent_pdf_legend"
 msgstr "A=Absent"
 
+msgid "are_you_sure"
+msgstr "Are you sure?"
+
 msgid "birth_date"
 msgstr "Birth Date"
 
@@ -30,6 +33,21 @@ msgstr "Cheating"
 
 msgid "cheating_pdf_legend"
 msgstr "T=Cheating"
+
+msgid "data_management"
+msgstr "Data Management"
+
+msgid "desc_lnk_data_management"
+msgstr "Management of data by entity"
+
+msgid "data_maintenance"
+msgstr "Data Maintenance"
+
+msgid "desc_lnk_data_maintenance"
+msgstr "Maintenance of data with the SQL language"
+
+msgid "desc_lnk_storage"
+msgstr "Monitoring of the storage capacity"
 
 msgid "function"
 msgstr "Function"

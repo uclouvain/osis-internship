@@ -105,12 +105,10 @@
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="{% url 'admin:index' %}" id="lnk_data" target="_blank">
+                                <li><a href="{% url 'data' %}" id="lnk_data">
                                         <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> {% trans 'data' %}
                                     </a>
                                 </li>
-                                <li><a href="{% url 'storage' %}" id="lnk_files">
-                                    <span class="glyphicon glyphicon-hdd" aria-hidden="true"></span> {% trans 'storage' %}</a></li>
                                 <li><a href="{% url 'messages' %}" id="lnk_messages">
                                     <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> {% trans 'messages' %}</a></li>
                             </ul>
