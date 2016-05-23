@@ -392,7 +392,12 @@ msgid "select"
 msgstr "Sélectionnez"
 
 msgid "message_address_papersheet"
-msgstr "Réutiliser l'adresse d'une entité liée au programme ou informez l'adresse d'affichage pour la feuille des notes"
+msgstr "Réutilisez l'adresse d'une entité liée au programme ou informez l'adresse d'affichage pour la feuille des notes"
+
+msgid "info_address_changed_for_papersheet"
+msgstr "Si vous choisissez de modifier un des champs de l'adresse ci-dessous, cela modifiera <b>uniquement</b> l'adresse "
+       "affichée sur la feuille de notes. Vous ne modifierai jamais l'adresse d'une entité/structure via ce formulaire. "
+       " La liste des entités ci-dessous n'est proposée que pour vous aider à remplir les champs"
 
 msgid "reuse_address_entity"
 msgstr "Réutiliser l'adresse de"

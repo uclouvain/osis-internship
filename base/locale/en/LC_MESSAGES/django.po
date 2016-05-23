@@ -325,6 +325,10 @@ msgstr "Submit XLS file"
 msgid "message_address_papersheet"
 msgstr "Reuse the address of an entity linked to the program or inform the posting address for the papersheet."
 
+msgid "info_address_changed_for_papersheet"
+msgstr "If you customize one of the field below, it only change the address displayed on the scores' encodings sheets. "
+       "It will never change the address of any Structure. The structure's list below is to help you to pre-fill in the form"
+
 msgid "reuse_address_entity"
 msgstr "Reuse the address of"
 
