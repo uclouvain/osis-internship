@@ -135,6 +135,10 @@
                 <div id="tab_scores_encoding" class="tab-pane fade">
                     <br>
                     <p>{% trans 'message_address_papersheet' %}.</p>
+                    <div class="alert alert-dismissible alert-warning">
+                      <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <p>{% trans 'info_address_changed_for_papersheet' %}.</p>
+                    </div>
 
                     <label for="slt_related_entities">{% trans 'reuse_address_entity' %}...</label>
                     <select class="form-control" id="slt_related_entities" name="related_entity">
@@ -198,8 +202,10 @@
                         </div>
                     </div>
                     <br>
-                    <button type="button" class="btn btn-primary" id="bt_save_score_encoding_address">
-                        <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'save' %}</button>
+                    {% if is_program_manager %}
+                        <button type="button" class="btn btn-primary" id="bt_save_score_encoding_address">
+                            <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'save' %}</button>
+                    {% endif %}
                     <span id="status_save"></span>
                 </div>
             </div>

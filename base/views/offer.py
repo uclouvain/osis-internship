@@ -56,7 +56,7 @@ def offers_search(request):
 
     academic_years = mdl.academic_year.find_academic_years()
 
-    offer_years = mdl.offer_year.search_root_offers(entity=entity, academic_yr=academic_yr, acronym=acronym)
+    offer_years = mdl.offer_year.search(entity=entity, academic_yr=academic_yr, acronym=acronym)
 
     return layout.render(request, "offers.html", {'academic_year': academic_yr,
                                                   'entity_acronym': entity,
@@ -70,10 +70,12 @@ def offer_read(request, offer_year_id):
     offer_yr = mdl.offer_year.find_by_id(offer_year_id)
     offer_yr_events = mdl.offer_year_calendar.find_offer_year_calendar(offer_yr)
     program_managers = mdl.program_manager.find_by_offer_year(offer_yr)
+    is_program_manager = mdl.program_manager.is_program_manager(request.user, offer_year=offer_yr)
     countries = mdl_ref.country.find_all()
     return layout.render(request, "offer.html", {'offer_year': offer_yr,
                                                  'offer_year_events': offer_yr_events,
                                                  'program_managers': program_managers,
+                                                 'is_program_manager': is_program_manager,
                                                  'countries': countries,
                                                  'tab': 0})
 

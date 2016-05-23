@@ -23,7 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import csv
 from django.core.urlresolvers import reverse
+from django.db import IntegrityError
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -385,7 +387,7 @@ def get_data_online(learning_unit_year_id, request):
 
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
 
-    coordinator = mdl.tutor.find_responsible(learning_unit_year.learning_unit)
+    coordinator = mdl.attribution.find_responsible(learning_unit_year.learning_unit)
     progress = mdl.exam_enrollment.calculate_exam_enrollment_progress(exam_enrollments)
 
     draft_scores_not_sumitted = len([exam_enrol for exam_enrol in exam_enrollments
@@ -398,7 +400,7 @@ def get_data_online(learning_unit_year_id, request):
             'learning_unit_year': learning_unit_year,
             'coordinator': coordinator,
             'is_program_manager': is_program_manager,
-            'is_coordinator': mdl.tutor.is_coordinator(request.user, learning_unit_year.learning_unit.id),
+            'is_coordinator': mdl.attribution.is_coordinator(request.user, learning_unit_year.learning_unit.id),
             'draft_scores_not_sumitted': draft_scores_not_sumitted,
             'number_session': exam_enrollments[0].session_exam.number_session if len(exam_enrollments) > 0 else _('none'),
             'tutors': mdl.tutor.find_by_learning_unit(learning_unit_year.learning_unit_id)}
@@ -428,7 +430,7 @@ def get_data_online_double(learning_unit_year_id, request):
 
     nb_final_scores = len([exam_enrol for exam_enrol in encoded_exam_enrollments
                           if exam_enrol.justification_final or exam_enrol.score_final is not None])
-    coordinator = mdl.tutor.find_responsible(learning_unit_year.learning_unit)
+    coordinator = mdl.attribution.find_responsible(learning_unit_year.learning_unit)
 
     encoded_exam_enrollments = _sort_for_encodings(encoded_exam_enrollments)
 
@@ -625,3 +627,29 @@ def _get_exam_enrollments(user,
     # Ordering by offerear.acronym, then person.lastname & firstname
     exam_enrollments = _sort_for_encodings(exam_enrollments)
     return exam_enrollments, is_program_manager
+
+
+def load_program_managers():
+    with open('base/views/program-managers.csv') as csvfile:
+        row = csv.reader(csvfile)
+        imported_counter = 0
+        error_counter = 0
+        for columns in row:
+            if len(columns) > 0:
+                offer_year = mdl.offer_year.find_by_acronym(columns[0].strip())
+                person = mdl.person.find_by_global_id(columns[2].strip())
+
+                if offer_year and person:
+                    program_manager = mdl.program_manager.ProgramManager()
+                    program_manager.offer_year = offer_year
+                    program_manager.person = person
+                    try:
+                        program_manager.save()
+                    except IntegrityError:
+                        print('Duplicated : %s - %s' % (offer_year, person))
+                    imported_counter += 1
+                else:
+                    error_counter += 1
+                    print(u'"%s", "%s", "%s", "%s", "%s"' % (columns[0], columns[1], columns[2], offer_year, person))
+        print(u'%d program managers imported.' % imported_counter)
+        print(u'%d program managers not imported.' % error_counter)
