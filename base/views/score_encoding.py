@@ -25,6 +25,7 @@
 ##############################################################################
 import csv
 from django.core.urlresolvers import reverse
+from django.db import IntegrityError
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -626,7 +627,7 @@ def _get_exam_enrollments(user,
     exam_enrollments = _sort_for_encodings(exam_enrollments)
     return exam_enrollments, is_program_manager
 
-#  from base.views.score_encoding import load_program_managers
+
 def load_program_managers():
     with open('base/views/program-managers.csv') as csvfile:
         row = csv.reader(csvfile)
@@ -641,7 +642,10 @@ def load_program_managers():
                     program_manager = mdl.program_manager.ProgramManager()
                     program_manager.offer_year = offer_year
                     program_manager.person = person
-                    program_manager.save()
+                    try:
+                        program_manager.save()
+                    except IntegrityError:
+                        print('Duplicated : %s - %s' % (offer_year, person))
                     imported_counter += 1
                 else:
                     error_counter += 1
