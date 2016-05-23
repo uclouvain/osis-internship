@@ -626,15 +626,16 @@ def _get_exam_enrollments(user,
     exam_enrollments = _sort_for_encodings(exam_enrollments)
     return exam_enrollments, is_program_manager
 
-
+#  from base.views.score_encoding import load_program_managers
 def load_program_managers():
     with open('base/views/program-managers.csv') as csvfile:
         row = csv.reader(csvfile)
         imported_counter = 0
+        error_counter = 0
         for columns in row:
             if len(columns) > 0:
-                offer_year = mdl.offer_year.find_by_acronym(columns[0])
-                person = mdl.person.find_by_global_id(columns[2])
+                offer_year = mdl.offer_year.find_by_acronym(columns[0].strip())
+                person = mdl.person.find_by_global_id(columns[2].strip())
 
                 if offer_year and person:
                     program_manager = mdl.program_manager.ProgramManager()
@@ -643,5 +644,7 @@ def load_program_managers():
                     program_manager.save()
                     imported_counter += 1
                 else:
-                    print(u'%s - %s does not exist.' % (columns[0], columns[2]))
+                    error_counter += 1
+                    print(u'"%s", "%s", "%s", "%s", "%s"' % (columns[0], columns[1], columns[2], offer_year, person))
         print(u'%d program managers imported.' % imported_counter)
+        print(u'%d program managers not imported.' % error_counter)
