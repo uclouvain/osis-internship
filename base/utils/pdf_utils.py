@@ -33,6 +33,8 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import mm
 from reportlab.lib import colors
 from django.utils.translation import ugettext_lazy as _
+import datetime
+import json
 
 from base import models as mdl
 
@@ -127,6 +129,8 @@ def build_pdf(document):
 def data_to_JSON(exam_enrollments, tutor=None):
     data = {}
     data['tutor_global_id'] = tutor.person.global_id if tutor else ''
+    now = datetime.datetime.now()
+    data['publication_date'] = '%s/%s/%s' % (now.day, now.month, now.year)
     data['institution'] = str(_('ucl_denom_location'))
     data['link_to_regulation'] = str(_('link_to_RGEE'))
     # Will contain lists of examEnrollments splitted by learningUnitYear
@@ -150,10 +154,9 @@ def data_to_JSON(exam_enrollments, tutor=None):
         # because all exam_enrollments have the same learningUnitYear
         session_exam = exam_enrollments[0].session_exam
         learning_unit_year = session_exam.learning_unit_year
-        coordinator = mdl.tutor.find_responsible(learning_unit_year.learning_unit)
+        coordinator = mdl.attribution.find_responsible(learning_unit_year.learning_unit.id)
         if coordinator:
-            coordinator_address = mdl.person_address.find_by_person_label(coordinator.person, 'PROFESSIONAL')\
-                                  if coordinator else None
+            coordinator_address = mdl.person_address.find_by_person_label(coordinator.person, 'PROFESSIONAL')
 
         learn_unit_year_dict['academic_year'] = str(learning_unit_year.academic_year)
         learn_unit_year_dict['coordinator'] = {'first_name': coordinator.person.first_name if coordinator else '',
@@ -220,7 +223,7 @@ def data_to_JSON(exam_enrollments, tutor=None):
         learn_unit_year_dict['programs'] = programs
         learning_unit_years.append(learn_unit_year_dict)
     data['learning_unit_years'] = learning_unit_years
-    return data
+    return json.dumps(data)
 
 
 def print_notes(list_exam_enrollment, tutor=None):
@@ -229,7 +232,8 @@ def print_notes(list_exam_enrollment, tutor=None):
     :param list_exam_enrollment: List of examEnrollments to print on the PDF.
     :param tutor: If the user who's asking for the PDF is a Tutor, this var is assigned to the user linked to the tutor.
     """
-    return build_pdf(data_to_JSON(list_exam_enrollment, tutor=tutor))
+    json_data = data_to_JSON(list_exam_enrollment, tutor=tutor)
+    return build_pdf(json.loads(json_data))
 
 
 def header_building(canvas, doc, styles):

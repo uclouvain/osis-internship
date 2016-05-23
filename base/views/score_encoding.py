@@ -653,3 +653,11 @@ def load_program_managers():
                     print(u'"%s", "%s", "%s", "%s", "%s"' % (columns[0], columns[1], columns[2], offer_year, person))
         print(u'%d program managers imported.' % imported_counter)
         print(u'%d program managers not imported.' % error_counter)
+
+
+def get_json_data_scores_sheets(tutor_global_id):
+    person = mdl.person.find_by_global_id(tutor_global_id)
+    tutor = mdl.tutor.find_by_person(person)
+    exam_enrollments = list(mdl.exam_enrollment.find_for_score_encodings(mdl.session_exam.find_session_exam_number(),
+                                                                         tutor=tutor))
+    return pdf_utils.data_to_JSON(exam_enrollments, tutor=tutor)
