@@ -35,6 +35,13 @@ urlpatterns = [
 
     # Please, organize the urls in alphabetic order.
 
+    url(r'^admin/data/$', common.data, name='data'),
+    url(r'^admin/data/maintenance$', common.data_maintenance, name='data_maintenance'),
+    url(r'^admin/storage/$', common.storage, name='storage'),
+    url(r'^admin/storage/files$', common.files, name='files'),
+    url(r'^admin/storage/files/search$', common.files_search, name='files_search'),
+    url(r'^admin/storage/files/([0-9]+)/$', common.document_file_read, name='document_file_read'),
+
     url(r'^catalog/$', common.catalog, name='catalog'),
 
     url(r'^institution/$', institution.institution, name='institution'),
@@ -54,11 +61,6 @@ urlpatterns = [
 
     url(r'^profile/$', common.profile, name='profile'),
     url(r'^profile/lang$', common.profile_lang, name='profile_lang'),
-
-    url(r'^storage/$', common.storage, name='storage'),
-    url(r'^storage/files$', common.files, name='files'),
-    url(r'^storage/files/search$', common.files_search, name='files_search'),
-    url(r'^storage/files/([0-9]+)/$', common.document_file_read, name='document_file_read'),
 
     url(r'^studies/$', common.studies, name='studies'),
     url(r'^studies/assessments/$', common.assessments, name='assessments'),

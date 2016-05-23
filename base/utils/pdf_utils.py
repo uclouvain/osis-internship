@@ -243,7 +243,7 @@ def headers_table():
 
 
 def get_data_coordinator(learning_unit_year, styles):
-    coordinator = mdl.tutor.find_responsible(learning_unit_year.learning_unit)
+    coordinator = mdl.attribution.find_responsible(learning_unit_year.learning_unit)
     p_coord_location = Paragraph('''''', styles["Normal"])
     p_coord_address = Paragraph('''''', styles["Normal"])
     p_responsible = Paragraph('<b>%s :</b>' % _('learning_unit_responsible'), styles["Normal"])

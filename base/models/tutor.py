@@ -26,7 +26,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.contrib import admin
-from base.models import person, attribution, session_exam
+from base.models import person, attribution
 
 
 class TutorAdmin(admin.ModelAdmin):
@@ -66,35 +66,7 @@ def find_by_id(tutor_id):
     return Tutor.objects.get(id=tutor_id)
 
 
-def find_responsible(a_learning_unit):
-    # If there are more than 1 coordinator, we take the first in alphabetic order
-    attribution_list = attribution.Attribution.objects.filter(learning_unit=a_learning_unit)\
-                                                      .filter(function='COORDINATOR')
-
-    if attribution_list and len(attribution_list) > 0:
-        if len(attribution_list) == 1:
-            return attribution_list[0].tutor
-        else:
-            for lu_attribution in attribution_list:
-                if lu_attribution.function == 'COORDINATOR':
-                    return lu_attribution.tutor
-            return attribution_list[0].tutor
-    return None
-
-
-def is_coordinator(user, learning_unit_id):
-    """
-    :param user:
-    :param learning_unit_id:
-    :return: True is the user is coordinator for the learningUnit passed in parameter.
-    """
-    attributions = attribution.Attribution.objects.filter(learning_unit_id=learning_unit_id)\
-                                      .filter(function='COORDINATOR')\
-                                      .filter(tutor__person__user=user)\
-                                      .count()
-    return attributions > 0
-
-
+# To refactor because it is not in the right place.
 def find_by_learning_unit(learning_unit_id):
     """
     :param learning_unit_id:
