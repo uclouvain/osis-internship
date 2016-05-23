@@ -424,7 +424,7 @@
     selectTab();
 
     $('#slt_related_entities').change(function(e) {
-        var uri = "/structure/" + $('#slt_related_entities').val() + "/address"
+        var uri = "/structure/" + $('#slt_related_entities').val() + "/address/"
         $.ajax({ url: uri }).then(function(data) {
             $('#txt_score_encoding_recipient').val(data.entity);
             $('#txt_score_encoding_location').val(data.location);
