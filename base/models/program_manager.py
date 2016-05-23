@@ -50,6 +50,9 @@ class ProgramManager(models.Model):
     def __str__(self):
         return u"%s - %s" % (self.person, self.offer_year)
 
+    class Meta:
+        unique_together = ('person', 'offer_year',)
+
 
 def find_by_person(a_person):
     programs_managed = ProgramManager.objects.filter(person=a_person)
