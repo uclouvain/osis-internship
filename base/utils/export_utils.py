@@ -100,7 +100,7 @@ def export_xls(academic_year_id, is_fac, exam_enrollments):
     filename = "session_%s_%s_%s.xlsx" % (str(academic_year.year),
                                          str(number_session),
                                          learn_unit_acronym)
-    response = HttpResponse(save_virtual_workbook(workbook), content_type='application/vnd.ms-excel')
+    response = HttpResponse(save_virtual_workbook(workbook), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = 'attachment; filename=%s' % filename
     return response
 
