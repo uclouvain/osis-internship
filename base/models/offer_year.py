@@ -131,7 +131,11 @@ def find_by_id(offer_year_id):
     return OfferYear.objects.get(pk=offer_year_id)
 
 
-def search_root_offers(entity=None, academic_yr=None, acronym=None):
+def find_by_acronym(acronym):
+    return OfferYear.objects.filter(acronym=acronym).first()
+
+
+def search(entity=None, academic_yr=None, acronym=None):
     """
     Offers are organized hierarchically. This function returns only root offers.
     """
