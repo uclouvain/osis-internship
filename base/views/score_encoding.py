@@ -62,10 +62,10 @@ def _truncate_decimals(new_score, new_justification, decimal_scores_authorized):
     :return:
     """
     if new_score is not None:
+        new_score = new_score.strip().replace(',', '.')
         if new_score == '' or new_score == 'None':
             new_score = None
         else:
-            new_score = new_score.strip().replace(',', '.')
             if decimal_scores_authorized:
                 new_score = float(new_score)
             else:
@@ -156,6 +156,7 @@ def _all_scores_are_validated(request, exam_enrollments):
     for exam_enrol in exam_enrollments:
         score_validated = request.POST.get('score_' + str(exam_enrol.id), None)
         justification_validated = request.POST.get('justification_' + str(exam_enrol.id), None)
+        score_validated = score_validated.strip().replace(',', '.') if score_validated is not None else None
         if (score_validated is None or score_validated == '') and not justification_validated:
             return False
     return True
