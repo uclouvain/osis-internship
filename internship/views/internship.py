@@ -117,8 +117,10 @@ def internships(request):
             query.insert(0,choice)
 
     for internship in query:
-        number = len(InternshipChoice.find_by(internship.organization, internship.learning_unit_year))
-        internship.number = number
+        number_first_choice = len(InternshipChoice.find_by(internship.organization, internship.learning_unit_year, s_choice = 1))
+        number_other_choice = len(InternshipChoice.find_by(internship.organization, internship.learning_unit_year, s_choice = 2))
+        internship.number_first_choice = number_first_choice
+        internship.number_other_choice = number_other_choice
 
     # Create the options for the selected list, delete duplicated
     query_organizations = InternshipOffer.find_internships()
@@ -173,8 +175,8 @@ def internships_stud(request):
             query.insert(0,choice)
 
     for internship in query:
-        number = len(InternshipChoice.find_by(internship.organization, internship.learning_unit_year))
-        internship.number = number
+        number_first_choice = len(InternshipChoice.find_by(internship.organization, internship.learning_unit_year, s_choice = 1))
+        internship.number_first_choice = number_first_choice
 
     # Create the options for the selected list, delete duplicated
     query_organizations = InternshipOffer.find_internships()
@@ -269,8 +271,8 @@ def internships_save(request):
     internship_organizations = list(set(internship_organizations))
 
     for internship in query:
-        number = len(InternshipChoice.find_by(internship.organization, internship.learning_unit_year))
-        internship.number = number
+        number_first_choice = len(InternshipChoice.find_by(internship.organization, internship.learning_unit_year, s_choice = 1))
+        internship.number_first_choice = number_first_choice
 
     return render(request, "internships_stud.html", {'section': 'internship',
                                                 'all_internships' : query,
@@ -281,7 +283,7 @@ def internships_save(request):
 @login_required
 def internships_create(request):
     #Select all the organisation (service partner)
-    organizations = Organization.find_by_type("SERVICE_PARTNER", order_by=['reference'])
+    organizations = Organization.find_all_order_by_reference()
 
     #select all the learning_unit_year which contain the word stage
     learning_unit_years = mdl.learning_unit_year.search(title="Stage")
@@ -301,6 +303,7 @@ def internships_new(request):
         organization = Organization.search(reference=request.POST['organization'])
         internship.organization = organization[0]
 
+    print(request.POST['learning_unit_year'])
     if request.POST['learning_unit_year']:
         learning_unit_year = mdl.learning_unit_year.search(title=request.POST['learning_unit_year'])
         internship.learning_unit_year = learning_unit_year[0]
@@ -312,7 +315,7 @@ def internships_new(request):
     internship.save()
 
     #Select all the organisation (service partner)
-    organizations = Organization.find_by_type("SERVICE_PARTNER", order_by=['reference'])
+    organizations = Organization.find_all_order_by_reference()
 
     #select all the learning_unit_year which contain the word stage
     learning_unit_years = mdl.learning_unit_year.search(title="Stage")
