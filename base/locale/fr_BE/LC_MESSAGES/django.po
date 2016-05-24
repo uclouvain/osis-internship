@@ -396,7 +396,7 @@ msgstr "Réutilisez l'adresse d'une entité liée au programme ou informez l'adr
 
 msgid "info_address_changed_for_papersheet"
 msgstr "Si vous choisissez de modifier un des champs de l'adresse ci-dessous, cela modifiera <b>uniquement</b> l'adresse "
-       "affichée sur la feuille de notes. Vous ne modifierai jamais l'adresse d'une entité/structure via ce formulaire. "
+       "affichée sur la feuille de notes. Vous ne modifierez jamais l'adresse d'une entité/structure via ce formulaire. "
        " La liste des entités ci-dessous n'est proposée que pour vous aider à remplir les champs"
 
 msgid "reuse_address_entity"
