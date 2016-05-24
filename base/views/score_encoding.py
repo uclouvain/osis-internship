@@ -482,13 +482,10 @@ def get_data_pgmer(request, offer_year_id=None, tutor_id=None, learning_unit_yea
                             if score_encoding.offer_year_id == offer_year_id]
 
     if tutor_id:
-        if tutor_id == 'nobody':
-            learning_unit_years = list(mdl.learning_unit_year.find_without_tutor_or_nobody())
-        else:
-            # Filter list by tutor
-            # The tutor_id received in session is a String, not an Int
-            tutor_id = int(tutor_id)
-            learning_unit_years = list(mdl.learning_unit_year.find_by_tutor(tutor_id))
+        # Filter list by tutor
+        # The tutor_id received in session is a String, not an Int
+        tutor_id = int(tutor_id)
+        learning_unit_years = list(mdl.learning_unit_year.find_by_tutor(tutor_id))
         learning_unit_year_ids = set([learn_unit_year.id for learn_unit_year in learning_unit_years])
         scores_encodings = [score_encoding for score_encoding in scores_encodings
                             if score_encoding.learning_unit_year_id in learning_unit_year_ids]
