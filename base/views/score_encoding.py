@@ -34,30 +34,11 @@ from base import models as mdl
 from base.utils import send_mail, pdf_utils, export_utils
 from . import layout
 import json
-from django.http import HttpResponse
-
-@login_required
-def scores_encoding(request, learning_unt_year_id=None):
-    # In case the user is a program manager
-    if mdl.program_manager.is_program_manager(user=request.user):
-        return get_data_pgmer(request)
-
-    # In case the user is a Tutor
-    elif mdl.tutor.is_tutor(request.user):
-        return get_data(request)
-    else:
-        return layout.render(request, "assessments/scores_encoding.html", {})
-
-
-@login_required
-def online_encoding(request, learning_unit_year_id=None):
-    data_dict = get_data_online(learning_unit_year_id, request)
-    return layout.render(request, "assessments/online_encoding.html", data_dict)
 
 
 def _truncate_decimals(new_score, new_justification, decimal_scores_authorized):
     """
-    Truncate decimals of new scores if decimals are unothorized.
+    Truncate decimals of new scores if decimals are unauthorized.
     :param new_score:
     :param new_justification:
     :return:
@@ -74,6 +55,35 @@ def _truncate_decimals(new_score, new_justification, decimal_scores_authorized):
     if new_justification == "None":
         new_justification = None
     return new_score, new_justification
+
+
+def _all_scores_are_validated(request, exam_enrollments):
+    for exam_enrol in exam_enrollments:
+        score_validated = request.POST.get('score_' + str(exam_enrol.id), None)
+        justification_validated = request.POST.get('justification_' + str(exam_enrol.id), None)
+        score_validated = score_validated.strip().replace(',', '.') if score_validated is not None else None
+        if (score_validated is None or score_validated == '') and not justification_validated:
+            return False
+    return True
+
+
+@login_required
+def scores_encoding(request):
+    # In case the user is a program manager
+    if mdl.program_manager.is_program_manager(user=request.user):
+        return get_data_pgmer(request)
+
+    # In case the user is a Tutor
+    elif mdl.tutor.is_tutor(request.user):
+        return get_data(request)
+    else:
+        return layout.render(request, "assessments/scores_encoding.html", {})
+
+
+@login_required
+def online_encoding(request, learning_unit_year_id=None):
+    data_dict = get_data_online(learning_unit_year_id, request)
+    return layout.render(request, "assessments/online_encoding.html", data_dict)
 
 
 @login_required
@@ -94,21 +104,20 @@ def online_encoding_form(request, learning_unit_year_id=None):
                 modification_possible = False
             if modification_possible:
                 new_score, new_justification = _truncate_decimals(score, justification, decimal_scores_authorized)
-                if new_score is not None or new_justification:
-                    enrollment.score_reencoded = None
-                    enrollment.justification_reencoded = None
+                enrollment.score_reencoded = None
+                enrollment.justification_reencoded = None
 
-                    # Case it is the program manager who validates the dubble encoding
-                    if data['is_program_manager']:
-                        enrollment.score_final = new_score
-                        enrollment.justification_final = new_justification
-                        mdl.exam_enrollment.create_exam_enrollment_historic(request.user, enrollment,
-                                                                            enrollment.score_final,
-                                                                            enrollment.justification_final)
-                    else:  # Case it is the tutor who validates the dubble encoding
-                        enrollment.score_draft = new_score
-                        enrollment.justification_draft = new_justification
-                    enrollment.save()
+                # Case it is the program manager who validates the dubble encoding
+                if data['is_program_manager']:
+                    enrollment.score_final = new_score
+                    enrollment.justification_final = new_justification
+                    mdl.exam_enrollment.create_exam_enrollment_historic(request.user, enrollment,
+                                                                        enrollment.score_final,
+                                                                        enrollment.justification_final)
+                else:  # Case it is the tutor who validates the dubble encoding
+                    enrollment.score_draft = new_score
+                    enrollment.justification_draft = new_justification
+                enrollment.save()
         data = get_data_online(learning_unit_year_id, request)
         return layout.render(request, "assessments/online_encoding.html", data)
 
@@ -128,7 +137,7 @@ def online_double_encoding_form(request, learning_unit_year_id=None):
             messages.add_message(request, messages.WARNING, "%s" % _('no_score_encoded_double_encoding_impossible'))
             return online_encoding(request, learning_unit_year_id=learning_unit_year_id)
 
-    # Case asking for a comparison with scores dubble encoded
+    # Case asking for a comparison with scores double encoded
     elif request.method == 'POST':
         decimal_scores_authorized = data['learning_unit_year'].decimal_scores
 
@@ -138,10 +147,9 @@ def online_double_encoding_form(request, learning_unit_year_id=None):
             score_dubble_encoded, justification_dubble_encoded = _truncate_decimals(score_dubble_encoded,
                                                                                     justification_dubble_encoded,
                                                                                     decimal_scores_authorized)
-            if score_dubble_encoded is not None or justification_dubble_encoded:
-                exam_enrol.score_reencoded = score_dubble_encoded
-                exam_enrol.justification_reencoded = justification_dubble_encoded
-                exam_enrol.save()
+            exam_enrol.score_reencoded = score_dubble_encoded
+            exam_enrol.justification_reencoded = justification_dubble_encoded
+            exam_enrol.save()
 
         # Needs to filter by examEnrollments where the score_reencoded and justification_reencoded are not None
         exam_enrollments = [exam_enrol for exam_enrol in exam_enrollments
@@ -155,23 +163,15 @@ def online_double_encoding_form(request, learning_unit_year_id=None):
         return layout.render(request, "assessments/online_double_encoding_validation.html", data)
 
 
-def _all_scores_are_validated(request, exam_enrollments):
-    for exam_enrol in exam_enrollments:
-        score_validated = request.POST.get('score_' + str(exam_enrol.id), None)
-        justification_validated = request.POST.get('justification_' + str(exam_enrol.id), None)
-        score_validated = score_validated.strip().replace(',', '.') if score_validated is not None else None
-        if (score_validated is None or score_validated == '') and not justification_validated:
-            return False
-    return True
-
-
 @login_required
 def online_double_encoding_validation(request, learning_unit_year_id=None, tutor_id=None):
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
     academic_year = mdl.academic_year.current_academic_year()
-    exam_enrollments, is_program_manager = _get_exam_enrollments(request.user,
-                                                                 learning_unit_year_id=learning_unit_year_id,
-                                                                 academic_year=academic_year)
+    is_program_manager = mdl.program_manager.is_program_manager(request.user)
+    exam_enrollments = _get_exam_enrollments(request.user,
+                                             learning_unit_year_id=learning_unit_year_id,
+                                             academic_year=academic_year,
+                                             is_program_manager=is_program_manager)
 
     if request.method == 'GET':
         return layout.render(request, "assessments/online_double_encoding_validation.html",
@@ -248,8 +248,10 @@ def online_double_encoding_validation(request, learning_unit_year_id=None, tutor
 
 
 def online_encoding_submission(request, learning_unit_year_id):
-    exam_enrollments, is_program_manager = _get_exam_enrollments(request.user,
-                                                                 learning_unit_year_id=learning_unit_year_id)
+    is_program_manager = mdl.program_manager.is_program_manager(request.user)
+    exam_enrollments = _get_exam_enrollments(request.user,
+                                             learning_unit_year_id=learning_unit_year_id,
+                                             is_program_manager=is_program_manager)
     submitted_enrollments = []
     # contains all SessionExams where the encoding is not terminated (progression < 100%)
     sessions_exam_still_open = set()
@@ -301,13 +303,14 @@ def upload_score_error(request):
 
 @login_required
 def notes_printing(request, learning_unit_year_id=None, tutor_id=None, offer_id=None):
-
     academic_year = mdl.academic_year.current_academic_year()
-    exam_enrollments, is_program_manager = _get_exam_enrollments(request.user,
-                                                                 learning_unit_year_id=learning_unit_year_id,
-                                                                 academic_year=academic_year,
-                                                                 tutor_id=tutor_id,
-                                                                 offer_year_id=offer_id)
+    is_program_manager = mdl.program_manager.is_program_manager(request.user)
+    exam_enrollments = _get_exam_enrollments(request.user,
+                                             learning_unit_year_id=learning_unit_year_id,
+                                             academic_year=academic_year,
+                                             tutor_id=tutor_id,
+                                             offer_year_id=offer_id,
+                                             is_program_manager=is_program_manager)
     tutor = mdl.tutor.find_by_user(request.user) if not is_program_manager else None
     return pdf_utils.print_notes(exam_enrollments, tutor=tutor)
 
@@ -320,9 +323,11 @@ def notes_printing_all(request, tutor_id=None, offer_id=None):
 @login_required
 def export_xls(request, learning_unit_year_id, academic_year_id):
     academic_year = mdl.academic_year.current_academic_year()
-    exam_enrollments, is_program_manager = _get_exam_enrollments(request.user,
-                                                                 learning_unit_year_id=learning_unit_year_id,
-                                                                 academic_year=academic_year)
+    is_program_manager = mdl.program_manager.is_program_manager(request.user)
+    exam_enrollments = _get_exam_enrollments(request.user,
+                                             learning_unit_year_id=learning_unit_year_id,
+                                             academic_year=academic_year,
+                                             is_program_manager=is_program_manager)
     return export_utils.export_xls(academic_year_id, is_program_manager, exam_enrollments)
 
 
@@ -384,10 +389,19 @@ def get_data(request, offer_year_id=None):
 
 
 def get_data_online(learning_unit_year_id, request):
+    """
+    Args:
+        learning_unit_year_id: The id of an annual learning unit.
+        request: default http request.
+    Returns:
+        a reusable map used by several templates to show data on the user interface.
+    """
     academic_yr = mdl.academic_year.current_academic_year()
-    exam_enrollments, is_program_manager = _get_exam_enrollments(request.user,
-                                                                 learning_unit_year_id=learning_unit_year_id,
-                                                                 academic_year=academic_yr)
+    is_program_manager = mdl.program_manager.is_program_manager(request.user)
+    exam_enrollments = _get_exam_enrollments(request.user,
+                                             learning_unit_year_id=learning_unit_year_id,
+                                             academic_year=academic_yr,
+                                             is_program_manager=is_program_manager)
 
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
 
@@ -449,8 +463,7 @@ def get_data_online_double(learning_unit_year_id, request):
             'count_total_enrollments': len(total_exam_enrollments),
             'number_session': encoded_exam_enrollments[0].session_exam.number_session
                               if len(encoded_exam_enrollments) > 0 else _('none'),
-            'tutors': mdl.tutor.find_by_learning_unit(learning_unit_year.learning_unit_id)
-            }
+            'tutors': mdl.tutor.find_by_learning_unit(learning_unit_year.learning_unit_id)}
 
 
 def get_data_pgmer(request, offer_year_id=None, tutor_id=None, learning_unit_year_acronym=None):
@@ -501,12 +514,12 @@ def get_data_pgmer(request, offer_year_id=None, tutor_id=None, learning_unit_yea
         coord_grouped_by_learning_unit = {attrib.learning_unit.id: attrib.tutor.person for attrib in all_attributions
                                           if attrib.function == 'COORDINATOR'}
         for score_encoding in scores_encodings:
-            line = {}
-            line['learning_unit_year'] = score_encoding.learning_unit_year
-            line['exam_enrollments_encoded'] = score_encoding.exam_enrollments_encoded
-            line['total_exam_enrollments'] = score_encoding.total_exam_enrollments
-            line['tutor_person'] = coord_grouped_by_learning_unit.get(score_encoding.learning_unit_year.learning_unit.id,
-                                                                       None)
+            line = {'learning_unit_year': score_encoding.learning_unit_year,
+                    'exam_enrollments_encoded': score_encoding.exam_enrollments_encoded,
+                    'total_exam_enrollments': score_encoding.total_exam_enrollments,
+                    'tutor_person': coord_grouped_by_learning_unit.get(
+                        score_encoding.learning_unit_year.learning_unit.id,
+                        None)}
             data.append(line)
 
     # Creating list of all tutors
@@ -552,6 +565,7 @@ def get_data_pgmer(request, offer_year_id=None, tutor_id=None, learning_unit_yea
                           'learning_unit_year_acronym': learning_unit_year_acronym})
 
 
+@login_required
 def refresh_list(request):
     # In case the user is a program manager
     if mdl.program_manager.is_program_manager(user=request.user):
@@ -565,24 +579,23 @@ def refresh_list(request):
         return get_data(request, offer_year_id=request.GET.get('offer_year_id', None))
 
 
-def _get_exam_enrollments(user,
-                          learning_unit_year_id=None, tutor_id=None, offer_year_id=None,
-                          academic_year=None):
+def _get_exam_enrollments(user, learning_unit_year_id=None, tutor_id=None, offer_year_id=None, academic_year=None,
+                          is_program_manager=False):
     """
-    :param user: The user who's asking for exam_enrollments (for scores' encoding).
-    :param learning_unit_year_id: To filter ExamEnroll by learning_unit_year.
-    :param tutor_id: To filter ExamEnroll by tutor.
-    :param offer_year_id: To filter ExamEnroll by OfferYear.
-    :param academic_year: The academic year for the data returned.
-    :return: All exam enrollments for the user passed in parameter (check if it is a program manager or a tutor) and
-             a Boolean is_program_manager (True if the user is a program manager, False if the user is a Tutor/coord).
+    Args:
+        user: The user who's asking for exam_enrollments (for scores' encoding).
+        learning_unit_year_id: To filter ExamEnroll by learning_unit_year.
+        tutor_id: To filter ExamEnroll by tutor.
+        offer_year_id: To filter ExamEnroll by OfferYear.
+        academic_year: The academic year for the data returned.
+    Returns:
+        All exam enrollments for the user passed in parameter (check if it is a program manager or a tutor) and
+        a Boolean is_program_manager (True if the user is a program manager, False if the user is a Tutor/coord).
     """
     if not academic_year:
         academic_year = mdl.academic_year.current_academic_year()
-    is_program_manager = False
     # Case the user is a program manager
-    if mdl.program_manager.is_program_manager(user):
-        is_program_manager = True
+    if is_program_manager:
         tutor = None
         if tutor_id:
             tutor = mdl.tutor.find_by_id(tutor_id)
@@ -609,14 +622,16 @@ def _get_exam_enrollments(user,
         exam_enrollments = []
     # Ordering by offerear.acronym, then person.lastname & firstname
     exam_enrollments = mdl.exam_enrollment.sort_for_encodings(exam_enrollments)
-    return exam_enrollments, is_program_manager
+    return exam_enrollments
 
 
+# To be removed once all program managers are imported.
 def load_program_managers():
     with open('base/views/program-managers.csv') as csvfile:
         row = csv.reader(csvfile)
         imported_counter = 0
         error_counter = 0
+        duplication_counter = 0
         for columns in row:
             if len(columns) > 0:
                 offer_year = mdl.offer_year.find_by_acronym(columns[0].strip())
@@ -630,12 +645,14 @@ def load_program_managers():
                         program_manager.save()
                     except IntegrityError:
                         print('Duplicated : %s - %s' % (offer_year, person))
+                        duplication_counter += 1
                     imported_counter += 1
                 else:
                     error_counter += 1
                     print(u'"%s", "%s", "%s", "%s", "%s"' % (columns[0], columns[1], columns[2], offer_year, person))
         print(u'%d program managers imported.' % imported_counter)
         print(u'%d program managers not imported.' % error_counter)
+        print(u'%d program managers duplicated.' % duplication_counter)
 
 
 def get_json_data_scores_sheets(tutor_global_id):
