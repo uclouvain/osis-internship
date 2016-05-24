@@ -33,6 +33,7 @@ from django.utils.translation import ugettext_lazy as _
 from base import models as mdl
 from base.utils import send_mail, pdf_utils, export_utils
 from . import layout
+import json
 
 
 @login_required
@@ -143,7 +144,7 @@ def online_double_encoding_form(request, learning_unit_year_id=None):
         # Needs to filter by examEnrollments where the score_reencoded and justification_reencoded are not None
         exam_enrollments = [exam_enrol for exam_enrol in exam_enrollments
                             if exam_enrol.score_reencoded is not None or exam_enrol.justification_reencoded]
-        exam_enrollments = _sort_for_encodings(exam_enrollments)
+        exam_enrollments = mdl.exam_enrollment.sort_for_encodings(exam_enrollments)
         data['enrollments'] = exam_enrollments
 
         if len(exam_enrollments) == 0:
@@ -432,7 +433,7 @@ def get_data_online_double(learning_unit_year_id, request):
                           if exam_enrol.justification_final or exam_enrol.score_final is not None])
     coordinator = mdl.attribution.find_responsible(learning_unit_year.learning_unit)
 
-    encoded_exam_enrollments = _sort_for_encodings(encoded_exam_enrollments)
+    encoded_exam_enrollments = mdl.exam_enrollment.sort_for_encodings(encoded_exam_enrollments)
 
     return {'section': 'scores_encoding',
             'academic_year': academic_yr,
@@ -561,27 +562,6 @@ def refresh_list(request):
         return get_data(request, offer_year_id=request.GET.get('offer_year_id', None))
 
 
-def _sort_for_encodings(exam_enrollments):
-    """
-    Sort the list by
-     1. offerYear.acronym
-     2. student.lastname
-     3. sutdent.firstname
-    :param exam_enrollments: List of examEnrollments to sort
-    :return:
-    """
-    def _sort(key):
-        off_enroll = key.learning_unit_enrollment.offer_enrollment
-        acronym = off_enroll.offer_year.acronym
-        last_name = off_enroll.student.person.last_name
-        first_name = off_enroll.student.person.first_name
-        return "%s %s %s" %(acronym if acronym else '',
-                            last_name.upper() if last_name else '',
-                            first_name.upper() if first_name else '')
-
-    return sorted(exam_enrollments, key=lambda k: _sort(k))
-
-
 def _get_exam_enrollments(user,
                           learning_unit_year_id=None, tutor_id=None, offer_year_id=None,
                           academic_year=None):
@@ -625,7 +605,7 @@ def _get_exam_enrollments(user,
     else:
         exam_enrollments = []
     # Ordering by offerear.acronym, then person.lastname & firstname
-    exam_enrollments = _sort_for_encodings(exam_enrollments)
+    exam_enrollments = mdl.exam_enrollment.sort_for_encodings(exam_enrollments)
     return exam_enrollments, is_program_manager
 
 
@@ -658,6 +638,10 @@ def load_program_managers():
 def get_json_data_scores_sheets(tutor_global_id):
     person = mdl.person.find_by_global_id(tutor_global_id)
     tutor = mdl.tutor.find_by_person(person)
-    exam_enrollments = list(mdl.exam_enrollment.find_for_score_encodings(mdl.session_exam.find_session_exam_number(),
-                                                                         tutor=tutor))
-    return pdf_utils.data_to_JSON(exam_enrollments, tutor=tutor)
+    if tutor:
+        exam_enrollments = list(mdl.exam_enrollment.find_for_score_encodings(mdl.session_exam.find_session_exam_number(),
+                                                                             tutor=tutor))
+        data = mdl.exam_enrollment.scores_sheet_data(exam_enrollments, tutor=tutor)
+        return json.dumps(data)
+    else:
+        return json.dumps({})

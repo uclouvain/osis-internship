@@ -126,114 +126,13 @@ def build_pdf(document):
     return response
 
 
-def data_to_JSON(exam_enrollments, tutor=None):
-    data = {}
-    data['tutor_global_id'] = tutor.person.global_id if tutor else ''
-    now = datetime.datetime.now()
-    data['publication_date'] = '%s/%s/%s' % (now.day, now.month, now.year)
-    data['institution'] = str(_('ucl_denom_location'))
-    data['link_to_regulation'] = str(_('link_to_RGEE'))
-    # Will contain lists of examEnrollments splitted by learningUnitYear
-    enrollments_by_learn_unit = {}  # {<learning_unit_year_id> : [<ExamEnrollment>]}
-    for exam_enroll in exam_enrollments:
-        key = exam_enroll.session_exam.learning_unit_year.id
-        if key not in enrollments_by_learn_unit.keys():
-            enrollments_by_learn_unit[key] = [exam_enroll]
-        else:
-            enrollments_by_learn_unit[key].append(exam_enroll)
-
-    # # Sort by learningUnitYear.acronym then by Offeryear.acronym
-    # list_exam_enrollments = sorted(enrollments_by_learn_unit.values(),
-    #                                key=lambda k: "%s %s" % (k[0].session_exam.learning_unit_year.acronym,
-    #                                                         k[0].session_exam.offer_year_calendar.offer_year.acronym))
-    learning_unit_years =  []
-    for exam_enrollments in enrollments_by_learn_unit.values():
-        # exam_enrollments contains all ExamEnrollment for a learningUnitYear
-        learn_unit_year_dict = {}
-        # We can take the first element of the list 'exam_enrollments' to get the learning_unit_year
-        # because all exam_enrollments have the same learningUnitYear
-        session_exam = exam_enrollments[0].session_exam
-        learning_unit_year = session_exam.learning_unit_year
-        coordinator = mdl.attribution.find_responsible(learning_unit_year.learning_unit.id)
-        if coordinator:
-            coordinator_address = mdl.person_address.find_by_person_label(coordinator.person, 'PROFESSIONAL')
-
-        learn_unit_year_dict['academic_year'] = str(learning_unit_year.academic_year)
-        learn_unit_year_dict['coordinator'] = {'first_name': coordinator.person.first_name if coordinator else '',
-                                               'last_name': coordinator.person.last_name if coordinator else ''}
-        learn_unit_year_dict['coordinator']['address'] = {'location': coordinator_address.location
-                                                                      if coordinator_address else '',
-                                                          'postal_code': coordinator_address.postal_code
-                                                                         if coordinator_address else '',
-                                                          'city': coordinator_address.city
-                                                                  if coordinator_address else ''}
-        learn_unit_year_dict['session_number'] = session_exam.number_session
-        learn_unit_year_dict['acronym'] = learning_unit_year.acronym
-        learn_unit_year_dict['title'] = learning_unit_year.title
-        learn_unit_year_dict['decimal_scores'] = learning_unit_year.decimal_scores
-
-        programs = []
-
-        # Will contain lists of examEnrollments by offerYear (=Program)
-        enrollments_by_program = {}  # {<offer_year_id> : [<ExamEnrollment>]}
-        for exam_enroll in exam_enrollments:
-            key = exam_enroll.session_exam.offer_year_calendar.offer_year.id
-            if key not in enrollments_by_program.keys():
-                enrollments_by_program[key] = [exam_enroll]
-            else:
-                enrollments_by_program[key].append(exam_enroll)
-
-        for list_enrollments in enrollments_by_program.values():  # exam_enrollments by OfferYear
-            session_exam = list_enrollments[0].session_exam
-            offer_year = session_exam.offer_year_calendar.offer_year
-
-            deliberation_date = mdl.offer_year_calendar.find_deliberation_date(offer_year,
-                                                                               session_exam.number_session)
-            if deliberation_date:
-                deliberation_date = deliberation_date.strftime("%d/%m/%Y")
-            else:
-                deliberation_date = '-'
-            deadline = ""
-            if session_exam.offer_year_calendar.end_date:
-                deadline = session_exam.offer_year_calendar.end_date.strftime('%d/%m/%Y')
-
-            program = {'acronym': session_exam.offer_year_calendar.offer_year.acronym,
-                       'deliberation_date': deliberation_date,
-                       'deadline': deadline,
-                       'address': {'recipient': offer_year.recipient,
-                                   'location': offer_year.location,
-                                   'postal_code': offer_year.postal_code,
-                                   'city': offer_year.city,
-                                   'phone': offer_year.phone,
-                                   'fax': offer_year.fax,
-                                  }
-                       }
-            enrollments = []
-            for exam_enrol in list_enrollments:
-                student = exam_enrol.learning_unit_enrollment.student
-                enrollments.append({
-                    "registration_id": student.registration_id,
-                    "last_name": student.person.last_name,
-                    "first_name": student.person.first_name,
-                    "score": str(exam_enrol.score_final) if exam_enrol.score_final else '',
-                    "justification": exam_enrol.justification_final if exam_enrol.justification_final else ''
-                })
-            program['enrollments'] = enrollments
-            programs.append(program)
-        learn_unit_year_dict['programs'] = programs
-        learning_unit_years.append(learn_unit_year_dict)
-    data['learning_unit_years'] = learning_unit_years
-    return json.dumps(data)
-
-
 def print_notes(list_exam_enrollment, tutor=None):
     """
     Create a multi-page document
     :param list_exam_enrollment: List of examEnrollments to print on the PDF.
     :param tutor: If the user who's asking for the PDF is a Tutor, this var is assigned to the user linked to the tutor.
     """
-    json_data = data_to_JSON(list_exam_enrollment, tutor=tutor)
-    return build_pdf(json.loads(json_data))
+    return build_pdf(mdl.exam_enrollment.scores_sheet_data(list_exam_enrollment, tutor=tutor))
 
 
 def header_building(canvas, doc, styles):
