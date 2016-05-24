@@ -55,19 +55,6 @@ def online_encoding(request, learning_unit_year_id=None):
     return layout.render(request, "assessments/online_encoding.html", data_dict)
 
 
-def paper_sheet(request, global_id):
-    person = mdl.person.find_by_global_id(global_id)
-    tutor = mdl.tutor.find_by_person(person)
-    if tutor:
-        exam_enrollments = list(mdl.exam_enrollment.find_for_score_encodings(mdl.session_exam.find_session_exam_number(),
-                                                         tutor=tutor))
-        data = mdl.exam_enrollment.scores_sheet_data(exam_enrollments, tutor=tutor)
-        json_data = json.dumps(data)
-    else:
-        json_data = json.dumps({})
-    return HttpResponse(json_data, content_type='application/json')
-
-
 def _truncate_decimals(new_score, new_justification, decimal_scores_authorized):
     """
     Truncate decimals of new scores if decimals are unothorized.
