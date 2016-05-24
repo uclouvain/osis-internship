@@ -25,7 +25,6 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-from django.db.models import Q
 
 from base.models import attribution
 
@@ -71,12 +70,6 @@ def search(academic_year_id=None, acronym=None, learning_unit=None, title=None):
         queryset = queryset.filter(title__icontains=title)
 
     return queryset
-
-
-def find_without_tutor_or_nobody():
-    learning_unit_ids = attribution.Attribution.objects.filter(Q(tutor_id__isNull=True) |
-                                                               Q(tutor__lastname='NOBODY'))
-    return LearningUnitYear.objects.filter(learning_unit_id__in=learning_unit_ids)
 
 
 def find_by_tutor(tutor_id):
