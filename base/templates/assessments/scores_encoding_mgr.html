@@ -64,6 +64,7 @@
                             {%for t in tutor_list%}
                                 <option value="{{t.id}}" {% if tutor_id == t.id %}selected{%endif%}>{{t.last_name}} {{t.first_name}}</option>
                             {%endfor%}
+                            <option value="nobody">{% trans 'no_attribution' %}</option>
                         </select>
                         {% endif %}
                     </div>
