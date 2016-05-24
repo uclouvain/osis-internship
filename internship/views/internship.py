@@ -326,3 +326,14 @@ def internships_new(request):
                                                         'all_organization':organizations,
                                                         'message':"Stage correctement créé"
                                                 })
+
+@login_required
+def student_choice(request, id):
+    internship = InternshipOffer.find_intership_by_id(id)
+
+    students = InternshipChoice.find_by(s_organization = internship.organization, s_learning_unit_year = internship.learning_unit_year)
+
+    return render(request, "internship_detail.html", {'section': 'internship',
+                                                        'internship': internship,
+                                                        'students' : students,
+                                                })

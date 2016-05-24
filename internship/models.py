@@ -56,6 +56,17 @@ class InternshipOffer(models.Model):
         internships = InternshipOffer.objects.filter(organization__name=organization)
         return internships
 
+    @staticmethod
+    def find_intership_by_id(id):
+        internship = InternshipOffer.objects.all()
+        for i in internship:
+            if int(i.id) == int(id):
+                return i
+
+        internship = InternshipChoice.objects.all()
+        for i in internship:
+            if int(i.id) == int(id):
+                return i
 
 class InternshipEnrollment(models.Model):
     learning_unit_enrollment = models.ForeignKey('base.LearningUnitEnrollment')
