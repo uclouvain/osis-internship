@@ -70,7 +70,16 @@
               <br><br>
               <label>{% trans 'available_at_office' %}</label> : {{ adviser.available_at_office|yesno:"Yes,No" }}
               <br><br>
-              <label>{% trans 'how_many_disertation' %}</label> : {{ count_advisers}}
+              <label>{% trans 'how_many_dissertation' %}</label> :  {{ count_advisers}}
+              <br><br>
+              <label>{% trans 'how_many_dissertation_need_request' %}</label> : <FONT color="red"> {{count_advisers_pro_request }} </FONT>
+              <br><br>
+              <label>{% trans 'how_many_dissertation_pro' %}</label> : {{ count_advisers_pro }}
+              <br><br>
+              <label>{% trans 'how_many_dissertation_copro' %}</label> : {{ count_advisers_copro }}
+              <br><br>
+              <label>{% trans 'how_many_dissertation_reader' %}</label> : {{ count_advisers_reader }}
+
             </div>
           </div>
           <br>
