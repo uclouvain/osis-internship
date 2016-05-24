@@ -75,8 +75,7 @@ def search(academic_year_id=None, acronym=None, learning_unit=None, title=None):
 
 def find_without_tutor_or_nobody():
     learning_unit_ids = attribution.Attribution.objects.filter(Q(tutor_id__isnull=True) |
-                                                               Q(tutor__person__last_name='NOBODY'))\
-        .values('learning_unit_id')
+                                                               Q(tutor__lastname='NOBODY'))
     return LearningUnitYear.objects.filter(learning_unit_id__in=learning_unit_ids)
 
 
