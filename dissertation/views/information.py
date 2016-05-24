@@ -71,7 +71,8 @@ def informations(request):
         Q(status='READER')& Q(dissertation__active=True)).exclude(Q(dissertation__status='DRAFT')|
         Q(dissertation__status='ENDED')|Q(dissertation__status='DEFENDED')).count()
 
-    return render(request, "informations.html", {'adviser': adviser, 'count_advisers':count_advisers,'count_advisers_CoPro':count_advisers_copro,
+    return render(request, "informations.html", {'adviser': adviser,
+    'count_advisers':count_advisers,'count_advisers_CoPro':count_advisers_copro,
     'count_advisers_pro':count_advisers_pro, 'count_advisers_reader':count_advisers_reader,
     'count_advisers_pro_request':count_advisers_pro_request })
 
