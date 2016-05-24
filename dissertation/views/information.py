@@ -87,8 +87,8 @@ def informations_edit(request):
             return redirect('informations')
     else:
         form = AdviserForm(instance=adviser)
-    count_advisers = DissertationRole.objects.filter(adviser=adviser).count()
-    return render(request, "informations_edit.html", {'form': form, 'person': person, 'count_advisers':count_advisers})
+
+    return render(request, "informations_edit.html", {'form': form, 'person': person})
 
 
 @login_required
