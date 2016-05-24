@@ -521,8 +521,9 @@ def get_data_pgmer(request, offer_year_id=None, tutor_id=None, learning_unit_yea
                 all_tutors.append({'last_name': attrib.tutor.person.last_name,
                                    'first_name': attrib.tutor.person.first_name,
                                    'id': attrib.tutor.id})
-        all_tutors = sorted(all_tutors, key=lambda k: k.get('last_name').upper() if k.get('last_name') else ''
-                                                      + k.get('first_name').upper() if k.get('first_name') else '')
+        all_tutors = sorted(all_tutors, key=lambda k: k.get('last_name').upper() if k.get('last_name') and
+                            k.get('last_name') != 'SOMEBODY' else '' +
+                            k.get('first_name').upper() if k.get('first_name') else '')
         request.session['all_tutors'] = all_tutors
 
     # Creating list of offer Years for the filter (offers year with minimum 1 record)
