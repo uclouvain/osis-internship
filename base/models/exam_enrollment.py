@@ -273,12 +273,14 @@ def scores_sheet_data(exam_enrollments, tutor=None):
         session_exam = exam_enrollments[0].session_exam
         learning_unit_year = session_exam.learning_unit_year
         coordinator = attribution.find_responsible(learning_unit_year.learning_unit.id)
+        coordinator_address = None
         if coordinator:
             coordinator_address = person_address.find_by_person_label(coordinator.person, 'PROFESSIONAL')
 
         learn_unit_year_dict['academic_year'] = str(learning_unit_year.academic_year)
         learn_unit_year_dict['coordinator'] = {'first_name': coordinator.person.first_name if coordinator else '',
                                                'last_name': coordinator.person.last_name if coordinator else ''}
+
         learn_unit_year_dict['coordinator']['address'] = {'location': coordinator_address.location
                                                                       if coordinator_address else '',
                                                           'postal_code': coordinator_address.postal_code
