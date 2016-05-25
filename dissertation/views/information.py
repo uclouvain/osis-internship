@@ -27,6 +27,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from dissertation.models.adviser import Adviser
 from dissertation.models.dissertation_role import DissertationRole
+from dissertation.models.offer_proposition import OfferProposition
 from base import models as mdl
 from dissertation.forms import AdviserForm, ManagerAdviserForm
 from django.contrib.auth.decorators import user_passes_test
@@ -71,10 +72,22 @@ def informations(request):
         Q(status='READER')& Q(dissertation__active=True)).exclude(Q(dissertation__status='DRAFT')|
         Q(dissertation__status='ENDED')|Q(dissertation__status='DEFENDED')).count()
 
+        advisers_pro = queryset.filter(Q(adviser=adviser) &
+        Q(status='PROMOTEUR')&
+        Q(dissertation__active=True)).exclude(Q(dissertation__status='DRAFT')|
+        Q(dissertation__status='ENDED')|Q(dissertation__status='DEFENDED'))
+
+        tab_offer_count={}
+        for dissertaion_role_pro in advisers_pro:
+            if dissertaion_role_pro.dissertation.offer_year_start.offer.title in tab_offer_count:
+                tab_offer_count[dissertaion_role_pro.dissertation.offer_year_start.offer.title]= tab_offer_count[str(dissertaion_role_pro.dissertation.offer_year_start.offer.title)]+1
+            else:
+                tab_offer_count[dissertaion_role_pro.dissertation.offer_year_start.offer.title]=1
+
     return render(request, "informations.html", {'adviser': adviser,
     'count_advisers':count_advisers,'count_advisers_CoPro':count_advisers_copro,
     'count_advisers_pro':count_advisers_pro, 'count_advisers_reader':count_advisers_reader,
-    'count_advisers_pro_request':count_advisers_pro_request })
+    'count_advisers_pro_request':count_advisers_pro_request,'tab_offer_count':tab_offer_count})
 
 @login_required
 def informations_edit(request):
@@ -91,24 +104,18 @@ def informations_edit(request):
 
     return render(request, "informations_edit.html", {'form': form, 'person': person})
 
-
 @login_required
 @user_passes_test(is_manager)
 def manager_informations(request):
     advisers = Adviser.find_all().filter(type='PRF')
     return render(request, 'manager_informations_list.html', {'advisers': advisers})
 
-
 @login_required
 @user_passes_test(is_manager)
 def manager_informations_detail(request, pk):
     adviser = get_object_or_404(Adviser, pk=pk)
-
-
     queryset = DissertationRole.objects.all()
-
     count_advisers = queryset.filter(Q(adviser=adviser)& Q(dissertation__active=True)).count()
-
     count_advisers_pro = queryset.filter(
     Q(adviser=adviser) & Q(status='PROMOTEUR')&
     Q(dissertation__active=True)).exclude(Q(dissertation__status='DRAFT')|
@@ -129,11 +136,21 @@ def manager_informations_detail(request, pk):
     Q(dissertation__status='DRAFT')|
     Q(dissertation__status='ENDED')|Q(dissertation__status='DEFENDED')).count()
 
+    advisers_pro = queryset.filter(Q(adviser=adviser) &
+    Q(status='PROMOTEUR')&
+    Q(dissertation__active=True)).exclude(Q(dissertation__status='DRAFT')|
+    Q(dissertation__status='ENDED')|Q(dissertation__status='DEFENDED'))
+    tab_offer_count={}
+    for dissertaion_role_pro in advisers_pro:
+        if dissertaion_role_pro.dissertation.offer_year_start.offer.title in tab_offer_count:
+            tab_offer_count[dissertaion_role_pro.dissertation.offer_year_start.offer.title]= tab_offer_count[str(dissertaion_role_pro.dissertation.offer_year_start.offer.title)]+1
+        else:
+            tab_offer_count[dissertaion_role_pro.dissertation.offer_year_start.offer.title]=1
 
     return render(request, 'manager_informations_detail.html',
     {'adviser': adviser,'count_advisers':count_advisers,'count_advisers_CoPro':count_advisers_copro,
     'count_advisers_pro':count_advisers_pro, 'count_advisers_reader':count_advisers_reader,
-    'count_advisers_pro_request':count_advisers_pro_request })
+    'count_advisers_pro_request':count_advisers_pro_request,'tab_offer_count':tab_offer_count})
 
 
 @login_required
