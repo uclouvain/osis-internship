@@ -105,6 +105,10 @@
                     <span class="label label-default">
                     {% elif dissertation.status == 'ENDED' %}
                     <span class="label label-default">
+                    {% elif dissertation.status == 'ENDED_WIN' %}
+                    <span class="label label-default">
+                    {% elif dissertation.status == 'ENDED_LOS' %}
+                    <span class="label label-default">
                     {% endif %}
                         {{ dissertation.status }}
                     </span>

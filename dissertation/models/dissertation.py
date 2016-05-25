@@ -51,6 +51,8 @@ class Dissertation(models.Model):
         ('TO_DEFEND', _('To be defended')),
         ('DEFENDED', _('Defended')),
         ('ENDED', _('Ended')),
+        ('ENDED_WIN', _('Ended Win')),
+        ('ENDED_LOS', _('Ended Los')),
     )
 
     title = models.CharField(max_length=200)

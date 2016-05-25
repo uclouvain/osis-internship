@@ -208,6 +208,9 @@ def manager_dissertations_to_dir_ok(request, pk):
     elif dissertation.status == 'DEFENDED':
         dissertation.status = 'ENDED_WIN'
         dissertation.save()
+    else:
+        dissertation.status = 'TO_RECEIVE'
+        dissertation.save()
     return redirect('manager_dissertations_detail', pk=pk)
 
 
