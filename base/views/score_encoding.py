@@ -513,10 +513,11 @@ def get_data_pgmer(request, offer_year_id=None, tutor_id=None, learning_unit_yea
         # Filter list by tutor
         # The tutor_id received in session is a String, not an Int
         tutor_id = int(tutor_id)
-        learning_unit_years = list(mdl.learning_unit_year.find_by_tutor(tutor_id))
-        learning_unit_year_ids = set([learn_unit_year.id for learn_unit_year in learning_unit_years])
+        tutor = mdl.tutor.find_by_id(tutor_id)
+        learning_unit_ids_by_tutor = set(mdl.attribution.search(tutor=tutor).values_list('learning_unit', flat=True))
+        # learning_unit_ids_attrib = [attr.learning_unit.id for attr in attributions_by_tutor]
         scores_encodings = [score_encoding for score_encoding in scores_encodings
-                            if score_encoding.learning_unit_year_id in learning_unit_year_ids]
+                            if score_encoding.learning_unit_year.learning_unit.id in learning_unit_ids_by_tutor]
 
     data = []
     all_attributions = []
@@ -524,48 +525,34 @@ def get_data_pgmer(request, offer_year_id=None, tutor_id=None, learning_unit_yea
         # Adding coordinator for each learningUnit
         learning_unit_ids = [score_encoding.learning_unit_year.learning_unit.id for score_encoding in scores_encodings]
         all_attributions = list(mdl.attribution.search(learning_unit_ids=learning_unit_ids))
-        coord_grouped_by_learning_unit = {attrib.learning_unit.id: attrib.tutor.person for attrib in all_attributions
+        coord_grouped_by_learning_unit = {attrib.learning_unit.id: attrib.tutor for attrib in all_attributions
                                           if attrib.function == 'COORDINATOR'}
         for score_encoding in scores_encodings:
-            line = {'learning_unit_year': score_encoding.learning_unit_year,
-                    'exam_enrollments_encoded': score_encoding.exam_enrollments_encoded,
-                    'total_exam_enrollments': score_encoding.total_exam_enrollments,
-                    'tutor_person': coord_grouped_by_learning_unit.get(
-                        score_encoding.learning_unit_year.learning_unit.id,
-                        None)}
+            line = {}
+            line['learning_unit_year'] = score_encoding.learning_unit_year
+            line['exam_enrollments_encoded'] = score_encoding.exam_enrollments_encoded
+            line['total_exam_enrollments'] = score_encoding.total_exam_enrollments
+            line['tutor'] = coord_grouped_by_learning_unit.get(score_encoding.learning_unit_year.learning_unit.id,
+                                                                       None)
             data.append(line)
 
     # Creating list of all tutors
-    all_tutors = request.session.get('all_tutors', None)
-    if all_tutors is None:
-        ids_passed = []  # To know if a tutor is already in the list
-        all_tutors = []
-        for attrib in all_attributions:
-            if attrib.tutor.id not in ids_passed:
-                ids_passed.append(attrib.tutor.id)
-                all_tutors.append({'last_name': attrib.tutor.person.last_name,
-                                   'first_name': attrib.tutor.person.first_name,
-                                   'id': attrib.tutor.id})
-        all_tutors = sorted(all_tutors, key=lambda k: k.get('last_name').upper() if k.get('last_name') else ''
-                                                      + k.get('first_name').upper() if k.get('first_name') else '')
-        request.session['all_tutors'] = all_tutors
+    all_tutors = []
+    for item in data:
+        tutor = item['tutor']
+        if tutor and tutor not in all_tutors:
+            all_tutors.append(tutor)
+    all_tutors = sorted(all_tutors, key=lambda k: k.person.last_name.upper() if k.person.last_name else ''
+                                                  + k.person.first_name.upper() if k.person.first_name else '')
 
     # Creating list of offer Years for the filter (offers year with minimum 1 record)
-    all_offers = request.session.get('all_offers', None)
-    if not all_offers:
-        offer_ids = []  # To know if a offer is already in the list
-        all_offers = []
-        for score_encoding in scores_encodings:
-            if score_encoding.offer_year.id not in offer_ids:
-                offer_ids.append(score_encoding.offer_year.id)
-                all_offers.append({'id': score_encoding.offer_year.id,
-                                   'acronym': score_encoding.offer_year.acronym,
-                                   'title': score_encoding.offer_year.title})
-        all_offers = sorted(all_offers, key=lambda k: k['acronym'])
-        request.session['all_offers'] = all_offers
+    all_offers = mdl.offer_year.find_by_user(request.user, academic_yr=academic_yr)
 
     # Ordering by learning_unit_year.acronym
     data = sorted(data, key=lambda k: k['learning_unit_year'].acronym)
+
+    if len(data) == 0:
+        messages.add_message(request, messages.WARNING, "%s" % _('no_result'))
 
     return layout.render(request, "assessments/scores_encoding_mgr.html",
                          {'notes_list': data,

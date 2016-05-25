@@ -36,7 +36,7 @@
 <div class="page-header">
     <h2>{% trans 'scores_encoding' %}</h2>
 </div>
-{% if notes_list%}
+{% if notes_list != None and notes_list|length >= 0 %}
 <div class="panel panel-default">
     <div class="panel-body">
         <form method="get" action="{% url 'refresh_list' %}" id="form_search_learning_units">
@@ -57,27 +57,23 @@
             <div class="row">
                 <div class="col-md-3">
                     <div class="form-group">
-                        {% if tutor_list %}
                         <label>{% trans 'tutor' %}</label><br>
                         <select id="slt_tutor" name="tutor" class="form-control">
                             <option value="">{% trans 'all' %}</option>
                             {%for t in tutor_list%}
-                                <option value="{{t.id}}" {% if tutor_id == t.id %}selected{%endif%}>{{t.last_name}} {{t.first_name}}</option>
+                                <option value="{{t.id}}" {% if tutor_id == t.id %}selected{%endif%}>{{t.person.last_name}} {{t.person.first_name}}</option>
                             {%endfor%}
                         </select>
-                        {% endif %}
                     </div>
                 </div>
                 <div class="col-md-4">
-                    {% if offer_list %}
                     <label>{% trans 'offer' %} {{ offer_sel}}</label><br>
                     <select id="slt_offer_list_selection" name="offer" class="form-control">
                         <option value="">{% trans 'all'%}</option>
-                        {%for o in offer_list%}
+                        {% for o in offer_list %}
                         <option value="{{o.id}}" {%if offer_year_id == o.id %}selected{%else%}{%endif%}>{{o.acronym}} - {{o.title}}</option>
-                        {%endfor%}
+                        {% endfor %}
                     </select>
-                    {% endif %}
                 </div>
                 <div class="col-md-3">
                     <label for="txt_acronym">{% trans 'learning_unit'%}</label>
@@ -97,6 +93,7 @@
             </div>
         </form>
         <br>
+        {% include "template_messages.html" %}
         <div class="row">
             <div class="col-md-6">
                 <b>{% trans 'select_an_encoding_type' %}</b>
@@ -143,8 +140,8 @@
                             <td><a href="{% url 'online_encoding' note_detail.learning_unit_year.id %}"
                                    id="lnk_{{ note_detail.learning_unit_year.acronym }}">{{ note_detail.learning_unit_year.title }}</a></td>
                             <td>
-                                {% if note_detail.tutor_person %}
-                                    {{ note_detail.tutor_person.last_name }} {{ note_detail.tutor_person.first_name }}
+                                {% if note_detail.tutor %}
+                                    {{ note_detail.tutor.person.last_name }} {{ note_detail.tutor.person.first_name }}
                                 {% else %}
                                     -
                                 {% endif %}
@@ -180,8 +177,8 @@
                                    title="Visualiser/charger les notes pour le cours"
                                    id="lnk_online_encoding_messages_{{note_detail.learning_unit_year.id}}">{{ note_detail.learning_unit_year.title }}</a></td>
                             <td>
-                                {% if note_detail.tutor_person %}
-                                    {{ note_detail.tutor_person.last_name }} {{ note_detail.tutor_person.first_name }}
+                                {% if note_detail.tutor %}
+                                    {{ note_detail.tutor.person.last_name }} {{ note_detail.person.first_name }}
                                 {% else %}
                                     -
                                 {% endif %}
@@ -236,8 +233,8 @@
                                    title="Visualiser/charger les notes pour le cours"
                                    id="lnk_paper_encoding_messages_{{note_detail.learning_unit_year.id}}">{{ note_detail.learning_unit_year.title }}</a></td>
                             <td>
-                                {% if note_detail.tutor_person %}
-                                    {{ note_detail.tutor_person.last_name }} {{ note_detail.tutor_person.first_name }}
+                                {% if note_detail.tutor %}
+                                    {{ note_detail.tutor.person.last_name }} {{ note_detail.tutor.person.first_name }}
                                 {% else %}
                                     -
                                 {% endif %}
