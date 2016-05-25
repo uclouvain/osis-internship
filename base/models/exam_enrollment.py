@@ -310,8 +310,8 @@ def scores_sheet_data(exam_enrollments, tutor=None):
             else:
                 deliberation_date = '-'
             deadline = ""
-            if session_exam.offer_year_calendar.end_date:
-                deadline = session_exam.offer_year_calendar.end_date.strftime('%d/%m/%Y')
+            if session_exam.deadline:
+                deadline = session_exam.deadline.strftime('%d/%m/%Y')
 
             program = {'acronym': session_exam.offer_year_calendar.offer_year.acronym,
                        'deliberation_date': deliberation_date,
