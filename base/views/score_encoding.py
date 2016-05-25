@@ -383,7 +383,7 @@ def get_data(request, offer_year_id=None):
         offer_ids = []  # To know if a offer is already in the list
         all_offers = []
         for exam_enrol in exam_enrollments:
-            offer_year = exam_enrol.session_exam.offer_year_calendar.offer_year
+            offer_year = exam_enrol.learning_unit_enrollment.offer_enrollment.offer_year
             if offer_year.id not in offer_ids:
                 offer_ids.append(offer_year.id)
                 all_offers.append({'id': offer_year.id,

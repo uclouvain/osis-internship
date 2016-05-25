@@ -214,7 +214,7 @@
                                 {% endif %}
                             {% endif %}
                         </td>
-                        <td>{{ enrollment.session_exam.offer_year_calendar.end_date | default_if_none:'' |date:"j/m/Y" }}</td>
+                        <td>{{ enrollment.session_exam.deadline | default_if_none:'' |date:"j/m/Y" }}</td>
                     </tr>
                 {% endfor %}
             </tbody>

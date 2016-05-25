@@ -211,26 +211,26 @@ def find_for_score_encodings(session_exam_number,
                                               are returned.
     :param with_justification_or_score_draft: If True, only examEnrollments with a score_draft or a justification_draft
                                               are returned.
-    :return: All examEnrollments filtered.
+    :return: All filtered examEnrollments.
     """
     queryset = ExamEnrollment.objects.filter(session_exam__number_session=session_exam_number)
 
     if learning_unit_year_id:
-        queryset = queryset.filter(session_exam__learning_unit_year_id=learning_unit_year_id)
+        queryset = queryset.filter(learning_unit_enrollment__learning_unit_year_id=learning_unit_year_id)
     elif learning_unit_year_ids:
-        queryset = queryset.filter(session_exam__learning_unit_year_id__in=learning_unit_year_ids)
+        queryset = queryset.filter(learning_unit_enrollment__learning_unit_year_id__in=learning_unit_year_ids)
 
     if tutor:
         # Filter by Tutor is like filter by a list of learningUnits
         # It's not necessary to add a filter if learningUnitYear or learningUnitYearIds are already defined
         if not learning_unit_year_id and not learning_unit_year_ids:
             learning_unit_year_ids = learning_unit_year.find_by_tutor(tutor).values_list('id')
-            queryset = queryset.filter(session_exam__learning_unit_year_id__in=learning_unit_year_ids)
+            queryset = queryset.filter(learning_unit_enrollment__learning_unit_year_id__in=learning_unit_year_ids)
 
     if offer_year_id:
-        queryset = queryset.filter(session_exam__offer_year_calendar__offer_year_id=offer_year_id)
+        queryset = queryset.filter(learning_unit_enrollment__offer_enrollment__offer_year_id=offer_year_id)
     elif offers_year:
-        queryset = queryset.filter(session_exam__offer_year_calendar__offer_year__in=offers_year)
+        queryset = queryset.filter(learning_unit_enrollment__offer_enrollment__offer_year_id__in=offers_year)
 
     if with_justification_or_score_final:
         queryset = queryset.exclude(score_final=None, justification_final=None)
@@ -293,27 +293,27 @@ def scores_sheet_data(exam_enrollments, tutor=None):
         # Will contain lists of examEnrollments by offerYear (=Program)
         enrollments_by_program = {}  # {<offer_year_id> : [<ExamEnrollment>]}
         for exam_enroll in exam_enrollments:
-            key = exam_enroll.session_exam.offer_year_calendar.offer_year.id
+            key = exam_enroll.learning_unit_enrollment.offer_enrollment.offer_year.id
             if key not in enrollments_by_program.keys():
                 enrollments_by_program[key] = [exam_enroll]
             else:
                 enrollments_by_program[key].append(exam_enroll)
 
         for list_enrollments in enrollments_by_program.values():  # exam_enrollments by OfferYear
-            session_exam = list_enrollments[0].session_exam
-            offer_year = session_exam.offer_year_calendar.offer_year
+            exam_enrollment = list_enrollments[0]
+            offer_year = exam_enrollment.learning_unit_enrollment.offer_enrollment.offer_year
 
             deliberation_date = offer_year_calendar.find_deliberation_date(offer_year,
-                                                                               session_exam.number_session)
+                                                                           exam_enrollment.session_exam.number_session)
             if deliberation_date:
                 deliberation_date = deliberation_date.strftime("%d/%m/%Y")
             else:
                 deliberation_date = '-'
             deadline = ""
-            if session_exam.offer_year_calendar.end_date:
-                deadline = session_exam.offer_year_calendar.end_date.strftime('%d/%m/%Y')
+            if session_exam.deadline:
+                deadline = session_exam.deadline.strftime('%d/%m/%Y')
 
-            program = {'acronym': session_exam.offer_year_calendar.offer_year.acronym,
+            program = {'acronym': exam_enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym,
                        'deliberation_date': deliberation_date,
                        'deadline': deadline,
                        'address': {'recipient': offer_year.recipient,
