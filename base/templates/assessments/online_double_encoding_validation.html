@@ -158,27 +158,23 @@
                             </td>
                         {% endif %}
                         {% if is_program_manager %}
-                                <td>{% if enrollment.score_final != enrollment.score_reencoded and not enrollment.justification_final %}
-                                        <button type="button" id="bt_take_draft_{{ enrollment.id }}" class="btn btn-default btn-sm">
-                                            <span class="glyphicon glyphicon-ok" id="span_take_draft_{{ enrollment.id }}" style="color: black" aria-hidden="true"></span>
-                                        </button>
-                                    {% elif enrollment.justification_final != enrollment.justification_reencoded and not enrollment.score_final and enrollment.score_final != 0 %}
-                                        <button type="button" id="bt_take_draft_{{ enrollment.id }}" class="btn btn-default btn-sm">
-                                            <span class="glyphicon glyphicon-ok" id="span_take_draft_{{ enrollment.id }}" style="color: black" aria-hidden="true"></span>
-                                        </button>
-                                    {% endif %}
-                                </td>
+                            <td>{% if enrollment.score_final != enrollment.score_reencoded or enrollment.justification_final != enrollment.justification_reencoded %}
+                                    <button type="button" id="bt_take_draft_{{ enrollment.id }}" class="btn btn-default btn-sm">
+                                        <span class="glyphicon glyphicon-ok" id="span_take_draft_{{ enrollment.id }}" style="color: black" aria-hidden="true"></span>
+                                    </button>
+                                {% endif %}
+                            </td>
                         {% else %}
-                                <td>{% if enrollment.score_draft != enrollment.score_reencoded and not enrollment.justification_draft %}
-                                        <button type="button" id="bt_take_draft_{{ enrollment.id }}" class="btn btn-default btn-sm">
-                                            <span class="glyphicon glyphicon-ok" id="span_take_draft_{{ enrollment.id }}" style="color: black" aria-hidden="true"></span>
-                                        </button>
-                                    {% elif enrollment.justification_draft != enrollment.justification_reencoded and not enrollment.score_draft and enrollment.score_draft != 0 %}
-                                        <button type="button" id="bt_take_draft_{{ enrollment.id }}" class="btn btn-default btn-sm">
-                                            <span class="glyphicon glyphicon-ok" id="span_take_draft_{{ enrollment.id }}" style="color: black" aria-hidden="true"></span>
-                                        </button>
-                                    {% endif %}
-                                </td>
+                            <td>{% if enrollment.score_draft != enrollment.score_reencoded and not enrollment.justification_draft %}
+                                    <button type="button" id="bt_take_draft_{{ enrollment.id }}" class="btn btn-default btn-sm">
+                                        <span class="glyphicon glyphicon-ok" id="span_take_draft_{{ enrollment.id }}" style="color: black" aria-hidden="true"></span>
+                                    </button>
+                                {% elif enrollment.justification_draft != enrollment.justification_reencoded and not enrollment.score_draft and enrollment.score_draft != 0 %}
+                                    <button type="button" id="bt_take_draft_{{ enrollment.id }}" class="btn btn-default btn-sm">
+                                        <span class="glyphicon glyphicon-ok" id="span_take_draft_{{ enrollment.id }}" style="color: black" aria-hidden="true"></span>
+                                    </button>
+                                {% endif %}
+                            </td>
                         {% endif %}
                         <td><input type="hidden" id="hdn_score_reencoded_{{ enrollment.id }}"
                                    value="{{ enrollment.score_reencoded | score_display:enrollment.session_exam.learning_unit_year.decimal_scores}}"/>
