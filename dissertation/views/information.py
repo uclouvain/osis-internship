@@ -85,7 +85,7 @@ def informations(request):
                 tab_offer_count[dissertaion_role_pro.dissertation.offer_year_start.offer.title]=1
 
     return render(request, "informations.html", {'adviser': adviser,
-    'count_advisers':count_advisers,'count_advisers_CoPro':count_advisers_copro,
+    'count_advisers':count_advisers,'count_advisers_copro':count_advisers_copro,
     'count_advisers_pro':count_advisers_pro, 'count_advisers_reader':count_advisers_reader,
     'count_advisers_pro_request':count_advisers_pro_request,'tab_offer_count':tab_offer_count})
 
@@ -148,7 +148,7 @@ def manager_informations_detail(request, pk):
             tab_offer_count[dissertaion_role_pro.dissertation.offer_year_start.offer.title]=1
 
     return render(request, 'manager_informations_detail.html',
-    {'adviser': adviser,'count_advisers':count_advisers,'count_advisers_CoPro':count_advisers_copro,
+    {'adviser': adviser,'count_advisers':count_advisers,'count_advisers_copro':count_advisers_copro,
     'count_advisers_pro':count_advisers_pro, 'count_advisers_reader':count_advisers_reader,
     'count_advisers_pro_request':count_advisers_pro_request,'tab_offer_count':tab_offer_count})
 
