@@ -38,7 +38,7 @@
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
-      <label> Premier choix </label><br/>
+      <label> Premier choix </label> : {{number_choices.1}}
       <ul>
         {% for student in students %}
           {% if student.choice == 1 %}
@@ -46,7 +46,7 @@
           {% endif %}
         {% endfor %}
       </ul>
-      <label> Deuxième choix </label><br/>
+      <label> Deuxième choix </label> : {{number_choices.2}}
       <ul>
         {% for student in students %}
           {% if student.choice == 2 %}
@@ -54,7 +54,7 @@
           {% endif %}
         {% endfor %}
       </ul>
-      <label> Troisième choix </label><br/>
+      <label> Troisième choix </label> : {{number_choices.3}}
       <ul>
         {% for student in students %}
           {% if student.choice == 3 %}
@@ -62,7 +62,7 @@
           {% endif %}
         {% endfor %}
       </ul>
-      <label> Quatrième choix </label><br/>
+      <label> Quatrième choix </label> : {{number_choices.4}}
       <ul>
         {% for student in students %}
           {% if student.choice == 4 %}

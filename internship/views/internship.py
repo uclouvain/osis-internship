@@ -28,6 +28,7 @@ from django.contrib.auth.decorators import login_required
 from internship.models import InternshipOffer, InternshipChoice, Organization
 from internship.forms import InternshipChoiceForm, InternshipOfferForm
 from base import models as mdl
+from django.utils.translation import ugettext_lazy as _
 
 import urllib.request
 import unicodedata
@@ -313,7 +314,7 @@ def internships_new(request):
         internship.maximum_enrollments = request.POST['maximum_enrollments']
 
     internship.save()
-
+    message = "%s" % _('Stage correctement créé !')
     #Select all the organisation (service partner)
     organizations = Organization.find_all_order_by_reference()
 
@@ -324,16 +325,23 @@ def internships_new(request):
     return render(request, "internships_create.html", {'section': 'internship',
                                                         'all_learning_unit_year': learning_unit_years,
                                                         'all_organization':organizations,
-                                                        'message':"Stage correctement créé"
+                                                        'message': message
                                                 })
 
 @login_required
 def student_choice(request, id):
     internship = InternshipOffer.find_intership_by_id(id)
-
     students = InternshipChoice.find_by(s_organization = internship.organization, s_learning_unit_year = internship.learning_unit_year)
+    number_choices = [None]*(5)
+
+    for index in range (1,5):
+        number_choices[index] = len (InternshipChoice.find_by(s_organization = internship.organization,
+                                                            s_learning_unit_year = internship.learning_unit_year,
+                                                            s_define_choice = index))
+    print (number_choices)
 
     return render(request, "internship_detail.html", {'section': 'internship',
                                                         'internship': internship,
                                                         'students' : students,
+                                                        'number_choices' : number_choices,
                                                 })

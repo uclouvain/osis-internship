@@ -37,9 +37,9 @@
     <h2>{% trans 'Internships Creation' %}</h2>
   </div>
   {% if message %}
-    <script language="javascript" type="text/javascript">
-      alert("Stage correctement créé");
-    </script>
+  <div>
+      <label class="alert alert-success" style="margin:5px">{{message}}</label>
+  </div>
   {% endif %}
   <table style="height:100%; width:100%;">
       <thead>

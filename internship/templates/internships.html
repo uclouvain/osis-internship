@@ -46,7 +46,7 @@
           <tr>
             <td style="text-align:center; width:50%;">
               <select name="organization_sort" onChange="javascript: this.form.submit();">
-               <option value="0">{% trans 'choose_a_hospital' %}</option>
+               <option value="0">{% trans 'all_hospitals' %}</option>
                {% for organization in all_organizations %}
                   <option value="{{ organization.name }}"
                   {% if organization.name == organization_sort_value %}selected{% endif %}>
