@@ -177,6 +177,15 @@ def manager_dissertations_delete(request, pk):
 
 @login_required
 @user_passes_test(is_manager)
+def manager_dissertations_role_delete(request, pk):
+    dissertation_role = get_object_or_404(DissertationRole, pk=pk)
+    dissertation = dissertation_role.dissertation
+    dissertation_role.delete()
+    return redirect('manager_dissertations_detail', pk=dissertation.pk)
+
+
+@login_required
+@user_passes_test(is_manager)
 def manager_dissertations_to_dir_submit(request, pk):
     dissertation = get_object_or_404(Dissertation, pk=pk)
     if dissertation.status == 'DRAFT' or dissertation.status == 'DIR_KO':
