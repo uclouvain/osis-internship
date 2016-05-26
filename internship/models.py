@@ -166,6 +166,10 @@ class InternshipChoice(models.Model):
         else:
             return None
 
+class Period(models.Model):
+    name = models.CharField(max_length=255)
+    date_start = models.DateField()
+    date_end = models.DateField()
 
 class Organization(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
