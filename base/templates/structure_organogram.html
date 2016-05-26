@@ -1,3 +1,4 @@
+<!doctype html>
 {% load staticfiles %}
 {% load i18n %}
 
@@ -24,8 +25,6 @@
  * at the root of the source code of this program.  If not,
  * see http://www.gnu.org/licenses/.
 {% endcomment %}
-
-<!doctype html>
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -54,8 +53,7 @@
                 var sub_nodes =$("<ul></ul>");
                 for(var i = 0, len = vec.length ;i < len; i++) {
                     var children = vec[i].children;
-
-                    var url="/structures/name/"+vec[i].name;
+                    var url="/structures/" + vec[i].id;
                     if(Array.isArray(children) && children.length > 0) {
                        var sub_nodes = $("<ul class='vertical'></ul>");
 

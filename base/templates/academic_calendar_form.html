@@ -47,7 +47,7 @@
         <form method="post" action="{% if academic_calendar.id%}{% url 'academic_calendar_save' academic_calendar.id %}{%else%}{% url 'academic_calendar_save_new' %}{%endif%}">
             {% csrf_token %}
             <div class="row">
-                <div class="col-md-2">
+                <div class="col-md-3">
                     <label for="slt_academic_year">{% trans 'academic_year'%}</label>
                     <select class="form-control" id="slt_academic_year" name="academic_year">
                         {% for v in academic_years %}
@@ -59,7 +59,7 @@
                         {% endfor %}
                     </select>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-5">
                     <label for="txt_title">{% trans 'title' %}</label>
                     <input class="form-control" value="{{ academic_calendar.title | default_if_none:'' }}"
                            name="title" id="txt_title"><font class="error">{{ form.title.errors }}</font>
@@ -98,6 +98,7 @@
                            value="{{ academic_calendar.highlight_shortcut | default_if_none:'' }}"
                            name="highlight_shortcut" id="txt_highlight_shortcut">
                     <font class="error">{{ form.highlight_shortcut.errors }}</font>
+                    <p style="margin-top: 5px;">http://osis.uclouvain.be/<span id="url"></span></p>
                 </div>
             </div>
             <br>
@@ -151,6 +152,7 @@
                                                   .attr("target", "_blank")
                                                   .attr("class", "btn btn-primary btn-lg")
                                                   .attr("role", "button").text('Avancer'));
+            $('#url').text($(this).val());
         }
     });
 

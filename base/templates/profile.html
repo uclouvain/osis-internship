@@ -35,7 +35,7 @@
 <div>
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" class="active"><a href="#identification" aria-controls="identification" role="tab" data-toggle="tab">{% trans 'identification' %}</a></li>
-        {% if tutor %}
+        {% if attributions and tutor %}
             <li role="presentation"><a href="#attributions" aria-controls="attributions" role="tab" data-toggle="tab">{% trans 'attributions' %}</a></li>
         {% endif %}
         {% if student %}
@@ -55,26 +55,30 @@
                     <label>{% trans 'global_identifiant' %}</label><br>
                     {{ person.global_id }}
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label>{% trans 'firstname' %}</label><br>
                     {{ person.first_name }} {{ person.middle_name }}
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label>{% trans 'lastname' %}</label><br>
                     {{ person.last_name }}
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-1">
                     <label>{% trans 'gender' %}</label><br>
                     {{ person.gender }}
                 </div>
                 <div class="col-md-2">
+                    <label>{% trans 'birth_date' %}</label><br>
+                    {{ person.birth_date | default_if_none:'' | date:"j/m/Y" }}
+                </div>
+                <div class="col-md-3">
                     <label>{% trans 'national_register' %}</label><br>
                     {{ person.national_id }}
                 </div>
             </div>
             <br>
             <div class="row">
-                <div class="col-md-5">
+                <div class="col-md-4">
                     <label>{% trans 'email' %}</label><br>
                     {{ person.email | default_if_none:'-' }}
                 </div>
@@ -110,7 +114,7 @@
                 </div>
             {% endif %}
         </div>
-        {% if tutor %}
+        {% if attributions and tutor %}
             <div role="tabpanel" class="tab-pane" id="attributions">
                 <br>
                 <table class="table table-striped table-hover">

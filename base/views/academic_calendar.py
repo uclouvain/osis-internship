@@ -139,6 +139,7 @@ def academic_calendar_save(request, id):
         if new_academic_calendar:
             mdl.offer_year_calendar.save(academic_calendar)
         else:
+            mdl.offer_year_calendar.update(academic_calendar)
             sent_error_message = mdl.offer_year_calendar.update(academic_calendar)
             if sent_error_message:
                 messages.add_message(request, messages.ERROR, "%s" % sent_error_message)

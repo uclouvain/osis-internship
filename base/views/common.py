@@ -24,7 +24,6 @@
 #
 ##############################################################################
 from datetime import datetime
-
 import subprocess
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import login as django_login
@@ -84,6 +83,20 @@ def catalog(request):
 
 
 @login_required
+def data(request):
+    return layout.render(request, "admin/data.html", {'section': 'data'})
+
+
+@login_required
+def data_maintenance(request):
+    sql_command = request.POST.get('sql_command')
+    results = mdl.native.execute(sql_command)
+    return layout.render(request, "admin/data_maintenance.html", {'section': 'data_maintenance',
+                                                                  'sql_command': sql_command,
+                                                                  'results': results})
+
+
+@login_required
 def academic_year(request):
     return layout.render(request, "academic_year.html", {'section': 'academic_year'})
 
@@ -93,7 +106,7 @@ def profile(request):
     person = mdl.person.find_by_user(request.user)
     addresses = mdl.person_address.find_by_person(person)
     tutor = mdl.tutor.find_by_person(person)
-    attributions = mdl.attribution.find_by_tutor(tutor)
+    attributions = mdl.attribution.search(tutor=tutor)
     student = mdl.student.find_by_person(person)
     offer_enrollments = mdl.offer_enrollment.find_by_student(student)
     programs_managed = mdl.program_manager.find_by_person(person)

@@ -33,7 +33,7 @@ from base import models as mdl
 
 HEADER = [str(_('academic_year')),
           str(_('session')),
-          str(_('activity_code')),
+          str(_('learning_unit')),
           str(_('program')),
           str(_('registration_number')),
           str(_('lastname')),
@@ -47,55 +47,60 @@ HEADER = [str(_('academic_year')),
 def export_xls(academic_year_id, is_fac, exam_enrollments):
     academic_year = mdl.academic_year.find_academic_year_by_id(academic_year_id)
 
-    wb = Workbook()
-    ws = wb.active
+    workbook = Workbook()
+    worksheet = workbook.active
 
-    __columns_resizing(ws)
-    ws.append(HEADER)
+    worksheet.append([str(exam_enrollments[0].learning_unit_enrollment.learning_unit_year)])
+    worksheet.append([str('Session: %s' % exam_enrollments[0].session_exam.number_session)])
+    worksheet.append([str('')])
+    worksheet.append([str(_('justification_legend') % mdl.exam_enrollment.justification_label_authorized())])
+    worksheet.append([str(_('score_legend') % "0 - 20")])
+    worksheet.append([str('')])
 
-    enrollment_counter = 1
+    __columns_resizing(worksheet)
+    worksheet.append(HEADER)
+
+    row_number = 7
     for exam_enroll in exam_enrollments:
         student = exam_enroll.learning_unit_enrollment.student
-        o = exam_enroll.learning_unit_enrollment.offer
+        offer = exam_enroll.learning_unit_enrollment.offer
         person = mdl.person.find_by_id(student.person.id)
 
-        if exam_enroll.session_exam.offer_year_calendar.end_date is None:
+        if exam_enroll.session_exam.deadline is None:
             end_date = "-"
         else:
-            end_date = exam_enroll.session_exam.offer_year_calendar.end_date.strftime('%d/%m/%Y')
+            end_date = exam_enroll.session_exam.deadline.strftime('%d/%m/%Y')
         score = None
-        if exam_enroll.score_final:
+        if exam_enroll.score_final is not None:
             if exam_enroll.session_exam.learning_unit_year.decimal_scores:
                 score = "{0:.2f}".format(exam_enroll.score_final)
             else:
                 score = "{0:.0f}".format(exam_enroll.score_final)
         justification = ""
         if exam_enroll.justification_final:
-            justification = dict(mdl.exam_enrollment.JUSTIFICATION_TYPES)[exam_enroll.justification_final]
-        ws.append([str(academic_year),
-                   str(exam_enroll.session_exam.number_session),
-                   exam_enroll.session_exam.learning_unit_year.acronym,
-                   o.acronym,
-                   student.registration_id,
-                   person.last_name,
-                   person.first_name,
-                   score,
-                   str(justification),
-                   end_date,
-                   exam_enroll.id])
+            justification = mdl.exam_enrollment.get_letter_justication_type(exam_enroll.justification_final)
+        worksheet.append([str(academic_year),
+                          str(exam_enroll.session_exam.number_session),
+                          exam_enroll.session_exam.learning_unit_year.acronym,
+                          offer.acronym,
+                          student.registration_id,
+                          person.last_name,
+                          person.first_name,
+                          score,
+                          str(justification),
+                          end_date,
+                          exam_enroll.id])
 
-        enrollment_counter += 1
-        __coloring_non_editable(ws, enrollment_counter, score, exam_enroll.justification_final)
+        row_number += 1
+        __coloring_non_editable(worksheet, row_number, score, exam_enroll.justification_final)
 
     number_session = list(exam_enrollments)[0].session_exam.number_session
     learn_unit_acronym = list(exam_enrollments)[0].session_exam.learning_unit_year.acronym
 
-    ws.append([str(_('other_score_legend')),
-               mdl.exam_enrollment.justification_label_authorized(is_fac)])
-    filename = "session_%s_%s_%s.xls" % (str(academic_year.year),
+    filename = "session_%s_%s_%s.xlsx" % (str(academic_year.year),
                                          str(number_session),
                                          learn_unit_acronym)
-    response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.ms-excel')
+    response = HttpResponse(save_virtual_workbook(workbook), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = 'attachment; filename=%s' % filename
     return response
 
@@ -123,7 +128,7 @@ def __columns_resizing(ws):
     col_id_exam_enrollment.hidden = True
 
 
-def __coloring_non_editable(ws, enrollment_counter, score, justification):
+def __coloring_non_editable(ws, row_number, score, justification):
     """
     Coloring of the non-editable columns
     """
@@ -131,10 +136,10 @@ def __coloring_non_editable(ws, enrollment_counter, score, justification):
     column_number = 1
     while column_number < 12:
         if column_number < 8 or column_number > 9:
-            ws.cell(row=enrollment_counter, column=column_number).style = style_no_modification
+            ws.cell(row=row_number, column=column_number).style = style_no_modification
         else:
             if not(score is None and justification is None):
-                ws.cell(row=enrollment_counter, column=8).style = style_no_modification
-                ws.cell(row=enrollment_counter, column=9).style = style_no_modification
+                ws.cell(row=row_number, column=8).style = style_no_modification
+                ws.cell(row=row_number, column=9).style = style_no_modification
 
         column_number += 1

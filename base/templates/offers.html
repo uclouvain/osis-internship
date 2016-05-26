@@ -39,7 +39,7 @@
     <div class="panel-body">
         <div class="row">
             <form method="get" action="{% url 'offers_search'%}">
-                <div class="col-md-2">
+                <div class="col-md-3">
                     <label for="slt_academic_year">{% trans 'academic_year'%}</label>
                     <select class="form-control" id="slt_academic_year" name="academic_year" value="{{ academic_year }}">
                         {% for v in academic_years %}
@@ -59,8 +59,6 @@
                            value="{{ code  | default_if_none:'' }}" style="text-transform:uppercase" maxlength="15">
                 </div>
                 <div class="col-md-3">
-                </div>
-                <div class="col-md-1">
                     <br>
                     <button type="submit" id="bt_submit_offer_year_search" class="btn btn-primary" role="button"
                             title="{% trans 'offer_year_search' %}">
@@ -87,7 +85,7 @@
                     <td>{{ offer_year.academic_year}}</td>
                     <td><a href="{% url 'offer_read' offer_year.id %}" id="lnk_offer_{{offer_year.id}}">{{ offer_year.acronym }}</a></td>
                     <td>{{ offer_year.title }}</td>
-                    <td>{{ offer_year.structure }}</td>
+                    <td>{{ offer_year.entity_management }}</td>
                 </tr>
             {% endfor %}
         </table>

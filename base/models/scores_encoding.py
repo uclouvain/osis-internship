@@ -28,7 +28,7 @@ from django.contrib import admin
 
 
 class ScoresEncodingAdmin(admin.ModelAdmin):
-    list_display = ('pgm_manager_person', 'tutor_person', 'offer_year', 'learning_unit_year', 'total_exam_enrollments', 'exam_enrollments_encoded')
+    list_display = ('pgm_manager_person', 'offer_year', 'learning_unit_year', 'total_exam_enrollments', 'exam_enrollments_encoded')
     search_fields = ['pgm_manager_person__last_name', 'pgm_manager_person__first_name']
 
 
@@ -36,7 +36,6 @@ class ScoresEncoding(models.Model):
     id = models.BigIntegerField(primary_key=True)
     program_manager = models.ForeignKey('ProgramManager', on_delete=models.DO_NOTHING)
     pgm_manager_person = models.ForeignKey('Person', related_name='pgm_manager_person', on_delete=models.DO_NOTHING)
-    tutor_person = models.ForeignKey('Person', related_name='tutor_person', on_delete=models.DO_NOTHING)
     offer_year = models.ForeignKey('OfferYear', on_delete=models.DO_NOTHING)
     learning_unit_year = models.ForeignKey('LearningUnitYear', on_delete=models.DO_NOTHING)
     total_exam_enrollments = models.IntegerField()
@@ -47,7 +46,7 @@ class ScoresEncoding(models.Model):
         db_table = 'app_scores_encoding'
 
 
-def search(user, learning_unit_year_id=None, offer_year_id=None):
+def search(user, learning_unit_year_id=None, offer_year_id=None, learning_unit_year_ids=None):
     queryset = ScoresEncoding.objects
 
     if offer_year_id:
@@ -55,6 +54,8 @@ def search(user, learning_unit_year_id=None, offer_year_id=None):
 
     if learning_unit_year_id:
         queryset = queryset.filter(learning_unit_year_id=learning_unit_year_id)
+    elif learning_unit_year_ids:
+        queryset = queryset.filter(learning_unit_year_id__in=learning_unit_year_ids)
 
-    return queryset.filter(program_manager__person__user=user)
+    return queryset.filter(pgm_manager_person__user=user)
 
