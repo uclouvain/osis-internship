@@ -69,7 +69,7 @@
                         <label>{% trans 'tutor' %}</label><br>
                         <select id="slt_tutor" name="tutor" class="form-control">
                             <option value="">{% trans 'all' %}</option>
-                            <option value="-1" {%if tutor_id == -1 %}selected{%endif%}>Sans attribution (NOBODY)</option>
+                            <option value="-1" {%if tutor_id == -1 %}selected{%endif%}>{% trans 'without_attribution' %} (NOBODY)</option>
                             {%for t in tutor_list%}
                                 <option value="{{t.id}}" {% if tutor_id == t.id %}selected{%endif%}>{{t.person.last_name}} {{t.person.first_name}}</option>
                             {%endfor%}

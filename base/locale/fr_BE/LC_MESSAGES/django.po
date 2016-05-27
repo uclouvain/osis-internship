@@ -1091,3 +1091,6 @@ msgstr "Télécharger le fichier excel"
 
 msgid "tooltip_print_scores"
 msgstr "Imprimer les notes"
+
+msgid "without_attribution"
+msgstr "Sans attribution"

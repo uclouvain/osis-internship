@@ -1076,3 +1076,6 @@ msgstr "Download the excel file"
 
 msgid "tooltip_print_scores"
 msgstr "Print the scores"
+
+msgid "without_attribution"
+msgstr "Without attribution"
