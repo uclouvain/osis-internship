@@ -92,6 +92,8 @@ class AssistantMandate(models.Model):
 def find_mandate_by_assistant_for_academic_year(assistant, this_academic_year):
     return AssistantMandate.objects.filter(assistant=assistant, academic_year=this_academic_year)  
 
-
 def find_mandate_by_id(mandate_id):
-    return AssistantMandate.objects.get(id=mandate_id)  
+    return AssistantMandate.objects.get(id=mandate_id)
+
+def find_mandate_by_academic_assistant(assistant):
+    return AssistantMandate.objects.get(assistant=assistant)  

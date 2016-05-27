@@ -67,7 +67,7 @@
 {% for mandate in object_list %}
 <td></td>
 <td><a href="{% url 'mandate_read' mandate.id %}">{{ mandate.assistant.person.last_name }}</a></td>
-<td>{{ mandate.assistant.person.first_name }}</td>
+<td><a href="{% url 'mandate_read' mandate.id %}">{{ mandate.assistant.person.first_name }}</a></td>
 <td></td>
 <td></td>
 <td></td>
@@ -76,7 +76,18 @@
 <td>{{ mandate.contract_duration }}</td>
 <td>{{ mandate.assistant.fulltime_equivalent }}</td>
 <td></td>
-<td></td>
+<td align="center">{% for rev in mandate.review_set.all %}
+		{% if rev.advice == "FAVORABLE" %}
+		<span class="glyphicon glyphicon-thumbs-up" style="font-size: 14pt; color: green" aria-hidden="true"></span>
+                                                                   
+    	{% elif rev.advice == "UNFAVOURABLE" %}
+    		<span class="glyphicon glyphicon-thumbs-down" style="font-size: 14pt; color: red" aria-hidden="true"></span>
+    	{% else %}
+    		<span class="glyphicon glyphicon-alert" style="font-size: 14pt; color: orange" aria-hidden="true"></span>
+    	{% endif %}                                                            
+		{% empty %}
+	{% endfor %}
+</td>
 <td></td>
 </tr>
 {% endfor %}

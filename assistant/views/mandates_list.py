@@ -23,16 +23,22 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from assistant.models import assistant_mandate
+from base.models import academic_year
+from django.views.generic import ListView
 
-
-
-@login_required
-def mandate_read(request, mandate_id):
-    this_mandate = assistant_mandate.find_mandate_by_id(mandate_id)
-    return render(request, 'mandate_read.html', {'mandate': this_mandate})
+class MandatesListView(ListView):
+    context_object_name = 'mandates_list'
+    template_name = 'mandates_list.html'
+    this_academic_year = academic_year.current_academic_year()
+    queryset = assistant_mandate.AssistantMandate.objects.filter(academic_year=this_academic_year)
+    
+    def get_context_data(self, **kwargs):
+        context = super(MandatesListView, self).get_context_data(**kwargs)
+        return context
+    
+ 
 
 
 
