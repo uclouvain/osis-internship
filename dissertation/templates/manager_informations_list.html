@@ -39,21 +39,19 @@
     <div class="panel-body">
       <table class="table table-hover">
         <thead>
-          <th style="text-align:center">{% trans 'first_name'%}</th>
-          <th style="text-align:center">{% trans 'last_name'%}</th>
-          <th style="text-align:center">{% trans 'adviser_type'%}</th>
-          <th style="text-align:center">{% trans 'available_by_email'%}</th>
-          <th style="text-align:center">{% trans 'available_by_phone'%}</th>
-          <th style="text-align:center">{% trans 'available_at_office'%}</th>
+          <th>{% trans 'adviser'%}</th>
+          <th>{% trans 'adviser_type'%}</th>
+          <th>{% trans 'available_by_email'%}</th>
+          <th>{% trans 'available_by_phone'%}</th>
+          <th>{% trans 'available_at_office'%}</th>
         </thead>
         {% for adviser in advisers %}
           <tr>
-            <td style="text-align:center"><a href="{% url 'manager_informations_detail' pk=adviser.pk %}">{{ adviser.person.first_name }}</td>
-            <td style="text-align:center"><a href="{% url 'manager_informations_detail' pk=adviser.pk %}">{{ adviser.person.last_name }}</td>
-            <td style="text-align:center">{{ adviser.type }}</td>
-            <td style="text-align:center">{{ adviser.available_by_email|yesno:"Yes,No" }}</td>
-            <td style="text-align:center">{{ adviser.available_by_phone|yesno:"Yes,No" }}</td>
-            <td style="text-align:center">{{ adviser.available_at_office|yesno:"Yes,No" }}</td>
+            <td><a href="{% url 'manager_informations_detail' pk=adviser.pk %}">{{ adviser }}</td>
+            <td>{{ adviser.type }}</td>
+            <td>{{ adviser.available_by_email|yesno:"Yes,No" }}</td>
+            <td>{{ adviser.available_by_phone|yesno:"Yes,No" }}</td>
+            <td>{{ adviser.available_at_office|yesno:"Yes,No" }}</td>
           </tr>
         {% endfor %}
       </table>

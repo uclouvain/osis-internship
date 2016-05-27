@@ -66,17 +66,17 @@
         {% else %}
           <table class="table table-hover">
             <thead>
-              <th style="text-align:center">{% trans 'title'%}</th>
-              <th style="text-align:center">{% trans 'author'%}</th>
-              <th style="text-align:center">{% trans 'status'%}</th>
-              <th style="text-align:center">{% trans 'offer_year_start'%}</th>
-              <th style="text-align:center">{% trans 'proposition_dissertation'%}</th>
+              <th>{% trans 'title'%}</th>
+              <th>{% trans 'author'%}</th>
+              <th>{% trans 'status'%}</th>
+              <th>{% trans 'offer_year_start'%}</th>
+              <th>{% trans 'proposition_dissertation'%}</th>
             </thead>
             {% for dissertation in dissertations %}
               <tr>
-                <td style="text-align:center"><a href="{% url 'manager_dissertations_detail' pk=dissertation.pk %}">{{ dissertation.title }}</a></td>
-                <td style="text-align:center">{{ dissertation.author }}</td>
-                <td style="text-align:center">
+                <td><a href="{% url 'manager_dissertations_detail' pk=dissertation.pk %}">{{ dissertation.title }}</a></td>
+                <td>{{ dissertation.author }}</td>
+                <td>
                     {% if dissertation.status == 'DRAFT' %}
                     <span class="label label-default">
                     {% elif dissertation.status == 'DIR_SUBMIT' %}
@@ -113,8 +113,8 @@
                         {{ dissertation.status }}
                     </span>
                 </td>
-                <td style="text-align:center">{{ dissertation.offer_year_start }}</td>
-                <td style="text-align:center">{{ dissertation.proposition_dissertation }}<br>({{ dissertation.proposition_dissertation.author }})</td>
+                <td>{{ dissertation.offer_year_start }}</td>
+                <td>{{ dissertation.proposition_dissertation }}</td>
               </tr>
             {% endfor %}
           </table>
