@@ -55,25 +55,26 @@
                 </div>
             </div>
             <div class="row">
+                <div class="col-md-4">
+                    <label>{% trans 'offer' %} {{ offer_sel }}</label><br>
+                    <select id="slt_offer_list_selection" name="offer" class="form-control">
+                        <option value="">{% trans 'all'%}</option>
+                        {% for o in offer_list %}
+                        <option value="{{o.id}}" {%if offer_year_id == o.id %}selected{%endif%}>{{o.acronym}} - {{o.title}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label>{% trans 'tutor' %}</label><br>
                         <select id="slt_tutor" name="tutor" class="form-control">
                             <option value="">{% trans 'all' %}</option>
+                            <option value="-1" {%if tutor_id == -1 %}selected{%endif%}>{% trans 'without_attribution' %} (NOBODY)</option>
                             {%for t in tutor_list%}
                                 <option value="{{t.id}}" {% if tutor_id == t.id %}selected{%endif%}>{{t.person.last_name}} {{t.person.first_name}}</option>
                             {%endfor%}
                         </select>
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <label>{% trans 'offer' %} {{ offer_sel}}</label><br>
-                    <select id="slt_offer_list_selection" name="offer" class="form-control">
-                        <option value="">{% trans 'all'%}</option>
-                        {% for o in offer_list %}
-                        <option value="{{o.id}}" {%if offer_year_id == o.id %}selected{%else%}{%endif%}>{{o.acronym}} - {{o.title}}</option>
-                        {% endfor %}
-                    </select>
                 </div>
                 <div class="col-md-3">
                     <label for="txt_acronym">{% trans 'learning_unit'%}</label>
@@ -200,11 +201,11 @@
                 </div>
                 <div role="tabpanel" class="tab-pane fade" id="tab_via_paper_{{forloop.counter0}}">
                     <br>
-                    <a class="btn btn-default {% if not tutor_id %}disabled{%endif%}"
-                       href="{%if tutor_id and offer_year_id %}
+                    <a class="btn btn-default {% if not tutor_id or tutor_id == -1 %}disabled{%endif%}"
+                       href="{%if tutor_id and tutor_id != -1 and offer_year_id %}
                                 {% url 'notes_printing_all' tutor_id=tutor_id offer_id=offer_year_id %}
                              {%else%}
-                                {%if tutor_id %}
+                                {%if tutor_id and tutor_id != -1 %}
                                     {% url 'notes_printing_all' tutor_id=tutor_id %}
                                 {%elif offer_year_id %}
                                     {% url 'notes_printing_all' offer_id=offer_year_id %}

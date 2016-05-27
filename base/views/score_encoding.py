@@ -457,6 +457,7 @@ def get_data_online_double(learning_unit_year_id, request):
                                     enrollment.justification_final and enrollment.score_final is None]
     else:
         encoded_exam_enrollments = []
+        total_exam_enrollments = []
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
 
     nb_final_scores = len([exam_enrol for exam_enrol in encoded_exam_enrollments
@@ -480,8 +481,11 @@ def get_data_online_double(learning_unit_year_id, request):
 
 
 def get_data_pgmer(request, offer_year_id=None, tutor_id=None, learning_unit_year_acronym=None):
+    NOBODY = -1
     academic_yr = mdl.academic_year.current_academic_year()
     learning_unit_year_ids = None
+    scores_encodings = []
+    exam_enrollments = []
     if learning_unit_year_acronym:
         learning_unit_year_ids = mdl.learning_unit_year.search(acronym=learning_unit_year_acronym).values_list('id',
                                                                                                                flat=True)
@@ -513,11 +517,14 @@ def get_data_pgmer(request, offer_year_id=None, tutor_id=None, learning_unit_yea
         # Filter list by tutor
         # The tutor_id received in session is a String, not an Int
         tutor_id = int(tutor_id)
-        tutor = mdl.tutor.find_by_id(tutor_id)
-        learning_unit_ids_by_tutor = set(mdl.attribution.search(tutor=tutor).values_list('learning_unit', flat=True))
-        # learning_unit_ids_attrib = [attr.learning_unit.id for attr in attributions_by_tutor]
-        scores_encodings = [score_encoding for score_encoding in scores_encodings
-                            if score_encoding.learning_unit_year.learning_unit.id in learning_unit_ids_by_tutor]
+        # NOBODY (-1) in case to filter by learningUnit without attribution. In this case, the list is filtered after retrieved
+        # all data and tutors below
+        if tutor_id != NOBODY:
+            tutor = mdl.tutor.find_by_id(tutor_id)
+            learning_unit_ids_by_tutor = set(mdl.attribution.search(tutor=tutor).values_list('learning_unit', flat=True))
+            # learning_unit_ids_attrib = [attr.learning_unit.id for attr in attributions_by_tutor]
+            scores_encodings = [score_encoding for score_encoding in scores_encodings
+                                if score_encoding.learning_unit_year.learning_unit.id in learning_unit_ids_by_tutor]
 
     data = []
     all_attributions = []
@@ -536,8 +543,12 @@ def get_data_pgmer(request, offer_year_id=None, tutor_id=None, learning_unit_yea
                                                                        None)
             data.append(line)
 
+    if tutor_id == NOBODY: # LearningUnit without attribution
+        data = [line for line in data if line['tutor'] is None]
+
     # Creating list of all tutors
     all_tutors = []
+    # all_tutors.append({'id': NOBODY, 'last_name': 'NOBODY', 'first_name': ''})
     for item in data:
         tutor = item['tutor']
         if tutor and tutor not in all_tutors:
