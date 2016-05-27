@@ -481,7 +481,7 @@ def get_data_online_double(learning_unit_year_id, request):
 
 
 def get_data_pgmer(request, offer_year_id=None, tutor_id=None, learning_unit_year_acronym=None):
-    NOBODY = int(-1)
+    NOBODY = -1
     academic_yr = mdl.academic_year.current_academic_year()
     learning_unit_year_ids = None
     scores_encodings = []
