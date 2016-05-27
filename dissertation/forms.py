@@ -65,7 +65,6 @@ class ManagerDissertationForm(ModelForm):
         fields = ('title', 'author', 'offer_year_start', 'proposition_dissertation', 'description')
 
 
-
 class ManagerDissertationRoleForm(ModelForm):
     class Meta:
         model = DissertationRole

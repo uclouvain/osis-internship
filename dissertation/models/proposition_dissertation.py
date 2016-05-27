@@ -67,7 +67,17 @@ class PropositionDissertation(models.Model):
     created_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return self.title
+        first_name = ""
+        middle_name = ""
+        last_name = ""
+        if self.author.person.first_name:
+            first_name = self.author.person.first_name
+        if self.author.person.middle_name:
+            middle_name = self.author.person.middle_name
+        if self.author.person.last_name:
+            last_name = self.author.person.last_name + ","
+        author = u"%s %s %s" % (last_name.upper(), first_name, middle_name)
+        return author+" - "+str(self.title)
 
     def search(terms=None):
         queryset = PropositionDissertation.objects.all()
