@@ -53,7 +53,7 @@
             </div>
         </div>
         <br>
-        <div class="panel panel-primary">
+        <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">{% trans 'dissertation_informations' %}</h3>
             </div>
@@ -107,6 +107,12 @@
                         <span class="label label-default">
                         {% elif dissertation.status == 'ENDED' %}
                         <span class="label label-default">
+                        {% elif dissertation.status == 'ENDED_WIN' %}
+                        <span class="label label-default">
+                        {% elif dissertation.status == 'ENDED_LOS' %}
+                        <span class="label label-default">
+                        {% else %}
+                        <span class="label label-default">
                         {% endif %}
                             {{ dissertation.status }}
                         </span>
@@ -122,8 +128,7 @@
                 </div>
             </div>
         </div>
-        <br>
-        <div class="panel panel-primary">
+        <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">{% trans 'proposition_dissertation_informations' %}</h3>
             </div>
@@ -146,8 +151,7 @@
                 </div>
             </div>
         </div>
-        <br>
-        <div class="panel panel-primary">
+        <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">{% trans 'actions' %}</h3>
             </div>
