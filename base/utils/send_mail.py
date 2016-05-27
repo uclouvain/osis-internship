@@ -74,8 +74,8 @@ def send_mail_after_scores_submission(persons, learning_unit_name, submitted_enr
         data = {
             'learning_unit_name': learning_unit_name,
             'signature': render_to_string('email/html_email_signature.html', {
-                'logo_mail_signature_url': LOGO_OSIS_URL,
-                'logo_osis_url': LOGO_EMAIL_SIGNATURE_URL})
+                'logo_mail_signature_url': LOGO_EMAIL_SIGNATURE_URL,
+                'logo_osis_url': LOGO_OSIS_URL})
         }
 
         dest_by_lang = map_persons_by_languages(persons)
@@ -143,8 +143,8 @@ def send_mail_after_academic_calendar_changes(academic_calendar, offer_year_cale
             'offer_year_acronym': offer_year_calendar.offer_year.acronym,
             'academic_calendar': str(academic_calendar),
             'signature': render_to_string('email/html_email_signature.html', {
-                'logo_mail_signature_url': LOGO_OSIS_URL,
-                'logo_osis_url': LOGO_EMAIL_SIGNATURE_URL})}
+                'logo_mail_signature_url': LOGO_EMAIL_SIGNATURE_URL,
+                'logo_osis_url': LOGO_OSIS_URL})}
 
         dest_by_lang = map_persons_by_languages([manager.person for manager in programm_managers
                                                  if manager.person])
