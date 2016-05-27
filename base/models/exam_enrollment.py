@@ -336,8 +336,10 @@ def scores_sheet_data(exam_enrollments, tutor=None):
                 })
             program['enrollments'] = enrollments
             programs.append(program)
+            programs = sorted(programs, key=lambda k: k['acronym'])
         learn_unit_year_dict['programs'] = programs
         learning_unit_years.append(learn_unit_year_dict)
+    learning_unit_years = sorted(learning_unit_years, key=lambda k: k['acronym'])
     data['learning_unit_years'] = learning_unit_years
     return data
 
