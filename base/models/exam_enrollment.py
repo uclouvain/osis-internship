@@ -240,7 +240,9 @@ def find_for_score_encodings(session_exam_number,
 
     now = timezone.now()
     return queryset.filter(session_exam__offer_year_calendar__start_date__lte=now)\
-                   .filter(session_exam__offer_year_calendar__end_date__gte=now)
+                   .filter(session_exam__offer_year_calendar__end_date__gte=now)\
+                   .select_related('learning_unit_enrollment__offer_enrollment__offer_year')\
+                   .select_related('session_exam__offer_year_calendar')
 
 
 def scores_sheet_data(exam_enrollments, tutor=None):
