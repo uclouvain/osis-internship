@@ -91,3 +91,6 @@ class PropositionDissertation(models.Model):
                 Q(offer_proposition__acronym__icontains=terms)
             ).distinct()
         return queryset
+
+    class Meta:
+        ordering = ["author__person__last_name", "author__person__middle_name", "author__person__first_name", "title"]
