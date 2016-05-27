@@ -358,8 +358,18 @@ def get_data(request, offer_year_id=None):
     academic_yr = mdl.academic_year.current_academic_year()
     tutor = mdl.attribution.get_assigned_tutor(request.user)
     exam_enrollments = list(mdl.exam_enrollment.find_for_score_encodings(mdl.session_exam.find_session_exam_number(),
-                                                                         tutor=tutor,
-                                                                         offer_year_id=offer_year_id))
+                                                                         tutor=tutor))
+
+    all_offers = []
+    for exam_enrol in exam_enrollments:
+        off_year = exam_enrol.learning_unit_enrollment.offer_enrollment.offer_year
+        if off_year not in all_offers:
+            all_offers.append(off_year)
+    all_offers = sorted(all_offers, key=lambda k: k.acronym)
+
+    if offer_year_id:
+        exam_enrollments = [exam_enrol for exam_enrol in exam_enrollments
+                            if exam_enrol.learning_unit_enrollment.offer_enrollment.offer_year.id == offer_year_id]
     # Grouping by learningUnitYear
     group_by_learn_unit_year = {}
     for exam_enrol in exam_enrollments:
@@ -378,19 +388,6 @@ def get_data(request, offer_year_id=None):
                                                             'exam_enrollments_encoded': exam_enrollments_encoded,
                                                             'total_exam_enrollments': 1}
     scores_list = group_by_learn_unit_year.values()
-    all_offers = request.session.get('all_offers', None)
-    if not all_offers:
-        offer_ids = []  # To know if a offer is already in the list
-        all_offers = []
-        for exam_enrol in exam_enrollments:
-            offer_year = exam_enrol.learning_unit_enrollment.offer_enrollment.offer_year
-            if offer_year.id not in offer_ids:
-                offer_ids.append(offer_year.id)
-                all_offers.append({'id': offer_year.id,
-                                   'acronym': offer_year.acronym,
-                                   'title': offer_year.title})
-        all_offers = sorted(all_offers, key=lambda k: k['acronym'])
-        request.session['all_offers'] = all_offers
 
     return layout.render(request, "assessments/scores_encoding.html",
                          {'tutor': tutor,
@@ -484,8 +481,6 @@ def get_data_pgmer(request, offer_year_id=None, tutor_id=None, learning_unit_yea
     NOBODY = -1
     academic_yr = mdl.academic_year.current_academic_year()
     learning_unit_year_ids = None
-    scores_encodings = []
-    exam_enrollments = []
     if learning_unit_year_acronym:
         learning_unit_year_ids = mdl.learning_unit_year.search(acronym=learning_unit_year_acronym).values_list('id',
                                                                                                                flat=True)
