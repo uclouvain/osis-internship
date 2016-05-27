@@ -177,13 +177,12 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <a class="btn btn-default btn-danger"
-                        href="{% url 'manager_dissertations_delete' pk=dissertation.pk %}">
-                        <span class="glyphicon glyphicon-remove"></span></a>
-
                         <a class="btn btn-default btn-primary"
                         href="{% url 'manager_dissertations_edit' pk=dissertation.pk %}">
-                        <span class="glyphicon glyphicon-edit"></span></a>
+                        <span class="glyphicon glyphicon-edit"></span> {% trans 'edit_manager_dissertation' %}</a>
+                        <a class="btn btn-default btn-danger"
+                        href="{% url 'manager_dissertations_delete' pk=dissertation.pk %}">
+                        <span class="glyphicon glyphicon-remove"></span> {% trans 'delete_manager_dissertation' %}</a>
 
                         {% if dissertation.status == 'DRAFT' or dissertation.status == 'DIR_KO' %}
                           <a href="{% url 'manager_dissertations_to_dir_submit' pk=dissertation.pk %}"

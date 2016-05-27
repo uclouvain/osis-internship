@@ -38,22 +38,7 @@
   </div>
   <div class="panel panel-default">
     <div class="panel-body">
-      <div class="row">
-        {% if proposition_dissertation.author == adviser %}
-        <div class="col-md-2 pull-right">
-          <div class="col-md-4 pull-right">
-            <a class="btn btn-default btn-danger" href="{% url 'proposition_dissertation_delete' pk=proposition_dissertation.pk %}">
-            <span class="glyphicon glyphicon-remove"></span></a>
-          </div>
-          <div class="col-md-4 pull-right">
-            <a class="btn btn-default btn-primary" href="{% url 'proposition_dissertation_edit' pk=proposition_dissertation.pk %}">
-            <span class="glyphicon glyphicon-edit"></span></a>
-          </div>
-        </div>
-        {% endif %}
-      </div>
-       <br>
-        <div class="panel panel-primary">
+        <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">{% trans 'dissertation_informations' %}</h3>
             </div>
@@ -146,6 +131,19 @@
                 </div>
             </div>
         </div>
+        {% if proposition_dissertation.author == adviser %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">{% trans 'actions' %}</h3>
+            </div>
+            <div class="panel-body">
+                <a class="btn btn-default btn-primary" href="{% url 'proposition_dissertation_edit' pk=proposition_dissertation.pk %}">
+                <span class="glyphicon glyphicon-edit"></span> {% trans 'edit_proposition_dissertation' %}</a>
+                <a class="btn btn-default btn-danger" href="{% url 'proposition_dissertation_delete' pk=proposition_dissertation.pk %}">
+                <span class="glyphicon glyphicon-remove"></span> {% trans 'delete_proposition_dissertation' %}</a>
+            </div>
+        </div>
+        {% endif %}
     </div>
   </div>
 {% endblock %}

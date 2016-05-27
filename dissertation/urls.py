@@ -84,7 +84,7 @@ urlpatterns = [
     url(r'^manager_proposition_dissertation/(?P<pk>[0-9]+)/edit/$',
         proposition_dissertation.manage_proposition_dissertation_edit, name='manager_proposition_dissertation_edit'),
 
-    url(r'^manager_search$', proposition_dissertation.manager_proposition_dissertations_search,
+    url(r'^manager_proposition_dissertation_search$', proposition_dissertation.manager_proposition_dissertations_search,
         name='manager_proposition_dissertations_search'),
 
     url(r'^dissertations_list$', dissertation.dissertations_list,

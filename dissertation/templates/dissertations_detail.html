@@ -38,21 +38,6 @@
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
-        <div class="row">
-            <div class="col-md-2 pull-right">
-                <div class="col-md-4 pull-right">
-                    <a class="btn btn-default btn-danger"
-                       href="{% url 'dissertations_delete' pk=dissertation.pk %}">
-                        <span class="glyphicon glyphicon-remove"></span></a>
-                </div>
-                <div class="col-md-4 pull-right">
-                    <a class="btn btn-default btn-primary"
-                       href="{% url 'dissertations_edit' pk=dissertation.pk %}">
-                        <span class="glyphicon glyphicon-edit"></span></a>
-                </div>
-            </div>
-        </div>
-        <br>
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">{% trans 'dissertation_informations' %}</h3>
@@ -158,6 +143,14 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-12">
+                        <a class="btn btn-default btn-primary"
+                        href="{% url 'dissertations_edit' pk=dissertation.pk %}">
+                        <span class="glyphicon glyphicon-edit"></span> {% trans 'edit_dissertation' %}</a>
+
+                        <a class="btn btn-default btn-danger"
+                       href="{% url 'dissertations_delete' pk=dissertation.pk %}">
+                        <span class="glyphicon glyphicon-remove"></span> {% trans 'delete_dissertation' %}</a>
+
                         {% if dissertation.status == 'DRAFT' %}
                         <a href="{% url 'dissertations_to_dir_submit' pk=dissertation.pk %}"
                            id="lnk_dissertations_to_dir_submit" class="btn btn-default"
