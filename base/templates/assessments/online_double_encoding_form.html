@@ -173,13 +173,13 @@
                                    {% endif %}>
                                 <option value=""></option>
                                 {% if is_program_manager %}
-                                    <option value="ABSENCE_UNJUSTIFIED">{% trans 'absence_unjustified' %}</option>
-                                    <option value="ABSENCE_JUSTIFIED">{% trans 'absence_justified' %}</option>
+                                    <option value="ABSENCE_UNJUSTIFIED">{% trans 'ABSENCE_UNJUSTIFIED' %}</option>
+                                    <option value="ABSENCE_JUSTIFIED">{% trans 'ABSENCE_JUSTIFIED' %}</option>
                                 {% else %}
                                     <option value="ABSENCE_UNJUSTIFIED">{% trans 'absent' %}</option>
                                 {% endif %}
-                                <option value="CHEATING">{% trans 'cheating' %}</option>
-                                <option value="SCORE_MISSING">{% trans 'score_missing' %}</option>
+                                <option value="CHEATING">{% trans 'CHEATING' %}</option>
+                                <option value="SCORE_MISSING">{% trans 'SCORE_MISSING' %}</option>
                             </select>
                         </td>
                         <td>{{ enrollment.session_exam.deadline | default_if_none:''|date:"j/m/Y" }}</td>

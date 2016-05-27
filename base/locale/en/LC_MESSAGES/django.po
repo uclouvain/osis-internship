@@ -28,7 +28,7 @@ msgstr "Are you sure?"
 msgid "birth_date"
 msgstr "Birth Date"
 
-msgid "cheating"
+msgid "CHEATING"
 msgstr "Cheating"
 
 msgid "cheating_pdf_legend"
@@ -58,13 +58,13 @@ msgstr "Ill"
 msgid "ill_pdf_legend"
 msgstr "I=Ill"
 
-msgid "absence_unjustified"
+msgid "ABSENCE_UNJUSTIFIED"
 msgstr "Unjustified Absence"
 
-msgid "absence_justified"
+msgid "ABSENCE_JUSTIFIED"
 msgstr "Justified absence"
 
-msgid "score_missing"
+msgid "SCORE_MISSING"
 msgstr "Score missing"
 
 msgid "score_already_submitted"

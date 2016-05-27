@@ -68,7 +68,7 @@ def send_mail_after_scores_submission(persons, learning_unit_name, submitted_enr
                 enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name,
                 enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name,
                 enrollment.score_final,
-                _(enrollment.justification_final) if enrollment.justification_final else '',
+                _(enrollment.justification_final) if enrollment.justification_final else None,
             ) for enrollment in submitted_enrollments]
 
         data = {

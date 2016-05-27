@@ -51,10 +51,10 @@ class ExamEnrollmentAdmin(admin.ModelAdmin):
 #    'CHEATING'            => 'T'
 #    'SCORE_MISSING'       => '?'
 JUSTIFICATION_TYPES = (
-    ('ABSENCE_UNJUSTIFIED', _('absence_unjustified')),  # A -> S
-    ('ABSENCE_JUSTIFIED', _('absence_justified')),      # M
-    ('CHEATING', _('cheating')),                        # T
-    ('SCORE_MISSING', _('score_missing')))              # ?
+    ('ABSENCE_UNJUSTIFIED', _('ABSENCE_UNJUSTIFIED')),  # A -> S
+    ('ABSENCE_JUSTIFIED', _('ABSENCE_JUSTIFIED')),      # M
+    ('CHEATING', _('CHEATING')),                        # T
+    ('SCORE_MISSING', _('SCORE_MISSING')))              # ?
 
 
 class ExamEnrollment(models.Model):
