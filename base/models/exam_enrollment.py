@@ -25,7 +25,7 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 from base.models import person, learning_unit_year, attribution, person_address, offer_year_calendar
 from django.utils import timezone
 import datetime
@@ -332,7 +332,7 @@ def scores_sheet_data(exam_enrollments, tutor=None):
                     "last_name": student.person.last_name,
                     "first_name": student.person.first_name,
                     "score": str(exam_enrol.score_final) if exam_enrol.score_final else '',
-                    "justification": exam_enrol.justification_final if exam_enrol.justification_final else ''
+                    "justification": _(exam_enrol.justification_final) if exam_enrol.justification_final else ''
                 })
             program['enrollments'] = enrollments
             programs.append(program)
