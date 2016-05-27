@@ -294,30 +294,48 @@ def internships_create(request):
                                                         'all_learning_unit_year': learning_unit_years,
                                                         'all_organization':organizations,
                                                 })
-@login_required
+
 def internships_new(request):
+    return internships_edit(request, None)
+
+@login_required
+def internships_edit(request, internship_id):
+    success = 0
+    check_internship = 0
     form = InternshipOfferForm(data=request.POST)
 
-    internship = InternshipOffer()
+    if internship_id :
+        internship = InternshipOffer.find_intership_by_id(internship_id)
+    else :
+        internship = InternshipOffer()
+        check_internship = len(InternshipOffer.find_interships_by_learning_unit_organization(learning_unit_year[0].title,
+                                                                                            request.POST['organization']))
+    organization = Organization.search(reference=request.POST['organization'])
+    learning_unit_year = mdl.learning_unit_year.search(title=request.POST['learning_unit_year'])
 
-    if request.POST['organization']:
-        organization = Organization.search(reference=request.POST['organization'])
-        internship.organization = organization[0]
+    if check_internship == 0 :
+        if request.POST['organization']:
+            internship.organization = organization[0]
 
-    print(request.POST['learning_unit_year'])
-    if request.POST['learning_unit_year']:
-        learning_unit_year = mdl.learning_unit_year.search(title=request.POST['learning_unit_year'])
-        internship.learning_unit_year = learning_unit_year[0]
-        internship.title = learning_unit_year[0].title
+        if request.POST['learning_unit_year']:
+            internship.learning_unit_year = learning_unit_year[0]
+            internship.title = learning_unit_year[0].title
 
-    if request.POST['maximum_enrollments']:
-        internship.maximum_enrollments = request.POST['maximum_enrollments']
+        if request.POST['maximum_enrollments']:
+            internship.maximum_enrollments = request.POST['maximum_enrollments']
 
-    internship.save()
-    message = "%s" % _('Stage correctement créé !')
+        internship.save()
+        success = 1
+        if internship_id :
+            message = "%s" % _('Stage correctement modifié ! Vous pouvez cliquer sur le bouton Retour')
+        else :
+            message = "%s" % _('Stage correctement créé !')
+
+    else :
+        message = "%s" % _('Ce stage pour cet hôpital existe déjà !')
+
     #Select all the organisation (service partner)
     organizations = Organization.find_all_order_by_reference()
-
     #select all the learning_unit_year which contain the word stage
     learning_unit_years = mdl.learning_unit_year.search(title="Stage")
 
@@ -325,7 +343,10 @@ def internships_new(request):
     return render(request, "internships_create.html", {'section': 'internship',
                                                         'all_learning_unit_year': learning_unit_years,
                                                         'all_organization':organizations,
-                                                        'message': message
+                                                        'select_organization' : organization[0].reference,
+                                                        'select_learning_unit_year' : learning_unit_year[0].title,
+                                                        'message': message,
+                                                        'success' : success
                                                 })
 
 @login_required
@@ -338,10 +359,16 @@ def student_choice(request, id):
         number_choices[index] = len (InternshipChoice.find_by(s_organization = internship.organization,
                                                             s_learning_unit_year = internship.learning_unit_year,
                                                             s_define_choice = index))
-    print (number_choices)
 
     return render(request, "internship_detail.html", {'section': 'internship',
                                                         'internship': internship,
                                                         'students' : students,
                                                         'number_choices' : number_choices,
                                                 })
+
+@login_required
+def internship_modification(request, internship_id):
+    internship = InternshipOffer.find_intership_by_id(internship_id)
+    return render(request, "internship_modification.html", {'internship': internship,
+                                                            'internship_id' : internship_id
+    })

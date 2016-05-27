@@ -43,7 +43,7 @@ class InternshipOffer(models.Model):
     @staticmethod
     def find_interships_by_learning_unit_organization(learning_unit_year, organization):
         internships = InternshipOffer.objects.filter(learning_unit_year__title=learning_unit_year)\
-                                            .filter(organization__name=organization)
+                                            .filter(organization__reference=organization)
         return internships
 
     @staticmethod
@@ -108,7 +108,7 @@ class InternshipMaster(models.Model):
     @staticmethod
     def find_masters_by_speciality_and_organization(speciality, organization):
         masters = InternshipMaster.objects.filter(speciality=speciality)\
-                                            .filter(organization__name=organization)
+                                            .filter(organization__reference=organization)
         return masters
 
     @staticmethod
