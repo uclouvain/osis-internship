@@ -78,7 +78,7 @@ def export_xls(academic_year_id, is_fac, exam_enrollments):
                 score = "{0:.0f}".format(exam_enroll.score_final)
         justification = ""
         if exam_enroll.justification_final:
-            justification = mdl.exam_enrollment.get_letter_justication_type(exam_enroll.justification_final)
+            justification = _(exam_enroll.justification_final)
         worksheet.append([str(academic_year),
                           str(exam_enroll.session_exam.number_session),
                           exam_enroll.session_exam.learning_unit_year.acronym,

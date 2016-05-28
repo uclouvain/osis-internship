@@ -776,16 +776,16 @@ msgid "offer_year_not_exist"
 msgstr "Le programme annualisé (%s) (%d) - n'existe pas"
 
 msgid "offer_enrollment_not_exist"
-msgstr "Les inscriptions à ce programme n'existe pas"
+msgstr "L'inscription à ce programme n'existe pas"
 
 msgid "activity_not_exit"
 msgstr "L'activité %s n'existe pas"
 
 msgid "enrollment_activity_not_exist"
-msgstr "l'inscription à l'activité %s n'existe pas"
+msgstr "L'inscription à l'activité %s n'existe pas"
 
 msgid "enrollment_exam_not_exists"
-msgstr "l'inscription à l'unité d'enseignement %s n'existe pas"
+msgstr "L'inscription à l'unité d'enseignement %s n'existe pas"
 
 msgid "Note already submitted"
 msgstr ""
@@ -797,17 +797,10 @@ msgid "score_decimal_not_allowed"
 msgstr "La note encodée est incorrecte : décimales non autorisées"
 
 msgid "constraint_score_other_score"
-msgstr "Vous ne pouvez pas remplir le champs 'Note chiffrée' e 'justification' tous les deux"
-
-#: utils/upload_xls_utils.py:226
-#, python-format
-msgid "%(count)d %(name)s."
-msgid_plural "%(count)d %(plural_name)s."
-msgstr[0] ""
-msgstr[1] ""
+msgstr "Vous ne pouvez pas remplir les champs 'Note chiffrée' et 'Justification' tous les deux"
 
 msgid "score_saved"
-msgstr "Notes"
+msgstr "Note(s) injectée(s)"
 
 msgid "score_invalid"
 msgstr "Note invalide"
@@ -819,7 +812,8 @@ msgid "the_coordinator_must_still_submit_scores"
 msgstr "Le coordinateur doit toujours soumettre les scores"
 
 msgid "no_score_injected"
-msgstr "Aucune note injectée"
+msgstr "Aucune note injectée (NB: les notes de votre fichier excel ne sont injectées que si elles sont différentes "
+       "de celles déjà enregistrées précédemment)."
 
 msgid "begin_date_lt_end_date"
 msgstr "La date de début doit etre égale ou inferieure à la date de fin"
@@ -1091,3 +1085,30 @@ msgstr "Télécharger le fichier excel"
 
 msgid "tooltip_print_scores"
 msgstr "Imprimer les notes"
+
+msgid "learning_unit_not_access"
+msgstr "Vous n'avez pas les droits d'accès à cette unité d'enseignement ou elle n'existe pas en pas de données"
+
+msgid "registration_id_not_access_or_not_exist"
+msgstr "Vous n'avez pas des droits accès pour cet étudiant ou il n'existe pas en base de données"
+
+msgid "more_than_one_academic_year_error"
+msgstr "Il y a plusieurs années académiques dans la colonne 'Année académique' de votre fichier excel. "
+      "Veuiller corriger votre fichier excel de manière à ce qu'il n'y ai qu'une seule année académique"
+
+msgid "more_than_one_session_error"
+msgstr "Il y a plusieurs numéros de sessions dans la colonne 'Session' de votre fichier excel. "
+      "Veuiller corriger votre fichier excel de manière à ce qu'il n'y ai qu'un seul numéro de session"
+
+msgid "offer_year_not_access_or_not_exist"
+msgstr "Vous n'avez pas les droits d'accès pour cette offre ou elle n'existe pas en base de données"
+
+msgid "learning_unit_not_access_or_not_exist"
+msgstr "Vous n'avez pas les droits d'accès pour cette unité d'enseignement ou elle n'existe pas en base de données"
+
+msgid "justification_invalid"
+msgstr "Justification invalide"
+
+msgid "more_than_one_learning_unit_error"
+msgstr "Vous avez encodé des notes pour plusieurs unités d'enseignements dans votre fichier excel "
+       "(colonne 'Unité d'enseignement'). Veillez à ne faire qu'un seul fichier excel par unité d'enseignement."
