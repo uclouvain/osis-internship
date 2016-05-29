@@ -28,7 +28,7 @@ msgstr "Êtes-vous sûr?"
 msgid "birth_date"
 msgstr "Date de naissance"
 
-msgid "cheating"
+msgid "CHEATING"
 msgstr "Tricherie"
 
 msgid "cheating_pdf_legend"
@@ -58,13 +58,13 @@ msgstr "Malade"
 msgid "ill_pdf_legend"
 msgstr "M=Malade"
 
-msgid "absence_unjustified"
+msgid "ABSENCE_UNJUSTIFIED"
 msgstr "Absence injustifiée"
 
-msgid "absence_justified"
+msgid "ABSENCE_JUSTIFIED"
 msgstr "Absence justifiée"
 
-msgid "score_missing"
+msgid "SCORE_MISSING"
 msgstr "Note manquante"
 
 msgid "score_missing_pdf_legend"
@@ -1085,6 +1085,9 @@ msgstr "Télécharger le fichier excel"
 
 msgid "tooltip_print_scores"
 msgstr "Imprimer les notes"
+
+msgid "without_attribution"
+msgstr "Sans attribution"
 
 msgid "learning_unit_not_access"
 msgstr "Vous n'avez pas les droits d'accès à cette unité d'enseignement ou elle n'existe pas en pas de données"
