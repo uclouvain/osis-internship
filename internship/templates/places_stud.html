@@ -68,8 +68,6 @@
               <tr>
                   <th>{% trans 'reference' %}</th>
                   <th>{% trans 'name' %}</th>
-                  <th>{% trans 'student_choice' %}</th>
-                  <th>{% trans 'affectation_result' %}</th>
                   <th>{% trans 'Address' %}</th>
                   <th>{% trans 'Postal Code' %}</th>
                   <th>{% trans 'City' %}</th>
@@ -85,17 +83,6 @@
                   </td>
                   <td>
                     {{ organization.name }}
-                  </td>
-                  <td align="center">
-                    <a class="btn btn-primary" target="_blank" id="lnk_students_choice{{organization.reference}}"
-                        href="{% url 'place_detail_student_choice' organization.reference %}">
-                      <span class="glyphicon glyphicon-search" aria-hidden="true">
-                        {{ organization.student_choice }}
-                      </span>
-                    </a>
-                  </td>
-                  <td align="center">
-                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                   </td>
                   <td>
                     {% for address in organization.address %}
@@ -127,7 +114,4 @@
       </div>
     </div>
   </div>
-  <a href="{% url 'place_create' %}" id="lnk_organization_create" class="btn btn-default"
-     role="button" title="{% trans 'create_an_organization'%}">{% trans 'add_a_hospital' %}
-     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
 {% endblock %}

@@ -35,6 +35,15 @@ from base.forms import ScoreFileForm
 from base import models as mdl
 
 
+col_academic_year = 0
+col_session = 1
+col_learning_unit = 2
+col_offer = 3
+col_registration_id = 4
+col_score = 7
+col_justification = 8
+
+
 @login_required
 def upload_scores_file(request, learning_unit_year_id=None):
     if request.method == 'POST':
@@ -48,182 +57,220 @@ def upload_scores_file(request, learning_unit_year_id=None):
                     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
                     is_program_manager = mdl.program_manager.is_program_manager(request.user)
                     __save_xls_scores(request, file_name, is_program_manager, request.user,
-                                      learning_unit_year.learning_unit.id)
+                                      learning_unit_year.id)
 
         return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_year_id, ]))
 
 
-def __save_xls_scores(request, file_name, is_program_manager, user, learning_unit_id):
+def _get_all_data(worksheet):
+    """
+    :param worksheet: The excel worksheet (containing examEnrollments/scores)
+    :return: All learn_unit_acronyms, offer_acronyms, registration_ids, session and academic_years
+             in all lines of the worksheet.
+    """
+    learn_unit_acronyms = []
+    offer_acronyms = []
+    registration_ids = []
+    sessions = []
+    academic_years = []
+    for count, row in enumerate(worksheet.rows):
+        if row[col_registration_id].value is None \
+                or len(str(row[col_registration_id].value)) == 0 \
+                or not _is_registration_id(row[col_registration_id].value):
+            # In case of blank line or line that is not a examEnrollment
+            continue
+        session = row[col_session].value
+        if session not in sessions:
+            sessions.append(session)
+
+        academic_year = int(row[col_academic_year].value[:4])
+        if academic_year not in academic_years:
+            academic_years.append(academic_year)
+
+        learn_unit_acronym = row[col_learning_unit].value
+        if learn_unit_acronym not in learn_unit_acronyms:
+            learn_unit_acronyms.append(learn_unit_acronym)
+
+        offer_acronym = row[col_offer].value
+        if offer_acronym not in offer_acronyms:
+            offer_acronyms.append(offer_acronym)
+
+        registration_id = row[col_registration_id].value
+        if registration_id not in registration_ids:
+            registration_ids.append(registration_id)
+
+    return {'learning_unit_acronyms': learn_unit_acronyms,
+            'offer_acronyms': offer_acronyms,
+            'registration_ids': registration_ids,
+            'sessions': sessions,
+            'academic_years': academic_years}
+
+
+def __save_xls_scores(request, file_name, is_program_manager, user, learning_unit_year_id):
     workbook = load_workbook(file_name, read_only=True)
     worksheet = workbook.active
     new_scores_number = 0
-    new_scores = False
-    session_exam = None
+    learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
 
-    col_academic_year = 0
-    col_session = 1
-    col_learning_unit = 2
-    col_offer = 3
-    col_registration_id = 4
-    col_score = 7
-    col_justification = 8
+    data_xls = _get_all_data(worksheet)
+    if len(data_xls['sessions']) > 1:
+        messages.add_message(request, messages.ERROR, '%s' % _('more_than_one_session_error'))
+        return False
+    else:
+        data_xls['session'] = data_xls['sessions'][0]  # Only one session
+
+    if len(data_xls['academic_years']) > 1:
+        messages.add_message(request, messages.ERROR, '%s' % _('more_than_one_academic_year_error'))
+        return False
+    else:
+        data_xls['academic_year'] = data_xls['academic_years'][0]  # Only one session
+
+    academic_year_in_database = mdl.academic_year.find_academic_year_by_year(data_xls['academic_year'])
+    if is_program_manager:
+        offer_years_managed = list(mdl.offer_year.find_by_user(user, academic_yr=academic_year_in_database))
+        exam_enrollments_managed_by_user = list(mdl.exam_enrollment.find_for_score_encodings(data_xls['session'],
+                                                                                             offers_year=offer_years_managed,
+                                                                                             learning_unit_year_id=learning_unit_year_id))
+    else:
+        tutor = mdl.tutor.find_by_user(request.user)
+        exam_enrollments_managed_by_user = list(mdl.exam_enrollment.find_for_score_encodings(data_xls['session'],
+                                                                                             tutor=tutor,
+                                                                                             learning_unit_year_id=learning_unit_year_id))
+
+    # Set of all LearningUnit.acronym managed by the user
+    learn_unit_acronyms_managed_by_user = {exam_enroll.learning_unit_enrollment.learning_unit_year.acronym
+                                           for exam_enroll in exam_enrollments_managed_by_user}
+    # Set of all OfferYear.acronym managed by the user
+    offer_acronyms_managed_by_user = {exam_enroll.learning_unit_enrollment.offer_enrollment.offer_year.acronym
+                                           for exam_enroll in exam_enrollments_managed_by_user}
+    # Set of all Student.registration_id managed by the user
+    registration_ids_managed_by_user = {exam_enroll.learning_unit_enrollment.student.registration_id
+                                           for exam_enroll in exam_enrollments_managed_by_user}
+    # Dictionary where key=Student.registration_id and value=ExamEnrollment (object from queryset)
+    exam_enrollments_by_registration_id = {}
+    for exam_enroll in exam_enrollments_managed_by_user:
+        registration_id = exam_enroll.learning_unit_enrollment.student.registration_id
+        if registration_id in exam_enrollments_by_registration_id.keys():
+            exam_enrollments_by_registration_id[registration_id].append(exam_enroll)
+        else:
+            exam_enrollments_by_registration_id[registration_id] = [exam_enroll]
 
     # Iterates over the lines of the spreadsheet.
     for count, row in enumerate(worksheet.rows):
-        new_score = False
         if row[col_registration_id].value is None \
-                or len(row[col_registration_id].value) == 0 \
+                or len(str(row[col_registration_id].value)) == 0 \
                 or not _is_registration_id(row[col_registration_id].value):
             continue
 
-        student = mdl.student.find_by(registration_id=row[col_registration_id].value)
-        info_line = "%s %d (NOMA %s):" % (_('Line'), count + 1, row[col_registration_id].value)
-        if not student:
-            messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('student_not_exist') % (str(row[col_registration_id].value))))
-        else:
-            academic_year = mdl.academic_year.find_academic_year_by_year(int(row[col_academic_year].value[:4]))
-            if not academic_year:
-                messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('academic_year_not_exist') % row[col_academic_year].value))
+        xls_registration_id = str(row[col_registration_id].value)
+        xls_offer_year_acronym = row[col_offer].value
+        xls_learning_unit_acronym = row[col_learning_unit].value
+        info_line = "%s %d (NOMA %s):" % (_('Line'), count + 1, xls_registration_id)
+        if xls_registration_id not in registration_ids_managed_by_user:
+            # In case the xls registration_id is not in the list, we check...
+            if learning_unit_year.acronym != xls_learning_unit_acronym:
+                # ... if it is because the user has multiple learningUnit in his excel file
+                # (the data from the DataBase are filtered by LearningUnitYear beacause excel is build by learningUnit)
+                messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('more_than_one_learning_unit_error')))
+            elif xls_offer_year_acronym not in offer_acronyms_managed_by_user:
+                # ... if it is because the user haven't access rights to the offerYear
+                messages.add_message(request, messages.ERROR, "%s '%s' %s!" % (info_line, xls_offer_year_acronym, _('offer_year_not_access_or_not_exist')))
             else:
-                offer_year = mdl.offer_year.find_by_academicyear_acronym(academic_year, row[col_offer].value)
-                if not offer_year:
-                    messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('offer_year_not_exist') % (str(row[col_offer].value), academic_year.year)))
+                # ... if it's beacause the registration id doesn't exist
+                messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('registration_id_not_access_or_not_exist')))
+        else:
+            exam_enrollments = exam_enrollments_by_registration_id[xls_registration_id]
+            exam_enrollment = None
+            # Find ExamEnrollment by learningUnit.acronym
+            for exam_enroll in exam_enrollments:
+                if exam_enroll.learning_unit_enrollment.learning_unit_year.acronym == xls_learning_unit_acronym:
+                    exam_enrollment = exam_enroll
+            if not exam_enrollment:
+                messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('enrollment_activity_not_exist') % (xls_learning_unit_acronym)))
+            elif not is_program_manager and (exam_enrollment.score_final is not None or exam_enrollment.justification_final):
+                # In case the user is not a program manager, we check if the scores are already submitted
+                # If this examEnrollment is already encoded in DataBase, nothing to do (ingnoring the line)
+                messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('score_already_submitted')))
+                continue
+            else:
+                academic_year = int(row[col_academic_year].value[:4])
+                if academic_year != academic_year_in_database.year:
+                    messages.add_message(request, messages.ERROR, "%s '%d' %s!" % (info_line, academic_year, _('academic_year_not_exist')))
                 else:
-                    offer_enrollment = mdl.offer_enrollment.find_by_student_offer(student, offer_year)
-                    if not offer_enrollment:
-                        messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('offer_enrollment_not_exist')))
+                    if xls_offer_year_acronym not in offer_acronyms_managed_by_user:
+                        messages.add_message(request, messages.ERROR, "%s '%s' %s!" % (info_line, xls_offer_year_acronym, _('offer_year_not_access_or_not_exist')))
+                    elif xls_offer_year_acronym != exam_enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym:
+                        messages.add_message(request, messages.ERROR, "%s '%s' %s!" % (info_line, xls_offer_year_acronym, _('offer_enrollment_not_exist')))
                     else:
-                        learning_unit_year_lists = mdl.learning_unit_year.search(academic_year,
-                                                                                 row[col_learning_unit].value)
-                        learning_unit_year = None
-                        if len(learning_unit_year_lists) == 1:
-                            learning_unit_year = learning_unit_year_lists[0]
-                        if not learning_unit_year:
-                            messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('activity_not_exit') % (str(row[col_learning_unit].value))))
+                        if xls_learning_unit_acronym not in learn_unit_acronyms_managed_by_user:
+                            messages.add_message(request, messages.ERROR, "%s '%s' %s!" % (info_line, xls_learning_unit_acronym, _('learning_unit_not_access_or_not_exist')))
                         else:
-                            learning_unit_enrollment = mdl.learning_unit_enrollment.find_by_learningunit_enrollment(learning_unit_year, offer_enrollment)
-                            if not learning_unit_enrollment:
-                                messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('enrollment_activity_not_exist') % (str(row[col_learning_unit].value))))
+                            if xls_learning_unit_acronym != exam_enrollment.learning_unit_enrollment.learning_unit_year.acronym:
+                                messages.add_message(request, messages.ERROR, "%s %s for %s!" % (info_line, _('enrollment_exam_not_exists'), xls_learning_unit_acronym))
                             else:
-                                session_number = int(row[col_session].value)
-                                exam_enrollment = mdl.exam_enrollment.find_by_enrollment_session(learning_unit_enrollment, session_number)
-                                if row[col_learning_unit].value != exam_enrollment.learning_unit_enrollment.learning_unit_year.acronym:
-                                    learning_unit = mdl.learning_unit.find_by_id(learning_unit_id)
-                                    messages.add_message(request, messages.ERROR, "%s %s for %s!" % (info_line, _('enrollment_exam_not_exists'), learning_unit.acronym))
-                                else:
-                                    if session_exam is None:
-                                        session_exam = exam_enrollment.session_exam
-                                    if is_program_manager:
-                                        notes_modifiable = True
+                                score = row[col_score].value
+                                if score is not None:
+                                    try:
+                                        score = float(str(row[col_score].value).strip().replace(',', '.'))
+                                    except ValueError:
+                                        messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('score_invalid')))
+                                        continue
+                                    if score < 0 or score > 20:
+                                        messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('scores_gt_0_lt_20')))
+                                        continue
+                                    elif not exam_enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores and round(score) != score:
+                                        messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('score_decimal_not_allowed')))
+                                        continue
+
+                                justification = row[col_justification].value
+                                if justification:
+                                    justification = justification.strip()
+                                    if justification in ['A', 'T', '?']:
+                                        switcher = {'A': "ABSENCE_UNJUSTIFIED",
+                                                    'T': "CHEATING",
+                                                    '?': "SCORE_MISSING"}
+                                        justification = switcher.get(justification, None)
                                     else:
-                                        if exam_enrollment.score_final is None and not exam_enrollment.justification_final:
-                                            notes_modifiable = True
-                                        else:
-                                            notes_modifiable = False
-                                            messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('score_already_submitted')))
-                                    score = None
-                                    if notes_modifiable:
-                                        if row[col_score].value is not None:
-                                            try:
-                                                score = float(str(row[col_score].value).strip().replace(',', '.'))
-                                            except ValueError:
-                                                messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('score_invalid')))
-                                        else:
-                                            score = None
+                                        messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('justification_invalid')))
+                                        continue
 
-                                        score_valid = True
+                                if score is not None and justification:
+                                    messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('constraint_score_other_score')))
 
-                                        if score is not None:
-                                            if score < 0 or score > 20:
-                                                messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('scores_gt_0_lt_20')))
-                                                score_valid = False
-                                            elif not learning_unit_year.decimal_scores and round(score) != score:
-                                                messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('score_decimal_not_allowed')))
-                                                score_valid = False
-                                        else:
-                                            score_valid = False
+                                elif score == 0 or score or justification:
+                                    if is_program_manager:
+                                        if exam_enrollment.score_final != score:
+                                            new_scores_number += 1
+                                            exam_enrollment.score_final = score
 
-                                        justification_xls = None
-                                        justification_value = row[col_justification].value
-                                        justification_valid = False
-                                        if justification_value:
-                                            justification_value = justification_value.strip()
-                                            if justification_value in ['A', 'T', '?']:
-                                                switcher = {'A': "ABSENCE_UNJUSTIFIED",
-                                                            'T': "CHEATING",
-                                                            '?': "SCORE_MISSING"}
-                                                justification_xls = switcher.get(justification_value, None)
-                                                justification_valid = True
+                                        if (justification and exam_enrollment.justification_final != justification) \
+                                                or (not is_program_manager and exam_enrollment.justification_draft != justification):
+                                            new_scores_number += 1
+                                            exam_enrollment.justification_final = justification
+                                        mdl.exam_enrollment.create_exam_enrollment_historic(request.user,
+                                                                                            exam_enrollment,
+                                                                                            score,
+                                                                                            justification)
+                                    else:
+                                        if score != exam_enrollment.score_draft:
+                                            new_scores_number += 1
+                                            exam_enrollment.score_draft = score
 
-                                        if score and justification_xls:
-                                            score_valid = False
-                                            justification_valid = False
-                                            messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('constraint_score_other_score')))
+                                        if justification and exam_enrollment.justification_draft != justification:
+                                            new_scores_number += 1
+                                            exam_enrollment.justification_draft = justification
+                                    exam_enrollment.save()
 
-                                        if score_valid or justification_valid:
-                                            if is_program_manager:
-                                                if exam_enrollment.score_final != score:
-                                                    new_scores_number += 1
-                                                    new_scores = True
-                                                    new_score = True
-
-                                                if (justification_valid and justification_xls and exam_enrollment.justification_final != justification_xls) \
-                                                        or (not is_program_manager and exam_enrollment.justification_draft != justification_xls):
-                                                    new_scores_number += 1
-                                                    new_scores = True
-                                                    new_score = True
-                                            else:
-                                                if score != exam_enrollment.score_draft:
-                                                    new_scores_number += 1
-                                                    new_scores = True
-                                                    new_score = True
-
-                                                if justification_valid and justification_xls and exam_enrollment.justification_draft != justification_xls:
-                                                    new_scores_number += 1
-                                                    new_scores = True
-                                                    new_score = True
-
-                                        if new_score:
-                                            if is_program_manager:
-                                                exam_enrollment.score_final = score
-                                                exam_enrollment.justification_final = justification_xls
-                                            else:
-                                                exam_enrollment.score_draft = score
-                                                exam_enrollment.justification_draft = justification_xls
-
-                                            exam_enrollment.save()
-
-                                            if is_program_manager:
-                                                mdl.exam_enrollment.create_exam_enrollment_historic(request.user,
-                                                                                                    exam_enrollment,
-                                                                                                    score,
-                                                                                                    justification_xls)
-
-    if session_exam is not None:
-        all_encoded = True
-        enrollments = mdl.exam_enrollment.find_exam_enrollments_by_session(session_exam)
-        for enrollment in enrollments:
-            if enrollment.score_final is None and not enrollment.justification_final:
-                all_encoded = False
-
-    if new_scores:
-        if new_scores_number > 0:
-            count = new_scores_number
-            text = ungettext('%(count)d %(name)s.',
-                             '%(count)d %(plural_name)s.',
-                             count) % {'count': new_scores_number,
-                                       'name': _('score_saved'),
-                                       'plural_name':  _('scores_saved')}
-
-            messages.add_message(request, messages.INFO, '%s' % text)
-            if not is_program_manager:
-                tutor = mdl.tutor.find_by_user(user)
-                if tutor and learning_unit_id:
-                    coordinator = mdl.attribution.search(tutor=tutor,
-                                                         learning_unit_id=learning_unit_id,
-                                                         function='COORDINATOR')
-                    if not coordinator:
-                        messages.add_message(request, messages.INFO, '%s' % _('the_coordinator_must_still_submit_scores'))
+    if new_scores_number > 0:
+        messages.add_message(request, messages.INFO, '%s %s' % (str(new_scores_number), _('score_saved')))
+        if not is_program_manager:
+            tutor = mdl.tutor.find_by_user(user)
+            if tutor and learning_unit_year.learning_unit_id:
+                coordinator = mdl.attribution.search(tutor=tutor,
+                                                     learning_unit_id=learning_unit_year.learning_unit_id,
+                                                     function='COORDINATOR')
+                if not coordinator:
+                    messages.add_message(request, messages.INFO, '%s' % _('the_coordinator_must_still_submit_scores'))
         return True
     else:
         messages.add_message(request, messages.ERROR, '%s' % _('no_score_injected'))

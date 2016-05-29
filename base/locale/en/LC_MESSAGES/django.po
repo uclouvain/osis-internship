@@ -28,7 +28,7 @@ msgstr "Are you sure?"
 msgid "birth_date"
 msgstr "Birth Date"
 
-msgid "cheating"
+msgid "CHEATING"
 msgstr "Cheating"
 
 msgid "cheating_pdf_legend"
@@ -58,13 +58,13 @@ msgstr "Ill"
 msgid "ill_pdf_legend"
 msgstr "I=Ill"
 
-msgid "absence_unjustified"
+msgid "ABSENCE_UNJUSTIFIED"
 msgstr "Unjustified Absence"
 
-msgid "absence_justified"
+msgid "ABSENCE_JUSTIFIED"
 msgstr "Justified absence"
 
-msgid "score_missing"
+msgid "SCORE_MISSING"
 msgstr "Score missing"
 
 msgid "score_already_submitted"
@@ -767,7 +767,7 @@ msgid "offer_year_not_exist"
 msgstr "The program (%s) (%d) - doesn't exist"
 
 msgid "offer_enrollment_not_exist"
-msgstr "There are not enrollments to programs"
+msgstr "There are any enrollment to this program"
 
 msgid "activity_not_exit"
 msgstr "The activity %s doesn't exist"
@@ -1076,3 +1076,32 @@ msgstr "Download the excel file"
 
 msgid "tooltip_print_scores"
 msgstr "Print the scores"
+
+msgid "without_attribution"
+msgstr "Without attribution"
+msgid "learning_unit_not_access"
+msgstr "You don't have access rights to this learning unit"
+
+msgid "registration_id_not_access_or_not_exist"
+msgstr "You don't have access rights for this student or he doesn't exist in our database"
+
+msgid "more_than_one_academic_year_error"
+msgstr "There are more than 1 academic year in your excel file. Please correct your file. Only one academic year "
+      "could be present in the 'Academic year' column."
+
+msgid "more_than_one_session_error"
+msgstr "There are more than 1 session in your excel file. Please correct your file. Only one session's number "
+      "could be present in the 'Session' column."
+
+msgid "offer_year_not_access_or_not_exist"
+msgstr "You don't have access rights for this offer or it doesn't exist in our database"
+
+msgid "learning_unit_not_access_or_not_exist"
+msgstr "You don't have access rights for this learning unit or it doesn't exist in our database"
+
+msgid "justification_invalid"
+msgstr "Invalid justification"
+
+msgid "more_than_one_learning_unit_error"
+msgstr "You encoded scores for more than 1 learning unit in your excel file (column 'Learning unit'). "
+       "Please make one excel file by learning unit."

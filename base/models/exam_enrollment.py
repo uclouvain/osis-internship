@@ -25,7 +25,7 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 from base.models import person, learning_unit_year, attribution, person_address, offer_year_calendar
 from django.utils import timezone
 import datetime
@@ -51,10 +51,10 @@ class ExamEnrollmentAdmin(admin.ModelAdmin):
 #    'CHEATING'            => 'T'
 #    'SCORE_MISSING'       => '?'
 JUSTIFICATION_TYPES = (
-    ('ABSENCE_UNJUSTIFIED', _('absence_unjustified')),  # A -> S
-    ('ABSENCE_JUSTIFIED', _('absence_justified')),      # M
-    ('CHEATING', _('cheating')),                        # T
-    ('SCORE_MISSING', _('score_missing')))              # ?
+    ('ABSENCE_UNJUSTIFIED', _('ABSENCE_UNJUSTIFIED')),  # A -> S
+    ('ABSENCE_JUSTIFIED', _('ABSENCE_JUSTIFIED')),      # M
+    ('CHEATING', _('CHEATING')),                        # T
+    ('SCORE_MISSING', _('SCORE_MISSING')))              # ?
 
 
 class ExamEnrollment(models.Model):
@@ -82,19 +82,6 @@ class ExamEnrollment(models.Model):
 
     def __str__(self):
         return u"%s - %s" % (self.session_exam, self.learning_unit_enrollment)
-
-
-def get_letter_justication_type(justification_type):
-    if JUSTIFICATION_TYPES[0][0] == justification_type:
-        return 'A'
-    elif JUSTIFICATION_TYPES[1][0] == justification_type:
-        return 'M'
-    elif JUSTIFICATION_TYPES[2][0] == justification_type:
-        return 'T'
-    elif JUSTIFICATION_TYPES[3][0] == justification_type:
-        return '?'
-    else:
-        return ''
 
 
 def find_exam_enrollments_by_session(session_exm):
@@ -240,7 +227,9 @@ def find_for_score_encodings(session_exam_number,
 
     now = timezone.now()
     return queryset.filter(session_exam__offer_year_calendar__start_date__lte=now)\
-                   .filter(session_exam__offer_year_calendar__end_date__gte=now)
+                   .filter(session_exam__offer_year_calendar__end_date__gte=now)\
+                   .select_related('learning_unit_enrollment__offer_enrollment__offer_year')\
+                   .select_related('session_exam__offer_year_calendar')
 
 
 def scores_sheet_data(exam_enrollments, tutor=None):
@@ -330,7 +319,7 @@ def scores_sheet_data(exam_enrollments, tutor=None):
                     "last_name": student.person.last_name,
                     "first_name": student.person.first_name,
                     "score": str(exam_enrol.score_final) if exam_enrol.score_final else '',
-                    "justification": exam_enrol.justification_final if exam_enrol.justification_final else ''
+                    "justification": _(exam_enrol.justification_final) if exam_enrol.justification_final else ''
                 })
             program['enrollments'] = enrollments
             programs.append(program)
