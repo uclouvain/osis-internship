@@ -84,19 +84,6 @@ class ExamEnrollment(models.Model):
         return u"%s - %s" % (self.session_exam, self.learning_unit_enrollment)
 
 
-def get_letter_justication_type(justification_type):
-    if JUSTIFICATION_TYPES[0][0] == justification_type:
-        return 'S'
-    elif JUSTIFICATION_TYPES[1][0] == justification_type:
-        return 'M'
-    elif JUSTIFICATION_TYPES[2][0] == justification_type:
-        return 'T'
-    elif JUSTIFICATION_TYPES[3][0] == justification_type:
-        return '?'
-    else:
-        return ''
-
-
 def find_exam_enrollments_by_session(session_exm):
     enrollments = ExamEnrollment.objects.filter(session_exam=session_exm) \
         .order_by('learning_unit_enrollment__offer_enrollment__offer_year__acronym',

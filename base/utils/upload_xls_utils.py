@@ -117,7 +117,7 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
         messages.add_message(request, messages.ERROR, '%s' % _('more_than_one_session_error'))
         return False
     else:
-        data_xls['session'] = data_xls['sessions'][0] # Only one session
+        data_xls['session'] = data_xls['sessions'][0]  # Only one session
 
     if len(data_xls['academic_years']) > 1:
         messages.add_message(request, messages.ERROR, '%s' % _('more_than_one_academic_year_error'))
