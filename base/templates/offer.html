@@ -135,6 +135,10 @@
                 <div id="tab_scores_encoding" class="tab-pane fade">
                     <br>
                     <p>{% trans 'message_address_papersheet' %}.</p>
+                    <div class="alert alert-dismissible alert-warning">
+                      <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <p>{% trans 'info_address_changed_for_papersheet' %}.</p>
+                    </div>
 
                     <label for="slt_related_entities">{% trans 'reuse_address_entity' %}...</label>
                     <select class="form-control" id="slt_related_entities" name="related_entity">
@@ -149,7 +153,7 @@
                             <label for="txt_score_encoding_recipient">{% trans 'recipient' %}</label>
                             <input class="form-control" value="{{ offer_year.recipient | default_if_none:'' }}"
                                    name="score_encoding_recipient" id="txt_score_encoding_recipient"
-                                   maxlength="20">
+                                   maxlength="255">
                         </div>
                         <div class="col-md-6">
                             <label for="txt_score_encoding_location">{% trans 'location' %}</label>
@@ -198,8 +202,10 @@
                         </div>
                     </div>
                     <br>
-                    <button type="button" class="btn btn-primary" id="bt_save_score_encoding_address">
-                        <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'save' %}</button>
+                    {% if is_program_manager %}
+                        <button type="button" class="btn btn-primary" id="bt_save_score_encoding_address">
+                            <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'save' %}</button>
+                    {% endif %}
                     <span id="status_save"></span>
                 </div>
             </div>
@@ -418,16 +424,19 @@
     selectTab();
 
     $('#slt_related_entities').change(function(e) {
-        var uri = "/structure/" + $('#slt_related_entities').val() + "/address"
-        $.ajax({ url: uri }).then(function(data) {
-            $('#txt_score_encoding_recipient').val(data.entity);
-            $('#txt_score_encoding_location').val(data.location);
-            $('#txt_score_encoding_postal_code').val(data.postal_code);
-            $('#txt_score_encoding_city').val(data.city);
-            $('#slt_score_encoding_country').val(data.country);
-            $('#txt_score_encoding_phone').val(data.phone);
-            $('#txt_score_encoding_fax').val(data.fax);
-        });
+        var related_entity = $('#slt_related_entities').val()
+        if(related_entity != "") {
+            var uri = "/structure/" + related_entity + "/address/"
+            $.ajax({ url: uri }).then(function(data) {
+                $('#txt_score_encoding_recipient').val(data.entity);
+                $('#txt_score_encoding_location').val(data.location);
+                $('#txt_score_encoding_postal_code').val(data.postal_code);
+                $('#txt_score_encoding_city').val(data.city);
+                $('#slt_score_encoding_country').val(data.country);
+                $('#txt_score_encoding_phone').val(data.phone);
+                $('#txt_score_encoding_fax').val(data.fax);
+            });
+        }
     });
 
     $('#bt_save_score_encoding_address').click(function() {

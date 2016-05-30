@@ -22,11 +22,35 @@ msgstr "Absent"
 msgid "absent_pdf_legend"
 msgstr "A=Absent"
 
-msgid "cheating"
+msgid "are_you_sure"
+msgstr "Êtes-vous sûr?"
+
+msgid "birth_date"
+msgstr "Date de naissance"
+
+msgid "CHEATING"
 msgstr "Tricherie"
 
 msgid "cheating_pdf_legend"
 msgstr "T=Tricherie"
+
+msgid "data_management"
+msgstr "Gestion de données"
+
+msgid "desc_lnk_data_management"
+msgstr "Gestion des données par entité du métier"
+
+msgid "data_maintenance"
+msgstr "Maintenance de données"
+
+msgid "desc_lnk_data_maintenance"
+msgstr "La maintenance de données avec la langage SQL"
+
+msgid "desc_lnk_storage"
+msgstr "Surveillance de la capacité de stockage"
+
+msgid "function"
+msgstr "Fonction"
 
 msgid "ill"
 msgstr "Malade"
@@ -34,13 +58,13 @@ msgstr "Malade"
 msgid "ill_pdf_legend"
 msgstr "M=Malade"
 
-msgid "absence_unjustified"
+msgid "ABSENCE_UNJUSTIFIED"
 msgstr "Absence injustifiée"
 
-msgid "absence_justified"
+msgid "ABSENCE_JUSTIFIED"
 msgstr "Absence justifiée"
 
-msgid "score_missing"
+msgid "SCORE_MISSING"
 msgstr "Note manquante"
 
 msgid "score_missing_pdf_legend"
@@ -137,7 +161,7 @@ msgid "label_jumbotron_details_academic_cal"
 msgstr "Comme présenté sur la page d'accueil"
 
 msgid "go"
-msgstr "Avancer"
+msgstr "Continuer"
 
 msgid "edit"
 msgstr "Éditer"
@@ -368,7 +392,12 @@ msgid "select"
 msgstr "Sélectionnez"
 
 msgid "message_address_papersheet"
-msgstr "Réutiliser l'adresse d'une entité liée au programme ou informez l'adresse d'affichage pour la feuille des notes"
+msgstr "Réutilisez l'adresse d'une entité liée au programme ou informez l'adresse d'affichage pour la feuille des notes"
+
+msgid "info_address_changed_for_papersheet"
+msgstr "Si vous choisissez de modifier un des champs de l'adresse ci-dessous, cela modifiera <b>uniquement</b> l'adresse "
+       "affichée sur la feuille de notes. Vous ne modifierez jamais l'adresse d'une entité/structure via ce formulaire. "
+       " La liste des entités ci-dessous n'est proposée que pour vous aider à remplir les champs"
 
 msgid "reuse_address_entity"
 msgstr "Réutiliser l'adresse de"
@@ -1054,8 +1083,14 @@ msgstr "Séclectionnez le fichier excel à soumettre"
 msgid "display_tutors"
 msgstr "Afficher tous les enseignants pour ce cours"
 
+msgid "no_score_to_encode"
+msgstr "Vous n'avez aucune note à encoder."
+
 msgid "tooltip_dowload_excel_file"
 msgstr "Télécharger le fichier excel"
 
 msgid "tooltip_print_scores"
 msgstr "Imprimer les notes"
+
+msgid "without_attribution"
+msgstr "Sans attribution"

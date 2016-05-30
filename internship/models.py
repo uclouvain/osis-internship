@@ -28,7 +28,7 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class InternshipOffer(models.Model):
-    organization = models.ForeignKey('base.Organization')
+    organization        = models.ForeignKey('internship.Organization')
     learning_unit_year = models.ForeignKey('base.LearningUnitYear')
     title = models.CharField(max_length=255)
     maximum_enrollments = models.IntegerField()
@@ -79,7 +79,7 @@ class InternshipMaster(models.Model):
                         ('EMERGENCY',_('Emergency')),
                         ('GERIATRICS',_('Geriatrics')))
 
-    organization = models.ForeignKey('base.Organization')
+    organization     = models.ForeignKey('internship.Organization')
     internship_offer = models.ForeignKey(InternshipOffer)
     person = models.ForeignKey('base.Person')
     reference = models.CharField(max_length=30, blank=True, null=True)
@@ -112,12 +112,107 @@ class InternshipMaster(models.Model):
 
 
 class InternshipChoice(models.Model):
-    student = models.ForeignKey('base.Student')
-    organization = models.ForeignKey('base.Organization')
-    learning_unit_year = models.ForeignKey('base.LearningUnitYear')
-    choice = models.IntegerField()
+    student             = models.ForeignKey('base.Student')
+    organization        = models.ForeignKey('internship.Organization')
+    learning_unit_year  = models.ForeignKey('base.LearningUnitYear')
+    choice              = models.IntegerField()
 
     @staticmethod
     def find_by_student(s_student):
         internships = InternshipChoice.objects.filter(student = s_student).order_by('choice')
         return internships
+
+    @staticmethod
+    def find_by_student_desc(s_student):
+        internships = InternshipChoice.objects.filter(student = s_student).order_by('-choice')
+        return internships
+
+    @staticmethod
+    def find_by(s_organization=None, s_learning_unit_year=None, s_organization_ref=None):
+        has_criteria = False
+        queryset = InternshipChoice.objects
+
+        if s_organization:
+            queryset = queryset.filter(organization=s_organization)
+            has_criteria = True
+
+        if s_learning_unit_year:
+            queryset = queryset.filter(learning_unit_year=s_learning_unit_year)
+            has_criteria = True
+
+        if s_organization_ref:
+            queryset = queryset.filter(organization__reference=s_organization_ref).order_by('choice')
+            has_criteria = True
+
+        if has_criteria:
+            return queryset
+        else:
+            return None
+
+
+class Organization(models.Model):
+    name = models.CharField(max_length=255)
+    acronym = models.CharField(max_length=15)
+    website = models.URLField(max_length=255, blank=True, null=True)
+    reference = models.CharField(max_length=30, blank=True, null=True)
+    type = models.CharField(max_length=30, blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+    @staticmethod
+    def find_by_id(organization_id):
+        return Organization.objects.get(pk=organization_id)
+
+    @staticmethod
+    def search(acronym=None, name=None, reference=None):
+        has_criteria = False
+        queryset = Organization.objects
+
+        if acronym:
+            queryset = queryset.filter(acronym=acronym)
+            has_criteria = True
+
+        if name:
+            queryset = queryset.filter(name=name)
+            has_criteria = True
+
+        if reference:
+            queryset = queryset.filter(reference=reference)
+            has_criteria = True
+
+        if has_criteria:
+            return queryset
+        else:
+            return None
+
+    @staticmethod
+    def find_all_order_by_reference():
+        return Organization.objects.all().order_by('reference')
+
+
+    @staticmethod
+    def find_by_type(type=None, order_by=None):
+        if order_by:
+            queryset = Organization.objects.filter(type=type).order_by(*order_by)
+        else:
+            queryset = Organization.objects.filter(type=type)
+
+        return queryset
+
+class OrganizationAddress(models.Model):
+    organization = models.ForeignKey('Organization')
+    label = models.CharField(max_length=20)
+    location = models.CharField(max_length=255)
+    postal_code = models.CharField(max_length=20)
+    city = models.CharField(max_length=255)
+    country = models.CharField(max_length=255)
+
+    @staticmethod
+    def find_by_organization(organization):
+        return OrganizationAddress.objects.filter(organization=organization).order_by('label')
+
+
+    @staticmethod
+    def find_by_id(organization_address_id):
+        return OrganizationAddress.objects.get(pk=organization_address_id)
