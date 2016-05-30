@@ -26,6 +26,7 @@
 from django import shortcuts
 from django.template.context import RequestContext
 from base import models as mdl
+from random import randint
 
 
 def _check_notice(request, values):
@@ -43,6 +44,8 @@ def _check_notice(request, values):
 
 def render(request, template, values):
     _check_notice(request, values)
+
+    values['js'] = randint(0, 100)
 
     return shortcuts.render(request, template, values)
 

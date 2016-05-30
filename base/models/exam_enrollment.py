@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from decimal import *
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
@@ -72,16 +73,38 @@ class ExamEnrollment(models.Model):
     def student(self):
         return self.learning_unit_enrollment.student
 
-    def clean_scores_reencoded(self):
-        """
-        Set score_reencoded and justification_reencoded to None.
-        """
-        self.score_reencoded = None
-        self.justification_reencoded = None
-        self.save()
-
     def __str__(self):
         return u"%s - %s" % (self.session_exam, self.learning_unit_enrollment)
+
+    @property
+    def to_validate_by_program_manager(self):
+        sc_reencoded = None
+        if self.score_reencoded is not None:
+            sc_reencoded = Decimal('%.2f' % self.score_reencoded)
+
+        if self.score_final != sc_reencoded or self.justification_final != self.justification_reencoded:
+            return True
+        else:
+            return False
+
+    @property
+    def to_validate_by_tutor(self):
+        sc_reencoded = None
+        if self.score_reencoded is not None:
+            sc_reencoded = Decimal('%.2f' % self.score_reencoded)
+
+        if self.score_draft != sc_reencoded or self.justification_draft != self.justification_reencoded:
+            return True
+        else:
+            return False
+
+    @property
+    def justification_draft_display(self):
+        return _(self.justification_draft)
+
+    @property
+    def justification_final_display(self):
+        return _(self.justification_final)
 
 
 def get_letter_justication_type(justification_type):

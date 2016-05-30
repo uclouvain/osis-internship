@@ -91,15 +91,13 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="alert alert-warning">
-                {% get_current_language as LANGUAGE_CODE %}
-                {% if enrollments.0.session_exam.learning_unit_year.decimal_scores %}
-                    {% trans 'decimal_values_accepted' %}
-                {% else %}
-                    {% trans 'decimal_values_ignored' %}
-                {% endif %}
-            </div>
+        <div class="alert alert-info">
+            {% get_current_language as LANGUAGE_CODE %}
+            {% if enrollments.0.session_exam.learning_unit_year.decimal_scores %}
+                {% trans 'decimal_values_accepted' %}
+            {% else %}
+                {% trans 'decimal_values_ignored' %}
+            {% endif %}
         </div>
         <form class="form-inline" method="POST" action="{% url 'online_encoding_form' learning_unit_year.id %}" id="form_online_encoding">
             {% csrf_token %}
@@ -200,8 +198,7 @@
 {% endblock %}
 {% block script %}
 <script>
-function originalValueChanged(id, score, justification) {
-    var values = [
+var values = [
         {% for enrollment in enrollments %}
             {% if is_program_manager %}
                 ['{{ enrollment.id }}', '{{ enrollment.score_final | default_if_none:'-1' }}','{{ enrollment.justification_final | default_if_none:'' }}'],
@@ -210,28 +207,6 @@ function originalValueChanged(id, score, justification) {
             {% endif %}
         {% endfor %}
         ['', '', '']];
-
-    if (score == null || score == "")
-        score = -1;
-    else
-        score = parseFloat(score)
-
-    if (justification == null) justification = '';
-
-    for (i = 0; i < values.length; i++) {
-        if (values[i][0] == id) {
-            // To test
-            console.log(parseFloat(values[i][1].replace(",", ".")) + " : " + score)
-            console.log(values[i][2] + " : " + justification)
-            if(score == parseFloat(values[i][1].replace(",", ".")) && justification == values[i][2]) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-    }
-    return null;
-}
 
 $("input[id^='num_score_']" ).change(function(event) {
     // Get the object that received the event.
@@ -248,7 +223,7 @@ $("input[id^='num_score_']" ).change(function(event) {
     }
     this.setCustomValidity('');
 
-    $("#hdn_score_changed_"+ enrollmentId).val(originalValueChanged(enrollmentId,
+    $("#hdn_score_changed_"+ enrollmentId).val(originalValueChanged(values, enrollmentId,
                                                                     $("#num_score_"+ enrollmentId).val(),
                                                                     $("#slt_justification_score_" + enrollmentId).val()));
 });
@@ -265,7 +240,7 @@ $("select[id^='slt_justification_score_']" ).change(function(event) {
     var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
     $("#num_score_" + enrollmentId).val('');
 
-    $("#hdn_score_changed_"+ enrollmentId).val(originalValueChanged(enrollmentId,
+    $("#hdn_score_changed_"+ enrollmentId).val(originalValueChanged(values, enrollmentId,
                                                                     $("#num_score_"+ enrollmentId).val(),
                                                                     $("#slt_justification_score_" + enrollmentId).val()));
 });
