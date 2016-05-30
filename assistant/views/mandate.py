@@ -26,7 +26,6 @@
 from django.contrib.auth.decorators import login_required
 from assistant.forms import MandateForm
 from base.views import layout
-from django.shortcuts import render
 from assistant.models import assistant_mandate
 
 
@@ -41,7 +40,7 @@ def mandate_edit(request, mandate_id):
                                 'contract_duration': mandate.contract_duration,
                                 'contract_duration_fte': mandate.contract_duration_fte
                                 })
-    return render(request, 'mandate_form.html', {'mandate': mandate,
+    return layout.render(request, 'mandate_form.html', {'mandate': mandate,
                                                 'form': form})
 
 

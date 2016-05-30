@@ -32,7 +32,7 @@ from assistant.models import assistant_mandate
 urlpatterns = [
     # S'il vous plaît, organiser les urls par ordre alphabétique.
     url(r'^home$', home.assistant_home , name='assistants_home'),
-    url(r'^manager/mandate/edit/(?P<mandate_id>\d+)/$', mandate.mandate_edit, name='mandate_read'),
-    url(r'^manager/mandate/save/(?P<mandate_id>\d+)/$', mandate.mandate_save, name='mandate_save'),
-    url(r'^manager/mandates/list$', login_required(mandates_list.MandatesListView.as_view()), name='mandates_list'),
+    url(r'^manager/mandates/(?P<mandate_id>\d+)/edit/$', mandate.mandate_edit, name='mandate_read'),
+    url(r'^manager/mandates/(?P<mandate_id>\d+)/save/$', mandate.mandate_save, name='mandate_save'),
+    url(r'^manager/mandates/$', login_required(mandates_list.MandatesListView.as_view()), name='mandates_list'),
 ]

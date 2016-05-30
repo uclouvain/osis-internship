@@ -52,5 +52,5 @@ class AcademicAssistant(models.Model):
     def __str__(self):
         return u"%s %s" % (self.person.first_name, self.person.last_name)
     
-def find_academic_assistant_by_id(assistant_id):
+def find_by_id(assistant_id):
     return AcademicAssistant.objects.get(id=assistant_id)  
