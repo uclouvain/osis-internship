@@ -30,5 +30,5 @@ from assistant.models import assistant_document
 from assistant.models import assistant_mandate
 from assistant.models import review
 from assistant.models import tutoring_learning_unit_year
-from assistant.models import mandate_structures
+from assistant.models import mandate_structure
 
