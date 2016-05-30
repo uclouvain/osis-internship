@@ -26,6 +26,7 @@
 from django.conf.urls import url
 
 from internship.views import home, internship, master, period, place, student, student_resume
+from internship import upload_xls
 
 urlpatterns = [
     # S'il vous plaît, organiser les urls par ordre alphabétique.
@@ -49,6 +50,7 @@ urlpatterns = [
     url(r'^places/edit/([0-9]+)/$', place.organization_edit, name='place_edit'),
     url(r'^places/save/([0-9]+)/$', place.organization_save, name='place_save'),
     url(r'^places/save/$', place.organization_new, name='place_save_new'),
+    url(r'^places/upload/$', upload_xls.upload_places_file,name='upload_places'),
 
     url(r'^students/$', student.internships_students, name='internships_students'),
     url(r'^students/resume/$', student_resume.internships_student_resume, name='internships_student_resume'),

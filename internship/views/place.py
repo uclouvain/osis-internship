@@ -153,8 +153,7 @@ def organization_save(request, organization_id, organization_address_id):
 
     organization.type = "service partner"
 
-    if form.is_valid():
-        organization.save()
+    organization.save()
 
     if organization_address_id:
         organization_address = OrganizationAddress.find_by_id(organization_address_id)
