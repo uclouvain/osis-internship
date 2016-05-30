@@ -254,11 +254,7 @@ function validation_finished() {
 
 function translate_justification(justification) {
     if(justification == "ABSENCE_UNJUSTIFIED") {
-        {% if is_program_manager %}
-            return "{% trans 'ABSENCE_UNJUSTIFIED' %}";
-        {% else %}
-            return "{% trans 'ABSENT' %}";
-        {% endif %}
+        return "{% trans 'ABSENCE_UNJUSTIFIED' %}";
     } else if (justification == "ABSENCE_JUSTIFIED") {
         return "{% trans 'ABSENCE_JUSTIFIED' %}";
     } else if (justification == "CHEATING") {
