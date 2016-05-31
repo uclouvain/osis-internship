@@ -27,6 +27,7 @@ from django import template
 
 register = template.Library()
 
+
 @register.filter
 def score_display(value, decimal_option):
     if value is None or str(value) == '-':
@@ -36,6 +37,7 @@ def score_display(value, decimal_option):
             return "{0:.2f}".format(value)
         else:
             return "{0:.0f}".format(value)
+
 
 @register.filter
 def disabled(value):

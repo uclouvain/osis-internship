@@ -93,15 +93,13 @@
             </div>
         </div>
         <hr>
-        <div class="row">
-            <div class="alert alert-warning">
-                {% get_current_language as LANGUAGE_CODE %}
-                {% if enrollments.0.session_exam.learning_unit_year.decimal_scores %}
-                  {% trans 'decimal_values_accepted' %}
-                {% else %}
-                  {% trans 'decimal_values_ignored' %}
-                {% endif %}
-            </div>
+        <div class="alert alert-info">
+            {% get_current_language as LANGUAGE_CODE %}
+            {% if enrollments.0.session_exam.learning_unit_year.decimal_scores %}
+              {% trans 'decimal_values_accepted' %}
+            {% else %}
+              {% trans 'decimal_values_ignored' %}
+            {% endif %}
         </div>
         <form class="form-inline" method="POST"
               action="{% url 'online_double_encoding_form' learning_unit_year.id %}"
@@ -181,6 +179,7 @@
                                 <option value="CHEATING">{% trans 'CHEATING' %}</option>
                                 <option value="SCORE_MISSING">{% trans 'SCORE_MISSING' %}</option>
                             </select>
+                            <input type="hidden" id="hdn_score_changed_{{ enrollment.id }}" name="score_changed_{{ enrollment.id }}">
                         </td>
                         <td>{{ enrollment.session_exam.deadline | default_if_none:''|date:"j/m/Y" }}</td>
                     </tr>
@@ -197,6 +196,12 @@
 {% endblock %}
 {% block script %}
 <script>
+    var values = [
+        {% for enrollment in enrollments %}
+            ['{{ enrollment.id }}', '-1',''],
+        {% endfor %}
+        ['', '', '']];
+
     $("input[id^='num_double_score_']" ).change(function(event) {
         // Get the object that received the event.
         var target = $(event.target);
@@ -210,7 +215,12 @@
         if(target.val() != "") {
             $("#slt_double_justification_score_" + enrollmentId).val('');
         }
+
         this.setCustomValidity('');
+
+        $("#hdn_score_changed_"+ enrollmentId).val(originalValueChanged(values, enrollmentId,
+                                                                    $("#num_double_score_"+ enrollmentId).val(),
+                                                                    $("#slt_double_justification_score_" + enrollmentId).val()));
     });
 
     $("select[id^='slt_double_justification_score_']" ).change(function(event) {
@@ -228,6 +238,10 @@
         if(target.val() != "") {
             $("#num_double_score_" + enrollmentId).val('');
         }
+
+        $("#hdn_score_changed_"+ enrollmentId).val(originalValueChanged(values, enrollmentId,
+                                                                    $("#num_double_score_"+ enrollmentId).val(),
+                                                                    $("#slt_double_justification_score_" + enrollmentId).val()));
     });
 
     $("input[id^='num_double_score_']" ).blur(function(event) {
@@ -252,7 +266,7 @@
         var justification_double = double_justification_field.val();
         var justification_draft =  $("#hdn_justification_draft_" + enrollmentId).val();
 
-        console.log(justification_double + " = " + justification_draft);
+        // console.log(justification_double + " = " + justification_draft);
 
         if ((justification_double != null || justification_draft != "") && justification_double != justification_draft) {
             double_justification_field.css("border", "1px solid #ff0000");

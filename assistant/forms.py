@@ -23,42 +23,24 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
+from django import forms
+from django.forms import ModelForm, Textarea
+from assistant import models as mdl
 
 
-class LearningUnitAdmin(admin.ModelAdmin):
-    list_display = ('acronym', 'title', 'start_year', 'end_year', 'changed')
-    fieldsets = ((None, {'fields': ('acronym','title','description','start_year','end_year')}),)
-    search_fields = ['acronym']
+class MandateForm(ModelForm):
+    comment = forms.CharField(
+        required = False,
+        widget = Textarea(attrs={'rows': '3', 'cols': '50'}))
+    absences = forms.CharField(
+        required = False, 
+        widget = Textarea(attrs={'rows': '3', 'cols': '50'}))
+    other_status = forms.CharField(
+        required = False)
+    renewal_type=forms.ChoiceField(choices= mdl.assistant_mandate.AssistantMandate.RENEWAL_TYPE_CHOICES)
+    class Meta:
+        model = mdl.assistant_mandate.AssistantMandate
+        fields = ('comment','absences','other_status','renewal_type')
+        
+        
 
-
-class LearningUnit(models.Model):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed = models.DateTimeField(null=True)
-    acronym = models.CharField(max_length=15)
-    title = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
-    start_year = models.IntegerField()
-    end_year = models.IntegerField(blank=True, null=True)
-    progress = None
-
-    def __str__(self):
-        return u"%s - %s" % (self.acronym, self.title)
-
-
-def find_by_id(learning_unit_id):
-    return LearningUnit.objects.get(pk=learning_unit_id)
-
-
-def find_by_ids(learning_unit_ids):
-    return LearningUnit.objects.filter(pk__in=learning_unit_ids)
-
-
-def search(acronym=None):
-    queryset = LearningUnit.objects
-
-    if acronym:
-        queryset = queryset.filter(acronym=acronym)
-
-    return queryset

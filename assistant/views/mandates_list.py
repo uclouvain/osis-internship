@@ -23,42 +23,22 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
+from django.shortcuts import render
+from assistant.models import assistant_mandate
+from base.models import academic_year
+from django.views.generic import ListView
+
+class MandatesListView(ListView):
+    context_object_name = 'mandates_list'
+    template_name = 'mandates_list.html'
+    this_academic_year = academic_year.current_academic_year()
+    queryset = assistant_mandate.AssistantMandate.objects.filter(academic_year=this_academic_year)
+    
+    def get_context_data(self, **kwargs):
+        context = super(MandatesListView, self).get_context_data(**kwargs)
+        return context
+    
+ 
 
 
-class LearningUnitAdmin(admin.ModelAdmin):
-    list_display = ('acronym', 'title', 'start_year', 'end_year', 'changed')
-    fieldsets = ((None, {'fields': ('acronym','title','description','start_year','end_year')}),)
-    search_fields = ['acronym']
 
-
-class LearningUnit(models.Model):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed = models.DateTimeField(null=True)
-    acronym = models.CharField(max_length=15)
-    title = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
-    start_year = models.IntegerField()
-    end_year = models.IntegerField(blank=True, null=True)
-    progress = None
-
-    def __str__(self):
-        return u"%s - %s" % (self.acronym, self.title)
-
-
-def find_by_id(learning_unit_id):
-    return LearningUnit.objects.get(pk=learning_unit_id)
-
-
-def find_by_ids(learning_unit_ids):
-    return LearningUnit.objects.filter(pk__in=learning_unit_ids)
-
-
-def search(acronym=None):
-    queryset = LearningUnit.objects
-
-    if acronym:
-        queryset = queryset.filter(acronym=acronym)
-
-    return queryset
