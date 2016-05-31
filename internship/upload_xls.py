@@ -31,6 +31,7 @@ from openpyxl import load_workbook
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 
+from internship.models import Organization, OrganizationAddress
 from internship.forms import OrganizationForm
 from base import models as mdl
 
@@ -52,7 +53,7 @@ def upload_places_file(request):
 def __save_xls_scores(request, file_name, user):
     workbook = load_workbook(file_name, read_only=True)
     worksheet = workbook.active
-
+    form = OrganizationForm(request)
     col_reference = 0
     col_name = 1
     col_address = 2
@@ -64,164 +65,77 @@ def __save_xls_scores(request, file_name, user):
     # Iterates over the lines of the spreadsheet.
     for count, row in enumerate(worksheet.rows):
         new_score = False
-        if row[col_registration_id].value is None \
-                or len(row[col_registration_id].value) == 0 \
-                or not _is_registration_id(row[col_registration_id].value):
+        if row[col_reference].value is None \
+                or row[col_reference].value == 0 \
+                or not _is_registration_id(row[col_reference].value):
             continue
 
-        student = mdl.student.find_by(registration_id=row[col_registration_id].value)
-        info_line = "%s %d (NOMA %s):" % (_('Line'), count + 1, row[col_registration_id].value)
-        if not student:
-            messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('student_not_exist') % (str(row[col_registration_id].value))))
+        place = Organization.search(reference=row[col_reference].value)
+        if place :
+            organization = Organization.find_by_id(place[0].id)
         else:
-            academic_year = mdl.academic_year.find_academic_year_by_year(int(row[col_academic_year].value[:4]))
-            if not academic_year:
-                messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('academic_year_not_exist') % row[col_academic_year].value))
-            else:
-                offer_year = mdl.offer_year.find_by_academicyear_acronym(academic_year, row[col_offer].value)
-                if not offer_year:
-                    messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('offer_year_not_exist') % (str(row[col_offer].value), academic_year.year)))
-                else:
-                    offer_enrollment = mdl.offer_enrollment.find_by_student_offer(student, offer_year)
-                    if not offer_enrollment:
-                        messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('offer_enrollment_not_exist')))
-                    else:
-                        learning_unit_year_lists = mdl.learning_unit_year.search(academic_year,
-                                                                                 row[col_learning_unit].value)
-                        learning_unit_year = None
-                        if len(learning_unit_year_lists) == 1:
-                            learning_unit_year = learning_unit_year_lists[0]
-                        if not learning_unit_year:
-                            messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('activity_not_exit') % (str(row[col_learning_unit].value))))
-                        else:
-                            learning_unit_enrollment = mdl.learning_unit_enrollment.find_by_learningunit_enrollment(learning_unit_year, offer_enrollment)
-                            if not learning_unit_enrollment:
-                                messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('enrollment_activity_not_exist') % (str(row[col_learning_unit].value))))
-                            else:
-                                session_number = int(row[col_session].value)
-                                exam_enrollment = mdl.exam_enrollment.find_by_enrollment_session(learning_unit_enrollment, session_number)
-                                if row[col_learning_unit].value != exam_enrollment.learning_unit_enrollment.learning_unit_year.acronym:
-                                    learning_unit = mdl.learning_unit.find_by_id(learning_unit_id)
-                                    messages.add_message(request, messages.ERROR, "%s %s for %s!" % (info_line, _('enrollment_exam_not_exists'), learning_unit.acronym))
-                                else:
-                                    if session_exam is None:
-                                        session_exam = exam_enrollment.session_exam
-                                    if is_program_manager:
-                                        notes_modifiable = True
-                                    else:
-                                        if exam_enrollment.score_final is None and not exam_enrollment.justification_final:
-                                            notes_modifiable = True
-                                        else:
-                                            notes_modifiable = False
-                                            messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('score_already_submitted')))
-                                    score = None
-                                    if notes_modifiable:
-                                        if row[col_score].value is not None:
-                                            try:
-                                                score = float(str(row[col_score].value).strip().replace(',', '.'))
-                                            except ValueError:
-                                                messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('score_invalid')))
-                                        else:
-                                            score = None
+            organization = Organization()
 
-                                        score_valid = True
+        if row[col_reference].value:
+            ref = ""
+            if row[col_reference].value < 10 :
+                ref = "0"+str(row[col_reference].value)
+            else :
+                ref = str(row[col_reference].value)
+            organization.reference = ref
+        else:
+            organization.reference = None
 
-                                        if score is not None:
-                                            if score < 0 or score > 20:
-                                                messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('scores_gt_0_lt_20')))
-                                                score_valid = False
-                                            elif not learning_unit_year.decimal_scores and round(score) != score:
-                                                messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('score_decimal_not_allowed')))
-                                                score_valid = False
-                                        else:
-                                            score_valid = False
+        if row[col_name].value:
+            organization.name = row[col_name].value
+            organization.acronym = row[col_name].value[:14]
+        else:
+            organization.name = None
+            organization.acronym = None
 
-                                        justification_xls = None
-                                        justification_value = row[col_justification].value
-                                        justification_valid = False
-                                        if justification_value:
-                                            justification_value = justification_value.strip()
-                                            if justification_value in ['A', 'T', '?']:
-                                                switcher = {'A': "ABSENCE_UNJUSTIFIED",
-                                                            'T': "CHEATING",
-                                                            '?': "SCORE_MISSING"}
-                                                justification_xls = switcher.get(justification_value, None)
-                                                justification_valid = True
+        if row[col_url].value:
+            organization.website = row[col_url].value
+        else:
+            organization.website = ""
 
-                                        if score and justification_xls:
-                                            score_valid = False
-                                            justification_valid = False
-                                            messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('constraint_score_other_score')))
+        organization.type = "service partner"
 
-                                        if score_valid or justification_valid:
-                                            if is_program_manager:
-                                                if exam_enrollment.score_final != score:
-                                                    new_scores_number += 1
-                                                    new_scores = True
-                                                    new_score = True
+        organization.save()
 
-                                                if (justification_valid and justification_xls and exam_enrollment.justification_final != justification_xls) \
-                                                        or (not is_program_manager and exam_enrollment.justification_draft != justification_xls):
-                                                    new_scores_number += 1
-                                                    new_scores = True
-                                                    new_score = True
-                                            else:
-                                                if score != exam_enrollment.score_draft:
-                                                    new_scores_number += 1
-                                                    new_scores = True
-                                                    new_score = True
+        if place :
+            organization_address = OrganizationAddress.find_by_organization(organization)
+            if not organization_address:
+                organization_address = OrganizationAddress()
+        else :
+            organization_address = OrganizationAddress()
 
-                                                if justification_valid and justification_xls and exam_enrollment.justification_draft != justification_xls:
-                                                    new_scores_number += 1
-                                                    new_scores = True
-                                                    new_score = True
+        organization_address.organization = organization
+        if organization:
+            organization_address.label = "Addr"+organization.name[:14]
+        else:
+            organization_address.label = " "
 
-                                        if new_score:
-                                            if is_program_manager:
-                                                exam_enrollment.score_final = score
-                                                exam_enrollment.justification_final = justification_xls
-                                            else:
-                                                exam_enrollment.score_draft = score
-                                                exam_enrollment.justification_draft = justification_xls
+        if row[col_address].value:
+            organization_address.location = row[col_address].value
+        else:
+            organization_address.location = " "
 
-                                            exam_enrollment.save()
+        if row[col_postal_code].value:
+            organization_address.postal_code = row[col_postal_code].value
+        else:
+            organization_address.postal_code = " "
 
-                                            if is_program_manager:
-                                                mdl.exam_enrollment.create_exam_enrollment_historic(request.user,
-                                                                                                    exam_enrollment,
-                                                                                                    score,
-                                                                                                    justification_xls)
+        if row[col_city].value:
+            organization_address.city = row[col_city].value
+        else:
+            organization_address.city = " "
 
-    if session_exam is not None:
-        all_encoded = True
-        enrollments = mdl.exam_enrollment.find_exam_enrollments_by_session(session_exam)
-        for enrollment in enrollments:
-            if enrollment.score_final is None and not enrollment.justification_final:
-                all_encoded = False
+        if row[col_country].value:
+            organization_address.country = row[col_country].value
+        else:
+            organization_address.country = " "
 
-    if new_scores:
-        if new_scores_number > 0:
-            count = new_scores_number
-            text = ungettext('%(count)d %(name)s.',
-                             '%(count)d %(plural_name)s.',
-                             count) % {'count': new_scores_number,
-                                       'name': _('score_saved'),
-                                       'plural_name':  _('scores_saved')}
-
-            messages.add_message(request, messages.INFO, '%s' % text)
-            if not is_program_manager:
-                tutor = mdl.tutor.find_by_user(user)
-                if tutor and learning_unit_id:
-                    coordinator = mdl.attribution.search(tutor=tutor,
-                                                         learning_unit_id=learning_unit_id,
-                                                         function='COORDINATOR')
-                    if not coordinator:
-                        messages.add_message(request, messages.INFO, '%s' % _('the_coordinator_must_still_submit_scores'))
-        return True
-    else:
-        messages.add_message(request, messages.ERROR, '%s' % _('no_score_injected'))
-        return False
-
+        organization_address.save()
 
 def _is_registration_id(registration_id):
     try:
