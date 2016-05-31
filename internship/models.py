@@ -29,7 +29,7 @@ from django.utils.translation import ugettext_lazy as _
 
 class InternshipOffer(models.Model):
     organization        = models.ForeignKey('internship.Organization')
-    learning_unit_year = models.ForeignKey('base.LearningUnitYear')
+    learning_unit_year  = models.ForeignKey('base.LearningUnitYear')
     title = models.CharField(max_length=255)
     maximum_enrollments = models.IntegerField()
 

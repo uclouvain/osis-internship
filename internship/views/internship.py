@@ -303,7 +303,6 @@ def internships_new(request):
         organization = Organization.search(reference=request.POST['organization'])
         internship.organization = organization[0]
 
-    print(request.POST['learning_unit_year'])
     if request.POST['learning_unit_year']:
         learning_unit_year = mdl.learning_unit_year.search(title=request.POST['learning_unit_year'])
         internship.learning_unit_year = learning_unit_year[0]

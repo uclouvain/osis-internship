@@ -31,8 +31,8 @@ from openpyxl import load_workbook
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 
-from internship.models import Organization, OrganizationAddress
-from internship.forms import OrganizationForm
+from internship.models import Organization, OrganizationAddress, InternshipOffer
+from internship.forms import OrganizationForm, InternshipOfferForm
 from base import models as mdl
 
 
@@ -45,12 +45,12 @@ def upload_places_file(request):
             if ".xls" not in str(file_name):
                 messages.add_message(request, messages.ERROR, _('file_must_be_xls'))
             else:
-                __save_xls_scores(request, file_name, request.user)
+                __save_xls_place(request, file_name, request.user)
 
     return HttpResponseRedirect(reverse('internships_places'))
 
 
-def __save_xls_scores(request, file_name, user):
+def __save_xls_place(request, file_name, user):
     workbook = load_workbook(file_name, read_only=True)
     worksheet = workbook.active
     form = OrganizationForm(request)
@@ -143,8 +143,6 @@ def __save_xls_scores(request, file_name, user):
         else:
             organization_address.country = " "
         organization_address.organization = organization
-
-        print(organization)
         organization_address.save()
 
 def _is_registration_id(registration_id):
@@ -153,3 +151,60 @@ def _is_registration_id(registration_id):
         return True
     except ValueError:
         return False
+
+
+@login_required
+def upload_internships_file(request):
+    if request.method == 'POST':
+        form = InternshipOfferForm(request.POST, request.FILES)
+        file_name = request.FILES['file']
+        if file_name is not None:
+            if ".xls" not in str(file_name):
+                messages.add_message(request, messages.ERROR, _('file_must_be_xls'))
+            else:
+                __save_xls_internships(request, file_name, request.user)
+
+    return HttpResponseRedirect(reverse('internships'))
+
+
+def __save_xls_internships(request, file_name, user):
+    workbook = load_workbook(file_name, read_only=True)
+    worksheet = workbook.active
+    form = OrganizationForm(request)
+    col_reference = 0
+    col_spec = 1
+    col_max_places = 2
+
+    # Iterates over the lines of the spreadsheet.
+    for count, row in enumerate(worksheet.rows):
+        new_score = False
+
+
+        form = InternshipOfferForm(data=request.POST)
+
+        internship = InternshipOffer()
+
+        if row[col_reference].value:
+            reference = ""
+            if row[col_reference].value < 10 :
+                reference = "0"+str(row[col_reference].value)
+            else :
+                reference = str(row[col_reference].value)
+            organization = Organization.search(reference=request.POST['organization'])
+            #internship.organization = organization[0]
+
+        if request.POST['learning_unit_year']:
+            learning_unit_year = mdl.learning_unit_year.search(title=request.POST['learning_unit_year'])
+            internship.learning_unit_year = learning_unit_year[0]
+            #internship.title = learning_unit_year[0].title
+
+        if request.POST['maximum_enrollments']:
+            internship.maximum_enrollments = request.POST['maximum_enrollments']
+
+        internship.save()
+
+        #Select all the organisation (service partner)
+        organizations = Organization.find_all_order_by_reference()
+
+        #select all the learning_unit_year which contain the word stage
+        learning_unit_years = mdl.learning_unit_year.search(title="Stage")
