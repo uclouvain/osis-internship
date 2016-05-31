@@ -37,6 +37,7 @@ urlpatterns = [
     url(r'^internships/create/$', internship.internships_create, name='internships_create'),
     url(r'^internships/new/$', internship.internships_new, name='internships_new'),
     url(r'^internships/save/$', internship.internships_save, name='internships_save'),
+    url(r'^internships/upload/$', upload_xls.upload_places_file,name='upload_internship'),
 
     url(r'^internships_masters/$', master.interships_masters, name='interships_masters'),
 
