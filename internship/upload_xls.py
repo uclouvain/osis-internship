@@ -84,7 +84,7 @@ def __save_xls_place(request, file_name, user):
 
         if row[col_reference].value:
             reference = ""
-            if row[col_reference].value < 10 :
+            if int(row[col_reference].value) < 10 :
                 reference = "0"+str(row[col_reference].value)
             else :
                 reference = str(row[col_reference].value)
@@ -174,37 +174,54 @@ def __save_xls_internships(request, file_name, user):
     col_reference = 0
     col_spec = 1
     col_max_places = 2
-
+    index = 1
     # Iterates over the lines of the spreadsheet.
     for count, row in enumerate(worksheet.rows):
+
         new_score = False
+        if row[col_reference].value is None \
+                or row[col_reference].value == 0 \
+                or not _is_registration_id(row[col_reference].value):
+            continue
 
+        if row[col_spec].value is not None:
+            success = 0
+            check_internship = 0
+            form = InternshipOfferForm(data=request.POST)
 
-        form = InternshipOfferForm(data=request.POST)
+            if row[col_reference].value:
+                reference = ""
+                if int(row[col_reference].value) < 10 :
+                    reference = "0"+str(row[col_reference].value)
+                else :
+                    reference = str(row[col_reference].value)
+                organization = Organization.search(reference=reference)
+                #internship.organization = organization[0]
 
-        internship = InternshipOffer()
+            if row[col_spec].value == "CH":
+                spec = "Stage en Chirurgie"
+            if row[col_spec].value == "GE":
+                spec = "Stage en Gériatrie"
+            if row[col_spec].value == "GO":
+                spec = "Stage en Gynécologie-Obstétrique"
+            if row[col_spec].value == "MI":
+                spec = "Stage en Médecine interne"
+            if row[col_spec].value == "PE":
+                spec = "Stage en Pédiatrie"
+            if row[col_spec].value == "UR":
+                spec = "Stage en Urgence"
 
-        if row[col_reference].value:
-            reference = ""
-            if row[col_reference].value < 10 :
-                reference = "0"+str(row[col_reference].value)
+            learning_unit_year = mdl.learning_unit_year.search(title=spec)
+            check_internship = InternshipOffer.find_interships_by_learning_unit_organization(spec,organization[0].name)
+
+            if len(check_internship) != 0:
+                internship = InternshipOffer.find_intership_by_id(check_internship[0].id)
             else :
-                reference = str(row[col_reference].value)
-            organization = Organization.search(reference=request.POST['organization'])
-            #internship.organization = organization[0]
+                internship = InternshipOffer()
 
-        if request.POST['learning_unit_year']:
-            learning_unit_year = mdl.learning_unit_year.search(title=request.POST['learning_unit_year'])
+            internship.organization = organization[0]
             internship.learning_unit_year = learning_unit_year[0]
-            #internship.title = learning_unit_year[0].title
+            internship.title = spec
+            internship.maximum_enrollments = row[col_max_places].value
 
-        if request.POST['maximum_enrollments']:
-            internship.maximum_enrollments = request.POST['maximum_enrollments']
-
-        internship.save()
-
-        #Select all the organisation (service partner)
-        organizations = Organization.find_all_order_by_reference()
-
-        #select all the learning_unit_year which contain the word stage
-        learning_unit_years = mdl.learning_unit_year.search(title="Stage")
+            internship.save()
