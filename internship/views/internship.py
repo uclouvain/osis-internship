@@ -304,14 +304,15 @@ def internships_edit(request, internship_id):
     check_internship = 0
     form = InternshipOfferForm(data=request.POST)
 
+    organization = Organization.search(reference=request.POST['organization'])
+    learning_unit_year = mdl.learning_unit_year.search(title=request.POST['learning_unit_year'])
+
     if internship_id :
         internship = InternshipOffer.find_intership_by_id(internship_id)
     else :
         internship = InternshipOffer()
         check_internship = len(InternshipOffer.find_interships_by_learning_unit_organization(learning_unit_year[0].title,
                                                                                             request.POST['organization']))
-    organization = Organization.search(reference=request.POST['organization'])
-    learning_unit_year = mdl.learning_unit_year.search(title=request.POST['learning_unit_year'])
 
     if check_internship == 0 :
         if request.POST['organization']:
