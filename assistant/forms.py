@@ -23,16 +23,24 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.conf.urls import url
-from django.contrib.auth.decorators import login_required
-from assistant.views import mandate, home
-from assistant.views import mandates_list
-from assistant.models import assistant_mandate
+from django import forms
+from django.forms import ModelForm, Textarea
+from assistant import models as mdl
 
-urlpatterns = [
-    # S'il vous plaît, organiser les urls par ordre alphabétique.
-    url(r'^home$', home.assistant_home , name='assistants_home'),
-    url(r'^manager/mandates/(?P<mandate_id>\d+)/edit/$', mandate.mandate_edit, name='mandate_read'),
-    url(r'^manager/mandates/(?P<mandate_id>\d+)/save/$', mandate.mandate_save, name='mandate_save'),
-    url(r'^manager/mandates/$', login_required(mandates_list.MandatesListView.as_view()), name='mandates_list'),
-]
+
+class MandateForm(ModelForm):
+    comment = forms.CharField(
+        required = False,
+        widget = Textarea(attrs={'rows': '3', 'cols': '50'}))
+    absences = forms.CharField(
+        required = False, 
+        widget = Textarea(attrs={'rows': '3', 'cols': '50'}))
+    other_status = forms.CharField(
+        required = False)
+    renewal_type=forms.ChoiceField(choices= mdl.assistant_mandate.AssistantMandate.RENEWAL_TYPE_CHOICES)
+    class Meta:
+        model = mdl.assistant_mandate.AssistantMandate
+        fields = ('comment','absences','other_status','renewal_type')
+        
+        
+

@@ -23,16 +23,22 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.conf.urls import url
-from django.contrib.auth.decorators import login_required
-from assistant.views import mandate, home
-from assistant.views import mandates_list
+from django.shortcuts import render
 from assistant.models import assistant_mandate
+from base.models import academic_year
+from django.views.generic import ListView
 
-urlpatterns = [
-    # S'il vous plaît, organiser les urls par ordre alphabétique.
-    url(r'^home$', home.assistant_home , name='assistants_home'),
-    url(r'^manager/mandates/(?P<mandate_id>\d+)/edit/$', mandate.mandate_edit, name='mandate_read'),
-    url(r'^manager/mandates/(?P<mandate_id>\d+)/save/$', mandate.mandate_save, name='mandate_save'),
-    url(r'^manager/mandates/$', login_required(mandates_list.MandatesListView.as_view()), name='mandates_list'),
-]
+class MandatesListView(ListView):
+    context_object_name = 'mandates_list'
+    template_name = 'mandates_list.html'
+    this_academic_year = academic_year.current_academic_year()
+    queryset = assistant_mandate.AssistantMandate.objects.filter(academic_year=this_academic_year)
+    
+    def get_context_data(self, **kwargs):
+        context = super(MandatesListView, self).get_context_data(**kwargs)
+        return context
+    
+ 
+
+
+
