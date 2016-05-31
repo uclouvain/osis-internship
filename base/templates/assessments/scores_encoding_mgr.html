@@ -126,6 +126,7 @@
                     <table class="table table-hover">
                         <thead>
                         <tr>
+                            <th>{% trans 'complete' %}</th>
                             <th>{% trans 'acronym' %}</th>
                             <th>{% trans 'learning_unit' %}</th>
                             <th>{% trans 'coordinator' %}</th>
@@ -137,6 +138,13 @@
 
                         {% for note_detail in notes_list %}
                         <tr>
+                            <td class="text-center">
+                                {% if note_detail.exam_enrollments_encoded == note_detail.total_exam_enrollments %}
+                                    <span class="glyphicon glyphicon-ok" style="color: green" aria-hidden="true"></span>
+                                {% else %}
+                                    <span class="glyphicon glyphicon-remove" style="color: red" aria-hidden="true"></span>
+                                {% endif %}
+                            </td>
                             <td>{{ note_detail.learning_unit_year.acronym }}</td>
                             <td><a href="{% url 'online_encoding' note_detail.learning_unit_year.id %}"
                                    id="lnk_{{ note_detail.learning_unit_year.acronym }}">{{ note_detail.learning_unit_year.title }}</a></td>
@@ -163,6 +171,7 @@
                     <table class="table table-hover">
                         <thead>
                         <tr>
+                            <th>{% trans 'complete' %}</th>
                             <th>{% trans 'acronym' %}</th>
                             <th>{% trans 'learning_unit' %}</th>
                             <th>{% trans 'coordinator' %}</th>
@@ -173,6 +182,13 @@
                         <tbody>
                         {% for note_detail in notes_list %}
                         <tr>
+                            <td class="text-center">
+                                {% if note_detail.exam_enrollments_encoded == note_detail.total_exam_enrollments %}
+                                    <span class="glyphicon glyphicon-ok" style="color: green" aria-hidden="true"></span>
+                                {% else %}
+                                    <span class="glyphicon glyphicon-remove" style="color: red" aria-hidden="true"></span>
+                                {% endif %}
+                            </td>
                             <td>{{ note_detail.learning_unit_year.acronym }}</td>
                             <td><a href="{% url 'online_encoding' note_detail.learning_unit_year.id %}"
                                    title="Visualiser/charger les notes pour le cours"
@@ -219,6 +235,7 @@
                     <table class="table table-hover">
                         <thead>
                         <tr>
+                            <th>{% trans 'complete' %}</th>
                             <th>{% trans 'acronym' %}</th>
                             <th>{% trans 'learning_unit' %}</th>
                             <th>{% trans 'coordinator' %}</th>
@@ -229,6 +246,13 @@
                         <tbody>
                         {% for note_detail in notes_list %}
                         <tr>
+                            <td class="text-center">
+                                {% if note_detail.exam_enrollments_encoded == note_detail.total_exam_enrollments %}
+                                    <span class="glyphicon glyphicon-ok" style="color: green" aria-hidden="true"></span>
+                                {% else %}
+                                    <span class="glyphicon glyphicon-remove" style="color: red" aria-hidden="true"></span>
+                                {% endif %}
+                            </td>
                             <td>{{ note_detail.learning_unit_year.acronym }}</td>
                             <td><a href="{% url 'online_encoding' note_detail.learning_unit_year.id  %}"
                                    title="Visualiser/charger les notes pour le cours"

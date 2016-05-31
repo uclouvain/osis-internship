@@ -1115,3 +1115,6 @@ msgstr "Justification invalide"
 msgid "more_than_one_learning_unit_error"
 msgstr "Vous avez encodé des notes pour plusieurs unités d'enseignements dans votre fichier excel "
        "(colonne 'Unité d'enseignement'). Veillez à ne faire qu'un seul fichier excel par unité d'enseignement."
+
+msgid "complete"
+msgstr "Complet"
