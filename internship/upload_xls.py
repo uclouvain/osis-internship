@@ -70,19 +70,25 @@ def __save_xls_scores(request, file_name, user):
                 or not _is_registration_id(row[col_reference].value):
             continue
 
-        place = Organization.search(reference=row[col_reference].value)
+        reference = ""
+        if row[col_reference].value < 10 :
+            reference = "0"+str(row[col_reference].value)
+        else :
+            reference = str(row[col_reference].value)
+
+        place = Organization.search(reference=reference)
         if place :
             organization = Organization.find_by_id(place[0].id)
         else:
             organization = Organization()
 
         if row[col_reference].value:
-            ref = ""
+            reference = ""
             if row[col_reference].value < 10 :
-                ref = "0"+str(row[col_reference].value)
+                reference = "0"+str(row[col_reference].value)
             else :
-                ref = str(row[col_reference].value)
-            organization.reference = ref
+                reference = str(row[col_reference].value)
+            organization.reference = reference
         else:
             organization.reference = None
 
@@ -106,10 +112,12 @@ def __save_xls_scores(request, file_name, user):
             organization_address = OrganizationAddress.find_by_organization(organization)
             if not organization_address:
                 organization_address = OrganizationAddress()
+            else :
+                organization_address = organization_address[0]
         else :
             organization_address = OrganizationAddress()
 
-        organization_address.organization = organization
+
         if organization:
             organization_address.label = "Addr"+organization.name[:14]
         else:
@@ -134,7 +142,9 @@ def __save_xls_scores(request, file_name, user):
             organization_address.country = row[col_country].value
         else:
             organization_address.country = " "
+        organization_address.organization = organization
 
+        print(organization)
         organization_address.save()
 
 def _is_registration_id(registration_id):
