@@ -720,6 +720,9 @@ msgstr "Légende pour le champ 'Note chiffrée': %s (0=Cote de présence)"
 msgid "unauthorized_decimal_for_this_activity"
 msgstr "Attention : décimales non autorisées pour ce cours"
 
+msgid "authorized_decimal_for_this_activity"
+msgstr "Les notes décimales sont autorisées pour ce cours"
+
 msgid "phone"
 msgstr "téléphone"
 
