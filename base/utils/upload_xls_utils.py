@@ -227,7 +227,7 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
 
                                 justification = row[col_justification].value
                                 if justification:
-                                    justification = str(justification).strip()
+                                    justification = str(justification).strip().upper()
                                     if justification in ['A', 'T', '?']:
                                         switcher = {'A': "ABSENCE_UNJUSTIFIED",
                                                     'T': "CHEATING",
