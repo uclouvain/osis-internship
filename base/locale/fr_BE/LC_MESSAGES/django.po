@@ -800,7 +800,7 @@ msgid "constraint_score_other_score"
 msgstr "Vous ne pouvez pas remplir les champs 'Note chiffrée' et 'Justification' tous les deux"
 
 msgid "score_saved"
-msgstr "Note(s) injectée(s)"
+msgstr "note(s) injectée(s)"
 
 msgid "score_invalid"
 msgstr "Note invalide"

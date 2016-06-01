@@ -798,7 +798,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "score_saved"
-msgstr "Score Saved"
+msgstr "score Saved"
 
 msgid "scores_saved"
 msgstr "score(s) saved"
