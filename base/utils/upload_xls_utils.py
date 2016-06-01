@@ -83,9 +83,12 @@ def _get_all_data(worksheet):
         if session not in sessions:
             sessions.append(session)
 
-        academic_year = int(row[col_academic_year].value[:4])
-        if academic_year not in academic_years:
-            academic_years.append(academic_year)
+        try:
+            academic_year = int(row[col_academic_year].value[:4])
+            if academic_year not in academic_years:
+                academic_years.append(academic_year)
+        except ValueError:
+            pass
 
         learn_unit_acronym = row[col_learning_unit].value
         if learn_unit_acronym not in learn_unit_acronyms:
@@ -229,7 +232,7 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
 
                                 justification = row[col_justification].value
                                 if justification:
-                                    justification = justification.strip()
+                                    justification = str(justification).strip().upper()
                                     if justification in ['A', 'T', '?']:
                                         switcher = {'A': "ABSENCE_UNJUSTIFIED",
                                                     'T': "CHEATING",
