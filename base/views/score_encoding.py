@@ -76,6 +76,28 @@ def online_encoding(request, learning_unit_year_id=None):
     return layout.render(request, "assessments/online_encoding.html", data_dict)
 
 
+def __send_message_if_all_encoded_in_pgm(enrollments, learning_unit_year, double):
+    """
+    Send a message to all the tutors of a learning unit inside a program managed by the program manager if all the scores
+    of this learning unit, inside this program, are encoded.
+    Th encoder is a program manager, so all the encoded scores are final.
+    :param enrollments: The enrollments to the learning unit year , inside the managed program.
+    :param learning_unit_year: The lerning unit year of the enrollments.
+    :param offer_acronym : The offer name
+    :param double : True if double encoding, else False
+    :return: An error messaged if the message cannot be sent.
+    """
+    progress = mdl.exam_enrollment.calculate_exam_enrollment_progress(enrollments)
+    offer_acronym = enrollments[0].learning_unit_enrollment.offer_enrollment.offer_year.acronym
+    sent_error_message = None
+    if progress == 100:
+        persons = list(set([tutor.person for tutor
+                            in mdl.tutor.find_by_learning_unit(learning_unit_year.learning_unit_id)]))
+        sent_error_message = send_mail.send_message_after_all_encoded_by_manager(persons, enrollments,
+                                                                                 learning_unit_year.acronym,
+                                                                                 offer_acronym,double)
+    return sent_error_message
+
 @login_required
 def online_encoding_form(request, learning_unit_year_id=None):
     data = get_data_online(learning_unit_year_id, request)
@@ -119,6 +141,8 @@ def online_encoding_form(request, learning_unit_year_id=None):
                     enrollment.justification_draft = new_justification
                 enrollment.save()
         data = get_data_online(learning_unit_year_id, request)
+        if data['is_program_manager']:
+            __send_message_if_all_encoded_in_pgm(data.get('enrollments'), data.get('learning_unit_year'),False)
         return layout.render(request, "assessments/online_encoding.html", data)
 
 
@@ -182,12 +206,12 @@ def online_double_encoding_validation(request, learning_unit_year_id=None, tutor
     # Case the user validate his choice between the first and the double encoding
     if request.method == 'POST':
         # Needs to filter by examEnrollments where the score_reencoded and justification_reencoded are not None
-        exam_enrollments = [exam_enrol for exam_enrol in exam_enrollments
+        exam_enrollments_reencoded = [exam_enrol for exam_enrol in exam_enrollments
                             if exam_enrol.score_reencoded is not None or exam_enrol.justification_reencoded]
 
         decimal_scores_authorized = learning_unit_year.decimal_scores
 
-        for exam_enrol in exam_enrollments:
+        for exam_enrol in exam_enrollments_reencoded:
             score_validated = request.POST.get('score_' + str(exam_enrol.id), None)
             justification_validated = request.POST.get('justification_' + str(exam_enrol.id), None)
 
@@ -212,7 +236,8 @@ def online_double_encoding_validation(request, learning_unit_year_id=None, tutor
                         exam_enrol.score_draft = new_score
                         exam_enrol.justification_draft = new_justification
                     exam_enrol.save()
-
+        if is_program_manager:
+            __send_message_if_all_encoded_in_pgm(exam_enrollments, learning_unit_year,True)
         return HttpResponseRedirect(reverse('online_encoding', args=(learning_unit_year_id,)))
 
 
