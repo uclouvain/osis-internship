@@ -24,9 +24,12 @@
 #
 ##############################################################################
 from django.contrib.auth.decorators import login_required
+from django.db import IntegrityError
+import csv, codecs
 from assistant.forms import MandateForm
 from base.views import layout
-from assistant.models import assistant_mandate
+from assistant.models import assistant_mandate, academic_assistant
+from base import models as mdl
 
 
 
@@ -75,6 +78,33 @@ def mandate_save(request, mandate_id):
 
         return layout.render(request, "mandate_form.html", {'mandate': mandate,
                                                                  'form': form})    
+
+def load_mandates(request):
+    with codecs.open('osis/assistant/views/data_assistant.csv', encoding='utf-8') as csvfile:
+        row = csv.reader(csvfile, delimiter=';')
+        imported_counter = 0
+        error_counter = 0
+        for columns in row:
+            if len(columns) > 0:
+                person = mdl.person.find_by_global_id(columns[4].strip())
+                if person:
+                    assistant = academic_assistant.AcademicAssistant()
+                    assistant.person = person
+                    assistant.position_id = columns[3].strip()
+                    
+                    try:
+                        assistant.save()
+                    except IntegrityError:
+                            print('Duplicated : %s - %s' % (assistant, person))
+                    imported_counter += 1
+                else:
+                    error_counter += 1
+                    print(u'"%s", "%s", ("%s")"' % (columns[6], columns[5], columns[4]))
+        print(u'%d assistants imported.' % imported_counter)
+        print(u'%d assistants not imported.' % error_counter)
+    return layout.render(request, "load_mandates.html", {'imported_counter': imported_counter,
+                                                         'error_counter': error_counter})             
+ 
 
 
 
