@@ -339,6 +339,7 @@ def _normalize_string(string):
     :param string: The string to normalize.
     :return: The normalized string
     """
+    string = string.replace(" ", "")
     return ''.join((c for c in unicodedata.normalize('NFD', string) if unicodedata.category(c) != 'Mn'))
 
 
