@@ -535,7 +535,7 @@ def get_data_pgmer(request, offer_year_id=None, tutor_id=None, learning_unit_yea
             line['exam_enrollments_encoded'] = score_encoding.exam_enrollments_encoded
             line['total_exam_enrollments'] = score_encoding.total_exam_enrollments
             line['tutor'] = coord_grouped_by_learning_unit.get(score_encoding.learning_unit_year.learning_unit.id,
-                                                                       None)
+                                                               None)
             data.append(line)
 
     if tutor_id == NOBODY: # LearningUnit without attribution
@@ -544,8 +544,8 @@ def get_data_pgmer(request, offer_year_id=None, tutor_id=None, learning_unit_yea
     # Creating list of all tutors
     all_tutors = []
     # all_tutors.append({'id': NOBODY, 'last_name': 'NOBODY', 'first_name': ''})
-    for item in data:
-        tutor = item['tutor']
+    for attrib in all_attributions:
+        tutor = attrib.tutor
         if tutor and tutor not in all_tutors:
             all_tutors.append(tutor)
     all_tutors = sorted(all_tutors, key=lambda k: k.person.last_name.upper() if k.person.last_name else ''
