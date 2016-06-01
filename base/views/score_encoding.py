@@ -423,7 +423,11 @@ def get_data_online_double(learning_unit_year_id, request):
             'tutors': mdl.tutor.find_by_learning_unit(learning_unit_year.learning_unit_id)}
 
 
-def get_data_pgmer(request, offer_year_id=None, tutor_id=None, learning_unit_year_acronym=None):
+def get_data_pgmer(request,
+                   offer_year_id=None,
+                   tutor_id=None,
+                   learning_unit_year_acronym=None,
+                   completed_encodings_only=False):
     NOBODY = -1
     academic_yr = mdl.academic_year.current_academic_year()
     learning_unit_year_ids = None
@@ -484,6 +488,10 @@ def get_data_pgmer(request, offer_year_id=None, tutor_id=None, learning_unit_yea
                                                                        None)
             data.append(line)
 
+    if completed_encodings_only:
+        # Filter by completed encodings (100% complete)
+        data = [line for line in data if line['exam_enrollments_encoded'] == line['total_exam_enrollments']]
+
     if tutor_id == NOBODY: # LearningUnit without attribution
         data = [line for line in data if line['tutor'] is None]
 
@@ -514,7 +522,8 @@ def get_data_pgmer(request, offer_year_id=None, tutor_id=None, learning_unit_yea
                           'tutor_id': tutor_id,
                           'academic_year': academic_yr,
                           'number_session': mdl.session_exam.find_session_exam_number(),
-                          'learning_unit_year_acronym': learning_unit_year_acronym})
+                          'learning_unit_year_acronym': learning_unit_year_acronym,
+                          'completed_encodings_only': completed_encodings_only})
 
 
 @login_required
@@ -524,7 +533,8 @@ def refresh_list(request):
         return get_data_pgmer(request,
                               offer_year_id=request.GET.get('offer', None),
                               tutor_id=request.GET.get('tutor', None),
-                              learning_unit_year_acronym=request.GET.get('learning_unit_year_acronym', None))
+                              learning_unit_year_acronym=request.GET.get('learning_unit_year_acronym', None),
+                              completed_encodings_only=request.GET.get('completed_encodings_only', False))
 
     # In case the user is a Tutor
     else:
