@@ -29,6 +29,7 @@ from django.utils.translation import ugettext as _
 from base.models import person, learning_unit_year, attribution, person_address, offer_year_calendar
 from django.utils import timezone
 import datetime
+import unicodedata
 
 
 class ExamEnrollmentAdmin(admin.ModelAdmin):
@@ -331,6 +332,17 @@ def scores_sheet_data(exam_enrollments, tutor=None):
     return data
 
 
+def _normalize_string(string):
+    """
+    Remove accents in the string passed in parameter.
+    For example : 'é - è' ==> 'e - e'  //  'àç' ==> 'ac'
+    :param string: The string to normalize.
+    :return: The normalized string
+    """
+    string = string.replace(" ", "")
+    return ''.join((c for c in unicodedata.normalize('NFD', string) if unicodedata.category(c) != 'Mn'))
+
+
 def sort_for_encodings(exam_enrollments):
     """
     Sort the list by
@@ -345,8 +357,10 @@ def sort_for_encodings(exam_enrollments):
         acronym = off_enroll.offer_year.acronym
         last_name = off_enroll.student.person.last_name
         first_name = off_enroll.student.person.first_name
-        return "%s %s %s" %(acronym if acronym else '',
-                            last_name.upper() if last_name else '',
-                            first_name.upper() if first_name else '')
+        last_name = _normalize_string(last_name) if last_name else None
+        first_name = _normalize_string(first_name) if first_name else None
+        return "%s %s %s" % (acronym if acronym else '',
+                             last_name.upper() if last_name else '',
+                             first_name.upper() if first_name else '')
 
     return sorted(exam_enrollments, key=lambda k: _sort(k))
