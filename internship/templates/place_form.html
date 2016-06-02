@@ -50,7 +50,9 @@
 
 <div class="panel panel-default">
     <div class="panel-body">
-        <form method="post" action="{% if organization.id%} {% url 'organization_save' organization.id %} {%else%} {% url 'place_save_new'%} {%endif%}">
+        <form method="post" action="{% if organization.id%}
+        {% url 'organization_save' organization.id organization.id organization_address_id%}
+        {%else%} {% url 'place_save_new'%} {%endif%}">
             {% csrf_token %}
             <h3>Hopital</h3>
             <div class="row">
