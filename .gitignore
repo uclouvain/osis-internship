@@ -8,8 +8,10 @@ venv/
 __pycache__/
 backoffice/server_settings.py
 /base/tests/sent_mails
+assistant/views/data_assistant.csv
 /reports
 .project
+.settings
 .vscode/
 .pydevproject
 *.mo
