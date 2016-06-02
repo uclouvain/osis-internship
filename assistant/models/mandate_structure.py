@@ -28,7 +28,7 @@ from django.db import models
 
 
 class MandateStructure(models.Model):
-    assistant_mandate = models.ForeignKey('AcademicAssistant')
+    assistant_mandate = models.ForeignKey('AssistantMandate')
     structure = models.ForeignKey('base.Structure')
 
     @property
