@@ -1121,3 +1121,6 @@ msgstr "Vous avez encodé des notes pour plusieurs unités d'enseignements dans 
 
 msgid "complete"
 msgstr "Complet"
+
+msgid "enrollments"
+msgstr "Inscriptions"
