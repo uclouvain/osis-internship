@@ -28,10 +28,11 @@ from django.db import IntegrityError
 import csv, codecs
 from assistant.forms import MandateForm
 from base.views import layout
-from assistant.models import assistant_mandate, academic_assistant
+from assistant.models import assistant_mandate, academic_assistant, mandate_structure
 from base import models as mdl
 from base.views.layout import render_to_response
 from django.http.response import HttpResponseRedirect
+from base.views.common import academic_year
 
 
 
@@ -78,8 +79,14 @@ def mandate_save(request, mandate_id):
 
 
 def load_mandates(request):
+    """Importe un fichier CSV osis/assistant/views/data_assistant.csv contenant la liste des mandats.
+    Si un mandat avec un assistant, sap_id, position_id et academic_year existe déjà,
+    il est mis à jour plutôt qu'ajouté.
+    Si l'assistant lié au mandat existe déjà, il n'est ni modifié ni ajouté"""
+    
     imported_assistants_counter = 0
     imported_mandates_counter = 0
+    updated_mandates_counter = 0
     error_counter = 0
     if(request.POST):
         with codecs.open('osis/assistant/views/data_assistant.csv', encoding='utf-8') as csvfile:
@@ -87,26 +94,42 @@ def load_mandates(request):
             for columns in row:
                 if len(columns) > 0:
                     person = mdl.person.find_by_global_id(columns[5].strip())
-                    print('%s' % (person)) 
                     if person:
                         assistant = academic_assistant.AcademicAssistant()
                         assistant.person = person
-                        mandate = assistant_mandate.AssistantMandate()
                         fte = columns[8].strip().replace(",", ".");
+                        this_academic_year = mdl.academic_year.current_academic_year()
+                        position_id = columns[3].strip()
+                        faculty = columns[1].strip()
+                        institute = columns[2].strip()
+                        sap_id = columns[4].strip()  
+                        entry_date = columns[10].strip()
+                        end_date = columns[10].strip()
+                        contract_duration = columns[14].strip()
+                        contract_duration_fte = columns[15].strip()
+                        renewal_type = columns[16].strip()
+                        assistant_type = columns[11].strip()
+                        grade = columns[12].strip()
+                        scale = columns[13].strip()
+                        renewal_type = columns[16].strip()
+                        absences =columns[17].strip()
+                        comment =columns[18].strip()
+                        other_status = columns[19].strip()
+                        mandate = assistant_mandate.AssistantMandate()
                         mandate.fulltime_equivalent = fte
-                        mandate.position_id = columns[3].strip()  
-                        mandate.sap_id = columns[4].strip()  
-                        mandate.entry_date = columns[9].strip()
-                        mandate.end_date = columns[10].strip()
-                        mandate.assistant_type = columns[11].strip()
-                        mandate.grade = columns[12].strip()
-                        mandate.scale = columns[13].strip()
-                        mandate.contract_duration = columns[14].strip()
-                        mandate.contract_duration_fte = columns[15].strip()
-                        mandate.renewal_type = columns[16].strip()
-                        mandate.absences =columns[17].strip()
-                        mandate.comment =columns[18].strip()
-                        mandate.other_status = columns[19].strip()
+                        mandate.position_id = position_id
+                        mandate.sap_id = sap_id 
+                        mandate.entry_date = entry_date
+                        mandate.end_date = end_date
+                        mandate.assistant_type = assistant_type
+                        mandate.grade = grade
+                        mandate.scale = scale
+                        mandate.contract_duration = contract_duration
+                        mandate.contract_duration_fte = contract_duration_fte
+                        mandate.renewal_type = renewal_type
+                        mandate.absences = absences
+                        mandate.comment = comment
+                        mandate.other_status = other_status
                         mandate.state='TO_DO'
                         mandate.research_percent=0
                         mandate.tutoring_percent=0
@@ -122,7 +145,6 @@ def load_mandates(request):
                         mandate.events_organisation_service=0
                         mandate.publishing_field_service=0
                         mandate.scientific_jury_service=0
-                        this_academic_year = mdl.academic_year.current_academic_year()
                         mandate.academic_year=this_academic_year
                         mandate.appeal='NONE'
                         mandate.special=False
@@ -133,14 +155,50 @@ def load_mandates(request):
                             print('Duplicated : %s - %s' % (assistant, person))
                         try:
                             mandate.assistant=academic_assistant.find_by_person(person)
-                            mandate.save()
-                            imported_mandates_counter += 1
+                            existing_mandate = assistant_mandate.AssistantMandate.objects.filter(academic_year = this_academic_year,
+                                                                                                 assistant = mandate.assistant,
+                                                                                                 sap_id = sap_id,
+                                                                                                 position_id = position_id)
+                            if existing_mandate.count() >0:
+                                existing_mandate.update(fulltime_equivalent=fte,
+                                               entry_date = entry_date,
+                                               end_date = end_date,
+                                               contract_duration = contract_duration,
+                                               contract_duration_fte = contract_duration_fte,
+                                               renewal_type = renewal_type,
+                                               assistant_type = assistant_type,
+                                               grade = grade,
+                                               scale = scale,
+                                               absences = absences,
+                                               comment = comment,
+                                               other_status = other_status)
+                                updated_mandates_counter += 1
+                            else:
+                                mandate.save()
+                                if institute:
+                                    existing_institute = mdl.structure.Structure.objects.get(acronym=institute,
+                                                                                         type='INSTITUTE')
+                                    if existing_institute:
+                                        mandate_struc_institute = mandate_structure.MandateStructure()
+                                        mandate_struc_institute.assistant_mandate = mandate
+                                        mandate_struc_institute.structure = existing_institute
+                                        mandate_struc_institute.save()
+                                if faculty:
+                                    existing_faculty = mdl.structure.Structure.objects.get(acronym=faculty,
+                                                                                       type='FACULTY')
+                                    if existing_faculty:
+                                        mandate_struc_faculty = mandate_structure.MandateStructure()
+                                        mandate_struc_faculty.assistant_mandate = mandate
+                                        mandate_struc_faculty.structure = existing_faculty
+                                        mandate_struc_faculty.save()
+                                imported_mandates_counter += 1
                         except IntegrityError:
-                            print('Duplicated : %s - %s' % (assistant, person))
+                            print('Duplicated : %s' % (assistant))
                     else:
                         error_counter += 1
     return layout.render(request, "load_mandates.html", {'imported_assistants': imported_assistants_counter,
                                                          'imported_mandates': imported_mandates_counter,
+                                                         'updated_mandates': updated_mandates_counter,
                                                          'error_counter': error_counter})             
  
 

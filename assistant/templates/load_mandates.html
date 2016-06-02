@@ -46,10 +46,11 @@
 
 <div class="panel panel-default">
     <div class="panel-body">
-    {% if imported_mandates %}
+    {% if imported_mandates or updated_mandates %}
     <div class="row"><ul>
     <li>{{ imported_assistants }} assistants importés.</li>
     <li>{{ imported_mandates }} mandats importés.</li>
+    <li>{{ updated_mandates }} mandats mis à jour.</li>
     <li>{{ error_counter }} enregistrements ignorés.</li>
     </ul>
     </div>
