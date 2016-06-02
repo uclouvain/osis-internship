@@ -51,7 +51,7 @@
 <div class="panel panel-default">
     <div class="panel-body">
         <form method="post" action="{% if organization.id%}
-        {% url 'organization_save' organization.id organization.id organization_address_id%}
+        {% url 'place_save' organization.id organization_address.id%}
         {%else%} {% url 'place_save_new'%} {%endif%}">
             {% csrf_token %}
             <h3>Hopital</h3>

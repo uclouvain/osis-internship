@@ -123,7 +123,7 @@ def internships_places_stud(request):
                                            'all_addresses': organization_addresses,
                                            'city_sort_get': city_sort_get})
 
-def organization_save(request, organization_id, organization_address_id):
+def place_save(request, organization_id, organization_address_id):
     print(organization_id)
     form = OrganizationForm(data=request.POST)
     if organization_id:
@@ -199,11 +199,12 @@ def organization_save(request, organization_id, organization_address_id):
                                                 })
 
 def organization_new(request):
-    return organization_save(request, None, None)
+    return place_save(request, None, None)
 
 def organization_edit(request, organization_id):
     organization = Organization.find_by_id(organization_id)
     organization_address = OrganizationAddress.find_by_organization(organization)
+    print(organization_address[0].id)
     return render(request, "place_form.html", {'organization': organization,
                                                 'organization_address':organization_address[0],
                                                 })
