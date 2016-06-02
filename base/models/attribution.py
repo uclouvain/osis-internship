@@ -67,7 +67,7 @@ def search(tutor=None, learning_unit_id=None, function=None, learning_unit_ids=N
     if learning_unit_ids:
         queryset = queryset.filter(learning_unit__id__in=learning_unit_ids)
 
-    return queryset
+    return queryset.select_related('tutor', 'learning_unit')
 
 
 def get_assigned_tutor(user):

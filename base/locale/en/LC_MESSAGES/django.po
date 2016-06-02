@@ -710,7 +710,10 @@ msgid "score_legend"
 msgstr "Score legend: %s (0=Score of presence)"
 
 msgid "unauthorized_decimal_for_this_activity"
-msgstr "Unauthorized decimal for this activity"
+msgstr "Unauthorized decimal for this learning unit"
+
+msgid "authorized_decimal_for_this_activity"
+msgstr "Decimals authorized for this learning unit"
 
 msgid "phone"
 msgstr "Phone"
@@ -798,7 +801,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "score_saved"
-msgstr "Score Saved"
+msgstr "score Saved"
 
 msgid "scores_saved"
 msgstr "score(s) saved"
