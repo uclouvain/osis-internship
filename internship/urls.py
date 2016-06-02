@@ -30,14 +30,19 @@ from internship.views import home, internship, master, period, place, student, s
 urlpatterns = [
     # S'il vous plaît, organiser les urls par ordre alphabétique.
     url(r'^$', home.internships_home, name='internships_home'),
+    url(r'^internships/edit/([0-9]+)/$', internship.internships_edit, name='internships_edit'),
     url(r'^internships/$', internship.internships, name='internships'),
+    url(r'^internships/std/$', internship.internships_stud, name='internships_stud'),
+    url(r'^internships/([0-9]+)/students/choice/$', internship.student_choice, name='internship_detail_student_choice'),
     url(r'^internships/create/$', internship.internships_create, name='internships_create'),
+    url(r'^internships/([0-9]+)/modification/$', internship.internship_modification, name='internship_modification'),
     url(r'^internships/new/$', internship.internships_new, name='internships_new'),
     url(r'^internships/save/$', internship.internships_save, name='internships_save'),
 
     url(r'^internships_masters/$', master.interships_masters, name='interships_masters'),
 
     url(r'^periods/$', period.internships_periods, name='internships_periods'),
+    url(r'^periods/create/$', period.period_create, name='periods_create'),
 
     url(r'^places/$', place.internships_places, name='internships_places'),
     url(r'^places/std/$', place.internships_places_stud, name='internships_places_stud'),

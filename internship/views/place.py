@@ -25,7 +25,7 @@
 ##############################################################################
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from internship.models import Organization, OrganizationAddress, InternshipChoice
+from internship.models import Organization, OrganizationAddress, InternshipChoice, InternshipOffer
 from internship.forms import OrganizationForm
 
 @login_required
@@ -211,11 +211,16 @@ def organization_create(request):
 
 def student_choice(request, reference):
     organization_choice = InternshipChoice.find_by(s_organization_ref=reference)
-
-    for r in organization_choice:
-        print(r.choice)
     organization = Organization.search(reference=reference)
+    all_offers = InternshipOffer.find_interships_by_organization(organization[0])
+
+    for al in all_offers:
+        number_first_choice = len(InternshipChoice.find_by(s_organization = al.organization,
+                                                            s_learning_unit_year=al.learning_unit_year,
+                                                            s_choice = 1))
+        al.number_first_choice = number_first_choice
 
     return render(request, "place_detail.html", {'organization': organization[0],
-                                                'organization_choice':organization_choice
+                                                'organization_choice':organization_choice,
+                                                'offers' : all_offers,
                                                 })
