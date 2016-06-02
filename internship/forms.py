@@ -42,6 +42,7 @@ class InternshipOfferForm(ModelForm):
         fields = ['organization', 'learning_unit_year', 'title', 'maximum_enrollments']
 
 class OrganizationForm(ModelForm):
+    file = forms.FileField()
     class Meta:
         model = Organization
         fields = ['acronym', 'name', 'website', 'reference']
