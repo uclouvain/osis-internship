@@ -51,7 +51,7 @@ urlpatterns = [
     url(r'^places/create/$', place.organization_create, name='place_create'),
     url(r'^places/([0-9]+)/students/choice/$', place.student_choice, name='place_detail_student_choice'),
     url(r'^places/edit/([0-9]+)/$', place.organization_edit, name='place_edit'),
-    url(r'^places/save/([0-9]+)/$', place.organization_save, name='place_save'),
+    url(r'^places/save/([0-9]+)/([0-9]+)/$', place.place_save, name='place_save'),
     url(r'^places/save/$', place.organization_new, name='place_save_new'),
     url(r'^places/upload/$', upload_xls.upload_places_file,name='upload_places'),
 
