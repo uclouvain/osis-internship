@@ -32,6 +32,7 @@
 {% block breadcrumb %}
 <li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'institution' %}</a></li>
 <li><a href="{% url 'mandates' %}" id="lnk_mandates">{% trans 'mandates' %}</a></li>
+<li><a href="{% url 'mandates_list' %}" id="lnk_assistants">{% trans 'mandates_list' %}</a></li>
 <li class="active">{% trans 'load_mandates' %}</li>
 
 {% endblock %}
@@ -39,9 +40,27 @@
 <div class="page-header">
     <h2>{% trans 'assistants' %}</h2>
 </div>
+	<div class = "page-header">
+   	<h1><small>{% trans 'import_data_from_csv'%}</small></h1>
+   	</div>
+
 <div class="panel panel-default">
     <div class="panel-body">
-	{{ error_counter }}
+    {% if imported_mandates %}
+    <div class="row"><ul>
+    <li>{{ imported_assistants }} assistants importés.</li>
+    <li>{{ imported_mandates }} mandats importés.</li>
+    <li>{{ error_counter }} enregistrements ignorés.</li>
+    </ul>
+    </div>
+    {% else %}
+    <form method="post" action=" {% url 'load_mandates' %} ">
+	{% csrf_token %}
+	<button type="submit" class="btn btn-primary" title="{% trans 'import'%}" id="bt_mandate_import"><span class="glyphicon glyphicon-import" aria-hidden="true"></span> {% trans 'import'%}</button>
+		<a class="btn btn-default" id="lnk_upload_cancel" href="{% url 'mandates_list' %}">
+		<span class="glyphicon glyphicon-cancel" aria-hidden="true"></span> {% trans 'cancel'%}</a>
+	</form>
+	{% endif %}
 	</div>
 </div>
 {% endblock %}

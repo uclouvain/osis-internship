@@ -42,5 +42,6 @@ class MandateForm(ModelForm):
         model = mdl.assistant_mandate.AssistantMandate
         fields = ('comment','absences','other_status','renewal_type')
         
-        
+    
 
+    

@@ -48,3 +48,6 @@ class AcademicAssistant(models.Model):
     
 def find_by_id(assistant_id):
     return AcademicAssistant.objects.get(id=assistant_id)  
+
+def find_by_person(person):
+    return AcademicAssistant.objects.get(person=person)  
