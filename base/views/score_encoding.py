@@ -365,6 +365,7 @@ def get_data(request, offer_year_id=None):
                                                             'exam_enrollments_encoded': exam_enrollments_encoded,
                                                             'total_exam_enrollments': 1}
     scores_list = group_by_learn_unit_year.values()
+    scores_list = sorted(scores_list, key=lambda k: k['learning_unit_year'].acronym)
 
     return layout.render(request, "assessments/scores_encoding.html",
                          {'tutor': tutor,
