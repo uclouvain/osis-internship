@@ -36,10 +36,14 @@
   <div class="page-header">
     <h2>{% trans 'Internships Creation' %}</h2>
   </div>
-  {% if message %}
-    <script language="javascript" type="text/javascript">
-      alert("Stage correctement créé");
-    </script>
+  {% if success == 1 %}
+  <div>
+      <label class="alert alert-success" style="margin:5px">{{message}}</label>
+  </div>
+  {% else %}
+  <div>
+      <label class="alert alert-warning" style="margin:5px">{{message}}</label>
+  </div>
   {% endif %}
   <table style="height:100%; width:100%;">
       <thead>
@@ -50,13 +54,13 @@
         </tr>
       </thead>
       <tbody>
-        <form action="{%url 'internships_new' %}" method="post">
+        <form method="post" action="{% if internship.id%} {% url 'internship_modification' internship.id %} {%else%} {% url 'internships_new'%} {%endif%}">
           {% csrf_token %}
           <tr>
             <td style="text-align:center;">
               <select name="organization">
                {% for organization in all_organization %}
-                  <option value={{ organization.reference }}>
+                  <option value={{ organization.reference }} {%if organization.reference == select_organization %}selected{%endif%}>
                       {{ organization.reference }} - {{ organization.name }}
                   </option>
                {% endfor %}
@@ -65,7 +69,7 @@
             <td style="text-align:center;">
               <select name="learning_unit_year">
                {% for learning_unit_year in all_learning_unit_year %}
-                  <option value={{ learning_unit_year.title }}>
+                  <option value={{ learning_unit_year.title }} {%if learning_unit_year.title == select_learning_unit_year %}selected{%endif%}>
                       {{ learning_unit_year.title }}
                   </option>
                {% endfor %}

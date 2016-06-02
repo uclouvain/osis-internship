@@ -43,7 +43,7 @@ class InternshipOffer(models.Model):
     @staticmethod
     def find_interships_by_learning_unit_organization(learning_unit_year, organization):
         internships = InternshipOffer.objects.filter(learning_unit_year__title=learning_unit_year)\
-                                            .filter(organization__name=organization)
+                                            .filter(organization__reference=organization)
         return internships
 
     @staticmethod
@@ -108,7 +108,7 @@ class InternshipMaster(models.Model):
     @staticmethod
     def find_masters_by_speciality_and_organization(speciality, organization):
         masters = InternshipMaster.objects.filter(speciality=speciality)\
-                                            .filter(organization__name=organization)
+                                            .filter(organization__reference=organization)
         return masters
 
     @staticmethod
@@ -129,6 +129,17 @@ class InternshipChoice(models.Model):
     choice              = models.IntegerField()
 
     @staticmethod
+    def find_by_all_student():
+        all = InternshipChoice.objects.all()
+        students_list=[]
+        for a in all:
+            students_list.append(a.student)
+        unique = []
+        [unique.append(item) for item in students_list if item not in unique]
+
+        return unique
+
+    @staticmethod
     def find_by_student(s_student):
         internships = InternshipChoice.objects.filter(student = s_student).order_by('choice')
         return internships
@@ -139,7 +150,9 @@ class InternshipChoice(models.Model):
         return internships
 
     @staticmethod
-    def find_by(s_organization=None, s_learning_unit_year=None, s_organization_ref=None, s_choice=None):
+    def find_by(s_organization=None, s_learning_unit_year=None, s_organization_ref=None, s_choice=None,
+                s_define_choice=None):
+
         has_criteria = False
         queryset = InternshipChoice.objects
 
@@ -155,12 +168,17 @@ class InternshipChoice(models.Model):
             queryset = queryset.filter(organization__reference=s_organization_ref).order_by('choice')
             has_criteria = True
 
+        if s_define_choice:
+            queryset = queryset.filter(choice=s_define_choice)
+            has_criteria = True
+
         if s_choice:
             if s_choice == 1 :
                 queryset = queryset.filter(choice=s_choice)
             else :
                 queryset = queryset.exclude(choice=1)
             has_criteria = True
+
         if has_criteria:
             return queryset
         else:
@@ -172,8 +190,6 @@ class Period(models.Model):
     date_end = models.DateField()
 
 class Organization(models.Model):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed = models.DateTimeField(null=True)
     name = models.CharField(max_length=255)
     acronym = models.CharField(max_length=15)
     website = models.URLField(max_length=255, blank=True, null=True)

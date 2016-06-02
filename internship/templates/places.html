@@ -52,7 +52,7 @@
                 <form action="{%url 'internships_places' %}" method="get">
                   <td style="text-align:center; width:50%;">
                     <select name="city_sort" onChange="javascript: this.form.submit();">
-                      <option value="0">{% trans 'choose_city' %}</option>
+                      <option value="0">{% trans 'all_city' %}</option>
                       {% for address in all_addresses %}
                         <option value="{{ address }}" {% if address == city_sort_get %}selected{%endif%}>
                           {{ address }}
