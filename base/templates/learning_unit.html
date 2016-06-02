@@ -43,7 +43,7 @@
             {% if attributions %}
                 <li><a data-toggle="tab" href="#tab_tutors" id="lnk_tab_tutors">{% trans 'attributions' %}</a></li>
             {% endif %}
-            {% if is_program_manager and learning_unit_enr %}
+            {% if is_program_manager and enrollments %}
                 <li><a data-toggle="tab" href="#tab_enrollments" id="lnk_tab_enrollments">{% trans 'enrollments' %}</a></li>
             {% endif %}
         </ul>
@@ -84,24 +84,24 @@
                     </table>
                 </div>
             {% endif %}
-            {% if is_program_manager and learning_unit_enr %}
+            {% if is_program_manager and enrollments %}
                 <div id="tab_enrollments" class="tab-pane fade in">
                     <br>
                     <table class="table table-striped table-hover">
                         <thead>
                             <tr>
-                                <th>{% trans 'Registration ID' %}</th>
-                                <th>{% trans 'Last Name'%}</th>
-                                <th>{% trans 'First Name'%}</th>
-                                <th>{% trans 'Email'%}</th>
+                                <th>{% trans 'registration_id' %}</th>
+                                <th>{% trans 'last_name'%}</th>
+                                <th>{% trans 'first_name'%}</th>
+                                <th>{% trans 'email'%}</th>
                             </tr>
                         </thead>
-                        {% for learning_uer in learning_unit_enr %}
+                        {% for enrollment in enrollments %}
                             <tr>
-                                <td>{{ learning_uer.offer_enrollment.student.registration_id }}</td>
-                                <td>{{ learning_uer.offer_enrollment.student.person.last_name }}</td>
-                                <td>{{ learning_uer.offer_enrollment.student.person.first_name }}</td>
-                                <td><a href="mailto:{{ learning_uer.offer_enrollment.student.person.email }}" id="lnk_academic_calendars">{{ learning_uer.offer_enrollment.student.person.email }}</a></td>
+                                <td>{{ enrollment.offer_enrollment.student.registration_id }}</td>
+                                <td>{{ enrollment.offer_enrollment.student.person.last_name }}</td>
+                                <td>{{ enrollment.offer_enrollment.student.person.first_name }}</td>
+                                <td><a href="mailto:{{ enrollment.offer_enrollment.student.person.email }}" id="lnk_academic_calendars">{{ enrollment.offer_enrollment.student.person.email }}</a></td>
                             </tr>
                         {% endfor %}
                     </table>

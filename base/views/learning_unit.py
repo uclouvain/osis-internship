@@ -68,10 +68,10 @@ def learning_units_search(request):
 def learning_unit_read(request, learning_unit_year_id):
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
     attributions = mdl.attribution.search(learning_unit_id=learning_unit_year.learning_unit.id)
-    learning_unit_enr = mdl.learning_unit_enrollment.find_by_learningunit_enrollment(learning_unit_year=learning_unit_year)
+    enrollments = mdl.learning_unit_enrollment.find_by_learningunit_enrollment(learning_unit_year)
     is_program_manager = mdl.program_manager.is_program_manager(request.user)
 
     return layout.render(request, "learning_unit.html", {'learning_unit_year': learning_unit_year,
                                                          'attributions': attributions,
-                                                         'learning_unit_enr': learning_unit_enr,
+                                                         'enrollments': enrollments,
                                                          'is_program_manager': is_program_manager})

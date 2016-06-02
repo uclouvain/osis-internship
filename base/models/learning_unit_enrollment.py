@@ -58,5 +58,5 @@ def find_by_learningunit_enrollment(learning_unit_year, offer_enrollment):
                                                  offer_enrollment=offer_enrollment)
 
 def find_by_learningunit_enrollment(learning_unit_year):
-    return LearningUnitEnrollment.objects.filter(learning_unit_year=learning_unit_year).all().order_by('offer_enrollment__student__person__last_name',
-                                                                                                       'offer_enrollment__student__person__first_name')
+    return LearningUnitEnrollment.objects.filter(learning_unit_year=learning_unit_year).order_by('offer_enrollment__student__person__last_name',
+                                                                                                 'offer_enrollment__student__person__first_name')
