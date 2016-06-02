@@ -24,11 +24,18 @@
 #
 ##############################################################################
 
-# Statements in alphabetic order.
-from assistant.models import academic_assistant
-from assistant.models import assistant_document
-from assistant.models import assistant_mandate
-from assistant.models import review
-from assistant.models import tutoring_learning_unit_year
-from assistant.models import mandate_structure
+from django.db import models
+
+
+class MandateStructure(models.Model):
+    assistant_mandate = models.ForeignKey('AssistantMandate')
+    structure = models.ForeignKey('base.Structure')
+
+    @property
+    def name(self):
+        return self.__str__()
+
+    def __str__(self):
+        return u"%s - %s" % (self.assistant_mandate.person, self.structure.acronym)
+
 
