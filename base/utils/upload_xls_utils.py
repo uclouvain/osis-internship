@@ -217,6 +217,7 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                                 messages.add_message(request, messages.ERROR, "%s %s for %s!" % (info_line, _('enrollment_exam_not_exists'), xls_learning_unit_acronym))
                             else:
                                 score = row[col_score].value
+                                score = None if score == '' else score # The score could be an Integer or String...
                                 if score is not None:
                                     try:
                                         score = float(str(row[col_score].value).strip().replace(',', '.'))
