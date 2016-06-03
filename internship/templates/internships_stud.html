@@ -64,12 +64,54 @@
   <div class="panel panel-default">
     <div class="panel-body">
         <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#tab_MI">{% trans 'Stage en Chirurgie'%}</a></li>
-            <li><a data-toggle="tab" href="#tab_CH">{% trans 'Stage en Gériatrie'%}</a></li>
-            <li><a data-toggle="tab" href="#tab_GO">{% trans 'Stage en Gynécologie-Obstétrique'%}</a></li>
-            <li><a data-toggle="tab" href="#tab_PED">{% trans 'Stage en Médecine interne'%}</a></li>
-            <li><a data-toggle="tab" href="#tab_URG">{% trans 'Stage en Pédiatrie'%}</a></li>
-            <li><a data-toggle="tab" href="#tab_GER">{% trans 'Stage aux urgences'%}</a></li>
+            <li class="active"><a data-toggle="tab" href="#tab_MI">{% trans 'Stage en Chirurgie'%}
+            {%for luy in all_learning_unit_year %}{% if luy.title == 'Stage en Chirurgie'%}
+              {%if luy.size = 4 %}
+                <span class="glyphicon glyphicon-ok" style="color:green"></span>
+              {%else%}
+                <span class="glyphicon glyphicon-remove" style="color:red" font-size="1.2em"></span>
+              {%endif%}
+            {% endif %}{%endfor%}</a></li>
+            <li><a data-toggle="tab" href="#tab_CH">{% trans 'Stage en Gériatrie'%}
+            {%for luy in all_learning_unit_year %}{% if luy.title == 'Stage en Gériatrie'%}
+              {%if luy.size = 4 %}
+                <span class="glyphicon glyphicon-ok" style="color:green"></span>
+              {%else%}
+                <span class="glyphicon glyphicon-remove" style="color:red" font-size="1.2em"></span>
+              {%endif%}
+            {% endif %}{%endfor%}</a></li>
+            <li><a data-toggle="tab" href="#tab_GO">{% trans 'Stage en Gynécologie-Obstétrique'%}
+            {%for luy in all_learning_unit_year %}{% if luy.title == 'Stage en Gynécologie-Obstétrique'%}
+              {%if luy.size = 4 %}
+                <span class="glyphicon glyphicon-ok" style="color:green"></span>
+              {%else%}
+                <span class="glyphicon glyphicon-remove" style="color:red" font-size="1.2em"></span>
+              {%endif%}
+            {% endif %}{%endfor%}</a></li>
+            <li><a data-toggle="tab" href="#tab_PED">{% trans 'Stage en Médecine interne'%}
+            {%for luy in all_learning_unit_year %}{% if luy.title == 'Stage en Médecine interne'%}
+              {%if luy.size = 4 %}
+                <span class="glyphicon glyphicon-ok" style="color:green"></span>
+              {%else%}
+                <span class="glyphicon glyphicon-remove" style="color:red" font-size="1.2em"></span>
+              {%endif%}
+            {% endif %}{%endfor%}</a></li>
+            <li><a data-toggle="tab" href="#tab_URG">{% trans 'Stage en Pédiatrie'%}
+            {%for luy in all_learning_unit_year %}{% if luy.title == 'Stage en Pédiatrie'%}
+              {%if luy.size = 4 %}
+                <span class="glyphicon glyphicon-ok" style="color:green"></span>
+              {%else%}
+                <span class="glyphicon glyphicon-remove" style="color:red" font-size="1.2em"></span>
+              {%endif%}
+            {% endif %}{%endfor%}</a></li>
+            <li><a data-toggle="tab" href="#tab_GER">{% trans 'Stage aux Urgences'%}
+            {%for luy in all_learning_unit_year %}{% if luy.title == 'Stage aux Urgences'%}
+              {%if luy.size = 4 %}
+                <span class="glyphicon glyphicon-ok" style="color:green"></span>
+              {%else%}
+                <span class="glyphicon glyphicon-remove" style="color:red" font-size="1.2em"></span>
+              {%endif%}
+            {% endif %}{%endfor%}</a></li>
             <li><a data-toggle="tab" href="#tab_CHOIX1">{% trans 'Stage au choix 1'%}</a></li>
             <li><a data-toggle="tab" href="#tab_CHOIX2">{% trans 'Stage au choix 2'%}</a></li>
             <li><a data-toggle="tab" href="#tab_CHOIX2">{% trans 'Stage au choix 3'%}</a></li>
@@ -374,7 +416,7 @@
                       </thead>
                       <tbody>
                         {% for internship in all_internships %}
-                        {% if internship.learning_unit_year.title = "Stage aux urgences"%}
+                        {% if internship.learning_unit_year.title = "Stage aux Urgences"%}
                           <tr>
                             <td>
                               <input type="hidden" name="organization"

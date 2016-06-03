@@ -23,6 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from internship.models import InternshipOffer, InternshipChoice, Organization
@@ -159,10 +161,20 @@ def internships_stud(request):
         internship_organizations.append(internship.organization)
     internship_organizations = list(set(internship_organizations))
 
+    all_internships = InternshipOffer.find_internships()
+    all_learning_unit_year = []
+    for choice in all_internships:
+        all_learning_unit_year.append(choice.learning_unit_year)
+    all_learning_unit_year = list(set(all_learning_unit_year))
+    for luy in all_learning_unit_year :
+        size = len(InternshipChoice.find_by(s_learning_unit_year=luy, s_student=student))
+        luy.size = size
+
     return render(request, "internships_stud.html", {'section': 'internship',
                                                 'all_internships' : query,
                                                 'all_organizations' : internship_organizations,
                                                 'organization_sort_value' : organization_sort_value,
+                                                'all_learning_unit_year' : all_learning_unit_year,
                                                  })
 
 @login_required
@@ -192,7 +204,6 @@ def internships_save(request):
     learning_unit_year_list = [x for x in learning_unit_year_list if x != 0]
     preference_list = [x for x in preference_list if x != '0']
 
-
     index = preference_list.__len__()
     for x in range(0, index):
         new_choice = InternshipChoice()
@@ -204,55 +215,8 @@ def internships_save(request):
         new_choice.choice = preference_list[x]
         new_choice.save()
 
-    #Rebuild the complet tab with the student choice
-    organization_sort_value = request.POST.get('organization_sort')
-    student_choice = InternshipChoice.find_by_student_desc(student)
-    #Then select Internship Offer depending of the option
-    if organization_sort_value and organization_sort_value != "0":
-        query = InternshipOffer.find_interships_by_organization(organization_sort_value)
-    else :
-        query = InternshipOffer.find_internships()
 
-    #Change the query into a list
-    query=list(query)
-    #delete the internships in query when they are in the student's selection then rebuild the query
-    index = 0
-    for choice in student_choice:
-        for internship in query :
-            if internship.organization == choice.organization and \
-                internship.learning_unit_year == choice.learning_unit_year :
-                    choice.maximum_enrollments =  internship.maximum_enrollments
-                    query[index] = 0
-            index += 1
-        query = [x for x in query if x != 0]
-        index = 0
-    query = [x for x in query if x != 0]
-
-    #insert the student choice into the global query, at first position,
-    #if they are in organization_sort_value (if it exist)
-    for choice in student_choice :
-        if organization_sort_value and organization_sort_value != "0" :
-            if choice.organization == organization_sort_value :
-                query.insert(0,choice)
-        else :
-            query.insert(0,choice)
-
-    # Create the options for the selected list, delete duplicated
-    query_organizations = InternshipOffer.find_internships()
-    internship_organizations = []
-    for internship in query_organizations:
-        internship_organizations.append(internship.organization)
-    internship_organizations = list(set(internship_organizations))
-
-    for internship in query:
-        number_first_choice = len(InternshipChoice.find_by(internship.organization, internship.learning_unit_year, s_choice = 1))
-        internship.number_first_choice = number_first_choice
-
-    return render(request, "internships_stud.html", {'section': 'internship',
-                                                'all_internships' : query,
-                                                'all_organizations' : internship_organizations,
-                                                'organization_sort_value' : organization_sort_value,
-                                                 })
+    return HttpResponseRedirect(reverse('internships_stud'))
 
 @login_required
 def internships_create(request):
