@@ -40,6 +40,7 @@
       <form method="get" action="{% url 'manager_dissertations_search'%}">
         <div class="row">
           <div class="col-md-6">
+          {{xlsx}}
             <a href="{% url 'manager_dissertations_list' %}" id="lnk_manager_dissertations" class="btn btn-default"
             role="button" title="{% trans 'all_dissertations'%}"><span class="glyphicon glyphicon-list"
             aria-hidden="true"></span> {% trans 'all_dissertations'%}</a>
@@ -47,14 +48,19 @@
             role="button" title="{% trans 'create_dissertation'%}"><span class="glyphicon glyphicon-plus"
             aria-hidden="true"></span> {% trans 'add_dissertation'%}</a>
           </div>
+          <div class="col-md-4 pull-right">
+            <input class="form-control" id="txt_search" placeholder="{% trans 'search' %}" name="search"
+            value="{{ request.GET.search }}">
+          </div>
           <div class="col-md-1 pull-right">
             <button type="submit" id="bt_submit_manager_information_search" class="btn btn-primary" role="button"
             title="{% trans 'search_teacher' %}"><span class="glyphicon glyphicon-search"
             aria-hidden="true"></span></button>
           </div>
-          <div class="col-md-5 pull-right">
-            <input class="form-control" id="txt_search" placeholder="{% trans 'search' %}" name="search"
-            value="{{ request.GET.search }}">
+          <div class="col-md-1 pull-right">
+          <button type="submit" id="bt_submit_manager_information_xlsx" class="btn btn-primary" role="button"
+            title="{% trans 'import_xlsx' %}" name="bt_xlsx" value="bt_xlsx"><span class="glyphicon glyphicon-download-alt"
+            aria-hidden="true" ></span></button>
           </div>
         </div>
       </form>

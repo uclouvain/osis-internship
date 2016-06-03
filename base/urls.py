@@ -68,7 +68,6 @@ urlpatterns = [
     url(r'^studies/assessments/scores_encoding/online/(?P<learning_unit_year_id>[0-9]+)/$', score_encoding.online_encoding, name='online_encoding'),
     url(r'^studies/assessments/scores_encoding/search/$', score_encoding.refresh_list, name='refresh_list'),
 
-
     url(r'^studies/assessments/scores_encoding/online/(?P<learning_unit_year_id>[0-9]+)/form$', score_encoding.online_encoding_form, name='online_encoding_form'),
     url(r'^studies/assessments/scores_encoding/online/([0-9]+)/submission$', score_encoding.online_encoding_submission, name='online_encoding_submission'),
     url(r'^studies/assessments/scores_encoding/online/(?P<learning_unit_year_id>[0-9]+)/double_form$', score_encoding.online_double_encoding_form, name='online_double_encoding_form'),

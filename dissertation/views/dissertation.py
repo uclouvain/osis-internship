@@ -34,6 +34,11 @@ from dissertation.models.dissertation_role import DissertationRole
 from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models.proposition_dissertation import PropositionDissertation
 from dissertation.forms import DissertationForm, ManagerDissertationForm, ManagerDissertationRoleForm
+from openpyxl.writer.excel import save_virtual_workbook
+from openpyxl import Workbook
+from openpyxl.compat import range
+from openpyxl.cell import get_column_letter
+from django.http import HttpResponse
 
 
 # Used by decorator @user_passes_test(is_manager) to secure manager views
@@ -142,6 +147,27 @@ def manager_dissertations_list(request):
     return render(request, 'manager_dissertations_list.html',
                   {'dissertations': dissertations})
 
+@login_required
+@user_passes_test(is_manager)
+def manager_dissertations_print(request):
+    dissertations = Dissertation.search(terms=request.GET['search']).filter(Q(active=True))
+    wb = Workbook(encoding='utf-8')
+    dest_filename = 'IMPORT.xlsx'
+    ws1 = wb.active
+    ws1.title = "disertation"
+    for row in range(1, 40):
+        ws1.append(range(600))
+
+    ws2 = wb.create_sheet(title="Pi")
+    ws2['F5'] = '3.14'
+    ws3 = wb.create_sheet(title="Data")
+    for row in range(10, 20):
+        for col in range(27, 54):
+            _ = ws3.cell(column=col, row=row, value="%s" % get_column_letter(col))
+
+    response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.ms-excel')
+    return response
+
 
 @login_required
 @user_passes_test(is_manager)
@@ -162,8 +188,26 @@ def manager_dissertations_new(request):
 @user_passes_test(is_manager)
 def manager_dissertations_search(request):
     dissertations = Dissertation.search(terms=request.GET['search']).filter(Q(active=True))
+    xlsx=False
+    if 'bt_xlsx' in request.GET:
+        wb = Workbook(encoding='utf-8')
+        dest_filename = 'IMPORT.xlsx'
+        ws1 = wb.active
+        ws1.title = "range names"
+        for row in range(1, 40):
+            ws1.append(range(600))
+
+        ws2 = wb.create_sheet(title="Pi")
+        ws2['F5'] = '3.14'
+        ws3 = wb.create_sheet(title="Data")
+        for row in range(10, 20):
+            for col in range(27, 54):
+                _ = ws3.cell(column=col, row=row, value="%s" % get_column_letter(col))
+        ## print(ws3['AA10'].value)
+        response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.ms-excel')
+        return response
     return render(request, "manager_dissertations_list.html",
-                  {'dissertations': dissertations})
+                  {'dissertations': dissertations,'xlsx':xlsx})
 
 
 @login_required
@@ -277,6 +321,7 @@ def dissertations_search(request):
     person = mdl.person.find_by_user(request.user)
     adviser = Adviser.find_by_person(person)
     dissertations = Dissertation.search(terms=request.GET['search']).filter(Q(proposition_dissertation__author=adviser) & Q(active=True))
+
     return render(request, "dissertations_list.html",
                   {'dissertations': dissertations})
 
