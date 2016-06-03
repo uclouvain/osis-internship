@@ -258,11 +258,11 @@
             <br>
             <input type="text" class="form-control" id="txt_registration_id" placeholder="{% trans 'registration_id' %}">
             <select class="form-control" name="justification" id="slt_justification_score">
-                <option value="">Justification</option>
-                <option value="ABSENCE_JUSTIFIED" {% if enrollment.justification_final == 'ABSENCE_JUSTIFIED' %}selected{% endif %}>{% trans 'absence_justified' %}</option>
-                <option value="ABSENCE_UNJUSTIFIED" {% if enrollment.justification_draft == 'ABSENCE_UNJUSTIFIED' or enrollment.justification_final == 'ABSENCE_UNJUSTIFIED' %}selected{% endif %}>{% trans 'absence_unjustified' %}</option>
-                <option value="CHEATING" {% if enrollment.justification_draft == 'CHEATING' or enrollment.justification_final == 'CHEATING' %}selected{% endif %}>{% trans 'cheating' %}</option>
-                <option value="SCORE_MISSING" {% if enrollment.justification_draft == 'SCORE_MISSING' or enrollment.justification_final == 'SCORE_MISSING' %}selected{% endif %}>{% trans 'score_missing' %}</option>
+                <option value="">Tous</option>
+                <option value="ABSENCE_JUSTIFIED">Absence justifié</option>
+                <option value="ABSENCE_UNJUSTIFIED">Absence injustifié</option>
+                <option value="CHEATING">Tricherie</option>
+                <option value="SCORE_MISSING">Note manquante</option>
             </select>
             <button type="submit" id="bt_submit_offer_year_search" class="btn btn-primary" role="button"
                         title="{% trans 'offer_year_search' %}">
