@@ -153,17 +153,21 @@
                             </td>
                             <td>
                               <select name="preference">
-                               <option value=0>0</option>
-                               <option value=1 {% if internship.choice == 1 %} selected{%endif%}>
+                               <option value=0 {% if internship.selectable == False %} disabled {%endif%}>0</option>
+                               <option value=1 {% if internship.choice == 1 %} selected{%endif%}
+                                                {% if internship.selectable == False %} disabled {%endif%}>
                                  Choix préféré
                                </option>
-                               <option value=2 {% if internship.choice == 2 %} selected{%endif%}>
+                               <option value=2 {% if internship.choice == 2 %} selected{%endif%}
+                                                {% if internship.selectable == False %} disabled {%endif%}>
                                  2ème choix
                                </option>
-                               <option value=3 {% if internship.choice == 3 %} selected{%endif%}>
+                               <option value=3 {% if internship.choice == 3 %} selected{%endif%}
+                                                {% if internship.selectable == False %} disabled {%endif%}>
                                  3ème choix
                                </option>
-                               <option value=4 {% if internship.choice == 4 %} selected{%endif%}>
+                               <option value=4 {% if internship.choice == 4 %} selected{%endif%}
+                                                {% if internship.selectable == False %} disabled {%endif%}>
                                  4ème choix
                                </option>
                               </select>
@@ -209,17 +213,21 @@
                             </td>
                             <td>
                               <select name="preference">
-                               <option value=0>0</option>
-                               <option value=1 {% if internship.choice == 1 %} selected{%endif%}>
+                               <option value=0 {% if internship.selectable == False %} disabled {%endif%}>0</option>
+                               <option value=1 {% if internship.choice == 1 %} selected{%endif%}
+                                                {% if internship.selectable == False %} disabled {%endif%}>
                                  Choix préféré
                                </option>
-                               <option value=2 {% if internship.choice == 2 %} selected{%endif%}>
+                               <option value=2 {% if internship.choice == 2 %} selected{%endif%}
+                                                {% if internship.selectable == False %} disabled {%endif%}>
                                  2ème choix
                                </option>
-                               <option value=3 {% if internship.choice == 3 %} selected{%endif%}>
+                               <option value=3 {% if internship.choice == 3 %} selected{%endif%}
+                                                {% if internship.selectable == False %} disabled {%endif%}>
                                  3ème choix
                                </option>
-                               <option value=4 {% if internship.choice == 4 %} selected{%endif%}>
+                               <option value=4 {% if internship.choice == 4 %} selected{%endif%}
+                                                {% if internship.selectable == False %} disabled {%endif%}>
                                  4ème choix
                                </option>
                               </select>
@@ -265,17 +273,21 @@
                             </td>
                             <td>
                               <select name="preference">
-                               <option value=0>0</option>
-                               <option value=1 {% if internship.choice == 1 %} selected{%endif%}>
+                               <option value=0 {% if internship.selectable == False %} disabled {%endif%}>0</option>
+                               <option value=1 {% if internship.choice == 1 %} selected{%endif%}
+                                                {% if internship.selectable == False %} disabled {%endif%}>
                                  Choix préféré
                                </option>
-                               <option value=2 {% if internship.choice == 2 %} selected{%endif%}>
+                               <option value=2 {% if internship.choice == 2 %} selected{%endif%}
+                                                {% if internship.selectable == False %} disabled {%endif%}>
                                  2ème choix
                                </option>
-                               <option value=3 {% if internship.choice == 3 %} selected{%endif%}>
+                               <option value=3 {% if internship.choice == 3 %} selected{%endif%}
+                                                {% if internship.selectable == False %} disabled {%endif%}>
                                  3ème choix
                                </option>
-                               <option value=4 {% if internship.choice == 4 %} selected{%endif%}>
+                               <option value=4 {% if internship.choice == 4 %} selected{%endif%}
+                                                {% if internship.selectable == False %} disabled {%endif%}>
                                  4ème choix
                                </option>
                               </select>
@@ -321,17 +333,21 @@
                             </td>
                             <td>
                               <select name="preference">
-                               <option value=0>0</option>
-                               <option value=1 {% if internship.choice == 1 %} selected{%endif%}>
+                               <option value=0 {% if internship.selectable == False %} disabled {%endif%}>0</option>
+                               <option value=1 {% if internship.choice == 1 %} selected{%endif%}
+                                                {% if internship.selectable == False %} disabled {%endif%}>
                                  Choix préféré
                                </option>
-                               <option value=2 {% if internship.choice == 2 %} selected{%endif%}>
+                               <option value=2 {% if internship.choice == 2 %} selected{%endif%}
+                                                {% if internship.selectable == False %} disabled {%endif%}>
                                  2ème choix
                                </option>
-                               <option value=3 {% if internship.choice == 3 %} selected{%endif%}>
+                               <option value=3 {% if internship.choice == 3 %} selected{%endif%}
+                                                {% if internship.selectable == False %} disabled {%endif%}>
                                  3ème choix
                                </option>
-                               <option value=4 {% if internship.choice == 4 %} selected{%endif%}>
+                               <option value=4 {% if internship.choice == 4 %} selected{%endif%}
+                                                {% if internship.selectable == False %} disabled {%endif%}>
                                  4ème choix
                                </option>
                               </select>
@@ -377,17 +393,21 @@
                             </td>
                             <td>
                               <select name="preference">
-                               <option value=0>0</option>
-                               <option value=1 {% if internship.choice == 1 %} selected{%endif%}>
+                               <option value=0 {% if internship.selectable == False %} disabled {%endif%}>0</option>
+                               <option value=1 {% if internship.choice == 1 %} selected{%endif%}
+                                                {% if internship.selectable == False %} disabled {%endif%}>
                                  Choix préféré
                                </option>
-                               <option value=2 {% if internship.choice == 2 %} selected{%endif%}>
+                               <option value=2 {% if internship.choice == 2 %} selected{%endif%}
+                                                {% if internship.selectable == False %} disabled {%endif%}>
                                  2ème choix
                                </option>
-                               <option value=3 {% if internship.choice == 3 %} selected{%endif%}>
+                               <option value=3 {% if internship.choice == 3 %} selected{%endif%}
+                                                {% if internship.selectable == False %} disabled {%endif%}>
                                  3ème choix
                                </option>
-                               <option value=4 {% if internship.choice == 4 %} selected{%endif%}>
+                               <option value=4 {% if internship.choice == 4 %} selected{%endif%}
+                                                {% if internship.selectable == False %} disabled {%endif%}>
                                  4ème choix
                                </option>
                               </select>
@@ -433,17 +453,21 @@
                             </td>
                             <td>
                               <select name="preference">
-                               <option value=0>0</option>
-                               <option value=1 {% if internship.choice == 1 %} selected{%endif%}>
+                               <option value=0 {% if internship.selectable == False %} disabled {%endif%}>0</option>
+                               <option value=1 {% if internship.choice == 1 %} selected{%endif%}
+                                                {% if internship.selectable == False %} disabled {%endif%}>
                                  Choix préféré
                                </option>
-                               <option value=2 {% if internship.choice == 2 %} selected{%endif%}>
+                               <option value=2 {% if internship.choice == 2 %} selected{%endif%}
+                                                {% if internship.selectable == False %} disabled {%endif%}>
                                  2ème choix
                                </option>
-                               <option value=3 {% if internship.choice == 3 %} selected{%endif%}>
+                               <option value=3 {% if internship.choice == 3 %} selected{%endif%}
+                                                {% if internship.selectable == False %} disabled {%endif%}>
                                  3ème choix
                                </option>
-                               <option value=4 {% if internship.choice == 4 %} selected{%endif%}>
+                               <option value=4 {% if internship.choice == 4 %} selected{%endif%}
+                                                {% if internship.selectable == False %} disabled {%endif%}>
                                  4ème choix
                                </option>
                               </select>
@@ -489,17 +513,21 @@
                             </td>
                             <td>
                               <select name="preference">
-                               <option value=0>0</option>
-                               <option value=1 {% if internship.choice == 1 %} selected{%endif%}>
+                               <option value=0 {% if internship.selectable == False %} disabled {%endif%}>0</option>
+                               <option value=1 {% if internship.choice == 1 %} selected{%endif%}
+                                                {% if internship.selectable == False %} disabled {%endif%}>
                                  Choix préféré
                                </option>
-                               <option value=2 {% if internship.choice == 2 %} selected{%endif%}>
+                               <option value=2 {% if internship.choice == 2 %} selected{%endif%}
+                                                {% if internship.selectable == False %} disabled {%endif%}>
                                  2ème choix
                                </option>
-                               <option value=3 {% if internship.choice == 3 %} selected{%endif%}>
+                               <option value=3 {% if internship.choice == 3 %} selected{%endif%}
+                                                {% if internship.selectable == False %} disabled {%endif%}>
                                  3ème choix
                                </option>
-                               <option value=4 {% if internship.choice == 4 %} selected{%endif%}>
+                               <option value=4 {% if internship.choice == 4 %} selected{%endif%}
+                                                {% if internship.selectable == False %} disabled {%endif%}>
                                  4ème choix
                                </option>
                               </select>
@@ -545,17 +573,21 @@
                             </td>
                             <td>
                               <select name="preference">
-                               <option value=0>0</option>
-                               <option value=1 {% if internship.choice == 1 %} selected{%endif%}>
+                               <option value=0 {% if internship.selectable == False %} disabled {%endif%}>0</option>
+                               <option value=1 {% if internship.choice == 1 %} selected{%endif%}
+                                                {% if internship.selectable == False %} disabled {%endif%}>
                                  Choix préféré
                                </option>
-                               <option value=2 {% if internship.choice == 2 %} selected{%endif%}>
+                               <option value=2 {% if internship.choice == 2 %} selected{%endif%}
+                                                {% if internship.selectable == False %} disabled {%endif%}>
                                  2ème choix
                                </option>
-                               <option value=3 {% if internship.choice == 3 %} selected{%endif%}>
+                               <option value=3 {% if internship.choice == 3 %} selected{%endif%}
+                                                {% if internship.selectable == False %} disabled {%endif%}>
                                  3ème choix
                                </option>
-                               <option value=4 {% if internship.choice == 4 %} selected{%endif%}>
+                               <option value=4 {% if internship.choice == 4 %} selected{%endif%}
+                                                {% if internship.selectable == False %} disabled {%endif%}>
                                  4ème choix
                                </option>
                               </select>

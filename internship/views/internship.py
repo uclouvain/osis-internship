@@ -153,6 +153,7 @@ def internships_stud(request):
     for internship in query:
         number_first_choice = len(InternshipChoice.find_by(internship.organization, internship.learning_unit_year, s_choice = 1))
         internship.number_first_choice = number_first_choice
+        print (internship.selectable)
 
     # Create the options for the selected list, delete duplicated
     query_organizations = InternshipOffer.find_internships()
@@ -262,6 +263,7 @@ def internships_edit(request, internship_id):
         if request.POST['maximum_enrollments']:
             internship.maximum_enrollments = request.POST['maximum_enrollments']
 
+        internship.selectable = True
         internship.save()
         success = 1
         if internship_id :
@@ -310,3 +312,21 @@ def internship_modification(request, internship_id):
     return render(request, "internship_modification.html", {'internship': internship,
                                                             'internship_id' : internship_id
     })
+
+@login_required
+def internships_block(request, block):
+    internships = InternshipOffer.find_internships()
+
+    for internship in internships:
+        edit_internship = InternshipOffer.find_intership_by_id(internship.id)
+        edit_internship.organization = internship.organization
+        edit_internship.learning_unit_year = internship.learning_unit_year
+        edit_internship.title = internship.title
+        edit_internship.maximum_enrollments = internship.maximum_enrollments
+        if block == '1' :
+            edit_internship.selectable = False
+        else :
+            edit_internship.selectable = True
+        edit_internship.save()
+
+    return HttpResponseRedirect(reverse('internships_home'))

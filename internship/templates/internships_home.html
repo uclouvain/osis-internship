@@ -66,6 +66,19 @@
             <!--<p>{% trans 'This process helps tutors while scores encoding.' %}</p>-->
           </li>
         </ul>
+        {% if blockable %}
+          <a href="{% url 'internships_block' 1 %}">
+            <button type="submit" class="btn btn-warning" title="{% trans 'block'%}" id="bt_interships_save">
+              Bloquer la sélection des stages
+            </button>
+          </a>
+        {%else%}
+          <a href="{% url 'internships_block' 2 %}">
+            <button type="submit" class="btn btn-warning" title="{% trans 'activate'%}" id="bt_interships_save">
+              Activer la sélection des stages
+            </button>
+          </a>
+        {%endif%}
       </div>
     </div>
   </div>

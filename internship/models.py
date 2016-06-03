@@ -32,6 +32,7 @@ class InternshipOffer(models.Model):
     learning_unit_year  = models.ForeignKey('base.LearningUnitYear')
     title = models.CharField(max_length=255)
     maximum_enrollments = models.IntegerField()
+    selectable          = models.BooleanField()
 
     def __str__(self):
         return self.title
