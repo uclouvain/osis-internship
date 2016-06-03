@@ -1102,6 +1102,11 @@ msgstr "You don't have access rights for this offer or it doesn't exist in our d
 msgid "learning_unit_not_access_or_not_exist"
 msgstr "You don't have access rights for this learning unit or it doesn't exist in our database"
 
+msgid "more_than_one_exam_enrol_for_one_learn_unit"
+msgstr "This student has multiple enrollments for a same exam. "
+       "(he's enrolled to a same learning unit in 2 different programs. "
+       "Please encode this score in the 'online' tab in the interface."
+
 msgid "justification_invalid"
 msgstr "Invalid justification"
 

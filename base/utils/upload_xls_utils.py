@@ -194,10 +194,12 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
         else:
             exam_enrollments = exam_enrollments_by_registration_id.get(xls_registration_id, [])
             exam_enrollment = None
+            count_exam_enrol_for_this_learn_unit = 0 # A student could have 2 examEnrollments for a same learningUnit in 2 different offers
             # Find ExamEnrollment by learningUnit.acronym
             for exam_enroll in exam_enrollments:
                 if exam_enroll.learning_unit_enrollment.learning_unit_year.acronym == xls_learning_unit_acronym:
                     exam_enrollment = exam_enroll
+                    count_exam_enrol_for_this_learn_unit +=1
             if not exam_enrollment:
                 messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('enrollment_activity_not_exist') % (xls_learning_unit_acronym)))
             elif not is_program_manager and (exam_enrollment.score_final is not None or exam_enrollment.justification_final):
@@ -213,7 +215,11 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                     if xls_offer_year_acronym not in offer_acronyms_managed_by_user:
                         messages.add_message(request, messages.ERROR, "%s '%s' %s!" % (info_line, xls_offer_year_acronym, _('offer_year_not_access_or_not_exist')))
                     elif xls_offer_year_acronym != exam_enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym:
-                        messages.add_message(request, messages.ERROR, "%s '%s' %s!" % (info_line, xls_offer_year_acronym, _('offer_enrollment_not_exist')))
+                        if count_exam_enrol_for_this_learn_unit > 1:
+                            # A student could have 2 exam enrollments for a same learningUnit in 2 different offers
+                            messages.add_message(request, messages.ERROR, "%s %s" % (info_line, _('more_than_one_exam_enrol_for_one_learn_unit')))
+                        else:
+                            messages.add_message(request, messages.ERROR, "%s '%s' %s!" % (info_line, xls_offer_year_acronym, _('offer_enrollment_not_exist')))
                     else:
                         if xls_learning_unit_acronym not in learn_unit_acronyms_managed_by_user:
                             messages.add_message(request, messages.ERROR, "%s '%s' %s!" % (info_line, xls_learning_unit_acronym, _('learning_unit_not_access_or_not_exist')))
