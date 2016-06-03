@@ -800,7 +800,7 @@ msgid "score_decimal_not_allowed"
 msgstr "La note encodée est incorrecte : décimales non autorisées"
 
 msgid "constraint_score_other_score"
-msgstr "Vous ne pouvez pas remplir les champs 'Note chiffrée' et 'Justification' tous les deux"
+msgstr "Vous ne pouvez pas remplir simultanément les colonnes 'Note chiffrée' et 'Justification'"
 
 msgid "score_saved"
 msgstr "note(s) injectée(s)"
@@ -1112,6 +1112,11 @@ msgstr "Vous n'avez pas les droits d'accès pour cette offre ou elle n'existe pa
 msgid "learning_unit_not_access_or_not_exist"
 msgstr "Vous n'avez pas les droits d'accès pour cette unité d'enseignement ou elle n'existe pas en base de données"
 
+msgid "more_than_one_exam_enrol_for_one_learn_unit"
+msgstr "Cet étudiant possède plusieurs inscriptions au même examen "
+       "(il est inscrit à un même cours dans 2 programmes différents). "
+       "Veuillez encoder cette note via l'onglet 'en ligne' de l'interface svp."
+
 msgid "justification_invalid"
 msgstr "Justification invalide"
 
@@ -1124,3 +1129,4 @@ msgstr "Inscriptions"
 
 msgid "incomplete"
 msgstr "Incomplet"
+
