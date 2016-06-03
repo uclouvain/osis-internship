@@ -25,7 +25,18 @@
 ##############################################################################
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from internship.forms import PeriodForm
 
 @login_required
 def internships_periods(request):
     return render(request, "periods.html", {'section': 'internship'})
+
+
+@login_required
+def period_create(request):
+
+    f = PeriodForm(request.POST)
+
+    return render(request, "period_create.html", {'section': 'internship',
+                                                    'form' : f
+                                                    })

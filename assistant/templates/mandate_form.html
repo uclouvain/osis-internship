@@ -1,0 +1,100 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+{% endcomment %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/custom.css' %}">
+{% endblock %}
+    
+{% block breadcrumb %}
+<li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'institution' %}</a></li>
+<li><a href="{% url 'mandates' %}" id="lnk_mandates">{% trans 'mandates' %}</a></li>
+<li><a href="{% url 'mandates_list' %}" id="lnk_assistants">{% trans 'mandates_list' %}</a></li>
+<li class="active">{% trans 'mandate_read' %}</li>
+
+{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h2>{% trans 'assistants' %}</h2>
+</div>
+<div class="panel panel-default">
+    <div class="panel-body">
+	<h3>{{ mandate.assistant.person }}</h3>	
+	<form method="post" action=" {% url 'mandate_save' mandate.id %} ">
+	{% csrf_token %}
+	<div class="row">
+	<div class="col-md-3">
+	<div class="controls">
+	<label for="txt_renewal_type">{% trans 'renewal_type' %}</label>
+		
+		{{ form.renewal_type }}<font class="error">{{ form.renewal_type.errors }}</font></div>
+	
+	</div>
+	<div class="col-md-3">
+	<label for="txt_contract_duration">{% trans 'contract_duration' %} : </label>
+	{{ mandate.contract_duration }}
+	</div>
+	<div class="col-md-3">
+	<label for="txt_contract_duration_fte">{% trans 'contract_duration_fte' %} : </label>
+	{{ mandate.contract_duration_fte }}
+	</div></div>
+	
+	</br>
+	
+	<div class="row">
+	<div class="col-md-4">
+		<label for="txt_comment">{% trans 'comment' %}</label>
+    	<div class="controls">{{ form.comment }}<font class="error">{{ form.comment.errors }}</font></div>
+	</div>
+	<div class="col-md-4">
+		<label for="txt_absences">{% trans 'absences' %}</label>
+		<div class="controls">{{ form.absences }}<font class="error">{{ form.absences.errors }}</font></div>
+	</div>
+	<div class="col-md-4">
+		<label for="txt_other_status">{% trans 'other_status' %}</label>
+		<div class="controls">{{ form.other_status }}<font class="error">{{ form.other_status.errors }}</font></div>
+	</div>
+	</div>
+	
+	<br>
+	<button type="submit" class="btn btn-primary" title="{% trans 'save'%}" id="bt_mandate_save"><span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}</button>
+		<a class="btn btn-default" id="lnk_mandate_cancel" href="{% url 'mandates_list' %}">
+		<span class="glyphicon glyphicon-cancel" aria-hidden="true"></span> {% trans 'cancel'%}</a>
+	</form>
+	</div>
+</div>
+{% endblock %}
+{% block script %}
+
+{% endblock %}
+
+
+
+
+
+
+
+

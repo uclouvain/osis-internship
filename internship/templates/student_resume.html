@@ -29,7 +29,6 @@
 {% block breadcrumb %}
   <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
   <li><a href="{% url 'internships_home' %}">Stages</a></li>
-  <li><a href="{% url 'internships_student_resume' %}">{% trans 'Students' %}</a></li>
   <li class="active">{{ student.person.last_name }} {{ student.person.first_name }}</li>
 {% endblock %}
 {% block content %}
@@ -100,24 +99,14 @@
           <div class="panel-body">
             <ul class="nav nav-tabs">
               <li class="active"><a data-toggle="tab" href="#tab_choice">{% trans 'Choix de l\'étudiant' %}</a></li>
-              <li><a data-toggle="tab" href="#tab_rep">{% trans 'Répartition de l\'étudiant' %}</a></li>
+              <li><a data-toggle="tab" href="#tab_rep">{% trans 'Affectation de l\'étudiant' %}</a></li>
             </ul>
             <div class="tab-content">
               <div id="tab_choice" class="tab-pane fade in active">
                 <div class="panel panel-default">
               	<div class="tab-content">
               		<div role="tabpanel" class="tab-pane fade in active" id="profile">
-                    <label> Stage de Médecine Interne </label><br/>
-                      <ul>
-                        {% for choice in internship_choice %}
-                          {% if choice.learning_unit_year.title == "Stage en Médecine interne" %}
-                            <li> {% trans 'Hôpital' %} :
-                                    {{ choice.organization.reference }} - {{ choice.organization.name }} |
-                                    Choix : {{ choice.choice }}
-                          {% endif %}
-                        {% endfor %}
-                      </ul>
-                    <label> Stage de Chirurgie </label><br/>
+                    <label> Stage en Chirurgie </label><br/>
                       <ul>
                         {% for choice in internship_choice %}
                           {% if choice.learning_unit_year.title == "Stage en Chirurgie" %}
@@ -127,17 +116,37 @@
                           {% endif %}
                         {% endfor %}
                       </ul>
-                    <label> Stage de Ginéco-Obsétrique </label><br/>
+                    <label> Stage en Gériatrie </label><br/>
                       <ul>
                         {% for choice in internship_choice %}
-                          {% if choice.learning_unit_year.title == "Stage en Gynécologie-Obsétrique" %}
+                          {% if choice.learning_unit_year.title == "Stage en Gériatrie" %}
                             <li> {% trans 'Hôpital' %} :
                                     {{ choice.organization.reference }} - {{ choice.organization.name }} |
                                     Choix : {{ choice.choice }}
                           {% endif %}
                         {% endfor %}
                       </ul>
-                    <label> Stage de Pédiatrie </label><br/>
+                    <label> Stage en Gynécologie-Obstétrique </label><br/>
+                      <ul>
+                        {% for choice in internship_choice %}
+                          {% if choice.learning_unit_year.title == "Stage en Gynécologie-Obstétrique" %}
+                            <li> {% trans 'Hôpital' %} :
+                                    {{ choice.organization.reference }} - {{ choice.organization.name }} |
+                                    Choix : {{ choice.choice }}
+                          {% endif %}
+                        {% endfor %}
+                      </ul>
+                    <label> Stage en Médecine Interne </label><br/>
+                      <ul>
+                        {% for choice in internship_choice %}
+                          {% if choice.learning_unit_year.title == "Stage en Médecine interne" %}
+                            <li> {% trans 'Hôpital' %} :
+                                    {{ choice.organization.reference }} - {{ choice.organization.name }} |
+                                    Choix : {{ choice.choice }}
+                          {% endif %}
+                        {% endfor %}
+                      </ul>
+                    <label> Stage en Pédiatrie </label><br/>
                       <ul>
                         {% for choice in internship_choice %}
                           {% if choice.learning_unit_year.title == "Stage en Pédiatrie" %}
@@ -147,20 +156,10 @@
                           {% endif %}
                         {% endfor %}
                       </ul>
-                    <label> Stage d'Urgence </label><br/>
+                    <label> Stage en Urgence </label><br/>
                       <ul>
                         {% for choice in internship_choice %}
                           {% if choice.learning_unit_year.title == "Stage en Urgence" %}
-                            <li> {% trans 'Hôpital' %} :
-                                    {{ choice.organization.reference }} - {{ choice.organization.name }} |
-                                    Choix : {{ choice.choice }}
-                          {% endif %}
-                        {% endfor %}
-                      </ul>
-                    <label> Stage de Gériatrie </label><br/>
-                      <ul>
-                        {% for choice in internship_choice %}
-                          {% if choice.learning_unit_year.title == "Stage en Gériatrie" %}
                             <li> {% trans 'Hôpital' %} :
                                     {{ choice.organization.reference }} - {{ choice.organization.name }} |
                                     Choix : {{ choice.choice }}
@@ -179,12 +178,12 @@
                 <div class="panel panel-default">
                 	<div class="tab-content">
                 	  <div role="tabpanel" class="tab-pane fade in active" id="profile">
-                      <label> Stage de Chirurgie </label><br/>
-                      <label> Stage de Médecine Interne </label><br/>
-                      <label> Stage de Ginéco-Obsétrique </label><br/>
-                      <label> Stage de Pédiatrie </label><br/>
-                      <label> Stage d'Urgence </label><br/>
-                      <label> Stage de Gériatrie </label><br/>
+                      <label> Stage en Chirurgie </label><br/>
+                      <label> Stage en Gériatrie </label><br/>
+                      <label> Stage en Gynécologie-Obstétrique </label><br/>
+                      <label> Stage en Médecine Interne </label><br/>
+                      <label> Stage en Pédiatrie </label><br/>
+                      <label> Stage en Urgence </label><br/>
                       <label> Stage au choix 1 </label><br/>
                       <label> Stage au choix 2 </label><br/>
                       <label> Stage au choix 3 </label><br/>

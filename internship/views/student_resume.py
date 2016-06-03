@@ -33,9 +33,12 @@ from django.utils.translation import ugettext_lazy as _
 
 @login_required
 def internships_student_resume(request):
+    students_list = InternshipChoice.find_by_all_student()
 
     return render(request, "student_search.html", {'s_noma': None,
-                                                   's_name': None})
+                                                   's_name': None,
+                                                   'students':     students_list,
+                                                   })
 
 
 @login_required
@@ -65,9 +68,10 @@ def internships_student_search(request):
 
     message = None
     if criteria_present:
-            students_list = mdl.student.find_by(registration_id=s_noma, person_name=s_name, person_first_name = s_firstname)
+        students_list = mdl.student.find_by(registration_id=s_noma, person_name=s_name, person_first_name = s_firstname)
     else:
-         message = "%s" % _('You must choose at least one criteria!')
+        students_list = InternshipChoice.find_by_all_student()
+        #message = "%s" % _('You must choose at least one criteria!')
 
     return render(request, "student_search.html",
                            {'s_noma':       s_noma,

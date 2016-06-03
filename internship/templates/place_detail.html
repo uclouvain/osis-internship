@@ -1,0 +1,177 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+ * OSIS stands for Open Student Information System. It's an application
+ * designed to manage the core business of higher education institutions,
+ * such as universities, faculties, institutes and professional schools.
+ * The core business involves the administration of students, teachers,
+ * courses, programs and so on.
+ *
+ * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * A copy of this license - GNU General Public License - is available
+ * at the root of the source code of this program.  If not,
+ * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block breadcrumb %}
+<li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+<li><a href="{% url 'internships_home' %}">Stages</a></li>
+<li><a href="{% url 'internships_places' %}">{% trans 'Places' %}</a></li>
+<li class="active">{{ organization.name }}</li>
+{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h2>{{ organization.name }}</h2>
+</div>
+<div class="panel panel-default">
+    <div class="panel-body">
+      <label> Stage en Chirurgie </label>
+        {% for offer in offers %}
+          {% if offer.title == "Stage en Chirurgie" %}
+            capacité maximale : {{offer.maximum_enrollments}} | Nombre de 1er choix : {{offer.number_first_choice}}
+          {%endif%}
+        {%endfor%}<br/>
+        Liste des étudiants : <a role="button" data-toggle="collapse" data-target="#stch"
+           aria-expanded="false"
+           aria-controls="stch"
+           title="{% trans 'display_students_choose_chirurgie' %}">
+            <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+        </a>
+        <div class="collapse" id="stch">
+          <ul>
+            {% for choice in organization_choice %}
+              {% if choice.learning_unit_year.title == "Stage en Chirurgie" %}
+                <li> {{ choice.student }} | Choix : {{ choice.choice }}
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+        <br/>
+      <label> Stage en Gériatrie </label>
+        {% for offer in offers %}
+          {% if offer.title == "Stage en Gériatrie" %}
+            capacité maximale : {{offer.maximum_enrollments}} | Nombre de 1er choix : {{offer.number_first_choice}}
+          {%endif%}
+        {%endfor%}<br/>
+        Liste des étudiants : <a role="button" data-toggle="collapse" data-target="#stge"
+           aria-expanded="false"
+           aria-controls="stge"
+           title="{% trans 'display_students_choose_geriatrie' %}">
+            <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+        </a>
+        <div class="collapse" id="stge">
+          <ul>
+            {% for choice in organization_choice %}
+              {% if choice.learning_unit_year.title == "Stage en Gériatrie" %}
+                <li> {{ choice.student }} | Choix : {{ choice.choice }}
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+        <br/>
+      <label> Stage en Gynécologie-Obstétrique </label>
+        {% for offer in offers %}
+          {% if offer.title == "Stage en Gynécologie-Obstétrique" %}
+            capacité maximale : {{offer.maximum_enrollments}} | Nombre de 1er choix : {{offer.number_first_choice}}
+          {%endif%}
+        {%endfor%}<br/>
+        Liste des étudiants : <a role="button" data-toggle="collapse" data-target="#stgo"
+           aria-expanded="false"
+           aria-controls="stgo"
+           title="{% trans 'display_students_choose_gyneco' %}">
+            <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+        </a>
+        <div class="collapse" id="stgo">
+          <ul>
+            {% for choice in organization_choice %}
+              {% if choice.learning_unit_year.title == "Stage en Gynécologie-Obstétrique" %}
+                <li> {{ choice.student }} | Choix : {{ choice.choice }}
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+        <br/>
+      <label> Stage en Médecine interne </label>
+        {% for offer in offers %}
+          {% if offer.title == "Stage en Médecine interne" %}
+            capacité maximale : {{offer.maximum_enrollments}} | Nombre de 1er choix : {{offer.number_first_choice}}
+          {%endif%}
+        {%endfor%}<br/>
+        Liste des étudiants : <a role="button" data-toggle="collapse" data-target="#stmi"
+           aria-expanded="false"
+           aria-controls="stmi"
+           title="{% trans 'display_students_choose_medint' %}">
+            <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+        </a>
+        <div class="collapse" id="stmi">
+          <ul>
+            {% for choice in organization_choice %}
+              {% if choice.learning_unit_year.title == "Stage en Médecine interne" %}
+                <li> {{ choice.student }} | Choix : {{ choice.choice }}
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+        <br/>
+      <label> Stage en Pédiatrie </label>
+        {% for offer in offers %}
+          {% if offer.title == "Stage en Pédiatrie" %}
+            capacité maximale : {{offer.maximum_enrollments}} | Nombre de 1er choix : {{offer.number_first_choice}}
+          {%endif%}
+        {%endfor%}<br/>
+        Liste des étudiants : <a role="button" data-toggle="collapse" data-target="#stpe"
+           aria-expanded="false"
+           aria-controls="stpe"
+           title="{% trans 'display_students_choose_ped' %}">
+            <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+        </a>
+        <div class="collapse" id="stpe">
+          <ul>
+            {% for choice in organization_choice %}
+              {% if choice.learning_unit_year.title == "Stage en Pédiatrie" %}
+                <li> {{ choice.student }} | Choix : {{ choice.choice }}
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+        <br/>
+      <label> Stage en Urgence </label>
+        {% for offer in offers %}
+          {% if offer.title == "Stage en Urgence" %}
+            capacité maximale : {{offer.maximum_enrollments}} | Nombre de 1er choix : {{offer.number_first_choice}}
+          {%endif%}
+        {%endfor%}<br/>
+        Liste des étudiants : <a role="button" data-toggle="collapse" data-target="#stur"
+           aria-expanded="false"
+           aria-controls="stur"
+           title="{% trans 'display_students_choose_urg' %}">
+            <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+        </a>
+        <div class="collapse" id="stur">
+          <ul>
+            {% for choice in organization_choice %}
+              {% if choice.learning_unit_year.title == "Stage en Urgence" %}
+                <li> {{ choice.student }} | Choix : {{ choice.choice }}
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+        <br/>
+      <label> Stage au choix</label><br/>
+	</div>
+</div>
+
+  {% endblock %}

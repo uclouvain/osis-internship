@@ -49,3 +49,27 @@ function disable_enter(e) {
     }
     return false;
 }
+
+function originalValueChanged(values, id, score, justification) {
+    if (score == null || score == "") {
+        score = -1;
+    } else {
+        score = parseFloat(score);
+    }
+
+    if (justification == null) justification = '';
+
+    for (i = 0; i < values.length; i++) {
+        if (values[i][0] == id) {
+            // To test
+            //console.log(parseFloat(values[i][1].replace(",", ".")) + " : " + score)
+            //console.log(values[i][2] + " : " + justification)
+            if(score == parseFloat(values[i][1].replace(",", ".")) && justification == values[i][2]) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    return null;
+}

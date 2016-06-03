@@ -24,23 +24,16 @@
 #
 ##############################################################################
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
 from base.models import  offer_year_calendar
 from django.utils import timezone
 
 
-SESSION_STATUS = (
-    ('IDLE', _('idle')),
-    ('OPEN', _('open')),
-    ('CLOSED', _('closed')))
-
-
 class SessionExamAdmin(admin.ModelAdmin):
-    list_display = ('learning_unit_year', 'offer_year_calendar', 'number_session', 'status', 'changed')
-    list_filter = ('status', 'number_session')
-    raw_id_fields = ('learning_unit_year','offer_year_calendar')
-    fieldsets = ((None, {'fields': ('learning_unit_year','number_session','status','offer_year_calendar')}),)
+    list_display = ('learning_unit_year', 'offer_year_calendar', 'number_session', 'changed')
+    list_filter = ('number_session',)
+    raw_id_fields = ('learning_unit_year', 'offer_year_calendar')
+    fieldsets = ((None, {'fields': ('learning_unit_year', 'number_session', 'offer_year_calendar')}),)
     search_fields = ['learning_unit_year__acronym']
 
 
@@ -48,10 +41,10 @@ class SessionExam(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     number_session = models.IntegerField()
-    status = models.CharField(max_length=10,choices=SESSION_STATUS)
     learning_unit_year = models.ForeignKey('LearningUnitYear')
     offer_year_calendar = models.ForeignKey('OfferYearCalendar')
     progress = None
+    deadline = models.DateField(null=True)
 
     def __str__(self):
         return u"%s - %d" % (self.learning_unit_year, self.number_session)
@@ -81,4 +74,3 @@ def find_session_exam_number():
     elif len(sess_exam_number) == 1:
         return sess_exam_number[0].get('number_session')
     return None
-
