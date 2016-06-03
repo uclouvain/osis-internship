@@ -33,32 +33,27 @@
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'teachers' %}</h2>
-
-  </div>
-  <div class="row">
-    <div class="col-md-6">
-      <a href="{% url 'manager_information_list_request' %}" id="lnk_manager_information_list_request" class="btn btn-default"
-      role="button" title="{% trans 'all_manager_information_list_not_respond'%}"><span class="glyphicon glyphicon-list"
-      aria-hidden="true"></span> {% trans 'manager_information_list_not_respond'%}</a>
+    <h2>{% trans 'teachers_not_responding_to_request' %}</h2>
   </div>
   <div class="panel panel-default">
     <div class="panel-body">
       <table class="table table-hover">
         <thead>
-          <th>{% trans 'adviser'%}</th>
+          <th>{% trans 'adviser_name'%}</th>
           <th>{% trans 'adviser_type'%}</th>
           <th>{% trans 'available_by_email'%}</th>
           <th>{% trans 'available_by_phone'%}</th>
           <th>{% trans 'available_at_office'%}</th>
         </thead>
-        {% for adviser in advisers %}
+
+        {% for adviser_need_request in advisers_need_request %}
           <tr>
-            <td><a href="{% url 'manager_informations_detail' pk=adviser.pk %}">{{ adviser }}</td>
-            <td>{{ adviser.type }}</td>
-            <td>{{ adviser.available_by_email|yesno:"Yes,No" }}</td>
-            <td>{{ adviser.available_by_phone|yesno:"Yes,No" }}</td>
-            <td>{{ adviser.available_at_office|yesno:"Yes,No" }}</td>
+            <td><a href="{% url 'manager_informations_detail' pk=adviser_need_request.adviser.pk %}">
+              {{ adviser_need_request.adviser }}</td>
+            <td>{{ adviser_need_request.adviser.person.name }}</td>
+            <td>{{ adviser_need_request.dissertation.title }}</td>
+            <td>{{ adviser_need_request.dissertation.status }}</td>
+            <td>{{ adviser_need_request.status }}</td>
           </tr>
         {% endfor %}
       </table>

@@ -33,6 +33,7 @@ from dissertation.forms import AdviserForm, ManagerAdviserForm
 from django.contrib.auth.decorators import user_passes_test
 from django.db import IntegrityError
 from django.db.models import Q
+from operator import attrgetter
 
 
 def is_manager(user):
@@ -191,3 +192,15 @@ def manager_informations_edit(request, pk):
 def manager_information_search(request):
     advisers = Adviser.search(terms=request.GET['search'])
     return render(request, "manager_informations_list.html", {'advisers': advisers})
+
+
+@login_required
+@user_passes_test(is_manager)
+def manager_information_list_request(request):
+
+    queryset = DissertationRole.objects.all()
+    advisers_need_request=queryset.filter(Q(status='PROMOTEUR')&
+    Q(dissertation__status='DIR_SUBMIT')& Q(dissertation__active=True))
+    advisers_need_request=advisers_need_request.order_by('adviser')
+
+    return render(request, "manager_informations_list_request.html", {'advisers_need_request': advisers_need_request})

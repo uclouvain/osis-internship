@@ -61,6 +61,8 @@ urlpatterns = [
     url(r'^manager_informations_detail/(?P<pk>[0-9]+)/$', information.manager_informations_detail,
         name='manager_informations_detail'),
     url(r'^manager_information_search$', information.manager_information_search, name='manager_information_search'),
+    url(r'^manager_information_list_request/$', information.manager_information_list_request,
+    name='manager_information_list_request'),
 
     url(r'^manager_informations/(?P<pk>[0-9]+)/edit/$', information.manager_informations_edit,
         name='manager_informations_edit'),
@@ -105,7 +107,6 @@ urlpatterns = [
         name='dissertations_to_dir_ok'),
     url(r'^dissertations_to_dir_ko/(?P<pk>[0-9]+)$', dissertation.dissertations_to_dir_ko,
         name='dissertations_to_dir_ko'),
-
 
     url(r'^proposition_dissertations/$', proposition_dissertation.proposition_dissertations,
         name='proposition_dissertations'),
