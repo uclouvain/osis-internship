@@ -86,10 +86,10 @@
                 <div class="col-md-2">
                     <div style="margin-top:32px;">
                       <label>
-                        <input id="chckbox_completed_encodings"
-                               {% if completed_encodings_only %} checked {% endif %}
-                               name="completed_encodings_only"
-                               type="checkbox"> {% trans 'complete' %}
+                        <input id="chckbox_incompleted_encodings"
+                               {% if incomplete_encodings_only %} checked {% endif %}
+                               name="incomplete_encodings_only"
+                               type="checkbox"> {% trans 'incomplete' %}
                       </label>
                     </div>
                 </div>
