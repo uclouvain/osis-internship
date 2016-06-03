@@ -65,12 +65,23 @@
     <tbody>
       <tr>
 {% for mandate in object_list %}
+
 <td>{{ mandate.sap_id }}</td>
 <td><a href="{% url 'mandate_read' mandate.id %}">{{ mandate.assistant.person.last_name }}</a></td>
 <td><a href="{% url 'mandate_read' mandate.id %}">{{ mandate.assistant.person.first_name }}</a></td>
-<td></td>
-<td></td>
-<td></td>
+
+{% for structure in mandate.mandatestructure_set.all|dictsort:"structure.type" %}
+	{% if mandate.mandatestructure_set.all.count == 1 %}
+		<td>{{ structure.structure.acronym }}</td><td></td>
+	{% else %}
+		<td>{{ structure.structure.acronym }}</td>
+	{% endif %}
+{% endfor %}
+{% if mandate.assistant_type == "TEACHING_ASSISTANT" %}
+	<td>AS</td>
+{% else %}
+	<td>ST</td>
+{% endif %}
 <td></td>
 <td></td>
 <td>{{ mandate.contract_duration }}</td>

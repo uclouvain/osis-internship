@@ -36,7 +36,5 @@ class MandateStructure(models.Model):
         return self.__str__()
 
     def __str__(self):
-        return u"%s - %s" % (self.assistant_mandate.person, self.structure.acronym)
+        return u"%s - %s" % (self.assistant_mandate.assistant, self.structure.acronym)
 
-def find_by_mandate(assistant_mandate):
-    return MandateStructure.objects.filter(assistant_mandate=assistant_mandate)
