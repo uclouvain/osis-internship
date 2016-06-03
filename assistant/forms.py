@@ -26,6 +26,7 @@
 from django import forms
 from django.forms import ModelForm, Textarea
 from assistant import models as mdl
+from assistant.models import academic_assistant
 
 
 class MandateForm(ModelForm):
@@ -42,5 +43,24 @@ class MandateForm(ModelForm):
         model = mdl.assistant_mandate.AssistantMandate
         fields = ('comment','absences','other_status','renewal_type')
         
-        
-
+class HorizontalRadioRenderer(forms.RadioSelect.renderer):
+    def render(self):
+        return (u'\n'.join([u'%s\n' % w for w in self]))
+            
+class AssistantFormPart1(forms.Form):
+    inscription = forms.ChoiceField(
+            choices=academic_assistant.AcademicAssistant.PHD_INSCRIPTION_CHOICES,
+            widget=forms.RadioSelect(renderer=HorizontalRadioRenderer)
+            )
+    expected_phd_date = forms.DateField(widget=forms.DateInput(format=('%d/%m/%Y'),
+                               attrs={'placeholder':'dd/mm/yyyy'}), input_formats=('%d/%m/%Y'))
+    phd_inscription_date = forms.DateField(widget=forms.DateInput(format=('%d/%m/%Y'),
+                               attrs={'placeholder':'dd/mm/yyyy'}), input_formats=('%d/%m/%Y'))
+    confirmation_test_date = forms.DateField(widget=forms.DateInput(format=('%d/%m/%Y'),
+                               attrs={'placeholder':'dd/mm/yyyy'}), input_formats=('%d/%m/%Y')) 
+    thesis_date = forms.DateField(widget=forms.DateInput(format=('%d/%m/%Y'),
+                               attrs={'placeholder':'dd/mm/yyyy'}), input_formats=('%d/%m/%Y'))  
+    supervisor = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'firstname.lastname@uclouvain.be', 'size':'30'}))
+    external_functions = forms.CharField(widget=forms.Textarea(attrs={'cols':'40','rows':'2'}))
+    external_contract = forms.CharField(widget=forms.Textarea(attrs={'cols':'40','rows':'2'}))
+    justification = forms.CharField(widget=forms.Textarea(attrs={'cols':'40','rows':'2'}))  

@@ -1,0 +1,201 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+{% endcomment %}
+{% block breadcrumb %}
+<li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'institution' %}</a></li>
+<li><a href="{% url 'mandates' %}" id="lnk_mandates">{% trans 'mandates' %}</a></li>
+<li class="active">{% trans 'assistants' %}</li>
+{% endblock %}
+{% block content %}
+<div class="container">
+<div class="page-header">
+    <h2>{% trans 'Assistantship mandate renewal - Part 1' %}</h2>
+</div>
+<div class="panel panel-default">
+  <div class="panel-body">
+  <form method="post" action="{% url 'pst_form_part1_save' mandate.id %}">
+      {% csrf_token %}
+  <div class="row">
+    <div class="col-xs-6 col-sm-3">
+    <label>{% trans 'Name and first name' %}</label> :<p>
+    <label>{% trans 'Birthdate' %}</label> :<p>
+    <label>{% trans 'Address' %}</label> :<p>
+    </div>
+    <div class="col-xs-6 col-sm-6">
+      {{assistant.person}}<p>
+      {{birthday}}<p>
+      {% for address in addresses %}
+      	{{address.location}} - {{address.postal_code}} {{address.city}}<br>{{address.country}}
+      {% endfor %}
+      <p>
+    </div>
+    <div class="col-xs-6 col-sm-3" align="right">
+    <label>{% trans 'Type of renewal' %}</label> : {{mandate.renewal_type}}<p>
+    </div>
+  </div>
+
+  <hr>
+  <b>{% trans 'Contract' %}</b><p>
+  <div class="row">
+    <div class="col-xs-6 col-sm-3">
+      {% trans 'Faculty' %} :<br>
+      {% trans 'Institute' %} :<br>
+      {% trans 'Full time equivalent' %} :<br>
+      {% trans 'Date of first nomination' %} :<br>
+      {% trans 'Field' %} :<br>
+      {% trans 'Grade' %} :<br>
+    </div>
+    <div class="col-xs-6 col-sm-9">
+      Data1<br>
+      Data2<br>
+      {{assistant.fulltime_equivalent}}<br>
+      {{assistant.entry_date}}<br>
+      Data5<br>
+      Data6<br>
+      {% for course in courses %}
+      {{ course }}
+      {% endfor %}</p>
+    </div>
+   </div>
+  <hr>
+  <b>{% trans 'Doctorate' %}</b><p>
+    
+    <div class="form-group">
+      <div class="row">
+        <div class="col-xs-6 col-sm-5">
+          {% trans 'Registered Ph.D.' %} :
+            {{ form.inscription }}
+        </div>
+        <div class="col-xs-6 col-sm-7">
+          {% trans 'Expected registering date' %} : 
+          {{ form.expected_phd_date }}
+        </div>
+      </div>
+      <div class="row"> 
+        <div class="col-xs-6 col-sm-3">
+           {% trans 'Supervisor email address' %} :
+        </div>
+        <div class="col-xs-6 col-sm-4">
+          {{ form.supervisor }}&nbsp;
+        </div>
+        <div class="col-xs-6 col-sm-3">
+          <label class="checkbox-inline">
+            <input type="checkbox" value="nosupervisor" id="no_supervisor" onChange="disablefield();">{% trans 'No supervisor' %}
+          </label>
+        </div>        
+      </div>
+      <div class="row">  
+        <div class="col-xs-6 col-sm-3"> 
+          {% trans 'Ph.D. Inscription date' %} :<br>&nbsp;
+        </div>
+        <div class="col-sm-6">     
+          {{ form.phd_inscription_date }}
+        </div>  
+      </div>
+      <div class="row">  
+        <div class="col-xs-6 col-sm-3"> 
+          {% trans 'Confirmatory test date ' %} <br><font size="1">{% trans '(for the 2<sup>nd</sup> renewal)' %}</font> :        
+        </div>     
+        <div class="col-sm-6">     
+          {{ form.confirmation_test_date }}
+        </div>
+          </div>
+      <div class="row">      
+        <div class="col-xs-6 col-sm-3"> 
+          {% trans 'Thesis defence date' %} :        
+        </div>
+        <div class="col-sm-6">     
+          {{ form.thesis_date }}
+        </div>
+      </div>  
+    </div>
+    <hr>
+    <b>{% trans 'Various' %}</b>
+    <p>{% trans 'Current function held outside the university and % of time spent' %} :  
+    {{ form.external_functions }}</p>
+    <p>{% trans 'External post asked outside (FNRS, FRIA, ...)' %} :
+    {{ form.external_contract }}</p>
+    <div class="col-sm-6"> 
+      <font size ="1">{% trans 'To the extent that you no longer meet the conditions for a "normal" renewal, can you clarify the circumstances justifying a request for an "exceptional" renewal (art. 51 of the RAMCS)' %} :
+      </font>
+    </div>
+    <div class="col-sm-4">    
+      {{ form.justification }}
+    </div>
+     <div class="col-sm-10">
+      <button type="submit" class="btn btn-default">{% trans 'Next part' %}</button>
+    </div>
+    </form>
+</div>
+</div>
+{% endblock %}
+
+{% block script %}
+  <script type="text/javascript">
+    function disablefield(){
+      if (document.getElementById('id_inscription_0').checked == 1){
+        document.getElementById('id_expected_phd_date').disabled='disabled';
+        document.getElementById('id_expected_phd_date').value='';
+      }
+      if (document.getElementById('id_inscription_1').checked == 1){
+        document.getElementById('id_expected_phd_date').disabled='disabled';
+        document.getElementById('id_expected_phd_date').value='';
+      }
+      if (document.getElementById('id_inscription_2').checked == 1){
+        document.getElementById('id_expected_phd_date').disabled='';
+        document.getElementById('id_expected_phd_date').value='{{assistant.expected_phd_date}}';
+      }  
+      if (document.getElementById('no_supervisor').checked == 1){
+        document.getElementById('supervisor_email').disabled='disabled';
+        document.getElementById('supervisor_email').value='';
+      }    
+      if (document.getElementById('no_supervisor').checked == 0){
+        document.getElementById('supervisor_email').disabled='';
+        document.getElementById('supervisor_email').request='request';
+        document.getElementById('supervisor_email').value='';
+      }          
+    }
+  </script>
+{% endblock %}
+
+{% block style %}
+  <style>
+    textarea{
+      display:inline-block;
+      vertical-align:middle;
+    }
+  </style>
+  <style>
+    .row [class*="col-"]{
+      margin-bottom: -99999px;
+      padding-bottom: 99999px;
+    }
+    .row{
+      overflow: hidden;
+    }
+  </style>
+{% endblock %}
