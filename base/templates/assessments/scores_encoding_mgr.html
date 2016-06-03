@@ -39,8 +39,8 @@
 {% if notes_list %}
 
 <ul class="nav nav-tabs" id="tabs">
-    <li class="active"><a data-toggle="tab" role="tab" href="#tab_scores_encoding" id="lnk_scores_encoding">{% trans 'scores_encoding'%}</a></li>
-    <li><a data-toggle="tab" role="tab" href="#tab_justifications" id="lnk_justifications">{% trans 'justifications'%}</a></li>
+    <li class="active"><a data-toggle="tab" role="tab" href="#tab_scores_encoding" id="lnk_scores_encoding">Par Unité d'enseignement</a></li>
+    <li><a data-toggle="tab" role="tab" href="#tab_justifications" id="lnk_justifications">Par Étudiants</a></li>
 </ul>
 <div class="tab-content">
     <div id="tab_scores_encoding" class="tab-pane fade in active">
@@ -257,6 +257,13 @@
         <form id="form_justification" method="get" class="form-inline">
             <br>
             <input type="text" class="form-control" id="txt_registration_id" placeholder="{% trans 'registration_id' %}">
+            <select class="form-control" name="justification" id="slt_justification_score">
+                <option value="">Justification</option>
+                <option value="ABSENCE_JUSTIFIED" {% if enrollment.justification_final == 'ABSENCE_JUSTIFIED' %}selected{% endif %}>{% trans 'absence_justified' %}</option>
+                <option value="ABSENCE_UNJUSTIFIED" {% if enrollment.justification_draft == 'ABSENCE_UNJUSTIFIED' or enrollment.justification_final == 'ABSENCE_UNJUSTIFIED' %}selected{% endif %}>{% trans 'absence_unjustified' %}</option>
+                <option value="CHEATING" {% if enrollment.justification_draft == 'CHEATING' or enrollment.justification_final == 'CHEATING' %}selected{% endif %}>{% trans 'cheating' %}</option>
+                <option value="SCORE_MISSING" {% if enrollment.justification_draft == 'SCORE_MISSING' or enrollment.justification_final == 'SCORE_MISSING' %}selected{% endif %}>{% trans 'score_missing' %}</option>
+            </select>
             <button type="submit" id="bt_submit_offer_year_search" class="btn btn-primary" role="button"
                         title="{% trans 'offer_year_search' %}">
                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
