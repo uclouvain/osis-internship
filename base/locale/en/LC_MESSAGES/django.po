@@ -1109,8 +1109,8 @@ msgid "more_than_one_learning_unit_error"
 msgstr "You encoded scores for more than 1 learning unit in your excel file (column 'Learning unit'). "
        "Please make one excel file by learning unit."
 
-msgid "complete"
-msgstr "Complete"
-
 msgid "enrollments"
 msgstr "Enrollments"
+
+msgid "incomplete"
+msgstr "Incomplete"

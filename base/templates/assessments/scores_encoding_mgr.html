@@ -55,12 +55,12 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label>{% trans 'offer' %} {{ offer_sel }}</label><br>
                     <select id="slt_offer_list_selection" name="offer" class="form-control">
                         <option value="">{% trans 'all'%}</option>
                         {% for o in offer_list %}
-                        <option value="{{o.id}}" {%if offer_year_id == o.id %}selected{%endif%}>{{o.acronym}} - {{o.title}}</option>
+                        <option value="{{o.id}}" {%if offer_year_id == o.id %}selected{%endif%}>{{o.acronym}}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -84,6 +84,16 @@
                            style="text-transform:uppercase" maxlength="15">
                 </div>
                 <div class="col-md-2">
+                    <div style="margin-top:32px;">
+                      <label>
+                        <input id="chckbox_incompleted_encodings"
+                               {% if incomplete_encodings_only %} checked {% endif %}
+                               name="incomplete_encodings_only"
+                               type="checkbox"> {% trans 'incomplete' %}
+                      </label>
+                    </div>
+                </div>
+                <div class="col-md-1">
                     <br>
                     <button type="submit" id="bt_submit_offer_search" class="btn btn-primary" role="button"
                             style="margin-top: 4px"
