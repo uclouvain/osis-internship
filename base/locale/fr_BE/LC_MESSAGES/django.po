@@ -720,6 +720,9 @@ msgstr "Légende pour le champ 'Note chiffrée': %s (0=Cote de présence)"
 msgid "unauthorized_decimal_for_this_activity"
 msgstr "Attention : décimales non autorisées pour ce cours"
 
+msgid "authorized_decimal_for_this_activity"
+msgstr "Les notes décimales sont autorisées pour ce cours"
+
 msgid "phone"
 msgstr "téléphone"
 
@@ -800,7 +803,7 @@ msgid "constraint_score_other_score"
 msgstr "Vous ne pouvez pas remplir les champs 'Note chiffrée' et 'Justification' tous les deux"
 
 msgid "score_saved"
-msgstr "Note(s) injectée(s)"
+msgstr "note(s) injectée(s)"
 
 msgid "score_invalid"
 msgstr "Note invalide"
@@ -1118,3 +1121,6 @@ msgstr "Vous avez encodé des notes pour plusieurs unités d'enseignements dans 
 
 msgid "complete"
 msgstr "Complet"
+
+msgid "enrollments"
+msgstr "Inscriptions"

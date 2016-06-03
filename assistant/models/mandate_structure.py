@@ -23,20 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from internship.forms import PeriodForm
 
-@login_required
-def internships_periods(request):
-    return render(request, "periods.html", {'section': 'internship'})
+from django.db import models
 
 
-@login_required
-def period_create(request):
+class MandateStructure(models.Model):
+    assistant_mandate = models.ForeignKey('AssistantMandate')
+    structure = models.ForeignKey('base.Structure')
 
-    f = PeriodForm(request.POST)
+    @property
+    def name(self):
+        return self.__str__()
 
-    return render(request, "period_create.html", {'section': 'internship',
-                                                    'form' : f
-                                                    })
+    def __str__(self):
+        return u"%s - %s" % (self.assistant_mandate.person, self.structure.acronym)
+
+

@@ -245,3 +245,82 @@ def send_and_save(persons, reference=None, **kwargs):
             )
             message_history.save()
         send_mail(recipient_list=recipient_list, **kwargs)
+
+
+def send_message_after_all_encoded_by_manager(persons, enrollments, learning_unit_acronym, offer_acronym):
+    """
+
+    :param persons:
+    :param enrollments:
+    :param acronym:
+    :return:
+    """
+    txt_message_templates = {template.language: template for template in
+                             list(message_template_mdl.find_by_reference('assessments_all_scores_by_pgm_manager_txt'))}
+    html_message_templates = {template.language: template for template in
+                              list(message_template_mdl.find_by_reference('assessments_all_scores_by_pgm_manager_html'))}
+
+    enrollments_data = [
+        (
+            enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym,
+            enrollment.session_exam.number_session,
+            enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id,
+            enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name,
+            enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name,
+            enrollment.score_final,
+            _(enrollment.justification_final) if enrollment.justification_final else None,
+        ) for enrollment in enrollments]
+
+    data = {
+        'learning_unit_acronym': learning_unit_acronym,
+        'offer_acronym': offer_acronym,
+        'signature': render_to_string('email/html_email_signature.html', {
+            'logo_mail_signature_url': LOGO_EMAIL_SIGNATURE_URL,
+            'logo_osis_url': LOGO_OSIS_URL})
+    }
+
+    dest_by_lang = map_persons_by_languages(persons)
+    for lang_code, person in dest_by_lang.items():
+        if lang_code in html_message_templates:
+            html_message_template = html_message_templates.get(lang_code)
+        else:
+            html_message_template = html_message_templates.get(settings.LANGUAGE_CODE)
+        if not html_message_template:
+            sent_error_message = _('template_error').format('assessments_all_scores_by_pgm_manager_html')
+            return sent_error_message
+
+        if lang_code in txt_message_templates:
+            txt_message_template = txt_message_templates.get(lang_code)
+        else:
+            txt_message_template = txt_message_templates.get(settings.LANGUAGE_CODE)
+        with translation.override(lang_code):
+            enrollments_header = (
+                _('acronym'),
+                _('session'),
+                _('registration_number'),
+                _('lastname'),
+                _('firstname'),
+                _('score'),
+                _('documentation')
+            )
+            enrollments_table_html = render_table_template_as_string(
+                enrollments_header,
+                enrollments_data,
+                True
+            )
+            data['enrollments'] = enrollments_table_html
+            html_message = Template(html_message_template.template).render(Context(data))
+            subject = html_message_template.subject.format(learning_unit_acronym=learning_unit_acronym,
+                                                           offer_acronym=offer_acronym)
+            enrollments_table_txt = render_table_template_as_string(
+                enrollments_header,
+                enrollments_data,
+                False
+            )
+            data['enrollments'] = enrollments_table_txt
+            txt_message = Template(txt_message_template.template).render(Context(data))
+            send_and_save(persons=person,
+                          subject=unescape(strip_tags(subject)),
+                          message=unescape(strip_tags(txt_message)),
+                          html_message=html_message, from_email=DEFAULT_FROM_EMAIL)
+    return None

@@ -43,6 +43,9 @@
             {% if attributions %}
                 <li><a data-toggle="tab" href="#tab_tutors" id="lnk_tab_tutors">{% trans 'attributions' %}</a></li>
             {% endif %}
+            {% if is_program_manager and enrollments %}
+                <li><a data-toggle="tab" href="#tab_enrollments" id="lnk_tab_enrollments">{% trans 'enrollments' %}</a></li>
+            {% endif %}
         </ul>
         <div class="tab-content">
             <div id="tab_informations" class="tab-pane fade in active">
@@ -76,6 +79,29 @@
                             <tr>
                                 <td>{{ attribution.tutor.person }}</td>
                                 <td>{{ attribution.function | title }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endif %}
+            {% if is_program_manager and enrollments %}
+                <div id="tab_enrollments" class="tab-pane fade in">
+                    <br>
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>{% trans 'registration_id' %}</th>
+                                <th>{% trans 'lastname'%}</th>
+                                <th>{% trans 'firstname'%}</th>
+                                <th>{% trans 'email'%}</th>
+                            </tr>
+                        </thead>
+                        {% for enrollment in enrollments %}
+                            <tr>
+                                <td>{{ enrollment.offer_enrollment.student.registration_id }}</td>
+                                <td>{{ enrollment.offer_enrollment.student.person.last_name }}</td>
+                                <td>{{ enrollment.offer_enrollment.student.person.first_name }}</td>
+                                <td><a href="mailto:{{ enrollment.offer_enrollment.student.person.email }}" id="lnk_academic_calendars">{{ enrollment.offer_enrollment.student.person.email }}</a></td>
                             </tr>
                         {% endfor %}
                     </table>

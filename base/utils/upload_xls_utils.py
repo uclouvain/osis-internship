@@ -83,9 +83,12 @@ def _get_all_data(worksheet):
         if session not in sessions:
             sessions.append(session)
 
-        academic_year = int(row[col_academic_year].value[:4])
-        if academic_year not in academic_years:
-            academic_years.append(academic_year)
+        try:
+            academic_year = int(row[col_academic_year].value[:4])
+            if academic_year not in academic_years:
+                academic_years.append(academic_year)
+        except ValueError:
+            pass
 
         learn_unit_acronym = row[col_learning_unit].value
         if learn_unit_acronym not in learn_unit_acronyms:
@@ -161,16 +164,21 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                 or len(str(row[col_registration_id].value)) == 0 \
                 or not _is_registration_id(row[col_registration_id].value):
             continue
-
+        elif (row[col_score].value is None or row[col_score].value == 0) and not row[col_justification].value:
+            # Id there's no score/justification encoded for this line, not necessary to make all checks below
+            continue
         xls_registration_id = str(row[col_registration_id].value)
         xls_offer_year_acronym = row[col_offer].value
         xls_learning_unit_acronym = row[col_learning_unit].value
         info_line = "%s %d (NOMA %s):" % (_('Line'), count + 1, xls_registration_id)
         if xls_registration_id not in registration_ids_managed_by_user:
             # In case the xls registration_id is not in the list, we check...
-            if learning_unit_year.acronym != xls_learning_unit_acronym:
+            if xls_learning_unit_acronym not in learn_unit_acronyms_managed_by_user:
+                # ... if it is because the user doesn't have access to the learningUnit
+                messages.add_message(request, messages.ERROR, "%s '%s' %s!" % (info_line, xls_learning_unit_acronym, _('learning_unit_not_access_or_not_exist')))
+            elif learning_unit_year.acronym != xls_learning_unit_acronym:
                 # ... if it is because the user has multiple learningUnit in his excel file
-                # (the data from the DataBase are filtered by LearningUnitYear beacause excel is build by learningUnit)
+                # (the data from the DataBase are filtered by LearningUnitYear because excel file is build by learningUnit)
                 messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('more_than_one_learning_unit_error')))
             elif xls_offer_year_acronym not in offer_acronyms_managed_by_user:
                 # ... if it is because the user haven't access rights to the offerYear
@@ -209,6 +217,7 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                                 messages.add_message(request, messages.ERROR, "%s %s for %s!" % (info_line, _('enrollment_exam_not_exists'), xls_learning_unit_acronym))
                             else:
                                 score = row[col_score].value
+                                score = None if score == '' else score # The score could be an Integer or String...
                                 if score is not None:
                                     try:
                                         score = float(str(row[col_score].value).strip().replace(',', '.'))
@@ -224,7 +233,7 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
 
                                 justification = row[col_justification].value
                                 if justification:
-                                    justification = justification.strip()
+                                    justification = str(justification).strip().upper()
                                     if justification in ['A', 'T', '?']:
                                         switcher = {'A': "ABSENCE_UNJUSTIFIED",
                                                     'T': "CHEATING",
