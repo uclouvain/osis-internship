@@ -82,8 +82,33 @@
 {% else %}
 	<td>ST</td>
 {% endif %}
-<td></td>
-<td></td>
+{% if mandate.state == "TO_DO" %}
+	<td>Pas répondu</td>
+{% elif mandate.state == "DECLINED" %}
+	<td>Non</td>
+{% elif mandate.state == "TRTS" %}
+	<td>Oui</td>
+{% elif mandate.state == "PHD_SUPERVISOR" %}
+	<td>Promoteur</td>
+{% elif mandate.state == "RESEARCH" %}
+	<td>Président d'Institut</td>
+{% elif mandate.state == "SUPERVISION" %}
+	<td>Doyen de faculté</td>
+{% elif mandate.state == "VICE_RECTOR" %}
+	<td>Vice-Recteur</td>
+{% endif %}
+{% if mandate.assistant.inscription == "YES" %}
+	{% if mandate.assistant.phd_inscription_date %}
+		<td>{{ mandate.assistant.phd_inscription_date }}</td>
+	{% else %}
+		<td>Oui</td>
+	{% endif %}
+{% elif mandate.assistant.inscription == "NO" %}
+	<td>Non</td>
+{% elif mandate.assistant.inscription == "IN_PROGRESS" %}
+	<td>En cours</td>
+{% endif %}
+
 <td>{{ mandate.contract_duration }}</td>
 <td>{{ mandate.contract_duration_fte }}</td>
 <td></td>
