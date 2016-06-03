@@ -29,54 +29,38 @@
 {% block breadcrumb %}
   <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
   <li><a href="{% url 'internships_home' %}">Stages</a></li>
-  <li><a href="{% url 'internships' %}">Tous les Stages</a></li>
-  <li class="active">Nouveau Stage</li>
+  <li><a href="{% url 'internships_periods' %}">{% trans 'Periods' %}</li>
+  <li class="active">Ajouter une période</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'Internships Creation' %}</h2>
+    <h2>{% trans 'Period Creation' %}</h2>
   </div>
-  {% if success == 1 %}
-  <div>
-      <label class="alert alert-success" style="margin:5px">{{message}}</label>
-  </div>
-  {% else %}
-  <div>
-      <label class="alert alert-warning" style="margin:5px">{{message}}</label>
-  </div>
+  {% if message %}
+    <script language="javascript" type="text/javascript">
+      alert("Période correctement créée");
+    </script>
   {% endif %}
   <table style="height:100%; width:100%;">
       <thead>
         <tr>
-            <th style="text-align:center;">{% trans 'organization' %}</th>
-            <th style="text-align:center;">{% trans 'learning_unit_year' %}</th>
-            <th style="text-align:center;">{% trans 'maximum_enrollments' %}</th>
+            <th style="text-align:center;">{% trans 'name' %}</th>
+            <th style="text-align:center;">{% trans 'date_start' %}</th>
+            <th style="text-align:center;">{% trans 'date_end' %}</th>
         </tr>
       </thead>
       <tbody>
-        <form method="post" action="{% if internship.id%} {% url 'internship_modification' internship.id %} {%else%} {% url 'internships_new'%} {%endif%}">
+        <form action="{%url 'periods_create' %}" method="post">
           {% csrf_token %}
           <tr>
             <td style="text-align:center;">
-              <select name="organization">
-               {% for organization in all_organization %}
-                  <option value={{ organization.reference }} {%if organization.reference == select_organization %}selected{%endif%}>
-                      {{ organization.reference }} - {{ organization.name }}
-                  </option>
-               {% endfor %}
-              </select>
+              <input type="text" name="period_name" required>
             </td>
             <td style="text-align:center;">
-              <select name="learning_unit_year">
-               {% for learning_unit_year in all_learning_unit_year %}
-                  <option value={{ learning_unit_year.title }} {%if learning_unit_year.title == select_learning_unit_year %}selected{%endif%}>
-                      {{ learning_unit_year.title }}
-                  </option>
-               {% endfor %}
-              </select>
+              <input type="text" name="period_name" required>
             </td>
             <td style="text-align:center;">
-              <input type="number" name="maximum_enrollments" required>
+              <input type="text" name="period_name" required>
             </td>
           </tr>
       </tbody>
@@ -86,12 +70,9 @@
           <span class="glyphicon glyphicon-save" aria-hidden="true"/> {% trans 'Save'%}
       </button>
     </form>
-    <a href="{% url 'place_create' %}" class="btn btn-info" title="{% trans 'create_an_organization'%}"
-      id="lnk_organization_create">{% trans 'add_a_hospital' %}
-      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-    </a>
+
     <br><br>
-    <a href="{% url 'internships' %}" class="btn btn-default" title="{% trans 'return'%}"
+    <a href="{% url 'internships_periods' %}" class="btn btn-default" title="{% trans 'return'%}"
       id="lnk_internships" >{% trans 'return' %}
       <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"/>
     </a>
