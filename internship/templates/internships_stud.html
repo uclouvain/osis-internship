@@ -66,10 +66,10 @@
         <ul class="nav nav-tabs">
             <li class="active"><a data-toggle="tab" href="#tab_MI">{% trans 'Stage en Chirurgie'%}</a></li>
             <li><a data-toggle="tab" href="#tab_CH">{% trans 'Stage en Gériatrie'%}</a></li>
-            <li><a data-toggle="tab" href="#tab_GO">{% trans 'Stage de Gynécologie-Obstétrique'%}</a></li>
+            <li><a data-toggle="tab" href="#tab_GO">{% trans 'Stage en Gynécologie-Obstétrique'%}</a></li>
             <li><a data-toggle="tab" href="#tab_PED">{% trans 'Stage en Médecine interne'%}</a></li>
             <li><a data-toggle="tab" href="#tab_URG">{% trans 'Stage en Pédiatrie'%}</a></li>
-            <li><a data-toggle="tab" href="#tab_GER">{% trans 'Stage en Urgence'%}</a></li>
+            <li><a data-toggle="tab" href="#tab_GER">{% trans 'Stage aux urgences'%}</a></li>
             <li><a data-toggle="tab" href="#tab_CHOIX1">{% trans 'Stage au choix 1'%}</a></li>
             <li><a data-toggle="tab" href="#tab_CHOIX2">{% trans 'Stage au choix 2'%}</a></li>
             <li><a data-toggle="tab" href="#tab_CHOIX2">{% trans 'Stage au choix 3'%}</a></li>
@@ -206,7 +206,7 @@
                       </thead>
                       <tbody>
                         {% for internship in all_internships %}
-                        {% if internship.learning_unit_year.title = "Stage de Gynécologie-Obstétrique"%}
+                        {% if internship.learning_unit_year.title = "Stage en Gynécologie-Obstétrique"%}
                           <tr>
                             <td>
                               <input type="hidden" name="organization"
@@ -374,7 +374,7 @@
                       </thead>
                       <tbody>
                         {% for internship in all_internships %}
-                        {% if internship.learning_unit_year.title = "Stage en Urgence"%}
+                        {% if internship.learning_unit_year.title = "Stage aux urgences"%}
                           <tr>
                             <td>
                               <input type="hidden" name="organization"

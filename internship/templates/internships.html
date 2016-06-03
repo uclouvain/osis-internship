@@ -64,10 +64,10 @@
         <ul class="nav nav-tabs">
             <li class="active"><a data-toggle="tab" href="#tab_MI">{% trans 'Stage en Chirurgie'%}</a></li>
             <li><a data-toggle="tab" href="#tab_CH">{% trans 'Stage en Gériatrie'%}</a></li>
-            <li><a data-toggle="tab" href="#tab_GO">{% trans 'Stage de Gynécologie-Obstétrique'%}</a></li>
+            <li><a data-toggle="tab" href="#tab_GO">{% trans 'Stage en Gynécologie-Obstétrique'%}</a></li>
             <li><a data-toggle="tab" href="#tab_PED">{% trans 'Stage en Médecine interne'%}</a></li>
             <li><a data-toggle="tab" href="#tab_URG">{% trans 'Stage en Pédiatrie'%}</a></li>
-            <li><a data-toggle="tab" href="#tab_GER">{% trans 'Stage en Urgence'%}</a></li>
+            <li><a data-toggle="tab" href="#tab_GER">{% trans 'Stage aux Urgences'%}</a></li>
             <li><a data-toggle="tab" href="#tab_CHOIX1">{% trans 'Stage au choix'%}</a></li>
         </ul>
         <input type="hidden" name="organization_sort" value="{{ organization.name }}"/>
@@ -360,7 +360,7 @@
                         </thead>
                         <tbody>
                           {% for internship in all_internships %}
-                          {% if internship.learning_unit_year.title = "Stage en Urgence"%}
+                          {% if internship.learning_unit_year.title = "Stage aux Urgences"%}
                             <tr>
                               <td>
                                 {{ internship.organization.reference }} - {{ internship.organization }}

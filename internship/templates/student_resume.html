@@ -98,7 +98,7 @@
         <div class="panel panel-default">
           <div class="panel-body">
             <ul class="nav nav-tabs">
-              <li class="active"><a data-toggle="tab" href="#tab_choice">{% trans 'Choix de l\'étudiant' %}</a></li>
+              <li class="active"><a data-toggle="tab" href="#tab_choice">{% trans 'Choix reçus par l\administration' %}</a></li>
               <li><a data-toggle="tab" href="#tab_rep">{% trans 'Affectation de l\'étudiant' %}</a></li>
             </ul>
             <div class="tab-content">
@@ -156,10 +156,10 @@
                           {% endif %}
                         {% endfor %}
                       </ul>
-                    <label> Stage en Urgence </label><br/>
+                    <label> Stage aux Urgences </label><br/>
                       <ul>
                         {% for choice in internship_choice %}
-                          {% if choice.learning_unit_year.title == "Stage en Urgence" %}
+                          {% if choice.learning_unit_year.title == "Stage aux Urgences" %}
                             <li> {% trans 'Hôpital' %} :
                                     {{ choice.organization.reference }} - {{ choice.organization.name }} |
                                     Choix : {{ choice.choice }}
@@ -183,7 +183,7 @@
                       <label> Stage en Gynécologie-Obstétrique </label><br/>
                       <label> Stage en Médecine Interne </label><br/>
                       <label> Stage en Pédiatrie </label><br/>
-                      <label> Stage en Urgence </label><br/>
+                      <label> Stage aux Urgences </label><br/>
                       <label> Stage au choix 1 </label><br/>
                       <label> Stage au choix 2 </label><br/>
                       <label> Stage au choix 3 </label><br/>
