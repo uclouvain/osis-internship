@@ -23,3 +23,4 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+default_app_config = 'base.apps.BaseConfig'

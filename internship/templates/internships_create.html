@@ -36,28 +36,31 @@
   <div class="page-header">
     <h2>{% trans 'Internships Creation' %}</h2>
   </div>
-  {% if message %}
-    <script language="javascript" type="text/javascript">
-      alert("Stage correctement créé");
-    </script>
+  {% if success == 1 %}
+  <div>
+      <label class="alert alert-success" style="margin:5px">{{message}}</label>
+  </div>
+  {% else %}
+  <div>
+      <label class="alert alert-warning" style="margin:5px">{{message}}</label>
+  </div>
   {% endif %}
   <table style="height:100%; width:100%;">
       <thead>
         <tr>
             <th style="text-align:center;">{% trans 'organization' %}</th>
             <th style="text-align:center;">{% trans 'learning_unit_year' %}</th>
-            <th style="text-align:center;">{% trans 'title' %}</th>
             <th style="text-align:center;">{% trans 'maximum_enrollments' %}</th>
         </tr>
       </thead>
       <tbody>
-        <form action="{%url 'internships_new' %}" method="post">
+        <form method="post" action="{% if internship.id%} {% url 'internship_modification' internship.id %} {%else%} {% url 'internships_new'%} {%endif%}">
           {% csrf_token %}
           <tr>
             <td style="text-align:center;">
               <select name="organization">
                {% for organization in all_organization %}
-                  <option value={{ organization.reference }}>
+                  <option value={{ organization.reference }} {%if organization.reference == select_organization %}selected{%endif%}>
                       {{ organization.reference }} - {{ organization.name }}
                   </option>
                {% endfor %}
@@ -66,16 +69,7 @@
             <td style="text-align:center;">
               <select name="learning_unit_year">
                {% for learning_unit_year in all_learning_unit_year %}
-                  <option value={{ learning_unit_year.title }}>
-                      {{ learning_unit_year.acronym }} - {{ learning_unit_year.title }} - {{learning_unit_year.academic_year}}
-                  </option>
-               {% endfor %}
-              </select>
-            </td>
-            <td style="text-align:center;">
-              <select name="title">
-               {% for learning_unit_year in all_learning_unit_year %}
-                  <option value={{ learning_unit_year.title }}>
+                  <option value={{ learning_unit_year.title }} {%if learning_unit_year.title == select_learning_unit_year %}selected{%endif%}>
                       {{ learning_unit_year.title }}
                   </option>
                {% endfor %}
@@ -89,11 +83,17 @@
   </table>
   <br/>
       <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_interships_new">
-          <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'Save'%}
+          <span class="glyphicon glyphicon-save" aria-hidden="true"/> {% trans 'Save'%}
       </button>
     </form>
-    <a href="{% url 'organization_create' %}" id="lnk_organization_create" class="btn btn-default"
-       role="button" title="{% trans 'create_an_organization'%}">{% trans 'add_an_hospital' %}
-       <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+    <a href="{% url 'place_create' %}" class="btn btn-info" title="{% trans 'create_an_organization'%}"
+      id="lnk_organization_create">{% trans 'add_a_hospital' %}
+      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+    </a>
+    <br><br>
+    <a href="{% url 'internships' %}" class="btn btn-default" title="{% trans 'return'%}"
+      id="lnk_internships" >{% trans 'return' %}
+      <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"/>
+    </a>
   </div>
 {% endblock %}
