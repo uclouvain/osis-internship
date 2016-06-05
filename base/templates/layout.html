@@ -124,10 +124,10 @@
                             <li><a href="{% url 'profile' %}" id="lnk_profile">
                                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                                 {% trans 'profile' %}</a></li>
-                            <!--<li role="separator" class="divider"></li>
+                            <li role="separator" class="divider"></li>
                             <li><a href="{% url 'logout' %}?next=/" id="lnk_logout">
                                 <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
-                                {% trans 'logout' %}</a></li>-->
+                                {% trans 'logout' %}</a></li>
                         </ul>
                     </li>
                 {% else %}
@@ -183,7 +183,7 @@
 
 <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
-<script src="{% static 'js/osis.js' %}"></script>
+<script src="{% static 'js/osis.js' %}?version={{ js }}"></script>
 {% block script %}
 {% endblock %}
 </body>

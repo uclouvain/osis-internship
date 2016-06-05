@@ -55,12 +55,12 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label>{% trans 'offer' %} {{ offer_sel }}</label><br>
                     <select id="slt_offer_list_selection" name="offer" class="form-control">
                         <option value="">{% trans 'all'%}</option>
                         {% for o in offer_list %}
-                        <option value="{{o.id}}" {%if offer_year_id == o.id %}selected{%endif%}>{{o.acronym}} - {{o.title}}</option>
+                        <option value="{{o.id}}" {%if offer_year_id == o.id %}selected{%endif%}>{{o.acronym}}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -84,6 +84,16 @@
                            style="text-transform:uppercase" maxlength="15">
                 </div>
                 <div class="col-md-2">
+                    <div style="margin-top:32px;">
+                      <label>
+                        <input id="chckbox_incompleted_encodings"
+                               {% if incomplete_encodings_only %} checked {% endif %}
+                               name="incomplete_encodings_only"
+                               type="checkbox"> {% trans 'incomplete' %}
+                      </label>
+                    </div>
+                </div>
+                <div class="col-md-1">
                     <br>
                     <button type="submit" id="bt_submit_offer_search" class="btn btn-primary" role="button"
                             style="margin-top: 4px"
@@ -126,6 +136,7 @@
                     <table class="table table-hover">
                         <thead>
                         <tr>
+                            <th>{% trans 'complete' %}</th>
                             <th>{% trans 'acronym' %}</th>
                             <th>{% trans 'learning_unit' %}</th>
                             <th>{% trans 'coordinator' %}</th>
@@ -137,6 +148,13 @@
 
                         {% for note_detail in notes_list %}
                         <tr>
+                            <td class="text-center">
+                                {% if note_detail.exam_enrollments_encoded == note_detail.total_exam_enrollments %}
+                                    <span class="glyphicon glyphicon-ok" style="color: green" aria-hidden="true"></span>
+                                {% else %}
+                                    <span class="glyphicon glyphicon-remove" style="color: red" aria-hidden="true"></span>
+                                {% endif %}
+                            </td>
                             <td>{{ note_detail.learning_unit_year.acronym }}</td>
                             <td><a href="{% url 'online_encoding' note_detail.learning_unit_year.id %}"
                                    id="lnk_{{ note_detail.learning_unit_year.acronym }}">{{ note_detail.learning_unit_year.title }}</a></td>
@@ -163,6 +181,7 @@
                     <table class="table table-hover">
                         <thead>
                         <tr>
+                            <th>{% trans 'complete' %}</th>
                             <th>{% trans 'acronym' %}</th>
                             <th>{% trans 'learning_unit' %}</th>
                             <th>{% trans 'coordinator' %}</th>
@@ -173,6 +192,13 @@
                         <tbody>
                         {% for note_detail in notes_list %}
                         <tr>
+                            <td class="text-center">
+                                {% if note_detail.exam_enrollments_encoded == note_detail.total_exam_enrollments %}
+                                    <span class="glyphicon glyphicon-ok" style="color: green" aria-hidden="true"></span>
+                                {% else %}
+                                    <span class="glyphicon glyphicon-remove" style="color: red" aria-hidden="true"></span>
+                                {% endif %}
+                            </td>
                             <td>{{ note_detail.learning_unit_year.acronym }}</td>
                             <td><a href="{% url 'online_encoding' note_detail.learning_unit_year.id %}"
                                    title="Visualiser/charger les notes pour le cours"
@@ -219,6 +245,7 @@
                     <table class="table table-hover">
                         <thead>
                         <tr>
+                            <th>{% trans 'complete' %}</th>
                             <th>{% trans 'acronym' %}</th>
                             <th>{% trans 'learning_unit' %}</th>
                             <th>{% trans 'coordinator' %}</th>
@@ -229,6 +256,13 @@
                         <tbody>
                         {% for note_detail in notes_list %}
                         <tr>
+                            <td class="text-center">
+                                {% if note_detail.exam_enrollments_encoded == note_detail.total_exam_enrollments %}
+                                    <span class="glyphicon glyphicon-ok" style="color: green" aria-hidden="true"></span>
+                                {% else %}
+                                    <span class="glyphicon glyphicon-remove" style="color: red" aria-hidden="true"></span>
+                                {% endif %}
+                            </td>
                             <td>{{ note_detail.learning_unit_year.acronym }}</td>
                             <td><a href="{% url 'online_encoding' note_detail.learning_unit_year.id  %}"
                                    title="Visualiser/charger les notes pour le cours"

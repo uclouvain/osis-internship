@@ -23,25 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django import template
 
-register = template.Library()
-
-
-@register.filter
-def score_display(value, decimal_option):
-    if value is None or str(value) == '-':
-        return ""
-    else:
-        if decimal_option:
-            return "{0:.2f}".format(value)
-        else:
-            return "{0:.0f}".format(value)
+from django.db import models
 
 
-@register.filter
-def disabled(value):
-    if value is None:
-        return ""
-    else:
-        return "disabled"
+class MandateStructure(models.Model):
+    assistant_mandate = models.ForeignKey('AssistantMandate')
+    structure = models.ForeignKey('base.Structure')
+
+    @property
+    def name(self):
+        return self.__str__()
+
+    def __str__(self):
+        return u"%s - %s" % (self.assistant_mandate.person, self.structure.acronym)
+
+
