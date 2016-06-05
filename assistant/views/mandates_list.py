@@ -23,25 +23,22 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django import template
+from django.shortcuts import render
+from assistant.models import assistant_mandate
+from base.models import academic_year
+from django.views.generic import ListView
 
-register = template.Library()
+class MandatesListView(ListView):
+    context_object_name = 'mandates_list'
+    template_name = 'mandates_list.html'
+    #this_academic_year = academic_year.current_academic_year()
+    #queryset = assistant_mandate.AssistantMandate.objects.filter(academic_year=this_academic_year)
+    
+    def get_context_data(self, **kwargs):
+        context = super(MandatesListView, self).get_context_data(**kwargs)
+        return context
+    
+ 
 
 
-@register.filter
-def score_display(value, decimal_option):
-    if value is None or str(value) == '-':
-        return ""
-    else:
-        if decimal_option:
-            return "{0:.2f}".format(value)
-        else:
-            return "{0:.0f}".format(value)
 
-
-@register.filter
-def disabled(value):
-    if value is None:
-        return ""
-    else:
-        return "disabled"

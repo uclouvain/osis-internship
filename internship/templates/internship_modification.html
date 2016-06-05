@@ -30,11 +30,11 @@
   <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
   <li><a href="{% url 'internships_home' %}">Stages</a></li>
   <li><a href="{% url 'internships' %}">Tous les Stages</a></li>
-  <li class="active">Nouveau Stage</li>
+  <li class="active">modification de stage</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'Internships Creation' %}</h2>
+    <h2>{% trans 'Internships modification' %}</h2>
   </div>
   {% if success == 1 %}
   <div>
@@ -54,29 +54,21 @@
         </tr>
       </thead>
       <tbody>
-        <form method="post" action="{% if internship.id%} {% url 'internship_modification' internship.id %} {%else%} {% url 'internships_new'%} {%endif%}">
+        <form method="post" action="{% url 'internships_edit' internship_id %}">
           {% csrf_token %}
           <tr>
             <td style="text-align:center;">
-              <select name="organization">
-               {% for organization in all_organization %}
-                  <option value={{ organization.reference }} {%if organization.reference == select_organization %}selected{%endif%}>
-                      {{ organization.reference }} - {{ organization.name }}
-                  </option>
-               {% endfor %}
-              </select>
+              <input type="hidden" name="organization" value="{{ internship.organization.reference }}">
+              <input type="text" name="organization_s"
+                    value="{{ internship.organization.reference }} - {{ internship.organization.name }}"
+                    size="32" readonly>
             </td>
             <td style="text-align:center;">
-              <select name="learning_unit_year">
-               {% for learning_unit_year in all_learning_unit_year %}
-                  <option value={{ learning_unit_year.title }} {%if learning_unit_year.title == select_learning_unit_year %}selected{%endif%}>
-                      {{ learning_unit_year.title }}
-                  </option>
-               {% endfor %}
-              </select>
+              <input type="text" name="learning_unit_year"
+                    value="{{ internship.learning_unit_year.title }}" readonly>
             </td>
             <td style="text-align:center;">
-              <input type="number" name="maximum_enrollments" required>
+              <input type="number" name="maximum_enrollments" value={{ internship.maximum_enrollments}} required></input>
             </td>
           </tr>
       </tbody>
@@ -86,10 +78,6 @@
           <span class="glyphicon glyphicon-save" aria-hidden="true"/> {% trans 'Save'%}
       </button>
     </form>
-    <a href="{% url 'place_create' %}" class="btn btn-info" title="{% trans 'create_an_organization'%}"
-      id="lnk_organization_create">{% trans 'add_a_hospital' %}
-      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-    </a>
     <br><br>
     <a href="{% url 'internships' %}" class="btn btn-default" title="{% trans 'return'%}"
       id="lnk_internships" >{% trans 'return' %}

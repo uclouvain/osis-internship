@@ -23,25 +23,24 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django import template
-
-register = template.Library()
-
-
-@register.filter
-def score_display(value, decimal_option):
-    if value is None or str(value) == '-':
-        return ""
-    else:
-        if decimal_option:
-            return "{0:.2f}".format(value)
-        else:
-            return "{0:.0f}".format(value)
+from django import forms
+from django.forms import ModelForm, Textarea
+from assistant import models as mdl
 
 
-@register.filter
-def disabled(value):
-    if value is None:
-        return ""
-    else:
-        return "disabled"
+class MandateForm(ModelForm):
+    comment = forms.CharField(
+        required = False,
+        widget = Textarea(attrs={'rows': '3', 'cols': '50'}))
+    absences = forms.CharField(
+        required = False, 
+        widget = Textarea(attrs={'rows': '3', 'cols': '50'}))
+    other_status = forms.CharField(
+        required = False)
+    renewal_type=forms.ChoiceField(choices= mdl.assistant_mandate.AssistantMandate.RENEWAL_TYPE_CHOICES)
+    class Meta:
+        model = mdl.assistant_mandate.AssistantMandate
+        fields = ('comment','absences','other_status','renewal_type')
+        
+        
+

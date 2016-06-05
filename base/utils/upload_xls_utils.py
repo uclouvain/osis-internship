@@ -134,18 +134,23 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
         exam_enrollments_managed_by_user = list(mdl.exam_enrollment.find_for_score_encodings(data_xls['session'],
                                                                                              offers_year=offer_years_managed,
                                                                                              learning_unit_year_id=learning_unit_year_id))
+        # Set of all LearningUnit.acronym managed by the user
+        learn_unit_acronyms_managed_by_user = {exam_enroll.learning_unit_enrollment.learning_unit_year.acronym
+                                               for exam_enroll in exam_enrollments_managed_by_user}
+        # Set of all OfferYear.acronym managed by the user
+        offer_acronyms_managed_by_user = {offer_year.acronym for offer_year in offer_years_managed}
     else:
         tutor = mdl.tutor.find_by_user(request.user)
         exam_enrollments_managed_by_user = list(mdl.exam_enrollment.find_for_score_encodings(data_xls['session'],
                                                                                              tutor=tutor,
                                                                                              learning_unit_year_id=learning_unit_year_id))
+        learning_unit_years = list(mdl.learning_unit_year.find_by_tutor(tutor.id))
+        # Set of all LearningUnit.acronym managed by the user
+        learn_unit_acronyms_managed_by_user = {learning_unit_year.acronym for learning_unit_year in learning_unit_years}
+        # Set of all OfferYear.acronym managed by the user
+        offer_acronyms_managed_by_user = {exam_enroll.learning_unit_enrollment.offer_enrollment.offer_year.acronym
+                                          for exam_enroll in exam_enrollments_managed_by_user}
 
-    # Set of all LearningUnit.acronym managed by the user
-    learn_unit_acronyms_managed_by_user = {exam_enroll.learning_unit_enrollment.learning_unit_year.acronym
-                                           for exam_enroll in exam_enrollments_managed_by_user}
-    # Set of all OfferYear.acronym managed by the user
-    offer_acronyms_managed_by_user = {exam_enroll.learning_unit_enrollment.offer_enrollment.offer_year.acronym
-                                           for exam_enroll in exam_enrollments_managed_by_user}
     # Set of all Student.registration_id managed by the user
     registration_ids_managed_by_user = {exam_enroll.learning_unit_enrollment.student.registration_id
                                            for exam_enroll in exam_enrollments_managed_by_user}
@@ -164,8 +169,8 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                 or len(str(row[col_registration_id].value)) == 0 \
                 or not _is_registration_id(row[col_registration_id].value):
             continue
-        elif (row[col_score].value is None or row[col_score].value == 0) and not row[col_justification].value:
-            # Id there's no score/justification encoded for this line, not necessary to make all checks below
+        elif (row[col_score].value is None or row[col_score].value == '') and not row[col_justification].value:
+            # If there's no score/justification encoded for this line, not necessary to make all checks below
             continue
         xls_registration_id = str(row[col_registration_id].value)
         xls_offer_year_acronym = row[col_offer].value
@@ -187,18 +192,20 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                 # ... if it's beacause the registration id doesn't exist
                 messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('registration_id_not_access_or_not_exist')))
         else:
-            exam_enrollments = exam_enrollments_by_registration_id[xls_registration_id]
+            exam_enrollments = exam_enrollments_by_registration_id.get(xls_registration_id, [])
             exam_enrollment = None
+            count_exam_enrol_for_this_learn_unit = 0 # A student could have 2 examEnrollments for a same learningUnit in 2 different offers
             # Find ExamEnrollment by learningUnit.acronym
             for exam_enroll in exam_enrollments:
                 if exam_enroll.learning_unit_enrollment.learning_unit_year.acronym == xls_learning_unit_acronym:
                     exam_enrollment = exam_enroll
+                    count_exam_enrol_for_this_learn_unit +=1
             if not exam_enrollment:
                 messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('enrollment_activity_not_exist') % (xls_learning_unit_acronym)))
             elif not is_program_manager and (exam_enrollment.score_final is not None or exam_enrollment.justification_final):
                 # In case the user is not a program manager, we check if the scores are already submitted
                 # If this examEnrollment is already encoded in DataBase, nothing to do (ingnoring the line)
-                messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('score_already_submitted')))
+                messages.add_message(request, messages.WARNING, "%s %s!" % (info_line, _('score_already_submitted')))
                 continue
             else:
                 academic_year = int(row[col_academic_year].value[:4])
@@ -208,7 +215,11 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                     if xls_offer_year_acronym not in offer_acronyms_managed_by_user:
                         messages.add_message(request, messages.ERROR, "%s '%s' %s!" % (info_line, xls_offer_year_acronym, _('offer_year_not_access_or_not_exist')))
                     elif xls_offer_year_acronym != exam_enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym:
-                        messages.add_message(request, messages.ERROR, "%s '%s' %s!" % (info_line, xls_offer_year_acronym, _('offer_enrollment_not_exist')))
+                        if count_exam_enrol_for_this_learn_unit > 1:
+                            # A student could have 2 exam enrollments for a same learningUnit in 2 different offers
+                            messages.add_message(request, messages.ERROR, "%s %s" % (info_line, _('more_than_one_exam_enrol_for_one_learn_unit')))
+                        else:
+                            messages.add_message(request, messages.ERROR, "%s '%s' %s!" % (info_line, xls_offer_year_acronym, _('offer_enrollment_not_exist')))
                     else:
                         if xls_learning_unit_acronym not in learn_unit_acronyms_managed_by_user:
                             messages.add_message(request, messages.ERROR, "%s '%s' %s!" % (info_line, xls_learning_unit_acronym, _('learning_unit_not_access_or_not_exist')))
@@ -217,7 +228,8 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                                 messages.add_message(request, messages.ERROR, "%s %s for %s!" % (info_line, _('enrollment_exam_not_exists'), xls_learning_unit_acronym))
                             else:
                                 score = row[col_score].value
-                                score = None if score == '' else score # The score could be an Integer or String...
+                                score = score.replace(" ", "") if type(score) == str else score
+                                score = None if score == '' else score  # The score could be an Integer or String...
                                 if score is not None:
                                     try:
                                         score = float(str(row[col_score].value).strip().replace(',', '.'))
@@ -232,6 +244,7 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                                         continue
 
                                 justification = row[col_justification].value
+                                justification = justification.replace(" ", "") if type(justification) == str else justification
                                 if justification:
                                     justification = str(justification).strip().upper()
                                     if justification in ['A', 'T', '?']:
