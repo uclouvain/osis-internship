@@ -65,7 +65,7 @@
     <tbody>
       <tr>
 {% for mandate in object_list %}
-<td></td>
+<td>{{ mandate.sap_id }}</td>
 <td><a href="{% url 'mandate_read' mandate.id %}">{{ mandate.assistant.person.last_name }}</a></td>
 <td><a href="{% url 'mandate_read' mandate.id %}">{{ mandate.assistant.person.first_name }}</a></td>
 <td></td>
@@ -74,7 +74,7 @@
 <td></td>
 <td></td>
 <td>{{ mandate.contract_duration }}</td>
-<td>{{ mandate.assistant.fulltime_equivalent }}</td>
+<td>{{ mandate.contract_duration_fte }}</td>
 <td></td>
 <td align="center">{% for rev in mandate.review_set.all %}
 		{% if rev.advice == "FAVORABLE" %}
