@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
 {% load i18n %}
+{
 
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -60,10 +61,21 @@
 	<div class="col-md-3">
 	<label for="txt_contract_duration_fte">{% trans 'contract_duration_fte' %} : </label>
 	{{ mandate.contract_duration_fte }}
-	</div></div>
-	
-	</br>
-	
+	</div></div></br>
+	{{ formset.management_form }}
+    <div class="row">
+    <div class="col-md-12"><label for="txt_structures">{% trans 'structures' %}</label>
+    {% for form in formset %}
+    	{% for field in form %}
+    		{% if field.name == "DELETE" %}
+				<div class="controls">{{ field }} {% trans 'delete' %}<font class="error">{{ field.errors }}</font></div>
+			{% else %}
+				<div class="controls">{{ field }}<font class="error">{{ field.errors }}</font></div>
+			{% endif %}
+		{% endfor %}
+		
+    {% endfor %}
+	</br></div></div>
 	<div class="row">
 	<div class="col-md-4">
 		<label for="txt_comment">{% trans 'comment' %}</label>

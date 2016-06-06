@@ -26,13 +26,15 @@
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 import csv, codecs
-from assistant.forms import MandateForm
+from assistant.forms import MandateForm, StructureInLineFormSet
 from base.views import layout
 from assistant.models import assistant_mandate, academic_assistant, mandate_structure
 from base import models as mdl
 from base.views.layout import render_to_response
 from django.http.response import HttpResponseRedirect
 from base.views.common import academic_year
+from assistant.models.mandate_structure import MandateStructure
+from django import forms
 
 
 
@@ -45,37 +47,31 @@ def mandate_edit(request, mandate_id):
                                 'other_status': mandate.other_status,
                                 'contract_duration': mandate.contract_duration,
                                 'contract_duration_fte': mandate.contract_duration_fte
-                                })
+                                }, prefix="mand",instance=mandate)
+    formset = StructureInLineFormSet(instance=mandate, prefix="struct")
+    
     return layout.render(request, 'mandate_form.html', {'mandate': mandate,
-                                                'form': form})
+                                                'form': form,
+                                                'formset': formset})
 
 
 def mandate_save(request, mandate_id):
-    form = MandateForm(data=request.POST)
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
-    # get the screen modifications
-    if request.POST['comment']:
-        mandate.comment = request.POST['comment']
-        mandate.absences = request.POST['absences']
-    else:
-        mandate.comment = None
-        mandate.absences = None
-    if request.POST['absences']:
-        mandate.absences = request.POST['absences']
-    else:
-        mandate.absences = None
-    if request.POST['other_status']:
-        mandate.other_status = request.POST['other_status']
-    else:
-        mandate.other_status = None
-    mandate.renewal_type = request.POST['renewal_type']
+    form = MandateForm(data=request.POST, instance=mandate, prefix='mand')
+    formset = StructureInLineFormSet(request.POST, request.FILES, instance=mandate, prefix='struct')
     if form.is_valid():
-        mandate.save()
-        return mandate_edit(request, mandate.id)
+        form.save()
+        if formset.is_valid():
+            formset.save()
+            return mandate_edit(request, mandate.id)
+        else:
+            return layout.render(request, "mandate_form.html", {'mandate': mandate,
+                                                                 'form': form,
+                                                                 'formset': formset})    
     else:
         return layout.render(request, "mandate_form.html", {'mandate': mandate,
-                                                                 'form': form})    
-
+                                                                 'form': form,
+                                                                 'formset': formset})    
 
 
 def load_mandates(request):
@@ -160,6 +156,9 @@ def load_mandates(request):
                                                                                                  sap_id = sap_id,
                                                                                                  position_id = position_id)
                             if existing_mandate.count() >0:
+                                
+                                MandateStructure.objects.filter(assistant_mandate=existing_mandate).delete()
+                                
                                 existing_mandate.update(fulltime_equivalent=fte,
                                                entry_date = entry_date,
                                                end_date = end_date,
@@ -172,6 +171,24 @@ def load_mandates(request):
                                                absences = absences,
                                                comment = comment,
                                                other_status = other_status)
+                                
+                                if institute:
+                                    existing_institute = mdl.structure.Structure.objects.get(acronym=institute,
+                                                                                         type='INSTITUTE')
+                                    if existing_institute:
+                                        mandate_struc_institute = mandate_structure.MandateStructure()
+                                        mandate_struc_institute.assistant_mandate = existing_mandate[0]
+                                        mandate_struc_institute.structure = existing_institute
+                                        mandate_struc_institute.save()
+                                if faculty:
+                                    existing_faculty = mdl.structure.Structure.objects.get(acronym=faculty,
+                                                                                       type='FACULTY')
+                                    if existing_faculty:
+                                        mandate_struc_faculty = mandate_structure.MandateStructure()
+                                        mandate_struc_faculty.assistant_mandate = existing_mandate[0]
+                                        mandate_struc_faculty.structure = existing_faculty
+                                        mandate_struc_faculty.save()
+                                
                                 updated_mandates_counter += 1
                             else:
                                 mandate.save()
