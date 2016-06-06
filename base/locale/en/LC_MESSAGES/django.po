@@ -905,6 +905,12 @@ msgstr "Undefined"
 msgid "messages"
 msgstr "Messages"
 
+msgid "by_specific_criteria"
+msgstr "By Specific Criteria"
+
+msgid "by_learning_unit"
+msgstr "By Learning Unit"
+
 msgid "messages_templates"
 msgstr "Messages templates"
 
