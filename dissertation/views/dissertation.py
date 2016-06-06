@@ -152,18 +152,22 @@ def manager_dissertations_list(request):
 def manager_dissertations_print(request):
     dissertations = Dissertation.search(terms=request.GET['search']).filter(Q(active=True))
     wb = Workbook(encoding='utf-8')
-    dest_filename = 'IMPORT.xlsx'
-    ws1 = wb.active
-    ws1.title = "disertation"
-    for row in range(1, 40):
-        ws1.append(range(600))
 
-    ws2 = wb.create_sheet(title="Pi")
-    ws2['F5'] = '3.14'
-    ws3 = wb.create_sheet(title="Data")
-    for row in range(10, 20):
-        for col in range(27, 54):
-            _ = ws3.cell(column=col, row=row, value="%s" % get_column_letter(col))
+    dest_filename = 'IMPORT_dissertaion_.xlsx'
+    ws1 = wb.active
+    ws1.title = "dissertation"
+    for dissertation in dissertation:
+        queryset = DissertationRole.objects.filter(Q(dissertation=dissertation))
+        queryset_pro = queryset.object.filter(Q(status='PROMOTEUR'))
+        queryset_copro = queryset.object.filter(Q(status='CO_PROMOTEUR'))
+        queryset_reader = queryset.object.filter(Q(status='READER'))
+
+        ws1.append([dissertation.creation_date,dissertation.author.student.person.first_name,
+        dissertation.author.student.person.middle_name,dissertation.author.student.person.last_name,
+        dissertation.author.student.person.global_id,dissertation.title,
+        dissertation.status,dissertation.offer_year_start,queryset_pro.adviser,queryset_copro.adviser,queryset_reader[0].adviser,queryset_reader[1].adviser])
+
+
 
     response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.ms-excel')
     return response
@@ -191,19 +195,27 @@ def manager_dissertations_search(request):
     xlsx=False
     if 'bt_xlsx' in request.GET:
         wb = Workbook(encoding='utf-8')
-        dest_filename = 'IMPORT.xlsx'
+        dest_filename = 'IMPORT_dissertaion_.xlsx'
         ws1 = wb.active
-        ws1.title = "range names"
-        for row in range(1, 40):
-            ws1.append(range(600))
+        ws1.title = "dissertation"
+        ws1.append(['Date_de_création','Students','Dissertation_title',
+        'Status','Offer_year_start','offer_year_start_short'])
+        for dissertation in dissertations:
+            queryset = DissertationRole.objects.filter(Q(dissertation=dissertation))
+            queryset_pro = queryset.filter(Q(status='PROMOTEUR'))
+            queryset_copro = queryset.filter(Q(status='CO_PROMOTEUR'))
+            queryset_reader = queryset.filter(Q(status='READER'))
 
-        ws2 = wb.create_sheet(title="Pi")
-        ws2['F5'] = '3.14'
-        ws3 = wb.create_sheet(title="Data")
-        for row in range(10, 20):
-            for col in range(27, 54):
-                _ = ws3.cell(column=col, row=row, value="%s" % get_column_letter(col))
-        ## print(ws3['AA10'].value)
+            ws1.append([dissertation.creation_date,
+            str(dissertation.author),
+            dissertation.title,
+            dissertation.status,
+            dissertation.offer_year_start.title,
+            dissertation.offer_year_start.title_short,
+            queryset_pro[0].adviser,queryset_copro.adviser,
+            queryset_reader[0].adviser,queryset_reader[1].adviser])
+
+
         response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.ms-excel')
         return response
     return render(request, "manager_dissertations_list.html",
