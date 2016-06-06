@@ -158,7 +158,7 @@ def manager_informations_detail(request, pk):
     tab_offer_count_pro={}
     for dissertaion_role_pro in advisers_pro:
         if dissertaion_role_pro.dissertation.offer_year_start.offer.title in tab_offer_count_pro:
-            tab_offer_count_pro[dissertaion_role_pro.dissertation.offer_year_start.offer.title]=tab_offer_count[str(dissertaion_role_pro.dissertation.offer_year_start.offer.title)]+1
+            tab_offer_count_pro[dissertaion_role_pro.dissertation.offer_year_start.offer.title]=tab_offer_count_pro[str(dissertaion_role_pro.dissertation.offer_year_start.offer.title)]+1
         else:
             tab_offer_count_pro[dissertaion_role_pro.dissertation.offer_year_start.offer.title]=1
 

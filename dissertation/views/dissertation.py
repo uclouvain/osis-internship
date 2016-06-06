@@ -206,15 +206,13 @@ def manager_dissertations_search(request):
             queryset_copro = queryset.filter(Q(status='CO_PROMOTEUR'))
             queryset_reader = queryset.filter(Q(status='READER'))
 
+
             ws1.append([dissertation.creation_date,
             str(dissertation.author),
             dissertation.title,
             dissertation.status,
             dissertation.offer_year_start.title,
-            dissertation.offer_year_start.title_short,
-            queryset_pro[0].adviser,queryset_copro.adviser,
-            queryset_reader[0].adviser,queryset_reader[1].adviser])
-
+            dissertation.offer_year_start.title_short])
 
         response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.ms-excel')
         return response
