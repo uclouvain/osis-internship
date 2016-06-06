@@ -905,6 +905,12 @@ msgstr "Centre de recherche"
 msgid "technologic_platform"
 msgstr "Plateforme technologique"
 
+msgid "by_specific_criteria"
+msgstr "Par critère spécifique"
+
+msgid "by_learning_unit"
+msgstr "Par unité d'enseignement"
+
 msgid "undefined"
 msgstr "Non défini"
 

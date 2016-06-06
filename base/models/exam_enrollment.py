@@ -146,10 +146,6 @@ def find_by_enrollment_session(learning_unit_enrollment, session_exam_number_ses
                                  .filter(session_exam__number_session=session_exam_number_session).first()
 
 
-def find_by_student(student):
-    return ExamEnrollment.objects.filter(learning_unit_enrollment__offer_enrollment__student=student)
-
-
 def calculate_exam_enrollment_progress(enrollments):
     if enrollments:
         progress = len([e for e in enrollments if e.score_final is not None or e.justification_final]) / len(enrollments)
