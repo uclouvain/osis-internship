@@ -153,7 +153,6 @@ def internships_stud(request):
     for internship in query:
         number_first_choice = len(InternshipChoice.find_by(internship.organization, internship.learning_unit_year, s_choice = 1))
         internship.number_first_choice = number_first_choice
-        print (internship.selectable)
 
     # Create the options for the selected list, delete duplicated
     query_organizations = InternshipOffer.find_internships()

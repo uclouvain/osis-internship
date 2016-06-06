@@ -32,6 +32,26 @@
   <li class="active">{% trans 'Internships' %}</li>
 {% endblock %}
 {% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>
+  function check(element){
+    var x = document.getElementsByName(element.name);
+    var check = 0
+    for (i = 0; i < x.length; i++) {
+      if (x[i].value !=0) {
+        if (element.value > 0) {
+          if (x[i].value == element.value) {
+            check += 1
+          }
+        }
+      }
+    }
+    if (check > 1) {
+      alert('Vous avez déjà un stage avec cette préférence dans cette spécialité.')
+      element.value = 0
+    }
+  }
+</script>
   <div class="page-header">
     <h2>{% trans 'Internships' %}</h2>
   </div>
@@ -152,7 +172,7 @@
                               {{ internship.number_first_choice }}
                             </td>
                             <td>
-                              <select name="preference">
+                              <select name="preferenceCH" onchange="check(this)">
                                <option value=0 {% if internship.selectable == False %} disabled {%endif%}>0</option>
                                <option value=1 {% if internship.choice == 1 %} selected{%endif%}
                                                 {% if internship.selectable == False %} disabled {%endif%}>
@@ -212,7 +232,7 @@
                               {{ internship.number_first_choice }}
                             </td>
                             <td>
-                              <select name="preference">
+                              <select name="preferenceGE" onchange="check(this)">
                                <option value=0 {% if internship.selectable == False %} disabled {%endif%}>0</option>
                                <option value=1 {% if internship.choice == 1 %} selected{%endif%}
                                                 {% if internship.selectable == False %} disabled {%endif%}>
@@ -272,7 +292,7 @@
                               {{ internship.number_first_choice }}
                             </td>
                             <td>
-                              <select name="preference">
+                              <select name="preferenceGO" onchange="check(this)">
                                <option value=0 {% if internship.selectable == False %} disabled {%endif%}>0</option>
                                <option value=1 {% if internship.choice == 1 %} selected{%endif%}
                                                 {% if internship.selectable == False %} disabled {%endif%}>
@@ -332,7 +352,7 @@
                               {{ internship.number_first_choice }}
                             </td>
                             <td>
-                              <select name="preference">
+                              <select name="preferenceMI" onchange="check(this)">
                                <option value=0 {% if internship.selectable == False %} disabled {%endif%}>0</option>
                                <option value=1 {% if internship.choice == 1 %} selected{%endif%}
                                                 {% if internship.selectable == False %} disabled {%endif%}>
@@ -392,7 +412,7 @@
                               {{ internship.number_first_choice }}
                             </td>
                             <td>
-                              <select name="preference">
+                              <select name="preferencePE" onchange="check(this)">
                                <option value=0 {% if internship.selectable == False %} disabled {%endif%}>0</option>
                                <option value=1 {% if internship.choice == 1 %} selected{%endif%}
                                                 {% if internship.selectable == False %} disabled {%endif%}>
@@ -452,7 +472,7 @@
                               {{ internship.number_first_choice }}
                             </td>
                             <td>
-                              <select name="preference">
+                              <select name="preferenceUR" onchange="check(this)">
                                <option value=0 {% if internship.selectable == False %} disabled {%endif%}>0</option>
                                <option value=1 {% if internship.choice == 1 %} selected{%endif%}
                                                 {% if internship.selectable == False %} disabled {%endif%}>
