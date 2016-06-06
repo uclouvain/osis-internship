@@ -43,9 +43,14 @@ class MandateForm(ModelForm):
     other_status = forms.CharField(
         required = False)
     renewal_type=forms.ChoiceField(choices= mdl.assistant_mandate.AssistantMandate.RENEWAL_TYPE_CHOICES)
+    assistant_type=forms.ChoiceField(choices= mdl.assistant_mandate.AssistantMandate.ASSISTANT_TYPE_CHOICES)
+    sap_id = forms.CharField(
+        required = True,
+        max_length=12,
+        strip = True)
     class Meta:
         model = mdl.assistant_mandate.AssistantMandate
-        fields = ('comment','absences','other_status','renewal_type')
+        fields = ('comment','absences','other_status','renewal_type','assistant_type','sap_id')
 
     
 class MandateStructureForm(ModelForm):

@@ -156,9 +156,7 @@ def load_mandates(request):
                                                                                                  sap_id = sap_id,
                                                                                                  position_id = position_id)
                             if existing_mandate.count() >0:
-                                
                                 MandateStructure.objects.filter(assistant_mandate=existing_mandate).delete()
-                                
                                 existing_mandate.update(fulltime_equivalent=fte,
                                                entry_date = entry_date,
                                                end_date = end_date,
@@ -171,7 +169,6 @@ def load_mandates(request):
                                                absences = absences,
                                                comment = comment,
                                                other_status = other_status)
-                                
                                 if institute:
                                     existing_institute = mdl.structure.Structure.objects.get(acronym=institute,
                                                                                          type='INSTITUTE')
@@ -188,7 +185,6 @@ def load_mandates(request):
                                         mandate_struc_faculty.assistant_mandate = existing_mandate[0]
                                         mandate_struc_faculty.structure = existing_faculty
                                         mandate_struc_faculty.save()
-                                
                                 updated_mandates_counter += 1
                             else:
                                 mandate.save()
@@ -217,7 +213,3 @@ def load_mandates(request):
                                                          'imported_mandates': imported_mandates_counter,
                                                          'updated_mandates': updated_mandates_counter,
                                                          'error_counter': error_counter})             
- 
-
-
-
