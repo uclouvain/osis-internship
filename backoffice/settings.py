@@ -132,15 +132,13 @@ STATIC_URL = '/static/'
 
 # Authentication settings
 
-LOGIN_URL = reverse_lazy('login')
-LOGOUT_URL = reverse_lazy('logout')
 LOGIN_REDIRECT_URL = '/'
 
 FIXTURE_DIRS = (
     '/base/fixtures/',
 )
 
-MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
+MESSAGE_STORAGE = 'django.contrib.messages.storage.fallback.FallbackStorage'
 
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, "base/tests/sent_mails")

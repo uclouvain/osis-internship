@@ -1,0 +1,111 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+ * OSIS stands for Open Student Information System. It's an application
+ * designed to manage the core business of higher education institutions,
+ * such as universities, faculties, institutes and professional schools.
+ * The core business involves the administration of students, teachers,
+ * courses, programs and so on.
+ *
+ * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * A copy of this license - GNU General Public License - is available
+ * at the root of the source code of this program.  If not,
+ * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block breadcrumb %}
+  <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+  <li><a href="{% url 'internships_home' %}">Stages</a></li>
+  <li><a href="{% url 'internships_home' %}">{% trans 'Internships' %}</a></li>
+  <li class="active">{% trans 'detail_choice' %}</li>
+{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h2>{{ internship.organization.name }} - {{ internship.learning_unit_year.title }}</h2>
+</div>
+<div class="panel panel-default">
+    <div class="panel-body">
+      <label> Premier choix </label> : {{number_choices.1}}<br/>
+      Liste des étudiants : <a role="button" data-toggle="collapse" data-target="#choice1"
+         aria-expanded="false"
+         aria-controls="choice1"
+         title="{% trans 'display_students_first_choice' %}">
+          <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+      </a>
+      <div class="collapse" id="choice1">
+        <ul>
+          {% for student in students %}
+            {% if student.choice == 1 %}
+              <li> {{ student.student }}
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+      <br/>
+      <label> Deuxième choix </label> : {{number_choices.2}}<br/>
+      Liste des étudiants : <a role="button" data-toggle="collapse" data-target="#choice2"
+         aria-expanded="false"
+         aria-controls="choice2"
+         title="{% trans 'display_students_second_choice' %}">
+          <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+      </a>
+      <div class="collapse" id="choice2">
+        <ul>
+          {% for student in students %}
+            {% if student.choice == 2 %}
+              <li> {{ student.student }}
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+      <br/>
+      <label> Troisième choix </label> : {{number_choices.3}}<br/>
+      Liste des étudiants : <a role="button" data-toggle="collapse" data-target="#choice3"
+         aria-expanded="false"
+         aria-controls="choice3"
+         title="{% trans 'display_students_third_choice' %}">
+          <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+      </a>
+      <div class="collapse" id="choice3">
+        <ul>
+          {% for student in students %}
+            {% if student.choice == 3 %}
+              <li> {{ student.student }}
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+      <br/>
+      <label> Quatrième choix </label> : {{number_choices.4}}<br/>
+      Liste des étudiants : <a role="button" data-toggle="collapse" data-target="#choice4"
+         aria-expanded="false"
+         aria-controls="choice4"
+         title="{% trans 'display_students_fourth_choice' %}">
+          <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+      </a>
+      <div class="collapse" id="choice4">
+        <ul>
+          {% for student in students %}
+            {% if student.choice == 4 %}
+              <li> {{ student.student }}
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+	</div>
+</div>
+
+  {% endblock %}

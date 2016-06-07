@@ -40,10 +40,8 @@ from base import models as mdl
 
 PAGE_SIZE = A4
 MARGIN_SIZE = 15 * mm
-COLS_WIDTH = [25*mm,50*mm,50*mm,25*mm,25*mm]
+COLS_WIDTH = [20*mm,55*mm,45*mm,15*mm,40*mm]
 STUDENTS_PER_PAGE = 24
-
-
 
 
 def add_header_footer(canvas, doc):
@@ -65,7 +63,6 @@ def add_header_footer(canvas, doc):
 
 
 def build_pdf(document):
-    # document = my_json_data
     filename = "%s.pdf" % _('scores_sheet')
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="%s"' % filename
@@ -94,7 +91,7 @@ def build_pdf(document):
                              Paragraph(enrollment["last_name"], styles['Normal']),
                              Paragraph(enrollment["first_name"], styles['Normal']),
                              enrollment["score"],
-                             Paragraph(enrollment["justification"], styles['Normal'])])
+                             Paragraph(_(enrollment["justification"]), styles['Normal'])])
 
                 students_printed += 1
                 enrollments_to_print -= 1
@@ -180,30 +177,9 @@ def legend_building_json(decimal_scores, content):
 
     legend_text = _('justification_legend') % mdl.exam_enrollment.justification_label_authorized()
     legend_text += "<br/>%s" % (str(_('score_legend') % "0 - 20"))
-    if not decimal_scores:
-        legend_text += "<br/><font color=red>%s</font>" % _('unauthorized_decimal_for_this_activity')
-
-    legend_text += '''<br/> %s : <a href="%s"><font color=blue><u>%s</u></font></a>''' \
-                   % (_("in_accordance_to_regulation"), _("link_to_RGEE"), _("link_to_RGEE"))
-    content.append(Paragraph('''
-                            <para>
-                                %s
-                            </para>
-                            ''' % legend_text, p))
-
-
-def legend_building(learning_unit_year, content):
-    p = ParagraphStyle('legend')
-    p.textColor = 'grey'
-    p.borderColor = 'grey'
-    p.borderWidth = 1
-    p.alignment = TA_CENTER
-    p.fontSize = 8
-    p.borderPadding = 5
-
-    legend_text = _('justification_legend') % mdl.exam_enrollment.justification_label_authorized()
-    legend_text += "<br/>%s" % (str(_('score_legend') % "0 - 20"))
-    if not learning_unit_year.decimal_scores:
+    if decimal_scores:
+        legend_text += "<br/><font color=red>%s</font>" % _('authorized_decimal_for_this_activity')
+    else:
         legend_text += "<br/><font color=red>%s</font>" % _('unauthorized_decimal_for_this_activity')
 
     legend_text += '''<br/> %s : <a href="%s"><font color=blue><u>%s</u></font></a>''' \
@@ -219,7 +195,7 @@ def headers_table():
     data = [['''%s''' % _('registration_number'),
              '''%s''' % _('lastname'),
              '''%s''' % _('firstname'),
-             '''%s''' % _('numbered_score'),
+             '''%s''' % _('score'),
              '''%s''' % _('justification')]]
     return data
 

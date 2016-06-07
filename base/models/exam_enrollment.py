@@ -23,12 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from decimal import *
 from django.db import models
 from django.contrib import admin
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 from base.models import person, learning_unit_year, attribution, person_address, offer_year_calendar
 from django.utils import timezone
 import datetime
+import unicodedata
 
 
 class ExamEnrollmentAdmin(admin.ModelAdmin):
@@ -51,10 +53,10 @@ class ExamEnrollmentAdmin(admin.ModelAdmin):
 #    'CHEATING'            => 'T'
 #    'SCORE_MISSING'       => '?'
 JUSTIFICATION_TYPES = (
-    ('ABSENCE_UNJUSTIFIED', _('absence_unjustified')),  # A -> S
-    ('ABSENCE_JUSTIFIED', _('absence_justified')),      # M
-    ('CHEATING', _('cheating')),                        # T
-    ('SCORE_MISSING', _('score_missing')))              # ?
+    ('ABSENCE_UNJUSTIFIED', _('ABSENCE_UNJUSTIFIED')),  # A -> S
+    ('ABSENCE_JUSTIFIED', _('ABSENCE_JUSTIFIED')),      # M
+    ('CHEATING', _('CHEATING')),                        # T
+    ('SCORE_MISSING', _('SCORE_MISSING')))              # ?
 
 
 class ExamEnrollment(models.Model):
@@ -72,29 +74,38 @@ class ExamEnrollment(models.Model):
     def student(self):
         return self.learning_unit_enrollment.student
 
-    def clean_scores_reencoded(self):
-        """
-        Set score_reencoded and justification_reencoded to None.
-        """
-        self.score_reencoded = None
-        self.justification_reencoded = None
-        self.save()
-
     def __str__(self):
         return u"%s - %s" % (self.session_exam, self.learning_unit_enrollment)
 
+    @property
+    def to_validate_by_program_manager(self):
+        sc_reencoded = None
+        if self.score_reencoded is not None:
+            sc_reencoded = Decimal('%.2f' % self.score_reencoded)
 
-def get_letter_justication_type(justification_type):
-    if JUSTIFICATION_TYPES[0][0] == justification_type:
-        return 'A'
-    elif JUSTIFICATION_TYPES[1][0] == justification_type:
-        return 'M'
-    elif JUSTIFICATION_TYPES[2][0] == justification_type:
-        return 'T'
-    elif JUSTIFICATION_TYPES[3][0] == justification_type:
-        return '?'
-    else:
-        return ''
+        if self.score_final != sc_reencoded or self.justification_final != self.justification_reencoded:
+            return True
+        else:
+            return False
+
+    @property
+    def to_validate_by_tutor(self):
+        sc_reencoded = None
+        if self.score_reencoded is not None:
+            sc_reencoded = Decimal('%.2f' % self.score_reencoded)
+
+        if self.score_draft != sc_reencoded or self.justification_draft != self.justification_reencoded:
+            return True
+        else:
+            return False
+
+    @property
+    def justification_draft_display(self):
+        return _(self.justification_draft)
+
+    @property
+    def justification_final_display(self):
+        return _(self.justification_final)
 
 
 def find_exam_enrollments_by_session(session_exm):
@@ -240,7 +251,9 @@ def find_for_score_encodings(session_exam_number,
 
     now = timezone.now()
     return queryset.filter(session_exam__offer_year_calendar__start_date__lte=now)\
-                   .filter(session_exam__offer_year_calendar__end_date__gte=now)
+                   .filter(session_exam__offer_year_calendar__end_date__gte=now)\
+                   .select_related('learning_unit_enrollment__offer_enrollment__offer_year')\
+                   .select_related('session_exam__offer_year_calendar')
 
 
 def scores_sheet_data(exam_enrollments, tutor=None):
@@ -330,14 +343,27 @@ def scores_sheet_data(exam_enrollments, tutor=None):
                     "last_name": student.person.last_name,
                     "first_name": student.person.first_name,
                     "score": str(exam_enrol.score_final) if exam_enrol.score_final else '',
-                    "justification": exam_enrol.justification_final if exam_enrol.justification_final else ''
+                    "justification": _(exam_enrol.justification_final) if exam_enrol.justification_final else ''
                 })
             program['enrollments'] = enrollments
             programs.append(program)
+            programs = sorted(programs, key=lambda k: k['acronym'])
         learn_unit_year_dict['programs'] = programs
         learning_unit_years.append(learn_unit_year_dict)
+    learning_unit_years = sorted(learning_unit_years, key=lambda k: k['acronym'])
     data['learning_unit_years'] = learning_unit_years
     return data
+
+
+def _normalize_string(string):
+    """
+    Remove accents in the string passed in parameter.
+    For example : 'é - è' ==> 'e - e'  //  'àç' ==> 'ac'
+    :param string: The string to normalize.
+    :return: The normalized string
+    """
+    string = string.replace(" ", "")
+    return ''.join((c for c in unicodedata.normalize('NFD', string) if unicodedata.category(c) != 'Mn'))
 
 
 def sort_for_encodings(exam_enrollments):
@@ -354,8 +380,10 @@ def sort_for_encodings(exam_enrollments):
         acronym = off_enroll.offer_year.acronym
         last_name = off_enroll.student.person.last_name
         first_name = off_enroll.student.person.first_name
-        return "%s %s %s" %(acronym if acronym else '',
-                            last_name.upper() if last_name else '',
-                            first_name.upper() if first_name else '')
+        last_name = _normalize_string(last_name) if last_name else None
+        first_name = _normalize_string(first_name) if first_name else None
+        return "%s %s %s" % (acronym if acronym else '',
+                             last_name.upper() if last_name else '',
+                             first_name.upper() if first_name else '')
 
     return sorted(exam_enrollments, key=lambda k: _sort(k))
