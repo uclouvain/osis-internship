@@ -175,6 +175,7 @@ def internships_stud(request):
                                                 'all_organizations' : internship_organizations,
                                                 'organization_sort_value' : organization_sort_value,
                                                 'all_learning_unit_year' : all_learning_unit_year,
+                                                'selectable' : query[0].selectable,
                                                  })
 
 @login_required

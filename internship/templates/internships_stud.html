@@ -80,7 +80,12 @@
       </tbody>
   </table>
   <br/>
-  Choississez une spécialité pour voir vos choix déjà enregistrés.
+  Choississez une spécialité pour voir vos choix déjà enregistrés.<br/>
+  <span class="glyphicon glyphicon-ok" style="color:green"></span> :
+  Vous avez déjà effectué vos 4 choix pour cette spécialité.<br/>
+  <span class="glyphicon glyphicon-remove" style="color:red"></span> :
+  Vous n'avez pas encore effectué vos 4 choix pour cette spécialité.<br/>
+  {% if selectable == False %}<b><u>Les choix sont bloqués pour l'instant.</u></b>{%endif%}
   <div class="panel panel-default">
     <div class="panel-body">
         <ul class="nav nav-tabs">
@@ -89,7 +94,7 @@
               {%if luy.size = 4 %}
                 <span class="glyphicon glyphicon-ok" style="color:green"></span>
               {%else%}
-                <span class="glyphicon glyphicon-remove" style="color:red" font-size="1.2em"></span>
+                <span class="glyphicon glyphicon-remove" style="color:red"></span>
               {%endif%}
             {% endif %}{%endfor%}</a></li>
             <li><a data-toggle="tab" href="#tab_CH">{% trans 'Stage en Gériatrie'%}
