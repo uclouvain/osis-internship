@@ -27,21 +27,18 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 
-class Review(models.Model):
-    ADVICE_CHOICES = (
-        ('FAVORABLE', _('Favorable')),
-        ('CONDITIONAL', _('Conditional')),
-        ('UNFAVOURABLE', _('Unfavourable')))
-
-    REVIEW_STATUS = (
-        ('IN_PROGRESS', _('In progress')),
-        ('DONE', _('Done')))
-
-    mandate = models.ForeignKey('AssistantMandate')
-    reviewer = models.ForeignKey('Reviewer')
-    advice = models.CharField(max_length=20, choices=ADVICE_CHOICES)
-    status = models.CharField(max_length=10, choices=REVIEW_STATUS, null=True)
-    justification = models.TextField(null=True, blank=True)
-    remark = models.TextField(null=True, blank=True)
-    confidential = models.TextField(null=True, blank=True)
-    changed = models.DateTimeField(null=True)
+class Reviewer(models.Model):
+    
+    ROLE_CHOICES = (
+        ('PHD_SUPERVISOR', _('PhD Supervisor')),
+        ('SUPERVISION', _('Supervision')),
+        ('RESEARCH', _('Research')),
+        ('SECTOR_VICE_RECTOR', _('Sector Vice-Rector')))
+    
+    person = models.ForeignKey('base.Person')
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES)
+    structure = models.ForeignKey('base.Structure', blank=True, null=True)
+    
+    
+    def __str__(self):
+        return u"%s - %s" % (self.person, self.role)
