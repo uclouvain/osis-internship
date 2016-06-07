@@ -132,8 +132,6 @@ STATIC_URL = '/static/'
 
 # Authentication settings
 
-LOGIN_URL = reverse_lazy('login')
-LOGOUT_URL = reverse_lazy('logout')
 LOGIN_REDIRECT_URL = '/'
 
 FIXTURE_DIRS = (
