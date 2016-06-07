@@ -1119,3 +1119,12 @@ msgstr "Enrollments"
 
 msgid "incomplete"
 msgstr "Incomplete"
+
+msgid "succesfull_logout"
+msgstr "You are succesfully logout."
+
+msgid "redirect_to_login"
+msgstr "Click to reconnect"
+
+msgid "complete"
+msgstr "Complete"
