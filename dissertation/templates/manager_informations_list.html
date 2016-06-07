@@ -34,27 +34,32 @@
 {% block content %}
   <div class="page-header">
     <h2>{% trans 'teachers' %}</h2>
-
-  </div>
-  <div class="row">
-    <div class="col-md-6">
-      <a href="{% url 'manager_information_list_request' %}" id="lnk_manager_information_list_request" class="btn btn-default"
-      role="button" title="{% trans 'all_manager_information_list_not_respond'%}"><span class="glyphicon glyphicon-list"
-      aria-hidden="true"></span> {% trans 'manager_information_list_not_respond'%}</a>
   </div>
   <div class="panel panel-default">
     <div class="panel-body">
+        <div class="row">
+             <div class="col-md-12">
+                 <a href="{% url 'manager_informations' %}" id="lnk_manager_informations" class="btn btn-default"
+                   role="button" title="{% trans 'manager_informations'%}"><span class="glyphicon glyphicon-list"
+                   aria-hidden="true"></span> {% trans 'all_advisers'%}</a>
+                 <a href="{% url 'manager_information_list_request' %}" id="lnk_manager_information_list_request"
+                    class="btn btn-default" role="button" title="{% trans 'all_manager_information_list_not_respond'%}">
+                    <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
+                    {% trans 'manager_information_list_not_respond'%}</a>
+             </div>
+        </div>
+        <br>
       <table class="table table-hover">
-        <thead>
+        <tr>
           <th>{% trans 'adviser'%}</th>
           <th>{% trans 'adviser_type'%}</th>
           <th>{% trans 'available_by_email'%}</th>
           <th>{% trans 'available_by_phone'%}</th>
           <th>{% trans 'available_at_office'%}</th>
-        </thead>
+        </tr>
         {% for adviser in advisers %}
           <tr>
-            <td><a href="{% url 'manager_informations_detail' pk=adviser.pk %}">{{ adviser }}</td>
+            <td><a href="{% url 'manager_informations_detail' pk=adviser.pk %}">{{ adviser }}</a></td>
             <td>{{ adviser.type }}</td>
             <td>{{ adviser.available_by_email|yesno:"Yes,No" }}</td>
             <td>{{ adviser.available_by_phone|yesno:"Yes,No" }}</td>
