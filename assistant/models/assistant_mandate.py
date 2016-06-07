@@ -110,3 +110,5 @@ def find_mandate_by_id(mandate_id):
 
 def find_mandate_by_academic_assistant(assistant):
     return AssistantMandate.objects.get(assistant=assistant)  
+
+

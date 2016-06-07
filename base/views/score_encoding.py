@@ -409,7 +409,9 @@ def get_data_online(learning_unit_year_id, request):
             'is_coordinator': mdl.attribution.is_coordinator(request.user, learning_unit_year.learning_unit.id),
             'draft_scores_not_submitted': draft_scores_not_submitted,
             'number_session': exam_enrollments[0].session_exam.number_session if len(exam_enrollments) > 0 else _('none'),
-            'tutors': mdl.tutor.find_by_learning_unit(learning_unit_year.learning_unit_id)}
+            'tutors': mdl.tutor.find_by_learning_unit(learning_unit_year.learning_unit_id),
+            'exam_enrollments_encoded': len([e for e in exam_enrollments if e.score_final is not None or e.justification_final]),
+            'total_exam_enrollments': len(exam_enrollments)}
 
 
 def get_data_online_double(learning_unit_year_id, request):
