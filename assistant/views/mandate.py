@@ -30,11 +30,7 @@ from assistant.forms import MandateForm, StructureInLineFormSet
 from base.views import layout
 from assistant.models import assistant_mandate, academic_assistant, mandate_structure
 from base import models as mdl
-from base.views.layout import render_to_response
-from django.http.response import HttpResponseRedirect
-from base.views.common import academic_year
 from assistant.models.mandate_structure import MandateStructure
-from django import forms
 
 
 

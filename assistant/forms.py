@@ -48,9 +48,18 @@ class MandateForm(ModelForm):
         required = True,
         max_length=12,
         strip = True)
+    contract_duration = forms.CharField(
+        required = True,
+        max_length=30,
+        strip = True)
+    
+    contract_duration_fte = forms.CharField(
+        required = True,
+        max_length=30,
+        strip = True)
     class Meta:
         model = mdl.assistant_mandate.AssistantMandate
-        fields = ('comment','absences','other_status','renewal_type','assistant_type','sap_id')
+        fields = ('comment','absences','other_status','renewal_type','assistant_type','sap_id','contract_duration','contract_duration_fte')
 
     
 class MandateStructureForm(ModelForm):
