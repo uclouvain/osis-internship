@@ -1130,3 +1130,6 @@ msgstr "Inscriptions"
 msgid "incomplete"
 msgstr "Incomplet"
 
+msgid "complete"
+msgstr "Complet"
+

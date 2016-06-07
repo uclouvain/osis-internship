@@ -1119,3 +1119,6 @@ msgstr "Enrollments"
 
 msgid "incomplete"
 msgstr "Incomplete"
+
+msgid "complete"
+msgstr "Complete"
