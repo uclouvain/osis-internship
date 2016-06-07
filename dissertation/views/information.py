@@ -53,42 +53,51 @@ def informations(request):
 
         queryset = DissertationRole.objects.all()
 
-        count_advisers = queryset.filter(Q(adviser=adviser)& Q(dissertation__active=True)).count()
+        count_advisers = queryset.filter(Q(adviser=adviser) & Q(dissertation__active=True)).count()
 
         count_advisers_pro = queryset.filter(Q(adviser=adviser) &
-        Q(status='PROMOTEUR')&
-        Q(dissertation__active=True)).exclude(Q(dissertation__status='DRAFT')|
-        Q(dissertation__status='ENDED')|Q(dissertation__status='DEFENDED')).count()
+                                             Q(status='PROMOTEUR') &
+                                             Q(dissertation__active=True)).exclude(Q(dissertation__status='DRAFT') |
+                                                                                   Q(dissertation__status='ENDED') |
+                                                                                   Q(dissertation__status='DEFENDED')
+                                                                                   ).count()
 
         count_advisers_pro_request = queryset.filter(
-        Q(adviser=adviser) & Q(status='PROMOTEUR')&
-        Q(dissertation__status='DIR_SUBMIT')& Q(dissertation__active=True)).count()
+            Q(adviser=adviser) & Q(status='PROMOTEUR') &
+            Q(dissertation__status='DIR_SUBMIT') & Q(dissertation__active=True)).count()
 
-        count_advisers_copro= queryset.filter(Q(adviser=adviser) &
-        Q(status='CO_PROMOTEUR')& Q(dissertation__active=True)).exclude(
-        Q(dissertation__status='DRAFT')|Q(dissertation__status='ENDED')|
-        Q(dissertation__status='DEFENDED')).count()
+        count_advisers_copro = queryset.filter(Q(adviser=adviser) &
+                                               Q(status='CO_PROMOTEUR') & Q(dissertation__active=True)).exclude(
+            Q(dissertation__status='DRAFT') | Q(dissertation__status='ENDED') |
+            Q(dissertation__status='DEFENDED')).count()
 
-        count_advisers_reader= queryset.filter(Q(adviser=adviser) &
-        Q(status='READER')& Q(dissertation__active=True)).exclude(Q(dissertation__status='DRAFT')|
-        Q(dissertation__status='ENDED')|Q(dissertation__status='DEFENDED')).count()
+        count_advisers_reader = queryset.filter(Q(adviser=adviser) &
+                                                Q(status='READER') & Q(dissertation__active=True)).exclude(
+            Q(dissertation__status='DRAFT') |
+            Q(dissertation__status='ENDED') | Q(dissertation__status='DEFENDED')).count()
 
         advisers_pro = queryset.filter(Q(adviser=adviser) &
-        Q(status='PROMOTEUR')&
-        Q(dissertation__active=True)).exclude(Q(dissertation__status='DRAFT')|
-        Q(dissertation__status='ENDED')|Q(dissertation__status='DEFENDED'))
+                                       Q(status='PROMOTEUR') &
+                                       Q(dissertation__active=True)).exclude(Q(dissertation__status='DRAFT') |
+                                                                             Q(dissertation__status='ENDED') |
+                                                                             Q(dissertation__status='DEFENDED'))
 
-        tab_offer_count={}
+        tab_offer_count = {}
         for dissertaion_role_pro in advisers_pro:
             if dissertaion_role_pro.dissertation.offer_year_start.offer.title in tab_offer_count:
-                tab_offer_count[dissertaion_role_pro.dissertation.offer_year_start.offer.title]= tab_offer_count[str(dissertaion_role_pro.dissertation.offer_year_start.offer.title)]+1
+                tab_offer_count[dissertaion_role_pro.dissertation.offer_year_start.offer.title] = \
+                    tab_offer_count[str(dissertaion_role_pro.dissertation.offer_year_start.offer.title)] + 1
             else:
-                tab_offer_count[dissertaion_role_pro.dissertation.offer_year_start.offer.title]=1
+                tab_offer_count[dissertaion_role_pro.dissertation.offer_year_start.offer.title] = 1
 
     return render(request, "informations.html", {'adviser': adviser,
-    'count_advisers':count_advisers,'count_advisers_copro':count_advisers_copro,
-    'count_advisers_pro':count_advisers_pro, 'count_advisers_reader':count_advisers_reader,
-    'count_advisers_pro_request':count_advisers_pro_request,'tab_offer_count':tab_offer_count})
+                                                 'count_advisers': count_advisers,
+                                                 'count_advisers_copro': count_advisers_copro,
+                                                 'count_advisers_pro': count_advisers_pro,
+                                                 'count_advisers_reader': count_advisers_reader,
+                                                 'count_advisers_pro_request': count_advisers_pro_request,
+                                                 'tab_offer_count': tab_offer_count})
+
 
 @login_required
 def informations_edit(request):
@@ -105,69 +114,77 @@ def informations_edit(request):
 
     return render(request, "informations_edit.html", {'form': form, 'person': person})
 
+
 @login_required
 @user_passes_test(is_manager)
 def manager_informations(request):
     advisers = Adviser.find_all().filter(type='PRF')
     return render(request, 'manager_informations_list.html', {'advisers': advisers})
 
+
 @login_required
 @user_passes_test(is_manager)
 def manager_informations_detail(request, pk):
     adviser = get_object_or_404(Adviser, pk=pk)
     queryset = DissertationRole.objects.all()
-    count_advisers = queryset.filter(Q(adviser=adviser)& Q(dissertation__active=True)).count()
+    count_advisers = queryset.filter(Q(adviser=adviser) & Q(dissertation__active=True)).count()
     count_advisers_pro = queryset.filter(
-    Q(adviser=adviser) & Q(status='PROMOTEUR')&
-    Q(dissertation__active=True)).exclude(Q(dissertation__status='DRAFT')|
-    Q(dissertation__status='ENDED')|Q(dissertation__status='DEFENDED')).count()
+        Q(adviser=adviser) & Q(status='PROMOTEUR') &
+        Q(dissertation__active=True)).exclude(Q(dissertation__status='DRAFT') |
+                                              Q(dissertation__status='ENDED') |
+                                              Q(dissertation__status='DEFENDED')).count()
 
     count_advisers_pro_request = queryset.filter(
-    Q(adviser=adviser) & Q(status='PROMOTEUR')&
-    Q(dissertation__status='DIR_SUBMIT')& Q(dissertation__active=True)).count()
+        Q(adviser=adviser) & Q(status='PROMOTEUR') &
+        Q(dissertation__status='DIR_SUBMIT') & Q(dissertation__active=True)).count()
 
-    advisers_copro= queryset.filter(
-    Q(adviser=adviser) & Q(status='CO_PROMOTEUR')&
-    Q(dissertation__active=True)).exclude(
-    Q(dissertation__status='DRAFT')|Q(dissertation__status='ENDED')|
-    Q(dissertation__status='DEFENDED'))
-    count_advisers_copro=advisers_copro.count()
-    tab_offer_count_copro={}
+    advisers_copro = queryset.filter(
+        Q(adviser=adviser) & Q(status='CO_PROMOTEUR') &
+        Q(dissertation__active=True)).exclude(
+        Q(dissertation__status='DRAFT') | Q(dissertation__status='ENDED') |
+        Q(dissertation__status='DEFENDED'))
+    count_advisers_copro = advisers_copro.count()
+    tab_offer_count_copro = {}
+    # parcourt les dissertation_role où l'adviser est co_promoteur en excluant les DRAFT-ENDED-DEFENDED
     for dissertaion_role_copro in advisers_copro:
         if dissertaion_role_copro.dissertation.offer_year_start.offer.title in tab_offer_count_copro:
-            tab_offer_count_copro[dissertaion_role_read.dissertation.offer_year_start.offer.title]=tab_offer_count_copro[str(dissertaion_role_copro.dissertation.offer_year_start.offer.title)]+1
+            tab_offer_count_copro[dissertaion_role_copro.dissertation.offer_year_start.offer.title] = \
+                tab_offer_count_copro[str(dissertaion_role_copro.dissertation.offer_year_start.offer.title)] + 1
         else:
-            tab_offer_count_copro[dissertaion_role_read.dissertation.offer_year_start.offer.title]=1
+            tab_offer_count_copro[dissertaion_role_copro.dissertation.offer_year_start.offer.title] = 1
 
-    advisers_reader= queryset.filter(Q(adviser=adviser) &
-    Q(status='READER')& Q(dissertation__active=True)).exclude(
-    Q(dissertation__status='DRAFT')|
-    Q(dissertation__status='ENDED')|Q(dissertation__status='DEFENDED'))
-    count_advisers_reader=advisers_reader.count()
-    tab_offer_count_read={}
+    advisers_reader = queryset.filter(Q(adviser=adviser) &
+                                      Q(status='READER') & Q(dissertation__active=True)).exclude(
+        Q(dissertation__status='DRAFT') |
+        Q(dissertation__status='ENDED') | Q(dissertation__status='DEFENDED'))
+    count_advisers_reader = advisers_reader.count()
+    tab_offer_count_read = {}
     for dissertaion_role_read in advisers_reader:
         if dissertaion_role_read.dissertation.offer_year_start.offer.title in tab_offer_count_read:
-            tab_offer_count_read[dissertaion_role_read.dissertation.offer_year_start.offer.title]=tab_offer_count_read[str(dissertaion_role_read.dissertation.offer_year_start.offer.title)]+1
+            tab_offer_count_read[dissertaion_role_read.dissertation.offer_year_start.offer.title] = \
+                tab_offer_count_read[str(dissertaion_role_read.dissertation.offer_year_start.offer.title)] + 1
         else:
-            tab_offer_count_read[dissertaion_role_read.dissertation.offer_year_start.offer.title]=1
+            tab_offer_count_read[dissertaion_role_read.dissertation.offer_year_start.offer.title] = 1
 
     advisers_pro = queryset.filter(Q(adviser=adviser) &
-    Q(status='PROMOTEUR')&
-    Q(dissertation__active=True)).exclude(Q(dissertation__status='DRAFT')|
-    Q(dissertation__status='ENDED')|Q(dissertation__status='DEFENDED'))
-    tab_offer_count_pro={}
+                                   Q(status='PROMOTEUR') &
+                                   Q(dissertation__active=True)).exclude(Q(dissertation__status='DRAFT') |
+                                                                         Q(dissertation__status='ENDED') |
+                                                                         Q(dissertation__status='DEFENDED'))
+    tab_offer_count_pro = {}
     for dissertaion_role_pro in advisers_pro:
         if dissertaion_role_pro.dissertation.offer_year_start.offer.title in tab_offer_count_pro:
-            tab_offer_count_pro[dissertaion_role_pro.dissertation.offer_year_start.offer.title]=tab_offer_count_pro[str(dissertaion_role_pro.dissertation.offer_year_start.offer.title)]+1
+            tab_offer_count_pro[dissertaion_role_pro.dissertation.offer_year_start.offer.title] = \
+                tab_offer_count_pro[str(dissertaion_role_pro.dissertation.offer_year_start.offer.title)] + 1
         else:
-            tab_offer_count_pro[dissertaion_role_pro.dissertation.offer_year_start.offer.title]=1
+            tab_offer_count_pro[dissertaion_role_pro.dissertation.offer_year_start.offer.title] = 1
 
     return render(request, 'manager_informations_detail.html',
-    {'adviser': adviser,'count_advisers':count_advisers,'count_advisers_copro':count_advisers_copro,
-    'count_advisers_pro':count_advisers_pro, 'count_advisers_reader':count_advisers_reader,
-    'count_advisers_pro_request':count_advisers_pro_request,
-    'tab_offer_count_pro':tab_offer_count_pro,'tab_offer_count_read':tab_offer_count_read,
-    'tab_offer_count_copro':tab_offer_count_copro})
+                  {'adviser': adviser, 'count_advisers': count_advisers, 'count_advisers_copro': count_advisers_copro,
+                   'count_advisers_pro': count_advisers_pro, 'count_advisers_reader': count_advisers_reader,
+                   'count_advisers_pro_request': count_advisers_pro_request,
+                   'tab_offer_count_pro': tab_offer_count_pro, 'tab_offer_count_read': tab_offer_count_read,
+                   'tab_offer_count_copro': tab_offer_count_copro})
 
 
 @login_required
@@ -197,10 +214,9 @@ def manager_information_search(request):
 @login_required
 @user_passes_test(is_manager)
 def manager_information_list_request(request):
-
     queryset = DissertationRole.objects.all()
-    advisers_need_request=queryset.filter(Q(status='PROMOTEUR')&
-    Q(dissertation__status='DIR_SUBMIT')& Q(dissertation__active=True))
-    advisers_need_request=advisers_need_request.order_by('adviser')
+    advisers_need_request = queryset.filter(Q(status='PROMOTEUR') &
+                                            Q(dissertation__status='DIR_SUBMIT') & Q(dissertation__active=True))
+    advisers_need_request = advisers_need_request.order_by('adviser')
 
     return render(request, "manager_informations_list_request.html", {'advisers_need_request': advisers_need_request})

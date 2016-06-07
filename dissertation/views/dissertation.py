@@ -84,12 +84,14 @@ def manager_dissertations_detail(request, pk):
     adviser = Adviser.find_by_person(person)
     count_dissertation_role = DissertationRole.objects.filter(dissertation=dissertation).count()
     if count_dissertation_role < 1:
-        pro = DissertationRole(status='PROMOTEUR', adviser=dissertation.proposition_dissertation.author, dissertation=dissertation)
+        pro = DissertationRole(status='PROMOTEUR', adviser=dissertation.proposition_dissertation.author,
+                               dissertation=dissertation)
         pro.save()
     dissertation_roles = DissertationRole.objects.filter(dissertation=dissertation)
     offer_proposition = OfferProposition.objects.get(offer=dissertation.offer_year_start.offer)
     return render(request, 'manager_dissertations_detail.html',
-                  {'dissertation': dissertation, 'adviser': adviser, 'dissertation_roles':dissertation_roles, 'count_dissertation_role':count_dissertation_role, 'offer_proposition':offer_proposition})
+                  {'dissertation': dissertation, 'adviser': adviser, 'dissertation_roles': dissertation_roles,
+                   'count_dissertation_role': count_dissertation_role, 'offer_proposition': offer_proposition})
 
 
 @login_required
@@ -147,6 +149,7 @@ def manager_dissertations_list(request):
     return render(request, 'manager_dissertations_list.html',
                   {'dissertations': dissertations})
 
+
 @login_required
 @user_passes_test(is_manager)
 def manager_dissertations_print(request):
@@ -156,18 +159,17 @@ def manager_dissertations_print(request):
     dest_filename = 'IMPORT_dissertaion_.xlsx'
     ws1 = wb.active
     ws1.title = "dissertation"
-    for dissertation in dissertation:
+    for dissertation in dissertations:
         queryset = DissertationRole.objects.filter(Q(dissertation=dissertation))
         queryset_pro = queryset.object.filter(Q(status='PROMOTEUR'))
         queryset_copro = queryset.object.filter(Q(status='CO_PROMOTEUR'))
         queryset_reader = queryset.object.filter(Q(status='READER'))
 
-        ws1.append([dissertation.creation_date,dissertation.author.student.person.first_name,
-        dissertation.author.student.person.middle_name,dissertation.author.student.person.last_name,
-        dissertation.author.student.person.global_id,dissertation.title,
-        dissertation.status,dissertation.offer_year_start,queryset_pro.adviser,queryset_copro.adviser,queryset_reader[0].adviser,queryset_reader[1].adviser])
-
-
+        ws1.append([dissertation.creation_date, dissertation.author.student.person.first_name,
+                    dissertation.author.student.person.middle_name, dissertation.author.student.person.last_name,
+                    dissertation.author.student.person.global_id, dissertation.title,
+                    dissertation.status, dissertation.offer_year_start, queryset_pro.adviser, queryset_copro.adviser,
+                    queryset_reader[0].adviser, queryset_reader[1].adviser])
 
     response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.ms-excel')
     return response
@@ -192,32 +194,31 @@ def manager_dissertations_new(request):
 @user_passes_test(is_manager)
 def manager_dissertations_search(request):
     dissertations = Dissertation.search(terms=request.GET['search']).filter(Q(active=True))
-    xlsx=False
+    xlsx = False
     if 'bt_xlsx' in request.GET:
         wb = Workbook(encoding='utf-8')
         dest_filename = 'IMPORT_dissertaion_.xlsx'
         ws1 = wb.active
         ws1.title = "dissertation"
-        ws1.append(['Date_de_création','Students','Dissertation_title',
-        'Status','Offer_year_start','offer_year_start_short'])
+        ws1.append(['Date_de_création', 'Students', 'Dissertation_title',
+                    'Status', 'Offer_year_start', 'offer_year_start_short'])
         for dissertation in dissertations:
             queryset = DissertationRole.objects.filter(Q(dissertation=dissertation))
             queryset_pro = queryset.filter(Q(status='PROMOTEUR'))
             queryset_copro = queryset.filter(Q(status='CO_PROMOTEUR'))
             queryset_reader = queryset.filter(Q(status='READER'))
 
-
             ws1.append([dissertation.creation_date,
-            str(dissertation.author),
-            dissertation.title,
-            dissertation.status,
-            dissertation.offer_year_start.title,
-            dissertation.offer_year_start.title_short])
+                        str(dissertation.author),
+                        dissertation.title,
+                        dissertation.status,
+                        dissertation.offer_year_start.title,
+                        dissertation.offer_year_start.title_short])
 
         response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.ms-excel')
         return response
     return render(request, "manager_dissertations_list.html",
-                  {'dissertations': dissertations,'xlsx':xlsx})
+                  {'dissertations': dissertations, 'xlsx': xlsx})
 
 
 @login_required
@@ -259,10 +260,11 @@ def manager_dissertations_to_dir_submit(request, pk):
 def manager_dissertations_to_dir_ok(request, pk):
     dissertation = get_object_or_404(Dissertation, pk=pk)
     offer_proposition = OfferProposition.objects.get(offer=dissertation.offer_year_start.offer)
-    if offer_proposition.validation_commission_exists == True and dissertation.status == 'DIR_SUBMIT':
+    if offer_proposition.validation_commission_exists and dissertation.status == 'DIR_SUBMIT':
         dissertation.status = 'COM_SUBMIT'
         dissertation.save()
-    elif offer_proposition.evaluation_first_year == True and ( dissertation.status == 'DIR_SUBMIT' or dissertation.status == 'COM_SUBMIT'):
+    elif offer_proposition.evaluation_first_year and (
+                    dissertation.status == 'DIR_SUBMIT' or dissertation.status == 'COM_SUBMIT'):
         dissertation.status = 'EVA_SUBMIT'
         dissertation.save()
     elif dissertation.status == 'EVA_SUBMIT':
@@ -330,7 +332,8 @@ def dissertations_new(request):
 def dissertations_search(request):
     person = mdl.person.find_by_user(request.user)
     adviser = Adviser.find_by_person(person)
-    dissertations = Dissertation.search(terms=request.GET['search']).filter(Q(proposition_dissertation__author=adviser) & Q(active=True))
+    dissertations = Dissertation.search(terms=request.GET['search']).filter(
+        Q(proposition_dissertation__author=adviser) & Q(active=True))
 
     return render(request, "dissertations_list.html",
                   {'dissertations': dissertations})
