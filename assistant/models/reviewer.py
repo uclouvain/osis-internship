@@ -34,7 +34,7 @@ class Reviewer(models.Model):
         ('SUPERVISION', _('Supervision')),
         ('RESEARCH', _('Research')),
         ('SECTOR_VICE_RECTOR', _('Sector Vice-Rector')))
-    
+     
     person = models.ForeignKey('base.Person')
     role = models.CharField(max_length=20, choices=ROLE_CHOICES)
     structure = models.ForeignKey('base.Structure', blank=True, null=True)
