@@ -41,7 +41,9 @@ def assistant_pst_part1(request):
     assistant_birthday = find_by_user(request.user).birth_date
     assistant_courses = program_manager.find_by_person(person.Person(academic_assistant.id))
     mandate = find_mandate_by_academic_assistant(academic_assistant)
-    form = AssistantFormPart1(initial={'phd_inscription_date': academic_assistant.phd_inscription_date,
+    assistant_faculty = mandate_structure.MandateStructure.objects.filter(assistant_mandate=mandate)
+    form = AssistantFormPart1(initial={'inscription': academic_assistant.inscription,
+                                       'phd_inscription_date': academic_assistant.phd_inscription_date,
                                        'confirmation_test_date': academic_assistant.confirmation_test_date,
                                        'thesis_date': academic_assistant.thesis_date,
                                        'supervisor': academic_assistant.supervisor,
@@ -53,6 +55,7 @@ def assistant_pst_part1(request):
                                                          'addresses': addresses_pst,
                                                          'courses': assistant_courses,
                                                          'mandate': mandate,
+                                                         'faculty': assistant_faculty,
                                                          'form': form}) 
     
 @login_required

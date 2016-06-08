@@ -46,7 +46,7 @@
     <label>{% trans 'Address' %}</label> :<p>
     </div>
     <div class="col-xs-6 col-sm-6">
-      {{assistant.person}}<p>
+      <b>{{assistant.person}}</b><p>
       {{birthday}}<p>
       {% for address in addresses %}
       	{{address.location}} - {{address.postal_code}} {{address.city}}<br>{{address.country}}
@@ -62,23 +62,20 @@
   <b>{% trans 'Contract' %}</b><p>
   <div class="row">
     <div class="col-xs-6 col-sm-3">
-      {% trans 'Faculty' %} :<br>
-      {% trans 'Institute' %} :<br>
+      {% trans 'Faculty/Institute' %} :<br>
       {% trans 'Full time equivalent' %} :<br>
       {% trans 'Date of first nomination' %} :<br>
       {% trans 'Field' %} :<br>
       {% trans 'Grade' %} :<br>
     </div>
     <div class="col-xs-6 col-sm-9">
-      Data1<br>
-      Data2<br>
-      {{assistant.fulltime_equivalent}}<br>
-      {{assistant.entry_date}}<br>
-      Data5<br>
-      Data6<br>
-      {% for course in courses %}
-      {{ course }}
-      {% endfor %}</p>
+      {% for course in courses.all|slice:"1" %}
+        {{ course.offer_year.entity_administration }}<br>
+      {% endfor %}  
+      {{mandate.fulltime_equivalent}}<br>
+      {{mandate.entry_date}}<br>
+      {{mandate.assistant_type}}<br>
+      {{mandate.grade}}</p>
     </div>
    </div>
   <hr>
@@ -88,7 +85,15 @@
       <div class="row">
         <div class="col-xs-6 col-sm-5">
           {% trans 'Registered Ph.D.' %} :
-            {{ form.inscription }}
+          <label class="radio-inline">
+          <input type="radio" name="inscription" id="id_inscription_0" value="{{assistant.inscription}}" onChange="disablefield();">{% trans 'Yes' %}
+          </label>
+          <label class="radio-inline">
+          <input type="radio" name="inscription" id="id_inscription_1" value="{{assistant.inscription}}" onChange="disablefield();">{% trans 'No' %}
+          </label>
+          <label class="radio-inline">
+          <input type="radio" name="inscription" id="id_inscription_2" value="{{assistant.inscription}}" onChange="disablefield();">{% trans 'In_progress' %}
+          </label>                 
         </div>
         <div class="col-xs-6 col-sm-7">
           {% trans 'Expected registering date' %} : 
@@ -100,7 +105,8 @@
            {% trans 'Supervisor email address' %} :
         </div>
         <div class="col-xs-6 col-sm-4">
-          {{ form.supervisor }}&nbsp;
+          <input  type="text" id="supervisor_email" name="supervisor" placeholder="firstname.lastname@uclouvain.be" size="30" value="{{assistant.supervisor}}">&nbsp;
+
         </div>
         <div class="col-xs-6 col-sm-3">
           <label class="checkbox-inline">
