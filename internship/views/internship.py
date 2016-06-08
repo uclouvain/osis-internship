@@ -135,6 +135,7 @@ def internships_stud(request):
             if internship.organization == choice.organization and \
                 internship.learning_unit_year == choice.learning_unit_year :
                     choice.maximum_enrollments =  internship.maximum_enrollments
+                    choice.selectable =  internship.selectable
                     query[index] = 0
             index += 1
         query = [x for x in query if x != 0]
@@ -182,17 +183,38 @@ def internships_stud(request):
 def internships_save(request):
     student = mdl.student.find_by(person_username=request.user)
     InternshipChoice.objects.filter(student=student).delete()
-
     form = InternshipChoiceForm(data=request.POST)
-
+    preference_list= list()
     if request.POST['organization']:
         organization_list = request.POST.getlist('organization')
 
     if request.POST['learning_unit_year']:
         learning_unit_year_list = request.POST.getlist('learning_unit_year')
 
-    if request.POST['preference']:
-        preference_list = request.POST.getlist('preference')
+    if request.POST['preferenceCH']:
+        for pref in request.POST.getlist('preferenceCH') :
+            preference_list.append(pref)
+
+    #Delete the comment when internship in Geriatrie will be imported
+    #if request.POST['preferenceGE']:
+    #    for pref in request.POST.getlist('preferenceGE') :
+    #        preference_list.append(pref)
+
+    if request.POST['preferenceGO']:
+        for pref in request.POST.getlist('preferenceGO') :
+            preference_list.append(pref)
+
+    if request.POST['preferenceMI']:
+        for pref in request.POST.getlist('preferenceMI') :
+            preference_list.append(pref)
+
+    if request.POST['preferencePE']:
+        for pref in request.POST.getlist('preferencePE') :
+            preference_list.append(pref)
+
+    if request.POST['preferenceUR']:
+        for pref in request.POST.getlist('preferenceUR') :
+            preference_list.append(pref)
 
     index = 0
     for r in preference_list:
