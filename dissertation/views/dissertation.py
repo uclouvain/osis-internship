@@ -39,6 +39,7 @@ from openpyxl import Workbook
 from openpyxl.compat import range
 from openpyxl.cell import get_column_letter
 from django.http import HttpResponse
+import time
 
 
 # Used by decorator @user_passes_test(is_manager) to secure manager views
@@ -196,26 +197,51 @@ def manager_dissertations_search(request):
     dissertations = Dissertation.search(terms=request.GET['search']).filter(Q(active=True))
     xlsx = False
     if 'bt_xlsx' in request.GET:
+
+        filename = 'IMPORT_dissertation_'+time.strftime("%Y-%m-%d %H:%M")+'.xlsx'
         wb = Workbook(encoding='utf-8')
-        dest_filename = 'IMPORT_dissertaion_.xlsx'
         ws1 = wb.active
         ws1.title = "dissertation"
         ws1.append(['Date_de_création', 'Students', 'Dissertation_title',
-                    'Status', 'Offer_year_start', 'offer_year_start_short'])
+                    'Status', 'Offer_year_start', 'offer_year_start_short','promoteur','copromoteur','lecteur1','lecteur2'])
         for dissertation in dissertations:
             queryset = DissertationRole.objects.filter(Q(dissertation=dissertation))
+            queryset_pro={}
+            queryset_copro={}
+            queryset_reader={}
+
             queryset_pro = queryset.filter(Q(status='PROMOTEUR'))
             queryset_copro = queryset.filter(Q(status='CO_PROMOTEUR'))
             queryset_reader = queryset.filter(Q(status='READER'))
+
+            if queryset_pro.count() > 0:
+                pro_name=str(queryset_pro[0].adviser)
+            else:
+                pro_name='none'
+
+            if queryset_copro.count() > 0:
+                copro_name=str(queryset_copro[0].adviser)
+            else:
+                copro_name='none'
+            if  queryset_reader.count() >0:
+                reader1_name=str(queryset_reader[0].adviser)
+                if queryset_reader.count() >1:
+                    reader2_name=str(queryset_reader[1].adviser)
+                else:
+                    reader2_name='none'
+            else:
+                reader1_name='none'
+
 
             ws1.append([dissertation.creation_date,
                         str(dissertation.author),
                         dissertation.title,
                         dissertation.status,
                         dissertation.offer_year_start.title,
-                        dissertation.offer_year_start.title_short])
+                        dissertation.offer_year_start.title_short,pro_name,copro_name,reader1_name,reader2_name])
 
         response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.ms-excel')
+        response['Content-Disposition'] = "attachment; filename="+filename
         return response
     return render(request, "manager_dissertations_list.html",
                   {'dissertations': dissertations, 'xlsx': xlsx})
