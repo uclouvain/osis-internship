@@ -135,7 +135,7 @@
         </div>
       </div>
       <div class="row">
-          <div class="col-md-9">
+          <div class="col-md-12">
               <div class="panel panel-default">
                   <div class="panel-heading">
                     <h3 class="panel-title">{% trans 'stats' %}</h3>
@@ -183,10 +183,24 @@
                             {{ count_advisers_reader }}
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                          <div id="chart_div"></div>
+                        </div>
+                        <div class="col-md-4">
+                          <div id="chart_div2"></div>
+                        </div>
+                        <div class="col-md-4">
+                          <div id="chart_div3"></div>
+                        </div>
+                      </div>
                   </div>
               </div>
           </div>
-          <div class="col-md-3">
+
+      </div>
+      <div class="row">
+            <div class="col-md-3">
               <div class="panel panel-default">
                   <div class="panel-heading">
                     <h3 class="panel-title">{% trans 'photo' %}</h3>
@@ -195,34 +209,21 @@
                       <img src="http://ultra16.sipr.ucl.ac.be/photos/photos_cp/photos/image{{ adviser.person.global_id |get_digit:"4" }}{{ adviser.person.global_id |get_digit:"3" }}/{{ adviser.person.global_id }}.jpg"  width="50%"/>
                   </div>
               </div>
-          </div>
-      </div>
-      <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">{% trans 'actions' %}</h3>
-        </div>
-        <div class="panel-body">
-          <div class="row">
-            <div class="col-md-12">
-                <a href="{% url 'manager_informations_edit' pk=adviser.pk %}" id="lnk_informations_edit" class="btn btn-default btn-primary"
-                role="button" title="{% trans 'edit_my_informations'%}"><span class="glyphicon glyphicon-edit"
-                aria-hidden="true"></span> {% trans 'edit_adviser' %}</a>
+            </div>
+            <div class="col-md-9">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{% trans 'actions' %}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <a href="{% url 'manager_informations_edit' pk=adviser.pk %}" id="lnk_informations_edit"
+                           class="btn btn-default btn-primary" role="button" title="{% trans 'edit_my_informations'%}">
+                            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                            {% trans 'edit_adviser' %}
+                        </a>
             </div>
           </div>
         </div>
-      </div>
-      <div class="panel-default">
-          <div class="row">
-            <div class="col-md-4">
-              <div id="chart_div"></div>
-            </div>
-            <div class="col-md-4">
-              <div id="chart_div2"></div>
-            </div>
-            <div class="col-md-4">
-              <div id="chart_div3"></div>
-            </div>
-          </div>
       </div>
     </div>
   </div>
