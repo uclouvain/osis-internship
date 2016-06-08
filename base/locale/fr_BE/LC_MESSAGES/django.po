@@ -1120,6 +1120,25 @@ msgstr "Cet étudiant possède plusieurs inscriptions au même examen "
 msgid "justification_invalid"
 msgstr "Justification invalide"
 
+msgid "outside_scores_encodings_period"
+msgstr "Vous êtes en dehors de la période d'encodage de notes: la dernière session d'examens est fermée depuis le %s."
+
+msgid "offer_year_calendar_academic_calendar_start_date_error"
+msgstr "La date de début de l'encodage des notes de votre programme ne peut pas être antérieure à la date d'ouverture "
+       "de l'encodage des notes du calendrier académique"
+
+msgid "offer_year_calendar_academic_calendar_end_date_error"
+msgstr "La date de fin de l'encodage des notes de votre programme ne peut pas être ultérieure à la date de fermeture "
+       "de l'encodage des notes du calendrier académique"
+
+msgid "academic_calendar_offer_year_calendar_start_date_error"
+msgstr "La date d'ouverture de l'encodage des notes du calendrier académique ne peut pas être supérieure au %s "
+       "(date de début de l'encodage des notes du programme '%s')"
+
+msgid "academic_calendar_offer_year_calendar_end_date_error"
+msgstr "La date de fermeture de l'encodage des notes du calendrier académique ne peut pas être inférieure au %s "
+       "(date de fin de l'encodage des notes du programme '%s')"
+
 msgid "more_than_one_learning_unit_error"
 msgstr "Vous avez encodé des notes pour plusieurs unités d'enseignements dans votre fichier excel "
        "(colonne 'Unité d'enseignement'). Veillez à ne faire qu'un seul fichier excel par unité d'enseignement."
