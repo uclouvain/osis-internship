@@ -1130,3 +1130,11 @@ msgstr "Inscriptions"
 msgid "incomplete"
 msgstr "Incomplet"
 
+msgid "succesfull_logout"
+msgstr "Vous êtes à présent déconnecté."
+
+msgid "redirect_to_login"
+msgstr "Cliquez pour vous reconnectez"
+
+msgid "complete"
+msgstr "Complet"

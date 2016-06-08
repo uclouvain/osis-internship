@@ -29,7 +29,6 @@ from django.forms import ModelForm, Textarea
 from assistant import models as mdl
 from base.models import structure 
 from django.forms.models import inlineformset_factory
-from idlelib.AutoComplete import AutoComplete
 
 
 class MandateForm(ModelForm):

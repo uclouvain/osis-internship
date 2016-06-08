@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -23,25 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
-from django.db import models
-
-
-class MandateStructure(models.Model):
-    assistant_mandate = models.ForeignKey('AssistantMandate')
-    structure = models.ForeignKey('base.Structure')
-
-    @property
-    def name(self):
-        return self.__str__()
-
-    def __str__(self):
-        return u"%s - %s" % (self.assistant_mandate.assistant, self.structure.acronym)
-
-def find_by_mandate(mandate):
-    return MandateStructure.objects.filter(assistant_mandate=mandate) 
+from django.conf import settings
+from django.shortcuts import redirect, render
 
 
-def find_by_mandate_and_type(mandate, struct_type):
-    return MandateStructure.objects.filter(assistant_mandate=mandate, structure__type = struct_type) 
+def login(request):
+    return redirect(settings.CURRENT_URL)
+
+
+def log_out(request):
+    return redirect(settings.SERVER_LOGOUT_URL)
+
 
