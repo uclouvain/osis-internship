@@ -119,7 +119,7 @@ urlpatterns = [
         name='send_message_again'),
     url(r'^messages/messages_history/search$', message.find_messages_history, name="messages_history_search"),
 
-    url(r'^my_osis/$',my_osis.my_osis_index,name="myosis"),
+    url(r'^my_osis/$',my_osis.my_osis_index,name="my_osis"),
     url(r'^my_osis/my_messages/$',my_osis.my_messages_index,name="my_messages"),
     url(r'^my_osis/my_messages/read/([0-9]+)/$', my_osis.read_message,"read_my_message"),
     url(r'^my_osis/my_messages/delete/([0-9]+)/$', my_osis.delete_from_my_messages, "delete_my_message"),
