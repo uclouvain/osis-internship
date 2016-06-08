@@ -32,7 +32,6 @@ from django.shortcuts import redirect
 from django.utils import translation
 from base import models as mdl
 from . import layout
-from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -109,35 +108,6 @@ def data_maintenance(request):
 @login_required
 def academic_year(request):
     return layout.render(request, "academic_year.html", {'section': 'academic_year'})
-
-
-@login_required
-def profile(request):
-    person = mdl.person.find_by_user(request.user)
-    addresses = mdl.person_address.find_by_person(person)
-    tutor = mdl.tutor.find_by_person(person)
-    attributions = mdl.attribution.search(tutor=tutor)
-    student = mdl.student.find_by_person(person)
-    offer_enrollments = mdl.offer_enrollment.find_by_student(student)
-    programs_managed = mdl.program_manager.find_by_person(person)
-    return layout.render(request, "profile.html", {'person': person,
-                                                   'addresses': addresses,
-                                                   'tutor': tutor,
-                                                   'attributions': attributions,
-                                                   'student': student,
-                                                   'offer_enrollments': offer_enrollments,
-                                                   'programs_managed': programs_managed,
-                                                   'supported_languages': settings.LANGUAGES,
-                                                   'default_language': settings.LANGUAGE_CODE})
-
-
-@login_required
-def profile_lang(request):
-    ui_language = request.POST.get('ui_language')
-    mdl.person.change_language(request.user, ui_language)
-    translation.activate(ui_language)
-    request.session[translation.LANGUAGE_SESSION_KEY] = ui_language
-    return profile(request)
 
 
 @login_required

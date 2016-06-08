@@ -36,6 +36,8 @@ class MessageHistory(models.Model):
     created = models.DateTimeField(editable=False)
     sent = models.DateTimeField(null=True)
     reference = models.CharField(max_length=100, null=True, db_index=True)
+    show_in_myosis = models.BooleanField(default=True)
+    read_in_myosis = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if not self.id:
@@ -70,3 +72,11 @@ def search(limit=100, **kwargs):
         queryset = queryset.order_by('created')
         messages_history = queryset[:limit]
     return messages_history
+
+
+def find_my_messages(username):
+    return MessageHistory.objects.filter(person__user__username=username).filter(show_in_myosis=True).order_by('sent')
+
+
+def delete_my_message(message_id):
+    MessageHistory.objects.filter(id=message_id).update(show_in_myosis=False)

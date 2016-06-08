@@ -932,8 +932,29 @@ msgstr "Recipient"
 msgid "subject"
 msgstr "Subject"
 
-msgid "myosis"
-msgstr "MyOsis"
+msgid "my_osis"
+msgstr "My Osis"
+
+msgid "my_messages"
+msgstr "My messages"
+
+msgid "received_on"
+msgstr "Received on"
+
+msgid "tooltip_my_message_read"
+msgstr "Show message"
+
+msgid "no_messages"
+msgstr "No messages"
+
+msgid "tooltip_delete_message"
+msgstr "Delete message"
+
+msgid "desc_profile"
+msgstr "The configuration of you user profile"
+
+msgid "desc_my_messages"
+msgstr "The messages sent by the application to you"
 
 msgid "sent"
 msgstr "Sent"

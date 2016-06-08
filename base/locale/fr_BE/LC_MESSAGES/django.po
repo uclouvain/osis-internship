@@ -944,8 +944,29 @@ msgstr "Destinataire"
 msgid "subject"
 msgstr "Sujet"
 
-msgid "myosis"
-msgstr "MyOsis"
+msgid "my_osis"
+msgstr "Mon Osis"
+
+msgid "my_messages"
+msgstr "Mes messages"
+
+msgid "received_on"
+msgstr "Reçu le"
+
+msgid "tooltip_my_message_read"
+msgstr "Lire le message"
+
+msgid "no_messages"
+msgstr "Pas de messages"
+
+msgid "tooltip_delete_message"
+msgstr "Supprimer le message"
+
+msgid "desc_profile"
+msgstr "informations lié à votre profile"
+
+msgid "desc_my_messages"
+msgstr "La liste des messages qui vous ont été envoyé par l'application"
 
 msgid "sent"
 msgstr "Envoyé"
@@ -1138,3 +1159,5 @@ msgstr "Cliquez pour vous reconnectez"
 
 msgid "complete"
 msgstr "Complet"
+
+
