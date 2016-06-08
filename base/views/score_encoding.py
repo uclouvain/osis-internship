@@ -547,7 +547,7 @@ def get_data_pgmer(request,
     if len(data) == 0:
         messages.add_message(request, messages.WARNING, "%s" % _('no_result'))
 
-    return layout.render(request, "assessments/scores_encoding_mgr.html",
+    return layout.render(request, "assessments/scores_encoding_by_learning_unit.html",
                          {'notes_list': data,
                           'offer_list': all_offers,
                           'tutor_list': all_tutors,
@@ -572,6 +572,103 @@ def refresh_list(request):
     # In case the user is a Tutor
     else:
         return get_data(request, offer_year_id=request.GET.get('offer_year_id', None))
+
+
+def get_data_specific_criteria(request):
+    registration_id = request.POST.get('registration_id', None)
+    last_name = request.POST.get('last_name', None)
+    first_name = request.POST.get('first_name', None)
+    justification = request.POST.get('justification', None)
+    offer_year_id = request.POST.get('program', None)
+
+    academic_yr = mdl.academic_year.current_academic_year()
+    number_session = mdl.session_exam.find_session_exam_number()
+
+    offers_year_managed = mdl.offer_year.find_by_user(request.user, academic_yr)
+
+    is_program_manager = mdl.program_manager.is_program_manager(request.user)
+
+    exam_enrollments = []
+
+    if request.method == 'POST':
+        if is_program_manager:
+            if not registration_id and not last_name and not first_name and not justification and not offer_year_id:
+                messages.add_message(request, messages.ERROR, "%s" % _('minimum_one_criteria'))
+            else:
+                offer_year_id = int(
+                    offer_year_id) if offer_year_id else None  # The offer_year_id received in session is a String, not an Int
+                exam_enrollments = list(mdl.exam_enrollment.find_for_score_encodings(number_session,
+                                                                                     registration_id=registration_id,
+                                                                                     student_last_name=last_name,
+                                                                                     student_first_name=first_name,
+                                                                                     justification=justification,
+                                                                                     offer_year_id=offer_year_id,
+                                                                                     offers_year=offers_year_managed))
+                exam_enrollments = mdl.exam_enrollment.sort_by_last_name_first_name(exam_enrollments)
+                if len(exam_enrollments) == 0:
+                    messages.add_message(request, messages.WARNING, "%s" % _('no_result'))
+        else:
+            messages.add_message(request, messages.ERROR, "%s" % _('user_is_not_program_manager'))
+    return {'offer_year_id': offer_year_id,
+            'registration_id': registration_id,
+            'last_name': last_name,
+            'first_name': first_name,
+            'justification': justification,
+            'academic_year': academic_yr,
+            'offer_list': offers_year_managed,
+            'number_session': number_session,
+            'exam_enrollments': exam_enrollments,
+            'is_program_manager': is_program_manager}
+
+
+@login_required
+def specific_criteria(request):
+    data = get_data_specific_criteria(request)
+    return layout.render(request, "assessments/scores_encoding_by_specific_criteria.html", data)
+
+
+@login_required
+def search_by_specific_criteria(request):
+    return specific_criteria(request)
+
+
+@login_required
+def specific_criteria_submission(request):
+    data = get_data_specific_criteria(request)
+
+    scores_saved = 0
+
+    for enrollment in data['exam_enrollments']:
+        learning_unit_year = enrollment.learning_unit_enrollment.learning_unit_year
+        decimal_scores_authorized = learning_unit_year.decimal_scores
+        score = request.POST.get('score_' + str(enrollment.id), None)
+        justification = request.POST.get('justification_' + str(enrollment.id), None)
+        score_changed = request.POST.get('score_changed_' + str(enrollment.id), 'false')
+        if score_changed == 'true':
+            changed = True
+        else:
+            changed = False
+
+        if changed:
+            scores_saved += 1
+            new_score, new_justification = _truncate_decimals(score, justification, decimal_scores_authorized)
+
+            enrollment.score_draft = new_score
+            enrollment.score_final = new_score
+            enrollment.justification_draft = new_justification
+            enrollment.justification_final = new_justification
+            mdl.exam_enrollment.create_exam_enrollment_historic(request.user, enrollment,
+                                                                enrollment.score_final,
+                                                                enrollment.justification_final)
+            enrollment.save()
+
+    # sent_error_message = __send_message_if_all_encoded_in_pgm(data.get('exam_enrollments'),
+    #                                                           data.get('learning_unit_year'))
+    # if sent_error_message:
+    #     messages.add_message(request, messages.ERROR, "%s" % sent_error_message)
+
+    messages.add_message(request, messages.INFO, "%s %s" % (scores_saved, _('scores_saved')))
+    return specific_criteria(request)
 
 
 def _get_exam_enrollments(user, learning_unit_year_id=None, tutor_id=None, offer_year_id=None, academic_year=None,

@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "assessments/scores_encoding_mgr_layout.html" %}
 {% load i18n %}
 {% load staticfiles %}
 {% load list %}
@@ -27,19 +27,12 @@
 * at the root of the source code of this program.  If not,
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
-{% block breadcrumb %}
-<li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'studies' %}</a></li>
-<li><a href="{% url 'assessments' %}" id="lnk_evaluations">{% trans 'evaluations' %}</a></li>
-<li class="active">{% trans 'scores_encoding' %}</li>
-{% endblock %}
-{% block content %}
-<div class="page-header">
-    <h2>{% trans 'scores_encoding' %}</h2>
-</div>
+
+{% block scores_encoding_tabs %}
 {% if notes_list != None and notes_list|length >= 0 %}
 <ul class="nav nav-tabs nav-justified" id="tabs">
     <li class="active"><a data-toggle="tab" role="tab" href="#tab_scores_encoding" id="lnk_scores_encoding">{% trans 'by_learning_unit' %}</a></li>
-    <li><a data-toggle="tab" role="tab" href="#tab_justifications" id="lnk_justifications">{% trans 'by_specific_criteria' %}</a></li>
+    <li><a href="{% url 'specific_criteria' %}" id="lnk_justifications">{% trans 'by_specific_criteria' %}</a></li>
 </ul>
 <div class="tab-content">
     <div id="tab_scores_encoding" class="tab-pane fade in active">
@@ -300,71 +293,6 @@
         </div>
     </div>
     <div id="tab_justifications" class="tab-pane fade">
-        <form id="form_justification" action="{% url 'search_by_specific_criteria' %}"  method="get">
-            <br>
-            <div class="row">
-                <div class="col-md-2">
-                    <label>{% trans 'registration_id' %}</label>
-                    <input type="text" class="form-control" id="txt_registration_id" name="registration_id" placeholder="{% trans 'registration_id' %}">
-                </div>
-                <div class="col-md-2">
-                    <label>{% trans 'lastname' %}</label>
-                    <input type="text" class="form-control" id="txt_last_name" name="last_name" placeholder="{% trans 'lastname' %}">
-                </div>
-                <div class="col-md-2">
-                    <label>{% trans 'firstname' %}</label>
-                    <input type="text" class="form-control" id="txt_first_name" name="first_name" placeholder="{% trans 'lastname' %}">
-                </div>
-                <div class="col-md-2">
-                    <label>{% trans 'justification' %}</label>
-                    <select class="form-control" name="justification" id="slt_justification">
-                        <option value="">Tous</option>
-                        <option value="ABSENCE_JUSTIFIED">Absence justifié</option>
-                        <option value="ABSENCE_UNJUSTIFIED">Absence injustifié</option>
-                        <option value="CHEATING">Tricherie</option>
-                        <option value="SCORE_MISSING">Note manquante</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label>{% trans 'offer' %}</label><br>
-                    <select id="slt_program" name="program" class="form-control">
-                        <option value="">{% trans 'all'%}</option>
-                        {% for o in offer_list %}
-                        <option value="{{o.id}}" {%if offer_year_id == o.id %}selected{%endif%}>{{o.acronym}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="col-md-1">
-                    <br>
-                    <button type="submit" id="bt_submit_offer_year_search" class="btn btn-primary" role="button"
-                        title="{% trans 'offer_year_search' %}">
-                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
-                </div>
-            </div>
-            <br>
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>{% trans 'learning_unit' %}</th>
-                        <th>{% trans 'registration_id' %}</th>
-                        <th>{% trans 'lastname' %}</th>
-                        <th>{% trans 'firstname' %}</th>
-                        <th>{% trans 'score' %}</th>
-                        <th>{% trans 'justification' %}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
-        </form>
     </div>
 </div>
 {% else %}
