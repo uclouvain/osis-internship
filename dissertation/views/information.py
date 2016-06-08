@@ -217,3 +217,13 @@ def manager_information_list_request(request):
     advisers_need_request = advisers_need_request.order_by('adviser')
 
     return render(request, "manager_informations_list_request.html", {'advisers_need_request': advisers_need_request})
+
+@login_required
+@user_passes_test(is_manager)
+def manager_information_detail_list(request, pk):
+    adviser = get_object_or_404(Adviser, pk=pk)
+    queryset = DissertationRole.objects.all()
+    adviser_list_dissertations = queryset.filter(Q(status='PROMOTEUR') & Q(adviser__pk=pk) &
+    Q(dissertation__active=True)).exclude(Q(dissertation__status='DRAFT') |
+    Q(dissertation__status='ENDED') |Q(dissertation__status='DEFENDED'))
+    return render(request, "manager_informations_profil_list.html", {'adviser_list_dissertations': adviser_list_dissertations,'adviser':adviser})

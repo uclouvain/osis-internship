@@ -32,8 +32,15 @@
   <li><a href="{% url 'manager_informations' %}" id="lnk_teachers">{% trans 'teachers' %}</a></li>
   <li class="active">{{ adviser.person.last_name }}, {{ adviser.person.first_name }}</li>
 {% endblock %}
+
 {% block content %}
+
   <div class="page-header">
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="#">{% trans 'profil_adviser' %}</a></li>
+      <li><a href="#">{% trans 'statistiques_adviser' %}</a></li>
+      <li><a href="{% url 'manager_information_detail_list' pk=adviser.pk %}">{% trans 'dissertation_adviser' %}</a></li>
+    </ul>
     <h2>{{ adviser.person.last_name }}, {{ adviser.person.first_name }}</h2>
   </div>
   <div class="panel panel-default">

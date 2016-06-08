@@ -60,6 +60,8 @@ urlpatterns = [
     url(r'^manager_informations/$', information.manager_informations, name='manager_informations'),
     url(r'^manager_informations_detail/(?P<pk>[0-9]+)/$', information.manager_informations_detail,
         name='manager_informations_detail'),
+    url(r'^manager_information_detail_list/(?P<pk>[0-9]+)/$', information.manager_information_detail_list,
+            name='manager_information_detail_list'),
     url(r'^manager_information_search$', information.manager_information_search, name='manager_information_search'),
     url(r'^manager_information_list_request/$', information.manager_information_list_request,
     name='manager_information_list_request'),

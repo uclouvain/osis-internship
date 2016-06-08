@@ -88,10 +88,10 @@ def manager_dissertations_detail(request, pk):
                                dissertation=dissertation)
         pro.save()
     dissertation_roles = DissertationRole.objects.filter(dissertation=dissertation)
-    offer_proposition = OfferProposition.objects.get(offer=dissertation.offer_year_start.offer)
+
     return render(request, 'manager_dissertations_detail.html',
                   {'dissertation': dissertation, 'adviser': adviser, 'dissertation_roles': dissertation_roles,
-                   'count_dissertation_role': count_dissertation_role, 'offer_proposition': offer_proposition})
+                   'count_dissertation_role': count_dissertation_role})
 
 
 @login_required
