@@ -33,7 +33,7 @@
 {% block content %}
 <div class="container">
 <div class="page-header">
-    <h2>{% trans 'Assistantship mandate renewal - Part 1' %}</h2>
+    <h2>{% trans 'assistantship_mandate_renewal_part1' %}</h2>
 </div>
 <div class="panel panel-default">
   <div class="panel-body">
@@ -41,9 +41,9 @@
       {% csrf_token %}
   <div class="row">
     <div class="col-xs-6 col-sm-3">
-    <label>{% trans 'Name and first name' %}</label> :<p>
-    <label>{% trans 'Birthdate' %}</label> :<p>
-    <label>{% trans 'Address' %}</label> :<p>
+    <label>{% trans 'name_firstname' %}</label> :<p>
+    <label>{% trans 'birthdate' %}</label> :<p>
+    <label>{% trans 'address' %}</label> :<p>
     </div>
     <div class="col-xs-6 col-sm-6">
       <b>{{assistant.person}}</b><p>
@@ -54,19 +54,19 @@
       <p>
     </div>
     <div class="col-xs-6 col-sm-3" align="right">
-    <label>{% trans 'Type of renewal' %}</label> : {{mandate.renewal_type}}<p>
+    <label>{% trans 'type_of_renewal' %}</label> : {{mandate.renewal_type}}<p>
     </div>
   </div>
 
   <hr>
-  <b>{% trans 'Contract' %}</b><p>
+  <b>{% trans 'contract' %}</b><p>
   <div class="row">
     <div class="col-xs-6 col-sm-3">
-      {% trans 'Faculty/Institute' %} :<br>
-      {% trans 'Full time equivalent' %} :<br>
-      {% trans 'Date of first nomination' %} :<br>
-      {% trans 'Field' %} :<br>
-      {% trans 'Grade' %} :<br>
+      {% trans 'faculty_institute' %} :<br>
+      {% trans 'full_time_equivalent' %} :<br>
+      {% trans 'date_of_first_nomination' %} :<br>
+      {% trans 'field' %} :<br>
+      {% trans 'grade' %} :<br>
     </div>
     <div class="col-xs-6 col-sm-9">
       {% for course in courses.all|slice:"1" %}
@@ -79,44 +79,43 @@
     </div>
    </div>
   <hr>
-  <b>{% trans 'Doctorate' %}</b><p>
+  <b>{% trans 'doctorate' %}</b><p>
     
     <div class="form-group">
       <div class="row">
         <div class="col-xs-6 col-sm-5">
-          {% trans 'Registered Ph.D.' %} :
+          {% trans 'registered_phd' %} :
           <label class="radio-inline">
-          <input type="radio" name="inscription" id="id_inscription_0" value="{{assistant.inscription}}" onChange="disablefield();">{% trans 'Yes' %}
+          <input type="radio" name="inscription" id="id_inscription_0" value="{{assistant.inscription}}" onChange="disablefield();">{% trans 'yes' %}
           </label>
           <label class="radio-inline">
-          <input type="radio" name="inscription" id="id_inscription_1" value="{{assistant.inscription}}" onChange="disablefield();">{% trans 'No' %}
+          <input type="radio" name="inscription" id="id_inscription_1" value="{{assistant.inscription}}" onChange="disablefield();">{% trans 'no' %}
           </label>
           <label class="radio-inline">
-          <input type="radio" name="inscription" id="id_inscription_2" value="{{assistant.inscription}}" onChange="disablefield();">{% trans 'In_progress' %}
+          <input type="radio" name="inscription" id="id_inscription_2" value="{{assistant.inscription}}" onChange="disablefield();">{% trans 'in_progress' %}
           </label>                 
         </div>
         <div class="col-xs-6 col-sm-7">
-          {% trans 'Expected registering date' %} : 
+          {% trans 'expected_registering_date' %} : 
           {{ form.expected_phd_date }}
         </div>
       </div>
       <div class="row"> 
         <div class="col-xs-6 col-sm-3">
-           {% trans 'Supervisor email address' %} :
+           {% trans 'supervisor_email_address' %} :
         </div>
         <div class="col-xs-6 col-sm-4">
-          <input  type="text" id="supervisor_email" name="supervisor" placeholder="firstname.lastname@uclouvain.be" size="30" value="{{assistant.supervisor}}">&nbsp;
-
+          <input  type="text" id="supervisor_email" name="supervisor" placeholder="{% trans 'firstname' %}.{% trans 'lastname' %}@uclouvain.be" size="30" value="{{assistant.supervisor}}">&nbsp;
         </div>
         <div class="col-xs-6 col-sm-3">
           <label class="checkbox-inline">
-            <input type="checkbox" value="nosupervisor" id="no_supervisor" onChange="disablefield();">{% trans 'No supervisor' %}
+            <input type="checkbox" value="nosupervisor" id="no_supervisor" onChange="disablefield();">{% trans 'no_supervisor' %}
           </label>
         </div>        
       </div>
       <div class="row">  
         <div class="col-xs-6 col-sm-3"> 
-          {% trans 'Ph.D. Inscription date' %} :<br>&nbsp;
+          {% trans 'phd_inscription_date' %} :<br>&nbsp;
         </div>
         <div class="col-sm-6">     
           {{ form.phd_inscription_date }}
@@ -124,7 +123,7 @@
       </div>
       <div class="row">  
         <div class="col-xs-6 col-sm-3"> 
-          {% trans 'Confirmatory test date ' %} <br><font size="1">{% trans '(for the 2<sup>nd</sup> renewal)' %}</font> :        
+          {% trans 'confirmatory_test_date ' %} <br><font size="1">{% trans '2nd_renewal' %}</font> :        
         </div>     
         <div class="col-sm-6">     
           {{ form.confirmation_test_date }}
@@ -132,7 +131,7 @@
           </div>
       <div class="row">      
         <div class="col-xs-6 col-sm-3"> 
-          {% trans 'Thesis defence date' %} :        
+          {% trans 'thesis_defence_date' %} :        
         </div>
         <div class="col-sm-6">     
           {{ form.thesis_date }}
@@ -140,20 +139,20 @@
       </div>  
     </div>
     <hr>
-    <b>{% trans 'Various' %}</b>
-    <p>{% trans 'Current function held outside the university and % of time spent' %} :  
+    <b>{% trans 'various' %}</b>
+    <p>{% trans 'function_outside_university' %} :  
     {{ form.external_functions }}</p>
-    <p>{% trans 'External post asked outside (FNRS, FRIA, ...)' %} :
+    <p>{% trans 'external_post' %} :
     {{ form.external_contract }}</p>
     <div class="col-sm-6"> 
-      <font size ="1">{% trans 'To the extent that you no longer meet the conditions for a "normal" renewal, can you clarify the circumstances justifying a request for an "exceptional" renewal (art. 51 of the RAMCS)' %} :
+      <font size ="1">{% trans 'exceptional_justification' %} :
       </font>
     </div>
     <div class="col-sm-4">    
       {{ form.justification }}
     </div>
      <div class="col-sm-10">
-      <button type="submit" class="btn btn-default">{% trans 'Next part' %}</button>
+      <button type="submit" class="btn btn-default">{% trans 'next_part' %}</button>
     </div>
     </form>
 </div>
