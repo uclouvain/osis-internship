@@ -56,9 +56,9 @@ def is_teacher(user):
     return adviser.type == 'PRF'
 
 
-################
-# VUE GENERALE #
-################
+##########################
+#      VUE GENERALE      #
+##########################
 
 @login_required
 def dissertations(request):
@@ -70,12 +70,23 @@ def dissertations(request):
         adviser = Adviser.find_by_person(person)
     except IntegrityError:
         adviser = Adviser.find_by_person(person)
-    return render(request, "dissertations.html", {'section': 'dissertations', 'person': person, 'adviser': adviser})
+
+    queryset = DissertationRole.objects.all()
+    count_advisers_pro_request = queryset.filter(
+        Q(adviser=adviser) & Q(status='PROMOTEUR') &
+        Q(dissertation__status='DIR_SUBMIT') & Q(dissertation__active=True)).count()
+
+    return render(request, "dissertations.html",
+                  {'section': 'dissertations',
+                   'person': person,
+                   'adviser': adviser,
+                   'count_advisers_pro_request': count_advisers_pro_request
+                   })
 
 
-################
-# VUES MANAGER #
-################
+##########################
+#      VUES MANAGER      #
+##########################
 
 @login_required
 @user_passes_test(is_manager)
@@ -324,9 +335,9 @@ def manager_dissertations_to_dir_ko(request, pk):
     return redirect('manager_dissertations_detail', pk=pk)
 
 
-################
-# VUES TEACHER #
-################
+##########################
+#      VUES TEACHER      #
+##########################
 
 @login_required
 @user_passes_test(is_teacher)

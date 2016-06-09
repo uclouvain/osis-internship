@@ -36,13 +36,26 @@ from django.db.models import Q
 from operator import attrgetter
 
 
+# Used by decorator @user_passes_test(is_manager) to secure manager views
 def is_manager(user):
     person = mdl.person.find_by_user(user)
     adviser = Adviser.find_by_person(person)
     return adviser.type == 'MGR'
 
 
+# Used by decorator @user_passes_test(is_manager) to secure manager views
+def is_teacher(user):
+    person = mdl.person.find_by_user(user)
+    adviser = Adviser.find_by_person(person)
+    return adviser.type == 'PRF'
+
+##########################
+#      VUES TEACHER      #
+##########################
+
+
 @login_required
+@user_passes_test(is_teacher)
 def informations(request):
     person = mdl.person.find_by_user(request.user)
     try:
@@ -55,6 +68,7 @@ def informations(request):
 
 
 @login_required
+@user_passes_test(is_teacher)
 def informations_detail_list(request):
     person = mdl.person.find_by_user(request.user)
     try:
@@ -91,6 +105,7 @@ def informations_detail_list(request):
 
 
 @login_required
+@user_passes_test(is_teacher)
 def informations_detail_stats(request):
     person = mdl.person.find_by_user(request.user)
     try:
@@ -161,6 +176,7 @@ def informations_detail_stats(request):
 
 
 @login_required
+@user_passes_test(is_teacher)
 def informations_edit(request):
     person = mdl.person.find_by_user(request.user)
     adviser = Adviser.find_by_person(person)
@@ -174,6 +190,10 @@ def informations_edit(request):
         form = AdviserForm(instance=adviser)
 
     return render(request, "informations_edit.html", {'form': form, 'person': person})
+
+##########################
+#      VUES MANAGER      #
+##########################
 
 
 @login_required
