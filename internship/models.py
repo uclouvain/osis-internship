@@ -32,6 +32,7 @@ class InternshipOffer(models.Model):
     learning_unit_year  = models.ForeignKey('base.LearningUnitYear')
     title = models.CharField(max_length=255)
     maximum_enrollments = models.IntegerField()
+    selectable          = models.BooleanField()
 
     def __str__(self):
         return self.title
@@ -91,12 +92,12 @@ class InternshipMaster(models.Model):
                         ('GERIATRICS',_('Geriatrics')))
 
     organization     = models.ForeignKey('internship.Organization')
-    internship_offer = models.ForeignKey(InternshipOffer)
+    #internship_offer = models.ForeignKey(InternshipOffer)
     person = models.ForeignKey('base.Person')
     reference = models.CharField(max_length=30, blank=True, null=True)
-    civility = models.CharField(max_length=20, blank=True, null=True, choices=CIVILITY_CHOICE)
-    type_mastery = models.CharField(max_length=20, blank=True, null=True, choices=TYPE_CHOICE)
-    speciality = models.CharField(max_length=20, blank=True, null=True, choices=SPECIALITY_CHOICE)
+    civility = models.CharField(max_length=20, blank=True, null=True)
+    type_mastery = models.CharField(max_length=20, blank=True, null=True)
+    speciality = models.CharField(max_length=20, blank=True, null=True)
 
     @staticmethod
     def find_masters():
@@ -120,6 +121,11 @@ class InternshipMaster(models.Model):
     def find_masters_by_organization(organization):
         masters = InternshipMaster.objects.filter(organization__name=organization)
         return masters
+
+    @staticmethod
+    def find_master_by_reference(reference):
+        master = InternshipMaster.objects.filter(reference=reference)
+        return master
 
 
 class InternshipChoice(models.Model):
