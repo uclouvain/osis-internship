@@ -338,11 +338,17 @@ def scores_sheet_data(exam_enrollments, tutor=None):
             enrollments = []
             for exam_enrol in list_enrollments:
                 student = exam_enrol.learning_unit_enrollment.student
+                score = ''
+                if exam_enrol.score_final is not None:
+                    if learning_unit_yr.decimal_scores:
+                        score = str(exam_enrol.score_final)
+                    else:
+                        score = str(int(exam_enrol.score_final))
                 enrollments.append({
                     "registration_id": student.registration_id,
                     "last_name": student.person.last_name,
                     "first_name": student.person.first_name,
-                    "score": str(exam_enrol.score_final) if exam_enrol.score_final else '',
+                    "score": score,
                     "justification": _(exam_enrol.justification_final) if exam_enrol.justification_final else ''
                 })
             program['enrollments'] = enrollments
