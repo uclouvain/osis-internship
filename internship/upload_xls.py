@@ -32,7 +32,7 @@ from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 
 from internship.models import Organization, OrganizationAddress, InternshipOffer
-from internship.forms import OrganizationForm, InternshipOfferForm
+from internship.forms import OrganizationForm, InternshipOfferForm, InternshipMasterForm
 from base import models as mdl
 
 
@@ -168,6 +168,79 @@ def upload_internships_file(request):
 
 
 def __save_xls_internships(request, file_name, user):
+    workbook = load_workbook(file_name, read_only=True)
+    worksheet = workbook.active
+    form = InternshipOfferForm(request)
+    col_reference = 0
+    col_spec = 1
+    col_max_places = 2
+    index = 1
+    # Iterates over the lines of the spreadsheet.
+    for count, row in enumerate(worksheet.rows):
+
+        new_score = False
+        if row[col_reference].value is None \
+                or row[col_reference].value == 0 \
+                or not _is_registration_id(row[col_reference].value):
+            continue
+
+        if row[col_spec].value is not None:
+            success = 0
+            check_internship = 0
+            form = InternshipOfferForm(data=request.POST)
+
+            if row[col_reference].value:
+                reference = ""
+                if int(row[col_reference].value) < 10 :
+                    reference = "0"+str(row[col_reference].value)
+                else :
+                    reference = str(row[col_reference].value)
+                organization = Organization.search(reference=reference)
+                #internship.organization = organization[0]
+
+            if row[col_spec].value == "CH":
+                spec = "Stage en Chirurgie"
+            if row[col_spec].value == "GE":
+                spec = "Stage en Gériatrie"
+            if row[col_spec].value == "GO":
+                spec = "Stage en Gynécologie-Obstétrique"
+            if row[col_spec].value == "MI":
+                spec = "Stage en Médecine interne"
+            if row[col_spec].value == "PE":
+                spec = "Stage en Pédiatrie"
+            if row[col_spec].value == "UR":
+                spec = "Stage en Urgence"
+
+            learning_unit_year = mdl.learning_unit_year.search(title=spec)
+            check_internship = InternshipOffer.find_interships_by_learning_unit_organization(spec,organization[0].name)
+
+            if len(check_internship) != 0:
+                internship = InternshipOffer.find_intership_by_id(check_internship[0].id)
+            else :
+                internship = InternshipOffer()
+
+            internship.organization = organization[0]
+            internship.learning_unit_year = learning_unit_year[0]
+            internship.title = spec
+            internship.maximum_enrollments = row[col_max_places].value
+
+            internship.save()
+
+@login_required
+def upload_masters_file(request):
+    if request.method == 'POST':
+        form = InternshipOfferForm(request.POST, request.FILES)
+        file_name = request.FILES['file']
+        if file_name is not None:
+            if ".xls" not in str(file_name):
+                messages.add_message(request, messages.ERROR, _('file_must_be_xls'))
+            else:
+                __save_xls_masters(request, file_name, request.user)
+
+    return HttpResponseRedirect(reverse('internships'))
+
+@login_required
+def __save_xls_masters(request, file_name, user):
     workbook = load_workbook(file_name, read_only=True)
     worksheet = workbook.active
     form = OrganizationForm(request)
