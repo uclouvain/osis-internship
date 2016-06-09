@@ -30,10 +30,10 @@ from django.utils.translation import ugettext_lazy as _
 class Reviewer(models.Model):
     
     ROLE_CHOICES = (
-        ('PHD_SUPERVISOR', _('PhD Supervisor')),
-        ('SUPERVISION', _('Supervision')),
-        ('RESEARCH', _('Research')),
-        ('SECTOR_VICE_RECTOR', _('Sector Vice-Rector')))
+        ('PHD_SUPERVISOR', _('phd_supervisor')),
+        ('SUPERVISION', _('supervision')),
+        ('RESEARCH', _('research')),
+        ('SECTOR_VICE_RECTOR', _('sector_vice_rector')))
      
     person = models.ForeignKey('base.Person')
     role = models.CharField(max_length=20, choices=ROLE_CHOICES)
