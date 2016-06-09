@@ -107,40 +107,33 @@ def online_encoding_form(request, learning_unit_year_id=None):
         return layout.render(request, "assessments/online_encoding_form.html", data)
 
     elif request.method == 'POST':
-        # Case the user submit his first online scores encodings
         decimal_scores_authorized = data['learning_unit_year'].decimal_scores
         for enrollment in data['enrollments']:
             score = request.POST.get('score_' + str(enrollment.id), None)
             justification = request.POST.get('justification_' + str(enrollment.id), None)
             score_changed = request.POST.get('score_changed_' + str(enrollment.id), 'false')
-            if score_changed == 'true':
-                changed = True
-            else:
-                changed = False
 
-            modification_possible = True
-            if not data['is_program_manager'] and \
-                    (enrollment.score_final is not None or enrollment.justification_final) or \
-                    not changed:
-                modification_possible = False
-            if modification_possible:
+            # modification is possible for program managers OR score has changed but nothing is final
+            if data['is_program_manager'] or \
+                    score_changed == 'true' and \
+                    enrollment.score_final is None and not enrollment.justification_final:
+
                 new_score, new_justification = _truncate_decimals(score, justification, decimal_scores_authorized)
                 enrollment.score_reencoded = None
                 enrollment.justification_reencoded = None
 
-                # Case it is the program manager who validates the double encoding
+                # draft score and justification are always set
+                enrollment.score_draft = new_score
+                enrollment.justification_draft = new_justification
+                # it is only the program manager who validates the double encoding
                 if data['is_program_manager']:
-                    enrollment.score_draft = new_score
                     enrollment.score_final = new_score
-                    enrollment.justification_draft = new_justification
                     enrollment.justification_final = new_justification
                     mdl.exam_enrollment.create_exam_enrollment_historic(request.user, enrollment,
                                                                         enrollment.score_final,
                                                                         enrollment.justification_final)
-                else:  # Case it is the tutor who validates the double encoding
-                    enrollment.score_draft = new_score
-                    enrollment.justification_draft = new_justification
                 enrollment.save()
+
         data = get_data_online(learning_unit_year_id, request)
         if data['is_program_manager']:
             sent_error_message = __send_message_if_all_encoded_in_pgm(data.get('enrollments'),
