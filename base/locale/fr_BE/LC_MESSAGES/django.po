@@ -760,8 +760,8 @@ msgstr "Monsieur"
 msgid "miss"
 msgstr "Madame"
 
-msgid "file_must_be_xls"
-msgstr "Le fichier doit être un XLS"
+msgid "file_must_be_xlsx"
+msgstr "Le fichier doit être un .XLSX"
 
 msgid "invalid_file"
 msgstr "Fichier invalide"

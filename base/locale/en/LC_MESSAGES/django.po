@@ -751,8 +751,8 @@ msgstr "Mister"
 msgid "miss"
 msgstr "Miss"
 
-msgid "file_must_be_xls"
-msgstr "The file must be a XLS"
+msgid "file_must_be_xlsx"
+msgstr "The file must be a .XLSX"
 
 msgid "invalid_file"
 msgstr "Invalid file"
