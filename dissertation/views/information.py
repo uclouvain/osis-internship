@@ -123,6 +123,58 @@ def manager_informations(request):
 @user_passes_test(is_manager)
 def manager_informations_detail(request, pk):
     adviser = get_object_or_404(Adviser, pk=pk)
+    return render(request, 'manager_informations_detail.html', {'adviser': adviser})
+
+
+@login_required
+@user_passes_test(is_manager)
+def manager_informations_edit(request, pk):
+    adviser = get_object_or_404(Adviser, pk=pk)
+    if request.method == "POST":
+        form = ManagerAdviserForm(request.POST, instance=adviser)
+        if form.is_valid():
+            adviser = form.save(commit=False)
+            adviser.save()
+            return redirect('manager_informations_detail', pk=adviser.pk)
+    else:
+        form = AdviserForm(instance=adviser)
+
+    return render(request, "manager_informations_edit.html", {'adviser': adviser, 'form': form})
+
+
+@login_required
+@user_passes_test(is_manager)
+def manager_informations_search(request):
+    advisers = Adviser.search(terms=request.GET['search'])
+    return render(request, "manager_informations_list.html", {'advisers': advisers})
+
+
+@login_required
+@user_passes_test(is_manager)
+def manager_informations_list_request(request):
+    queryset = DissertationRole.objects.all()
+    advisers_need_request = queryset.filter(Q(status='PROMOTEUR') &
+                                            Q(dissertation__status='DIR_SUBMIT') &
+                                            Q(dissertation__active=True))
+    advisers_need_request = advisers_need_request.order_by('adviser')
+
+    return render(request, "manager_informations_list_request.html", {'advisers_need_request': advisers_need_request})
+
+@login_required
+@user_passes_test(is_manager)
+def manager_informations_detail_list(request, pk):
+    adviser = get_object_or_404(Adviser, pk=pk)
+    queryset = DissertationRole.objects.all()
+    adviser_list_dissertations = queryset.filter(Q(status='PROMOTEUR') & Q(adviser__pk=pk) &
+    Q(dissertation__active=True)).exclude(Q(dissertation__status='DRAFT') |
+    Q(dissertation__status='ENDED') |Q(dissertation__status='DEFENDED'))
+    return render(request, "manager_informations_detail_list.html", {'adviser_list_dissertations': adviser_list_dissertations,'adviser':adviser})
+
+
+@login_required
+@user_passes_test(is_manager)
+def manager_informations_detail_stats(request, pk):
+    adviser = get_object_or_404(Adviser, pk=pk)
     queryset = DissertationRole.objects.all()
     count_advisers = queryset.filter(Q(adviser=adviser) & Q(dissertation__active=True)).count()
     count_advisers_pro = queryset.filter(
@@ -176,54 +228,9 @@ def manager_informations_detail(request, pk):
         else:
             tab_offer_count_pro[dissertaion_role_pro.dissertation.offer_year_start.offer.title] = 1
 
-    return render(request, 'manager_informations_detail.html',
+    return render(request, 'manager_informations_detail_stats.html',
                   {'adviser': adviser, 'count_advisers': count_advisers, 'count_advisers_copro': count_advisers_copro,
                    'count_advisers_pro': count_advisers_pro, 'count_advisers_reader': count_advisers_reader,
                    'count_advisers_pro_request': count_advisers_pro_request,
                    'tab_offer_count_pro': tab_offer_count_pro, 'tab_offer_count_read': tab_offer_count_read,
                    'tab_offer_count_copro': tab_offer_count_copro})
-
-
-@login_required
-@user_passes_test(is_manager)
-def manager_informations_edit(request, pk):
-    adviser = get_object_or_404(Adviser, pk=pk)
-    if request.method == "POST":
-        form = ManagerAdviserForm(request.POST, instance=adviser)
-        if form.is_valid():
-            adviser = form.save(commit=False)
-            adviser.save()
-            return redirect('manager_informations_detail', pk=adviser.pk)
-    else:
-        form = AdviserForm(instance=adviser)
-
-    return render(request, "manager_informations_edit.html", {'adviser': adviser, 'form': form})
-
-
-@login_required
-@user_passes_test(is_manager)
-def manager_information_search(request):
-    advisers = Adviser.search(terms=request.GET['search'])
-    return render(request, "manager_informations_list.html", {'advisers': advisers})
-
-
-@login_required
-@user_passes_test(is_manager)
-def manager_information_list_request(request):
-    queryset = DissertationRole.objects.all()
-    advisers_need_request = queryset.filter(Q(status='PROMOTEUR') &
-                                            Q(dissertation__status='DIR_SUBMIT') &
-                                            Q(dissertation__active=True))
-    advisers_need_request = advisers_need_request.order_by('adviser')
-
-    return render(request, "manager_informations_list_request.html", {'advisers_need_request': advisers_need_request})
-
-@login_required
-@user_passes_test(is_manager)
-def manager_information_detail_list(request, pk):
-    adviser = get_object_or_404(Adviser, pk=pk)
-    queryset = DissertationRole.objects.all()
-    adviser_list_dissertations = queryset.filter(Q(status='PROMOTEUR') & Q(adviser__pk=pk) &
-    Q(dissertation__active=True)).exclude(Q(dissertation__status='DRAFT') |
-    Q(dissertation__status='ENDED') |Q(dissertation__status='DEFENDED'))
-    return render(request, "manager_informations_profil_list.html", {'adviser_list_dissertations': adviser_list_dissertations,'adviser':adviser})

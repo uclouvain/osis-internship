@@ -36,13 +36,13 @@
 {% block content %}
 
   <div class="page-header">
-    <ul class="nav nav-tabs">
-      <li class="active"><a href="#">{% trans 'profil_adviser' %}</a></li>
-      <li><a href="#">{% trans 'statistiques_adviser' %}</a></li>
-      <li><a href="{% url 'manager_information_detail_list' pk=adviser.pk %}">{% trans 'dissertation_adviser' %}</a></li>
-    </ul>
     <h2>{{ adviser.person.last_name }}, {{ adviser.person.first_name }}</h2>
   </div>
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="#">{% trans 'adviser_profile' %}</a></li>
+    <li><a href="{% url 'manager_informations_detail_list' pk=adviser.pk %}">{% trans 'adviser_dissertations' %}</a></li>
+    <li><a href="{% url 'manager_informations_detail_stats' pk=adviser.pk %}">{% trans 'adviser_stats' %}</a></li>
+  </ul>
   <div class="panel panel-default">
     <div class="panel-body">
         <div class="row">
@@ -147,71 +147,6 @@
               </div>
           </div>
         </div>
-      </div>
-      <div class="row">
-          <div class="col-md-12">
-              <div class="panel panel-default">
-                  <div class="panel-heading">
-                    <h3 class="panel-title">{% trans 'stats' %}</h3>
-                  </div>
-                  <div class="panel-body">
-                      <div class="row">
-                        <div class="col-md-6" style="text-align: right">
-                            <label>{% trans 'how_many_dissertation_need_answer' %}</label>
-                        </div>
-                        <div class="col-md-6">
-                            {% if count_advisers_pro_request > 0 %}
-                                <span style="color: red">
-                            {% else %}
-                                <span>
-                            {% endif %}
-                            {{ count_advisers_pro_request }}
-                                </span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6" style="text-align: right">
-                            <label>{% trans 'how_many_dissertation_pro' %}</label>
-                        </div>
-                        <div class="col-md-6">
-                            {{ count_advisers_pro }}
-                            {% for key,value in tab_offer_count.items %}
-                                <br>
-                                {% trans 'in_this_offer ' %}{{ key }} : {{ value }}
-                            {% endfor %}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6" style="text-align: right">
-                            <label>{% trans 'how_many_dissertation_copro' %}</label>
-                        </div>
-                        <div class="col-md-6">
-                            {{ count_advisers_copro }}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6" style="text-align: right">
-                            <label>{% trans 'how_many_dissertation_reader' %}</label>
-                        </div>
-                        <div class="col-md-6">
-                            {{ count_advisers_reader }}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                          <div id="chart_div"></div>
-                        </div>
-                        <div class="col-md-4">
-                          <div id="chart_div2"></div>
-                        </div>
-                        <div class="col-md-4">
-                          <div id="chart_div3"></div>
-                        </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-
       </div>
       <div class="row">
             <div class="col-md-12">
