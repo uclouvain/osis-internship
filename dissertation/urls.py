@@ -31,6 +31,8 @@ urlpatterns = [
 
     url(r'^informations/$', information.informations, name='informations'),
     url(r'^informations_edit/$', information.informations_edit, name='informations_edit'),
+    url(r'^informations_detail_list/$', information.informations_detail_list, name='informations_detail_list'),
+    url(r'^informations_detail_stats/$', information.informations_detail_stats, name='informations_detail_stats'),
 
     url(r'^manager_dissertations_list$', dissertation.manager_dissertations_list,
         name='manager_dissertations_list'),

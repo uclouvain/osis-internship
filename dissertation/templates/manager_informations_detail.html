@@ -34,7 +34,6 @@
 {% endblock %}
 
 {% block content %}
-
   <div class="page-header">
     <h2>{{ adviser.person.last_name }}, {{ adviser.person.first_name }}</h2>
   </div>
@@ -156,7 +155,7 @@
                     </div>
                     <div class="panel-body">
                         <a href="{% url 'manager_informations_edit' pk=adviser.pk %}" id="lnk_informations_edit"
-                           class="btn btn-default btn-primary" role="button" title="{% trans 'edit_my_informations'%}">
+                           class="btn btn-default btn-primary" role="button" title="{% trans 'edit_adviser'%}">
                             <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                             {% trans 'edit_adviser' %}
                         </a>
@@ -166,71 +165,4 @@
       </div>
     </div>
   </div>
-
-
-  <!--Load the AJAX API-->
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script type="text/javascript">
-
-      // Load the Visualization API and the corechart package.
-      google.charts.load('current', {'packages':['corechart']});
-
-      // Set a callback to run when the Google Visualization API is loaded.
-      google.charts.setOnLoadCallback(drawChart);
-
-      function drawChart() {
-
-      // Create the data table.
-      var data = new google.visualization.DataTable();
-      data.addColumn('string', 'Topping');
-      data.addColumn('number', 'Slices');
-      data.addRows([
-        {% for key,value in tab_offer_count_pro.items%}
-        ['{{key}}',{{value}}],
-        {% endfor %}
-      ]);
-
-      // Create the data table.
-      var data2 = new google.visualization.DataTable();
-      data2.addColumn('string', 'Topping');
-      data2.addColumn('number', 'Slices');
-      data2.addRows([
-        {% for key,value in tab_offer_count_copro.items%}
-        ['{{key}}',{{value}}],
-        {% endfor %}
-      ]);
-
-      var data3 = new google.visualization.DataTable();
-      data3.addColumn('string', 'Topping');
-      data3.addColumn('number', 'Slices');
-      data3.addRows([
-        {% for key,value in tab_offer_count_read.items%}
-        ['{{key}}',{{value}}],
-        {% endfor %}
-      ]);
-
-      // Set chart options
-      var options = {'title':'{% trans 'title_chart_pro' %}: {{ count_advisers_pro }}',
-                     'width':300,
-                     'height':250};
-      // Set chart options
-      var options2 = {'title':'{% trans 'title_chart_copro' %}: {{ count_advisers_copro }}',
-                     'width':300,
-                     'height':250};
-      // Set chart options
-      var options3 = {'title':'{% trans 'title_chart_read' %}: {{ count_advisers_reader }}',
-                     'width':300,
-                     'height':250};
-
-      // Instantiate and draw our chart, passing in some options.
-      var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
-      chart.draw(data, options);
-      var chart2 = new google.visualization.PieChart(document.getElementById('chart_div2'));
-      chart2.draw(data2, options2);
-      var chart3 = new google.visualization.PieChart(document.getElementById('chart_div3'));
-      chart3.draw(data3, options3);
-
-    }
-
-    </script>
 {% endblock %}
