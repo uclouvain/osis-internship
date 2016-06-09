@@ -54,6 +54,9 @@ def upload_scores_file(request, learning_unit_year_id=None):
                 is_program_manager = mdl.program_manager.is_program_manager(request.user)
                 __save_xls_scores(request, file_name, is_program_manager, request.user,
                                   learning_unit_year.id)
+        else:
+            for error_msg in [error_msg for error_msgs in form.errors.values() for error_msg in error_msgs]:
+                messages.add_message(request, messages.ERROR, "{}".format(error_msg))
         return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_year_id, ]))
 
 

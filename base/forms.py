@@ -35,15 +35,15 @@ class LoginForm(forms.Form):
 
 
 class ScoreFileForm(forms.Form):
-    file = forms.FileField()
+    file = forms.FileField(error_messages={'required': _('no_file_submitted')})
 
     def clean_file(self):
         file = self.cleaned_data['file']
-        content_type = file.content_type.split('/')[0]
-        valid_content_type = 'vnd.openxmlformats-officedocument.spreadsheetml.sheet' == content_type
-        if ".xslx" not in file.name or not valid_content_type :
-            raise forms.ValidationError(_('file_must_be_xlsx'))
-        return  file
+        content_type = file.content_type.split('/')[1]
+        valid_content_type = 'vnd.openxmlformats-officedocument.spreadsheetml.sheet' in content_type
+        if ".xlsx" not in file.name or not valid_content_type :
+            self.add_error('file',forms.ValidationError(_('file_must_be_xlsx'), code='invalid'))
+        return file
 
 
 class OrganizationForm(ModelForm):
