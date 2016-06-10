@@ -351,21 +351,6 @@ def dissertations_list(request):
 
 @login_required
 @user_passes_test(is_teacher)
-def dissertations_new(request):
-    if request.method == "POST":
-        form = DissertationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('dissertations_list')
-    else:
-        form = DissertationForm(initial={'active': True})
-        form.fields["proposition_dissertation"].queryset = PropositionDissertation.objects.filter(visibility=True,
-                                                                                                  active=True)
-    return render(request, 'dissertations_edit.html', {'form': form})
-
-
-@login_required
-@user_passes_test(is_teacher)
 def dissertations_search(request):
     person = mdl.person.find_by_user(request.user)
     adviser = Adviser.find_by_person(person)
@@ -384,21 +369,6 @@ def dissertations_detail(request, pk):
     adviser = Adviser.find_by_person(person)
     return render(request, 'dissertations_detail.html',
                   {'dissertation': dissertation, 'adviser': adviser})
-
-
-@login_required
-@user_passes_test(is_teacher)
-def dissertations_edit(request, pk):
-    dissertation = get_object_or_404(Dissertation, pk=pk)
-    if request.method == "POST":
-        form = DissertationForm(request.POST, instance=dissertation)
-        if form.is_valid():
-            dissertation = form.save()
-            dissertation.save()
-            return redirect('dissertations_detail', pk=dissertation.pk)
-    else:
-        form = DissertationForm(instance=dissertation)
-    return render(request, 'dissertations_edit.html', {'form': form})
 
 
 @login_required
@@ -423,8 +393,23 @@ def dissertations_to_dir_submit(request, pk):
 @user_passes_test(is_teacher)
 def dissertations_to_dir_ok(request, pk):
     dissertation = get_object_or_404(Dissertation, pk=pk)
-    dissertation.status = 'DIR_OK'
-    dissertation.save()
+    offer_proposition = OfferProposition.objects.get(offer=dissertation.offer_year_start.offer)
+    if offer_proposition.validation_commission_exists and dissertation.status == 'DIR_SUBMIT':
+        dissertation.status = 'COM_SUBMIT'
+        dissertation.save()
+    elif offer_proposition.evaluation_first_year and (
+                    dissertation.status == 'DIR_SUBMIT' or dissertation.status == 'COM_SUBMIT'):
+        dissertation.status = 'EVA_SUBMIT'
+        dissertation.save()
+    elif dissertation.status == 'EVA_SUBMIT':
+        dissertation.status = 'TO_RECEIVE'
+        dissertation.save()
+    elif dissertation.status == 'DEFENDED':
+        dissertation.status = 'ENDED_WIN'
+        dissertation.save()
+    else:
+        dissertation.status = 'TO_RECEIVE'
+        dissertation.save()
     return redirect('dissertations_detail', pk=pk)
 
 
@@ -432,6 +417,16 @@ def dissertations_to_dir_ok(request, pk):
 @user_passes_test(is_teacher)
 def dissertations_to_dir_ko(request, pk):
     dissertation = get_object_or_404(Dissertation, pk=pk)
-    dissertation.status = 'DIR_KO'
-    dissertation.save()
+    if dissertation.status == 'DIR_SUBMIT':
+        dissertation.status = 'DIR_KO'
+        dissertation.save()
+    elif dissertation.status == 'COM_SUBMIT':
+        dissertation.status = 'COM_KO'
+        dissertation.save()
+    elif dissertation.status == 'EVA_SUBMIT':
+        dissertation.status = 'EVA_KO'
+        dissertation.save()
+    elif dissertation.status == 'DEFENDED':
+        dissertation.status = 'ENDED_LOS'
+        dissertation.save()
     return redirect('dissertations_detail', pk=pk)

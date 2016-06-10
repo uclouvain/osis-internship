@@ -143,10 +143,6 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <a class="btn btn-default btn-primary"
-                        href="{% url 'dissertations_edit' pk=dissertation.pk %}">
-                        <span class="glyphicon glyphicon-edit"></span> {% trans 'edit_dissertation' %}</a>
-
                         <a class="btn btn-default btn-danger"
                         href="{% url 'dissertations_delete' pk=dissertation.pk %}"
                         onclick="return confirm('{% trans 'delete_dissertation_confirmation_message' %}')">
@@ -159,6 +155,7 @@
                            onclick="return confirm('{% trans 'to_dir_ok_confirmation_message' %}')"><span
                                 class="glyphicon glyphicon-ok-circle"
                                 aria-hidden="true"></span> {% trans 'dissertations_to_dir_ok'%}</a>
+
                         <a href="{% url 'dissertations_to_dir_ko' pk=dissertation.pk %}"
                            id="lnk_dissertations_to_dir_ko" class="btn btn-default"
                            role="button" title="{% trans 'dissertations_to_dir_ko'%}"

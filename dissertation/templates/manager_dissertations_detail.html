@@ -197,7 +197,8 @@
                         {% if dissertation.status == 'DIR_SUBMIT' or dissertation.status == 'COM_SUBMIT' or dissertation.status == 'EVA_SUBMIT'%}
                           <a href="{% url 'manager_dissertations_to_dir_ok' pk=dissertation.pk %}"
                              id="lnk_manager_dissertations_to_dir_ok" class="btn btn-default"
-                             role="button" title="{% trans 'manager_dissertations_to_dir_ok'%}"><span
+                             role="button" title="{% trans 'manager_dissertations_to_dir_ok'%}"
+                             onclick="return confirm('{% trans 'confirmation_message' %}')"><span
                                   class="glyphicon glyphicon-ok-circle"
                                   aria-hidden="true"></span> {% trans 'Accepter manager_dissertations_to_dir_ok'%}</a>
                           <a href="{% url 'manager_dissertations_to_dir_ko' pk=dissertation.pk %}"
@@ -210,26 +211,30 @@
                         {% if dissertation.status == 'TO_RECEIVE' %}
                         <a href="{% url 'manager_dissertations_to_dir_submit' pk=dissertation.pk %}"
                            id="lnk_manager_dissertations_to_dir_submit" class="btn btn-default"
-                           role="button" title="{% trans 'manager_dissertations_to_dir_submit'%}"><span
+                           role="button" title="{% trans 'manager_dissertations_to_dir_submit'%}"
+                           onclick="return confirm('{% trans 'confirmation_message' %}')"><span
                                 class="glyphicon glyphicon-circle-arrow-right"
                                 aria-hidden="true"></span> {% trans 'Déposer manager_dissertations_to_receive'%}</a>
                         {% endif %}
                         {% if dissertation.status == 'TO_DEFEND' %}
                         <a href="{% url 'manager_dissertations_to_dir_submit' pk=dissertation.pk %}"
                            id="lnk_manager_dissertations_to_dir_submit" class="btn btn-default"
-                           role="button" title="{% trans 'manager_dissertations_to_dir_submit'%}"><span
+                           role="button" title="{% trans 'manager_dissertations_to_dir_submit'%}"
+                           onclick="return confirm('{% trans 'confirmation_message' %}')"><span
                                 class="glyphicon glyphicon-circle-arrow-right"
                                 aria-hidden="true"></span> {% trans 'Défendu manager_dissertations_to_receive'%}</a>
                         {% endif %}
                         {% if dissertation.status == 'DEFENDED' %}
                           <a href="{% url 'manager_dissertations_to_dir_ok' pk=dissertation.pk %}"
                              id="lnk_manager_dissertations_to_dir_ok" class="btn btn-default"
-                             role="button" title="{% trans 'manager_dissertations_to_dir_ok'%}"><span
+                             role="button" title="{% trans 'manager_dissertations_to_dir_ok'%}"
+                             onclick="return confirm('{% trans 'win_confirmation_message' %}')"><span
                                   class="glyphicon glyphicon-ok-circle"
                                   aria-hidden="true"></span> {% trans 'REUSSI manager_dissertations_to_dir_ok'%}</a>
                           <a href="{% url 'manager_dissertations_to_dir_ko' pk=dissertation.pk %}"
                              id="lnk_manager_dissertations_to_dir_ko" class="btn btn-default"
-                             role="button" title="{% trans 'manager_dissertations_to_dir_ko'%}"><span
+                             role="button" title="{% trans 'manager_dissertations_to_dir_ko'%}"
+                             onclick="return confirm('{% trans 'lose_confirmation_message' %}')"><span
                                   class="glyphicon glyphicon-remove-circle"
                                   aria-hidden="true"></span> {% trans 'RATE manager_dissertations_to_dir_ko'%}</a>
                         {% endif %}
