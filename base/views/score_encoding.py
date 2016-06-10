@@ -593,7 +593,7 @@ def get_data_specific_criteria(request):
     if request.method == 'POST':
         if is_program_manager:
             if not registration_id and not last_name and not first_name and not justification and not offer_year_id:
-                messages.add_message(request, messages.ERROR, "%s" % _('minimum_one_criteria'))
+                messages.add_message(request, messages.WARNING, "%s" % _('minimum_one_criteria'))
             else:
                 offer_year_id = int(
                     offer_year_id) if offer_year_id else None  # The offer_year_id received in session is a String, not an Int
