@@ -42,6 +42,8 @@ col_registration_id = 4
 col_score = 7
 col_justification = 8
 
+REGISTRATION_ID_SIZE = 8 # Size of all registration ids (convention)
+
 
 @login_required
 def upload_scores_file(request, learning_unit_year_id=None):
@@ -171,6 +173,7 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
             # If there's no score/justification encoded for this line, not necessary to make all checks below
             continue
         xls_registration_id = str(row[col_registration_id].value)
+        xls_registration_id = xls_registration_id.zfill(REGISTRATION_ID_SIZE)
         xls_offer_year_acronym = row[col_offer].value
         xls_learning_unit_acronym = row[col_learning_unit].value
         info_line = "%s %d (NOMA %s):" % (_('Line'), count + 1, xls_registration_id)
