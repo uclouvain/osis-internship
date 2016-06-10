@@ -110,7 +110,11 @@ def _get_all_data(worksheet):
 
 
 def __save_xls_scores(request, file_name, is_program_manager, user, learning_unit_year_id):
-    workbook = load_workbook(file_name, read_only=True)
+    try:
+        workbook = load_workbook(file_name, read_only=True)
+    except KeyError:
+        messages.add_message(request, messages.ERROR, _('file_must_be_xlsx'))
+        return False
     worksheet = workbook.active
     new_scores_number = 0
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
