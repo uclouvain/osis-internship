@@ -193,6 +193,9 @@ def manager_dissertations_print(request):
 @login_required
 @user_passes_test(is_manager)
 def manager_dissertations_new(request):
+    person = mdl.person.find_by_user(request.user)
+    adviser = Adviser.find_by_person(person)
+    faculty_adviser = FacultyAdviser.find_by_adviser(adviser)
     if request.method == "POST":
         form = ManagerDissertationForm(request.POST)
         if form.is_valid():
@@ -200,8 +203,7 @@ def manager_dissertations_new(request):
             return redirect('manager_dissertations_list')
     else:
         form = ManagerDissertationForm(initial={'active': True})
-        form.fields["proposition_dissertation"].queryset = PropositionDissertation.objects.filter(visibility=True,
-                                                                                                  active=True)
+        form.fields["proposition_dissertation"].queryset = PropositionDissertation.objects.filter(visibility=True, active=True, offer_proposition__offer=faculty_adviser)
     return render(request, 'manager_dissertations_edit.html', {'form': form})
 
 
