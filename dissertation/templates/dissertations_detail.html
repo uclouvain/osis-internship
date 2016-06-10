@@ -152,26 +152,17 @@
                         onclick="return confirm('{% trans 'delete_dissertation_confirmation_message' %}')">
                         <span class="glyphicon glyphicon-remove"></span> {% trans 'delete_dissertation' %}</a>
 
-                        {% if dissertation.status == 'DRAFT' %}
-                        <a href="{% url 'dissertations_to_dir_submit' pk=dissertation.pk %}"
-                           id="lnk_dissertations_to_dir_submit" class="btn btn-default"
-                           role="button" title="{% trans 'dissertations_to_dir_submit'%}"><span
-                                class="glyphicon glyphicon-circle-arrow-right"
-                                aria-hidden="true"></span> {% trans 'dissertations_to_dir_submit'%}</a>
-                        {% endif %}
-
-                        {% if dissertation.status == 'DIR_SUBMIT' or dissertation.status == 'DIR_KO' %}
+                        {% if dissertation.status == 'DIR_SUBMIT' %}
                         <a href="{% url 'dissertations_to_dir_ok' pk=dissertation.pk %}"
                            id="lnk_dissertations_to_dir_ok" class="btn btn-default"
-                           role="button" title="{% trans 'dissertations_to_dir_ok'%}"><span
+                           role="button" title="{% trans 'dissertations_to_dir_ok'%}"
+                           onclick="return confirm('{% trans 'to_dir_ok_confirmation_message' %}')"><span
                                 class="glyphicon glyphicon-ok-circle"
                                 aria-hidden="true"></span> {% trans 'dissertations_to_dir_ok'%}</a>
-                        {% endif %}
-
-                        {% if dissertation.status == 'DIR_SUBMIT' or dissertation.status == 'DIR_OK' %}
                         <a href="{% url 'dissertations_to_dir_ko' pk=dissertation.pk %}"
                            id="lnk_dissertations_to_dir_ko" class="btn btn-default"
-                           role="button" title="{% trans 'dissertations_to_dir_ko'%}"><span
+                           role="button" title="{% trans 'dissertations_to_dir_ko'%}"
+                           onclick="return confirm('{% trans 'to_dir_ko_confirmation_message' %}')"><span
                                 class="glyphicon glyphicon-remove-circle"
                                 aria-hidden="true"></span> {% trans 'dissertations_to_dir_ko'%}</a>
                         {% endif %}
