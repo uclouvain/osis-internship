@@ -445,3 +445,13 @@ def dissertations_to_dir_ko(request, pk):
         dissertation.status = 'ENDED_LOS'
         dissertation.save()
     return redirect('dissertations_detail', pk=pk)
+
+
+@login_required
+@user_passes_test(is_teacher)
+def dissertations_wait_list(request):
+    person = mdl.person.find_by_user(request.user)
+    adviser = Adviser.find_by_person(person)
+    dissertations = Dissertation.objects.filter(Q(proposition_dissertation__author=adviser) & Q(active=True) & Q(status="DIR_SUBMIT")).exclude(status="DRAFT")
+    return render(request, 'dissertations_list.html',
+                  {'dissertations': dissertations})
