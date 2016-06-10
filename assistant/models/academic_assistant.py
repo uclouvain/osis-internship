@@ -35,12 +35,6 @@ class AcademicAssistant(models.Model):
 
     person = models.ForeignKey('base.Person')
     supervisor = models.ForeignKey('base.Person', blank=True, null=True, related_name='person_supervisor')
-    position_id = models.CharField(max_length=12)
-    fulltime_equivalent = models.DecimalField(max_digits=3, decimal_places=2)
-    sap_id = models.CharField(max_length=12)
-    entry_date = models.DateField()
-    end_date = models.DateField()
-    scale = models.CharField(max_length=3)
     thesis_title = models.CharField(max_length=255, null=True, blank=True)
     phd_inscription_date = models.DateField(null=True, blank=True)
     confirmation_test_date = models.DateField(null=True, blank=True)
@@ -54,3 +48,6 @@ class AcademicAssistant(models.Model):
     
 def find_by_id(assistant_id):
     return AcademicAssistant.objects.get(id=assistant_id)  
+
+def find_by_person(person):
+    return AcademicAssistant.objects.get(person=person)  

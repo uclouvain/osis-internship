@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -23,17 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.conf.urls import url
-from django.contrib.auth.decorators import login_required
-from assistant.views import mandate, home
-from assistant.views import mandates_list
-from assistant.models import assistant_mandate
+from django.conf import settings
+from django.shortcuts import redirect, render
 
-urlpatterns = [
-    # S'il vous plaît, organiser les urls par ordre alphabétique.
-    url(r'^home$', home.assistant_home , name='assistants_home'),
-    url(r'^manager/mandates/(?P<mandate_id>\d+)/edit/$', mandate.mandate_edit, name='mandate_read'),
-    url(r'^manager/mandates/(?P<mandate_id>\d+)/save/$', mandate.mandate_save, name='mandate_save'),
-    url(r'^manager/mandates/load/$', mandate.load_mandates, name='load_mandates'),
-    url(r'^manager/mandates/$', login_required(mandates_list.MandatesListView.as_view()), name='mandates_list'),
-]
+
+def login(request):
+    return redirect(settings.CURRENT_URL)
+
+
+def log_out(request):
+    return redirect(settings.SERVER_LOGOUT_URL)
+
+

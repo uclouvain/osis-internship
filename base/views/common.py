@@ -27,7 +27,8 @@ from datetime import datetime
 import subprocess
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import login as django_login
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, logout
+from django.shortcuts import redirect
 from django.utils import translation
 from base import models as mdl
 from . import layout
@@ -36,11 +37,15 @@ from django.utils.translation import ugettext_lazy as _
 
 
 def page_not_found(request):
-    return layout.render(request, 'page_not_found.html')
+    return layout.render(request, 'page_not_found.html', {})
 
 
 def access_denied(request):
-    return layout.render(request, 'access_denied.html')
+    return layout.render(request, 'access_denied.html', {})
+
+
+def server_error(request):
+    return layout.render(request, 'server_error.html', {})
 
 
 def login(request):
@@ -65,6 +70,15 @@ def home(request):
         calendar_events = mdl.academic_calendar.find_academic_calendar_by_academic_year_with_dates(academic_yr.id)
     return layout.render(request, "home.html", {'academic_calendar': calendar_events,
                                                 'highlights': mdl.academic_calendar.find_highlight_academic_calendars()})
+
+
+def log_out(request):
+    logout(request)
+    return redirect('logged_out')
+
+
+def logged_out(request):
+    return layout.render(request,'logged_out.html', {})
 
 
 @login_required
