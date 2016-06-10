@@ -365,6 +365,13 @@ def get_data(request, offer_year_id=None):
                                                             'exam_enrollments_encoded': exam_enrollments_encoded,
                                                             'total_exam_enrollments': 1}
     scores_list = group_by_learn_unit_year.values()
+    # Adding progress for each line (progress by learningUnitYear)
+    for exam_enrol_by_learn_unit in scores_list:
+        progress = (exam_enrol_by_learn_unit['exam_enrollments_encoded']
+                    / exam_enrol_by_learn_unit['total_exam_enrollments']) * 100
+        exam_enrol_by_learn_unit['progress'] = "{0:.0f}".format(progress)
+        exam_enrol_by_learn_unit['progress_int'] = progress
+    # Filtering by learningUnitYear.acronym
     scores_list = sorted(scores_list, key=lambda k: k['learning_unit_year'].acronym)
 
     return layout.render(request, "assessments/scores_encoding.html",
@@ -402,6 +409,7 @@ def get_data_online(learning_unit_year_id, request):
     return {'section': 'scores_encoding',
             'academic_year': academic_yr,
             'progress': "{0:.0f}".format(progress),
+            'progress_int': progress,
             'enrollments': exam_enrollments,
             'learning_unit_year': learning_unit_year,
             'coordinator': coordinator,
@@ -515,12 +523,15 @@ def get_data_pgmer(request,
         coord_grouped_by_learning_unit = {attrib.learning_unit.id: attrib.tutor for attrib in all_attributions
                                           if attrib.function == 'COORDINATOR'}
         for score_encoding in scores_encodings:
+            progress = (score_encoding.exam_enrollments_encoded / score_encoding.total_exam_enrollments) * 100
             line = {}
             line['learning_unit_year'] = score_encoding.learning_unit_year
             line['exam_enrollments_encoded'] = score_encoding.exam_enrollments_encoded
             line['total_exam_enrollments'] = score_encoding.total_exam_enrollments
             line['tutor'] = coord_grouped_by_learning_unit.get(score_encoding.learning_unit_year.learning_unit.id,
                                                                None)
+            line['progress'] = "{0:.0f}".format(progress)
+            line['progress_int'] = progress
             data.append(line)
 
     if incomplete_encodings_only:
