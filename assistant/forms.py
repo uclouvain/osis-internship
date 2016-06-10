@@ -27,10 +27,8 @@ from django import forms
 from django.db.models import Q
 from django.forms import ModelForm, Textarea
 from assistant import models as mdl
-from base.models import structure 
+from base.models import structure
 from django.forms.models import inlineformset_factory
-
-
 
 
 class MandateForm(ModelForm):
@@ -87,5 +85,3 @@ StructureInLineFormSet = inlineformset_factory(mdl.assistant_mandate.AssistantMa
                                                can_delete=True,
                                                min_num=1,
                                                max_num=2)  
-    
-
