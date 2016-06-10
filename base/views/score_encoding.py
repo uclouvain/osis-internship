@@ -47,7 +47,7 @@ def _is_inside_scores_encodings_period(user):
     academic_calendars = list(mdl.academic_calendar.get_scores_encoding_calendars())
     for ac_calendar in academic_calendars:
         if ac_calendar.start_date and ac_calendar.end_date:
-            if ac_calendar.start_date < now < ac_calendar.end_date:
+            if ac_calendar.start_date <= now <= ac_calendar.end_date:
                 return True
     return False
 
