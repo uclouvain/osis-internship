@@ -638,6 +638,8 @@ def specific_criteria_submission(request):
 
     scores_saved = 0
 
+    learning_unit_years_changed = []
+
     for enrollment in data['exam_enrollments']:
         learning_unit_year = enrollment.learning_unit_enrollment.learning_unit_year
         decimal_scores_authorized = learning_unit_year.decimal_scores
@@ -651,6 +653,10 @@ def specific_criteria_submission(request):
 
         if changed:
             scores_saved += 1
+
+            if learning_unit_year not in learning_unit_years_changed:
+                learning_unit_years_changed.append(learning_unit_year)
+
             new_score, new_justification = _truncate_decimals(score, justification, decimal_scores_authorized)
 
             enrollment.score_draft = new_score
@@ -662,10 +668,27 @@ def specific_criteria_submission(request):
                                                                 enrollment.justification_final)
             enrollment.save()
 
-    # sent_error_message = __send_message_if_all_encoded_in_pgm(data.get('exam_enrollments'),
-    #                                                           data.get('learning_unit_year'))
-    # if sent_error_message:
-    #     messages.add_message(request, messages.ERROR, "%s" % sent_error_message)
+    academic_yr = mdl.academic_year.current_academic_year()
+    offers_year_managed = mdl.offer_year.find_by_user(request.user, academic_yr)
+    all_exam_enrollments = list(mdl.exam_enrollment.find_for_score_encodings(session_exam_number=mdl.session_exam.find_session_exam_number(),
+                                                                             offers_year=offers_year_managed,
+                                                                             learning_unit_year_ids=[learn_unit_year.id for learn_unit_year in learning_unit_years_changed]))
+
+    # ExamEnrollments by learning_unit_year (only if examEnrollment of the learningUnitYear has changed)
+    grouped_by_learning_unit_years_for_mails = {}
+    for enrollment in all_exam_enrollments:
+        learning_unit_year = enrollment.learning_unit_enrollment.learning_unit_year
+        if learning_unit_year in learning_unit_years_changed:
+            if learning_unit_year in grouped_by_learning_unit_years_for_mails.keys():
+                grouped_by_learning_unit_years_for_mails[learning_unit_year].append(enrollment)
+            else:
+                grouped_by_learning_unit_years_for_mails[learning_unit_year] = [enrollment]
+
+    for learn_unit_year, exam_enrollments in grouped_by_learning_unit_years_for_mails.items():
+        sent_error_message = __send_message_if_all_encoded_in_pgm(exam_enrollments,
+                                                                  learn_unit_year)
+        if sent_error_message:
+            messages.add_message(request, messages.ERROR, "%s" % sent_error_message)
 
     messages.add_message(request, messages.INFO, "%s %s" % (scores_saved, _('scores_saved')))
     return specific_criteria(request)
