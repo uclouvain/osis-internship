@@ -35,15 +35,14 @@
   <div class="page-header">
     <h2>{% trans 'dissertations' %}</h2>
   </div>
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="#">{% trans 'all_dissertations' %}</a></li>
+  </ul>
   <div class="panel panel-default">
     <div class="panel-body">
       <form method="get" action="{% url 'manager_dissertations_search'%}">
         <div class="row">
           <div class="col-md-6">
-          
-            <a href="{% url 'manager_dissertations_list' %}" id="lnk_manager_dissertations" class="btn btn-default"
-            role="button" title="{% trans 'all_dissertations'%}"><span class="glyphicon glyphicon-list"
-            aria-hidden="true"></span> {% trans 'all_dissertations'%}</a>
             <a href="{% url 'manager_dissertations_new' %}" id="lnk_manager_dissertations_new" class="btn btn-default"
             role="button" title="{% trans 'create_dissertation'%}"><span class="glyphicon glyphicon-plus"
             aria-hidden="true"></span> {% trans 'add_dissertation'%}</a>
