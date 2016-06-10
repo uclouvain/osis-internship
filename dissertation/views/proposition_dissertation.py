@@ -27,8 +27,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from base import models as mdl
-from dissertation.models.proposition_dissertation import PropositionDissertation
 from dissertation.models.adviser import Adviser
+from dissertation.models.faculty_adviser import FacultyAdviser
+from dissertation.models.proposition_dissertation import PropositionDissertation
 from dissertation.forms import PropositionDissertationForm, ManagerPropositionDissertationForm
 from django.contrib.auth.decorators import user_passes_test
 
@@ -43,7 +44,10 @@ def is_manager(user):
 @login_required
 @user_passes_test(is_manager)
 def manager_proposition_dissertations(request):
-    proposition_dissertations = PropositionDissertation.objects.filter(Q(active=True))
+    person = mdl.person.find_by_user(request.user)
+    adviser = Adviser.find_by_person(person)
+    faculty_adviser = FacultyAdviser.find_by_adviser(adviser)
+    proposition_dissertations = PropositionDissertation.objects.filter(Q(active=True) & Q(offer_proposition__offer=faculty_adviser))
     return render(request, 'manager_proposition_dissertations_list.html',
                   {'proposition_dissertations': proposition_dissertations})
 
