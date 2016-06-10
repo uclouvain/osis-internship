@@ -1010,8 +1010,14 @@ msgstr "Search in the messages history"
 msgid "none"
 msgstr "None"
 
+msgid "application_management"
+msgstr "Application management"
+
 msgid "learning_unit_responsible"
 msgstr "Learning unit's responsible"
+
+msgid "too_many_results"
+msgstr "Too many results! Please be more specific."
 
 msgid "all_learning_units_must_be_shown"
 msgstr "All learning units must be shown"

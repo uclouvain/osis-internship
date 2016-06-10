@@ -289,7 +289,7 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                                     exam_enrollment.save()
 
     if new_scores_number > 0:
-        messages.add_message(request, messages.INFO, '%s %s' % (str(new_scores_number), _('score_saved')))
+        messages.add_message(request, messages.SUCCES, '%s %s' % (str(new_scores_number), _('score_saved')))
         if not is_program_manager:
             tutor = mdl.tutor.find_by_user(user)
             if tutor and learning_unit_year.learning_unit_id:
@@ -297,7 +297,7 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                                                      learning_unit_id=learning_unit_year.learning_unit_id,
                                                      function='COORDINATOR')
                 if not coordinator:
-                    messages.add_message(request, messages.INFO, '%s' % _('the_coordinator_must_still_submit_scores'))
+                    messages.add_message(request, messages.SUCCES, '%s' % _('the_coordinator_must_still_submit_scores'))
         return True
     else:
         messages.add_message(request, messages.ERROR, '%s' % _('no_score_injected'))

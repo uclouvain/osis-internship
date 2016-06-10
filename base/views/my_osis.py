@@ -25,7 +25,9 @@
 ##############################################################################
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 from django.utils import translation
 from base import models as mdl
 from base.views import layout
@@ -33,16 +35,16 @@ from django.utils.translation import ugettext as _
 
 @login_required
 def my_osis_index(request):
-    return layout.render(request,"my_osis/my_osis_home.html")
+    return layout.render(request, "my_osis/my_osis_home.html", {})
 
 
 @login_required
 def my_messages_index(request):
-    username = request.GET['user']
-    my_messages = list(mdl.message_history.find_my_messages(username))
+    person = mdl.person.find_by_user(request.user)
+    my_messages = mdl.message_history.find_my_messages(person)
     if not my_messages:
-        messages.add_message(request, messages.INFO, "%s" % _('no_messages'))
-    return layout.render(request,"my_osis/my_messages.html", {'messages': my_messages, })
+        messages.add_message(request, messages.INFO, _('no_messages'))
+    return layout.render(request, "my_osis/my_messages.html", {'my_messages': my_messages, })
 
 
 @login_required
@@ -54,7 +56,7 @@ def delete_from_my_messages(request,message_id):
 @login_required
 def read_message(request, message_id):
     message = mdl.message_history.find_by_id(message_id).update(read_in_myosis=True)
-    return layout.render(request, "my_osis/my_message.html", {'message': message, })
+    return layout.render(request, "my_osis/my_message.html", {'my_message': message, })
 
 
 
@@ -85,3 +87,11 @@ def profile_lang(request):
     translation.activate(ui_language)
     request.session[translation.LANGUAGE_SESSION_KEY] = ui_language
     return profile(request)
+
+
+@login_required
+@user_passes_test(lambda u: u.has_perm('base.management_tasks') and u.has_perm('base.change_messagetemplate'))
+def messages_templates_index(request):
+    return HttpResponseRedirect(reverse('admin:base_messagetemplate_changelist'))
+
+

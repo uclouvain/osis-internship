@@ -35,7 +35,7 @@
         <h2>{% trans 'my_messages' %}</h2>
     </div>
     {% include "template_messages.html" %}
-    {% if messages %}
+    {% if my_messages %}
         <table class="table table-striped table-hover">
             <thead>
             <tr>
@@ -43,11 +43,11 @@
                 <th>{% trans 'received_on' %}</th>
             </tr>
             </thead>
-            {% for message in messages %}
-                <tr {% if not message.read_in_myosis %} style="font-weight: bold" {% endif %}>
-                    <td><a href="{% url 'read_my_message' message.id %}"
-                           id="lnk_my_message_read_{{ message.id }}" title="tooltip_my_message_read">{{ message.subject }}</a></td>
-                    <td>{% message.created %}
+            {% for my_message in my_messages %}
+                <tr {% if not my_message.read_in_myosis %} style="font-weight: bold" {% endif %}>
+                    <td><a href="{% url 'read_my_message' my_message.id %}"
+                           id="lnk_my_message_read_{{ my_message.id }}" title="tooltip_my_message_read">{{ my_message.subject }}</a></td>
+                    <td>{{ my_message.created  }}
                 </tr>
             {% endfor %}
         </table>

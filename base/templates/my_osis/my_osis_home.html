@@ -1,7 +1,6 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
 {% load i18n %}
-{% load admin_urls %}
 
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
@@ -50,4 +49,22 @@
             </div>
         </div>
     </div>
+    {% if perms.base.management_tasks or request.user.is_superuser %}
+        <div class="panel panel-danger">
+            <div class="panel-heading clearfix">
+                <i class="fa fa-cogs" style="font-size: 200%; color: #6699FF;"></i>
+                {% trans 'application_management' %}
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    {% if perms.base.change_messagetemplate %}
+                    <div class="col-md-5 col-md-offset-1">
+                        <h4 class="media-heading"><a href="{% url 'messages_templates' %}" id="lnk_configure_messages_templates">{% trans 'messages_templates' %}</a></h4>
+                        <p>{% trans 'desc_messages_template' %}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}

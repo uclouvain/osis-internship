@@ -26,6 +26,23 @@
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
+from django.contrib import admin
+from django.utils.translation import ugettext as _
+
+class MessageHistoryAdmin(admin.ModelAdmin):
+    date_hierarchy = 'created'
+    list_display = ('person', 'reference', 'subject', 'sent', 'created')
+    fieldsets = ((None, {'fields': (('person__first_name', 'person__last_name', 'person__email'), 'reference',
+                                    'subject', ('sent', 'created'))}),)
+    readonly_fields = ('person', 'reference', 'subject', 'sent', 'created')
+    ordering = ['-created']
+    search_fields = ['person__first_name', 'person__last_name', 'person__email', 'reference', 'subject']
+
+    def get_search_results(self, request, queryset, search_term):
+        queryset, use_distinct = super(MessageHistoryAdmin, self).get_search_results(request, queryset, search_term)
+        if len(queryset[:201]) > 200:
+            raise ValueError(_('too_many_results'))
+        return queryset, use_distinct
 
 
 class MessageHistory(models.Model):
@@ -74,8 +91,8 @@ def search(limit=100, **kwargs):
     return messages_history
 
 
-def find_my_messages(username):
-    return MessageHistory.objects.filter(person__user__username=username).filter(show_in_myosis=True).order_by('sent')
+def find_my_messages(person):
+    return MessageHistory.objects.filter(person=person).filter(show_in_myosis=True).order_by('sent')
 
 
 def delete_my_message(message_id):

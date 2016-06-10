@@ -19,11 +19,17 @@ msgstr ""
 msgid "absent"
 msgstr "Absent"
 
+msgid "application_management"
+msgstr "Gestion de l'application"
+
 msgid "absent_pdf_legend"
 msgstr "A=Absent"
 
 msgid "are_you_sure"
 msgstr "Êtes-vous sûr?"
+
+msgid "too_many_results"
+msgstr "Votre recherche retourne trop de résultats, veuillez spécifier la recherche."
 
 msgid "birth_date"
 msgstr "Date de naissance"
