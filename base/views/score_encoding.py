@@ -24,16 +24,51 @@
 #
 ##############################################################################
 import csv
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.db import IntegrityError
 from django.http import HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as trans
 from base import models as mdl
 from base.utils import send_mail, pdf_utils, export_utils
 from . import layout
 import json
+import datetime
+
+
+def _is_inside_scores_encodings_period(user):
+    """
+    :param user: The request.User
+    :return: True if the today date is inside a period of scores encodings (inside session 1,2 or 3). Else return False.
+    """
+    now = datetime.datetime.now().date()
+    academic_calendars = list(mdl.academic_calendar.get_scores_encoding_calendars())
+    for ac_calendar in academic_calendars:
+        if ac_calendar.start_date and ac_calendar.end_date:
+            if ac_calendar.start_date <= now <= ac_calendar.end_date:
+                return True
+    return False
+
+
+@login_required
+def outside_scores_encodings_period(request):
+    now = datetime.datetime.now().date()
+    academic_calendars = list(mdl.academic_calendar.get_scores_encoding_calendars())
+    last_academic_calendar = None
+    # Searching for the latest period of scores encodings
+    for ac_calendar in academic_calendars:
+        if ac_calendar.start_date and ac_calendar.end_date:
+            if last_academic_calendar is None:
+                last_academic_calendar = ac_calendar
+            elif now - ac_calendar.end_date < now - last_academic_calendar.end_date:
+                last_academic_calendar = ac_calendar
+
+    str_date = last_academic_calendar.end_date.strftime('%d/%m/%Y') if last_academic_calendar else ''
+    text = trans('outside_scores_encodings_period') % str_date
+    messages.add_message(request, messages.WARNING, "%s" % text)
+    return layout.render(request, "assessments/outside_scores_encodings_period.html", {})
 
 
 def _truncate_decimals(new_score, new_justification, decimal_scores_authorized):
@@ -58,6 +93,7 @@ def _truncate_decimals(new_score, new_justification, decimal_scores_authorized):
 
 
 @login_required
+@user_passes_test(_is_inside_scores_encodings_period, login_url=reverse_lazy('outside_scores_encodings_period'))
 def scores_encoding(request):
     # In case the user is a program manager
     if mdl.program_manager.is_program_manager(user=request.user):
@@ -71,6 +107,7 @@ def scores_encoding(request):
 
 
 @login_required
+@user_passes_test(_is_inside_scores_encodings_period, login_url=reverse_lazy('outside_scores_encodings_period'))
 def online_encoding(request, learning_unit_year_id=None):
     data_dict = get_data_online(learning_unit_year_id, request)
     return layout.render(request, "assessments/online_encoding.html", data_dict)
@@ -100,6 +137,7 @@ def __send_message_if_all_encoded_in_pgm(enrollments, learning_unit_year):
 
 
 @login_required
+@user_passes_test(_is_inside_scores_encodings_period, login_url=reverse_lazy('outside_scores_encodings_period'))
 def online_encoding_form(request, learning_unit_year_id=None):
     data = get_data_online(learning_unit_year_id, request)
 
@@ -151,6 +189,7 @@ def online_encoding_form(request, learning_unit_year_id=None):
 
 
 @login_required
+@user_passes_test(_is_inside_scores_encodings_period, login_url=reverse_lazy('outside_scores_encodings_period'))
 def online_double_encoding_form(request, learning_unit_year_id=None):
     data = get_data_online_double(learning_unit_year_id, request)
     encoded_exam_enrollments = data['enrollments']
@@ -198,6 +237,7 @@ def online_double_encoding_form(request, learning_unit_year_id=None):
 
 
 @login_required
+@user_passes_test(_is_inside_scores_encodings_period, login_url=reverse_lazy('outside_scores_encodings_period'))
 def online_double_encoding_validation(request, learning_unit_year_id=None, tutor_id=None):
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
     academic_year = mdl.academic_year.current_academic_year()
@@ -292,6 +332,7 @@ def upload_score_error(request):
 
 
 @login_required
+@user_passes_test(_is_inside_scores_encodings_period, login_url=reverse_lazy('outside_scores_encodings_period'))
 def notes_printing(request, learning_unit_year_id=None, tutor_id=None, offer_id=None):
     academic_year = mdl.academic_year.current_academic_year()
     is_program_manager = mdl.program_manager.is_program_manager(request.user)
@@ -311,6 +352,7 @@ def notes_printing_all(request, tutor_id=None, offer_id=None):
 
 
 @login_required
+@user_passes_test(_is_inside_scores_encodings_period, login_url=reverse_lazy('outside_scores_encodings_period'))
 def export_xls(request, learning_unit_year_id, academic_year_id):
     academic_year = mdl.academic_year.current_academic_year()
     is_program_manager = mdl.program_manager.is_program_manager(request.user)
@@ -562,6 +604,7 @@ def get_data_pgmer(request,
 
 
 @login_required
+@user_passes_test(_is_inside_scores_encodings_period, login_url=reverse_lazy('outside_scores_encodings_period'))
 def refresh_list(request):
     # In case the user is a program manager
     if mdl.program_manager.is_program_manager(user=request.user):

@@ -1125,6 +1125,23 @@ msgstr "This student has multiple enrollments for a same exam. "
 msgid "justification_invalid"
 msgstr "Invalid justification"
 
+msgid "outside_scores_encodings_period"
+msgstr "You're out of the period of scores' encodings : the last exams' session is closed since %s."
+
+msgid "offer_year_calendar_academic_calendar_start_date_error"
+msgstr "The start date of your program can't be lower than the opening's date of scores' encodings in the academic calendar"
+
+msgid "offer_year_calendar_academic_calendar_end_date_error"
+msgstr "The end date of your program can't be greater than the closure's date of scores' encodings in the academic calendar"
+
+msgid "academic_calendar_offer_year_calendar_start_date_error"
+msgstr "The opening's date of scores' encodings of the academic calendar can't be greater than %s "
+       "(start date of scores' encodings of the program '%s')"
+
+msgid "academic_calendar_offer_year_calendar_end_date_error"
+msgstr "The closure's date of scores' encodings of the academic calendar can't be lower than %s "
+       "(end date of scores' encodings of the program '%s')"
+
 msgid "more_than_one_learning_unit_error"
 msgstr "You encoded scores for more than 1 learning unit in your excel file (column 'Learning unit'). "
        "Please make one excel file by learning unit."
