@@ -74,8 +74,8 @@ def search(limit=100, **kwargs):
     return messages_history
 
 
-def find_my_messages(username):
-    return MessageHistory.objects.filter(person__user__username=username).filter(show_in_myosis=True).order_by('sent')
+def find_my_messages(person):
+    return MessageHistory.objects.filter(person=person).filter(show_in_myosis=True).order_by('sent')
 
 
 def delete_my_message(message_id):

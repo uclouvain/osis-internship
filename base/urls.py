@@ -124,8 +124,8 @@ urlpatterns = [
 
     url(r'^my_osis/$',my_osis.my_osis_index,name="my_osis"),
     url(r'^my_osis/my_messages/$',my_osis.my_messages_index,name="my_messages"),
-    url(r'^my_osis/my_messages/read/([0-9]+)/$', my_osis.read_message,"read_my_message"),
-    url(r'^my_osis/my_messages/delete/([0-9]+)/$', my_osis.delete_from_my_messages, "delete_my_message"),
+    url(r'^my_osis/my_messages/read/([0-9]+)/$', my_osis.read_message, name="read_my_message"),
+    url(r'^my_osis/my_messages/delete/([0-9]+)/$', my_osis.delete_from_my_messages, name="delete_my_message"),
     url(r'^my_osis/profile/$', my_osis.profile, name='profile'),
     url(r'^my_osis/profile/lang$', my_osis.profile_lang, name='profile_lang'),
 ]
