@@ -344,7 +344,7 @@ def manager_dissertations_to_dir_ko(request, pk):
 def dissertations_list(request):
     person = mdl.person.find_by_user(request.user)
     adviser = Adviser.find_by_person(person)
-    dissertations = Dissertation.objects.filter(Q(proposition_dissertation__author=adviser) & Q(active=True))
+    dissertations = Dissertation.objects.filter(Q(proposition_dissertation__author=adviser) & Q(active=True)).exclude(status="DRAFT")
     return render(request, 'dissertations_list.html',
                   {'dissertations': dissertations})
 
