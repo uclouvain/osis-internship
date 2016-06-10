@@ -53,7 +53,7 @@
           </div>
           <br>
         {% endfor %}
-        <button type="submit" class="save btn btn-default">Save</button>
+        <button type="submit" class="save btn btn-default" onclick="return confirm('{% trans 'proposition_dissertation_confirmation_message' %}')">Save</button>
       </form>
     </div>
   </div>
