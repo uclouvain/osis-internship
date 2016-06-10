@@ -22,4 +22,8 @@ class Migration(migrations.Migration):
             name='show_in_myosis',
             field=models.BooleanField(default=True),
         ),
+        migrations.AlterModelOptions(
+            name='person',
+            options={'permissions': (('management_tasks', 'Can do management tasks'),)},
+        ),
     ]

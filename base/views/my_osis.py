@@ -25,7 +25,9 @@
 ##############################################################################
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 from django.utils import translation
 from base import models as mdl
 from base.views import layout
@@ -85,3 +87,11 @@ def profile_lang(request):
     translation.activate(ui_language)
     request.session[translation.LANGUAGE_SESSION_KEY] = ui_language
     return profile(request)
+
+
+@login_required
+@user_passes_test(lambda u: u.has_perm('base.management_tasks') and u.has_perm('base.change_messagetemplate'))
+def messages_templates_index(request):
+    return HttpResponseRedirect(reverse('admin:base_messagetemplate_changelist'))
+
+
