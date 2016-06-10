@@ -751,8 +751,8 @@ msgstr "Mister"
 msgid "miss"
 msgstr "Miss"
 
-msgid "file_must_be_xls"
-msgstr "The file must be a XLS"
+msgid "file_must_be_xlsx"
+msgstr "The file must be a valid 'XLSX' excel file"
 
 msgid "invalid_file"
 msgstr "Invalid file"
@@ -1082,6 +1082,9 @@ msgstr "You haven't any score to encode."
 
 msgid "tooltip_dowload_excel_file"
 msgstr "Download the excel file"
+
+msgid "no_file_submitted"
+msgstr "You have to select a file to upload."
 
 msgid "tooltip_print_scores"
 msgstr "Print the scores"

@@ -760,11 +760,14 @@ msgstr "Monsieur"
 msgid "miss"
 msgstr "Madame"
 
-msgid "file_must_be_xls"
-msgstr "Le fichier doit être un XLS"
+msgid "file_must_be_xlsx"
+msgstr "Le fichier doit être un fichier excel valide au format 'XLSX'"
 
 msgid "invalid_file"
 msgstr "Fichier invalide"
+
+msgid "no_file_submitted"
+msgstr "Vous n'avez pas selectionné de fichier excel à soumettre."
 
 msgid "Line"
 msgstr "Ligne"

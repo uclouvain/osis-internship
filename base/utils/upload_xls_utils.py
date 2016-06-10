@@ -26,7 +26,6 @@
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from django.utils.translation import ungettext
 from openpyxl import load_workbook
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
@@ -51,14 +50,13 @@ def upload_scores_file(request, learning_unit_year_id=None):
         if form.is_valid():
             file_name = request.FILES['file']
             if file_name is not None:
-                if ".xls" not in str(file_name):
-                    messages.add_message(request, messages.INFO, _('file_must_be_xls'))
-                else:
-                    learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
-                    is_program_manager = mdl.program_manager.is_program_manager(request.user)
-                    __save_xls_scores(request, file_name, is_program_manager, request.user,
-                                      learning_unit_year.id)
-
+                learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
+                is_program_manager = mdl.program_manager.is_program_manager(request.user)
+                __save_xls_scores(request, file_name, is_program_manager, request.user,
+                                  learning_unit_year.id)
+        else:
+            for error_msg in [error_msg for error_msgs in form.errors.values() for error_msg in error_msgs]:
+                messages.add_message(request, messages.ERROR, "{}".format(error_msg))
         return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_year_id, ]))
 
 
