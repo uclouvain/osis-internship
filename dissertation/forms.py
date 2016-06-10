@@ -53,6 +53,12 @@ class PropositionDissertationForm(ModelForm):
         widgets = {'author': forms.HiddenInput(), 'offer_proposition': forms.CheckboxSelectMultiple()}
 
 
+class ManagerAddAdviserForm(ModelForm):
+    class Meta:
+        model = Adviser
+        fields = ('person','available_by_email', 'available_by_phone', 'available_at_office', 'comment')
+
+
 class ManagerAdviserForm(ModelForm):
     class Meta:
         model = Adviser

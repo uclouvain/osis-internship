@@ -29,7 +29,7 @@ from dissertation.models.adviser import Adviser
 from dissertation.models.dissertation_role import DissertationRole
 from dissertation.models.offer_proposition import OfferProposition
 from base import models as mdl
-from dissertation.forms import AdviserForm, ManagerAdviserForm
+from dissertation.forms import AdviserForm, ManagerAdviserForm, ManagerAddAdviserForm
 from django.contrib.auth.decorators import user_passes_test
 from django.db import IntegrityError
 from django.db.models import Q
@@ -205,6 +205,19 @@ def manager_informations(request):
 
 @login_required
 @user_passes_test(is_manager)
+def manager_informations_add(request):
+    if request.method == "POST":
+        form = ManagerAddAdviserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('manager_informations')
+    else:
+        form = ManagerAddAdviserForm(initial={'type': "PRF"})
+    return render(request, 'manager_informations_add.html', {'form': form})
+
+
+@login_required
+@user_passes_test(is_manager)
 def manager_informations_detail(request, pk):
     adviser = get_object_or_404(Adviser, pk=pk)
     return render(request, 'manager_informations_detail.html', {'adviser': adviser})
@@ -221,7 +234,7 @@ def manager_informations_edit(request, pk):
             adviser.save()
             return redirect('manager_informations_detail', pk=adviser.pk)
     else:
-        form = AdviserForm(instance=adviser)
+        form = ManagerAdviserForm(instance=adviser)
 
     return render(request, "manager_informations_edit.html", {'adviser': adviser, 'form': form})
 
