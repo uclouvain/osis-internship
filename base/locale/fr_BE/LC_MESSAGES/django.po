@@ -793,6 +793,12 @@ msgstr "L'inscription à l'unité d'enseignement %s n'existe pas"
 msgid "Note already submitted"
 msgstr ""
 
+msgid "server_error"
+msgstr "Une erreur innatendue s'est produite"
+
+msgid "server_error_message"
+msgstr "Nous mettons tout en oeuvre pour résoudre ce problème."
+
 msgid "scores_gt_0_lt_20"
 msgstr "La note encodée est incorrecte (elle doit être comprise entre 0 et 20)"
 
