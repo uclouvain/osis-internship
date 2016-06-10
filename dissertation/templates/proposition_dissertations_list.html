@@ -35,17 +35,15 @@
   <div class="page-header">
     <h2>{% trans 'subjects' %}</h2>
   </div>
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="{% url 'proposition_dissertation_my' %}">{% trans 'my_proposition_dissertations' %}</a></li>
+    <li class="active"><a href="{% url 'proposition_dissertations'%}">{% trans 'all_proposition_dissertations' %}</a></li>
+  </ul>
   <div class="panel panel-default">
     <div class="panel-body">
       <form method="get" action="{% url 'proposition_dissertations_search'%}">
         <div class="row">
           <div class="col-md-6">
-            <a href="{% url 'proposition_dissertations' %}" id="lnk_proposition_dissertation" class="btn btn-default"
-            role="button" title="{% trans 'all_propositions_dissertations'%}"><span class="glyphicon glyphicon-list"
-            aria-hidden="true"></span> {% trans 'all_propositions'%}</a>
-            <a href="{% url 'proposition_dissertation_my' %}" id="lnk_proposition_dissertation_my" class="btn btn-default"
-            role="button" title="{% trans 'my_propositions_dissertations'%}"><span class="glyphicon glyphicon-user"
-            aria-hidden="true"></span> {% trans 'my_propositions'%}</a>
             <a href="{% url 'proposition_dissertation_new' %}" id="lnk_proposition_dissertation_new" class="btn btn-default"
             role="button" title="{% trans 'create_proposition_dissertation'%}"><span class="glyphicon glyphicon-plus"
             aria-hidden="true"></span> {% trans 'add_proposition'%}</a>
