@@ -4,12 +4,14 @@ sys
 *.pyc
 *.iml
 .idea/
+*.csv
 venv/
 __pycache__/
 backoffice/server_settings.py
 /base/tests/sent_mails
 /reports
 .project
+.settings
 .vscode/
 .pydevproject
 *.mo
