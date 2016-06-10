@@ -58,6 +58,8 @@ urlpatterns = [
         name='manager_dissertations_to_dir_ok'),
     url(r'^manager_dissertations_to_dir_ko/(?P<pk>[0-9]+)$', dissertation.manager_dissertations_to_dir_ko,
         name='manager_dissertations_to_dir_ko'),
+        url(r'^manager_dissertations_wait_list$', dissertation.manager_dissertations_wait_list,
+            name='manager_dissertations_wait_list'),
 
     url(r'^manager_informations/$', information.manager_informations, name='manager_informations'),
     url(r'^manager_informations_add/$', information.manager_informations_add, name='manager_informations_add'),

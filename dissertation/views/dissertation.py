@@ -340,6 +340,16 @@ def manager_dissertations_to_dir_ko(request, pk):
     return redirect('manager_dissertations_detail', pk=pk)
 
 
+@login_required
+@user_passes_test(is_manager)
+def manager_dissertations_wait_list(request):
+    person = mdl.person.find_by_user(request.user)
+    adviser = Adviser.find_by_person(person)
+    faculty_adviser = FacultyAdviser.find_by_adviser(adviser)
+    dissertations = Dissertation.objects.filter(Q(offer_year_start__offer=faculty_adviser) & Q(status="DIR_SUBMIT"))
+    return render(request, 'manager_dissertations_wait_list.html', {'dissertations': dissertations})
+
+
 ##########################
 #      VUES TEACHER      #
 ##########################
