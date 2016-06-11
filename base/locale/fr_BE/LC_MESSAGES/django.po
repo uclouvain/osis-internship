@@ -58,6 +58,12 @@ msgstr "Surveillance de la capacité de stockage"
 msgid "function"
 msgstr "Fonction"
 
+msgid "message_resent_ok"
+msgstr "Le message à bien été renvoyé."
+
+msgid "message_not_resent_no_email"
+msgstr "Le message ne peut être réenvoyé , l'utilisateur n'a pas d'adresse mail."
+
 msgid "ill"
 msgstr "Malade"
 

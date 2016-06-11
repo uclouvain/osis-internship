@@ -27,22 +27,42 @@ from django.db import models
 from django.db.models import Q
 from django.utils import timezone
 from django.contrib import admin
+from django.utils.safestring import mark_for_escaping, mark_safe
 from django.utils.translation import ugettext as _
 
+
 class MessageHistoryAdmin(admin.ModelAdmin):
-    date_hierarchy = 'created'
-    list_display = ('person', 'reference', 'subject', 'sent', 'created')
-    fieldsets = ((None, {'fields': (('person__first_name', 'person__last_name', 'person__email'), 'reference',
-                                    'subject', ('sent', 'created'))}),)
-    readonly_fields = ('person', 'reference', 'subject', 'sent', 'created')
-    ordering = ['-created']
-    search_fields = ['person__first_name', 'person__last_name', 'person__email', 'reference', 'subject']
 
     def get_search_results(self, request, queryset, search_term):
         queryset, use_distinct = super(MessageHistoryAdmin, self).get_search_results(request, queryset, search_term)
         if len(queryset[:201]) > 200:
             raise ValueError(_('too_many_results'))
         return queryset, use_distinct
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def get_actions(self, request):
+        actions = super(MessageHistoryAdmin, self).get_actions(request)
+        if 'delete_selected' in actions:
+            del actions['delete_selected']
+        return actions
+
+    date_hierarchy = 'created'
+    list_display = ('person', 'reference', 'subject', 'sent', 'created')
+    fieldsets = ((None, {'fields': ('person', 'reference',
+                                    'subject', ('sent', 'created'), 'content_html_safe', 'content_txt')}),)
+    readonly_fields = ('person', 'reference', 'subject', 'sent', 'created', 'content_html_safe', 'content_txt')
+    ordering = ['-created']
+    search_fields = ['person__first_name', 'person__last_name', 'person__email', 'reference', 'subject']
+
+
 
 
 class MessageHistory(models.Model):
@@ -63,6 +83,9 @@ class MessageHistory(models.Model):
 
     def __str__(self):
         return self.subject
+
+    def content_html_safe(self):
+        return mark_safe(self.content_html)
 
 
 def find_by_id(message_history_id):
@@ -97,3 +120,10 @@ def find_my_messages(person):
 
 def delete_my_message(message_id):
     MessageHistory.objects.filter(id=message_id).update(show_in_myosis=False)
+
+
+def read_my_message(message_id):
+    message = MessageHistory.objects.get(id=message_id)
+    message.read_in_myosis=True
+    message.save()
+    return message

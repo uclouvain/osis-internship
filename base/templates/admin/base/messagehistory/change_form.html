@@ -1,6 +1,5 @@
-{% extends "layout.html" %}
-{% load staticfiles %}
-{% load i18n %}
+{% extends "admin/change_form.html" %}
+{% load i18n admin_urls %}
 
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -26,30 +25,13 @@
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{% block breadcrumb %}
-    <li><a href="{% url 'my_osis' %}" id="lnk_my_osis">{% trans 'my_osis' %}</a></li>
-    <li class="active">{% trans 'messages' %}</li>
+{% block object-tools %}
 {% endblock %}
-{% block content %}
-    <div class="page-header">
-        <h2>{% trans 'my_messages' %}</h2>
+
+{% block submit_buttons_bottom %}
+    <div align="center">
+        <button type='button' onclick='location.href="{% url 'send_message_again' adminform.form.instance.id %}"'>
+                {% trans 'send_message_again' %}
+        </button>
     </div>
-    {% include "template_messages.html" %}
-    {% if my_messages %}
-        <table class="table table-striped table-hover">
-            <thead>
-            <tr>
-                <th>{% trans 'subject'%}</th>
-                <th>{% trans 'received_on' %}</th>
-            </tr>
-            </thead>
-            {% for my_message in my_messages %}
-                <tr {% if not my_message.read_in_myosis %} style="font-weight: bold" {% endif %}>
-                    <td><a href="{% url 'read_my_message' my_message.id %}"
-                           id="lnk_my_message_read_{{ my_message.id }}" title="tooltip_my_message_read">{{ my_message.subject }}</a></td>
-                    <td>{{ my_message.created  }}</td>
-                </tr>
-            {% endfor %}
-        </table>
-    {% endif %}
 {% endblock %}

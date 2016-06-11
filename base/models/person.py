@@ -79,11 +79,6 @@ class Person(models.Model):
 
         return u"%s %s %s" % (last_name.upper(), first_name, middle_name)
 
-    class Meta:
-        permissions = (
-            ("management_tasks", "Can do management tasks"),
-        )
-
 
 
 def find_by_id(person_id):

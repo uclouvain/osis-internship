@@ -26,12 +26,15 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.models import _user_has_perm
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.utils import translation
 from base import models as mdl
+from base.utils import send_mail
 from base.views import layout
 from django.utils.translation import ugettext as _
+import base.models.message_history as message_history_mdl
 
 @login_required
 def my_osis_index(request):
@@ -48,14 +51,14 @@ def my_messages_index(request):
 
 
 @login_required
-def delete_from_my_messages(request,message_id):
+def delete_from_my_messages(request, message_id):
     mdl.message_history.delete_my_message(message_id)
     return my_messages_index(request)
 
 
 @login_required
 def read_message(request, message_id):
-    message = mdl.message_history.find_by_id(message_id).update(read_in_myosis=True)
+    message = mdl.message_history.read_my_message(message_id)
     return layout.render(request, "my_osis/my_message.html", {'my_message': message, })
 
 
@@ -90,8 +93,19 @@ def profile_lang(request):
 
 
 @login_required
-@user_passes_test(lambda u: u.has_perm('base.management_tasks') and u.has_perm('base.change_messagetemplate'))
+@user_passes_test(lambda u: u.is_staff and u.has_perm('base.change_messagetemplate'))
 def messages_templates_index(request):
     return HttpResponseRedirect(reverse('admin:base_messagetemplate_changelist'))
 
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def send_message_again(request, message_history_id):
+    message_history = message_history_mdl.find_by_id(message_history_id)
+    if not message_history.person.email:
+        messages.add_message(request, messages.ERROR, _('message_not_resent_no_email'))
+    else:
+        send_mail.send_again(message_history_id)
+        messages.add_message(request, messages.INFO, _('message_resent_ok'))
+    return HttpResponseRedirect(reverse('admin:base_messagehistory_changelist'))
 

@@ -27,8 +27,8 @@ from django.conf.urls import url
 from django.contrib.auth.views import logout
 
 from base.utils import upload_xls_utils
-from base.views import learning_unit, offer, common, score_encoding, institution, organization, academic_calendar, \
-    message,my_osis
+from base.views import learning_unit, offer, common, score_encoding, institution, organization, academic_calendar,\
+    my_osis
 
 urlpatterns = [
     url(r'^$', common.home, name='home'),
@@ -115,18 +115,13 @@ urlpatterns = [
     url(r'^organization_address/delete/([0-9]+)/$', organization.organization_address_delete,
         name='organization_address_delete'),
 
-    url(r'^messages/$', message.messages, name='messages'),
-    url(r'^messages/messages_history/$', message.messages_history_index, name='messages_history_index'),
-    url(r'^messages/message_history/read/([0-9]+)/$', message.message_history_read, name='message_history_read'),
-    url(r'^messages/messages_history/send_message_again/([0-9]+)/$', message.send_message_again,
-        name='send_message_again'),
-    url(r'^messages/messages_history/search$', message.find_messages_history, name="messages_history_search"),
-
     url(r'^my_osis/$',my_osis.my_osis_index,name="my_osis"),
     url(r'^my_osis/management_tasks/messages_templates',my_osis.messages_templates_index,name="messages_templates"),
     url(r'^my_osis/my_messages/$',my_osis.my_messages_index,name="my_messages"),
     url(r'^my_osis/my_messages/read/([0-9]+)/$', my_osis.read_message, name="read_my_message"),
     url(r'^my_osis/my_messages/delete/([0-9]+)/$', my_osis.delete_from_my_messages, name="delete_my_message"),
+    url(r'^my_osis/my_messages/send_message_again/([0-9]+)/$', my_osis.send_message_again,
+        name='send_message_again'),
     url(r'^my_osis/profile/$', my_osis.profile, name='profile'),
     url(r'^my_osis/profile/lang$', my_osis.profile_lang, name='profile_lang'),
 
