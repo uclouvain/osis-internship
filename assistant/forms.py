@@ -67,13 +67,13 @@ StructureInLineFormSet = inlineformset_factory(mdl.assistant_mandate.AssistantMa
                                                extra=2,
                                                can_delete=True,
                                                min_num=1,
-                                               max_num=2)  
-    
+                                               max_num=2)
+
 
 class MandatesArchivesForm(ModelForm):
     academic_year = forms.ModelChoiceField(queryset=academic_year.AcademicYear.objects.all(),
                                            widget=forms.Select(attrs={"onChange": 'submit()'}))
-    
+
     class Meta:
         model = mdl.assistant_mandate.AssistantMandate
         fields = ('academic_year',)
