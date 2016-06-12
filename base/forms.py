@@ -26,9 +26,9 @@
 from ckeditor.widgets import CKEditorWidget
 from django import forms
 from django.forms import ModelForm
-from django.forms.formsets import BaseFormSet
-from base import models as mdl
 from django.utils.translation import ugettext_lazy as _
+
+from base import models as mdl
 
 
 class LoginForm(forms.Form):
@@ -89,10 +89,10 @@ class MessageTemplateForm(ModelForm):
 
 
 class MyMessageForm(forms.Form):
-    selected = forms.BooleanField(initial=False)
+    selected = forms.BooleanField(initial=False, required=False)
     subject = forms.CharField(required=False)
     created = forms.DateTimeField(required=False)
-    read = forms.BooleanField(initial=False,required=False)
+    read = forms.BooleanField(initial=False, required=False)
     id = forms.IntegerField()
 
 

@@ -24,20 +24,12 @@
 #
 ##############################################################################
 from django.db import models
-from django.db.models import Q
 from django.utils import timezone
 from django.contrib import admin
-from django.utils.safestring import mark_for_escaping, mark_safe
-from django.utils.translation import ugettext as _
+from django.utils.safestring import mark_safe
 
 
 class MessageHistoryAdmin(admin.ModelAdmin):
-
-    def get_search_results(self, request, queryset, search_term):
-        queryset, use_distinct = super(MessageHistoryAdmin, self).get_search_results(request, queryset, search_term)
-        if len(queryset[:201]) > 200:
-            raise ValueError(_('too_many_results'))
-        return queryset, use_distinct
 
     def has_add_permission(self, request):
         return False
@@ -45,7 +37,7 @@ class MessageHistoryAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 
-    def has_add_permission(self, request, obj=None):
+    def has_change_permission(self, request, obj=None):
         return False
 
     def get_actions(self, request):
@@ -103,7 +95,7 @@ def find_my_messages(person):
 def delete_my_messages(messages_ids):
     """
     Delete messages from my osis (but not from history)
-    :param message_ids: The ids list of messages to delete from my osis
+    :param messages_ids: The ids list of messages to delete from my osis
     """
     MessageHistory.objects.filter(id__in=messages_ids).update(show_in_myosis=False)
 
@@ -115,7 +107,7 @@ def read_my_message(message_id):
     :return : The message
     """
     message = MessageHistory.objects.get(id=message_id)
-    message.read_in_myosis=True
+    message.read_in_myosis = True
     message.save()
     return message
 

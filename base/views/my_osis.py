@@ -30,12 +30,14 @@ from django.core.urlresolvers import reverse
 from django.forms.formsets import formset_factory
 from django.http import HttpResponseRedirect
 from django.utils import translation
+from django.utils.translation import ugettext as _
+
 from base import models as mdl
 from base.forms import MyMessageActionForm, MyMessageForm
 from base.utils import send_mail
 from base.views import layout
-from django.utils.translation import ugettext as _
 import base.models.message_history as message_history_mdl
+
 
 @login_required
 def my_osis_index(request):
@@ -90,7 +92,6 @@ def delete_from_my_messages(request, message_id):
 def read_message(request, message_id):
     message = mdl.message_history.read_my_message(message_id)
     return layout.render(request, "my_osis/my_message.html", {'my_message': message, })
-
 
 
 @login_required

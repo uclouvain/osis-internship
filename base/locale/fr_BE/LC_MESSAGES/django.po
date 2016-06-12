@@ -990,10 +990,10 @@ msgid "tooltip_delete_message"
 msgstr "Supprimer le message"
 
 msgid "desc_profile"
-msgstr "informations lié à votre profile"
+msgstr "informations liées à votre profile"
 
 msgid "desc_my_messages"
-msgstr "La liste des messages qui vous ont été envoyé par l'application"
+msgstr "La liste des messages qui vous ont été envoyés par l'application"
 
 msgid "sent"
 msgstr "Envoyé"
