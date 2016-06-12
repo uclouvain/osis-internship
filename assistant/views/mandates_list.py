@@ -24,16 +24,24 @@
 #
 ##############################################################################
 from assistant.models import assistant_mandate
+from django.core.urlresolvers import reverse
 from base.models import academic_year
 from assistant.forms import MandatesArchivesForm
 from django.views.generic import ListView
 from django.views.generic.edit import FormMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 
-class MandatesListView(ListView, FormMixin):
+class MandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMixin):
     context_object_name = 'mandates_list'
     template_name = 'mandates_list.html'
     form_class = MandatesArchivesForm
+
+    def test_func(self):
+        return self.request.user.groups.filter(name='hr_department')
+    
+    def get_login_url(self):
+        return reverse('assistants_home')
 
     def get_queryset(self):
         form_class = MandatesArchivesForm
