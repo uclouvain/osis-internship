@@ -27,9 +27,11 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.urlresolvers import reverse
+from django.forms.formsets import formset_factory
 from django.http import HttpResponseRedirect
 from django.utils import translation
 from base import models as mdl
+from base.forms import MyMessageActionForm, MyMessageForm
 from base.utils import send_mail
 from base.views import layout
 from django.utils.translation import ugettext as _
@@ -44,15 +46,44 @@ def my_osis_index(request):
 def my_messages_index(request):
     person = mdl.person.find_by_user(request.user)
     my_messages = mdl.message_history.find_my_messages(person)
+    my_messages_formset = None
     if not my_messages:
         messages.add_message(request, messages.INFO, _('no_messages'))
-    return layout.render(request, "my_osis/my_messages.html", {'my_messages': my_messages, })
+    else:
+        initial_formset_content = [{'selected': False,
+                                    'subject':  message_hist.subject,
+                                    'created':  message_hist.created,
+                                    'id':       message_hist.id,
+                                    'read':     message_hist.read_in_myosis
+                                    } for message_hist in my_messages]
+        my_messages_formset = formset_factory(MyMessageForm, extra=0)(initial=initial_formset_content)
+    return layout.render(request,
+                         "my_osis/my_messages.html",
+                         {
+                             'my_messages_formset': my_messages_formset,
+                             'my_message_action_form': MyMessageActionForm()
+                         })
+
+
+@login_required
+def my_messages_action(request):
+    my_message_action_form = MyMessageActionForm(request.POST)
+    my_messages_formset = formset_factory(MyMessageForm)(request.POST, request.FILES)
+    if my_message_action_form.is_valid() and my_messages_formset.is_valid():
+        my_messages_ids_to_action = [mess_form.cleaned_data.get('id')
+                                     for mess_form in my_messages_formset
+                                     if mess_form.cleaned_data.get('selected')]
+        if 'MARK_AS_READ' in my_message_action_form.cleaned_data.get('action'):
+            mdl.message_history.mark_as_read(my_messages_ids_to_action)
+        elif 'DELETE' in my_message_action_form.cleaned_data.get('action'):
+            mdl.message_history.delete_my_messages(my_messages_ids_to_action)
+    return HttpResponseRedirect(reverse('my_messages'))
 
 
 @login_required
 def delete_from_my_messages(request, message_id):
-    mdl.message_history.delete_my_message(message_id)
-    return my_messages_index(request)
+    mdl.message_history.delete_my_messages([message_id, ])
+    return HttpResponseRedirect(reverse('my_messages'))
 
 
 @login_required
@@ -107,4 +138,7 @@ def send_message_again(request, message_history_id):
         send_mail.send_again(message_history_id)
         messages.add_message(request, messages.INFO, _('message_resent_ok'))
     return HttpResponseRedirect(reverse('admin:base_messagehistory_changelist'))
+
+
+
 

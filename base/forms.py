@@ -26,6 +26,7 @@
 from ckeditor.widgets import CKEditorWidget
 from django import forms
 from django.forms import ModelForm
+from django.forms.formsets import BaseFormSet
 from base import models as mdl
 from django.utils.translation import ugettext_lazy as _
 
@@ -87,9 +88,16 @@ class MessageTemplateForm(ModelForm):
         fields = ['reference', 'subject', 'template', 'format', 'language']
 
 
-class MessageHistorySearchForm(forms.Form):
-    subject = forms.CharField(max_length=50, required=False)
-    reference = forms.CharField(max_length=50, required=False)
-    recipient = forms.CharField(max_length=25, required=False)
-    origin = forms.CharField(max_length=25, required=False)
-    not_sent = forms.BooleanField(initial=False, required=False)
+class MyMessageForm(forms.Form):
+    selected = forms.BooleanField(initial=False)
+    subject = forms.CharField(required=False)
+    created = forms.DateTimeField(required=False)
+    read = forms.BooleanField(initial=False,required=False)
+    id = forms.IntegerField()
+
+
+class MyMessageActionForm(forms.Form):
+    ACTIONS = (('MARK_AS_READ', _('mark_selected_as_read')), ('DELETE', _('delete_selected')))
+    action = forms.ChoiceField(required=False, choices=ACTIONS, initial=None)
+
+

@@ -4,20 +4,6 @@ from __future__ import unicode_literals
 
 from django.db import migrations, models
 
-def create_trigger_delete_old_messages():
-    return """CREATE TRIGGER trigger_delete_old_messages_from_hystory
-            AFTER INSERT ON base_messagehistory
-            EXECUTE PROCEDURE delete_old_messages_from_history();"""
-
-
-def create_function_delete_old_messages():
-    return """CREATE OR REPLACE FUNCTION delete_old_messages_from_history() RETURNS trigger AS $$
-                BEGIN
-                  DELETE FROM base_messagehistory WHERE created < NOW() - INTERVAL '2 years';
-                  RETURN NULL;
-                END;
-                $$ language 'plpgsql';"""
-
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -34,11 +20,5 @@ class Migration(migrations.Migration):
             model_name='messagehistory',
             name='show_in_myosis',
             field=models.BooleanField(default=True),
-        ),
-        migrations.RunSQL(
-            create_function_delete_old_messages()
-        ),
-        migrations.RunSQL(
-            create_trigger_delete_old_messages(),
         ),
     ]

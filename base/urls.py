@@ -118,6 +118,7 @@ urlpatterns = [
     url(r'^my_osis/$',my_osis.my_osis_index,name="my_osis"),
     url(r'^my_osis/management_tasks/messages_templates',my_osis.messages_templates_index,name="messages_templates"),
     url(r'^my_osis/my_messages/$',my_osis.my_messages_index,name="my_messages"),
+    url(r'^my_osis/my_messages/action/$',my_osis.my_messages_action,name="my_messages_action"),
     url(r'^my_osis/my_messages/read/([0-9]+)/$', my_osis.read_message, name="read_my_message"),
     url(r'^my_osis/my_messages/delete/([0-9]+)/$', my_osis.delete_from_my_messages, name="delete_my_message"),
     url(r'^my_osis/my_messages/send_message_again/([0-9]+)/$', my_osis.send_message_again,

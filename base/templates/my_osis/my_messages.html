@@ -35,21 +35,66 @@
         <h2>{% trans 'my_messages' %}</h2>
     </div>
     {% include "template_messages.html" %}
-    {% if my_messages %}
-        <table class="table table-striped table-hover">
-            <thead>
-            <tr>
-                <th>{% trans 'subject'%}</th>
-                <th>{% trans 'received_on' %}</th>
-            </tr>
-            </thead>
-            {% for my_message in my_messages %}
-                <tr {% if not my_message.read_in_myosis %} style="font-weight: bold" {% endif %}>
-                    <td><a href="{% url 'read_my_message' my_message.id %}"
-                           id="lnk_my_message_read_{{ my_message.id }}" title="tooltip_my_message_read">{{ my_message.subject }}</a></td>
-                    <td>{{ my_message.created  }}</td>
+    {% if my_messages_formset and my_message_action_form %}
+        <form action="{% url 'my_messages_action' %}" method="post">
+            {% csrf_token %}
+            {{ my_messages_formset.management_form }}
+            <div class="row">
+                <div class="col-md-3">
+                    <select class="form-control" name="{{ my_message_action_form.action.html_name }}"
+                            id="slt_my_message_action" data-toggle="tooltip" data-placement="bottom" title="{% trans 'tooltip_select_action' %}">
+                        <option value="" selected>-----</option>
+                        <option value="MARK_AS_READ">{% trans 'mark_selected_messages_as_read' %}</option>
+                        <option value="DELETE">{% trans 'delete_selected_messages' %}</option>
+                    </select>
+                </div>
+                <div class="col-md-1">
+                    <input type="submit"
+                           class="btn btn-default"
+                           value="{% trans 'execute' %}"
+                           data-toggle="tooltip" data-placement="right"
+                           title="{% trans 'tooltip_execute_my_message_action' %}"
+                           id="btn_my_message_action_execute"/>
+                </div>
+            </div>
+            <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <th><input type="checkbox"
+                               id="chk_select_all"
+                               data-toggle="tooltip" data-placement="left"
+                               title="{% trans 'tooltip_select_all_messages' %}"/></th>
+                    <th>{% trans 'subject' %}</th>
+                    <th>{% trans 'received_on' %}</th>
                 </tr>
-            {% endfor %}
-        </table>
+                </thead>
+                <tbody>
+                {% for my_message_form in my_messages_formset %}
+                    <tr {% if not my_message_form.read.value %} style="font-weight: bold" {% endif %}>
+                        <td><input type="checkbox"
+                                   name="{{ my_message_form.selected.html_name }}"
+                                   id="chk_selected_{{ my_message_form.id.value }}"/>
+                        </td>
+                        <td><a href="{% url 'read_my_message' my_message_form.id.value %}"
+                               id="lnk_my_message_read_{{ my_message_form.id.value }}"
+                               data-toggle="tooltip" data-placement="bottom"
+                               title="{% trans 'tooltip_my_message_read' %}">{{ my_message_form.subject.value }}</a></td>
+                        <td>{{ my_message_form.created.value }}</td>
+                        {{ my_message_form.id.as_hidden }}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </form>
     {% endif %}
+{% endblock %}
+
+{% block script %}
+<script>
+    $(document).ready(function(){
+        $("#chk_select_all").change(function(){
+            $('[id^="chk_selected_"]').prop('checked', $(this).prop("checked"));
+        });
+    });
+</script>
 {% endblock %}

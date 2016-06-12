@@ -1028,6 +1028,30 @@ msgstr "Référence du template du message"
 msgid "btn_messages_history_search"
 msgstr "Recherche dans l'historique des messages"
 
+msgid "delete_selected_messages"
+msgstr "Supprimer les messages sélectionnés"
+
+msgid "mark_selected_messages_as_read"
+msgstr "Marquer les messages sélectionnés comme lus"
+
+msgid "tooltip_execute_my_message_action"
+msgstr "Exécuter l'action sélectionnée"
+
+msgid "tooltip_select_action"
+msgstr "Sélectionner l'action à exécuter"
+
+msgid "tooltip_select_all_messages"
+msgstr "Sélectionner tous les messages"
+
+msgid "close"
+msgstr "Fermer"
+
+msgid "execute"
+msgstr "Exécuter"
+
+msgid "tooltip_to_my_messages"
+msgstr "Retourner à la liste des messages"
+
 msgid "none"
 msgstr "Aucun"
 

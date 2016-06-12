@@ -184,6 +184,30 @@ msgstr "Highlight shortcut"
 msgid "highlight_description"
 msgstr "Highlight description"
 
+msgid "delete_selected_messages"
+msgstr "Delete selected messages"
+
+msgid "mark_selected_messages_as_read"
+msgstr "Mark selected messages as read"
+
+msgid "btn_my_message_action_execute"
+msgstr "Execute selected action"
+
+msgid "tooltip_select_action"
+msgstr "Select action to execute"
+
+msgid "tooltip_select_all_messages"
+msgstr "Select all the messages"
+
+msgid "close"
+msgstr "Close"
+
+msgid "execute"
+msgstr "Execute"
+
+msgid "tooltip_to_my_messages"
+msgstr "Back to messages"
+
 msgid "save"
 msgstr "Save"
 
