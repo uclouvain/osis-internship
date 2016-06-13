@@ -80,7 +80,7 @@ def _get_all_data(worksheet):
             # In case of blank line or line that is not a examEnrollment
             continue
         session = row[col_session].value
-        if session not in sessions:
+        if session and session not in sessions:
             sessions.append(session)
 
         try:
@@ -91,15 +91,15 @@ def _get_all_data(worksheet):
             pass
 
         learn_unit_acronym = row[col_learning_unit].value
-        if learn_unit_acronym not in learn_unit_acronyms:
+        if learn_unit_acronym and learn_unit_acronym not in learn_unit_acronyms:
             learn_unit_acronyms.append(learn_unit_acronym)
 
         offer_acronym = row[col_offer].value
-        if offer_acronym not in offer_acronyms:
+        if offer_acronym and offer_acronym not in offer_acronyms:
             offer_acronyms.append(offer_acronym)
 
         registration_id = row[col_registration_id].value
-        if registration_id not in registration_ids:
+        if registration_id and registration_id not in registration_ids:
             registration_ids.append(registration_id)
 
     return {'learning_unit_acronyms': learn_unit_acronyms,
@@ -122,6 +122,9 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
     data_xls = _get_all_data(worksheet)
     if len(data_xls['sessions']) > 1:
         messages.add_message(request, messages.ERROR, '%s' % _('more_than_one_session_error'))
+        return False
+    elif len(data_xls['sessions']) == 0:
+        messages.add_message(request, messages.ERROR, '%s' % _('missing_column_session'))
         return False
     else:
         data_xls['session'] = data_xls['sessions'][0]  # Only one session
