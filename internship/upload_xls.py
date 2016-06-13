@@ -35,7 +35,6 @@ from internship.models import Organization, OrganizationAddress, InternshipOffer
 from internship.forms import OrganizationForm, InternshipOfferForm, InternshipMasterForm
 from base import models as mdl
 
-
 @login_required
 def upload_places_file(request):
     if request.method == 'POST':
@@ -60,7 +59,7 @@ def __save_xls_place(request, file_name, user):
     col_postal_code = 3
     col_city = 4
     col_country = 5
-    col_url = 7
+    col_url = 6
 
     # Iterates over the lines of the spreadsheet.
     for count, row in enumerate(worksheet.rows):
@@ -173,7 +172,7 @@ def __save_xls_internships(request, file_name, user):
     form = InternshipOfferForm(request)
     col_reference = 0
     col_spec = 1
-    col_max_places = 2
+    col_max_places = 4
     index = 1
     # Iterates over the lines of the spreadsheet.
     for count, row in enumerate(worksheet.rows):
@@ -247,9 +246,9 @@ def __save_xls_masters(request, file_name, user):
 
     col_reference = 2
     col_firstname = 3
-    col_name = 4
+    col_lastname = 4
     col_mail = 7
-    col_organization_ref = 6
+    col_organization_reference = 6
     col_civility = 0
     col_mastery = 1
     col_speciality = 5
@@ -265,12 +264,49 @@ def __save_xls_masters(request, file_name, user):
 
 
         form = InternshipMasterForm(data=request.POST)
-        if row[col_reference].value:
-            reference = ""
-            if int(row[col_reference].value) < 10 :
-                reference = "0"+str(row[col_reference].value)
-            else :
-                reference = str(row[col_reference].value)
-            master = InternshipMaster.find_master_by_reference(reference)
-            if len(master) is 0:
+        if row[col_firstname].value and row[col_lastname].value:
+            master = InternshipMaster.find_master_by_firstname_name(row[col_firstname].value, row[col_lastname].value)
+            if len(master) == 0:
                 master = InternshipMaster()
+
+            if row[col_organization_reference].value:
+                reference = ""
+                if int(row[col_organization_reference].value) < 10 :
+                    reference = "0"+str(row[col_organization_reference].value)
+                else :
+                    reference = str(row[col_organization_reference].value)
+                organization = Organization.search(reference=reference)
+
+                master.organization = organization[0]
+
+            if row[col_firstname].value:
+                master.first_name = row[col_firstname].value
+            else :
+                master.first_name = " "
+
+            if row[col_lastname].value:
+                master.last_name = row[col_lastname].value
+            else :
+                master.last_name = " "
+
+            if row[col_reference].value:
+                master.reference = row[col_reference].value
+            else:
+                master.reference = " "
+
+            if row[col_civility].value:
+                master.civility = row[col_civility].value
+            else:
+                master.civility = " "
+
+            if row[col_mastery].value:
+                master.type_mastery = row[col_mastery].value
+            else:
+                master.type_mastery = " "
+
+            if row[col_speciality].value:
+                master.speciality = row[col_speciality].value
+            else:
+                master.speciality = " "
+
+            master.save()

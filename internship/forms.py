@@ -56,4 +56,4 @@ class InternshipMasterForm(ModelForm):
     file = forms.FileField()
     class Meta:
         model = InternshipMaster
-        fields = ['organization', 'person', 'reference', 'civility', 'type_mastery', 'speciality']
+        fields = ['organization', 'first_name', 'last_name', 'reference', 'civility', 'type_mastery', 'speciality']
