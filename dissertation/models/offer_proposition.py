@@ -60,5 +60,3 @@ class OfferProposition(models.Model):
     def __str__(self):
         return self.acronym
 
-    def find_all():
-        return OfferProposition.objects.order_by('offer').distinct()

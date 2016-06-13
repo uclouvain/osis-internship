@@ -27,13 +27,11 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from dissertation.models.adviser import Adviser
 from dissertation.models.dissertation_role import DissertationRole
-from dissertation.models.offer_proposition import OfferProposition
 from base import models as mdl
 from dissertation.forms import AdviserForm, ManagerAdviserForm, ManagerAddAdviserForm
 from django.contrib.auth.decorators import user_passes_test
 from django.db import IntegrityError
 from django.db.models import Q
-from operator import attrgetter
 
 
 # Used by decorator @user_passes_test(is_manager) to secure manager views
@@ -162,7 +160,7 @@ def informations_edit(request):
 @login_required
 @user_passes_test(is_manager)
 def manager_informations(request):
-    advisers = Adviser.find_all().filter(type='PRF')
+    advisers = Adviser.objects.filter(type='PRF').order_by('person__last_name', 'person__first_name')
     return render(request, 'manager_informations_list.html', {'advisers': advisers})
 
 

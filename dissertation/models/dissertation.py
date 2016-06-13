@@ -32,7 +32,7 @@ from django.contrib import admin
 
 
 class DissertationAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'status','active')
+    list_display = ('title', 'author', 'status', 'active')
 
 
 class Dissertation(models.Model):

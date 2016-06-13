@@ -32,7 +32,7 @@ from django.contrib import admin
 
 
 class PropositionDissertationAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'visibility','active')
+    list_display = ('title', 'author', 'visibility', 'active')
 
 
 class PropositionDissertation(models.Model):

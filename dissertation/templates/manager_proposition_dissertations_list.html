@@ -66,13 +66,13 @@
             <label class="alert alert-info" style="margin-left:10%;width:80%;text-align:center;">{% trans 'no_result' %}</label>
           {% else %}
             <table class="table table-hover">
-              <thead>
+              <tr>
                 <th>{% trans 'title'%}</th>
                 <th>{% trans 'author'%}</th>
                 <th>{% trans 'offer_propositions'%}</th>
                 <th>{% trans 'max_students_number'%}</th>
                 <th>{% trans 'visibility'%}</th>
-              </thead>
+              </tr>
               {% for proposition_dissertation in proposition_dissertations %}
                 <tr>
                   <td><a href="{% url 'manager_proposition_dissertation_detail' pk=proposition_dissertation.pk %}">{{ proposition_dissertation.title }}</a></td>

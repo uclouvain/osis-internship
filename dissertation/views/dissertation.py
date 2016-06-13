@@ -34,11 +34,9 @@ from dissertation.models.dissertation_role import DissertationRole
 from dissertation.models.faculty_adviser import FacultyAdviser
 from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models.proposition_dissertation import PropositionDissertation
-from dissertation.forms import DissertationForm, ManagerDissertationForm, ManagerDissertationRoleForm
+from dissertation.forms import ManagerDissertationForm, ManagerDissertationRoleForm
 from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl import Workbook
-from openpyxl.compat import range
-from openpyxl.cell import get_column_letter
 from django.http import HttpResponse
 import time
 
@@ -203,9 +201,10 @@ def manager_dissertations_new(request):
             return redirect('manager_dissertations_list')
     else:
         form = ManagerDissertationForm(initial={'active': True})
-        form.fields["proposition_dissertation"].queryset = PropositionDissertation.objects.filter(visibility=True,
-                                                                                                  active=True,
-                                                                                                  offer_proposition__offer=faculty_adviser)
+        form.fields["proposition_dissertation"].queryset = \
+            PropositionDissertation.objects.filter(visibility=True,
+                                                   active=True,
+                                                   offer_proposition__offer=faculty_adviser)
     return render(request, 'manager_dissertations_edit.html', {'form': form})
 
 
@@ -225,10 +224,6 @@ def manager_dissertations_search(request):
                     'lecteur2'])
         for dissertation in dissertations:
             queryset = DissertationRole.objects.filter(Q(dissertation=dissertation))
-            queryset_pro = {}
-            queryset_copro = {}
-            queryset_reader = {}
-
             queryset_pro = queryset.filter(Q(status='PROMOTEUR'))
             queryset_copro = queryset.filter(Q(status='CO_PROMOTEUR'))
             queryset_reader = queryset.filter(Q(status='READER'))

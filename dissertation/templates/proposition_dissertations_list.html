@@ -72,12 +72,12 @@
               <label class="alert alert-info" style="margin-left:10%;width:80%;text-align:center;">{% trans 'No result' %}</label>
             {% else %}
               <table class="table table-hover">
-                <thead>
+                <tr>
                   <th>{% trans 'Title'%}</th>
                   <th>{% trans 'Author'%}</th>
                   <th>{% trans 'Offer'%}</th>
                   <th>{% trans 'Max Students'%}</th>
-                </thead>
+                </tr>
                 {% for proposition_dissertation in proposition_dissertations %}
                   <tr>
                     <td><a href="{% url 'proposition_dissertation_detail' pk=proposition_dissertation.pk %}">{{ proposition_dissertation.title }}</a></td>
@@ -92,4 +92,5 @@
         {% endif %}
     </div>
   </div>
+ </div>
 {% endblock %}

@@ -37,7 +37,7 @@
   </div>
   <ul class="nav nav-tabs">
     <li class="active"><a href="#">{% trans 'all_dissertations' %}</a></li>
-    <li><a href="{% url 'manager_dissertations_wait_list' %}">{% trans 'wait_dissertations' %}</a></li>
+    <li><a href="{% url 'manager_dissertations_wait_list' %}">{% trans 'waiting_dissertations' %}</a></li>
   </ul>
   <div class="panel panel-default">
     <div class="panel-body">
@@ -71,13 +71,13 @@
           <label class="alert alert-info" style="margin-left:10%;width:80%;text-align:center;">{% trans 'no_result' %}</label>
         {% else %}
           <table class="table table-hover">
-            <thead>
+            <tr>
               <th>{% trans 'title'%}</th>
               <th>{% trans 'author'%}</th>
               <th>{% trans 'status'%}</th>
               <th>{% trans 'offer_year_start'%}</th>
               <th>{% trans 'proposition_dissertation'%}</th>
-            </thead>
+            </tr>
             {% for dissertation in dissertations %}
               <tr>
                 <td><a href="{% url 'manager_dissertations_detail' pk=dissertation.pk %}">{{ dissertation.title }}</a></td>

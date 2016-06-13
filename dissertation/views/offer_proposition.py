@@ -46,7 +46,7 @@ def manager_offer_parameters(request):
     person = mdl.person.find_by_user(request.user)
     adviser = Adviser.find_by_person(person)
     faculty_adviser = FacultyAdviser.find_by_adviser(adviser)
-    offer_propositions = OfferProposition.find_all().filter(offer=faculty_adviser)
+    offer_propositions = OfferProposition.objects.distinct().filter(offer=faculty_adviser).order_by('offer')
     return render(request, 'manager_offer_parameters.html', {'offer_propositions': offer_propositions})
 
 

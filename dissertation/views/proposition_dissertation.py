@@ -93,7 +93,6 @@ def manager_proposition_dissertation_new(request):
         form = ManagerPropositionDissertationForm(request.POST)
         if form.is_valid():
             form.save()
-            proposition_dissertations = PropositionDissertation.objects.all()
             return redirect('manager_proposition_dissertations')
     else:
         form = ManagerPropositionDissertationForm(initial={'active': True})
@@ -112,7 +111,8 @@ def manager_proposition_dissertations_search(request):
 def proposition_dissertations(request):
     person = mdl.person.find_by_user(request.user)
     adviser = Adviser.find_by_person(person)
-    proposition_dissertations = PropositionDissertation.objects.filter(Q(visibility=True) & Q(active=True) | Q(author=adviser))
+    proposition_dissertations = PropositionDissertation.objects.filter((Q(visibility=True) &
+                                                                       Q(active=True)) | Q(author=adviser))
     return render(request, 'proposition_dissertations_list.html',
                   {'proposition_dissertations': proposition_dissertations})
 
@@ -169,7 +169,6 @@ def proposition_dissertation_new(request):
         form = PropositionDissertationForm(request.POST)
         if form.is_valid():
             form.save()
-            proposition_dissertations = PropositionDissertation.objects.all()
             return redirect('proposition_dissertations')
     else:
         person = mdl.person.find_by_user(request.user)

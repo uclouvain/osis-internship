@@ -62,16 +62,13 @@ class Adviser(models.Model):
         adviser = Adviser.objects.get(person=a_person)
         return adviser
 
-    def find_all():
-        return Adviser.objects.order_by('person')
-
     def search(terms):
         queryset = Adviser.objects.all().filter(type='PRF')
         if terms:
             queryset = queryset.filter(
-                (Q(person__first_name__icontains=terms) | Q(person__last_name__icontains=terms)) & Q(type='PRF')).distinct()
+                (Q(person__first_name__icontains=terms) | Q(person__last_name__icontains=terms)) &
+                Q(type='PRF')).distinct()
         return queryset
-
 
     class Meta:
         ordering = ["person__last_name", "person__middle_name", "person__first_name"]
