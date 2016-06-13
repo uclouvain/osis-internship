@@ -39,11 +39,11 @@
         <div class="jumbotron">
             <h1>{% trans 'action_needed' %}</h1>
                 <p>
-                   {% trans 'You have ' %}
+                   {% trans 'you_have' %}
                    <span style="font-weight: bold">{{ count_advisers_pro_request }}</span>
-                   {% trans ' dissertations waiting for an answer, please check it. Thank you !' %}
+                   {% trans 'wating_dissertations_message' %}
                 </p>
-                <p><a class="btn btn-primary btn-lg" href="{% url 'dissertations_wait_list' %}" role="button">{% trans 'see_my_wait_dissertations' %}</a></p>
+                <p><a class="btn btn-primary btn-lg" href="{% url 'dissertations_wait_list' %}" role="button">{% trans 'see_my_waiting_dissertations' %}</a></p>
         </div>
         {% endif %}
   <div class="panel panel-default">

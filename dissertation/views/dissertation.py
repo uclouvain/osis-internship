@@ -203,7 +203,9 @@ def manager_dissertations_new(request):
             return redirect('manager_dissertations_list')
     else:
         form = ManagerDissertationForm(initial={'active': True})
-        form.fields["proposition_dissertation"].queryset = PropositionDissertation.objects.filter(visibility=True, active=True, offer_proposition__offer=faculty_adviser)
+        form.fields["proposition_dissertation"].queryset = PropositionDissertation.objects.filter(visibility=True,
+                                                                                                  active=True,
+                                                                                                  offer_proposition__offer=faculty_adviser)
     return render(request, 'manager_dissertations_edit.html', {'form': form})
 
 
@@ -214,50 +216,50 @@ def manager_dissertations_search(request):
     xlsx = False
     if 'bt_xlsx' in request.GET:
 
-        filename = 'IMPORT_dissertation_'+time.strftime("%Y-%m-%d %H:%M")+'.xlsx'
+        filename = 'IMPORT_dissertation_' + time.strftime("%Y-%m-%d %H:%M") + '.xlsx'
         wb = Workbook(encoding='utf-8')
         ws1 = wb.active
         ws1.title = "dissertation"
         ws1.append(['Date_de_création', 'Students', 'Dissertation_title',
-                    'Status', 'Offer_year_start', 'offer_year_start_short','promoteur','copromoteur','lecteur1','lecteur2'])
+                    'Status', 'Offer_year_start', 'offer_year_start_short', 'promoteur', 'copromoteur', 'lecteur1',
+                    'lecteur2'])
         for dissertation in dissertations:
             queryset = DissertationRole.objects.filter(Q(dissertation=dissertation))
-            queryset_pro={}
-            queryset_copro={}
-            queryset_reader={}
+            queryset_pro = {}
+            queryset_copro = {}
+            queryset_reader = {}
 
             queryset_pro = queryset.filter(Q(status='PROMOTEUR'))
             queryset_copro = queryset.filter(Q(status='CO_PROMOTEUR'))
             queryset_reader = queryset.filter(Q(status='READER'))
 
             if queryset_pro.count() > 0:
-                pro_name=str(queryset_pro[0].adviser)
+                pro_name = str(queryset_pro[0].adviser)
             else:
-                pro_name='none'
+                pro_name = 'none'
 
             if queryset_copro.count() > 0:
-                copro_name=str(queryset_copro[0].adviser)
+                copro_name = str(queryset_copro[0].adviser)
             else:
-                copro_name='none'
-            if  queryset_reader.count() >0:
-                reader1_name=str(queryset_reader[0].adviser)
-                if queryset_reader.count() >1:
-                    reader2_name=str(queryset_reader[1].adviser)
+                copro_name = 'none'
+            if queryset_reader.count() > 0:
+                reader1_name = str(queryset_reader[0].adviser)
+                if queryset_reader.count() > 1:
+                    reader2_name = str(queryset_reader[1].adviser)
                 else:
-                    reader2_name='none'
+                    reader2_name = 'none'
             else:
-                reader1_name='none'
-
+                reader1_name = 'none'
 
             ws1.append([dissertation.creation_date,
                         str(dissertation.author),
                         dissertation.title,
                         dissertation.status,
                         dissertation.offer_year_start.title,
-                        dissertation.offer_year_start.title_short,pro_name,copro_name,reader1_name,reader2_name])
+                        dissertation.offer_year_start.title_short, pro_name, copro_name, reader1_name, reader2_name])
 
         response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.ms-excel')
-        response['Content-Disposition'] = "attachment; filename="+filename
+        response['Content-Disposition'] = "attachment; filename=" + filename
         return response
     return render(request, "manager_dissertations_list.html",
                   {'dissertations': dissertations, 'xlsx': xlsx})
@@ -359,9 +361,43 @@ def manager_dissertations_wait_list(request):
 def dissertations_list(request):
     person = mdl.person.find_by_user(request.user)
     adviser = Adviser.find_by_person(person)
-    dissertations = Dissertation.objects.filter(Q(proposition_dissertation__author=adviser) & Q(active=True)).exclude(status="DRAFT")
-    return render(request, 'dissertations_list.html',
-                  {'dissertations': dissertations})
+
+    queryset = DissertationRole.objects.all()
+    adviser_list_dissertations = queryset.filter(Q(status='PROMOTEUR') &
+                                                 Q(adviser__pk=adviser.pk) &
+                                                 Q(dissertation__active=True)).exclude(
+        Q(dissertation__status='DRAFT'))
+    adviser_list_dissertations = adviser_list_dissertations.order_by('dissertation__status',
+                                                                     'dissertation__author__person__last_name',
+                                                                     'dissertation__author__person__first_name'
+                                                                     )
+
+    adviser_list_dissertations_copro = queryset.filter(Q(status='CO_PROMOTEUR') &
+                                                       Q(adviser__pk=adviser.pk) &
+                                                       Q(dissertation__active=True)).exclude(
+        Q(dissertation__status='DRAFT'))
+    adviser_list_dissertations_copro = \
+        adviser_list_dissertations_copro.order_by('dissertation__status',
+                                                  'dissertation__author__person__last_name',
+                                                  'dissertation__author__person__first_name'
+                                                  )
+
+    adviser_list_dissertations_reader = queryset.filter(Q(status='READER') &
+                                                        Q(adviser__pk=adviser.pk) &
+                                                        Q(dissertation__active=True)).exclude(
+        Q(dissertation__status='DRAFT'))
+    adviser_list_dissertations_reader = \
+        adviser_list_dissertations_reader.order_by('dissertation__status',
+                                                   'dissertation__author__person__last_name',
+                                                   'dissertation__author__person__first_name'
+                                                   )
+    return render(request, "dissertations_list.html",
+                  {'adviser': adviser,
+                   'adviser_list_dissertations': adviser_list_dissertations,
+                   'adviser_list_dissertations_copro': adviser_list_dissertations_copro,
+                   'adviser_list_dissertations_reader': adviser_list_dissertations_reader,
+                   }
+                  )
 
 
 @login_required
@@ -452,6 +488,15 @@ def dissertations_to_dir_ko(request, pk):
 def dissertations_wait_list(request):
     person = mdl.person.find_by_user(request.user)
     adviser = Adviser.find_by_person(person)
-    dissertations = Dissertation.objects.filter(Q(proposition_dissertation__author=adviser) & Q(active=True) & Q(status="DIR_SUBMIT")).exclude(status="DRAFT")
-    return render(request, 'dissertations_list.html',
-                  {'dissertations': dissertations})
+
+    queryset = DissertationRole.objects.all()
+    roles_list_dissertations = queryset.filter(Q(status='PROMOTEUR') &
+                                               Q(adviser__pk=adviser.pk) &
+                                               Q(dissertation__active=True) &
+                                               Q(dissertation__status="DIR_SUBMIT")
+                                               )
+    roles_list_dissertations = roles_list_dissertations.order_by(
+                                                    'dissertation__author__person__last_name',
+                                                    'dissertation__author__person__first_name')
+    return render(request, 'dissertations_wait_list.html',
+                  {'roles_list_dissertations': roles_list_dissertations})
