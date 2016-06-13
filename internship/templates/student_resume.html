@@ -27,8 +27,8 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
-  <li><a href="{% url 'internships_home' %}">Stages</a></li>
+  <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
+  <li><a href="{% url 'internships_home' %}">{% trans 'internships' %}</a></li>
   <li class="active">{{ student.person.last_name }} {{ student.person.first_name }}</li>
 {% endblock %}
 {% block content %}
@@ -40,15 +40,15 @@
         <br>
         <div class="row">
             <div class="col-md-4">
-                <label>{% trans 'Name' %}</label><br>
+                <label>{% trans 'name' %}</label><br>
                 {{ student.person.last_name | default_if_none:'-' }}
             </div>
             <div class="col-md-4">
-                <label>{% trans 'Forname'%}</label><br>
+                <label>{% trans 'firstname'%}</label><br>
                 {{ student.person.first_name | default_if_none:'-' }}
             </div>
             <div class="col-md-4">
-                <label>{% trans 'Noma'%}</label><br>
+                <label>{% trans 'noma'%}</label><br>
                 {{ student.registration_id | default_if_none:'-' }}
             </div>
         </div>
@@ -56,11 +56,11 @@
 
         <div class="row">
             <div class="col-md-4">
-                <label>{% trans 'Gender' %}</label><br>
+                <label>{% trans 'gender' %}</label><br>
                 {{ student.person.gender | default_if_none:'-' }}
             </div>
             <div class="col-md-4">
-                <label>{% trans 'Email' %}</label><br>
+                <label>{% trans 'email' %}</label><br>
                 {{ student.person.email | default_if_none:'-' }}
             </div>
         </div>
@@ -68,16 +68,16 @@
 
         <div class="row">
             <div class="col-md-4">
-                <label>{% trans 'Phone / Mobile' %}</label><br>
+                <label>{% trans 'phone_mobile' %}</label><br>
                 {{ student.person.phone | default_if_none:'-' }} /
                 {{ student.person.phone_mobile | default_if_none:'-' }}
             </div>
             <div class="col-md-4">
-                <label>{% trans 'Language' %}</label><br>
+                <label>{% trans 'language' %}</label><br>
                 {{ student.person.language | default_if_none:'-' }}
             </div>
             <div class="col-md-4">
-                <label>{% trans 'Address' %}</label><br>
+                <label>{% trans 'address' %}</label><br>
                 {%if student.address%}
                   {% for ad in student.address %}
                     {{ ad.location | default_if_none:'-' }} {{ ad.postal_code | default_if_none:'-' }}
@@ -90,7 +90,7 @@
 
         <div class="row">
             <div class="col-md-10">
-                <label>{% trans 'Stage(s)' %}</label>
+                <label>{% trans 'internships' %}</label>
             </div>
         </div>
         <br>
@@ -98,8 +98,8 @@
         <div class="panel panel-default">
           <div class="panel-body">
             <ul class="nav nav-tabs">
-              <li class="active"><a data-toggle="tab" href="#tab_choice">{% trans 'Choix reçus par l\administration' %}</a></li>
-              <li><a data-toggle="tab" href="#tab_rep">{% trans 'Affectation de l\'étudiant' %}</a></li>
+              <li class="active"><a data-toggle="tab" href="#tab_choice">{% trans 'choice_receive_by_administration' %}</a></li>
+              <li><a data-toggle="tab" href="#tab_rep">{% trans 'student_affectation' %}</a></li>
             </ul>
             <div class="tab-content">
               <div id="tab_choice" class="tab-pane fade in active">

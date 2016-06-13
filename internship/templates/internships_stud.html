@@ -28,8 +28,8 @@
 
 {% block breadcrumb %}
   <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
-  <li><a href="{% url 'internships_home' %}">Stages</a></li>
-  <li class="active">{% trans 'Internships' %}</li>
+  <li><a href="{% url 'internships_home' %}">{% trans 'internships' %}</a></li>
+  <li class="active">{% trans 'all_internships' %}</li>
 {% endblock %}
 {% block content %}
 <script>
@@ -52,12 +52,12 @@
   }
 </script>
   <div class="page-header">
-    <h2>{% trans 'Internships' %}</h2>
+    <h2>{% trans 'internships' %}</h2>
   </div>
   <table style="height:100%; width:100%;">
       <thead>
         <tr>
-            <th style="text-align:center; width:50%;">{% trans 'Organization' %}</th>
+            <th style="text-align:center; width:50%;">{% trans 'organization' %}</th>
         </tr>
       </thead>
       <tbody>
@@ -79,12 +79,12 @@
       </tbody>
   </table>
   <br/>
-  Choississez une spécialité pour voir vos choix déjà enregistrés.<br/>
+  {% trans 'choose_spec_see_record_choice' %}
   <span class="glyphicon glyphicon-ok" style="color:green"></span> :
-  Vous avez déjà effectué vos 4 choix pour cette spécialité.<br/>
+  {% trans 'all_ready_4_choice_spec' %}<br/>
   <span class="glyphicon glyphicon-remove" style="color:red"></span> :
-  Vous n'avez pas encore effectué vos 4 choix pour cette spécialité.<br/>
-  {% if selectable == False %}<b><u>Les choix sont bloqués pour l'instant.</u></b>{%endif%}
+  {% trans 'not_4_choice_spec' %}<br/>
+  {% if selectable == False %}<b><u>{% trans 'internship_block_moment' %}</u></b>{%endif%}
   <div class="panel panel-default">
     <div class="panel-body">
         <ul class="nav nav-tabs">

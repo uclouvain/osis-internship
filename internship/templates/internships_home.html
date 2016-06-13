@@ -28,11 +28,11 @@
 
 {% block breadcrumb %}
   <li class="active"><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
-  <li><a href="{% url 'internships_home' %}">Stages</a></li>
+  <li><a href="{% url 'internships_home' %}">{% trans 'all_internships' %}</a></li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'Internships Managment' %}</h2>
+    <h2>{% trans 'internships_managment' %}</h2>
   </div>
 
   <h3>STAC</h3>
@@ -41,41 +41,37 @@
       <div class="row">
         <ul>
           <li>
-            <h4 class="media-heading"><a href="{% url 'internships' %}">{% trans 'Offres de stages' %}</a></h4>
-            <p>{% trans 'Where you can register for different choices of placement.' %}</p>
+            <h4 class="media-heading"><a href="{% url 'internships' %}">{% trans 'internships_offers' %}</a></h4>
           </li>
           <li>
-            <h4 class="media-heading"><a href="{% url 'internships_periods' %}">{% trans 'Liste des périodes' %}</a></h4>
-            <!--<p>{% trans 'This process helps tutors while scores encoding.' %}</p>-->
+            <h4 class="media-heading"><a href="{% url 'internships_periods' %}">{% trans 'periods_list' %}</a></h4>
           </li>
           <li>
-            <h4 class="media-heading"><a href="{% url 'internships_places' %}">{% trans 'Liste des hôpitaux' %}</a></h4>
-            <p>{% trans 'Where you can find all the origanizations where do your internships.' %}</p>
+            <h4 class="media-heading"><a href="{% url 'internships_places' %}">{% trans 'hospital_list' %}</a></h4>
           </li>
           <li>
-            <h4 class="media-heading"><a href="{% url 'interships_masters' %}">{% trans 'Liste des maîtres de Stages' %}</a></h4>
-            <p>{% trans 'To see the different internship master.' %}</p>
+            <h4 class="media-heading"><a href="{% url 'interships_masters' %}">{% trans 'internships_masters_list' %}</a></h4>
           </li>
           <li>
-            <h4 class="media-heading"><a href="{% url 'internships_student_resume' %}">{% trans 'Bilan des étudiants' %}</a></h4>
+            <h4 class="media-heading"><a href="{% url 'internships_student_resume' %}">{% trans 'student_sumup' %}</a></h4>
             <!--<p>{% trans 'This process helps tutors while scores encoding.' %}</p>-->
           </li>
 
           <li>
-            <h4 class="media-heading"><a href="{% url 'internships_students' %}">{% trans 'Etudiants' %} (à venir)</a></h4>
+            <h4 class="media-heading"><a href="{% url 'internships_students' %}">{% trans 'student' %} (à venir)</a></h4>
             <!--<p>{% trans 'This process helps tutors while scores encoding.' %}</p>-->
           </li>
         </ul>
         {% if blockable %}
           <a href="{% url 'internships_block' 1 %}">
             <button type="submit" class="btn btn-warning" title="{% trans 'block'%}" id="bt_interships_save">
-              Bloquer la sélection des stages
+              {% trans 'block_internship_selection' %}
             </button>
           </a>
         {%else%}
           <a href="{% url 'internships_block' 2 %}">
             <button type="submit" class="btn btn-warning" title="{% trans 'activate'%}" id="bt_interships_save">
-              Activer la sélection des stages
+              {% trans 'activate_internship_selection' %}
             </button>
           </a>
         {%endif%}
@@ -89,20 +85,16 @@
       <div class="row">
         <ul>
           <li>
-            <h4 class="media-heading"><a href="{% url 'internships_stud' %}">{% trans 'Choisir ses stages' %}</a></h4>
-            <p>{% trans 'Where you can register for different choices of placement.' %}</p>
+            <h4 class="media-heading"><a href="{% url 'internships_stud' %}">{% trans 'choose_internships' %}</a></h4>
           </li>
           <li>
-            <h4 class="media-heading"><a href="{% url 'internships_places_stud' %}">{% trans 'Liste des hôpitaux' %}</a></h4>
-            <p>{% trans 'Where you can find all the origanizations where do your internships.' %}</p>
+            <h4 class="media-heading"><a href="{% url 'internships_places_stud' %}">{% trans 'hospital_list' %}</a></h4>
           </li>
           <li>
-            <h4 class="media-heading"><a href="{% url 'interships_masters' %}">{% trans 'Listes des maîtres de Stages' %}</a></h4>
-            <p>{% trans 'To see the different internship master.' %}</p>
+            <h4 class="media-heading"><a href="{% url 'interships_masters' %}">{% trans 'internships_masters_list' %}</a></h4>
           </li>
           <li>
-            <h4 class="media-heading"><a href="{% url 'internships_student_read' noma %}">{% trans 'Bilan de vos choix et affectations de stages' %}</a></h4>
-            <!--<p>{% trans 'This process helps tutors while scores encoding.' %}</p>-->
+            <h4 class="media-heading"><a href="{% url 'internships_student_read' noma %}">{% trans 'summary_your_choices_and_affectation' %}</a></h4>
           </li>
         </ul>
       </div>
