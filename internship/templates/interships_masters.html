@@ -86,7 +86,6 @@
                   <th>{% trans 'Forname' %}</th>
                   <th>{% trans 'Type' %}</th>
                   <th>{% trans 'Speciality' %}</th>
-                  <th>{% trans 'Mail' %}</th>
                   <th>{% trans 'Organization' %}</th>
               </tr>
             </thead>
@@ -100,19 +99,16 @@
                     {{ master.civility }}
                   </td>
                   <td>
-                    {{ master.person.last_name }}
+                    {{ master.last_name }}
                   </td>
                   <td>
-                    {{ master.person.first_name }}
+                    {{ master.first_name }}
                   </td>
                   <td>
                     {{ master.type_mastery }}
                   </td>
                   <td>
                     {{ master.speciality }}
-                  </td>
-                  <td>
-                    {{ master.person.email }}
                   </td>
                   <td>
                     <a href="{% url 'internships' %}?organization_sort={{ master.organization }}">{{ master.organization }}</a>
