@@ -58,12 +58,9 @@ def assistant_pst_part1(request):
                                                          'faculty': assistant_faculty,
                                                          'form': form}) 
     
-@login_required
-#def assistant_pst_part2(request):   
-    
+@login_required    
 def pst_form_part1_save(request, mandate_id):
     form = AssistantFormPart1(data=request.POST)
-    
     assistant_mandate = find_mandate_by_id(mandate_id)
     academic_assistant = find_mandate_by_academic_assistant(assistant_mandate.assistant)
     
