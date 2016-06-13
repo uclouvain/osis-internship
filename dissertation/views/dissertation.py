@@ -418,8 +418,16 @@ def dissertations_detail(request, pk):
     dissertation = get_object_or_404(Dissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
     adviser = Adviser.find_by_person(person)
+    count_dissertation_role = DissertationRole.objects.filter(dissertation=dissertation).count()
+    if count_dissertation_role < 1:
+        pro = DissertationRole(status='PROMOTEUR', adviser=dissertation.proposition_dissertation.author,
+                               dissertation=dissertation)
+        pro.save()
+    dissertation_roles = DissertationRole.objects.filter(dissertation=dissertation)
+
     return render(request, 'dissertations_detail.html',
-                  {'dissertation': dissertation, 'adviser': adviser})
+                  {'dissertation': dissertation, 'adviser': adviser, 'dissertation_roles': dissertation_roles,
+                   'count_dissertation_role': count_dissertation_role})
 
 
 @login_required

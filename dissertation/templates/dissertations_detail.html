@@ -115,6 +115,23 @@
         </div>
         <div class="panel panel-default">
             <div class="panel-heading">
+                <h3 class="panel-title">{% trans 'dissertation_jury' %}</h3>
+            </div>
+            <div class="panel-body">
+                {% for dissertation_role in dissertation_roles %}
+                <div class="row">
+                  <div class="col-md-3" style="text-align: right">
+                      <label>{{ dissertation_role.status }}</label>
+                  </div>
+                  <div class="col-md-9">
+                      {{ dissertation_role.adviser }}
+                  </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
                 <h3 class="panel-title">{% trans 'proposition_dissertation_informations' %}</h3>
             </div>
             <div class="panel-body">
