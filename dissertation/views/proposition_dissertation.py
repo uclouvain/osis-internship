@@ -159,7 +159,7 @@ def proposition_dissertation_my(request):
     person = mdl.person.find_by_user(request.user)
     adviser = Adviser.find_by_person(person)
     proposition_dissertations = PropositionDissertation.objects.filter(Q(author=adviser) & Q(active=True))
-    return render(request, 'proposition_dissertations_list.html',
+    return render(request, 'proposition_dissertations_list_my.html',
                   {'proposition_dissertations': proposition_dissertations})
 
 

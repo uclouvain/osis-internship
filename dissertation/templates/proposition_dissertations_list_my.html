@@ -36,8 +36,8 @@
     <h2>{% trans 'subjects' %}</h2>
   </div>
   <ul class="nav nav-tabs">
-    <li><a href="{% url 'proposition_dissertation_my' %}">{% trans 'my_proposition_dissertations' %}</a></li>
-    <li class="active"><a href="#">{% trans 'all_proposition_dissertations' %}</a></li>
+    <li class="active"><a href="#">{% trans 'my_proposition_dissertations' %}</a></li>
+    <li><a href="{% url 'proposition_dissertations'%}">{% trans 'all_proposition_dissertations' %}</a></li>
   </ul>
   <div class="panel panel-default">
     <div class="panel-body">
@@ -73,15 +73,23 @@
             {% else %}
               <table class="table table-hover">
                 <tr>
-                  <th>{% trans 'Title'%}</th>
-                  <th>{% trans 'Author'%}</th>
-                  <th>{% trans 'Offer'%}</th>
-                  <th>{% trans 'Max Students'%}</th>
+                  <th>{% trans 'title'%}</th>
+                  <th>{% trans 'author'%}</th>
+                  <th>{% trans 'visible'%}</th>
+                  <th>{% trans 'offer'%}</th>
+                  <th>{% trans 'max_students'%}</th>
                 </tr>
                 {% for proposition_dissertation in proposition_dissertations %}
                   <tr>
                     <td><a href="{% url 'proposition_dissertation_detail' pk=proposition_dissertation.pk %}">{{ proposition_dissertation.title }}</a></td>
                     <td>{{ proposition_dissertation.author }}</td>
+                    <td>
+                        {% if proposition_dissertation.visibility %}
+                            <span class="glyphicon glyphicon-ok" style="color:green"></span>
+                        {% else %}
+                            <span class="glyphicon glyphicon-remove" style="color:red"></span>
+                        {% endif %}
+                    </td>
                     <td>{% for offer_proposition in proposition_dissertation.offer_proposition.all %}<span class="label label-default">{{ offer_proposition }}</span> {% endfor %}</td>
                     <td>{{ proposition_dissertation.max_number_student }}</td>
                   </tr>
