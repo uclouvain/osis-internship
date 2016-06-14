@@ -101,13 +101,20 @@ def internships(request):
     # Create the options for the selected list, delete duplicated
     query_organizations = InternshipOffer.find_internships()
     internship_organizations = []
+    internship_learning_unit_year = []
     for internship in query_organizations:
         internship_organizations.append(internship.organization)
+        internship_learning_unit_year.append(internship.learning_unit_year)
     internship_organizations = list(set(internship_organizations))
+    internship_learning_unit_year = list(set(internship_learning_unit_year))
+    for luy in internship_learning_unit_year:
+        tab = luy.title.replace(" ", "")
+        luy.tab = tab
 
     return render(request, "internships.html", {'section': 'internship',
                                                 'all_internships' : query,
                                                 'all_organizations' : internship_organizations,
+                                                'all_learning_unit_year' : internship_learning_unit_year,
                                                 'organization_sort_value' : organization_sort_value,
                                                  })
 
@@ -170,6 +177,8 @@ def internships_stud(request):
     for luy in all_learning_unit_year :
         size = len(InternshipChoice.find_by(s_learning_unit_year=luy, s_student=student))
         luy.size = size
+        tab = luy.title.replace(" ", "")
+        luy.tab = tab
 
     return render(request, "internships_stud.html", {'section': 'internship',
                                                 'all_internships' : query,
