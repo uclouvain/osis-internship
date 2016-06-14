@@ -26,7 +26,7 @@
 from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
 from assistant.views import mandate, home
-from assistant.views import mandates_list
+from assistant.views import mandates_list, reviewer_mandates_list
 from assistant.models import assistant_mandate
 
 urlpatterns = [
@@ -36,4 +36,5 @@ urlpatterns = [
     url(r'^manager/mandates/(?P<mandate_id>\d+)/save/$', mandate.mandate_save, name='mandate_save'),
     url(r'^manager/mandates/load/$', mandate.load_mandates, name='load_mandates'),
     url(r'^manager/mandates/$', login_required(mandates_list.MandatesListView.as_view()), name='mandates_list'),
+    url(r'^reviewer/mandates/$', reviewer_mandates_list.MandatesListView.as_view(), name='reviewer_mandates_list'),
 ]
