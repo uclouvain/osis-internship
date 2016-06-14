@@ -28,18 +28,23 @@ from django.db import IntegrityError
 import csv, codecs
 from assistant.forms import MandateForm, StructureInLineFormSet
 from base.views import layout
-from assistant.models import assistant_mandate, academic_assistant, mandate_structure
+from assistant.models import assistant_mandate, academic_assistant, mandate_structure, manager
 from base import models as mdl
 from assistant.models.mandate_structure import MandateStructure
+from django.core.exceptions import ObjectDoesNotExist
 
-
-def not_in_hr_department_group(user):
+def user_is_manager(user):
     """Use with a ``user_passes_test`` decorator to restrict access to 
-    authenticated users who are not in the "hr_department" group."""
-    return user.is_authenticated() and user.groups.filter(name='hr_department').exists()
+    authenticated users who are manager."""
+    
+    try:
+        if user.is_authenticated():
+            return manager.Manager.objects.get(person=user.person)
+    except ObjectDoesNotExist:
+        return False
+    
 
-
-@user_passes_test(not_in_hr_department_group, login_url='assistants_home')
+@user_passes_test(user_is_manager, login_url='assistants_home')
 def mandate_edit(request, mandate_id):
     """Use to edit an assistant mandate."""
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
@@ -56,7 +61,7 @@ def mandate_edit(request, mandate_id):
                                                 'form': form,
                                                 'formset': formset})
 
-@user_passes_test(not_in_hr_department_group, login_url='assistants_home')
+@user_passes_test(user_is_manager, login_url='assistants_home')
 def mandate_save(request, mandate_id):
     """Use to save an assistant mandate."""
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
@@ -77,7 +82,7 @@ def mandate_save(request, mandate_id):
                                                                  'formset': formset})    
 
 
-@user_passes_test(not_in_hr_department_group, login_url='assistants_home')
+@user_passes_test(user_is_manager, login_url='assistants_home')
 def load_mandates(request):
     """Importe un fichier CSV osis/assistant/views/data_assistant.csv contenant la liste des mandats.
     Si un mandat avec un assistant, sap_id, position_id et academic_year existe déjà,

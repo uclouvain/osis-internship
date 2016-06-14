@@ -24,8 +24,13 @@
 #
 ##############################################################################
 from django.contrib import admin
-from assistant.models import reviewer
+from assistant.models import reviewer, manager
 
 # Register your models here.
 admin.site.register(reviewer.Reviewer,
-                    reviewer.ReviewerAdmin)
+                    reviewer.ReviewerAdmin,
+                    )
+
+admin.site.register(manager.Manager,
+                    manager.ManagerAdmin
+                    )

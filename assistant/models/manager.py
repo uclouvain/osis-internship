@@ -23,15 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
-# Statements in alphabetic order.
-from assistant.models import academic_assistant
-from assistant.models import assistant_document
-from assistant.models import assistant_mandate
-from assistant.models import manager
-from assistant.models import mandate_structure
-from assistant.models import review
-from assistant.models import reviewer
-from assistant.models import tutoring_learning_unit_year
+from django.db import models
+from django.contrib import admin
 
 
+class ManagerAdmin(admin.ModelAdmin):
+    raw_id_fields = ('person', )
+    search_fields = ['person__first_name', 'person__last_name',
+                     'person__global_id', 'structure__acronym']
+
+class Manager(models.Model):
+    person = models.ForeignKey('base.Person')
+    
+    def __str__(self):
+        return u"%s" % (self.person)
