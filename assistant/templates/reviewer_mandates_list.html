@@ -52,7 +52,7 @@
 </form></br> 
 </div></div>
 <div class="table-responsive">  
-<table id="myTable" class="table table-hover table-bordered" cellspacing="0" width="100%">
+<table id="myTable" class="table table-hover table-condensed table-bordered" cellspacing="0" width="100%">
 <thead>
       <tr>
       <th>{% trans 'global_id' %}</th>
@@ -64,7 +64,9 @@
         <th>{% trans 'mandate' %}</th>
         <th>{% trans 'eq_fte' %}</th>
         <th>{% trans 'workflow' %}</th>
-        <th>{% trans 'actions' %}</th>
+        <th>{% trans 'edit' %}</th>
+        <th>{% trans 'view' %}</th>
+        <th>{% trans 'download' %}</th>
         
       </tr>
     </thead>
@@ -111,23 +113,29 @@
 {% elif mandate.state == "VICE_RECTOR" %}
 	<td>{% trans 'sector_vice_rector' %}</td>
 {% endif %}
-<td>
+<td align="center">
 {% if mandate.state in request.user.person.reviewer_set.first.role and request.user.person.reviewer_set.first.id not in has_delegate %}
-	<span class="glyphicon glyphicon-edit" style="font-size: 14pt;" aria-hidden="true">
+	<button type="submit" class="btn btn-primary" title="{% trans 'edit'%}" id="bt_review_edit"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>
 {% endif %}
+</td><td align="center">
 {% if request.user.person.reviewer_set.first.role == "SECTOR_VICE_RECTOR_ASSISTANT" and mandate.state == "VICE_RECTOR" %}
-	<span class="glyphicon glyphicon-eye-open" style="font-size: 14pt;" aria-hidden="true">
-	<span class="glyphicon glyphicon-download" style="font-size: 14pt;" aria-hidden="true">
+	<button type="submit" class="btn btn-primary" title="{% trans 'view'%}" id="bt_review_view"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></button>
+	</td><td align="center"><button type="submit" class="btn btn-primary" title="{% trans 'download'%}" id="bt_review_download"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></button>
+	</td>
 {% elif request.user.person.reviewer_set.first.role == 'SECTOR_VICE_RECTOR' and mandate.state == 'VICE_RECTOR' %}
-	<span class="glyphicon glyphicon-eye-open" style="font-size: 14pt;" aria-hidden="true">
-	<span class="glyphicon glyphicon-download" style="font-size: 14pt;" aria-hidden="true">
+	<button type="submit" class="btn btn-primary" title="{% trans 'view'%}" id="bt_review_view"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></button>
+	</td><td align="center"><button type="submit" class="btn btn-primary" title="{% trans 'download'%}" id="bt_review_download"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></button>
+	</td>
 {% elif request.user.person.reviewer_set.first.role == "SUPERVISION" and mandate.state in supervision_list %}
-	<span class="glyphicon glyphicon-eye-open" style="font-size: 14pt;" aria-hidden="true">
-	<span class="glyphicon glyphicon-download" style="font-size: 14pt;" aria-hidden="true">
+	<button type="submit" class="btn btn-primary" title="{% trans 'view'%}" id="bt_review_view"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></button>
+	</td><td align="center"><button type="submit" class="btn btn-primary" title="{% trans 'download'%}" id="bt_review_download"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></button>
+	</td>
 {% elif request.user.person.reviewer_set.first.role == "RESEARCH" and  mandate.state in research_list %}
-	<span class="glyphicon glyphicon-eye-open" style="font-size: 14pt;" aria-hidden="true">
-	<span class="glyphicon glyphicon-download" style="font-size: 14pt;" aria-hidden="true">
-	
+	<button type="submit" class="btn btn-primary" title="{% trans 'view'%}" id="bt_review_view"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></button>
+	</td><td align="center"><button type="submit" class="btn btn-primary" title="{% trans 'download'%}" id="bt_review_download"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></button>
+	</td>
+{% else %}
+	</td><td></td>
 {% endif %}
 </td>
 </tr>
