@@ -28,8 +28,8 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
-  <li><a href="{% url 'internships_home' %}">Stages</a></li>
+  <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
+  <li><a href="{% url 'internships_home' %}">{% trans 'internships' %}</a></li>
   <li class="active">{% trans 'all_hospital' %}</li>
 {% endblock %}
 
@@ -44,7 +44,7 @@
         <table style="height:100%; width:100%;">
             <thead>
               <tr>
-                  <th style="text-align:center; width:50%;">{% trans 'City' %}</th>
+                  <th style="text-align:center; width:50%;">{% trans 'city' %}</th>
               </tr>
             </thead>
             <tbody>
@@ -75,11 +75,11 @@
                   <th>{% trans 'name' %}</th>
                   <th>{% trans 'student_choice' %}</th>
                   <th>{% trans 'affectation_result' %}</th>
-                  <th>{% trans 'Address' %}</th>
-                  <th>{% trans 'Postal Code' %}</th>
-                  <th>{% trans 'City' %}</th>
-                  <th>{% trans 'Country' %}</th>
-                  <th>{% trans 'Url' %}</th>
+                  <th>{% trans 'address' %}</th>
+                  <th>{% trans 'postal_code' %}</th>
+                  <th>{% trans 'city' %}</th>
+                  <th>{% trans 'country' %}</th>
+                  <th>{% trans 'url' %}</th>
               </tr>
             </thead>
             <tbody>

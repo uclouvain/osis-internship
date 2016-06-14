@@ -27,33 +27,33 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
-  <li><a href="{% url 'internships_home' %}">Stages</a></li>
-  <li class="active">{% trans 'Students' %}</li>
+  <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
+  <li><a href="{% url 'internships_home' %}">{% trans 'internships' %}</a></li>
+  <li class="active">{% trans 'students' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'Students sum up' %}</h2>
+    <h2>{% trans 'students_sumup' %}</h2>
   </div>
   <div class="panel panel-default">
     <form  method="get" action="{% url 'internships_student_search'%}" >
       <div class="row">
           <div class="col-md-3">
-              <label for="noma">{% trans 'Noma'%}</label>
+              <label for="noma">{% trans 'noma'%}</label>
               <input class="form-control" id="txt_noma" placeholder="{% trans 'Noma' %}"
                                                         name="s_noma"
                                                         value="{{ s_noma | default_if_none:'' }}"
                                                         style="text-transform:uppercase">
           </div>
           <div class="col-md-3">
-              <label for="name" >{% trans 'Name'%}</label>
+              <label for="name" >{% trans 'name'%}</label>
               <input class="form-control" id="txt_name" placeholder="{% trans 'Name' %}"
                                                         name="s_name"
                                                         value="{{ s_name | default_if_none:'' }}"
                                                         style="text-transform:uppercase">
           </div>
           <div class="col-md-3">
-              <label for="name" >{% trans 'Firstname'%}</label>
+              <label for="name" >{% trans 'firstname'%}</label>
               <input class="form-control" id="txt_firstname" placeholder="{% trans 'Firstname' %}"
                                                         name="s_firstname"
                                                         value="{{ s_firstname | default_if_none:'' }}"
@@ -75,15 +75,15 @@
       {% else%}
       <div>
           {% if students|length == 0 %}
-              <label class="alert alert-info" style="margin:5px">{% trans 'No result!' %}</label>
+              <label class="alert alert-info" style="margin:5px">{% trans 'no_result' %}</label>
           {% else %}
               <table class="table table-striped table-hover">
                   <thead>
-                  <th>{% trans 'Noma'%}</th>
-                  <th>{% trans 'Name'%}</th>
-                  <th>{% trans 'Forname'%}</th>
-                  <th>{% trans 'Details'%}</th>
-                  <th>{% trans 'Modif. Choix'%}</th>
+                  <th>{% trans 'noma'%}</th>
+                  <th>{% trans 'name'%}</th>
+                  <th>{% trans 'firstname'%}</th>
+                  <th>{% trans 'details'%}</th>
+                  <th>{% trans 'choice_modification'%}</th>
                   </thead>
                   {% for student in students %}
                   <tr>
