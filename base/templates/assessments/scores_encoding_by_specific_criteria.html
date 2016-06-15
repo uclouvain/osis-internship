@@ -95,8 +95,8 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th>{% trans 'learning_unit' %}</th>
                         <th>{% trans 'offer' %}</th>
+                        <th>{% trans 'learning_unit' %}</th>
                         <th>{% trans 'registration_id' %}</th>
                         <th>{% trans 'lastname' %}</th>
                         <th>{% trans 'firstname' %}</th>
@@ -107,8 +107,8 @@
                 <tbody>
                 {% for enrol in exam_enrollments %}
                     <tr>
-                        <td>{{ enrol.learning_unit_enrollment.learning_unit_year.acronym }}</td>
                         <td>{{ enrol.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
+                        <td>{{ enrol.learning_unit_enrollment.learning_unit_year.acronym }}</td>
                         <td>{{ enrol.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
                         <td>{{ enrol.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
                         <td>{{ enrol.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
