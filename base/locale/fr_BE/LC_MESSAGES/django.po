@@ -1164,6 +1164,9 @@ msgstr "Vous n'êtes pas un gestionnaire de programme. Par conséquent, vous n'a
 msgid "enrollments"
 msgstr "Inscriptions"
 
+msgid "missing_column_session"
+msgstr "Veuillez remplir la colonne 'session' de votre fichier excel."
+
 msgid "incomplete"
 msgstr "Incomplet"
 
