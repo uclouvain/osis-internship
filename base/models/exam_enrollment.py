@@ -401,15 +401,17 @@ def _normalize_string(string):
     return ''.join((c for c in unicodedata.normalize('NFD', string) if unicodedata.category(c) != 'Mn'))
 
 
-def sort_by_last_name_first_name(exam_enrollments):
+def sort_by_offer_acronym_last_name_first_name(exam_enrollments):
     def _sort(key):
         off_enroll = key.learning_unit_enrollment.offer_enrollment
         last_name = off_enroll.student.person.last_name
         first_name = off_enroll.student.person.first_name
         last_name = _normalize_string(last_name) if last_name else None
         first_name = _normalize_string(first_name) if first_name else None
+        offer_year_acronym = key.learning_unit_enrollment.offer_enrollment.offer_year.acronym
         learn_unit_acronym = key.learning_unit_enrollment.learning_unit_year.acronym
-        return "%s %s %s" % (last_name.upper() if last_name else '',
+        return "%s %s %s %s" % (offer_year_acronym if offer_year_acronym else '',
+                             last_name.upper() if last_name else '',
                              first_name.upper() if first_name else '',
                              learn_unit_acronym if learn_unit_acronym else '')
 
