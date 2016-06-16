@@ -333,7 +333,7 @@ msgstr "Statut"
 msgid "program"
 msgstr "Programme"
 
-msgid "session"
+msgid "sessionn"
 msgstr "Session"
 
 msgid "number_session"

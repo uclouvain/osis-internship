@@ -341,7 +341,7 @@ msgstr "Status"
 msgid "program"
 msgstr "Program"
 
-msgid "session"
+msgid "sessionn"
 msgstr "Session"
 
 msgid "number_session"
