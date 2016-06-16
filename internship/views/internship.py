@@ -299,12 +299,16 @@ def internships_edit(request, internship_id):
         success = 1
         if internship_id :
             message = "%s" % _('Stage correctement modifié ! Vous pouvez cliquer sur le bouton Retour')
+            organization_related = organization[0]
         else :
             message = "%s" % _('Stage correctement créé !')
+            organization_related = None
 
     else :
         message = "%s" % _('Ce stage pour cet hôpital existe déjà !')
 
+
+    print(organization_related)
     #Select all the organisation (service partner)
     organizations = Organization.find_all_order_by_reference()
     #select all the learning_unit_year which contain the word stage
@@ -317,7 +321,8 @@ def internships_edit(request, internship_id):
                                                         'select_organization' : organization[0].reference,
                                                         'select_learning_unit_year' : learning_unit_year[0].title,
                                                         'message': message,
-                                                        'success' : success
+                                                        'success' : success,
+                                                        'organization_related' : organization_related,
                                                 })
 
 @login_required
@@ -340,8 +345,10 @@ def student_choice(request, id):
 @login_required
 def internship_modification(request, internship_id):
     internship = InternshipOffer.find_intership_by_id(internship_id)
+    organization_sorted = request.POST['organization_sort']
     return render(request, "internship_modification.html", {'internship': internship,
-                                                            'internship_id' : internship_id
+                                                            'internship_id' : internship_id,
+                                                            'organization_sorted' : organization_sorted,
     })
 
 @login_required
