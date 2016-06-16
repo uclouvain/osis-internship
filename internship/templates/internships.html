@@ -27,18 +27,18 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
-  <li><a href="{% url 'internships_home' %}">Stages</a></li>
-  <li class="active">{% trans 'Internships' %}</li>
+  <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
+  <li><a href="{% url 'internships_home' %}">{% trans 'all_internships' %}</a></li>
+  <li class="active">{% trans 'all_internships' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'Internships' %}</h2>
+    <h2>{% trans 'internships' %}</h2>
   </div>
   <table style="height:100%; width:100%;">
       <thead>
         <tr>
-            <th style="text-align:center; width:50%;">{% trans 'Organization' %}</th>
+            <th style="text-align:center; width:50%;">{% trans 'organization' %}</th>
         </tr>
       </thead>
       <tbody>
@@ -46,7 +46,7 @@
           <tr>
             <td style="text-align:center; width:50%;">
               <select name="organization_sort" onChange="javascript: this.form.submit();">
-               <option value="0">{% trans 'all_hospitals' %}</option>
+               <option value="0">{% trans 'choose_a_hospital' %}</option>
                {% for organization in all_organizations %}
                   <option value="{{ organization.name }}"
                   {% if organization.name == organization_sort_value %}selected{% endif %}>
@@ -62,18 +62,16 @@
   <div class="panel panel-default">
     <div class="panel-body">
         <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#tab_MI">{% trans 'Stage en Chirurgie'%}</a></li>
-            <li><a data-toggle="tab" href="#tab_CH">{% trans 'Stage en Gériatrie'%}</a></li>
-            <li><a data-toggle="tab" href="#tab_GO">{% trans 'Stage de Gynécologie-Obstétrique'%}</a></li>
-            <li><a data-toggle="tab" href="#tab_PED">{% trans 'Stage en Médecine interne'%}</a></li>
-            <li><a data-toggle="tab" href="#tab_URG">{% trans 'Stage en Pédiatrie'%}</a></li>
-            <li><a data-toggle="tab" href="#tab_GER">{% trans 'Stage en Urgence'%}</a></li>
-            <li><a data-toggle="tab" href="#tab_CHOIX1">{% trans 'Stage au choix'%}</a></li>
+          {% for luy in all_learning_unit_year %}
+            <li><a data-toggle="tab" href="#tab_{{luy.tab}}">{{luy.title}}</a></li>
+          {% endfor %}
+            <li><a data-toggle="tab" href="#tab_choice">{% trans 'internship_choice' %}</a></li>
         </ul>
         <input type="hidden" name="organization_sort" value="{{ organization.name }}"/>
         {% csrf_token %}
         <div class="tab-content">
-            <div id="tab_MI" class="tab-pane fade in active">
+          {% for luy in all_learning_unit_year %}
+            <div id="tab_{{luy.tab}}" class="tab-pane fade in active">
               <div class="panel panel-default">
                 <div class="tab-content">
                   <div role="tabpanel" class="tab-pane fade in active" id="profile">
@@ -90,7 +88,7 @@
                         </thead>
                         <tbody>
                           {% for internship in all_internships %}
-                          {% if internship.learning_unit_year.title = "Stage en Chirurgie"%}
+                          {% if internship.learning_unit_year == luy %}
                             <tr>
                               <td>
                                 {{ internship.organization.reference }} - {{ internship.organization }}
@@ -127,332 +125,63 @@
                 </div>
               </div>
             </div>
-            <div id="tab_CH" class="tab-pane fade">
-              <div class="panel panel-default">
-                <div class="tab-content">
-                  <div role="tabpanel" class="tab-pane fade in active" id="profile">
-                    <table class="table table-hover">
-                        <thead>
+          {%endfor%}
+          <div id="tab_choice" class="tab-pane fade in active">
+            <div class="panel panel-default">
+              <div class="tab-content">
+                <div role="tabpanel" class="tab-pane fade in active" id="profile">
+                  <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th align="center">{% trans 'organization' %}</th>
+                          <th align="center">{% trans 'student_max' %}</th>
+                          <th align="center">{% trans 'Nombre de 1er choix' %}</th>
+                          <th align="center">{% trans 'Nombre d\'autres choix faits' %}</th>
+                          <th align="center">{% trans 'Détails' %}</th>
+                          <th align="center">{% trans 'Modification' %}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for internship in all_internships %}
+                        {% if internship.learning_unit_year == luy %}
                           <tr>
-                            <th align="center">{% trans 'organization' %}</th>
-                            <th align="center">{% trans 'student_max' %}</th>
-                            <th align="center">{% trans 'Nombre de 1er choix' %}</th>
-                            <th align="center">{% trans 'Nombre d\'autres choix faits' %}</th>
-                            <th align="center">{% trans 'Détails' %}</th>
-                            <th align="center">{% trans 'Modification' %}</th>
+                            <td>
+                              {{ internship.organization.reference }} - {{ internship.organization }}
+                            </td>
+                            <td align="center">
+                              {{ internship.maximum_enrollments }}
+                            </td>
+                            <td align="center">
+                              {{ internship.number_first_choice }}
+                            </td>
+                            <td align="center">
+                              {{ internship.number_other_choice }}
+                            </td>
+                            <td align="center">
+                              <a class="btn btn-info" target="_blank" id="lnk_students_choice{{internship.id}}"
+                                href="{% url 'internship_detail_student_choice' internship.id %}">
+                                <span class="glyphicon glyphicon-search" aria-hidden="true">
+                                </span>
+                              </a>
+                            </td>
+                            <td align="center">
+                              <a class="btn btn-warning" target="_blank" id="lnk_internship_modification"
+                                href="{% url 'internship_modification' internship.id %}">
+                                <span class="glyphicon glyphicon-pencil" aria-hidden="true">
+                                </span>
+                              </a>
+                            </td>
                           </tr>
-                        </thead>
-                        <tbody>
-                          {% for internship in all_internships %}
-                          {% if internship.learning_unit_year.title = "Stage en Gériatrie"%}
-                            <tr>
-                              <td>
-                                {{ internship.organization.reference }} - {{ internship.organization }}
-                              </td>
-                              <td align="center">
-                                {{ internship.maximum_enrollments }}
-                              </td>
-                              <td align="center">
-                                {{ internship.number_first_choice }}
-                              </td>
-                              <td align="center">
-                                {{ internship.number_other_choice }}
-                              </td>
-                              <td align="center">
-                                <a class="btn btn-primary" target="_blank" id="lnk_students_choice{{internship.id}}"
-                                  href="{% url 'internship_detail_student_choice' internship.id %}">
-                                  <span class="glyphicon glyphicon-search" aria-hidden="true">
-                                  </span>
-                                </a>
-                              </td>
-                              <td align="center">
-                                <a class="btn btn-warning" target="_blank" id="lnk_internship_modification"
-                                  href="{% url 'internship_modification' internship.id %}">
-                                  <span class="glyphicon glyphicon-pencil" aria-hidden="true">
-                                  </span>
-                                </a>
-                              </td>
-                            </tr>
-                          {% endif %}
-                          {% endfor %}
-                        </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div id="tab_GO" class="tab-pane fade">
-              <div class="panel panel-default">
-                <div class="tab-content">
-                  <div role="tabpanel" class="tab-pane fade in active" id="profile">
-                    <table class="table table-hover">
-                        <thead>
-                          <tr>
-                            <th align="center">{% trans 'organization' %}</th>
-                            <th align="center">{% trans 'student_max' %}</th>
-                            <th align="center">{% trans 'Nombre de 1er choix' %}</th>
-                            <th align="center">{% trans 'Nombre d\'autres choix faits' %}</th>
-                            <th align="center">{% trans 'Détails' %}</th>
-                            <th align="center">{% trans 'Modification' %}</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {% for internship in all_internships %}
-                          {% if internship.learning_unit_year.title = "Stage en Gynécologie-Obstétrique"%}
-                            <tr>
-                              <td>
-                                {{ internship.organization.reference }} - {{ internship.organization }}
-                              </td>
-                              <td align="center">
-                                {{ internship.maximum_enrollments }}
-                              </td>
-                              <td align="center">
-                                {{ internship.number_first_choice }}
-                              </td>
-                              <td align="center">
-                                {{ internship.number_other_choice }}
-                              </td>
-                              <td align="center">
-                                <a class="btn btn-primary" target="_blank" id="lnk_students_choice{{internship.id}}"
-                                  href="{% url 'internship_detail_student_choice' internship.id %}">
-                                  <span class="glyphicon glyphicon-search" aria-hidden="true">
-                                  </span>
-                                </a>
-                              </td>
-                              <td align="center">
-                                <a class="btn btn-warning" target="_blank" id="lnk_internship_modification"
-                                  href="{% url 'internship_modification' internship.id %}">
-                                  <span class="glyphicon glyphicon-pencil" aria-hidden="true">
-                                  </span>
-                                </a>
-                              </td>
-                            </tr>
-                          {% endif %}
-                          {% endfor %}
-                        </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div id="tab_PED" class="tab-pane fade">
-              <div class="panel panel-default">
-                <div class="tab-content">
-                  <div role="tabpanel" class="tab-pane fade in active" id="profile">
-                    <table class="table table-hover">
-                        <thead>
-                          <tr>
-                            <th align="center">{% trans 'organization' %}</th>
-                            <th align="center">{% trans 'student_max' %}</th>
-                            <th align="center">{% trans 'Nombre de 1er choix' %}</th>
-                            <th align="center">{% trans 'Nombre d\'autres choix faits' %}</th>
-                            <th align="center">{% trans 'Détails' %}</th>
-                            <th align="center">{% trans 'Modification' %}</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {% for internship in all_internships %}
-                          {% if internship.learning_unit_year.title = "Stage en Médecine interne"%}
-                            <tr>
-                              <td>
-                                {{ internship.organization.reference }} - {{ internship.organization }}
-                              </td>
-                              <td align="center">
-                                {{ internship.maximum_enrollments }}
-                              </td>
-                              <td align="center">
-                                {{ internship.number_first_choice }}
-                              </td>
-                              <td align="center">
-                                {{ internship.number_other_choice }}
-                              </td>
-                              <td align="center">
-                                <a class="btn btn-primary" target="_blank" id="lnk_students_choice{{internship.id}}"
-                                  href="{% url 'internship_detail_student_choice' internship.id %}">
-                                  <span class="glyphicon glyphicon-search" aria-hidden="true">
-                                  </span>
-                                </a>
-                              </td>
-                              <td align="center">
-                                <a class="btn btn-warning" target="_blank" id="lnk_internship_modification"
-                                  href="{% url 'internship_modification' internship.id %}">
-                                  <span class="glyphicon glyphicon-pencil" aria-hidden="true">
-                                  </span>
-                                </a>
-                              </td>
-                            </tr>
-                          {% endif %}
-                          {% endfor %}
-                        </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div id="tab_URG" class="tab-pane fade">
-              <div class="panel panel-default">
-                <div class="tab-content">
-                  <div role="tabpanel" class="tab-pane fade in active" id="profile">
-                    <table class="table table-hover">
-                        <thead>
-                          <tr>
-                            <th align="center">{% trans 'organization' %}</th>
-                            <th align="center">{% trans 'student_max' %}</th>
-                            <th align="center">{% trans 'Nombre de 1er choix' %}</th>
-                            <th align="center">{% trans 'Nombre d\'autres choix faits' %}</th>
-                            <th align="center">{% trans 'Détails' %}</th>
-                            <th align="center">{% trans 'Modification' %}</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {% for internship in all_internships %}
-                          {% if internship.learning_unit_year.title = "Stage en Pédiatrie"%}
-                            <tr>
-                              <td>
-                                {{ internship.organization.reference }} - {{ internship.organization }}
-                              </td>
-                              <td align="center">
-                                {{ internship.maximum_enrollments }}
-                              </td>
-                              <td align="center">
-                                {{ internship.number_first_choice }}
-                              </td>
-                              <td align="center">
-                                {{ internship.number_other_choice }}
-                              </td>
-                              <td align="center">
-                                <a class="btn btn-primary" target="_blank" id="lnk_students_choice{{internship.id}}"
-                                  href="{% url 'internship_detail_student_choice' internship.id %}">
-                                  <span class="glyphicon glyphicon-search" aria-hidden="true">
-                                  </span>
-                                </a>
-                              </td>
-                              <td align="center">
-                                <a class="btn btn-warning" target="_blank" id="lnk_internship_modification"
-                                  href="{% url 'internship_modification' internship.id %}">
-                                  <span class="glyphicon glyphicon-pencil" aria-hidden="true">
-                                  </span>
-                                </a>
-                              </td>
-                            </tr>
-                          {% endif %}
-                          {% endfor %}
-                        </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div id="tab_GER" class="tab-pane fade">
-              <div class="panel panel-default">
-                <div class="tab-content">
-                  <div role="tabpanel" class="tab-pane fade in active" id="profile">
-                    <table class="table table-hover">
-                        <thead>
-                          <tr>
-                            <th align="center">{% trans 'organization' %}</th>
-                            <th align="center">{% trans 'student_max' %}</th>
-                            <th align="center">{% trans 'Nombre de 1er choix' %}</th>
-                            <th align="center">{% trans 'Nombre d\'autres choix faits' %}</th>
-                            <th align="center">{% trans 'Détails' %}</th>
-                            <th align="center">{% trans 'Modification' %}</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {% for internship in all_internships %}
-                          {% if internship.learning_unit_year.title = "Stage en Urgence"%}
-                            <tr>
-                              <td>
-                                {{ internship.organization.reference }} - {{ internship.organization }}
-                              </td>
-                              <td align="center">
-                                {{ internship.maximum_enrollments }}
-                              </td>
-                              <td align="center">
-                                {{ internship.number_first_choice }}
-                              </td>
-                              <td align="center">
-                                {{ internship.number_other_choice }}
-                              </td>
-                              <td align="center">
-                                <a class="btn btn-primary" target="_blank" id="lnk_students_choice{{internship.id}}"
-                                  href="{% url 'internship_detail_student_choice' internship.id %}">
-                                  <span class="glyphicon glyphicon-search" aria-hidden="true">
-                                  </span>
-                                </a>
-                              </td>
-                              <td align="center">
-                                <a class="btn btn-warning" target="_blank" id="lnk_internship_modification"
-                                  href="{% url 'internship_modification' internship.id %}">
-                                  <span class="glyphicon glyphicon-pencil" aria-hidden="true">
-                                  </span>
-                                </a>
-                              </td>
-                            </tr>
-                          {% endif %}
-                          {% endfor %}
-                        </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div id="tab_CHOIX1" class="tab-pane fade">
-              <div class="panel panel-default">
-                <div class="tab-content">
-                  <div role="tabpanel" class="tab-pane fade in active" id="profile">
-                    <table class="table table-hover">
-                        <thead>
-                          <tr>
-                            <th align="center">{% trans 'organization' %}</th>
-                            <th align="center">{% trans 'student_max' %}</th>
-                            <th align="center">{% trans 'Nombre de 1er choix' %}</th>
-                            <th align="center">{% trans 'Nombre d\'autres choix faits' %}</th>
-                            <th align="center">{% trans 'Détails' %}</th>
-                            <th align="center">{% trans 'Modification' %}</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {% for internship in all_internships %}
-                          {% if internship.learning_unit_year.title = "Stage au choix"%}
-                            <tr>
-                              <td>
-                                {{ internship.organization.reference }} - {{ internship.organization }}
-                              </td>
-                              <td align="center">
-                                {{ internship.maximum_enrollments }}
-                              </td>
-                              <td align="center">
-                                {{ internship.number_first_choice }}
-                              </td>
-                              <td align="center">
-                                {{ internship.number_other_choice }}
-                              </td>
-                              <td align="center">
-                                <a class="btn btn-primary" target="_blank" id="lnk_students_choice{{internship.id}}"
-                                  href="{% url 'internship_detail_student_choice' internship.id %}">
-                                  <span class="glyphicon glyphicon-search" aria-hidden="true">
-                                  </span>
-                                </a>
-                              </td>
-                              <td align="center">
-                                <a class="btn btn-warning" target="_blank" id="lnk_internship_modification"
-                                  href="{% url 'internship_modification' internship.id %}">
-                                  <span class="glyphicon glyphicon-pencil" aria-hidden="true">
-                                  </span>
-                                </a>
-                              </td>
-                            </tr>
-                          {% endif %}
-                          {% endfor %}
-                        </tbody>
-                    </table>
-                  </div>
+                        {% endif %}
+                        {% endfor %}
+                      </tbody>
+                  </table>
                 </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
   <a href="{% url 'internships_create' %}" id="lnk_organization_create" class="btn btn-default"
      role="button" title="{% trans 'create_an_organization'%}">{% trans 'Ajouter un stage' %}
      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
