@@ -56,6 +56,18 @@ def is_teacher(user):
     return adviser.type == 'PRF'
 
 
+# Used to insert update log
+def insert_update(request, dissertation, old_status):
+    person = mdl.person.find_by_user(request.user)
+    adviser = Adviser.find_by_person(person)
+    update = DissertationUpdate()
+    update.status_from = old_status
+    update.status_to = dissertation.status
+    update.justification = adviser.type + "_set_to_" + dissertation.status
+    update.person = person
+    update.dissertation = dissertation
+    update.save()
+
 ##########################
 #      VUE GENERALE      #
 ##########################
@@ -282,6 +294,14 @@ def manager_dissertations_delete(request, pk):
     dissertation = get_object_or_404(Dissertation, pk=pk)
     dissertation.active = False
     dissertation.save()
+    # create update log
+    update = DissertationUpdate()
+    update.status_from = dissertation.status
+    update.status_to = dissertation.status
+    update.justification = "manager_set_active_false"
+    update.person = mdl.person.find_by_user(request.user)
+    update.dissertation = dissertation
+    update.save()
     return redirect('manager_dissertations_list')
 
 
@@ -298,6 +318,8 @@ def manager_dissertations_role_delete(request, pk):
 @user_passes_test(is_manager)
 def manager_dissertations_to_dir_submit(request, pk):
     dissertation = get_object_or_404(Dissertation, pk=pk)
+    old_status = dissertation.status
+
     if dissertation.status == 'DRAFT' or dissertation.status == 'DIR_KO':
         dissertation.status = 'DIR_SUBMIT'
         dissertation.save()
@@ -307,6 +329,8 @@ def manager_dissertations_to_dir_submit(request, pk):
     elif dissertation.status == 'TO_DEFEND':
         dissertation.status = 'DEFENDED'
         dissertation.save()
+
+    insert_update(request, dissertation, old_status)
     return redirect('manager_dissertations_detail', pk=pk)
 
 
@@ -315,6 +339,8 @@ def manager_dissertations_to_dir_submit(request, pk):
 def manager_dissertations_to_dir_ok(request, pk):
     dissertation = get_object_or_404(Dissertation, pk=pk)
     offer_proposition = OfferProposition.objects.get(offer=dissertation.offer_year_start.offer)
+    old_status = dissertation.status
+
     if offer_proposition.validation_commission_exists and dissertation.status == 'DIR_SUBMIT':
         dissertation.status = 'COM_SUBMIT'
         dissertation.save()
@@ -331,6 +357,8 @@ def manager_dissertations_to_dir_ok(request, pk):
     else:
         dissertation.status = 'TO_RECEIVE'
         dissertation.save()
+
+    insert_update(request, dissertation, old_status)
     return redirect('manager_dissertations_detail', pk=pk)
 
 
@@ -338,6 +366,8 @@ def manager_dissertations_to_dir_ok(request, pk):
 @user_passes_test(is_manager)
 def manager_dissertations_to_dir_ko(request, pk):
     dissertation = get_object_or_404(Dissertation, pk=pk)
+    old_status = dissertation.status
+
     if dissertation.status == 'DIR_SUBMIT':
         dissertation.status = 'DIR_KO'
         dissertation.save()
@@ -350,6 +380,8 @@ def manager_dissertations_to_dir_ko(request, pk):
     elif dissertation.status == 'DEFENDED':
         dissertation.status = 'ENDED_LOS'
         dissertation.save()
+
+    insert_update(request, dissertation, old_status)
     return redirect('manager_dissertations_detail', pk=pk)
 
 
@@ -469,8 +501,11 @@ def dissertations_delete(request, pk):
 @user_passes_test(is_teacher)
 def dissertations_to_dir_submit(request, pk):
     dissertation = get_object_or_404(Dissertation, pk=pk)
+    old_status = dissertation.status
     dissertation.status = 'DIR_SUBMIT'
     dissertation.save()
+
+    insert_update(request, dissertation, old_status)
     return redirect('dissertations_detail', pk=pk)
 
 
@@ -478,6 +513,7 @@ def dissertations_to_dir_submit(request, pk):
 @user_passes_test(is_teacher)
 def dissertations_to_dir_ok(request, pk):
     dissertation = get_object_or_404(Dissertation, pk=pk)
+    old_status = dissertation.status
     offer_proposition = OfferProposition.objects.get(offer=dissertation.offer_year_start.offer)
     if offer_proposition.validation_commission_exists and dissertation.status == 'DIR_SUBMIT':
         dissertation.status = 'COM_SUBMIT'
@@ -495,6 +531,8 @@ def dissertations_to_dir_ok(request, pk):
     else:
         dissertation.status = 'TO_RECEIVE'
         dissertation.save()
+
+    insert_update(request, dissertation, old_status)
     return redirect('dissertations_detail', pk=pk)
 
 
@@ -502,6 +540,7 @@ def dissertations_to_dir_ok(request, pk):
 @user_passes_test(is_teacher)
 def dissertations_to_dir_ko(request, pk):
     dissertation = get_object_or_404(Dissertation, pk=pk)
+    old_status = dissertation.status
     if dissertation.status == 'DIR_SUBMIT':
         dissertation.status = 'DIR_KO'
         dissertation.save()
@@ -514,6 +553,8 @@ def dissertations_to_dir_ko(request, pk):
     elif dissertation.status == 'DEFENDED':
         dissertation.status = 'ENDED_LOS'
         dissertation.save()
+
+    insert_update(request, dissertation, old_status)
     return redirect('dissertations_detail', pk=pk)
 
 
