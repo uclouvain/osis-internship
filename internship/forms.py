@@ -39,7 +39,7 @@ class InternshipChoiceForm(ModelForm):
 class InternshipOfferForm(ModelForm):
     class Meta :
         model = InternshipOffer
-        fields = ['organization', 'learning_unit_year', 'title', 'maximum_enrollments']
+        fields = ['organization', 'learning_unit_year', 'title', 'maximum_enrollments', 'selectable']
 
 class OrganizationForm(ModelForm):
     file = forms.FileField()

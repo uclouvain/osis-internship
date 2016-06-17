@@ -33,6 +33,7 @@ urlpatterns = [
     url(r'^$', home.internships_home, name='internships_home'),
     url(r'^internships/edit/([0-9]+)/$', internship.internships_edit, name='internships_edit'),
     url(r'^internships/$', internship.internships, name='internships'),
+    url(r'^internships/block/([0-9]+)/$', internship.internships_block, name='internships_block'),
     url(r'^internships/std/$', internship.internships_stud, name='internships_stud'),
     url(r'^internships/([0-9]+)/students/choice/$', internship.student_choice, name='internship_detail_student_choice'),
     url(r'^internships/create/$', internship.internships_create, name='internships_create'),

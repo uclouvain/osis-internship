@@ -159,7 +159,7 @@ class InternshipChoice(models.Model):
 
     @staticmethod
     def find_by(s_organization=None, s_learning_unit_year=None, s_organization_ref=None, s_choice=None,
-                s_define_choice=None):
+                s_define_choice=None, s_student=None):
 
         has_criteria = False
         queryset = InternshipChoice.objects
@@ -185,6 +185,10 @@ class InternshipChoice(models.Model):
                 queryset = queryset.filter(choice=s_choice)
             else :
                 queryset = queryset.exclude(choice=1)
+            has_criteria = True
+
+        if s_student:
+            queryset = queryset.filter(student = s_student).order_by('choice')
             has_criteria = True
 
         if has_criteria:

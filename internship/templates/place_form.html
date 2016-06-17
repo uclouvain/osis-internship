@@ -29,9 +29,9 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-<li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
-<li><a href="{% url 'internships_home' %}">Stages</a></li>
-<li><a href="{% url 'internships_places' %}">{% trans 'Places' %}</a></li>
+<li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
+<li><a href="{% url 'internships_home' %}">{% trans 'internships' %}</a></li>
+<li><a href="{% url 'internships_places' %}">{% trans 'all_places' %}</a></li>
 <li class="active">{% trans 'new_place' %}</li>
 {% endblock %}
 {% if message %}
@@ -54,7 +54,7 @@
         {% url 'place_save' organization.id organization_address.id%}
         {%else%} {% url 'place_save_new'%} {%endif%}">
             {% csrf_token %}
-            <h3>Hopital</h3>
+            <h3>{% trans 'organization' %}</h3>
             <div class="row">
                 <div class="col-md-4">
                     <label for="txt_reference">{% trans 'reference'%}</label>
@@ -78,7 +78,7 @@
             </div>
             <input type="hidden" value="{{ organization_address.id }}" name="organization_address_id"/>
             <input type="hidden" value="{{ organization_id }}" name="organization_id"/>
-            <h3>Adresse</h3>
+            <h3>{% trans 'address' %}</h3>
             <div class="row">
                 <div class="col-md-6">
                     <label for="txt_organization_address_label">{% trans 'label' %}</label>
@@ -108,7 +108,7 @@
             <button type="submit" class="btn btn-primary" title="{% trans 'save'%}" id="bt_organization_save">
               <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}</button>
             <a class="btn btn-default" id="lnk_organization_cancel" href="{% url 'internships_places' %}">
-                <span class="glyphicon glyphicon-cancel" aria-hidden="true"></span> {% trans 'cancel'%}</a>
+                <span class="glyphicon glyphicon-cancel" aria-hidden="true"></span> {% trans 'return'%}</a>
         </form>
     </div>
 </div>
