@@ -31,7 +31,7 @@
 {% block breadcrumb %}
 <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
 <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'dissertations' %}</a></li>
-<li><a href="{% url 'manager_dissertations_list' %}" id="lnk_propositions">{% trans 'dissertations' %}</a></li>
+<li><a href="{% url 'dissertations_list' %}" id="lnk_propositions">{% trans 'dissertations' %}</a></li>
 <li class="active">{{ dissertation.title }}</li>
 {% endblock %}
 {% block content %}
@@ -39,7 +39,7 @@
     <h2>{{ dissertation.title }}</h2>
 </div>
 <ul class="nav nav-tabs">
-    <li><a href="{% url 'manager_dissertations_detail' pk=dissertation.pk %}">{% trans 'main' %}</a></li>
+    <li><a href="{% url 'dissertations_detail' pk=dissertation.pk %}">{% trans 'main' %}</a></li>
     <li class="active"><a href="#">{% trans 'dissertation_updates' %}</a></li>
 </ul>
 <div class="panel panel-default">

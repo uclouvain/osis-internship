@@ -443,6 +443,21 @@ def dissertations_detail(request, pk):
 
 @login_required
 @user_passes_test(is_teacher)
+def dissertations_detail_updates(request, pk):
+    dissertation = get_object_or_404(Dissertation, pk=pk)
+    person = mdl.person.find_by_user(request.user)
+    adviser = Adviser.find_by_person(person)
+    dissertation_updates = DissertationUpdate.objects.filter(dissertation=dissertation).order_by('created')
+
+    return render(request, 'dissertations_detail_updates.html',
+                  {'dissertation': dissertation,
+                   'adviser': adviser,
+                   'dissertation_updates': dissertation_updates
+                   })
+
+
+@login_required
+@user_passes_test(is_teacher)
 def dissertations_delete(request, pk):
     dissertation = get_object_or_404(Dissertation, pk=pk)
     dissertation.active = False

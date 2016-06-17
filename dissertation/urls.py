@@ -105,6 +105,8 @@ urlpatterns = [
         name='dissertations_search'),
     url(r'^dissertations_detail/(?P<pk>[0-9]+)$', dissertation.dissertations_detail,
         name='dissertations_detail'),
+    url(r'^dissertations_detail_updates/(?P<pk>[0-9]+)$', dissertation.dissertations_detail_updates,
+        name='dissertations_detail_updates'),
     url(r'^dissertations_delete/(?P<pk>[0-9]+)$', dissertation.dissertations_delete,
         name='dissertations_delete'),
     url(r'^dissertations_to_dir_submit/(?P<pk>[0-9]+)$', dissertation.dissertations_to_dir_submit,
