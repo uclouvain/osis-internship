@@ -31,6 +31,7 @@ from base import models as mdl
 from dissertation.models.adviser import Adviser
 from dissertation.models.dissertation import Dissertation
 from dissertation.models.dissertation_role import DissertationRole
+from dissertation.models.dissertation_update import DissertationUpdate
 from dissertation.models.faculty_adviser import FacultyAdviser
 from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models.proposition_dissertation import PropositionDissertation
@@ -103,6 +104,21 @@ def manager_dissertations_detail(request, pk):
     return render(request, 'manager_dissertations_detail.html',
                   {'dissertation': dissertation, 'adviser': adviser, 'dissertation_roles': dissertation_roles,
                    'count_dissertation_role': count_dissertation_role})
+
+
+@login_required
+@user_passes_test(is_manager)
+def manager_dissertations_detail_updates(request, pk):
+    dissertation = get_object_or_404(Dissertation, pk=pk)
+    person = mdl.person.find_by_user(request.user)
+    adviser = Adviser.find_by_person(person)
+    dissertation_updates = DissertationUpdate.objects.filter(dissertation=dissertation).order_by('created')
+
+    return render(request, 'manager_dissertations_detail_updates.html',
+                  {'dissertation': dissertation,
+                   'adviser': adviser,
+                   'dissertation_updates': dissertation_updates
+                   })
 
 
 @login_required
