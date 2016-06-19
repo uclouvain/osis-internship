@@ -70,6 +70,34 @@ StructureInLineFormSet = inlineformset_factory(mdl.assistant_mandate.AssistantMa
                                                max_num=2)
 
 
+class HorizontalRadioRenderer(forms.RadioSelect.renderer):
+    def render(self):
+        return u'\n'.join([u'%s\n' % w for w in self])
+
+
+class AssistantFormPart1(forms.Form):
+    inscription = forms.ChoiceField(
+            choices=mdl.academic_assistant.AcademicAssistant.PHD_INSCRIPTION_CHOICES,
+            widget=forms.RadioSelect(renderer=HorizontalRadioRenderer))
+    expected_phd_date = forms.DateField(widget=forms.DateInput(format='%d/%m/%Y',
+                                        attrs={'placeholder': 'dd/mm/yyyy'}),
+                                        input_formats='%d/%m/%Y')
+    phd_inscription_date = forms.DateField(widget=forms.DateInput(format='%d/%m/%Y',
+                                           attrs={'placeholder':'dd/mm/yyyy'}),
+                                           input_formats='%d/%m/%Y')
+    confirmation_test_date = forms.DateField(widget=forms.DateInput(format='%d/%m/%Y',
+                                             attrs={'placeholder': 'dd/mm/yyyy'}),
+                                             input_formats='%d/%m/%Y')
+    thesis_date = forms.DateField(widget=forms.DateInput(format='%d/%m/%Y',
+                                  attrs={'placeholder': 'dd/mm/yyyy'}),
+                                  input_formats='%d/%m/%Y')
+    supervisor = forms.CharField(widget=forms.TextInput(
+                                 attrs={'placeholder': 'firstname.lastname@uclouvain.be', 'size': '30'}))
+    external_functions = forms.CharField(widget=forms.Textarea(attrs={'cols': '40', 'rows': '2'}))
+    external_contract = forms.CharField(widget=forms.Textarea(attrs={'cols': '40', 'rows': '2'}))
+    justification = forms.CharField(widget=forms.Textarea(attrs={'cols': '40', 'rows': '2'}))
+
+
 class MandatesArchivesForm(ModelForm):
     academic_year = forms.ModelChoiceField(queryset=academic_year.AcademicYear.objects.all(),
                                            widget=forms.Select(attrs={"onChange": 'submit()'}))
