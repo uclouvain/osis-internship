@@ -214,6 +214,15 @@ msgstr "User"
 msgid "search_for_a_file"
 msgstr "Search for a file"
 
+msgid "javascript_is_disabled"
+msgstr "Javascript is disabled on browser"
+
+msgid "please_enable_javascript"
+msgstr "Please enable javascript to use this website"
+
+msgid "old_browser_warning"
+msgstr "Your browser is out of date. This can lead to unknown behaviour."
+
 msgid "name"
 msgstr "Name"
 
