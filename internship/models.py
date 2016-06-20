@@ -191,8 +191,11 @@ class InternshipChoice(models.Model):
 
 class Period(models.Model):
     name = models.CharField(max_length=255)
-    date_start = models.DateField()
-    date_end = models.DateField()
+    date_start = models.DateField(blank=False)
+    date_end = models.DateField(blank=False)
+
+    def find_all():
+        return Period.objects.all()
 
 class Organization(models.Model):
     name = models.CharField(max_length=255)

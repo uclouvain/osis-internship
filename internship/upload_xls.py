@@ -173,7 +173,7 @@ def __save_xls_internships(request, file_name, user):
     form = OrganizationForm(request)
     col_reference = 0
     col_spec = 1
-    col_max_places = 2
+    col_max_places = 4
     index = 1
     # Iterates over the lines of the spreadsheet.
     for count, row in enumerate(worksheet.rows):
@@ -224,5 +224,5 @@ def __save_xls_internships(request, file_name, user):
             internship.title = spec
             internship.maximum_enrollments = row[col_max_places].value
             internship.selectable = True
-            
+
             internship.save()

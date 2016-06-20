@@ -361,3 +361,72 @@ def internships_block(request, block):
         edit_internship.save()
 
     return HttpResponseRedirect(reverse('internships_home'))
+
+@login_required
+def internships_modification_student(request, registration_id):
+    student = mdl.student.find_by(registration_id=registration_id)
+    #get in order descending to have the first choices in first lines in the insert (line 114)
+    student_choice = InternshipChoice.find_by_student_desc(student)
+    #First get the value of the option's value for the sort
+    if request.method == 'GET':
+        organization_sort_value = request.GET.get('organization_sort')
+
+    #Then select Internship Offer depending of the option
+    if organization_sort_value and organization_sort_value != "0":
+        query = InternshipOffer.find_interships_by_organization(organization_sort_value)
+    else :
+        query = InternshipOffer.find_internships()
+
+    #Change the query into a list
+    query=list(query)
+    #delete the internships in query when they are in the student's selection then rebuild the query
+    index = 0
+    for choice in student_choice:
+        for internship in query :
+            if internship.organization == choice.organization and \
+                internship.learning_unit_year == choice.learning_unit_year :
+                    choice.maximum_enrollments =  internship.maximum_enrollments
+                    choice.selectable =  internship.selectable
+                    query[index] = 0
+            index += 1
+        query = [x for x in query if x != 0]
+        index = 0
+    query = [x for x in query if x != 0]
+
+    #insert the student choice into the global query, at first position,
+    #if they are in organization_sort_value (if it exist)
+    for choice in student_choice :
+        if organization_sort_value and organization_sort_value != "0" :
+            if choice.organization.name == organization_sort_value :
+                query.insert(0,choice)
+        else :
+            query.insert(0,choice)
+
+    for internship in query:
+        number_first_choice = len(InternshipChoice.find_by(internship.organization, internship.learning_unit_year, s_choice = 1))
+        internship.number_first_choice = number_first_choice
+
+    # Create the options for the selected list, delete duplicated
+    query_organizations = InternshipOffer.find_internships()
+    internship_organizations = []
+    for internship in query_organizations:
+        internship_organizations.append(internship.organization)
+    internship_organizations = list(set(internship_organizations))
+
+    all_internships = InternshipOffer.find_internships()
+    all_learning_unit_year = []
+    for choice in all_internships:
+        all_learning_unit_year.append(choice.learning_unit_year)
+    all_learning_unit_year = list(set(all_learning_unit_year))
+    for luy in all_learning_unit_year :
+        size = len(InternshipChoice.find_by(s_learning_unit_year=luy, s_student=student))
+        luy.size = size
+        tab = luy.title.replace(" ", "")
+        luy.tab = tab
+
+    return render(request, "internship_modification_student.html", {'section': 'internship',
+                                                'all_internships' : query,
+                                                'all_organizations' : internship_organizations,
+                                                'organization_sort_value' : organization_sort_value,
+                                                'all_learning_unit_year' : all_learning_unit_year,
+                                                 })

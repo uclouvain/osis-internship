@@ -48,6 +48,6 @@ class OrganizationForm(ModelForm):
         fields = ['acronym', 'name', 'website', 'reference']
 
 class PeriodForm(forms.Form):
-    name = forms.CharField()
-    start_date = forms.DateField(widget=DateInput())
-    end_date = forms.DateField(widget=DateInput())
+    class Meta:
+        model = Period
+        widgets = {'date' : forms.DateInput(attrs={'type':'date'})}
