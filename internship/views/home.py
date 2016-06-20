@@ -35,6 +35,8 @@ def internships_home(request):
         noma = s.registration_id
 
     internships = InternshipOffer.find_internships()
+    #Check if there is a internship offers in data base. If not, the internships
+    #can be block, but there is no effect
     if len(internships) > 0 :
         if internships[0].selectable:
             blockable = True
