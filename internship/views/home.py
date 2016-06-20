@@ -31,8 +31,11 @@ from internship.models import InternshipOffer
 @login_required
 def internships_home(request):
     student = mdl.student.find_by(person_username=request.user)
-    for s in student:
-        noma = s.registration_id
+    if len(student) > 0 :
+        for s in student:
+            noma = s.registration_id
+    else :
+        noma = 0
 
     internships = InternshipOffer.find_internships()
     if internships[0].selectable:
