@@ -31,6 +31,7 @@ from internship.models import InternshipOffer
 @login_required
 def internships_home(request):
     student = mdl.student.find_by(person_username=request.user)
+    #Check if the user is a student, if not the noma is not requiered so it's 0
     if len(student) > 0 :
         for s in student:
             noma = s.registration_id
