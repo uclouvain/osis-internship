@@ -163,6 +163,16 @@ def justification_label_authorized():
 class ExamEnrollmentHistoryAdmin(admin.ModelAdmin):
     list_display = ('exam_enrollment', 'person', 'score_final', 'justification_final', 'modification_date')
     fieldsets = ((None, {'fields': ('exam_enrollment', 'person', 'score_final', 'justification_final')}),)
+    raw_id_fields = ('exam_enrollment', 'person')
+    search_fields = ['exam_enrollment__learning_unit_enrollment__offer_enrollment__student__person__first_name',
+                     'exam_enrollment__learning_unit_enrollment__offer_enrollment__student__person__last_name',
+                     'exam_enrollment__learning_unit_enrollment__offer_enrollment__student__registration_id']
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def has_add_permission(self, request):
+        return False
 
 
 class ExamEnrollmentHistory(models.Model):
