@@ -369,6 +369,34 @@ def manager_dissertations_to_dir_ok(request, pk):
 
 @login_required
 @user_passes_test(is_manager)
+def manager_dissertations_to_dir_ok_list(request, pk):
+    dissertation = get_object_or_404(Dissertation, pk=pk)
+    offer_proposition = OfferProposition.objects.get(offer=dissertation.offer_year_start.offer)
+    old_status = dissertation.status
+
+    if offer_proposition.validation_commission_exists and dissertation.status == 'DIR_SUBMIT':
+        dissertation.status = 'COM_SUBMIT'
+        dissertation.save()
+    elif offer_proposition.evaluation_first_year and (
+                    dissertation.status == 'DIR_SUBMIT' or dissertation.status == 'COM_SUBMIT'):
+        dissertation.status = 'EVA_SUBMIT'
+        dissertation.save()
+    elif dissertation.status == 'EVA_SUBMIT':
+        dissertation.status = 'TO_RECEIVE'
+        dissertation.save()
+    elif dissertation.status == 'DEFENDED':
+        dissertation.status = 'ENDED_WIN'
+        dissertation.save()
+    else:
+        dissertation.status = 'TO_RECEIVE'
+        dissertation.save()
+
+    insert_update(request, dissertation, old_status)
+    return redirect('manager_dissertations_wait_commission_list')
+
+
+@login_required
+@user_passes_test(is_manager)
 def manager_dissertations_to_dir_ko(request, pk):
     dissertation = get_object_or_404(Dissertation, pk=pk)
     old_status = dissertation.status

@@ -59,6 +59,7 @@
               <th>{% trans 'status'%}</th>
               <th>{% trans 'offer_year_start'%}</th>
               <th>{% trans 'proposition_dissertation'%}</th>
+              <th>{% trans 'action'%}</th>
             </tr>
             {% for dissertation in dissertations %}
               <tr>
@@ -103,6 +104,11 @@
                 </td>
                 <td>{{ dissertation.offer_year_start }}</td>
                 <td>{{ dissertation.proposition_dissertation }}</td>
+                <td><a href="{% url 'manager_dissertations_to_dir_ok_list' pk=dissertation.pk %}"
+                   id="manager_dissertations_to_dir_ok_list" class="btn btn-default"
+                   role="button" title="{% trans 'manager_dissertations_to_dir_ok_list'%}"><span
+                        class="glyphicon glyphicon-ok-circle"
+                        aria-hidden="true"></span> {% trans 'manager_evaluation_accept'%}</a></td>
               </tr>
             {% endfor %}
           </table>
