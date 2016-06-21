@@ -1173,5 +1173,11 @@ msgstr "You are succesfully logout."
 msgid "redirect_to_login"
 msgstr "Click to reconnect"
 
+msgid "no_valid_academic_year_error"
+msgstr "No valid academic year found in your xls file. The date should be formatted like '2015-2016' or '2015'."
+
+msgid "no_data_for_this_academic_year"
+msgstr "No data for this academic year"
+
 msgid "complete"
 msgstr "Complete"
