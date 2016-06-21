@@ -157,6 +157,12 @@ msgstr "Submission date"
 msgid "description"
 msgstr "Description"
 
+msgid "message_resent_ok"
+msgstr "The message xas sent again."
+
+msgid "message_not_resent_no_email"
+msgstr "The message can't be sent again, no email provided."
+
 msgid "label_jumbotron_details_academic_cal"
 msgstr "As displayed on the home page"
 
@@ -177,6 +183,30 @@ msgstr "Highlight shortcut"
 
 msgid "highlight_description"
 msgstr "Highlight description"
+
+msgid "delete_selected_messages"
+msgstr "Delete selected messages"
+
+msgid "mark_selected_messages_as_read"
+msgstr "Mark selected messages as read"
+
+msgid "btn_my_message_action_execute"
+msgstr "Execute selected action"
+
+msgid "tooltip_select_action"
+msgstr "Select action to execute"
+
+msgid "tooltip_select_all_messages"
+msgstr "Select all the messages"
+
+msgid "close"
+msgstr "Close"
+
+msgid "execute"
+msgstr "Execute"
+
+msgid "tooltip_to_my_messages"
+msgstr "Back to messages"
 
 msgid "save"
 msgstr "Save"
@@ -953,8 +983,29 @@ msgstr "Recipient"
 msgid "subject"
 msgstr "Subject"
 
-msgid "myosis"
-msgstr "MyOsis"
+msgid "my_osis"
+msgstr "My OSIS"
+
+msgid "my_messages"
+msgstr "My Messages"
+
+msgid "received_on"
+msgstr "Received on"
+
+msgid "tooltip_my_message_read"
+msgstr "Show message"
+
+msgid "no_messages"
+msgstr "No Messages"
+
+msgid "tooltip_delete_message"
+msgstr "Delete message"
+
+msgid "desc_profile"
+msgstr "The configuration of you user profile"
+
+msgid "desc_my_messages"
+msgstr "The messages sent by the application to you"
 
 msgid "sent"
 msgstr "Sent"
@@ -998,8 +1049,14 @@ msgstr "Search in the messages history"
 msgid "none"
 msgstr "None"
 
+msgid "application_management"
+msgstr "Application management"
+
 msgid "learning_unit_responsible"
 msgstr "Learning unit's responsible"
+
+msgid "too_many_results"
+msgstr "Too many results! Please be more specific."
 
 msgid "all_learning_units_must_be_shown"
 msgstr "All learning units must be shown"
