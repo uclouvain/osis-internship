@@ -1,0 +1,189 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block breadcrumb %}
+<li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
+<li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'dissertations' %}</a></li>
+<li><a href="{% url 'dissertations_list' %}" id="lnk_propositions">{% trans 'dissertations' %}</a></li>
+<li class="active">{{ dissertation.title }}</li>
+{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h2>{{ dissertation.title }}</h2>
+</div>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">{% trans 'dissertation_informations' %}</h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-3" style="text-align: right">
+                        <label>{% trans 'author' %}</label>
+                    </div>
+                    <div class="col-md-9">
+                        {{ dissertation.author }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3" style="text-align: right">
+                        <label>{% trans 'title' %}</label>
+                    </div>
+                    <div class="col-md-9">
+                        {{ dissertation.title }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3" style="text-align: right">
+                        <label>{% trans 'status' %}</label>
+                    </div>
+                    <div class="col-md-9">
+                        {% if dissertation.status == 'DRAFT' %}
+                        <span class="label label-default">
+                        {% elif dissertation.status == 'DIR_SUBMIT' %}
+                        <span class="label label-primary">
+                        {% elif dissertation.status == 'DIR_OK' %}
+                        <span class="label label-success">
+                        {% elif dissertation.status == 'DIR_KO' %}
+                        <span class="label label-danger">
+                        {% elif dissertation.status == 'COM_SUBMIT' %}
+                        <span class="label label-primary">
+                        {% elif dissertation.status == 'COM_OK' %}
+                        <span class="label label-default">
+                        {% elif dissertation.status == 'COM_KO' %}
+                        <span class="label label-default">
+                        {% elif dissertation.status == 'EVA_SUBMIT' %}
+                        <span class="label label-default">
+                        {% elif dissertation.status == 'EVA_OK' %}
+                        <span class="label label-default">
+                        {% elif dissertation.status == 'EVA_KO' %}
+                        <span class="label label-default">
+                        {% elif dissertation.status == 'TO_RECEIVE' %}
+                        <span class="label label-default">
+                        {% elif dissertation.status == 'TO_DEFEND' %}
+                        <span class="label label-default">
+                        {% elif dissertation.status == 'DEFENDED' %}
+                        <span class="label label-default">
+                        {% elif dissertation.status == 'ENDED' %}
+                        <span class="label label-default">
+                        {% elif dissertation.status == 'ENDED_WIN' %}
+                        <span class="label label-default">
+                        {% elif dissertation.status == 'ENDED_LOS' %}
+                        <span class="label label-default">
+                        {% else %}
+                        <span class="label label-default">
+                        {% endif %}
+                            {{ dissertation.status }}
+                        </span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3" style="text-align: right">
+                        <label>{% trans 'description' %}</label>
+                    </div>
+                    <div class="col-md-9" style="text-align: justify">
+                        {{ dissertation.description }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">{% trans 'dissertation_jury' %}</h3>
+            </div>
+            <div class="panel-body">
+                {% for dissertation_role in dissertation_roles %}
+                <div class="row">
+                  <div class="col-md-3" style="text-align: right">
+                      <label>{{ dissertation_role.status }}</label>
+                  </div>
+                  <div class="col-md-9">
+                      {{ dissertation_role.adviser }}
+                  </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">{% trans 'proposition_dissertation_informations' %}</h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-3" style="text-align: right">
+                        <label>{% trans 'author' %}</label>
+                    </div>
+                    <div class="col-md-9">
+                        {{ dissertation.proposition_dissertation.author }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3" style="text-align: right">
+                        <label>{% trans 'title' %}</label>
+                    </div>
+                    <div class="col-md-9">
+                        {{ dissertation.proposition_dissertation.title }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">{% trans 'actions' %}</h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <a class="btn btn-default btn-danger"
+                        href="{% url 'dissertations_delete' pk=dissertation.pk %}"
+                        onclick="return confirm('{% trans 'delete_dissertation_confirmation_message' %}')">
+                        <span class="glyphicon glyphicon-remove"></span> {% trans 'delete_dissertation' %}</a>
+
+                        {% if dissertation.status == 'DIR_SUBMIT' %}
+                        <a href="{% url 'dissertations_to_dir_ok' pk=dissertation.pk %}"
+                           id="lnk_dissertations_to_dir_ok" class="btn btn-default"
+                           role="button" title="{% trans 'dissertations_to_dir_ok'%}"
+                           onclick="return confirm('{% trans 'to_dir_ok_confirmation_message' %}')"><span
+                                class="glyphicon glyphicon-ok-circle"
+                                aria-hidden="true"></span> {% trans 'dissertations_to_dir_ok'%}</a>
+
+                        <a href="{% url 'dissertations_to_dir_ko' pk=dissertation.pk %}"
+                           id="lnk_dissertations_to_dir_ko" class="btn btn-default"
+                           role="button" title="{% trans 'dissertations_to_dir_ko'%}"
+                           onclick="return confirm('{% trans 'to_dir_ko_confirmation_message' %}')"><span
+                                class="glyphicon glyphicon-remove-circle"
+                                aria-hidden="true"></span> {% trans 'dissertations_to_dir_ko'%}</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

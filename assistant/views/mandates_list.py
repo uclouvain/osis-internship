@@ -23,18 +23,61 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.shortcuts import render
-from assistant.models import assistant_mandate
+from assistant.models import assistant_mandate, manager
+from django.core.urlresolvers import reverse
 from base.models import academic_year
+from assistant.forms import MandatesArchivesForm
 from django.views.generic import ListView
+from django.views.generic.edit import FormMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.core.exceptions import ObjectDoesNotExist
 
 
-class MandatesListView(ListView):
+class MandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMixin):
     context_object_name = 'mandates_list'
     template_name = 'mandates_list.html'
-    # this_academic_year = academic_year.current_academic_year()
-    # queryset = assistant_mandate.AssistantMandate.objects.filter(academic_year=this_academic_year)
+    form_class = MandatesArchivesForm
+
+    def test_func(self):
+        try:
+            return manager.Manager.objects.get(person=self.request.user.person)
+        except ObjectDoesNotExist:
+            return False
+    
+    def get_login_url(self):
+        return reverse('assistants_home')
+
+    def get_queryset(self):
+        form_class = MandatesArchivesForm
+        form = form_class(self.request.GET)
+        if form.is_valid():
+            self.request.session['selected_academic_year'] = form.cleaned_data[
+                'academic_year'].id
+            queryset = assistant_mandate.AssistantMandate.objects.filter(
+                academic_year=form.cleaned_data['academic_year'])
+        elif self.request.session.get('selected_academic_year'):
+            selected_academic_year = academic_year.AcademicYear.objects.get(
+                id=self.request.session.get('selected_academic_year'))
+            queryset = assistant_mandate.AssistantMandate.objects\
+                .filter(academic_year=selected_academic_year)
+        else:
+            selected_academic_year = academic_year.current_academic_year()
+            self.request.session[
+                'selected_academic_year'] = selected_academic_year.id
+            queryset = assistant_mandate.AssistantMandate.objects.filter(
+                academic_year=selected_academic_year)
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super(MandatesListView, self).get_context_data(**kwargs)
         return context
+
+    def get_initial(self):
+        if self.request.session.get('selected_academic_year'):
+            selected_academic_year = academic_year.AcademicYear.objects.get(
+                id=self.request.session.get('selected_academic_year'))
+        else:
+            selected_academic_year = academic_year.current_academic_year()
+            self.request.session[
+                'selected_academic_year'] = selected_academic_year.id
+        return {'academic_year': selected_academic_year}

@@ -27,20 +27,20 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
-  <li><a href="{% url 'internships_home' %}">Stages</a></li>
-  <li class="active">{% trans 'Students' %}</li>
+  <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
+  <li><a href="{% url 'internships_home' %}">{% trans 'internships' %}</a></li>
+  <li class="active">{% trans 'students' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'Students' %}</h2>
+    <h2>{% trans 'students' %}</h2>
   </div>
   <div class="panel panel-default">
         <table style="height:100%; width:100%;">
             <thead>
               <tr>
-                  <th style="text-align:center; width:50%;">{% trans 'Academic Year' %}</th>
-                  <th style="text-align:center; width:50%;">{% trans 'City' %}</th>
+                  <th style="text-align:center; width:50%;">{% trans 'academic_year' %}</th>
+                  <th style="text-align:center; width:50%;">{% trans 'city' %}</th>
               </tr>
             </thead>
             <tbody>
@@ -52,7 +52,7 @@
                 </td>
                 <td style="text-align:center; width:50%;">
                   <select>
-                   
+
                   </select>
                 </td>
               </tr>

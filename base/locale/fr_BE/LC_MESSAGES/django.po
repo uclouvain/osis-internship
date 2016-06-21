@@ -345,7 +345,7 @@ msgstr "Statut"
 msgid "program"
 msgstr "Programme"
 
-msgid "session"
+msgid "sessionn"
 msgstr "Session"
 
 msgid "number_session"
@@ -1028,6 +1028,7 @@ msgstr "Référence du template du message"
 msgid "btn_messages_history_search"
 msgstr "Recherche dans l'historique des messages"
 
+
 msgid "delete_selected_messages"
 msgstr "Supprimer les messages sélectionnés"
 
@@ -1051,6 +1052,15 @@ msgstr "Exécuter"
 
 msgid "tooltip_to_my_messages"
 msgstr "Retourner à la liste des messages"
+
+msgid "javascript_is_disabled"
+msgstr "Javascript est désactivé"
+
+msgid "please_enable_javascript"
+msgstr "Veuillez activer le javascript pour accèder à Osis."
+
+msgid "old_browser_warning"
+msgstr "Votre navigateur n'est pas à jour. Certaines fonctionnalités peuvent ne pas fonctionner correctement."
 
 msgid "none"
 msgstr "Aucun"
@@ -1220,6 +1230,9 @@ msgstr "Vous n'êtes pas un gestionnaire de programme. Par conséquent, vous n'a
 
 msgid "enrollments"
 msgstr "Inscriptions"
+
+msgid "missing_column_session"
+msgstr "Veuillez remplir la colonne 'session' de votre fichier excel."
 
 msgid "incomplete"
 msgstr "Incomplet"

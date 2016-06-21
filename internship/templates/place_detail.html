@@ -27,9 +27,9 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-<li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
-<li><a href="{% url 'internships_home' %}">Stages</a></li>
-<li><a href="{% url 'internships_places' %}">{% trans 'Places' %}</a></li>
+<li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
+<li><a href="{% url 'internships_home' %}">{% trans 'internships' %}</a></li>
+<li><a href="{% url 'internships_places' %}">{% trans 'places' %}</a></li>
 <li class="active">{{ organization.name }}</li>
 {% endblock %}
 {% block content %}
@@ -148,9 +148,9 @@
           </ul>
         </div>
         <br/>
-      <label> Stage en Urgence </label>
+      <label> Stage aux Urgences </label>
         {% for offer in offers %}
-          {% if offer.title == "Stage en Urgence" %}
+          {% if offer.title == "Stage aux Urgences" %}
             capacité maximale : {{offer.maximum_enrollments}} | Nombre de 1er choix : {{offer.number_first_choice}}
           {%endif%}
         {%endfor%}<br/>
@@ -163,7 +163,7 @@
         <div class="collapse" id="stur">
           <ul>
             {% for choice in organization_choice %}
-              {% if choice.learning_unit_year.title == "Stage en Urgence" %}
+              {% if choice.learning_unit_year.title == "Stage aux Urgences" %}
                 <li> {{ choice.student }} | Choix : {{ choice.choice }}
               {% endif %}
             {% endfor %}

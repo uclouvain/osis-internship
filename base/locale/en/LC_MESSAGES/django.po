@@ -244,6 +244,15 @@ msgstr "User"
 msgid "search_for_a_file"
 msgstr "Search for a file"
 
+msgid "javascript_is_disabled"
+msgstr "Javascript is disabled on browser"
+
+msgid "please_enable_javascript"
+msgstr "Please enable javascript to use this website"
+
+msgid "old_browser_warning"
+msgstr "Your browser is out of date. This can lead to unknown behaviour."
+
 msgid "name"
 msgstr "Name"
 
@@ -371,7 +380,7 @@ msgstr "Status"
 msgid "program"
 msgstr "Program"
 
-msgid "session"
+msgid "sessionn"
 msgstr "Session"
 
 msgid "number_session"
@@ -1208,6 +1217,9 @@ msgstr "You're not a program manager. Therefore you dont have access to this pag
 
 msgid "enrollments"
 msgstr "Enrollments"
+
+msgid "missing_column_session"
+msgstr "Please fill in the 'session' column with the correct session's number."
 
 msgid "incomplete"
 msgstr "Incomplete"

@@ -27,14 +27,14 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
-  <li><a href="{% url 'internships_home' %}">Stages</a></li>
-  <li><a href="{% url 'internships_periods' %}">{% trans 'Periods' %}</li>
-  <li class="active">Ajouter une période</li>
+  <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
+  <li><a href="{% url 'internships_home' %}">{% trans 'internships' %}</a></li>
+  <li><a href="{% url 'internships_periods' %}">{% trans 'periods' %}</li>
+  <li class="active">{% trans 'add_period' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'Period Creation' %}</h2>
+    <h2>{% trans 'period_creation' %}</h2>
   </div>
   {% if message %}
     <script language="javascript" type="text/javascript">
@@ -67,7 +67,7 @@
   </table>
   <br/>
       <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_interships_new">
-          <span class="glyphicon glyphicon-save" aria-hidden="true"/> {% trans 'Save'%}
+          <span class="glyphicon glyphicon-save" aria-hidden="true"/> {% trans 'save'%}
       </button>
     </form>
 
