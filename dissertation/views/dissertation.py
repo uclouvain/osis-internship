@@ -188,7 +188,8 @@ def manager_dissertations_list(request):
     adviser = Adviser.find_by_person(person)
     faculty_adviser = FacultyAdviser.find_by_adviser(adviser)
     dissertations = Dissertation.objects.filter(offer_year_start__offer=faculty_adviser)
-    return render(request, 'manager_dissertations_list.html', {'dissertations': dissertations})
+    offer_proposition = OfferProposition.objects.get(offer=faculty_adviser)
+    return render(request, 'manager_dissertations_list.html', {'dissertations': dissertations,'offer_proposition': offer_proposition})
 
 
 @login_required
@@ -240,6 +241,10 @@ def manager_dissertations_new(request):
 @user_passes_test(is_manager)
 def manager_dissertations_search(request):
     dissertations = Dissertation.search(terms=request.GET['search']).filter(Q(active=True))
+    person = mdl.person.find_by_user(request.user)
+    adviser = Adviser.find_by_person(person)
+    faculty_adviser = FacultyAdviser.find_by_adviser(adviser)
+    offer_proposition = OfferProposition.objects.get(offer=faculty_adviser)
     xlsx = False
     if 'bt_xlsx' in request.GET:
 
@@ -285,7 +290,7 @@ def manager_dissertations_search(request):
         response['Content-Disposition'] = "attachment; filename=" + filename
         return response
     return render(request, "manager_dissertations_list.html",
-                  {'dissertations': dissertations, 'xlsx': xlsx})
+                  {'dissertations': dissertations,'offer_proposition': offer_proposition, 'xlsx': xlsx})
 
 
 @login_required
@@ -391,8 +396,31 @@ def manager_dissertations_wait_list(request):
     person = mdl.person.find_by_user(request.user)
     adviser = Adviser.find_by_person(person)
     faculty_adviser = FacultyAdviser.find_by_adviser(adviser)
+    offer_proposition = OfferProposition.objects.get(offer=faculty_adviser)
     dissertations = Dissertation.objects.filter(Q(offer_year_start__offer=faculty_adviser) & Q(status="DIR_SUBMIT"))
-    return render(request, 'manager_dissertations_wait_list.html', {'dissertations': dissertations})
+    return render(request, 'manager_dissertations_wait_list.html', {'dissertations': dissertations, 'offer_proposition': offer_proposition})
+
+
+@login_required
+@user_passes_test(is_manager)
+def manager_dissertations_wait_commission_list(request):
+    person = mdl.person.find_by_user(request.user)
+    adviser = Adviser.find_by_person(person)
+    faculty_adviser = FacultyAdviser.find_by_adviser(adviser)
+    offer_proposition = OfferProposition.objects.get(offer=faculty_adviser)
+    dissertations = Dissertation.objects.filter(Q(offer_year_start__offer=faculty_adviser) & Q(status="COM_SUBMIT"))
+    return render(request, 'manager_dissertations_wait_commission_list.html', {'dissertations': dissertations, 'offer_proposition': offer_proposition})
+
+
+@login_required
+@user_passes_test(is_manager)
+def manager_dissertations_wait_eval_list(request):
+    person = mdl.person.find_by_user(request.user)
+    adviser = Adviser.find_by_person(person)
+    faculty_adviser = FacultyAdviser.find_by_adviser(adviser)
+    offer_proposition = OfferProposition.objects.get(offer=faculty_adviser)
+    dissertations = Dissertation.objects.filter(Q(offer_year_start__offer=faculty_adviser) & Q(status="EVA_SUBMIT"))
+    return render(request, 'manager_dissertations_wait_eval_list.html', {'dissertations': dissertations, 'offer_proposition': offer_proposition})
 
 
 ##########################

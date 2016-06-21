@@ -37,12 +37,12 @@
   </div>
   <ul class="nav nav-tabs">
     <li><a href="{% url 'manager_dissertations_list' %}">{% trans 'all_dissertations' %}</a></li>
-    <li class="active"><a href="manager_dissertations_wait_list">{% trans 'waiting_dissertations' %}</a></li>
+    <li><a href="manager_dissertations_wait_list">{% trans 'waiting_dissertations' %}</a></li>
     {% if offer_proposition.validation_commission_exists == True %}
       <li><a href="{% url 'manager_dissertations_wait_commission_list' %}">{% trans 'waiting_commission' %}</a></li>
     {% endif %}
     {% if offer_proposition.evaluation_first_year == True %}
-      <li><a href="{% url 'manager_dissertations_wait_eval_list' %}">{% trans 'waiting_evaluation' %}</a></li>
+      <li class="active"><a href="{% url 'manager_dissertations_wait_eval_list' %}">{% trans 'waiting_evaluation' %}</a></li>
     {% endif %}
   </ul>
   <div class="panel panel-default">

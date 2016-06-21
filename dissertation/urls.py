@@ -61,6 +61,10 @@ urlpatterns = [
         name='manager_dissertations_to_dir_ko'),
     url(r'^manager_dissertations_wait_list$', dissertation.manager_dissertations_wait_list,
         name='manager_dissertations_wait_list'),
+    url(r'^manager_dissertations_wait_commission_list$', dissertation.manager_dissertations_wait_commission_list,
+        name='manager_dissertations_wait_commission_list'),
+    url(r'^manager_dissertations_wait_eval_list$', dissertation.manager_dissertations_wait_eval_list,
+        name='manager_dissertations_wait_eval_list'),
 
     url(r'^manager_informations/$', information.manager_informations, name='manager_informations'),
     url(r'^manager_informations_add/$', information.manager_informations_add, name='manager_informations_add'),
