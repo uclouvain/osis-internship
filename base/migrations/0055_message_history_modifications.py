@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('base', '0053_auto_20160529_2355'),
+        ('base', '0054_scoresencoding'),
     ]
 
     operations = [
