@@ -174,6 +174,13 @@ class ExamEnrollmentHistoryAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         return False
 
+    def get_actions(self, request):
+        actions = super(ExamEnrollmentHistoryAdmin, self).get_actions(request)
+
+        if 'delete_selected' in actions:
+            del actions['delete_selected']
+        return actions
+
 
 class ExamEnrollmentHistory(models.Model):
     exam_enrollment = models.ForeignKey(ExamEnrollment)
