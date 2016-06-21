@@ -23,31 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
-from django import forms
-from django.forms import ModelForm
-from internship.models import InternshipChoice, InternshipOffer, Organization, Period
-from functools import partial
-DateInput = partial(forms.DateInput, {'class': 'datepicker'})
+from django.db import models
+from django.contrib import admin
 
 
-class InternshipChoiceForm(ModelForm):
-    class Meta :
-        model = InternshipChoice
-        fields = ['organization', 'learning_unit_year', 'student', 'choice']
+class ManagerAdmin(admin.ModelAdmin):
+    raw_id_fields = ('person', )
+    search_fields = ['person__first_name', 'person__last_name',
+                     'person__global_id', 'structure__acronym']
 
-class InternshipOfferForm(ModelForm):
-    class Meta :
-        model = InternshipOffer
-        fields = ['organization', 'learning_unit_year', 'title', 'maximum_enrollments', 'selectable']
-
-class OrganizationForm(ModelForm):
-    file = forms.FileField()
-    class Meta:
-        model = Organization
-        fields = ['acronym', 'name', 'website', 'reference']
-
-class PeriodForm(forms.Form):
-    name = forms.CharField()
-    start_date = forms.DateField(widget=DateInput())
-    end_date = forms.DateField(widget=DateInput())
+class Manager(models.Model):
+    person = models.ForeignKey('base.Person')
+    
+    def __str__(self):
+        return u"%s" % (self.person)

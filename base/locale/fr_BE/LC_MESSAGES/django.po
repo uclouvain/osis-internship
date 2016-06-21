@@ -333,7 +333,7 @@ msgstr "Statut"
 msgid "program"
 msgstr "Programme"
 
-msgid "session"
+msgid "sessionn"
 msgstr "Session"
 
 msgid "number_session"
@@ -994,6 +994,15 @@ msgstr "Référence du template du message"
 
 msgid "btn_messages_history_search"
 msgstr "Recherche dans l'historique des messages"
+
+msgid "javascript_is_disabled"
+msgstr "Javascript est désactivé"
+
+msgid "please_enable_javascript"
+msgstr "Veuillez activer le javascript pour accèder à Osis."
+
+msgid "old_browser_warning"
+msgstr "Votre navigateur n'est pas à jour. Certaines fonctionnalités peuvent ne pas fonctionner correctement."
 
 msgid "none"
 msgstr "Aucun"
