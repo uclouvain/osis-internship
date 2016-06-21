@@ -972,7 +972,7 @@ msgid "subject"
 msgstr "Sujet"
 
 msgid "my_osis"
-msgstr "Mon Osis"
+msgstr "Mon OSIS"
 
 msgid "my_messages"
 msgstr "Mes messages"

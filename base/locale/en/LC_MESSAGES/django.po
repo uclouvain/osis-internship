@@ -984,10 +984,10 @@ msgid "subject"
 msgstr "Subject"
 
 msgid "my_osis"
-msgstr "My Osis"
+msgstr "My OSIS"
 
 msgid "my_messages"
-msgstr "My messages"
+msgstr "My Messages"
 
 msgid "received_on"
 msgstr "Received on"
@@ -996,7 +996,7 @@ msgid "tooltip_my_message_read"
 msgstr "Show message"
 
 msgid "no_messages"
-msgstr "No messages"
+msgstr "No Messages"
 
 msgid "tooltip_delete_message"
 msgstr "Delete message"
