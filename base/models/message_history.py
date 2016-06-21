@@ -37,9 +37,6 @@ class MessageHistoryAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 
-    def has_change_permission(self, request, obj=None):
-        return False
-
     def get_actions(self, request):
         actions = super(MessageHistoryAdmin, self).get_actions(request)
         if 'delete_selected' in actions:
@@ -63,8 +60,8 @@ class MessageHistory(models.Model):
     created = models.DateTimeField(editable=False)
     sent = models.DateTimeField(null=True)
     reference = models.CharField(max_length=100, null=True, db_index=True)
-    show_in_myosis = models.BooleanField(default=True)
-    read_in_myosis = models.BooleanField(default=False)
+    show_to_user = models.BooleanField(default=True)
+    read_by_user = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if not self.id:
@@ -89,7 +86,7 @@ def find_my_messages(person):
     :param person: The related person
     :return: The list of messages for this person
     """
-    return MessageHistory.objects.filter(person=person).filter(show_in_myosis=True).order_by('sent')
+    return MessageHistory.objects.filter(person=person).filter(show_to_user=True).order_by('sent')
 
 
 def delete_my_messages(messages_ids):
@@ -97,7 +94,7 @@ def delete_my_messages(messages_ids):
     Delete messages from my osis (but not from history)
     :param messages_ids: The ids list of messages to delete from my osis
     """
-    MessageHistory.objects.filter(id__in=messages_ids).update(show_in_myosis=False)
+    MessageHistory.objects.filter(id__in=messages_ids).update(show_to_user=False)
 
 
 def read_my_message(message_id):
@@ -107,7 +104,7 @@ def read_my_message(message_id):
     :return : The message
     """
     message = MessageHistory.objects.get(id=message_id)
-    message.read_in_myosis = True
+    message.read_by_user = True
     message.save()
     return message
 
@@ -117,4 +114,4 @@ def mark_as_read(messages_ids):
     Mark a list of messages as read in my osis
     :param messages_ids: The ids list of messages
     """
-    MessageHistory.objects.filter(id__in=messages_ids).update(read_in_myosis=True)
+    MessageHistory.objects.filter(id__in=messages_ids).update(read_by_user=True)

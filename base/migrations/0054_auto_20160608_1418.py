@@ -13,12 +13,12 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='messagehistory',
-            name='read_in_myosis',
+            name='read_by_user',
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
             model_name='messagehistory',
-            name='show_in_myosis',
+            name='show_to_user',
             field=models.BooleanField(default=True),
         ),
     ]

@@ -56,7 +56,7 @@ def my_messages_index(request):
                                     'subject':  message_hist.subject,
                                     'created':  message_hist.created,
                                     'id':       message_hist.id,
-                                    'read':     message_hist.read_in_myosis
+                                    'read':     message_hist.read_by_user
                                     } for message_hist in my_messages]
         my_messages_formset = formset_factory(MyMessageForm, extra=0)(initial=initial_formset_content)
     return layout.render(request,
