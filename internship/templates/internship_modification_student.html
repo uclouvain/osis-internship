@@ -35,48 +35,19 @@
   <div class="page-header">
     <h2>{% trans 'internships' %}</h2>
   </div>
-  <table style="height:100%; width:100%;">
-      <thead>
-        <tr>
-            <th style="text-align:center; width:50%;">{% trans 'organization' %}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <form action="{%url 'internships' %}" method="get">
-          <tr>
-            <td style="text-align:center; width:50%;">
-              <select name="organization_sort" onChange="javascript: this.form.submit();">
-               <option value="0">{% trans 'choose_a_hospital' %}</option>
-               {% for organization in all_organizations %}
-                  <option value="{{ organization.name }}"
-                  {% if organization.name == organization_sort_value %}selected{% endif %}>
-                      {{ organization.reference }} - {{ organization.name }}
-                  </option>
-               {% endfor %}
-              </select>
-            </td>
-          </tr>
-        </form>
-      </tbody>
-  </table>
   <br/>
     <div class="panel panel-default">
     <div class="panel-body">
         <ul class="nav nav-tabs">
           {% for luy in all_learning_unit_year %}
-            <li><a data-toggle="tab" href="#tab_{{luy.tab}}">{{luy.title}}
-              {%if luy.size = 4 %}
-                <span class="glyphicon glyphicon-ok" style="color:green"></span>
-              {%else%}
-                <span class="glyphicon glyphicon-remove" style="color:red"></span>
-              {%endif%}</a></li>
+            <li><a data-toggle="tab" href="#tab_{{luy.tab}}">{{luy.title}}</a></li>
           {% endfor %}
             <li><a data-toggle="tab" href="#tab_CHOIX1">{% trans 'Stage au choix 1'%}</a></li>
             <li><a data-toggle="tab" href="#tab_CHOIX2">{% trans 'Stage au choix 2'%}</a></li>
             <li><a data-toggle="tab" href="#tab_CHOIX2">{% trans 'Stage au choix 3'%}</a></li>
             <li><a data-toggle="tab" href="#tab_CHOIX2">{% trans 'Stage au choix 4'%}</a></li>
         </ul>
-        <form  method="post" action="{% url 'internships_save' %}" >
+        <form  method="post" action="{% url 'internship_save_modification_student' %}" >
         <input type="hidden" name="organization_sort" value="{{ organization.name }}"/>
         {% csrf_token %}
         <div class="tab-content">
@@ -93,6 +64,7 @@
                           <th>{% trans 'Nombre de premier choix' %}</th>
                           <th>{% trans 'preference' %}</th>
                           <th>{% trans 'period' %}</th>
+                          <th>{% trans 'fix' %}</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -131,8 +103,13 @@
                             </td>
                             <td>
                               <select multiple>
-
-                              </select
+                                {% for period in periods %}
+                                  <option value={{period.name}}>{{period.name}}</option>
+                                {% endfor %}
+                              </select>
+                            </td>
+                            <td>
+                              <input type="checkbox" name="fixthis" value="{{period.name}}">
                             </td>
                           </tr>
                         {% endif %}

@@ -71,9 +71,10 @@ class InternshipOffer(models.Model):
 
 class InternshipEnrollment(models.Model):
     learning_unit_enrollment = models.ForeignKey('base.LearningUnitEnrollment')
+    student = models.ForeignKey('base.student')
     internship_offer = models.ForeignKey(InternshipOffer)
-    start_date = models.DateField()
-    end_date = models.DateField()
+    place = models.ForeignKey('internship.Organization')
+    period = models.ForeignKey('internship.Period')
 
     def __str__(self):
         return u"%s" % self.learning_unit_enrollment.student

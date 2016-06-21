@@ -27,7 +27,7 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from internship.models import InternshipOffer, InternshipChoice, Organization
+from internship.models import InternshipOffer, InternshipChoice, Organization, Period
 from internship.forms import InternshipChoiceForm, InternshipOfferForm
 from base import models as mdl
 from django.utils.translation import ugettext_lazy as _
@@ -364,7 +364,7 @@ def internships_block(request, block):
 
 @login_required
 def internships_modification_student(request, registration_id):
-    student = mdl.student.find_by(registration_id=registration_id)
+    student = mdl.student.find_by(registration_id=registration_id, full_registration = True)
     #get in order descending to have the first choices in first lines in the insert (line 114)
     student_choice = InternshipChoice.find_by_student_desc(student)
     #First get the value of the option's value for the sort
@@ -424,9 +424,18 @@ def internships_modification_student(request, registration_id):
         tab = luy.title.replace(" ", "")
         luy.tab = tab
 
+    periods = Period.find_all()
+
     return render(request, "internship_modification_student.html", {'section': 'internship',
                                                 'all_internships' : query,
                                                 'all_organizations' : internship_organizations,
                                                 'organization_sort_value' : organization_sort_value,
                                                 'all_learning_unit_year' : all_learning_unit_year,
+                                                'periods' : periods,
                                                  })
+
+@login_required
+def internship_save_modification_student(request) :
+    
+
+    return

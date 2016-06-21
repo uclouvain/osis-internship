@@ -33,10 +33,9 @@ class InternshipOfferAdmin(admin.ModelAdmin):
 
 admin.site.register(InternshipOffer, InternshipOfferAdmin)
 
-
 class InternshipEnrollmentAdmin(admin.ModelAdmin):
-    list_display = ('learning_unit_enrollment','internship_offer', 'start_date', 'end_date')
-    fieldsets = ((None, {'fields': ('learning_unit_enrollment','internship_offer', 'start_date', 'end_date')}),)
+    list_display = ('learning_unit_enrollment','student', 'internship_offer', 'place', 'period')
+    fieldsets = ((None, {'fields': ('learning_unit_enrollment','student', 'internship_offer', 'place', 'period')}),)
 
 admin.site.register(InternshipEnrollment, InternshipEnrollmentAdmin)
 
