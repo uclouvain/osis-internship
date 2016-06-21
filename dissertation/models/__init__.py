@@ -23,32 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.conf.urls import include, url
-from django.contrib import admin
-from django.conf import settings
-from base.views import common
-
-urlpatterns = [
-    url(r'^login/$', common.login, name='login'),
-    url(r'^logout/$', common.log_out, name='logout'),
-    url(r'^logged_out/$',common.logged_out,name='logged_out'),
-
-    url(r'^'+settings.ADMIN_URL, admin.site.urls),
-    url(r'', include('base.urls')),
-    url(r'^assistants/', include('assistant.urls')),
-    url(r'^internships/', include('internship.urls')),
-    url(r'^dissertation/', include('dissertation.urls')),
-]
-
-handler404 = 'base.views.common.page_not_found'
-handler403 = 'base.views.common.access_denied'
-handler500 = 'base.views.common.server_error'
-
-admin.site.site_header = 'OSIS'
-admin.site.site_title  = 'OSIS'
-admin.site.index_title = 'Louvain'
-
-try:
-    from backoffice.server_urls import *
-except ImportError:
-    pass
+from dissertation.models import adviser
+from dissertation.models import dissertation
+from dissertation.models import dissertation_group
+from dissertation.models import dissertation_role
+from dissertation.models import faculty_adviser
+from dissertation.models import offer_proposition
+from dissertation.models import proposition_dissertation
+from dissertation.models import proposition_role

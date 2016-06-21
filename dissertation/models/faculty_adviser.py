@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -23,32 +23,18 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.conf.urls import include, url
-from django.contrib import admin
-from django.conf import settings
-from base.views import common
+from django.db import models
+from base.models import offer
+from dissertation.models import adviser
 
-urlpatterns = [
-    url(r'^login/$', common.login, name='login'),
-    url(r'^logout/$', common.log_out, name='logout'),
-    url(r'^logged_out/$',common.logged_out,name='logged_out'),
 
-    url(r'^'+settings.ADMIN_URL, admin.site.urls),
-    url(r'', include('base.urls')),
-    url(r'^assistants/', include('assistant.urls')),
-    url(r'^internships/', include('internship.urls')),
-    url(r'^dissertation/', include('dissertation.urls')),
-]
+class FacultyAdviser(models.Model):
+    adviser = models.ForeignKey(adviser.Adviser)
+    offer = models.ForeignKey(offer.Offer)
 
-handler404 = 'base.views.common.page_not_found'
-handler403 = 'base.views.common.access_denied'
-handler500 = 'base.views.common.server_error'
+    def __str__(self):
+        return self.offer.title
 
-admin.site.site_header = 'OSIS'
-admin.site.site_title  = 'OSIS'
-admin.site.index_title = 'Louvain'
-
-try:
-    from backoffice.server_urls import *
-except ImportError:
-    pass
+    def find_by_adviser(a_adviser):
+        faculty_adviser = FacultyAdviser.objects.get(adviser=a_adviser)
+        return faculty_adviser.offer
