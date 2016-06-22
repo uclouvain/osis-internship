@@ -36,23 +36,23 @@ def listen_queue(queue_name, callback):
     :param queue_name: The name of the queue to create and to listen.
     :param callback: The action to perform when a message is consumed. (It is a function).
     """
-    if not callable(callback) :
+    if not callable(callback):
         raise Exception("Error ! The second parameter of listen_queue MUST BE a function !")
     connection_parameters = {
-        'queue_name' : queue_name,
-        'queue_url' : QUEUE_URL,
-        'queue_user' : QUEUE_USER,
-        'queue_password' : QUEUE_PASSWORD,
-        'queue_port' : QUEUE_PORT,
-        'queue_context_root' : QUEUE_CONTEXT_ROOT,
-        'exchange' : queue_name,
-        'routing_key' : '',
+        'queue_name': queue_name,
+        'queue_url': QUEUE_URL,
+        'queue_user': QUEUE_USER,
+        'queue_password': QUEUE_PASSWORD,
+        'queue_port': QUEUE_PORT,
+        'queue_context_root': QUEUE_CONTEXT_ROOT,
+        'exchange': queue_name,
+        'routing_key': '',
     }
     consumer_thread = ConsumerThread(connection_parameters, callback)
     try:
         consumer_thread.daemon = True
         consumer_thread.start()
-    except KeyboardInterrupt :
+    except KeyboardInterrupt:
         consumer_thread.stop()
 
 
@@ -76,20 +76,17 @@ class ConsumerThread(threading.Thread):
 
     def run(self):
         connection_parameters = {
-            'queue_name' : self._queue_name,
-            'queue_url' : self._queue_url,
-            'queue_user' : self._queue_user,
-            'queue_password' : self._queue_password,
-            'queue_port' : self._queue_port,
-            'queue_context_root' : self._queue_context_root,
-            'exchange' : self._exchange,
-            'routing_key' : self._routing_key,
+            'queue_name': self._queue_name,
+            'queue_url': self._queue_url,
+            'queue_user': self._queue_user,
+            'queue_password': self._queue_password,
+            'queue_port': self._queue_port,
+            'queue_context_root': self._queue_context_root,
+            'exchange': self._exchange,
+            'routing_key': self._routing_key,
         }
         example = ExampleConsumer(connection_parameters=connection_parameters, callback=self.callback_func)
-        try:
-            example.run()
-        except AMQPConnectionError :
-            print("Messaging System not available! OSIS cannot communicate with OSIS Portal.")
+        example.run()
 
 
 class ExampleConsumer(object):
@@ -134,13 +131,18 @@ class ExampleConsumer(object):
         :rtype: pika.SelectConnection
         """
         print('Connecting to %s' % (self._connection_parameters['queue_url']))
-        credentials = pika.PlainCredentials(self._connection_parameters['queue_user'], self._connection_parameters['queue_password'])
-        return pika.SelectConnection(pika.ConnectionParameters(self._connection_parameters['queue_url'],
-                                                               self._connection_parameters['queue_port'],
-                                                               self._connection_parameters['queue_context_root'],
-                                                               credentials),
-                                     self.on_connection_open,
-                                     stop_ioloop_on_close=False)
+        credentials = pika.PlainCredentials(self._connection_parameters['queue_user'],
+                                            self._connection_parameters['queue_password'])
+        try:
+            return pika.SelectConnection(pika.ConnectionParameters(self._connection_parameters['queue_url'],
+                                                                   self._connection_parameters['queue_port'],
+                                                                   self._connection_parameters['queue_context_root'],
+                                                                   credentials),
+                                         self.on_connection_open,
+                                         stop_ioloop_on_close=False)
+        except AMQPConnectionError:
+            print("Messaging System not available! OSIS cannot communicate with OSIS Portal.")
+            return None
 
     def on_connection_open(self, unused_connection):
         """
@@ -403,7 +405,8 @@ class ExampleConsumer(object):
         starting the IOLoop to block and allow the SelectConnection to operate.
         """
         self._connection = self.connect()
-        self._connection.ioloop.start()
+        if self._connection:
+            self._connection.ioloop.start()
 
     def stop(self):
         """

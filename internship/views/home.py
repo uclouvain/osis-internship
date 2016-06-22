@@ -26,13 +26,21 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from base import models as mdl
+from internship.models import InternshipOffer
 
 @login_required
 def internships_home(request):
     student = mdl.student.find_by(person_username=request.user)
-
     for s in student:
         noma = s.registration_id
+
+    internships = InternshipOffer.find_internships()
+    if internships[0].selectable:
+        blockable = True
+    else :
+        blockable = False
+
     return render(request, "internships_home.html", {'section': 'internship',
                                                         'noma' : noma,
+                                                        'blockable' : blockable
                                                     })

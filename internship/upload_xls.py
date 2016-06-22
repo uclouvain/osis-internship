@@ -209,7 +209,7 @@ def __save_xls_internships(request, file_name, user):
             if row[col_spec].value == "PE":
                 spec = "Stage en Pédiatrie"
             if row[col_spec].value == "UR":
-                spec = "Stage en Urgence"
+                spec = "Stage aux Urgences"
 
             learning_unit_year = mdl.learning_unit_year.search(title=spec)
             check_internship = InternshipOffer.find_interships_by_learning_unit_organization(spec,organization[0].name)
@@ -223,5 +223,6 @@ def __save_xls_internships(request, file_name, user):
             internship.learning_unit_year = learning_unit_year[0]
             internship.title = spec
             internship.maximum_enrollments = row[col_max_places].value
-
+            internship.selectable = True
+            
             internship.save()

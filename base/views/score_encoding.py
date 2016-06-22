@@ -653,7 +653,7 @@ def get_data_specific_criteria(request):
                                                                                      justification=justification,
                                                                                      offer_year_id=offer_year_id,
                                                                                      offers_year=offers_year_managed))
-                exam_enrollments = mdl.exam_enrollment.sort_by_last_name_first_name(exam_enrollments)
+                exam_enrollments = mdl.exam_enrollment.sort_by_offer_acronym_last_name_first_name(exam_enrollments)
                 if len(exam_enrollments) == 0:
                     messages.add_message(request, messages.WARNING, "%s" % _('no_result'))
         else:
@@ -739,7 +739,7 @@ def specific_criteria_submission(request):
         if sent_error_message:
             messages.add_message(request, messages.ERROR, "%s" % sent_error_message)
 
-    messages.add_message(request, messages.INFO, "%s %s" % (scores_saved, _('scores_saved')))
+    messages.add_message(request, messages.SUCCES, "%s %s" % (scores_saved, _('scores_saved')))
     return specific_criteria(request)
 
 
