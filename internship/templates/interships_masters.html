@@ -27,20 +27,20 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
-  <li><a href="{% url 'internships_home' %}">Stages</a></li>
-  <li class="active">{% trans 'Internships Masters' %}</li>
+<li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
+<li><a href="{% url 'internships_home' %}">{% trans 'internships' %}</a></li>
+  <li class="active">{% trans 'internships_masters' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'Internships Masters' %}</h2>
+    <h2>{% trans 'internships_masters' %}</h2>
   </div>
   <div class="panel panel-default">
         <table style="height:100%; width:100%;">
             <thead>
               <tr>
-                  <th style="text-align:center; width:50%;">{% trans 'Speciality' %}</th>
-                  <th style="text-align:center; width:50%;">{% trans 'Organization' %}</th>
+                  <th style="text-align:center; width:50%;">{% trans 'speciality' %}</th>
+                  <th style="text-align:center; width:50%;">{% trans 'organization' %}</th>
               </tr>
             </thead>
             <tbody>
@@ -80,7 +80,7 @@
         <table class="table table-hover">
             <thead>
               <tr>
-                  <th>{% trans 'Number' %}</th>
+                  <th>{% trans 'reference' %}</th>
                   <th>{% trans 'Sexe' %}</th>
                   <th>{% trans 'Name' %}</th>
                   <th>{% trans 'Forname' %}</th>

@@ -27,13 +27,13 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
-  <li><a href="{% url 'internships_home' %}">Stages</a></li>
-  <li class="active">{% trans 'Periods' %}</li>
+  <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
+  <li><a href="{% url 'internships_home' %}">{% trans 'internships' %}</a></li>
+  <li class="active">{% trans 'periods' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'Periods' %}</h2>
+    <h2>{% trans 'periods' %}</h2>
   </div>
 
   <div class="panel panel-default">
@@ -42,9 +42,9 @@
         <table class="table table-hover">
             <thead>
               <tr>
-                  <th>{% trans 'Name' %}</th>
-                  <th>{% trans 'Start Date' %}</th>
-                  <th>{% trans 'End Date' %}</th>
+                  <th>{% trans 'name' %}</th>
+                  <th>{% trans 'date_start' %}</th>
+                  <th>{% trans 'date_end' %}</th>
               </tr>
             </thead>
             <tbody>
@@ -59,6 +59,6 @@
     </div>
   </div>
   <a href="{% url 'periods_create' %}" id="lnk_period_create" class="btn btn-default"
-     role="button" title="{% trans 'create_a_period'%}">{% trans 'Ajouter une période' %}
+     role="button" title="{% trans 'create_a_period'%}">{% trans 'add_period' %}
      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
 {% endblock %}

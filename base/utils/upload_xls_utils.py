@@ -84,10 +84,14 @@ def _get_all_data(worksheet):
             sessions.append(session)
 
         try:
-            academic_year = int(row[col_academic_year].value[:4])
-            if academic_year not in academic_years:
+            academic_year = None
+            if type(row[col_academic_year].value) is int:
+                academic_year = int(row[col_academic_year].value)
+            elif type(row[col_academic_year].value) is str:
+                academic_year = int(row[col_academic_year].value[:4])
+            if academic_year and academic_year not in academic_years:
                 academic_years.append(academic_year)
-        except ValueError:
+        except (ValueError, TypeError):
             pass
 
         learn_unit_acronym = row[col_learning_unit].value
@@ -132,10 +136,16 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
     if len(data_xls['academic_years']) > 1:
         messages.add_message(request, messages.ERROR, '%s' % _('more_than_one_academic_year_error'))
         return False
+    elif len(data_xls['academic_years']) == 0:
+        messages.add_message(request, messages.ERROR, '%s' % _('no_valid_academic_year_error'))
+        return False
     else:
-        data_xls['academic_year'] = data_xls['academic_years'][0]  # Only one session
+        data_xls['academic_year'] = data_xls['academic_years'][0]  # Only one academic year
 
     academic_year_in_database = mdl.academic_year.find_academic_year_by_year(data_xls['academic_year'])
+    if not academic_year_in_database:
+        messages.add_message(request, messages.ERROR, '%s (%s).' % (_('no_data_for_this_academic_year'), data_xls['academic_year']))
+        return False
     if is_program_manager:
         offer_years_managed = list(mdl.offer_year.find_by_user(user, academic_yr=academic_year_in_database))
         exam_enrollments_managed_by_user = list(mdl.exam_enrollment.find_for_score_encodings(data_xls['session'],
@@ -216,7 +226,7 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                 messages.add_message(request, messages.WARNING, "%s %s!" % (info_line, _('score_already_submitted')))
                 continue
             else:
-                academic_year = int(row[col_academic_year].value[:4])
+                academic_year = data_xls['academic_year']
                 if academic_year != academic_year_in_database.year:
                     messages.add_message(request, messages.ERROR, "%s '%d' %s!" % (info_line, academic_year, _('academic_year_not_exist')))
                 else:
@@ -292,7 +302,7 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                                     exam_enrollment.save()
 
     if new_scores_number > 0:
-        messages.add_message(request, messages.INFO, '%s %s' % (str(new_scores_number), _('score_saved')))
+        messages.add_message(request, messages.SUCCES, '%s %s' % (str(new_scores_number), _('score_saved')))
         if not is_program_manager:
             tutor = mdl.tutor.find_by_user(user)
             if tutor and learning_unit_year.learning_unit_id:
@@ -300,7 +310,7 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                                                      learning_unit_id=learning_unit_year.learning_unit_id,
                                                      function='COORDINATOR')
                 if not coordinator:
-                    messages.add_message(request, messages.INFO, '%s' % _('the_coordinator_must_still_submit_scores'))
+                    messages.add_message(request, messages.SUCCES, '%s' % _('the_coordinator_must_still_submit_scores'))
         return True
     else:
         messages.add_message(request, messages.ERROR, '%s' % _('no_score_injected'))
