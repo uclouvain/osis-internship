@@ -1237,6 +1237,10 @@ msgstr "Veuillez remplir la colonne 'session' de votre fichier excel."
 msgid "incomplete"
 msgstr "Incomplet"
 
+msgid "xls_columns_structure_error"
+msgstr "Votre fichier excel n'est pas bien structuré. Veuillez respecter l'ordre des colonnes fournie lors du "
+       "téléchargement de votre fichier (bouton '{}')."
+
 msgid "succesfull_logout"
 msgstr "Vous êtes à présent déconnecté."
 
