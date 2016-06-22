@@ -1224,6 +1224,10 @@ msgstr "Please fill in the 'session' column with the correct session's number."
 msgid "incomplete"
 msgstr "Incomplete"
 
+msgid "xls_columns_structure_error"
+msgstr "Your excel file isn't well structured. Please follow the structure of the excel file provided "
+       "(button '{}')"
+
 msgid "succesfull_logout"
 msgstr "You are succesfully logout."
 

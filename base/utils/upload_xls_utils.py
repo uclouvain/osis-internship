@@ -28,7 +28,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from openpyxl import load_workbook
 from django.contrib import messages
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 
 from base.forms import ScoreFileForm
 from base import models as mdl
@@ -54,8 +54,11 @@ def upload_scores_file(request, learning_unit_year_id=None):
             if file_name is not None:
                 learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
                 is_program_manager = mdl.program_manager.is_program_manager(request.user)
-                __save_xls_scores(request, file_name, is_program_manager, request.user,
-                                  learning_unit_year.id)
+                try:
+                    __save_xls_scores(request, file_name, is_program_manager, request.user,
+                                      learning_unit_year.id)
+                except IndexError:
+                    messages.add_message(request, messages.ERROR, _('xls_columns_structure_error').format(_('via_excel'), _('get_excel_file')))
         else:
             for error_msg in [error_msg for error_msgs in form.errors.values() for error_msg in error_msgs]:
                 messages.add_message(request, messages.ERROR, "{}".format(error_msg))
@@ -282,11 +285,13 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                                         if exam_enrollment.score_final != score:
                                             new_scores_number += 1
                                             exam_enrollment.score_final = score
+                                            exam_enrollment.justification_final = None
 
                                         if (justification and exam_enrollment.justification_final != justification) \
                                                 or (not is_program_manager and exam_enrollment.justification_draft != justification):
                                             new_scores_number += 1
                                             exam_enrollment.justification_final = justification
+                                            exam_enrollment.score_final = None
                                         mdl.exam_enrollment.create_exam_enrollment_historic(request.user,
                                                                                             exam_enrollment,
                                                                                             score,
@@ -295,14 +300,16 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                                         if score != exam_enrollment.score_draft:
                                             new_scores_number += 1
                                             exam_enrollment.score_draft = score
+                                            exam_enrollment.justification_draft = None
 
                                         if justification and exam_enrollment.justification_draft != justification:
                                             new_scores_number += 1
                                             exam_enrollment.justification_draft = justification
+                                        exam_enrollment.score_draft = None
                                     exam_enrollment.save()
 
     if new_scores_number > 0:
-        messages.add_message(request, messages.SUCCES, '%s %s' % (str(new_scores_number), _('score_saved')))
+        messages.add_message(request, messages.SUCCESS, '%s %s' % (str(new_scores_number), _('score_saved')))
         if not is_program_manager:
             tutor = mdl.tutor.find_by_user(user)
             if tutor and learning_unit_year.learning_unit_id:
@@ -310,7 +317,7 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                                                      learning_unit_id=learning_unit_year.learning_unit_id,
                                                      function='COORDINATOR')
                 if not coordinator:
-                    messages.add_message(request, messages.SUCCES, '%s' % _('the_coordinator_must_still_submit_scores'))
+                    messages.add_message(request, messages.SUCCESS, '%s' % _('the_coordinator_must_still_submit_scores'))
         return True
     else:
         messages.add_message(request, messages.ERROR, '%s' % _('no_score_injected'))
