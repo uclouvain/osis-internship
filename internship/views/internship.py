@@ -436,6 +436,37 @@ def internships_modification_student(request, registration_id):
 
 @login_required
 def internship_save_modification_student(request) :
-    
+    if request.POST['organization']:
+        organization_list = request.POST.getlist('organization')
 
+    if request.POST['learning_unit_year']:
+        learning_unit_year_list = request.POST.getlist('learning_unit_year')
+
+    all_internships = InternshipOffer.find_internships()
+    all_learning_unit_year = []
+    for choice in all_internships:
+        all_learning_unit_year.append(choice.learning_unit_year)
+    all_learning_unit_year = list(set(all_learning_unit_year))
+    for luy in all_learning_unit_year :
+        tab = luy.title.replace(" ", "")
+        luy.tab = tab
+
+    preference_list_tab = []
+    for luy in all_learning_unit_year:
+        preference_list_tab.append('preference'+luy.tab)
+
+    preference_list= list()
+    for pref_tab in preference_list_tab:
+        if request.POST[pref_tab]:
+            for pref in request.POST.getlist(pref_tab) :
+                preference_list.append(pref)
+
+    if request.POST['periods_s']:
+        periods_list = request.POST.getlist('periods_s')
+
+    if request.POST.get('fixthis'):
+        fixthis_list = request.POST.getlist('fixthis')
+
+    print(periods_list)
+    print(fixthis_list)
     return

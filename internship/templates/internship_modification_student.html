@@ -102,14 +102,15 @@
                               </select>
                             </td>
                             <td>
-                              <select multiple>
+                              <select name="periods_s" multiple>
+                                  <option value=0 selected>--</option>
                                 {% for period in periods %}
                                   <option value={{period.name}}>{{period.name}}</option>
                                 {% endfor %}
                               </select>
                             </td>
                             <td>
-                              <input type="checkbox" name="fixthis" value="{{period.name}}">
+                              <input type="checkbox" name="fixthis" value="1">
                             </td>
                           </tr>
                         {% endif %}
