@@ -41,6 +41,11 @@
     <link rel="stylesheet" href="{% static 'css/custom.css' %}?version={{ js }}">
     <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/tree.css' %}">
+    {% block header %}
+    <noscript>
+      <meta http-equiv="refresh" content="0;url={% url 'noscript' %}">
+    </noscript>
+    {% endblock %}
     {% block style %}
     {% endblock %}
     <style>
