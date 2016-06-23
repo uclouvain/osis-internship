@@ -27,10 +27,12 @@
 {% block header %}
 {% endblock %}
 {% block content %}
-<div class="container">
-    <div>
-        <h3>{% trans 'javascript_is_disabled' %}</h3>
-        <p>{% trans 'please_enable_javascript' %}</p>
-    </div>
+<div>
+    <div class="alert alert-danger" role="alert">
+        <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
+        &nbsp;{% trans 'javascript_is_disabled' %}</div>
+    <p>{% trans 'please_enable_javascript' %}</p>
+    <br>
+    <a href="{% url 'home' %}" class="btn btn-default">{% trans 'home' %}</a>
 </div>
 {% endblock %}
