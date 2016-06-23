@@ -54,6 +54,13 @@ class InternshipChoiceAdmin(admin.ModelAdmin):
 
 admin.site.register(InternshipChoice, InternshipChoiceAdmin)
 
+class PeriodInternshipPlacesAdmin(admin.ModelAdmin):
+    list_display = ('period', 'internship', 'number_places')
+    fieldsets = ((None, {'fields': ('period', 'internship', 'number_places')}),)
+
+admin.site.register(PeriodInternshipPlaces, PeriodInternshipPlacesAdmin)
+
+
 class OrganizationAdmin(admin.ModelAdmin):
     list_display = ('name', 'acronym', 'reference', 'type')
     fieldsets = ((None, {'fields': ('name', 'acronym', 'reference', 'website', 'type')}),)

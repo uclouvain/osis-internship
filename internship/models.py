@@ -194,6 +194,11 @@ class Period(models.Model):
     date_start = models.DateField()
     date_end = models.DateField()
 
+class PeriodInternshipPlaces(models.Model):
+    period = models.ForeignKey('internship.Period')
+    internship = models.ForeignKey('internship.InternshipOffer')
+    number_places = models.IntegerField(blank=None, null=False)
+
 class Organization(models.Model):
     name = models.CharField(max_length=255)
     acronym = models.CharField(max_length=15)
