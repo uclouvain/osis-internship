@@ -34,6 +34,12 @@ class MessageTemplateAdmin(admin.ModelAdmin):
     list_display = ('reference', 'subject', 'format', 'language')
     fieldsets = ((None, {'fields': ('reference', 'subject', 'template', 'format', 'language')}),)
 
+    def get_actions(self, request):
+        actions = super(MessageTemplateAdmin, self).get_actions(request)
+        if not self.has_delete_permission(request) and 'delete_selected' in actions:
+            del actions['delete_selected']
+        return actions
+
 
 class MessageTemplate(models.Model):
     FORMAT_CHOICES = (('PLAIN', _('plain')),

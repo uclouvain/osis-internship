@@ -23,6 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-# from django.db import models
+from django.db import models
+from django.contrib import admin
 
-# unused
+
+class ManagerAdmin(admin.ModelAdmin):
+    raw_id_fields = ('person', )
+    search_fields = ['person__first_name', 'person__last_name',
+                     'person__global_id', 'structure__acronym']
+
+class Manager(models.Model):
+    person = models.ForeignKey('base.Person')
+    
+    def __str__(self):
+        return u"%s" % (self.person)
