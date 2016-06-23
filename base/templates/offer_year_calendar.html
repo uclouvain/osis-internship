@@ -52,7 +52,7 @@
             </div>
         </div>
         <br>
-        {% if is_programme_manager %}
+        {% if is_programme_manager and offer_year_calendar.academic_calendar.end_date and offer_year_calendar.academic_calendar.start_date %}
             <a href="{% url 'offer_year_calendar_edit' offer_year_calendar.id %}" title="{%trans 'edit'%}"
                class="btn btn-primary" role="button" id="bt_offer_year_calendar_edit">
                 <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> {% trans 'edit'%}

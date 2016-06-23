@@ -1,7 +1,6 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
 {% load i18n %}
-{% load admin_urls %}
 
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
@@ -28,26 +27,36 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li class="active">{% trans 'messages' %}</li>
+  <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
+  <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'dissertations' %}</a></li>
+  <li class="active">{% trans 'teachers' %}</li>
 {% endblock %}
 {% block content %}
-<div class="page-header">
-    <h2>{% trans 'messages' %}</h2>
-</div>
-<div class="panel panel-default">
+  <div class="page-header">
+    <h2>{% trans 'teachers_not_responding_to_request' %}</h2>
+  </div>
+  <div class="panel panel-default">
     <div class="panel-body">
-        <div class="row">
-            <div class="col-md-1"><i class="fa fa-pencil" style="font-size: 400%; color: #6699FF;"></i></div>
-            <div class="col-md-5">
-                <h4 class="media-heading"><a href="{% url 'admin:base_messagetemplate_changelist' %}" id="lnk_messages_templates">{% trans 'messages_templates' %}</a></h4>
-                <p>{% trans 'desc_messages_template' %}</p>
-            </div>
-            <div class="col-md-1"><i class="fa fa-history" style="font-size: 400%; color: #6699FF;"></i></div>
-            <div class="col-md-5">
-                <h4 class="media-heading"><a href="{% url 'messages_history_index' %}" id="lnk_messages_history">{% trans 'messages_history' %}</a></h4>
-                <p> {% trans 'desc_messages_history' %}</p>
-            </div>
-        </div>
+      <table class="table table-hover">
+        <tr>
+          <th>{% trans 'adviser_name'%}</th>
+          <th>{% trans 'adviser_type'%}</th>
+          <th>{% trans 'available_by_email'%}</th>
+          <th>{% trans 'available_by_phone'%}</th>
+          <th>{% trans 'available_at_office'%}</th>
+        </tr>
+
+        {% for adviser_need_request in advisers_need_request %}
+          <tr>
+            <td><a href="{% url 'manager_informations_detail' pk=adviser_need_request.adviser.pk %}">
+              {{ adviser_need_request.adviser }}</a></td>
+            <td>{{ adviser_need_request.adviser.person.name }}</td>
+            <td>{{ adviser_need_request.dissertation.title }}</td>
+            <td>{{ adviser_need_request.dissertation.status }}</td>
+            <td>{{ adviser_need_request.status }}</td>
+          </tr>
+        {% endfor %}
+      </table>
+      </div>
     </div>
-</div>
 {% endblock %}

@@ -739,7 +739,7 @@ def specific_criteria_submission(request):
         if sent_error_message:
             messages.add_message(request, messages.ERROR, "%s" % sent_error_message)
 
-    messages.add_message(request, messages.INFO, "%s %s" % (scores_saved, _('scores_saved')))
+    messages.add_message(request, messages.SUCCESS, "%s %s" % (scores_saved, _('scores_saved')))
     return specific_criteria(request)
 
 
