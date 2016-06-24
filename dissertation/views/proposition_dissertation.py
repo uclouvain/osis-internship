@@ -28,6 +28,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from base import models as mdl
 from dissertation.models.adviser import Adviser
+from dissertation.models.dissertation import Dissertation
 from dissertation.models.faculty_adviser import FacultyAdviser
 from dissertation.models.proposition_dissertation import PropositionDissertation
 from dissertation.forms import PropositionDissertationForm, ManagerPropositionDissertationForm
@@ -48,8 +49,10 @@ def manager_proposition_dissertations(request):
     adviser = Adviser.find_by_person(person)
     faculty_adviser = FacultyAdviser.find_by_adviser(adviser)
     proposition_dissertations = PropositionDissertation.objects.filter(Q(active=True) & Q(offer_proposition__offer=faculty_adviser))
+    count_dissertations = Dissertation.objects.filter(Q(proposition_dissertation=proposition_dissertations)).count()
+    percent = count_dissertations*100
     return render(request, 'manager_proposition_dissertations_list.html',
-                  {'proposition_dissertations': proposition_dissertations})
+                  {'proposition_dissertations': proposition_dissertations, 'percent': percent})
 
 
 @login_required

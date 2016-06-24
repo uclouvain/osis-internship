@@ -37,7 +37,7 @@ from dissertation.models.dissertation_update import DissertationUpdate
 from dissertation.models.faculty_adviser import FacultyAdviser
 from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models.proposition_dissertation import PropositionDissertation
-from dissertation.forms import ManagerDissertationForm, ManagerDissertationRoleForm
+from dissertation.forms import ManagerDissertationForm, ManagerDissertationEditForm, ManagerDissertationRoleForm
 from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl import Workbook
 from django.http import HttpResponse
@@ -140,13 +140,13 @@ def manager_dissertations_detail_updates(request, pk):
 def manager_dissertations_edit(request, pk):
     dissertation = get_object_or_404(Dissertation, pk=pk)
     if request.method == "POST":
-        form = ManagerDissertationForm(request.POST, instance=dissertation)
+        form = ManagerDissertationEditForm(request.POST, instance=dissertation)
         if form.is_valid():
             dissertation = form.save()
             dissertation.save()
             return redirect('manager_dissertations_detail', pk=dissertation.pk)
     else:
-        form = ManagerDissertationForm(instance=dissertation)
+        form = ManagerDissertationEditForm(instance=dissertation)
     return render(request, 'manager_dissertations_edit.html', {'form': form})
 
 
