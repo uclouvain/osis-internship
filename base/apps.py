@@ -25,9 +25,7 @@
 ##############################################################################
 from django.apps import AppConfig
 from backoffice.queue import queue
-
-def my_print():
-    print('test')
+from pika.exceptions import AMQPConnectionError
 
 
 class BaseConfig(AppConfig):

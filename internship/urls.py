@@ -33,6 +33,7 @@ urlpatterns = [
     url(r'^$', home.internships_home, name='internships_home'),
     url(r'^internships/edit/([0-9]+)/$', internship.internships_edit, name='internships_edit'),
     url(r'^internships/$', internship.internships, name='internships'),
+    url(r'^internships/block/([0-9]+)/$', internship.internships_block, name='internships_block'),
     url(r'^internships/std/$', internship.internships_stud, name='internships_stud'),
     url(r'^internships/([0-9]+)/students/choice/$', internship.student_choice, name='internship_detail_student_choice'),
     url(r'^internships/create/$', internship.internships_create, name='internships_create'),
@@ -42,6 +43,7 @@ urlpatterns = [
     url(r'^internships/upload/$', upload_xls.upload_internships_file,name='upload_internship'),
 
     url(r'^internships_masters/$', master.interships_masters, name='interships_masters'),
+    url(r'^internships_masters/upload/$', upload_xls.upload_masters_file, name='upload_interships_masters'),
 
     url(r'^periods/$', period.internships_periods, name='internships_periods'),
     url(r'^periods/create/$', period.period_create, name='periods_create'),

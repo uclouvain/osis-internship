@@ -27,9 +27,8 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
-  <li><a href="{% url 'internships_home' %}">Stages</a></li>
-  <li><a href="{% url 'internships_home' %}">{% trans 'Internships' %}</a></li>
+  <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
+  <li><a href="{% url 'internships_home' %}">{% trans 'internships' %}</a></li>
   <li class="active">{% trans 'detail_choice' %}</li>
 {% endblock %}
 {% block content %}
@@ -38,8 +37,8 @@
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
-      <label> Premier choix </label> : {{number_choices.1}}<br/>
-      Liste des étudiants : <a role="button" data-toggle="collapse" data-target="#choice1"
+      <label> {% trans 'first_choice' %} </label> : {{number_choices.1}}<br/>
+      {% trans 'student_list' %} : <a role="button" data-toggle="collapse" data-target="#choice1"
          aria-expanded="false"
          aria-controls="choice1"
          title="{% trans 'display_students_first_choice' %}">
@@ -55,8 +54,8 @@
         </ul>
       </div>
       <br/>
-      <label> Deuxième choix </label> : {{number_choices.2}}<br/>
-      Liste des étudiants : <a role="button" data-toggle="collapse" data-target="#choice2"
+      <label> {% trans 'second_choice' %} </label> : {{number_choices.2}}<br/>
+      {% trans 'student_list' %} : <a role="button" data-toggle="collapse" data-target="#choice2"
          aria-expanded="false"
          aria-controls="choice2"
          title="{% trans 'display_students_second_choice' %}">
@@ -72,8 +71,8 @@
         </ul>
       </div>
       <br/>
-      <label> Troisième choix </label> : {{number_choices.3}}<br/>
-      Liste des étudiants : <a role="button" data-toggle="collapse" data-target="#choice3"
+      <label> {% trans 'third_choice' %} </label> : {{number_choices.3}}<br/>
+      {% trans 'student_list' %} : <a role="button" data-toggle="collapse" data-target="#choice3"
          aria-expanded="false"
          aria-controls="choice3"
          title="{% trans 'display_students_third_choice' %}">
@@ -89,8 +88,8 @@
         </ul>
       </div>
       <br/>
-      <label> Quatrième choix </label> : {{number_choices.4}}<br/>
-      Liste des étudiants : <a role="button" data-toggle="collapse" data-target="#choice4"
+      <label> {% trans 'fourth_choice' %} </label> : {{number_choices.4}}<br/>
+      {% trans 'student_list' %} : <a role="button" data-toggle="collapse" data-target="#choice4"
          aria-expanded="false"
          aria-controls="choice4"
          title="{% trans 'display_students_fourth_choice' %}">

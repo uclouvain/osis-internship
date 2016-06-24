@@ -91,7 +91,7 @@ def send_mail_after_scores_submission(persons, learning_unit_name, submitted_enr
                 with translation.override(lang_code):
                     submitted_enrollment_header = (
                         _('acronym'),
-                        _('session'),
+                        _('sessionn'),
                         _('registration_number'),
                         _('lastname'),
                         _('firstname'),
@@ -296,7 +296,7 @@ def send_message_after_all_encoded_by_manager(persons, enrollments, learning_uni
         with translation.override(lang_code):
             enrollments_header = (
                 _('acronym'),
-                _('session'),
+                _('sessionn'),
                 _('registration_number'),
                 _('lastname'),
                 _('firstname'),

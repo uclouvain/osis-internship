@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+ * OSIS stands for Open Student Information System. It's an application
+ * designed to manage the core business of higher education institutions,
+ * such as universities, faculties, institutes and professional schools.
+ * The core business involves the administration of students, teachers,
+ * courses, programs and so on.
+ *
+ * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * A copy of this license - GNU General Public License - is available
+ * at the root of the source code of this program.  If not,
+ * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block breadcrumb %}
+  <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
+  <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'dissertations' %}</a></li>
+  <li class="active">{% trans 'teachers' %}</li>
+{% endblock %}
+{% block content %}
+  <div class="page-header">
+    <h2>{% trans 'teachers' %}</h2>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-body">
+        <div class="row">
+             <div class="col-md-12">
+                 <a href="{% url 'manager_informations' %}" id="lnk_manager_informations" class="btn btn-default"
+                   role="button" title="{% trans 'manager_informations'%}"><span class="glyphicon glyphicon-list"
+                   aria-hidden="true"></span> {% trans 'all_advisers'%}</a>
+                 <a href="{% url 'manager_informations_list_request' %}" id="lnk_manager_informations_list_request"
+                    class="btn btn-default" role="button" title="{% trans 'all_manager_informations_list_not_respond'%}">
+                    <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
+                    {% trans 'manager_information_list_not_respond'%}</a>
+                  <a href="{% url 'manager_informations_add' %}" id="lnk_manager_informations_add" class="btn btn-default"
+                    role="button" title="{% trans 'manager_informations_add'%}"><span class="glyphicon glyphicon-plus"
+                    aria-hidden="true"></span> {% trans 'add_advisers'%}</a>
+             </div>
+        </div>
+        <br>
+      <table class="table table-hover">
+        <tr>
+          <th>{% trans 'adviser'%}</th>
+          <th>{% trans 'adviser_type'%}</th>
+          <th>{% trans 'available_by_email'%}</th>
+          <th>{% trans 'available_by_phone'%}</th>
+          <th>{% trans 'available_at_office'%}</th>
+        </tr>
+        {% for adviser in advisers %}
+          <tr>
+            <td><a href="{% url 'manager_informations_detail' pk=adviser.pk %}">{{ adviser }}</a></td>
+            <td>{{ adviser.type }}</td>
+            <td>{{ adviser.available_by_email|yesno:"Yes,No" }}</td>
+            <td>{{ adviser.available_by_phone|yesno:"Yes,No" }}</td>
+            <td>{{ adviser.available_at_office|yesno:"Yes,No" }}</td>
+          </tr>
+        {% endfor %}
+      </table>
+      </div>
+    </div>
+{% endblock %}

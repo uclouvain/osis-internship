@@ -28,8 +28,8 @@ from .models import *
 
 
 class InternshipOfferAdmin(admin.ModelAdmin):
-    list_display = ('organization','learning_unit_year', 'title', 'maximum_enrollments')
-    fieldsets = ((None, {'fields': ('organization','learning_unit_year', 'title', 'maximum_enrollments')}),)
+    list_display = ('organization','learning_unit_year', 'title', 'maximum_enrollments', 'selectable')
+    fieldsets = ((None, {'fields': ('organization','learning_unit_year', 'title', 'maximum_enrollments', 'selectable')}),)
 
 admin.site.register(InternshipOffer, InternshipOfferAdmin)
 
@@ -42,8 +42,8 @@ admin.site.register(InternshipEnrollment, InternshipEnrollmentAdmin)
 
 
 class InternshipMasterAdmin(admin.ModelAdmin):
-    list_display = ('reference', 'organization', 'internship_offer', 'person', 'civility', 'type_mastery', 'speciality')
-    fieldsets = ((None, {'fields': ('reference', 'organization', 'internship_offer', 'person', 'civility', 'type_mastery', 'speciality')}),)
+    list_display = ('reference', 'organization', 'first_name', 'last_name', 'civility', 'type_mastery', 'speciality')
+    fieldsets = ((None, {'fields': ('reference', 'organization', 'first_name', 'last_name', 'civility', 'type_mastery', 'speciality')}),)
 
 admin.site.register(InternshipMaster, InternshipMasterAdmin)
 

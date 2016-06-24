@@ -19,11 +19,17 @@ msgstr ""
 msgid "absent"
 msgstr "Absent"
 
+msgid "application_management"
+msgstr "Gestion de l'application"
+
 msgid "absent_pdf_legend"
 msgstr "A=Absent"
 
 msgid "are_you_sure"
 msgstr "Êtes-vous sûr?"
+
+msgid "too_many_results"
+msgstr "Votre recherche retourne trop de résultats, veuillez spécifier la recherche."
 
 msgid "birth_date"
 msgstr "Date de naissance"
@@ -51,6 +57,12 @@ msgstr "Surveillance de la capacité de stockage"
 
 msgid "function"
 msgstr "Fonction"
+
+msgid "message_resent_ok"
+msgstr "Le message à bien été réenvoyé."
+
+msgid "message_not_resent_no_email"
+msgstr "Le message ne peut être réenvoyé , l'utilisateur n'a pas d'adresse mail."
 
 msgid "ill"
 msgstr "Malade"
@@ -333,7 +345,7 @@ msgstr "Statut"
 msgid "program"
 msgstr "Programme"
 
-msgid "session"
+msgid "sessionn"
 msgstr "Session"
 
 msgid "number_session"
@@ -959,8 +971,29 @@ msgstr "Destinataire"
 msgid "subject"
 msgstr "Sujet"
 
-msgid "myosis"
-msgstr "MyOsis"
+msgid "my_osis"
+msgstr "Mon OSIS"
+
+msgid "my_messages"
+msgstr "Mes messages"
+
+msgid "received_on"
+msgstr "Reçu le"
+
+msgid "tooltip_my_message_read"
+msgstr "Lire le message"
+
+msgid "no_messages"
+msgstr "Pas de messages"
+
+msgid "tooltip_delete_message"
+msgstr "Supprimer le message"
+
+msgid "desc_profile"
+msgstr "informations liées à votre profile"
+
+msgid "desc_my_messages"
+msgstr "La liste des messages qui vous ont été envoyés par l'application"
 
 msgid "sent"
 msgstr "Envoyé"
@@ -994,6 +1027,43 @@ msgstr "Référence du template du message"
 
 msgid "btn_messages_history_search"
 msgstr "Recherche dans l'historique des messages"
+
+
+msgid "delete_selected_messages"
+msgstr "Supprimer les messages sélectionnés"
+
+msgid "mark_selected_messages_as_read"
+msgstr "Marquer les messages sélectionnés comme lus"
+
+msgid "tooltip_execute_my_message_action"
+msgstr "Exécuter l'action sélectionnée"
+
+msgid "tooltip_select_action"
+msgstr "Sélectionner l'action à exécuter"
+
+msgid "tooltip_select_all_messages"
+msgstr "Sélectionner tous les messages"
+
+msgid "close"
+msgstr "Fermer"
+
+msgid "execute"
+msgstr "Exécuter"
+
+msgid "tooltip_to_my_messages"
+msgstr "Retourner à la liste des messages"
+
+msgid "javascript_is_disabled"
+msgstr "JavaScript est désactivé dans votre navigateur, mais OSIS ne fonctionne pas sans JavaScript."
+
+msgid "please_enable_javascript"
+msgstr "Veuillez <a href='http://enable-javascript.com/fr/' target='_blank'>activer le JavaScript</a> pour utiliser l'application."
+
+msgid "old_browser_warning"
+msgstr "Votre navigateur n'est pas à jour. Certaines fonctionnalités peuvent ne pas fonctionner correctement."
+
+msgid "home"
+msgstr "Page d'accueil"
 
 msgid "none"
 msgstr "Aucun"
@@ -1164,8 +1234,15 @@ msgstr "Vous n'êtes pas un gestionnaire de programme. Par conséquent, vous n'a
 msgid "enrollments"
 msgstr "Inscriptions"
 
+msgid "missing_column_session"
+msgstr "Veuillez remplir la colonne 'session' de votre fichier excel."
+
 msgid "incomplete"
 msgstr "Incomplet"
+
+msgid "xls_columns_structure_error"
+msgstr "Votre fichier excel n'est pas bien structuré. Veuillez respecter l'ordre des colonnes fournie lors du "
+       "téléchargement de votre fichier (bouton '{}')."
 
 msgid "succesfull_logout"
 msgstr "Vous êtes à présent déconnecté."
@@ -1173,5 +1250,13 @@ msgstr "Vous êtes à présent déconnecté."
 msgid "redirect_to_login"
 msgstr "Cliquez pour vous reconnectez"
 
+msgid "no_valid_academic_year_error"
+msgstr "Aucune année académique au format valide n'a été trouvé dans votre fichier excel. La date doit être formatée comme suit ; '2015-2016' ou '2015'."
+
+msgid "no_data_for_this_academic_year"
+msgstr "Aucune données pour cette année académique"
+
 msgid "complete"
 msgstr "Complet"
+
+

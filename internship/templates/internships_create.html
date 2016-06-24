@@ -27,14 +27,14 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
-  <li><a href="{% url 'internships_home' %}">Stages</a></li>
-  <li><a href="{% url 'internships' %}">Tous les Stages</a></li>
-  <li class="active">Nouveau Stage</li>
+  <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
+  <li><a href="{% url 'internships_home' %}">{% trans 'internships' %}</a></li>
+  <li><a href="{% url 'internships' %}">{% trans 'all_internships' %}</a></li>
+  <li class="active">{% trans 'new_internship' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'Internships Creation' %}</h2>
+    <h2>{% trans 'new_internship' %}</h2>
   </div>
   {% if success == 1 %}
   <div>
@@ -83,7 +83,7 @@
   </table>
   <br/>
       <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_interships_new">
-          <span class="glyphicon glyphicon-save" aria-hidden="true"/> {% trans 'Save'%}
+          <span class="glyphicon glyphicon-save" aria-hidden="true"/> {% trans 'save'%}
       </button>
     </form>
     <a href="{% url 'place_create' %}" class="btn btn-info" title="{% trans 'create_an_organization'%}"
