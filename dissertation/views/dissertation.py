@@ -28,6 +28,8 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db import IntegrityError
 from django.db.models import Q
 from base import models as mdl
+from base.models.offer_enrollment import OfferEnrollment
+from base.models.offer_year import OfferYear
 from dissertation.models.adviser import Adviser
 from dissertation.models.dissertation import Dissertation
 from dissertation.models.dissertation_role import DissertationRole
@@ -234,6 +236,10 @@ def manager_dissertations_new(request):
             PropositionDissertation.objects.filter(visibility=True,
                                                    active=True,
                                                    offer_proposition__offer=faculty_adviser)
+        form.fields["author"].queryset = \
+            OfferEnrollment.objects.filter(offer_year__offer=faculty_adviser)
+        form.fields["offer_year_start"].queryset = \
+            OfferYear.objects.filter(offer=faculty_adviser)
     return render(request, 'manager_dissertations_edit.html', {'form': form})
 
 
