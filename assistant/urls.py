@@ -25,15 +25,17 @@
 ##############################################################################
 from django.conf.urls import url
 from assistant.views import mandate, home, assistant_form
-from assistant.views import mandates_list
+from assistant.views import mandates_list, reviewer_mandates_list
 
 urlpatterns = [
     # S'il vous plaît, organiser les urls par ordre alphabétique.
-    url(r'^home$', home.assistant_home , name='assistants_home'),
+
+    url(r'^home$', home.assistant_home, name='assistants_home'),
     url(r'^manager/mandates/(?P<mandate_id>\d+)/edit/$', mandate.mandate_edit, name='mandate_read'),
     url(r'^manager/mandates/(?P<mandate_id>\d+)/save/$', mandate.mandate_save, name='mandate_save'),
     url(r'^manager/mandates/load/$', mandate.load_mandates, name='load_mandates'),
     url(r'^manager/mandates/$', mandates_list.MandatesListView.as_view(), name='mandates_list'),
     url(r'^pst/$', assistant_form.assistant_pst_part1, name='assistant_pst'),
     url(r'^pst/form_part1/save/(?P<mandate_id>\d+)/$', assistant_form.pst_form_part1_save, name='pst_form_part1_save'),
+    url(r'^reviewer/mandates/$', reviewer_mandates_list.MandatesListView.as_view(), name='reviewer_mandates_list'),
 ]
