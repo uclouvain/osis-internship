@@ -49,10 +49,8 @@ def manager_proposition_dissertations(request):
     adviser = Adviser.find_by_person(person)
     faculty_adviser = FacultyAdviser.find_by_adviser(adviser)
     proposition_dissertations = PropositionDissertation.objects.filter(Q(active=True) & Q(offer_proposition__offer=faculty_adviser))
-    count_dissertations = Dissertation.objects.filter(Q(proposition_dissertation=proposition_dissertations)).count()
-    percent = count_dissertations*100
     return render(request, 'manager_proposition_dissertations_list.html',
-                  {'proposition_dissertations': proposition_dissertations, 'percent': percent})
+                  {'proposition_dissertations': proposition_dissertations})
 
 
 @login_required
@@ -70,8 +68,10 @@ def manager_proposition_dissertation_detail(request, pk):
     proposition_dissertation = get_object_or_404(PropositionDissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
     adviser = Adviser.find_by_person(person)
+    count_use = Dissertation.objects.filter(Q(active=True) & Q(proposition_dissertation=proposition_dissertation)).count()
+    percent = count_use*100
     return render(request, 'manager_proposition_dissertation_detail.html',
-                  {'proposition_dissertation': proposition_dissertation, 'adviser': adviser})
+                  {'proposition_dissertation': proposition_dissertation, 'adviser': adviser, 'percent': percent})
 
 
 @login_required
@@ -133,8 +133,10 @@ def proposition_dissertation_detail(request, pk):
     proposition_dissertation = get_object_or_404(PropositionDissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
     adviser = Adviser.find_by_person(person)
+    count_use = Dissertation.objects.filter(Q(active=True) & Q(proposition_dissertation=proposition_dissertation)).count()
+    percent = count_use*100
     return render(request, 'proposition_dissertation_detail.html',
-                  {'proposition_dissertation': proposition_dissertation, 'adviser': adviser})
+                  {'proposition_dissertation': proposition_dissertation, 'adviser': adviser, 'percent': percent})
 
 
 @login_required

@@ -95,6 +95,14 @@
                 </div>
                 <div class="row">
                     <div class="col-md-3" style="text-align: right">
+                        <label>{% trans 'percent' %}</label>
+                    </div>
+                    <div class="col-md-9" style="text-align: justify">
+                        {% widthratio percent proposition_dissertation.max_number_student 1 %}{% trans '%'%}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3" style="text-align: right">
                         <label>{% trans 'type' %}</label>
                     </div>
                     <div class="col-md-9" style="text-align: justify">
