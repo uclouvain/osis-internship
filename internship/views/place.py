@@ -30,7 +30,7 @@ from internship.forms import OrganizationForm
 
 
 @login_required
-@permission_required('internship.is_internship_manager')
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_places(request):
     # First get the value of the option for the sort
     if request.method == 'GET':
@@ -128,7 +128,7 @@ def internships_places_stud(request):
 
 
 @login_required
-@permission_required('internship.is_internship_manager')
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def place_save(request, organization_id, organization_address_id):
     print(organization_id)
     form = OrganizationForm(data=request.POST)
@@ -194,7 +194,7 @@ def place_save(request, organization_id, organization_address_id):
         organization_address.country = None
 
     if request.POST['organization_id']:
-        organization_address.organization = mdl.organization.find_by_id(int(request.POST['organization_id']))
+        organization_address.organization = Organization.find_by_id(int(request.POST['organization_id']))
 
     organization_address.save()
 
@@ -206,13 +206,13 @@ def place_save(request, organization_id, organization_address_id):
 
 
 @login_required
-@permission_required('internship.is_internship_manager')
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def organization_new(request):
     return place_save(request, None, None)
 
 
 @login_required
-@permission_required('internship.is_internship_manager')
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def organization_edit(request, organization_id):
     organization = Organization.find_by_id(organization_id)
     organization_address = OrganizationAddress.find_by_organization(organization)
@@ -222,14 +222,14 @@ def organization_edit(request, organization_id):
 
 
 @login_required
-@permission_required('internship.is_internship_manager')
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def organization_create(request):
     organization = Organization()
     return render(request, "place_form.html", {'organization': organization})
 
 
 @login_required
-@permission_required('internship.is_internship_manager')
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def student_choice(request, reference):
     organization_choice = InternshipChoice.find_by(s_organization_ref=reference)
     organization = Organization.search(reference=reference)

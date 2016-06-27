@@ -29,13 +29,13 @@ from internship.forms import PeriodForm
 
 
 @login_required
-@permission_required('internship.is_internship_manager')
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_periods(request):
     return render(request, "periods.html", {'section': 'internship'})
 
 
 @login_required
-@permission_required('internship.is_internship_manager')
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def period_create(request):
 
     f = PeriodForm(request.POST)

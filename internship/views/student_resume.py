@@ -32,7 +32,7 @@ from django.utils.translation import ugettext_lazy as _
 
 
 @login_required
-@permission_required('internship.is_internship_manager')
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_resume(request):
     students_list = InternshipChoice.find_by_all_student()
 
@@ -42,7 +42,7 @@ def internships_student_resume(request):
 
 
 @login_required
-@permission_required('internship.is_internship_manager')
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_search(request):
     s_noma = request.GET['s_noma']
     s_name = request.GET['s_name']
