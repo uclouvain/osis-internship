@@ -32,6 +32,7 @@
   <li class="active">{% trans 'all_internships' %}</li>
 {% endblock %}
 {% block content %}
+
   <div class="page-header">
     <h2>{% trans 'internships' %}</h2>
   </div>
@@ -110,7 +111,8 @@
                               </select>
                             </td>
                             <td>
-                              <input type="checkbox" name="fixthis" value="1">
+                              <input type='hidden' value='0' name='fixthis'>
+                              <input type='checkbox' value='1' name='fixthis'>
                             </td>
                           </tr>
                         {% endif %}
