@@ -308,7 +308,6 @@ def internships_edit(request, internship_id):
         message = "%s" % _('Ce stage pour cet hôpital existe déjà !')
 
 
-    print(organization_related)
     #Select all the organisation (service partner)
     organizations = Organization.find_all_order_by_reference()
     #select all the learning_unit_year which contain the word stage
