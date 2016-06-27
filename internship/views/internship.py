@@ -84,7 +84,7 @@ def calc_dist(lat_a, long_a, lat_b, long_b):
 
 
 @login_required
-@permission_required('internship.is_internship_manager')
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def internships(request):
     # First get the value of the option's value for the sort
     if request.method == 'GET':
@@ -258,7 +258,7 @@ def internships_save(request):
 
 
 @login_required
-@permission_required('internship.is_internship_manager')
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_create(request):
     # Select all the organisation (service partner)
     organizations = Organization.find_all_order_by_reference()
@@ -273,13 +273,13 @@ def internships_create(request):
 
 
 @login_required
-@permission_required('internship.is_internship_manager')
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_new(request):
     return internships_edit(request, None)
 
 
 @login_required
-@permission_required('internship.is_internship_manager')
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_edit(request, internship_id):
     success = 0
     check_internship = 0
@@ -336,7 +336,7 @@ def internships_edit(request, internship_id):
 
 
 @login_required
-@permission_required('internship.is_internship_manager')
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def student_choice(request, id):
     internship = InternshipOffer.find_intership_by_id(id)
     students = InternshipChoice.find_by(s_organization=internship.organization,
@@ -355,7 +355,7 @@ def student_choice(request, id):
 
 
 @login_required
-@permission_required('internship.is_internship_manager')
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_modification(request, internship_id):
     internship = InternshipOffer.find_intership_by_id(internship_id)
     organization_sorted = request.POST['organization_sort']
@@ -365,7 +365,7 @@ def internship_modification(request, internship_id):
 
 
 @login_required
-@permission_required('internship.is_internship_manager')
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_block(request, block):
     internships = InternshipOffer.find_internships()
 
