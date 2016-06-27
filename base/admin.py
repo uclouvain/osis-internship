@@ -106,3 +106,5 @@ admin.site.register(student.Student,
 
 admin.site.register(tutor.Tutor,
                     tutor.TutorAdmin)
+
+admin.site.register(message_history.MessageHistory,message_history.MessageHistoryAdmin)

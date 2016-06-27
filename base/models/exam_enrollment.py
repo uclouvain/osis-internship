@@ -161,8 +161,26 @@ def justification_label_authorized():
 
 
 class ExamEnrollmentHistoryAdmin(admin.ModelAdmin):
-    list_display = ('exam_enrollment', 'person', 'score_final', 'justification_final', 'modification_date')
+    list_display = ('person', 'score_final', 'justification_final', 'modification_date', 'exam_enrollment')
     fieldsets = ((None, {'fields': ('exam_enrollment', 'person', 'score_final', 'justification_final')}),)
+    raw_id_fields = ('exam_enrollment', 'person')
+    search_fields = ['exam_enrollment__learning_unit_enrollment__offer_enrollment__student__person__first_name',
+                     'exam_enrollment__learning_unit_enrollment__offer_enrollment__student__person__last_name',
+                     'exam_enrollment__learning_unit_enrollment__offer_enrollment__student__registration_id']
+    readonly_fields = ('exam_enrollment', 'person', 'score_final', 'justification_final', 'modification_date')
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def has_add_permission(self, request):
+        return False
+
+    def get_actions(self, request):
+        actions = super(ExamEnrollmentHistoryAdmin, self).get_actions(request)
+
+        if 'delete_selected' in actions:
+            del actions['delete_selected']
+        return actions
 
 
 class ExamEnrollmentHistory(models.Model):
@@ -308,8 +326,7 @@ def scores_sheet_data(exam_enrollments, tutor=None):
         learn_unit_year_dict = {}
         # We can take the first element of the list 'exam_enrollments' to get the learning_unit_yr
         # because all exam_enrollments have the same learningUnitYear
-        session_exam = exam_enrollments[0].session_exam
-        learning_unit_yr = session_exam.learning_unit_year
+        learning_unit_yr = exam_enrollments[0].session_exam.learning_unit_year
         coordinator = attribution.find_responsible(learning_unit_yr.learning_unit.id)
         coordinator_address = None
         if coordinator:
@@ -325,7 +342,7 @@ def scores_sheet_data(exam_enrollments, tutor=None):
                                                                          if coordinator_address else '',
                                                           'city': coordinator_address.city
                                                                   if coordinator_address else ''}
-        learn_unit_year_dict['session_number'] = session_exam.number_session
+        learn_unit_year_dict['session_number'] = exam_enrollments[0].session_exam.number_session
         learn_unit_year_dict['acronym'] = learning_unit_yr.acronym
         learn_unit_year_dict['title'] = learning_unit_yr.title
         learn_unit_year_dict['decimal_scores'] = learning_unit_yr.decimal_scores
@@ -352,8 +369,8 @@ def scores_sheet_data(exam_enrollments, tutor=None):
             else:
                 deliberation_date = '-'
             deadline = ""
-            if session_exam.deadline:
-                deadline = session_exam.deadline.strftime('%d/%m/%Y')
+            if exam_enrollment.session_exam.deadline:
+                deadline = exam_enrollment.session_exam.deadline.strftime('%d/%m/%Y')
 
             program = {'acronym': exam_enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym,
                        'deliberation_date': deliberation_date,
