@@ -34,7 +34,7 @@
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'parameters' %} {{ offer_proposition.title }}</h2>
+    <h2>{% trans 'parameters' %} {{ offer_proposition.acronym }}</h2>
   </div>
   <div class="panel panel-default">
     <div class="panel-body">
@@ -61,6 +61,12 @@
           <div class="col-md-2">
             {{ offer_proposition.day_of_month_end_visibility_proposition }} / {{ offer_proposition.month_end_visibility_proposition }}
           </div>
+          <div class="col-md-4">
+            <label>{% trans 'In_visibility_proposition' %}</label> :
+          </div>
+          <div class="col-md-1">
+             {{ offer_proposition.in_periode_visibility_proposition|yesno:"Yes,No" }}
+          </div>
         </div>
       </div>
       <div class="panel-body">
@@ -78,6 +84,12 @@
           </div>
           <div class="col-md-2">
             {{ offer_proposition.day_of_month_end_visibility_dissertation }} / {{ offer_proposition.month_end_visibility_dissertation }}
+          </div>
+          <div class="col-md-4">
+            <label>{% trans 'In_visibility_dissertation' %}</label> :
+          </div>
+          <div class="col-md-1">
+             {{ offer_proposition.in_periode_visibility_dissertation|yesno:"Yes,No" }}
           </div>
         </div>
       </div>
@@ -112,6 +124,7 @@
         <div class="col-md-2">
            {{ offer_proposition.evaluation_first_year|yesno:"Yes,No" }}
         </div>
+
       </div>
       <div class="row">
         <div class="col-md-4">
@@ -120,7 +133,8 @@
         <div class="col-md-2">
            {{ offer_proposition.validation_commission_exists|yesno:"Yes,No" }}
         </div>
-      </div>
+
+
     </div>
   </div>
 {% endblock %}

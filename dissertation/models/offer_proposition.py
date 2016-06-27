@@ -25,6 +25,7 @@
 ##############################################################################
 from django.db import models
 from base.models import offer
+import datetime
 
 
 class OfferProposition(models.Model):
@@ -75,6 +76,57 @@ class OfferProposition(models.Model):
     #   End of oppening dissertation
     month_end_visibility_dissertation = models.IntegerField(default=8)
     day_of_month_end_visibility_dissertation = models.IntegerField(default=31)
+
+    @property
+    def in_periode_visibility_proposition (self):
+        c=datetime.date.today()
+        a=datetime.date(c.year,self.month_start_visibility_proposition,self.day_of_month_start_visibility_proposition)
+        b=datetime.date(c.year,self.month_end_visibility_proposition,self.day_of_month_end_visibility_proposition)
+        if a>b:
+            if c >= a or c<=b:
+                return True
+            else:
+                return False
+        if a<=b:
+            if c>=a and c <=b:
+                return True
+            else:
+                return False
+    @property
+    def in_periode_visibility_dissertation (self):
+        c=datetime.date.today()
+        a=datetime.date(c.year,self.month_start_visibility_dissertation,self.day_of_month_start_visibility_dissertation)
+        b=datetime.date(c.year,self.month_end_visibility_dissertation,self.day_of_month_end_visibility_dissertation)
+        if a>b:
+            if c >= a or c<=b:
+                return True
+            else:
+                return False
+        if a<=b:
+            if c>=a and c <=b:
+                return True
+            else:
+                return False
+
+    def __day_month_check (day,month):
+        if ((month == 1) or(month == 3)or(month == 5)or(month == 7)or(month == 8)or(month == 10)or(month == 12)):
+            if day<0 or day> 31:
+
+                print('day start visibility proposition is not correct ')
+            else:
+                return True
+        elif ((month == 4) or(month == 6)or(month == 9)or(month == 11)):
+            if day<0 or day> 30:
+
+                print('day start visibility proposition is not correct ')
+            else:
+                return True
+        elif (month == 2):
+            if day<0 or day> 28:
+
+                print('day start visibility proposition is not correct ')
+            else:
+                return True
 
     def __str__(self):
         return self.acronym
