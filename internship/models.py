@@ -69,6 +69,11 @@ class InternshipOffer(models.Model):
             if int(i.id) == int(id):
                 return i
 
+    class Meta:
+        permissions = (
+            ("is_internship_manager", "Is Internship Manager"),
+        )
+
 class InternshipEnrollment(models.Model):
     learning_unit_enrollment = models.ForeignKey('base.LearningUnitEnrollment')
     internship_offer = models.ForeignKey(InternshipOffer)

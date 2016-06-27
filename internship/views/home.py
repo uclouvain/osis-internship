@@ -28,28 +28,29 @@ from django.contrib.auth.decorators import login_required
 from base import models as mdl
 from internship.models import InternshipOffer
 
+
 @login_required
 def internships_home(request):
     student = mdl.student.find_by(person_username=request.user)
     #Check if the user is a student, if not the noma is not requiered so it's 0
-    if len(student) > 0 :
+    if len(student) > 0:
         for s in student:
             noma = s.registration_id
-    else :
+    else:
         noma = 0
 
     internships = InternshipOffer.find_internships()
     #Check if there is a internship offers in data base. If not, the internships
     #can be block, but there is no effect
-    if len(internships) > 0 :
+    if len(internships) > 0:
         if internships[0].selectable:
             blockable = True
-        else :
+        else:
             blockable = False
-    else :
+    else:
         blockable = True
 
-    return render(request, "internships_home.html", {'section': 'internship',
-                                                        'noma' : noma,
-                                                        'blockable' : blockable
+    return render(request, "internships_home.html", {'section':   'internship',
+                                                     'noma':      noma,
+                                                     'blockable': blockable
                                                     })
