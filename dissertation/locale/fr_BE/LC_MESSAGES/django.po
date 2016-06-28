@@ -21,3 +21,24 @@ msgstr "Mémoire"
 
 msgid "dissertations"
 msgstr "Mémoires"
+
+msgid "subjects"
+msgstr "Sujets"
+
+msgid "teachers"
+msgstr "Enseignants"
+
+msgid "parameters"
+msgstr "Paramètres"
+
+msgid "desc_lnk_manager_proposition_dissertations"
+msgstr "Sujets de mémoire proposés par les enseignants"
+
+msgid "desc_lnk_manager_informations"
+msgstr "Liste des enseignants liés à la plateforme Mémoires"
+
+msgid "desc_lnk_manager_dissertations"
+msgstr "Projets de mémoire des étudiants"
+
+msgid "desc_lnk_manager_offer_parameters"
+msgstr "Paramétrage de la plateforme"

@@ -73,7 +73,10 @@ def manager_proposition_dissertation_detail(request, pk):
                                             ).exclude(Q(status='DRAFT')).count()
     percent = count_use * 100 / proposition_dissertation.max_number_student
     return render(request, 'manager_proposition_dissertation_detail.html',
-                  {'proposition_dissertation': proposition_dissertation, 'adviser': adviser, 'percent': percent})
+                  {'proposition_dissertation': proposition_dissertation,
+                   'adviser': adviser,
+                   'count_use': count_use,
+                   'percent': percent})
 
 
 @login_required
@@ -140,7 +143,10 @@ def proposition_dissertation_detail(request, pk):
                                             ).exclude(Q(status='DRAFT')).count()
     percent = count_use * 100 / proposition_dissertation.max_number_student
     return render(request, 'proposition_dissertation_detail.html',
-                  {'proposition_dissertation': proposition_dissertation, 'adviser': adviser, 'percent': percent})
+                  {'proposition_dissertation': proposition_dissertation,
+                   'adviser': adviser,
+                   'count_use': count_use,
+                   'percent': percent})
 
 
 @login_required

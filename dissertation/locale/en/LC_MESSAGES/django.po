@@ -19,5 +19,8 @@ msgstr ""
 msgid "dissertation"
 msgstr "Dissertation"
 
+msgid "dissertations"
+msgstr "Dissertations"
+
 msgid "subjects"
-msgstr "Sujets"
+msgstr "Subjects"

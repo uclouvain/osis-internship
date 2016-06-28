@@ -95,10 +95,10 @@
                 </div>
                 <div class="row">
                     <div class="col-md-3" style="text-align: right">
-                        <label>{% trans 'percent' %}</label>
+                        <label>{% trans 'taken_places' %}</label>
                     </div>
                     <div class="col-md-9" style="text-align: justify">
-                        {{ percent }}{% trans '%'%}
+                        {{ count_use }} {% trans 'of' %} {{ proposition_dissertation.max_number_student }} ({{ percent }}{% trans '%'%})
                     </div>
                 </div>
                 <div class="row">
