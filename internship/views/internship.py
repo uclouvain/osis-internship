@@ -187,12 +187,21 @@ def internships_stud(request):
         tab = luy.title.replace(" ", "")
         luy.tab = tab
 
-    return render(request, "internships_stud.html", {'section':                  'internship',
-                                                     'all_internships':          query,
-                                                     'all_organizations':        internship_organizations,
-                                                     'organization_sort_value':  organization_sort_value,
-                                                     'all_learning_unit_year':   all_learning_unit_year,
-                                                     'selectable':               query[0].selectable, })
+    if len(query) > 0 :
+        if query[0].selectable:
+            selectable = True
+        else :
+            selectable = False
+    else :
+        selectable = True
+
+    return render(request, "internships_stud.html", {'section': 'internship',
+                                                'all_internships' : query,
+                                                'all_organizations' : internship_organizations,
+                                                'organization_sort_value' : organization_sort_value,
+                                                'all_learning_unit_year' : all_learning_unit_year,
+                                                'selectable' : selectable,
+                                                 })
 
 
 @login_required
