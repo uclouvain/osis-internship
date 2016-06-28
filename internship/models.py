@@ -69,6 +69,11 @@ class InternshipOffer(models.Model):
             if int(i.id) == int(id):
                 return i
 
+    class Meta:
+        permissions = (
+            ("is_internship_manager", "Is Internship Manager"),
+        )
+
 class InternshipEnrollment(models.Model):
     learning_unit_enrollment = models.ForeignKey('base.LearningUnitEnrollment')
     internship_offer = models.ForeignKey(InternshipOffer)
@@ -200,6 +205,11 @@ class Period(models.Model):
     name = models.CharField(max_length=255)
     date_start = models.DateField()
     date_end = models.DateField()
+
+class PeriodInternshipPlaces(models.Model):
+    period = models.ForeignKey('internship.Period')
+    internship = models.ForeignKey('internship.InternshipOffer')
+    number_places = models.IntegerField(blank=None, null=False)
 
 class Organization(models.Model):
     name = models.CharField(max_length=255)
