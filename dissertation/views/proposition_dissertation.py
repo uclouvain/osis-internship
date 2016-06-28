@@ -71,7 +71,7 @@ def manager_proposition_dissertation_detail(request, pk):
     count_use = Dissertation.objects.filter(Q(active=True) &
                                             Q(proposition_dissertation=proposition_dissertation)
                                             ).exclude(Q(status='DRAFT')).count()
-    percent = count_use*100/proposition_dissertation.max_number_student
+    percent = count_use * 100 / proposition_dissertation.max_number_student
     return render(request, 'manager_proposition_dissertation_detail.html',
                   {'proposition_dissertation': proposition_dissertation, 'adviser': adviser, 'percent': percent})
 
