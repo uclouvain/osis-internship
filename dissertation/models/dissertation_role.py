@@ -40,10 +40,10 @@ class DissertationRole(models.Model):
     dissertation = models.ForeignKey(dissertation.Dissertation)
 
     def __str__(self):
-        status = ""
-        adviser = ""
+        sta = ""
+        adv = ""
         if self.status:
-            status = self.status
+            sta = self.status
         if self.adviser:
-            adviser = self.adviser
-        return u"%s %s" % (status, adviser)
+            adv = self.adviser
+        return u"%s %s" % (sta, adv)
