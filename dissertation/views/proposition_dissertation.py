@@ -68,8 +68,10 @@ def manager_proposition_dissertation_detail(request, pk):
     proposition_dissertation = get_object_or_404(PropositionDissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
     adviser = Adviser.find_by_person(person)
-    count_use = Dissertation.objects.filter(Q(active=True) & Q(proposition_dissertation=proposition_dissertation)).count()
-    percent = count_use*100
+    count_use = Dissertation.objects.filter(Q(active=True) &
+                                            Q(proposition_dissertation=proposition_dissertation)
+                                            ).exclude(Q(status='DRAFT')).count()
+    percent = count_use*100/proposition_dissertation.max_number_student
     return render(request, 'manager_proposition_dissertation_detail.html',
                   {'proposition_dissertation': proposition_dissertation, 'adviser': adviser, 'percent': percent})
 
@@ -133,8 +135,10 @@ def proposition_dissertation_detail(request, pk):
     proposition_dissertation = get_object_or_404(PropositionDissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
     adviser = Adviser.find_by_person(person)
-    count_use = Dissertation.objects.filter(Q(active=True) & Q(proposition_dissertation=proposition_dissertation)).count()
-    percent = count_use*100
+    count_use = Dissertation.objects.filter(Q(active=True) &
+                                            Q(proposition_dissertation=proposition_dissertation)
+                                            ).exclude(Q(status='DRAFT')).count()
+    percent = count_use * 100 / proposition_dissertation.max_number_student
     return render(request, 'proposition_dissertation_detail.html',
                   {'proposition_dissertation': proposition_dissertation, 'adviser': adviser, 'percent': percent})
 
