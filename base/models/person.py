@@ -80,6 +80,7 @@ class Person(models.Model):
         return u"%s %s %s" % (last_name.upper(), first_name, middle_name)
 
 
+
 def find_by_id(person_id):
     return Person.objects.get(id=person_id)
 

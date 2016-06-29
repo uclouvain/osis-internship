@@ -82,6 +82,7 @@ TEMPLATES = [
         'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
+            'debug': DEBUG,
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
@@ -132,7 +133,8 @@ STATIC_URL = '/static/'
 
 # Authentication settings
 
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = 'home'
+LOGIN_URL = 'login'
 
 FIXTURE_DIRS = (
     '/base/fixtures/',

@@ -32,7 +32,7 @@ from django.utils.translation import ugettext_lazy as _
 from base import models as mdl
 
 HEADER = [str(_('academic_year')),
-          str(_('session')),
+          str(_('sessionn')),
           str(_('learning_unit')),
           str(_('program')),
           str(_('registration_number')),
