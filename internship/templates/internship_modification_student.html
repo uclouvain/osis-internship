@@ -108,13 +108,15 @@
                               <select name="periods_s" multiple>
                                   <option value=0 selected>--</option>
                                 {% for period in periods %}
-                                  <option value={{period.name}}>{{period.name}}</option>
+                                  <option value="{{period.name}}
+                                  {{internship.organization.reference }}
+                                  {{internship.learning_unit_year.acronym }}">{{period.name}}</option>
                                 {% endfor %}
                               </select>
                             </td>
                             <td>
                               <input type='hidden' value='0' name='fixthis'>
-                              <input type='checkbox' value='1' name='fixthis'>
+                              <input type='checkbox' value='1' name='fixthis' {% if internship.priority == True %}checked{% endif %}>
                             </td>
                           </tr>
                         {% endif %}

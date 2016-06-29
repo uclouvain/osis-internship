@@ -27,7 +27,7 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from internship.models import InternshipOffer, InternshipChoice, Organization, Period
+from internship.models import InternshipEnrollment, InternshipOffer, InternshipChoice, Organization, Period
 from internship.forms import InternshipChoiceForm, InternshipOfferForm
 from base import models as mdl
 from django.utils.translation import ugettext_lazy as _
@@ -475,7 +475,48 @@ def internship_save_modification_student(request) :
         index += 1
 
     index = 0
-    for organization in organization_list:
-        print (organization, learning_unit_year_list[index], preference_list[index], periods_list[index], fixthis_list[index])
+    for r in preference_list:
+        if r == "0":
+            learning_unit_year_list[index] = 0
+            organization_list[index] = 0
         index += 1
+
+    registration_id = request.POST.getlist('registration_id')
+    student = mdl.student.find_by(registration_id=registration_id[0], full_registration = True)
+    organization_list = [x for x in organization_list if x != 0]
+    learning_unit_year_list = [x for x in learning_unit_year_list if x != 0]
+    preference_list = [x for x in preference_list if x != '0']
+    periods_list = [x for x in periods_list if x != '0']
+
+    InternshipChoice.objects.filter(student=student).delete()
+    index = preference_list.__len__()
+    for x in range(0, index):
+        new_choice = InternshipChoice()
+        new_choice.student = student[0]
+        organization = Organization.search(reference=organization_list[x])
+        new_choice.organization = organization[0]
+        learning_unit_year = mdl.learning_unit_year.search(title=learning_unit_year_list[x])
+        new_choice.learning_unit_year = learning_unit_year[0]
+        new_choice.choice = preference_list[x]
+        if fixthis_list[x] == '1':
+            new_choice.priority = True
+        else :
+            new_choice.priority = False
+        new_choice.save()
+
+    index = periods_list.__len__()
+    InternshipEnrollment.objects.filter(student=student).delete()
+    for x in range(0, index):
+        if periods_list[x] != '0':
+            new_enrollment = InternshipEnrollment()
+            tab_period = periods_list[x].split( )
+            period = Period.find_by(name=tab_period[0])
+            organization = Organization.search(reference=tab_period[1])
+            learning_unit_year = mdl.learning_unit_year.search(acronym=tab_period[2])
+            internship = InternshipOffer.find_interships_by_learning_unit_organization(learning_unit_year[0].title, organization[0].reference)
+            new_enrollment.student = student[0]
+            new_enrollment.internship_offer = internship[0]
+            new_enrollment.place = organization[0]
+            new_enrollment.period = period[0]
+            new_enrollment.save()
     return
