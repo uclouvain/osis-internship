@@ -519,4 +519,4 @@ def internship_save_modification_student(request) :
             new_enrollment.place = organization[0]
             new_enrollment.period = period[0]
             new_enrollment.save()
-    return
+    return HttpResponseRedirect(reverse('internship_modification_student'))
