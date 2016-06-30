@@ -16,29 +16,350 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "dissertation"
-msgstr "Mémoire"
+msgid "action_needed"
+msgstr "action_needed"
 
-msgid "dissertations"
-msgstr "Mémoires"
+msgid "actions"
+msgstr "actions"
 
-msgid "subjects"
-msgstr "Sujets"
+msgid "adviser_can_suggest_reader"
+msgstr "adviser_can_suggest_reader"
 
-msgid "teachers"
-msgstr "Enseignants"
+msgid "adviser_dissertations"
+msgstr "adviser_dissertations"
 
-msgid "parameters"
-msgstr "Paramètres"
+msgid "adviser_profile"
+msgstr "adviser_profile"
 
-msgid "desc_lnk_manager_proposition_dissertations"
-msgstr "Sujets de mémoire proposés par les enseignants"
+msgid "adviser_stats"
+msgstr "adviser_stats"
 
-msgid "desc_lnk_manager_informations"
-msgstr "Liste des enseignants liés à la plateforme Mémoires"
+msgid "all_advisers"
+msgstr "all_advisers"
+
+msgid "all_dissertations"
+msgstr "all_dissertations"
+
+msgid "all_proposition_dissertations"
+msgstr "all_proposition_dissertations"
+
+msgid "author"
+msgstr "author"
+
+msgid "available_at_office"
+msgstr "available_at_office"
+
+msgid "available_by_email"
+msgstr "available_by_email"
+
+msgid "available_by_phone"
+msgstr "available_by_phone"
+
+msgid "collaboration"
+msgstr "collaboration"
+
+msgid "comment"
+msgstr "comment"
+
+msgid "confirmation_message"
+msgstr "confirmation_message"
+
+msgid "creation_date"
+msgstr "creation_date"
+
+msgid "current_status"
+msgstr "current_status"
+
+msgid "defend_periode"
+msgstr "defend_periode"
+
+msgid "delete_adviser_role_confirmation_message"
+msgstr "delete_adviser_role_confirmation_message"
+
+msgid "delete_dissertation"
+msgstr "delete_dissertation"
+
+msgid "delete_dissertation_confirmation_message"
+msgstr "delete_dissertation_confirmation_message"
+
+msgid "delete_manager_dissertation"
+msgstr "delete_manager_dissertation"
+
+msgid "delete_proposition_dissertation"
+msgstr "delete_proposition_dissertation"
+
+msgid "delete_proposition_dissertation_confirmation_message"
+msgstr "delete_proposition_dissertation_confirmation_message"
+
+msgid "desc_lnk_dissertations"
+msgstr "desc_lnk_dissertations"
+
+msgid "desc_lnk_informations"
+msgstr "desc_lnk_informations"
 
 msgid "desc_lnk_manager_dissertations"
-msgstr "Projets de mémoire des étudiants"
+msgstr "desc_lnk_manager_dissertations"
+
+msgid "desc_lnk_manager_informations"
+msgstr "desc_lnk_manager_informations"
 
 msgid "desc_lnk_manager_offer_parameters"
-msgstr "Paramétrage de la plateforme"
+msgstr "desc_lnk_manager_offer_parameters"
+
+msgid "desc_lnk_manager_proposition_dissertations"
+msgstr "desc_lnk_manager_proposition_dissertations"
+
+msgid "desc_lnk_propositions_dissertations"
+msgstr "desc_lnk_propositions_dissertations"
+
+msgid "description"
+msgstr "description"
+
+msgid "dissertation_adviser_copromoteur"
+msgstr "dissertation_adviser_copromoteur"
+
+msgid "dissertation_adviser_promoteur"
+msgstr "dissertation_adviser_promoteur"
+
+msgid "dissertation_adviser_reader"
+msgstr "dissertation_adviser_reader"
+
+msgid "dissertation_confirmation_message"
+msgstr "dissertation_confirmation_message"
+
+msgid "dissertation_informations"
+msgstr "dissertation_informations"
+
+msgid "dissertation_jury"
+msgstr "dissertation_jury"
+
+msgid "dissertation_person"
+msgstr "dissertation_person"
+
+msgid "dissertations"
+msgstr "dissertations"
+
+msgid "dissertation_updates"
+msgstr "dissertation_updates"
+
+msgid "edit_adviser"
+msgstr "edit_adviser"
+
+msgid "edit_manager_dissertation"
+msgstr "edit_manager_dissertation"
+
+msgid "edit_my_informations"
+msgstr "edit_my_informations"
+
+msgid "edit_proposition_dissertation"
+msgstr "edit_proposition_dissertation"
+
+msgid "email"
+msgstr "email"
+
+msgid "evaluation_first_year"
+msgstr "evaluation_first_year"
+
+msgid "how_many_dissertation_copro"
+msgstr "how_many_dissertation_copro"
+
+msgid "how_many_dissertation_need_answer"
+msgstr "how_many_dissertation_need_answer"
+
+msgid "how_many_dissertation_pro"
+msgstr "how_many_dissertation_pro"
+
+msgid "how_many_dissertation_reader"
+msgstr "how_many_dissertation_reader"
+
+msgid "import_xlsx"
+msgstr "import_xlsx"
+
+msgid "informations"
+msgstr "informations"
+
+msgid "in_this_offer"
+msgstr "in_this_offer"
+
+msgid "in_visibility_dissertation"
+msgstr "in_visibility_dissertation"
+
+msgid "in_visibility_proposition"
+msgstr "in_visibility_proposition"
+
+msgid "invisible"
+msgstr "invisible"
+
+msgid "level"
+msgstr "level"
+
+msgid "lose_confirmation_message"
+msgstr "lose_confirmation_message"
+
+msgid "main"
+msgstr "main"
+
+msgid "manager_informations_add_confirmation"
+msgstr "manager_informations_add_confirmation"
+
+msgid "manager_informations_list_request"
+msgstr "manager_informations_list_request"
+
+msgid "max_students_number"
+msgstr "max_students_number"
+
+msgid "mobile_phone"
+msgstr "mobile_phone"
+
+msgid "my_informations"
+msgstr "my_informations"
+
+msgid "my_profile"
+msgstr "my_profile"
+
+msgid "my_proposition_dissertations"
+msgstr "my_proposition_dissertations"
+
+msgid "my_stats"
+msgstr "my_stats"
+
+msgid "name"
+msgstr "name"
+
+msgid "new_adviser"
+msgstr "new_adviser"
+
+msgid "new_or_edit_dissertation"
+msgstr "new_or_edit_dissertation"
+
+msgid "new_or_edit_subject"
+msgstr "new_or_edit_subject"
+
+msgid "no_result"
+msgstr "no_result"
+
+msgid "of"
+msgstr "of"
+
+msgid "offer_propositions"
+msgstr "offer_propositions"
+
+msgid "parameters"
+msgstr "parameters"
+
+msgid "phone"
+msgstr "phone"
+
+msgid "phone_mobile"
+msgstr "phone_mobile"
+
+msgid "photo"
+msgstr "photo"
+
+msgid "profile_person"
+msgstr "profile_person"
+
+msgid "proposition_dissertation_confirmation_message"
+msgstr "proposition_dissertation_confirmation_message"
+
+msgid "proposition_dissertation_informations"
+msgstr "proposition_dissertation_informations"
+
+msgid "readers_visibility_date_for_students"
+msgstr "readers_visibility_date_for_students"
+
+msgid "search"
+msgstr "search"
+
+msgid "search_proposition_dissertation"
+msgstr "search_proposition_dissertation"
+
+msgid "search_teacher"
+msgstr "search_teacher"
+
+msgid "see_my_waiting_dissertations"
+msgstr "see_my_waiting_dissertations"
+
+msgid "stats_person"
+msgstr "stats_person"
+
+msgid "stats"
+msgstr "stats"
+
+msgid "status"
+msgstr "status"
+
+msgid "student_can_manage_readers"
+msgstr "student_can_manage_readers"
+
+msgid "student_path"
+msgstr "student_path"
+
+msgid "subjects"
+msgstr "subjects"
+
+msgid "taken_places"
+msgstr "taken_places"
+
+msgid "teachers"
+msgstr "teachers"
+
+msgid "teachers_not_responding_to_request"
+msgstr "teachers_not_responding_to_request"
+
+msgid "title"
+msgstr "title"
+
+msgid "title_chart_copro"
+msgstr "title_chart_copro"
+
+msgid "title_chart_pro"
+msgstr "title_chart_pro"
+
+msgid "title_chart_read"
+msgstr "title_chart_read"
+
+msgid "to_dir_ko_confirmation_message"
+msgstr "to_dir_ko_confirmation_message"
+
+msgid "to_dir_ok_confirmation_message"
+msgstr "to_dir_ok_confirmation_message"
+
+msgid "to_dir_submit_confirmation_message"
+msgstr "to_dir_submit_confirmation_message"
+
+msgid "type"
+msgstr "type"
+
+msgid "updates"
+msgstr "updates"
+
+msgid "validation_commission_exists"
+msgstr "validation_commission_exists"
+
+msgid "visibility"
+msgstr "visibility"
+
+msgid "visible"
+msgstr "visible"
+
+msgid "waiting_commission"
+msgstr "waiting_commission"
+
+msgid "waiting_dissertations"
+msgstr "waiting_dissertations"
+
+msgid "waiting_evaluation"
+msgstr "waiting_evaluation"
+
+msgid "waiting_reception"
+msgstr "waiting_reception"
+
+msgid "wating_dissertations_message"
+msgstr "wating_dissertations_message"
+
+msgid "win_confirmation_message"
+msgstr "win_confirmation_message"
+
+msgid "you_have"
+msgstr "you_have"
