@@ -119,11 +119,12 @@
         </table>
       </div>
     </div>
-    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#pnl_upload_masters"
-            id="bt_upload_score_modal">
-      <span class="glyphicon glyphicon-upload" aria-hidden="true"></span> {% trans 'import_masters' %}
-    </button>
-
+      {% if perms.internship.is_internship_manager %}
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#pnl_upload_masters"
+                id="bt_upload_score_modal">
+          <span class="glyphicon glyphicon-upload" aria-hidden="true"></span> {% trans 'import_masters' %}
+        </button>
+      {% endif %}
   <div class="modal fade" id="pnl_upload_masters" tabindex="-1" role="dialog" aria-labelledby="uploadScoresLabel">
       <div class="modal-dialog" role="document">
           <div class="modal-content">
