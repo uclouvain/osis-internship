@@ -29,31 +29,316 @@
 {% block breadcrumb %}
   <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
   <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'dissertations' %}</a></li>
-  <li class="active">{% trans 'parameters' %}</li>
+  <li class="active">{% trans 'parameters' %} {{ offer_proposition.title }}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'parameters' %}</h2>
+    <h2>{% trans 'parameters' %} {{ offer_proposition.acronym }}</h2>
   </div>
   <div class="panel panel-default">
     <div class="panel-body">
-      <form method="POST" class="post-form">
+      <form method="POST" class="post-form" name="form_offer">
         {% csrf_token %}
-        {% for field in form %}
-          <div class="row {% if field.errors %}error{% endif %}">
-            <div class="col-md-4" style="text-align: right">
-              {% if not field.is_hidden %}
-                <label>{{ field.label }}</label>
-              {% endif %}
+
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-md-4">
+              <label>{% trans 'date_start_visibility_proposition'%}</label> :
             </div>
-            <div class="col-md-5">
-            {{ field }}
+            <div class="col-md-2">
+              <SELECT NAME="month_start_visibility_proposition" onChange='get_days_month(this)' id="month_start_visibility_proposition">
+                {% for i in range%}
+                <OPTION VALUE="{{forloop.counter}}"
+                {% if offer_proposition.month_start_visibility_proposition == forloop.counter%}
+                selected="selected"{% endif%}>{{forloop.counter}}</OPTION>
+                {% endfor %}
+              </SELECT>
+                /
+                <SELECT NAME="day_of_month_start_visibility_proposition" >
+                {% for i in range%}
+                  <OPTION VALUE="{{forloop.counter}}"
+                  {% if offer_proposition.day_of_month_start_visibility_proposition == forloop.counter %}
+                  selected="selected"{% endif %}>{{ forloop.counter }}</OPTION>
+                  {% endfor %}
+                </SELECT>
             </div>
           </div>
+          <div class="row">
+            <div class="col-md-4">
+              <label>{% trans 'date_end_visibility_proposition'%}</label> :
+            </div>
+            <div class="col-md-2">
+              <SELECT NAME="month_end_visibility_proposition"  onChange='get_days_month(this)' id="month_end_visibility_proposition">
+                {% for i in range%}
+                <OPTION VALUE="{{forloop.counter}}"
+                {% if offer_proposition.month_end_visibility_proposition == forloop.counter%}
+                selected="selected"{% endif%}>{{forloop.counter}}</OPTION>
+                {% endfor %}
+              </SELECT> /
+
+              <SELECT NAME="day_of_month_end_visibility_proposition">
+                {% for i in range%}
+                <OPTION VALUE="{{forloop.counter}}"
+                {% if offer_proposition.day_of_month_end_visibility_proposition == forloop.counter%}
+                selected="selected"{% endif%}>{{forloop.counter}}</OPTION>
+                {% endfor %}
+              </SELECT>
+            </div>
+            <div class="col-md-4">
+              <label>{% trans 'In_visibility_proposition' %}</label> :
+            </div>
+            <div class="col-md-1">
+               {{ offer_proposition.in_periode_visibility_proposition|yesno:"Yes,No" }}
+            </div>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-md-4">
+              <label>{% trans 'date_start_visibility_dissertation'%}</label> :
+            </div>
+            <div class="col-md-2">
+              <SELECT NAME="month_start_visibility_dissertation" onChange='get_days_month(this)' id="month_start_visibility_dissertation">
+                {% for i in range%}
+                <OPTION VALUE="{{forloop.counter}}"
+                {% if offer_proposition.month_start_visibility_dissertation == forloop.counter%}
+                selected="selected"{% endif%}>{{forloop.counter}}</OPTION>
+
+                {% endfor %}
+
+              </SELECT>
+                /
+                <SELECT NAME="day_of_month_start_visibility_dissertation" >
+                {% for i in range%}
+                  <OPTION VALUE="{{forloop.counter}}"
+                  {% if offer_proposition.day_of_month_end_visibility_dissertation == forloop.counter%}
+                  selected="selected"{% endif%}>{{forloop.counter}}</OPTION>
+                  {% endfor %}
+                </SELECT>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <label>{% trans 'date_end_visibility_dissertation'%}</label> :
+            </div>
+            <div class="col-md-2">
+              <SELECT NAME="month_end_visibility_dissertation" onChange='get_days_month(this)' id="month_end_visibility_dissertation">
+                {% for i in range%}
+                <OPTION VALUE="{{forloop.counter}}"
+                {% if offer_proposition.month_end_visibility_dissertation == forloop.counter%}
+                selected="selected"{% endif%}>{{forloop.counter}}</OPTION>
+                {% endfor %}
+              </SELECT>
+                /
+                <SELECT NAME="day_of_month_end_visibility_dissertation" >
+                {% for i in range%}
+                  <OPTION VALUE="{{forloop.counter}}"
+                  {% if offer_proposition.day_of_month_end_visibility_dissertation == forloop.counter%}
+                  selected="selected"{% endif%}>{{forloop.counter}}</OPTION>
+                  {% endfor %}
+                </SELECT>
+
+            </div>
+            <div class="col-md-4">
+              <label>{% trans 'In_visibility_dissertation' %}</label> :
+            </div>
+            <div class="col-md-1">
+               {{ offer_proposition.in_periode_visibility_dissertation|yesno:"Yes,No" }}
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <label>{% trans 'student_can_manage_readers' %}</label> :
+          </div>
+          <div class="col-md-2">
+            Yes
+            <input type="radio" name="student_can_manage_readers" value="True" {% if offer_proposition.student_can_manage_readers == True%} checked {% endif%}>
+            No
+            <input type="radio" name="student_can_manage_readers" value="False" {% if offer_proposition.student_can_manage_readers == False %} checked {% endif%}>
+
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <label>{% trans 'readers_visibility_date_for_students' %}</label> :
+          </div>
+          <div class="col-md-2">
+            Yes
+            <input type="radio" name="readers_visibility_date_for_students" value="True" {% if offer_proposition.readers_visibility_date_for_students == True%} checked {% endif%}>
+            No
+            <input type="radio" name="readers_visibility_date_for_students" value="False" {% if offer_proposition.readers_visibility_date_for_students == False %} checked {% endif%}>
+
+          </div>
+        </div>
+         <div class="row">
+          <div class="col-md-4">
+            <label>{% trans 'adviser_can_suggest_reader' %}</label> :
+          </div>
+          <div class="col-md-2">
+            Yes
+            <input type="radio" name="adviser_can_suggest_reader" value="True" {% if offer_proposition.adviser_can_suggest_reader == True%} checked {% endif%}>
+            No
+            <input type="radio" name="adviser_can_suggest_reader" value="False" {% if offer_proposition.adviser_can_suggest_reader == False %} checked {% endif%}>
+
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <label>{% trans 'evaluation_first_year' %}</label> :
+          </div>
+          <div class="col-md-2">
+             Yes
+             <input type="radio" name="evaluation_first_year" value="True" {% if offer_proposition.evaluation_first_year == True%} checked {% endif%}>
+             No
+             <input type="radio" name="evaluation_first_year" value="False" {% if offer_proposition.evaluation_first_year == False %} checked {% endif%}>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <label>{% trans 'validation_commission_exists' %}</label> :
+          </div>
+          <div class="col-md-2">
+             Yes
+             <input type="radio" name="validation_commission_exists" value="True" {% if offer_proposition.validation_commission_exists == True%} checked {% endif%}>
+             No
+             <input type="radio" name="validation_commission_exists" value="False" {% if offer_proposition.validation_commission_exists == False %} checked {% endif%}>
+
+          </div>
           <br>
-        {% endfor %}
+
         <button type="submit" class="save btn btn-default">Save</button>
       </form>
     </div>
   </div>
+
+<script type="text/javascript">
+
+function get_days_month(elem)
+{
+  var selectedMonthIndex = elem.selectedIndex;
+
+  var selectedId = 0;
+  selectedId = $(elem).attr('id');
+  console.log(selectedMonthIndex);
+  console.log(selectedId);
+  var jours = 0;
+  switch (selectedMonthIndex)
+  {
+    case 0 : jours = 31; break;
+    case 1 : jours = 28; break;
+    case 2 : jours = 31; break;
+    case 3 : jours = 30; break;
+    case 4 : jours = 31; break;
+    case 5 : jours = 30; break;
+    case 6 : jours = 31; break;
+    case 7 : jours = 31; break;
+    case 8 : jours = 30; break;
+    case 9 : jours = 31; break;
+    case 10 : jours = 30; break;
+    case 11 : jours = 31; break;
+  }
+
+  if (selectedId =="month_start_visibility_proposition")
+  {
+    console.log('selectedId :');
+    console.log(selectedId);
+    console.log('jours:');
+    console.log(jours);
+
+    document.form_offer.day_of_month_start_visibility_proposition.options.length=0;
+    document.form_offer.day_of_month_start_visibility_proposition.options.length=jours;
+
+    for (var i=0; i<jours; i++)
+      {
+      console.log(i);
+          document.form_offer.day_of_month_start_visibility_proposition.options[i].text = i+1;
+      }
+  }
+
+  if (selectedId =="month_end_visibility_proposition")
+  {
+    console.log('selectedId :');
+    console.log(selectedId);
+    console.log('jours:');
+    console.log(jours);
+
+    document.form_offer.day_of_month_end_visibility_proposition.options.length=0;
+    document.form_offer.day_of_month_end_visibility_proposition.options.length=jours;
+    for (var i=0; i<jours; i++)
+      {
+      console.log(i);
+          document.form_offer.day_of_month_end_visibility_proposition.options[i].text = i+1;
+      }
+  }
+
+  if (selectedId =="month_start_visibility_dissertation")
+  {
+    console.log('selectedId :');
+    console.log(selectedId);
+    console.log('jours:');
+    console.log(jours);
+
+    document.form_offer.day_of_month_start_visibility_dissertation.options.length=0;
+    document.form_offer.day_of_month_start_visibility_dissertation.options.length=jours;
+    for (var i=0; i<jours; i++)
+      {
+      console.log(i);
+          document.form_offer.day_of_month_start_visibility_dissertation.options[i].text = i+1;
+      }
+  }
+  if (selectedId =="month_end_visibility_dissertation")
+  {
+    console.log('selectedId :');
+    console.log(selectedId);
+    console.log('jours:');
+    console.log(jours);
+
+    document.form_offer.day_of_month_end_visibility_dissertation.options.length=0;
+    document.form_offer.day_of_month_end_visibility_dissertation.options.length=jours;
+    for (var i=0; i<jours; i++)
+      {
+      console.log(i);
+          document.form_offer.day_of_month_end_visibility_dissertation.options[i].text = i+1;
+      }
+  }
+
+}
+
+/*function get_days_month(form)
+{
+    var selectedMonth = $(this).getAttribute('name');
+    console.log(selectedMonth);
+/*
+    var rub = form.month_start_visibility_proposition.selectedIndex;
+    var child = form.month_start_visibility_proposition.data-name-child;
+    console.log(child);
+    var jours = 0;
+    switch (rub) {
+    case 0 : jours = 31; break;
+    case 1 : jours = 29; break;
+    case 2 : jours = 31; break;
+    case 3 : jours = 30; break;
+    case 4 : jours = 31; break;
+    case 5 : jours = 30; break;
+    case 6 : jours = 31; break;
+    case 7 : jours = 31; break;
+    case 8 : jours = 30; break;
+    case 9 : jours = 31; break;
+    case 10 : jours = 30; break;
+    case 11 : jours = 31; break;
+  }
+  if (request.getParameter("month_start_visibility_proposition")!=null)
+  {
+    form.day_of_month_start_visibility_proposition.options.length=0;
+    form.day_of_month_start_visibility_proposition.options.length=jours;
+  }
+console.log(jours);
+for (var i=0; i<jours; i++)
+  {
+  console.log(i);
+      form.day_of_month_start_visibility_proposition.options[i].text = i+1;
+  }
+}*/
+</script>
 {% endblock %}
