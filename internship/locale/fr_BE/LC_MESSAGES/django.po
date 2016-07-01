@@ -1,0 +1,182 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-04-22 15:14+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "studies"
+msgstr "Études"
+
+msgid "internships"
+msgstr "Stages"
+
+msgid "detail_choice"
+msgstr "Détails des choix"
+
+msgid "first_choice"
+msgstr "Choix préféré"
+
+msgid "second_choice"
+msgstr "2ème choix"
+
+msgid "third_choice"
+msgstr "3ème choix"
+
+msgid "fourth_choice"
+msgstr "4ème choix"
+
+msgid "student_list"
+msgstr "Liste des étudiants"
+
+msgid "all_internships"
+msgstr "Tous les stages"
+
+msgid "internship_modification"
+msgstr "Modification du stage"
+
+msgid "new_internship"
+msgstr "Nouveau stage"
+
+msgid "internships_managment"
+msgstr "Gestion des stages"
+
+msgid "internships_offers"
+msgstr "Offres de stage"
+
+msgid "periods_list"
+msgstr "Liste des périodes"
+
+msgid "hospital_list"
+msgstr "Liste des hôpitaux"
+
+msgid "internships_masters_list"
+msgstr "Liste des maîtres de stage"
+
+msgid "student_sumup"
+msgstr "Bilan des étudiants"
+
+msgid "student"
+msgstr "Étudiant"
+
+msgid "block_internship_selection"
+msgstr "Bloquer la sélection des stages"
+
+msgid "activate_internship_selection"
+msgstr "Activer la sélection des stages"
+
+msgid "choose_internships"
+msgstr "Choisissez vos stages"
+
+msgid "summary_your_choices_and_affectation"
+msgstr "Résumé de vos choix et affectations"
+
+msgid "organization"
+msgstr "Hôpital"
+
+msgid "choose_a_hospital"
+msgstr "Chosir un hôpital"
+
+msgid "choose_spec_see_record_choice"
+msgstr "Choisissez une spécialité pour voir vos choix déjà effectués."
+
+msgid "all_ready_4_choice_spec"
+msgstr "Vous avez déjà soumis vos 4 choix pour cette spécialité."
+
+msgid "not_4_choice_spec"
+msgstr "Vous n'avez pas encore soumis vos 4 choix pour cette spécialité."
+
+msgid "internships_masters"
+msgstr "Maîtres de stages"
+
+msgid "speciality"
+msgstr "Spécialité"
+
+msgid "reference"
+msgstr "Référence"
+
+msgid "name"
+msgstr "Nom"
+
+msgid "forname"
+msgstr "Prénom"
+
+msgid "civility"
+msgstr "Civilité"
+
+msgid "type"
+msgstr "Type"
+
+msgid "mail"
+msgstr "Email"
+
+msgid "periods"
+msgstr "Périodes"
+
+msgid "add_period"
+msgstr "Ajouter une période"
+
+msgid "period_creation"
+msgstr "Créer une période"
+
+msgid "date_start"
+msgstr "Date début"
+
+msgid "date_end"
+msgstr "Date de fin"
+
+msgid "places"
+msgstr "Hôpitaux"
+
+msgid "all_places"
+msgstr "Tous les hôpitaux"
+
+msgid "noma"
+msgstr "Noma"
+
+msgid "gender"
+msgstr "Sexe"
+
+msgid "email"
+msgstr "Email"
+
+msgid "phone_mobile"
+msgstr "Numéro de Téléphone / Numéro de portable"
+
+msgid "language"
+msgstr "Langue"
+
+msgid "address"
+msgstr "Adresse"
+
+msgid "choice_receive_by_administration"
+msgstr "Choix reçus par l'administration"
+
+msgid "student_affectation"
+msgstr "Affectation de stage"
+
+msgid "no_result"
+msgstr "Aucun résultat"
+
+msgid "details"
+msgstr "Détails"
+
+msgid "choice_modification"
+msgstr "Modification des choix"
+
+msgid "academic_year"
+msgstr "Année académique"
+
+msgid "internship_choice"
+msgstr "Choix de stage"
