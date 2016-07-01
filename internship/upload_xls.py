@@ -289,48 +289,58 @@ def __save_xls_masters(request, file_name, user):
 
         form = InternshipMasterForm(data=request.POST)
         if row[col_firstname].value and row[col_lastname].value:
-            master = InternshipMaster.find_master_by_firstname_name(row[col_firstname].value, row[col_lastname].value)
-            if len(master) == 0:
+            master_check = InternshipMaster.find_master_by_firstname_name(row[col_firstname].value, row[col_lastname].value)
+            if len(master_check) == 0:
                 master = InternshipMaster()
+            else:
+                master = master_check[0]
 
-            if row[col_organization_reference].value:
-                reference = ""
-                if int(row[col_organization_reference].value) < 10 :
-                    reference = "0"+str(row[col_organization_reference].value)
+            if row[col_organization_reference].value.isdigit():
+                if row[col_organization_reference].value:
+                    reference = ""
+                    check_reference = row[col_organization_reference].value.strip(' ')
+                    if check_reference != "":
+                        if check_reference[0][0] != "0":
+                            if int(check_reference) < 10 :
+                                reference = "0"+str(check_reference)
+                            else :
+                                reference = str(check_reference)
+                        else :
+                            reference = str(check_reference)
+
+                        organization = Organization.search(reference=reference)
+                        master.organization = organization[0]
+                    else :
+                        master.organization = None
+
+                if row[col_firstname].value:
+                    master.first_name = row[col_firstname].value
                 else :
-                    reference = str(row[col_organization_reference].value)
-                organization = Organization.search(reference=reference)
+                    master.first_name = " "
 
-                master.organization = organization[0]
+                if row[col_lastname].value:
+                    master.last_name = row[col_lastname].value
+                else :
+                    master.last_name = " "
 
-            if row[col_firstname].value:
-                master.first_name = row[col_firstname].value
-            else :
-                master.first_name = " "
+                if row[col_reference].value:
+                    master.reference = row[col_reference].value
+                else:
+                    master.reference = " "
 
-            if row[col_lastname].value:
-                master.last_name = row[col_lastname].value
-            else :
-                master.last_name = " "
+                if row[col_civility].value:
+                    master.civility = row[col_civility].value
+                else:
+                    master.civility = " "
 
-            if row[col_reference].value:
-                master.reference = row[col_reference].value
-            else:
-                master.reference = " "
+                if row[col_mastery].value:
+                    master.type_mastery = row[col_mastery].value
+                else:
+                    master.type_mastery = " "
 
-            if row[col_civility].value:
-                master.civility = row[col_civility].value
-            else:
-                master.civility = " "
+                if row[col_speciality].value:
+                    master.speciality = row[col_speciality].value
+                else:
+                    master.speciality = " "
 
-            if row[col_mastery].value:
-                master.type_mastery = row[col_mastery].value
-            else:
-                master.type_mastery = " "
-
-            if row[col_speciality].value:
-                master.speciality = row[col_speciality].value
-            else:
-                master.speciality = " "
-
-            master.save()
+                master.save()

@@ -96,21 +96,21 @@ class InternshipMaster(models.Model):
                         ('EMERGENCY',_('Emergency')),
                         ('GERIATRICS',_('Geriatrics')))
 
-    organization     = models.ForeignKey('internship.Organization')
+    organization     = models.ForeignKey('internship.Organization', null=True)
     #internship_offer = models.ForeignKey(InternshipOffer)
     first_name = models.CharField(max_length=50, blank=True, null=True, db_index=True)
     last_name = models.CharField(max_length=50, blank=True, null=True, db_index=True)
-    reference = models.CharField(max_length=30, blank=True, null=True)
-    civility = models.CharField(max_length=20, blank=True, null=True)
-    type_mastery = models.CharField(max_length=20, blank=True, null=True)
-    speciality = models.CharField(max_length=20, blank=True, null=True)
+    reference = models.CharField(max_length=50, blank=True, null=True)
+    civility = models.CharField(max_length=50, blank=True, null=True)
+    type_mastery = models.CharField(max_length=50, blank=True, null=True)
+    speciality = models.CharField(max_length=50, blank=True, null=True)
 
     @staticmethod
     def find_masters():
         return InternshipMaster.objects.all()
 
     def __str__(self):
-        return u"%s - %s" % (self.person, self.reference)
+        return u"%s" % (self.reference)
 
     @staticmethod
     def find_masters_by_speciality_and_organization(speciality, organization):
