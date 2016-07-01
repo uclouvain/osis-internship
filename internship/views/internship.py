@@ -27,7 +27,7 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
-from internship.models import InternshipOffer, InternshipChoice, Organization
+from internship.models import InternshipEnrollment, InternshipOffer, InternshipChoice, Organization, Period
 from internship.forms import InternshipChoiceForm, InternshipOfferForm
 from base import models as mdl
 from django.utils.translation import ugettext_lazy as _
@@ -391,3 +391,164 @@ def internships_block(request, block):
         edit_internship.save()
 
     return HttpResponseRedirect(reverse('internships_home'))
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def internships_modification_student(request, registration_id):
+    student = mdl.student.find_by(registration_id=registration_id, full_registration = True)
+    #get in order descending to have the first choices in first lines in the insert (line 114)
+    student_choice = InternshipChoice.find_by_student_desc(student)
+    #First get the value of the option's value for the sort
+    if request.method == 'GET':
+        organization_sort_value = request.GET.get('organization_sort')
+
+    #Then select Internship Offer depending of the option
+    if organization_sort_value and organization_sort_value != "0":
+        query = InternshipOffer.find_interships_by_organization(organization_sort_value)
+    else :
+        query = InternshipOffer.find_internships()
+
+    #Change the query into a list
+    query=list(query)
+    #delete the internships in query when they are in the student's selection then rebuild the query
+    index = 0
+    for choice in student_choice:
+        for internship in query :
+            if internship.organization == choice.organization and \
+                internship.learning_unit_year == choice.learning_unit_year :
+                    choice.maximum_enrollments =  internship.maximum_enrollments
+                    choice.selectable =  internship.selectable
+                    query[index] = 0
+            index += 1
+        query = [x for x in query if x != 0]
+        index = 0
+    query = [x for x in query if x != 0]
+
+    #insert the student choice into the global query, at first position,
+    #if they are in organization_sort_value (if it exist)
+    for choice in student_choice :
+        if organization_sort_value and organization_sort_value != "0" :
+            if choice.organization.name == organization_sort_value :
+                query.insert(0,choice)
+        else :
+            query.insert(0,choice)
+
+    for internship in query:
+        number_first_choice = len(InternshipChoice.find_by(internship.organization, internship.learning_unit_year, s_choice = 1))
+        internship.number_first_choice = number_first_choice
+
+    # Create the options for the selected list, delete duplicated
+    query_organizations = InternshipOffer.find_internships()
+    internship_organizations = []
+    for internship in query_organizations:
+        internship_organizations.append(internship.organization)
+    internship_organizations = list(set(internship_organizations))
+
+    all_internships = InternshipOffer.find_internships()
+    all_learning_unit_year = []
+    for choice in all_internships:
+        all_learning_unit_year.append(choice.learning_unit_year)
+    all_learning_unit_year = list(set(all_learning_unit_year))
+    for luy in all_learning_unit_year :
+        size = len(InternshipChoice.find_by(s_learning_unit_year=luy, s_student=student))
+        luy.size = size
+        tab = luy.title.replace(" ", "")
+        luy.tab = tab
+
+    periods = Period.find_all()
+
+    return render(request, "internship_modification_student.html", {'section': 'internship',
+                                                'all_internships' : query,
+                                                'all_organizations' : internship_organizations,
+                                                'organization_sort_value' : organization_sort_value,
+                                                'all_learning_unit_year' : all_learning_unit_year,
+                                                'periods' : periods,
+                                                'registration_id':registration_id,
+                                                 })
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def internship_save_modification_student(request) :
+    if request.POST['organization']:
+        organization_list = request.POST.getlist('organization')
+
+    if request.POST['learning_unit_year']:
+        learning_unit_year_list = request.POST.getlist('learning_unit_year')
+
+    all_internships = InternshipOffer.find_internships()
+    all_learning_unit_year = []
+    for choice in all_internships:
+        all_learning_unit_year.append(choice.learning_unit_year)
+    all_learning_unit_year = list(set(all_learning_unit_year))
+    for luy in all_learning_unit_year :
+        tab = luy.title.replace(" ", "")
+        luy.tab = tab
+
+    preference_list_tab = []
+    for luy in all_learning_unit_year:
+        preference_list_tab.append('preference'+luy.tab)
+
+    preference_list= list()
+    for pref_tab in preference_list_tab:
+        if request.POST[pref_tab]:
+            for pref in request.POST.getlist(pref_tab) :
+                preference_list.append(pref)
+
+    if request.POST['periods_s']:
+        periods_list = request.POST.getlist('periods_s')
+
+    if request.POST.get('fixthis'):
+        fixthis_list = request.POST.getlist('fixthis')
+    index = 0
+    fixthis_final_list = []
+    for value in fixthis_list:
+        if value == '1'and fixthis_list[index-1]=='0':
+            del fixthis_list[index-1]
+        index += 1
+
+    index = 0
+    for r in preference_list:
+        if r == "0":
+            learning_unit_year_list[index] = 0
+            organization_list[index] = 0
+        index += 1
+
+    registration_id = request.POST.getlist('registration_id')
+    student = mdl.student.find_by(registration_id=registration_id[0], full_registration = True)
+    organization_list = [x for x in organization_list if x != 0]
+    learning_unit_year_list = [x for x in learning_unit_year_list if x != 0]
+    preference_list = [x for x in preference_list if x != '0']
+    periods_list = [x for x in periods_list if x != '0']
+
+    InternshipChoice.objects.filter(student=student).delete()
+    index = preference_list.__len__()
+    for x in range(0, index):
+        new_choice = InternshipChoice()
+        new_choice.student = student[0]
+        organization = Organization.search(reference=organization_list[x])
+        new_choice.organization = organization[0]
+        learning_unit_year = mdl.learning_unit_year.search(title=learning_unit_year_list[x])
+        new_choice.learning_unit_year = learning_unit_year[0]
+        new_choice.choice = preference_list[x]
+        if fixthis_list[x] == '1':
+            new_choice.priority = True
+        else :
+            new_choice.priority = False
+        new_choice.save()
+
+    index = periods_list.__len__()
+    InternshipEnrollment.objects.filter(student=student).delete()
+    for x in range(0, index):
+        if periods_list[x] != '0':
+            new_enrollment = InternshipEnrollment()
+            tab_period = periods_list[x].split( )
+            period = Period.find_by(name=tab_period[0])
+            organization = Organization.search(reference=tab_period[1])
+            learning_unit_year = mdl.learning_unit_year.search(acronym=tab_period[2])
+            internship = InternshipOffer.find_interships_by_learning_unit_organization(learning_unit_year[0].title, organization[0].reference)
+            new_enrollment.student = student[0]
+            new_enrollment.internship_offer = internship[0]
+            new_enrollment.place = organization[0]
+            new_enrollment.period = period[0]
+            new_enrollment.save()
+    return HttpResponseRedirect(reverse('internship_modification_student'))

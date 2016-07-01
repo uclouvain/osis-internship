@@ -50,17 +50,17 @@
         </tr>
       </thead>
       <tbody>
-        <form action="{%url 'periods_create' %}" method="post">
+        <form action="{%url 'periods_new' %}" method="post">
           {% csrf_token %}
           <tr>
             <td style="text-align:center;">
               <input type="text" name="period_name" required>
             </td>
             <td style="text-align:center;">
-              <input type="text" name="period_name" required>
+              <input type="date" name="date_start" placeholder="AAAA-MM-JJ"/ required>
             </td>
             <td style="text-align:center;">
-              <input type="text" name="period_name" required>
+              <input type="date" name="date_end" placeholder="AAAA-MM-JJ"/ required>
             </td>
           </tr>
       </tbody>
