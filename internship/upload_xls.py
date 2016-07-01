@@ -31,7 +31,7 @@ from openpyxl import load_workbook
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 
-from internship.models import Organization, OrganizationAddress, InternshipOffer, InternshipMaster, Period
+from internship.models import Organization, OrganizationAddress, InternshipOffer, InternshipMaster, Period, PeriodInternshipPlaces
 from internship.forms import OrganizationForm, InternshipOfferForm, InternshipMasterForm
 from base import models as mdl
 
@@ -214,15 +214,12 @@ def __save_xls_internships(request, file_name, user):
                 spec = "Stage aux Urgences"
 
             learning_unit_year = mdl.learning_unit_year.search(title=spec)
-            check_internship = InternshipOffer.find_interships_by_learning_unit_organization(spec,organization[0].name)
+            check_internship = InternshipOffer.find_interships_by_learning_unit_organization(spec,organization[0].reference)
 
             number_place = 0
             for x in range (3,15):
-                period_search = "P"+str(x)
                 number_place += int(row[x].value)
-                period = Period.find_by(period_name)
 
-            print (number_place)
             if len(check_internship) != 0:
                 internship = InternshipOffer.find_intership_by_id(check_internship[0].id)
             else :
@@ -233,8 +230,24 @@ def __save_xls_internships(request, file_name, user):
             internship.title = spec
             internship.maximum_enrollments = number_place
             internship.selectable = True
-
             internship.save()
+
+            number_period = 1
+            for x in range (3,15):
+                period_search = "P"+str(number_period)
+                number_period += 1
+                period = Period.find_by(name=period_search)
+                check_relation = PeriodInternshipPlaces.find_by(period, internship)
+
+                if len(check_relation) != 0:
+                    relation = PeriodInternshipPlaces.find_by(relation_id = check_relation[0].id)
+                else :
+                    relation = PeriodInternshipPlaces()
+
+                relation.period = period[0]
+                relation.internship = internship
+                relation.number_places = int(row[x].value)
+                relation.save()
 
 @login_required
 def upload_masters_file(request):

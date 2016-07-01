@@ -206,10 +206,45 @@ class Period(models.Model):
     date_start = models.DateField()
     date_end = models.DateField()
 
+    @staticmethod
+    def find_by(name=None):
+        queryset = Period.objects
+
+        if name:
+            queryset = queryset.filter(name=name)
+            has_criteria = True
+
+        if has_criteria:
+            return queryset
+        else:
+            return None
+
 class PeriodInternshipPlaces(models.Model):
     period = models.ForeignKey('internship.Period')
     internship = models.ForeignKey('internship.InternshipOffer')
     number_places = models.IntegerField(blank=None, null=False)
+
+    @staticmethod
+    def find_by(period=None, internship=None, relation_id=None):
+        queryset = PeriodInternshipPlaces.objects
+
+        if period:
+            queryset = queryset.filter(period=period)
+            has_criteria = True
+
+        if internship:
+            queryset = queryset.filter(internship=internship)
+            has_criteria = True
+
+        if relation_id:
+            queryset = queryset.get(pk=relation_id)
+            has_criteria = True
+
+        if has_criteria:
+            return queryset
+        else:
+            return None
+
 
 class Organization(models.Model):
     name = models.CharField(max_length=255)
