@@ -75,10 +75,10 @@ class InternshipOffer(models.Model):
         )
 
 class InternshipEnrollment(models.Model):
-    learning_unit_enrollment = models.ForeignKey('base.LearningUnitEnrollment')
+    student = models.ForeignKey('base.student')
     internship_offer = models.ForeignKey(InternshipOffer)
-    start_date = models.DateField()
-    end_date = models.DateField()
+    place = models.ForeignKey('internship.Organization')
+    period = models.ForeignKey('internship.Period')
 
     def __str__(self):
         return u"%s" % self.learning_unit_enrollment.student
@@ -140,6 +140,7 @@ class InternshipChoice(models.Model):
     organization        = models.ForeignKey('internship.Organization')
     learning_unit_year  = models.ForeignKey('base.LearningUnitYear')
     choice              = models.IntegerField()
+    priority            = models.BooleanField()
 
     @staticmethod
     def find_by_all_student():
@@ -203,8 +204,24 @@ class InternshipChoice(models.Model):
 
 class Period(models.Model):
     name = models.CharField(max_length=255)
-    date_start = models.DateField()
-    date_end = models.DateField()
+    date_start = models.DateField(blank=False)
+    date_end = models.DateField(blank=False)
+
+    def find_all():
+        return Period.objects.all()
+
+    @staticmethod
+    def find_by(name=None):
+        queryset = Period.objects
+
+        if name:
+            queryset = queryset.filter(name=name)
+            has_criteria = True
+
+        if has_criteria:
+            return queryset
+        else:
+            return None
 
 class PeriodInternshipPlaces(models.Model):
     period = models.ForeignKey('internship.Period')

@@ -23,22 +23,38 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
+from internship.models import Period
 from internship.forms import PeriodForm
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_periods(request):
-    return render(request, "periods.html", {'section': 'internship'})
+    periods = Period.find_all()
+    return render(request, "periods.html", {'section': 'internship',
+                                            'periods' : periods})
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def period_create(request):
+    f = PeriodForm(data=request.POST)
+    return render(request, "period_create.html", {'section': 'internship',
+                                                    'form' : f
+                                                    })
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def period_new(request):
+    form = PeriodForm(data=request.POST)
+    period = Period()
 
-    f = PeriodForm(request.POST)
+    period.name = request.POST['period_name']
+    period.date_start = request.POST['date_start']
+    period.date_end = request.POST['date_end']
 
-    return render(request, "period_create.html", {'section':    'internship',
-                                                  'form':       f, })
+    period.save()
+    return render(request, "period_create.html", {'section': 'internship'})

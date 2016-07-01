@@ -223,7 +223,7 @@ def __save_xls_internships(request, file_name, user):
             internship.title = spec
             internship.maximum_enrollments = row[col_max_places].value
             internship.selectable = True
-            
+
             internship.save()
 
 @login_required
