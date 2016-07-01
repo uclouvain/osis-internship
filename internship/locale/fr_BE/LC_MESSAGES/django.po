@@ -113,7 +113,7 @@ msgid "forname"
 msgstr "Prénom"
 
 msgid "civility"
-msgstr "Civilité
+msgstr "Civilité"
 
 msgid "type"
 msgstr "Type"
