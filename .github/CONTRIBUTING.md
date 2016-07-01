@@ -23,7 +23,7 @@
 
 ### Modèle :
 - Chaque fichier décrivant un modèle doit se trouver dans le répertoire *'models'*
-- Chaque fichier contenant une classe du modèle ne peut renvoyer que des instances du modèle qu'elle déclare. Autrement dit, un fichier my_model.py contient une classe My_model() et des méthodes qui ne peuvent renvoyer que des queryset venant de My_model
+- Chaque fichier contenant une classe du modèle ne peut renvoyer que des instances du modèle qu'elle déclare. Autrement dit, un fichier my_model.py contient une classe MyModel() et des méthodes qui ne peuvent renvoyer que des records venant de MyModel
 
 ### Formulaire :
 - Utiliser les objets Forms fournis par Django (https://docs.djangoproject.com/en/1.9/topics/forms/)
