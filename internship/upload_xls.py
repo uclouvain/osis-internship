@@ -31,7 +31,7 @@ from openpyxl import load_workbook
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 
-from internship.models import Organization, OrganizationAddress, InternshipOffer, InternshipMaster
+from internship.models import Organization, OrganizationAddress, InternshipOffer, InternshipMaster, Period
 from internship.forms import OrganizationForm, InternshipOfferForm, InternshipMasterForm
 from base import models as mdl
 
@@ -172,7 +172,6 @@ def __save_xls_internships(request, file_name, user):
     form = InternshipOfferForm(request)
     col_reference = 0
     col_spec = 1
-    col_max_places = 4
     index = 1
     # Iterates over the lines of the spreadsheet.
     for count, row in enumerate(worksheet.rows):
@@ -197,22 +196,33 @@ def __save_xls_internships(request, file_name, user):
                 organization = Organization.search(reference=reference)
                 #internship.organization = organization[0]
 
-            if row[col_spec].value == "CH":
+            spec_value = row[col_spec].value
+            spec_value = spec_value.replace(" ","")
+            spec_value = spec_value.replace("*","")
+
+            if spec_value == "CH":
                 spec = "Stage en Chirurgie"
-            if row[col_spec].value == "GE":
+            if spec_value == "GE":
                 spec = "Stage en Gériatrie"
-            if row[col_spec].value == "GO":
+            if spec_value == "GO":
                 spec = "Stage en Gynécologie-Obstétrique"
-            if row[col_spec].value == "MI":
+            if spec_value == "MI":
                 spec = "Stage en Médecine interne"
-            if row[col_spec].value == "PE":
+            if spec_value == "PE":
                 spec = "Stage en Pédiatrie"
-            if row[col_spec].value == "UR":
+            if spec_value == "UR":
                 spec = "Stage aux Urgences"
 
             learning_unit_year = mdl.learning_unit_year.search(title=spec)
             check_internship = InternshipOffer.find_interships_by_learning_unit_organization(spec,organization[0].name)
 
+            number_place = 0
+            for x in range (3,15):
+                period_search = "P"+str(x)
+                number_place += int(row[x].value)
+                period = Period.find_by(period_name)
+
+            print (number_place)
             if len(check_internship) != 0:
                 internship = InternshipOffer.find_intership_by_id(check_internship[0].id)
             else :
@@ -221,9 +231,9 @@ def __save_xls_internships(request, file_name, user):
             internship.organization = organization[0]
             internship.learning_unit_year = learning_unit_year[0]
             internship.title = spec
-            internship.maximum_enrollments = row[col_max_places].value
+            internship.maximum_enrollments = number_place
             internship.selectable = True
-            
+
             internship.save()
 
 @login_required
