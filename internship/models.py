@@ -39,7 +39,7 @@ class InternshipOffer(models.Model):
 
     @staticmethod
     def find_internships():
-        return InternshipOffer.objects.all().order_by('organization__reference')
+        return InternshipOffer.objects.all().order_by('learning_unit_year__acronym', 'organization__reference')
 
     @staticmethod
     def find_interships_by_learning_unit_organization(learning_unit_year, organization):
