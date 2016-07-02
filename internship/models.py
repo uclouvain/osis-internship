@@ -96,21 +96,21 @@ class InternshipMaster(models.Model):
                         ('EMERGENCY',_('Emergency')),
                         ('GERIATRICS',_('Geriatrics')))
 
-    organization     = models.ForeignKey('internship.Organization')
+    organization     = models.ForeignKey('internship.Organization', null=True)
     #internship_offer = models.ForeignKey(InternshipOffer)
     first_name = models.CharField(max_length=50, blank=True, null=True, db_index=True)
     last_name = models.CharField(max_length=50, blank=True, null=True, db_index=True)
-    reference = models.CharField(max_length=30, blank=True, null=True)
-    civility = models.CharField(max_length=20, blank=True, null=True)
-    type_mastery = models.CharField(max_length=20, blank=True, null=True)
-    speciality = models.CharField(max_length=20, blank=True, null=True)
+    reference = models.CharField(max_length=50, blank=True, null=True)
+    civility = models.CharField(max_length=50, blank=True, null=True)
+    type_mastery = models.CharField(max_length=50, blank=True, null=True)
+    speciality = models.CharField(max_length=50, blank=True, null=True)
 
     @staticmethod
     def find_masters():
         return InternshipMaster.objects.all()
 
     def __str__(self):
-        return u"%s - %s" % (self.person, self.reference)
+        return u"%s" % (self.reference)
 
     @staticmethod
     def find_masters_by_speciality_and_organization(speciality, organization):
@@ -223,10 +223,45 @@ class Period(models.Model):
         else:
             return None
 
+    @staticmethod
+    def find_by(name=None):
+        queryset = Period.objects
+
+        if name:
+            queryset = queryset.filter(name=name)
+            has_criteria = True
+
+        if has_criteria:
+            return queryset
+        else:
+            return None
+
 class PeriodInternshipPlaces(models.Model):
     period = models.ForeignKey('internship.Period')
     internship = models.ForeignKey('internship.InternshipOffer')
     number_places = models.IntegerField(blank=None, null=False)
+
+    @staticmethod
+    def find_by(period=None, internship=None, relation_id=None):
+        queryset = PeriodInternshipPlaces.objects
+
+        if period:
+            queryset = queryset.filter(period=period)
+            has_criteria = True
+
+        if internship:
+            queryset = queryset.filter(internship=internship)
+            has_criteria = True
+
+        if relation_id:
+            queryset = queryset.get(pk=relation_id)
+            has_criteria = True
+
+        if has_criteria:
+            return queryset
+        else:
+            return None
+
 
 class Organization(models.Model):
     name = models.CharField(max_length=255)
