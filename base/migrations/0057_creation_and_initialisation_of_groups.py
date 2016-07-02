@@ -29,12 +29,12 @@ def add_init_tutors_group(apps, schema_editor):
     tutors_group, created = Group.objects.get_or_create(name='tutors')
     if created:
         # Add permissions to group
-        offers_perm = Permission.objects.get(codename='can_access_offer')
-        offers_years_perm = Permission.objects.get(codename='can_acces_offeryear')
-        student_path_perm = Permission.objects.get(codename='can_acces_student_path')
-        evaluation_perm = Permission.objects.get(codename='can_acces_evaluation')
-        score_encoding_perm = Permission.objects.get(codename='can_acces_scoreencoding')
-        tutors_group.permissions.add(offers_perm, student_path_perm, offers_years_perm, evaluation_perm, score_encoding_perm)
+        catalog_perm = Permission.objects.get(codename='can_access_catalog')
+        offer_perm = Permission.objects.get(codename='can_access_offer')
+        student_path_perm = Permission.objects.get(codename='can_access_student_path')
+        evaluation_perm = Permission.objects.get(codename='can_access_evaluation')
+        score_encoding_perm = Permission.objects.get(codename='can_access_scoreencoding')
+        tutors_group.permissions.add(catalog_perm, student_path_perm,offer_perm, evaluation_perm, score_encoding_perm)
 
         # Add existing users to group
         for tutor in list(Tutor.objects.all()):
@@ -51,14 +51,14 @@ def add_init_pgm_managers_group(apps, schema_editor):
     pgm_managers_group, created = Group.objects.get_or_create(name='program_managers')
     if created:
         # Add permissions to group
-        offers_perm = Permission.objects.get(codename='can_access_offer')
-        offers_years_perm = Permission.objects.get(codename='can_acces_offeryear')
-        student_path_perm = Permission.objects.get(codename='can_acces_student_path')
-        evaluation_perm = Permission.objects.get(codename='can_acces_evaluation')
-        score_encoding_perm = Permission.objects.get(codename='can_acces_scoreencoding')
+        catalog_perm = Permission.objects.get(codename='can_access_catalog')
+        offer_perm = Permission.objects.get(codename='can_access_offer')
+        student_path_perm = Permission.objects.get(codename='can_access_student_path')
+        evaluation_perm = Permission.objects.get(codename='can_access_evaluation')
+        score_encoding_perm = Permission.objects.get(codename='can_access_scoreencoding')
         academic_year_perm = Permission.objects.get(codename='can_access_academicyear')
-        academic_calendar_perm = Permission.objects.get(codename='can_acces_academic_clendar')
-        pgm_managers_group.permissions.add(offers_perm, student_path_perm, offers_years_perm,
+        academic_calendar_perm = Permission.objects.get(codename='can_access_academic_clendar')
+        pgm_managers_group.permissions.add(catalog_perm, student_path_perm, offer_perm,
                                            evaluation_perm, score_encoding_perm,
                                            academic_year_perm,academic_calendar_perm)
 
@@ -77,7 +77,7 @@ def add_init_students_group(apps, schema_editor):
     student_group, created = Group.objects.get_or_create(name='students')
     if created:
         # Add permissions to group
-        student_path_perm = Permission.objects.get(codename='can_acces_student_path')
+        student_path_perm = Permission.objects.get(codename='can_access_student_path')
         student_group.permissions.add(student_path_perm)
 
         # Add existing users to group

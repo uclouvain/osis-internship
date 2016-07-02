@@ -55,7 +55,7 @@ class Organization(models.Model):
 
     class Meta:
         permissions = (
-            ("can_acces_organization", "Can access organization"),
+            ("can_access_organization", "Can access organization"),
         )
 
 

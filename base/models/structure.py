@@ -70,7 +70,7 @@ class Structure(models.Model):
 
     class Meta:
         permissions = (
-            ("can_acces_structure", "Can access structure"),
+            ("can_access_structure", "Can access structure"),
         )
 
 

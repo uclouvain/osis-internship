@@ -46,7 +46,7 @@ class ScoresEncoding(models.Model):
         db_table = 'app_scores_encoding'
 
         permissions = (
-            ("can_acces_scoreencoding", "Can access scoreencoding"),
+            ("can_access_scoreencoding", "Can access scoreencoding"),
         )
 
 

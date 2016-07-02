@@ -44,6 +44,7 @@ class Offer(models.Model):
     class Meta:
         permissions = (
             ("can_access_offer", "Can access offer"),
+            ("can_access_catalog", "Can access catalog"),
         )
 
 

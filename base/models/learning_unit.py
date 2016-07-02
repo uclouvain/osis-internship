@@ -48,7 +48,7 @@ class LearningUnit(models.Model):
 
     class Meta:
         permissions = (
-            ("can_acces_leaningunit", "Can access learning unit"),
+            ("can_access_learningunit", "Can access learning unit"),
         )
 
 

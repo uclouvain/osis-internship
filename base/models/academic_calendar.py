@@ -52,7 +52,7 @@ class AcademicCalendar(models.Model):
 
     class Meta:
         permissions = (
-            ("can_acces_academic_clendar", "Can access academic calendar"),
+            ("can_access_academic_calendar", "Can access academic calendar"),
         )
 
 

@@ -46,8 +46,8 @@ class OfferEnrollment(models.Model):
 
     class Meta:
         permissions = (
-            ("can_acces_student_path", "Can access student path"),
-            ("can_acces_evaluation", "Can access evaluation"),
+            ("can_access_student_path", "Can access student path"),
+            ("can_access_evaluation", "Can access evaluation"),
         )
 
 

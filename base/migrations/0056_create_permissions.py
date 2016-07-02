@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='academiccalendar',
-            options={'permissions': (('can_acces_academic_clendar', 'Can access academic calendar'),)},
+            options={'permissions': (('can_access_academic_calendar', 'Can access academic calendar'),)},
         ),
         migrations.AlterModelOptions(
             name='academicyear',
@@ -22,23 +22,19 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterModelOptions(
             name='learningunit',
-            options={'permissions': (('can_acces_leaningunit', 'Can access learning unit'),)},
+            options={'permissions': (('can_access_learningunit', 'Can access learning unit'),)},
         ),
         migrations.AlterModelOptions(
             name='offer',
-            options={'permissions': (('can_access_offer', 'Can access offer'),)},
+            options={'permissions': (('can_access_offer', 'Can access offer'), ('can_access_catalog', 'Can access catalog'), )},
         ),
         migrations.AlterModelOptions(
             name='offerenrollment',
-            options={'permissions': (('can_acces_student_path', 'Can access student path'), ('can_acces_evaluation', 'Can access evaluation'))},
-        ),
-        migrations.AlterModelOptions(
-            name='offeryear',
-            options={'permissions': (('can_acces_offeryear', 'Can access offeryear'),)},
+            options={'permissions': (('can_access_student_path', 'Can access student path'), ('can_access_evaluation', 'Can access evaluation'))},
         ),
         migrations.AlterModelOptions(
             name='organization',
-            options={'permissions': (('can_acces_organization', 'Can access organization'),)},
+            options={'permissions': (('can_access_organization', 'Can access organization'),)},
         ),
         migrations.AlterModelOptions(
             name='person',
@@ -46,10 +42,10 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterModelOptions(
             name='scoresencoding',
-            options={'managed': False, 'permissions': (('can_acces_scoreencoding', 'Can access scoreencoding'),)},
+            options={'managed': False, 'permissions': (('can_access_scoreencoding', 'Can access scoreencoding'),)},
         ),
         migrations.AlterModelOptions(
             name='structure',
-            options={'permissions': (('can_acces_structure', 'Can access structure'),)},
+            options={'permissions': (('can_access_structure', 'Can access structure'),)},
         ),
     ]
