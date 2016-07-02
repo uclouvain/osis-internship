@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 from django.core.management.sql import emit_post_migrate_signal
 
-from django.db import migrations, models
+from django.db import migrations
 from base.models.program_manager import ProgramManager
 from base.models.student import Student
 from base.models.tutor import Tutor
