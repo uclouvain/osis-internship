@@ -44,7 +44,7 @@
                 <p>{% trans 'desc_lnk_assessments' %}</p>
             </div>
             {% endif %}
-            {% if perms.internship.can_access_internships %}
+            {% if perms.internship.can_access_internship %}
             <div class="col-md-1"><i class="fa fa-user-md" style="font-size: 400%; color: #6699FF;"></i></div>
             <div class="col-md-5">
               <h4 class="media-heading"><a href="{% url 'internships_home' %}" id="lnk_internships">{% trans 'internships' %}</a></h4>
