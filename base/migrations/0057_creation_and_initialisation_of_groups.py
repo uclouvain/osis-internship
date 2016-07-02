@@ -37,7 +37,9 @@ def add_init_tutors_group(apps, schema_editor):
         tutors_group.permissions.add(offers_perm, student_path_perm, offers_years_perm, evaluation_perm, score_encoding_perm)
 
         # Add existing users to group
-        [tutor.person.user.groups.add(tutors_group) for tutor in list(Tutor.objects.all())]
+        for tutor in list(Tutor.objects.all()):
+            if tutor.person.user:
+                tutor.person.user.groups.add(tutors_group)
 
 
 def add_init_pgm_managers_group(apps, schema_editor):
@@ -56,11 +58,14 @@ def add_init_pgm_managers_group(apps, schema_editor):
         score_encoding_perm = Permission.objects.get(codename='can_acces_scoreencoding')
         academic_year_perm = Permission.objects.get(codename='can_access_academicyear')
         academic_calendar_perm = Permission.objects.get(codename='can_acces_academic_clendar')
-        pgm_managers_group.permissions.add(offers_perm, student_path_perm, offers_years_perm, evaluation_perm, score_encoding_perm,
-                              academic_year_perm,academic_calendar_perm)
+        pgm_managers_group.permissions.add(offers_perm, student_path_perm, offers_years_perm,
+                                           evaluation_perm, score_encoding_perm,
+                                           academic_year_perm,academic_calendar_perm)
 
         # Add existing users to group
-        [pgm_managers.person.user.groups.add(pgm_managers_group) for pgm_managers in list(ProgramManager.objects.all())]
+        for pgm_managers in list(ProgramManager.objects.all()):
+            if pgm_managers.person.user:
+                pgm_managers.person.user.groups.add(pgm_managers_group)
 
 
 def add_init_students_group(apps, schema_editor):
@@ -76,7 +81,9 @@ def add_init_students_group(apps, schema_editor):
         student_group.permissions.add(student_path_perm)
 
         # Add existing users to group
-        [student.person.user.groups.add(student_group) for student in list(Student.objects.all())]
+        for student in list(Student.objects.all()):
+            if student.person.user:
+                student.person.user.groups.add(student_group)
 
 
 class Migration(migrations.Migration):
