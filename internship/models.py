@@ -72,6 +72,7 @@ class InternshipOffer(models.Model):
     class Meta:
         permissions = (
             ("is_internship_manager", "Is Internship Manager"),
+            ("can_access_internship","Can access internships"),
         )
 
 class InternshipEnrollment(models.Model):

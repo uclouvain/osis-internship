@@ -50,6 +50,11 @@ class AcademicCalendar(models.Model):
     def __str__(self):
         return u"%s %s" % (self.academic_year, self.title)
 
+    class Meta:
+        permissions = (
+            ("can_access_academic_calendar", "Can access academic calendar"),
+        )
+
 
 def find_highlight_academic_calendars():
     return AcademicCalendar.objects.filter(start_date__lte=timezone.now(), end_date__gte=timezone.now(),

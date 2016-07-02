@@ -28,7 +28,9 @@ from django.contrib.auth.backends import RemoteUserBackend
 from django.contrib.auth.middleware import RemoteUserMiddleware
 from django.contrib import auth
 from django.contrib.auth import backends
+from django.contrib.auth.models import Group
 from django.core.exceptions import ImproperlyConfigured
+from base.models import tutor, program_manager, student
 
 from base.models.person import Person, find_by_global_id, find_by_user
 
@@ -59,23 +61,25 @@ class ShibbolethAuthBackend(RemoteUserBackend):
             })
             if created:
                 user = self.configure_user(user, user_infos)
+            else:
+                user = self.__update_user(user, user_infos)
+                self.__update_person(user, user_infos)
         else:
             try:
                 user = UserModel._default_manager.get_by_natural_key(username)
+                user = self.__update_user(user, user_infos)
+                self.__update_person(user, user_infos)
             except UserModel.DoesNotExist:
                 pass
-        user = self.__update_user(user, user_infos)
-        self.__update_person(user, user_infos)
         return user
 
     def clean_username(self, username):
         return username.split("@")[0]
 
     def configure_user(self, user, user_infos):
-        user.last_name = user_infos['USER_LAST_NAME']
-        user.first_name = user_infos['USER_FIRST_NAME']
-        user.email = user_infos['USER_EMAIL']
-        user.save()
+        user = self.__update_user(self, user, user_infos)
+        person = self.__update_person(self, user, user_infos)
+        user = self.make_user_groups(self, user, person)
         return user
 
     def __update_user(self, user, user_infos):
@@ -99,6 +103,23 @@ class ShibbolethAuthBackend(RemoteUserBackend):
             person.email = user.email
             person.global_id = user_infos['USER_FGS']
         person.save()
+        return person
+
+    def __make_user_groups(self, user, person):
+        # Check Tutor
+        if tutor.find_by_person(person):
+            tutors_group = Group.objects.get(name='tutors')
+            user.groups.add(tutors_group)
+        # Check PgmManager
+        if program_manager.find_by_person(person):
+            pgm_managers_group = Group.objects.get(name='program_managers')
+            user.groups.add(pgm_managers_group)
+        # Check Student
+        if student.find_by_person(person):
+            student_group = Group.objects.get(name='students')
+            user.groups.add(student_group)
+        user.save()
+        return user
 
 
 class ShibbolethAuthMiddleware(RemoteUserMiddleware):
@@ -154,3 +175,4 @@ class ShibbolethAuthMiddleware(RemoteUserMiddleware):
 
     def clean_string(self, string):
         return string.encode('raw_unicode_escape').decode("utf-8")
+
