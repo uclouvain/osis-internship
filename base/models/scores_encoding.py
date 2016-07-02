@@ -45,6 +45,11 @@ class ScoresEncoding(models.Model):
         managed = False
         db_table = 'app_scores_encoding'
 
+        permissions = (
+            ("can_acces_scoreencoding", "Can access scoreencoding"),
+        )
+
+
 
 def search(user, learning_unit_year_id=None, offer_year_id=None, learning_unit_year_ids=None):
     queryset = ScoresEncoding.objects

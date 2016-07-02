@@ -48,6 +48,11 @@ class AcademicYear(models.Model):
     def __str__(self):
         return u"%s-%s" % (self.year, self.year + 1)
 
+    class Meta:
+        permissions = (
+            ("can_access_academicyear", "Can access academic year"),
+        )
+
 
 def find_academic_year_by_id(academic_year_id):
     return AcademicYear.objects.get(pk=academic_year_id)

@@ -53,6 +53,11 @@ class Organization(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        permissions = (
+            ("can_acces_organization", "Can access organization"),
+        )
+
 
 def find_by_id(organization_id):
     return Organization.objects.get(pk=organization_id)

@@ -68,6 +68,11 @@ class Structure(models.Model):
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)
 
+    class Meta:
+        permissions = (
+            ("can_acces_structure", "Can access structure"),
+        )
+
 
 def find_structures():
     return Structure.objects.all().order_by('acronym')

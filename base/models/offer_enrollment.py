@@ -44,6 +44,12 @@ class OfferEnrollment(models.Model):
     def __str__(self):
         return u"%s - %s" % (self.student, self.offer_year)
 
+    class Meta:
+        permissions = (
+            ("can_acces_student_path", "Can access student path"),
+            ("can_acces_evaluation", "Can access evaluation"),
+        )
+
 
 def find_by_student(a_student):
     enrollments = OfferEnrollment.objects.filter(student=a_student)

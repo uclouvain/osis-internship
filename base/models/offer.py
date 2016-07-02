@@ -41,6 +41,11 @@ class Offer(models.Model):
     def __str__(self):
         return self.title
 
+    class Meta:
+        permissions = (
+            ("can_access_offer", "Can access offer"),
+        )
+
 
 def find_by_id(offer_id):
     return Offer.objects.get(pk=offer_id)

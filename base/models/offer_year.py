@@ -118,6 +118,11 @@ class OfferYear(models.Model):
                                             academic_year=self.academic_year).exclude(id=self.id)
         return None
 
+    class Meta:
+        permissions = (
+            ("can_acces_offeryear", "Can access offeryear"),
+        )
+
 
 def find_by_academic_year(academic_yr):
     return OfferYear.objects.filter(academic_year=int(academic_yr))
