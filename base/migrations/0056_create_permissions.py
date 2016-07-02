@@ -38,7 +38,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterModelOptions(
             name='person',
-            options={'permissions': (('is_administrator', 'Is administrator'),)},
+            options={'permissions': (('is_administrator', 'Is administrator'), ('is_institution_administrator', 'Is institution administrator '),)},
         ),
         migrations.AlterModelOptions(
             name='scoresencoding',

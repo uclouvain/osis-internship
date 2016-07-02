@@ -57,7 +57,7 @@ def add_init_pgm_managers_group(apps, schema_editor):
         evaluation_perm = Permission.objects.get(codename='can_access_evaluation')
         score_encoding_perm = Permission.objects.get(codename='can_access_scoreencoding')
         academic_year_perm = Permission.objects.get(codename='can_access_academicyear')
-        academic_calendar_perm = Permission.objects.get(codename='can_access_academic_clendar')
+        academic_calendar_perm = Permission.objects.get(codename='can_access_academic_calendar')
         pgm_managers_group.permissions.add(catalog_perm, student_path_perm, offer_perm,
                                            evaluation_perm, score_encoding_perm,
                                            academic_year_perm,academic_calendar_perm)
@@ -86,6 +86,19 @@ def add_init_students_group(apps, schema_editor):
                 student.person.user.groups.add(student_group)
 
 
+def add_init_institution_administration_group(apps, schema_editor):
+    db_alias = schema_editor.connection.alias
+    emit_post_migrate_signal(2, False, db_alias)
+    Group = apps.get_model('auth', 'Group')
+    Permission = apps.get_model('auth', 'Permission')
+    inst_administrators_group, created = Group.objects.get_or_create(name='institution_administration')
+    if created:
+        is_inst_admin_perm = Permission.objects.get(codename='is_institution_administrator')
+        organisation_perm = Permission.objects.get(codename='can_access_organization')
+        structure_perm = Permission.objects.get(codename='can_access_structure')
+        inst_administrators_group.permissions.add(is_inst_admin_perm, organisation_perm, structure_perm)
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -98,4 +111,5 @@ class Migration(migrations.Migration):
         migrations.RunPython(add_init_tutors_group),
         migrations.RunPython(add_init_pgm_managers_group),
         migrations.RunPython(add_init_students_group),
+        migrations.RunPython(add_init_institution_administration_group)
     ]

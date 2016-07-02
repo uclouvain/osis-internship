@@ -82,6 +82,7 @@ class Person(models.Model):
     class Meta:
         permissions = (
             ("is_administrator", "Is administrator"),
+            ("is_institution_administrator", "Is institution administrator "),
         )
 
 
