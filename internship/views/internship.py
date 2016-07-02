@@ -31,6 +31,7 @@ from internship.models import InternshipEnrollment, InternshipOffer, InternshipC
 from internship.forms import InternshipChoiceForm, InternshipOfferForm
 from base import models as mdl
 from django.utils.translation import ugettext_lazy as _
+from collections import OrderedDict
 
 import urllib.request
 import unicodedata
@@ -112,7 +113,7 @@ def internships(request):
         internship_organizations.append(internship.organization)
         internship_learning_unit_year.append(internship.learning_unit_year)
     internship_organizations = list(set(internship_organizations))
-    internship_learning_unit_year = list(set(internship_learning_unit_year))
+    internship_learning_unit_year = list(OrderedDict.fromkeys(internship_learning_unit_year))
     for luy in internship_learning_unit_year:
         tab = luy.title.replace(" ", "")
         luy.tab = tab
@@ -180,7 +181,7 @@ def internships_stud(request):
     all_learning_unit_year = []
     for choice in all_internships:
         all_learning_unit_year.append(choice.learning_unit_year)
-    all_learning_unit_year = list(set(all_learning_unit_year))
+    all_learning_unit_year = list(OrderedDict.fromkeys(all_learning_unit_year))
     for luy in all_learning_unit_year:
         size = len(InternshipChoice.find_by(s_learning_unit_year=luy, s_student=student))
         luy.size = size
