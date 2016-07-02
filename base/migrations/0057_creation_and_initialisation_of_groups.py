@@ -20,7 +20,7 @@ def add_administrators_group(apps, schema_editor):
         administrators_group.permissions.add(is_admin_perm)
 
 
-def add_init_tutors_group(apps, schema_editor):
+def add_tutors_group(apps, schema_editor):
     # create group
     db_alias = schema_editor.connection.alias
     emit_post_migrate_signal(2, False, db_alias)
@@ -36,13 +36,8 @@ def add_init_tutors_group(apps, schema_editor):
         score_encoding_perm = Permission.objects.get(codename='can_access_scoreencoding')
         tutors_group.permissions.add(catalog_perm, student_path_perm,offer_perm, evaluation_perm, score_encoding_perm)
 
-        # Add existing users to group
-        for tutor in list(Tutor.objects.all()):
-            if tutor.person.user:
-                tutor.person.user.groups.add(tutors_group)
 
-
-def add_init_pgm_managers_group(apps, schema_editor):
+def add_pgm_managers_group(apps, schema_editor):
     # create group
     db_alias = schema_editor.connection.alias
     emit_post_migrate_signal(2, False, db_alias)
@@ -62,13 +57,8 @@ def add_init_pgm_managers_group(apps, schema_editor):
                                            evaluation_perm, score_encoding_perm,
                                            academic_year_perm,academic_calendar_perm)
 
-        # Add existing users to group
-        for pgm_managers in list(ProgramManager.objects.all()):
-            if pgm_managers.person.user:
-                pgm_managers.person.user.groups.add(pgm_managers_group)
 
-
-def add_init_students_group(apps, schema_editor):
+def add_students_group(apps, schema_editor):
     # create group
     db_alias = schema_editor.connection.alias
     emit_post_migrate_signal(2, False, db_alias)
@@ -79,11 +69,6 @@ def add_init_students_group(apps, schema_editor):
         # Add permissions to group
         student_path_perm = Permission.objects.get(codename='can_access_student_path')
         student_group.permissions.add(student_path_perm)
-
-        # Add existing users to group
-        for student in list(Student.objects.all()):
-            if student.person.user:
-                student.person.user.groups.add(student_group)
 
 
 def add_init_institution_administration_group(apps, schema_editor):
@@ -108,8 +93,8 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunPython(add_administrators_group),
-        migrations.RunPython(add_init_tutors_group),
-        migrations.RunPython(add_init_pgm_managers_group),
-        migrations.RunPython(add_init_students_group),
+        migrations.RunPython(add_tutors_group),
+        migrations.RunPython(add_pgm_managers_group),
+        migrations.RunPython(add_students_group),
         migrations.RunPython(add_init_institution_administration_group)
     ]
