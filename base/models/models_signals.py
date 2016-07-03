@@ -23,18 +23,29 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.apps import AppConfig
-from backoffice.queue import queue
-from pika.exceptions import AMQPConnectionError
+from django.contrib.auth.models import Group
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from base.models.program_manager import ProgramManager
+from base.models.student import Student
+from base.models.tutor import Tutor
+
+@receiver(post_save, sender=Tutor)
+def add_to_tutors_group(sender, instance, **kwargs):
+    if kwargs.get('created', True) and instance.person.user:
+        tutors_group = Group.objects.get(name='tutors')
+        instance.person.user.groups.add(tutors_group)
 
 
-class BaseConfig(AppConfig):
-    name = 'base'
-    paper_sheet_queue = 'PAPER_SHEET_QUEUE'
+@receiver(post_save, sender=Student)
+def add_to_students_group(sender, instance, **kwargs):
+    if kwargs.get('created', True) and instance.person.user:
+        students_group = Group.objects.get(name='students')
+        instance.person.user.groups.add(students_group)
 
-    def ready(self):
-        from base.models.models_signals import add_to_tutors_group,add_to_pgm_managers_group, add_to_students_group
-        from base.views.score_encoding import get_json_data_scores_sheets
-        # if django.core.exceptions.AppRegistryNotReady: Apps aren't loaded yet.
-        # ===> This exception says that there is an error in the implementation of method ready(self) !!
-        queue.listen_queue(self.paper_sheet_queue, get_json_data_scores_sheets)
+
+@receiver(post_save, sender=ProgramManager)
+def add_to_pgm_managers_group(sender, instance, **kwargs):
+    if kwargs.get('created', True) and instance.person.user:
+        pgm_managers_group = Group.objects.get(name='program_managers')
+        instance.person.user.groups.add(pgm_managers_group)
