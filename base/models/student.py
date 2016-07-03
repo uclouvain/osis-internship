@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.contrib.auth.models import Group
 from django.db import models
 from django.contrib import admin
 from django.core.exceptions import ObjectDoesNotExist
