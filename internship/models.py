@@ -268,6 +268,9 @@ class InternshipSpeciality(models.Model):
     name = models.CharField(max_length=125, blank=False, null=False)
     mandatory = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.name
+
     @staticmethod
     def find_by(learning_unit=None, name=None):
         queryset = InternshipSpeciality.objects

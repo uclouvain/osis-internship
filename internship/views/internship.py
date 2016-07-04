@@ -217,30 +217,25 @@ def internships_save(request):
     if request.POST['speciality']:
         speciality_list = request.POST.getlist('speciality')
 
-    if request.POST['preferenceCH']:
-        for pref in request.POST.getlist('preferenceCH'):
-            preference_list.append(pref)
+    all_internships = InternshipOffer.find_internships()
+    all_speciality = []
+    for choice in all_internships:
+        all_speciality.append(choice.speciality)
 
-    # Delete the comment when internship in Geriatrie will be imported
-    # if request.POST['preferenceGE']:
-    #    for pref in request.POST.getlist('preferenceGE') :
-    #        preference_list.append(pref)
+    all_speciality = list(OrderedDict.fromkeys(all_speciality))
+    for luy in all_speciality :
+        tab = luy.name.replace(" ", "")
+        luy.tab = tab
 
-    if request.POST['preferenceGO']:
-        for pref in request.POST.getlist('preferenceGO'):
-            preference_list.append(pref)
+    preference_list_tab = []
+    for luy in all_speciality:
+        preference_list_tab.append('preference'+luy.tab)
 
-    if request.POST['preferenceMI']:
-        for pref in request.POST.getlist('preferenceMI'):
-            preference_list.append(pref)
-
-    if request.POST['preferencePE']:
-        for pref in request.POST.getlist('preferencePE'):
-            preference_list.append(pref)
-
-    if request.POST['preferenceUR']:
-        for pref in request.POST.getlist('preferenceUR'):
-            preference_list.append(pref)
+    preference_list= list()
+    for pref_tab in preference_list_tab:
+        if request.POST[pref_tab]:
+            for pref in request.POST.getlist(pref_tab) :
+                preference_list.append(pref)
 
     index = 0
     for r in preference_list:
@@ -259,9 +254,10 @@ def internships_save(request):
         new_choice.student = student[0]
         organization = Organization.search(reference=organization_list[x])
         new_choice.organization = organization[0]
-        speciality = mdl.speciality.search(title=speciality_list[x])
+        speciality = InternshipSpeciality.find_by(name=speciality_list[x])
         new_choice.speciality = speciality[0]
         new_choice.choice = preference_list[x]
+        new_choice.priority = False
         new_choice.save()
 
     return HttpResponseRedirect(reverse('internships_stud'))
@@ -528,7 +524,7 @@ def internship_save_modification_student(request) :
         new_choice.student = student[0]
         organization = Organization.search(reference=organization_list[x])
         new_choice.organization = organization[0]
-        speciality = mdl.speciality.search(title=speciality_list[x])
+        speciality = InternshipSpeciality.find_by(name=speciality_list[x])
         new_choice.speciality = speciality[0]
         new_choice.choice = preference_list[x]
         if fixthis_list[x] == '1':
@@ -552,4 +548,6 @@ def internship_save_modification_student(request) :
             new_enrollment.place = organization[0]
             new_enrollment.period = period[0]
             new_enrollment.save()
-    return HttpResponseRedirect(reverse('internship_modification_student'))
+
+    redirect_url = reverse('internships_modification_student', args=[registration_id[0]])
+    return HttpResponseRedirect(redirect_url)

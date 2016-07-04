@@ -41,7 +41,7 @@
     <div class="panel-body">
         <ul class="nav nav-tabs">
           {% for luy in all_speciality %}
-            <li><a data-toggle="tab" href="#tab_{{luy.tab}}">{{luy.title}}</a></li>
+            <li><a data-toggle="tab" href="#tab_{{luy.tab}}">{{luy.name}}</a></li>
           {% endfor %}
             <li><a data-toggle="tab" href="#tab_CHOIX1">{% trans 'Stage au choix 1'%}</a></li>
             <li><a data-toggle="tab" href="#tab_CHOIX2">{% trans 'Stage au choix 2'%}</a></li>
