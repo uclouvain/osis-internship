@@ -181,6 +181,48 @@ msgstr "Academic year"
 msgid "internship_choice"
 msgstr "internship's choices"
 
+msgid "import_internships"
+msgstr "Import internships"
+
+msgid "all_hospitals"
+msgstr "All hospitals"
+
+msgid "import_masters"
+msgstr "Import internship's masters"
+
+msgid "internships_injection"
+msgstr "Internships' injection"
+
+msgid "list_of_all_hospital"
+msgstr "List of all hospital"
+
+msgid "all_city"
+msgstr "All city"
+
+msgid "import_hospital"
+msgstr "Import hospitals"
+
+msgid "add_a_hospital"
+msgstr "Add a hospital"
+
+msgid "places_injection"
+msgstr "Hospitals' injection"
+
+msgid "student_choice"
+msgstr "Students' choice"
+
+msgid "affectation_result"
+msgstr "Affectation's result"
+
+msgid "help_pnl_selectedfiles_internships"
+msgstr "Select a xlsx file for the internships' injection"
+
+msgid "help_pnl_selectedfiles_places"
+msgstr "Select a xlsx file for the hospitals' injection"
+
+msgid "help_pnl_selectedfiles_masters"
+msgstr "Select a xlsx file for the internship's masters' injection"
+
 msgid "internships_specialities"
 msgstr "Internships' specialities"
 
