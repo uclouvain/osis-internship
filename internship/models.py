@@ -29,7 +29,7 @@ from django.utils.translation import ugettext_lazy as _
 
 class InternshipOffer(models.Model):
     organization        = models.ForeignKey('internship.Organization')
-    speciality          = models.ForeignKey('internship.InternshipSpeciality')
+    speciality          = models.ForeignKey('internship.InternshipSpeciality',null=True)
     title = models.CharField(max_length=255)
     maximum_enrollments = models.IntegerField()
     selectable          = models.BooleanField(default=True)
@@ -139,7 +139,7 @@ class InternshipMaster(models.Model):
 class InternshipChoice(models.Model):
     student             = models.ForeignKey('base.Student')
     organization        = models.ForeignKey('internship.Organization')
-    speciality          = models.ForeignKey('internship.InternshipSpeciality')
+    speciality          = models.ForeignKey('internship.InternshipSpeciality',null=True)
     choice              = models.IntegerField()
     priority            = models.BooleanField()
 

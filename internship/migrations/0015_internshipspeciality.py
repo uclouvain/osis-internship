@@ -69,13 +69,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='internshipchoice',
             name='speciality',
-            field=models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to='internship.InternshipSpeciality'),
+            field=models.ForeignKey(null=True, default=None, on_delete=django.db.models.deletion.CASCADE, to='internship.InternshipSpeciality'),
             preserve_default=False,
         ),
         migrations.AddField(
             model_name='internshipoffer',
             name='speciality',
-            field=models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to='internship.InternshipSpeciality'),
+            field=models.ForeignKey(null=True, default=None, on_delete=django.db.models.deletion.CASCADE, to='internship.InternshipSpeciality'),
             preserve_default=False,
         ),
         migrations.RunPython(remove_internship_access_to_student_group),
