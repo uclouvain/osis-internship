@@ -115,6 +115,7 @@ def student_save_information_modification(request, registration_id):
     information = InternshipStudentInformation.find_by_person(student[0].person)
     if not information:
         information = InternshipStudentInformation()
+        information.person = student[0].person
     information.email = request.POST['student_email']
     information.phone_mobile = request.POST['student_phone']
     information.location = request.POST['student_location']
