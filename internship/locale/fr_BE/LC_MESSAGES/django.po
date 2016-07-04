@@ -234,3 +234,9 @@ msgstr "Ajouter une spécialité"
 
 msgid "mandatory"
 msgstr "obligatoire"
+
+msgid "internship_block_moment"
+msgstr "Les sélections de stage sont bloquées actuellement."
+
+msgid "return"
+msgstr "Retour"

@@ -116,16 +116,6 @@
                           {% endif %}
                         {% endfor %}
                       </ul>
-                    <label> Stage en Gériatrie </label><br/>
-                      <ul>
-                        {% for choice in internship_choice %}
-                          {% if choice.speciality.name == "Stage en Gériatrie" %}
-                            <li> {% trans 'Hôpital' %} :
-                                    {{ choice.organization.reference }} - {{ choice.organization.name }} |
-                                    Choix : {{ choice.choice }}
-                          {% endif %}
-                        {% endfor %}
-                      </ul>
                     <label> Stage en Gynécologie-Obstétrique </label><br/>
                       <ul>
                         {% for choice in internship_choice %}

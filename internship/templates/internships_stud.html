@@ -288,9 +288,11 @@
               </div>
             </div>
           </div>
-          <button type="submit" class="btn btn-primary" title="{% trans 'Send'%}" id="bt_interships_save">
-              <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Soumettre
-          </button>
+          {% if selectable == True %}
+            <button type="submit" class="btn btn-primary" title="{% trans 'Send'%}" id="bt_interships_save">
+                <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Soumettre
+            </button>
+          {%endif%}
         </div>
         </form>
   </div>
