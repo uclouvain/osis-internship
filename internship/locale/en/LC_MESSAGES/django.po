@@ -234,3 +234,9 @@ msgstr "Add a speciality"
 
 msgid "mandatory"
 msgstr "Mandatory"
+
+msgid "internship_block_moment"
+msgstr "internships' selection are currently blocked."
+
+msgid "return"
+msgstr "Return"
