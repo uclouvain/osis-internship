@@ -29,38 +29,30 @@
 {% block breadcrumb %}
   <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
   <li><a href="{% url 'internships_home' %}">{% trans 'internships' %}</a></li>
-  <li><a href="{% url 'internships_periods' %}">{% trans 'periods' %}</a></li>
-  <li class="active">{% trans 'add_period' %}</li>
+  <li><a href="{% url 'internships_specialities' %}">{% trans 'internships_specialities' %}</a></li>
+  <li class="active">{% trans 'add_speciality' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'period_creation' %}</h2>
+    <h2>{% trans 'create_a_speciality' %}</h2>
   </div>
-  {% if message %}
-    <script language="javascript" type="text/javascript">
-      alert("Période correctement créée");
-    </script>
-  {% endif %}
   <table style="height:100%; width:100%;">
       <thead>
         <tr>
             <th style="text-align:center;">{% trans 'name' %}</th>
-            <th style="text-align:center;">{% trans 'date_start' %}</th>
-            <th style="text-align:center;">{% trans 'date_end' %}</th>
+            <th style="text-align:center;">{% trans 'mandatory' %}</th>
         </tr>
       </thead>
       <tbody>
-        <form action="{%url 'periods_new' %}" method="post">
+        <form action="{%url 'speciality_new' %}" method="post">
           {% csrf_token %}
           <tr>
             <td style="text-align:center;">
-              <input type="text" name="period_name" required>
+              <input type="hidden" name="learning_unit" value={{learning_unit}}></input>
+              <input type="text" name="name" placeholder="Stage en ..." required>
             </td>
             <td style="text-align:center;">
-              <input type="date" name="date_start" placeholder="AAAA-MM-JJ"/ required>
-            </td>
-            <td style="text-align:center;">
-              <input type="date" name="date_end" placeholder="AAAA-MM-JJ"/ required>
+              <input type="checkbox" name="mandatory">
             </td>
           </tr>
       </tbody>
@@ -72,7 +64,7 @@
     </form>
 
     <br><br>
-    <a href="{% url 'internships_periods' %}" class="btn btn-default" title="{% trans 'return'%}"
+    <a href="{% url 'internships_specialities' %}" class="btn btn-default" title="{% trans 'return'%}"
       id="lnk_internships" >{% trans 'return' %}
       <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"/>
     </a>

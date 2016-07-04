@@ -49,7 +49,7 @@
       <thead>
         <tr>
             <th style="text-align:center;">{% trans 'organization' %}</th>
-            <th style="text-align:center;">{% trans 'learning_unit_year' %}</th>
+            <th style="text-align:center;">{% trans 'speciality' %}</th>
             <th style="text-align:center;">{% trans 'maximum_enrollments' %}</th>
         </tr>
       </thead>
@@ -67,10 +67,10 @@
               </select>
             </td>
             <td style="text-align:center;">
-              <select name="learning_unit_year">
-               {% for learning_unit_year in all_learning_unit_year %}
-                  <option value={{ learning_unit_year.title }} {%if learning_unit_year.title == select_learning_unit_year %}selected{%endif%}>
-                      {{ learning_unit_year.title }}
+              <select name="speciality">
+               {% for speciality in all_speciality %}
+                  <option value={{ speciality.name }} {%if speciality.name == select_speciality %}selected{%endif%}>
+                      {{ speciality.name}}
                   </option>
                {% endfor %}
               </select>

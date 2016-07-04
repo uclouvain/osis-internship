@@ -28,10 +28,11 @@ from .models import *
 
 
 class InternshipOfferAdmin(admin.ModelAdmin):
-    list_display = ('organization','learning_unit_year', 'title', 'maximum_enrollments', 'selectable')
-    fieldsets = ((None, {'fields': ('organization','learning_unit_year', 'title', 'maximum_enrollments', 'selectable')}),)
+    list_display = ('organization','speciality', 'title', 'maximum_enrollments', 'selectable')
+    fieldsets = ((None, {'fields': ('organization','speciality', 'title', 'maximum_enrollments', 'selectable')}),)
 
 admin.site.register(InternshipOffer, InternshipOfferAdmin)
+
 
 class InternshipEnrollmentAdmin(admin.ModelAdmin):
     list_display = ('student', 'internship_offer', 'place', 'period')
@@ -48,8 +49,8 @@ admin.site.register(InternshipMaster, InternshipMasterAdmin)
 
 
 class InternshipChoiceAdmin(admin.ModelAdmin):
-    list_display = ('student', 'organization', 'learning_unit_year', 'choice', 'priority')
-    fieldsets = ((None, {'fields': ('student', 'organization', 'learning_unit_year', 'choice', 'priority')}),)
+    list_display = ('student', 'organization', 'speciality', 'choice')
+    fieldsets = ((None, {'fields': ('student', 'organization', 'speciality', 'choice')}),)
 
 admin.site.register(InternshipChoice, InternshipChoiceAdmin)
 
@@ -58,6 +59,12 @@ class PeriodInternshipPlacesAdmin(admin.ModelAdmin):
     fieldsets = ((None, {'fields': ('period', 'internship', 'number_places')}),)
 
 admin.site.register(PeriodInternshipPlaces, PeriodInternshipPlacesAdmin)
+
+class InternshipSpecialityAdmin(admin.ModelAdmin):
+    list_display = ('learning_unit', 'name', 'mandatory')
+    fieldsets = ((None, {'fields': ('learning_unit', 'name', 'mandatory')}),)
+
+admin.site.register(InternshipSpeciality, InternshipSpecialityAdmin)
 
 
 class OrganizationAdmin(admin.ModelAdmin):
@@ -72,9 +79,3 @@ class OrganizationAddressAdmin(admin.ModelAdmin):
     fieldsets = ((None, {'fields': ('organization', 'label', 'location', 'postal_code', 'city', 'country')}),)
 
 admin.site.register(OrganizationAddress, OrganizationAddressAdmin)
-
-class PeriodAdmin(admin.ModelAdmin):
-    list_display = ('name', 'date_start', 'date_end')
-    fieldsets = ((None, {'fields': ('name', 'date_start', 'date_end')}),)
-
-admin.site.register(Period, PeriodAdmin)

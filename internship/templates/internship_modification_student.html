@@ -40,7 +40,7 @@
     <div class="panel panel-default">
     <div class="panel-body">
         <ul class="nav nav-tabs">
-          {% for luy in all_learning_unit_year %}
+          {% for luy in all_speciality %}
             <li><a data-toggle="tab" href="#tab_{{luy.tab}}">{{luy.title}}</a></li>
           {% endfor %}
             <li><a data-toggle="tab" href="#tab_CHOIX1">{% trans 'Stage au choix 1'%}</a></li>
@@ -52,7 +52,7 @@
         <input type="hidden" name="organization_sort" value="{{ organization.name }}"/>
         {% csrf_token %}
         <div class="tab-content">
-          {% for luy in all_learning_unit_year %}
+          {% for luy in all_speciality %}
           <div id="tab_{{luy.tab}}" class="tab-pane fade in active">
               <div class="panel panel-default">
                 <div class="tab-content">
@@ -70,7 +70,7 @@
                       </thead>
                       <tbody>
                         {% for internship in all_internships %}
-                        {% if internship.learning_unit_year == luy %}
+                        {% if internship.speciality == luy %}
                           <tr>
                             <td>
                               <input type="hidden" name="organization"
@@ -80,8 +80,8 @@
                                 {{ internship.organization.reference }} - {{ internship.organization }}
                             </td>
                             <td align="center">
-                              <input type="hidden" name="learning_unit_year"
-                              value="{{ internship.learning_unit_year.title }}"/>
+                              <input type="hidden" name="speciality"
+                              value="{{ internship.speciality.name }}"/>
                               {{ internship.maximum_enrollments }}
                             </td>
                             <td align="center">
@@ -110,7 +110,7 @@
                                 {% for period in periods %}
                                   <option value="{{period.name}}
                                   {{internship.organization.reference }}
-                                  {{internship.learning_unit_year.acronym }}">{{period.name}}</option>
+                                  {{internship.speciality.name }}">{{period.name}}</option>
                                 {% endfor %}
                               </select>
                             </td>
@@ -143,7 +143,7 @@
                       </thead>
                       <tbody>
                         {% for internship in all_internships %}
-                        {% if internship.learning_unit_year.title = "Stage au choix"%}
+                        {% if internship.speciality.name = "Stage au choix"%}
                           <tr>
                             <td>
                               <input type="hidden" name="organization"
@@ -151,8 +151,8 @@
                                 {{ internship.organization.reference }} - {{ internship.organization }}
                             </td>
                             <td align="center">
-                              <input type="hidden" name="learning_unit_year"
-                              value="{{ internship.learning_unit_year.title }}"/>
+                              <input type="hidden" name="speciality"
+                              value="{{ internship.speciality.name}"/>
                               {{ internship.maximum_enrollments }}
                             </td>
                             <td align="center">
@@ -203,7 +203,7 @@
                       </thead>
                       <tbody>
                         {% for internship in all_internships %}
-                        {% if internship.learning_unit_year.title = "Stage au choix"%}
+                        {% if internship.speciality.name = "Stage au choix"%}
                           <tr>
                             <td>
                               <input type="hidden" name="organization"
@@ -211,8 +211,8 @@
                                 {{ internship.organization.reference }} - {{ internship.organization }}
                             </td>
                             <td align="center">
-                              <input type="hidden" name="learning_unit_year"
-                              value="{{ internship.learning_unit_year.title }}"/>
+                              <input type="hidden" name="speciality"
+                              value="{{ internship.speciality.name }}"/>
                               {{ internship.maximum_enrollments }}
                             </td>
                             <td align="center">

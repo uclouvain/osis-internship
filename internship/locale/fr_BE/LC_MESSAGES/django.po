@@ -180,3 +180,15 @@ msgstr "Année académique"
 
 msgid "internship_choice"
 msgstr "Choix de stage"
+
+msgid "internships_specialities"
+msgstr "Spécialités des stages"
+
+msgid "create_a_speciality"
+msgstr "Créer une spécialité"
+
+msgid "add_speciality"
+msgstr "Ajouter une spécialité"
+
+msgid "mandatory"
+msgstr "obligatoire"

@@ -62,14 +62,14 @@
   <div class="panel panel-default">
     <div class="panel-body">
         <ul class="nav nav-tabs">
-          {% for luy in all_learning_unit_year %}
-            <li><a data-toggle="tab" href="#tab_{{luy.tab}}">{{luy.title}}</a></li>
+          {% for luy in all_speciality %}
+            <li><a data-toggle="tab" href="#tab_{{luy.tab}}">{{luy.name}}</a></li>
           {% endfor %}
             <li><a data-toggle="tab" href="#tab_choice">{% trans 'internship_choice' %}</a></li>
         </ul>
         {% csrf_token %}
         <div class="tab-content">
-          {% for luy in all_learning_unit_year %}
+          {% for luy in all_speciality %}
             <div id="tab_{{luy.tab}}" class="tab-pane fade in active">
               <div class="panel panel-default">
                 <div class="tab-content">
@@ -87,7 +87,7 @@
                         </thead>
                         <tbody>
                           {% for internship in all_internships %}
-                          {% if internship.learning_unit_year == luy %}
+                          {% if internship.speciality == luy %}
                             <tr>
                               <td>
                                 {{ internship.organization.reference }} - {{ internship.organization }}
@@ -146,7 +146,7 @@
                       </thead>
                       <tbody>
                         {% for internship in all_internships %}
-                        {% if internship.learning_unit_year == luy %}
+                        {% if internship.speciality == luy %}
                           <tr>
                             <td>
                               {{ internship.organization.reference }} - {{ internship.organization }}

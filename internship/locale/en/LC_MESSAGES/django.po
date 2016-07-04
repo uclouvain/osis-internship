@@ -180,3 +180,15 @@ msgstr "Academic year"
 
 msgid "internship_choice"
 msgstr "internship's choices"
+
+msgid "internships_specialities"
+msgstr "Internships' specialities"
+
+msgid "create_a_speciality"
+msgstr "Create a speciality"
+
+msgid "add_speciality"
+msgstr "Add a speciality"
+
+msgid "mandatory"
+msdstr "Mandatory"
