@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -373,4 +374,8 @@ class InternshipStudentInformation(models.Model):
 
     @staticmethod
     def find_by_person(person):
-        return InternshipStudentInformation.objects.get(person=person)
+        try:
+            return InternshipStudentInformation.objects.get(person=person)
+        except ObjectDoesNotExist:
+            return None
+

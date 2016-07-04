@@ -61,7 +61,7 @@
             </div>
             <div class="col-md-4">
                 <label>{% trans 'email' %}</label><br>
-                {{ student.information.email | default_if_none:'-' }}
+                {{ information.email | default_if_none:'-' }}
             </div>
         </div>
         <br>
@@ -69,7 +69,7 @@
         <div class="row">
             <div class="col-md-4">
                 <label>{% trans 'phone_mobile' %}</label><br>
-                {{ student.information.phone_mobile | default_if_none:'-' }}
+                {{ information.phone_mobile | default_if_none:'-' }}
             </div>
             <div class="col-md-4">
                 <label>{% trans 'language' %}</label><br>
@@ -77,9 +77,9 @@
             </div>
             <div class="col-md-4">
                 <label>{% trans 'address' %}</label><br>
-                {% if student.information %}
-                  {{ student.information.location | default_if_none:'-' }} {{ student.information.postal_code | default_if_none:'-' }}
-                  {{ student.information.city | default_if_none:'-' }}<br>
+                {% if information %}
+                  {{ information.location | default_if_none:'-' }} {{ information.postal_code | default_if_none:'-' }}
+                  {{ information.city | default_if_none:'-' }}<br>
                 {%endif%}
             </div>
         </div>

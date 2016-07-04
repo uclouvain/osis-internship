@@ -86,16 +86,16 @@ def internships_student_search(request):
 
 
 @login_required
+@permission_required('internship.can_access_internship', raise_exception=True)
 def internships_student_read(request, registration_id):
     student = mdl.student.find_by(registration_id=registration_id)
     information = InternshipStudentInformation.find_by_person(student[0].person)
     student = student[0]
-    if information:
-        student.information = information
     internship_choice = InternshipChoice.find_by_student(student)
 
     return render(request, "student_resume.html",
                            {'student':             student,
+                            'information':         information,
                             'internship_choice':   internship_choice, })
 
 @login_required
@@ -104,11 +104,9 @@ def internship_student_information_modification(request, registration_id):
     student = mdl.student.find_by(registration_id=registration_id)
     information = InternshipStudentInformation.find_by_person(student[0].person)
     student = student[0]
-    if information:
-        student.information = information
-
     return render(request, "student_information_modification.html",
-                           {'student':             student, })
+                           {'student':             student,
+                            'information':         information, })
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
