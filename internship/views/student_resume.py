@@ -23,10 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
-from internship.models import InternshipChoice
+from internship.models import InternshipChoice, InternshipStudentInformation
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -86,12 +88,41 @@ def internships_student_search(request):
 @login_required
 def internships_student_read(request, registration_id):
     student = mdl.student.find_by(registration_id=registration_id)
-    student[0].address = ""
-    address = mdl.person_address.find_by_person(student[0].person)
-    if address:
-        student[0].address = address
-    internship_choice = InternshipChoice.find_by_student(student[0])
+    information = InternshipStudentInformation.find_by_person(student[0].person)
+    student = student[0]
+    if information:
+        student.information = information
+    internship_choice = InternshipChoice.find_by_student(student)
 
     return render(request, "student_resume.html",
-                           {'student':             student[0],
+                           {'student':             student,
                             'internship_choice':   internship_choice, })
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def internship_student_information_modification(request, registration_id):
+    student = mdl.student.find_by(registration_id=registration_id)
+    information = InternshipStudentInformation.find_by_person(student[0].person)
+    student = student[0]
+    if information:
+        student.information = information
+
+    return render(request, "student_information_modification.html",
+                           {'student':             student, })
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def student_save_information_modification(request, registration_id):
+    student = mdl.student.find_by(registration_id=registration_id)
+    information = InternshipStudentInformation.find_by_person(student[0].person)
+
+    information.email = request.POST['student_email']
+    information.phone_mobile = request.POST['student_phone']
+    information.location = request.POST['student_location']
+    information.postal_code = request.POST['student_postal_code']
+    information.city = request.POST['student_city']
+    information.country = request.POST['student_country']
+    information.save()
+
+    redirect_url = reverse('internships_student_read', args=[registration_id])
+    return HttpResponseRedirect(redirect_url)

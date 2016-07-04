@@ -61,7 +61,7 @@
             </div>
             <div class="col-md-4">
                 <label>{% trans 'email' %}</label><br>
-                {{ student.person.email | default_if_none:'-' }}
+                {{ student.information.email | default_if_none:'-' }}
             </div>
         </div>
         <br>
@@ -69,8 +69,7 @@
         <div class="row">
             <div class="col-md-4">
                 <label>{% trans 'phone_mobile' %}</label><br>
-                {{ student.person.phone | default_if_none:'-' }} /
-                {{ student.person.phone_mobile | default_if_none:'-' }}
+                {{ student.information.phone_mobile | default_if_none:'-' }}
             </div>
             <div class="col-md-4">
                 <label>{% trans 'language' %}</label><br>
@@ -78,20 +77,27 @@
             </div>
             <div class="col-md-4">
                 <label>{% trans 'address' %}</label><br>
-                {%if student.address%}
-                  {% for ad in student.address %}
-                    {{ ad.location | default_if_none:'-' }} {{ ad.postal_code | default_if_none:'-' }}
-                    {{ ad.city | default_if_none:'-' }}<br>
-                  {% endfor %}
+                {% if student.information %}
+                  {{ student.information.location | default_if_none:'-' }} {{ student.information.postal_code | default_if_none:'-' }}
+                  {{ student.information.city | default_if_none:'-' }}<br>
                 {%endif%}
             </div>
         </div>
         <br>
 
         <div class="row">
-            <div class="col-md-10">
+            <div class="col-md-9">
                 <label>{% trans 'internships' %}</label>
             </div>
+            {% if perms.internship.is_internship_manager %}
+              <div class="col-md-1">
+                <a class="btn btn-warning" target="_blank" id="lnk_student_information_modification"
+                  href="{% url 'internship_student_information_modification' student.registration_id %}">
+                  <span class="glyphicon glyphicon-pencil" aria-hidden="true"> {% trans 'edit' %}
+                  </span>
+                </a>
+              </div>
+            {% endif %}
         </div>
         <br>
 
