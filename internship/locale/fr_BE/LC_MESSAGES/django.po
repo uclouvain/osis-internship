@@ -180,3 +180,45 @@ msgstr "Année académique"
 
 msgid "internship_choice"
 msgstr "Choix de stage"
+
+msgid "import_internships"
+msgstr "Importer les stages"
+
+msgid "all_hospitals"
+msgstr "Tous les hôpitaux"
+
+msgid "import_masters"
+msgstr "Importer les maîtres de stage"
+
+msgid "internships_injection"
+msgstr "Injection des stages"
+
+msgid "list_of_all_hospital"
+msgstr "Liste de tous les hôpitaux"
+
+msgid "all_city"
+msgstr "toutes les villes"
+
+msgid "import_hospital"
+msgstr "Importer les hôpitaux"
+
+msgid "add_a_hospital"
+msgstr "Ajouter un hôpital"
+
+msgid "places_injection"
+msgstr "Injection des hôpitaux"
+
+msgid "student_choice"
+msgstr "Choix des étudiants"
+
+msgid "affectation_result"
+msgstr "Résultat de l'affectation"
+
+msgid "help_pnl_selectedfiles_internships"
+msgstr "Veuillez sélectionner un fichier xlsx pour l'injection des stages"
+
+msgid "help_pnl_selectedfiles_places"
+msgstr "Veuillez sélectionner un fichier xlsx pour l'injection des hôpitaux"
+
+msgid "help_pnl_selectedfiles_masters"
+msgstr "Veuillez sélectionner un fichier xlsx pour l'injection des maîtres de stages"
