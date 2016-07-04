@@ -31,7 +31,7 @@ from openpyxl import load_workbook
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 
-from internship.models import Organization, OrganizationAddress, InternshipOffer, InternshipMaster, Period, PeriodInternshipPlaces
+from internship.models import Organization, OrganizationAddress, InternshipOffer, InternshipMaster, Period, PeriodInternshipPlaces, InternshipSpeciality
 from internship.forms import OrganizationForm, InternshipOfferForm, InternshipMasterForm
 from base import models as mdl
 
@@ -213,7 +213,7 @@ def __save_xls_internships(request, file_name, user):
             if spec_value == "UR":
                 spec = "Stage aux Urgences"
 
-            learning_unit_year = mdl.learning_unit_year.search(title=spec)
+            speciality = InternshipSpeciality.find_by(name=spec)
             check_internship = InternshipOffer.find_interships_by_learning_unit_organization(spec,organization[0].reference)
 
             number_place = 0
@@ -226,7 +226,7 @@ def __save_xls_internships(request, file_name, user):
                 internship = InternshipOffer()
 
             internship.organization = organization[0]
-            internship.learning_unit_year = learning_unit_year[0]
+            internship.speciality = speciality[0]
             internship.title = spec
             internship.maximum_enrollments = number_place
             internship.selectable = True

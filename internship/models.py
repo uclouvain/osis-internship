@@ -29,7 +29,7 @@ from django.utils.translation import ugettext_lazy as _
 
 class InternshipOffer(models.Model):
     organization        = models.ForeignKey('internship.Organization')
-    learning_unit_year  = models.ForeignKey('base.LearningUnitYear')
+    speciality          = models.ForeignKey('internship.InternshipSpeciality')
     title = models.CharField(max_length=255)
     maximum_enrollments = models.IntegerField()
     selectable          = models.BooleanField(default=True)
@@ -39,17 +39,17 @@ class InternshipOffer(models.Model):
 
     @staticmethod
     def find_internships():
-        return InternshipOffer.objects.all().order_by('learning_unit_year__acronym', 'organization__reference')
+        return InternshipOffer.objects.all().order_by('speciality__name', 'organization__reference')
 
     @staticmethod
-    def find_interships_by_learning_unit_organization(learning_unit_year, organization):
-        internships = InternshipOffer.objects.filter(learning_unit_year__title=learning_unit_year)\
+    def find_interships_by_learning_unit_organization(speciality, organization):
+        internships = InternshipOffer.objects.filter(speciality__name=speciality)\
                                             .filter(organization__reference=organization)
         return internships
 
     @staticmethod
-    def find_interships_by_learning_unit(learning_unit_year):
-        internships = InternshipOffer.objects.filter(learning_unit_year__title=learning_unit_year)
+    def find_interships_by_learning_unit(speciality):
+        internships = InternshipOffer.objects.filter(speciality__name=speciality)
         return internships
 
     @staticmethod
@@ -139,7 +139,7 @@ class InternshipMaster(models.Model):
 class InternshipChoice(models.Model):
     student             = models.ForeignKey('base.Student')
     organization        = models.ForeignKey('internship.Organization')
-    learning_unit_year  = models.ForeignKey('base.LearningUnitYear')
+    speciality          = models.ForeignKey('internship.InternshipSpeciality')
     choice              = models.IntegerField()
     priority            = models.BooleanField()
 
@@ -165,7 +165,7 @@ class InternshipChoice(models.Model):
         return internships
 
     @staticmethod
-    def find_by(s_organization=None, s_learning_unit_year=None, s_organization_ref=None, s_choice=None,
+    def find_by(s_organization=None, s_speciality=None, s_organization_ref=None, s_choice=None,
                 s_define_choice=None, s_student=None):
 
         has_criteria = False
@@ -175,8 +175,8 @@ class InternshipChoice(models.Model):
             queryset = queryset.filter(organization=s_organization)
             has_criteria = True
 
-        if s_learning_unit_year:
-            queryset = queryset.filter(learning_unit_year=s_learning_unit_year)
+        if s_speciality:
+            queryset = queryset.filter(speciality=s_speciality)
             has_criteria = True
 
         if s_organization_ref:
@@ -262,6 +262,35 @@ class PeriodInternshipPlaces(models.Model):
             return queryset
         else:
             return None
+
+class InternshipSpeciality(models.Model):
+    learning_unit = models.ForeignKey('base.LearningUnit')
+    name = models.CharField(max_length=125, blank=False, null=False)
+    mandatory = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name
+
+    @staticmethod
+    def find_by(learning_unit=None, name=None):
+        queryset = InternshipSpeciality.objects
+
+        if learning_unit:
+            queryset = queryset.filter(learning_unit=learning_unit)
+            has_criteria = True
+
+        if name:
+            queryset = queryset.filter(name=name)
+            has_criteria = True
+
+        if has_criteria:
+            return queryset
+        else:
+            return None
+
+    @staticmethod
+    def find_all():
+        return InternshipSpeciality.objects.all().order_by('name')
 
 
 class Organization(models.Model):

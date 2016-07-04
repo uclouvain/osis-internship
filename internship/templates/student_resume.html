@@ -109,7 +109,7 @@
                     <label> Stage en Chirurgie </label><br/>
                       <ul>
                         {% for choice in internship_choice %}
-                          {% if choice.learning_unit_year.title == "Stage en Chirurgie" %}
+                          {% if choice.speciality.name == "Stage en Chirurgie" %}
                             <li> {% trans 'Hôpital' %} :
                                     {{ choice.organization.reference }} - {{ choice.organization.name }} |
                                     Choix : {{ choice.choice }}
@@ -119,7 +119,7 @@
                     <label> Stage en Gériatrie </label><br/>
                       <ul>
                         {% for choice in internship_choice %}
-                          {% if choice.learning_unit_year.title == "Stage en Gériatrie" %}
+                          {% if choice.speciality.name == "Stage en Gériatrie" %}
                             <li> {% trans 'Hôpital' %} :
                                     {{ choice.organization.reference }} - {{ choice.organization.name }} |
                                     Choix : {{ choice.choice }}
@@ -129,7 +129,7 @@
                     <label> Stage en Gynécologie-Obstétrique </label><br/>
                       <ul>
                         {% for choice in internship_choice %}
-                          {% if choice.learning_unit_year.title == "Stage en Gynécologie-Obstétrique" %}
+                          {% if choice.speciality.name == "Stage en Gynécologie-Obstétrique" %}
                             <li> {% trans 'Hôpital' %} :
                                     {{ choice.organization.reference }} - {{ choice.organization.name }} |
                                     Choix : {{ choice.choice }}
@@ -139,7 +139,7 @@
                     <label> Stage en Médecine Interne </label><br/>
                       <ul>
                         {% for choice in internship_choice %}
-                          {% if choice.learning_unit_year.title == "Stage en Médecine interne" %}
+                          {% if choice.speciality.name == "Stage en Médecine interne" %}
                             <li> {% trans 'Hôpital' %} :
                                     {{ choice.organization.reference }} - {{ choice.organization.name }} |
                                     Choix : {{ choice.choice }}
@@ -149,7 +149,7 @@
                     <label> Stage en Pédiatrie </label><br/>
                       <ul>
                         {% for choice in internship_choice %}
-                          {% if choice.learning_unit_year.title == "Stage en Pédiatrie" %}
+                          {% if choice.speciality.name == "Stage en Pédiatrie" %}
                             <li> {% trans 'Hôpital' %} :
                                     {{ choice.organization.reference }} - {{ choice.organization.name }} |
                                     Choix : {{ choice.choice }}
@@ -159,7 +159,7 @@
                     <label> Stage aux Urgences </label><br/>
                       <ul>
                         {% for choice in internship_choice %}
-                          {% if choice.learning_unit_year.title == "Stage aux Urgences" %}
+                          {% if choice.speciality.name == "Stage aux Urgences" %}
                             <li> {% trans 'Hôpital' %} :
                                     {{ choice.organization.reference }} - {{ choice.organization.name }} |
                                     Choix : {{ choice.choice }}

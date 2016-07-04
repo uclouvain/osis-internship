@@ -222,3 +222,15 @@ msgstr "Veuillez sélectionner un fichier xlsx pour l'injection des hôpitaux"
 
 msgid "help_pnl_selectedfiles_masters"
 msgstr "Veuillez sélectionner un fichier xlsx pour l'injection des maîtres de stages"
+
+msgid "internships_specialities"
+msgstr "Spécialités des stages"
+
+msgid "create_a_speciality"
+msgstr "Créer une spécialité"
+
+msgid "add_speciality"
+msgstr "Ajouter une spécialité"
+
+msgid "mandatory"
+msgstr "obligatoire"

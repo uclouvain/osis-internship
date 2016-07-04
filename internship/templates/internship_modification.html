@@ -49,7 +49,7 @@
       <thead>
         <tr>
             <th style="text-align:center;">{% trans 'organization' %}</th>
-            <th style="text-align:center;">{% trans 'learning_unit_year' %}</th>
+            <th style="text-align:center;">{% trans 'speciality' %}</th>
             <th style="text-align:center;">{% trans 'maximum_enrollments' %}</th>
         </tr>
       </thead>
@@ -64,8 +64,8 @@
                     size="32" readonly>
             </td>
             <td style="text-align:center;">
-              <input type="text" name="learning_unit_year"
-                    value="{{ internship.learning_unit_year.title }}" readonly>
+              <input type="text" name="speciality"
+                    value="{{ internship.speciality.name}}" readonly>
             </td>
             <td style="text-align:center;">
               <input type="number" name="maximum_enrollments" value={{ internship.maximum_enrollments}} required></input>

@@ -237,7 +237,7 @@ def student_choice(request, reference):
 
     for al in all_offers:
         number_first_choice = len(InternshipChoice.find_by(s_organization=al.organization,
-                                                           s_learning_unit_year=al.learning_unit_year,
+                                                           s_speciality=al.speciality,
                                                            s_choice=1))
         al.number_first_choice = number_first_choice
 
