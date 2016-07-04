@@ -25,7 +25,7 @@
 ##############################################################################
 import csv
 from django.contrib.auth.models import Group
-from django.db import IntegrityError
+from django.db import IntegrityError, DataError
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from base import models as mdl
@@ -70,8 +70,11 @@ def load_internship_students():
                     try:
                         internships_student.save()
                     except IntegrityError:
-                        print("Duplicate : {}".format(str(person)))
+                        print("Duplicate : {} - {}".format(str(person), columns[1].strip()))
                         duplication_counter += 1
+                    except DataError:
+                        error_counter += 1
+                        print("Data error : {} - {}".format(str(person), columns[1].strip()))
                     if person.user :
                         intern_students_group = Group.objects.get(name='internship_students')
                         person.user.groups.add(intern_students_group)
