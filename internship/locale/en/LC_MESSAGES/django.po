@@ -233,4 +233,4 @@ msgid "add_speciality"
 msgstr "Add a speciality"
 
 msgid "mandatory"
-msdstr "Mandatory"
+msgstr "Mandatory"
