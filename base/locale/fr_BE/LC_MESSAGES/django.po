@@ -833,7 +833,7 @@ msgid "scores_saved"
 msgstr "note(s) enregistrée(s)"
 
 msgid "the_coordinator_must_still_submit_scores"
-msgstr "Le coordinateur doit toujours soumettre les scores"
+msgstr "Le coordinateur doit toujours soumettre les notes"
 
 msgid "no_score_injected"
 msgstr "Aucune note injectée (NB: les notes de votre fichier excel ne sont injectées que si elles sont différentes "

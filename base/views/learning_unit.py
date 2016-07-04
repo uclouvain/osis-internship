@@ -23,10 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
 from . import layout
 
 
+@login_required
+@permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_units(request):
     academic_yr = None
     code = ""
@@ -43,6 +46,8 @@ def learning_units(request):
                                                           'init': "1"})
 
 
+@login_required
+@permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_units_search(request):
     """
     Learning units search
@@ -65,6 +70,8 @@ def learning_units_search(request):
                                                           'init': "0"})
 
 
+@login_required
+@permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_unit_read(request, learning_unit_year_id):
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
     attributions = mdl.attribution.search(learning_unit_id=learning_unit_year.learning_unit.id)

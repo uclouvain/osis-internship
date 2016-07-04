@@ -35,6 +35,7 @@
     <h2>{% trans 'internships_managment' %}</h2>
   </div>
 
+{% if perms.internship.is_internship_manager %}
   <h3>STAC</h3>
   <div class="panel panel-default">
     <div class="panel-body">
@@ -51,6 +52,9 @@
           </li>
           <li>
             <h4 class="media-heading"><a href="{% url 'interships_masters' %}">{% trans 'internships_masters_list' %}</a></h4>
+          </li>
+          <li>
+            <h4 class="media-heading"><a href="{% url 'internships_specialities' %}">{% trans 'internships_specialities' %}</a></h4>
           </li>
           <li>
             <h4 class="media-heading"><a href="{% url 'internships_student_resume' %}">{% trans 'student_sumup' %}</a></h4>
@@ -78,7 +82,7 @@
       </div>
     </div>
   </div>
-
+{% else %}
   <h3>ETUDIANT</h3>
   <div class="panel panel-default">
     <div class="panel-body">
@@ -100,4 +104,5 @@
       </div>
     </div>
   </div>
+{% endif %}
 {% endblock %}

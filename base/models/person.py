@@ -79,6 +79,11 @@ class Person(models.Model):
 
         return u"%s %s %s" % (last_name.upper(), first_name, middle_name)
 
+    class Meta:
+        permissions = (
+            ("is_administrator", "Is administrator"),
+            ("is_institution_administrator", "Is institution administrator "),
+        )
 
 
 def find_by_id(person_id):
