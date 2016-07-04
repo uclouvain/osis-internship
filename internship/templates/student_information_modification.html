@@ -66,11 +66,11 @@
           <div class="row">
               <div class="col-md-4">
                   <label>{% trans 'email' %}</label><br>
-                  <input type="text" name="student_email" value="{{ student.information.email | default_if_none:'-' }}">
+                  <input type="text" name="student_email" value="{{ information.email | default_if_none:'-' }}">
               </div>
               <div class="col-md-4">
                   <label>{% trans 'phone_mobile' %}</label><br>
-                  <input type="text" name="student_phone" value="{{ student.information.phone_mobile | default_if_none:'-' }}">
+                  <input type="text" name="student_phone" value="{{ information.phone_mobile | default_if_none:'-' }}">
               </div>
           </div>
           <br><br>
@@ -79,19 +79,19 @@
             <label>{% trans 'address' %}</label><br>
             <div class="col-md-3">
               <label>{% trans 'location' %}</label><br>
-              <input type="text" name="student_location" value="{{ student.information.location | default_if_none:'-' }}">
+              <input type="text" name="student_location" value="{{ information.location | default_if_none:'-' }}">
             </div>
             <div class="col-md-3">
               <label>{% trans 'postal_code' %}</label><br>
-              <input type="text" name="student_postal_code" value="{{ student.information.postal_code | default_if_none:'-' }}">
+              <input type="text" name="student_postal_code" value="{{ information.postal_code | default_if_none:'-' }}">
             </div>
             <div class="col-md-3">
               <label>{% trans 'city' %}</label><br>
-              <input type="text" name="student_city" value="{{ student.information.city | default_if_none:'-' }}">
+              <input type="text" name="student_city" value="{{ information.city | default_if_none:'-' }}">
             </div>
             <div class="col-md-3">
               <label>{% trans 'country' %}</label><br>
-              <input type="text" name="student_country" value="{{ student.information.country | default_if_none:'-' }}">
+              <input type="text" name="student_country" value="{{ information.country | default_if_none:'-' }}">
             </div>
           </div>
           <br>
