@@ -538,7 +538,7 @@ def internship_save_modification_student(request) :
     for x in range(0, index):
         if periods_list[x] != '0':
             new_enrollment = InternshipEnrollment()
-            tab_period = periods_list[x].split( )
+            tab_period = periods_list[x].split('\\n')
             period = Period.find_by(name=tab_period[0])
             organization = Organization.search(reference=tab_period[1])
             speciality = InternshipSpeciality.find_by(name=tab_period[2])
