@@ -230,6 +230,16 @@ def manager_dissertations_new(request):
         if form.is_valid():
             form.save()
             return redirect('manager_dissertations_list')
+        else:
+            form.fields["proposition_dissertation"].queryset = \
+                PropositionDissertation.objects.filter(visibility=True,
+                                                       active=True,
+                                                       offer_proposition__offer=faculty_adviser)
+            form.fields["author"].queryset = \
+                OfferEnrollment.objects.filter(offer_year__offer=faculty_adviser)
+            form.fields["offer_year_start"].queryset = \
+                OfferYear.objects.filter(offer=faculty_adviser)
+
     else:
         form = ManagerDissertationForm(initial={'active': True})
         form.fields["proposition_dissertation"].queryset = \
