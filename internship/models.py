@@ -343,6 +343,7 @@ class Organization(models.Model):
 
         return queryset
 
+
 class OrganizationAddress(models.Model):
     organization = models.ForeignKey('Organization')
     label = models.CharField(max_length=20)
@@ -359,3 +360,17 @@ class OrganizationAddress(models.Model):
     @staticmethod
     def find_by_id(organization_address_id):
         return OrganizationAddress.objects.get(pk=organization_address_id)
+
+
+class InternshipStudentInformation(models.Model):
+    person = models.ForeignKey('base.Person')
+    location = models.CharField(max_length=255)
+    postal_code = models.CharField(max_length=20)
+    city = models.CharField(max_length=255)
+    country = models.CharField(max_length=255)
+    email = models.EmailField(max_length=255, blank=True, null=True)
+    phone_mobile = models.CharField(max_length=30, blank=True, null=True)
+
+    @staticmethod
+    def find_by_person(person):
+        return InternshipStudentInformation.objects.get(person=person)

@@ -23,9 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import csv
+from django.contrib.auth.models import Group
+from django.db import IntegrityError
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from base import models as mdl
+from internship import models
+
 
 @login_required
 def internships_students(request):
@@ -41,3 +46,40 @@ def internships_students(request):
     #            student.address = address
 
     return render(request, "students.html", {'section': 'internship', 'all_students': students})
+
+
+
+# To be removed once all program managers are imported.
+def load_internship_students():
+    with open('internship/views/internship_students.csv') as csvfile:
+        row = csv.reader(csvfile)
+        imported_counter = 0
+        error_counter = 0
+        duplication_counter = 0
+        for columns in row:
+            if len(columns) > 0:
+                person = mdl.person.find_by_global_id(columns[1].strip())
+                if person:
+                    internships_students_info = models.InternshipStudentInformation()
+                    internships_students.person = person
+                    internships_students.location = columns[2].strip()
+                    internships_students.postal_code = columns[3].strip()
+                    internships_students.city = columns[4].strip()
+                    internships_students.country = columns[5].strip()
+                    internships_students.email = columns[6].strip()
+                    internships_students.phone_mobile = columns[7].strip()
+                    try:
+                        internships_students_info.save()
+                    except IntegrityError:
+                        print("Duplicate : {}".format(str(person)))
+                        duplication_counter += 1
+                    if person.user :
+                        intern_students_group = Group.objects.get(name='internship_students')
+                        person.user.groups.add(intern_students_group)
+                    imported_counter += 1
+                else:
+                    error_counter += 1
+                    print("Erreur : {} - {}".format(columns[0],columns[1]))
+        print("Imports : {}".format(imported_counter))
+        print("Erreur de données : {}".format(error_counter))
+        print("Duplication : {}".format(duplication_counter))
