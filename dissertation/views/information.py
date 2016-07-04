@@ -63,7 +63,8 @@ def informations(request):
     except IntegrityError:
         adviser = Adviser.find_by_person(person)
 
-    return render(request, "informations.html", {'adviser': adviser})
+    return render(request, "informations.html", {'adviser': adviser, 'first_name': adviser.person.first_name.title(),
+                                                 'last_name': adviser.person.last_name.title()})
 
 
 @login_required
@@ -187,7 +188,9 @@ def manager_informations_add(request):
 @user_passes_test(is_manager)
 def manager_informations_detail(request, pk):
     adviser = get_object_or_404(Adviser, pk=pk)
-    return render(request, 'manager_informations_detail.html', {'adviser': adviser})
+    return render(request, 'manager_informations_detail.html', {'adviser': adviser,
+                                                 'first_name': adviser.person.first_name.title(),
+                                                 'last_name': adviser.person.last_name.title()})
 
 
 @login_required

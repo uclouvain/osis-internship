@@ -149,7 +149,7 @@ msgid "edit_manager_dissertation"
 msgstr "edit_manager_dissertation"
 
 msgid "edit_my_informations"
-msgstr "edit_my_informations"
+msgstr "Editer mes informations"
 
 msgid "edit_proposition_dissertation"
 msgstr "edit_proposition_dissertation"
