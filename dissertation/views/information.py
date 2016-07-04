@@ -151,7 +151,12 @@ def informations_edit(request):
     else:
         form = AdviserForm(instance=adviser)
 
-    return render(request, "informations_edit.html", {'form': form, 'person': person})
+    return render(request, "informations_edit.html",
+                {'form': form, 'first_name': person.first_name.title(),
+                 'last_name':person.last_name.title(),
+                 'email': person.email,
+                 'phone': person.phone,
+                 'phone_mobile': person.phone_mobile})
 
 ##########################
 #      VUES MANAGER      #

@@ -32,46 +32,58 @@
   <li class="active">{% trans 'my_informations' %}</li>
 {% endblock %}
 {% block content %}
-  <div class="page-header">
-    <h2>{% trans 'my_informations' %}</h2>
-  </div>
-  <div class="panel panel-default">
-    <div class="panel-body">
-      <div class="row">
-        <div class="col-md-3">
-          <label>{% trans 'name' %}</label><br>
-          {{  person.first_name }} {{ person.last_name }}
-        </div>
-        <div class="col-md-3">
-          <label>{% trans 'email' %}</label><br>
-          {{  person.email }}
-        </div>
-        <div class="col-md-3">
-          <label>{% trans 'phone' %}</label><br>
-          {{  person.phone }}
-        </div>
-        <div class="col-md-3">
-          <label>{% trans 'mobile_phone' %}</label><br>
-          {{  person.phone_mobile }}
-        </div>
-      </div>
-      <div class="panel-body">
-        <form method="POST" class="post-form">
-          {% csrf_token %}
-          {% for field in form %}
-            <div class="row {% if field.errors %}error{% endif %}">
-              <div class="col-md-4" style="text-align: right">
-                <label>{{ field.label }}</label>
-              </div>
-              <div class="col-md-5">
-                {{ field }}
-              </div>
-            </div>
-            <br>
-          {% endfor %}
-          <button type="submit" class="save btn btn-default">Save</button>
-        </form>
-      </div>
+    <div class="page-header">
+        <h2>{% trans 'my_informations' %}</h2>
     </div>
-  </div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <form method="POST" class="post-form">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-3">
+                      <label>{% trans 'name' %}</label><br>
+                      {{  first_name }} {{ last_name }}
+                    </div>
+                    <div class="col-md-3">
+                      <label>{% trans 'email' %}</label><br>
+                      {{  email }}
+                    </div>
+                    <div class="col-md-3">
+                      <label>{% trans 'phone' %}</label><br>
+                      {{  phone }}
+                    </div>
+                    <div class="col-md-3">
+                      <label>{% trans 'mobile_phone' %}</label><br>
+                      {{  phone_mobile }}
+                    </div>
+                </div>
+                <br>
+                <div class="row {% if field.errors %}error{% endif %}">
+                    <div class="col-md-2 col-lg-offset-1" style="text-align: right">
+                        <label for="{{ form.available_by_email.id_for_label }}">{% trans 'available_by_email' %}</label>
+                    </div>
+                    <div class="col-md-1">
+                        <input class="form-control" id="txt_available_by_email"  name="available_by_email"
+                            style="margin:-6px;" type="checkbox" {% if form.available_by_email.value %} checked {% endif %} >
+                    </div>
+                    <div class="col-md-2" style="text-align: right">
+                        <label for="{{ form.available_by_phone.id_for_label }}">{% trans 'available_by_phone' %}</label>
+                    </div>
+                    <div class="col-md-1">
+                        <input class="form-control" id="txt_available_by_phone"  name="available_by_phone"
+                            style="margin:-6px;" type="checkbox" {% if form.available_by_phone.value %} checked {% endif %} >
+                    </div>
+                    <div class="col-md-2" style="text-align: right">
+                        <label for="{{ form.available_at_office.id_for_label }}">{% trans 'available_at_office' %}</label>
+                    </div>
+                    <div class="col-md-1">
+                        <input class="form-control" id="txt_available_at_office"  name="available_at_office"
+                            style="margin:-6px;" type="checkbox" {% if form.available_at_office.value %} checked {% endif %} >
+                    </div>
+                </div>
+                <br>
+                <button type="submit" class="save btn btn-default">Save</button>
+            </form>
+        </div>
+    </div>
 {% endblock %}
