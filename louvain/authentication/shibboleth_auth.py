@@ -77,9 +77,9 @@ class ShibbolethAuthBackend(RemoteUserBackend):
         return username.split("@")[0]
 
     def configure_user(self, user, user_infos):
-        user = self.__update_user(self, user, user_infos)
-        person = self.__update_person(self, user, user_infos)
-        user = self.make_user_groups(self, user, person)
+        user = self.__update_user(user, user_infos)
+        person = self.__update_person(user, user_infos)
+        user = self.make_user_groups(user, person)
         return user
 
     def __update_user(self, user, user_infos):
