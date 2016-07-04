@@ -369,7 +369,7 @@ class InternshipStudentInformation(models.Model):
     city = models.CharField(max_length=255)
     country = models.CharField(max_length=255)
     email = models.EmailField(max_length=255, blank=True, null=True)
-    phone_mobile = models.CharField(max_length=30, blank=True, null=True)
+    phone_mobile = models.CharField(max_length=100, blank=True, null=True)
 
     @staticmethod
     def find_by_person(person):
