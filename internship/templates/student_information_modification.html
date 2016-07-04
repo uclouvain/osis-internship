@@ -1,0 +1,105 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+ * OSIS stands for Open Student Information System. It's an application
+ * designed to manage the core business of higher education institutions,
+ * such as universities, faculties, institutes and professional schools.
+ * The core business involves the administration of students, teachers,
+ * courses, programs and so on.
+ *
+ * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * A copy of this license - GNU General Public License - is available
+ * at the root of the source code of this program.  If not,
+ * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block breadcrumb %}
+  <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
+  <li><a href="{% url 'internships_home' %}">{% trans 'internships' %}</a></li>
+  <li class="active">{{ student.person.last_name }} {{ student.person.first_name }}</li>
+{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h2>{{ student.person.last_name }} {{ student.person.first_name }}</h2>
+</div>
+  <div class="panel panel-default">
+      <div class="panel-body">
+        <br>
+        <div class="row">
+            <div class="col-md-3">
+                <label>{% trans 'name' %}</label><br>
+                {{ student.person.last_name | default_if_none:'-' }}
+            </div>
+            <div class="col-md-3">
+                <label>{% trans 'firstname'%}</label><br>
+                {{ student.person.first_name | default_if_none:'-' }}
+            </div>
+            <div class="col-md-3">
+                <label>{% trans 'noma'%}</label><br>
+                {{ student.registration_id | default_if_none:'-' }}
+            </div>
+            <div class="col-md-2">
+                <label>{% trans 'gender' %}</label><br>
+                {{ student.person.gender | default_if_none:'-' }}
+            </div>
+            <div class="col-md-1">
+                <label>{% trans 'language' %}</label><br>
+                {{ student.person.language | default_if_none:'-' }}
+            </div>
+        </div>
+        <br>
+        <form method="post" action="{% url 'student_save_information_modification' student.registration_id %}">
+          {% csrf_token %}
+          <div class="row">
+              <div class="col-md-4">
+                  <label>{% trans 'email' %}</label><br>
+                  <input type="text" name="student_email" value="{{ student.information.email | default_if_none:'-' }}">
+              </div>
+              <div class="col-md-4">
+                  <label>{% trans 'phone_mobile' %}</label><br>
+                  <input type="text" name="student_phone" value="{{ student.information.phone_mobile | default_if_none:'-' }}">
+              </div>
+          </div>
+          <br><br>
+
+          <div class="row">
+            <label>{% trans 'address' %}</label><br>
+            <div class="col-md-3">
+              <label>{% trans 'location' %}</label><br>
+              <input type="text" name="student_location" value="{{ student.information.location | default_if_none:'-' }}">
+            </div>
+            <div class="col-md-3">
+              <label>{% trans 'postal_code' %}</label><br>
+              <input type="text" name="student_postal_code" value="{{ student.information.postal_code | default_if_none:'-' }}">
+            </div>
+            <div class="col-md-3">
+              <label>{% trans 'city' %}</label><br>
+              <input type="text" name="student_city" value="{{ student.information.city | default_if_none:'-' }}">
+            </div>
+            <div class="col-md-3">
+              <label>{% trans 'country' %}</label><br>
+              <input type="text" name="student_country" value="{{ student.information.country | default_if_none:'-' }}">
+            </div>
+          </div>
+          <br>
+
+          <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_interships_new">
+              <span class="glyphicon glyphicon-save" aria-hidden="true"/> {% trans 'save'%}
+          </button>
+        </form>
+      </div>
+  </div>
+  {% endblock %}
