@@ -203,7 +203,12 @@ def manager_informations_edit(request, pk):
     else:
         form = ManagerAdviserForm(instance=adviser)
 
-    return render(request, "manager_informations_edit.html", {'adviser': adviser, 'form': form})
+    return render(request, "manager_informations_edit.html",
+     {'form': form, 'first_name': adviser.person.first_name.title(),
+      'last_name':adviser.person.last_name.title(),
+      'email': adviser.person.email,
+      'phone': adviser.person.phone,
+      'phone_mobile': adviser.person.phone_mobile})
 
 
 @login_required
