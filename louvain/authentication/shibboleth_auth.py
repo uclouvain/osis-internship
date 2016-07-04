@@ -31,6 +31,7 @@ from django.contrib.auth import backends
 from django.contrib.auth.models import Group
 from django.core.exceptions import ImproperlyConfigured
 from base.models import tutor, program_manager, student
+from internship import models as int_mdl
 
 from base.models.person import Person, find_by_global_id, find_by_user
 
@@ -118,6 +119,10 @@ class ShibbolethAuthBackend(RemoteUserBackend):
         if student.find_by_person(person):
             student_group = Group.objects.get(name='students')
             user.groups.add(student_group)
+        # Check if student is internship student
+        if int_mdl.InternshipStudentInformation.find_by_person(person):
+            internship_student_group = Group.objects.get(name='internship_students')
+            user.groups.add(internship_student_group)
         user.save()
         return user
 
