@@ -82,6 +82,6 @@ admin.site.register(OrganizationAddress, OrganizationAddressAdmin)
 
 class InternshipStudentInformationAdmin(admin.ModelAdmin):
     list_display = ('person', 'location', 'postal_code', 'city', 'country', 'email', 'phone_mobile')
-    fieldsets = ((None, {'field': ('person', 'location', 'postal_code', 'city', 'country', 'email', 'phone_mobile')}),)
+    fieldsets = ((None, {'fields': ('person', 'location', 'postal_code', 'city', 'country', 'email', 'phone_mobile')}),)
 
 admin.site.register(InternshipStudentInformation, InternshipStudentInformationAdmin)
