@@ -113,7 +113,8 @@ def internship_student_information_modification(request, registration_id):
 def student_save_information_modification(request, registration_id):
     student = mdl.student.find_by(registration_id=registration_id)
     information = InternshipStudentInformation.find_by_person(student[0].person)
-
+    if not information:
+        information = InternshipStudentInformation()
     information.email = request.POST['student_email']
     information.phone_mobile = request.POST['student_phone']
     information.location = request.POST['student_location']
