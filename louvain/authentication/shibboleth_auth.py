@@ -79,7 +79,7 @@ class ShibbolethAuthBackend(RemoteUserBackend):
     def configure_user(self, user, user_infos):
         user = self.__update_user(user, user_infos)
         person = self.__update_person(user, user_infos)
-        user = self.make_user_groups(user, person)
+        user = self.__make_user_groups(user, person)
         return user
 
     def __update_user(self, user, user_infos):
