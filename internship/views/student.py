@@ -65,8 +65,8 @@ def load_internship_students():
                     internships_student.postal_code = columns[3].strip()
                     internships_student.city = columns[4].strip()
                     internships_student.country = columns[5].strip()
-                    internships_student.email = columns[6].strip()
-                    internships_student.phone_mobile = columns[7].strip()
+                    internships_student.phone_mobile = columns[6].strip()
+                    internships_student.email = columns[7].strip()
                     try:
                         internships_student.save()
                     except IntegrityError:
