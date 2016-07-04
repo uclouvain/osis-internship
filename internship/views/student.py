@@ -48,8 +48,7 @@ def internships_students(request):
     return render(request, "students.html", {'section': 'internship', 'all_students': students})
 
 
-
-# To be removed once all program managers are imported.
+# To be removed once all students are imported.
 def load_internship_students():
     with open('internship/views/internship_students.csv') as csvfile:
         row = csv.reader(csvfile)
@@ -60,16 +59,16 @@ def load_internship_students():
             if len(columns) > 0:
                 person = mdl.person.find_by_global_id(columns[1].strip())
                 if person:
-                    internships_students_info = models.InternshipStudentInformation()
-                    internships_students.person = person
-                    internships_students.location = columns[2].strip()
-                    internships_students.postal_code = columns[3].strip()
-                    internships_students.city = columns[4].strip()
-                    internships_students.country = columns[5].strip()
-                    internships_students.email = columns[6].strip()
-                    internships_students.phone_mobile = columns[7].strip()
+                    internships_student = models.InternshipStudentInformation()
+                    internships_student.person = person
+                    internships_student.location = columns[2].strip()
+                    internships_student.postal_code = columns[3].strip()
+                    internships_student.city = columns[4].strip()
+                    internships_student.country = columns[5].strip()
+                    internships_student.email = columns[6].strip()
+                    internships_student.phone_mobile = columns[7].strip()
                     try:
-                        internships_students_info.save()
+                        internships_student.save()
                     except IntegrityError:
                         print("Duplicate : {}".format(str(person)))
                         duplication_counter += 1
