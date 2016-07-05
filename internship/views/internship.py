@@ -473,6 +473,7 @@ def internships_modification_student(request, registration_id):
                                                 'all_speciality' : all_speciality,
                                                 'periods' : periods,
                                                 'registration_id':registration_id,
+                                                'student' : student[0],
                                                  })
 
 @login_required
