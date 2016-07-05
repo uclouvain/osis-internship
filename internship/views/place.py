@@ -37,7 +37,19 @@ def internships_places(request):
         city_sort_get = request.GET.get('city_sort')
 
     # Second, import all the organizations with their address(es if they have more than one)
-    organizations = Organization.find_by_type("service partner", order_by=['reference'])
+    all_organizations = Organization.find_by_type("service partner", order_by=['reference'])
+
+    number_ref = []
+    for organization in all_organizations:
+        if organization is not None:
+            number_ref.append(organization.reference)
+    number_ref=sorted(number_ref, key=int)
+    organizations = []
+    for i in number_ref:
+        print(i)
+        organization = Organization.search(reference=i)
+        organizations.append(organization[0])
+
     if organizations:
         for organization in organizations:
             organization.address = ""

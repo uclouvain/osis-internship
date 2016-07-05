@@ -67,7 +67,7 @@ def interships_masters(request):
     for organization in master_organizations:
         if organization is not None:
             number_ref.append(organization.reference)
-    number_ref=sorted(number_ref)
+    number_ref=sorted(number_ref, key=int)
     master_organizations = []
     for i in number_ref:
         organization = Organization.search(reference=i)
