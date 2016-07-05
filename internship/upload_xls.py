@@ -196,58 +196,60 @@ def __save_xls_internships(request, file_name, user):
                 organization = Organization.search(reference=reference)
                 #internship.organization = organization[0]
 
-            spec_value = row[col_spec].value
-            spec_value = spec_value.replace(" ","")
-            spec_value = spec_value.replace("*","")
+            if len (organization) > 0 :
 
-            if spec_value == "CH":
-                spec = "Stage en Chirurgie"
-            if spec_value == "GE":
-                spec = "Stage en Gériatrie"
-            if spec_value == "GO":
-                spec = "Stage en Gynécologie-Obstétrique"
-            if spec_value == "MI":
-                spec = "Stage en Médecine interne"
-            if spec_value == "PE":
-                spec = "Stage en Pédiatrie"
-            if spec_value == "UR":
-                spec = "Stage aux Urgences"
+                spec_value = row[col_spec].value
+                spec_value = spec_value.replace(" ","")
+                spec_value = spec_value.replace("*","")
 
-            speciality = InternshipSpeciality.find_by(name=spec)
-            check_internship = InternshipOffer.find_interships_by_learning_unit_organization(spec,organization[0].reference)
+                if spec_value == "CH":
+                    spec = "Stage en Chirurgie"
+                if spec_value == "GE":
+                    spec = "Stage en Gériatrie"
+                if spec_value == "GO":
+                    spec = "Stage en Gynécologie-Obstétrique"
+                if spec_value == "MI":
+                    spec = "Stage en Médecine interne"
+                if spec_value == "PE":
+                    spec = "Stage en Pédiatrie"
+                if spec_value == "UR":
+                    spec = "Stage aux Urgences"
 
-            number_place = 0
-            for x in range (3,15):
-                number_place += int(row[x].value)
+                speciality = InternshipSpeciality.find_by(name=spec)
+                check_internship = InternshipOffer.find_interships_by_learning_unit_organization(spec,organization[0].reference)
 
-            if len(check_internship) != 0:
-                internship = InternshipOffer.find_intership_by_id(check_internship[0].id)
-            else :
-                internship = InternshipOffer()
+                number_place = 0
+                for x in range (3,15):
+                    number_place += int(row[x].value)
 
-            internship.organization = organization[0]
-            internship.speciality = speciality[0]
-            internship.title = spec
-            internship.maximum_enrollments = number_place
-            internship.selectable = True
-            internship.save()
-
-            number_period = 1
-            for x in range (3,15):
-                period_search = "P"+str(number_period)
-                number_period += 1
-                period = Period.find_by(name=period_search)
-                check_relation = PeriodInternshipPlaces.find_by(period, internship)
-
-                if len(check_relation) != 0:
-                    relation = PeriodInternshipPlaces.find_by(relation_id = check_relation[0].id)
+                if len(check_internship) != 0:
+                    internship = InternshipOffer.find_intership_by_id(check_internship[0].id)
                 else :
-                    relation = PeriodInternshipPlaces()
+                    internship = InternshipOffer()
 
-                relation.period = period[0]
-                relation.internship = internship
-                relation.number_places = int(row[x].value)
-                relation.save()
+                internship.organization = organization[0]
+                internship.speciality = speciality[0]
+                internship.title = spec
+                internship.maximum_enrollments = number_place
+                internship.selectable = True
+                internship.save()
+
+                number_period = 1
+                for x in range (3,15):
+                    period_search = "P"+str(number_period)
+                    number_period += 1
+                    period = Period.find_by(name=period_search)
+                    check_relation = PeriodInternshipPlaces.find_by(period, internship)
+
+                    if len(check_relation) != 0:
+                        relation = PeriodInternshipPlaces.find_by(relation_id = check_relation[0].id)
+                    else :
+                        relation = PeriodInternshipPlaces()
+
+                    relation.period = period[0]
+                    relation.internship = internship
+                    relation.number_places = int(row[x].value)
+                    relation.save()
 
 @login_required
 def upload_masters_file(request):
