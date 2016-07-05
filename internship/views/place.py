@@ -139,13 +139,9 @@ def place_save(request, organization_id, organization_address_id):
         organization = Organization()
 
     # get the screen modifications
-    if request.POST['acronym']:
-        organization.acronym = request.POST['acronym']
-    else:
-        organization.acronym = None
-
     if request.POST['name']:
         organization.name = request.POST['name']
+        organization.acronym = request.POST['name'][:14]
     else:
         organization.name = None
 
@@ -169,8 +165,9 @@ def place_save(request, organization_id, organization_address_id):
         organization_address = OrganizationAddress()
 
     organization_address.organization = organization
-    if request.POST['organization_address_label']:
-        organization_address.label = request.POST['organization_address_label']
+
+    if organization:
+        organization_address.label = "Addr"+organization.name[:14]
     else:
         organization_address.label = None
 
