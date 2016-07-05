@@ -35,46 +35,18 @@
   <div class="page-header">
     <h2>{% trans 'students' %}</h2>
   </div>
-  <div class="panel panel-default">
-        <table style="height:100%; width:100%;">
-            <thead>
-              <tr>
-                  <th style="text-align:center; width:50%;">{% trans 'academic_year' %}</th>
-                  <th style="text-align:center; width:50%;">{% trans 'city' %}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td style="text-align:center; width:50%;">
-                  <select>
-
-                  </select>
-                </td>
-                <td style="text-align:center; width:50%;">
-                  <select>
-
-                  </select>
-                </td>
-              </tr>
-            </tbody>
-        </table>
-  </div>
-  <div class="panel panel-default">
+    <div class="panel panel-default">
     <div class="tab-content">
       <div role="tabpanel" class="tab-pane fade in active" id="profile">
         <table class="table table-hover">
             <thead>
               <tr>
-                  <th>{% trans 'Name' %}</th>
-                  <th>{% trans 'Forname' %}</th>
-                  <th>{% trans 'Noma' %}</th>
-                  <th>{% trans 'Academic Year' %}</th>
-                  <th>{% trans 'Periode' %}</th>
-                  <th>{% trans 'Sexe' %}</th>
-                  <th>{% trans 'Mail' %}</th>
-                  <th>{% trans 'Address' %}</th>
-                  <th>{% trans 'Postal Code' %}</th>
-                  <th>{% trans 'City' %}</th>
+                  <th>{% trans 'name' %}</th>
+                  <th>{% trans 'forname' %}</th>
+                  <th>{% trans 'sexe' %}</th>
+                  <th>{% trans 'mail' %}</th>
+                  <th>{% trans 'birth_date' %}</th>
+                  <th>{% trans 'address' %}</th>
                   <th>{% trans 'Phone Number' %}</th>
               </tr>
             </thead>
@@ -88,31 +60,19 @@
                     {{ student.person.first_name }}
                   </td>
                   <td>
-                    {{ student.registration_id }}
-                  </td>
-                  <td>
-
-                  </td>
-                  <td>
-
-                  </td>
-                  <td>
                     {{ student.person.gender }}
                   </td>
                   <td>
-                    {{ student.person.email }}
+                    {{ student.email }}
                   </td>
                   <td>
-                    {{ student.address.location}}
+                    {{ student.person.birth_date }}
                   </td>
                   <td>
-                    {{ student.address.postal_code}}
+                    {{ student.location}} {{ student.postal_code}} {{ student.city }} {{ student.country }}
                   </td>
                   <td>
-                    {{ student.address.city }}
-                  </td>
-                  <td>
-                    {{ student.person.phone_mobile }}
+                    {{ student.phone_mobile }}
                   </td>
               </tr>
               {% endfor %}

@@ -379,6 +379,7 @@ class InternshipStudentInformation(models.Model):
         except ObjectDoesNotExist:
             return None
 
+    @staticmethod
     def find_by(person_name=None, person_first_name=None):
         has_criteria = False
         queryset = InternshipStudentInformation.objects
@@ -395,3 +396,7 @@ class InternshipStudentInformation(models.Model):
             return queryset
         else:
             return None
+
+    @staticmethod
+    def find_all():
+        return InternshipStudentInformation.objects.all()

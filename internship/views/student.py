@@ -29,21 +29,13 @@ from django.db import IntegrityError, DataError
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from base import models as mdl
-from internship import models
+from internship.models import InternshipStudentInformation
 
 
 @login_required
 def internships_students(request):
     #Function to find students link to internship incoming
-    students = None
-
-    #Dont delete this bloc of comment
-    #if students:
-    #    for student in students:
-    #        student.address = ""
-    #        address = mdl.person_address.find_by_person(student.person)
-    #        if address:
-    #            student.address = address
+    students = InternshipStudentInformation.find_all()
 
     return render(request, "students.html", {'section': 'internship', 'all_students': students})
 
