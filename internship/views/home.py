@@ -24,12 +24,13 @@
 #
 ##############################################################################
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
 from internship.models import InternshipOffer
 
 
 @login_required
+@permission_required('internship.can_access_internship', raise_exception=True)
 def internships_home(request):
     student = mdl.student.find_by(person_username=request.user)
     #Check if the user is a student, if not the noma is not requiered so it's 0

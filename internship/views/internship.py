@@ -126,6 +126,7 @@ def internships(request):
 
 
 @login_required
+@permission_required('internship.can_access_internship', raise_exception=True)
 def internships_stud(request):
     student = mdl.student.find_by(person_username=request.user)
     # get in order descending to have the first choices in first lines in the insert (line 114)

@@ -79,6 +79,7 @@ def internships_places(request):
                                            'city_sort_get': city_sort_get})
 
 @login_required
+@permission_required('internship.can_access_internship', raise_exception=True)
 def internships_places_stud(request):
     # First get the value of the option for the sort
     if request.method == 'GET':
