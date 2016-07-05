@@ -132,8 +132,8 @@ class InternshipMaster(models.Model):
 
     @staticmethod
     def find_master_by_firstname_name(firstname, name):
-        master = InternshipMaster.objects.filter(first_name=firstname)\
-                                            .filter(last_name=name)
+        master = InternshipMaster.objects.filter(first_name__icontains=firstname)\
+                                            .filter(last_name__icontains=name)
         return master
 
 

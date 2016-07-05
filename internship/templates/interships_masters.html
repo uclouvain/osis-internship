@@ -104,7 +104,7 @@
                         {% csrf_token %}
                         <input type="hidden" name="first_name" value={{ master.first_name }}>
                         <input type="hidden" name="name" value={{ master.last_name }}>
-                        <button type="submit" class="btn btn-warning">
+                        <button type="submit" class="btn btn-danger">
                           <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                         </button>
                         {{ master.reference }}
