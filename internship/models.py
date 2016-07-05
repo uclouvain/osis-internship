@@ -378,4 +378,3 @@ class InternshipStudentInformation(models.Model):
             return InternshipStudentInformation.objects.get(person=person)
         except ObjectDoesNotExist:
             return None
-

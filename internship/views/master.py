@@ -27,8 +27,8 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
-from internship.models import InternshipMaster
-
+from internship.models import InternshipMaster, Organization
+from operator import itemgetter
 
 @login_required
 @permission_required('internship.can_access_internship', raise_exception=True)
@@ -60,7 +60,17 @@ def interships_masters(request):
         master_specs.append(master.speciality)
         master_organizations.append(master.organization)
     master_specs = list(set(master_specs))
+    master_specs = sorted(master_specs)
     master_organizations = list(set(master_organizations))
+    number_ref = []
+    for organization in master_organizations:
+        if organization is not None:
+            number_ref.append(organization.reference)
+    number_ref=sorted(number_ref)
+    master_organizations = []
+    for i in number_ref:
+        organization = Organization.search(reference=i)
+        master_organizations.append(organization[0])
 
     return render(request, "interships_masters.html", {'section':                   'internship',
                                                        'all_masters':               query,
