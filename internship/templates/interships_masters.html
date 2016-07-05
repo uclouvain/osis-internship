@@ -63,7 +63,7 @@
                      {% for organization in all_organizations %}
                         <option value="{{ organization.name }}"
                         {% if organization.name == organization_sort_value %}selected{% endif %}>
-                            {{ organization.name }}
+                            {{ organization.reference }} - {{ organization.name }}
                         </option>
                      {% endfor %}
                     </select>
