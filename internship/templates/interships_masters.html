@@ -129,7 +129,11 @@
                     {{ master.speciality }}
                   </td>
                   <td>
-                    <a href="{% url 'internships' %}?organization_sort={{ master.organization }}">{{ master.organization }}</a>
+                    {% if master.organization.website %}
+                      <a href="{{ master.organization.website }}" target="blank">{{ master.organization }}</a>
+                    {% else %}
+                      {{ master.organization }}
+                    {%endif%}
                   </td>
               </tr>
               {% endfor %}

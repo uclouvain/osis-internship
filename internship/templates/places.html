@@ -132,7 +132,11 @@
                     {% endfor %}
                   </td>
                 <td>
-                  {{ organization.website }}
+                  {% if organization.website %}
+                    <a href="{{ organization.website }}" target="blank">{{ organization.website }}</a>
+                  {% else %}
+                    
+                  {%endif%}
                 </td>
               </tr>
               {% endfor %}
