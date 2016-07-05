@@ -46,7 +46,7 @@
       }
     }
     if (check > 1) {
-      alert('Vous avez déjà un stage avec cette préférence dans cette spécialité.')
+      alert("{% trans 'already_internship_preference_speciality' %}")
       element.value = 0
     }
   }
@@ -84,7 +84,7 @@
   {% trans 'all_ready_4_choice_spec' %}<br/>
   <span class="glyphicon glyphicon-remove" style="color:red"></span> :
   {% trans 'not_4_choice_spec' %}<br/>
-  {% if selectable == False %}<b><u>{% trans 'internship_block_moment' %}</u></b>{%endif%}
+  {% if selectable == False %}<h3><b><u>{% trans 'internship_block_moment' %}</u></b></h3>{%endif%}
   <div class="panel panel-default">
     <div class="panel-body">
         <ul class="nav nav-tabs">
@@ -289,8 +289,8 @@
             </div>
           </div>
           {% if selectable == True %}
-            <button type="submit" class="btn btn-primary" title="{% trans 'Send'%}" id="bt_interships_save">
-                <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Soumettre
+            <button type="submit" class="btn btn-primary" title="{% trans 'submission' %}" id="bt_interships_save">
+                <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'submission' %}
             </button>
           {%endif%}
         </div>

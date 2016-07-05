@@ -240,3 +240,6 @@ msgstr "internships' selection are currently blocked."
 
 msgid "return"
 msgstr "Return"
+
+msgid "already_internship_preference_speciality"
+msgstr "You already have an internship with this preference for this speciality."

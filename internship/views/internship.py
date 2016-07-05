@@ -126,6 +126,7 @@ def internships(request):
 
 
 @login_required
+@permission_required('internship.can_access_internship', raise_exception=True)
 def internships_stud(request):
     student = mdl.student.find_by(person_username=request.user)
     # get in order descending to have the first choices in first lines in the insert (line 114)
@@ -207,58 +208,69 @@ def internships_stud(request):
 
 @login_required
 def internships_save(request):
-    student = mdl.student.find_by(person_username=request.user)
-    InternshipChoice.objects.filter(student=student).delete()
-    form = InternshipChoiceForm(data=request.POST)
-    preference_list = list()
-    if request.POST['organization']:
-        organization_list = request.POST.getlist('organization')
+    internships = InternshipOffer.find_internships()
+    if len(internships) > 0:
+        if internships[0].selectable:
+            selectable = True
+        else:
+            selectable = False
+    else:
+        selectable = True
 
-    if request.POST['speciality']:
-        speciality_list = request.POST.getlist('speciality')
+    if selectable :
+        student = mdl.student.find_by(person_username=request.user)
+        InternshipChoice.objects.filter(student=student).delete()
 
-    all_internships = InternshipOffer.find_internships()
-    all_speciality = []
-    for choice in all_internships:
-        all_speciality.append(choice.speciality)
+        form = InternshipChoiceForm(data=request.POST)
+        preference_list = list()
+        if request.POST['organization']:
+            organization_list = request.POST.getlist('organization')
 
-    all_speciality = list(OrderedDict.fromkeys(all_speciality))
-    for luy in all_speciality :
-        tab = luy.name.replace(" ", "")
-        luy.tab = tab
+        if request.POST['speciality']:
+            speciality_list = request.POST.getlist('speciality')
 
-    preference_list_tab = []
-    for luy in all_speciality:
-        preference_list_tab.append('preference'+luy.tab)
+        all_internships = InternshipOffer.find_internships()
+        all_speciality = []
+        for choice in all_internships:
+            all_speciality.append(choice.speciality)
 
-    preference_list= list()
-    for pref_tab in preference_list_tab:
-        if request.POST[pref_tab]:
-            for pref in request.POST.getlist(pref_tab) :
-                preference_list.append(pref)
+        all_speciality = list(OrderedDict.fromkeys(all_speciality))
+        for luy in all_speciality :
+            tab = luy.name.replace(" ", "")
+            luy.tab = tab
 
-    index = 0
-    for r in preference_list:
-        if r == "0":
-            speciality_list[index] = 0
-            organization_list[index] = 0
-        index += 1
+        preference_list_tab = []
+        for luy in all_speciality:
+            preference_list_tab.append('preference'+luy.tab)
 
-    organization_list = [x for x in organization_list if x != 0]
-    speciality_list = [x for x in speciality_list if x != 0]
-    preference_list = [x for x in preference_list if x != '0']
+        preference_list= list()
+        for pref_tab in preference_list_tab:
+            if request.POST[pref_tab]:
+                for pref in request.POST.getlist(pref_tab) :
+                    preference_list.append(pref)
 
-    index = preference_list.__len__()
-    for x in range(0, index):
-        new_choice = InternshipChoice()
-        new_choice.student = student[0]
-        organization = Organization.search(reference=organization_list[x])
-        new_choice.organization = organization[0]
-        speciality = InternshipSpeciality.find_by(name=speciality_list[x])
-        new_choice.speciality = speciality[0]
-        new_choice.choice = preference_list[x]
-        new_choice.priority = False
-        new_choice.save()
+        index = 0
+        for r in preference_list:
+            if r == "0":
+                speciality_list[index] = 0
+                organization_list[index] = 0
+            index += 1
+
+        organization_list = [x for x in organization_list if x != 0]
+        speciality_list = [x for x in speciality_list if x != 0]
+        preference_list = [x for x in preference_list if x != '0']
+
+        index = preference_list.__len__()
+        for x in range(0, index):
+            new_choice = InternshipChoice()
+            new_choice.student = student[0]
+            organization = Organization.search(reference=organization_list[x])
+            new_choice.organization = organization[0]
+            speciality = InternshipSpeciality.find_by(name=speciality_list[x])
+            new_choice.speciality = speciality[0]
+            new_choice.choice = preference_list[x]
+            new_choice.priority = False
+            new_choice.save()
 
     return HttpResponseRedirect(reverse('internships_stud'))
 

@@ -240,3 +240,6 @@ msgstr "Les sélections de stage sont bloquées actuellement."
 
 msgid "return"
 msgstr "Retour"
+
+msgid "already_internship_preference_speciality"
+msgstr "Vous avez déjà un stage avec cette préférence dans cette spécialité."
