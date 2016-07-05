@@ -54,6 +54,12 @@ class InternshipChoiceAdmin(admin.ModelAdmin):
 
 admin.site.register(InternshipChoice, InternshipChoiceAdmin)
 
+class PeriodAdmin(admin.ModelAdmin):
+    list_display = ('name', 'date_start', 'date_end')
+    fieldsets = ((None, {'fields': ('name', 'date_start', 'date_end')}),)
+
+admin.site.register(Period, PeriodAdmin)
+
 class PeriodInternshipPlacesAdmin(admin.ModelAdmin):
     list_display = ('period', 'internship', 'number_places')
     fieldsets = ((None, {'fields': ('period', 'internship', 'number_places')}),)
