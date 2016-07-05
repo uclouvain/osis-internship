@@ -23,6 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from internship.models import InternshipMaster
@@ -66,3 +68,12 @@ def interships_masters(request):
                                                        'all_organizations':         master_organizations,
                                                        'speciality_sort_value':     speciality_sort_value,
                                                        'organization_sort_value':   organization_sort_value})
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def delete_interships_masters(request):
+    print(request.POST["first_name"])
+    print(request.POST["name"])
+    print(InternshipMaster.find_master_by_firstname_name(request.POST["first_name"], request.POST["name"]))
+    InternshipMaster.find_master_by_firstname_name(request.POST["first_name"], request.POST["name"]).delete()
+    return HttpResponseRedirect(reverse('interships_masters'))
