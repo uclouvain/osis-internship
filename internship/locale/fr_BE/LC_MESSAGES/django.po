@@ -86,7 +86,7 @@ msgid "organization"
 msgstr "Hôpital"
 
 msgid "choose_a_hospital"
-msgstr "Chosir un hôpital"
+msgstr "Choisir un hôpital"
 
 msgid "choose_spec_see_record_choice"
 msgstr "Choisissez une spécialité pour voir vos choix déjà effectués."
