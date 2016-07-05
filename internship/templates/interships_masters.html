@@ -63,7 +63,7 @@
                      {% for organization in all_organizations %}
                         <option value="{{ organization.name }}"
                         {% if organization.name == organization_sort_value %}selected{% endif %}>
-                            {{ organization.name }}
+                            {{ organization.reference }} - {{ organization.name }}
                         </option>
                      {% endfor %}
                     </select>
@@ -74,26 +74,44 @@
             </tbody>
         </table>
   </div>
+  {% if perms.internship.is_internship_manager %}
+    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#pnl_upload_masters"
+            id="bt_upload_score_modal">
+      <span class="glyphicon glyphicon-upload" aria-hidden="true"></span> {% trans 'import_masters' %}
+    </button>
+  {% endif %}
   <div class="panel panel-default">
     <div class="tab-content">
       <div role="tabpanel" class="tab-pane fade in active" id="profile">
         <table class="table table-hover">
             <thead>
               <tr>
-                  <th>{% trans 'Number' %}</th>
-                  <th>{% trans 'Civility' %}</th>
-                  <th>{% trans 'Name' %}</th>
-                  <th>{% trans 'Forname' %}</th>
-                  <th>{% trans 'Type' %}</th>
-                  <th>{% trans 'Speciality' %}</th>
-                  <th>{% trans 'Organization' %}</th>
+                  <th>{% trans 'reference' %}</th>
+                  <th>{% trans 'civility' %}</th>
+                  <th>{% trans 'name' %}</th>
+                  <th>{% trans 'forname' %}</th>
+                  <th>{% trans 'type' %}</th>
+                  <th>{% trans 'speciality' %}</th>
+                  <th>{% trans 'organization' %}</th>
               </tr>
             </thead>
             <tbody>
               {% for master in all_masters %}
               <tr>
                   <td>
-                    {{ master.reference }}
+                    {% if perms.internship.is_internship_manager %}
+                      <form method="post" action="{% url 'delete_interships_masters' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="first_name" value={{ master.first_name }}>
+                        <input type="hidden" name="name" value={{ master.last_name }}>
+                        <button type="submit" class="btn btn-danger">
+                          <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                        </button>
+                        {{ master.reference }}
+                      </form>
+                    {%else%}
+                      {{ master.reference }}
+                    {%endif%}
                   </td>
                   <td>
                     {{ master.civility }}
@@ -111,7 +129,11 @@
                     {{ master.speciality }}
                   </td>
                   <td>
-                    <a href="{% url 'internships' %}?organization_sort={{ master.organization }}">{{ master.organization }}</a>
+                    {% if master.organization.website %}
+                      <a href="{{ master.organization.website }}" target="blank">{{ master.organization }}</a>
+                    {% else %}
+                      {{ master.organization }}
+                    {%endif%}
                   </td>
               </tr>
               {% endfor %}
@@ -119,12 +141,6 @@
         </table>
       </div>
     </div>
-      {% if perms.internship.is_internship_manager %}
-        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#pnl_upload_masters"
-                id="bt_upload_score_modal">
-          <span class="glyphicon glyphicon-upload" aria-hidden="true"></span> {% trans 'import_masters' %}
-        </button>
-      {% endif %}
   <div class="modal fade" id="pnl_upload_masters" tabindex="-1" role="dialog" aria-labelledby="uploadScoresLabel">
       <div class="modal-dialog" role="document">
           <div class="modal-content">

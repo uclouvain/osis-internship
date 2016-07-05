@@ -59,6 +59,10 @@
         </form>
       </tbody>
   </table>
+  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#pnl_upload_internship"
+          id="bt_upload_score_modal">
+    <span class="glyphicon glyphicon-upload" aria-hidden="true"></span> {% trans 'import_internships' %}
+  </button>
   <div class="panel panel-default">
     <div class="panel-body">
         <ul class="nav nav-tabs">
@@ -71,6 +75,7 @@
         <div class="tab-content">
           {% for luy in all_speciality %}
             <div id="tab_{{luy.tab}}" class="tab-pane fade in active">
+              <h3>{{luy.name}}</h3>
               <div class="panel panel-default">
                 <div class="tab-content">
                   <div role="tabpanel" class="tab-pane fade in active" id="profile">
@@ -185,14 +190,6 @@
           </div>
         </div>
       </div>
-  <a href="{% url 'internships_create' %}" id="lnk_organization_create" class="btn btn-default"
-     role="button" title="{% trans 'create_an_organization'%}">{% trans 'Ajouter un stage' %}
-     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
-
-   <button type="button" class="btn btn-default" data-toggle="modal" data-target="#pnl_upload_internship"
-           id="bt_upload_score_modal">
-     <span class="glyphicon glyphicon-upload" aria-hidden="true"></span> {% trans 'import_internships' %}
-   </button>
 
    <div class="modal fade" id="pnl_upload_internship" tabindex="-1" role="dialog" aria-labelledby="uploadScoresLabel">
        <div class="modal-dialog" role="document">

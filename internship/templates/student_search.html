@@ -39,13 +39,6 @@
     <form  method="get" action="{% url 'internships_student_search'%}" >
       <div class="row">
           <div class="col-md-3">
-              <label for="noma">{% trans 'noma'%}</label>
-              <input class="form-control" id="txt_noma" placeholder="{% trans 'Noma' %}"
-                                                        name="s_noma"
-                                                        value="{{ s_noma | default_if_none:'' }}"
-                                                        style="text-transform:uppercase">
-          </div>
-          <div class="col-md-3">
               <label for="name" >{% trans 'name'%}</label>
               <input class="form-control" id="txt_name" placeholder="{% trans 'Name' %}"
                                                         name="s_name"
