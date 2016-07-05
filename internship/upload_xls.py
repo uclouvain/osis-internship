@@ -225,37 +225,38 @@ def __save_xls_internships(request, file_name, user):
                     else :
                         number_place += int(row[x].value)
 
-                if len(check_internship) != 0:
-                    internship = InternshipOffer.find_intership_by_id(check_internship[0].id)
-                else :
-                    internship = InternshipOffer()
-
-                internship.organization = organization[0]
-                internship.speciality = speciality[0]
-                internship.title = spec
-                internship.maximum_enrollments = number_place
-                internship.selectable = True
-                internship.save()
-
-                number_period = 1
-                for x in range (3,15):
-                    period_search = "P"+str(number_period)
-                    number_period += 1
-                    period = Period.find_by(name=period_search)
-                    check_relation = PeriodInternshipPlaces.find_by(period, internship)
-
-                    if len(check_relation) != 0:
-                        relation = PeriodInternshipPlaces.find_by(relation_id = check_relation[0].id)
+                for x in range(0,len(speciality)) :
+                    if len(check_internship) != 0:
+                        internship = InternshipOffer.find_intership_by_id(check_internship[0].id)
                     else :
-                        relation = PeriodInternshipPlaces()
+                        internship = InternshipOffer()
 
-                    relation.period = period[0]
-                    relation.internship = internship
-                    if row[x].value is None:
-                        relation.number_places = 0
-                    else :
-                        relation.number_places = int(row[x].value)
-                    relation.save()
+                    internship.organization = organization[0]
+                    internship.speciality = speciality[x]
+                    internship.title = spec
+                    internship.maximum_enrollments = number_place
+                    internship.selectable = True
+                    internship.save()
+
+                    number_period = 1
+                    for x in range (3,15):
+                        period_search = "P"+str(number_period)
+                        number_period += 1
+                        period = Period.find_by(name=period_search)
+                        check_relation = PeriodInternshipPlaces.find_by(period, internship)
+
+                        if len(check_relation) != 0:
+                            relation = PeriodInternshipPlaces.find_by(relation_id = check_relation[0].id)
+                        else :
+                            relation = PeriodInternshipPlaces()
+
+                        relation.period = period[0]
+                        relation.internship = internship
+                        if row[x].value is None:
+                            relation.number_places = 0
+                        else :
+                            relation.number_places = int(row[x].value)
+                        relation.save()
 
 @login_required
 def upload_masters_file(request):

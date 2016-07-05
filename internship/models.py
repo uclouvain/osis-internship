@@ -281,7 +281,7 @@ class InternshipSpeciality(models.Model):
             has_criteria = True
 
         if name:
-            queryset = queryset.filter(name=name)
+            queryset = queryset.filter(name__icontains=name)
             has_criteria = True
 
         if has_criteria:
