@@ -74,6 +74,12 @@
             </tbody>
         </table>
   </div>
+  {% if perms.internship.is_internship_manager %}
+    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#pnl_upload_masters"
+            id="bt_upload_score_modal">
+      <span class="glyphicon glyphicon-upload" aria-hidden="true"></span> {% trans 'import_masters' %}
+    </button>
+  {% endif %}
   <div class="panel panel-default">
     <div class="tab-content">
       <div role="tabpanel" class="tab-pane fade in active" id="profile">
@@ -93,15 +99,19 @@
               {% for master in all_masters %}
               <tr>
                   <td>
-                    <form method="post" action="{% url 'delete_interships_masters' %}">
-                      {% csrf_token %}
-                      <input type="hidden" name="first_name" value={{ master.first_name }}>
-                      <input type="hidden" name="name" value={{ master.last_name }}>
-                      <button type="submit" class="btn btn-warning">
-                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                      </button>
+                    {% if perms.internship.is_internship_manager %}
+                      <form method="post" action="{% url 'delete_interships_masters' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="first_name" value={{ master.first_name }}>
+                        <input type="hidden" name="name" value={{ master.last_name }}>
+                        <button type="submit" class="btn btn-warning">
+                          <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                        </button>
+                        {{ master.reference }}
+                      </form>
+                    {%else%}
                       {{ master.reference }}
-                    </form>
+                    {%endif%}
                   </td>
                   <td>
                     {{ master.civility }}
@@ -127,12 +137,6 @@
         </table>
       </div>
     </div>
-      {% if perms.internship.is_internship_manager %}
-        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#pnl_upload_masters"
-                id="bt_upload_score_modal">
-          <span class="glyphicon glyphicon-upload" aria-hidden="true"></span> {% trans 'import_masters' %}
-        </button>
-      {% endif %}
   <div class="modal fade" id="pnl_upload_masters" tabindex="-1" role="dialog" aria-labelledby="uploadScoresLabel">
       <div class="modal-dialog" role="document">
           <div class="modal-content">
