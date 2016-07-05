@@ -46,16 +46,10 @@ def internships_student_resume(request):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_search(request):
-    s_noma = request.GET['s_noma']
     s_name = request.GET['s_name']
     s_firstname = request.GET['s_firstname']
     students_list = []
     criteria_present = False
-
-    if len(s_noma) <= 0:
-        s_noma = None
-    else:
-        criteria_present=True
 
     s_name = s_name.strip()
     if len(s_name) <= 0:
@@ -71,14 +65,13 @@ def internships_student_search(request):
 
     message = None
     if criteria_present:
-        students_list = mdl.student.find_by(registration_id=s_noma, person_name=s_name, person_first_name = s_firstname)
+        students_list = InternshipStudentInformation.find_by(person_name=s_name, person_first_name = s_firstname)
     else:
         students_list = InternshipChoice.find_by_all_student()
         # message = "%s" % _('You must choose at least one criteria!')
 
     return render(request, "student_search.html",
-                           {'s_noma':       s_noma,
-                            's_name':       s_name,
+                           {'s_name':       s_name,
                             's_firstname':  s_firstname,
                             'students':     students_list,
                             'init':         "0",

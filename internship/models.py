@@ -378,3 +378,20 @@ class InternshipStudentInformation(models.Model):
             return InternshipStudentInformation.objects.get(person=person)
         except ObjectDoesNotExist:
             return None
+
+    def find_by(person_name=None, person_first_name=None):
+        has_criteria = False
+        queryset = InternshipStudentInformation.objects
+
+        if person_name:
+            queryset = queryset.filter(person__last_name__icontains=person_name)
+            has_criteria = True
+
+        if person_first_name:
+            queryset = queryset.filter(person__first_name__icontains=person_first_name)
+            has_criteria = True
+
+        if has_criteria:
+            return queryset
+        else:
+            return None
