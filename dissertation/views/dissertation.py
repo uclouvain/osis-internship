@@ -74,6 +74,7 @@ def insert_update(request, dissertation, old_status):
 #      VUE GENERALE      #
 ##########################
 
+
 @login_required
 def dissertations(request):
     # if logged user is not an adviser, create linked adviser
@@ -191,7 +192,8 @@ def manager_dissertations_list(request):
     faculty_adviser = FacultyAdviser.find_by_adviser(adviser)
     dissertations = Dissertation.objects.filter(offer_year_start__offer=faculty_adviser)
     offer_proposition = OfferProposition.objects.get(offer=faculty_adviser)
-    return render(request, 'manager_dissertations_list.html', {'dissertations': dissertations,'offer_proposition': offer_proposition})
+    return render(request, 'manager_dissertations_list.html', {'dissertations': dissertations,
+                                                               'offer_proposition': offer_proposition})
 
 
 @login_required
@@ -306,7 +308,7 @@ def manager_dissertations_search(request):
         response['Content-Disposition'] = "attachment; filename=" + filename
         return response
     return render(request, "manager_dissertations_list.html",
-                  {'dissertations': dissertations,'offer_proposition': offer_proposition, 'xlsx': xlsx})
+                  {'dissertations': dissertations, 'offer_proposition': offer_proposition, 'xlsx': xlsx})
 
 
 @login_required
@@ -490,7 +492,8 @@ def manager_dissertations_wait_list(request):
     faculty_adviser = FacultyAdviser.find_by_adviser(adviser)
     offer_proposition = OfferProposition.objects.get(offer=faculty_adviser)
     dissertations = Dissertation.objects.filter(Q(offer_year_start__offer=faculty_adviser) & Q(status="DIR_SUBMIT"))
-    return render(request, 'manager_dissertations_wait_list.html', {'dissertations': dissertations, 'offer_proposition': offer_proposition})
+    return render(request, 'manager_dissertations_wait_list.html', {'dissertations': dissertations,
+                                                                    'offer_proposition': offer_proposition})
 
 
 @login_required
@@ -501,7 +504,8 @@ def manager_dissertations_wait_comm_list(request):
     faculty_adviser = FacultyAdviser.find_by_adviser(adviser)
     offer_proposition = OfferProposition.objects.get(offer=faculty_adviser)
     dissertations = Dissertation.objects.filter(Q(offer_year_start__offer=faculty_adviser) & Q(status="COM_SUBMIT"))
-    return render(request, 'manager_dissertations_wait_commission_list.html', {'dissertations': dissertations, 'offer_proposition': offer_proposition})
+    return render(request, 'manager_dissertations_wait_commission_list.html', {'dissertations': dissertations,
+                                                                               'offer_proposition': offer_proposition})
 
 
 @login_required
@@ -512,7 +516,8 @@ def manager_dissertations_wait_eval_list(request):
     faculty_adviser = FacultyAdviser.find_by_adviser(adviser)
     offer_proposition = OfferProposition.objects.get(offer=faculty_adviser)
     dissertations = Dissertation.objects.filter(Q(offer_year_start__offer=faculty_adviser) & Q(status="EVA_SUBMIT"))
-    return render(request, 'manager_dissertations_wait_eval_list.html', {'dissertations': dissertations, 'offer_proposition': offer_proposition})
+    return render(request, 'manager_dissertations_wait_eval_list.html', {'dissertations': dissertations,
+                                                                         'offer_proposition': offer_proposition})
 
 
 @login_required
@@ -523,7 +528,8 @@ def manager_dissertations_wait_recep_list(request):
     faculty_adviser = FacultyAdviser.find_by_adviser(adviser)
     offer_proposition = OfferProposition.objects.get(offer=faculty_adviser)
     dissertations = Dissertation.objects.filter(Q(offer_year_start__offer=faculty_adviser) & Q(status="TO_RECEIVE"))
-    return render(request, 'manager_dissertations_wait_recep_list.html', {'dissertations': dissertations, 'offer_proposition': offer_proposition})
+    return render(request, 'manager_dissertations_wait_recep_list.html', {'dissertations': dissertations,
+                                                                          'offer_proposition': offer_proposition})
 
 
 ##########################

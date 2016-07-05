@@ -30,6 +30,7 @@ from base import models as mdl
 from dissertation.models.adviser import Adviser
 from dissertation.models.dissertation import Dissertation
 from dissertation.models.faculty_adviser import FacultyAdviser
+from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models.proposition_dissertation import PropositionDissertation
 from dissertation.forms import PropositionDissertationForm, ManagerPropositionDissertationForm
 from django.contrib.auth.decorators import user_passes_test
@@ -76,7 +77,7 @@ def manager_proposition_dissertation_detail(request, pk):
                   {'proposition_dissertation': proposition_dissertation,
                    'adviser': adviser,
                    'count_use': count_use,
-                   'percent': percent})
+                   'percent': round(percent, 2)})
 
 
 @login_required
@@ -146,7 +147,7 @@ def proposition_dissertation_detail(request, pk):
                   {'proposition_dissertation': proposition_dissertation,
                    'adviser': adviser,
                    'count_use': count_use,
-                   'percent': percent})
+                   'percent': round(percent, 2)})
 
 
 @login_required
@@ -154,6 +155,7 @@ def proposition_dissertation_edit(request, pk):
     proposition_dissertation = get_object_or_404(PropositionDissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
     adviser = Adviser.find_by_person(person)
+    offer_propositions = OfferProposition.objects.all()
     if proposition_dissertation.author == adviser:
         if request.method == "POST":
             form = PropositionDissertationForm(request.POST, instance=proposition_dissertation)
@@ -163,7 +165,8 @@ def proposition_dissertation_edit(request, pk):
                 return redirect('proposition_dissertation_detail', pk=proposition_dissertation.pk)
         else:
             form = PropositionDissertationForm(instance=proposition_dissertation)
-        return render(request, 'proposition_dissertation_edit.html', {'form': form})
+        return render(request, 'proposition_dissertation_edit.html', {'form': form,
+                                                                      'offer_propositions': offer_propositions})
     else:
         return render(request, 'proposition_dissertations_list.html',
                       {'proposition_dissertations': proposition_dissertations})

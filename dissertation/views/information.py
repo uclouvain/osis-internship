@@ -152,12 +152,11 @@ def informations_edit(request):
     else:
         form = AdviserForm(instance=adviser)
 
-    return render(request, "informations_edit.html",
-                {'form': form, 'first_name': person.first_name.title(),
-                 'last_name':person.last_name.title(),
-                 'email': person.email,
-                 'phone': person.phone,
-                 'phone_mobile': person.phone_mobile})
+    return render(request, "informations_edit.html", {'form': form, 'first_name': person.first_name.title(),
+                                                      'last_name': person.last_name.title(),
+                                                      'email': person.email,
+                                                      'phone': person.phone,
+                                                      'phone_mobile': person.phone_mobile})
 
 ##########################
 #      VUES MANAGER      #
@@ -189,8 +188,8 @@ def manager_informations_add(request):
 def manager_informations_detail(request, pk):
     adviser = get_object_or_404(Adviser, pk=pk)
     return render(request, 'manager_informations_detail.html', {'adviser': adviser,
-                                                 'first_name': adviser.person.first_name.title(),
-                                                 'last_name': adviser.person.last_name.title()})
+                                                                'first_name': adviser.person.first_name.title(),
+                                                                'last_name': adviser.person.last_name.title()})
 
 
 @login_required
@@ -208,7 +207,7 @@ def manager_informations_edit(request, pk):
 
     return render(request, "manager_informations_edit.html",
      {'form': form, 'first_name': adviser.person.first_name.title(),
-      'last_name':adviser.person.last_name.title(),
+      'last_name': adviser.person.last_name.title(),
       'email': adviser.person.email,
       'phone': adviser.person.phone,
       'phone_mobile': adviser.person.phone_mobile})

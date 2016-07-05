@@ -60,13 +60,14 @@ def manager_offer_parameters_detail(request, pk):
 @login_required
 @user_passes_test(is_manager)
 def manager_offer_parameters_edit(request, pk):
-	offer_proposition = get_object_or_404(OfferProposition, pk=pk)
-	if request.method == "POST":
-		form = ManagerOfferPropositionForm(request.POST, instance=OfferProposition)
-		if form.is_valid():
-			offer_proposition = form.save(commit=False)
-			offer_proposition.save()
-			return redirect('manager_offer_parameters')
-	else:
-		form = ManagerOfferPropositionForm(instance=offer_proposition)
-	return render(request, "manager_offer_parameters_edit.html", {'offer_proposition': offer_proposition, 'form': form,'range':range(12)})
+    offer_proposition = get_object_or_404(OfferProposition, pk=pk)
+    if request.method == "POST":
+        form = ManagerOfferPropositionForm(request.POST, instance=OfferProposition)
+        if form.is_valid():
+            offer_proposition = form.save(commit=False)
+            offer_proposition.save()
+            return redirect('manager_offer_parameters')
+    else:
+        form = ManagerOfferPropositionForm(instance=offer_proposition)
+    return render(request, "manager_offer_parameters_edit.html", {'offer_proposition': offer_proposition, 'form': form,
+                                                                  'range': range(12)})
