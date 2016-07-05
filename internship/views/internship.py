@@ -260,7 +260,49 @@ def internships_save(request):
         speciality_list = [x for x in speciality_list if x != 0]
         preference_list = [x for x in preference_list if x != '0']
 
+        if len(speciality_list) > 0:
+            old_spec=speciality_list[0]
+            new_spec=""
+            index = 0
+            cumul = 0
+            for p in speciality_list:
+                new_spec = p
+                index += 1
+                if old_spec == new_spec:
+                    cumul += 1
+                    old_spec = new_spec
+                else :
+                    if cumul < 4:
+                        cumul += 1
+                        for i in range(index-cumul,index-1):
+                            preference_list[i] = 0
+                        cumul = 1
+                    else :
+                        cumul = 1
+                    old_spec = new_spec
+
+
+            if index < 4:
+                for i in range(index-cumul,index):
+                    preference_list[i] = 0
+            else :
+                if cumul != 4 :
+                    for i in range(index-cumul,index):
+                        preference_list[i] = 0
+
+        index = 0
+        for r in preference_list:
+            if r == 0:
+                speciality_list[index] = 0
+                organization_list[index] = 0
+            index += 1
+
+        organization_list = [x for x in organization_list if x != 0]
+        speciality_list = [x for x in speciality_list if x != 0]
+        preference_list = [x for x in preference_list if x != 0]
+
         index = preference_list.__len__()
+
         for x in range(0, index):
             new_choice = InternshipChoice()
             new_choice.student = student[0]
