@@ -117,7 +117,7 @@ class InternshipMaster(models.Model):
     @staticmethod
     def find_masters_by_speciality_and_organization(speciality, organization):
         masters = InternshipMaster.objects.filter(speciality=speciality)\
-                                            .filter(organization__reference=organization)
+                                            .filter(organization__name=organization)
         return masters
 
     @staticmethod
