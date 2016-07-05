@@ -220,7 +220,10 @@ def __save_xls_internships(request, file_name, user):
 
                 number_place = 0
                 for x in range (3,15):
-                    number_place += int(row[x].value)
+                    if row[x].value is None:
+                        number_place += 0
+                    else :
+                        number_place += int(row[x].value)
 
                 if len(check_internship) != 0:
                     internship = InternshipOffer.find_intership_by_id(check_internship[0].id)
@@ -248,7 +251,10 @@ def __save_xls_internships(request, file_name, user):
 
                     relation.period = period[0]
                     relation.internship = internship
-                    relation.number_places = int(row[x].value)
+                    if row[x].value is None:
+                        relation.number_places = 0
+                    else :
+                        relation.number_places = int(row[x].value)
                     relation.save()
 
 @login_required
