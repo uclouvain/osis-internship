@@ -92,7 +92,7 @@ def manage_proposition_dissertation_edit(request, pk):
             return redirect('manager_proposition_dissertation_detail', pk=proposition_dissertation.pk)
     else:
         form = ManagerPropositionDissertationForm(instance=proposition_dissertation)
-    return render(request, 'manager_proposition_dissertation_edit.html', {'form': form, 'offer_propositions': offer_propositions})
+    return render(request, 'manager_proposition_dissertation_edit.html', {'form': form})
 
 
 @login_required

@@ -38,20 +38,93 @@
   </div>
   <div class="panel panel-default">
     <div class="panel-body">
-      <form method="POST" class="post-form">
+       <form method="POST" class="post-form">
         {% csrf_token %}
-        {% for field in form %}
-          <div class="row {% if field.errors %}error{% endif %}">
-            <div class="col-md-4" style="text-align: right">
-              <label>{{ field.label }}</label>
+        <div class="row">
+            <div class="col-md-1 col-lg-offset-2" style="text-align:right">
+                <label for="txt_type">{% trans 'author' %}</label>
             </div>
-            <div class="col-md-5">
-              {{ field }}
+            <div class="col-md-3">
+                <select class="form-control" id="txt_author"  name="author" style="margin:-6px;">
+                    <option value={{ form.author }}
+                </select>
             </div>
-          </div>
-          <br>
-        {% endfor %}
-        <button type="submit" class="save btn btn-default">Save</button>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-2 col-lg-offset-1" style="text-align:right">
+                <label for="txt_title" {% if form.title.errors %} style="color:red;" {% endif %}>{% trans 'title' %}</label>
+            </div>
+            <div class="col-md-4">
+                <input class="form-control" id="txt_title"  name="title"
+                    style="margin:-6px;" value="{{ form.title.value }}">
+            </div>
+            <div class="col-md-1 col-lg-offset-2" style="text-align:right">
+                <label for="txt_visibility">{% trans 'visibility' %}</label>
+            </div>
+            <div class="col-md-1">
+                <input class="form-control" id="txt_visibility"  name="visibility"
+                    style="margin:-6px;" type="checkbox" {% if form.visibility.value %} checked {% endif %}>
+            </div>
+        </div>
+        <br>
+        <div class="row {% if field.errors %}error{% endif %}">
+            <div class="col-md-2 col-lg-offset-1" style="text-align:right">
+                <label for="txt_description">{% trans 'description' %}</label>
+            </div>
+            <div class="col-md-8">
+                <textarea class="form-control" id="txt_description"  name="description" rows="10" style="margin:-6px;">{{ form.description.value }}</textarea>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-1 col-lg-offset-2" style="text-align:right">
+                <label for="txt_type">{% trans 'type' %}</label>
+            </div>
+            <div class="col-md-3">
+                <select class="form-control" id="txt_type"  name="type" style="margin:-6px;">
+                    <option value={{ form.type }}
+                </select>
+            </div>
+            <div class="col-md-1" style="text-align:right">
+                <label for="txt_level">{% trans 'level' %}</label>
+            </div>
+            <div class="col-md-3">
+                <select class="form-control" id="txt_level"  name="level" style="margin:-6px;">
+                    <option value={{ form.level }}
+                </select>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-2 col-lg-offset-1" style="text-align:right">
+                <label for="txt_collaboration">{% trans 'collaboration' %}</label>
+            </div>
+            <div class="col-md-3">
+                <select class="form-control" id="txt_collaboration"  name="collaboration" style="margin:-6px;">
+                    <option value={{ form.collaboration }}
+                </select>
+            </div>
+            <div class="col-md-3" style="text-align:right">
+                <label for="txt_max_students_number" {% if form.max_students_number.errors %} style="color:red;" {% endif %}>{% trans 'max_students_number' %}</label>
+            </div>
+            <div class="col-md-1">
+                <input class="form-control" id="txt_max_number_student"  name="max_number_student"
+                    style="margin:-6px;text-align:center;" value="{{ form.max_number_student.value }}">
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-7 col-lg-offset-3">
+                {% for checkbox in form.offer_proposition %}
+                    <div class="col-md-2">
+                        {{ checkbox.tag }}
+                        <label for="txt_visibility">{{ checkbox.choice_label }}</label>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <button type="submit" class="save btn btn-default" onclick="return confirm('{% trans 'proposition_dissertation_confirmation_message' %}')">Save</button>
       </form>
     </div>
   </div>
