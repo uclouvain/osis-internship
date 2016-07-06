@@ -17,241 +17,244 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 msgid "action_needed"
-msgstr "action_needed"
+msgstr "action requise"
 
 msgid "actions"
 msgstr "actions"
 
 msgid "adviser_can_suggest_reader"
-msgstr "adviser_can_suggest_reader"
+msgstr "les enseignants peuvent proposer un lecteur"
 
 msgid "adviser_dissertations"
-msgstr "adviser_dissertations"
+msgstr "mémoires reliés"
 
 msgid "adviser_profile"
-msgstr "adviser_profile"
+msgstr "profil enseignant"
 
 msgid "adviser_stats"
-msgstr "adviser_stats"
+msgstr "statistiques enseignant"
 
 msgid "all_advisers"
-msgstr "all_advisers"
+msgstr "tous les enseignants"
 
 msgid "all_dissertations"
-msgstr "all_dissertations"
+msgstr "tous les mémoires"
 
 msgid "all_proposition_dissertations"
-msgstr "all_proposition_dissertations"
+msgstr "tous les sujets de mémoires"
 
 msgid "author"
-msgstr "author"
+msgstr "auteur"
 
 msgid "available_at_office"
-msgstr "available_at_office"
+msgstr "disponible au bureau"
 
 msgid "available_by_email"
-msgstr "available_by_email"
+msgstr "disponible par email"
 
 msgid "available_by_phone"
-msgstr "available_by_phone"
+msgstr "disponible par téléphone"
 
 msgid "collaboration"
 msgstr "collaboration"
 
 msgid "comment"
-msgstr "comment"
+msgstr "commentaire"
 
 msgid "confirmation_message"
-msgstr "confirmation_message"
+msgstr "message de confirmation"
 
 msgid "creation_date"
-msgstr "creation_date"
+msgstr "date de création"
 
 msgid "current_status"
-msgstr "current_status"
+msgstr "statut actuel"
 
 msgid "defend_periode"
-msgstr "defend_periode"
+msgstr "période de défense"
 
 msgid "delete_adviser_role_confirmation_message"
-msgstr "delete_adviser_role_confirmation_message"
+msgstr "Attention : vous allez définitivement supprimer ce membre du jury. Êtes-vous certain de vouloir continuer ?"
 
 msgid "delete_dissertation"
-msgstr "delete_dissertation"
+msgstr "Supprimer le mémoire"
 
 msgid "delete_dissertation_confirmation_message"
-msgstr "delete_dissertation_confirmation_message"
+msgstr "Attention : vous allez définitivement supprimer ce mémoire. Êtes-vous certain de vouloir continuer ?"
 
 msgid "delete_manager_dissertation"
-msgstr "delete_manager_dissertation"
+msgstr "Supprimer ce mémoire"
 
 msgid "delete_proposition_dissertation"
-msgstr "delete_proposition_dissertation"
+msgstr "Supprimer ce sujet de mémoire"
 
 msgid "delete_proposition_dissertation_confirmation_message"
-msgstr "delete_proposition_dissertation_confirmation_message"
+msgstr "Attention : vous allez définitivement supprimer ce sujet de mémoire. Êtes-vous certain de vouloir continuer ?"
 
 msgid "desc_lnk_dissertations"
-msgstr "desc_lnk_dissertations"
+msgstr "Liste des projets de mémoires auxquels je suis relié."
 
 msgid "desc_lnk_informations"
-msgstr "desc_lnk_informations"
+msgstr "Paramétrage de mes informations pour la plateforme mémoire."
 
 msgid "desc_lnk_manager_dissertations"
-msgstr "desc_lnk_manager_dissertations"
+msgstr "Liste des projets de mémoires."
 
 msgid "desc_lnk_manager_informations"
-msgstr "desc_lnk_manager_informations"
+msgstr "Liste des enseignants liés à la plateforme Mémoires"
 
 msgid "desc_lnk_manager_offer_parameters"
-msgstr "desc_lnk_manager_offer_parameters"
+msgstr "Paramétrage de la plateforme"
 
 msgid "desc_lnk_manager_proposition_dissertations"
-msgstr "desc_lnk_manager_proposition_dissertations"
+msgstr "Sujets de mémoire proposés par les enseignants"
 
 msgid "desc_lnk_propositions_dissertations"
-msgstr "desc_lnk_propositions_dissertations"
+msgstr "Sujets de mémoire proposés par moi-même et par les autres enseignants"
 
 msgid "description"
 msgstr "description"
 
 msgid "dissertation_adviser_copromoteur"
-msgstr "dissertation_adviser_copromoteur"
+msgstr "Mémoires encadrés en tant que co-promoteur"
 
 msgid "dissertation_adviser_promoteur"
-msgstr "dissertation_adviser_promoteur"
+msgstr "Mémoires encadrés en tant que promoteur"
 
 msgid "dissertation_adviser_reader"
-msgstr "dissertation_adviser_reader"
+msgstr "Mémoires encadrés en tant que lecteur"
 
 msgid "dissertation_confirmation_message"
-msgstr "dissertation_confirmation_message"
+msgstr "Vous allez sauvegarder les modifications de ce mémoire. Continuer ?"
 
 msgid "dissertation_informations"
-msgstr "dissertation_informations"
+msgstr "Informations sur le mémoire"
 
 msgid "dissertation_jury"
-msgstr "dissertation_jury"
+msgstr "Jury du mémoire"
 
 msgid "dissertation_person"
 msgstr "dissertation_person"
 
+msgid "dissertation_titre"
+msgstr "titre du mémoire"
+
 msgid "dissertations"
-msgstr "dissertations"
+msgstr "mémoires"
 
 msgid "dissertation_updates"
-msgstr "dissertation_updates"
+msgstr "Mises-à-jour du mémoire"
 
 msgid "edit_adviser"
-msgstr "edit_adviser"
+msgstr "Modifier l'enseignant"
 
 msgid "edit_manager_dissertation"
-msgstr "edit_manager_dissertation"
+msgstr "Modifier le mémoire"
 
 msgid "edit_my_informations"
-msgstr "Editer mes informations"
+msgstr "Modifier mes informations"
 
 msgid "edit_proposition_dissertation"
-msgstr "edit_proposition_dissertation"
+msgstr "Modifier le sujet de mémoire"
 
 msgid "email"
 msgstr "email"
 
 msgid "evaluation_first_year"
-msgstr "evaluation_first_year"
+msgstr "Évaluation de fin de première année"
 
 msgid "how_many_dissertation_copro"
-msgstr "how_many_dissertation_copro"
+msgstr "quantité de mémoires en tant que co-promoteur"
 
 msgid "how_many_dissertation_need_answer"
-msgstr "how_many_dissertation_need_answer"
+msgstr "quantités de mémoires demandant une réponse"
 
 msgid "how_many_dissertation_pro"
-msgstr "how_many_dissertation_pro"
+msgstr "quantité de mémoires en tant que promoteur"
 
 msgid "how_many_dissertation_reader"
-msgstr "how_many_dissertation_reader"
+msgstr "quantité de mémoires en tant que lecteur"
 
 msgid "import_xlsx"
-msgstr "import_xlsx"
+msgstr "import xlsx"
 
 msgid "informations"
 msgstr "informations"
 
 msgid "in_this_offer"
-msgstr "in_this_offer"
+msgstr "dans cette offre"
 
 msgid "in_visibility_dissertation"
-msgstr "in_visibility_dissertation"
+msgstr "Mémoires visibles pour l'instant"
 
 msgid "in_visibility_proposition"
-msgstr "in_visibility_proposition"
+msgstr "Sujets de mémoires visibles pour l'instant"
 
 msgid "invisible"
 msgstr "invisible"
 
 msgid "level"
-msgstr "level"
+msgstr "niveau"
 
 msgid "lose_confirmation_message"
-msgstr "lose_confirmation_message"
+msgstr "Attention : ce mémoire va être marqué comme reporté à l'année suivante. Êtes-vous certain de vouloir continuer ?"
 
 msgid "main"
-msgstr "main"
+msgstr "principal"
 
 msgid "manager_informations_add_confirmation"
 msgstr "manager_informations_add_confirmation"
 
 msgid "manager_informations_list_request"
-msgstr "manager_informations_list_request"
+msgstr "Enseignants devant répondre à une demande"
 
 msgid "max_students_number"
-msgstr "max_students_number"
+msgstr "nombre maximum d'étudiants"
 
 msgid "mobile_phone"
-msgstr "mobile_phone"
+msgstr "GSM"
 
 msgid "my_informations"
-msgstr "my_informations"
+msgstr "mes informations"
 
 msgid "my_profile"
-msgstr "my_profile"
+msgstr "mon profil"
 
 msgid "my_proposition_dissertations"
-msgstr "my_proposition_dissertations"
+msgstr "mes sujets de mémoires"
 
 msgid "my_stats"
-msgstr "my_stats"
+msgstr "mes statistiques"
 
 msgid "name"
-msgstr "name"
+msgstr "nom"
 
 msgid "new_adviser"
-msgstr "new_adviser"
+msgstr "Ajout enseignant"
 
 msgid "new_or_edit_dissertation"
-msgstr "new_or_edit_dissertation"
+msgstr "Nouveau/Modifier mémoire"
 
 msgid "new_or_edit_subject"
-msgstr "new_or_edit_subject"
+msgstr "Nouveau/Modifier sujet de mémoire"
 
 msgid "no_result"
-msgstr "no_result"
+msgstr "aucun résultat"
 
 msgid "of"
-msgstr "of"
+msgstr "sur"
 
 msgid "offer_propositions"
-msgstr "offer_propositions"
+msgstr "programmes"
 
 msgid "parameters"
-msgstr "parameters"
+msgstr "paramètres"
 
 msgid "phone"
-msgstr "phone"
+msgstr "téléphone"
 
 msgid "phone_mobile"
-msgstr "phone_mobile"
+msgstr "GSM"
 
 msgid "photo"
 msgstr "photo"
@@ -260,106 +263,106 @@ msgid "profile_person"
 msgstr "profile_person"
 
 msgid "proposition_dissertation_confirmation_message"
-msgstr "proposition_dissertation_confirmation_message"
+msgstr "Vous allez sauvegarder les modifications de ce sujet de mémoire. Continuer ?"
 
 msgid "proposition_dissertation_informations"
-msgstr "proposition_dissertation_informations"
+msgstr "Informations sur le sujet de mémoire"
 
 msgid "readers_visibility_date_for_students"
-msgstr "readers_visibility_date_for_students"
+msgstr "Date de visibilité des lecteurs pour les étudiants"
 
 msgid "search"
-msgstr "search"
+msgstr "recherche"
 
 msgid "search_proposition_dissertation"
-msgstr "search_proposition_dissertation"
+msgstr "rechercher un sujet de mémoire"
 
 msgid "search_teacher"
-msgstr "search_teacher"
+msgstr "rechercher un enseignant"
 
 msgid "see_my_waiting_dissertations"
-msgstr "see_my_waiting_dissertations"
+msgstr "Voir les mémoires en attente de réponse"
 
 msgid "stats_person"
 msgstr "stats_person"
 
 msgid "stats"
-msgstr "stats"
+msgstr "statistiques"
 
 msgid "status"
-msgstr "status"
+msgstr "état"
 
 msgid "student_can_manage_readers"
-msgstr "student_can_manage_readers"
+msgstr "les étudiants peuvent gérer les lecteurs"
 
 msgid "student_path"
-msgstr "student_path"
+msgstr "Parcours de l'étudiant"
 
 msgid "subjects"
-msgstr "subjects"
+msgstr "sujets de mémoires"
 
 msgid "taken_places"
-msgstr "taken_places"
+msgstr "places prises"
 
 msgid "teachers"
-msgstr "teachers"
+msgstr "enseignants"
 
 msgid "teachers_not_responding_to_request"
-msgstr "teachers_not_responding_to_request"
+msgstr "Enseignants devant répondre à une demande"
 
 msgid "title"
-msgstr "title"
+msgstr "titre"
 
 msgid "title_chart_copro"
-msgstr "title_chart_copro"
+msgstr "Répartition des mémoires en tant que co-promoteur"
 
 msgid "title_chart_pro"
-msgstr "title_chart_pro"
+msgstr "Répartition des mémoires en tant que promoteur"
 
 msgid "title_chart_read"
-msgstr "title_chart_read"
+msgstr "Répartition des mémoires en tant que lecteur"
 
 msgid "to_dir_ko_confirmation_message"
-msgstr "to_dir_ko_confirmation_message"
+msgstr "Attention : vous allez refuser ce projet de mémoire. Êtes-vous certain de vouloir continuer ?"
 
 msgid "to_dir_ok_confirmation_message"
-msgstr "to_dir_ok_confirmation_message"
+msgstr "Attention : vous allez accepter ce projet de mémoire. Êtes-vous certain de vouloir continuer ?"
 
 msgid "to_dir_submit_confirmation_message"
-msgstr "to_dir_submit_confirmation_message"
+msgstr "Attention : vous allez soumettre ce projet de mémoire au promoteur. Êtes-vous certain de vouloir continuer ?"
 
 msgid "type"
 msgstr "type"
 
 msgid "updates"
-msgstr "updates"
+msgstr "mises-à-jour"
 
 msgid "validation_commission_exists"
-msgstr "validation_commission_exists"
+msgstr "présence d'une commission de validation"
 
 msgid "visibility"
-msgstr "visibility"
+msgstr "visibilité"
 
 msgid "visible"
 msgstr "visible"
 
 msgid "waiting_commission"
-msgstr "waiting_commission"
+msgstr "en attente de la commission"
 
 msgid "waiting_dissertations"
-msgstr "waiting_dissertations"
+msgstr "en attente de réponse de l'enseignant"
 
 msgid "waiting_evaluation"
-msgstr "waiting_evaluation"
+msgstr "en attente de l'évaluation (fin de 1è année)"
 
 msgid "waiting_reception"
-msgstr "waiting_reception"
+msgstr "en attente de la réception"
 
 msgid "wating_dissertations_message"
-msgstr "wating_dissertations_message"
+msgstr "mémoire(s) en attente de validation"
 
 msgid "win_confirmation_message"
-msgstr "win_confirmation_message"
+msgstr "Attention : vous allez indiquer ce mémoire comme terminé et réussi. Êtes-vous certain de vouloir continuer ?"
 
 msgid "you_have"
-msgstr "you_have"
+msgstr "Vous avez"
