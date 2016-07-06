@@ -1,0 +1,245 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-04-22 15:14+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "studies"
+msgstr "Studies"
+
+msgid "internships"
+msgstr "Internships"
+
+msgid "detail_choice"
+msgstr "Choice's Details"
+
+msgid "first_choice"
+msgstr "First choice"
+
+msgid "second_choice"
+msgstr "Second choice"
+
+msgid "third_choice"
+msgstr "Third Choice"
+
+msgid "fourth_choice"
+msgstr "Fourth choice"
+
+msgid "student_list"
+msgstr "Students list"
+
+msgid "all_internships"
+msgstr "All internships"
+
+msgid "internship_modification"
+msgstr "Internship modification"
+
+msgid "new_internship"
+msgstr "New internship"
+
+msgid "internships_managment"
+msgstr "Internships managment"
+
+msgid "internships_offers"
+msgstr "Internships offers"
+
+msgid "periods_list"
+msgstr "Periods list"
+
+msgid "hospital_list"
+msgstr "Hospital list"
+
+msgid "internships_masters_list"
+msgstr "Internship's masters list"
+
+msgid "student_sumup"
+msgstr "Student sum up"
+
+msgid "student"
+msgstr "Student"
+
+msgid "block_internship_selection"
+msgstr "Block internship's selection"
+
+msgid "activate_internship_selection"
+msgstr "Activate internship's selection"
+
+msgid "choose_internships"
+msgstr "Choose your internship"
+
+msgid "summary_your_choices_and_affectation"
+msgstr "Sump up of your choices and your affectations"
+
+msgid "organization"
+msgstr "Hospital"
+
+msgid "choose_a_hospital"
+msgstr "Choose a hospital"
+
+msgid "choose_spec_see_record_choice"
+msgstr "Choose a speciality to see your choices already done."
+
+msgid "all_ready_4_choice_spec"
+msgstr "You already have submit your 4 choices for this speciality."
+
+msgid "not_4_choice_spec"
+msgstr "You don't have submit your 4 choices for this speciality."
+
+msgid "internships_masters"
+msgstr "Internship's masters"
+
+msgid "speciality"
+msgstr "Speciality"
+
+msgid "reference"
+msgstr "Reference"
+
+msgid "name"
+msgstr "Name"
+
+msgid "forname"
+msgstr "Firstname"
+
+msgid "civility"
+msgstr "Civility"
+
+msgid "type"
+msgstr "Type"
+
+msgid "mail"
+msgstr "Email"
+
+msgid "periods"
+msgstr "Périods"
+
+msgid "add_period"
+msgstr "Add a period"
+
+msgid "period_creation"
+msgstr "Create a period"
+
+msgid "date_start"
+msgstr "Date start"
+
+msgid "date_end"
+msgstr "Date end"
+
+msgid "places"
+msgstr "Hospitals"
+
+msgid "all_places"
+msgstr "All hospitals"
+
+msgid "noma"
+msgstr "Noma"
+
+msgid "gender"
+msgstr "Gender"
+
+msgid "email"
+msgstr "Email"
+
+msgid "phone_mobile"
+msgstr "Phone Number / Mobile Number"
+
+msgid "language"
+msgstr "Language"
+
+msgid "address"
+msgstr "Address"
+
+msgid "choice_receive_by_administration"
+msgstr "Choice receive by administration"
+
+msgid "student_affectation"
+msgstr "Internship's affectation"
+
+msgid "no_result"
+msgstr "No result"
+
+msgid "details"
+msgstr "Details"
+
+msgid "choice_modification"
+msgstr "Choices modification"
+
+msgid "academic_year"
+msgstr "Academic year"
+
+msgid "internship_choice"
+msgstr "internship's choices"
+
+msgid "import_internships"
+msgstr "Import internships"
+
+msgid "all_hospitals"
+msgstr "All hospitals"
+
+msgid "import_masters"
+msgstr "Import internship's masters"
+
+msgid "internships_injection"
+msgstr "Internships' injection"
+
+msgid "list_of_all_hospital"
+msgstr "List of all hospital"
+
+msgid "all_city"
+msgstr "All city"
+
+msgid "import_hospital"
+msgstr "Import hospitals"
+
+msgid "add_a_hospital"
+msgstr "Add a hospital"
+
+msgid "places_injection"
+msgstr "Hospitals' injection"
+
+msgid "student_choice"
+msgstr "Students' choice"
+
+msgid "affectation_result"
+msgstr "Affectation's result"
+
+msgid "help_pnl_selectedfiles_internships"
+msgstr "Select a xlsx file for the internships' injection"
+
+msgid "help_pnl_selectedfiles_places"
+msgstr "Select a xlsx file for the hospitals' injection"
+
+msgid "help_pnl_selectedfiles_masters"
+msgstr "Select a xlsx file for the internship's masters' injection"
+
+msgid "internships_specialities"
+msgstr "Internships' specialities"
+
+msgid "create_a_speciality"
+msgstr "Create a speciality"
+
+msgid "add_speciality"
+msgstr "Add a speciality"
+
+msgid "mandatory"
+msgstr "Mandatory"
+
+msgid "internship_block_moment"
+msgstr "internships' selection are currently blocked."
+
+msgid "return"
+msgstr "Return"
+
+msgid "already_internship_preference_speciality"
+msgstr "You already have an internship with this preference for this speciality."
