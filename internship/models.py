@@ -117,7 +117,7 @@ class InternshipMaster(models.Model):
     @staticmethod
     def find_masters_by_speciality_and_organization(speciality, organization):
         masters = InternshipMaster.objects.filter(speciality=speciality)\
-                                            .filter(organization__reference=organization)
+                                            .filter(organization__name=organization)
         return masters
 
     @staticmethod
@@ -132,8 +132,8 @@ class InternshipMaster(models.Model):
 
     @staticmethod
     def find_master_by_firstname_name(firstname, name):
-        master = InternshipMaster.objects.filter(first_name=firstname)\
-                                            .filter(last_name=name)
+        master = InternshipMaster.objects.filter(first_name__icontains=firstname)\
+                                            .filter(last_name__icontains=name)
         return master
 
 
@@ -273,7 +273,7 @@ class InternshipSpeciality(models.Model):
         return self.name
 
     @staticmethod
-    def find_by(learning_unit=None, name=None):
+    def find_by(learning_unit=None, name=None, mandatory=None):
         queryset = InternshipSpeciality.objects
 
         if learning_unit:
@@ -281,7 +281,11 @@ class InternshipSpeciality(models.Model):
             has_criteria = True
 
         if name:
-            queryset = queryset.filter(name=name)
+            queryset = queryset.filter(name__icontains=name)
+            has_criteria = True
+
+        if mandatory:
+            queryset = queryset.filter(mandatory=mandatory)
             has_criteria = True
 
         if has_criteria:
@@ -379,3 +383,24 @@ class InternshipStudentInformation(models.Model):
         except ObjectDoesNotExist:
             return None
 
+    @staticmethod
+    def find_by(person_name=None, person_first_name=None):
+        has_criteria = False
+        queryset = InternshipStudentInformation.objects
+
+        if person_name:
+            queryset = queryset.filter(person__last_name__icontains=person_name)
+            has_criteria = True
+
+        if person_first_name:
+            queryset = queryset.filter(person__first_name__icontains=person_first_name)
+            has_criteria = True
+
+        if has_criteria:
+            return queryset
+        else:
+            return None
+
+    @staticmethod
+    def find_all():
+        return InternshipStudentInformation.objects.all()

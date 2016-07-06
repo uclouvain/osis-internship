@@ -132,16 +132,36 @@
                           {% endif %}
                         {% endfor %}
                       </ul>
-                    <label> Stage en Médecine Interne </label><br/>
+                    <label> Stage en Médecine Interne 1</label><br/>
                       <ul>
                         {% for choice in internship_choice %}
-                          {% if choice.speciality.name == "Stage en Médecine interne" %}
+                          {% if choice.speciality.name == "Stage en Médecine interne 1" %}
                             <li> {% trans 'Hôpital' %} :
                                     {{ choice.organization.reference }} - {{ choice.organization.name }} |
                                     Choix : {{ choice.choice }}
                           {% endif %}
                         {% endfor %}
                       </ul>
+                    <label> Stage en Médecine Interne 2</label><br/>
+                      <ul>
+                        {% for choice in internship_choice %}
+                          {% if choice.speciality.name == "Stage en Médecine interne 2" %}
+                            <li> {% trans 'Hôpital' %} :
+                                    {{ choice.organization.reference }} - {{ choice.organization.name }} |
+                                    Choix : {{ choice.choice }}
+                          {% endif %}
+                        {% endfor %}
+                      </ul>
+                      <label> Stage en Médecine Interne 3</label><br/>
+                        <ul>
+                          {% for choice in internship_choice %}
+                            {% if choice.speciality.name == "Stage en Médecine interne 3" %}
+                              <li> {% trans 'Hôpital' %} :
+                                      {{ choice.organization.reference }} - {{ choice.organization.name }} |
+                                      Choix : {{ choice.choice }}
+                            {% endif %}
+                          {% endfor %}
+                        </ul>
                     <label> Stage en Pédiatrie </label><br/>
                       <ul>
                         {% for choice in internship_choice %}

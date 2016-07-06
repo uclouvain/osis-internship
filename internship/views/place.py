@@ -37,7 +37,19 @@ def internships_places(request):
         city_sort_get = request.GET.get('city_sort')
 
     # Second, import all the organizations with their address(es if they have more than one)
-    organizations = Organization.find_by_type("service partner", order_by=['reference'])
+    all_organizations = Organization.find_by_type("service partner", order_by=['reference'])
+
+    number_ref = []
+    for organization in all_organizations:
+        if organization is not None:
+            number_ref.append(organization.reference)
+    number_ref=sorted(number_ref, key=int)
+    organizations = []
+    for i in number_ref:
+        print(i)
+        organization = Organization.search(reference=i)
+        organizations.append(organization[0])
+
     if organizations:
         for organization in organizations:
             organization.address = ""
@@ -139,13 +151,9 @@ def place_save(request, organization_id, organization_address_id):
         organization = Organization()
 
     # get the screen modifications
-    if request.POST['acronym']:
-        organization.acronym = request.POST['acronym']
-    else:
-        organization.acronym = None
-
     if request.POST['name']:
         organization.name = request.POST['name']
+        organization.acronym = request.POST['name'][:14]
     else:
         organization.name = None
 
@@ -169,8 +177,9 @@ def place_save(request, organization_id, organization_address_id):
         organization_address = OrganizationAddress()
 
     organization_address.organization = organization
-    if request.POST['organization_address_label']:
-        organization_address.label = request.POST['organization_address_label']
+
+    if organization:
+        organization_address.label = "Addr"+organization.name[:14]
     else:
         organization_address.label = None
 

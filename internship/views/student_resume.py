@@ -28,7 +28,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
-from internship.models import InternshipChoice, InternshipStudentInformation
+from internship.models import InternshipChoice, InternshipStudentInformation, InternshipSpeciality
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -38,24 +38,29 @@ from django.utils.translation import ugettext_lazy as _
 def internships_student_resume(request):
     students_list = InternshipChoice.find_by_all_student()
 
+    for si in students_list:
+        student = mdl.student.find_by_person(si.person)
+        choices = InternshipChoice.find_by_student(student)
+        si.number_choices = len(choices)
+
+    specialities = InternshipSpeciality.find_by(mandatory=True)
+    number_selection = 4 * len (specialities)
+
+
     return render(request, "student_search.html", {'s_noma':    None,
                                                    's_name':    None,
-                                                   'students':  students_list, })
+                                                   'students':  students_list,
+                                                   'number_selection' : number_selection,
+                                                   })
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_search(request):
-    s_noma = request.GET['s_noma']
     s_name = request.GET['s_name']
     s_firstname = request.GET['s_firstname']
     students_list = []
     criteria_present = False
-
-    if len(s_noma) <= 0:
-        s_noma = None
-    else:
-        criteria_present=True
 
     s_name = s_name.strip()
     if len(s_name) <= 0:
@@ -71,14 +76,13 @@ def internships_student_search(request):
 
     message = None
     if criteria_present:
-        students_list = mdl.student.find_by(registration_id=s_noma, person_name=s_name, person_first_name = s_firstname)
+        students_list = InternshipStudentInformation.find_by(person_name=s_name, person_first_name = s_firstname)
     else:
         students_list = InternshipChoice.find_by_all_student()
         # message = "%s" % _('You must choose at least one criteria!')
 
     return render(request, "student_search.html",
-                           {'s_noma':       s_noma,
-                            's_name':       s_name,
+                           {'s_name':       s_name,
                             's_firstname':  s_firstname,
                             'students':     students_list,
                             'init':         "0",
