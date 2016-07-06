@@ -28,7 +28,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
-from internship.models import InternshipChoice, InternshipStudentInformation
+from internship.models import InternshipChoice, InternshipStudentInformation, InternshipSpeciality
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -38,9 +38,20 @@ from django.utils.translation import ugettext_lazy as _
 def internships_student_resume(request):
     students_list = InternshipChoice.find_by_all_student()
 
+    for si in students_list:
+        student = mdl.student.find_by_person(si.person)
+        choices = InternshipChoice.find_by_student(student)
+        si.number_choices = len(choices)
+
+    specialities = InternshipSpeciality.find_by(mandatory=True)
+    number_selection = 4 * len (specialities)
+
+
     return render(request, "student_search.html", {'s_noma':    None,
                                                    's_name':    None,
-                                                   'students':  students_list, })
+                                                   'students':  students_list,
+                                                   'number_selection' : number_selection,
+                                                   })
 
 
 @login_required

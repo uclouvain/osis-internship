@@ -52,11 +52,14 @@ def speciality_create(request):
 def speciality_new(request):
     form = InternshipSpecialityForm(data=request.POST)
     speciality = InternshipSpeciality()
+    mandatory = False
+    if request.POST.get('mandatory') :
+        mandatory = True
 
     learning_unit = mdl.learning_unit.search(acronym=request.POST['learning_unit'])
     speciality.learning_unit = learning_unit[0]
     speciality.name = request.POST['name']
-    speciality.mandatory = request.POST['mandatory']
+    speciality.mandatory = mandatory
 
     speciality.save()
     return render(request, "speciality_create.html", {'section': 'internship',
