@@ -119,7 +119,7 @@
                 {% for checkbox in form.offer_proposition %}
                     <div class="col-md-2">
                         {{ checkbox.tag }}
-                        <label for="txt_visibility">{{ checkbox.choice_label }}</label>
+                        <label for="txt_visibility" {% if form.offer_proposition.errors %} style="color:red;" {% endif %}>{{ checkbox.choice_label }}</label>
                     </div>
                 {% endfor %}
             </div>

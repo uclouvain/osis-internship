@@ -105,7 +105,7 @@ def manager_proposition_dissertation_new(request):
             return redirect('manager_proposition_dissertations')
     else:
         form = ManagerPropositionDissertationForm(initial={'active': True})
-    return render(request, 'manager_proposition_dissertation_edit.html', {'form': form})
+    return render(request, 'manager_proposition_dissertation_new.html', {'form': form})
 
 
 @login_required
@@ -192,7 +192,7 @@ def proposition_dissertation_new(request):
         person = mdl.person.find_by_user(request.user)
         adviser = Adviser.find_by_person(person)
         form = PropositionDissertationForm(initial={'author': adviser, 'active': True})
-    return render(request, 'proposition_dissertation_edit.html', {'form': form})
+    return render(request, 'proposition_dissertation_new.html', {'form': form})
 
 
 @login_required
