@@ -273,7 +273,7 @@ class InternshipSpeciality(models.Model):
         return self.name
 
     @staticmethod
-    def find_by(learning_unit=None, name=None):
+    def find_by(learning_unit=None, name=None, mandatory=None):
         queryset = InternshipSpeciality.objects
 
         if learning_unit:
@@ -282,6 +282,10 @@ class InternshipSpeciality(models.Model):
 
         if name:
             queryset = queryset.filter(name__icontains=name)
+            has_criteria = True
+
+        if mandatory:
+            queryset = queryset.filter(mandatory=mandatory)
             has_criteria = True
 
         if has_criteria:

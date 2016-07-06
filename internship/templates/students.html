@@ -47,14 +47,15 @@
                   <th>{% trans 'mail' %}</th>
                   <th>{% trans 'birth_date' %}</th>
                   <th>{% trans 'address' %}</th>
-                  <th>{% trans 'Phone Number' %}</th>
+                  <th>{% trans 'phone_mobile' %}</th>
+                  <th>{% trans 'statut' %}</th>
               </tr>
             </thead>
             <tbody>
               {% for student in all_students %}
               <tr>
                   <td>
-                    {{ student.person.last_name }}
+                      {{ student.person.last_name }}
                   </td>
                   <td>
                     {{ student.person.first_name }}
@@ -73,6 +74,17 @@
                   </td>
                   <td>
                     {{ student.phone_mobile }}
+                  </td>
+                  <td>
+                    {% if student.number_choices == number_selection %}
+                      <button type="button" class="btn btn-success">
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                      </button>
+                    {% else %}
+                      <button type="button" class="btn btn-danger">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                      </button>
+                    {% endif %}
                   </td>
               </tr>
               {% endfor %}
