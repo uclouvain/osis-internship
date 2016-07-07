@@ -24,11 +24,13 @@
 #
 ##############################################################################
 from django.shortcuts import render
+from django.http.response import HttpResponseRedirect
+from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from assistant.models import *
 from base.models import person, person_address, academic_year, learning_unit_year, offer_year, program_manager
 from django.template.context_processors import request
-from assistant.forms import AssistantFormPart1
+from assistant.forms import AssistantFormPart1, AssistantFormPart6
 from assistant.models.academic_assistant import find_by_id
 from assistant.models.assistant_mandate import find_mandate_by_id,\
     find_mandate_by_academic_assistant
@@ -116,4 +118,37 @@ def pst_form_part1_save(request, mandate_id):
         return assistant_pst_part1(request, academic_assistant.id)
     else:
         form = AssistantFormPart1()
-        return render(request, "assistant_form_part2.html")        
+        return render(request, "assistant_form_part2.html")   
+    
+def form_part6_edit(request, mandate_id):
+    mandate = assistant_mandate.find_mandate_by_id(mandate_id)
+    person = request.user.person
+    assistant = mandate.assistant
+    if person != assistant.person:
+        return HttpResponseRedirect(reverse('assistant_mandates'))
+    form = AssistantFormPart6(initial={'tutoring_percent': mandate.tutoring_percent,
+                                       'service_activities_percent': mandate.service_activities_percent,
+                                       'formation_activities_percent': mandate.formation_activities_percent,
+                                       'research_percent': mandate.research_percent,
+                                       'activities_report_remark': mandate.activities_report_remark
+                                       }, prefix='mand')
+    return render(request, "assistant_form_part6.html", {'assistant': assistant,
+                                                         'mandate': mandate,
+                                                         'form': form}) 
+    
+def form_part6_save(request, mandate_id):
+    """Use to save an assistant form part6."""
+    mandate = assistant_mandate.find_mandate_by_id(mandate_id)
+    assistant = mandate.assistant
+    person = request.user.person
+    if person != assistant.person:
+        return HttpResponseRedirect(reverse('assistant_mandates'))
+    elif request.method == 'POST':
+        form = AssistantFormPart6(data=request.POST, instance=mandate, prefix='mand')
+        if form.is_valid():
+            form.save()
+            return form_part6_edit(request, mandate.id)
+        else:
+            return render(request, "assistant_form_part6.html", {'assistant': assistant,
+                                                             'mandate': mandate,
+                                                             'form': form})      
