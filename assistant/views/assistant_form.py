@@ -124,7 +124,7 @@ def form_part6_edit(request, mandate_id):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     person = request.user.person
     assistant = mandate.assistant
-    if person != assistant.person:
+    if person != assistant.person or mandate.state != 'TRTS':
         return HttpResponseRedirect(reverse('assistant_mandates'))
     form = AssistantFormPart6(initial={'tutoring_percent': mandate.tutoring_percent,
                                        'service_activities_percent': mandate.service_activities_percent,
@@ -141,13 +141,21 @@ def form_part6_save(request, mandate_id):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     assistant = mandate.assistant
     person = request.user.person
-    if person != assistant.person:
+    if person != assistant.person or mandate.state != 'TRTS':
         return HttpResponseRedirect(reverse('assistant_mandates'))
     elif request.method == 'POST':
         form = AssistantFormPart6(data=request.POST, instance=mandate, prefix='mand')
         if form.is_valid():
-            form.save()
-            return form_part6_edit(request, mandate.id)
+            if 'validate_and_submit' in request.POST:
+                if assistant.supervisor:
+                    mandate.state='PHD_SUPERVISOR'
+                else:
+                    mandate.state='RESEARCH'
+                form.save()
+                return HttpResponseRedirect(reverse('assistant_mandates'))
+            else:
+                form.save()
+                return form_part6_edit(request, mandate.id)
         else:
             return render(request, "assistant_form_part6.html", {'assistant': assistant,
                                                              'mandate': mandate,
