@@ -124,7 +124,7 @@ def form_part5_edit(request, mandate_id):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     person = request.user.person
     assistant = mandate.assistant
-    if person != assistant.person:
+    if person != assistant.person or mandate.state != 'TRTS':
         return HttpResponseRedirect(reverse('assistant_mandates'))
     form = AssistantFormPart5(initial={'faculty_representation': mandate.faculty_representation,
                                        'institute_representation': mandate.institute_representation,
@@ -148,7 +148,7 @@ def form_part5_save(request, mandate_id):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     assistant = mandate.assistant
     person = request.user.person
-    if person != assistant.person:
+    if person != assistant.person or mandate.state != 'TRTS':
         return HttpResponseRedirect(reverse('assistant_mandates'))
     elif request.method == 'POST':
         form = AssistantFormPart5(data=request.POST, instance=mandate, prefix='mand')
