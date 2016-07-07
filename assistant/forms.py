@@ -105,3 +105,18 @@ class MandatesArchivesForm(ModelForm):
     class Meta:
         model = mdl.assistant_mandate.AssistantMandate
         fields = ('academic_year',)
+        
+        
+class AssistantFormPart5(ModelForm):
+    degrees = forms.CharField(
+        required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '4'}))
+    formations = forms.CharField(
+        required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '4'}))
+
+    class Meta:
+        model = mdl.assistant_mandate.AssistantMandate
+        fields = ('faculty_representation', 'institute_representation', 'sector_representation',
+                  'governing_body_representation','corsci_representation','students_service',
+                  'infrastructure_mgmt_service','events_organisation_service','publishing_field_service',
+                  'scientific_jury_service','degrees','formations')  
+    
