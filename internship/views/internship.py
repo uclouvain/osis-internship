@@ -191,7 +191,6 @@ def internships_stud(request):
     query_selectable = InternshipOffer.find_internships()
     if len(query_selectable) > 0 :
         if query_selectable[0].selectable:
-            print (query_selectable[0].organization, query_selectable[0].speciality, query_selectable[0].selectable)
             selectable = True
         else :
             selectable = False
