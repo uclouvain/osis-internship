@@ -83,7 +83,9 @@
             </div>
             <div class="col-md-3">
                 <select class="form-control" id="txt_type"  name="type" style="margin:-6px;">
-                    <option value={{ form.type }}
+                    {% for type in types_choices %}
+                        <option value="{{ type.0 }}" {% if form.type.value == type.0 %}selected{% endif %}>{{ type.1}}</option>
+                    {% endfor %}
                 </select>
             </div>
             <div class="col-md-1" style="text-align:right">
@@ -91,7 +93,9 @@
             </div>
             <div class="col-md-3">
                 <select class="form-control" id="txt_level"  name="level" style="margin:-6px;">
-                    <option value={{ form.level }}
+                    {% for level in levels_choices %}
+                        <option value="{{ level.0 }}" {% if form.level.value == level.0 %}selected{% endif %}>{{ level.1}}</option>
+                    {% endfor %}
                 </select>
             </div>
         </div>
@@ -102,11 +106,13 @@
             </div>
             <div class="col-md-3">
                 <select class="form-control" id="txt_collaboration"  name="collaboration" style="margin:-6px;">
-                    <option value={{ form.collaboration }}
+                    {% for collaboration in collaborations_choices %}
+                        <option value="{{ collaboration.0 }}" {% if form.collaboration.value == collaboration.0 %}selected{% endif %}>{{ collaboration.1}}</option>
+                    {% endfor %}
                 </select>
             </div>
             <div class="col-md-3" style="text-align:right">
-                <label for="txt_max_students_number" {% if form.max_students_number.errors %} style="color:red;" {% endif %}>{% trans 'max_students_number' %}</label>
+                <label for="txt_max_students_number" {% if form.max_number_student.errors %} style="color:red;" {% endif %}>{% trans 'max_students_number' %}</label>
             </div>
             <div class="col-md-1">
                 <input class="form-control" id="txt_max_number_student"  name="max_number_student"

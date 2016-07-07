@@ -92,5 +92,8 @@ class PropositionDissertation(models.Model):
             ).distinct()
         return queryset
 
+    def find_by_id(proposition_dissertation_id):
+        return PropositionDissertation.objects.get(pk=proposition_dissertation_id)
+
     class Meta:
         ordering = ["author__person__last_name", "author__person__middle_name", "author__person__first_name", "title"]

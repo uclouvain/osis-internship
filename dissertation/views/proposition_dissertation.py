@@ -92,7 +92,11 @@ def manage_proposition_dissertation_edit(request, pk):
             return redirect('manager_proposition_dissertation_detail', pk=proposition_dissertation.pk)
     else:
         form = ManagerPropositionDissertationForm(instance=proposition_dissertation)
-    return render(request, 'manager_proposition_dissertation_edit.html', {'form': form})
+    return render(request, 'manager_proposition_dissertation_edit.html',
+                  {'form': form,
+                   'types_choices': PropositionDissertation.TYPES_CHOICES,
+                   'levels_choices': PropositionDissertation.LEVELS_CHOICES,
+                   'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES})
 
 
 @login_required
@@ -105,7 +109,11 @@ def manager_proposition_dissertation_new(request):
             return redirect('manager_proposition_dissertations')
     else:
         form = ManagerPropositionDissertationForm(initial={'active': True})
-    return render(request, 'manager_proposition_dissertation_new.html', {'form': form})
+    return render(request, 'manager_proposition_dissertation_new.html',
+                  {'form': form,
+                   'types_choices': PropositionDissertation.TYPES_CHOICES,
+                   'levels_choices': PropositionDissertation.LEVELS_CHOICES,
+                   'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES})
 
 
 @login_required
@@ -155,7 +163,6 @@ def proposition_dissertation_edit(request, pk):
     proposition_dissertation = get_object_or_404(PropositionDissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
     adviser = Adviser.find_by_person(person)
-    offer_propositions = OfferProposition.objects.all()
     if proposition_dissertation.author == adviser:
         if request.method == "POST":
             form = PropositionDissertationForm(request.POST, instance=proposition_dissertation)
@@ -165,8 +172,11 @@ def proposition_dissertation_edit(request, pk):
                 return redirect('proposition_dissertation_detail', pk=proposition_dissertation.pk)
         else:
             form = PropositionDissertationForm(instance=proposition_dissertation)
-        return render(request, 'proposition_dissertation_edit.html', {'form': form,
-                                                                      'offer_propositions': offer_propositions})
+        return render(request, 'proposition_dissertation_edit.html',
+                      {'form': form,
+                       'types_choices': PropositionDissertation.TYPES_CHOICES,
+                       'levels_choices': PropositionDissertation.LEVELS_CHOICES,
+                       'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES})
     else:
         return render(request, 'proposition_dissertations_list.html',
                       {'proposition_dissertations': proposition_dissertations})
@@ -192,7 +202,11 @@ def proposition_dissertation_new(request):
         person = mdl.person.find_by_user(request.user)
         adviser = Adviser.find_by_person(person)
         form = PropositionDissertationForm(initial={'author': adviser, 'active': True})
-    return render(request, 'proposition_dissertation_new.html', {'form': form})
+    return render(request, 'proposition_dissertation_new.html',
+                  {'form': form,
+                   'types_choices': PropositionDissertation.TYPES_CHOICES,
+                   'levels_choices': PropositionDissertation.LEVELS_CHOICES,
+                   'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES})
 
 
 @login_required
