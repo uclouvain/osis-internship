@@ -29,9 +29,9 @@ from django.db.models import Q
 from base import models as mdl
 from dissertation.models.adviser import Adviser, find_adviser_by_person
 from dissertation.models.dissertation import Dissertation
-from dissertation.models.faculty_adviser import FacultyAdviser
+from dissertation.models.faculty_adviser import find_faculty_adviser_by_adviser
 from dissertation.models.offer_proposition import OfferProposition
-from dissertation.models.proposition_dissertation import PropositionDissertation
+from dissertation.models.proposition_dissertation import PropositionDissertation, search_proposition_dissertation
 from dissertation.forms import PropositionDissertationForm, ManagerPropositionDissertationForm
 from django.contrib.auth.decorators import user_passes_test
 
@@ -119,7 +119,7 @@ def manager_proposition_dissertation_new(request):
 @login_required
 @user_passes_test(is_manager)
 def manager_proposition_dissertations_search(request):
-    proposition_dissertations = PropositionDissertation.search(terms=request.GET['search']).filter(Q(active=True))
+    proposition_dissertations = search_proposition_dissertation(terms=request.GET['search']).filter(Q(active=True))
     return render(request, "manager_proposition_dissertations_list.html",
                   {'proposition_dissertations': proposition_dissertations})
 
@@ -211,7 +211,7 @@ def proposition_dissertation_new(request):
 
 @login_required
 def proposition_dissertations_search(request):
-    proposition_dissertations = PropositionDissertation.search(terms=request.GET['search']).filter(
+    proposition_dissertations = search_proposition_dissertation(terms=request.GET['search']).filter(
         Q(visibility=True) & Q(active=True))
     return render(request, "proposition_dissertations_list.html",
                   {'proposition_dissertations': proposition_dissertations})

@@ -79,21 +79,23 @@ class PropositionDissertation(models.Model):
         author = u"%s %s %s" % (last_name.upper(), first_name, middle_name)
         return author+" - "+str(self.title)
 
-    def search(terms=None):
-        queryset = PropositionDissertation.objects.all()
-        if terms:
-            queryset = queryset.filter(
-                Q(title__icontains=terms) |
-                Q(description__icontains=terms) |
-                Q(author__person__first_name__icontains=terms) |
-                Q(author__person__middle_name__icontains=terms) |
-                Q(author__person__last_name__icontains=terms) |
-                Q(offer_proposition__acronym__icontains=terms)
-            ).distinct()
-        return queryset
-
-    def find_by_id(proposition_dissertation_id):
-        return PropositionDissertation.objects.get(pk=proposition_dissertation_id)
-
     class Meta:
         ordering = ["author__person__last_name", "author__person__middle_name", "author__person__first_name", "title"]
+
+
+def search_proposition_dissertation(terms=None):
+    queryset = PropositionDissertation.objects.all()
+    if terms:
+        queryset = queryset.filter(
+            Q(title__icontains=terms) |
+            Q(description__icontains=terms) |
+            Q(author__person__first_name__icontains=terms) |
+            Q(author__person__middle_name__icontains=terms) |
+            Q(author__person__last_name__icontains=terms) |
+            Q(offer_proposition__acronym__icontains=terms)
+        ).distinct()
+    return queryset
+
+
+def find_proposition_dissertation_by_id(proposition_dissertation_id):
+    return PropositionDissertation.objects.get(pk=proposition_dissertation_id)
