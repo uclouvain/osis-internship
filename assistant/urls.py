@@ -24,7 +24,7 @@
 #
 ##############################################################################
 from django.conf.urls import url
-from assistant.views import mandate, home, assistant_form
+from assistant.views import mandate, home, assistant_form, assistant
 from assistant.views import mandates_list, reviewer_mandates_list
 
 urlpatterns = [
@@ -34,8 +34,11 @@ urlpatterns = [
     url(r'^manager/mandates/(?P<mandate_id>\d+)/save/$', mandate.mandate_save, name='mandate_save'),
     url(r'^manager/mandates/load/$', mandate.load_mandates, name='load_mandates'),
     url(r'^manager/mandates/$', mandates_list.MandatesListView.as_view(), name='mandates_list'),
+    url(r'^pst/access_denied$', home.access_denied, name='access_denied'),
     url(r'^pst/form_part1/edit/(?P<mandate_id>\d+)/$', assistant_form.form_part1_edit, name='form_part1_edit'),
     url(r'^pst/form_part1/save/(?P<mandate_id>\d+)/$', assistant_form.form_part1_save, name='form_part1_save'),
+    url(r'^pst/mandate/(?P<mandate_id>\d+)/state/$', assistant.mandate_change_state, name='mandate_change_state'),
+    url(r'^pst/mandates/$', assistant.AssistantMandatesListView.as_view(), name='assistant_mandates'),
     url(r'^reviewer/mandates/$', reviewer_mandates_list.MandatesListView.as_view(), name='reviewer_mandates_list'),
     
 ]
