@@ -52,7 +52,7 @@
                                                         value="{{ s_firstname | default_if_none:'' }}"
                                                         style="text-transform:uppercase">
           </div>
-          <div class="col-md-2">
+          <div class="col-md-1">
             <br>
             <button type="submit" id="bt_submit_student_search" class="btn btn-primary"
                                   role="button" title="{% trans 'Search for a student ' %}">
@@ -61,6 +61,24 @@
           </div>
         </div>
       </form>
+      <div class="col-md-3">
+        <br>
+        <button class="btn btn-info" title="{% trans 'number_of_enrollments' %}">
+          {% trans 'number_of_enrollments' %} : {{student_with_internships}} / {{students_can_have_internships}}
+        </button>&nbsp;&nbsp;
+      </div>
+      <div class="col-md-2">
+        <br>
+        <button type="button" class="btn btn-success">
+          <span class="glyphicon glyphicon-ok" aria-hidden="true"> : {{students_ok}}</span>
+        </button>
+      </div>
+      <div class="col-md-2">
+        <br>
+        <button type="button" class="btn btn-danger">
+          <span class="glyphicon glyphicon-remove" aria-hidden="true"> : {{students_not_ok}}</span>
+        </button>
+      </div>
       {% if message %}
       <div>
           <label class="alert alert-warning" style="margin:5px">{{message}}</label>
