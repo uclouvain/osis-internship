@@ -52,9 +52,9 @@ def period_new(request):
     form = PeriodForm(data=request.POST)
     period = Period()
 
-    period.name = request.POST['period_name']
-    period.date_start = request.POST['date_start']
-    period.date_end = request.POST['date_end']
+    period.name = request.POST.get('period_name')
+    period.date_start = request.POST.get('date_start')
+    period.date_end = request.POST.get('date_end')
 
     period.save()
     return render(request, "period_create.html", {'section': 'internship'})
