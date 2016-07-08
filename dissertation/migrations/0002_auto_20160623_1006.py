@@ -9,7 +9,6 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('base', '0056_auto_20160623_1006'),
         ('dissertation', '0001_initial'),
     ]
 
