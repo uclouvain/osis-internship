@@ -25,7 +25,7 @@
 ##############################################################################
 from datetime import datetime
 import subprocess
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from django.contrib.auth.views import login as django_login
 from django.contrib.auth import authenticate, logout
 from django.shortcuts import redirect
@@ -47,6 +47,10 @@ def server_error(request):
     return layout.render(request, 'server_error.html', {})
 
 
+def noscript(request):
+    return layout.render(request, 'noscript.html', {})
+
+
 def login(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -61,7 +65,7 @@ def login(request):
                 request.session[translation.LANGUAGE_SESSION_KEY] = user_language
     return django_login(request)
 
-
+@login_required
 def home(request):
     academic_yr = mdl.academic_year.current_academic_year()
     calendar_events = None
@@ -81,26 +85,31 @@ def logged_out(request):
 
 
 @login_required
+@permission_required('base.can_access_student_path', raise_exception=True)
 def studies(request):
     return layout.render(request, "studies.html", {'section': 'studies'})
 
 
 @login_required
+@permission_required('base.can_access_evaluation', raise_exception=True)
 def assessments(request):
     return layout.render(request, "assessments/assessments.html", {'section': 'assessments'})
 
 
 @login_required
+@permission_required('base.can_access_catalog', raise_exception=True)
 def catalog(request):
     return layout.render(request, "catalog.html", {'section': 'catalog'})
 
 
 @login_required
+@user_passes_test(lambda u: u.is_staff and u.has_perm('base.is_administrator'))
 def data(request):
     return layout.render(request, "admin/data.html", {'section': 'data'})
 
 
 @login_required
+@user_passes_test(lambda u: u.is_staff and u.has_perm('base.is_administrator'))
 def data_maintenance(request):
     sql_command = request.POST.get('sql_command')
     results = mdl.native.execute(sql_command)
@@ -110,11 +119,13 @@ def data_maintenance(request):
 
 
 @login_required
+@permission_required('base.can_access_academicyear', raise_exception=True)
 def academic_year(request):
     return layout.render(request, "academic_year.html", {'section': 'academic_year'})
 
 
 @login_required
+@permission_required('base.is_administrator', raise_exception=True)
 def storage(request):
     df = subprocess.Popen(["df", "-h"], stdout=subprocess.PIPE)
     output = df.communicate()[0]
@@ -141,11 +152,13 @@ def storage(request):
 
 
 @login_required
+@permission_required('base.is_administrator', raise_exception=True)
 def files(request):
     return layout.render(request, "admin/files.html", {})
 
 
 @login_required
+@permission_required('base.is_administrator', raise_exception=True)
 def files_search(request):
     registration_date = request.GET['registration_date']
     username = request.GET['user']
@@ -163,6 +176,7 @@ def files_search(request):
 
 
 @login_required
+@permission_required('base.is_administrator', raise_exception=True)
 def document_file_read(request, document_file_id):
     document_file = mdl.document_file.find_by_id(document_file_id)
     return layout.render(request, "admin/file.html", {'file': document_file})

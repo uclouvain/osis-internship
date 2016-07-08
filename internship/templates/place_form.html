@@ -64,10 +64,6 @@
                     <label for="txt_name">{% trans 'name'%}</label>
                     <input class="form-control" value="{{ organization.name| default_if_none:'' }}" name="name" id="txt_name" maxlength="255"><font class="error">{{ form.name.errors }}</font>
                 </div>
-                <div class="col-md-3">
-                    <label for="txt_acronym">{% trans 'acronym' %}</label>
-                    <input class="form-control" value="{{ organization.acronym | default_if_none:'' }}" name="acronym" id="txt_acronym" maxlength="15"><font class="error">{{ form.acronym.errors }}</font>
-                </div>
             </div>
             <br>
             <div class="row">
@@ -80,10 +76,6 @@
             <input type="hidden" value="{{ organization_id }}" name="organization_id"/>
             <h3>{% trans 'address' %}</h3>
             <div class="row">
-                <div class="col-md-6">
-                    <label for="txt_organization_address_label">{% trans 'label' %}</label>
-                    <input class="form-control" value="{{ organization_address.label | default_if_none:'' }}" name="organization_address_label" id="txt_organization_address_label" maxlength="20" required>
-                </div>
                 <div class="col-md-6">
                     <label for="address_location">{% trans 'location' %}</label>
                     <input class="form-control" value="{{ organization_address.location | default_if_none:'' }}" name="organization_address_location" id="txt_organization_address_location" maxlength="255" required>
