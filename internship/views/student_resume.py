@@ -135,12 +135,12 @@ def student_save_information_modification(request, registration_id):
     if not information:
         information = InternshipStudentInformation()
         information.person = student[0].person
-    information.email = request.POST['student_email']
-    information.phone_mobile = request.POST['student_phone']
-    information.location = request.POST['student_location']
-    information.postal_code = request.POST['student_postal_code']
-    information.city = request.POST['student_city']
-    information.country = request.POST['student_country']
+    information.email = request.POST.get('student_email')
+    information.phone_mobile = request.POST.get('student_phone')
+    information.location = request.POST.get('student_location')
+    information.postal_code = request.POST.get('student_postal_code')
+    information.city = request.POST.get('student_city')
+    information.country = request.POST.get('student_country')
     information.save()
 
     redirect_url = reverse('internships_student_read', args=[registration_id])
