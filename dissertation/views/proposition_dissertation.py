@@ -48,7 +48,7 @@ def is_manager(user):
 def manager_proposition_dissertations(request):
     person = mdl.person.find_by_user(request.user)
     adviser = find_adviser_by_person(person)
-    faculty_adviser = FacultyAdviser.find_by_adviser(adviser)
+    faculty_adviser = find_faculty_adviser_by_adviser(adviser)
     proposition_dissertations = PropositionDissertation.objects.filter(Q(active=True) & Q(offer_proposition__offer=faculty_adviser))
     return render(request, 'manager_proposition_dissertations_list.html',
                   {'proposition_dissertations': proposition_dissertations})
