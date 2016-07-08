@@ -39,9 +39,8 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h2>{% trans 'assistants_mandates_renewal' %}</h2>
+    <h3>{% trans 'assistantship_mandate_renewal' %} {{ year|add:1 }}</h3>
 </div>
-
 <div class="panel panel-default">
     <div class="panel-body">
  <div class="row">
@@ -55,19 +54,20 @@
 <table id="myTable" class="table table-hover table-condensed table-bordered" cellspacing="0" width="100%">
 <thead>
       <tr>
-      <th>Matricule</th>
-        <th>Nom</th>
-        <th>Prénom</th>
-        <th>Faculté</th>
-        <th>Institut</th>
-        <th>Filière</th>
-        <th>Renouvellement</th>
-        <th>Inscription Doctorat</th>
-        <th>Mandat</th>
-        <th>EQ EFT</th>
-        <th>Recherche</th>
-        <th>Encadrement</th>
-        <th>VRS</th>
+      <th>{% trans 'matricule' %}</th>
+        <th>{% trans 'name' %}</th>
+        <th>{% trans 'first_name' %}</th>
+        <th>{% trans 'faculty' %}</th>
+        <th>{% trans 'institute' %}</th>
+        <th>{% trans 'stream' %}</th>
+        <th>{% trans 'renewal' %}</th>
+        <th>{% trans 'doctorate' %}</th>
+        <th>{% trans 'mandate' %}</th>
+        <th>{% trans 'eq_eft' %}</th>
+        <th>{% trans 'po_eft' %}</th>
+        <th>{% trans 'res' %}</th>
+        <th>{% trans 'tut' %}</th>
+        <th>{% trans 's_v-r' %}</th>
       </tr>
     </thead>
     <tbody>
@@ -123,6 +123,7 @@
 
 <td>{{ mandate.contract_duration }}</td>
 <td>{{ mandate.contract_duration_fte }}</td>
+<td>{{ mandate.fulltime_equivalent }}</td>
 <td></td>
 <td align="center">{% for rev in mandate.review_set.all %}
 		{% if rev.advice == "FAVORABLE" %}

@@ -39,7 +39,7 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h2>{% trans 'assistants_mandates_renewal' %} ({{ mandate.academic_year }})</h2>
+    <h3>{% trans 'assistantship_mandate_renewal' %} {{ mandate.academic_year.year|add:1 }}</h3>
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
