@@ -265,6 +265,11 @@ def manager_dissertations_search(request):
     faculty_adviser = find_faculty_adviser_by_adviser(adviser)
     offer_proposition = OfferProposition.objects.get(offer=faculty_adviser)
     xlsx = False
+    reader1_name=''
+    reader2_name=''
+    copro_name=''
+    pro_name=''
+
     if 'bt_xlsx' in request.GET:
 
         filename = 'IMPORT_dissertation_' + time.strftime("%Y-%m-%d %H:%M") + '.xlsx'
