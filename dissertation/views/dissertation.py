@@ -42,6 +42,7 @@ from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl import Workbook
 from django.http import HttpResponse
 import time
+from base.views import layout
 
 
 # Used by decorator @user_passes_test(is_manager) to secure manager views
@@ -91,7 +92,7 @@ def dissertations(request):
         Q(adviser=adviser) & Q(status='PROMOTEUR') &
         Q(dissertation__status='DIR_SUBMIT') & Q(dissertation__active=True)).count()
 
-    return render(request, "dissertations.html",
+    return layout.render(request, "dissertations.html",
                   {'section': 'dissertations',
                    'person': person,
                    'adviser': adviser,
@@ -116,7 +117,7 @@ def manager_dissertations_detail(request, pk):
         pro.save()
     dissertation_roles = DissertationRole.objects.filter(dissertation=dissertation)
 
-    return render(request, 'manager_dissertations_detail.html',
+    return layout.render(request, 'manager_dissertations_detail.html',
                   {'dissertation': dissertation, 'adviser': adviser, 'dissertation_roles': dissertation_roles,
                    'count_dissertation_role': count_dissertation_role})
 
@@ -129,7 +130,7 @@ def manager_dissertations_detail_updates(request, pk):
     adviser = find_adviser_by_person(person)
     dissertation_updates = DissertationUpdate.objects.filter(dissertation=dissertation).order_by('created')
 
-    return render(request, 'manager_dissertations_detail_updates.html',
+    return layout.render(request, 'manager_dissertations_detail_updates.html',
                   {'dissertation': dissertation,
                    'adviser': adviser,
                    'dissertation_updates': dissertation_updates
@@ -148,7 +149,7 @@ def manager_dissertations_edit(request, pk):
             return redirect('manager_dissertations_detail', pk=dissertation.pk)
     else:
         form = ManagerDissertationEditForm(instance=dissertation)
-    return render(request, 'manager_dissertations_edit.html', {'form': form})
+    return layout.render(request, 'manager_dissertations_edit.html', {'form': form})
 
 
 @login_required
@@ -163,7 +164,7 @@ def manager_dissertations_jury_edit(request, pk):
             return redirect('manager_dissertations_detail', pk=dissertation_role.dissertation.pk)
     else:
         form = ManagerDissertationRoleForm(instance=dissertation_role)
-    return render(request, 'manager_dissertations_jury_edit.html', {'form': form})
+    return layout.render(request, 'manager_dissertations_jury_edit.html', {'form': form})
 
 
 @login_required
@@ -179,7 +180,7 @@ def manager_dissertations_jury_new(request, pk):
                 return redirect('manager_dissertations_detail', pk=dissertation.pk)
         else:
             form = ManagerDissertationRoleForm(initial={'dissertation': dissertation})
-            return render(request, 'manager_dissertations_jury_edit.html', {'form': form})
+            return layout.render(request, 'manager_dissertations_jury_edit.html', {'form': form})
     else:
         return redirect('manager_dissertations_detail', pk=dissertation.pk)
 
@@ -192,7 +193,7 @@ def manager_dissertations_list(request):
     faculty_adviser = find_faculty_adviser_by_adviser(adviser)
     dissertations = Dissertation.objects.filter(offer_year_start__offer=faculty_adviser)
     offer_proposition = OfferProposition.objects.get(offer=faculty_adviser)
-    return render(request, 'manager_dissertations_list.html', {'dissertations': dissertations,
+    return layout.render(request, 'manager_dissertations_list.html', {'dissertations': dissertations,
                                                                'offer_proposition': offer_proposition})
 
 
@@ -252,7 +253,7 @@ def manager_dissertations_new(request):
             OfferEnrollment.objects.filter(offer_year__offer=faculty_adviser)
         form.fields["offer_year_start"].queryset = \
             OfferYear.objects.filter(offer=faculty_adviser)
-    return render(request, 'manager_dissertations_edit.html', {'form': form})
+    return layout.render(request, 'manager_dissertations_edit.html', {'form': form})
 
 
 @login_required
@@ -307,7 +308,7 @@ def manager_dissertations_search(request):
         response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.ms-excel')
         response['Content-Disposition'] = "attachment; filename=" + filename
         return response
-    return render(request, "manager_dissertations_list.html",
+    return layout.render(request, "manager_dissertations_list.html",
                   {'dissertations': dissertations, 'offer_proposition': offer_proposition, 'xlsx': xlsx})
 
 
@@ -492,7 +493,7 @@ def manager_dissertations_wait_list(request):
     faculty_adviser = find_faculty_adviser_by_adviser(adviser)
     offer_proposition = OfferProposition.objects.get(offer=faculty_adviser)
     dissertations = Dissertation.objects.filter(Q(offer_year_start__offer=faculty_adviser) & Q(status="DIR_SUBMIT"))
-    return render(request, 'manager_dissertations_wait_list.html', {'dissertations': dissertations,
+    return layout.render(request, 'manager_dissertations_wait_list.html', {'dissertations': dissertations,
                                                                     'offer_proposition': offer_proposition})
 
 
@@ -504,7 +505,7 @@ def manager_dissertations_wait_comm_list(request):
     faculty_adviser = find_faculty_adviser_by_adviser(adviser)
     offer_proposition = OfferProposition.objects.get(offer=faculty_adviser)
     dissertations = Dissertation.objects.filter(Q(offer_year_start__offer=faculty_adviser) & Q(status="COM_SUBMIT"))
-    return render(request, 'manager_dissertations_wait_commission_list.html', {'dissertations': dissertations,
+    return layout.render(request, 'manager_dissertations_wait_commission_list.html', {'dissertations': dissertations,
                                                                                'offer_proposition': offer_proposition})
 
 
@@ -516,7 +517,7 @@ def manager_dissertations_wait_eval_list(request):
     faculty_adviser = find_faculty_adviser_by_adviser(adviser)
     offer_proposition = OfferProposition.objects.get(offer=faculty_adviser)
     dissertations = Dissertation.objects.filter(Q(offer_year_start__offer=faculty_adviser) & Q(status="EVA_SUBMIT"))
-    return render(request, 'manager_dissertations_wait_eval_list.html', {'dissertations': dissertations,
+    return layout.render(request, 'manager_dissertations_wait_eval_list.html', {'dissertations': dissertations,
                                                                          'offer_proposition': offer_proposition})
 
 
@@ -528,7 +529,7 @@ def manager_dissertations_wait_recep_list(request):
     faculty_adviser = find_faculty_adviser_by_adviser(adviser)
     offer_proposition = OfferProposition.objects.get(offer=faculty_adviser)
     dissertations = Dissertation.objects.filter(Q(offer_year_start__offer=faculty_adviser) & Q(status="TO_RECEIVE"))
-    return render(request, 'manager_dissertations_wait_recep_list.html', {'dissertations': dissertations,
+    return layout.render(request, 'manager_dissertations_wait_recep_list.html', {'dissertations': dissertations,
                                                                           'offer_proposition': offer_proposition})
 
 
@@ -571,7 +572,7 @@ def dissertations_list(request):
                                                    'dissertation__author__person__last_name',
                                                    'dissertation__author__person__first_name'
                                                    )
-    return render(request, "dissertations_list.html",
+    return layout.render(request, "dissertations_list.html",
                   {'adviser': adviser,
                    'adviser_list_dissertations': adviser_list_dissertations,
                    'adviser_list_dissertations_copro': adviser_list_dissertations_copro,
@@ -588,7 +589,7 @@ def dissertations_search(request):
     dissertations = search_dissertation(terms=request.GET['search']).filter(
         Q(proposition_dissertation__author=adviser) & Q(active=True))
 
-    return render(request, "dissertations_list.html",
+    return layout.render(request, "dissertations_list.html",
                   {'dissertations': dissertations})
 
 
@@ -605,7 +606,7 @@ def dissertations_detail(request, pk):
         pro.save()
     dissertation_roles = DissertationRole.objects.filter(dissertation=dissertation)
 
-    return render(request, 'dissertations_detail.html',
+    return layout.render(request, 'dissertations_detail.html',
                   {'dissertation': dissertation, 'adviser': adviser, 'dissertation_roles': dissertation_roles,
                    'count_dissertation_role': count_dissertation_role})
 
@@ -618,7 +619,7 @@ def dissertations_detail_updates(request, pk):
     adviser = find_adviser_by_person(person)
     dissertation_updates = DissertationUpdate.objects.filter(dissertation=dissertation).order_by('created')
 
-    return render(request, 'dissertations_detail_updates.html',
+    return layout.render(request, 'dissertations_detail_updates.html',
                   {'dissertation': dissertation,
                    'adviser': adviser,
                    'dissertation_updates': dissertation_updates
@@ -710,5 +711,5 @@ def dissertations_wait_list(request):
     roles_list_dissertations = roles_list_dissertations.order_by(
                                                     'dissertation__author__person__last_name',
                                                     'dissertation__author__person__first_name')
-    return render(request, 'dissertations_wait_list.html',
+    return layout.render(request, 'dissertations_wait_list.html',
                   {'roles_list_dissertations': roles_list_dissertations})

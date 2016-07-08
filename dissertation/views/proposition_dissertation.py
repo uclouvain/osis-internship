@@ -34,6 +34,7 @@ from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models.proposition_dissertation import PropositionDissertation, search_proposition_dissertation
 from dissertation.forms import PropositionDissertationForm, ManagerPropositionDissertationForm
 from django.contrib.auth.decorators import user_passes_test
+from base.views import layout
 
 
 # Used by decorator @user_passes_test(is_manager) to secure manager views
@@ -50,7 +51,7 @@ def manager_proposition_dissertations(request):
     adviser = find_adviser_by_person(person)
     faculty_adviser = find_faculty_adviser_by_adviser(adviser)
     proposition_dissertations = PropositionDissertation.objects.filter(Q(active=True) & Q(offer_proposition__offer=faculty_adviser))
-    return render(request, 'manager_proposition_dissertations_list.html',
+    return layout.render(request, 'manager_proposition_dissertations_list.html',
                   {'proposition_dissertations': proposition_dissertations})
 
 
@@ -73,7 +74,7 @@ def manager_proposition_dissertation_detail(request, pk):
                                             Q(proposition_dissertation=proposition_dissertation)
                                             ).exclude(Q(status='DRAFT')).count()
     percent = count_use * 100 / proposition_dissertation.max_number_student
-    return render(request, 'manager_proposition_dissertation_detail.html',
+    return layout.render(request, 'manager_proposition_dissertation_detail.html',
                   {'proposition_dissertation': proposition_dissertation,
                    'adviser': adviser,
                    'count_use': count_use,
@@ -92,7 +93,7 @@ def manage_proposition_dissertation_edit(request, pk):
             return redirect('manager_proposition_dissertation_detail', pk=proposition_dissertation.pk)
     else:
         form = ManagerPropositionDissertationForm(instance=proposition_dissertation)
-    return render(request, 'manager_proposition_dissertation_edit.html',
+    return layout.render(request, 'manager_proposition_dissertation_edit.html',
                   {'form': form,
                    'types_choices': PropositionDissertation.TYPES_CHOICES,
                    'levels_choices': PropositionDissertation.LEVELS_CHOICES,
@@ -109,7 +110,7 @@ def manager_proposition_dissertation_new(request):
             return redirect('manager_proposition_dissertations')
     else:
         form = ManagerPropositionDissertationForm(initial={'active': True})
-    return render(request, 'manager_proposition_dissertation_new.html',
+    return layout.render(request, 'manager_proposition_dissertation_new.html',
                   {'form': form,
                    'types_choices': PropositionDissertation.TYPES_CHOICES,
                    'levels_choices': PropositionDissertation.LEVELS_CHOICES,
@@ -120,7 +121,7 @@ def manager_proposition_dissertation_new(request):
 @user_passes_test(is_manager)
 def manager_proposition_dissertations_search(request):
     proposition_dissertations = search_proposition_dissertation(terms=request.GET['search']).filter(Q(active=True))
-    return render(request, "manager_proposition_dissertations_list.html",
+    return layout.render(request, "manager_proposition_dissertations_list.html",
                   {'proposition_dissertations': proposition_dissertations})
 
 
@@ -130,7 +131,7 @@ def proposition_dissertations(request):
     adviser = find_adviser_by_person(person)
     proposition_dissertations = PropositionDissertation.objects.filter((Q(visibility=True) &
                                                                        Q(active=True)) | Q(author=adviser))
-    return render(request, 'proposition_dissertations_list.html',
+    return layout.render(request, 'proposition_dissertations_list.html',
                   {'proposition_dissertations': proposition_dissertations})
 
 
@@ -151,7 +152,7 @@ def proposition_dissertation_detail(request, pk):
                                             Q(proposition_dissertation=proposition_dissertation)
                                             ).exclude(Q(status='DRAFT')).count()
     percent = count_use * 100 / proposition_dissertation.max_number_student
-    return render(request, 'proposition_dissertation_detail.html',
+    return layout.render(request, 'proposition_dissertation_detail.html',
                   {'proposition_dissertation': proposition_dissertation,
                    'adviser': adviser,
                    'count_use': count_use,
@@ -172,13 +173,13 @@ def proposition_dissertation_edit(request, pk):
                 return redirect('proposition_dissertation_detail', pk=proposition_dissertation.pk)
         else:
             form = PropositionDissertationForm(instance=proposition_dissertation)
-        return render(request, 'proposition_dissertation_edit.html',
+        return layout.render(request, 'proposition_dissertation_edit.html',
                       {'form': form,
                        'types_choices': PropositionDissertation.TYPES_CHOICES,
                        'levels_choices': PropositionDissertation.LEVELS_CHOICES,
                        'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES})
     else:
-        return render(request, 'proposition_dissertations_list.html',
+        return layout.render(request, 'proposition_dissertations_list.html',
                       {'proposition_dissertations': proposition_dissertations})
 
 
@@ -187,7 +188,7 @@ def proposition_dissertation_my(request):
     person = mdl.person.find_by_user(request.user)
     adviser = find_adviser_by_person(person)
     proposition_dissertations = PropositionDissertation.objects.filter(Q(author=adviser) & Q(active=True))
-    return render(request, 'proposition_dissertations_list_my.html',
+    return layout.render(request, 'proposition_dissertations_list_my.html',
                   {'proposition_dissertations': proposition_dissertations})
 
 
@@ -202,7 +203,7 @@ def proposition_dissertation_new(request):
         person = mdl.person.find_by_user(request.user)
         adviser = find_adviser_by_person(person)
         form = PropositionDissertationForm(initial={'author': adviser, 'active': True})
-    return render(request, 'proposition_dissertation_new.html',
+    return layout.render(request, 'proposition_dissertation_new.html',
                   {'form': form,
                    'types_choices': PropositionDissertation.TYPES_CHOICES,
                    'levels_choices': PropositionDissertation.LEVELS_CHOICES,
@@ -213,5 +214,5 @@ def proposition_dissertation_new(request):
 def proposition_dissertations_search(request):
     proposition_dissertations = search_proposition_dissertation(terms=request.GET['search']).filter(
         Q(visibility=True) & Q(active=True))
-    return render(request, "proposition_dissertations_list.html",
+    return layout.render(request, "proposition_dissertations_list.html",
                   {'proposition_dissertations': proposition_dissertations})

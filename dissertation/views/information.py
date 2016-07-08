@@ -33,6 +33,7 @@ from dissertation.forms import AdviserForm, ManagerAdviserForm, ManagerAddAdvise
 from django.contrib.auth.decorators import user_passes_test
 from django.db import IntegrityError
 from django.db.models import Q
+from base.views import layout
 
 
 # Used by decorator @user_passes_test(is_manager) to secure manager views
@@ -63,8 +64,10 @@ def informations(request):
     except IntegrityError:
         adviser = find_adviser_by_person(person)
 
-    return render(request, "informations.html", {'adviser': adviser, 'first_name': adviser.person.first_name.title(),
-                                                 'last_name': adviser.person.last_name.title()})
+    return layout.render(request, "informations.html", {'adviser': adviser,
+                                                        'first_name': adviser.person.first_name.title(),
+                                                        'last_name': adviser.person.last_name.title()
+                                                        })
 
 
 @login_required
@@ -130,7 +133,7 @@ def informations_detail_stats(request):
         else:
             tab_offer_count_pro[dissertaion_role_pro.dissertation.offer_year_start.offer.title] = 1
 
-    return render(request, 'informations_detail_stats.html',
+    return layout.render(request, 'informations_detail_stats.html',
                   {'adviser': adviser, 'count_advisers': count_advisers, 'count_advisers_copro': count_advisers_copro,
                    'count_advisers_pro': count_advisers_pro, 'count_advisers_reader': count_advisers_reader,
                    'count_advisers_pro_request': count_advisers_pro_request,
@@ -152,7 +155,7 @@ def informations_edit(request):
     else:
         form = AdviserForm(instance=adviser)
 
-    return render(request, "informations_edit.html", {'form': form, 'first_name': person.first_name.title(),
+    return layout.render(request, "informations_edit.html", {'form': form, 'first_name': person.first_name.title(),
                                                       'last_name': person.last_name.title(),
                                                       'email': person.email,
                                                       'phone': person.phone,
@@ -167,7 +170,7 @@ def informations_edit(request):
 @user_passes_test(is_manager)
 def manager_informations(request):
     advisers = Adviser.objects.filter(type='PRF').order_by('person__last_name', 'person__first_name')
-    return render(request, 'manager_informations_list.html', {'advisers': advisers})
+    return layout.render(request, 'manager_informations_list.html', {'advisers': advisers})
 
 
 @login_required
@@ -180,14 +183,14 @@ def manager_informations_add(request):
             return redirect('manager_informations')
     else:
         form = ManagerAddAdviserForm(initial={'type': "PRF"})
-    return render(request, 'manager_informations_add.html', {'form': form})
+    return layout.render(request, 'manager_informations_add.html', {'form': form})
 
 
 @login_required
 @user_passes_test(is_manager)
 def manager_informations_detail(request, pk):
     adviser = get_object_or_404(Adviser, pk=pk)
-    return render(request, 'manager_informations_detail.html', {'adviser': adviser,
+    return layout.render(request, 'manager_informations_detail.html', {'adviser': adviser,
                                                                 'first_name': adviser.person.first_name.title(),
                                                                 'last_name': adviser.person.last_name.title()})
 
@@ -205,7 +208,7 @@ def manager_informations_edit(request, pk):
     else:
         form = ManagerAdviserForm(instance=adviser)
 
-    return render(request, "manager_informations_edit.html",
+    return layout.render(request, "manager_informations_edit.html",
      {'form': form, 'first_name': adviser.person.first_name.title(),
       'last_name': adviser.person.last_name.title(),
       'email': adviser.person.email,
@@ -217,7 +220,7 @@ def manager_informations_edit(request, pk):
 @user_passes_test(is_manager)
 def manager_informations_search(request):
     advisers = search_adviser(terms=request.GET['search'])
-    return render(request, "manager_informations_list.html", {'advisers': advisers})
+    return layout.render(request, "manager_informations_list.html", {'advisers': advisers})
 
 
 @login_required
@@ -233,7 +236,7 @@ def manager_informations_list_request(request):
                                             Q(dissertation__active=True)).distinct('adviser')
     advisers_need_request = advisers_need_request
 
-    return render(request, "manager_informations_list_request.html", {'advisers_need_request': advisers_need_request})
+    return layout.render(request, "manager_informations_list_request.html", {'advisers_need_request': advisers_need_request})
 
 
 @login_required
@@ -265,7 +268,7 @@ def manager_informations_detail_list(request, pk):
                                                         Q(dissertation__status='DRAFT'))
     adviser_list_dissertations_reader = adviser_list_dissertations_reader.order_by('dissertation__status')
 
-    return render(request, "manager_informations_detail_list.html",
+    return layout.render(request, "manager_informations_detail_list.html",
                   {'adviser': adviser,
                    'adviser_list_dissertations': adviser_list_dissertations,
                    'adviser_list_dissertations_copro': adviser_list_dissertations_copro,
@@ -330,7 +333,7 @@ def manager_informations_detail_stats(request, pk):
         else:
             tab_offer_count_pro[dissertaion_role_pro.dissertation.offer_year_start.offer.title] = 1
 
-    return render(request, 'manager_informations_detail_stats.html',
+    return layout.render(request, 'manager_informations_detail_stats.html',
                   {'adviser': adviser, 'count_advisers': count_advisers, 'count_advisers_copro': count_advisers_copro,
                    'count_advisers_pro': count_advisers_pro, 'count_advisers_reader': count_advisers_reader,
                    'count_advisers_pro_request': count_advisers_pro_request,
