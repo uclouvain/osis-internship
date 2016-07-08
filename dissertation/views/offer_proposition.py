@@ -63,7 +63,7 @@ def manager_offer_parameters_detail(request, pk):
 def manager_offer_parameters_edit(request, pk):
     offer_proposition = get_object_or_404(OfferProposition, pk=pk)
     if request.method == "POST":
-        form = ManagerOfferPropositionForm(request.POST, instance=OfferProposition)
+        form = ManagerOfferPropositionForm(request.POST, instance=offer_proposition)
         if form.is_valid():
             offer_proposition = form.save(commit=False)
             offer_proposition.save()

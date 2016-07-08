@@ -88,8 +88,12 @@ class ManagerDissertationRoleForm(ModelForm):
 class ManagerOfferPropositionForm(ModelForm):
     class Meta:
         model = OfferProposition
-        fields = ('adviser_can_suggest_reader', 'validation_commission_exists', 'student_can_manage_readers',
-                  'evaluation_first_year', 'readers_visibility_date_for_students', 'offer')
+        fields = ('adviser_can_suggest_reader','validation_commission_exists','student_can_manage_readers',
+                  'evaluation_first_year','readers_visibility_date_for_students',
+                  'month_start_visibility_proposition','day_of_month_start_visibility_proposition',
+                  'month_end_visibility_proposition','day_of_month_end_visibility_proposition',
+                  'month_start_visibility_dissertation','day_of_month_start_visibility_dissertation',
+                  'month_end_visibility_dissertation','day_of_month_end_visibility_dissertation')
         widgets = {'offer': forms.HiddenInput(), 'offer_proposition': forms.CheckboxSelectMultiple()}
 
 
