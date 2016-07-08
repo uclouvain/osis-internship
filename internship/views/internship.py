@@ -223,10 +223,10 @@ def internships_save(request):
 
         form = InternshipChoiceForm(data=request.POST)
         preference_list = list()
-        if request.POST['organization']:
+        if request.POST.get('organization'):
             organization_list = request.POST.getlist('organization')
 
-        if request.POST['speciality']:
+        if request.POST.get('speciality'):
             speciality_list = request.POST.getlist('speciality')
 
         all_internships = InternshipOffer.find_internships()
