@@ -42,7 +42,6 @@ def interships_masters(request):
     # If both exist / if just speciality exist / if just organization exist / if none exist
     if speciality_sort_value and speciality_sort_value != "0":
         if organization_sort_value and organization_sort_value != "0":
-            print(organization_sort_value)
             query = InternshipMaster.find_masters_by_speciality_and_organization(speciality_sort_value,
                                                                                  organization_sort_value)
         else:
