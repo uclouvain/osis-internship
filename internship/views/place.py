@@ -46,7 +46,6 @@ def internships_places(request):
     number_ref=sorted(number_ref, key=int)
     organizations = []
     for i in number_ref:
-        print(i)
         organization = Organization.search(reference=i)
         organizations.append(organization[0])
 
@@ -143,7 +142,6 @@ def internships_places_stud(request):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def place_save(request, organization_id, organization_address_id):
-    print(organization_id)
     form = OrganizationForm(data=request.POST)
     if organization_id:
         organization = Organization.find_by_id(organization_id)
@@ -151,19 +149,19 @@ def place_save(request, organization_id, organization_address_id):
         organization = Organization()
 
     # get the screen modifications
-    if request.POST['name']:
-        organization.name = request.POST['name']
-        organization.acronym = request.POST['name'][:14]
+    if request.POST.get('name'):
+        organization.name = request.POST.get('name')
+        organization.acronym = request.POST.get('name')[:14]
     else:
         organization.name = None
 
-    if request.POST['website']:
-        organization.website = request.POST['website']
+    if request.POST.get('website'):
+        organization.website = request.POST.get('website')
     else:
         organization.website = ""
 
-    if request.POST['reference']:
-        organization.reference = request.POST['reference']
+    if request.POST.get('reference'):
+        organization.reference = request.POST.get('reference')
     else:
         organization.reference = None
 
@@ -183,28 +181,28 @@ def place_save(request, organization_id, organization_address_id):
     else:
         organization_address.label = None
 
-    if request.POST['organization_address_location']:
-        organization_address.location = request.POST['organization_address_location']
+    if request.POST.get('organization_address_location'):
+        organization_address.location = request.POST.get('organization_address_location')
     else:
         organization_address.location = None
 
-    if request.POST['organization_address_postal_code']:
-        organization_address.postal_code = request.POST['organization_address_postal_code']
+    if request.POST.get('organization_address_postal_code'):
+        organization_address.postal_code = request.POST.get('organization_address_postal_code')
     else:
         organization_address.postal_code = None
 
-    if request.POST['organization_address_city']:
-        organization_address.city = request.POST['organization_address_city']
+    if request.POST.get('organization_address_city'):
+        organization_address.city = request.POST.get('organization_address_city')
     else:
         organization_address.city = None
 
-    if request.POST['organization_address_country']:
-        organization_address.country = request.POST['organization_address_country']
+    if request.POST.get('organization_address_country'):
+        organization_address.country = request.POST.get('organization_address_country')
     else:
         organization_address.country = None
 
-    if request.POST['organization_id']:
-        organization_address.organization = Organization.find_by_id(int(request.POST['organization_id']))
+    if request.POST.get('organization_id'):
+        organization_address.organization = Organization.find_by_id(int(request.POST.get('organization_id')))
 
     organization_address.save()
 
@@ -226,7 +224,6 @@ def organization_new(request):
 def organization_edit(request, organization_id):
     organization = Organization.find_by_id(organization_id)
     organization_address = OrganizationAddress.find_by_organization(organization)
-    print(organization_address[0].id)
     return render(request, "place_form.html", {'organization':          organization,
                                                'organization_address':  organization_address[0], })
 
