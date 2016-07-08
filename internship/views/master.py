@@ -83,8 +83,8 @@ def interships_masters(request):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def delete_interships_masters(request):
-    first_name = request.POST["first_name"].replace(" ", "")
-    name = request.POST["name"].replace(" ", "")
+    first_name = request.POST.get("first_name").replace(" ", "")
+    name = request.POST.get("name").replace(" ", "")
 
     InternshipMaster.find_master_by_firstname_name(first_name, name).delete()
     return HttpResponseRedirect(reverse('interships_masters'))
