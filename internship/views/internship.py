@@ -150,7 +150,6 @@ def internships_stud(request):
             if internship.organization == choice.organization and \
                internship.speciality == choice.speciality:
                     choice.maximum_enrollments = internship.maximum_enrollments
-                    choice.selectable = internship.selectable
                     query[index] = 0
             index += 1
         query = [x for x in query if x != 0]
@@ -189,8 +188,9 @@ def internships_stud(request):
         tab = luy.name.replace(" ", "")
         luy.tab = tab
 
-    if len(query) > 0 :
-        if query[0].selectable:
+    query_selectable = InternshipOffer.find_internships()
+    if len(query_selectable) > 0 :
+        if query_selectable[0].selectable:
             selectable = True
         else :
             selectable = False
