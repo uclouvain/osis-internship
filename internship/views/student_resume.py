@@ -89,11 +89,13 @@ def internships_student_search(request):
 
     message = None
     if criteria_present:
-        students_list = InternshipStudentInformation.find_by(person_name=s_name, person_first_name = s_firstname)
+        students_list_check = InternshipStudentInformation.find_by(person_name=s_name, person_first_name = s_firstname)
+
+        for slc in students_list_check:
+            students_list.append( mdl.student.find_by(person_name = slc.person.last_name, person_first_name = slc.person.first_name ))
     else:
         students_list = InternshipChoice.find_by_all_student()
         # message = "%s" % _('You must choose at least one criteria!')
-
     return render(request, "student_search.html",
                            {'s_name':       s_name,
                             's_firstname':  s_firstname,
