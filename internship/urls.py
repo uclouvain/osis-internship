@@ -25,7 +25,7 @@
 ##############################################################################
 from django.conf.urls import url
 
-from internship.views import home, internship, master, period, place, student, student_resume
+from internship.views import home, internship, master, period, place, speciality, student, student_resume
 from internship import upload_xls
 
 urlpatterns = [
@@ -35,18 +35,22 @@ urlpatterns = [
     url(r'^internships/$', internship.internships, name='internships'),
     url(r'^internships/block/([0-9]+)/$', internship.internships_block, name='internships_block'),
     url(r'^internships/std/$', internship.internships_stud, name='internships_stud'),
+    url(r'^internships/student/([0-9]+)/modification/$', internship.internships_modification_student, name='internships_modification_student'),
     url(r'^internships/([0-9]+)/students/choice/$', internship.student_choice, name='internship_detail_student_choice'),
     url(r'^internships/create/$', internship.internships_create, name='internships_create'),
     url(r'^internships/([0-9]+)/modification/$', internship.internship_modification, name='internship_modification'),
     url(r'^internships/new/$', internship.internships_new, name='internships_new'),
     url(r'^internships/save/$', internship.internships_save, name='internships_save'),
+    url(r'^internships/save/modification/student/$', internship.internship_save_modification_student, name='internship_save_modification_student'),
     url(r'^internships/upload/$', upload_xls.upload_internships_file,name='upload_internship'),
 
     url(r'^internships_masters/$', master.interships_masters, name='interships_masters'),
     url(r'^internships_masters/upload/$', upload_xls.upload_masters_file, name='upload_interships_masters'),
+    url(r'^internships_masters/delete/$', master.delete_interships_masters, name='delete_interships_masters'),
 
     url(r'^periods/$', period.internships_periods, name='internships_periods'),
     url(r'^periods/create/$', period.period_create, name='periods_create'),
+    url(r'^periods/new/$', period.period_new, name='periods_new'),
 
     url(r'^places/$', place.internships_places, name='internships_places'),
     url(r'^places/std/$', place.internships_places_stud, name='internships_places_stud'),
@@ -57,8 +61,15 @@ urlpatterns = [
     url(r'^places/save/$', place.organization_new, name='place_save_new'),
     url(r'^places/upload/$', upload_xls.upload_places_file,name='upload_places'),
 
+    url(r'^specialities/$', speciality.specialities, name='internships_specialities'),
+    url(r'^specialities/create/$', speciality.speciality_create, name='speciality_create'),
+    url(r'^specialities/new/$', speciality.speciality_new, name='speciality_new'),
+
     url(r'^students/$', student.internships_students, name='internships_students'),
     url(r'^students/resume/$', student_resume.internships_student_resume, name='internships_student_resume'),
     url(r'^students/search$', student_resume.internships_student_search, name='internships_student_search'),
     url(r'^students/([0-9]+)/resume/$', student_resume.internships_student_read, name='internships_student_read'),
+    url(r'^students/([0-9]+)/information/modification/$', student_resume.internship_student_information_modification, name='internship_student_information_modification'),
+    url(r'^students/([0-9]+)/save/information/modification/$', student_resume.student_save_information_modification, name='student_save_information_modification'),
+
 ]

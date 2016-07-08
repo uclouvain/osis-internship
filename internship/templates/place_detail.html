@@ -53,7 +53,7 @@
         <div class="collapse" id="stch">
           <ul>
             {% for choice in organization_choice %}
-              {% if choice.learning_unit_year.title == "Stage en Chirurgie" %}
+              {% if choice.speciality.name == "Stage en Chirurgie" %}
                 <li> {{ choice.student }} | Choix : {{ choice.choice }}
               {% endif %}
             {% endfor %}
@@ -75,7 +75,7 @@
         <div class="collapse" id="stge">
           <ul>
             {% for choice in organization_choice %}
-              {% if choice.learning_unit_year.title == "Stage en Gériatrie" %}
+              {% if choice.speciality.name == "Stage en Gériatrie" %}
                 <li> {{ choice.student }} | Choix : {{ choice.choice }}
               {% endif %}
             {% endfor %}
@@ -97,7 +97,7 @@
         <div class="collapse" id="stgo">
           <ul>
             {% for choice in organization_choice %}
-              {% if choice.learning_unit_year.title == "Stage en Gynécologie-Obstétrique" %}
+              {% if choice.speciality.name == "Stage en Gynécologie-Obstétrique" %}
                 <li> {{ choice.student }} | Choix : {{ choice.choice }}
               {% endif %}
             {% endfor %}
@@ -119,7 +119,7 @@
         <div class="collapse" id="stmi">
           <ul>
             {% for choice in organization_choice %}
-              {% if choice.learning_unit_year.title == "Stage en Médecine interne" %}
+              {% if choice.speciality.name == "Stage en Médecine interne" %}
                 <li> {{ choice.student }} | Choix : {{ choice.choice }}
               {% endif %}
             {% endfor %}
@@ -141,7 +141,7 @@
         <div class="collapse" id="stpe">
           <ul>
             {% for choice in organization_choice %}
-              {% if choice.learning_unit_year.title == "Stage en Pédiatrie" %}
+              {% if choice.speciality.name == "Stage en Pédiatrie" %}
                 <li> {{ choice.student }} | Choix : {{ choice.choice }}
               {% endif %}
             {% endfor %}
@@ -163,7 +163,7 @@
         <div class="collapse" id="stur">
           <ul>
             {% for choice in organization_choice %}
-              {% if choice.learning_unit_year.title == "Stage aux Urgences" %}
+              {% if choice.speciality.name == "Stage aux Urgences" %}
                 <li> {{ choice.student }} | Choix : {{ choice.choice }}
               {% endif %}
             {% endfor %}

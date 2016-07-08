@@ -31,7 +31,7 @@ from openpyxl import load_workbook
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 
-from internship.models import Organization, OrganizationAddress, InternshipOffer, InternshipMaster
+from internship.models import Organization, OrganizationAddress, InternshipOffer, InternshipMaster, Period, PeriodInternshipPlaces, InternshipSpeciality
 from internship.forms import OrganizationForm, InternshipOfferForm, InternshipMasterForm
 from base import models as mdl
 
@@ -172,7 +172,6 @@ def __save_xls_internships(request, file_name, user):
     form = InternshipOfferForm(request)
     col_reference = 0
     col_spec = 1
-    col_max_places = 4
     index = 1
     # Iterates over the lines of the spreadsheet.
     for count, row in enumerate(worksheet.rows):
@@ -197,34 +196,67 @@ def __save_xls_internships(request, file_name, user):
                 organization = Organization.search(reference=reference)
                 #internship.organization = organization[0]
 
-            if row[col_spec].value == "CH":
-                spec = "Stage en Chirurgie"
-            if row[col_spec].value == "GE":
-                spec = "Stage en Gériatrie"
-            if row[col_spec].value == "GO":
-                spec = "Stage en Gynécologie-Obstétrique"
-            if row[col_spec].value == "MI":
-                spec = "Stage en Médecine interne"
-            if row[col_spec].value == "PE":
-                spec = "Stage en Pédiatrie"
-            if row[col_spec].value == "UR":
-                spec = "Stage aux Urgences"
+            if len (organization) > 0 :
 
-            learning_unit_year = mdl.learning_unit_year.search(title=spec)
-            check_internship = InternshipOffer.find_interships_by_learning_unit_organization(spec,organization[0].name)
+                spec_value = row[col_spec].value
+                spec_value = spec_value.replace(" ","")
+                spec_value = spec_value.replace("*","")
 
-            if len(check_internship) != 0:
-                internship = InternshipOffer.find_intership_by_id(check_internship[0].id)
-            else :
-                internship = InternshipOffer()
+                if spec_value == "CH":
+                    spec = "Stage en Chirurgie"
+                if spec_value == "GE":
+                    spec = "Stage en Gériatrie"
+                if spec_value == "GO":
+                    spec = "Stage en Gynécologie-Obstétrique"
+                if spec_value == "MI":
+                    spec = "Stage en Médecine interne"
+                if spec_value == "PE":
+                    spec = "Stage en Pédiatrie"
+                if spec_value == "UR":
+                    spec = "Stage aux Urgences"
 
-            internship.organization = organization[0]
-            internship.learning_unit_year = learning_unit_year[0]
-            internship.title = spec
-            internship.maximum_enrollments = row[col_max_places].value
-            internship.selectable = True
-            
-            internship.save()
+                speciality = InternshipSpeciality.find_by(name=spec)
+                check_internship = InternshipOffer.find_interships_by_learning_unit_organization(spec,organization[0].reference)
+
+                number_place = 0
+                for x in range (3,15):
+                    if row[x].value is None:
+                        number_place += 0
+                    else :
+                        number_place += int(row[x].value)
+
+                for x in range(0,len(speciality)) :
+                    if len(check_internship) != 0:
+                        internship = InternshipOffer.find_intership_by_id(check_internship[0].id)
+                    else :
+                        internship = InternshipOffer()
+
+                    internship.organization = organization[0]
+                    internship.speciality = speciality[x]
+                    internship.title = spec
+                    internship.maximum_enrollments = number_place
+                    internship.selectable = True
+                    internship.save()
+
+                    number_period = 1
+                    for x in range (3,15):
+                        period_search = "P"+str(number_period)
+                        number_period += 1
+                        period = Period.find_by(name=period_search)
+                        check_relation = PeriodInternshipPlaces.find_by(period, internship)
+
+                        if len(check_relation) != 0:
+                            relation = PeriodInternshipPlaces.find_by(relation_id = check_relation[0].id)
+                        else :
+                            relation = PeriodInternshipPlaces()
+
+                        relation.period = period[0]
+                        relation.internship = internship
+                        if row[x].value is None:
+                            relation.number_places = 0
+                        else :
+                            relation.number_places = int(row[x].value)
+                        relation.save()
 
 @login_required
 def upload_masters_file(request):
@@ -258,28 +290,40 @@ def __save_xls_masters(request, file_name, user):
     for count, row in enumerate(worksheet.rows):
 
         new_score = False
-        if row[col_reference].value is None \
-                or row[col_reference].value == 0 \
-                or not _is_registration_id(row[col_reference].value):
+        check_reference = str(row[col_reference].value).strip(' ')
+        if check_reference == "":
+            check_reference = "000"
+        if check_reference is None:
+            check_reference = "000"
+
+        if not _is_registration_id(check_reference):
             continue
 
 
         form = InternshipMasterForm(data=request.POST)
         if row[col_firstname].value and row[col_lastname].value:
-            master = InternshipMaster.find_master_by_firstname_name(row[col_firstname].value, row[col_lastname].value)
-            if len(master) == 0:
+            master_check = InternshipMaster.find_master_by_firstname_name(row[col_firstname].value, row[col_lastname].value)
+            if len(master_check) == 0:
                 master = InternshipMaster()
+            else:
+                master = master_check[0]
 
             if row[col_organization_reference].value:
                 reference = ""
-                if int(row[col_organization_reference].value) < 10 :
-                    reference = "0"+str(row[col_organization_reference].value)
+                check_reference = row[col_organization_reference].value.strip(' ')
+                if check_reference != "":
+                    if check_reference[0][0] != "0":
+                        if int(check_reference) < 10 :
+                            reference = "0"+str(check_reference)
+                        else :
+                            reference = str(check_reference)
+                    else :
+                        reference = str(check_reference)
+
+                    organization = Organization.search(reference=reference)
+                    master.organization = organization[0]
                 else :
-                    reference = str(row[col_organization_reference].value)
-                organization = Organization.search(reference=reference)
-
-                master.organization = organization[0]
-
+                    master.organization = None
             if row[col_firstname].value:
                 master.first_name = row[col_firstname].value
             else :

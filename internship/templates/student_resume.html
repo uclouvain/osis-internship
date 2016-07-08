@@ -61,7 +61,7 @@
             </div>
             <div class="col-md-4">
                 <label>{% trans 'email' %}</label><br>
-                {{ student.person.email | default_if_none:'-' }}
+                {{ information.email | default_if_none:'-' }}
             </div>
         </div>
         <br>
@@ -69,8 +69,7 @@
         <div class="row">
             <div class="col-md-4">
                 <label>{% trans 'phone_mobile' %}</label><br>
-                {{ student.person.phone | default_if_none:'-' }} /
-                {{ student.person.phone_mobile | default_if_none:'-' }}
+                {{ information.phone_mobile | default_if_none:'-' }}
             </div>
             <div class="col-md-4">
                 <label>{% trans 'language' %}</label><br>
@@ -78,20 +77,27 @@
             </div>
             <div class="col-md-4">
                 <label>{% trans 'address' %}</label><br>
-                {%if student.address%}
-                  {% for ad in student.address %}
-                    {{ ad.location | default_if_none:'-' }} {{ ad.postal_code | default_if_none:'-' }}
-                    {{ ad.city | default_if_none:'-' }}<br>
-                  {% endfor %}
+                {% if information %}
+                  {{ information.location | default_if_none:'-' }} {{ information.postal_code | default_if_none:'-' }}
+                  {{ information.city | default_if_none:'-' }}<br>
                 {%endif%}
             </div>
         </div>
         <br>
 
         <div class="row">
-            <div class="col-md-10">
+            <div class="col-md-9">
                 <label>{% trans 'internships' %}</label>
             </div>
+            {% if perms.internship.is_internship_manager %}
+              <div class="col-md-1">
+                <a class="btn btn-warning" target="_blank" id="lnk_student_information_modification"
+                  href="{% url 'internship_student_information_modification' student.registration_id %}">
+                  <span class="glyphicon glyphicon-pencil" aria-hidden="true"> {% trans 'edit' %}
+                  </span>
+                </a>
+              </div>
+            {% endif %}
         </div>
         <br>
 
@@ -109,17 +115,7 @@
                     <label> Stage en Chirurgie </label><br/>
                       <ul>
                         {% for choice in internship_choice %}
-                          {% if choice.learning_unit_year.title == "Stage en Chirurgie" %}
-                            <li> {% trans 'Hôpital' %} :
-                                    {{ choice.organization.reference }} - {{ choice.organization.name }} |
-                                    Choix : {{ choice.choice }}
-                          {% endif %}
-                        {% endfor %}
-                      </ul>
-                    <label> Stage en Gériatrie </label><br/>
-                      <ul>
-                        {% for choice in internship_choice %}
-                          {% if choice.learning_unit_year.title == "Stage en Gériatrie" %}
+                          {% if choice.speciality.name == "Stage en Chirurgie" %}
                             <li> {% trans 'Hôpital' %} :
                                     {{ choice.organization.reference }} - {{ choice.organization.name }} |
                                     Choix : {{ choice.choice }}
@@ -129,27 +125,47 @@
                     <label> Stage en Gynécologie-Obstétrique </label><br/>
                       <ul>
                         {% for choice in internship_choice %}
-                          {% if choice.learning_unit_year.title == "Stage en Gynécologie-Obstétrique" %}
+                          {% if choice.speciality.name == "Stage en Gynécologie-Obstétrique" %}
                             <li> {% trans 'Hôpital' %} :
                                     {{ choice.organization.reference }} - {{ choice.organization.name }} |
                                     Choix : {{ choice.choice }}
                           {% endif %}
                         {% endfor %}
                       </ul>
-                    <label> Stage en Médecine Interne </label><br/>
+                    <label> Stage en Médecine Interne 1</label><br/>
                       <ul>
                         {% for choice in internship_choice %}
-                          {% if choice.learning_unit_year.title == "Stage en Médecine interne" %}
+                          {% if choice.speciality.name == "Stage en Médecine interne 1" %}
                             <li> {% trans 'Hôpital' %} :
                                     {{ choice.organization.reference }} - {{ choice.organization.name }} |
                                     Choix : {{ choice.choice }}
                           {% endif %}
                         {% endfor %}
                       </ul>
+                    <label> Stage en Médecine Interne 2</label><br/>
+                      <ul>
+                        {% for choice in internship_choice %}
+                          {% if choice.speciality.name == "Stage en Médecine interne 2" %}
+                            <li> {% trans 'Hôpital' %} :
+                                    {{ choice.organization.reference }} - {{ choice.organization.name }} |
+                                    Choix : {{ choice.choice }}
+                          {% endif %}
+                        {% endfor %}
+                      </ul>
+                      <label> Stage en Médecine Interne 3</label><br/>
+                        <ul>
+                          {% for choice in internship_choice %}
+                            {% if choice.speciality.name == "Stage en Médecine interne 3" %}
+                              <li> {% trans 'Hôpital' %} :
+                                      {{ choice.organization.reference }} - {{ choice.organization.name }} |
+                                      Choix : {{ choice.choice }}
+                            {% endif %}
+                          {% endfor %}
+                        </ul>
                     <label> Stage en Pédiatrie </label><br/>
                       <ul>
                         {% for choice in internship_choice %}
-                          {% if choice.learning_unit_year.title == "Stage en Pédiatrie" %}
+                          {% if choice.speciality.name == "Stage en Pédiatrie" %}
                             <li> {% trans 'Hôpital' %} :
                                     {{ choice.organization.reference }} - {{ choice.organization.name }} |
                                     Choix : {{ choice.choice }}
@@ -159,7 +175,7 @@
                     <label> Stage aux Urgences </label><br/>
                       <ul>
                         {% for choice in internship_choice %}
-                          {% if choice.learning_unit_year.title == "Stage aux Urgences" %}
+                          {% if choice.speciality.name == "Stage aux Urgences" %}
                             <li> {% trans 'Hôpital' %} :
                                     {{ choice.organization.reference }} - {{ choice.organization.name }} |
                                     Choix : {{ choice.choice }}
