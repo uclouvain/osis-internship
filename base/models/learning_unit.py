@@ -46,6 +46,11 @@ class LearningUnit(models.Model):
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)
 
+    class Meta:
+        permissions = (
+            ("can_access_learningunit", "Can access learning unit"),
+        )
+
 
 def find_by_id(learning_unit_id):
     return LearningUnit.objects.get(pk=learning_unit_id)
@@ -62,3 +67,4 @@ def search(acronym=None):
         queryset = queryset.filter(acronym=acronym)
 
     return queryset
+

@@ -26,6 +26,7 @@
 from datetime import datetime
 
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import get_object_or_404
 from base.forms import AcademicCalendarForm
 from base import models as mdl
@@ -34,6 +35,8 @@ from django.utils.translation import ugettext as trans
 from . import layout
 
 
+@login_required
+@permission_required('base.can_access_academic_calendar', raise_exception=True)
 def academic_calendars(request):
     academic_year = None
     academic_years = mdl.academic_year.find_academic_years()
@@ -47,6 +50,8 @@ def academic_calendars(request):
                                                               'academic_calendars': academic_calendars})
 
 
+@login_required
+@permission_required('base.can_access_academic_calendar', raise_exception=True)
 def academic_calendars_search(request):
     academic_year = request.GET['academic_year']
     academic_years = mdl.academic_year.find_academic_years()
@@ -63,16 +68,21 @@ def academic_calendars_search(request):
         'academic_years': academic_years,
         'academic_calendars': query})
 
-
+@login_required
+@permission_required('base.can_access_academic_calendar', raise_exception=True)
 def academic_calendar_read(request, id):
     academic_calendar = mdl.academic_calendar.find_academic_calendar_by_id(id)
     return layout.render(request, "academic_calendar.html", {'academic_calendar': academic_calendar})
 
 
+@login_required
+@permission_required('base.can_access_academic_calendar', raise_exception=True)
 def academic_calendar_new(request):
     return academic_calendar_save(request, None)
 
 
+@login_required
+@permission_required('base.can_access_academic_calendar', raise_exception=True)
 def academic_calendar_save(request, id):
     form = AcademicCalendarForm(data=request.POST)
 
@@ -173,14 +183,16 @@ def academic_calendar_save(request, id):
                                                                       'academic_years': academic_years,
                                                                       'form': form})
 
-
+@login_required
+@permission_required('base.can_access_academic_calendar', raise_exception=True)
 def academic_calendar_edit(request, id):
     academic_calendar = mdl.academic_calendar.find_academic_calendar_by_id(id)
     academic_years = mdl.academic_year.find_academic_years()
     return layout.render(request, "academic_calendar_form.html", {'academic_calendar': academic_calendar,
                                                                   'academic_years': academic_years})
 
-
+@login_required
+@permission_required('base.can_access_academic_calendar', raise_exception=True)
 def academic_calendar_create(request):
     academic_calendar = mdl.academic_calendar.AcademicCalendar()
     academic_years = mdl.academic_year.find_academic_years()
