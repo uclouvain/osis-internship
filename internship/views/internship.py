@@ -222,7 +222,8 @@ def internships_save(request):
         InternshipChoice.objects.filter(student=student).delete()
 
         form = InternshipChoiceForm(data=request.POST)
-        preference_list = list()
+        organization_list = list()
+        speciality_list = list()
         if request.POST.get('organization'):
             organization_list = request.POST.getlist('organization')
 
