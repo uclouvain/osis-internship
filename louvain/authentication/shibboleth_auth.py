@@ -84,25 +84,28 @@ class ShibbolethAuthBackend(RemoteUserBackend):
         return user
 
     def __update_user(self, user, user_infos):
-        user.first_name = user_infos['USER_FIRST_NAME']
-        user.last_name = user_infos['USER_LAST_NAME']
-        user.email = user_infos['USER_EMAIL']
+        user.first_name = user_infos.get('USER_FIRST_NAME')
+        user.last_name = user_infos.get('USER_LAST_NAME')
+        user.email = user_infos.get('USER_EMAIL')
         user.save()
         return user
 
     def __update_person(self, user, user_infos):
-        person = find_by_global_id(user_infos['USER_FGS'])
+        person = find_by_global_id(user_infos.get('USER_FGS'))
         if not person:
             person = find_by_user(user)
         if not person:
-            person = Person(user=user, global_id=user_infos['USER_FGS'], first_name=user_infos['USER_FIRST_NAME'],
-                            last_name=user_infos['USER_LAST_NAME'], email=user_infos['USER_EMAIL'])
+            person = Person(user=user,
+                            global_id=user_infos.get('USER_FGS'),
+                            first_name=user_infos.get('USER_FIRST_NAME'),
+                            last_name=user_infos.get('USER_LAST_NAME'),
+                            email=user_infos.get('USER_EMAIL'))
         else:
             person.user = user
             person.first_name = user.first_name
             person.last_name = user.last_name
             person.email = user.email
-            person.global_id = user_infos['USER_FGS']
+            person.global_id = user_infos.get('USER_FGS')
         person.save()
         return person
 
@@ -168,12 +171,15 @@ class ShibbolethAuthMiddleware(RemoteUserMiddleware):
             auth.login(request, user)
 
     def get_shibboleth_infos(self, request):
-        user_first_name = self.clean_string(request.META['givenName'])
-        user_last_name = self.clean_string(request.META['sn'])
-        user_email = request.META['mail']
-        employee_number_len = len(request.META['employeeNumber'])
-        prefix_fgs = (8 - employee_number_len) * '0'
-        user_fgs = ''.join([prefix_fgs, request.META['employeeNumber']])
+        user_email = request.META.get('mail')
+        employee_number = request.META.get('employeeNumber')
+        prefix_fgs = (8 - len(employee_number)) * '0'
+        user_fgs = ''.join([prefix_fgs, employee_number])
+        first_last_name_default = (user_email.split('@')[0]).split('.')
+        firstname_default = first_last_name_default[0] if first_last_name_default[0] else ''
+        lastname_default = first_last_name_default[1] if first_last_name_default[1] else ''
+        user_first_name = self.clean_string(request.META.get('givenName',firstname_default))
+        user_last_name = self.clean_string(request.META.get('sn',lastname_default))
         user_infos = {'USER_FIRST_NAME': user_first_name, 'USER_LAST_NAME': user_last_name, 'USER_EMAIL': user_email,
                       'USER_FGS': user_fgs}
         return user_infos
