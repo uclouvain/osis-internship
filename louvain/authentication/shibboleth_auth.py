@@ -176,8 +176,15 @@ class ShibbolethAuthMiddleware(RemoteUserMiddleware):
         prefix_fgs = (8 - len(employee_number)) * '0'
         user_fgs = ''.join([prefix_fgs, employee_number])
         first_last_name_default = (user_email.split('@')[0]).split('.')
-        firstname_default = first_last_name_default[0] if first_last_name_default[0] else ''
-        lastname_default = first_last_name_default[1] if first_last_name_default[1] else ''
+        if len(first_last_name_default) > 1:
+            firstname_default = first_last_name_default[0]
+            lastname_default = first_last_name_default[1]
+        elif len(first_last_name_default) > 0:
+            firstname_default = ''
+            lastname_default = first_last_name_default[0]
+        else:
+            firstname_default = ''
+            lastname_default = ''
         user_first_name = self.clean_string(request.META.get('givenName',firstname_default))
         user_last_name = self.clean_string(request.META.get('sn',lastname_default))
         user_infos = {'USER_FIRST_NAME': user_first_name, 'USER_LAST_NAME': user_last_name, 'USER_EMAIL': user_email,
