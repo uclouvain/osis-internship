@@ -509,7 +509,7 @@ def internships_modification_student(request, registration_id):
         luy.tab = tab
 
     periods = Period.find_all()
-    
+
     return render(request, "internship_modification_student.html", {'section': 'internship',
                                                 'all_internships' : query,
                                                 'all_organizations' : internship_organizations,
@@ -549,6 +549,7 @@ def internship_save_modification_student(request) :
             for pref in request.POST.getlist(pref_tab) :
                 preference_list.append(pref)
 
+    periods_list = list()
     if request.POST.get('periods_s'):
         periods_list = request.POST.getlist('periods_s')
 
@@ -570,6 +571,7 @@ def internship_save_modification_student(request) :
 
     registration_id = request.POST.getlist('registration_id')
     student = mdl.student.find_by(registration_id=registration_id[0], full_registration = True)
+
     organization_list = [x for x in organization_list if x != 0]
     speciality_list = [x for x in speciality_list if x != 0]
     periods_list = [x for x in periods_list if x != '0']

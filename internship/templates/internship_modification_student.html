@@ -110,7 +110,6 @@
                             </td>
                             <td>
                               <select name="periods_s" multiple>
-                                  <option value=0>--</option>
                                   {% for period in periods %}
                                   <option value="{{period.name}}\n{{internship.organization.reference }}\n{{internship.speciality.name }}"
                                     {% for enroll in student_enrollment %}
