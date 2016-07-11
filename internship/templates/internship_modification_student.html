@@ -57,6 +57,7 @@
         <div class="tab-content">
           {% for luy in all_speciality %}
           <div id="tab_{{luy.tab}}" class="tab-pane fade in active">
+            <h3>{{luy.name}}</h3>
               <div class="panel panel-default">
                 <div class="tab-content">
                   <div role="tabpanel" class="tab-pane fade in active" id="profile">
@@ -109,12 +110,22 @@
                             </td>
                             <td>
                               <select name="periods_s" multiple>
-                                  <option value=0 selected>--</option>
-                                {% for period in periods %}
-                                  <option value="{{period.name}}\n{{internship.organization.reference }}\n{{internship.speciality.name }}">
+                                  <option value=0>--</option>
+                                  {% for period in periods %}
+                                  <option value="{{period.name}}\n{{internship.organization.reference }}\n{{internship.speciality.name }}"
+                                    {% for enroll in student_enrollment %}
+                                  	  {% if enroll.internship_offer.speciality == internship.speciality %}
+                                  		  {% if enroll.place == internship.organization %}
+                                  		    {% if enroll.period.name == period.name %}
+                                            selected="true"
+                                          {% endif %}
+                                        {%endif%}
+                                      {%endif%}
+                                    {% endfor %}
+                                  >
                                     {{period.name}}
                                   </option>
-                                {% endfor %}
+                                  {% endfor %}
                               </select>
                             </td>
                             <td>

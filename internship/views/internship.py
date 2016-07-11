@@ -460,6 +460,7 @@ def internships_modification_student(request, registration_id):
     else :
         query = InternshipOffer.find_internships()
 
+    student_enrollment = InternshipEnrollment.find_by(student)
     #Change the query into a list
     query=list(query)
     #delete the internships in query when they are in the student's selection then rebuild the query
@@ -508,7 +509,7 @@ def internships_modification_student(request, registration_id):
         luy.tab = tab
 
     periods = Period.find_all()
-
+    
     return render(request, "internship_modification_student.html", {'section': 'internship',
                                                 'all_internships' : query,
                                                 'all_organizations' : internship_organizations,
@@ -517,6 +518,7 @@ def internships_modification_student(request, registration_id):
                                                 'periods' : periods,
                                                 'registration_id':registration_id,
                                                 'student' : student[0],
+                                                'student_enrollment' : student_enrollment,
                                                  })
 
 @login_required
