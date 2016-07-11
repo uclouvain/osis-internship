@@ -49,6 +49,9 @@
             <li><a data-toggle="tab" href="#tab_CHOIX2">{% trans 'Stage au choix 4'%}</a></li>
         </ul>
         <form  method="post" action="{% url 'internship_save_modification_student' %}" >
+          <button type="submit" class="btn btn-primary" title="{% trans 'Send'%}" id="bt_interships_save">
+              <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Soumettre
+          </button>
         <input type="hidden" name="organization_sort" value="{{ organization.name }}"/>
         {% csrf_token %}
         <div class="tab-content">
@@ -249,10 +252,7 @@
               </div>
             </div>
           </div>
-          <button type="submit" class="btn btn-primary" title="{% trans 'Send'%}" id="bt_interships_save">
-              <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Soumettre
-          </button>
         </div>
-        </form>
+      </form>
   </div>
 {% endblock %}
