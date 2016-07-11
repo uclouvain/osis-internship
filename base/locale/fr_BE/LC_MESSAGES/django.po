@@ -1253,6 +1253,9 @@ msgstr "Cliquez pour vous reconnectez"
 msgid "no_valid_academic_year_error"
 msgstr "Aucune année académique au format valide n'a été trouvé dans votre fichier excel. La date doit être formatée comme suit ; '2015-2016' ou '2015'."
 
+msgid "printing_date"
+msgstr "Date d'impression"
+
 msgid "no_data_for_this_academic_year"
 msgstr "Aucune données pour cette année académique"
 
