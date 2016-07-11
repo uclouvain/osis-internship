@@ -84,6 +84,7 @@ def build_pdf(document):
             data = headers_table()
             students_printed = 0
             enrollments_to_print = len(program['enrollments'])
+            nb_students = len(program['enrollments'])
             for enrollment in program['enrollments']:
 
                 # 1. Append the examEnrollment to the table 'data'
@@ -100,14 +101,14 @@ def build_pdf(document):
                     students_printed = 0
                     # Print a complete PDF sheet
                     # 3. Write header
-                    main_data_json(learn_unit_year, program, styles, content)
+                    main_data(learn_unit_year, program, nb_students, styles, content)
                     # 4. Adding the complete table of examEnrollments to the PDF sheet
                     _write_table_of_students(content, data)
 
                     # 5. Write Legend
                     deadline = program['deadline']
                     end_page_infos_building(content, deadline)
-                    legend_building_json(learn_unit_year['decimal_scores'], content)
+                    legend_building(learn_unit_year['decimal_scores'], content)
 
                     # 6. New Page
                     content.append(PageBreak())
@@ -166,7 +167,7 @@ def _write_table_of_students(content, data):
     content.append(t)
 
 
-def legend_building_json(decimal_scores, content):
+def legend_building(decimal_scores, content):
     p = ParagraphStyle('legend')
     p.textColor = 'grey'
     p.borderColor = 'grey'
@@ -200,7 +201,7 @@ def headers_table():
     return data
 
 
-def get_data_coordinator_json(learning_unit_year, styles):
+def get_data_coordinator(learning_unit_year, styles):
     p_coord_location = Paragraph('''''', styles["Normal"])
     p_coord_address = Paragraph('''''', styles["Normal"])
     p_responsible = Paragraph('<b>%s :</b>' % _('learning_unit_responsible'), styles["Normal"])
@@ -220,7 +221,7 @@ def get_data_coordinator_json(learning_unit_year, styles):
     return [[p_responsible], [p_coord_name], [p_coord_location], [p_coord_address]]
 
 
-def main_data_json(learning_unit_year, program, styles, content):
+def main_data(learning_unit_year, program, nb_students, styles, content):
 
     # We add first a blank line
     content.append(Paragraph('''
@@ -256,7 +257,7 @@ def main_data_json(learning_unit_year, program, styles, content):
                       [p_struct_address],
                       [p_phone_fax_data]]
 
-    header_coordinator_structure = [[get_data_coordinator_json(learning_unit_year, styles), data_structure]]
+    header_coordinator_structure = [[get_data_coordinator(learning_unit_year, styles), data_structure]]
     table_header = Table(header_coordinator_structure, colWidths='*')
     table_header.setStyle(TableStyle([
         ('LEFTPADDING', (0, 0), (-1, -1), 0),
@@ -280,7 +281,11 @@ def main_data_json(learning_unit_year, program, styles, content):
     # content.append(Paragraph('Session : %d' % session_exam.number_session, text_left_style))
     content.append(Paragraph("<strong>%s : %s</strong>" % (learning_unit_year['acronym'], learning_unit_year['title']),
                              styles["Normal"]))
-    content.append(Paragraph('''<b>%s : %s</b>''' % (_('program'), program['acronym']), styles["Normal"]))
+    content.append(Paragraph('''<b>%s : %s </b>(%s %s)''' % (_('program'),
+                                                             program['acronym'],
+                                                             nb_students,
+                                                             _('students')),
+                             styles["Normal"]))
     content.append(Paragraph('''
         <para spaceb=2>
             &nbsp;

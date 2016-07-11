@@ -1256,6 +1256,9 @@ msgstr "Aucune année académique au format valide n'a été trouvé dans votre 
 msgid "no_data_for_this_academic_year"
 msgstr "Aucune données pour cette année académique"
 
+msgid "students"
+msgstr "étudiants"
+
 msgid "complete"
 msgstr "Complet"
 
