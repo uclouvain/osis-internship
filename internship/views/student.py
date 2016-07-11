@@ -41,6 +41,8 @@ def internships_students(request):
         student = mdl.student.find_by_person(si.person)
         choices = InternshipChoice.find_by_student(student)
         si.number_choices = len(choices)
+        if student:
+            si.registration_id = student.registration_id
 
     specialities = InternshipSpeciality.find_by(mandatory=True)
     number_selection = 4 * len (specialities)

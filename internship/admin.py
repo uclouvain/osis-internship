@@ -49,8 +49,8 @@ admin.site.register(InternshipMaster, InternshipMasterAdmin)
 
 
 class InternshipChoiceAdmin(admin.ModelAdmin):
-    list_display = ('student', 'organization', 'speciality', 'choice')
-    fieldsets = ((None, {'fields': ('student', 'organization', 'speciality', 'choice')}),)
+    list_display = ('student', 'organization', 'speciality', 'choice', 'priority')
+    fieldsets = ((None, {'fields': ('student', 'organization', 'speciality', 'choice', 'priority')}),)
 
 admin.site.register(InternshipChoice, InternshipChoiceAdmin)
 
