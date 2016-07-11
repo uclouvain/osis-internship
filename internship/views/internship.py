@@ -460,6 +460,7 @@ def internships_modification_student(request, registration_id):
     else :
         query = InternshipOffer.find_internships()
 
+    student_enrollment = InternshipEnrollment.find_by(student)
     #Change the query into a list
     query=list(query)
     #delete the internships in query when they are in the student's selection then rebuild the query
@@ -508,7 +509,7 @@ def internships_modification_student(request, registration_id):
         luy.tab = tab
 
     periods = Period.find_all()
-
+    
     return render(request, "internship_modification_student.html", {'section': 'internship',
                                                 'all_internships' : query,
                                                 'all_organizations' : internship_organizations,
@@ -517,6 +518,7 @@ def internships_modification_student(request, registration_id):
                                                 'periods' : periods,
                                                 'registration_id':registration_id,
                                                 'student' : student[0],
+                                                'student_enrollment' : student_enrollment,
                                                  })
 
 @login_required
@@ -570,11 +572,19 @@ def internship_save_modification_student(request) :
     student = mdl.student.find_by(registration_id=registration_id[0], full_registration = True)
     organization_list = [x for x in organization_list if x != 0]
     speciality_list = [x for x in speciality_list if x != 0]
-    preference_list = [x for x in preference_list if x != '0']
     periods_list = [x for x in periods_list if x != '0']
+    final_preference_list = list()
+    final_fixthis_list = list()
+    index = 0
+    for p in preference_list:
+        if p != '0':
+            final_preference_list.append(p)
+            final_fixthis_list.append(fixthis_list[index])
+
+        index += 1
 
     InternshipChoice.objects.filter(student=student).delete()
-    index = preference_list.__len__()
+    index = final_preference_list.__len__()
     for x in range(0, index):
         new_choice = InternshipChoice()
         new_choice.student = student[0]
@@ -582,8 +592,8 @@ def internship_save_modification_student(request) :
         new_choice.organization = organization[0]
         speciality = InternshipSpeciality.find_by(name=speciality_list[x])
         new_choice.speciality = speciality[0]
-        new_choice.choice = preference_list[x]
-        if fixthis_list[x] == '1':
+        new_choice.choice = final_preference_list[x]
+        if final_fixthis_list[x] == '1':
             new_choice.priority = True
         else :
             new_choice.priority = False

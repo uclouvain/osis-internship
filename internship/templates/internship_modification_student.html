@@ -49,11 +49,15 @@
             <li><a data-toggle="tab" href="#tab_CHOIX2">{% trans 'Stage au choix 4'%}</a></li>
         </ul>
         <form  method="post" action="{% url 'internship_save_modification_student' %}" >
+          <button type="submit" class="btn btn-primary" title="{% trans 'Send'%}" id="bt_interships_save">
+              <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Soumettre
+          </button>
         <input type="hidden" name="organization_sort" value="{{ organization.name }}"/>
         {% csrf_token %}
         <div class="tab-content">
           {% for luy in all_speciality %}
           <div id="tab_{{luy.tab}}" class="tab-pane fade in active">
+            <h3>{{luy.name}}</h3>
               <div class="panel panel-default">
                 <div class="tab-content">
                   <div role="tabpanel" class="tab-pane fade in active" id="profile">
@@ -106,12 +110,22 @@
                             </td>
                             <td>
                               <select name="periods_s" multiple>
-                                  <option value=0 selected>--</option>
-                                {% for period in periods %}
-                                  <option value="{{period.name}}\n{{internship.organization.reference }}\n{{internship.speciality.name }}">
+                                  <option value=0>--</option>
+                                  {% for period in periods %}
+                                  <option value="{{period.name}}\n{{internship.organization.reference }}\n{{internship.speciality.name }}"
+                                    {% for enroll in student_enrollment %}
+                                  	  {% if enroll.internship_offer.speciality == internship.speciality %}
+                                  		  {% if enroll.place == internship.organization %}
+                                  		    {% if enroll.period.name == period.name %}
+                                            selected="true"
+                                          {% endif %}
+                                        {%endif%}
+                                      {%endif%}
+                                    {% endfor %}
+                                  >
                                     {{period.name}}
                                   </option>
-                                {% endfor %}
+                                  {% endfor %}
                               </select>
                             </td>
                             <td>
@@ -249,10 +263,7 @@
               </div>
             </div>
           </div>
-          <button type="submit" class="btn btn-primary" title="{% trans 'Send'%}" id="bt_interships_save">
-              <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Soumettre
-          </button>
         </div>
-        </form>
+      </form>
   </div>
 {% endblock %}
