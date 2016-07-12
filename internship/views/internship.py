@@ -553,10 +553,10 @@ def internship_save_modification_student(request) :
     if request.POST.get('periods_s'):
         periods_list = request.POST.getlist('periods_s')
 
+    fixthis_list = list()
     if request.POST.get('fixthis'):
         fixthis_list = request.POST.getlist('fixthis')
     index = 0
-    fixthis_final_list = []
     for value in fixthis_list:
         if value == '1'and fixthis_list[index-1]=='0':
             del fixthis_list[index-1]
