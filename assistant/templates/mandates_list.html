@@ -28,10 +28,7 @@
 {% block style %}
 <link rel="stylesheet" href="{% static 'css/custom.css' %}">
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.11/css/dataTables.bootstrap.min.css">
-
 {% endblock %}
-    
-    
 {% block breadcrumb %}
 <li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'institution' %}</a></li>
 <li><a href="{% url 'mandates' %}" id="lnk_mandates">{% trans 'mandates' %}</a></li>
@@ -43,105 +40,83 @@
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
- <div class="row">
-	<div class="col-md-12 text-right"> 
- <form action=" {% url 'mandates_list' %} " method="GET">  
-    
-    {{ form }}
-</form></br> 
-</div></div>
-<div class="table-responsive">  
-<table id="myTable" class="table table-hover table-condensed table-bordered" cellspacing="0" width="100%">
-<thead>
-      <tr>
-      <th>{% trans 'matricule' %}</th>
-        <th>{% trans 'name' %}</th>
-        <th>{% trans 'first_name' %}</th>
-        <th>{% trans 'faculty' %}</th>
-        <th>{% trans 'institute' %}</th>
-        <th>{% trans 'stream' %}</th>
-        <th>{% trans 'renewal' %}</th>
-        <th>{% trans 'doctorate' %}</th>
-        <th>{% trans 'mandate' %}</th>
-        <th>{% trans 'eq_eft' %}</th>
-        <th>{% trans 'po_eft' %}</th>
-        <th>{% trans 'res' %}</th>
-        <th>{% trans 'tut' %}</th>
-        <th>{% trans 's_v-r' %}</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-{% for mandate in object_list %}
-
-<td>{{ mandate.sap_id }}</td>
-<td><a href="{% url 'mandate_read' mandate.id %}">{{ mandate.assistant.person.last_name }}</a></td>
-<td><a href="{% url 'mandate_read' mandate.id %}">{{ mandate.assistant.person.first_name }}</a></td>
-{% if mandate.mandatestructure_set.all %}
-	{% for structure in mandate.mandatestructure_set.all|dictsort:"structure.type" %}
-		{% if mandate.mandatestructure_set.all.count == 1 %}
-			<td>{{ structure.structure.acronym }}</td><td></td>
-		{% elif mandate.mandatestructure_set.all.count == 2 %}
-			<td>{{ structure.structure.acronym }}</td>
-		{% endif %}
-	{% endfor %}
-{% else %}
-	<td></td><td></td>
-{% endif %}
-
-{% if mandate.assistant_type == "TEACHING_ASSISTANT" %}
-	<td>AS</td>
-{% else %}
-	<td>ST</td>
-{% endif %}
-{% if mandate.state == "TO_DO" %}
-	<td>Pas répondu</td>
-{% elif mandate.state == "DECLINED" %}
-	<td>Non</td>
-{% elif mandate.state == "TRTS" %}
-	<td>Oui</td>
-{% elif mandate.state == "PHD_SUPERVISOR" %}
-	<td>Promoteur</td>
-{% elif mandate.state == "RESEARCH" %}
-	<td>Président d'Institut</td>
-{% elif mandate.state == "SUPERVISION" %}
-	<td>Doyen de faculté</td>
-{% elif mandate.state == "VICE_RECTOR" %}
-	<td>Vice-Recteur</td>
-{% endif %}
-{% if mandate.assistant.inscription == "YES" %}
-	{% if mandate.assistant.phd_inscription_date %}
-		<td>{{ mandate.assistant.phd_inscription_date }}</td>
-	{% else %}
-		<td>Oui</td>
-	{% endif %}
-{% elif mandate.assistant.inscription == "NO" %}
-	<td>Non</td>
-{% elif mandate.assistant.inscription == "IN_PROGRESS" %}
-	<td>En cours</td>
-{% endif %}
-
-<td>{{ mandate.contract_duration }}</td>
-<td>{{ mandate.contract_duration_fte }}</td>
-<td>{{ mandate.fulltime_equivalent }}</td>
-<td></td>
-<td align="center">{% for rev in mandate.review_set.all %}
-		{% if rev.advice == "FAVORABLE" %}
-		<span class="glyphicon glyphicon-thumbs-up" style="font-size: 14pt; color: green" aria-hidden="true"></span>
-                                                                   
-    	{% elif rev.advice == "UNFAVOURABLE" %}
-    		<span class="glyphicon glyphicon-thumbs-down" style="font-size: 14pt; color: red" aria-hidden="true"></span>
-    	{% else %}
-    		<span class="glyphicon glyphicon-alert" style="font-size: 14pt; color: orange" aria-hidden="true"></span>
-    	{% endif %}                                                            
-		{% empty %}
-	{% endfor %}
-</td>
-<td></td>
-</tr>
-{% endfor %}
-</tbody>
-  </table>
+        <div class="row">
+            <div class="col-md-12 text-right">
+                <form action=" {% url 'mandates_list' %} " method="GET">
+                {{ form }}
+                </form></br>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table id="myTable" class="table table-hover table-condensed table-bordered" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+            <th>{% trans 'matricule' %}</th>
+            <th>{% trans 'assistant' %}</th>
+            <th>{% trans 'structures' %}</th>
+            <th>{% trans 'stream' %}</th>
+            <th>{% trans 'renewal' %}</th>
+            <th>{% trans 'doctorate' %}</th>
+            <th>{% trans 'mandate' %}</th>
+            <th>{% trans 'eq_eft' %}</th>
+            <th>{% trans 'po_eft' %}</th>
+            <th>{% trans 'res' %}</th>
+            <th>{% trans 'tut' %}</th>
+            <th>{% trans 's_v-r' %}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            {% for mandate in object_list %}
+                <td>{{ mandate.sap_id }}</td>
+                <td><a href="{% url 'mandate_read' mandate.id %}">{{ mandate.assistant.person }}</a></td>
+                <td><ul>
+                {% for struct in mandate.mandatestructure_set.all|dictsort:"structure.type" %}
+                    {% if struct.structure.part_of %}
+                    <li>{% trans struct.structure.type|lower %} :
+                    {{ struct.structure.acronym }} ({{ struct.structure.part_of.acronym }})</li>
+                    {% else %}
+                    <li>{% trans struct.structure.type|lower %} : {{ struct.structure.acronym }}</li>
+                    {% endif %}
+                {% endfor %}
+                </ul></td>
+                {% if mandate.assistant_type == "TEACHING_ASSISTANT" %}
+                <td>AS</td>
+                {% else %}
+                <td>ST</td>
+                {% endif %}
+                <td>{% trans mandate.state|lower %}</td>
+                {% if mandate.assistant.inscription == "YES" %}
+                    {% if mandate.assistant.phd_inscription_date %}
+                    <td>{{ mandate.assistant.phd_inscription_date }}</td>
+                    {% else %}
+                    <td>{% trans 'yes' %}</td>
+                    {% endif %}
+                {% elif mandate.assistant.inscription == "NO" %}
+                <td>{% trans 'no' %}</td>
+                {% elif mandate.assistant.inscription == "IN_PROGRESS" %}
+                <td>{% trans 'in_progress' %}</td>
+                {% endif %}
+                <td>{{ mandate.contract_duration }}</td>
+                <td>{{ mandate.contract_duration_fte }}</td>
+                <td>{{ mandate.fulltime_equivalent }}</td>
+                <td></td>
+                <td align="center">
+                {% for rev in mandate.review_set.all %}
+                    {% if rev.advice == "FAVORABLE" %}
+                    <span class="glyphicon glyphicon-thumbs-up" style="font-size: 14pt; color: green" aria-hidden="true"></span>
+                    {% elif rev.advice == "UNFAVOURABLE" %}
+                    <span class="glyphicon glyphicon-thumbs-down" style="font-size: 14pt; color: red" aria-hidden="true"></span>
+                    {% else %}
+                    <span class="glyphicon glyphicon-alert" style="font-size: 14pt; color: orange" aria-hidden="true"></span>
+                    {% endif %}
+                {% endfor %}
+                </td><td></td></tr>
+            {% endfor %}
+            </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 {% endblock %}
 {% block script %}
@@ -154,6 +129,4 @@
     } );
 } );
 </script>   
-    </div>
-</div>
 {% endblock %}

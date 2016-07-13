@@ -55,8 +55,9 @@ class MandateStructureForm(ModelForm):
         
 def get_field_qs(field, **kwargs):
         if field.name == 'structure':
-            return forms.ModelChoiceField(queryset=structure.Structure.objects.filter(Q(type='INSTITUTE') |
-                                                                                      Q(type='FACULTY')))
+            return forms.ModelChoiceField(queryset=structure.Structure.objects.filter
+            (Q(type='INSTITUTE') | Q(type='POLE') | Q(type='PROGRAM_COMMISSION') |
+             Q(type='FACULTY')).order_by('acronym'))
         return field.formfield(**kwargs)
 
     
@@ -67,7 +68,7 @@ StructureInLineFormSet = inlineformset_factory(mdl.assistant_mandate.AssistantMa
                                                extra=2,
                                                can_delete=True,
                                                min_num=1,
-                                               max_num=2)
+                                               max_num=4)
 
 
 class HorizontalRadioRenderer(forms.RadioSelect.renderer):
