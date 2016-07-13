@@ -88,7 +88,12 @@ def work_dist(student, organizations):
     student_address = student_informations[0].location + " " + student_informations[0].postal_code + " " \
                     + student_informations[0].city + " " + student_informations[0].country
     student_address_lat_long = geocode(student_address)
-    
+    for organization in organizations :
+        organization_informations = OrganizationAddress.find_by_organization(organization)
+        organization_address = organization_informations[0].location + " " + organization_informations[0].postal_code + " " \
+                            + organization_informations[0].city + " " + organization_informations[0].country + " "
+        organization_address = organization_address.replace('\n','')
+        organization_address_lat_long = geocode(organization_address)
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
