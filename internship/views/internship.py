@@ -83,6 +83,12 @@ def calc_dist(lat_a, long_a, lat_b, long_b):
     # for distance in kilometers use this
     return (degrees(acos(distance)) * 69.09)/0.621371
 
+def work_dist(student, organizations):
+    student_informations = InternshipStudentInformation.find_by(person_name=student.person.last_name, person_first_name=student.person.first_name)
+    student_address = student_informations[0].location + " " + student_informations[0].postal_code + " " \
+                    + student_informations[0].city + " " + student_informations[0].country
+    student_address_lat_long = geocode(student_address)
+    
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
