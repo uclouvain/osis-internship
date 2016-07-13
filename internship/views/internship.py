@@ -100,6 +100,8 @@ def work_dist(student, organizations):
             distance = calc_dist(student_address_lat_long[0], student_address_lat_long[1], organization_address_lat_long[0], organization_address_lat_long[1])
             distance_student_organization[int(organization.reference)] = distance
 
+    distance_student_organization = sorted(distance_student_organization.items(), key=itemgetter(1))
+    return distance_student_organization
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
