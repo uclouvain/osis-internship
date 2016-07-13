@@ -28,7 +28,10 @@ from django.contrib.auth.backends import RemoteUserBackend
 from django.contrib.auth.middleware import RemoteUserMiddleware
 from django.contrib import auth
 from django.contrib.auth import backends
+from django.contrib.auth.models import Group
 from django.core.exceptions import ImproperlyConfigured
+from base.models import tutor, program_manager, student
+from internship import models as int_mdl
 
 from base.models.person import Person, find_by_global_id, find_by_user
 
@@ -59,46 +62,72 @@ class ShibbolethAuthBackend(RemoteUserBackend):
             })
             if created:
                 user = self.configure_user(user, user_infos)
+            else:
+                user = self.__update_user(user, user_infos)
+                self.__update_person(user, user_infos)
         else:
             try:
                 user = UserModel._default_manager.get_by_natural_key(username)
+                user = self.__update_user(user, user_infos)
+                self.__update_person(user, user_infos)
             except UserModel.DoesNotExist:
                 pass
-        user = self.__update_user(user, user_infos)
-        self.__update_person(user, user_infos)
         return user
 
     def clean_username(self, username):
         return username.split("@")[0]
 
     def configure_user(self, user, user_infos):
-        user.last_name = user_infos['USER_LAST_NAME']
-        user.first_name = user_infos['USER_FIRST_NAME']
-        user.email = user_infos['USER_EMAIL']
-        user.save()
+        user = self.__update_user(user, user_infos)
+        person = self.__update_person(user, user_infos)
+        user = self.__make_user_groups(user, person)
         return user
 
     def __update_user(self, user, user_infos):
-        user.first_name = user_infos['USER_FIRST_NAME']
-        user.last_name = user_infos['USER_LAST_NAME']
-        user.email = user_infos['USER_EMAIL']
+        user.first_name = user_infos.get('USER_FIRST_NAME')
+        user.last_name = user_infos.get('USER_LAST_NAME')
+        user.email = user_infos.get('USER_EMAIL')
         user.save()
         return user
 
     def __update_person(self, user, user_infos):
-        person = find_by_global_id(user_infos['USER_FGS'])
+        person = find_by_global_id(user_infos.get('USER_FGS'))
         if not person:
             person = find_by_user(user)
         if not person:
-            person = Person(user=user, global_id=user_infos['USER_FGS'], first_name=user_infos['USER_FIRST_NAME'],
-                            last_name=user_infos['USER_LAST_NAME'], email=user_infos['USER_EMAIL'])
+            person = Person(user=user,
+                            global_id=user_infos.get('USER_FGS'),
+                            first_name=user_infos.get('USER_FIRST_NAME'),
+                            last_name=user_infos.get('USER_LAST_NAME'),
+                            email=user_infos.get('USER_EMAIL'))
         else:
             person.user = user
             person.first_name = user.first_name
             person.last_name = user.last_name
             person.email = user.email
-            person.global_id = user_infos['USER_FGS']
+            person.global_id = user_infos.get('USER_FGS')
         person.save()
+        return person
+
+    def __make_user_groups(self, user, person):
+        # Check Tutor
+        if tutor.find_by_person(person):
+            tutors_group = Group.objects.get(name='tutors')
+            user.groups.add(tutors_group)
+        # Check PgmManager
+        if program_manager.find_by_person(person):
+            pgm_managers_group = Group.objects.get(name='program_managers')
+            user.groups.add(pgm_managers_group)
+        # Check Student
+        if student.find_by_person(person):
+            student_group = Group.objects.get(name='students')
+            user.groups.add(student_group)
+        # Check if student is internship student
+        if int_mdl.InternshipStudentInformation.find_by_person(person):
+            internship_student_group = Group.objects.get(name='internship_students')
+            user.groups.add(internship_student_group)
+        user.save()
+        return user
 
 
 class ShibbolethAuthMiddleware(RemoteUserMiddleware):
@@ -142,15 +171,26 @@ class ShibbolethAuthMiddleware(RemoteUserMiddleware):
             auth.login(request, user)
 
     def get_shibboleth_infos(self, request):
-        user_first_name = self.clean_string(request.META['givenName'])
-        user_last_name = self.clean_string(request.META['sn'])
-        user_email = request.META['mail']
-        employee_number_len = len(request.META['employeeNumber'])
-        prefix_fgs = (8 - employee_number_len) * '0'
-        user_fgs = ''.join([prefix_fgs, request.META['employeeNumber']])
+        user_email = request.META.get('mail')
+        employee_number = request.META.get('employeeNumber')
+        prefix_fgs = (8 - len(employee_number)) * '0'
+        user_fgs = ''.join([prefix_fgs, employee_number])
+        first_last_name_default = (user_email.split('@')[0]).split('.')
+        if len(first_last_name_default) > 1:
+            firstname_default = first_last_name_default[0]
+            lastname_default = first_last_name_default[1]
+        elif len(first_last_name_default) > 0:
+            firstname_default = ''
+            lastname_default = first_last_name_default[0]
+        else:
+            firstname_default = ''
+            lastname_default = ''
+        user_first_name = self.clean_string(request.META.get('givenName',firstname_default))
+        user_last_name = self.clean_string(request.META.get('sn',lastname_default))
         user_infos = {'USER_FIRST_NAME': user_first_name, 'USER_LAST_NAME': user_last_name, 'USER_EMAIL': user_email,
                       'USER_FGS': user_fgs}
         return user_infos
 
     def clean_string(self, string):
         return string.encode('raw_unicode_escape').decode("utf-8")
+

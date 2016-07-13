@@ -23,16 +23,21 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
 from base.forms import OrganizationForm
 from . import layout
 from reference import models as mdlref
 
 
+@login_required
+@permission_required('base.can_access_organization', raise_exception=True)
 def organizations(request):
     return layout.render(request, "organizations.html", {'types': mdl.organization.ORGANIZATION_TYPE})
 
 
+@login_required
+@permission_required('base.can_access_organization', raise_exception=True)
 def organizations_search(request):
     organizations = mdl.organization.search(acronym=request.GET['acronym'],
                                             name=request.GET['name'],
@@ -42,6 +47,8 @@ def organizations_search(request):
                                                          'types': mdl.organization.ORGANIZATION_TYPE})
 
 
+@login_required
+@permission_required('base.can_access_organization', raise_exception=True)
 def organization_read(request, organization_id):
     organization = mdl.organization.find_by_id(organization_id)
     structures = mdl.structure.find_by_organization(organization)
@@ -51,10 +58,14 @@ def organization_read(request, organization_id):
                                                         'structures': structures})
 
 
+@login_required
+@permission_required('base.can_access_organization', raise_exception=True)
 def organization_new(request):
     return organization_save(request, None)
 
 
+@login_required
+@permission_required('base.can_access_organization', raise_exception=True)
 def organization_save(request, organization_id):
     form = OrganizationForm(data=request.POST)
     if organization_id:
@@ -97,18 +108,24 @@ def organization_save(request, organization_id):
                                                                  'form': form})
 
 
+@login_required
+@permission_required('base.can_access_organization', raise_exception=True)
 def organization_edit(request, organization_id):
     organization = mdl.organization.find_by_id(organization_id)
     return layout.render(request, "organization_form.html", {'organization': organization,
                                                              'types': mdl.organization.ORGANIZATION_TYPE})
 
 
+@login_required
+@permission_required('base.can_access_organization', raise_exception=True)
 def organization_create(request):
     organization = mdl.organization.Organization()
     return layout.render(request, "organization_form.html", {'organization': organization,
                                                              'types': mdl.organization.ORGANIZATION_TYPE})
 
 
+@login_required
+@permission_required('base.can_access_organization', raise_exception=True)
 def organization_address_read(request, organization_address_id):
     organization_address = mdl.organization_address.find_by_id(organization_address_id)
     organization_id = organization_address.organization.id
@@ -116,6 +133,8 @@ def organization_address_read(request, organization_address_id):
                                                                 'organization_id':      organization_id})
 
 
+@login_required
+@permission_required('base.can_access_organization', raise_exception=True)
 def organization_address_edit(request, organization_address_id):
     organization_address = mdl.organization_address.find_by_id(organization_address_id)
     organization_id = organization_address.organization.id
@@ -125,6 +144,8 @@ def organization_address_edit(request, organization_address_id):
                                                                      'countries': countries})
 
 
+@login_required
+@permission_required('base.can_access_organization', raise_exception=True)
 def organization_address_save(request, organization_address_id):
     if organization_address_id:
         organization_address = mdl.organization_address.find_by_id(organization_address_id)
@@ -164,10 +185,14 @@ def organization_address_save(request, organization_address_id):
     return organization_read(request, organization_address.organization.id)
 
 
+@login_required
+@permission_required('base.can_access_organization', raise_exception=True)
 def organization_address_new(request):
     return organization_address_save(request, None)
 
 
+@login_required
+@permission_required('base.can_access_organization', raise_exception=True)
 def organization_address_create(request, organization_id):
     organization_address = mdl.organization_address.OrganizationAddress()
     organization = mdl.organization.find_by_id(organization_id)
@@ -177,6 +202,8 @@ def organization_address_create(request, organization_id):
                                                                      'countries': countries})
 
 
+@login_required
+@permission_required('base.can_access_organization', raise_exception=True)
 def organization_address_delete(request, organization_address_id):
     organization_address = mdl.organization_address.find_by_id(organization_address_id)
     organization = organization_address.organization

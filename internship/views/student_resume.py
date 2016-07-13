@@ -23,10 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
-from internship.models import InternshipChoice
+from internship.models import InternshipChoice, InternshipStudentInformation, InternshipSpeciality
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -35,25 +37,43 @@ from django.utils.translation import ugettext_lazy as _
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_resume(request):
     students_list = InternshipChoice.find_by_all_student()
+    specialities = InternshipSpeciality.find_by(mandatory=True)
+
+    number_selection = 4 * len (specialities)
+    student_with_internships = len(students_list)
+    students_can_have_internships = len(InternshipStudentInformation.find_all())
+
+    students_ok = 0
+    students_not_ok = 0
+    for si in students_list:
+        student = mdl.student.find_by_person(si.person)
+        choices = InternshipChoice.find_by_student(student)
+        si.number_choices = len(choices)
+        if len(choices) == number_selection:
+            students_ok += 1
+        else :
+            students_not_ok += 1
+
+
 
     return render(request, "student_search.html", {'s_noma':    None,
                                                    's_name':    None,
-                                                   'students':  students_list, })
+                                                   'students':  students_list,
+                                                   'number_selection' : number_selection,
+                                                   'students_ok' : students_ok,
+                                                   'students_not_ok' : students_not_ok,
+                                                   'student_with_internships' : student_with_internships,
+                                                   'students_can_have_internships' : students_can_have_internships,
+                                                   })
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_search(request):
-    s_noma = request.GET['s_noma']
     s_name = request.GET['s_name']
     s_firstname = request.GET['s_firstname']
     students_list = []
     criteria_present = False
-
-    if len(s_noma) <= 0:
-        s_noma = None
-    else:
-        criteria_present=True
 
     s_name = s_name.strip()
     if len(s_name) <= 0:
@@ -69,14 +89,15 @@ def internships_student_search(request):
 
     message = None
     if criteria_present:
-        students_list = mdl.student.find_by(registration_id=s_noma, person_name=s_name, person_first_name = s_firstname)
+        students_list_check = InternshipStudentInformation.find_by(person_name=s_name, person_first_name = s_firstname)
+
+        for slc in students_list_check:
+            students_list.append( mdl.student.find_by(person_name = slc.person.last_name, person_first_name = slc.person.first_name ))
     else:
         students_list = InternshipChoice.find_by_all_student()
         # message = "%s" % _('You must choose at least one criteria!')
-
     return render(request, "student_search.html",
-                           {'s_noma':       s_noma,
-                            's_name':       s_name,
+                           {'s_name':       s_name,
                             's_firstname':  s_firstname,
                             'students':     students_list,
                             'init':         "0",
@@ -84,14 +105,43 @@ def internships_student_search(request):
 
 
 @login_required
+@permission_required('internship.can_access_internship', raise_exception=True)
 def internships_student_read(request, registration_id):
     student = mdl.student.find_by(registration_id=registration_id)
-    student[0].address = ""
-    address = mdl.person_address.find_by_person(student[0].person)
-    if address:
-        student[0].address = address
-    internship_choice = InternshipChoice.find_by_student(student[0])
+    information = InternshipStudentInformation.find_by_person(student[0].person)
+    student = student[0]
+    internship_choice = InternshipChoice.find_by_student(student)
 
     return render(request, "student_resume.html",
-                           {'student':             student[0],
+                           {'student':             student,
+                            'information':         information,
                             'internship_choice':   internship_choice, })
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def internship_student_information_modification(request, registration_id):
+    student = mdl.student.find_by(registration_id=registration_id)
+    information = InternshipStudentInformation.find_by_person(student[0].person)
+    student = student[0]
+    return render(request, "student_information_modification.html",
+                           {'student':             student,
+                            'information':         information, })
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def student_save_information_modification(request, registration_id):
+    student = mdl.student.find_by(registration_id=registration_id)
+    information = InternshipStudentInformation.find_by_person(student[0].person)
+    if not information:
+        information = InternshipStudentInformation()
+        information.person = student[0].person
+    information.email = request.POST.get('student_email')
+    information.phone_mobile = request.POST.get('student_phone')
+    information.location = request.POST.get('student_location')
+    information.postal_code = request.POST.get('student_postal_code')
+    information.city = request.POST.get('student_city')
+    information.country = request.POST.get('student_country')
+    information.save()
+
+    redirect_url = reverse('internships_student_read', args=[registration_id])
+    return HttpResponseRedirect(redirect_url)

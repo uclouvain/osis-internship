@@ -25,28 +25,32 @@
 ##############################################################################
 import json
 from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
 from . import layout
 
 
 @login_required
+@permission_required('base.is_institution_administrator', raise_exception=True)
 def institution(request):
     return layout.render(request, "institution.html", {'section': 'institution'})
 
 
 @login_required
+@permission_required('base.can_access_mandate', raise_exception=True)
 def mandates(request):
     return layout.render(request, "mandates.html", {'section': 'mandates'})
 
 
 @login_required
+@permission_required('base.can_access_structure', raise_exception=True)
 def structures(request):
     return layout.render(request, "structures.html", {'init': "1",
                                                       'types': mdl.structure.ENTITY_TYPE})
 
 
 @login_required
+@permission_required('base.can_access_structure', raise_exception=True)
 def structures_search(request):
     structure_type = None
     if request.GET['type_choices']:
@@ -60,13 +64,15 @@ def structures_search(request):
 
 
 @login_required
+@permission_required('base.can_access_structure', raise_exception=True)
 def structure_read(request, structure_id):
     structure = mdl.structure.find_by_id(structure_id)
     offers_years = mdl.offer_year.find_by_structure(structure)
     return layout.render(request, "structure.html", {'structure': structure,
                                                      'offers_years': offers_years})
 
-
+@login_required
+@permission_required('base.can_access_structure', raise_exception=True)
 def structure_diagram(request, parent_id):
     structure = mdl.structure.find_by_id(parent_id)
     tags = mdl.structure.find_structure_hierarchy(structure)
@@ -74,7 +80,8 @@ def structure_diagram(request, parent_id):
     return layout.render(request, "structure_organogram.html", {'structure': structure,
                                                                 'data': data})
 
-
+@login_required
+@permission_required('base.can_access_structure', raise_exception=True)
 def structure_address(request, structure_id):
     structure = mdl.structure.find_by_id(structure_id)
     struct_address = mdl.structure_address.find_structure_address(structure)
