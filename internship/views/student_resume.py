@@ -37,20 +37,33 @@ from django.utils.translation import ugettext_lazy as _
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_resume(request):
     students_list = InternshipChoice.find_by_all_student()
+    specialities = InternshipSpeciality.find_by(mandatory=True)
 
+    number_selection = 4 * len (specialities)
+    student_with_internships = len(students_list)
+    students_can_have_internships = len(InternshipStudentInformation.find_all())
+
+    students_ok = 0
+    students_not_ok = 0
     for si in students_list:
         student = mdl.student.find_by_person(si.person)
         choices = InternshipChoice.find_by_student(student)
         si.number_choices = len(choices)
+        if len(choices) == number_selection:
+            students_ok += 1
+        else :
+            students_not_ok += 1
 
-    specialities = InternshipSpeciality.find_by(mandatory=True)
-    number_selection = 4 * len (specialities)
 
 
     return render(request, "student_search.html", {'s_noma':    None,
                                                    's_name':    None,
                                                    'students':  students_list,
                                                    'number_selection' : number_selection,
+                                                   'students_ok' : students_ok,
+                                                   'students_not_ok' : students_not_ok,
+                                                   'student_with_internships' : student_with_internships,
+                                                   'students_can_have_internships' : students_can_have_internships,
                                                    })
 
 
@@ -76,11 +89,13 @@ def internships_student_search(request):
 
     message = None
     if criteria_present:
-        students_list = InternshipStudentInformation.find_by(person_name=s_name, person_first_name = s_firstname)
+        students_list_check = InternshipStudentInformation.find_by(person_name=s_name, person_first_name = s_firstname)
+
+        for slc in students_list_check:
+            students_list.append( mdl.student.find_by(person_name = slc.person.last_name, person_first_name = slc.person.first_name ))
     else:
         students_list = InternshipChoice.find_by_all_student()
         # message = "%s" % _('You must choose at least one criteria!')
-
     return render(request, "student_search.html",
                            {'s_name':       s_name,
                             's_firstname':  s_firstname,
@@ -120,12 +135,12 @@ def student_save_information_modification(request, registration_id):
     if not information:
         information = InternshipStudentInformation()
         information.person = student[0].person
-    information.email = request.POST['student_email']
-    information.phone_mobile = request.POST['student_phone']
-    information.location = request.POST['student_location']
-    information.postal_code = request.POST['student_postal_code']
-    information.city = request.POST['student_city']
-    information.country = request.POST['student_country']
+    information.email = request.POST.get('student_email')
+    information.phone_mobile = request.POST.get('student_phone')
+    information.location = request.POST.get('student_location')
+    information.postal_code = request.POST.get('student_postal_code')
+    information.city = request.POST.get('student_city')
+    information.country = request.POST.get('student_country')
     information.save()
 
     redirect_url = reverse('internships_student_read', args=[registration_id])

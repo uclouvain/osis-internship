@@ -150,7 +150,6 @@ def internships_stud(request):
             if internship.organization == choice.organization and \
                internship.speciality == choice.speciality:
                     choice.maximum_enrollments = internship.maximum_enrollments
-                    choice.selectable = internship.selectable
                     query[index] = 0
             index += 1
         query = [x for x in query if x != 0]
@@ -189,8 +188,9 @@ def internships_stud(request):
         tab = luy.name.replace(" ", "")
         luy.tab = tab
 
-    if len(query) > 0 :
-        if query[0].selectable:
+    query_selectable = InternshipOffer.find_internships()
+    if len(query_selectable) > 0 :
+        if query_selectable[0].selectable:
             selectable = True
         else :
             selectable = False
@@ -222,11 +222,12 @@ def internships_save(request):
         InternshipChoice.objects.filter(student=student).delete()
 
         form = InternshipChoiceForm(data=request.POST)
-        preference_list = list()
-        if request.POST['organization']:
+        organization_list = list()
+        speciality_list = list()
+        if request.POST.get('organization'):
             organization_list = request.POST.getlist('organization')
 
-        if request.POST['speciality']:
+        if request.POST.get('speciality'):
             speciality_list = request.POST.getlist('speciality')
 
         all_internships = InternshipOffer.find_internships()
@@ -245,7 +246,7 @@ def internships_save(request):
 
         preference_list= list()
         for pref_tab in preference_list_tab:
-            if request.POST[pref_tab]:
+            if request.POST.get(pref_tab):
                 for pref in request.POST.getlist(pref_tab) :
                     preference_list.append(pref)
 
@@ -345,26 +346,26 @@ def internships_edit(request, internship_id):
     check_internship = 0
     form = InternshipOfferForm(data=request.POST)
 
-    organization = Organization.search(reference=request.POST['organization'])
-    speciality = InternshipSpeciality.find_by(name=request.POST['speciality'])
+    organization = Organization.search(reference=request.POST.get('organization'))
+    speciality = InternshipSpeciality.find_by(name=request.POST.get('speciality'))
 
     if internship_id:
         internship = InternshipOffer.find_intership_by_id(internship_id)
     else:
         internship = InternshipOffer()
         check_internship = len(InternshipOffer.find_interships_by_learning_unit_organization(speciality[0].name,
-                                                                                             request.POST['organization']))
+                                                                                             request.POST.get('organization')))
 
     if check_internship == 0:
-        if request.POST['organization']:
+        if request.POST.get('organization'):
             internship.organization = organization[0]
 
-        if request.POST['speciality']:
+        if request.POST.get('speciality'):
             internship.speciality = speciality[0]
             internship.title = speciality[0].name
 
-        if request.POST['maximum_enrollments']:
-            internship.maximum_enrollments = request.POST['maximum_enrollments']
+        if request.POST.get('maximum_enrollments'):
+            internship.maximum_enrollments = request.POST.get('maximum_enrollments')
 
         internship.selectable = True
         internship.save()
@@ -418,7 +419,7 @@ def student_choice(request, id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_modification(request, internship_id):
     internship = InternshipOffer.find_intership_by_id(internship_id)
-    organization_sorted = request.POST['organization_sort']
+    organization_sorted = request.POST.get('organization_sort')
     return render(request, "internship_modification.html", {'internship':           internship,
                                                             'internship_id':        internship_id,
                                                             'organization_sorted':  organization_sorted, })
@@ -459,6 +460,7 @@ def internships_modification_student(request, registration_id):
     else :
         query = InternshipOffer.find_internships()
 
+    student_enrollment = InternshipEnrollment.find_by(student)
     #Change the query into a list
     query=list(query)
     #delete the internships in query when they are in the student's selection then rebuild the query
@@ -516,15 +518,16 @@ def internships_modification_student(request, registration_id):
                                                 'periods' : periods,
                                                 'registration_id':registration_id,
                                                 'student' : student[0],
+                                                'student_enrollment' : student_enrollment,
                                                  })
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_save_modification_student(request) :
-    if request.POST['organization']:
+    if request.POST.get('organization'):
         organization_list = request.POST.getlist('organization')
 
-    if request.POST['speciality']:
+    if request.POST.get('speciality'):
         speciality_list = request.POST.getlist('speciality')
 
     all_internships = InternshipOffer.find_internships()
@@ -542,17 +545,18 @@ def internship_save_modification_student(request) :
 
     preference_list= list()
     for pref_tab in preference_list_tab:
-        if request.POST[pref_tab]:
+        if request.POST.get(pref_tab):
             for pref in request.POST.getlist(pref_tab) :
                 preference_list.append(pref)
 
-    if request.POST['periods_s']:
+    periods_list = list()
+    if request.POST.get('periods_s'):
         periods_list = request.POST.getlist('periods_s')
 
+    fixthis_list = list()
     if request.POST.get('fixthis'):
         fixthis_list = request.POST.getlist('fixthis')
     index = 0
-    fixthis_final_list = []
     for value in fixthis_list:
         if value == '1'and fixthis_list[index-1]=='0':
             del fixthis_list[index-1]
@@ -567,13 +571,22 @@ def internship_save_modification_student(request) :
 
     registration_id = request.POST.getlist('registration_id')
     student = mdl.student.find_by(registration_id=registration_id[0], full_registration = True)
+
     organization_list = [x for x in organization_list if x != 0]
     speciality_list = [x for x in speciality_list if x != 0]
-    preference_list = [x for x in preference_list if x != '0']
     periods_list = [x for x in periods_list if x != '0']
+    final_preference_list = list()
+    final_fixthis_list = list()
+    index = 0
+    for p in preference_list:
+        if p != '0':
+            final_preference_list.append(p)
+            final_fixthis_list.append(fixthis_list[index])
+
+        index += 1
 
     InternshipChoice.objects.filter(student=student).delete()
-    index = preference_list.__len__()
+    index = final_preference_list.__len__()
     for x in range(0, index):
         new_choice = InternshipChoice()
         new_choice.student = student[0]
@@ -581,8 +594,8 @@ def internship_save_modification_student(request) :
         new_choice.organization = organization[0]
         speciality = InternshipSpeciality.find_by(name=speciality_list[x])
         new_choice.speciality = speciality[0]
-        new_choice.choice = preference_list[x]
-        if fixthis_list[x] == '1':
+        new_choice.choice = final_preference_list[x]
+        if final_fixthis_list[x] == '1':
             new_choice.priority = True
         else :
             new_choice.priority = False
