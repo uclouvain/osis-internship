@@ -93,8 +93,19 @@ class ManagerOfferPropositionForm(ModelForm):
                   'start_visibility_proposition',
                   'end_visibility_proposition',
                   'start_visibility_dissertation','end_visibility_dissertation')
-        widgets = {'offer': forms.HiddenInput(), 'offer_proposition': forms.CheckboxSelectMultiple()}
-
+        widgets = {'offer': forms.HiddenInput()}
+        start_visibility_proposition = forms.DateTimeField(widget=forms.DateTimeInput(format='%d/%m/%Y '),
+                                     input_formats=('%d/%m/%Y',),
+                                     required=True)
+        end_visibility_proposition = forms.DateTimeField(widget=forms.DateTimeInput(format='%d/%m/%Y '),
+                                     input_formats=('%d/%m/%Y',),
+                                     required=True)
+        start_visibility_dissertation = forms.DateTimeField(widget=forms.DateTimeInput(format='%d/%m/%Y '),
+                                     input_formats=('%d/%m/%Y',),
+                                     required=True)
+        end_visibility_dissertation = forms.DateTimeField(widget=forms.DateTimeInput(format='%d/%m/%Y '),
+                                     input_formats=('%d/%m/%Y',),
+                                     required=True)
 
 class ManagerPropositionDissertationForm(ModelForm):
     class Meta:

@@ -42,47 +42,34 @@
 
         <div class="panel-body">
           <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
               <label>{% trans 'date_start_visibility_proposition'%}</label> :
             </div>
-            <div class="col-md-2">
-              <SELECT NAME="month_start_visibility_proposition" onChange='get_days_month(this)' id="month_start_visibility_proposition">
-                {% for i in range%}
-                <OPTION VALUE="{{forloop.counter}}"
-                {% if offer_proposition.month_start_visibility_proposition == forloop.counter%}
-                selected="selected"{% endif%}>{{forloop.counter}}</OPTION>
-                {% endfor %}
-              </SELECT>
-                /
-                <SELECT NAME="day_of_month_start_visibility_proposition" >
-                {% for i in range%}
-                  <OPTION VALUE="{{forloop.counter}}"
-                  {% if offer_proposition.day_of_month_start_visibility_proposition == forloop.counter %}
-                  selected="selected"{% endif %}>{{ forloop.counter }}</OPTION>
-                  {% endfor %}
-                </SELECT>
+            <div class="col-md-3">
+              <div class="form-group">
+                  <div class='input-group date'>
+                    <input type="text" class="form-control"
+                           value="{{ offer_proposition.start_visibility_proposition| default_if_none:''|date:'' }}"
+                    name="start_visibility_proposition" id="txt_start_date">
+                  </div>
+              </div>
+
             </div>
           </div>
           <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
               <label>{% trans 'date_end_visibility_proposition'%}</label> :
             </div>
-            <div class="col-md-2">
-              <SELECT NAME="month_end_visibility_proposition"  onChange='get_days_month(this)' id="month_end_visibility_proposition">
-                {% for i in range%}
-                <OPTION VALUE="{{forloop.counter}}"
-                {% if offer_proposition.month_end_visibility_proposition == forloop.counter%}
-                selected="selected"{% endif%}>{{forloop.counter}}</OPTION>
-                {% endfor %}
-              </SELECT> /
+            <div class="col-md-3">
 
-              <SELECT NAME="day_of_month_end_visibility_proposition">
-                {% for i in range%}
-                <OPTION VALUE="{{forloop.counter}}"
-                {% if offer_proposition.day_of_month_end_visibility_proposition == forloop.counter%}
-                selected="selected"{% endif%}>{{forloop.counter}}</OPTION>
-                {% endfor %}
-              </SELECT>
+                <div class="form-group">
+                    <div class='input-group date'>
+
+                        <input type="text" class="form-control"
+                               value="{{ offer_proposition.end_visibility_proposition| default_if_none:''|date:'' }}"
+                        name="end_visibility_proposition" id="txt_start_date">
+                    </div>
+                </div>
             </div>
             <div class="col-md-4">
               <label>{% trans 'In_visibility_proposition' %}</label> :
@@ -94,56 +81,40 @@
         </div>
         <div class="panel-body">
           <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
               <label>{% trans 'date_start_visibility_dissertation'%}</label> :
             </div>
-            <div class="col-md-2">
-              <SELECT NAME="month_start_visibility_dissertation" onChange='get_days_month(this)' id="month_start_visibility_dissertation">
-                {% for i in range%}
-                <OPTION VALUE="{{forloop.counter}}"
-                {% if offer_proposition.month_start_visibility_dissertation == forloop.counter%}
-                selected="selected"{% endif%}>{{forloop.counter}}</OPTION>
+            <div class="col-md-3">
+              <div class="form-group">
+                  <div class='input-group date'>
 
-                {% endfor %}
-
-              </SELECT>
-                /
-                <SELECT NAME="day_of_month_start_visibility_dissertation" >
-                {% for i in range%}
-                  <OPTION VALUE="{{forloop.counter}}"
-                  {% if offer_proposition.day_of_month_end_visibility_dissertation == forloop.counter%}
-                  selected="selected"{% endif%}>{{forloop.counter}}</OPTION>
-                  {% endfor %}
-                </SELECT>
+                      <input type="text" class="form-control"
+                             value="{{ offer_proposition.start_visibility_dissertation| default_if_none:''|date:'' }}"
+                      name="start_visibility_dissertation" id="txt_start_date">
+                  </div>
+              </div>
             </div>
           </div>
           <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
               <label>{% trans 'date_end_visibility_dissertation'%}</label> :
             </div>
-            <div class="col-md-2">
-              <SELECT NAME="month_end_visibility_dissertation" onChange='get_days_month(this)' id="month_end_visibility_dissertation">
-                {% for i in range%}
-                <OPTION VALUE="{{forloop.counter}}"
-                {% if offer_proposition.month_end_visibility_dissertation == forloop.counter%}
-                selected="selected"{% endif%}>{{forloop.counter}}</OPTION>
-                {% endfor %}
-              </SELECT>
-                /
-                <SELECT NAME="day_of_month_end_visibility_dissertation" >
-                {% for i in range%}
-                  <OPTION VALUE="{{forloop.counter}}"
-                  {% if offer_proposition.day_of_month_end_visibility_dissertation == forloop.counter%}
-                  selected="selected"{% endif%}>{{forloop.counter}}</OPTION>
-                  {% endfor %}
-                </SELECT>
+            <div class="col-md-3">
 
+                <div class="form-group">
+                    <div class='input-group date'>
+
+                        <input type="text" class="form-control"
+                               value="{{ offer_proposition.end_visibility_dissertation| default_if_none:''|date:'' }}"
+                        name="end_visibility_dissertation" id="txt_start_date">
+                    </div>
+                </div>
             </div>
             <div class="col-md-4">
               <label>{% trans 'In_visibility_dissertation' %}</label> :
             </div>
             <div class="col-md-1">
-               {{ offer_proposition.in_periode_visibility_dissertation|yesno:"Yes,No" }}
+               <label>{{ offer_proposition.in_periode_visibility_dissertation|yesno:"Yes,No" }}</label>
             </div>
           </div>
         </div>
@@ -212,133 +183,7 @@
     </div>
   </div>
 
-<script type="text/javascript">
+{% endblock %}
+{% block script %}
 
-function get_days_month(elem)
-{
-  var selectedMonthIndex = elem.selectedIndex;
-
-  var selectedId = 0;
-  selectedId = $(elem).attr('id');
-  console.log(selectedMonthIndex);
-  console.log(selectedId);
-  var jours = 0;
-  switch (selectedMonthIndex)
-  {
-    case 0 : jours = 31; break;
-    case 1 : jours = 28; break;
-    case 2 : jours = 31; break;
-    case 3 : jours = 30; break;
-    case 4 : jours = 31; break;
-    case 5 : jours = 30; break;
-    case 6 : jours = 31; break;
-    case 7 : jours = 31; break;
-    case 8 : jours = 30; break;
-    case 9 : jours = 31; break;
-    case 10 : jours = 30; break;
-    case 11 : jours = 31; break;
-  }
-
-  if (selectedId =="month_start_visibility_proposition")
-  {
-    console.log('selectedId :');
-    console.log(selectedId);
-    console.log('jours:');
-    console.log(jours);
-
-    document.form_offer.day_of_month_start_visibility_proposition.options.length=0;
-    document.form_offer.day_of_month_start_visibility_proposition.options.length=jours;
-
-    for (var i=0; i<jours; i++)
-      {
-      console.log(i);
-          document.form_offer.day_of_month_start_visibility_proposition.options[i].text = i+1;
-      }
-  }
-
-  if (selectedId =="month_end_visibility_proposition")
-  {
-    console.log('selectedId :');
-    console.log(selectedId);
-    console.log('jours:');
-    console.log(jours);
-
-    document.form_offer.day_of_month_end_visibility_proposition.options.length=0;
-    document.form_offer.day_of_month_end_visibility_proposition.options.length=jours;
-    for (var i=0; i<jours; i++)
-      {
-      console.log(i);
-          document.form_offer.day_of_month_end_visibility_proposition.options[i].text = i+1;
-      }
-  }
-
-  if (selectedId =="month_start_visibility_dissertation")
-  {
-    console.log('selectedId :');
-    console.log(selectedId);
-    console.log('jours:');
-    console.log(jours);
-
-    document.form_offer.day_of_month_start_visibility_dissertation.options.length=0;
-    document.form_offer.day_of_month_start_visibility_dissertation.options.length=jours;
-    for (var i=0; i<jours; i++)
-      {
-      console.log(i);
-          document.form_offer.day_of_month_start_visibility_dissertation.options[i].text = i+1;
-      }
-  }
-  if (selectedId =="month_end_visibility_dissertation")
-  {
-    console.log('selectedId :');
-    console.log(selectedId);
-    console.log('jours:');
-    console.log(jours);
-
-    document.form_offer.day_of_month_end_visibility_dissertation.options.length=0;
-    document.form_offer.day_of_month_end_visibility_dissertation.options.length=jours;
-    for (var i=0; i<jours; i++)
-      {
-      console.log(i);
-          document.form_offer.day_of_month_end_visibility_dissertation.options[i].text = i+1;
-      }
-  }
-
-}
-
-/*function get_days_month(form)
-{
-    var selectedMonth = $(this).getAttribute('name');
-    console.log(selectedMonth);
-/*
-    var rub = form.month_start_visibility_proposition.selectedIndex;
-    var child = form.month_start_visibility_proposition.data-name-child;
-    console.log(child);
-    var jours = 0;
-    switch (rub) {
-    case 0 : jours = 31; break;
-    case 1 : jours = 29; break;
-    case 2 : jours = 31; break;
-    case 3 : jours = 30; break;
-    case 4 : jours = 31; break;
-    case 5 : jours = 30; break;
-    case 6 : jours = 31; break;
-    case 7 : jours = 31; break;
-    case 8 : jours = 30; break;
-    case 9 : jours = 31; break;
-    case 10 : jours = 30; break;
-    case 11 : jours = 31; break;
-  }
-  if (request.getParameter("month_start_visibility_proposition")!=null)
-  {
-    form.day_of_month_start_visibility_proposition.options.length=0;
-    form.day_of_month_start_visibility_proposition.options.length=jours;
-  }
-console.log(jours);
-for (var i=0; i<jours; i++)
-  {
-  console.log(i);
-      form.day_of_month_start_visibility_proposition.options[i].text = i+1;
-  }
-}*/
-</script>
 {% endblock %}
