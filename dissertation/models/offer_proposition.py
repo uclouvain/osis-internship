@@ -103,5 +103,6 @@ class OfferProposition(models.Model):
         else:
             return False
 
+
     def __str__(self):
         return self.acronym
