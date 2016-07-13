@@ -88,7 +88,7 @@ def work_dist(student, organizations):
     student_address = student_informations[0].location + " " + student_informations[0].postal_code + " " \
                     + student_informations[0].city + " " + student_informations[0].country
     student_address_lat_long = geocode(student_address)
-
+    distance_student_organization = {}
     for organization in organizations :
         organization_informations = OrganizationAddress.find_by_organization(organization)
         organization_address = organization_informations[0].location + " " + organization_informations[0].postal_code + " " \
@@ -98,6 +98,8 @@ def work_dist(student, organizations):
 
         if organization_address_lat_long[0] is not None :
             distance = calc_dist(student_address_lat_long[0], student_address_lat_long[1], organization_address_lat_long[0], organization_address_lat_long[1])
+            distance_student_organization[int(organization.reference)] = distance
+
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
