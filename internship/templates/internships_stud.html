@@ -54,30 +54,6 @@
   <div class="page-header">
     <h2>{% trans 'internships' %}</h2>
   </div>
-  <table style="height:100%; width:100%;">
-      <thead>
-        <tr>
-            <th style="text-align:center; width:50%;">{% trans 'organization' %}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <form action="{%url 'internships_stud' %}" method="get">
-          <tr>
-            <td style="text-align:center; width:50%;">
-              <select name="organization_sort" onChange="javascript: this.form.submit();">
-               <option value="0">{% trans 'choose_a_hospital' %}</option>
-               {% for organization in all_organizations %}
-                  <option value="{{ organization.name }}"
-                  {% if organization.name == organization_sort_value %}selected{% endif %}>
-                      {{ organization.reference }} - {{ organization.name }}
-                  </option>
-               {% endfor %}
-              </select>
-            </td>
-          </tr>
-        </form>
-      </tbody>
-  </table>
   <br/>
   {% trans 'choose_spec_see_record_choice' %}<br/>
   <span class="glyphicon glyphicon-ok" style="color:green"></span> :

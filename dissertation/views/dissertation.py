@@ -31,6 +31,7 @@ from base import models as mdl
 from dissertation.models.adviser import Adviser
 from dissertation.models.dissertation import Dissertation
 from dissertation.models.dissertation_role import DissertationRole
+from dissertation.models.dissertation_update import DissertationUpdate
 from dissertation.models.faculty_adviser import FacultyAdviser
 from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models.proposition_dissertation import PropositionDissertation
@@ -54,6 +55,18 @@ def is_teacher(user):
     adviser = Adviser.find_by_person(person)
     return adviser.type == 'PRF'
 
+
+# Used to insert update log
+def insert_update(request, dissertation, old_status):
+    person = mdl.person.find_by_user(request.user)
+    adviser = Adviser.find_by_person(person)
+    update = DissertationUpdate()
+    update.status_from = old_status
+    update.status_to = dissertation.status
+    update.justification = adviser.type + "_set_to_" + dissertation.status
+    update.person = person
+    update.dissertation = dissertation
+    update.save()
 
 ##########################
 #      VUE GENERALE      #
@@ -103,6 +116,21 @@ def manager_dissertations_detail(request, pk):
     return render(request, 'manager_dissertations_detail.html',
                   {'dissertation': dissertation, 'adviser': adviser, 'dissertation_roles': dissertation_roles,
                    'count_dissertation_role': count_dissertation_role})
+
+
+@login_required
+@user_passes_test(is_manager)
+def manager_dissertations_detail_updates(request, pk):
+    dissertation = get_object_or_404(Dissertation, pk=pk)
+    person = mdl.person.find_by_user(request.user)
+    adviser = Adviser.find_by_person(person)
+    dissertation_updates = DissertationUpdate.objects.filter(dissertation=dissertation).order_by('created')
+
+    return render(request, 'manager_dissertations_detail_updates.html',
+                  {'dissertation': dissertation,
+                   'adviser': adviser,
+                   'dissertation_updates': dissertation_updates
+                   })
 
 
 @login_required
@@ -160,7 +188,8 @@ def manager_dissertations_list(request):
     adviser = Adviser.find_by_person(person)
     faculty_adviser = FacultyAdviser.find_by_adviser(adviser)
     dissertations = Dissertation.objects.filter(offer_year_start__offer=faculty_adviser)
-    return render(request, 'manager_dissertations_list.html', {'dissertations': dissertations})
+    offer_proposition = OfferProposition.objects.get(offer=faculty_adviser)
+    return render(request, 'manager_dissertations_list.html', {'dissertations': dissertations,'offer_proposition': offer_proposition})
 
 
 @login_required
@@ -212,6 +241,10 @@ def manager_dissertations_new(request):
 @user_passes_test(is_manager)
 def manager_dissertations_search(request):
     dissertations = Dissertation.search(terms=request.GET['search']).filter(Q(active=True))
+    person = mdl.person.find_by_user(request.user)
+    adviser = Adviser.find_by_person(person)
+    faculty_adviser = FacultyAdviser.find_by_adviser(adviser)
+    offer_proposition = OfferProposition.objects.get(offer=faculty_adviser)
     xlsx = False
     if 'bt_xlsx' in request.GET:
 
@@ -257,7 +290,7 @@ def manager_dissertations_search(request):
         response['Content-Disposition'] = "attachment; filename=" + filename
         return response
     return render(request, "manager_dissertations_list.html",
-                  {'dissertations': dissertations, 'xlsx': xlsx})
+                  {'dissertations': dissertations,'offer_proposition': offer_proposition, 'xlsx': xlsx})
 
 
 @login_required
@@ -266,6 +299,14 @@ def manager_dissertations_delete(request, pk):
     dissertation = get_object_or_404(Dissertation, pk=pk)
     dissertation.active = False
     dissertation.save()
+    # create update log
+    update = DissertationUpdate()
+    update.status_from = dissertation.status
+    update.status_to = dissertation.status
+    update.justification = "manager_set_active_false"
+    update.person = mdl.person.find_by_user(request.user)
+    update.dissertation = dissertation
+    update.save()
     return redirect('manager_dissertations_list')
 
 
@@ -282,6 +323,8 @@ def manager_dissertations_role_delete(request, pk):
 @user_passes_test(is_manager)
 def manager_dissertations_to_dir_submit(request, pk):
     dissertation = get_object_or_404(Dissertation, pk=pk)
+    old_status = dissertation.status
+
     if dissertation.status == 'DRAFT' or dissertation.status == 'DIR_KO':
         dissertation.status = 'DIR_SUBMIT'
         dissertation.save()
@@ -291,7 +334,29 @@ def manager_dissertations_to_dir_submit(request, pk):
     elif dissertation.status == 'TO_DEFEND':
         dissertation.status = 'DEFENDED'
         dissertation.save()
+
+    insert_update(request, dissertation, old_status)
     return redirect('manager_dissertations_detail', pk=pk)
+
+
+@login_required
+@user_passes_test(is_manager)
+def manager_dissertations_to_dir_submit_list(request, pk):
+    dissertation = get_object_or_404(Dissertation, pk=pk)
+    old_status = dissertation.status
+
+    if dissertation.status == 'DRAFT' or dissertation.status == 'DIR_KO':
+        dissertation.status = 'DIR_SUBMIT'
+        dissertation.save()
+    elif dissertation.status == 'TO_RECEIVE':
+        dissertation.status = 'TO_DEFEND'
+        dissertation.save()
+    elif dissertation.status == 'TO_DEFEND':
+        dissertation.status = 'DEFENDED'
+        dissertation.save()
+
+    insert_update(request, dissertation, old_status)
+    return redirect('manager_dissertations_wait_recep_list')
 
 
 @login_required
@@ -299,6 +364,8 @@ def manager_dissertations_to_dir_submit(request, pk):
 def manager_dissertations_to_dir_ok(request, pk):
     dissertation = get_object_or_404(Dissertation, pk=pk)
     offer_proposition = OfferProposition.objects.get(offer=dissertation.offer_year_start.offer)
+    old_status = dissertation.status
+
     if offer_proposition.validation_commission_exists and dissertation.status == 'DIR_SUBMIT':
         dissertation.status = 'COM_SUBMIT'
         dissertation.save()
@@ -315,13 +382,73 @@ def manager_dissertations_to_dir_ok(request, pk):
     else:
         dissertation.status = 'TO_RECEIVE'
         dissertation.save()
+
+    insert_update(request, dissertation, old_status)
     return redirect('manager_dissertations_detail', pk=pk)
+
+
+@login_required
+@user_passes_test(is_manager)
+def manager_dissertations_to_dir_ok_comm_list(request, pk):
+    dissertation = get_object_or_404(Dissertation, pk=pk)
+    offer_proposition = OfferProposition.objects.get(offer=dissertation.offer_year_start.offer)
+    old_status = dissertation.status
+
+    if offer_proposition.validation_commission_exists and dissertation.status == 'DIR_SUBMIT':
+        dissertation.status = 'COM_SUBMIT'
+        dissertation.save()
+    elif offer_proposition.evaluation_first_year and (
+                    dissertation.status == 'DIR_SUBMIT' or dissertation.status == 'COM_SUBMIT'):
+        dissertation.status = 'EVA_SUBMIT'
+        dissertation.save()
+    elif dissertation.status == 'EVA_SUBMIT':
+        dissertation.status = 'TO_RECEIVE'
+        dissertation.save()
+    elif dissertation.status == 'DEFENDED':
+        dissertation.status = 'ENDED_WIN'
+        dissertation.save()
+    else:
+        dissertation.status = 'TO_RECEIVE'
+        dissertation.save()
+
+    insert_update(request, dissertation, old_status)
+    return redirect('manager_dissertations_wait_comm_list')
+
+
+@login_required
+@user_passes_test(is_manager)
+def manager_dissertations_to_dir_ok_eval_list(request, pk):
+    dissertation = get_object_or_404(Dissertation, pk=pk)
+    offer_proposition = OfferProposition.objects.get(offer=dissertation.offer_year_start.offer)
+    old_status = dissertation.status
+
+    if offer_proposition.validation_commission_exists and dissertation.status == 'DIR_SUBMIT':
+        dissertation.status = 'COM_SUBMIT'
+        dissertation.save()
+    elif offer_proposition.evaluation_first_year and (
+                    dissertation.status == 'DIR_SUBMIT' or dissertation.status == 'COM_SUBMIT'):
+        dissertation.status = 'EVA_SUBMIT'
+        dissertation.save()
+    elif dissertation.status == 'EVA_SUBMIT':
+        dissertation.status = 'TO_RECEIVE'
+        dissertation.save()
+    elif dissertation.status == 'DEFENDED':
+        dissertation.status = 'ENDED_WIN'
+        dissertation.save()
+    else:
+        dissertation.status = 'TO_RECEIVE'
+        dissertation.save()
+
+    insert_update(request, dissertation, old_status)
+    return redirect('manager_dissertations_wait_eval_list')
 
 
 @login_required
 @user_passes_test(is_manager)
 def manager_dissertations_to_dir_ko(request, pk):
     dissertation = get_object_or_404(Dissertation, pk=pk)
+    old_status = dissertation.status
+
     if dissertation.status == 'DIR_SUBMIT':
         dissertation.status = 'DIR_KO'
         dissertation.save()
@@ -334,6 +461,8 @@ def manager_dissertations_to_dir_ko(request, pk):
     elif dissertation.status == 'DEFENDED':
         dissertation.status = 'ENDED_LOS'
         dissertation.save()
+
+    insert_update(request, dissertation, old_status)
     return redirect('manager_dissertations_detail', pk=pk)
 
 
@@ -343,8 +472,42 @@ def manager_dissertations_wait_list(request):
     person = mdl.person.find_by_user(request.user)
     adviser = Adviser.find_by_person(person)
     faculty_adviser = FacultyAdviser.find_by_adviser(adviser)
+    offer_proposition = OfferProposition.objects.get(offer=faculty_adviser)
     dissertations = Dissertation.objects.filter(Q(offer_year_start__offer=faculty_adviser) & Q(status="DIR_SUBMIT"))
-    return render(request, 'manager_dissertations_wait_list.html', {'dissertations': dissertations})
+    return render(request, 'manager_dissertations_wait_list.html', {'dissertations': dissertations, 'offer_proposition': offer_proposition})
+
+
+@login_required
+@user_passes_test(is_manager)
+def manager_dissertations_wait_comm_list(request):
+    person = mdl.person.find_by_user(request.user)
+    adviser = Adviser.find_by_person(person)
+    faculty_adviser = FacultyAdviser.find_by_adviser(adviser)
+    offer_proposition = OfferProposition.objects.get(offer=faculty_adviser)
+    dissertations = Dissertation.objects.filter(Q(offer_year_start__offer=faculty_adviser) & Q(status="COM_SUBMIT"))
+    return render(request, 'manager_dissertations_wait_commission_list.html', {'dissertations': dissertations, 'offer_proposition': offer_proposition})
+
+
+@login_required
+@user_passes_test(is_manager)
+def manager_dissertations_wait_eval_list(request):
+    person = mdl.person.find_by_user(request.user)
+    adviser = Adviser.find_by_person(person)
+    faculty_adviser = FacultyAdviser.find_by_adviser(adviser)
+    offer_proposition = OfferProposition.objects.get(offer=faculty_adviser)
+    dissertations = Dissertation.objects.filter(Q(offer_year_start__offer=faculty_adviser) & Q(status="EVA_SUBMIT"))
+    return render(request, 'manager_dissertations_wait_eval_list.html', {'dissertations': dissertations, 'offer_proposition': offer_proposition})
+
+
+@login_required
+@user_passes_test(is_manager)
+def manager_dissertations_wait_recep_list(request):
+    person = mdl.person.find_by_user(request.user)
+    adviser = Adviser.find_by_person(person)
+    faculty_adviser = FacultyAdviser.find_by_adviser(adviser)
+    offer_proposition = OfferProposition.objects.get(offer=faculty_adviser)
+    dissertations = Dissertation.objects.filter(Q(offer_year_start__offer=faculty_adviser) & Q(status="TO_RECEIVE"))
+    return render(request, 'manager_dissertations_wait_recep_list.html', {'dissertations': dissertations, 'offer_proposition': offer_proposition})
 
 
 ##########################
@@ -427,6 +590,21 @@ def dissertations_detail(request, pk):
 
 @login_required
 @user_passes_test(is_teacher)
+def dissertations_detail_updates(request, pk):
+    dissertation = get_object_or_404(Dissertation, pk=pk)
+    person = mdl.person.find_by_user(request.user)
+    adviser = Adviser.find_by_person(person)
+    dissertation_updates = DissertationUpdate.objects.filter(dissertation=dissertation).order_by('created')
+
+    return render(request, 'dissertations_detail_updates.html',
+                  {'dissertation': dissertation,
+                   'adviser': adviser,
+                   'dissertation_updates': dissertation_updates
+                   })
+
+
+@login_required
+@user_passes_test(is_teacher)
 def dissertations_delete(request, pk):
     dissertation = get_object_or_404(Dissertation, pk=pk)
     dissertation.active = False
@@ -438,8 +616,11 @@ def dissertations_delete(request, pk):
 @user_passes_test(is_teacher)
 def dissertations_to_dir_submit(request, pk):
     dissertation = get_object_or_404(Dissertation, pk=pk)
+    old_status = dissertation.status
     dissertation.status = 'DIR_SUBMIT'
     dissertation.save()
+
+    insert_update(request, dissertation, old_status)
     return redirect('dissertations_detail', pk=pk)
 
 
@@ -447,6 +628,7 @@ def dissertations_to_dir_submit(request, pk):
 @user_passes_test(is_teacher)
 def dissertations_to_dir_ok(request, pk):
     dissertation = get_object_or_404(Dissertation, pk=pk)
+    old_status = dissertation.status
     offer_proposition = OfferProposition.objects.get(offer=dissertation.offer_year_start.offer)
     if offer_proposition.validation_commission_exists and dissertation.status == 'DIR_SUBMIT':
         dissertation.status = 'COM_SUBMIT'
@@ -464,6 +646,8 @@ def dissertations_to_dir_ok(request, pk):
     else:
         dissertation.status = 'TO_RECEIVE'
         dissertation.save()
+
+    insert_update(request, dissertation, old_status)
     return redirect('dissertations_detail', pk=pk)
 
 
@@ -471,6 +655,7 @@ def dissertations_to_dir_ok(request, pk):
 @user_passes_test(is_teacher)
 def dissertations_to_dir_ko(request, pk):
     dissertation = get_object_or_404(Dissertation, pk=pk)
+    old_status = dissertation.status
     if dissertation.status == 'DIR_SUBMIT':
         dissertation.status = 'DIR_KO'
         dissertation.save()
@@ -483,6 +668,8 @@ def dissertations_to_dir_ko(request, pk):
     elif dissertation.status == 'DEFENDED':
         dissertation.status = 'ENDED_LOS'
         dissertation.save()
+
+    insert_update(request, dissertation, old_status)
     return redirect('dissertations_detail', pk=pk)
 
 

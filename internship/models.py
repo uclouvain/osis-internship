@@ -85,6 +85,19 @@ class InternshipEnrollment(models.Model):
     def __str__(self):
         return u"%s" % self.learning_unit_enrollment.student
 
+    @staticmethod
+    def find_by(student=None) :
+        has_criteria = False
+        queryset = InternshipEnrollment.objects
+
+        if student:
+            queryset = queryset.filter(student=student)
+            has_criteria = True
+
+        if has_criteria:
+            return queryset
+        else:
+            return None
 
 class InternshipMaster(models.Model):
     CIVILITY_CHOICE = (('PROFESSOR',_('Professor')),
@@ -146,7 +159,7 @@ class InternshipChoice(models.Model):
 
     @staticmethod
     def find_by_all_student():
-        all = InternshipChoice.objects.all()
+        all = InternshipChoice.objects.all().order_by('student__person__last_name')
         students_list=[]
         for a in all:
             students_list.append(a.student)
@@ -208,6 +221,9 @@ class Period(models.Model):
     name = models.CharField(max_length=255)
     date_start = models.DateField(blank=False)
     date_end = models.DateField(blank=False)
+
+    def __str__(self):
+        return u"%s" % (self.name)
 
     def find_all():
         return Period.objects.all()

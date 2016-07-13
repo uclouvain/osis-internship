@@ -56,9 +56,9 @@ def speciality_new(request):
     if request.POST.get('mandatory') :
         mandatory = True
 
-    learning_unit = mdl.learning_unit.search(acronym=request.POST['learning_unit'])
+    learning_unit = mdl.learning_unit.search(acronym=request.POST.get('learning_unit'))
     speciality.learning_unit = learning_unit[0]
-    speciality.name = request.POST['name']
+    speciality.name = request.POST.get('name')
     speciality.mandatory = mandatory
 
     speciality.save()
