@@ -174,13 +174,13 @@ def proposition_dissertation_edit(request, pk):
         else:
             form = PropositionDissertationForm(instance=proposition_dissertation)
         return layout.render(request, 'proposition_dissertation_edit.html',
-                      {'form': form,
-                       'types_choices': PropositionDissertation.TYPES_CHOICES,
-                       'levels_choices': PropositionDissertation.LEVELS_CHOICES,
-                       'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES})
+                             {'form': form,
+                              'types_choices': PropositionDissertation.TYPES_CHOICES,
+                              'levels_choices': PropositionDissertation.LEVELS_CHOICES,
+                              'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES})
     else:
         return layout.render(request, 'proposition_dissertations_list.html',
-                      {'proposition_dissertations': proposition_dissertations})
+                             {'proposition_dissertations': proposition_dissertations})
 
 
 @login_required

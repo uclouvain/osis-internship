@@ -65,10 +65,12 @@ def manager_offer_parameters_edit(request, pk):
     if request.method == "POST":
         form = ManagerOfferPropositionForm(request.POST, instance=offer_proposition)
         if form.is_valid():
-            offer_proposition = form.save(commit=False)
+            offer_proposition = form.save()
             offer_proposition.save()
-            return redirect('manager_offer_parameters')
+            return redirect('manager_offer_parameters_detail', pk=offer_proposition.pk)
     else:
         form = ManagerOfferPropositionForm(instance=offer_proposition)
-    return layout.render(request, "manager_offer_parameters_edit.html", {'offer_proposition': offer_proposition, 'form': form,
-                                                                  'range': range(12)})
+    return layout.render(request, "manager_offer_parameters_edit.html",
+                         {'offer_proposition': offer_proposition,
+                          'form': form,
+                          'range': range(12)})

@@ -25,7 +25,9 @@
  * at the root of the source code of this program.  If not,
  * see http://www.gnu.org/licenses/.
 {% endcomment %}
-
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/bootstrap-datepicker3.min.css' %}" type='text/css'>
+{% endblock %}
 {% block breadcrumb %}
   <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
   <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'dissertations' %}</a></li>
@@ -37,153 +39,123 @@
   </div>
   <div class="panel panel-default">
     <div class="panel-body">
-      <form method="POST" class="post-form" name="form_offer">
-        {% csrf_token %}
-
-        <div class="panel-body">
-          <div class="row">
-            <div class="col-md-3">
-              <label>{% trans 'date_start_visibility_proposition'%}</label> :
+        <form method="POST" class="post-form" name="form_offer">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-3 col-lg-offset-3">
+                  {{  form.offer }}{{  form.acronym }}
+                </div>
             </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                  <div class='input-group date'>
+            <br>
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="txt_start_visibility_proposition">{% trans 'start_visibility_proposition'%}</label>
                     <input type="text" class="form-control"
-                           value="{{ offer_proposition.start_visibility_proposition| default_if_none:''|date:'' }}"
-                    name="start_visibility_proposition" id="txt_start_date">
-                  </div>
-              </div>
-
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-3">
-              <label>{% trans 'date_end_visibility_proposition'%}</label> :
-            </div>
-            <div class="col-md-3">
-
-                <div class="form-group">
-                    <div class='input-group date'>
-
-                        <input type="text" class="form-control"
-                               value="{{ offer_proposition.end_visibility_proposition| default_if_none:''|date:'' }}"
-                        name="end_visibility_proposition" id="txt_start_date">
-                    </div>
+                           value="{{ form.start_visibility_proposition| default_if_none:''|date:'j/m/Y' }}"
+                           name="start_visibility_proposition" id="txt_start_visibility_proposition"><font class="error">{{ form.start_visibility_proposition.errors }}</font>
+                </div>
+                <div class="col-md-6">
+                    <label for="txt_end_visibility_proposition">{% trans 'end_visibility_proposition' %}</label>
+                    <input type="text" class="form-control"
+                           value="{{ form.end_visibility_proposition| default_if_none:''|date:'j/m/Y' }}"
+                           name="end_visibility_proposition" id="txt_end_visibility_proposition"><font class="error">{{ form.end_visibility_proposition.errors }}</font>
                 </div>
             </div>
-            <div class="col-md-4">
-              <label>{% trans 'In_visibility_proposition' %}</label> :
-            </div>
-            <div class="col-md-1">
-               {{ offer_proposition.in_periode_visibility_proposition|yesno:"Yes,No" }}
-            </div>
-          </div>
-        </div>
-        <div class="panel-body">
-          <div class="row">
-            <div class="col-md-3">
-              <label>{% trans 'date_start_visibility_dissertation'%}</label> :
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                  <div class='input-group date'>
-
-                      <input type="text" class="form-control"
-                             value="{{ offer_proposition.start_visibility_dissertation| default_if_none:''|date:'' }}"
-                      name="start_visibility_dissertation" id="txt_start_date">
-                  </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-3">
-              <label>{% trans 'date_end_visibility_dissertation'%}</label> :
-            </div>
-            <div class="col-md-3">
-
-                <div class="form-group">
-                    <div class='input-group date'>
-
-                        <input type="text" class="form-control"
-                               value="{{ offer_proposition.end_visibility_dissertation| default_if_none:''|date:'' }}"
-                        name="end_visibility_dissertation" id="txt_start_date">
-                    </div>
+            <br>
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="txt_start_visibility_dissertation">{% trans 'start_visibility_dissertation'%}</label>
+                    <input type="text" class="form-control"
+                           value="{{ form.start_visibility_dissertation| default_if_none:''|date:'j/m/Y' }}"
+                           name="start_visibility_dissertation" id="txt_start_visibility_dissertation"><font class="error">{{ form.start_visibility_dissertation.errors }}</font>
+                </div>
+                <div class="col-md-6">
+                    <label for="txt_end_visibility_dissertation">{% trans 'end_visibility_dissertation' %}</label>
+                    <input type="text" class="form-control"
+                           value="{{ form.end_visibility_dissertation| default_if_none:''|date:'j/m/Y' }}"
+                           name="end_visibility_dissertation" id="txt_end_visibility_dissertation"><font class="error">{{ form.end_visibility_dissertation.errors }}</font>
                 </div>
             </div>
-            <div class="col-md-4">
-              <label>{% trans 'In_visibility_dissertation' %}</label> :
+            <br>
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="txt_student_can_manage_readers">{% trans 'student_can_manage_readers' %}</label>
+                </div>
+                <div class="col-md-1">
+                    <input class="form-control" id="txt_student_can_manage_readers"  name="student_can_manage_readers"
+                           style="margin:-6px;" type="checkbox" {% if form.student_can_manage_readers.value %} checked {% endif %}>
+                </div>
             </div>
-            <div class="col-md-1">
-               <label>{{ offer_proposition.in_periode_visibility_dissertation|yesno:"Yes,No" }}</label>
+            <br>
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="txt_readers_visibility_date_for_students">{% trans 'readers_visibility_date_for_students' %}</label>
+                </div>
+                <div class="col-md-1">
+                    <input class="form-control" id="txt_readers_visibility_date_for_students"  name="readers_visibility_date_for_students"
+                           style="margin:-6px;" type="checkbox" {% if form.readers_visibility_date_for_students.value %} checked {% endif %}>
+                </div>
             </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4">
-            <label>{% trans 'student_can_manage_readers' %}</label> :
-          </div>
-          <div class="col-md-2">
-            Yes
-            <input type="radio" name="student_can_manage_readers" value="True" {% if offer_proposition.student_can_manage_readers == True%} checked {% endif%}>
-            No
-            <input type="radio" name="student_can_manage_readers" value="False" {% if offer_proposition.student_can_manage_readers == False %} checked {% endif%}>
-
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4">
-            <label>{% trans 'readers_visibility_date_for_students' %}</label> :
-          </div>
-          <div class="col-md-2">
-            Yes
-            <input type="radio" name="readers_visibility_date_for_students" value="True" {% if offer_proposition.readers_visibility_date_for_students == True%} checked {% endif%}>
-            No
-            <input type="radio" name="readers_visibility_date_for_students" value="False" {% if offer_proposition.readers_visibility_date_for_students == False %} checked {% endif%}>
-
-          </div>
-        </div>
-         <div class="row">
-          <div class="col-md-4">
-            <label>{% trans 'adviser_can_suggest_reader' %}</label> :
-          </div>
-          <div class="col-md-2">
-            Yes
-            <input type="radio" name="adviser_can_suggest_reader" value="True" {% if offer_proposition.adviser_can_suggest_reader == True%} checked {% endif%}>
-            No
-            <input type="radio" name="adviser_can_suggest_reader" value="False" {% if offer_proposition.adviser_can_suggest_reader == False %} checked {% endif%}>
-
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4">
-            <label>{% trans 'evaluation_first_year' %}</label> :
-          </div>
-          <div class="col-md-2">
-             Yes
-             <input type="radio" name="evaluation_first_year" value="True" {% if offer_proposition.evaluation_first_year == True%} checked {% endif%}>
-             No
-             <input type="radio" name="evaluation_first_year" value="False" {% if offer_proposition.evaluation_first_year == False %} checked {% endif%}>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4">
-            <label>{% trans 'validation_commission_exists' %}</label> :
-          </div>
-          <div class="col-md-2">
-             Yes
-             <input type="radio" name="validation_commission_exists" value="True" {% if offer_proposition.validation_commission_exists == True%} checked {% endif%}>
-             No
-             <input type="radio" name="validation_commission_exists" value="False" {% if offer_proposition.validation_commission_exists == False %} checked {% endif%}>
-
-          </div>
-        </div>
-        <br>
-        <button type="submit" class="save btn btn-default">Save</button>
-      </form>
+            <br>
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="txt_adviser_can_suggest_reader">{% trans 'adviser_can_suggest_reader' %}</label>
+                </div>
+                <div class="col-md-1">
+                    <input class="form-control" id="txt_adviser_can_suggest_reader"  name="adviser_can_suggest_reader"
+                           style="margin:-6px;" type="checkbox" {% if form.adviser_can_suggest_reader.value %} checked {% endif %}>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="txt_evaluation_first_year">{% trans 'evaluation_first_year' %}</label>
+                </div>
+                <div class="col-md-1">
+                    <input class="form-control" id="txt_evaluation_first_year"  name="evaluation_first_year"
+                           style="margin:-6px;" type="checkbox" {% if form.evaluation_first_year.value %} checked {% endif %}>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="txt_validation_commission_exists">{% trans 'validation_commission_exists' %}</label>
+                </div>
+                <div class="col-md-1">
+                    <input class="form-control" id="txt_validation_commission_exists"  name="validation_commission_exists"
+                           style="margin:-6px;" type="checkbox" {% if form.validation_commission_exists.value %} checked {% endif %}>
+                </div>
+            </div>
+            <br>
+            <button type="submit" class="save btn btn-default">Save</button>
+        </form>
     </div>
   </div>
-
 {% endblock %}
 {% block script %}
+<script src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>
+<script>
+    $("#txt_start_visibility_dissertation").datepicker({
+        format: "dd/mm/yyyy",
+        autoclose: true,
+        orientation: "bottom auto"
+    });
 
+    $("#txt_end_visibility_dissertation").datepicker({
+        format: "dd/mm/yyyy",
+        autoclose: true,
+        orientation: "bottom auto"
+    });
+        $("#txt_start_visibility_proposition").datepicker({
+        format: "dd/mm/yyyy",
+        autoclose: true,
+        orientation: "bottom auto"
+    });
+
+    $("#txt_end_visibility_proposition").datepicker({
+        format: "dd/mm/yyyy",
+        autoclose: true,
+        orientation: "bottom auto"
+    });
+</script>
 {% endblock %}

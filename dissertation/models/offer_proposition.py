@@ -29,51 +29,18 @@ from base.models import offer
 import datetime
 
 
-
 class OfferProposition(models.Model):
     acronym = models.CharField(max_length=200)
     offer = models.ForeignKey(offer.Offer)
-
-    ####################
-    # READERS PARAMETERS
-    ####################
-
-    # Do the students manage their readers ?
-    # True = students can manage their readers
-    # False = students cannot manage their readers, only the managers can
     student_can_manage_readers = models.BooleanField(default=True)
-
-    # Can students always see readers ?
-    # True = Yes
-    # False = No, only when the date is ok
     readers_visibility_date_for_students = models.BooleanField(default=False)
-
-    # Can advisers suggest readers when creating proposition_dissertation ?
     adviser_can_suggest_reader = models.BooleanField(default=False)
-
-    ##################
-    # STEPS PARAMETERS
-    ##################
-    # Is there a first year evaluation ?
     evaluation_first_year = models.BooleanField(default=False)
-
-    # Is there a validation commission ?
     validation_commission_exists = models.BooleanField(default=False)
-
-    #################
-    # DATE PARAMETERS
-    #################
-    #   Start of visibility of proposition_dissertation
-    start_visibility_proposition = models.DateTimeField(default=timezone.now)
-
-    #   End of visibility of proposition_dissertation
-    end_visibility_proposition = models.DateTimeField(default=timezone.now)
-
-    #   Start of opening dissertation
-    start_visibility_dissertation = models.DateTimeField(default=timezone.now)
-
-    #   End of oppening dissertation
-    end_visibility_dissertation = models.DateTimeField(default=timezone.now)
+    start_visibility_proposition = models.DateField(default=timezone.now)
+    end_visibility_proposition = models.DateField(default=timezone.now)
+    start_visibility_dissertation = models.DateField(default=timezone.now)
+    end_visibility_dissertation = models.DateField(default=timezone.now)
 
     @property
     def in_periode_visibility_proposition(self):
@@ -102,7 +69,6 @@ class OfferProposition(models.Model):
                 return False
         else:
             return False
-
 
     def __str__(self):
         return self.acronym
