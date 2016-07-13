@@ -41,3 +41,7 @@ class Option(models.Model):
 
     def __str__(self):
         return u"%s" % self.label
+
+
+def find_by_question(question):
+    return Option.objects.filter(question=question)

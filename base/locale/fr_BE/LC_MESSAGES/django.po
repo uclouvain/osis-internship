@@ -1187,3 +1187,21 @@ msgstr "Cliquez pour vous reconnectez"
 
 msgid "complete"
 msgstr "Complet"
+
+msgid "admission_form"
+msgstr "Formulaire d'admission"
+
+msgid "order"
+msgstr "Ordonner"
+
+msgid "required"
+msgstr "Obligatoire"
+
+msgid "question"
+msgstr "Question"
+
+msgid "questions"
+msgstr "Questions"
+
+msgid "value"
+msgstr "Valeur"

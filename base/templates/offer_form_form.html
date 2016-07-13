@@ -1,0 +1,90 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+ * OSIS stands for Open Student Information System. It's an application
+ * designed to manage the core business of higher education institutions,
+ * such as universities, faculties, institutes and professional schools.
+ * The core business involves the administration of students, teachers,
+ * courses, programs and so on.
+ *
+ * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * A copy of this license - GNU General Public License - is available
+ * at the root of the source code of this program.  If not,
+ * see http://www.gnu.org/licenses/.
+{% endcomment %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/bootstrap-datepicker3.min.css' %}" type='text/css'>
+{% endblock %}
+{% block breadcrumb %}
+<li><a href="{% url 'catalog' %}" id="lnk_catalog">{% trans 'catalogue' %}</a></li>
+  <li><a href="{% url 'offers' %}" id="lnk_offers">{% trans 'offers' %}</a></li>
+<li class="active">{% trans 'admission_form' %}</li>
+{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h2>{% trans 'admission_form' %}</h2>
+    {% if offer_year.parent %}
+        <p>{{ offer_year.parent.acronym }} - {{ offer_year.parent.title }}</p>
+        <p>{{ offer_year.acronym }} - {{ offer_year.title }}</p>
+    {%else%}
+        <p>{{ offer_year.acronym }} - {{ offer_year.title }}</p>
+    {%endif%}
+</div>
+
+{% include "template_messages.html" %}
+
+<div class="panel panel-default">
+  <div class="panel-body">
+    {% if offer_form.id %}
+    <form method="post" action="{% url 'offer_form_save' offer_form.id %}">
+        <input type="hidden" name="id" id="hdn_offer_form" value="{{ offer_form.id }}">
+        <input type="hidden" name="offer_year" id="hdn_offer_form" value="{{ offer_year.id }}">
+    {%else%}
+    <form method="post" action="{% url 'offer_form_save_new'  %}">
+        <input type="hidden" name="offer_year" id="hdn_offer_form" value="{{ offer_year.id }}">
+    {%endif%}
+      {% csrf_token %}
+      <br>
+      <div class="row">
+          <div class="col-md-12">
+              <label for="txt_title">{% trans 'title' %}</label>
+              <input class="form-control" value="{{ offer_form.title | default_if_none:'' }}"
+                     name="title" id="txt_title"><font class="error">{{ form.title.errors }}</font>
+          </div>
+      </div>
+      <br>
+      <div class="row">
+          <div class="col-md-12">
+              <label for="txt_description">{% trans 'description'%}</label>
+              <textarea name="description" id="txt_description" class="form-control">{{ offer_form.description | default_if_none:'' }}</textarea>
+              <font class="error">{{ form.description.errors }}</font>
+          </div>
+      </div>
+      <br>
+      <button type="submit" class="btn btn-primary" title="{% trans 'save'%}" id="bt_offer_form_save">
+        <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}
+      </button>
+        <a href="{% url 'offer_read' offer_year.id %}"
+           id="lnk_offer_read_{{offer_year.id}}" title="{%trans 'back'%}"
+           class="btn btn-default" role="button">
+            <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span> {% trans 'back'%}
+        </a>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
+

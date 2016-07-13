@@ -27,6 +27,7 @@ from ckeditor.widgets import CKEditorWidget
 from django import forms
 from django.forms import ModelForm
 from base import models as mdl
+from admission import models as admission
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -93,3 +94,15 @@ class MessageHistorySearchForm(forms.Form):
     recipient = forms.CharField(max_length=25, required=False)
     origin = forms.CharField(max_length=25, required=False)
     not_sent = forms.BooleanField(initial=False, required=False)
+
+
+class OfferFormForm(ModelForm):
+    class Meta:
+        model = admission.form.Form
+        fields = ['offer_year', 'title', 'description']
+
+
+class OfferQuestionForm(ModelForm):
+    class Meta:
+        model = admission.question.Question
+        fields = ['label', 'description', 'type', 'order', 'required', 'form']

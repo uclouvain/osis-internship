@@ -39,3 +39,12 @@ class Form(models.Model):
 
     def __str__(self):
         return u"%s" % self.title
+
+
+def find_by_offer_year(offer_year):
+    return Form.objects.filter(offer_year=offer_year) \
+                       .order_by('title', 'description')
+
+
+def find_by_id(form_id):
+    return Form.objects.get(pk=form_id)

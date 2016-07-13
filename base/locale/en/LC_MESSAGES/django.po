@@ -1175,3 +1175,21 @@ msgstr "Click to reconnect"
 
 msgid "complete"
 msgstr "Complete"
+
+msgid "admission_form"
+msgstr "Admission form"
+
+msgid "order"
+msgstr "Order"
+
+msgid "required"
+msgstr "Required"
+
+msgid "question"
+msgstr "Question"
+
+msgid "questions"
+msgstr "Questions"
+
+msgid "value"
+msgstr "Value"
