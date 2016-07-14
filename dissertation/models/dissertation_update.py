@@ -24,35 +24,15 @@
 #
 ##############################################################################
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
-from dissertation.models import dissertation
+from . import dissertation
 
 
 class DissertationUpdate(models.Model):
-    STATUS_CHOICES = (
-        ('DRAFT', _('Draft')),
-        ('DIR_SUBMIT', _('Submitted to Director')),
-        ('DIR_OK', _('Accepted by Director')),
-        ('DIR_KO', _('Refused by Director')),
-        ('COM_SUBMIT', _('Submitted to Commission')),
-        ('COM_OK', _('Accepted by Commission')),
-        ('COM_KO', _('Refused by Commission')),
-        ('EVA_SUBMIT', _('Submitted to First Year Evaluation')),
-        ('EVA_OK', _('Accepted by First Year Evaluation')),
-        ('EVA_KO', _('Refused by First Year Evaluation')),
-        ('TO_RECEIVE', _('To be received')),
-        ('TO_DEFEND', _('To be defended')),
-        ('DEFENDED', _('Defended')),
-        ('ENDED', _('Ended')),
-        ('ENDED_WIN', _('Ended Win')),
-        ('ENDED_LOS', _('Ended Los')),
-    )
 
-    status_from = models.CharField(max_length=12, choices=STATUS_CHOICES, default='DRAFT')
-    status_to = models.CharField(max_length=12, choices=STATUS_CHOICES, default='DRAFT')
+    status_from = models.CharField(max_length=12, choices=dissertation.STATUS_CHOICES, default='DRAFT')
+    status_to = models.CharField(max_length=12, choices=dissertation.STATUS_CHOICES, default='DRAFT')
     created = models.DateTimeField(auto_now_add=True)
     justification = models.TextField(default=' ')
-
     person = models.ForeignKey('base.Person')
     dissertation = models.ForeignKey(dissertation.Dissertation)
 

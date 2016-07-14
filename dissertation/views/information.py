@@ -25,27 +25,28 @@
 ##############################################################################
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from dissertation.models.adviser import Adviser
+from dissertation.models.adviser import Adviser, find_adviser_by_person, search_adviser
 from dissertation.models.dissertation_role import DissertationRole
-from dissertation.models.faculty_adviser import FacultyAdviser
+from dissertation.models.faculty_adviser import FacultyAdviser, find_by_adviser
 from base import models as mdl
 from dissertation.forms import AdviserForm, ManagerAdviserForm, ManagerAddAdviserForm
 from django.contrib.auth.decorators import user_passes_test
 from django.db import IntegrityError
 from django.db.models import Q
+from base.views import layout
 
 
 # Used by decorator @user_passes_test(is_manager) to secure manager views
 def is_manager(user):
     person = mdl.person.find_by_user(user)
-    adviser = Adviser.find_by_person(person)
+    adviser = find_adviser_by_person(person)
     return adviser.type == 'MGR'
 
 
 # Used by decorator @user_passes_test(is_manager) to secure manager views
 def is_teacher(user):
     person = mdl.person.find_by_user(user)
-    adviser = Adviser.find_by_person(person)
+    adviser = find_adviser_by_person(person)
     return adviser.type == 'PRF'
 
 ##########################
@@ -61,9 +62,12 @@ def informations(request):
         adviser = Adviser(person=person, available_by_email=False, available_by_phone=False, available_at_office=False)
         adviser.save()
     except IntegrityError:
-        adviser = Adviser.find_by_person(person)
+        adviser = find_adviser_by_person(person)
 
-    return render(request, "informations.html", {'adviser': adviser})
+    return layout.render(request, "informations.html", {'adviser': adviser,
+                                                        'first_name': adviser.person.first_name.title(),
+                                                        'last_name': adviser.person.last_name.title()
+                                                        })
 
 
 @login_required
@@ -74,7 +78,7 @@ def informations_detail_stats(request):
         adviser = Adviser(person=person, available_by_email=False, available_by_phone=False, available_at_office=False)
         adviser.save()
     except IntegrityError:
-        adviser = Adviser.find_by_person(person)
+        adviser = find_adviser_by_person(person)
 
     queryset = DissertationRole.objects.all()
     count_advisers = queryset.filter(Q(adviser=adviser) & Q(dissertation__active=True)).count()
@@ -129,19 +133,23 @@ def informations_detail_stats(request):
         else:
             tab_offer_count_pro[dissertaion_role_pro.dissertation.offer_year_start.offer.title] = 1
 
-    return render(request, 'informations_detail_stats.html',
-                  {'adviser': adviser, 'count_advisers': count_advisers, 'count_advisers_copro': count_advisers_copro,
-                   'count_advisers_pro': count_advisers_pro, 'count_advisers_reader': count_advisers_reader,
-                   'count_advisers_pro_request': count_advisers_pro_request,
-                   'tab_offer_count_pro': tab_offer_count_pro, 'tab_offer_count_read': tab_offer_count_read,
-                   'tab_offer_count_copro': tab_offer_count_copro})
+    return layout.render(request, 'informations_detail_stats.html',
+                         {'adviser': adviser,
+                          'count_advisers': count_advisers,
+                          'count_advisers_copro': count_advisers_copro,
+                          'count_advisers_pro': count_advisers_pro,
+                          'count_advisers_reader': count_advisers_reader,
+                          'count_advisers_pro_request': count_advisers_pro_request,
+                          'tab_offer_count_pro': tab_offer_count_pro,
+                          'tab_offer_count_read': tab_offer_count_read,
+                          'tab_offer_count_copro': tab_offer_count_copro})
 
 
 @login_required
 @user_passes_test(is_teacher)
 def informations_edit(request):
     person = mdl.person.find_by_user(request.user)
-    adviser = Adviser.find_by_person(person)
+    adviser = find_adviser_by_person(person)
     if request.method == "POST":
         form = AdviserForm(request.POST, instance=adviser)
         if form.is_valid():
@@ -150,8 +158,12 @@ def informations_edit(request):
             return redirect('informations')
     else:
         form = AdviserForm(instance=adviser)
-
-    return render(request, "informations_edit.html", {'form': form, 'person': person})
+    return layout.render(request, "informations_edit.html", {'form': form,
+                                                             'first_name': person.first_name.title(),
+                                                             'last_name': person.last_name.title(),
+                                                             'email': person.email,
+                                                             'phone': person.phone,
+                                                             'phone_mobile': person.phone_mobile})
 
 ##########################
 #      VUES MANAGER      #
@@ -162,7 +174,7 @@ def informations_edit(request):
 @user_passes_test(is_manager)
 def manager_informations(request):
     advisers = Adviser.objects.filter(type='PRF').order_by('person__last_name', 'person__first_name')
-    return render(request, 'manager_informations_list.html', {'advisers': advisers})
+    return layout.render(request, 'manager_informations_list.html', {'advisers': advisers})
 
 
 @login_required
@@ -175,14 +187,17 @@ def manager_informations_add(request):
             return redirect('manager_informations')
     else:
         form = ManagerAddAdviserForm(initial={'type': "PRF"})
-    return render(request, 'manager_informations_add.html', {'form': form})
+    return layout.render(request, 'manager_informations_add.html', {'form': form})
 
 
 @login_required
 @user_passes_test(is_manager)
 def manager_informations_detail(request, pk):
     adviser = get_object_or_404(Adviser, pk=pk)
-    return render(request, 'manager_informations_detail.html', {'adviser': adviser})
+    return layout.render(request, 'manager_informations_detail.html',
+                         {'adviser': adviser,
+                          'first_name': adviser.person.first_name.title(),
+                          'last_name': adviser.person.last_name.title()})
 
 
 @login_required
@@ -197,23 +212,28 @@ def manager_informations_edit(request, pk):
             return redirect('manager_informations_detail', pk=adviser.pk)
     else:
         form = ManagerAdviserForm(instance=adviser)
-
-    return render(request, "manager_informations_edit.html", {'adviser': adviser, 'form': form})
+    return layout.render(request, "manager_informations_edit.html",
+                         {'form': form,
+                          'first_name': adviser.person.first_name.title(),
+                          'last_name': adviser.person.last_name.title(),
+                          'email': adviser.person.email,
+                          'phone': adviser.person.phone,
+                          'phone_mobile': adviser.person.phone_mobile})
 
 
 @login_required
 @user_passes_test(is_manager)
 def manager_informations_search(request):
-    advisers = Adviser.search(terms=request.GET['search'])
-    return render(request, "manager_informations_list.html", {'advisers': advisers})
+    advisers = search_adviser(terms=request.GET['search'])
+    return layout.render(request, "manager_informations_list.html", {'advisers': advisers})
 
 
 @login_required
 @user_passes_test(is_manager)
 def manager_informations_list_request(request):
     person = mdl.person.find_by_user(request.user)
-    adviser = Adviser.find_by_person(person)
-    faculty_adviser = FacultyAdviser.find_by_adviser(adviser)
+    adviser = find_adviser_by_person(person)
+    faculty_adviser = find_by_adviser(adviser)
     queryset = DissertationRole.objects.all()
     advisers_need_request = queryset.filter(Q(status='PROMOTEUR') &
                                             Q(dissertation__status='DIR_SUBMIT') &
@@ -221,15 +241,16 @@ def manager_informations_list_request(request):
                                             Q(dissertation__active=True)).distinct('adviser')
     advisers_need_request = advisers_need_request
 
-    return render(request, "manager_informations_list_request.html", {'advisers_need_request': advisers_need_request})
+    return layout.render(request, "manager_informations_list_request.html",
+                         {'advisers_need_request': advisers_need_request})
 
 
 @login_required
 @user_passes_test(is_manager)
 def manager_informations_detail_list(request, pk):
     person = mdl.person.find_by_user(request.user)
-    adviser_co = Adviser.find_by_person(person)
-    faculty_adviser = FacultyAdviser.find_by_adviser(adviser_co)
+    adviser_co = find_adviser_by_person(person)
+    faculty_adviser = find_by_adviser(adviser_co)
     adviser = get_object_or_404(Adviser, pk=pk)
     queryset = DissertationRole.objects.all()
     adviser_list_dissertations = queryset.filter(Q(status='PROMOTEUR') &
@@ -253,12 +274,11 @@ def manager_informations_detail_list(request, pk):
                                                         Q(dissertation__status='DRAFT'))
     adviser_list_dissertations_reader = adviser_list_dissertations_reader.order_by('dissertation__status')
 
-    return render(request, "manager_informations_detail_list.html",
-                  {'adviser': adviser,
-                   'adviser_list_dissertations': adviser_list_dissertations,
-                   'adviser_list_dissertations_copro': adviser_list_dissertations_copro,
-                   'adviser_list_dissertations_reader': adviser_list_dissertations_reader,
-                   })
+    return layout.render(request, "manager_informations_detail_list.html",
+                         {'adviser': adviser,
+                          'adviser_list_dissertations': adviser_list_dissertations,
+                          'adviser_list_dissertations_copro': adviser_list_dissertations_copro,
+                          'adviser_list_dissertations_reader': adviser_list_dissertations_reader})
 
 
 @login_required
@@ -291,11 +311,11 @@ def manager_informations_detail_stats(request, pk):
                 tab_offer_count_copro[str(dissertaion_role_copro.dissertation.offer_year_start.offer.title)] + 1
         else:
             tab_offer_count_copro[dissertaion_role_copro.dissertation.offer_year_start.offer.title] = 1
-
     advisers_reader = queryset.filter(Q(adviser=adviser) &
-                                      Q(status='READER') & Q(dissertation__active=True)).exclude(
-        Q(dissertation__status='DRAFT') |
-        Q(dissertation__status='ENDED') | Q(dissertation__status='DEFENDED'))
+                                      Q(status='READER') &
+                                      Q(dissertation__active=True)).exclude(Q(dissertation__status='DRAFT') |
+                                                                            Q(dissertation__status='ENDED') |
+                                                                            Q(dissertation__status='DEFENDED'))
     count_advisers_reader = advisers_reader.count()
     tab_offer_count_read = {}
     for dissertaion_role_read in advisers_reader:
@@ -304,7 +324,6 @@ def manager_informations_detail_stats(request, pk):
                 tab_offer_count_read[str(dissertaion_role_read.dissertation.offer_year_start.offer.title)] + 1
         else:
             tab_offer_count_read[dissertaion_role_read.dissertation.offer_year_start.offer.title] = 1
-
     advisers_pro = queryset.filter(Q(adviser=adviser) &
                                    Q(status='PROMOTEUR') &
                                    Q(dissertation__active=True)).exclude(Q(dissertation__status='DRAFT') |
@@ -317,10 +336,13 @@ def manager_informations_detail_stats(request, pk):
                 tab_offer_count_pro[str(dissertaion_role_pro.dissertation.offer_year_start.offer.title)] + 1
         else:
             tab_offer_count_pro[dissertaion_role_pro.dissertation.offer_year_start.offer.title] = 1
-
-    return render(request, 'manager_informations_detail_stats.html',
-                  {'adviser': adviser, 'count_advisers': count_advisers, 'count_advisers_copro': count_advisers_copro,
-                   'count_advisers_pro': count_advisers_pro, 'count_advisers_reader': count_advisers_reader,
-                   'count_advisers_pro_request': count_advisers_pro_request,
-                   'tab_offer_count_pro': tab_offer_count_pro, 'tab_offer_count_read': tab_offer_count_read,
-                   'tab_offer_count_copro': tab_offer_count_copro})
+    return layout.render(request, 'manager_informations_detail_stats.html',
+                         {'adviser': adviser,
+                          'count_advisers': count_advisers,
+                          'count_advisers_copro': count_advisers_copro,
+                          'count_advisers_pro': count_advisers_pro,
+                          'count_advisers_reader': count_advisers_reader,
+                          'count_advisers_pro_request': count_advisers_pro_request,
+                          'tab_offer_count_pro': tab_offer_count_pro,
+                          'tab_offer_count_read': tab_offer_count_read,
+                          'tab_offer_count_copro': tab_offer_count_copro})

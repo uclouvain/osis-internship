@@ -42,7 +42,7 @@
         {% csrf_token %}
         <div class="row">
             <div class="col-md-1 col-lg-offset-2" style="text-align:right">
-                <label for="txt_type">{% trans 'author' %}</label>
+                <label for="txt_type" {% if form.author.errors %} style="color:red;" {% endif %}>{% trans 'author' %}</label>
             </div>
             <div class="col-md-3">
                 <select class="form-control" id="txt_author"  name="author" style="margin:-6px;">
@@ -57,7 +57,7 @@
             </div>
             <div class="col-md-4">
                 <input class="form-control" id="txt_title"  name="title"
-                    style="margin:-6px;" value="{{ form.title.value }}">
+                    style="margin:-6px;">
             </div>
             <div class="col-md-1 col-lg-offset-2" style="text-align:right">
                 <label for="txt_visibility">{% trans 'visibility' %}</label>
@@ -73,7 +73,7 @@
                 <label for="txt_description">{% trans 'description' %}</label>
             </div>
             <div class="col-md-8">
-                <textarea class="form-control" id="txt_description"  name="description" rows="10" style="margin:-6px;">{{ form.description.value }}</textarea>
+                <textarea class="form-control" id="txt_description"  name="description" rows="10" style="margin:-6px;"></textarea>
             </div>
         </div>
         <br>
@@ -116,7 +116,7 @@
             </div>
             <div class="col-md-1">
                 <input class="form-control" id="txt_max_number_student"  name="max_number_student"
-                    style="margin:-6px;text-align:center;" value="{{ form.max_number_student.value }}">
+                    style="margin:-6px;text-align:center;">
             </div>
         </div>
         <br>

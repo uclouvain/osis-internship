@@ -95,6 +95,14 @@
                 </div>
                 <div class="row">
                     <div class="col-md-3" style="text-align: right">
+                        <label>{% trans 'taken_places' %}</label>
+                    </div>
+                    <div class="col-md-9" style="text-align: justify">
+                        {{ count_use }} {% trans 'of' %} {{ proposition_dissertation.max_number_student }} ({{ percent }}{% trans '%'%})
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3" style="text-align: right">
                         <label>{% trans 'type' %}</label>
                     </div>
                     <div class="col-md-9" style="text-align: justify">
@@ -132,11 +140,8 @@
 
             </div>
         </div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">{% trans 'actions' %}</h3>
-            </div>
-            <div class="panel-body">
+        <div class="row">
+            <div class="col-md-12">
                 <a class="btn btn-default btn-primary" href="{% url 'manager_proposition_dissertation_edit' pk=proposition_dissertation.pk %}">
                 <span class="glyphicon glyphicon-edit"></span> {% trans 'edit_proposition_dissertation' %}</a>
                 <a class="btn btn-default btn-danger"
