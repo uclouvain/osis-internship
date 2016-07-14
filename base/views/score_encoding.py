@@ -220,7 +220,7 @@ def online_double_encoding_form(request, learning_unit_year_id=None):
         reencoded_exam_enrollments = mdl.exam_enrollment.sort_for_encodings(reencoded_exam_enrollments)
         data['enrollments'] = reencoded_exam_enrollments
 
-        if len(reencoded_exam_enrollments) == 0:
+        if not reencoded_exam_enrollments:
             messages.add_message(request, messages.WARNING, "%s" % _('no_dubble_score_encoded_comparison_impossible'))
             return online_encoding(request, learning_unit_year_id=learning_unit_year_id)
         return layout.render(request, "assessments/online_double_encoding_validation.html", data)
