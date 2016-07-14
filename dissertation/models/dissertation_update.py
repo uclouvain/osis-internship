@@ -24,8 +24,7 @@
 #
 ##############################################################################
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
-from dissertation.models import dissertation
+from . import dissertation
 
 
 class DissertationUpdate(models.Model):

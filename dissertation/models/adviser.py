@@ -23,11 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from .dissertation_role import DissertationRole
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
+from .dissertation_role import DissertationRole
 
 
 class AdviserAdmin(admin.ModelAdmin):

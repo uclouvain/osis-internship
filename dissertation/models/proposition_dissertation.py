@@ -23,12 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.contrib import admin
 from django.db import models
+from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from dissertation.models import adviser, offer_proposition
-from django.db.models import Q
-from django.contrib import admin
 
 
 class PropositionDissertationAdmin(admin.ModelAdmin):

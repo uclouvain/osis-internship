@@ -23,12 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.utils.translation import ugettext_lazy as _
-from dissertation.models import proposition_dissertation
-from base.models import offer_year, student
-from django.db.models import Q
 from django.contrib import admin
+from django.db import models
+from django.db.models import Q
+from django.utils.translation import ugettext_lazy as _
+from base.models import offer_year, student
+from . import proposition_dissertation
 
 
 class DissertationAdmin(admin.ModelAdmin):

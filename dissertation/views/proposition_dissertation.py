@@ -29,7 +29,7 @@ from django.db.models import Q
 from base import models as mdl
 from dissertation.models.adviser import Adviser, find_adviser_by_person
 from dissertation.models.dissertation import Dissertation
-from dissertation.models.faculty_adviser import find_faculty_adviser_by_adviser
+from dissertation.models.faculty_adviser import find_by_adviser
 from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models.proposition_dissertation import PropositionDissertation, search_proposition_dissertation
 from dissertation.forms import PropositionDissertationForm, ManagerPropositionDissertationForm
@@ -49,7 +49,7 @@ def is_manager(user):
 def manager_proposition_dissertations(request):
     person = mdl.person.find_by_user(request.user)
     adviser = find_adviser_by_person(person)
-    faculty_adviser = find_faculty_adviser_by_adviser(adviser)
+    faculty_adviser = find_by_adviser(adviser)
     proposition_dissertations = PropositionDissertation.objects.filter(Q(active=True) &
                                                                        Q(offer_proposition__offer=faculty_adviser))
     return layout.render(request, 'manager_proposition_dissertations_list.html',
