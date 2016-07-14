@@ -76,23 +76,15 @@ def outside_scores_encodings_period(request):
 def _truncate_decimals(new_score, new_justification, decimal_scores_authorized):
     """
     Truncate decimals of new scores if decimals are unauthorized.
-    :param new_score:
-    :param new_justification:
-    :return:
     """
-    if new_score is not None:
+    try:
         new_score = new_score.strip().replace(',', '.')
-        if new_score == '':
-            new_score = None
-        else:
-            if decimal_scores_authorized:
-                new_score = float(new_score)
-            else:
-                new_score = int(float(new_score))
-    if new_justification == '':
-        new_justification = None
-    return new_score, new_justification
-
+        new_score = float(new_score)
+        if not decimal_scores_authorized:
+            new_score = int(new_score)
+    except:
+        new_score = None
+    return new_score, None if not new_justification else new_justification
 
 @login_required
 @user_passes_test(_is_inside_scores_encodings_period, login_url=reverse_lazy('outside_scores_encodings_period'))
