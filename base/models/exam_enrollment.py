@@ -83,10 +83,7 @@ class ExamEnrollment(models.Model):
         if self.score_reencoded is not None:
             sc_reencoded = Decimal('%.2f' % self.score_reencoded)
 
-        if self.score_final != sc_reencoded or self.justification_final != self.justification_reencoded:
-            return True
-        else:
-            return False
+        return self.score_final != sc_reencoded or self.justification_final != self.justification_reencoded
 
     @property
     def to_validate_by_tutor(self):
@@ -94,10 +91,7 @@ class ExamEnrollment(models.Model):
         if self.score_reencoded is not None:
             sc_reencoded = Decimal('%.2f' % self.score_reencoded)
 
-        if self.score_draft != sc_reencoded or self.justification_draft != self.justification_reencoded:
-            return True
-        else:
-            return False
+        return self.score_draft != sc_reencoded or self.justification_draft != self.justification_reencoded
 
     @property
     def justification_draft_display(self):
