@@ -63,9 +63,10 @@ urlpatterns = [
 
     url(r'^specialities/$', speciality.specialities, name='internships_specialities'),
     url(r'^specialities/create/$', speciality.speciality_create, name='speciality_create'),
+    url(r'^specialities/delete/([0-9]+)/$', speciality.speciality_delete, name='speciality_delete'),
+    url(r'^specialities/modification/([0-9]+)/$', speciality.speciality_modification, name='speciality_modification'),
     url(r'^specialities/save/([0-9]+)/$', speciality.speciality_save, name='speciality_save'),
     url(r'^specialities/new/$', speciality.speciality_new, name='speciality_new'),
-    url(r'^specialities/modification/([0-9]+)/$', speciality.speciality_modification, name='speciality_modification'),
 
     url(r'^students/$', student.internships_students, name='internships_students'),
     url(r'^students/resume/$', student_resume.internships_student_resume, name='internships_student_resume'),

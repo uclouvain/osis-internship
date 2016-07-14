@@ -66,6 +66,10 @@
                       <span class="glyphicon glyphicon-pencil" aria-hidden="true">
                       </span>
                     </a>
+                    <a class="btn btn-danger" id="lnk_speciality_{{speciality.id}}"
+                      href="{% url 'speciality_delete' speciality.id %}">
+                      <span class="glyphicon glyphicon-trash" aria-hidden="true">
+                      </span>
                   </td>
               </tr>
               {%endfor%}
