@@ -117,7 +117,6 @@ def __send_message_if_all_encoded_in_pgm(enrollments, learning_unit_year):
     Th encoder is a program manager, so all the encoded scores are final.
     :param enrollments: The enrollments to the learning unit year , inside the managed program.
     :param learning_unit_year: The lerning unit year of the enrollments.
-    :param double : True if double encoding, else False
     :return: An error messaged if the message cannot be sent.
     """
     progress = mdl.exam_enrollment.calculate_exam_enrollment_progress(enrollments)
