@@ -139,26 +139,22 @@ def search(entity=None, academic_yr=None, acronym=None):
     """
     Offers are organized hierarchically. This function returns only root offers.
     """
-    has_criteria = False
+    out = None
     queryset = OfferYear.objects
 
     if entity:
         queryset = queryset.filter(entity_management__acronym__icontains=entity)
-        has_criteria = True
 
     if academic_yr:
         queryset = queryset.filter(academic_year=academic_yr)
-        has_criteria = True
 
     if acronym:
         queryset = queryset.filter(acronym__icontains=acronym)
-        has_criteria = True
 
-    if has_criteria:
-        queryset = queryset.order_by('acronym')
-        return queryset
-    else:
-        return None
+    if entity or academic_yr or acronym:
+        out = queryset.order_by('acronym')
+               
+    return out
 
 
 def find_by_academicyear_acronym(academic_yr, acronym):
