@@ -69,9 +69,7 @@ def speciality_save(request, speciality_id):
     speciality.mandatory = mandatory
 
     speciality.save()
-    return render(request, "speciality_create.html", {'section': 'internship',
-                                                    'learning_unit' : learning_unit[0],
-                                                    })
+    return HttpResponseRedirect(reverse('internships_specialities'))
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
