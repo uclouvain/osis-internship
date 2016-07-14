@@ -91,7 +91,7 @@ def _truncate_decimals(new_score, new_justification, decimal_scores_authorized):
 @permission_required('base.can_access_scoreencoding', raise_exception=True)
 def scores_encoding(request):
     # In case the user is a program manager
-    if mdl.program_manager.is_program_manager(user=request.user):
+    if mdl.program_manager.is_program_manager(request.user):
         return get_data_pgmer(request)
 
     # In case the user is a Tutor
