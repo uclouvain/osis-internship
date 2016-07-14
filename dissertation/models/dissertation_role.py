@@ -25,7 +25,6 @@
 ##############################################################################
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from . import adviser, dissertation
 
 
 class DissertationRole(models.Model):
@@ -36,8 +35,8 @@ class DissertationRole(models.Model):
     )
 
     status = models.CharField(max_length=12, choices=STATUS_CHOICES)
-    adviser = models.ForeignKey(adviser.Adviser)
-    dissertation = models.ForeignKey(dissertation.Dissertation)
+    adviser = models.ForeignKey('Adviser')
+    dissertation = models.ForeignKey('Dissertation')
 
     def __str__(self):
         return u"%s %s" % (self.status if self.status else "",
