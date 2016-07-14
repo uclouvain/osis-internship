@@ -258,18 +258,15 @@ def online_double_encoding_validation(request, learning_unit_year_id=None, tutor
 
                 # A choice must be done between the first and the double encoding to save new changes.
                 if new_score is not None or new_justification:
+                    exam_enrol.score_draft = new_score
+                    exam_enrol.justification_draft = new_justification
                     # Case it is the program manager who validates the double encoding
                     if is_program_manager:
-                        exam_enrol.score_draft = new_score
                         exam_enrol.score_final = new_score
-                        exam_enrol.justification_draft = new_justification
                         exam_enrol.justification_final = new_justification
                         mdl.exam_enrollment.create_exam_enrollment_historic(request.user, exam_enrol,
                                                                             exam_enrol.score_final,
                                                                             exam_enrol.justification_final)
-                    else:  # Case it is the tutor who validates the double encoding
-                        exam_enrol.score_draft = new_score
-                        exam_enrol.justification_draft = new_justification
                     exam_enrol.save()
         if is_program_manager:
             sent_error_message = __send_message_if_all_encoded_in_pgm(exam_enrollments, learning_unit_year)
