@@ -26,7 +26,6 @@
 from django.db import models
 from django.utils import timezone
 from base.models import offer
-import datetime
 
 
 class OfferProposition(models.Model):

@@ -52,7 +52,6 @@ class DissertationUpdate(models.Model):
     status_to = models.CharField(max_length=12, choices=STATUS_CHOICES, default='DRAFT')
     created = models.DateTimeField(auto_now_add=True)
     justification = models.TextField(default=' ')
-
     person = models.ForeignKey('base.Person')
     dissertation = models.ForeignKey(dissertation.Dissertation)
 

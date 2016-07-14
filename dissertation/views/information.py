@@ -134,11 +134,15 @@ def informations_detail_stats(request):
             tab_offer_count_pro[dissertaion_role_pro.dissertation.offer_year_start.offer.title] = 1
 
     return layout.render(request, 'informations_detail_stats.html',
-                  {'adviser': adviser, 'count_advisers': count_advisers, 'count_advisers_copro': count_advisers_copro,
-                   'count_advisers_pro': count_advisers_pro, 'count_advisers_reader': count_advisers_reader,
-                   'count_advisers_pro_request': count_advisers_pro_request,
-                   'tab_offer_count_pro': tab_offer_count_pro, 'tab_offer_count_read': tab_offer_count_read,
-                   'tab_offer_count_copro': tab_offer_count_copro})
+                         {'adviser': adviser,
+                          'count_advisers': count_advisers,
+                          'count_advisers_copro': count_advisers_copro,
+                          'count_advisers_pro': count_advisers_pro,
+                          'count_advisers_reader': count_advisers_reader,
+                          'count_advisers_pro_request': count_advisers_pro_request,
+                          'tab_offer_count_pro': tab_offer_count_pro,
+                          'tab_offer_count_read': tab_offer_count_read,
+                          'tab_offer_count_copro': tab_offer_count_copro})
 
 
 @login_required
@@ -154,12 +158,12 @@ def informations_edit(request):
             return redirect('informations')
     else:
         form = AdviserForm(instance=adviser)
-
-    return layout.render(request, "informations_edit.html", {'form': form, 'first_name': person.first_name.title(),
-                                                      'last_name': person.last_name.title(),
-                                                      'email': person.email,
-                                                      'phone': person.phone,
-                                                      'phone_mobile': person.phone_mobile})
+    return layout.render(request, "informations_edit.html", {'form': form,
+                                                             'first_name': person.first_name.title(),
+                                                             'last_name': person.last_name.title(),
+                                                             'email': person.email,
+                                                             'phone': person.phone,
+                                                             'phone_mobile': person.phone_mobile})
 
 ##########################
 #      VUES MANAGER      #
@@ -190,9 +194,10 @@ def manager_informations_add(request):
 @user_passes_test(is_manager)
 def manager_informations_detail(request, pk):
     adviser = get_object_or_404(Adviser, pk=pk)
-    return layout.render(request, 'manager_informations_detail.html', {'adviser': adviser,
-                                                                'first_name': adviser.person.first_name.title(),
-                                                                'last_name': adviser.person.last_name.title()})
+    return layout.render(request, 'manager_informations_detail.html',
+                         {'adviser': adviser,
+                          'first_name': adviser.person.first_name.title(),
+                          'last_name': adviser.person.last_name.title()})
 
 
 @login_required
@@ -207,13 +212,13 @@ def manager_informations_edit(request, pk):
             return redirect('manager_informations_detail', pk=adviser.pk)
     else:
         form = ManagerAdviserForm(instance=adviser)
-
     return layout.render(request, "manager_informations_edit.html",
-     {'form': form, 'first_name': adviser.person.first_name.title(),
-      'last_name': adviser.person.last_name.title(),
-      'email': adviser.person.email,
-      'phone': adviser.person.phone,
-      'phone_mobile': adviser.person.phone_mobile})
+                         {'form': form,
+                          'first_name': adviser.person.first_name.title(),
+                          'last_name': adviser.person.last_name.title(),
+                          'email': adviser.person.email,
+                          'phone': adviser.person.phone,
+                          'phone_mobile': adviser.person.phone_mobile})
 
 
 @login_required
@@ -236,7 +241,8 @@ def manager_informations_list_request(request):
                                             Q(dissertation__active=True)).distinct('adviser')
     advisers_need_request = advisers_need_request
 
-    return layout.render(request, "manager_informations_list_request.html", {'advisers_need_request': advisers_need_request})
+    return layout.render(request, "manager_informations_list_request.html",
+                         {'advisers_need_request': advisers_need_request})
 
 
 @login_required
@@ -269,11 +275,10 @@ def manager_informations_detail_list(request, pk):
     adviser_list_dissertations_reader = adviser_list_dissertations_reader.order_by('dissertation__status')
 
     return layout.render(request, "manager_informations_detail_list.html",
-                  {'adviser': adviser,
-                   'adviser_list_dissertations': adviser_list_dissertations,
-                   'adviser_list_dissertations_copro': adviser_list_dissertations_copro,
-                   'adviser_list_dissertations_reader': adviser_list_dissertations_reader,
-                   })
+                         {'adviser': adviser,
+                          'adviser_list_dissertations': adviser_list_dissertations,
+                          'adviser_list_dissertations_copro': adviser_list_dissertations_copro,
+                          'adviser_list_dissertations_reader': adviser_list_dissertations_reader})
 
 
 @login_required
@@ -306,11 +311,11 @@ def manager_informations_detail_stats(request, pk):
                 tab_offer_count_copro[str(dissertaion_role_copro.dissertation.offer_year_start.offer.title)] + 1
         else:
             tab_offer_count_copro[dissertaion_role_copro.dissertation.offer_year_start.offer.title] = 1
-
     advisers_reader = queryset.filter(Q(adviser=adviser) &
-                                      Q(status='READER') & Q(dissertation__active=True)).exclude(
-        Q(dissertation__status='DRAFT') |
-        Q(dissertation__status='ENDED') | Q(dissertation__status='DEFENDED'))
+                                      Q(status='READER') &
+                                      Q(dissertation__active=True)).exclude(Q(dissertation__status='DRAFT') |
+                                                                            Q(dissertation__status='ENDED') |
+                                                                            Q(dissertation__status='DEFENDED'))
     count_advisers_reader = advisers_reader.count()
     tab_offer_count_read = {}
     for dissertaion_role_read in advisers_reader:
@@ -319,7 +324,6 @@ def manager_informations_detail_stats(request, pk):
                 tab_offer_count_read[str(dissertaion_role_read.dissertation.offer_year_start.offer.title)] + 1
         else:
             tab_offer_count_read[dissertaion_role_read.dissertation.offer_year_start.offer.title] = 1
-
     advisers_pro = queryset.filter(Q(adviser=adviser) &
                                    Q(status='PROMOTEUR') &
                                    Q(dissertation__active=True)).exclude(Q(dissertation__status='DRAFT') |
@@ -332,10 +336,13 @@ def manager_informations_detail_stats(request, pk):
                 tab_offer_count_pro[str(dissertaion_role_pro.dissertation.offer_year_start.offer.title)] + 1
         else:
             tab_offer_count_pro[dissertaion_role_pro.dissertation.offer_year_start.offer.title] = 1
-
     return layout.render(request, 'manager_informations_detail_stats.html',
-                  {'adviser': adviser, 'count_advisers': count_advisers, 'count_advisers_copro': count_advisers_copro,
-                   'count_advisers_pro': count_advisers_pro, 'count_advisers_reader': count_advisers_reader,
-                   'count_advisers_pro_request': count_advisers_pro_request,
-                   'tab_offer_count_pro': tab_offer_count_pro, 'tab_offer_count_read': tab_offer_count_read,
-                   'tab_offer_count_copro': tab_offer_count_copro})
+                         {'adviser': adviser,
+                          'count_advisers': count_advisers,
+                          'count_advisers_copro': count_advisers_copro,
+                          'count_advisers_pro': count_advisers_pro,
+                          'count_advisers_reader': count_advisers_reader,
+                          'count_advisers_pro_request': count_advisers_pro_request,
+                          'tab_offer_count_pro': tab_offer_count_pro,
+                          'tab_offer_count_read': tab_offer_count_read,
+                          'tab_offer_count_copro': tab_offer_count_copro})

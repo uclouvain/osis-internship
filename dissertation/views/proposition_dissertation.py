@@ -50,9 +50,10 @@ def manager_proposition_dissertations(request):
     person = mdl.person.find_by_user(request.user)
     adviser = find_adviser_by_person(person)
     faculty_adviser = find_faculty_adviser_by_adviser(adviser)
-    proposition_dissertations = PropositionDissertation.objects.filter(Q(active=True) & Q(offer_proposition__offer=faculty_adviser))
+    proposition_dissertations = PropositionDissertation.objects.filter(Q(active=True) &
+                                                                       Q(offer_proposition__offer=faculty_adviser))
     return layout.render(request, 'manager_proposition_dissertations_list.html',
-                  {'proposition_dissertations': proposition_dissertations})
+                         {'proposition_dissertations': proposition_dissertations})
 
 
 @login_required
@@ -75,10 +76,10 @@ def manager_proposition_dissertation_detail(request, pk):
                                             ).exclude(Q(status='DRAFT')).count()
     percent = count_use * 100 / proposition_dissertation.max_number_student
     return layout.render(request, 'manager_proposition_dissertation_detail.html',
-                  {'proposition_dissertation': proposition_dissertation,
-                   'adviser': adviser,
-                   'count_use': count_use,
-                   'percent': round(percent, 2)})
+                         {'proposition_dissertation': proposition_dissertation,
+                          'adviser': adviser,
+                          'count_use': count_use,
+                          'percent': round(percent, 2)})
 
 
 @login_required
@@ -94,10 +95,10 @@ def manage_proposition_dissertation_edit(request, pk):
     else:
         form = ManagerPropositionDissertationForm(instance=proposition_dissertation)
     return layout.render(request, 'manager_proposition_dissertation_edit.html',
-                  {'form': form,
-                   'types_choices': PropositionDissertation.TYPES_CHOICES,
-                   'levels_choices': PropositionDissertation.LEVELS_CHOICES,
-                   'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES})
+                         {'form': form,
+                          'types_choices': PropositionDissertation.TYPES_CHOICES,
+                          'levels_choices': PropositionDissertation.LEVELS_CHOICES,
+                          'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES})
 
 
 @login_required
@@ -111,10 +112,10 @@ def manager_proposition_dissertation_new(request):
     else:
         form = ManagerPropositionDissertationForm(initial={'active': True})
     return layout.render(request, 'manager_proposition_dissertation_new.html',
-                  {'form': form,
-                   'types_choices': PropositionDissertation.TYPES_CHOICES,
-                   'levels_choices': PropositionDissertation.LEVELS_CHOICES,
-                   'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES})
+                         {'form': form,
+                          'types_choices': PropositionDissertation.TYPES_CHOICES,
+                          'levels_choices': PropositionDissertation.LEVELS_CHOICES,
+                          'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES})
 
 
 @login_required
@@ -122,7 +123,7 @@ def manager_proposition_dissertation_new(request):
 def manager_proposition_dissertations_search(request):
     proposition_dissertations = search_proposition_dissertation(terms=request.GET['search']).filter(Q(active=True))
     return layout.render(request, "manager_proposition_dissertations_list.html",
-                  {'proposition_dissertations': proposition_dissertations})
+                         {'proposition_dissertations': proposition_dissertations})
 
 
 @login_required
@@ -132,7 +133,7 @@ def proposition_dissertations(request):
     proposition_dissertations = PropositionDissertation.objects.filter((Q(visibility=True) &
                                                                        Q(active=True)) | Q(author=adviser))
     return layout.render(request, 'proposition_dissertations_list.html',
-                  {'proposition_dissertations': proposition_dissertations})
+                         {'proposition_dissertations': proposition_dissertations})
 
 
 @login_required
@@ -153,10 +154,10 @@ def proposition_dissertation_detail(request, pk):
                                             ).exclude(Q(status='DRAFT')).count()
     percent = count_use * 100 / proposition_dissertation.max_number_student
     return layout.render(request, 'proposition_dissertation_detail.html',
-                  {'proposition_dissertation': proposition_dissertation,
-                   'adviser': adviser,
-                   'count_use': count_use,
-                   'percent': round(percent, 2)})
+                         {'proposition_dissertation': proposition_dissertation,
+                          'adviser': adviser,
+                          'count_use': count_use,
+                          'percent': round(percent, 2)})
 
 
 @login_required
@@ -189,7 +190,7 @@ def proposition_dissertation_my(request):
     adviser = find_adviser_by_person(person)
     proposition_dissertations = PropositionDissertation.objects.filter(Q(author=adviser) & Q(active=True))
     return layout.render(request, 'proposition_dissertations_list_my.html',
-                  {'proposition_dissertations': proposition_dissertations})
+                         {'proposition_dissertations': proposition_dissertations})
 
 
 @login_required
@@ -204,10 +205,10 @@ def proposition_dissertation_new(request):
         adviser = find_adviser_by_person(person)
         form = PropositionDissertationForm(initial={'author': adviser, 'active': True})
     return layout.render(request, 'proposition_dissertation_new.html',
-                  {'form': form,
-                   'types_choices': PropositionDissertation.TYPES_CHOICES,
-                   'levels_choices': PropositionDissertation.LEVELS_CHOICES,
-                   'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES})
+                         {'form': form,
+                          'types_choices': PropositionDissertation.TYPES_CHOICES,
+                          'levels_choices': PropositionDissertation.LEVELS_CHOICES,
+                          'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES})
 
 
 @login_required
@@ -215,4 +216,4 @@ def proposition_dissertations_search(request):
     proposition_dissertations = search_proposition_dissertation(terms=request.GET['search']).filter(
         Q(visibility=True) & Q(active=True))
     return layout.render(request, "proposition_dissertations_list.html",
-                  {'proposition_dissertations': proposition_dissertations})
+                         {'proposition_dissertations': proposition_dissertations})
