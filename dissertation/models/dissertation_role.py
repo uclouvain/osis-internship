@@ -25,14 +25,14 @@
 ##############################################################################
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from dissertation.models import adviser, dissertation
+from . import adviser, dissertation
 
 
 class DissertationRole(models.Model):
     STATUS_CHOICES = (
-        ('PROMOTEUR', _('Pro')),
-        ('CO_PROMOTEUR', _('CoPro')),
-        ('READER', _('Reader')),
+        ('PROMOTEUR', _('pro')),
+        ('CO_PROMOTEUR', _('popro')),
+        ('READER', _('reader')),
     )
 
     status = models.CharField(max_length=12, choices=STATUS_CHOICES)
@@ -40,10 +40,5 @@ class DissertationRole(models.Model):
     dissertation = models.ForeignKey(dissertation.Dissertation)
 
     def __str__(self):
-        sta = ""
-        adv = ""
-        if self.status:
-            sta = self.status
-        if self.adviser:
-            adv = self.adviser
-        return u"%s %s" % (sta, adv)
+        return u"%s %s" % (self.status if self.status else "",
+                           self.adviser if self.adviser else "")

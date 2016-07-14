@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from .dissertation_role import DissertationRole
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
@@ -59,8 +60,7 @@ class Adviser(models.Model):
         return u"%s %s %s" % (last_name.upper(), first_name, middle_name)
 
     def stat_dissertation_role(self):
-        from dissertation.models.dissertation_role import DissertationRole
-        list_stat = [0]*4
+        list_stat = [0] * 4
         queryset = DissertationRole.objects.all().filter(Q(adviser=self))
         list_stat[0] = queryset.filter(Q(adviser=self) & Q(dissertation__active=True)).count()
         list_stat[1] = queryset.filter(

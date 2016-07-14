@@ -47,11 +47,8 @@ class OfferProposition(models.Model):
         a = self.start_visibility_proposition
         b = self.end_visibility_proposition
 
-        if a <= b:
-            if c >= a and c <= b:
-                return True
-            else:
-                return False
+        if a <= b and a <= c <= b:
+            return True
         else:
             return False
 
@@ -61,11 +58,8 @@ class OfferProposition(models.Model):
         a = self.start_visibility_dissertation
         b = self.end_visibility_dissertation
 
-        if a <= b:
-            if c >= a and c <= b:
-                return True
-            else:
-                return False
+        if a <= b and a <= c <= b:
+            return True
         else:
             return False
 
