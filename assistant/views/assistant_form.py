@@ -23,14 +23,23 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.shortcuts import render
+from django.http.response import HttpResponseRedirect
+from django.core.urlresolvers import reverse
+from django.contrib.auth.decorators import login_required
 from assistant.models import *
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 from django.template.context_processors import request
-from assistant.forms import AssistantFormPart1, AssistantFormPart1b, AssistantFormPart6
+from assistant.forms import *
 from base.models import person_address, person
+from assistant.models.academic_assistant import find_by_id
+from assistant.models.assistant_mandate import find_mandate_by_id, find_mandate_by_academic_assistant
+from base.models.person import find_by_user
+from base.models import person_address, person
+
 
 @login_required
 def form_part1_edit(request, mandate_id):
@@ -66,7 +75,6 @@ def form_part1_save(request, mandate_id):
         form.save()
         form2.save()
         return form_part1_edit(request, mandate.id)
-        
     else:
         return render(request, "assistant_form_part1.html", {'assistant': assistant,
                                                      'mandate': mandate,
@@ -114,3 +122,43 @@ def form_part6_save(request, mandate_id):
             return render(request, "assistant_form_part6.html", {'assistant': assistant,
                                                              'mandate': mandate,
                                                              'form': form})
+
+def form_part5_edit(request, mandate_id):
+    mandate = assistant_mandate.find_mandate_by_id(mandate_id)
+    person = request.user.person
+    assistant = mandate.assistant
+    if person != assistant.person or mandate.state != 'TRTS':
+        return HttpResponseRedirect(reverse('assistant_mandates'))
+    form = AssistantFormPart5(initial={'faculty_representation': mandate.faculty_representation,
+                                       'institute_representation': mandate.institute_representation,
+                                       'sector_representation': mandate.sector_representation,
+                                       'governing_body_representation': mandate.governing_body_representation,
+                                       'corsci_representation': mandate.corsci_representation,
+                                       'students_service': mandate.students_service,
+                                       'infrastructure_mgmt_service': mandate.infrastructure_mgmt_service,
+                                       'events_organisation_service': mandate.events_organisation_service,
+                                       'publishing_field_service': mandate.publishing_field_service,
+                                       'scientific_jury_service': mandate.scientific_jury_service,
+                                       'degrees': mandate.degrees,
+                                       'formations': mandate.formations
+                                       }, prefix='mand')
+    return render(request, "assistant_form_part5.html", {'assistant': assistant,
+                                                         'mandate': mandate,
+                                                         'form': form}) 
+    
+def form_part5_save(request, mandate_id):
+    """Use to save an assistant form part5."""
+    mandate = assistant_mandate.find_mandate_by_id(mandate_id)
+    assistant = mandate.assistant
+    person = request.user.person
+    if person != assistant.person or mandate.state != 'TRTS':
+        return HttpResponseRedirect(reverse('assistant_mandates'))
+    elif request.method == 'POST':
+        form = AssistantFormPart5(data=request.POST, instance=mandate, prefix='mand')
+        if form.is_valid():
+            form.save()
+            return form_part5_edit(request, mandate.id)
+        else:
+            return render(request, "assistant_form_part5.html", {'assistant': assistant,
+                                                             'mandate': mandate,
+                                                             'form': form}) 
