@@ -82,8 +82,8 @@ class OrganizationAdmin(admin.ModelAdmin):
 admin.site.register(Organization, OrganizationAdmin)
 
 class OrganizationAddressAdmin(admin.ModelAdmin):
-    list_display = ('organization', 'label', 'location', 'postal_code', 'city', 'latitude', 'longitude', 'check_coordonates', 'country')
-    fieldsets = ((None, {'fields': ('organization', 'label', 'location', 'postal_code', 'city', 'latitude', 'longitude', 'check_coordonates', 'country')}),)
+    list_display = ('organization', 'label', 'location', 'postal_code', 'city', 'country','latitude', 'longitude', 'check_coordonates')
+    fieldsets = ((None, {'fields': ('organization', 'label', 'location', 'postal_code', 'city', 'country', 'latitude', 'longitude', 'check_coordonates')}),)
 
 admin.site.register(OrganizationAddress, OrganizationAddressAdmin)
 
