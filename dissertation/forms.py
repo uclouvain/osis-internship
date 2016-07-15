@@ -67,15 +67,16 @@ class ManagerAdviserForm(ModelForm):
 class ManagerDissertationForm(ModelForm):
     class Meta:
         model = Dissertation
-        fields = ('title', 'author', 'offer_year_start', 'proposition_dissertation', 'description', 'defend_periode',
-                  'defend_year')
+        fields = ('title', 'author', 'offer_year_start', 'proposition_dissertation', 'description', 'defend_year',
+                  'defend_periode')
 
 
 class ManagerDissertationEditForm(ModelForm):
     class Meta:
         model = Dissertation
-        fields = ('title', 'author', 'offer_year_start', 'proposition_dissertation', 'description', 'defend_periode',
-                  'defend_year')
+        fields = ('title', 'author', 'offer_year_start', 'proposition_dissertation', 'description', 'defend_year',
+                  'defend_periode'
+                  )
 
 
 class ManagerDissertationRoleForm(ModelForm):

@@ -27,10 +27,8 @@ from django.contrib import admin
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
-from base.models import offer_year, student
+from base.models import offer_year, student, academic_year
 from . import proposition_dissertation
-from datetime import datetime
-
 
 class DissertationAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'status', 'active')
@@ -65,13 +63,11 @@ class Dissertation(models.Model):
         ('SEPTEMBER', _('september')),
     )
 
-    DEFEND_YEAR_CHOICES = tuple((str(n), str(n)) for n in range(2016, datetime.now().year + 5))
-
     title = models.CharField(max_length=200)
     author = models.ForeignKey(student.Student)
     status = models.CharField(max_length=12, choices=STATUS_CHOICES, default='DRAFT')
     defend_periode = models.CharField(max_length=12, choices=DEFEND_PERIODE_CHOICES, default='UNDEFINED')
-    defend_year = models.CharField(max_length=4, choices=DEFEND_YEAR_CHOICES, default='2016')
+    defend_year = models.ForeignKey(academic_year.AcademicYear)
     offer_year_start = models.ForeignKey(offer_year.OfferYear)
     proposition_dissertation = models.ForeignKey(proposition_dissertation.PropositionDissertation)
     description = models.TextField(blank=True, null=True)

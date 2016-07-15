@@ -121,10 +121,18 @@
                 </div>
                 <div class="row">
                   <div class="col-md-3" style="text-align: right">
+                      <label>{% trans 'defend_year' %}</label>
+                  </div>
+                  <div class="col-md-9">
+                      {{ dissertation.defend_year }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3" style="text-align: right">
                       <label>{% trans 'defend_periode' %}</label>
                   </div>
                   <div class="col-md-9">
-                      {{ dissertation.defend_periode }} {{ dissertation.defend_year }}
+                      {{ dissertation.defend_periode }}
                   </div>
                 </div>
             </div>
