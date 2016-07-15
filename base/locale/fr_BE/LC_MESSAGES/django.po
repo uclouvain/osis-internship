@@ -1256,6 +1256,9 @@ msgstr "Aucune année académique au format valide n'a été trouvé dans votre 
 msgid "printing_date"
 msgstr "Date d'impression"
 
+msgid "file_production_date"
+msgstr "Date de production du fichier excel"
+
 msgid "no_data_for_this_academic_year"
 msgstr "Aucune données pour cette année académique"
 
