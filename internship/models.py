@@ -439,6 +439,7 @@ class InternshipStudentAffectationStat(models.Model):
     choice = models.IntegerField(blank=False, null=False)
     cost = models.IntegerField(blank=False, null=False)
     consecutive_month = models.BooleanField(default=False, null=False)
+    type_of_internship = models.CharField(max_length=1, blank=False, null=False, default='N')
 
     @staticmethod
     def find_all():

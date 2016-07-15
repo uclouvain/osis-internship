@@ -94,3 +94,9 @@ class InternshipStudentInformationAdmin(admin.ModelAdmin):
     search_fields = ['person__user__username', 'person__last_name', 'person__first_name']
 
 admin.site.register(InternshipStudentInformation, InternshipStudentInformationAdmin)
+
+class InternshipStudentAffectationStatAdmin(admin.ModelAdmin):
+    list_display = ('student', 'organization', 'speciality', 'period', 'choice', 'cost', 'consecutive_month', 'type_of_internship')
+    fieldsets = ((None, {'fields': ('student', 'organization', 'speciality', 'period', 'choice', 'cost', 'consecutive_month', 'type_of_internship')}),)
+
+admin.site.register(InternshipStudentAffectationStat, InternshipStudentAffectationStatAdmin)
