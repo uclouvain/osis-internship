@@ -83,6 +83,25 @@ def calc_dist(lat_a, long_a, lat_b, long_b):
     # for distance in kilometers use this
     return (degrees(acos(distance)) * 69.09)/0.621371
 
+def work_dist(student, organizations):
+    student_informations = InternshipStudentInformation.find_by(person_name=student.person.last_name, person_first_name=student.person.first_name)
+    student_address = student_informations[0].location + " " + student_informations[0].postal_code + " " \
+                    + student_informations[0].city + " " + student_informations[0].country
+    student_address_lat_long = geocode(student_address)
+    distance_student_organization = {}
+    for organization in organizations :
+        organization_informations = OrganizationAddress.find_by_organization(organization)
+        organization_address = organization_informations[0].location + " " + organization_informations[0].postal_code + " " \
+                            + organization_informations[0].city + " " + organization_informations[0].country + " "
+        organization_address = organization_address.replace('\n','')
+        organization_address_lat_long = geocode(organization_address)
+
+        if organization_address_lat_long[0] is not None :
+            distance = calc_dist(student_address_lat_long[0], student_address_lat_long[1], organization_address_lat_long[0], organization_address_lat_long[1])
+            distance_student_organization[int(organization.reference)] = distance
+
+    distance_student_organization = sorted(distance_student_organization.items(), key=itemgetter(1))
+    return distance_student_organization
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
@@ -289,7 +308,8 @@ def internships_save(request):
             else :
                 if cumul != 4 :
                     for i in range(index-cumul,index):
-                        preference_list[i] = 0
+                        if i < len(preference_list):
+                            preference_list[i] = 0
 
         index = 0
         for r in preference_list:
@@ -553,10 +573,10 @@ def internship_save_modification_student(request) :
     if request.POST.get('periods_s'):
         periods_list = request.POST.getlist('periods_s')
 
-    fixthis_list = list()
     if request.POST.get('fixthis'):
         fixthis_list = request.POST.getlist('fixthis')
     index = 0
+    fixthis_final_list = []
     for value in fixthis_list:
         if value == '1'and fixthis_list[index-1]=='0':
             del fixthis_list[index-1]
