@@ -79,6 +79,8 @@ def period_delete(request, period_id):
 def period_modification(request, period_id):
     period_check = Period.objects.filter(pk=period_id)
     period = period_check[0]
+    period.date_start = period.date_start.strftime("%Y-%m-%d")
+    period.date_end = period.date_end.strftime("%Y-%m-%d")
 
     return render(request, "period_create.html", {'section': 'internship',
                                                     'period' : period
