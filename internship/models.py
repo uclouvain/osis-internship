@@ -226,7 +226,7 @@ class Period(models.Model):
         return u"%s" % (self.name)
 
     def find_all():
-        return Period.objects.all()
+        return Period.objects.all().order_by('date_start')
 
     @staticmethod
     def find_by(name=None, id=None):
