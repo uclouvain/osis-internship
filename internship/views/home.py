@@ -26,7 +26,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
-from internship.models import InternshipOffer, InternshipStudentInformation
+from internship.models import InternshipOffer, InternshipStudentInformation, OrganizationAddress
 import urllib.request
 import unicodedata
 from xml.dom import minidom
@@ -64,7 +64,19 @@ def internships_home(request):
             student_info.longitude = student_address_lat_long[1]
             student_info.check_coordonates = True
             student_info.save()
-            
+
+    organization_informations = OrganizationAddress.find_all()
+    for organization_info in organization_informations:
+        if not organization_info.check_coordonates :
+            organization_address = organization_info.location + " " + organization_info.postal_code + " " \
+                            + organization_info.city + " " + organization_info.country
+            organization_address = organization_address.replace('\n','')
+            organization_address_lat_long = geocode(organization_address)
+            organization_info.latitude = organization_address_lat_long[0]
+            organization_info.longitude = organization_address_lat_long[1]
+            organization_info.check_coordonates = True
+            organization_info.save()
+
     return render(request, "internships_home.html", {'section':   'internship',
                                                      'noma':      noma,
                                                      'blockable': blockable

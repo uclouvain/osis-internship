@@ -385,6 +385,10 @@ class OrganizationAddress(models.Model):
     def find_by_id(organization_address_id):
         return OrganizationAddress.objects.get(pk=organization_address_id)
 
+    @staticmethod
+    def find_all():
+        return OrganizationAddress.objects.all()
+
 
 class InternshipStudentInformation(models.Model):
     person = models.ForeignKey('base.Person')
