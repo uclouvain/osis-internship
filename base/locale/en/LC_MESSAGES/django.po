@@ -1243,6 +1243,9 @@ msgstr "No valid academic year found in your xls file. The date should be format
 msgid "printing_date"
 msgstr "Printing date"
 
+msgid "file_production_date"
+msgstr "Excel file production date"
+
 msgid "no_data_for_this_academic_year"
 msgstr "No data for this academic year"
 
