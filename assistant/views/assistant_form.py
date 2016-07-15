@@ -28,8 +28,13 @@ from django.http.response import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from assistant.models import *
+from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
+from django.http.response import HttpResponseRedirect
+from django.shortcuts import render
 from django.template.context_processors import request
-from assistant.forms import AssistantFormPart1, AssistantFormPart1b, AssistantFormPart5
+from assistant.forms import *
+from base.models import person_address, person
 from assistant.models.academic_assistant import find_by_id
 from assistant.models.assistant_mandate import find_mandate_by_id, find_mandate_by_academic_assistant
 from base.models.person import find_by_user
@@ -72,11 +77,52 @@ def form_part1_save(request, mandate_id):
         return form_part1_edit(request, mandate.id)
     else:
         return render(request, "assistant_form_part1.html", {'assistant': assistant,
-                                                             'mandate': mandate,
-                                                             'addresses': addresses,
-                                                             'form': form,
-                                                             'form2': form2})  
+                                                     'mandate': mandate,
+                                                     'addresses': addresses,
+                                                     'form': form,
+                                                     'form2': form2})
+
+def form_part6_edit(request, mandate_id):
+    mandate = assistant_mandate.find_mandate_by_id(mandate_id)
+    person = request.user.person
+    assistant = mandate.assistant
+    if person != assistant.person or mandate.state != 'TRTS':
+        return HttpResponseRedirect(reverse('assistant_mandates'))
+    form = AssistantFormPart6(initial={'tutoring_percent': mandate.tutoring_percent,
+                                       'service_activities_percent': mandate.service_activities_percent,
+                                       'formation_activities_percent': mandate.formation_activities_percent,
+                                       'research_percent': mandate.research_percent,
+                                       'activities_report_remark': mandate.activities_report_remark
+                                       }, prefix='mand')
+    return render(request, "assistant_form_part6.html", {'assistant': assistant,
+                                                         'mandate': mandate,
+                                                         'form': form}) 
     
+def form_part6_save(request, mandate_id):
+    """Use to save an assistant form part6."""
+    mandate = assistant_mandate.find_mandate_by_id(mandate_id)
+    assistant = mandate.assistant
+    person = request.user.person
+    if person != assistant.person or mandate.state != 'TRTS':
+        return HttpResponseRedirect(reverse('assistant_mandates'))
+    elif request.method == 'POST':
+        form = AssistantFormPart6(data=request.POST, instance=mandate, prefix='mand')
+        if form.is_valid():
+            if 'validate_and_submit' in request.POST:
+                if assistant.supervisor:
+                    mandate.state='PHD_SUPERVISOR'
+                else:
+                    mandate.state='RESEARCH'
+                form.save()
+                return HttpResponseRedirect(reverse('assistant_mandates'))
+            else:
+                form.save()
+                return form_part6_edit(request, mandate.id)
+        else:
+            return render(request, "assistant_form_part6.html", {'assistant': assistant,
+                                                             'mandate': mandate,
+                                                             'form': form})
+
 def form_part5_edit(request, mandate_id):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     person = request.user.person

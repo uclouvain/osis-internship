@@ -30,6 +30,7 @@ from django.forms import ModelForm, Textarea
 from assistant import models as mdl
 from base.models import structure, academic_year, person
 from django.forms.models import inlineformset_factory
+from django.core.exceptions import ValidationError
 
 
 class MandateForm(ModelForm):
@@ -140,8 +141,8 @@ class MandatesArchivesForm(ModelForm):
     class Meta:
         model = mdl.assistant_mandate.AssistantMandate
         fields = ('academic_year',)
-        
-        
+
+
 class AssistantFormPart5(ModelForm):
     degrees = forms.CharField(
         required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '4'}))
@@ -153,5 +154,25 @@ class AssistantFormPart5(ModelForm):
         fields = ('faculty_representation', 'institute_representation', 'sector_representation',
                   'governing_body_representation','corsci_representation','students_service',
                   'infrastructure_mgmt_service','events_organisation_service','publishing_field_service',
-                  'scientific_jury_service','degrees','formations')  
-    
+                  'scientific_jury_service','degrees','formations')
+
+
+class AssistantFormPart6(ModelForm):
+    activities_report_remark = forms.CharField(
+        required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '4'}))
+
+    class Meta:
+        model = mdl.assistant_mandate.AssistantMandate
+        fields = ('tutoring_percent', 'service_activities_percent', 'formation_activities_percent',
+                  'research_percent', 'activities_report_remark')
+
+    def clean(self):
+        tutoring_percent = self.cleaned_data['tutoring_percent']
+        service_activities_percent = self.cleaned_data['service_activities_percent']
+        formation_activities_percent = self.cleaned_data['formation_activities_percent']
+        research_percent = self.cleaned_data['research_percent']
+
+        if tutoring_percent + service_activities_percent + formation_activities_percent + research_percent != 100:
+            raise ValidationError(_('total_must_be_100_message'))
+        else:
+            return self.cleaned_data
