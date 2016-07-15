@@ -373,6 +373,7 @@ class OrganizationAddress(models.Model):
     city = models.CharField(max_length=255)
     latitude = models.FloatField(blank=True, null=True)
     longitude = models.FloatField(blank=True, null=True)
+    check_coordonates = models.BooleanField(default=False)
     country = models.CharField(max_length=255)
 
     @staticmethod
@@ -393,6 +394,7 @@ class InternshipStudentInformation(models.Model):
     country = models.CharField(max_length=255)
     latitude = models.FloatField(blank=True, null=True)
     longitude = models.FloatField(blank=True, null=True)
+    check_coordonates = models.BooleanField(default=False)
     email = models.EmailField(max_length=255, blank=True, null=True)
     phone_mobile = models.CharField(max_length=100, blank=True, null=True)
 
