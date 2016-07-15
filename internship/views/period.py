@@ -50,14 +50,18 @@ def period_create(request):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def period_save(request, period_id):
     form = PeriodForm(data=request.POST)
-    period = Period()
+    check_period = Period.find_by(id=period_id)
+    if check_period :
+        period = check_period[0]
+    else :
+        period = Period()
 
     period.name = request.POST.get('period_name')
     period.date_start = request.POST.get('date_start')
     period.date_end = request.POST.get('date_end')
 
     period.save()
-    return render(request, "period_create.html", {'section': 'internship'})
+    return HttpResponseRedirect(reverse('internships_periods'))
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
@@ -75,6 +79,7 @@ def period_delete(request, period_id):
 def period_modification(request, period_id):
     period_check = Period.objects.filter(pk=period_id)
     period = period_check[0]
+
     return render(request, "period_create.html", {'section': 'internship',
                                                     'period' : period
                                                     })

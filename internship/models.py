@@ -229,24 +229,15 @@ class Period(models.Model):
         return Period.objects.all()
 
     @staticmethod
-    def find_by(name=None):
+    def find_by(name=None, id=None):
         queryset = Period.objects
 
         if name:
             queryset = queryset.filter(name=name)
             has_criteria = True
 
-        if has_criteria:
-            return queryset
-        else:
-            return None
-
-    @staticmethod
-    def find_by(name=None):
-        queryset = Period.objects
-
-        if name:
-            queryset = queryset.filter(name=name)
+        if id:
+            queryset = queryset.filter(pk=id)
             has_criteria = True
 
         if has_criteria:
