@@ -289,7 +289,8 @@ def internships_save(request):
             else :
                 if cumul != 4 :
                     for i in range(index-cumul,index):
-                        preference_list[i] = 0
+                        if i < len(preference_list):
+                            preference_list[i] = 0
 
         index = 0
         for r in preference_list:
@@ -553,10 +554,10 @@ def internship_save_modification_student(request) :
     if request.POST.get('periods_s'):
         periods_list = request.POST.getlist('periods_s')
 
-    fixthis_list = list()
     if request.POST.get('fixthis'):
         fixthis_list = request.POST.getlist('fixthis')
     index = 0
+    fixthis_final_list = []
     for value in fixthis_list:
         if value == '1'and fixthis_list[index-1]=='0':
             del fixthis_list[index-1]
