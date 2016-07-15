@@ -28,14 +28,15 @@ from django.contrib import admin
 
 
 class DomainAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-    fieldsets = ((None, {'fields': ('name',)}),)
+    list_display = ('name', 'parent', 'decree')
+    fieldsets = ((None, {'fields': ('name', 'parent', 'decree')}),)
 
 
 class Domain(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     name = models.CharField(max_length=255)
     parent = models.ForeignKey('self', null=True, blank=True)
+    decree = models.ForeignKey('Decree')
 
     def __str__(self):
         return self.name

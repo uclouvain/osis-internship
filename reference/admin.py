@@ -34,4 +34,7 @@ admin.site.register(country.Country, country.CountryAdmin)
 
 admin.site.register(decree.Decree, decree.DecreeAdmin)
 
+admin.site.register(domain.Domain,
+                    domain.DomainAdmin)
+
 admin.site.register(language.Language, language.LanguageAdmin)

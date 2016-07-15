@@ -25,12 +25,11 @@
 ##############################################################################
 
 # Statements in alphabetic order.
-from base.models import academic_year
 from base.models import academic_calendar
+from base.models import academic_year
 from base.models import application_notice
 from base.models import attribution
 from base.models import document_file
-from base.models import domain
 from base.models import exam_enrollment
 from base.models import learning_unit
 from base.models import learning_unit_enrollment
@@ -38,7 +37,6 @@ from base.models import learning_unit_year
 from base.models import message_history
 from base.models import message_template
 from base.models import native
-from base.models import scores_encoding
 from base.models import offer
 from base.models import offer_enrollment
 from base.models import offer_year
@@ -48,8 +46,10 @@ from base.models import organization_address
 from base.models import person
 from base.models import person_address
 from base.models import program_manager
+from base.models import scores_encoding
 from base.models import session_exam
 from base.models import structure
 from base.models import structure_address
 from base.models import student
 from base.models import tutor
+
