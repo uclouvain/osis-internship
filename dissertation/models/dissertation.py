@@ -23,41 +23,51 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.utils.translation import ugettext_lazy as _
-from dissertation.models import proposition_dissertation
-from base.models import offer_year, student
-from django.db.models import Q
 from django.contrib import admin
+from django.db import models
+from django.db.models import Q
+from django.utils.translation import ugettext_lazy as _
+from base.models import offer_year, student
+from . import proposition_dissertation
 
 
 class DissertationAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'status', 'active')
 
 
+STATUS_CHOICES = (
+    ('DRAFT', _('draft')),
+    ('DIR_SUBMIT', _('submitted_to_director')),
+    ('DIR_OK', _('accepted_by_director')),
+    ('DIR_KO', _('refused_by_director')),
+    ('COM_SUBMIT', _('submitted_to_commission')),
+    ('COM_OK', _('accepted_by_commission')),
+    ('COM_KO', _('refused_by_commission')),
+    ('EVA_SUBMIT', _('submitted_to_first_year_evaluation')),
+    ('EVA_OK', _('accepted_by_first_year_evaluation')),
+    ('EVA_KO', _('refused_by_first_year_evaluation')),
+    ('TO_RECEIVE', _('to_be_received')),
+    ('TO_DEFEND', _('to_be_defended')),
+    ('DEFENDED', _('defended')),
+    ('ENDED', _('ended')),
+    ('ENDED_WIN', _('ended_win')),
+    ('ENDED_LOS', _('ended_los')),
+)
+
+
 class Dissertation(models.Model):
-    STATUS_CHOICES = (
-        ('DRAFT', _('Draft')),
-        ('DIR_SUBMIT', _('Submitted to Director')),
-        ('DIR_OK', _('Accepted by Director')),
-        ('DIR_KO', _('Refused by Director')),
-        ('COM_SUBMIT', _('Submitted to Commission')),
-        ('COM_OK', _('Accepted by Commission')),
-        ('COM_KO', _('Refused by Commission')),
-        ('EVA_SUBMIT', _('Submitted to First Year Evaluation')),
-        ('EVA_OK', _('Accepted by First Year Evaluation')),
-        ('EVA_KO', _('Refused by First Year Evaluation')),
-        ('TO_RECEIVE', _('To be received')),
-        ('TO_DEFEND', _('To be defended')),
-        ('DEFENDED', _('Defended')),
-        ('ENDED', _('Ended')),
-        ('ENDED_WIN', _('Ended Win')),
-        ('ENDED_LOS', _('Ended Los')),
+
+    DEFEND_PERIODE_CHOICES = (
+        ('UNDEFINED', _('undefined')),
+        ('JANUARY', _('january')),
+        ('JUNE', _('june')),
+        ('SEPTEMBER', _('september')),
     )
 
     title = models.CharField(max_length=200)
     author = models.ForeignKey(student.Student)
     status = models.CharField(max_length=12, choices=STATUS_CHOICES, default='DRAFT')
+    defend_periode = models.CharField(max_length=12, choices=DEFEND_PERIODE_CHOICES, default='UNDEFINED')
     offer_year_start = models.ForeignKey(offer_year.OfferYear)
     proposition_dissertation = models.ForeignKey(proposition_dissertation.PropositionDissertation)
     description = models.TextField(blank=True, null=True)
@@ -68,22 +78,23 @@ class Dissertation(models.Model):
     def __str__(self):
         return self.title
 
-    def search(terms=None):
-        queryset = Dissertation.objects.all()
-        if terms:
-            queryset = queryset.filter(
-                Q(author__person__first_name__icontains=terms) |
-                Q(author__person__middle_name__icontains=terms) |
-                Q(author__person__last_name__icontains=terms) |
-                Q(description__icontains=terms) |
-                Q(proposition_dissertation__title__icontains=terms) |
-                Q(proposition_dissertation__author__person__first_name__icontains=terms) |
-                Q(proposition_dissertation__author__person__middle_name__icontains=terms) |
-                Q(proposition_dissertation__author__person__last_name__icontains=terms) |
-                Q(status__icontains=terms) |
-                Q(title__icontains=terms)
-            ).distinct()
-        return queryset
-
     class Meta:
         ordering = ["author__person__last_name", "author__person__middle_name", "author__person__first_name", "title"]
+
+
+def search_dissertation(terms=None):
+    queryset = Dissertation.objects.all()
+    if terms:
+        queryset = queryset.filter(
+            Q(author__person__first_name__icontains=terms) |
+            Q(author__person__middle_name__icontains=terms) |
+            Q(author__person__last_name__icontains=terms) |
+            Q(description__icontains=terms) |
+            Q(proposition_dissertation__title__icontains=terms) |
+            Q(proposition_dissertation__author__person__first_name__icontains=terms) |
+            Q(proposition_dissertation__author__person__middle_name__icontains=terms) |
+            Q(proposition_dissertation__author__person__last_name__icontains=terms) |
+            Q(status__icontains=terms) |
+            Q(title__icontains=terms)
+        ).distinct()
+    return queryset

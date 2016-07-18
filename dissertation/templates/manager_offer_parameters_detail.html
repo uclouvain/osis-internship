@@ -34,7 +34,7 @@
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'parameters' %} {{ offer_proposition.title }}</h2>
+    <h2>{% trans 'parameters' %} {{ offer_proposition.acronym }}</h2>
   </div>
   <div class="panel panel-default">
     <div class="panel-body">
@@ -43,6 +43,54 @@
           <a href="{% url 'manager_offer_parameters_edit' pk=offer_proposition.pk %}" id="lnk_manager_offer_parameters_edit" class="btn btn-default btn-primary"
           role="button" title="{% trans 'edit_parameters'%}"><span class="glyphicon glyphicon-edit"
           aria-hidden="true"></span></a>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-4">
+            <label>{% trans 'date_start_visibility_proposition'%}</label> :
+          </div>
+          <div class="col-md-2">
+            {{ offer_proposition.start_visibility_proposition }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <label>{% trans 'date_end_visibility_proposition'%}</label> :
+          </div>
+          <div class="col-md-2">
+            {{ offer_proposition.end_visibility_proposition }}
+          </div>
+          <div class="col-md-4">
+            <label>{% trans 'in_visibility_proposition' %}</label> :
+          </div>
+          <div class="col-md-1">
+             {{ offer_proposition.in_periode_visibility_proposition|yesno:"Yes,No" }}
+          </div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-4">
+            <label>{% trans 'date_start_visibility_dissertation'%}</label> :
+          </div>
+          <div class="col-md-2">
+              <label>{{ offer_proposition.start_visibility_dissertation }}</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <label>{% trans 'date_end_visibility_dissertation'%}</label> :
+          </div>
+          <div class="col-md-2">
+            {{ offer_proposition.end_visibility_dissertation }}
+          </div>
+          <div class="col-md-4">
+            <label>{% trans 'in_visibility_dissertation' %}</label> :
+          </div>
+          <div class="col-md-1">
+             {{ offer_proposition.in_periode_visibility_dissertation|yesno:"Yes,No" }}
+          </div>
         </div>
       </div>
       <div class="row">
@@ -76,6 +124,7 @@
         <div class="col-md-2">
            {{ offer_proposition.evaluation_first_year|yesno:"Yes,No" }}
         </div>
+
       </div>
       <div class="row">
         <div class="col-md-4">
