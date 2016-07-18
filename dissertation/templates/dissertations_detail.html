@@ -36,6 +36,14 @@
 <div class="page-header">
     <h2>{{ dissertation.title }}</h2>
 </div>
+<ul class="nav nav-tabs">
+    <li class="active"><a href="#">{% trans 'main' %}</a></li>
+    <li>
+        <a href="{% url 'dissertations_detail_updates' pk=dissertation.pk %}">
+            {% trans 'dissertation_updates' %}
+        </a>
+    </li>
+</ul>
 <div class="panel panel-default">
     <div class="panel-body">
         <div class="panel panel-default">
@@ -110,6 +118,14 @@
                     <div class="col-md-9" style="text-align: justify">
                         {{ dissertation.description }}
                     </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3" style="text-align: right">
+                      <label>{% trans 'defend_periode' %}</label>
+                  </div>
+                  <div class="col-md-9">
+                      {{ dissertation.defend_periode }}
+                  </div>
                 </div>
             </div>
         </div>

@@ -1,0 +1,138 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+{% load l10n %}
+
+{% comment "License" %}
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+{% endcomment %}
+{% block breadcrumb %}
+<li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'institution' %}</a></li>
+<li><a href="{% url 'mandates' %}" id="lnk_mandates">{% trans 'mandates' %}</a></li>
+<li><a href="{% url 'assistant_mandates' %}" id="lnk_mandates">{% trans 'my_mandates' %}</a></li>
+<li class="active">{% trans 'renewal_form' %}</li>
+{% endblock %}
+{% block content %}
+<div class="panel panel-default">
+    <div class="panel-body">
+        <form method="POST" action="{% url 'form_part6_save' mandate.id %}">
+        {% csrf_token %}
+        <div class="panel-info">
+            <div class="panel-heading">
+                <font size="4">{% trans 'summary' %}</font>
+            </div>
+            <div class="panel-body">
+                <font size="2">{% trans 'total_must_be_100_message' %}</font>
+            </div>
+        </div><p>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="txt_tutoring_percent">{% trans 'tutoring_percent' %}</label>
+                </div>
+                <div class="col-md-3">
+                    <div class="controls">{{ form.tutoring_percent }}</div>
+                    <font class="error">{{ form.tutoring_percent.errors }}</font>
+                </div>
+            </div><p>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="txt_research_percent">{% trans 'research_percent' %}</label>
+                </div>
+                <div class="col-md-3">
+                    <div class="controls">{{ form.research_percent }}</div>
+                    <font class="error">{{ form.research_percent.errors }}</font>
+                </div>
+            </div><p>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="txt_service_activities_percent">{% trans 'service_activities_percent' %}</label>
+                </div>
+                <div class="col-md-3">
+                    <div class="controls">{{ form.service_activities_percent }}</div>
+                    <font class="error">{{ form.service_activities_percent.errors }}</font>
+                </div>
+            </div><p>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="txt_formation_activities_percent">{% trans 'formation_activities_percent' %}</label>
+                </div>
+                <div class="col-md-3">
+                    <div class="controls">{{ form.formation_activities_percent }}</div>
+                    <font class="error">{{ form.formation_activities_percent.errors }}</font>
+                </div>
+            </div><p>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <font class="error">{{ form.non_field_errors }}</font>
+            </div>
+        </div>
+        <div class="panel-info">
+            <div class="panel-heading">
+                <font size="4">{% trans 'general_comment' %}</font>
+            </div>
+        </div><p>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="txt_activities_report_remark">{% trans 'activities_report_remark' %}</label>
+                </div>
+                <div class="col-md-3">
+                    <div class="controls">{{ form.activities_report_remark }}</div>
+                    <font class="error">{{ form.activities_report_remark.errors }}</font>
+                </div>
+            </div><p>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-12 align="left">
+                    <button type="submit" class="btn btn-primary btn-block"
+                    title="{% trans 'save'%}" id="bt_pstform_part6_save">
+                    <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}</button>
+                </div>
+            </div><p>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-12 align="left">
+                    <button type="submit" class="btn btn-success btn-block" title="{% trans 'validate_and_submit'%}"
+                    id="bt_pstform_validate_and_submit" name="validate_and_submit"
+                    onclick="return confirm('{% trans 'confirm_validation' %}')">
+                    <span class="glyphicon glyphicon-saved" aria-hidden="true">
+                    </span> {% trans 'validate_and_submit'%}</button>
+                </div>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+{% endblock %}
