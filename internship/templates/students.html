@@ -45,7 +45,6 @@
                   <th>{% trans 'forname' %}</th>
                   <th>{% trans 'sexe' %}</th>
                   <th>{% trans 'mail' %}</th>
-                  <th>{% trans 'birth_date' %}</th>
                   <th>{% trans 'address' %}</th>
                   <th>{% trans 'phone_mobile' %}</th>
                   <th>{% trans 'statut' %}</th>
@@ -65,9 +64,6 @@
                   </td>
                   <td>
                     {{ student.email }}
-                  </td>
-                  <td>
-                    {{ student.person.birth_date }}
                   </td>
                   <td>
                     {{ student.location}} {{ student.postal_code}} {{ student.city }} {{ student.country }}

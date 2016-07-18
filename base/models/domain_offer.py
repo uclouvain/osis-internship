@@ -23,34 +23,24 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.db import models
+from django.contrib import admin
+from django.utils.translation import ugettext_lazy as _
+from base.models import offer, program_manager, academic_year
 
-# Statements in alphabetic order.
-from base.models import academic_calendar
-from base.models import academic_year
-from base.models import application_notice
-from base.models import attribution
-from base.models import document_file
-from base.models import domain_offer
-from base.models import exam_enrollment
-from base.models import learning_unit
-from base.models import learning_unit_enrollment
-from base.models import learning_unit_year
-from base.models import message_history
-from base.models import message_template
-from base.models import native
-from base.models import offer
-from base.models import offer_enrollment
-from base.models import offer_year
-from base.models import offer_year_calendar
-from base.models import organization
-from base.models import organization_address
-from base.models import person
-from base.models import person_address
-from base.models import program_manager
-from base.models import scores_encoding
-from base.models import session_exam
-from base.models import structure
-from base.models import structure_address
-from base.models import student
-from base.models import tutor
 
+class DomainOfferAdmin(admin.ModelAdmin):
+    list_display = ('domain', 'offer_year', 'priority')
+    fieldsets = ((None, {'fields': ('domain', 'offer_year', 'priority',)}),)
+    raw_id_fields = ('offer_year',)
+    search_fields = ['acronym']
+
+
+class DomainOffer(models.Model):
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    domain = models.ForeignKey('reference.Domain')
+    offer_year = models.ForeignKey('OfferYear')
+    priority = models.CharField(max_length=20)
+
+    def __str__(self):
+        return u"%s - %s" % (self.domain, self.offer_year)
