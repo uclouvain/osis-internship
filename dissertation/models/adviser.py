@@ -63,10 +63,10 @@ class Adviser(models.Model):
     def get_stat_dissertation_role(self):
 
         list_stat = [0] * 5
-        #list_stat[0]= count dissertation_role active of adviser
-        #list_stat[1]= count dissertation_role Promoteur active of adviser
-        #list_stat[2]= count dissertation_role coPromoteur active of adviser
-        #list_stat[3]= count dissertation_role coPromoteur active of adviser
+        # list_stat[0]= count dissertation_role active of adviser
+        # list_stat[1]= count dissertation_role Promoteur active of adviser
+        # list_stat[2]= count dissertation_role coPromoteur active of adviser
+        # list_stat[3]= count dissertation_role coPromoteur active of adviser
         # list_stat[4]= count dissertation_role need request active of adviser
         list_stat[0] = 0
         list_stat[1] = 0
@@ -76,15 +76,17 @@ class Adviser(models.Model):
 
         queryset = DissertationRole.objects.all().filter(Q(adviser=self))
         list_stat[0] = queryset.filter(Q(dissertation__active=True)).count()
-        list_stat[1] = queryset.filter(Q(status='PROMOTEUR')).filter(Q(dissertation__active=True))\
-        .exclude(Q(dissertation__status='DRAFT') | Q(dissertation__status='ENDED') | Q(dissertation__status='DEFENDED')).count()
+        list_stat[1] = queryset.filter(Q(status='PROMOTEUR')).filter(Q(dissertation__active=True)) \
+        .exclude(Q(dissertation__status='DRAFT')| Q(dissertation__status='ENDED') |
+                 Q(dissertation__status='DEFENDED')).count()
 
         list_stat[4] = queryset.filter(Q(status='PROMOTEUR')).filter(
-                                       Q(dissertation__status='DIR_SUBMIT')).filter(
-                                       Q(dissertation__active=True)).count()
+            Q(dissertation__status='DIR_SUBMIT')).filter(
+            Q(dissertation__active=True)).count()
 
-        advisers_copro = queryset.filter(Q(status='CO_PROMOTEUR')).filter(Q(dissertation__active=True))\
-            .exclude(Q(dissertation__status='DRAFT') | Q(dissertation__status='ENDED') | Q(dissertation__status='DEFENDED'))
+        advisers_copro = queryset.filter(Q(status='CO_PROMOTEUR')).filter(Q(dissertation__active=True)) \
+            .exclude(
+            Q(dissertation__status='DRAFT') | Q(dissertation__status='ENDED') | Q(dissertation__status='DEFENDED'))
 
         list_stat[2] = advisers_copro.count()
         tab_offer_count_copro = {}
@@ -107,10 +109,10 @@ class Adviser(models.Model):
                     tab_offer_count_read[str(dissertaion_role_read.dissertation.offer_year_start.offer.title)] + 1
             else:
                 tab_offer_count_read[dissertaion_role_read.dissertation.offer_year_start.offer.title] = 1
-        advisers_pro = queryset.filter(Q(status='PROMOTEUR')).filter(Q(dissertation__active=True))\
+        advisers_pro = queryset.filter(Q(status='PROMOTEUR')).filter(Q(dissertation__active=True)) \
             .exclude(Q(dissertation__status='DRAFT') |
-            Q(dissertation__status='ENDED') |
-            Q(dissertation__status='DEFENDED'))
+                     Q(dissertation__status='ENDED') |
+                     Q(dissertation__status='DEFENDED'))
 
         tab_offer_count_pro = {}
         for dissertaion_role_pro in advisers_pro:
