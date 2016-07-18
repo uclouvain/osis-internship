@@ -38,6 +38,9 @@ admin.site.register(application_notice.ApplicationNotice,
 admin.site.register(attribution.Attribution,
                     attribution.AttributionAdmin)
 
+admin.site.register(campus.Campus,
+                    campus.CampusAdmin)
+
 admin.site.register(document_file.DocumentFile,
                     document_file.DocumentFileAdmin)
 
