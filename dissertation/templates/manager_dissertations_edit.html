@@ -40,17 +40,57 @@
     <div class="panel-body">
       <form method="POST" class="post-form">
         {% csrf_token %}
-        {% for field in form %}
-          <div class="row {% if field.errors %}error{% endif %}">
-            <div class="col-md-4" style="text-align: right">
-              <label>{{ field.label }}</label>
+        <div class="row">
+            <div class="col-md-3 col-lg-offset-1" style="text-align:right">
+                <label for="txt_title" {% if form.title.errors %} style="color:red;" {% endif %}>{% trans 'title' %}</label>
             </div>
-            <div class="col-md-5">
-              {{ field }}
+            <div class="col-md-4">
+                <input class="form-control" id="txt_title"  name="title" style="margin:-6px;" value="{{ form.title.value }}">
             </div>
-          </div>
-          <br>
-        {% endfor %}
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-3 col-lg-offset-1" style="text-align:right">
+                <label for="txt_author">{% trans 'author' %}</label>
+            </div>
+            <div class="col-md-4">
+                <select class="form-control" id="txt_author"  name="author" style="margin:-6px;">
+                    <option value={{ form.author }}
+                </select>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-3 col-lg-offset-1" style="text-align:right">
+                <label for="txt_offer_year_start">{% trans 'offer_year_start' %}</label>
+            </div>
+            <div class="col-md-4">
+                <select class="form-control" id="txt_offer_year_start"  name="offer_year_start" style="margin:-6px;">
+                    <option value={{ form.offer_year_start }}
+                </select>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-3 col-lg-offset-1" style="text-align:right">
+                <label for="txt_proposition_dissertation">{% trans 'proposition_dissertation' %}</label>
+            </div>
+            <div class="col-md-4">
+                <select class="form-control" id="txt_proposition_dissertation"  name="proposition_dissertation" style="margin:-6px;">
+                    <option value={{ form.proposition_dissertation }}
+                </select>
+            </div>
+        </div>
+        <br>
+        <div class="row {% if field.errors %}error{% endif %}">
+            <div class="col-md-3 col-lg-offset-1" style="text-align:right">
+                <label for="txt_description">{% trans 'description' %}</label>
+            </div>
+            <div class="col-md-8">
+                <textarea class="form-control" id="txt_description"  name="description" rows="10" style="margin:-6px;">{{ form.description.value }}</textarea>
+            </div>
+        </div>
+        <br>
         <button type="submit" class="save btn btn-default" onclick="return confirm('{% trans 'dissertation_confirmation_message' %}')">Save</button>
       </form>
     </div>
