@@ -262,9 +262,6 @@ msgstr "propmoteur"
 msgid "number_of_dissertation_copro"
 msgstr "copropmoteur"
 
-msgid "number_of_dissertation_pro"
-msgstr "copropmoteur"
-
 msgid "number_of_dissertation_reader"
 msgstr "lecteur"
 
