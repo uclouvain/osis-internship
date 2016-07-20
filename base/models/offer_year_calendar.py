@@ -23,11 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils import timezone
 from django.contrib import admin
 from base.models import offer_year
+import datetime
 
 
 class OfferYearCalendarAdmin(admin.ModelAdmin):
@@ -112,25 +113,28 @@ def find_by_id(offer_year_calendar_id):
     return OfferYearCalendar.objects.get(pk=offer_year_calendar_id)
 
 
-def find_deliberation_date(offer_year, session_number):
-    title = 'Deliberations - exam session ' + str(session_number)
-    queryset = OfferYearCalendar.objects.filter(academic_calendar__title=title)\
-                                        .filter(offer_year=offer_year)\
-                                        .values('start_date')
-    if len(queryset) == 1:
-        return queryset[0].get('start_date')
-    return None
+def find_deliberation_date(session_exam):
+    scores_encodings_end_date = session_exam.offer_year_calendar.end_date
+    # The deliberation date is the end date of the scores encodings +1 day
+    scores_encodings_end_date += datetime.timedelta(days=1)
+    return scores_encodings_end_date
 
 
 def get_min_start_date(academic_calendar_id):
-    return OfferYearCalendar.objects.filter(academic_calendar_id=academic_calendar_id) \
-                                    .filter(customized=True) \
-                                    .filter(start_date__isnull=False)\
-                                    .earliest('start_date')
+    try:
+        return OfferYearCalendar.objects.filter(academic_calendar_id=academic_calendar_id) \
+                                        .filter(customized=True) \
+                                        .filter(start_date__isnull=False)\
+                                        .earliest('start_date')
+    except ObjectDoesNotExist:
+        return None
 
 
 def get_max_end_date(academic_calendar_id):
-    return OfferYearCalendar.objects.filter(academic_calendar_id=academic_calendar_id) \
-                                    .filter(customized=True) \
-                                    .filter(end_date__isnull=False) \
-                                    .latest('end_date')
+    try:
+        return OfferYearCalendar.objects.filter(academic_calendar_id=academic_calendar_id) \
+                                        .filter(customized=True) \
+                                        .filter(end_date__isnull=False) \
+                                        .latest('end_date')
+    except ObjectDoesNotExist:
+        return None
