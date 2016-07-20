@@ -27,12 +27,13 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from base import models as mdl
-from dissertation.models.adviser import Adviser, find_adviser_by_person
+from dissertation.models.adviser import find_adviser_by_person
 from dissertation.models.dissertation import Dissertation
 from dissertation.models.faculty_adviser import find_by_adviser
-from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models.proposition_dissertation import PropositionDissertation, search_proposition_dissertation
-from dissertation.forms import PropositionDissertationForm, ManagerPropositionDissertationForm
+from dissertation.models.proposition_role import PropositionRole
+from dissertation.forms import PropositionDissertationForm, ManagerPropositionDissertationForm,\
+    PropositionRoleForm, ManagerPropositionRoleForm
 from django.contrib.auth.decorators import user_passes_test
 from base.views import layout
 
@@ -75,11 +76,19 @@ def manager_proposition_dissertation_detail(request, pk):
                                             Q(proposition_dissertation=proposition_dissertation)
                                             ).exclude(Q(status='DRAFT')).count()
     percent = count_use * 100 / proposition_dissertation.max_number_student
+    count_proposition_role = PropositionRole.objects.filter(proposition_dissertation=proposition_dissertation).count()
+    if count_proposition_role < 1:
+        pro = PropositionRole(status='PROMOTEUR', adviser=proposition_dissertation.author,
+                              proposition_dissertation=proposition_dissertation)
+        pro.save()
+    proposition_roles = PropositionRole.objects.filter(proposition_dissertation=proposition_dissertation)
     return layout.render(request, 'manager_proposition_dissertation_detail.html',
                          {'proposition_dissertation': proposition_dissertation,
                           'adviser': adviser,
                           'count_use': count_use,
-                          'percent': round(percent, 2)})
+                          'percent': round(percent, 2),
+                          'proposition_roles': proposition_roles,
+                          'count_dissertation_role': count_proposition_role})
 
 
 @login_required
@@ -99,6 +108,48 @@ def manage_proposition_dissertation_edit(request, pk):
                           'types_choices': PropositionDissertation.TYPES_CHOICES,
                           'levels_choices': PropositionDissertation.LEVELS_CHOICES,
                           'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES})
+
+
+@login_required
+@user_passes_test(is_manager)
+def manager_proposition_dissertations_jury_edit(request, pk):
+    proposition_role = get_object_or_404(PropositionRole, pk=pk)
+    if request.method == "POST":
+        form = ManagerPropositionRoleForm(request.POST, instance=proposition_role)
+        if form.is_valid():
+            dissertation = form.save()
+            dissertation.save()
+            return redirect('manager_proposition_dissertation_detail', pk=proposition_role.proposition_dissertation.pk)
+    else:
+        form = ManagerPropositionRoleForm(instance=proposition_role)
+    return layout.render(request, 'manager_proposition_dissertations_jury_edit.html', {'form': form})
+
+
+@login_required
+@user_passes_test(is_manager)
+def manager_proposition_dissertations_jury_new(request, pk):
+    proposition_dissertation = get_object_or_404(PropositionDissertation, pk=pk)
+    count_proposition_role = PropositionRole.objects.filter(proposition_dissertation=proposition_dissertation).count()
+    if count_proposition_role < 5:
+        if request.method == "POST":
+            form = ManagerPropositionRoleForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return redirect('manager_proposition_dissertation_detail', pk=proposition_dissertation.pk)
+        else:
+            form = ManagerPropositionRoleForm(initial={'proposition_dissertation': proposition_dissertation})
+            return layout.render(request, 'manager_proposition_dissertations_jury_edit.html', {'form': form})
+    else:
+        return redirect('manager_proposition_dissertation_detail', pk=proposition_dissertation.pk)
+
+
+@login_required
+@user_passes_test(is_manager)
+def manager_proposition_dissertations_role_delete(request, pk):
+    proposition_role = get_object_or_404(PropositionRole, pk=pk)
+    proposition_dissertation = proposition_role.proposition_dissertation
+    proposition_role.delete()
+    return redirect('manager_proposition_dissertation_detail', pk=proposition_dissertation.pk)
 
 
 @login_required
@@ -153,11 +204,19 @@ def proposition_dissertation_detail(request, pk):
                                             Q(proposition_dissertation=proposition_dissertation)
                                             ).exclude(Q(status='DRAFT')).count()
     percent = count_use * 100 / proposition_dissertation.max_number_student
+    count_proposition_role = PropositionRole.objects.filter(proposition_dissertation=proposition_dissertation).count()
+    if count_proposition_role < 1:
+        pro = PropositionRole(status='PROMOTEUR', adviser=proposition_dissertation.author,
+                              proposition_dissertation=proposition_dissertation)
+        pro.save()
+    proposition_roles = PropositionRole.objects.filter(proposition_dissertation=proposition_dissertation)
     return layout.render(request, 'proposition_dissertation_detail.html',
                          {'proposition_dissertation': proposition_dissertation,
                           'adviser': adviser,
                           'count_use': count_use,
-                          'percent': round(percent, 2)})
+                          'percent': round(percent, 2),
+                          'proposition_roles': proposition_roles,
+                          'count_dissertation_role': count_proposition_role})
 
 
 @login_required
@@ -217,3 +276,42 @@ def proposition_dissertations_search(request):
         Q(visibility=True) & Q(active=True))
     return layout.render(request, "proposition_dissertations_list.html",
                          {'proposition_dissertations': proposition_dissertations})
+
+
+@login_required
+def proposition_dissertations_jury_edit(request, pk):
+    proposition_role = get_object_or_404(PropositionRole, pk=pk)
+    if request.method == "POST":
+        form = ManagerPropositionRoleForm(request.POST, instance=proposition_role)
+        if form.is_valid():
+            dissertation = form.save()
+            dissertation.save()
+            return redirect('proposition_dissertation_detail', pk=proposition_role.proposition_dissertation.pk)
+    else:
+        form = PropositionRoleForm(instance=proposition_role)
+    return layout.render(request, 'proposition_dissertations_jury_edit.html', {'form': form})
+
+
+@login_required
+def proposition_dissertations_jury_new(request, pk):
+    proposition_dissertation = get_object_or_404(PropositionDissertation, pk=pk)
+    count_proposition_role = PropositionRole.objects.filter(proposition_dissertation=proposition_dissertation).count()
+    if count_proposition_role < 5:
+        if request.method == "POST":
+            form = PropositionRoleForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return redirect('proposition_dissertation_detail', pk=proposition_dissertation.pk)
+        else:
+            form = PropositionRoleForm(initial={'proposition_dissertation': proposition_dissertation})
+            return layout.render(request, 'proposition_dissertations_jury_edit.html', {'form': form})
+    else:
+        return redirect('proposition_dissertation_detail', pk=proposition_dissertation.pk)
+
+
+@login_required
+def proposition_dissertations_role_delete(request, pk):
+    proposition_role = get_object_or_404(PropositionRole, pk=pk)
+    proposition_dissertation = proposition_role.proposition_dissertation
+    proposition_role.delete()
+    return redirect('proposition_dissertation_detail', pk=proposition_dissertation.pk)
