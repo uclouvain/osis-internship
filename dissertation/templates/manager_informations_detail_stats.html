@@ -58,7 +58,7 @@
                         </div>
                         <div class="col-md-6">
                             {% if count_advisers_pro_request > 0 %}
-                                <span style="color: red">
+                                <span style="color: red"></span>
                             {% else %}
                                 <span>
                             {% endif %}
@@ -129,139 +129,143 @@
           </div>
       </div>
     </div>
-
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.js"></script>
-<script>
-var ctx_pie_chart_pro = document.getElementById("pie_chart_pro");
-var ctx_pie_chart_copro = document.getElementById("pie_chart_copro");
-var ctx_pie_chart_read = document.getElementById("pie_chart_read");
-
-
-var pie_chart_pro = new Chart(ctx_pie_chart_pro, {
-    type: 'pie',
-    data:
-    {
-        labels: [
-          {% for key,value in tab_offer_count_pro.items%}
-          "{{key}}",
-          {% endfor %}
-        ],
-
-        datasets: [{
-            label: '#',
-            data: [ {% for key,value in tab_offer_count_pro.items%}
-                    {{value}},
-                    {% endfor %}],
-            backgroundColor: [
-                'rgba(5, 99, 132, 30)',
-                'rgba(54, 162, 235, 30)',
-                'rgba(255, 206, 86, 30)',
-                'rgba(75, 192, 192, 30)',
-                'rgba(153, 102, 255, 30)',
-                'rgba(255, 159, 64, 30)',
-                'rgba(255, 119, 74, 30)',
-                'rgba(175, 192, 192, 30)',
-                'rgba(203, 102, 255, 30)',
-                'rgba(195, 199, 164, 30)',
-                'rgba(255, 229, 174, 30)'
-            ],
-            borderColor: [
-
-            ],
-            borderWidth: 0
-        }]
-    },
-    options: {
-        title: {
-            display: true,
-            options: '{% trans 'chart_pie_adviser_promoteur'  %}'
-                }
-              }
-});
-var pie_chart_copro = new Chart(ctx_pie_chart_copro, {
-    type: 'pie',
-    data: {
-        labels: [
-          {% for key,value in tab_offer_count_copro.items%}
-          "{{key}}",
-          {% endfor %}
-        ],
-
-        datasets: [{
-            label: '# ',
-            data: [ {% for key,value in tab_offer_count_copro.items%}
-                    {{value}},
-                    {% endfor %}],
-            backgroundColor: [
-                'rgba(5, 99, 132, 30)',
-                'rgba(54, 162, 235, 30)',
-                'rgba(255, 206, 86, 30)',
-                'rgba(75, 192, 192, 30)',
-                'rgba(153, 102, 255, 30)',
-                'rgba(255, 159, 64, 30)',
-                'rgba(255, 119, 74, 30)',
-                'rgba(175, 192, 192, 30)',
-                'rgba(203, 102, 255, 30)',
-                'rgba(195, 199, 164, 30)',
-                'rgba(255, 229, 174, 30)'
-            ],
-            borderColor: [
-
-            ],
-            borderWidth: 0
-        }]
-    },
-    options: {
-        title: {
-            display: true,
-            options: '{% trans 'chart_pie_adviser_copromoteur'  %}'
-                }
-              }
-
-});
-var pie_chart_read = new Chart(ctx_pie_chart_read, {
-    type: 'pie',
-    data:
-    {
-        labels: [
-          {% for key,value in tab_offer_count_read.items%}
-          "{{key}}",
-          {% endfor %}
-        ],
-
-        datasets: [{
-            label: '#',
-            data: [ {% for key,value in tab_offer_count_read.items%}
-                    {{value}},
-                    {% endfor %}],
-            backgroundColor: [
-                'rgba(5, 99, 132, 30)',
-                'rgba(54, 162, 235, 30)',
-                'rgba(255, 206, 86, 30)',
-                'rgba(75, 192, 192, 30)',
-                'rgba(153, 102, 255, 30)',
-                'rgba(255, 159, 64, 30)',
-                'rgba(255, 119, 74, 30)',
-                'rgba(175, 192, 192, 30)',
-                'rgba(203, 102, 255, 30)',
-                'rgba(195, 199, 164, 30)',
-                'rgba(255, 229, 174, 30)'
-            ],
-            borderColor: [
-
-            ],
-            borderWidth: 0
-        }]
-    },
-    options: {
-        title: {
-            display: true,
-            options: '{% trans 'chart_pie_adviser_read'  %}'
-                }
-              }
-});
+{% endblock %}
+    {% block script %}
+    <script src="/static/js/chart.min.js"></script>
+    <script>
+    $(function(){
+        var ctx_pie_chart_pro = document.getElementById("pie_chart_pro");
+        var ctx_pie_chart_copro = document.getElementById("pie_chart_copro");
+        var ctx_pie_chart_read = document.getElementById("pie_chart_read");
 
 
+        var pie_chart_pro = new Chart(ctx_pie_chart_pro, {
+            type: 'pie',
+            data:
+            {
+                labels: [
+                  {% for key,value in tab_offer_count_pro.items%}
+                  "{{key}}",
+                  {% endfor %}
+                ],
+
+                datasets: [{
+                    label: '#',
+                    data: [ {% for key,value in tab_offer_count_pro.items%}
+                            {{value}},
+                            {% endfor %}],
+                    backgroundColor: [
+                        'rgba(5, 99, 132, 30)',
+                        'rgba(54, 162, 235, 30)',
+                        'rgba(255, 206, 86, 30)',
+                        'rgba(75, 192, 192, 30)',
+                        'rgba(153, 102, 255, 30)',
+                        'rgba(255, 159, 64, 30)',
+                        'rgba(255, 119, 74, 30)',
+                        'rgba(175, 192, 192, 30)',
+                        'rgba(203, 102, 255, 30)',
+                        'rgba(195, 199, 164, 30)',
+                        'rgba(255, 229, 174, 30)'
+                    ],
+                    borderColor: [
+
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    options: '{% trans 'chart_pie_adviser_promoteur'  %}'
+                        }
+                      }
+        });
+        var pie_chart_copro = new Chart(ctx_pie_chart_copro, {
+            type: 'pie',
+            data: {
+                labels: [
+                  {% for key,value in tab_offer_count_copro.items%}
+                  "{{key}}",
+                  {% endfor %}
+                ],
+
+                datasets: [{
+                    label: '# ',
+                    data: [ {% for key,value in tab_offer_count_copro.items%}
+                            {{value}},
+                            {% endfor %}],
+                    backgroundColor: [
+                        'rgba(5, 99, 132, 30)',
+                        'rgba(54, 162, 235, 30)',
+                        'rgba(255, 206, 86, 30)',
+                        'rgba(75, 192, 192, 30)',
+                        'rgba(153, 102, 255, 30)',
+                        'rgba(255, 159, 64, 30)',
+                        'rgba(255, 119, 74, 30)',
+                        'rgba(175, 192, 192, 30)',
+                        'rgba(203, 102, 255, 30)',
+                        'rgba(195, 199, 164, 30)',
+                        'rgba(255, 229, 174, 30)'
+                    ],
+                    borderColor: [
+
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    options: '{% trans 'chart_pie_adviser_copromoteur'  %}'
+                        }
+                      }
+
+        });
+        var pie_chart_read = new Chart(ctx_pie_chart_read, {
+            type: 'pie',
+            data:
+            {
+                labels: [
+                  {% for key,value in tab_offer_count_read.items%}
+                  "{{key}}",
+                  {% endfor %}
+                ],
+
+                datasets: [{
+                    label: '#',
+                    data: [ {% for key,value in tab_offer_count_read.items%}
+                            {{value}},
+                            {% endfor %}],
+                    backgroundColor: [
+                        'rgba(5, 99, 132, 30)',
+                        'rgba(54, 162, 235, 30)',
+                        'rgba(255, 206, 86, 30)',
+                        'rgba(75, 192, 192, 30)',
+                        'rgba(153, 102, 255, 30)',
+                        'rgba(255, 159, 64, 30)',
+                        'rgba(255, 119, 74, 30)',
+                        'rgba(175, 192, 192, 30)',
+                        'rgba(203, 102, 255, 30)',
+                        'rgba(195, 199, 164, 30)',
+                        'rgba(255, 229, 174, 30)'
+                    ],
+                    borderColor: [
+
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    options: '{% trans 'chart_pie_adviser_read'  %}'
+                        }
+                      }
+        });
+    });
 
 </script>
+
 {% endblock %}
+
+
