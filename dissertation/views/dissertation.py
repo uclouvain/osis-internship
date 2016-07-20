@@ -28,8 +28,8 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db import IntegrityError
 from django.db.models import Q
 from base import models as mdl
-from base.models.offer_enrollment import OfferEnrollment
 from base.models.offer_year import OfferYear
+from base.models.student import Student
 from base.views import layout
 from dissertation.models.adviser import Adviser, find_adviser_by_person
 from dissertation.models.dissertation import Dissertation, search_dissertation
@@ -224,7 +224,7 @@ def manager_dissertations_print(request):
 def manager_dissertations_new(request):
     person = mdl.person.find_by_user(request.user)
     adviser = find_adviser_by_person(person)
-    faculty_adviser = find_by_adviser(adviser)
+    offer = find_by_adviser(adviser)
     if request.method == "POST":
         form = ManagerDissertationForm(request.POST)
         if form.is_valid():
@@ -234,22 +234,22 @@ def manager_dissertations_new(request):
             form.fields["proposition_dissertation"].queryset = \
                 PropositionDissertation.objects.filter(visibility=True,
                                                        active=True,
-                                                       offer_proposition__offer=faculty_adviser)
+                                                       offer_proposition__offer=offer)
             form.fields["author"].queryset = \
-                OfferEnrollment.objects.filter(offer_year__offer=faculty_adviser)
+                Student.objects.filter(offerenrollment__offer_year__offer=offer)
             form.fields["offer_year_start"].queryset = \
-                OfferYear.objects.filter(offer=faculty_adviser)
+                OfferYear.objects.filter(offer=offer)
 
     else:
         form = ManagerDissertationForm(initial={'active': True})
         form.fields["proposition_dissertation"].queryset = \
             PropositionDissertation.objects.filter(visibility=True,
                                                    active=True,
-                                                   offer_proposition__offer=faculty_adviser)
+                                                   offer_proposition__offer=offer)
         form.fields["author"].queryset = \
-            OfferEnrollment.objects.filter(offer_year__offer=faculty_adviser)
+            Student.objects.filter(offerenrollment__offer_year__offer=offer)
         form.fields["offer_year_start"].queryset = \
-            OfferYear.objects.filter(offer=faculty_adviser)
+            OfferYear.objects.filter(offer=offer)
     return layout.render(request, 'manager_dissertations_edit.html', {'form': form})
 
 
