@@ -29,7 +29,7 @@
 {% block style %}
 <link rel="stylesheet" href="{% static 'css/custom.css' %}">
 {% endblock %}
-    
+
 {% block breadcrumb %}
 <li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'institution' %}</a></li>
 <li><a href="{% url 'mandates' %}" id="lnk_mandates">{% trans 'mandates' %}</a></li>
@@ -43,93 +43,89 @@
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
-	<h3>{{ mandate.assistant.person }}</h3>	
-	<form method="post" action=" {% url 'mandate_save' mandate.id %} ">
-	{% csrf_token %}
-	<div class="form-group">
-	<div class="row">
-	<div class="col-md-4">
-	<label for="txt_email">{% trans 'email' %} : </label>
-	{{ mandate.assistant.person.email }}
-	</div>
-	<div class="col-md-4">
-	<label for="txt_gender">{% trans 'gender' %} : </label>
-	{{ mandate.assistant.person.gender }}
-	</div>
-	<div class="col-md-4">
-	<label for="txt_birth_date">{% trans 'birth_date' %} : </label>
-	{{ mandate.assistant.person.birth_date }}
-	</div></div>
-	</div>
-	<div class="form-group">
-	<div class="row">
-	<div class="col-md-4">
-	<label for="txt_assistant_type">{% trans 'assistant_type' %} : </label>
-	{{ form.assistant_type }}<font class="error">{{ form.assistant_type.errors }}</font>
-	</div>
-	<div class="col-md-4">
-	<label for="txt_matricule_number">{% trans 'matricule_number' %} : </label>
-	{{ form.sap_id }}
-	</div>
-	</div></div>
-	
-	
-	
-	<div class="form-group">
-	<div class="row">
-	<div class="col-md-4">
-	<div class="controls">
-	<label for="txt_renewal_type">{% trans 'renewal_type' %}</label>
-		
-		{{ form.renewal_type }}<font class="error">{{ form.renewal_type.errors }}</font></div>
-	
-	</div>
-	<div class="col-md-4">
-	<label for="txt_contract_duration">{% trans 'contract_duration' %} : </label>
-	{{ form.contract_duration }}
-	</div>
-	<div class="col-md-4">
-	<label for="txt_contract_duration_fte">{% trans 'contract_duration_fte' %} : </label>
-	{{ form.contract_duration_fte }}
-	</div></div></div>
-	{{ formset.management_form }}
-	<div class="form-group">
-    <div class="row">
-    <div class="col-md-12"><label for="txt_structures">{% trans 'structures' %}</label>
-    {% for form in formset %}
-    	{% for field in form %}
-    		{% if field.name == "DELETE" %}
-				<div class="controls">{{ field }} {% trans 'delete' %}<font class="error">{{ field.errors }}</font></div>
-			{% else %}
-				<div class="controls">{{ field }}<font class="error">{{ field.errors }}</font></div>
-			{% endif %}
-		{% endfor %}
-		
-    {% endfor %}
-	</div></div></div>
-	<div class="form-group">
-	<div class="row">
-	<div class="col-md-4">
-		<label for="txt_comment">{% trans 'comment' %}</label>
-    	<div class="controls">{{ form.comment }}<font class="error">{{ form.comment.errors }}</font></div>
-	</div>
-	<div class="col-md-4">
-		<label for="txt_absences">{% trans 'absences' %}</label>
-		<div class="controls">{{ form.absences }}<font class="error">{{ form.absences.errors }}</font></div>
-	</div>
-	<div class="col-md-4">
-		<label for="txt_other_status">{% trans 'other_status' %}</label>
-		<div class="controls">{{ form.other_status }}<font class="error">{{ form.other_status.errors }}</font></div>
-	</div>
-	</div>
-	</div>
-	
-	<br>
-	<button type="submit" class="btn btn-primary" title="{% trans 'save'%}" id="bt_mandate_save"><span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}</button>
-		<a class="btn btn-default" id="lnk_mandate_cancel" href="{% url 'mandates_list' %}">
-		<span class="glyphicon glyphicon-cancel" aria-hidden="true"></span> {% trans 'cancel'%}</a>
-	</form>
-	</div>
+        <h3>{{ mandate.assistant.person }}</h3>
+        <form method="post" action=" {% url 'mandate_save' mandate.id %} ">
+            {% csrf_token %}
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="txt_email">{% trans 'email' %} : </label>
+                        {{ mandate.assistant.person.email }}
+                    </div>
+                    <div class="col-md-8">
+                        <label for="txt_gender">{% trans 'gender' %} : </label>
+                        {{ mandate.assistant.person.gender }}
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="txt_assistant_type">{% trans 'assistant_type' %} : </label>
+                        {{ form.assistant_type }}<font class="error">{{ form.assistant_type.errors }}</font>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="txt_matricule_number">{% trans 'matricule_number' %} : </label>
+                        {{ form.sap_id }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="controls">
+                            <label for="txt_renewal_type">{% trans 'renewal_type' %}</label>
+
+                            {{ form.renewal_type }}<font class="error">{{ form.renewal_type.errors }}</font></div>
+
+                    </div>
+                    <div class="col-md-4">
+                        <label for="txt_contract_duration">{% trans 'contract_duration' %} : </label>
+                        {{ form.contract_duration }}
+                    </div>
+                    <div class="col-md-4">
+                        <label for="txt_contract_duration_fte">{% trans 'contract_duration_fte' %} : </label>
+                        {{ form.contract_duration_fte }}
+                    </div></div></div>
+            {{ formset.management_form }}
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-12"><label for="txt_structures">{% trans 'structures' %}</label>
+                        {% for form in formset %}
+                        {% for field in form %}
+                        {% if field.name == "DELETE" %}
+                        <div class="controls">{{ field }} {% trans 'delete' %}<font class="error">{{ field.errors }}</font></div>
+                        {% else %}
+                        <div class="controls">{{ field }}<font class="error">{{ field.errors }}</font></div>
+                        {% endif %}
+                        {% endfor %}
+
+                        {% endfor %}
+                    </div></div></div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="txt_comment">{% trans 'comment' %}</label>
+                        <div class="controls">{{ form.comment }}<font class="error">{{ form.comment.errors }}</font></div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="txt_absences">{% trans 'absences' %}</label>
+                        <div class="controls">{{ form.absences }}<font class="error">{{ form.absences.errors }}</font></div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="txt_other_status">{% trans 'other_status' %}</label>
+                        <div class="controls">{{ form.other_status }}<font class="error">{{ form.other_status.errors }}</font></div>
+                    </div>
+                </div>
+            </div>
+
+            <br>
+            <button type="submit" class="btn btn-primary" title="{% trans 'save'%}" id="bt_mandate_save"><span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}</button>
+            <a class="btn btn-default" id="lnk_mandate_cancel" href="{% url 'mandates_list' %}">
+                <span class="glyphicon glyphicon-cancel" aria-hidden="true"></span> {% trans 'cancel'%}</a>
+        </form>
+    </div>
 </div>
 {% endblock %}
 {% block script %}

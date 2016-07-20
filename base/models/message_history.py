@@ -24,8 +24,32 @@
 #
 ##############################################################################
 from django.db import models
-from django.db.models import Q
 from django.utils import timezone
+from django.contrib import admin
+from django.utils.safestring import mark_safe
+
+
+class MessageHistoryAdmin(admin.ModelAdmin):
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def get_actions(self, request):
+        actions = super(MessageHistoryAdmin, self).get_actions(request)
+        if 'delete_selected' in actions:
+            del actions['delete_selected']
+        return actions
+
+    date_hierarchy = 'created'
+    list_display = ('person', 'reference', 'subject', 'sent', 'created')
+    fieldsets = ((None, {'fields': ('person', 'reference',
+                                    'subject', ('sent', 'created'), 'content_html_safe', 'content_txt')}),)
+    readonly_fields = ('person', 'reference', 'subject', 'sent', 'created', 'content_html_safe', 'content_txt')
+    ordering = ['-created']
+    search_fields = ['person__first_name', 'person__last_name', 'person__email', 'reference', 'subject']
 
 
 class MessageHistory(models.Model):
@@ -36,6 +60,8 @@ class MessageHistory(models.Model):
     created = models.DateTimeField(editable=False)
     sent = models.DateTimeField(null=True)
     reference = models.CharField(max_length=100, null=True, db_index=True)
+    show_to_user = models.BooleanField(default=True)
+    read_by_user = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if not self.id:
@@ -45,28 +71,47 @@ class MessageHistory(models.Model):
     def __str__(self):
         return self.subject
 
+    def content_html_safe(self):
+        return mark_safe(self.content_html)
+
 
 def find_by_id(message_history_id):
     message_history = MessageHistory.objects.get(id=message_history_id)
     return message_history
 
 
-def search(limit=100, **kwargs):
-    if not kwargs:
-        messages_history = MessageHistory.objects.all().order_by('created')[:limit]
-    else:
-        queryset = MessageHistory.objects
-        if kwargs.get('reference'):
-            queryset = queryset.filter(reference__icontains=kwargs.get('reference'))
-        if kwargs.get('subject'):
-            queryset = queryset.filter(subject__icontains=kwargs.get('subject'))
-        if kwargs.get('recipient'):
-            queryset = queryset.filter(Q(person__email__icontains=kwargs.get('recipient')) |
-                                       Q(person__last_name__icontains=kwargs.get('recipient')) |
-                                       Q(person__user__username__icontains=kwargs.get('recipient')))
-        if kwargs.get('not_sent'):
-            queryset = queryset.filter(sent__isnull=True)
+def find_my_messages(person):
+    """
+    Get the messages for a user to show in my osis.
+    :param person: The related person
+    :return: The list of messages for this person
+    """
+    return MessageHistory.objects.filter(person=person).filter(show_to_user=True).order_by('sent')
 
-        queryset = queryset.order_by('created')
-        messages_history = queryset[:limit]
-    return messages_history
+
+def delete_my_messages(messages_ids):
+    """
+    Delete messages from my osis (but not from history)
+    :param messages_ids: The ids list of messages to delete from my osis
+    """
+    MessageHistory.objects.filter(id__in=messages_ids).update(show_to_user=False)
+
+
+def read_my_message(message_id):
+    """
+    Get a message from message history and set it as read in my osis
+    :param message_id: The id of the message
+    :return : The message
+    """
+    message = MessageHistory.objects.get(id=message_id)
+    message.read_by_user = True
+    message.save()
+    return message
+
+
+def mark_as_read(messages_ids):
+    """
+    Mark a list of messages as read in my osis
+    :param messages_ids: The ids list of messages
+    """
+    MessageHistory.objects.filter(id__in=messages_ids).update(read_by_user=True)

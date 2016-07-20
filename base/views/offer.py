@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.contrib.auth.decorators import login_required, permission_required
 
 from django.http import HttpResponse
 from base import models as mdl
@@ -38,6 +39,8 @@ from django.contrib import messages
 from django.shortcuts import get_object_or_404
 
 
+@login_required
+@permission_required('base.can_access_offer', raise_exception=True)
 def offers(request):
     academic_yr = None
     academic_years = mdl.academic_year.find_academic_years()
@@ -51,6 +54,8 @@ def offers(request):
                                                   'init': "1"})
 
 
+@login_required
+@permission_required('base.can_access_offer', raise_exception=True)
 def offers_search(request):
     entity = request.GET['entity_acronym']
 
@@ -71,6 +76,8 @@ def offers_search(request):
                                                   'init': "0"})
 
 
+@login_required
+@permission_required('base.can_access_offer', raise_exception=True)
 def offer_read(request, offer_year_id):
     offer_yr = mdl.offer_year.find_by_id(offer_year_id)
     offer_yr_events = mdl.offer_year_calendar.find_offer_year_calendar(offer_yr)
@@ -86,7 +93,9 @@ def offer_read(request, offer_year_id):
                                                  'countries': countries,
                                                  'tab': 0})
 
-
+@login_required
+@permission_required('base.can_access_offer', raise_exception=True)
+@permission_required('base.can_score_encoding', raise_exception=True)
 def score_encoding(request, offer_year_id):
     if request.method == 'POST':
         offer_yr = mdl.offer_year.find_by_id(offer_year_id)
@@ -142,41 +151,6 @@ def offer_question_save(request, question_id=None):
 
     question = admission.question.find_by_id(question_id)
     question_form = OfferQuestionForm(data=request.POST, instance=question)
-
-    # if id:
-    #     offer_question = admission.question.find_by_id(id)
-    # else:
-    #     offer_question = admission.question.Question()
-    # form_id = request.POST['form']
-    #
-    # if form_id:
-    #     localform = get_object_or_404(admission.form.Form, pk=form_id)
-    #     offer_question.form = localform
-    # else:
-    #     offer_question.form = None
-    #
-    # if request.POST['label']:
-    #     offer_question.label = request.POST['label']
-    # else:
-    #     offer_question.label = None
-    #
-    # if request.POST['description']:
-    #     offer_question.description = request.POST['description']
-    # else:
-    #     offer_question.description = None
-    #
-    # if request.POST['type']:
-    #     offer_question.type = request.POST['type']
-    # else:
-    #     offer_question.type = None
-    #
-    # if request.POST['order']:
-    #     offer_question.order = request.POST['order']
-    # else:
-    #     offer_question.order = None
-
-    #quest_required = request.POST.get('quest_required', False)
-    #question_form.required = quest_required
 
     if question_form.is_valid():
         instance = question_form.save()
@@ -274,6 +248,8 @@ def offer_form_edit(request, id):
                                                            'offer_form': offer_form})
 
 
+@login_required
+@permission_required('base.can_access_offer', raise_exception=True)
 def offer_year_calendar_read(request, id):
     offer_year_calendar = mdl.offer_year_calendar.find_by_id(id)
     is_programme_manager = mdl.program_manager.is_program_manager(request.user, offer_year=offer_year_calendar.offer_year)
@@ -281,6 +257,8 @@ def offer_year_calendar_read(request, id):
                                                                'is_programme_manager': is_programme_manager})
 
 
+@login_required
+@permission_required('base.can_access_offer', raise_exception=True)
 def offer_year_calendar_save(request, id):
     form = OfferYearCalendarForm(data=request.POST)
 
@@ -330,7 +308,8 @@ def offer_year_calendar_save(request, id):
         return layout.render(request, "offer_year_calendar_form.html", {'offer_year_calendar': offer_year_calendar,
                                                                         'form': form})
 
-
+@login_required
+@permission_required('base.can_access_offer', raise_exception=True)
 def offer_year_calendar_edit(request, id):
     offer_year_calendar = mdl.offer_year_calendar.find_by_id(id)
     return layout.render(request, "offer_year_calendar_form.html", {'offer_year_calendar': offer_year_calendar})

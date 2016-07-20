@@ -32,10 +32,10 @@ from django.conf import settings
 
 
 class PersonAdmin(admin.ModelAdmin):
-    list_display = ('first_name' , 'middle_name', 'last_name', 'username', 'email', 'gender', 'birth_date', 'global_id',
+    list_display = ('first_name' , 'middle_name', 'last_name', 'username', 'email', 'gender', 'global_id',
                     'national_id', 'changed')
     search_fields = ['first_name', 'middle_name', 'last_name', 'user__username', 'email']
-    fieldsets = ((None, {'fields': ('user', 'global_id', 'national_id', 'gender', 'birth_date', 'first_name',
+    fieldsets = ((None, {'fields': ('user', 'global_id', 'national_id', 'gender', 'first_name',
                                     'middle_name', 'last_name', 'email', 'phone', 'phone_mobile', 'language')}),)
     raw_id_fields = ('user',)
 
@@ -59,7 +59,6 @@ class Person(models.Model):
     phone = models.CharField(max_length=30, blank=True, null=True)
     phone_mobile = models.CharField(max_length=30, blank=True, null=True)
     language = models.CharField(max_length=30, null=True, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE)
-    birth_date = models.DateField(blank=True, null=True)
 
     def username(self):
         if self.user is None:
@@ -78,6 +77,12 @@ class Person(models.Model):
             last_name = self.last_name + ","
 
         return u"%s %s %s" % (last_name.upper(), first_name, middle_name)
+
+    class Meta:
+        permissions = (
+            ("is_administrator", "Is administrator"),
+            ("is_institution_administrator", "Is institution administrator "),
+        )
 
 
 def find_by_id(person_id):

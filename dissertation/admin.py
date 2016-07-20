@@ -23,6 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from dissertation.models import *
 from django.contrib import admin
 
-# Register your models here.
+admin.site.register(adviser.Adviser, adviser.AdviserAdmin)
+admin.site.register(dissertation.Dissertation, dissertation.DissertationAdmin)
+admin.site.register(dissertation_group.DissertationGroup)
+admin.site.register(dissertation_role.DissertationRole)
+admin.site.register(dissertation_update.DissertationUpdate)
+admin.site.register(faculty_adviser.FacultyAdviser)
+admin.site.register(offer_proposition.OfferProposition)
+admin.site.register(proposition_dissertation.PropositionDissertation, proposition_dissertation.PropositionDissertationAdmin)
+admin.site.register(proposition_role.PropositionRole)

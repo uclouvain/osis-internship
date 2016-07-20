@@ -1,0 +1,137 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+ * OSIS stands for Open Student Information System. It's an application
+ * designed to manage the core business of higher education institutions,
+ * such as universities, faculties, institutes and professional schools.
+ * The core business involves the administration of students, teachers,
+ * courses, programs and so on.
+ *
+ * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * A copy of this license - GNU General Public License - is available
+ * at the root of the source code of this program.  If not,
+ * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block breadcrumb %}
+  <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
+  <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'dissertations' %}</a></li>
+  <li><a href="{% url 'manager_proposition_dissertations' %}" id="lnk_propositions">{% trans 'subjects' %}</a></li>
+  <li class="active">{% trans 'new_or_edit_subject' %}</li>
+{% endblock %}
+{% block content %}
+  <div class="page-header">
+    <h2>{% trans 'new_or_edit_subject' %}</h2>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-body">
+       <form method="POST" class="post-form">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-1 col-lg-offset-2" style="text-align:right">
+                <label for="txt_type">{% trans 'author' %}</label>
+            </div>
+            <div class="col-md-3">
+                <select class="form-control" id="txt_author"  name="author" style="margin:-6px;">
+                    <option value={{ form.author }}
+                </select>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-2 col-lg-offset-1" style="text-align:right">
+                <label for="txt_title" {% if form.title.errors %} style="color:red;" {% endif %}>{% trans 'title' %}</label>
+            </div>
+            <div class="col-md-4">
+                <input class="form-control" id="txt_title"  name="title"
+                    style="margin:-6px;" value="{{ form.title.value }}">
+            </div>
+            <div class="col-md-1 col-lg-offset-2" style="text-align:right">
+                <label for="txt_visibility">{% trans 'visibility' %}</label>
+            </div>
+            <div class="col-md-1">
+                <input class="form-control" id="txt_visibility"  name="visibility"
+                    style="margin:-6px;" type="checkbox" {% if form.visibility.value %} checked {% endif %}>
+            </div>
+        </div>
+        <br>
+        <div class="row {% if field.errors %}error{% endif %}">
+            <div class="col-md-2 col-lg-offset-1" style="text-align:right">
+                <label for="txt_description">{% trans 'description' %}</label>
+            </div>
+            <div class="col-md-8">
+                <textarea class="form-control" id="txt_description"  name="description" rows="10" style="margin:-6px;">{{ form.description.value }}</textarea>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-1 col-lg-offset-2" style="text-align:right">
+                <label for="txt_type">{% trans 'type' %}</label>
+            </div>
+            <div class="col-md-3">
+                <select class="form-control" id="txt_type"  name="type" style="margin:-6px;">
+                    {% for type in types_choices %}
+                        <option value="{{ type.0 }}" {% if form.type.value == type.0 %}selected{% endif %}>{{ type.1}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-1" style="text-align:right">
+                <label for="txt_level">{% trans 'level' %}</label>
+            </div>
+            <div class="col-md-3">
+                <select class="form-control" id="txt_level"  name="level" style="margin:-6px;">
+                    {% for level in levels_choices %}
+                        <option value="{{ level.0 }}" {% if form.level.value == level.0 %}selected{% endif %}>{{ level.1}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-2 col-lg-offset-1" style="text-align:right">
+                <label for="txt_collaboration">{% trans 'collaboration' %}</label>
+            </div>
+            <div class="col-md-3">
+                <select class="form-control" id="txt_collaboration"  name="collaboration" style="margin:-6px;">
+                    {% for collaboration in collaborations_choices %}
+                        <option value="{{ collaboration.0 }}" {% if form.collaboration.value == collaboration.0 %}selected{% endif %}>{{ collaboration.1}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3" style="text-align:right">
+                <label for="txt_max_students_number" {% if form.max_number_student.errors %} style="color:red;" {% endif %}>{% trans 'max_students_number' %}</label>
+            </div>
+            <div class="col-md-1">
+                <input class="form-control" id="txt_max_number_student"  name="max_number_student"
+                    style="margin:-6px;text-align:center;" value="{{ form.max_number_student.value }}">
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-7 col-lg-offset-3">
+                {% for checkbox in form.offer_proposition %}
+                    <div class="col-md-2">
+                        {{ checkbox.tag }}
+                        <label for="txt_visibility" {% if form.offer_proposition.errors %} style="color:red;" {% endif %}>{{ checkbox.choice_label }}</label>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <button type="submit" class="save btn btn-default" onclick="return confirm('{% trans 'proposition_dissertation_confirmation_message' %}')">Save</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

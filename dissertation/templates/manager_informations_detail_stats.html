@@ -1,0 +1,181 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+ * OSIS stands for Open Student Information System. It's an application
+ * designed to manage the core business of higher education institutions,
+ * such as universities, faculties, institutes and professional schools.
+ * The core business involves the administration of students, teachers,
+ * courses, programs and so on.
+ *
+ * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * A copy of this license - GNU General Public License - is available
+ * at the root of the source code of this program.  If not,
+ * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block breadcrumb %}
+  <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
+  <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'dissertations' %}</a></li>
+  <li><a href="{% url 'manager_informations' %}" id="lnk_teachers">{% trans 'teachers' %}</a></li>
+  <li class="active">{{ adviser.person.last_name }}, {{ adviser.person.first_name }}</li>
+{% endblock %}
+
+{% block content %}
+
+  <div class="page-header">
+    <h2>{{ adviser.person.last_name }}, {{ adviser.person.first_name }}</h2>
+  </div>
+  <ul class="nav nav-tabs">
+    <li><a href="{% url 'manager_informations_detail' pk=adviser.pk %}">{% trans 'adviser_profile' %}</a></li>
+    <li><a href="{% url 'manager_informations_detail_list' pk=adviser.pk %}">{% trans 'adviser_dissertations' %}</a></li>
+    <li class="active"><a href="#">{% trans 'adviser_stats' %}</a></li>
+  </ul>
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div class="row">
+          <div class="col-md-12">
+              <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h3 class="panel-title">{% trans 'stats' %}</h3>
+                  </div>
+                  <div class="panel-body">
+                      <div class="row">
+                        <div class="col-md-6" style="text-align: right">
+                            <label>{% trans 'how_many_dissertation_need_answer' %}</label>
+                        </div>
+                        <div class="col-md-6">
+                            {% if count_advisers_pro_request > 0 %}
+                                <span style="color: red">
+                            {% else %}
+                                <span>
+                            {% endif %}
+                            {{ count_advisers_pro_request }}
+                                </span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6" style="text-align: right">
+                            <label>{% trans 'how_many_dissertation_pro' %}</label>
+                        </div>
+                        <div class="col-md-6">
+                            {{ count_advisers_pro }}
+                            {% for key,value in tab_offer_count.items %}
+                                <br>
+                                {% trans 'in_this_offer' %}{{ key }} : {{ value }}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6" style="text-align: right">
+                            <label>{% trans 'how_many_dissertation_copro' %}</label>
+                        </div>
+                        <div class="col-md-6">
+                            {{ count_advisers_copro }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6" style="text-align: right">
+                            <label>{% trans 'how_many_dissertation_reader' %}</label>
+                        </div>
+                        <div class="col-md-6">
+                            {{ count_advisers_reader }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                          <div id="chart_div"></div>
+                        </div>
+                        <div class="col-md-4">
+                          <div id="chart_div2"></div>
+                        </div>
+                        <div class="col-md-4">
+                          <div id="chart_div3"></div>
+                        </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!--Load the AJAX API-->
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+
+      // Load the Visualization API and the corechart package.
+      google.charts.load('current', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+
+      // Create the data table.
+      var data = new google.visualization.DataTable();
+      data.addColumn('string', 'Topping');
+      data.addColumn('number', 'Slices');
+      data.addRows([
+        {% for key,value in tab_offer_count_pro.items%}
+        ['{{key}}',{{value}}],
+        {% endfor %}
+      ]);
+
+      // Create the data table.
+      var data2 = new google.visualization.DataTable();
+      data2.addColumn('string', 'Topping');
+      data2.addColumn('number', 'Slices');
+      data2.addRows([
+        {% for key,value in tab_offer_count_copro.items%}
+        ['{{key}}',{{value}}],
+        {% endfor %}
+      ]);
+
+      var data3 = new google.visualization.DataTable();
+      data3.addColumn('string', 'Topping');
+      data3.addColumn('number', 'Slices');
+      data3.addRows([
+        {% for key,value in tab_offer_count_read.items%}
+        ['{{key}}',{{value}}],
+        {% endfor %}
+      ]);
+
+      // Set chart options
+      var options = {'title':'{% trans 'title_chart_pro' %}: {{ count_advisers_pro }}',
+                     'width':300,
+                     'height':250};
+      // Set chart options
+      var options2 = {'title':'{% trans 'title_chart_copro' %}: {{ count_advisers_copro }}',
+                     'width':300,
+                     'height':250};
+      // Set chart options
+      var options3 = {'title':'{% trans 'title_chart_read' %}: {{ count_advisers_reader }}',
+                     'width':300,
+                     'height':250};
+
+      // Instantiate and draw our chart, passing in some options.
+      var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+      chart.draw(data, options);
+      var chart2 = new google.visualization.PieChart(document.getElementById('chart_div2'));
+      chart2.draw(data2, options2);
+      var chart3 = new google.visualization.PieChart(document.getElementById('chart_div3'));
+      chart3.draw(data3, options3);
+
+    }
+
+    </script>
+{% endblock %}

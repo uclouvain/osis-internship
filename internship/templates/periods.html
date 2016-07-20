@@ -48,11 +48,19 @@
               </tr>
             </thead>
             <tbody>
+              {%for period in periods%}
               <tr>
                   <td>
-
+                    {{period.name}}
+                  </td>
+                  <td>
+                    {{period.date_start}}
+                  </td>
+                  <td>
+                    {{period.date_end}}
                   </td>
               </tr>
+              {%endfor%}
             </tbody>
         </table>
       </div>
