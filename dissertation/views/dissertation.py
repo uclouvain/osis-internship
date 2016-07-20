@@ -28,8 +28,8 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db import IntegrityError
 from django.db.models import Q
 from base import models as mdl
-from base.models.offer_enrollment import OfferEnrollment
 from base.models.offer_year import OfferYear
+from base.models.student import Student
 from base.views import layout
 from dissertation.models.adviser import Adviser, find_adviser_by_person
 from dissertation.models.dissertation import Dissertation, search_dissertation
@@ -236,7 +236,7 @@ def manager_dissertations_new(request):
                                                        active=True,
                                                        offer_proposition__offer=faculty_adviser)
             form.fields["author"].queryset = \
-                OfferEnrollment.objects.filter(offer_year__offer=faculty_adviser)
+                Student.objects.filter(offerenrollment__offer_year__offer=faculty_adviser)
             form.fields["offer_year_start"].queryset = \
                 OfferYear.objects.filter(offer=faculty_adviser)
 
@@ -247,7 +247,7 @@ def manager_dissertations_new(request):
                                                    active=True,
                                                    offer_proposition__offer=faculty_adviser)
         form.fields["author"].queryset = \
-            OfferEnrollment.objects.filter(offer_year__offer=faculty_adviser)
+            Student.objects.filter(offerenrollment__offer_year__offer=faculty_adviser)
         form.fields["offer_year_start"].queryset = \
             OfferYear.objects.filter(offer=faculty_adviser)
     return layout.render(request, 'manager_dissertations_edit.html', {'form': form})
