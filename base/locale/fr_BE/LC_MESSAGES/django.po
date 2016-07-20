@@ -1205,3 +1205,27 @@ msgstr "Questions"
 
 msgid "value"
 msgstr "Valeur"
+
+msgid "short_input_text"
+msgstr "Short input text"
+
+msgid "long_input_text"
+msgstr "Long input text"
+
+msgid "radio_button"
+msgstr "Radio button"
+
+msgid "checkbox"
+msgstr "Checkbox"
+
+msgid "upload_button"
+msgstr "Upload button"
+
+msgid "download_link"
+msgstr "Download link"
+
+msgid "dropdown_list"
+msgstr "Dropdown list"
+
+msgid "http_link"
+msgstr "HTTP link"

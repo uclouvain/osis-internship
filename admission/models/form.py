@@ -25,6 +25,7 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class FormAdmin(admin.ModelAdmin):
@@ -47,4 +48,8 @@ def find_by_offer_year(offer_year):
 
 
 def find_by_id(form_id):
-    return Form.objects.get(pk=form_id)
+    try:
+        form = Form.objects.get(pk=form_id)
+        return form
+    except ObjectDoesNotExist:
+        return None

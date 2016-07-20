@@ -115,7 +115,7 @@ urlpatterns = [
     url(r'^offer_question/([0-9]+)/$', offer.offer_question_read, name='offer_question_read'),
     url(r'^offer_question/(?P<form_id>[0-9]+)/create/$', offer.offer_question_create, name='offer_question_create'),
     url(r'^offer_question/edit/([0-9]+)/$', offer.offer_question_edit, name='offer_question_edit'),
-    url(r'^offer_question/save/([0-9]+)/$', offer.offer_question_save, name='offer_question_save'),
+    url(r'^offer_question/save/(?:/([0-9]+))?/$', offer.offer_question_save, name='offer_question_save'),
     url(r'^offer_question/save/$', offer.offer_question_new, name='offer_question_save_new'),
 
     url(r'^organization_address/read/([0-9]+)/$', organization.organization_address_read,

@@ -25,6 +25,7 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class OptionAdmin(admin.ModelAdmin):
@@ -43,5 +44,9 @@ class Option(models.Model):
         return u"%s" % self.label
 
 
-def find_by_question(question):
-    return Option.objects.filter(question=question)
+def find_by_question_id(question):
+    try:
+        option = Option.objects.filter(question=question)
+        return option
+    except ObjectDoesNotExist:
+        return None

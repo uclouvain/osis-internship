@@ -105,4 +105,4 @@ class OfferFormForm(ModelForm):
 class OfferQuestionForm(ModelForm):
     class Meta:
         model = admission.question.Question
-        fields = ['label', 'description', 'type', 'order', 'required', 'form']
+        fields = ['id', 'label', 'description', 'type', 'order', 'required', 'form']
