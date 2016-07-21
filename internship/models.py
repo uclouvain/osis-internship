@@ -371,6 +371,9 @@ class OrganizationAddress(models.Model):
     location = models.CharField(max_length=255)
     postal_code = models.CharField(max_length=20)
     city = models.CharField(max_length=255)
+    latitude = models.FloatField(blank=True, null=True)
+    longitude = models.FloatField(blank=True, null=True)
+    check_coordonates = models.BooleanField(default=False)
     country = models.CharField(max_length=255)
 
     @staticmethod
@@ -382,6 +385,10 @@ class OrganizationAddress(models.Model):
     def find_by_id(organization_address_id):
         return OrganizationAddress.objects.get(pk=organization_address_id)
 
+    @staticmethod
+    def find_all():
+        return OrganizationAddress.objects.all()
+
 
 class InternshipStudentInformation(models.Model):
     person = models.ForeignKey('base.Person')
@@ -389,6 +396,9 @@ class InternshipStudentInformation(models.Model):
     postal_code = models.CharField(max_length=20)
     city = models.CharField(max_length=255)
     country = models.CharField(max_length=255)
+    latitude = models.FloatField(blank=True, null=True)
+    longitude = models.FloatField(blank=True, null=True)
+    check_coordonates = models.BooleanField(default=False)
     email = models.EmailField(max_length=255, blank=True, null=True)
     phone_mobile = models.CharField(max_length=100, blank=True, null=True)
 
@@ -420,3 +430,17 @@ class InternshipStudentInformation(models.Model):
     @staticmethod
     def find_all():
         return InternshipStudentInformation.objects.all()
+
+class InternshipStudentAffectationStat(models.Model):
+    student = models.ForeignKey('base.Student')
+    organization = models.ForeignKey('internship.Organization')
+    speciality = models.ForeignKey('internship.InternshipSpeciality')
+    period = models.ForeignKey('internship.Period')
+    choice = models.CharField(max_length=1, blank=False, null=False, default='0')
+    cost = models.IntegerField(blank=False, null=False)
+    consecutive_month = models.BooleanField(default=False, null=False)
+    type_of_internship = models.CharField(max_length=1, blank=False, null=False, default='N')
+
+    @staticmethod
+    def find_all():
+        return InternshipStudentAffectationStat.objects.all()
