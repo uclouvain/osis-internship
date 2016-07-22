@@ -730,4 +730,5 @@ def dissertations_wait_list(request):
     roles_list_dissertations = roles_list_dissertations.order_by(
                                                     'dissertation__author__person__last_name',
                                                     'dissertation__author__person__first_name')
-    return layout.render(request, 'dissertations_wait_list.html', {'roles_list_dissertations': roles_list_dissertations})
+    return layout.render(request, 'dissertations_wait_list.html',
+                         {'roles_list_dissertations': roles_list_dissertations})
