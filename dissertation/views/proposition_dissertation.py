@@ -88,7 +88,7 @@ def manager_proposition_dissertation_detail(request, pk):
                           'count_use': count_use,
                           'percent': round(percent, 2),
                           'proposition_roles': proposition_roles,
-                          'count_dissertation_role': count_proposition_role})
+                          'count_proposition_role': count_proposition_role})
 
 
 @login_required
@@ -216,7 +216,7 @@ def proposition_dissertation_detail(request, pk):
                           'count_use': count_use,
                           'percent': round(percent, 2),
                           'proposition_roles': proposition_roles,
-                          'count_dissertation_role': count_proposition_role})
+                          'count_proposition_role': count_proposition_role})
 
 
 @login_required
