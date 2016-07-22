@@ -53,18 +53,27 @@
         <tr>
           <th>{% trans 'adviser'%}</th>
           <th>{% trans 'adviser_type'%}</th>
-          <th>{% trans 'available_by_email'%}</th>
-          <th>{% trans 'available_by_phone'%}</th>
-          <th>{% trans 'available_at_office'%}</th>
+          <th>{% trans 'number_of_dissertation_active_total'%}</th>
+          <th>{% trans 'number_of_dissertation_pro'%}</th>
+          <th>{% trans 'number_of_dissertation_copro'%}</th>
+          <th>{% trans 'number_of_dissertation_reader'%}</th>
+          <th>{% trans 'number_of_dissertation_need_request'%}</th>
+
         </tr>
         {% for adviser in advisers %}
+
           <tr>
             <td><a href="{% url 'manager_informations_detail' pk=adviser.pk %}">{{ adviser }}</a></td>
             <td>{{ adviser.type }}</td>
-            <td>{{ adviser.available_by_email|yesno:"Yes,No" }}</td>
-            <td>{{ adviser.available_by_phone|yesno:"Yes,No" }}</td>
-            <td>{{ adviser.available_at_office|yesno:"Yes,No" }}</td>
+            {% with ad_stat=adviser.get_stat_dissertation_role %}
+            <td>{{ad_stat.0.0}}</td>
+            <td>{{ad_stat.0.1}}</td>
+            <td>{{ad_stat.0.2}}</td>
+            <td>{{ad_stat.0.3}}</td>
+            <td>{{ad_stat.0.4}}</td>
+            {% endwith %}
           </tr>
+
         {% endfor %}
       </table>
       </div>
