@@ -33,7 +33,7 @@ class OfferYearAdmin(admin.ModelAdmin):
     list_display = ('acronym', 'offer', 'parent', 'title', 'academic_year', 'changed')
     fieldsets = ((None, {'fields': ('offer', 'academic_year', 'entity_administration', 'entity_administration_fac',
                                     'entity_management', 'entity_management_fac', 'acronym', 'title', 'parent',
-                                    'title_international', 'title_short', 'title_printable', 'grade')}),)
+                                    'title_international', 'title_short', 'title_printable', 'grade', 'campus')}),)
     raw_id_fields = ('offer', 'parent')
     search_fields = ['acronym']
 
