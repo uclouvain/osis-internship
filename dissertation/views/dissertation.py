@@ -153,6 +153,9 @@ def manager_dissertations_detail_updates(request, pk):
 @user_passes_test(is_manager)
 def manager_dissertations_edit(request, pk):
     dissertation = get_object_or_404(Dissertation, pk=pk)
+    person = mdl.person.find_by_user(request.user)
+    adviser = find_adviser_by_person(person)
+    offer = find_by_adviser(adviser)
     if request.method == "POST":
         form = ManagerDissertationEditForm(request.POST, instance=dissertation)
         if form.is_valid():
@@ -161,9 +164,15 @@ def manager_dissertations_edit(request, pk):
             return redirect('manager_dissertations_detail', pk=dissertation.pk)
     else:
         form = ManagerDissertationEditForm(instance=dissertation)
-    return layout.render(request, 'manager_dissertations_edit.html',
-                         {'form': form,
-                          'defend_periode_choices': Dissertation.DEFEND_PERIODE_CHOICES})
+        form.fields["proposition_dissertation"].queryset = \
+            PropositionDissertation.objects.filter(visibility=True,
+                                                   active=True,
+                                                   offer_proposition__offer=offer)
+        form.fields["author"].queryset = \
+            Student.objects.filter(offerenrollment__offer_year__offer=offer)
+        form.fields["offer_year_start"].queryset = \
+            OfferYear.objects.filter(offer=offer)
+    return layout.render(request, 'manager_dissertations_new.html', {'form': form})
 
 
 @login_required
