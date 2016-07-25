@@ -29,6 +29,7 @@ from dissertation.models.adviser import Adviser
 from dissertation.models.dissertation import Dissertation
 from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models.proposition_dissertation import PropositionDissertation
+from dissertation.models.proposition_role import PropositionRole
 from dissertation.models.dissertation_role import DissertationRole
 
 
@@ -52,6 +53,13 @@ class PropositionDissertationForm(ModelForm):
         widgets = {'author': forms.HiddenInput(), 'offer_proposition': forms.CheckboxSelectMultiple()}
 
 
+class PropositionRoleForm(ModelForm):
+    class Meta:
+        model = PropositionRole
+        fields = ('proposition_dissertation', 'status', 'adviser')
+        widgets = {'proposition_dissertation': forms.HiddenInput()}
+
+
 class ManagerAddAdviserForm(ModelForm):
     class Meta:
         model = Adviser
@@ -67,13 +75,16 @@ class ManagerAdviserForm(ModelForm):
 class ManagerDissertationForm(ModelForm):
     class Meta:
         model = Dissertation
-        fields = ('title', 'author', 'offer_year_start', 'proposition_dissertation', 'description')
+        fields = ('title', 'author', 'offer_year_start', 'proposition_dissertation', 'description', 'defend_year',
+                  'defend_periode')
 
 
 class ManagerDissertationEditForm(ModelForm):
     class Meta:
         model = Dissertation
-        fields = ('title', 'author', 'offer_year_start', 'proposition_dissertation', 'description', 'defend_periode')
+        fields = ('title', 'author', 'offer_year_start', 'proposition_dissertation', 'description', 'defend_year',
+                  'defend_periode'
+                  )
 
 
 class ManagerDissertationRoleForm(ModelForm):
@@ -112,3 +123,10 @@ class ManagerPropositionDissertationForm(ModelForm):
             'author', 'visibility', 'title', 'description', 'type', 'level', 'collaboration', 'max_number_student',
             'offer_proposition')
         widgets = {'offer_proposition': forms.CheckboxSelectMultiple()}
+
+
+class ManagerPropositionRoleForm(ModelForm):
+    class Meta:
+        model = PropositionRole
+        fields = ('proposition_dissertation', 'status', 'adviser')
+        widgets = {'proposition_dissertation': forms.HiddenInput()}

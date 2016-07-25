@@ -38,6 +38,7 @@ from dissertation.models.dissertation_update import DissertationUpdate
 from dissertation.models.faculty_adviser import find_by_adviser
 from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models.proposition_dissertation import PropositionDissertation
+from dissertation.models.proposition_role import PropositionRole
 from dissertation.forms import ManagerDissertationForm, ManagerDissertationEditForm, ManagerDissertationRoleForm
 from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl import Workbook
@@ -110,12 +111,23 @@ def manager_dissertations_detail(request, pk):
     person = mdl.person.find_by_user(request.user)
     adviser = find_adviser_by_person(person)
     count_dissertation_role = DissertationRole.objects.filter(dissertation=dissertation).count()
-    if count_dissertation_role < 1:
-        pro = DissertationRole(status='PROMOTEUR', adviser=dissertation.proposition_dissertation.author,
-                               dissertation=dissertation)
-        pro.save()
+    count_proposition_role = PropositionRole.objects \
+        .filter(proposition_dissertation=dissertation.proposition_dissertation).count()
+    proposition_roles = PropositionRole.objects.filter(proposition_dissertation=dissertation.proposition_dissertation)
+    if count_proposition_role == 0:
+        if count_dissertation_role == 0:
+            pro = DissertationRole(status='PROMOTEUR',
+                                   adviser=dissertation.proposition_dissertation.author,
+                                   dissertation=dissertation)
+            pro.save()
+    else:
+        if count_dissertation_role == 0:
+            for proposition_role in proposition_roles:
+                jury = DissertationRole(status=proposition_role.status,
+                                        adviser=proposition_role.adviser,
+                                        dissertation=dissertation)
+                jury.save()
     dissertation_roles = DissertationRole.objects.filter(dissertation=dissertation)
-
     return layout.render(request, 'manager_dissertations_detail.html',
                          {'dissertation': dissertation,
                           'adviser': adviser,
@@ -600,11 +612,22 @@ def dissertations_detail(request, pk):
     person = mdl.person.find_by_user(request.user)
     adviser = find_adviser_by_person(person)
     count_dissertation_role = DissertationRole.objects.filter(dissertation=dissertation).count()
-    if count_dissertation_role < 1:
-        pro = DissertationRole(status='PROMOTEUR',
-                               adviser=dissertation.proposition_dissertation.author,
-                               dissertation=dissertation)
-        pro.save()
+    count_proposition_role = PropositionRole.objects \
+        .filter(proposition_dissertation=dissertation.proposition_dissertation).count()
+    proposition_roles = PropositionRole.objects.filter(proposition_dissertation=dissertation.proposition_dissertation)
+    if count_proposition_role == 0:
+        if count_dissertation_role == 0:
+            pro = DissertationRole(status='PROMOTEUR',
+                                   adviser=dissertation.proposition_dissertation.author,
+                                   dissertation=dissertation)
+            pro.save()
+    else:
+        if count_dissertation_role == 0:
+            for proposition_role in proposition_roles:
+                jury = DissertationRole(status=proposition_role.status,
+                                        adviser=proposition_role.adviser,
+                                        dissertation=dissertation)
+                jury.save()
     dissertation_roles = DissertationRole.objects.filter(dissertation=dissertation)
     return layout.render(request, 'dissertations_detail.html',
                          {'dissertation': dissertation,
@@ -709,4 +732,5 @@ def dissertations_wait_list(request):
     roles_list_dissertations = roles_list_dissertations.order_by(
                                                     'dissertation__author__person__last_name',
                                                     'dissertation__author__person__first_name')
-    return layout.render(request, 'dissertations_wait_list.html', {'roles_list_dissertations': roles_list_dissertations})
+    return layout.render(request, 'dissertations_wait_list.html',
+                         {'roles_list_dissertations': roles_list_dissertations})
