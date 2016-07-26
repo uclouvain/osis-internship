@@ -32,7 +32,8 @@
 {% block breadcrumb %}
 <li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'institution' %}</a></li>
 <li><a href="{% url 'mandates' %}" id="lnk_mandates">{% trans 'mandates' %}</a></li>
-<li><a href="{% url 'reviewer_mandates_list' %}" id="lnk_reviewer_mandates_list">{% trans 'reviewer_mandates_list' %}</a></li>
+<li><a href="{% url 'reviewer_mandates_list' %}" id="lnk_reviewer_mandates_list">
+    {% trans 'reviewer_mandates_list' %}</a></li>
 <li class="active">{% trans 'mandate_edit' %}</li>
 {% endblock %}
 {% block content %}
