@@ -23,10 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import User
+from django.core import serializers
 from django.db import models
 from django.contrib import admin
 from django.core.exceptions import ObjectDoesNotExist
+from base.models import person
+
 
 
 class StudentAdmin(admin.ModelAdmin):
@@ -93,6 +96,36 @@ def find_all_for_sync():
     """
     print("Retrieving data from " + str(Student) + "...")
     # Necessary fields for Osis-portal
-    fields = ['id', 'registration_id', 'person']
-    # list() to force the evaluation of the queryset
-    return list(Student.objects.values(*fields))
+    # fields = ['id', 'registration_id', 'person']
+
+    records = students_to_list_json()
+    return records
+
+
+def students_to_list_json():
+    """
+        Returns a  list of json representation of all the students.
+        :return: a list of json represented as dictionnary
+    """
+    students = Student.objects.select_related('person__user').all()
+    list_students = []
+    for stud in students:
+        stud_json = student_to_json(stud)
+        list_students.append(stud_json)
+    return list_students
+
+
+def student_to_json(student_object):
+    """
+    Returns a json representation of a student.
+    :param student_object: an instance of the class Student
+    :return: a json represented as dictionnary
+    """
+    student_json = {
+            'id': student_object.id,
+            'registration_id': student_object.registration_id,
+            'person': person.person_to_json(student_object.person)
+        }
+    return student_json
+
+

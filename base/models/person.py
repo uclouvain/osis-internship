@@ -32,7 +32,7 @@ from django.conf import settings
 
 
 class PersonAdmin(admin.ModelAdmin):
-    list_display = ('first_name' , 'middle_name', 'last_name', 'username', 'email', 'gender', 'birth_date', 'global_id',
+    list_display = ('first_name', 'middle_name', 'last_name', 'username', 'email', 'gender', 'birth_date', 'global_id',
                     'national_id', 'changed')
     search_fields = ['first_name', 'middle_name', 'last_name', 'user__username', 'email']
     fieldsets = ((None, {'fields': ('user', 'global_id', 'national_id', 'gender', 'birth_date', 'first_name',
@@ -70,11 +70,11 @@ class Person(models.Model):
         first_name = ""
         middle_name = ""
         last_name = ""
-        if self.first_name :
+        if self.first_name:
             first_name = self.first_name
-        if self.middle_name :
+        if self.middle_name:
             middle_name = self.middle_name
-        if self.last_name :
+        if self.last_name:
             last_name = self.last_name + ","
 
         return u"%s %s %s" % (last_name.upper(), first_name, middle_name)
@@ -104,3 +104,50 @@ def change_language(user, new_language):
 
 def find_by_global_id(global_id):
     return Person.objects.filter(global_id=global_id).first()
+
+
+def find_persons_by_ids(list_person_id):
+    return Person.objects.filter(id__in=list_person_id)
+
+
+def person_to_json(person_object):
+    """
+        Returns a json representation of a person.
+        :param person_object: an instance of the class Person
+        :return: a json represented as dictionnary
+    """
+    person_json = {}
+    fields = Person._meta.get_fields(include_hidden=True)
+    for field in fields:
+        if not field_is_ok(field):
+            continue
+        if field.name == 'user':
+            person_json[field.name] = user_to_json(person_object.user)
+        else:
+            person_json[field.name] = getattr(person_object, field.name)
+
+    return person_json
+
+def user_to_json(user_object):
+    """
+        Returns a json representation of a user.
+        :param user_object: an instance of the class User
+        :return: a json represented as dictionnary
+    """
+    user_json = {}
+    fields = User._meta.get_fields(include_hidden=True)
+    for field in fields:
+        if not field_is_ok(field):
+            continue
+        user_json[field.name] = getattr(user_object, field.name)
+
+    return user_json
+
+
+def field_is_ok(field):
+    if field.concrete and (
+                not field.is_relation
+                or field.one_to_one
+                or (field.many_to_one and field.related_model)):
+        return True
+    return False
