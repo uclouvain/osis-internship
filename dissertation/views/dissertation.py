@@ -33,7 +33,7 @@ from base.models.student import Student
 from base.views import layout
 from dissertation.models.adviser import Adviser, find_adviser_by_person
 from dissertation.models.dissertation import Dissertation, search_dissertation
-from dissertation.models.dissertation_role import DissertationRole
+from dissertation.models.dissertation_role import DissertationRole, count_adviser_roles
 from dissertation.models.dissertation_update import DissertationUpdate
 from dissertation.models.faculty_adviser import find_by_adviser
 from dissertation.models.offer_proposition import OfferProposition
@@ -88,10 +88,7 @@ def dissertations(request):
     except IntegrityError:
         adviser = find_adviser_by_person(person)
 
-    queryset = DissertationRole.objects.all()
-    count_advisers_pro_request = queryset.filter(
-        Q(adviser=adviser) & Q(status='PROMOTEUR') &
-        Q(dissertation__status='DIR_SUBMIT') & Q(dissertation__active=True)).count()
+    count_advisers_pro_request = count_adviser_roles(adviser, 'PROMOTEUR', 'DIR_SUBMIT')
 
     return layout.render(request, "dissertations.html",
                          {'section': 'dissertations',

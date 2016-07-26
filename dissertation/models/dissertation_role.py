@@ -41,3 +41,16 @@ class DissertationRole(models.Model):
     def __str__(self):
         return u"%s %s" % (self.status if self.status else "",
                            self.adviser if self.adviser else "")
+
+
+# Récupère le nombre de dissertations pour un adviser
+def count_adviser_roles(adviser, role, dissertation_status):
+    return DissertationRole.objects.all().filter(
+                                            adviser=adviser
+                                        ).filter(
+                                            status=role
+                                        ).filter(
+                                            dissertation__status=dissertation_status
+                                        ).filter(
+                                            dissertation__active=True
+                                        ).count()
