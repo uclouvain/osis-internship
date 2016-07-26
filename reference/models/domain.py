@@ -40,3 +40,14 @@ class Domain(models.Model):
 
     def __str__(self):
         return self.name
+
+
+def find_all_for_sync():
+    """
+    :return: All records in the 'Domain' model (table). Used to synchronize date from Osis to Osis-portal.
+    """
+    print("Retrieving data from " + str(Domain) + "...")
+    # Necessary fields for Osis-portal
+    fields = ['id', 'external_id', 'name', 'parent_id']
+    # list() to force the evaluation of the queryset
+    return list(Domain.objects.values(*fields).order_by('name'))
