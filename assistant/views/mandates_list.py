@@ -70,6 +70,8 @@ class MandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMi
 
     def get_context_data(self, **kwargs):
         context = super(MandatesListView, self).get_context_data(**kwargs)
+        context['year'] = academic_year.AcademicYear.objects.get(
+                id=self.request.session.get('selected_academic_year')).year
         return context
 
     def get_initial(self):
