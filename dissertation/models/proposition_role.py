@@ -25,7 +25,6 @@
 ##############################################################################
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from . import proposition_dissertation, adviser
 
 
 class PropositionRole(models.Model):
@@ -36,8 +35,8 @@ class PropositionRole(models.Model):
     )
 
     status = models.CharField(max_length=12, choices=STATUS_CHOICES, default="PROMOTEUR")
-    adviser = models.ForeignKey(adviser.Adviser)
-    proposition_dissertation = models.ForeignKey(proposition_dissertation.PropositionDissertation)
+    adviser = models.ForeignKey('Adviser')
+    proposition_dissertation = models.ForeignKey('PropositionDissertation')
 
     def __str__(self):
         return u"%s %s" % (self.status if self.status else "",

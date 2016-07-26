@@ -51,7 +51,7 @@ def find_by(registration_id=None, person_name=None, person_username=None, person
     Find students by optional arguments. At least one argument should be informed
     otherwise it returns empty.
     """
-    has_criteria = False
+    out = None
     queryset = Student.objects
 
     if registration_id:
@@ -59,25 +59,20 @@ def find_by(registration_id=None, person_name=None, person_username=None, person
             queryset = queryset.filter(registration_id=registration_id)
         else :
             queryset = queryset.filter(registration_id__icontains=registration_id)
-        has_criteria = True
 
     if person_name:
         queryset = queryset.filter(person__last_name__icontains=person_name)
-        has_criteria = True
 
     if person_username:
         queryset = queryset.filter(person__user=person_username)
-        has_criteria = True
 
     if person_first_name:
         queryset = queryset.filter(person__first_name__icontains=person_first_name)
-        has_criteria = True
 
-    if has_criteria:
-        return queryset
-    else:
-        return None
+    if registration_id or person_name or person_username or person_first_name:
+        out = queryset
 
+    return out
 
 def find_by_person(a_person):
     try:

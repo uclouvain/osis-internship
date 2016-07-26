@@ -23,9 +23,22 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from reference.models import continent
-from reference.models import country
-from reference.models import currency
-from reference.models import decree
-from reference.models import domain
-from reference.models import language
+from django.db import models
+from django.contrib import admin
+
+
+class CampusAdmin(admin.ModelAdmin):
+    list_display = ('name', 'organization', 'changed')
+    list_filter = ('organization',)
+    fieldsets = ((None, {'fields': ('name', 'organization')}),)
+    search_fields = ['name', 'organization__name']
+
+
+class Campus(models.Model):
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    changed = models.DateTimeField(null=True)
+    name = models.CharField(max_length=100, blank=True, null=True)
+    organization = models.ForeignKey('Organization')
+
+    def __str__(self):
+        return u"%s" % self.name
