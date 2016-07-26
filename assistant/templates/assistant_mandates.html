@@ -47,8 +47,7 @@
 		<table id="myTable" class="table table-hover" cellspacing="0" width="100%">
 		<thead><tr>
       	<th>{% trans 'academic_year' %}</th>
-        <th>{% trans 'faculty' %}</th>
-        <th>{% trans 'institute' %}</th>
+        <th>{% trans 'structures' %}</th>
         <th>{% trans 'fulltime_equivalent' %}</th>
         <th>{% trans 'state' %}</th>
         <th>{% trans 'action' %}</th>
@@ -60,17 +59,16 @@
 			<form method="post" action=" {% url 'mandate_change_state' mandate.id %} ">
 			{% csrf_token %}
 			<td>{{ mandate.academic_year }}</td>	
-			{% if mandate.mandatestructure_set.all %}
-				{% for structure in mandate.mandatestructure_set.all|dictsort:"structure.type" %}
-					{% if mandate.mandatestructure_set.all.count == 1 %}
-						<td>{{ structure.structure.acronym }}</td><td></td>
-					{% elif mandate.mandatestructure_set.all.count == 2 %}
-						<td>{{ structure.structure.acronym }}</td>
-					{% endif %}
-				{% endfor %}
-			{% else %}
-			<td></td><td></td>
-			{% endif %}	
+			<td><ul>
+            {% for struct in mandate.mandatestructure_set.all|dictsort:"structure.type" %}
+                {% if struct.structure.part_of %}
+                <li>{% trans struct.structure.type|lower %} :
+                {{ struct.structure.acronym }} ({{ struct.structure.part_of.acronym }})</li>
+                {% else %}
+                <li>{% trans struct.structure.type|lower %} : {{ struct.structure.acronym }}</li>
+                {% endif %}
+            {% endfor %}
+            </ul> </td>
 			<td>{{ mandate.fulltime_equivalent }}</td>	
 			{% if mandate.state == "TO_DO" %}
 				<td>{% trans 'pending' %}</td>
@@ -96,9 +94,10 @@
 				id="bt_mandate_decline" name="bt_mandate_decline" onclick="return confirm('{% trans 'confirm_decline' %}')">
 				<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> {% trans 'decline'%}</button>
 			{% elif mandate.state == "TRTS" %}
-				<button type="submit" class="btn btn-primary" title="{% trans 'edit'%}" 
-				id="bt_mandate_edit" name="bt_mandate_edit">
-				<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> {% trans 'edit'%}</button>
+				<a href="{% url 'form_part1_edit' mandate.id %}">
+                    <button type="button" class="btn btn-link btn-lg" title="{% trans 'edit'%}" id="bt_mandate_edit">
+                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                    </button>{% trans 'edit'%}</a>
 			{% endif %}
 			</td></tr>
 			</form>
