@@ -359,7 +359,8 @@ msgid "degrees"
 msgstr "Diplôme(s) obtenu(s)"
 
 msgid "formations"
-msgstr "Formations scientifiques, pédagogiques ou autres auxquelles vous avez participé (LLL, SMCS, RHUM, Summer School)"
+msgstr "Formations scientifiques, pédagogiques ou autres auxquelles vous avez participé \
+(LLL, SMCS, RHUM, Summer School)"
 
 
 
