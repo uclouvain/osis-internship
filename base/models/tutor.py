@@ -83,3 +83,14 @@ def is_tutor(user):
     :return: True if the user is a tutor. False if the user is not a tutor.
     """
     return Tutor.objects.filter(person__user=user).count() > 0
+
+
+def find_all_for_sync():
+    """
+    :return: All records in the 'Tutor' model (table). Used to synchronize date from Osis to Osis-portal.
+    """
+    print("Retrieving data from " + str(Tutor) + "...")
+    # Necessary fields for Osis-portal
+    fields = ['id', 'registration_id', 'changed', 'person']
+    # list() to force the evaluation of the queryset
+    return list(Tutor.objects.values(*fields).order_by('name'))

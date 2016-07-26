@@ -49,14 +49,14 @@ def get_all_data(model_class, fields=None, order_by=None):
     """
     print("Retrieving data from " + str(model_class) + "...")
     queryset = model_class.objects
-    if fields :
+    if fields:
         queryset = queryset.values(*fields)
-    else :
+    else:
         queryset = queryset.values()
-    if order_by :
+    if order_by:
         queryset = queryset.order_by(order_by)
     print("Done.")
-    return list(queryset) # list() to force the evaluation of the queryset
+    return list(queryset)  # list() to force the evaluation of the queryset
 
 
 def get_model_class_str(model_class):
@@ -67,6 +67,8 @@ def get_model_class_str(model_class):
     map_classes = {
         mdl_ref.country.Country: 'reference.Country',
         mdl_base.domain.Domain: 'admission.Domain',
+        mdl_base.student.Student: 'base.Student',
+        mdl_base.tutor.Tutor: 'base.Tutor'
     }
     return map_classes[model_class]
 
@@ -95,3 +97,13 @@ def migrate_reference_country():
 def migrate_base_domain():
     records = mdl_base.domain.find_all_for_sync()
     migrate(mdl_base.domain.Domain, records, 'admission')
+
+
+def migrate_base_student():
+    records = mdl_base.student.find_all_for_sync()
+    migrate(mdl_base.student.Student, records, 'osis_base')
+
+
+def migrate_base_tutor():
+    records = mdl_base.tutor.find_all_for_sync()
+    migrate(mdl_base.tutor.Tutor, records, 'osis_base')

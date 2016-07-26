@@ -85,3 +85,14 @@ def find_by_person(a_person):
         return student
     except ObjectDoesNotExist:
         return None
+
+
+def find_all_for_sync():
+    """
+    :return: All records in the 'Student' model (table). Used to synchronize date from Osis to Osis-portal.
+    """
+    print("Retrieving data from " + str(Student) + "...")
+    # Necessary fields for Osis-portal
+    fields = ['id', 'registration_id', 'person']
+    # list() to force the evaluation of the queryset
+    return list(Student.objects.values(*fields).order_by('name'))
