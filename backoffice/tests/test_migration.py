@@ -66,4 +66,4 @@ class PortalMigrationTest(TestCase):
                 print("Error when retrieving data " + str(item))
 
         self.assertListEqual(list_expected, list_actual, "Get all data doesn't return all data "
-                                                           "for the student model.")
+                                                         "for the student model.")

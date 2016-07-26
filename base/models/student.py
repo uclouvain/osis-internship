@@ -95,4 +95,4 @@ def find_all_for_sync():
     # Necessary fields for Osis-portal
     fields = ['id', 'registration_id', 'person']
     # list() to force the evaluation of the queryset
-    return list(Student.objects.values(*fields).order_by('name'))
+    return list(Student.objects.values(*fields))
