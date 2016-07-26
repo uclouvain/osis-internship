@@ -30,11 +30,11 @@
   <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
   <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'dissertations' %}</a></li>
   <li><a href="{% url 'manager_dissertations_list' %}" id="lnk_dissertations_list">{% trans 'dissertations' %}</a></li>
-  <li class="active">{% trans 'edit_dissertation' %}</li>
+  <li class="active">{% trans 'new_dissertation' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'edit_dissertation' %}</h2>
+    <h2>{% trans 'new_dissertation' %}</h2>
   </div>
   <div class="panel panel-default">
     <div class="panel-body">
@@ -88,19 +88,6 @@
             </div>
             <div class="col-md-8">
                 <textarea class="form-control" id="txt_description"  name="description" rows="10" style="margin:-6px;">{{ form.description.value | default_if_none:''}}</textarea>
-            </div>
-        </div>
-        <br>
-        <div class="row">
-            <div class="col-md-3 col-lg-offset-1" style="text-align:right">
-                <label for="txt_defend_periode">{% trans 'defend_periode' %}</label>
-            </div>
-            <div class="col-md-4">
-                <select class="form-control" id="txt_defend_periode"  name="defend_periode" style="margin:-6px;">
-                    {% for defend_periode in defend_periode_choices %}
-                        <option value="{{ defend_periode.0 }}" {% if form.defend_periode.value == defend_periode.0 %}selected{% endif %}>{{ defend_periode.1}}</option>
-                    {% endfor %}
-                </select>
             </div>
         </div>
         <br>
