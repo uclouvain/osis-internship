@@ -33,7 +33,7 @@ from base.models.student import Student
 from base.views import layout
 from dissertation.models.adviser import Adviser, find_adviser_by_person
 from dissertation.models.dissertation import Dissertation, search_dissertation
-from dissertation.models.dissertation_role import DissertationRole, count_adviser_roles
+from dissertation.models.dissertation_role import DissertationRole, count_adviser_roles, count_roles_by_dissertation
 from dissertation.models.dissertation_update import DissertationUpdate
 from dissertation.models.faculty_adviser import find_by_adviser
 from dissertation.models.offer_proposition import OfferProposition
@@ -107,7 +107,7 @@ def manager_dissertations_detail(request, pk):
     dissertation = get_object_or_404(Dissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
     adviser = find_adviser_by_person(person)
-    count_dissertation_role = DissertationRole.objects.filter(dissertation=dissertation).count()
+    count_dissertation_role = count_roles_by_dissertation(dissertation)
     count_proposition_role = PropositionRole.objects \
         .filter(proposition_dissertation=dissertation.proposition_dissertation).count()
     proposition_roles = PropositionRole.objects.filter(proposition_dissertation=dissertation.proposition_dissertation)
