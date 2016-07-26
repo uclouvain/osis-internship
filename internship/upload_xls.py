@@ -216,7 +216,6 @@ def __save_xls_internships(request, file_name, user):
                     spec = "Stage aux Urgences"
 
                 speciality = InternshipSpeciality.find_by(name=spec)
-                check_internship = InternshipOffer.find_interships_by_learning_unit_organization(spec,organization[0].reference)
 
                 number_place = 0
                 for x in range (3,15):
@@ -226,6 +225,7 @@ def __save_xls_internships(request, file_name, user):
                         number_place += int(row[x].value)
 
                 for x in range(0,len(speciality)) :
+                    check_internship = InternshipOffer.find_interships_by_learning_unit_organization(speciality[x],organization[0].reference)
                     if len(check_internship) != 0:
                         internship = InternshipOffer.find_intership_by_id(check_internship[0].id)
                     else :

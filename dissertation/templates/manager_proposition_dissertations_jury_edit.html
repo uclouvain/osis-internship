@@ -29,8 +29,8 @@
 {% block breadcrumb %}
   <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
   <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'dissertations' %}</a></li>
-  <li><a href="{% url 'dissertations_list' %}" id="lnk_dissertations_list">{% trans 'dissertations' %}</a></li>
-  <li class="active">{% trans 'new_or_edit_dissertation' %}</li>
+  <li><a href="{% url 'manager_proposition_dissertations' %}" id="lnk_manager_proposition_dissertations">{% trans 'proposition_dissertations' %}</a></li>
+  <li class="active">{% trans 'new_or_edit_jury_proposition_dissertation' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
@@ -43,7 +43,9 @@
         {% for field in form %}
           <div class="row {% if field.errors %}error{% endif %}">
             <div class="col-md-4" style="text-align: right">
-              <label>{{ field.label }}</label>
+              {% if not field.is_hidden %}
+                <label>{{ field.label }}</label>
+              {% endif %}
             </div>
             <div class="col-md-5">
               {{ field }}

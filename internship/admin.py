@@ -49,8 +49,8 @@ admin.site.register(InternshipMaster, InternshipMasterAdmin)
 
 
 class InternshipChoiceAdmin(admin.ModelAdmin):
-    list_display = ('student', 'organization', 'speciality', 'choice')
-    fieldsets = ((None, {'fields': ('student', 'organization', 'speciality', 'choice')}),)
+    list_display = ('student', 'organization', 'speciality', 'choice', 'priority')
+    fieldsets = ((None, {'fields': ('student', 'organization', 'speciality', 'choice', 'priority')}),)
 
 admin.site.register(InternshipChoice, InternshipChoiceAdmin)
 
@@ -69,6 +69,7 @@ admin.site.register(PeriodInternshipPlaces, PeriodInternshipPlacesAdmin)
 class InternshipSpecialityAdmin(admin.ModelAdmin):
     list_display = ('learning_unit', 'name', 'mandatory')
     fieldsets = ((None, {'fields': ('learning_unit', 'name', 'mandatory')}),)
+    raw_id_fields = ('learning_unit',)
 
 admin.site.register(InternshipSpeciality, InternshipSpecialityAdmin)
 

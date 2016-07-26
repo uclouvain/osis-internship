@@ -24,7 +24,7 @@
 #
 ##############################################################################
 from django.db import models
-from dissertation.models import dissertation
+from . import dissertation
 
 
 class DissertationGroup(models.Model):
