@@ -37,7 +37,7 @@ import random
 
 class PortalMigrationTest(TestCase):
     def setUp(self):
-        PortalMigrationTest.createStudents()
+        self.list_students = PortalMigrationTest.createStudents()
 
     def testGetModelClass(self):
         list_expected = ['reference.Country',
@@ -50,10 +50,25 @@ class PortalMigrationTest(TestCase):
                        portal_migration.get_model_class_str(tutor.Tutor)]
         self.assertListEqual(list_expected, list_actual, "get_model_class_str doesn't "
                                                          "return the correct string for"
-                                                         "the class")
+                                                         "the class.")
+    # TODO implement it for all other models
+    def testGetAllData(self):
+        list_expected = self.list_students
+
+        # Need to transform results query into model object
+        list_query = portal_migration.get_all_data(student.Student)
+        list_actual = []
+        for item in list_query:
+            list_actual.append(student.Student.objects.get(id=item['id']))
+        self.assertListEqual(list_expected, list_actual, "Get all data doesn't return all data "
+                                                           "for the student model.")
 
     @staticmethod
     def createStudents():
+        """
+        Creates student objects.
+        :return: A list of student objects.
+        """
         list_first_names = ['Henry', 'Pierre', 'Alexandre', 'Jeanne', 'Suzanne', 'Olivier',
                             'Jean', 'Lisa']
         list_last_names = ['Smith', 'Brown', 'Lopez', 'Lewis', 'Robinson', 'Diaz',
@@ -65,10 +80,14 @@ class PortalMigrationTest(TestCase):
         list_users = PortalMigrationTest.createUsers(list_last_names, list_password)
         list_persons = PortalMigrationTest.createPersons(list_users, list_global_ids, list_first_names,
                                                          list_last_names)
+        list_students = []
         for i in range(0, len(list_last_names)):
             a_student = student.Student(person=list_persons[i],
                                         registration_id=list_global_ids[i])
             a_student.save()
+            list_students.append(a_student)
+
+        return list_students
 
 
     @staticmethod
