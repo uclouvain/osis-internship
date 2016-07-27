@@ -55,20 +55,20 @@
             <th>{% trans 'assistant' %}</th>
             <th>{% trans 'structures' %}</th>
             <th>{% trans 'stream' %}</th>
-            <th>{% trans 'renewal' %}</th>
+            <th>{% trans 'renewal_short_name' %}</th>
             <th>{% trans 'doctorate' %}</th>
             <th>{% trans 'mandate' %}</th>
             <th>{% trans 'equivalent_full_time' %}</th>
             <th>{% trans 'percentage_equivalent_full_time' %}</th>
-            <th>{% trans 'research' %}</th>
-            <th>{% trans 'tutoring' %}</th>
-            <th>{% trans 'sector_vice-rector' %}</th>
+            <th>{% trans 'phd' %}</th>
+            <th>{% trans 'research_short_name' %}</th>
+            <th>{% trans 'tutoring_short_name' %}</th>
+            <th>{% trans 'sector_vice-rector_short_name' %}</th>
             </tr>
             </thead>
             <tbody>
-            <tr>
             {% for mandate in object_list %}
-                <td>{{ mandate.sap_id }}</td>
+                <tr><td>{{ mandate.sap_id }}</td>
                 <td><a href="{% url 'mandate_read' mandate.id %}">{{ mandate.assistant.person }}</a></td>
                 <td><ul>
                 {% for struct in mandate.mandatestructure_set.all|dictsort:"structure.type" %}
@@ -100,18 +100,48 @@
                 <td>{{ mandate.contract_duration }}</td>
                 <td>{{ mandate.contract_duration_fte }}</td>
                 <td>{{ mandate.fulltime_equivalent }}</td>
-                <td></td>
-                <td align="center">
-                {% for rev in mandate.review_set.all %}
-                    {% if rev.advice == "FAVORABLE" %}
-                    <span class="glyphicon glyphicon-thumbs-up" style="font-size: 14pt; color: green" aria-hidden="true"></span>
+                {% if mandate.review_set.all|length == 0 %}
+                        <td></td><td></td><td></td><td></td>
+                {% endif %}
+                {% for review in mandate.review_set.all|dictsort:"changed" %}
+                    {% if "RESEARCH" in review.reviewer.role and forloop.counter == 1 %}
+                        <td></td>
+                    {% elif "SUPERVISION" in review.reviewer.role and forloop.counter < 3 %}
+                        {% if forloop.counter == 1 %}
+                            <td></td><td></td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                    {% elif "VICE-RECTOR" in review.reviewer.role and forloop.counter < 4 %}
+                        {% if forloop.counter == 2 %}
+                            <td></td><td></td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                    {% endif %}
+                    <td align="center">
+                    {% if review.advice == "FAVORABLE" %}
+                        <span class="glyphicon glyphicon-thumbs-up" style="font-size: 14pt; color: green"
+                              aria-hidden="true"></span>
                     {% elif rev.advice == "UNFAVOURABLE" %}
-                    <span class="glyphicon glyphicon-thumbs-down" style="font-size: 14pt; color: red" aria-hidden="true"></span>
+                        <span class="glyphicon glyphicon-thumbs-down" style="font-size: 14pt; color: red"
+                              aria-hidden="true"></span>
                     {% else %}
-                    <span class="glyphicon glyphicon-alert" style="font-size: 14pt; color: orange" aria-hidden="true"></span>
+                        <span class="glyphicon glyphicon-alert" style="font-size: 14pt; color: orange"
+                              aria-hidden="true"></span>
+                    {% endif %}
+                    </td>
+                    {% if forloop.last %}
+                        {% if "RESEARCH" in review.reviewer.role %}
+                            <td></td><td></td>
+                        {% elif "SUPERVISION" in review.reviewer.role %}
+                            <td></td>
+                        {% elif review.reviewer.role == None %}
+                            <td></td><td></td><td></td>
+                        {% endif %}
                     {% endif %}
                 {% endfor %}
-                </td><td></td></tr>
+            </tr>
             {% endfor %}
             </tbody>
             </table>
