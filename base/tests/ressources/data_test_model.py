@@ -1,3 +1,29 @@
+##############################################################################
+#
+# OSIS stands for Open Student Information System. It's an application
+#    designed to manage the core business of higher education institutions,
+#    such as universities, faculties, institutes and professional schools.
+#    The core business involves the administration of students, teachers,
+#    courses, programs and so on.
+#
+#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#    GNU General Public License for more details.
+#
+#    A copy of this license - GNU General Public License - is available
+#    at the root of the source code of this program.  If not,
+#    see http://www.gnu.org/licenses/.
+#
+##############################################################################
+
 expected_for_students = {'students': '[{"model": "base.student", "pk": 25, "fields": {"registration_id": "001", "person": 49}}, {"model": "base.student", "pk": 26, "fields": {"registration_id": "002", "person": 50}}, {"model": "base.student", "pk": 27, "fields": {"registration_id": "003", "person": 51}}, {"model": "base.student", "pk": 28, "fields": {"registration_id": "004", "person": 52}}, {"model": "base.student", "pk": 29, "fields": {"registration_id": "005", "person": 53}}, {"model": "base.student", "pk": 30, "fields": {"registration_id": "006", "person": 54}}, {"model": "base.student", "pk": 31, "fields": {"registration_id": "007", "person": 55}}, {"model": "base.student", "pk": 32, "fields": {"registration_id": "008", "person": 56}}]', 'persons': '[{"model": "base.person", "pk": 49, "fields": {"external_id": null, "changed": "2016-10-25T08:45:00Z", "global_id": "001", "gender": "U", "national_id": null, "first_name": "Henry", "middle_name": null, "last_name": "Smith", "email": "HenrySmith@test.com", "phone": null, "phone_mobile": null, "language": "fr-be"}}, {"model": "base.person", "pk": 50, "fields": {"external_id": null, "changed": "2016-10-25T08:45:00Z", "global_id": "002", "gender": "U", "national_id": null, "first_name": "Pierre", "middle_name": null, "last_name": "Brown", "email": "PierreBrown@test.com", "phone": null, "phone_mobile": null, "language": "fr-be"}}, {"model": "base.person", "pk": 51, "fields": {"external_id": null, "changed": "2016-10-25T08:45:00Z", "global_id": "003", "gender": "U", "national_id": null, "first_name": "Alexandre", "middle_name": null, "last_name": "Lopez", "email": "AlexandreLopez@test.com", "phone": null, "phone_mobile": null, "language": "fr-be"}}, {"model": "base.person", "pk": 52, "fields": {"external_id": null, "changed": "2016-10-25T08:45:00Z", "global_id": "004", "gender": "U", "national_id": null, "first_name": "Jeanne", "middle_name": null, "last_name": "Lewis", "email": "JeanneLewis@test.com", "phone": null, "phone_mobile": null, "language": "fr-be"}}, {"model": "base.person", "pk": 53, "fields": {"external_id": null, "changed": "2016-10-25T08:45:00Z", "global_id": "005", "gender": "U", "national_id": null, "first_name": "Suzanne", "middle_name": null, "last_name": "Robinson", "email": "SuzanneRobinson@test.com", "phone": null, "phone_mobile": null, "language": "fr-be"}}, {"model": "base.person", "pk": 54, "fields": {"external_id": null, "changed": "2016-10-25T08:45:00Z", "global_id": "006", "gender": "U", "national_id": null, "first_name": "Olivier", "middle_name": null, "last_name": "Diaz", "email": "OlivierDiaz@test.com", "phone": null, "phone_mobile": null, "language": "fr-be"}}, {"model": "base.person", "pk": 55, "fields": {"external_id": null, "changed": "2016-10-25T08:45:00Z", "global_id": "007", "gender": "U", "national_id": null, "first_name": "Jean", "middle_name": null, "last_name": "Kelly", "email": "JeanKelly@test.com", "phone": null, "phone_mobile": null, "language": "fr-be"}}, {"model": "base.person", "pk": 56, "fields": {"external_id": null, "changed": "2016-10-25T08:45:00Z", "global_id": "008", "gender": "U", "national_id": null, "first_name": "Lisa", "middle_name": null, "last_name": "Howard", "email": "LisaHoward@test.com", "phone": null, "phone_mobile": null, "language": "fr-be"}}]'}
 
 

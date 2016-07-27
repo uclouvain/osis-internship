@@ -27,12 +27,9 @@
 
 ###########################################################################
 # TO RUN THE SCRIPT ALONE, UNCOMMENT 6 NEXT LINES
-# from sys import path
-# import os
-# import django
-# path.append('./osis')
-# os.environ["DJANGO_SETTINGS_MODULE"] = "backoffice.settings"
-# django.setup()
+# launch "python manage.py shell" in console
+# > import backoffice.portal_migration as portal
+# > portal.migrate_base_student() # migration of all students
 ###########################################################################
 
 from reference import models as mdl_ref
