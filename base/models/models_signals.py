@@ -29,12 +29,22 @@ from django.dispatch import receiver
 from base.models.program_manager import ProgramManager
 from base.models.student import Student
 from base.models.tutor import Tutor
+import base.models as mdl_base
+import backoffice.portal_migration as portal_migration
+
+queue_name = 'osis_base'
+
 
 @receiver(post_save, sender=Tutor)
 def add_to_tutors_group(sender, instance, **kwargs):
     if kwargs.get('created', True) and instance.person.user:
         tutors_group = Group.objects.get(name='tutors')
         instance.person.user.groups.add(tutors_group)
+        # Send new tutor to osis-portal
+        records = {"tutors": mdl_base.tutor.serialize_list_tutors([instance]),
+                   "persons": mdl_base.person.serialize_list_persons([instance.person])}
+        portal_migration.migrate_records(records=records, model_class=instance.__class__,
+                                         queue_name=queue_name)
 
 
 @receiver(post_save, sender=Student)
@@ -42,6 +52,11 @@ def add_to_students_group(sender, instance, **kwargs):
     if kwargs.get('created', True) and instance.person.user:
         students_group = Group.objects.get(name='students')
         instance.person.user.groups.add(students_group)
+        # Send new student to osis-portal
+        records = {"students": mdl_base.student.serialize_list_students([instance]),
+                   "persons": mdl_base.person.serialize_list_persons([instance.person])}
+        portal_migration.migrate_records(records=records, model_class=instance.__class__,
+                                         queue_name=queue_name)
 
 
 @receiver(post_save, sender=ProgramManager)

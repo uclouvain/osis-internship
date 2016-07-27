@@ -105,3 +105,7 @@ def migrate_base_student():
 def migrate_base_tutor():
     records = mdl_base.tutor.find_all_for_sync()
     migrate(mdl_base.tutor.Tutor, records, 'osis_base')
+
+
+def migrate_records(records, model_class, queue_name):
+    migrate(model_class, records, queue_name)
