@@ -94,10 +94,6 @@ def find_all_for_sync():
     """
     :return: All records in the 'Student' model (table). Used to synchronize date from Osis to Osis-portal.
     """
-    print("Retrieving data from " + str(Student) + "...")
-    # Necessary fields for Osis-portal
-    # fields = ['id', 'registration_id', 'person']
-
     records = serialize_all_students()
     return records
 
@@ -123,9 +119,11 @@ def serialize_all_students():
 def serialize_list_students(list_students):
     """
     Serialize a list of student objects using the json format.
+    Use to send data to osis-portal.
     :param list_students: a list of student objects
     :return: a string
     """
+    # Restrict fields for osis-portal
     fields = ('id', 'registration_id', 'person')
     return serializers.serialize("json", list_students, fields=fields)
 

@@ -80,13 +80,11 @@ def migrate(model_class, records, queue_name):
     :param queue_name: The name of the queue in which data are sent.
     :param records: List of records to send into the queue.
     """
-    print("Sending records into the queue named '" + queue_name + "'...")
     data = {
         'model_class_str': get_model_class_str(model_class),
         'records': records,
     }
     queue_actions.send_message(queue_name, data)
-    print("Done.")
 
 
 def migrate_reference_country():
@@ -101,7 +99,6 @@ def migrate_base_domain():
 
 def migrate_base_student():
     records = mdl_base.student.find_all_for_sync()
-    print(records)
     migrate(mdl_base.student.Student, records, 'osis_base')
 
 

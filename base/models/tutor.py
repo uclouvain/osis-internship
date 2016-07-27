@@ -23,11 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib.auth.models import Group
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.contrib import admin
 from base.models import person, attribution
+from django.core import serializers
+import json
 
 
 class TutorAdmin(admin.ModelAdmin):
@@ -87,10 +88,38 @@ def is_tutor(user):
 
 def find_all_for_sync():
     """
-    :return: All records in the 'Tutor' model (table). Used to synchronize date from Osis to Osis-portal.
+    :return: All records in the 'Student' model (table). Used to synchronize date from Osis to Osis-portal.
     """
-    print("Retrieving data from " + str(Tutor) + "...")
-    # Necessary fields for Osis-portal
-    fields = ['id', 'registration_id', 'changed', 'person']
-    # list() to force the evaluation of the queryset
-    return list(Tutor.objects.values(*fields).order_by('name'))
+    records = serialize_all_tutors()
+    return records
+
+
+def serialize_all_tutors():
+    """
+    Serialize all the tutors in json format
+    :return: a json object
+    """
+    # Fetch all related persons objects
+    tutors = Tutor.objects.select_related('person').all()
+    list_tutors = []
+    list_persons = []
+    for tut in tutors:
+        list_tutors.append(tut)
+        list_persons.append(tut.person)
+    data_tutors = serialize_list_tutors(list_tutors)
+    data_persons = person.serialize_list_persons(list_persons)
+    data_dict = {'tutors': data_tutors, 'persons': data_persons}
+    return json.dumps(data_dict)
+
+
+def serialize_list_tutors(list_tutors):
+    """
+    Serialize a list of tutors objects using the json format.
+    Use to send data to osis-portal.
+    :param list_tutors: a list of tutor objects
+    :return: a string
+    """
+    # Restrict fields for osis-portal
+    fields = ('id', 'external_id', 'changed', 'person')
+    return serializers.serialize("json", list_tutors, fields=fields)
+

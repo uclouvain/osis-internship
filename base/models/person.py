@@ -110,9 +110,11 @@ def find_by_global_id(global_id):
 def serialize_list_persons(list_persons):
     """
     Serialize a list of person objects using the json format.
+    Use to send data to osis-portal.
     :param list_persons: a list of person objects
     :return: a string
     """
+    # Restrict fields for osis-portal
     fields = ('id', 'external_id', 'changed', 'global_id', 'gender',
               'national_id', 'first_name', 'middle_name', 'last_name',
               'email', 'phone', 'phone_mobile', 'language')
