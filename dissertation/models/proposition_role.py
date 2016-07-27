@@ -41,3 +41,7 @@ class PropositionRole(models.Model):
     def __str__(self):
         return u"%s %s" % (self.status if self.status else "",
                            self.adviser if self.adviser else "")
+
+
+def count_proposition_roles_by_dissertation(dissertation):
+    return PropositionRole.objects.filter(proposition_dissertation=dissertation.proposition_dissertation).count()

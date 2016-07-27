@@ -33,12 +33,12 @@ from base.models.student import Student
 from base.views import layout
 from dissertation.models.adviser import Adviser, find_adviser_by_person
 from dissertation.models.dissertation import Dissertation, search_dissertation
-from dissertation.models.dissertation_role import DissertationRole, count_adviser_roles, count_roles_by_dissertation
+from dissertation.models.dissertation_role import DissertationRole, count_adviser_roles, count_dissertation_roles
 from dissertation.models.dissertation_update import DissertationUpdate
 from dissertation.models.faculty_adviser import find_by_adviser
 from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models.proposition_dissertation import PropositionDissertation
-from dissertation.models.proposition_role import PropositionRole
+from dissertation.models.proposition_role import PropositionRole, count_proposition_roles_by_dissertation
 from dissertation.forms import ManagerDissertationForm, ManagerDissertationEditForm, ManagerDissertationRoleForm
 from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl import Workbook
@@ -107,9 +107,8 @@ def manager_dissertations_detail(request, pk):
     dissertation = get_object_or_404(Dissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
     adviser = find_adviser_by_person(person)
-    count_dissertation_role = count_roles_by_dissertation(dissertation)
-    count_proposition_role = PropositionRole.objects \
-        .filter(proposition_dissertation=dissertation.proposition_dissertation).count()
+    count_dissertation_role = count_dissertation_roles(dissertation)
+    count_proposition_role = count_proposition_roles_by_dissertation(dissertation)
     proposition_roles = PropositionRole.objects.filter(proposition_dissertation=dissertation.proposition_dissertation)
     if count_proposition_role == 0:
         if count_dissertation_role == 0:

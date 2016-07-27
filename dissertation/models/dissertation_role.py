@@ -56,5 +56,5 @@ def count_adviser_roles(adviser, role, dissertation_status):
                                     ).count()
 
 
-def count_roles_by_dissertation(dissertation):
+def count_dissertation_roles(dissertation):
     return DissertationRole.objects.filter(dissertation=dissertation).count()
