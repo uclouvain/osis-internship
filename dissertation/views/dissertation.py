@@ -172,7 +172,8 @@ def manager_dissertations_edit(request, pk):
             Student.objects.filter(offerenrollment__offer_year__offer=offer)
         form.fields["offer_year_start"].queryset = \
             OfferYear.objects.filter(offer=offer)
-    return layout.render(request, 'manager_dissertations_edit.html', {'form': form})
+    return layout.render(request, 'manager_dissertations_edit.html',
+                         {'form': form, 'defend_periode_choices': Dissertation.DEFEND_PERIODE_CHOICES})
 
 
 @login_required
