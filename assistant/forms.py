@@ -30,6 +30,7 @@ from django.forms import ModelForm, Textarea
 from assistant import models as mdl
 from base.models import structure, academic_year, person
 from django.forms.models import inlineformset_factory
+from django.core.exceptions import ValidationError
 
 
 class MandateForm(ModelForm):
@@ -55,7 +56,6 @@ class MandateForm(ModelForm):
 
 
 class MandateStructureForm(ModelForm):
-
     class Meta:
         model = mdl.mandate_structure.MandateStructure
         fields = ('structure', 'assistant_mandate')
@@ -63,10 +63,10 @@ class MandateStructureForm(ModelForm):
 
 def get_field_qs(field, **kwargs):
     if field.name == 'structure':
-        return forms.ModelChoiceField(queryset=structure.Structure.objects.filter(Q(type='INSTITUTE') |
-                                                                                  Q(type='FACULTY')))
+        return forms.ModelChoiceField(queryset=structure.Structure.objects.filter(
+        Q(type='INSTITUTE') | Q(type='POLE') | Q(type='PROGRAM_COMMISSION') |
+        Q(type='FACULTY')).order_by('acronym'))
     return field.formfield(**kwargs)
-
 
 StructureInLineFormSet = inlineformset_factory(mdl.assistant_mandate.AssistantMandate,
                                                mdl.mandate_structure.MandateStructure,
@@ -76,18 +76,17 @@ StructureInLineFormSet = inlineformset_factory(mdl.assistant_mandate.AssistantMa
                                                extra=2,
                                                can_delete=True,
                                                min_num=1,
-                                               max_num=2)
+                                               max_num=4)
 
 
 class HorizontalRadioRenderer(forms.RadioSelect.renderer):
-
     def render(self):
         return u'\n'.join([u'%s\n' % w for w in self])
 
 
 class AssistantFormPart1(ModelForm):
     inscription = forms.ChoiceField(required=True, widget=forms.RadioSelect(renderer=HorizontalRadioRenderer, attrs={
-                                    "onChange": 'Hide()'}), choices=mdl.academic_assistant.AcademicAssistant.PHD_INSCRIPTION_CHOICES)
+        "onChange": 'Hide()'}), choices=mdl.academic_assistant.AcademicAssistant.PHD_INSCRIPTION_CHOICES)
     expected_phd_date = forms.DateField(required=False, widget=forms.DateInput(format='%d/%m/%Y',
                                                                                attrs={'placeholder': 'dd/mm/yyyy'}),
                                         input_formats=['%d/%m/%Y'])
@@ -95,7 +94,8 @@ class AssistantFormPart1(ModelForm):
                                                                                   attrs={'placeholder': 'dd/mm/yyyy'}),
                                            input_formats=['%d/%m/%Y'])
     confirmation_test_date = forms.DateField(required=False, widget=forms.DateInput(format='%d/%m/%Y',
-                                                                                    attrs={'placeholder': 'dd/mm/yyyy'}),
+                                                                                    attrs={
+                                                                                        'placeholder': 'dd/mm/yyyy'}),
                                              input_formats=['%d/%m/%Y'])
     thesis_date = forms.DateField(required=False, widget=forms.DateInput(format='%d/%m/%Y',
                                                                          attrs={'placeholder': 'dd/mm/yyyy'}),
@@ -118,7 +118,7 @@ class AssistantFormPart1(ModelForm):
         if inscription == 'IN_PROGRESS' and not expected_phd_date:
             msg = _("expected_phd_date_required_msg")
             self.add_error('expected_phd_date', msg)
-            
+
 
 class AssistantFormPart1b(ModelForm):
     external_functions = forms.CharField(
@@ -140,8 +140,8 @@ class MandatesArchivesForm(ModelForm):
     class Meta:
         model = mdl.assistant_mandate.AssistantMandate
         fields = ('academic_year',)
-        
-        
+
+
 class AssistantFormPart5(ModelForm):
     degrees = forms.CharField(
         required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '4'}))
@@ -153,7 +153,7 @@ class AssistantFormPart5(ModelForm):
         fields = ('faculty_representation', 'institute_representation', 'sector_representation',
                   'governing_body_representation','corsci_representation','students_service',
                   'infrastructure_mgmt_service','events_organisation_service','publishing_field_service',
-                  'scientific_jury_service','degrees','formations')  
+                  'scientific_jury_service','degrees','formations')
 
 
 class ReviewForm(ModelForm):
@@ -180,3 +180,49 @@ class ReviewForm(ModelForm):
         if advice == 'CONDITIONAL' and not justification:
             msg = _("justification_required_if_conditional")
             self.add_error('justification', msg)
+
+
+class AssistantFormPart6(ModelForm):
+    activities_report_remark = forms.CharField(
+        required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '4'}))
+
+    class Meta:
+        model = mdl.assistant_mandate.AssistantMandate
+        fields = ('tutoring_percent', 'service_activities_percent', 'formation_activities_percent',
+                  'research_percent', 'activities_report_remark')
+
+    def clean(self):
+        tutoring_percent = self.cleaned_data['tutoring_percent']
+        service_activities_percent = self.cleaned_data['service_activities_percent']
+        formation_activities_percent = self.cleaned_data['formation_activities_percent']
+        research_percent = self.cleaned_data['research_percent']
+
+        if tutoring_percent + service_activities_percent + formation_activities_percent + research_percent != 100:
+            raise ValidationError(_('total_must_be_100_message'))
+        else:
+            return self.cleaned_data
+
+
+class ReviewerDelegationForm(ModelForm):
+    person = forms.ModelChoiceField(required=True, queryset=person.Person.objects.all().order_by('last_name'),
+                                    to_field_name="email")
+    role = forms.CharField(widget=forms.HiddenInput(), required=True)
+    structure = forms.ModelChoiceField(widget=forms.HiddenInput(), required=True, queryset=
+    structure.Structure.objects.all())
+
+    class Meta:
+        model = mdl.reviewer.Reviewer
+        fields = ('person', 'structure', 'role')
+        widgets = {
+            'structure': forms.HiddenInput()
+        }
+
+    def clean(self):
+        super(ReviewerDelegationForm, self).clean()
+        selected_person = self.cleaned_data.get('person')
+        try:
+            mdl.reviewer.Reviewer.objects.get(person=selected_person)
+            msg = _("person_already_reviewer_msg")
+            self.add_error('person', msg)
+        except:
+            pass

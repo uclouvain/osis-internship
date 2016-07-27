@@ -29,11 +29,11 @@
 {% block breadcrumb %}
 <li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'institution' %}</a></li>
 <li><a href="{% url 'mandates' %}" id="lnk_mandates">{% trans 'mandates' %}</a></li>
-<li class="active">{% trans 'assistants' %}</li>
+<li class="active">{% trans 'form_part1_edit' %}</li>
 {% endblock %}
 {% block content %}
 <ul class="nav nav-tabs ">
-<li><a href="#">{% trans 'my_mandates' %}</a></li>
+<li><a href="{% url 'assistant_mandates' %}">{% trans 'my_mandates' %}</a></li>
 <li class="active"><a href="#">{% trans 'assistant_form_part1' %}</a></li>
 <li><a href="#">{% trans 'assistant_form_part2' %}</a></li>
 </ul>
@@ -54,14 +54,6 @@
       			</div>
       			<div class="col-md-3">
     				<div class="controls">{{assistant.person}}</div>
-    			</div>
-    		</div>
-    		<div class="row">
-      			<div class="col-md-3">
-      				<label for="txt_birth_date">{% trans 'birth_date' %}</label>
-      			</div>
-      			<div class="col-md-3">
-    				<div class="controls">{{assistant.person.birth_date}}</div>
     			</div>
     		</div>
     		<div class="row">

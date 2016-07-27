@@ -27,18 +27,17 @@
 
 ###########################################################################
 # TO RUN THE SCRIPT ALONE, UNCOMMENT 6 NEXT LINES
-from sys import path
-import os
-import django
-path.append('../')
-os.environ["DJANGO_SETTINGS_MODULE"] = "backoffice.settings"
-django.setup()
+# from sys import path
+# import os
+# import django
+# path.append('./osis')
+# os.environ["DJANGO_SETTINGS_MODULE"] = "backoffice.settings"
+# django.setup()
 ###########################################################################
 
 from reference import models as mdl_ref
 from base import models as mdl_base
-from backoffice import queue
-
+from backoffice.queue import queue_actions
 
 
 def get_all_data(model_class, fields=None, order_by=None):
@@ -66,35 +65,33 @@ def get_model_class_str(model_class):
     :return: un String qui représente le model_class passé en paramètre.
     """
     map_classes = {
-        mdl_ref.Country : 'reference.Country',
-        mdl_base.domain.Domain : 'admission.Domain',
+        mdl_ref.country.Country: 'reference.Country',
+        mdl_base.domain.Domain: 'admission.Domain',
     }
     return map_classes[model_class]
 
 
-
-def migrate(model_class, queue_name, fields=None):
+def migrate(model_class, records, queue_name):
     """
-    Récupère tous les records du modèle passé en paramètre et les envoie dans la queue.
+    Send all records into the queue name passed in pparameter.
+    :param model_class: The model's class used to get data to send into the Queue (to sync these data from Osis to Osis-portal).
+    :param queue_name: The name of the queue in which data are sent.
+    :param records: List of records to send into the queue.
     """
-    records = get_all_data(model_class, fields=fields, order_by='name')
     print("Sending records into the queue named '" + queue_name + "'...")
     data = {
-        'model_class_str' : get_model_class_str(model_class),
-        'records' : records,
+        'model_class_str': get_model_class_str(model_class),
+        'records': records,
     }
-    queue.send_message(queue_name, data)
+    queue_actions.send_message(queue_name, data)
     print("Done.")
 
 
-def execute():
-    """
-    Lance la migration de Osis.Country vers Osis-portal.Country.
-    """
-    # migrate(models.Continent)
-    # migrate(models.Currency)
-    migrate(mdl_ref.Country, 'reference', fields=['id', 'iso_code', 'name', 'nationality', 'european_union', 'dialing_code', 'cref_code'])
-    migrate(mdl_base.domain.Domain, 'admission', fields=['id', 'external_id', 'name', 'parent_id'])
+def migrate_reference_country():
+    records = mdl_ref.country.find_all_for_sync()
+    migrate(mdl_ref.country.Country, records, 'reference')
 
 
-# execute()
+def migrate_base_domain():
+    records = mdl_base.domain.find_all_for_sync()
+    migrate(mdl_base.domain.Domain, records, 'admission')

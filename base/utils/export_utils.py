@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import datetime
 from django.http import HttpResponse
 from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
@@ -52,6 +53,10 @@ def export_xls(academic_year_id, is_fac, exam_enrollments):
 
     worksheet.append([str(exam_enrollments[0].learning_unit_enrollment.learning_unit_year)])
     worksheet.append([str('Session: %s' % exam_enrollments[0].session_exam.number_session)])
+    worksheet.append([str('')])
+    printing_date = datetime.datetime.now()
+    printing_date = printing_date.strftime("%d/%m/%Y")
+    worksheet.append([str('%s: %s' % (_('file_production_date'), printing_date))])
     worksheet.append([str('')])
     worksheet.append([str(_('justification_legend') % mdl.exam_enrollment.justification_label_authorized())])
     worksheet.append([str(_('score_legend') % "0 - 20")])

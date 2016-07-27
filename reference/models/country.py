@@ -57,3 +57,14 @@ def find_all():
 
 def find_by_id(country_id):
     return Country.objects.get(pk=country_id)
+
+
+def find_all_for_sync():
+    """
+    :return: All records in the 'Country' model (table). Used to synchronize date from Osis to Osis-portal.
+    """
+    print("Retrieving data from " + str(Country) + "...")
+    # Necessary fields for Osis-portal
+    fields = ['id', 'iso_code', 'name', 'nationality', 'european_union', 'dialing_code', 'cref_code']
+    # list() to force the evaluation of the queryset
+    return list(Country.objects.values(*fields).order_by('name'))

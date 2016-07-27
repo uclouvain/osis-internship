@@ -24,57 +24,44 @@
 #
 ##############################################################################
 from django.db import models
+from django.utils import timezone
 from base.models import offer
 
 
 class OfferProposition(models.Model):
     acronym = models.CharField(max_length=200)
     offer = models.ForeignKey(offer.Offer)
-
-    ####################
-    # READERS PARAMETERS
-    ####################
-
-    # Do the students manage their readers ?
-    # True = students can manage their readers
-    # False = students cannot manage their readers, only the managers can
     student_can_manage_readers = models.BooleanField(default=True)
-
-    # Can students always see readers ?
-    # True = Yes
-    # False = No, only when the date is ok
     readers_visibility_date_for_students = models.BooleanField(default=False)
-
-    # Can advisers suggest readers when creating proposition_dissertation ?
     adviser_can_suggest_reader = models.BooleanField(default=False)
-
-    ##################
-    # STEPS PARAMETERS
-    ##################
-    # Is there a first year evaluation ?
     evaluation_first_year = models.BooleanField(default=False)
-
-    # Is there a validation commission ?
     validation_commission_exists = models.BooleanField(default=False)
+    start_visibility_proposition = models.DateField(default=timezone.now)
+    end_visibility_proposition = models.DateField(default=timezone.now)
+    start_visibility_dissertation = models.DateField(default=timezone.now)
+    end_visibility_dissertation = models.DateField(default=timezone.now)
 
-    #################
-    # DATE PARAMETERS
-    #################
-    #   Start of visibility of proposition_dissertation
-    month_start_visibility_proposition = models.IntegerField(default=9)
-    day_of_month_start_visibility_proposition = models.IntegerField(default=1)
+    @property
+    def in_periode_visibility_proposition(self):
+        c = timezone.now()
+        a = self.start_visibility_proposition
+        b = self.end_visibility_proposition
 
-    #   End of visibility of proposition_dissertation
-    month_end_visibility_proposition = models.IntegerField(default=8)
-    day_of_month_end_visibility_proposition = models.IntegerField(default=31)
+        if a <= b and a <= c <= b:
+            return True
+        else:
+            return False
 
-    #   Start of opening dissertation
-    month_start_visibility_dissertation = models.IntegerField(default=9)
-    day_of_month_start_visibility_dissertation = models.IntegerField(default=1)
+    @property
+    def in_periode_visibility_dissertation(self):
+        c = timezone.now()
+        a = self.start_visibility_dissertation
+        b = self.end_visibility_dissertation
 
-    #   End of oppening dissertation
-    month_end_visibility_dissertation = models.IntegerField(default=8)
-    day_of_month_end_visibility_dissertation = models.IntegerField(default=31)
+        if a <= b and a <= c <= b:
+            return True
+        else:
+            return False
 
     def __str__(self):
         return self.acronym
