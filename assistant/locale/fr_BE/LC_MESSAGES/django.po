@@ -259,9 +259,6 @@ msgstr "ETP"
 msgid "percentage_equivalent_full_time"
 msgstr "% ETP"
 
-msgid "sector_vice-rector"
-msgstr "V-R S."
-
 msgid "tutoring"
 msgstr "Ens."
 
@@ -362,6 +359,16 @@ msgid "formations"
 msgstr "Formations scientifiques, pédagogiques ou autres auxquelles vous avez participé \
 (LLL, SMCS, RHUM, Summer School)"
 
+msgid "phd"
+msgstr "PhD"
 
+msgid "research_short_name"
+msgstr "RCH"
+
+msgid "tutoring_short_name"
+msgstr "ENS"
+
+msgid "sector_vice-rector_short_name"
+msgstr "V-R S."
 
 

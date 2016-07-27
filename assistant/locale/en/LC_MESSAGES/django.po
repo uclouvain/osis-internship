@@ -256,9 +256,6 @@ msgstr "EFT"
 msgid "percentage_equivalent_full_time"
 msgstr "% EFT"
 
-msgid "sector_vice-rector"
-msgstr "S. V-R"
-
 msgid "program_commission"
 msgstr "Program Commission"
 
@@ -352,6 +349,20 @@ msgstr "Obtained diplomas"
 msgid "formations"
 msgstr "Scientific or educational formations"
 
+msgid "renewal_short_name"
+msgstr "Summary"
+
+msgid "phd"
+msgstr "PhD"
+
+msgid "research_short_name"
+msgstr "RES"
+
+msgid "tutoring_short_name"
+msgstr "TUT"
+
+msgid "sector_vice-rector_short_name"
+msgstr "S. V-R"
 
 
 
