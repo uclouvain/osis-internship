@@ -1,0 +1,86 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+{% endcomment %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/custom.css' %}">
+<link rel="stylesheet" href="{% static 'css/dataTables.bootstrap.min.css' %}">
+{% endblock %}
+{% block breadcrumb %}
+<li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'institution' %}</a></li>
+<li><a href="{% url 'mandates' %}" id="lnk_mandates">{% trans 'mandates' %}</a></li>
+<li><a href="{% url 'reviewer_mandates_list' %}" id="lnk_reviewer_mandates_list">{% trans 'reviewer_mandates_list' %}</a></li>
+<li><a href="{% url 'reviewer_delegation' %}" id="lnk_reviewer_delegation">{% trans 'reviewer_delegation' %}</a></li>
+<li class="active">{% trans 'reviewer_delegation_add' %}</li>
+{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h3>{% trans 'assistantship_mandate_renewal' %} {{ year|add:1 }}</h3>
+</div>
+<div class="panel panel-default">
+    <div class="panel-body">
+    <h4>{% trans 'choose_person_as_reviewer_for' %} {{related_structure.title}} ({{related_structure.acronym}})</h4>	
+    <form method="POST" action="{% url 'reviewer_delegation_add' related_structure.id %}">
+    {{ form.non_field_errors }}
+ 		{% csrf_token %}
+ 		{% for hidden in form.hidden_fields %}
+			{{ hidden }}
+		{% endfor %}
+	<div class="form-group">
+		<div class="row">
+			<div class="col-md-4">
+				<div class="controls"  onChange="print_email();">
+				<label for="txt_person">{% trans 'person' %}</label>
+				{{ form.person }}<font class="error">{{ form.person.errors }}</font></div>
+				</div>
+				<div class="col-md-3">
+					<div id="email_person"></div>
+				</div>
+			</div>
+		</div>
+    <button type="submit" class="btn btn-primary" title="{% trans 'save'%}" id="bt_add_reviewer_save"
+    onclick="return confirm('{% trans 'confirm_reviewer_addition' %}')">
+    <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}</button>
+    <a class="btn btn-default" id="lnk_upload_cancel" href="{% url 'reviewer_delegation' %}">
+    <span class="glyphicon glyphicon-cancel" aria-hidden="true"></span> {% trans 'cancel'%}</a>
+    </form>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+function print_email()
+{
+	var email = document.getElementById("id_person").value;
+	document.getElementById('email_person').innerHTML = email;
+}
+
+window.onload = function() {
+    Hide();
+    print_email();
+};
+</script>
+{% endblock %}
