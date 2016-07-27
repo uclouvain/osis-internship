@@ -28,7 +28,8 @@
 
 
 from django.test import TestCase
-from base.models import student, tutor, person, domain
+from base.models import student, tutor, person
+from reference.models import domain
 from reference.models import country
 import backoffice.portal_migration as portal_migration
 from django.core.exceptions import ObjectDoesNotExist
@@ -39,7 +40,6 @@ class PortalMigrationTest(TestCase):
     def setUp(self):
         self.list_students = data_for_tests.create_students()
         self.list_tutors = data_for_tests.create_tutors()
-
 
     def testGetModelClass(self):
         list_expected = ['reference.Country',

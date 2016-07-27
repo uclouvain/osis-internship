@@ -66,7 +66,7 @@ def get_model_class_str(model_class):
     """
     map_classes = {
         mdl_ref.country.Country: 'reference.Country',
-        mdl_base.domain.Domain: 'admission.Domain',
+        mdl_ref.domain.Domain: 'admission.Domain',
         mdl_base.student.Student: 'base.Student',
         mdl_base.tutor.Tutor: 'base.Tutor'
     }
@@ -93,8 +93,8 @@ def migrate_reference_country():
 
 
 def migrate_base_domain():
-    records = mdl_base.domain.find_all_for_sync()
-    migrate(mdl_base.domain.Domain, records, 'admission')
+    records = mdl_ref.domain.find_all_for_sync()
+    migrate(mdl_ref.domain.Domain, records, 'admission')
 
 
 def migrate_base_student():
