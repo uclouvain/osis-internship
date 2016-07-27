@@ -27,8 +27,8 @@
 # This class tests the portal_migration functions.
 
 
-from base.models import student, tutor, person, domain
-from reference.models import country
+from base.models import student, tutor, person
+import datetime
 from django.contrib.auth.models import User
 import random
 
@@ -44,11 +44,11 @@ def create_students():
                        'Kelly', 'Howard']
     list_password = ['qwerty', 'mustang', 'master', 'superman', 'ranger', '1234', 'trustno1',
                      'tigger']
-    list_global_ids = generate_list_ids(number_of_id=8, length_of_id=8)
+    list_global_ids = ['001', '002', '003', '004', '005', '006', '007', '008']
 
     list_users = create_users(list_last_names, list_password)
     list_persons = create_persons(list_users, list_global_ids, list_first_names,
-                                 list_last_names)
+                                  list_last_names)
     list_students = []
     for i in range(0, len(list_last_names)):
         a_student = student.Student(person=list_persons[i],
@@ -57,6 +57,33 @@ def create_students():
         list_students.append(a_student)
 
     return list_students
+
+
+def create_tutors():
+    """
+    Creates tutor objects.
+    :return: A list of tutor objects.
+    """
+    list_first_names = ['Charls', 'Mathieu', 'Sophie', 'Marthe', 'Roger', 'Gaston',
+                        'Nemo', 'Harry']
+    list_last_names = ['Walker', 'Scott', 'Wright', 'Allen', 'Nelson', 'Mitchell',
+                       'Moore', 'Campbell']
+    list_password = ['qwerty', 'mustang', 'master', 'superman', 'ranger', '1234', 'trustno1',
+                     'tigger']
+    list_global_ids = ['0101', '0102', '0103', '0104', '0105', '0106', '0107', '0108']
+
+    list_users = create_users(list_last_names, list_password)
+    list_persons = create_persons(list_users, list_global_ids, list_first_names,
+                                  list_last_names)
+    list_tutors = []
+    for i in range(0, len(list_last_names)):
+        a_tutor = tutor.Tutor(person=list_persons[i],
+                              external_id=list_global_ids[i],
+                              changed=datetime.datetime(2016, 10, 25, 10, 45))
+        a_tutor.save()
+        list_tutors.append(a_tutor)
+
+    return list_tutors
 
 
 def create_users(list_usernames, list_passwords):
@@ -95,7 +122,8 @@ def create_persons(list_users, list_global_id, list_first_names, list_last_names
                                  global_id=list_global_id[i],
                                  first_name=list_first_names[i],
                                  last_name=list_last_names[i],
-                                 email=email)
+                                 email=email,
+                                 changed=datetime.datetime(2016, 10, 25, 10, 45))
         a_person.save()
         list_persons.append(a_person)
 

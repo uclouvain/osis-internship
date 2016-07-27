@@ -28,7 +28,6 @@ from django.db import models
 from django.contrib import admin
 from base.models import person, attribution
 from django.core import serializers
-import json
 
 
 class TutorAdmin(admin.ModelAdmin):
@@ -109,7 +108,7 @@ def serialize_all_tutors():
     data_tutors = serialize_list_tutors(list_tutors)
     data_persons = person.serialize_list_persons(list_persons)
     data_dict = {'tutors': data_tutors, 'persons': data_persons}
-    return json.dumps(data_dict)
+    return data_dict
 
 
 def serialize_list_tutors(list_tutors):

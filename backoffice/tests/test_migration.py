@@ -38,6 +38,8 @@ import backoffice.tests.data_for_tests as data_for_tests
 class PortalMigrationTest(TestCase):
     def setUp(self):
         self.list_students = data_for_tests.create_students()
+        self.list_tutors = data_for_tests.create_tutors()
+
 
     def testGetModelClass(self):
         list_expected = ['reference.Country',
@@ -52,8 +54,7 @@ class PortalMigrationTest(TestCase):
                                                          "return the correct string for"
                                                          "the class.")
 
-    # TODO implement it for all other models
-    def testGetAllData(self):
+    def testGetAllDataStudent(self):
         list_expected = self.list_students
 
         # Need to transform results query into model object
@@ -67,3 +68,18 @@ class PortalMigrationTest(TestCase):
 
         self.assertListEqual(list_expected, list_actual, "Get all data doesn't return all data "
                                                          "for the student model.")
+
+    def testGetAllDataTutors(self):
+        list_expected = self.list_tutors
+
+        # Need to transform results query into model object
+        list_query = portal_migration.get_all_data(tutor.Tutor)
+        list_actual = []
+        for item in list_query:
+            try:
+                list_actual.append(tutor.Tutor.objects.get(id=item['id']))
+            except ObjectDoesNotExist:
+                print("Error when retrieving data " + str(item))
+
+        self.assertListEqual(list_expected, list_actual, "Get all data doesn't return all data "
+                                                         "for the tutor model.")

@@ -26,21 +26,21 @@
 
 
 from django.test import TestCase
-from base.models import student
+from base.models import tutor
 import base.tests.ressources.data_test_model as data_for_test
 import backoffice.tests.data_for_tests as data_model
 
 
 class PortalMigrationTest(TestCase):
     def setUp(self):
-        self.list_students = data_model.create_students()
+        self.list_tutors = data_model.create_tutors()
 
     def testFindAllForSync(self):
-        actual = student.find_all_for_sync()
-        expected = data_for_test.expected_for_students
+        actual = tutor.find_all_for_sync()
+        expected = data_for_test.expected_for_tutors
 
-        error_msg = "find all ofr sync for students doesn't return correct json format."
-        self.assertJSONEqual(actual['students'], expected['students'], error_msg)
+        error_msg = "find all for sync for tutors doesn't return correct json format."
+        self.assertJSONEqual(actual['tutors'], expected['tutors'], error_msg)
         self.assertJSONEqual(actual['persons'], expected['persons'], error_msg)
 
 

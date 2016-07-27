@@ -28,8 +28,6 @@ from django.contrib import admin
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 from base.models import person
-import json
-
 
 
 class StudentAdmin(admin.ModelAdmin):
@@ -113,7 +111,7 @@ def serialize_all_students():
     data_students = serialize_list_students(list_students)
     data_persons = person.serialize_list_persons(list_persons)
     data_dict = {'students': data_students, 'persons': data_persons}
-    return json.dumps(data_dict)
+    return data_dict
 
 
 def serialize_list_students(list_students):
