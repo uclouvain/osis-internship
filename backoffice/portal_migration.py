@@ -49,14 +49,14 @@ def get_all_data(model_class, fields=None, order_by=None):
     """
     print("Retrieving data from " + str(model_class) + "...")
     queryset = model_class.objects
-    if fields:
+    if fields :
         queryset = queryset.values(*fields)
-    else:
+    else :
         queryset = queryset.values()
-    if order_by:
+    if order_by :
         queryset = queryset.order_by(order_by)
     print("Done.")
-    return list(queryset)  # list() to force the evaluation of the queryset
+    return list(queryset) # list() to force the evaluation of the queryset
 
 
 def get_model_class_str(model_class):
@@ -101,6 +101,7 @@ def migrate_base_domain():
 
 def migrate_base_student():
     records = mdl_base.student.find_all_for_sync()
+    print(records)
     migrate(mdl_base.student.Student, records, 'osis_base')
 
 

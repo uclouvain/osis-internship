@@ -23,12 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib.auth.models import User
-from django.core import serializers
 from django.db import models
 from django.contrib import admin
+from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 from base.models import person
+import json
 
 
 
@@ -98,34 +98,34 @@ def find_all_for_sync():
     # Necessary fields for Osis-portal
     # fields = ['id', 'registration_id', 'person']
 
-    records = students_to_list_json()
+    records = serialize_all_students()
     return records
 
 
-def students_to_list_json():
+def serialize_all_students():
     """
-        Returns a  list of json representation of all the students.
-        :return: a list of json represented as dictionnary
+    Serialize all the students in json format
+    :return: a json object
     """
-    students = Student.objects.select_related('person__user').all()
+    # Fetch all related persons objects
+    students = Student.objects.select_related('person').all()
     list_students = []
+    list_persons = []
     for stud in students:
-        stud_json = student_to_json(stud)
-        list_students.append(stud_json)
-    return list_students
+        list_students.append(stud)
+        list_persons.append(stud.person)
+    data_students = serialize_list_students(list_students)
+    data_persons = person.serialize_list_persons(list_persons)
+    data_dict = {'students': data_students, 'persons': data_persons}
+    return json.dumps(data_dict)
 
 
-def student_to_json(student_object):
+def serialize_list_students(list_students):
     """
-    Returns a json representation of a student.
-    :param student_object: an instance of the class Student
-    :return: a json represented as dictionnary
+    Serialize a list of student objects using the json format.
+    :param list_students: a list of student objects
+    :return: a string
     """
-    student_json = {
-            'id': student_object.id,
-            'registration_id': student_object.registration_id,
-            'person': person.person_to_json(student_object.person)
-        }
-    return student_json
-
+    fields = ('id', 'registration_id', 'person')
+    return serializers.serialize("json", list_students, fields=fields)
 

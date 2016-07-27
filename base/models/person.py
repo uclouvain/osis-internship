@@ -29,6 +29,7 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
+from django.core import serializers
 
 
 class PersonAdmin(admin.ModelAdmin):
@@ -106,48 +107,15 @@ def find_by_global_id(global_id):
     return Person.objects.filter(global_id=global_id).first()
 
 
-def find_persons_by_ids(list_person_id):
-    return Person.objects.filter(id__in=list_person_id)
-
-
-def person_to_json(person_object):
+def serialize_list_persons(list_persons):
     """
-        Returns a json representation of a person.
-        :param person_object: an instance of the class Person
-        :return: a json represented as dictionnary
+    Serialize a list of person objects using the json format.
+    :param list_persons: a list of person objects
+    :return: a string
     """
-    person_json = {}
-    fields = Person._meta.get_fields(include_hidden=True)
-    for field in fields:
-        if not field_is_ok(field):
-            continue
-        if field.name == 'user':
-            person_json[field.name] = user_to_json(person_object.user)
-        else:
-            person_json[field.name] = getattr(person_object, field.name)
-
-    return person_json
-
-def user_to_json(user_object):
-    """
-        Returns a json representation of a user.
-        :param user_object: an instance of the class User
-        :return: a json represented as dictionnary
-    """
-    user_json = {}
-    fields = User._meta.get_fields(include_hidden=True)
-    for field in fields:
-        if not field_is_ok(field):
-            continue
-        user_json[field.name] = getattr(user_object, field.name)
-
-    return user_json
+    fields = ('id', 'external_id', 'changed', 'global_id', 'gender',
+              'national_id', 'first_name', 'middle_name', 'last_name',
+              'email', 'phone', 'phone_mobile', 'language')
+    return serializers.serialize("json", list_persons, fields=fields)
 
 
-def field_is_ok(field):
-    if field.concrete and (
-                not field.is_relation
-                or field.one_to_one
-                or (field.many_to_one and field.related_model)):
-        return True
-    return False
