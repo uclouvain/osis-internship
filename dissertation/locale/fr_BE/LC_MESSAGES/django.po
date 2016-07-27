@@ -31,6 +31,9 @@ msgstr "mémoires reliés"
 msgid "adviser_profile"
 msgstr "profil enseignant"
 
+msgid "adviser_type"
+msgstr "Type de la personne"
+
 msgid "adviser_stats"
 msgstr "statistiques enseignant"
 
@@ -54,6 +57,15 @@ msgstr "disponible par email"
 
 msgid "available_by_phone"
 msgstr "disponible par téléphone"
+
+msgid "chart_pie_adviser_promoteur"
+msgstr "Mémoire(s) en tant que promoteur "
+
+msgid "chart_pie_adviser_copro"
+msgstr "Mémoire(s) en tant que copromoteur "
+
+msgid "chart_pie_adviser_reading"
+msgstr "Mémoire(s) en tant que lecteur "
 
 msgid "collaboration"
 msgstr "collaboration"
@@ -240,6 +252,18 @@ msgstr "Nouveau/Modifier sujet de mémoire"
 
 msgid "no_result"
 msgstr "aucun résultat"
+
+msgid "number_of_dissertation_active_total"
+msgstr "Nombre total de projet(s) en cours"
+
+msgid "number_of_dissertation_pro"
+msgstr "propmoteur"
+
+msgid "number_of_dissertation_copro"
+msgstr "copropmoteur"
+
+msgid "number_of_dissertation_reader"
+msgstr "lecteur"
 
 msgid "of"
 msgstr "sur"

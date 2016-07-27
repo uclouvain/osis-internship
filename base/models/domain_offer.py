@@ -25,28 +25,22 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
+from django.utils.translation import ugettext_lazy as _
+from base.models import offer, program_manager, academic_year
 
 
-class DomainAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-    fieldsets = ((None, {'fields': ('name',)}),)
+class DomainOfferAdmin(admin.ModelAdmin):
+    list_display = ('domain', 'offer_year', 'priority')
+    fieldsets = ((None, {'fields': ('domain', 'offer_year', 'priority',)}),)
+    raw_id_fields = ('offer_year',)
+    search_fields = ['acronym']
 
 
-class Domain(models.Model):
+class DomainOffer(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
-    name = models.CharField(max_length=255)
-    parent = models.ForeignKey('self', null=True, blank=True)
+    domain = models.ForeignKey('reference.Domain')
+    offer_year = models.ForeignKey('OfferYear')
+    priority = models.CharField(max_length=20)
 
     def __str__(self):
-        return self.name
-
-
-def find_all_for_sync():
-    """
-    :return: All records in the 'Domain' model (table). Used to synchronize date from Osis to Osis-portal.
-    """
-    print("Retrieving data from " + str(Domain) + "...")
-    # Necessary fields for Osis-portal
-    fields = ['id', 'external_id', 'name', 'parent_id']
-    # list() to force the evaluation of the queryset
-    return list(Domain.objects.values(*fields).order_by('name'))
+        return u"%s - %s" % (self.domain, self.offer_year)

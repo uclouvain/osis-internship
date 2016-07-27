@@ -23,9 +23,22 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from reference.models import continent
-from reference.models import country
-from reference.models import currency
-from reference.models import decree
-from reference.models import domain
-from reference.models import language
+from django.db import models
+from django.contrib import admin
+
+
+class DecreeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'start_date', 'end_date')
+    fieldsets = ((None, {'fields': ('name', 'start_date', 'end_date')}),)
+    ordering = ('name',)
+    search_fields = ['name']
+
+
+class Decree(models.Model):
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    name = models.CharField(max_length=80, unique=True)
+    start_date = models.DateField(blank=True, null=True)
+    end_date = models.DateField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
