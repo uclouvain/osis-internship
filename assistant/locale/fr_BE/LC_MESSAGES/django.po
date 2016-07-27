@@ -359,6 +359,9 @@ msgid "formations"
 msgstr "Formations scientifiques, pédagogiques ou autres auxquelles vous avez participé \
 (LLL, SMCS, RHUM, Summer School)"
 
+msgid "renewal_short_name"
+msgstr "Statut"
+
 msgid "phd"
 msgstr "PhD"
 

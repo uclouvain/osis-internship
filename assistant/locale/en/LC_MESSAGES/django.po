@@ -350,7 +350,7 @@ msgid "formations"
 msgstr "Scientific or educational formations"
 
 msgid "renewal_short_name"
-msgstr "Summary"
+msgstr "Renewal"
 
 msgid "phd"
 msgstr "PhD"
