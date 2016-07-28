@@ -41,3 +41,7 @@ class DissertationUpdate(models.Model):
                + ' / ' + str(self.created)
 
         return desc
+
+
+def get_dissertation_updates(dissert):
+    return DissertationUpdate.objects.filter(dissertation=dissert).order_by('created')

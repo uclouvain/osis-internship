@@ -41,6 +41,7 @@ from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models.proposition_dissertation import PropositionDissertation
 from dissertation.models.proposition_role import PropositionRole, count_proposition_roles_by_dissertation, \
     get_proposition_roles_by_dissertation
+from dissertation.models.dissertation_update import get_dissertation_updates
 from dissertation.forms import ManagerDissertationForm, ManagerDissertationEditForm, ManagerDissertationRoleForm
 from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl import Workbook
@@ -135,7 +136,7 @@ def manager_dissertations_detail_updates(request, pk):
     dissertation = get_object_or_404(Dissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
     adviser = find_adviser_by_person(person)
-    dissertation_updates = DissertationUpdate.objects.filter(dissertation=dissertation).order_by('created')
+    dissertation_updates = get_dissertation_updates(dissertation)
 
     return layout.render(request, 'manager_dissertations_detail_updates.html',
                          {'dissertation': dissertation,
