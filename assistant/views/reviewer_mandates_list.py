@@ -40,7 +40,7 @@ class MandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMi
 
     def test_func(self):
         try:
-            return reviewer.Reviewer.objects.get(person=self.request.user.person)
+            return reviewer.Reviewer.objects.filter(person=self.request.user.person)
         except ObjectDoesNotExist:
             return False
         
@@ -51,9 +51,9 @@ class MandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMi
     def get_queryset(self):
         form_class = MandatesArchivesForm
         form = form_class(self.request.GET)
-        rev = reviewer.Reviewer.objects.get(person=self.request.user.person)
+        rev = reviewer.Reviewer.objects.filter(person=self.request.user.person)[0]
         structures_id = structure.Structure.objects.filter(Q(id=rev.structure.id) | Q(part_of_id=rev.structure.id)).values_list('id', flat=True)
-        mandates_id = mandate_structure.MandateStructure.objects.filter(structure__in=structures_id).values_list('assistant_mandate_id', flat=True)
+        mandates_id = mandate_structure.MandateStructure.objects.filter(structure__in=structures_id).values_list('assistant_mandate_id', flat=True).distinct()
         if form.is_valid():
             self.request.session['selected_academic_year'] = form.cleaned_data[
                 'academic_year'].id
@@ -74,12 +74,20 @@ class MandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMi
 
     def get_context_data(self, **kwargs):
         context = super(MandatesListView, self).get_context_data(**kwargs)
-        has_delegate = reviewer.Reviewer.objects.filter(delegate_of__isnull=False).values_list('delegate_of_id', flat=True)
-        context['has_delegate']=has_delegate
         research_list = ['RESEARCH','SUPERVISION','VICE_RECTOR']
         supervision_list = ['SUPERVISION','VICE_RECTOR']
+        can_delegate = False
+        try:
+            reviewer.Reviewer.objects.get(Q(person=self.request.user.person) &
+                                      (Q(role="SUPERVISION") | Q(role="RESEARCH")))
+            can_delegate = True
+        except:
+            can_delegate = False
+        context['can_delegate'] = can_delegate
         context['research_list'] = research_list
         context['supervision_list'] = supervision_list
+        context['year'] = academic_year.AcademicYear.objects.get(
+                id=self.request.session.get('selected_academic_year')).year
         return context
 
     def get_initial(self):

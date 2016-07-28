@@ -23,10 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib.auth.models import Group
 from django.db import models
 from django.contrib import admin
+from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
+from base.models import person
 
 
 class StudentAdmin(admin.ModelAdmin):
@@ -80,3 +81,42 @@ def find_by_person(a_person):
         return student
     except ObjectDoesNotExist:
         return None
+
+
+def find_all_for_sync():
+    """
+    :return: All records in the 'Student' model (table). Used to synchronize date from Osis to Osis-portal.
+    """
+    records = serialize_all_students()
+    return records
+
+
+def serialize_all_students():
+    """
+    Serialize all the students in json format
+    :return: a json object
+    """
+    # Fetch all related persons objects
+    students = Student.objects.select_related('person').all()
+    list_students = []
+    list_persons = []
+    for stud in students:
+        list_students.append(stud)
+        list_persons.append(stud.person)
+    data_students = serialize_list_students(list_students)
+    data_persons = person.serialize_list_persons(list_persons)
+    data_dict = {'students': data_students, 'persons': data_persons}
+    return data_dict
+
+
+def serialize_list_students(list_students):
+    """
+    Serialize a list of student objects using the json format.
+    Use to send data to osis-portal.
+    :param list_students: a list of student objects
+    :return: a string
+    """
+    # Restrict fields for osis-portal
+    fields = ('id', 'registration_id', 'person')
+    return serializers.serialize("json", list_students, fields=fields)
+
