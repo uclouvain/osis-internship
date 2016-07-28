@@ -51,7 +51,7 @@
         <br>
         <div class="row">
             <div class="col-md-3 col-lg-offset-1" style="text-align:right">
-                <label for="txt_author">{% trans 'author' %}</label>
+                <label for="txt_author" {% if form.author.errors %} style="color:red;" {% endif %}>{% trans 'author' %}</label>
             </div>
             <div class="col-md-4">
                 <select class="form-control" id="txt_author"  name="author" style="margin:-6px;">
@@ -62,7 +62,7 @@
         <br>
         <div class="row">
             <div class="col-md-3 col-lg-offset-1" style="text-align:right">
-                <label for="txt_offer_year_start">{% trans 'offer_year_start' %}</label>
+                <label for="txt_offer_year_start" {% if form.offer_year_start.errors %} style="color:red;" {% endif %}>{% trans 'offer_year_start' %}</label>
             </div>
             <div class="col-md-4">
                 <select class="form-control" id="txt_offer_year_start"  name="offer_year_start" style="margin:-6px;">
@@ -73,7 +73,7 @@
         <br>
         <div class="row">
             <div class="col-md-3 col-lg-offset-1" style="text-align:right">
-                <label for="txt_proposition_dissertation">{% trans 'proposition_dissertation' %}</label>
+                <label for="txt_proposition_dissertation" {% if form.proposition_dissertation.errors %} style="color:red;" {% endif %}>{% trans 'proposition_dissertation' %}</label>
             </div>
             <div class="col-md-4">
                 <select class="form-control" id="txt_proposition_dissertation"  name="proposition_dissertation" style="margin:-6px;">
@@ -93,7 +93,7 @@
         <br>
         <div class="row">
             <div class="col-md-3 col-lg-offset-1" style="text-align:right">
-                <label for="txt_defend_periode">{% trans 'defend_periode' %}</label>
+                <label for="txt_defend_periode" {% if form.defend_periode.errors %} style="color:red;" {% endif %}>{% trans 'defend_periode' %}</label>
             </div>
             <div class="col-md-4">
                 <select class="form-control" id="txt_defend_periode"  name="defend_periode" style="margin:-6px;">
@@ -106,7 +106,7 @@
         <br>
         <div class="row">
             <div class="col-md-3 col-lg-offset-1" style="text-align:right">
-                <label for="txt_defend_year">{% trans 'defend_year' %}</label>
+                <label for="txt_defend_year" {% if form.defend_year.errors %} style="color:red;" {% endif %}>{% trans 'defend_year' %}</label>
             </div>
             <div class="col-md-4">
                 <select class="form-control" id="txt_defend_year"  name="defend_year" style="margin:-6px;">
