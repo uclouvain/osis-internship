@@ -65,3 +65,7 @@ def add_dissertation_role(status, adviser, dissertation):
                             adviser=adviser,
                             dissertation=dissertation)
     role.save()
+
+
+def get_dissertation_roles_by_dissertation(dissertation):
+    return DissertationRole.objects.filter(dissertation=dissertation)

@@ -34,7 +34,7 @@ from base.views import layout
 from dissertation.models.adviser import Adviser, find_adviser_by_person
 from dissertation.models.dissertation import Dissertation, search_dissertation
 from dissertation.models.dissertation_role import DissertationRole, count_adviser_roles, count_dissertation_roles, \
-    add_dissertation_role
+    add_dissertation_role, get_dissertation_roles_by_dissertation
 from dissertation.models.dissertation_update import DissertationUpdate
 from dissertation.models.faculty_adviser import find_by_adviser
 from dissertation.models.offer_proposition import OfferProposition
@@ -121,7 +121,7 @@ def manager_dissertations_detail(request, pk):
             for proposition_role in proposition_roles:
                 add_dissertation_role(proposition_role.status, proposition_role.adviser, dissertation)
 
-    dissertation_roles = DissertationRole.objects.filter(dissertation=dissertation)
+    dissertation_roles = get_dissertation_roles_by_dissertation(dissertation)
     return layout.render(request, 'manager_dissertations_detail.html',
                          {'dissertation': dissertation,
                           'adviser': adviser,
