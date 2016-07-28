@@ -58,3 +58,10 @@ def count_adviser_roles(adviser, role, dissertation_status):
 
 def count_dissertation_roles(dissertation):
     return DissertationRole.objects.filter(dissertation=dissertation).count()
+
+
+def add_dissertation_role(status, adviser, dissertation):
+    role = DissertationRole(status=status,
+                            adviser=adviser,
+                            dissertation=dissertation)
+    role.save()

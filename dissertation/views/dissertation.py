@@ -33,7 +33,8 @@ from base.models.student import Student
 from base.views import layout
 from dissertation.models.adviser import Adviser, find_adviser_by_person
 from dissertation.models.dissertation import Dissertation, search_dissertation
-from dissertation.models.dissertation_role import DissertationRole, count_adviser_roles, count_dissertation_roles
+from dissertation.models.dissertation_role import DissertationRole, count_adviser_roles, count_dissertation_roles, \
+    add_dissertation_role
 from dissertation.models.dissertation_update import DissertationUpdate
 from dissertation.models.faculty_adviser import find_by_adviser
 from dissertation.models.offer_proposition import OfferProposition
@@ -111,19 +112,15 @@ def manager_dissertations_detail(request, pk):
     count_dissertation_role = count_dissertation_roles(dissertation)
     count_proposition_role = count_proposition_roles_by_dissertation(dissertation)
     proposition_roles = get_proposition_roles_by_dissertation(dissertation)
+
     if count_proposition_role == 0:
         if count_dissertation_role == 0:
-            pro = DissertationRole(status='PROMOTEUR',
-                                   adviser=dissertation.proposition_dissertation.author,
-                                   dissertation=dissertation)
-            pro.save()
+            add_dissertation_role('PROMOTEUR', dissertation.proposition_dissertation.author, dissertation)
     else:
         if count_dissertation_role == 0:
             for proposition_role in proposition_roles:
-                jury = DissertationRole(status=proposition_role.status,
-                                        adviser=proposition_role.adviser,
-                                        dissertation=dissertation)
-                jury.save()
+                add_dissertation_role(proposition_role.status, proposition_role.adviser, dissertation)
+
     dissertation_roles = DissertationRole.objects.filter(dissertation=dissertation)
     return layout.render(request, 'manager_dissertations_detail.html',
                          {'dissertation': dissertation,
