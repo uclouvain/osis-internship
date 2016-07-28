@@ -38,7 +38,8 @@ from dissertation.models.dissertation_role import DissertationRole, count_advise
 from dissertation.models.dissertation_update import DissertationUpdate
 from dissertation.models.faculty_adviser import find_by_adviser
 from dissertation.models.offer_proposition import OfferProposition
-from dissertation.models.proposition_dissertation import PropositionDissertation
+from dissertation.models.proposition_dissertation import PropositionDissertation, \
+    find_propositions_dissertation_by_offer
 from dissertation.models.proposition_role import PropositionRole, count_proposition_roles_by_dissertation, \
     get_proposition_roles_by_dissertation
 from dissertation.models.dissertation_update import get_dissertation_updates
@@ -158,20 +159,14 @@ def manager_dissertations_edit(request, pk):
             dissertation.save()
             return redirect('manager_dissertations_detail', pk=dissertation.pk)
         else:
-            form.fields["proposition_dissertation"].queryset = \
-                PropositionDissertation.objects.filter(visibility=True,
-                                                       active=True,
-                                                       offer_proposition__offer=offer)
+            form.fields["proposition_dissertation"].queryset = find_propositions_dissertation_by_offer(offer)
             form.fields["author"].queryset = \
                 Student.objects.filter(offerenrollment__offer_year__offer=offer)
             form.fields["offer_year_start"].queryset = \
                 OfferYear.objects.filter(offer=offer)
     else:
         form = ManagerDissertationEditForm(instance=dissertation)
-        form.fields["proposition_dissertation"].queryset = \
-            PropositionDissertation.objects.filter(visibility=True,
-                                                   active=True,
-                                                   offer_proposition__offer=offer)
+        form.fields["proposition_dissertation"].queryset = find_propositions_dissertation_by_offer(offer)
         form.fields["author"].queryset = \
             Student.objects.filter(offerenrollment__offer_year__offer=offer)
         form.fields["offer_year_start"].queryset = \
