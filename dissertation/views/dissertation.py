@@ -38,7 +38,8 @@ from dissertation.models.dissertation_update import DissertationUpdate
 from dissertation.models.faculty_adviser import find_by_adviser
 from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models.proposition_dissertation import PropositionDissertation
-from dissertation.models.proposition_role import PropositionRole, count_proposition_roles_by_dissertation
+from dissertation.models.proposition_role import PropositionRole, count_proposition_roles_by_dissertation, \
+    get_proposition_roles_by_dissertation
 from dissertation.forms import ManagerDissertationForm, ManagerDissertationEditForm, ManagerDissertationRoleForm
 from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl import Workbook
@@ -109,7 +110,7 @@ def manager_dissertations_detail(request, pk):
     adviser = find_adviser_by_person(person)
     count_dissertation_role = count_dissertation_roles(dissertation)
     count_proposition_role = count_proposition_roles_by_dissertation(dissertation)
-    proposition_roles = PropositionRole.objects.filter(proposition_dissertation=dissertation.proposition_dissertation)
+    proposition_roles = get_proposition_roles_by_dissertation(dissertation)
     if count_proposition_role == 0:
         if count_dissertation_role == 0:
             pro = DissertationRole(status='PROMOTEUR',

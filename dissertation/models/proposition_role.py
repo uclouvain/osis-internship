@@ -45,3 +45,7 @@ class PropositionRole(models.Model):
 
 def count_proposition_roles_by_dissertation(dissertation):
     return PropositionRole.objects.filter(proposition_dissertation=dissertation.proposition_dissertation).count()
+
+
+def get_proposition_roles_by_dissertation(dissertation):
+    return PropositionRole.objects.filter(proposition_dissertation=dissertation.proposition_dissertation)
