@@ -157,6 +157,15 @@ def manager_dissertations_edit(request, pk):
             dissertation = form.save()
             dissertation.save()
             return redirect('manager_dissertations_detail', pk=dissertation.pk)
+        else:
+            form.fields["proposition_dissertation"].queryset = \
+                PropositionDissertation.objects.filter(visibility=True,
+                                                       active=True,
+                                                       offer_proposition__offer=offer)
+            form.fields["author"].queryset = \
+                Student.objects.filter(offerenrollment__offer_year__offer=offer)
+            form.fields["offer_year_start"].queryset = \
+                OfferYear.objects.filter(offer=offer)
     else:
         form = ManagerDissertationEditForm(instance=dissertation)
         form.fields["proposition_dissertation"].queryset = \
