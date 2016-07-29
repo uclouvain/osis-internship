@@ -25,9 +25,9 @@
 ##############################################################################
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from reference.models import country, currency, continent, decree, domain, \
-                            education_institution, language
+from reference.models import country, domain, education_institution, language
 import backoffice.portal_migration as portal_migration
+import sys
 
 queue_name = 'reference'
 
@@ -52,8 +52,13 @@ def send_instance_to_osis_portal(model_class, instance):
     :return:
     """
     # Records contains the serialized instance.
-    records = model_class.serialize_list([instance])
+    mod = sys.modules[model_class.__module__]
+    records = mod.serialize_list([instance]) # Need to put instance in a list.
     portal_migration.migrate_records(records=records, model_class=model_class,
                                      queue_name=queue_name)
+
+
+
+
 
 
