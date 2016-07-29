@@ -146,18 +146,8 @@ def academic_calendar_save(request, id):
         new_academic_calendar = False
         if academic_calendar.id is None:
             new_academic_calendar = True
-        off_year_calendar_min = mdl.offer_year_calendar.get_min_start_date(academic_calendar.id)
         off_year_calendar_max = mdl.offer_year_calendar.get_max_end_date(academic_calendar.id)
-        if off_year_calendar_min and academic_calendar.start_date.date() > off_year_calendar_min.start_date:
-            messages.add_message(request,
-                                 messages.ERROR,
-                                 "%s" % (trans('academic_calendar_offer_year_calendar_start_date_error')
-                                         % (off_year_calendar_min.start_date.strftime('%d/%m/%Y'),
-                                            off_year_calendar_min.offer_year.acronym)))
-            return layout.render(request, "academic_calendar_form.html", {'academic_calendar': academic_calendar,
-                                                                          'academic_years': academic_years,
-                                                                          'form': form})
-        elif off_year_calendar_max and academic_calendar.end_date.date() < off_year_calendar_max.end_date:
+        if off_year_calendar_max and academic_calendar.end_date.date() < off_year_calendar_max.end_date:
             messages.add_message(request, messages.ERROR,
                                  "%s." % (trans('academic_calendar_offer_year_calendar_end_date_error')
                                           % (off_year_calendar_max.end_date.strftime('%d/%m/%Y'),
