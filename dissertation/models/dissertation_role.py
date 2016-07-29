@@ -30,7 +30,7 @@ from django.utils.translation import ugettext_lazy as _
 class DissertationRole(models.Model):
     STATUS_CHOICES = (
         ('PROMOTEUR', _('pro')),
-        ('CO_PROMOTEUR', _('popro')),
+        ('CO_PROMOTEUR', _('copro')),
         ('READER', _('reader')),
     )
 

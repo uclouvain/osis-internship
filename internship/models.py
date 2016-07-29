@@ -182,40 +182,39 @@ class InternshipChoice(models.Model):
     def find_by(s_organization=None, s_speciality=None, s_organization_ref=None, s_choice=None,
                 s_define_choice=None, s_student=None):
 
-        has_criteria = False
+        out = None
         queryset = InternshipChoice.objects
 
         if s_organization:
             queryset = queryset.filter(organization=s_organization)
-            has_criteria = True
 
         if s_speciality:
             queryset = queryset.filter(speciality=s_speciality)
-            has_criteria = True
 
         if s_organization_ref:
             queryset = queryset.filter(organization__reference=s_organization_ref).order_by('choice')
-            has_criteria = True
 
         if s_define_choice:
             queryset = queryset.filter(choice=s_define_choice)
-            has_criteria = True
 
         if s_choice:
             if s_choice == 1 :
                 queryset = queryset.filter(choice=s_choice)
             else :
                 queryset = queryset.exclude(choice=1)
-            has_criteria = True
 
         if s_student:
             queryset = queryset.filter(student = s_student).order_by('choice')
-            has_criteria = True
 
-        if has_criteria:
-            return queryset
-        else:
-            return None
+        if s_organization or \
+                s_speciality or \
+                s_organization_ref or \
+                s_define_choice or \
+                s_choice or \
+                s_student:
+            out = queryset
+
+        return out
 
 class Period(models.Model):
     name = models.CharField(max_length=255)
