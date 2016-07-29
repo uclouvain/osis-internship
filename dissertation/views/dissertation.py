@@ -28,8 +28,8 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db import IntegrityError
 from django.db.models import Q
 from base import models as mdl
-from base.models.offer_year import OfferYear
-from base.models.student import Student
+from base.models.offer_year import OfferYear, find_by_offer as find_offer_year_by_offer
+from base.models.student import Student, find_by_offer as find_student_by_offer
 from base.views import layout
 from dissertation.models.adviser import Adviser, find_adviser_by_person
 from dissertation.models.dissertation import Dissertation, search_dissertation
@@ -152,6 +152,7 @@ def manager_dissertations_edit(request, pk):
     person = mdl.person.find_by_user(request.user)
     adviser = find_adviser_by_person(person)
     offer = find_by_adviser(adviser)
+
     if request.method == "POST":
         form = ManagerDissertationEditForm(request.POST, instance=dissertation)
         if form.is_valid():
@@ -160,17 +161,14 @@ def manager_dissertations_edit(request, pk):
             return redirect('manager_dissertations_detail', pk=dissertation.pk)
         else:
             form.fields["proposition_dissertation"].queryset = find_propositions_dissertation_by_offer(offer)
-            form.fields["author"].queryset = \
-                Student.objects.filter(offerenrollment__offer_year__offer=offer)
-            form.fields["offer_year_start"].queryset = \
-                OfferYear.objects.filter(offer=offer)
+            form.fields["author"].queryset = find_student_by_offer(offer)
+            form.fields["offer_year_start"].queryset = find_offer_year_by_offer(offer)
     else:
         form = ManagerDissertationEditForm(instance=dissertation)
         form.fields["proposition_dissertation"].queryset = find_propositions_dissertation_by_offer(offer)
-        form.fields["author"].queryset = \
-            Student.objects.filter(offerenrollment__offer_year__offer=offer)
-        form.fields["offer_year_start"].queryset = \
-            OfferYear.objects.filter(offer=offer)
+        form.fields["author"].queryset = find_student_by_offer(offer)
+        form.fields["offer_year_start"].queryset = find_offer_year_by_offer(offer)
+
     return layout.render(request, 'manager_dissertations_edit.html',
                          {'form': form, 'defend_periode_choices': Dissertation.DEFEND_PERIODE_CHOICES})
 
