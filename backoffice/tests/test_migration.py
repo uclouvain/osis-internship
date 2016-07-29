@@ -29,8 +29,7 @@
 
 from django.test import TestCase
 from base.models import student, tutor, person
-from reference.models import domain
-from reference.models import country
+from reference.models import country, domain, education_institution, language
 import backoffice.portal_migration as portal_migration
 from django.core.exceptions import ObjectDoesNotExist
 import backoffice.tests.data_for_tests as data_for_tests
@@ -43,11 +42,15 @@ class PortalMigrationTest(TestCase):
 
     def testGetModelClass(self):
         list_expected = ['reference.Country',
-                         'admission.Domain',
+                         'reference.Domain',
+                         'reference.EducationInstitution'
+                         'reference.Language',
                          'base.Student',
                          'base.Tutor']
         list_actual = [portal_migration.get_model_class_str(country.Country),
                        portal_migration.get_model_class_str(domain.Domain),
+                       portal_migration.get_model_class_str(education_institution.EducationInstitution),
+                       portal_migration.get_model_class_str(language.Language),
                        portal_migration.get_model_class_str(student.Student),
                        portal_migration.get_model_class_str(tutor.Tutor)]
         self.assertListEqual(list_expected, list_actual, "get_model_class_str doesn't "

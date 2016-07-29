@@ -44,16 +44,14 @@ def get_all_data(model_class, fields=None, order_by=None):
     :param order_by: A string represent the name of a column in the model.
     :return: Liste des records sous forme de dictionnaire
     """
-    print("Retrieving data from " + str(model_class) + "...")
     queryset = model_class.objects
-    if fields :
+    if fields:
         queryset = queryset.values(*fields)
-    else :
+    else:
         queryset = queryset.values()
-    if order_by :
+    if order_by:
         queryset = queryset.order_by(order_by)
-    print("Done.")
-    return list(queryset) # list() to force the evaluation of the queryset
+    return list(queryset)  # list() to force the evaluation of the queryset
 
 
 def get_model_class_str(model_class):
@@ -62,8 +60,13 @@ def get_model_class_str(model_class):
     :return: un String qui représente le model_class passé en paramètre.
     """
     map_classes = {
+        mdl_ref.continent.Continent: 'reference.Continent',
         mdl_ref.country.Country: 'reference.Country',
-        mdl_ref.domain.Domain: 'admission.Domain',
+        mdl_ref.currency.Currency: 'reference.Currency',
+        mdl_ref.decree.Decree: 'reference.Decree',
+        mdl_ref.domain.Domain: 'reference.Domain',
+        mdl_ref.education_institution.EducationInstitution: 'reference.EducationInstitution',
+        mdl_ref.language.Language: 'reference.Language',
         mdl_base.student.Student: 'base.Student',
         mdl_base.tutor.Tutor: 'base.Tutor'
     }
@@ -89,9 +92,9 @@ def migrate_reference_country():
     migrate(mdl_ref.country.Country, records, 'reference')
 
 
-def migrate_base_domain():
+def migrate_reference_domain():
     records = mdl_ref.domain.find_all_for_sync()
-    migrate(mdl_ref.domain.Domain, records, 'admission')
+    migrate(mdl_ref.domain.Domain, records, 'reference')
 
 
 def migrate_base_student():
@@ -106,3 +109,4 @@ def migrate_base_tutor():
 
 def migrate_records(records, model_class, queue_name):
     migrate(model_class, records, queue_name)
+

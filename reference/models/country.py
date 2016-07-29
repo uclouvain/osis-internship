@@ -25,6 +25,7 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
+from django.core import serializers
 
 
 class CountryAdmin(admin.ModelAdmin):
@@ -68,3 +69,14 @@ def find_all_for_sync():
     fields = ['id', 'iso_code', 'name', 'nationality', 'european_union', 'dialing_code', 'cref_code']
     # list() to force the evaluation of the queryset
     return list(Country.objects.values(*fields).order_by('name'))
+
+
+def serialize_list(list_countries):
+    """
+    Serialize a list of "Country" objects using the json format.
+    Use to send data to osis-portal.
+    :param list_countries: a list of "Country" objects
+    :return: the serialized list (a json)
+    """
+    fields = ('id', 'iso_code', 'name', 'nationality', 'european_union', 'dialing_code', 'cref_code')
+    return serializers.serialize("json", list_countries, fields=fields)
