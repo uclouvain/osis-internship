@@ -62,10 +62,10 @@ def get_model_class_str(model_class):
     :return: un String qui représente le model_class passé en paramètre.
     """
     map_classes = {
-        mdl_ref.country.Country: 'reference.Country',
-        mdl_ref.domain.Domain: 'admission.Domain',
-        mdl_base.student.Student: 'base.Student',
-        mdl_base.tutor.Tutor: 'base.Tutor'
+        mdl_ref.country.Country: 'reference.country.Country',
+        mdl_ref.domain.Domain: 'reference.domain.Domain',
+        mdl_base.student.Student: 'base.student.Student',
+        mdl_base.tutor.Tutor: 'base.tutor.Tutor'
     }
     return map_classes[model_class]
 
