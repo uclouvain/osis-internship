@@ -98,3 +98,7 @@ def search_dissertation(terms=None):
             Q(title__icontains=terms)
         ).distinct()
     return queryset
+
+
+def search_by_offer(offer):
+    return Dissertation.objects.filter(offer_year_start__offer=offer)

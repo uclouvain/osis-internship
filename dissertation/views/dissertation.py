@@ -34,11 +34,13 @@ from base.views import layout
 from dissertation.models.adviser import Adviser
 from dissertation.models import adviser
 from dissertation.models.dissertation import Dissertation, search_dissertation
+from dissertation.models import dissertation
 from dissertation.models.dissertation_role import DissertationRole
 from dissertation.models import dissertation_role
 from dissertation.models.dissertation_update import DissertationUpdate
 from dissertation.models import faculty_adviser
 from dissertation.models.offer_proposition import OfferProposition
+from dissertation.models import offer_proposition
 from dissertation.models.proposition_dissertation import PropositionDissertation
 from dissertation.models import proposition_dissertation
 from dissertation.models.proposition_role import PropositionRole
@@ -193,7 +195,7 @@ def manager_dissertations_jury_edit(request, pk):
 @user_passes_test(is_manager)
 def manager_dissertations_jury_new(request, pk):
     dissertation = get_object_or_404(Dissertation, pk=pk)
-    count_dissertation_role = DissertationRole.objects.filter(dissertation=dissertation).count()
+    count_dissertation_role = dissertation_role.count_by_dissertation(dissertation)
     if count_dissertation_role < 5:
         if request.method == "POST":
             form = ManagerDissertationRoleForm(request.POST)
@@ -213,10 +215,10 @@ def manager_dissertations_list(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     offer = faculty_adviser.search_by_adviser(adv).offer
-    disserts = Dissertation.objects.filter(offer_year_start__offer=offer)
-    offer_proposition = OfferProposition.objects.get(offer=offer)
+    disserts = dissertation.search_by_offer(offer)
+    offer_prop = offer_proposition.search_by_offer(offer)
     return layout.render(request, 'manager_dissertations_list.html', {'dissertations': disserts,
-                                                                      'offer_proposition': offer_proposition})
+                                                                      'offer_proposition': offer_prop})
 
 
 @login_required
