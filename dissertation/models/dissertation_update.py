@@ -43,5 +43,5 @@ class DissertationUpdate(models.Model):
         return desc
 
 
-def get_dissertation_updates(dissert):
+def search_by_dissertation(dissert):
     return DissertationUpdate.objects.filter(dissertation=dissert).order_by('created')

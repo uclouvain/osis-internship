@@ -43,9 +43,9 @@ class PropositionRole(models.Model):
                            self.adviser if self.adviser else "")
 
 
-def count_proposition_roles_by_dissertation(dissertation):
+def count_by_dissertation(dissertation):
     return PropositionRole.objects.filter(proposition_dissertation=dissertation.proposition_dissertation).count()
 
 
-def get_proposition_roles_by_dissertation(dissertation):
+def search_by_dissertation(dissertation):
     return PropositionRole.objects.filter(proposition_dissertation=dissertation.proposition_dissertation)

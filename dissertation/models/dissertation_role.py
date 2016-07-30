@@ -44,7 +44,7 @@ class DissertationRole(models.Model):
 
 
 # Récupère le nombre de dissertations pour un adviser
-def count_adviser_roles(adviser, role, dissertation_status):
+def count_by_adviser(adviser, role, dissertation_status):
     return DissertationRole.objects.filter(
                                         adviser=adviser
                                     ).filter(
@@ -56,16 +56,16 @@ def count_adviser_roles(adviser, role, dissertation_status):
                                     ).count()
 
 
-def count_dissertation_roles(dissertation):
+def count_by_dissertation(dissertation):
     return DissertationRole.objects.filter(dissertation=dissertation).count()
 
 
-def add_dissertation_role(status, adviser, dissertation):
+def add(status, adviser, dissertation):
     role = DissertationRole(status=status,
                             adviser=adviser,
                             dissertation=dissertation)
     role.save()
 
 
-def get_dissertation_roles_by_dissertation(dissertation):
+def search_by_dissertation(dissertation):
     return DissertationRole.objects.filter(dissertation=dissertation)

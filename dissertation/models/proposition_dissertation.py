@@ -100,7 +100,7 @@ def find_proposition_dissertation_by_id(proposition_dissertation_id):
     return PropositionDissertation.objects.get(pk=proposition_dissertation_id)
 
 
-def find_propositions_dissertation_by_offer(offer):
+def search_by_offer(offer):
     return PropositionDissertation.objects.filter(visibility=True,
                                                   active=True,
                                                   offer_proposition__offer=offer)
