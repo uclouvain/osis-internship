@@ -31,7 +31,8 @@ from base import models as mdl
 from base.models.offer_year import OfferYear
 from base.models.student import Student
 from base.views import layout
-from dissertation.models.adviser import Adviser, find_adviser_by_person
+from dissertation.models.adviser import Adviser
+from dissertation.models import adviser
 from dissertation.models.dissertation import Dissertation, search_dissertation
 from dissertation.models.dissertation_role import DissertationRole
 from dissertation.models import dissertation_role
@@ -53,25 +54,25 @@ import time
 # Used by decorator @user_passes_test(is_manager) to secure manager views
 def is_manager(user):
     person = mdl.person.find_by_user(user)
-    adviser = find_adviser_by_person(person)
-    return adviser.type == 'MGR'
+    adv = adviser.search_by_person(person)
+    return adv.type == 'MGR'
 
 
 # Used by decorator @user_passes_test(is_manager) to secure manager views
 def is_teacher(user):
     person = mdl.person.find_by_user(user)
-    adviser = find_adviser_by_person(person)
-    return adviser.type == 'PRF'
+    adv = adviser.search_by_person(person)
+    return adv.type == 'PRF'
 
 
 # Used to insert update log
 def insert_update(request, dissertation, old_status):
     person = mdl.person.find_by_user(request.user)
-    adviser = find_adviser_by_person(person)
+    adv = adviser.search_by_person(person)
     update = DissertationUpdate()
     update.status_from = old_status
     update.status_to = dissertation.status
-    update.justification = adviser.type + "_set_to_" + dissertation.status
+    update.justification = adv.type + "_set_to_" + dissertation.status
     update.person = person
     update.dissertation = dissertation
     update.save()
@@ -86,18 +87,18 @@ def dissertations(request):
     # if logged user is not an adviser, create linked adviser
     person = mdl.person.find_by_user(request.user)
     try:
-        adviser = Adviser(person=person, available_by_email=False, available_by_phone=False, available_at_office=False)
-        adviser.save()
-        adviser = find_adviser_by_person(person)
+        adv = Adviser(person=person, available_by_email=False, available_by_phone=False, available_at_office=False)
+        adv.save()
+        adv = adviser.search_by_person(person)
     except IntegrityError:
-        adviser = find_adviser_by_person(person)
+        adv = adviser.search_by_person(person)
 
-    count_advisers_pro_request = dissertation_role.count_by_adviser(adviser, 'PROMOTEUR', 'DIR_SUBMIT')
+    count_advisers_pro_request = dissertation_role.count_by_adviser(adv, 'PROMOTEUR', 'DIR_SUBMIT')
 
     return layout.render(request, "dissertations.html",
                          {'section': 'dissertations',
                           'person': person,
-                          'adviser': adviser,
+                          'adviser': adv,
                           'count_advisers_pro_request': count_advisers_pro_request})
 
 
@@ -110,7 +111,7 @@ def dissertations(request):
 def manager_dissertations_detail(request, pk):
     dissertation = get_object_or_404(Dissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
-    adviser = find_adviser_by_person(person)
+    adv = adviser.search_by_person(person)
     count_dissertation_role = dissertation_role.count_by_dissertation(dissertation)
     count_proposition_role = proposition_role.count_by_dissertation(dissertation)
     proposition_roles = proposition_role.search_by_dissertation(dissertation)
@@ -126,7 +127,7 @@ def manager_dissertations_detail(request, pk):
     dissertation_roles = dissertation_role.search_by_dissertation(dissertation)
     return layout.render(request, 'manager_dissertations_detail.html',
                          {'dissertation': dissertation,
-                          'adviser': adviser,
+                          'adviser': adv,
                           'dissertation_roles': dissertation_roles,
                           'count_dissertation_role': count_dissertation_role})
 
@@ -136,12 +137,12 @@ def manager_dissertations_detail(request, pk):
 def manager_dissertations_detail_updates(request, pk):
     dissertation = get_object_or_404(Dissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
-    adviser = find_adviser_by_person(person)
+    adv = adviser.search_by_person(person)
     dissertation_updates = dissertation_update.search_by_dissertation(dissertation)
 
     return layout.render(request, 'manager_dissertations_detail_updates.html',
                          {'dissertation': dissertation,
-                          'adviser': adviser,
+                          'adviser': adv,
                           'dissertation_updates': dissertation_updates})
 
 
@@ -150,8 +151,8 @@ def manager_dissertations_detail_updates(request, pk):
 def manager_dissertations_edit(request, pk):
     dissertation = get_object_or_404(Dissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
-    adviser = find_adviser_by_person(person)
-    offer = faculty_adviser.search_by_adviser(adviser).offer
+    adv = adviser.search_by_person(person)
+    offer = faculty_adviser.search_by_adviser(adv).offer
 
     if request.method == "POST":
         form = ManagerDissertationEditForm(request.POST, instance=dissertation)
@@ -210,8 +211,8 @@ def manager_dissertations_jury_new(request, pk):
 @user_passes_test(is_manager)
 def manager_dissertations_list(request):
     person = mdl.person.find_by_user(request.user)
-    adviser = find_adviser_by_person(person)
-    offer = faculty_adviser.search_by_adviser(adviser).offer
+    adv = adviser.search_by_person(person)
+    offer = faculty_adviser.search_by_adviser(adv).offer
     disserts = Dissertation.objects.filter(offer_year_start__offer=offer)
     offer_proposition = OfferProposition.objects.get(offer=offer)
     return layout.render(request, 'manager_dissertations_list.html', {'dissertations': disserts,
@@ -244,8 +245,8 @@ def manager_dissertations_print(request):
 @user_passes_test(is_manager)
 def manager_dissertations_new(request):
     person = mdl.person.find_by_user(request.user)
-    adviser = find_adviser_by_person(person)
-    offer = faculty_adviser.search_by_adviser(adviser).offer
+    adv = adviser.search_by_person(person)
+    offer = faculty_adviser.search_by_adviser(adv).offer
     if request.method == "POST":
         form = ManagerDissertationForm(request.POST)
         if form.is_valid():
@@ -279,8 +280,8 @@ def manager_dissertations_new(request):
 def manager_dissertations_search(request):
     disserts = search_dissertation(terms=request.GET['search']).filter(Q(active=True))
     person = mdl.person.find_by_user(request.user)
-    adviser = find_adviser_by_person(person)
-    offer = faculty_adviser.search_by_adviser(adviser).offer
+    adv = adviser.search_by_person(person)
+    offer = faculty_adviser.search_by_adviser(adv).offer
     offer_proposition = OfferProposition.objects.get(offer=offer)
     xlsx = False
     reader1_name = ''
@@ -514,8 +515,8 @@ def manager_dissertations_to_dir_ko(request, pk):
 @user_passes_test(is_manager)
 def manager_dissertations_wait_list(request):
     person = mdl.person.find_by_user(request.user)
-    adviser = find_adviser_by_person(person)
-    offer = faculty_adviser.search_by_adviser(adviser).offer
+    adv = adviser.search_by_person(person)
+    offer = faculty_adviser.search_by_adviser(adv).offer
     offer_proposition = OfferProposition.objects.get(offer=offer)
     disserts = Dissertation.objects.filter(Q(offer_year_start__offer=offer) & Q(status="DIR_SUBMIT"))
     return layout.render(request, 'manager_dissertations_wait_list.html',
@@ -527,8 +528,8 @@ def manager_dissertations_wait_list(request):
 @user_passes_test(is_manager)
 def manager_dissertations_wait_comm_list(request):
     person = mdl.person.find_by_user(request.user)
-    adviser = find_adviser_by_person(person)
-    offer = faculty_adviser.search_by_adviser(adviser).offer
+    adv = adviser.search_by_person(person)
+    offer = faculty_adviser.search_by_adviser(adv).offer
     offer_proposition = OfferProposition.objects.get(offer=offer)
     disserts = Dissertation.objects.filter(Q(offer_year_start__offer=offer) & Q(status="COM_SUBMIT"))
     return layout.render(request, 'manager_dissertations_wait_commission_list.html',
@@ -540,8 +541,8 @@ def manager_dissertations_wait_comm_list(request):
 @user_passes_test(is_manager)
 def manager_dissertations_wait_eval_list(request):
     person = mdl.person.find_by_user(request.user)
-    adviser = find_adviser_by_person(person)
-    offer = faculty_adviser.search_by_adviser(adviser).offer
+    adv = adviser.search_by_person(person)
+    offer = faculty_adviser.search_by_adviser(adv).offer
     offer_proposition = OfferProposition.objects.get(offer=offer)
     disserts = Dissertation.objects.filter(Q(offer_year_start__offer=offer) & Q(status="EVA_SUBMIT"))
     return layout.render(request, 'manager_dissertations_wait_eval_list.html',
@@ -553,8 +554,8 @@ def manager_dissertations_wait_eval_list(request):
 @user_passes_test(is_manager)
 def manager_dissertations_wait_recep_list(request):
     person = mdl.person.find_by_user(request.user)
-    adviser = find_adviser_by_person(person)
-    offer = faculty_adviser.search_by_adviser(adviser).offer
+    adv = adviser.search_by_person(person)
+    offer = faculty_adviser.search_by_adviser(adv).offer
     offer_proposition = OfferProposition.objects.get(offer=offer)
     disserts = Dissertation.objects.filter(Q(offer_year_start__offer=offer) & Q(status="TO_RECEIVE"))
     return layout.render(request, 'manager_dissertations_wait_recep_list.html',
@@ -570,17 +571,17 @@ def manager_dissertations_wait_recep_list(request):
 @user_passes_test(is_teacher)
 def dissertations_list(request):
     person = mdl.person.find_by_user(request.user)
-    adviser = find_adviser_by_person(person)
+    adv = adviser.search_by_person(person)
     queryset = DissertationRole.objects.all()
     adviser_list_dissertations = queryset.filter(Q(status='PROMOTEUR') &
-                                                 Q(adviser__pk=adviser.pk) &
+                                                 Q(adviser__pk=adv.pk) &
                                                  Q(dissertation__active=True)).exclude(
         Q(dissertation__status='DRAFT'))
     adviser_list_dissertations = adviser_list_dissertations.order_by('dissertation__status',
                                                                      'dissertation__author__person__last_name',
                                                                      'dissertation__author__person__first_name')
     adviser_list_dissertations_copro = queryset.filter(Q(status='CO_PROMOTEUR') &
-                                                       Q(adviser__pk=adviser.pk) &
+                                                       Q(adviser__pk=adv.pk) &
                                                        Q(dissertation__active=True)).exclude(
         Q(dissertation__status='DRAFT'))
     adviser_list_dissertations_copro = \
@@ -588,7 +589,7 @@ def dissertations_list(request):
                                                   'dissertation__author__person__last_name',
                                                   'dissertation__author__person__first_name')
     adviser_list_dissertations_reader = queryset.filter(Q(status='READER') &
-                                                        Q(adviser__pk=adviser.pk) &
+                                                        Q(adviser__pk=adv.pk) &
                                                         Q(dissertation__active=True)).exclude(
         Q(dissertation__status='DRAFT'))
     adviser_list_dissertations_reader = \
@@ -596,7 +597,7 @@ def dissertations_list(request):
                                                    'dissertation__author__person__last_name',
                                                    'dissertation__author__person__first_name')
     return layout.render(request, "dissertations_list.html",
-                         {'adviser': adviser,
+                         {'adviser': adv,
                           'adviser_list_dissertations': adviser_list_dissertations,
                           'adviser_list_dissertations_copro': adviser_list_dissertations_copro,
                           'adviser_list_dissertations_reader': adviser_list_dissertations_reader})
@@ -606,9 +607,9 @@ def dissertations_list(request):
 @user_passes_test(is_teacher)
 def dissertations_search(request):
     person = mdl.person.find_by_user(request.user)
-    adviser = find_adviser_by_person(person)
+    adv = adviser.search_by_person(person)
     disserts = search_dissertation(terms=request.GET['search']).filter(
-        Q(proposition_dissertation__author=adviser) & Q(active=True))
+        Q(proposition_dissertation__author=adv) & Q(active=True))
     return layout.render(request, "dissertations_list.html", {'dissertations': disserts})
 
 
@@ -617,7 +618,7 @@ def dissertations_search(request):
 def dissertations_detail(request, pk):
     dissertation = get_object_or_404(Dissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
-    adviser = find_adviser_by_person(person)
+    adv = adviser.search_by_person(person)
     count_dissertation_role = DissertationRole.objects.filter(dissertation=dissertation).count()
     count_proposition_role = PropositionRole.objects \
         .filter(proposition_dissertation=dissertation.proposition_dissertation).count()
@@ -638,7 +639,7 @@ def dissertations_detail(request, pk):
     dissertation_roles = DissertationRole.objects.filter(dissertation=dissertation)
     return layout.render(request, 'dissertations_detail.html',
                          {'dissertation': dissertation,
-                          'adviser': adviser,
+                          'adviser': adv,
                           'dissertation_roles': dissertation_roles,
                           'count_dissertation_role': count_dissertation_role})
 
@@ -648,11 +649,11 @@ def dissertations_detail(request, pk):
 def dissertations_detail_updates(request, pk):
     dissertation = get_object_or_404(Dissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
-    adviser = find_adviser_by_person(person)
+    adv = adviser.search_by_person(person)
     dissertation_updates = DissertationUpdate.objects.filter(dissertation=dissertation).order_by('created')
     return layout.render(request, 'dissertations_detail_updates.html',
                          {'dissertation': dissertation,
-                          'adviser': adviser,
+                          'adviser': adv,
                           'dissertation_updates': dissertation_updates})
 
 
@@ -729,11 +730,11 @@ def dissertations_to_dir_ko(request, pk):
 @user_passes_test(is_teacher)
 def dissertations_wait_list(request):
     person = mdl.person.find_by_user(request.user)
-    adviser = find_adviser_by_person(person)
+    adv = adviser.search_by_person(person)
 
     queryset = DissertationRole.objects.all()
     roles_list_dissertations = queryset.filter(Q(status='PROMOTEUR') &
-                                               Q(adviser__pk=adviser.pk) &
+                                               Q(adviser__pk=adv.pk) &
                                                Q(dissertation__active=True) &
                                                Q(dissertation__status="DIR_SUBMIT"))
     roles_list_dissertations = roles_list_dissertations.order_by(

@@ -127,7 +127,7 @@ class Adviser(models.Model):
         ordering = ["person__last_name", "person__middle_name", "person__first_name"]
 
 
-def find_adviser_by_person(a_person):
+def search_by_person(a_person):
     adviser = Adviser.objects.get(person=a_person)
     return adviser
 

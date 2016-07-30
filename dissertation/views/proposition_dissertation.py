@@ -27,7 +27,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from base import models as mdl
-from dissertation.models.adviser import find_adviser_by_person
+from dissertation.models import adviser
 from dissertation.models.dissertation import Dissertation
 from dissertation.models import faculty_adviser
 from dissertation.models.proposition_dissertation import PropositionDissertation, search_proposition_dissertation
@@ -41,18 +41,18 @@ from base.views import layout
 # Used by decorator @user_passes_test(is_manager) to secure manager views
 def is_manager(user):
     person = mdl.person.find_by_user(user)
-    adviser = find_adviser_by_person(person)
-    return adviser.type == 'MGR'
+    adv = adviser.search_by_person(person)
+    return adv.type == 'MGR'
 
 
 @login_required
 @user_passes_test(is_manager)
 def manager_proposition_dissertations(request):
     person = mdl.person.find_by_user(request.user)
-    adviser = find_adviser_by_person(person)
-    offer = faculty_adviser.search_by_adviser(adviser).offer
+    adv = adviser.search_by_person(person)
+    offer = faculty_adviser.search_by_adviser(adv).offer
     prop_disserts = PropositionDissertation.objects.filter(Q(active=True) &
-                                                                       Q(offer_proposition__offer=offer))
+                                                           Q(offer_proposition__offer=offer))
     return layout.render(request, 'manager_proposition_dissertations_list.html',
                          {'proposition_dissertations': prop_disserts})
 
@@ -71,7 +71,7 @@ def manager_proposition_dissertation_delete(request, pk):
 def manager_proposition_dissertation_detail(request, pk):
     proposition_dissertation = get_object_or_404(PropositionDissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
-    adviser = find_adviser_by_person(person)
+    adv = adviser.search_by_person(person)
     count_use = Dissertation.objects.filter(Q(active=True) &
                                             Q(proposition_dissertation=proposition_dissertation)
                                             ).exclude(Q(status='DRAFT')).count()
@@ -84,7 +84,7 @@ def manager_proposition_dissertation_detail(request, pk):
     proposition_roles = PropositionRole.objects.filter(proposition_dissertation=proposition_dissertation)
     return layout.render(request, 'manager_proposition_dissertation_detail.html',
                          {'proposition_dissertation': proposition_dissertation,
-                          'adviser': adviser,
+                          'adviser': adv,
                           'count_use': count_use,
                           'percent': round(percent, 2),
                           'proposition_roles': proposition_roles,
@@ -172,19 +172,19 @@ def manager_proposition_dissertation_new(request):
 @login_required
 @user_passes_test(is_manager)
 def manager_proposition_dissertations_search(request):
-    proposition_dissertations = search_proposition_dissertation(terms=request.GET['search']).filter(Q(active=True))
+    prop_disserts = search_proposition_dissertation(terms=request.GET['search']).filter(Q(active=True))
     return layout.render(request, "manager_proposition_dissertations_list.html",
-                         {'proposition_dissertations': proposition_dissertations})
+                         {'proposition_dissertations': prop_disserts})
 
 
 @login_required
 def proposition_dissertations(request):
     person = mdl.person.find_by_user(request.user)
-    adviser = find_adviser_by_person(person)
-    proposition_dissertations = PropositionDissertation.objects.filter((Q(visibility=True) &
-                                                                       Q(active=True)) | Q(author=adviser))
+    adv = adviser.search_by_person(person)
+    prop_disserts = PropositionDissertation.objects.filter((Q(visibility=True) &
+                                                                       Q(active=True)) | Q(author=adv))
     return layout.render(request, 'proposition_dissertations_list.html',
-                         {'proposition_dissertations': proposition_dissertations})
+                         {'proposition_dissertations': prop_disserts})
 
 
 @login_required
@@ -199,7 +199,7 @@ def proposition_dissertation_delete(request, pk):
 def proposition_dissertation_detail(request, pk):
     proposition_dissertation = get_object_or_404(PropositionDissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
-    adviser = find_adviser_by_person(person)
+    adv = adviser.search_by_person(person)
     count_use = Dissertation.objects.filter(Q(active=True) &
                                             Q(proposition_dissertation=proposition_dissertation)
                                             ).exclude(Q(status='DRAFT')).count()
@@ -212,7 +212,7 @@ def proposition_dissertation_detail(request, pk):
     proposition_roles = PropositionRole.objects.filter(proposition_dissertation=proposition_dissertation)
     return layout.render(request, 'proposition_dissertation_detail.html',
                          {'proposition_dissertation': proposition_dissertation,
-                          'adviser': adviser,
+                          'adviser': adv,
                           'count_use': count_use,
                           'percent': round(percent, 2),
                           'proposition_roles': proposition_roles,
@@ -223,8 +223,8 @@ def proposition_dissertation_detail(request, pk):
 def proposition_dissertation_edit(request, pk):
     proposition_dissertation = get_object_or_404(PropositionDissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
-    adviser = find_adviser_by_person(person)
-    if proposition_dissertation.author == adviser:
+    adv = adviser.search_by_person(person)
+    if proposition_dissertation.author == adv:
         if request.method == "POST":
             form = PropositionDissertationForm(request.POST, instance=proposition_dissertation)
             if form.is_valid():
@@ -246,10 +246,10 @@ def proposition_dissertation_edit(request, pk):
 @login_required
 def proposition_dissertation_my(request):
     person = mdl.person.find_by_user(request.user)
-    adviser = find_adviser_by_person(person)
-    proposition_dissertations = PropositionDissertation.objects.filter(Q(author=adviser) & Q(active=True))
+    adv = adviser.search_by_person(person)
+    prop_disserts = PropositionDissertation.objects.filter(Q(author=adv) & Q(active=True))
     return layout.render(request, 'proposition_dissertations_list_my.html',
-                         {'proposition_dissertations': proposition_dissertations})
+                         {'proposition_dissertations': prop_disserts})
 
 
 @login_required
@@ -261,8 +261,8 @@ def proposition_dissertation_new(request):
             return redirect('proposition_dissertations')
     else:
         person = mdl.person.find_by_user(request.user)
-        adviser = find_adviser_by_person(person)
-        form = PropositionDissertationForm(initial={'author': adviser, 'active': True})
+        adv = adviser.search_by_person(person)
+        form = PropositionDissertationForm(initial={'author': adv, 'active': True})
     return layout.render(request, 'proposition_dissertation_new.html',
                          {'form': form,
                           'types_choices': PropositionDissertation.TYPES_CHOICES,
@@ -272,10 +272,10 @@ def proposition_dissertation_new(request):
 
 @login_required
 def proposition_dissertations_search(request):
-    proposition_dissertations = search_proposition_dissertation(terms=request.GET['search']).filter(
+    prop_disserts = search_proposition_dissertation(terms=request.GET['search']).filter(
         Q(visibility=True) & Q(active=True))
     return layout.render(request, "proposition_dissertations_list.html",
-                         {'proposition_dissertations': proposition_dissertations})
+                         {'proposition_dissertations': prop_disserts})
 
 
 @login_required
