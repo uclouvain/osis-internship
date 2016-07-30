@@ -27,7 +27,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from dissertation.models.adviser import Adviser, find_adviser_by_person, search_adviser
 from dissertation.models.dissertation_role import DissertationRole
-from dissertation.models.faculty_adviser import FacultyAdviser, find_by_adviser
+from dissertation.models.faculty_adviser import FacultyAdviser
+from dissertation.models import faculty_adviser
 from base import models as mdl
 from dissertation.forms import AdviserForm, ManagerAdviserForm, ManagerAddAdviserForm
 from django.contrib.auth.decorators import user_passes_test
@@ -233,11 +234,11 @@ def manager_informations_search(request):
 def manager_informations_list_request(request):
     person = mdl.person.find_by_user(request.user)
     adviser = find_adviser_by_person(person)
-    faculty_adviser = find_by_adviser(adviser)
+    offer = faculty_adviser.search_by_adviser(adviser).offer
     queryset = DissertationRole.objects.all()
     advisers_need_request = queryset.filter(Q(status='PROMOTEUR') &
                                             Q(dissertation__status='DIR_SUBMIT') &
-                                            Q(dissertation__offer_year_start__offer=faculty_adviser) &
+                                            Q(dissertation__offer_year_start__offer=offer) &
                                             Q(dissertation__active=True)).distinct('adviser')
     advisers_need_request = advisers_need_request
 
@@ -250,26 +251,26 @@ def manager_informations_list_request(request):
 def manager_informations_detail_list(request, pk):
     person = mdl.person.find_by_user(request.user)
     adviser_co = find_adviser_by_person(person)
-    faculty_adviser = find_by_adviser(adviser_co)
+    offer = faculty_adviser.search_by_adviser(adviser_co).offer
     adviser = get_object_or_404(Adviser, pk=pk)
     queryset = DissertationRole.objects.all()
     adviser_list_dissertations = queryset.filter(Q(status='PROMOTEUR') &
                                                  Q(adviser__pk=pk) &
-                                                 Q(dissertation__offer_year_start__offer=faculty_adviser) &
+                                                 Q(dissertation__offer_year_start__offer=offer) &
                                                  Q(dissertation__active=True)).exclude(
                                                         Q(dissertation__status='DRAFT'))
     adviser_list_dissertations = adviser_list_dissertations.order_by('dissertation__status')
 
     adviser_list_dissertations_copro = queryset.filter(Q(status='CO_PROMOTEUR') &
                                                        Q(adviser__pk=pk) &
-                                                       Q(dissertation__offer_year_start__offer=faculty_adviser) &
+                                                       Q(dissertation__offer_year_start__offer=offer) &
                                                        Q(dissertation__active=True)).exclude(
                                                         Q(dissertation__status='DRAFT'))
     adviser_list_dissertations_copro = adviser_list_dissertations_copro.order_by('dissertation__status')
 
     adviser_list_dissertations_reader = queryset.filter(Q(status='READER') &
                                                         Q(adviser__pk=pk) &
-                                                        Q(dissertation__offer_year_start__offer=faculty_adviser) &
+                                                        Q(dissertation__offer_year_start__offer=offer) &
                                                         Q(dissertation__active=True)).exclude(
                                                         Q(dissertation__status='DRAFT'))
     adviser_list_dissertations_reader = adviser_list_dissertations_reader.order_by('dissertation__status')

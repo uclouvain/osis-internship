@@ -36,7 +36,7 @@ from dissertation.models.dissertation import Dissertation, search_dissertation
 from dissertation.models.dissertation_role import DissertationRole
 from dissertation.models import dissertation_role
 from dissertation.models.dissertation_update import DissertationUpdate
-from dissertation.models.faculty_adviser import find_by_adviser
+from dissertation.models import faculty_adviser
 from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models.proposition_dissertation import PropositionDissertation
 from dissertation.models import proposition_dissertation
@@ -151,7 +151,7 @@ def manager_dissertations_edit(request, pk):
     dissertation = get_object_or_404(Dissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
     adviser = find_adviser_by_person(person)
-    offer = find_by_adviser(adviser)
+    offer = faculty_adviser.search_by_adviser(adviser).offer
 
     if request.method == "POST":
         form = ManagerDissertationEditForm(request.POST, instance=dissertation)
@@ -211,9 +211,9 @@ def manager_dissertations_jury_new(request, pk):
 def manager_dissertations_list(request):
     person = mdl.person.find_by_user(request.user)
     adviser = find_adviser_by_person(person)
-    faculty_adviser = find_by_adviser(adviser)
-    disserts = Dissertation.objects.filter(offer_year_start__offer=faculty_adviser)
-    offer_proposition = OfferProposition.objects.get(offer=faculty_adviser)
+    offer = faculty_adviser.search_by_adviser(adviser).offer
+    disserts = Dissertation.objects.filter(offer_year_start__offer=offer)
+    offer_proposition = OfferProposition.objects.get(offer=offer)
     return layout.render(request, 'manager_dissertations_list.html', {'dissertations': disserts,
                                                                       'offer_proposition': offer_proposition})
 
@@ -245,7 +245,7 @@ def manager_dissertations_print(request):
 def manager_dissertations_new(request):
     person = mdl.person.find_by_user(request.user)
     adviser = find_adviser_by_person(person)
-    offer = find_by_adviser(adviser)
+    offer = faculty_adviser.search_by_adviser(adviser).offer
     if request.method == "POST":
         form = ManagerDissertationForm(request.POST)
         if form.is_valid():
@@ -280,8 +280,8 @@ def manager_dissertations_search(request):
     disserts = search_dissertation(terms=request.GET['search']).filter(Q(active=True))
     person = mdl.person.find_by_user(request.user)
     adviser = find_adviser_by_person(person)
-    faculty_adviser = find_by_adviser(adviser)
-    offer_proposition = OfferProposition.objects.get(offer=faculty_adviser)
+    offer = faculty_adviser.search_by_adviser(adviser).offer
+    offer_proposition = OfferProposition.objects.get(offer=offer)
     xlsx = False
     reader1_name = ''
     reader2_name = ''
@@ -515,9 +515,9 @@ def manager_dissertations_to_dir_ko(request, pk):
 def manager_dissertations_wait_list(request):
     person = mdl.person.find_by_user(request.user)
     adviser = find_adviser_by_person(person)
-    faculty_adviser = find_by_adviser(adviser)
-    offer_proposition = OfferProposition.objects.get(offer=faculty_adviser)
-    disserts = Dissertation.objects.filter(Q(offer_year_start__offer=faculty_adviser) & Q(status="DIR_SUBMIT"))
+    offer = faculty_adviser.search_by_adviser(adviser).offer
+    offer_proposition = OfferProposition.objects.get(offer=offer)
+    disserts = Dissertation.objects.filter(Q(offer_year_start__offer=offer) & Q(status="DIR_SUBMIT"))
     return layout.render(request, 'manager_dissertations_wait_list.html',
                          {'dissertations': disserts,
                           'offer_proposition': offer_proposition})
@@ -528,9 +528,9 @@ def manager_dissertations_wait_list(request):
 def manager_dissertations_wait_comm_list(request):
     person = mdl.person.find_by_user(request.user)
     adviser = find_adviser_by_person(person)
-    faculty_adviser = find_by_adviser(adviser)
-    offer_proposition = OfferProposition.objects.get(offer=faculty_adviser)
-    disserts = Dissertation.objects.filter(Q(offer_year_start__offer=faculty_adviser) & Q(status="COM_SUBMIT"))
+    offer = faculty_adviser.search_by_adviser(adviser).offer
+    offer_proposition = OfferProposition.objects.get(offer=offer)
+    disserts = Dissertation.objects.filter(Q(offer_year_start__offer=offer) & Q(status="COM_SUBMIT"))
     return layout.render(request, 'manager_dissertations_wait_commission_list.html',
                          {'dissertations': disserts,
                           'offer_proposition': offer_proposition})
@@ -541,9 +541,9 @@ def manager_dissertations_wait_comm_list(request):
 def manager_dissertations_wait_eval_list(request):
     person = mdl.person.find_by_user(request.user)
     adviser = find_adviser_by_person(person)
-    faculty_adviser = find_by_adviser(adviser)
-    offer_proposition = OfferProposition.objects.get(offer=faculty_adviser)
-    disserts = Dissertation.objects.filter(Q(offer_year_start__offer=faculty_adviser) & Q(status="EVA_SUBMIT"))
+    offer = faculty_adviser.search_by_adviser(adviser).offer
+    offer_proposition = OfferProposition.objects.get(offer=offer)
+    disserts = Dissertation.objects.filter(Q(offer_year_start__offer=offer) & Q(status="EVA_SUBMIT"))
     return layout.render(request, 'manager_dissertations_wait_eval_list.html',
                          {'dissertations': disserts,
                           'offer_proposition': offer_proposition})
@@ -554,9 +554,9 @@ def manager_dissertations_wait_eval_list(request):
 def manager_dissertations_wait_recep_list(request):
     person = mdl.person.find_by_user(request.user)
     adviser = find_adviser_by_person(person)
-    faculty_adviser = find_by_adviser(adviser)
-    offer_proposition = OfferProposition.objects.get(offer=faculty_adviser)
-    disserts = Dissertation.objects.filter(Q(offer_year_start__offer=faculty_adviser) & Q(status="TO_RECEIVE"))
+    offer = faculty_adviser.search_by_adviser(adviser).offer
+    offer_proposition = OfferProposition.objects.get(offer=offer)
+    disserts = Dissertation.objects.filter(Q(offer_year_start__offer=offer) & Q(status="TO_RECEIVE"))
     return layout.render(request, 'manager_dissertations_wait_recep_list.html',
                          {'dissertations': disserts,
                           'offer_proposition': offer_proposition})
