@@ -230,15 +230,15 @@ def manager_dissertations_print(request):
     ws1 = wb.active
     ws1.title = "dissertation"
     for dissert in disserts:
-        queryset = DissertationRole.objects.filter(Q(dissertation=dissert))
-        queryset_pro = queryset.object.filter(Q(status='PROMOTEUR'))
-        queryset_copro = queryset.object.filter(Q(status='CO_PROMOTEUR'))
-        queryset_reader = queryset.object.filter(Q(status='READER'))
+        promoteur = dissertation_role.search_by_dissertation_and_role(dissert, 'PROMOTEUR')
+        copromoteur = dissertation_role.search_by_dissertation_and_role(dissert, 'CO_PROMOTEUR')
+        reader = dissertation_role.search_by_dissertation_and_role(dissert, 'READER')
         ws1.append([dissert.creation_date, dissert.author.student.person.first_name,
                     dissert.author.student.person.middle_name, dissert.author.student.person.last_name,
                     dissert.author.student.person.global_id, dissert.title,
-                    dissert.status, dissert.offer_year_start, queryset_pro.adviser, queryset_copro.adviser,
-                    queryset_reader[0].adviser, queryset_reader[1].adviser])
+                    dissert.status, dissert.offer_year_start, promoteur.adviser, copromoteur.adviser,
+                    reader[0].adviser, reader[1].adviser])
+
     response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.ms-excel')
     return response
 
