@@ -41,12 +41,12 @@ class PortalMigrationTest(TestCase):
         self.list_tutors = data_for_tests.create_tutors()
 
     def testGetModelClass(self):
-        list_expected = ['reference.Country',
-                         'reference.Domain',
-                         'reference.EducationInstitution'
-                         'reference.Language',
-                         'base.Student',
-                         'base.Tutor']
+        list_expected = ['reference.country.Country',
+                         'reference.domain.Domain',
+                         'reference.education_institution.EducationInstitution',
+                         'reference.language.Language',
+                         'base.student.Student',
+                         'base.tutor.Tutor']
         list_actual = [portal_migration.get_model_class_str(country.Country),
                        portal_migration.get_model_class_str(domain.Domain),
                        portal_migration.get_model_class_str(education_institution.EducationInstitution),

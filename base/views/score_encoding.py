@@ -52,21 +52,31 @@ def _is_inside_scores_encodings_period(user):
     return False
 
 
+def find_closest_past_date(dates):
+    """
+    Find and return the closest date to the date now in the 'dates' list.
+    :param dates: List of dates in which we'll find the closest date to now.
+    """
+    now = datetime.datetime.now().date()
+    past_dates = [date for date in dates if date and date < now]
+    smallest_delta = None # delta = Number of days between a past date and now
+    closest_date = None
+    for date in past_dates:
+        delta = now - date
+        if smallest_delta is None or delta.days < smallest_delta.days:
+            closest_date = date
+    return closest_date
+
+
 @login_required
 @permission_required('base.can_access_scoreencoding', raise_exception=True)
 def outside_scores_encodings_period(request):
-    now = datetime.datetime.now().date()
     academic_calendars = list(mdl.academic_calendar.get_scores_encoding_calendars())
-    last_academic_calendar = None
-    # Searching for the latest period of scores encodings
-    for ac_calendar in academic_calendars:
-        if ac_calendar.start_date and ac_calendar.end_date:
-            if last_academic_calendar is None:
-                last_academic_calendar = ac_calendar
-            elif now - ac_calendar.end_date < now - last_academic_calendar.end_date:
-                last_academic_calendar = ac_calendar
-
-    str_date = last_academic_calendar.end_date.strftime('%d/%m/%Y') if last_academic_calendar else ''
+    closest_date = None
+    if academic_calendars:
+        # Searching for the latest period of scores encodings
+        closest_date = find_closest_past_date([ac_calendar.end_date for ac_calendar in academic_calendars])
+    str_date = closest_date.strftime('%d/%m/%Y') if closest_date else ''
     text = trans('outside_scores_encodings_period') % str_date
     messages.add_message(request, messages.WARNING, "%s" % text)
     return layout.render(request, "assessments/outside_scores_encodings_period.html", {})
