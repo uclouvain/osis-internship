@@ -82,7 +82,7 @@ class Dissertation(models.Model):
         ordering = ["author__person__last_name", "author__person__middle_name", "author__person__first_name", "title"]
 
 
-def search_dissertation(terms=None):
+def search(terms=None, active=True):
     queryset = Dissertation.objects.all()
     if terms:
         queryset = queryset.filter(
@@ -96,8 +96,12 @@ def search_dissertation(terms=None):
             Q(proposition_dissertation__author__person__last_name__icontains=terms) |
             Q(status__icontains=terms) |
             Q(title__icontains=terms)
-        ).distinct()
+        ).filter(active=active).distinct()
     return queryset
+
+
+def search_by_proposition_author(terms=None, active=True, proposition_author=None):
+    return search(terms=terms, active=active).filter(proposition_dissertation__author=proposition_author)
 
 
 def search_by_offer(offer):

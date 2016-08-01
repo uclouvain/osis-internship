@@ -33,7 +33,7 @@ from base.models.student import Student
 from base.views import layout
 from dissertation.models.adviser import Adviser
 from dissertation.models import adviser
-from dissertation.models.dissertation import Dissertation, search_dissertation
+from dissertation.models.dissertation import Dissertation
 from dissertation.models import dissertation
 from dissertation.models.dissertation_role import DissertationRole
 from dissertation.models import dissertation_role
@@ -224,7 +224,7 @@ def manager_dissertations_list(request):
 @login_required
 @user_passes_test(is_manager)
 def manager_dissertations_print(request):
-    disserts = search_dissertation(terms=request.GET['search']).filter(Q(active=True))
+    disserts = dissertation.search(terms=request.GET['search'], active=True)
     wb = Workbook(encoding='utf-8')
     dest_filename = 'IMPORT_dissertaion_.xlsx'
     ws1 = wb.active
@@ -280,7 +280,7 @@ def manager_dissertations_new(request):
 @login_required
 @user_passes_test(is_manager)
 def manager_dissertations_search(request):
-    disserts = search_dissertation(terms=request.GET['search']).filter(Q(active=True))
+    disserts = dissertation.search(terms=request.GET['search'], active=True)
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     offer = faculty_adviser.search_by_adviser(adv).offer
@@ -610,8 +610,9 @@ def dissertations_list(request):
 def dissertations_search(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-    disserts = search_dissertation(terms=request.GET['search']).filter(
-        Q(proposition_dissertation__author=adv) & Q(active=True))
+    disserts = dissertation.search_by_proposition_author(terms=request.GET['search'],
+                                                         active=True,
+                                                         proposition_author=adv)
     return layout.render(request, "dissertations_list.html", {'dissertations': disserts})
 
 
