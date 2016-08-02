@@ -29,6 +29,8 @@ from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from base.models import offer_year, student, academic_year
 from . import proposition_dissertation
+from . import offer_proposition
+
 
 class DissertationAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'status', 'active')
@@ -77,6 +79,54 @@ class Dissertation(models.Model):
 
     def __str__(self):
         return self.title
+
+    def deactivate(self):
+        self.active = False
+        self.save()
+
+    def set_status(self, status):
+        self.status = status
+        self.save()
+
+    def go_forward(self):
+        if self.status == 'DRAFT' or self.status == 'DIR_KO':
+            self.set_status('DIR_SUBMIT')
+        elif self.status == 'TO_RECEIVE':
+            self.set_status('TO_DEFEND')
+        elif self.status == 'TO_DEFEND':
+            self.set_status('DEFENDED')
+
+    def accept(self):
+        offer_prop = offer_proposition.search_by_offer(self.offer_year_start.offer)
+        if offer_prop.validation_commission_exists and self.status == 'DIR_SUBMIT':
+            self.status = 'COM_SUBMIT'
+            self.save()
+        elif offer_prop.evaluation_first_year and (self.status == 'DIR_SUBMIT' or self.status == 'COM_SUBMIT'):
+            self.status = 'EVA_SUBMIT'
+            self.save()
+        elif self.status == 'EVA_SUBMIT':
+            self.status = 'TO_RECEIVE'
+            self.save()
+        elif self.status == 'DEFENDED':
+            self.status = 'ENDED_WIN'
+            self.save()
+        else:
+            self.status = 'TO_RECEIVE'
+            self.save()
+
+    def refuse(self):
+        if self.status == 'DIR_SUBMIT':
+            self.status = 'DIR_KO'
+            self.save()
+        elif self.status == 'COM_SUBMIT':
+            self.status = 'COM_KO'
+            self.save()
+        elif self.status == 'EVA_SUBMIT':
+            self.status = 'EVA_KO'
+            self.save()
+        elif self.status == 'DEFENDED':
+            self.status = 'ENDED_LOS'
+            self.save()
 
     class Meta:
         ordering = ["author__person__last_name", "author__person__middle_name", "author__person__first_name", "title"]
