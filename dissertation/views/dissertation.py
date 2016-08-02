@@ -426,7 +426,7 @@ def manager_dissertations_wait_recep_list(request):
     offer = faculty_adviser.search_by_adviser(adv).offer
     offer_prop = offer_proposition.search_by_offer(offer)
     disserts = dissertation.search_by_offer_and_status(offer, "TO_RECEIVE")
-    
+
     return layout.render(request, 'manager_dissertations_wait_recep_list.html',
                          {'dissertations': disserts,
                           'offer_proposition': offer_prop})
@@ -441,30 +441,11 @@ def manager_dissertations_wait_recep_list(request):
 def dissertations_list(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-    queryset = DissertationRole.objects.all()
-    adviser_list_dissertations = queryset.filter(Q(status='PROMOTEUR') &
-                                                 Q(adviser__pk=adv.pk) &
-                                                 Q(dissertation__active=True)).exclude(
-        Q(dissertation__status='DRAFT'))
-    adviser_list_dissertations = adviser_list_dissertations.order_by('dissertation__status',
-                                                                     'dissertation__author__person__last_name',
-                                                                     'dissertation__author__person__first_name')
-    adviser_list_dissertations_copro = queryset.filter(Q(status='CO_PROMOTEUR') &
-                                                       Q(adviser__pk=adv.pk) &
-                                                       Q(dissertation__active=True)).exclude(
-        Q(dissertation__status='DRAFT'))
-    adviser_list_dissertations_copro = \
-        adviser_list_dissertations_copro.order_by('dissertation__status',
-                                                  'dissertation__author__person__last_name',
-                                                  'dissertation__author__person__first_name')
-    adviser_list_dissertations_reader = queryset.filter(Q(status='READER') &
-                                                        Q(adviser__pk=adv.pk) &
-                                                        Q(dissertation__active=True)).exclude(
-        Q(dissertation__status='DRAFT'))
-    adviser_list_dissertations_reader = \
-        adviser_list_dissertations_reader.order_by('dissertation__status',
-                                                   'dissertation__author__person__last_name',
-                                                   'dissertation__author__person__first_name')
+
+    adviser_list_dissertations = dissertation_role.search_by_adviser_and_role(adv, 'PROMOTEUR')
+    adviser_list_dissertations_copro = dissertation_role.search_by_adviser_and_role(adv, 'CO_PROMOTEUR')
+    adviser_list_dissertations_reader = dissertation_role.search_by_adviser_and_role(adv, 'READER')
+
     return layout.render(request, "dissertations_list.html",
                          {'adviser': adv,
                           'adviser_list_dissertations': adviser_list_dissertations,

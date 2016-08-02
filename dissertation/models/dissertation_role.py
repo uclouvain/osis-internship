@@ -73,3 +73,19 @@ def search_by_dissertation(dissertation):
 
 def search_by_dissertation_and_role(dissertation, role):
     return search_by_dissertation(dissertation).filter(status=role)
+
+
+def search_by_adviser_and_role(adviser, role):
+    return DissertationRole.objects.filter(
+                                        status=role
+                                    ).filter(
+                                        adviser=adviser
+                                    ).filter(
+                                        dissertation__active=True
+                                    ).exclude(
+                                        dissertation__status='DRAFT'
+                                    ).order_by(
+                                        'dissertation__status',
+                                        'dissertation__author__person__last_name',
+                                        'dissertation__author__person__first_name'
+                                    )
