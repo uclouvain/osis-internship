@@ -25,6 +25,7 @@
 ##############################################################################
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.db.models import Q
 
 
 class DissertationRole(models.Model):
@@ -43,7 +44,6 @@ class DissertationRole(models.Model):
                            self.adviser if self.adviser else "")
 
 
-# Récupère le nombre de dissertations pour un adviser
 def count_by_adviser(adviser, role, dissertation_status):
     return DissertationRole.objects.filter(
                                         adviser=adviser
@@ -58,6 +58,24 @@ def count_by_adviser(adviser, role, dissertation_status):
 
 def count_by_dissertation(dissertation):
     return DissertationRole.objects.filter(dissertation=dissertation).count()
+
+
+def search_by_adviser_and_role_stats(adviser, role):
+    return DissertationRole.objects.filter(
+                                        adviser=adviser
+                                    ).filter(
+                                        status=role
+                                    ).filter(
+                                        dissertation__active=True
+                                    ).exclude(
+                                        Q(dissertation__status='DRAFT') |
+                                        Q(dissertation__status='ENDED') |
+                                        Q(dissertation__status='DEFENDED')
+                                    )
+
+
+def count_by_adviser_and_role_stats(adviser, role):
+    return search_by_adviser_and_role_stats(adviser, role).count()
 
 
 def add(status, adviser, dissertation):
