@@ -28,8 +28,6 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db import IntegrityError
 from django.db.models import Q
 from base import models as mdl
-from base.models.offer_year import OfferYear
-from base.models.student import Student
 from base.views import layout
 from dissertation.models.adviser import Adviser
 from dissertation.models import adviser
@@ -42,7 +40,6 @@ from dissertation.models import dissertation_update
 from dissertation.models import faculty_adviser
 from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models import offer_proposition
-from dissertation.models.proposition_dissertation import PropositionDissertation
 from dissertation.models import proposition_dissertation
 from dissertation.models.proposition_role import PropositionRole
 from dissertation.models import proposition_role
@@ -99,24 +96,24 @@ def dissertations(request):
 @login_required
 @user_passes_test(is_manager)
 def manager_dissertations_detail(request, pk):
-    dissertation = get_object_or_404(Dissertation, pk=pk)
+    dissert = get_object_or_404(Dissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-    count_dissertation_role = dissertation_role.count_by_dissertation(dissertation)
-    count_proposition_role = proposition_role.count_by_dissertation(dissertation)
-    proposition_roles = proposition_role.search_by_dissertation(dissertation)
+    count_dissertation_role = dissertation_role.count_by_dissertation(dissert)
+    count_proposition_role = proposition_role.count_by_dissertation(dissert)
+    proposition_roles = proposition_role.search_by_dissertation(dissert)
 
     if count_proposition_role == 0:
         if count_dissertation_role == 0:
-            dissertation_role.add('PROMOTEUR', dissertation.proposition_dissertation.author, dissertation)
+            dissertation_role.add('PROMOTEUR', dissert.proposition_dissertation.author, dissert)
     else:
         if count_dissertation_role == 0:
             for role in proposition_roles:
-                dissertation_role.add(role.status, role.adviser, dissertation)
+                dissertation_role.add(role.status, role.adviser, dissert)
 
-    dissertation_roles = dissertation_role.search_by_dissertation(dissertation)
+    dissertation_roles = dissertation_role.search_by_dissertation(dissert)
     return layout.render(request, 'manager_dissertations_detail.html',
-                         {'dissertation': dissertation,
+                         {'dissertation': dissert,
                           'adviser': adv,
                           'dissertation_roles': dissertation_roles,
                           'count_dissertation_role': count_dissertation_role})
@@ -125,13 +122,13 @@ def manager_dissertations_detail(request, pk):
 @login_required
 @user_passes_test(is_manager)
 def manager_dissertations_detail_updates(request, pk):
-    dissertation = get_object_or_404(Dissertation, pk=pk)
+    dissert = get_object_or_404(Dissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-    dissertation_updates = dissertation_update.search_by_dissertation(dissertation)
+    dissertation_updates = dissertation_update.search_by_dissertation(dissert)
 
     return layout.render(request, 'manager_dissertations_detail_updates.html',
-                         {'dissertation': dissertation,
+                         {'dissertation': dissert,
                           'adviser': adv,
                           'dissertation_updates': dissertation_updates})
 
@@ -139,23 +136,23 @@ def manager_dissertations_detail_updates(request, pk):
 @login_required
 @user_passes_test(is_manager)
 def manager_dissertations_edit(request, pk):
-    dissertation = get_object_or_404(Dissertation, pk=pk)
+    dissert = get_object_or_404(Dissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     offer = faculty_adviser.search_by_adviser(adv).offer
 
     if request.method == "POST":
-        form = ManagerDissertationEditForm(request.POST, instance=dissertation)
+        form = ManagerDissertationEditForm(request.POST, instance=dissert)
         if form.is_valid():
-            dissertation = form.save()
-            dissertation.save()
-            return redirect('manager_dissertations_detail', pk=dissertation.pk)
+            dissert = form.save()
+            dissert.save()
+            return redirect('manager_dissertations_detail', pk=dissert.pk)
         else:
             form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offer(offer)
             form.fields["author"].queryset = mdl.student.find_by_offer(offer)
             form.fields["offer_year_start"].queryset = mdl.offer_year.find_by_offer(offer)
     else:
-        form = ManagerDissertationEditForm(instance=dissertation)
+        form = ManagerDissertationEditForm(instance=dissert)
         form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offer(offer)
         form.fields["author"].queryset = mdl.student.find_by_offer(offer)
         form.fields["offer_year_start"].queryset = mdl.offer_year.find_by_offer(offer)
@@ -171,8 +168,8 @@ def manager_dissertations_jury_edit(request, pk):
     if request.method == "POST":
         form = ManagerDissertationRoleForm(request.POST, instance=dissert_role)
         if form.is_valid():
-            dissertation = form.save()
-            dissertation.save()
+            dissert = form.save()
+            dissert.save()
             return redirect('manager_dissertations_detail', pk=dissert_role.dissertation.pk)
     else:
         form = ManagerDissertationRoleForm(instance=dissert_role)
@@ -182,19 +179,19 @@ def manager_dissertations_jury_edit(request, pk):
 @login_required
 @user_passes_test(is_manager)
 def manager_dissertations_jury_new(request, pk):
-    dissertation = get_object_or_404(Dissertation, pk=pk)
-    count_dissertation_role = dissertation_role.count_by_dissertation(dissertation)
+    dissert = get_object_or_404(Dissertation, pk=pk)
+    count_dissertation_role = dissertation_role.count_by_dissertation(dissert)
     if count_dissertation_role < 5:
         if request.method == "POST":
             form = ManagerDissertationRoleForm(request.POST)
             if form.is_valid():
                 form.save()
-                return redirect('manager_dissertations_detail', pk=dissertation.pk)
+                return redirect('manager_dissertations_detail', pk=dissert.pk)
         else:
-            form = ManagerDissertationRoleForm(initial={'dissertation': dissertation})
+            form = ManagerDissertationRoleForm(initial={'dissertation': dissert})
             return layout.render(request, 'manager_dissertations_jury_edit.html', {'form': form})
     else:
-        return redirect('manager_dissertations_detail', pk=dissertation.pk)
+        return redirect('manager_dissertations_detail', pk=dissert.pk)
 
 
 @login_required
@@ -261,7 +258,7 @@ def manager_dissertations_search(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     offer = faculty_adviser.search_by_adviser(adv).offer
-    offer_proposition = OfferProposition.objects.get(offer=offer)
+    offer_prop = OfferProposition.objects.get(offer=offer)
     xlsx = False
     reader1_name = ''
     reader2_name = ''
@@ -313,7 +310,7 @@ def manager_dissertations_search(request):
         return response
     return layout.render(request, "manager_dissertations_list.html",
                          {'dissertations': dissertations,
-                          'offer_proposition': offer_proposition,
+                          'offer_proposition': offer_prop,
                           'xlsx': xlsx})
 
 
