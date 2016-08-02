@@ -208,27 +208,6 @@ def manager_dissertations_list(request):
 
 @login_required
 @user_passes_test(is_manager)
-def manager_dissertations_print(request):
-    disserts = dissertation.search(terms=request.GET['search'], active=True)
-    wb = Workbook(encoding='utf-8')
-    dest_filename = 'IMPORT_dissertaion_.xlsx'
-    ws1 = wb.active
-    ws1.title = "dissertation"
-    for dissert in disserts:
-        promoteur = dissertation_role.search_by_dissertation_and_role(dissert, 'PROMOTEUR')
-        copromoteur = dissertation_role.search_by_dissertation_and_role(dissert, 'CO_PROMOTEUR')
-        reader = dissertation_role.search_by_dissertation_and_role(dissert, 'READER')
-        ws1.append([dissert.creation_date, dissert.author.student.person.first_name,
-                    dissert.author.student.person.middle_name, dissert.author.student.person.last_name,
-                    dissert.author.student.person.global_id, dissert.title,
-                    dissert.status, dissert.offer_year_start, promoteur.adviser, copromoteur.adviser,
-                    reader[0].adviser, reader[1].adviser])
-
-    return HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.ms-excel')
-
-
-@login_required
-@user_passes_test(is_manager)
 def manager_dissertations_new(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -260,14 +239,9 @@ def manager_dissertations_search(request):
     offer = faculty_adviser.search_by_adviser(adv).offer
     offer_prop = OfferProposition.objects.get(offer=offer)
     xlsx = False
-    reader1_name = ''
-    reader2_name = ''
-    copro_name = ''
-    pro_name = ''
 
     if 'bt_xlsx' in request.GET:
-
-        filename = 'IMPORT_dissertation_' + time.strftime("%Y-%m-%d %H:%M") + '.xlsx'
+        filename = 'EXPORT_dissertation_' + time.strftime("%Y-%m-%d %H:%M") + '.xlsx'
         wb = Workbook(encoding='utf-8')
         ws1 = wb.active
         ws1.title = "dissertation"
@@ -275,28 +249,28 @@ def manager_dissertations_search(request):
                     'Status', 'Offer_year_start', 'offer_year_start_short', 'promoteur', 'copromoteur', 'lecteur1',
                     'lecteur2'])
         for dissert in disserts:
-            queryset = DissertationRole.objects.filter(Q(dissertation=dissert))
-            queryset_pro = queryset.filter(Q(status='PROMOTEUR'))
-            queryset_copro = queryset.filter(Q(status='CO_PROMOTEUR'))
-            queryset_reader = queryset.filter(Q(status='READER'))
+            promoteur = dissertation_role.search_by_dissertation_and_role(dissert, 'PROMOTEUR')
+            copromoteur = dissertation_role.search_by_dissertation_and_role(dissert, 'CO_PROMOTEUR')
+            reader = dissertation_role.search_by_dissertation_and_role(dissert, 'READER')
 
-            if queryset_pro.count() > 0:
-                pro_name = str(queryset_pro[0].adviser)
+            if promoteur.count() > 0:
+                pro_name = str(promoteur[0].adviser)
             else:
                 pro_name = 'none'
 
-            if queryset_copro.count() > 0:
-                copro_name = str(queryset_copro[0].adviser)
+            if copromoteur.count() > 0:
+                copro_name = str(copromoteur[0].adviser)
             else:
                 copro_name = 'none'
-            if queryset_reader.count() > 0:
-                reader1_name = str(queryset_reader[0].adviser)
-                if queryset_reader.count() > 1:
-                    reader2_name = str(queryset_reader[1].adviser)
+            if reader.count() > 0:
+                reader1_name = str(reader[0].adviser)
+                if reader.count() > 1:
+                    reader2_name = str(reader[1].adviser)
                 else:
                     reader2_name = 'none'
             else:
                 reader1_name = 'none'
+                reader2_name = 'none'
 
             ws1.append([dissert.creation_date,
                         str(dissert.author),
@@ -308,10 +282,12 @@ def manager_dissertations_search(request):
         response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.ms-excel')
         response['Content-Disposition'] = "attachment; filename=" + filename
         return response
-    return layout.render(request, "manager_dissertations_list.html",
-                         {'dissertations': dissertations,
-                          'offer_proposition': offer_prop,
-                          'xlsx': xlsx})
+
+    else:
+        return layout.render(request, "manager_dissertations_list.html",
+                                      {'dissertations': disserts,
+                                       'offer_proposition': offer_prop,
+                                       'xlsx': xlsx})
 
 
 @login_required
