@@ -91,42 +91,42 @@ class Dissertation(models.Model):
     def go_forward(self):
         if self.status == 'DRAFT' or self.status == 'DIR_KO':
             self.set_status('DIR_SUBMIT')
+
         elif self.status == 'TO_RECEIVE':
             self.set_status('TO_DEFEND')
+
         elif self.status == 'TO_DEFEND':
             self.set_status('DEFENDED')
 
     def accept(self):
         offer_prop = offer_proposition.search_by_offer(self.offer_year_start.offer)
         if offer_prop.validation_commission_exists and self.status == 'DIR_SUBMIT':
-            self.status = 'COM_SUBMIT'
-            self.save()
+            self.set_status('COM_SUBMIT')
+
         elif offer_prop.evaluation_first_year and (self.status == 'DIR_SUBMIT' or self.status == 'COM_SUBMIT'):
-            self.status = 'EVA_SUBMIT'
-            self.save()
+            self.set_status('EVA_SUBMIT')
+
         elif self.status == 'EVA_SUBMIT':
-            self.status = 'TO_RECEIVE'
-            self.save()
+            self.set_status('TO_RECEIVE')
+
         elif self.status == 'DEFENDED':
-            self.status = 'ENDED_WIN'
-            self.save()
+            self.set_status('ENDED_WIN')
+
         else:
-            self.status = 'TO_RECEIVE'
-            self.save()
+            self.set_status('TO_RECEIVE')
 
     def refuse(self):
         if self.status == 'DIR_SUBMIT':
-            self.status = 'DIR_KO'
-            self.save()
+            self.set_status('DIR_KO')
+
         elif self.status == 'COM_SUBMIT':
-            self.status = 'COM_KO'
-            self.save()
+            self.set_status('COM_KO')
+
         elif self.status == 'EVA_SUBMIT':
-            self.status = 'EVA_KO'
-            self.save()
+            self.set_status('EVA_KO')
+
         elif self.status == 'DEFENDED':
-            self.status = 'ENDED_LOS'
-            self.save()
+            self.set_status('ENDED_LOS')
 
     class Meta:
         ordering = ["author__person__last_name", "author__person__middle_name", "author__person__first_name", "title"]
