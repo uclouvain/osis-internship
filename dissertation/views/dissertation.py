@@ -296,14 +296,7 @@ def manager_dissertations_delete(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     dissert.active = False
     dissert.save()
-    # create update log
-    update = DissertationUpdate()
-    update.status_from = dissert.status
-    update.status_to = dissert.status
-    update.justification = "manager_set_active_false"
-    update.person = mdl.person.find_by_user(request.user)
-    update.dissertation = dissert
-    update.save()
+    dissertation_update.add(request, dissert, dissert.status, justification="manager_set_active_false")
     return redirect('manager_dissertations_list')
 
 

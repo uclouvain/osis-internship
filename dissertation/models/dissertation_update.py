@@ -49,13 +49,16 @@ def search_by_dissertation(dissert):
     return DissertationUpdate.objects.filter(dissertation=dissert).order_by('created')
 
 
-def add(request, dissert, old_status):
+def add(request, dissert, old_status, justification=""):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     update = DissertationUpdate()
     update.status_from = old_status
     update.status_to = dissert.status
-    update.justification = adv.type + "_set_to_" + dissert.status
+    if justification:
+        update.justification = justification
+    else:
+        update.justification = adv.type + "_set_to_" + dissert.status
     update.person = person
     update.dissertation = dissert
     update.save()
