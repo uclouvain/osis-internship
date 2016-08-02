@@ -120,16 +120,6 @@ def find_deliberation_date(session_exam):
     return scores_encodings_end_date
 
 
-def get_min_start_date(academic_calendar_id):
-    try:
-        return OfferYearCalendar.objects.filter(academic_calendar_id=academic_calendar_id) \
-                                        .filter(customized=True) \
-                                        .filter(start_date__isnull=False)\
-                                        .earliest('start_date')
-    except ObjectDoesNotExist:
-        return None
-
-
 def get_max_end_date(academic_calendar_id):
     try:
         return OfferYearCalendar.objects.filter(academic_calendar_id=academic_calendar_id) \
