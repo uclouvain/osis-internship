@@ -38,6 +38,7 @@ from dissertation.models import dissertation
 from dissertation.models.dissertation_role import DissertationRole
 from dissertation.models import dissertation_role
 from dissertation.models.dissertation_update import DissertationUpdate
+from dissertation.models import dissertation_update
 from dissertation.models import faculty_adviser
 from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models import offer_proposition
@@ -45,7 +46,6 @@ from dissertation.models.proposition_dissertation import PropositionDissertation
 from dissertation.models import proposition_dissertation
 from dissertation.models.proposition_role import PropositionRole
 from dissertation.models import proposition_role
-from dissertation.models import dissertation_update
 from dissertation.forms import ManagerDissertationForm, ManagerDissertationEditForm, ManagerDissertationRoleForm
 from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl import Workbook
@@ -66,18 +66,6 @@ def is_teacher(user):
     adv = adviser.search_by_person(person)
     return adv.type == 'PRF'
 
-
-# Used to insert update log
-def insert_update(request, dissertation, old_status):
-    person = mdl.person.find_by_user(request.user)
-    adv = adviser.search_by_person(person)
-    update = DissertationUpdate()
-    update.status_from = old_status
-    update.status_to = dissertation.status
-    update.justification = adv.type + "_set_to_" + dissertation.status
-    update.person = person
-    update.dissertation = dissertation
-    update.save()
 
 ##########################
 #      VUE GENERALE      #
@@ -239,8 +227,7 @@ def manager_dissertations_print(request):
                     dissert.status, dissert.offer_year_start, promoteur.adviser, copromoteur.adviser,
                     reader[0].adviser, reader[1].adviser])
 
-    response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.ms-excel')
-    return response
+    return HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.ms-excel')
 
 
 @login_required
@@ -382,7 +369,7 @@ def manager_dissertations_to_dir_submit(request, pk):
         dissertation.status = 'DEFENDED'
         dissertation.save()
 
-    insert_update(request, dissertation, old_status)
+    dissertation_update.add(request, dissertation, old_status)
     return redirect('manager_dissertations_detail', pk=pk)
 
 
@@ -402,7 +389,7 @@ def manager_dissertations_to_dir_submit_list(request, pk):
         dissertation.status = 'DEFENDED'
         dissertation.save()
 
-    insert_update(request, dissertation, old_status)
+    dissertation_update.add(request, dissertation, old_status)
     return redirect('manager_dissertations_wait_recep_list')
 
 
@@ -430,7 +417,7 @@ def manager_dissertations_to_dir_ok(request, pk):
         dissertation.status = 'TO_RECEIVE'
         dissertation.save()
 
-    insert_update(request, dissertation, old_status)
+    dissertation_update.add(request, dissertation, old_status)
     return redirect('manager_dissertations_detail', pk=pk)
 
 
@@ -458,7 +445,7 @@ def manager_dissertations_to_dir_ok_comm_list(request, pk):
         dissertation.status = 'TO_RECEIVE'
         dissertation.save()
 
-    insert_update(request, dissertation, old_status)
+    dissertation_update.add(request, dissertation, old_status)
     return redirect('manager_dissertations_wait_comm_list')
 
 
@@ -486,7 +473,7 @@ def manager_dissertations_to_dir_ok_eval_list(request, pk):
         dissertation.status = 'TO_RECEIVE'
         dissertation.save()
 
-    insert_update(request, dissertation, old_status)
+    dissertation_update.add(request, dissertation, old_status)
     return redirect('manager_dissertations_wait_eval_list')
 
 
@@ -509,7 +496,7 @@ def manager_dissertations_to_dir_ko(request, pk):
         dissertation.status = 'ENDED_LOS'
         dissertation.save()
 
-    insert_update(request, dissertation, old_status)
+    dissertation_update.add(request, dissertation, old_status)
     return redirect('manager_dissertations_detail', pk=pk)
 
 
@@ -676,7 +663,8 @@ def dissertations_to_dir_submit(request, pk):
     old_status = dissertation.status
     dissertation.status = 'DIR_SUBMIT'
     dissertation.save()
-    insert_update(request, dissertation, old_status)
+
+    dissertation_update.add(request, dissertation, old_status)
     return redirect('dissertations_detail', pk=pk)
 
 
@@ -703,7 +691,7 @@ def dissertations_to_dir_ok(request, pk):
         dissertation.status = 'TO_RECEIVE'
         dissertation.save()
 
-    insert_update(request, dissertation, old_status)
+    dissertation_update.add(request, dissertation, old_status)
     return redirect('dissertations_detail', pk=pk)
 
 
@@ -725,7 +713,7 @@ def dissertations_to_dir_ko(request, pk):
         dissertation.status = 'ENDED_LOS'
         dissertation.save()
 
-    insert_update(request, dissertation, old_status)
+    dissertation_update.add(request, dissertation, old_status)
     return redirect('dissertations_detail', pk=pk)
 
 
