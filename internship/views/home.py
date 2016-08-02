@@ -55,25 +55,33 @@ def internships_home(request):
 
     student_informations = InternshipStudentInformation.find_all()
     for student_info in student_informations:
-        if not student_info.check_coordonates :
+        if student_info.latitude == None :
             student_address = student_info.location + " " + student_info.postal_code + " " \
                             + student_info.city + " " + student_info.country
             student_address = student_address.replace('\n','')
             student_address_lat_long = geocode(student_address)
-            student_info.latitude = student_address_lat_long[0]
-            student_info.longitude = student_address_lat_long[1]
+            if student_address_lat_long[0] != None:
+                student_info.latitude = student_address_lat_long[0]
+                student_info.longitude = student_address_lat_long[1]
+            else :
+                student_info.latitude = 999
+                student_info.longitude = 999
             student_info.check_coordonates = True
             student_info.save()
 
     organization_informations = OrganizationAddress.find_all()
     for organization_info in organization_informations:
-        if not organization_info.check_coordonates :
+        if organization_info.latitude == None :
             organization_address = organization_info.location + " " + organization_info.postal_code + " " \
                             + organization_info.city + " " + organization_info.country
             organization_address = organization_address.replace('\n','')
             organization_address_lat_long = geocode(organization_address)
-            organization_info.latitude = organization_address_lat_long[0]
-            organization_info.longitude = organization_address_lat_long[1]
+            if organization_address_lat_long[0] != None:
+                organization_info.latitude = organization_address_lat_long[0]
+                organization_info.longitude = organization_address_lat_long[1]
+            else :
+                organization_info.latitude = 999
+                organization_info.longitude = 999
             organization_info.check_coordonates = True
             organization_info.save()
 

@@ -141,7 +141,8 @@ def student_save_information_modification(request, registration_id):
     information.postal_code = request.POST.get('student_postal_code')
     information.city = request.POST.get('student_city')
     information.country = request.POST.get('student_country')
-    information.check_coordonates = False
+    information.latitude = None
+    information.longitude = None
     information.save()
 
     redirect_url = reverse('internships_student_read', args=[registration_id])
