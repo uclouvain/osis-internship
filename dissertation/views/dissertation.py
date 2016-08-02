@@ -41,7 +41,6 @@ from dissertation.models import faculty_adviser
 from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models import offer_proposition
 from dissertation.models import proposition_dissertation
-from dissertation.models.proposition_role import PropositionRole
 from dissertation.models import proposition_role
 from dissertation.forms import ManagerDissertationForm, ManagerDissertationEditForm, ManagerDissertationRoleForm
 from openpyxl.writer.excel import save_virtual_workbook
@@ -467,29 +466,25 @@ def dissertations_search(request):
 @login_required
 @user_passes_test(is_teacher)
 def dissertations_detail(request, pk):
-    dissertation = get_object_or_404(Dissertation, pk=pk)
+    dissert = get_object_or_404(Dissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-    count_dissertation_role = DissertationRole.objects.filter(dissertation=dissertation).count()
-    count_proposition_role = PropositionRole.objects \
-        .filter(proposition_dissertation=dissertation.proposition_dissertation).count()
-    proposition_roles = PropositionRole.objects.filter(proposition_dissertation=dissertation.proposition_dissertation)
+    count_dissertation_role = dissertation_role.count_by_dissertation(dissert)
+    count_proposition_role = proposition_role.count_by_dissertation(dissert)
+    proposition_roles = proposition_role.search_by_dissertation(dissert)
+
     if count_proposition_role == 0:
         if count_dissertation_role == 0:
-            pro = DissertationRole(status='PROMOTEUR',
-                                   adviser=dissertation.proposition_dissertation.author,
-                                   dissertation=dissertation)
-            pro.save()
+            dissertation_role.add('PROMOTEUR', dissert.proposition_dissertation.author, dissert)
+
     else:
         if count_dissertation_role == 0:
-            for prop_role in proposition_roles:
-                jury = DissertationRole(status=prop_role.status,
-                                        adviser=prop_role.adviser,
-                                        dissertation=dissertation)
-                jury.save()
-    dissertation_roles = DissertationRole.objects.filter(dissertation=dissertation)
+            for role in proposition_roles:
+                dissertation_role.add(role.status, role.adviser, dissert)
+
+    dissertation_roles = dissertation_role.search_by_dissertation(dissert)
     return layout.render(request, 'dissertations_detail.html',
-                         {'dissertation': dissertation,
+                         {'dissertation': dissert,
                           'adviser': adv,
                           'dissertation_roles': dissertation_roles,
                           'count_dissertation_role': count_dissertation_role})
@@ -498,12 +493,12 @@ def dissertations_detail(request, pk):
 @login_required
 @user_passes_test(is_teacher)
 def dissertations_detail_updates(request, pk):
-    dissertation = get_object_or_404(Dissertation, pk=pk)
+    dissert = get_object_or_404(Dissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-    dissertation_updates = DissertationUpdate.objects.filter(dissertation=dissertation).order_by('created')
+    dissertation_updates = DissertationUpdate.objects.filter(dissertation=dissert).order_by('created')
     return layout.render(request, 'dissertations_detail_updates.html',
-                         {'dissertation': dissertation,
+                         {'dissertation': dissert,
                           'adviser': adv,
                           'dissertation_updates': dissertation_updates})
 
