@@ -242,25 +242,15 @@ def manager_dissertations_new(request):
             form.save()
             return redirect('manager_dissertations_list')
         else:
-            form.fields["proposition_dissertation"].queryset = \
-                PropositionDissertation.objects.filter(visibility=True,
-                                                       active=True,
-                                                       offer_proposition__offer=offer)
-            form.fields["author"].queryset = \
-                Student.objects.filter(offerenrollment__offer_year__offer=offer)
-            form.fields["offer_year_start"].queryset = \
-                OfferYear.objects.filter(offer=offer)
+            form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offer(offer)
+            form.fields["author"].queryset = mdl.student.find_by_offer(offer)
+            form.fields["offer_year_start"].queryset = mdl.offer_year.find_by_offer(offer)
 
     else:
         form = ManagerDissertationForm(initial={'active': True})
-        form.fields["proposition_dissertation"].queryset = \
-            PropositionDissertation.objects.filter(visibility=True,
-                                                   active=True,
-                                                   offer_proposition__offer=offer)
-        form.fields["author"].queryset = \
-            Student.objects.filter(offerenrollment__offer_year__offer=offer)
-        form.fields["offer_year_start"].queryset = \
-            OfferYear.objects.filter(offer=offer)
+        form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offer(offer)
+        form.fields["author"].queryset = mdl.student.find_by_offer(offer)
+        form.fields["offer_year_start"].queryset = mdl.offer_year.find_by_offer(offer)
     return layout.render(request, 'manager_dissertations_new.html', {'form': form})
 
 
