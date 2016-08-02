@@ -26,7 +26,6 @@
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db import IntegrityError
-from django.db.models import Q
 from base import models as mdl
 from base.views import layout
 from dissertation.models.adviser import Adviser
@@ -35,7 +34,6 @@ from dissertation.models.dissertation import Dissertation
 from dissertation.models import dissertation
 from dissertation.models.dissertation_role import DissertationRole
 from dissertation.models import dissertation_role
-from dissertation.models.dissertation_update import DissertationUpdate
 from dissertation.models import dissertation_update
 from dissertation.models import faculty_adviser
 from dissertation.models.offer_proposition import OfferProposition
@@ -305,6 +303,7 @@ def manager_dissertations_delete(request, pk):
 def manager_dissertations_role_delete(request, pk):
     dissert_role = get_object_or_404(DissertationRole, pk=pk)
     dissert = dissert_role.dissertation
+    dissertation_update.add(request, dissert, dissert.status, justification="manager_delete_jury "+str(dissert_role))
     dissert_role.delete()
     return redirect('manager_dissertations_detail', pk=dissert.pk)
 
@@ -496,7 +495,7 @@ def dissertations_detail_updates(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-    dissertation_updates = DissertationUpdate.objects.filter(dissertation=dissert).order_by('created')
+    dissertation_updates = dissertation_update.search_by_dissertation(dissert)
     return layout.render(request, 'dissertations_detail_updates.html',
                          {'dissertation': dissert,
                           'adviser': adv,
@@ -506,70 +505,42 @@ def dissertations_detail_updates(request, pk):
 @login_required
 @user_passes_test(is_teacher)
 def dissertations_delete(request, pk):
-    dissertation = get_object_or_404(Dissertation, pk=pk)
-    dissertation.active = False
-    dissertation.save()
+    dissert = get_object_or_404(Dissertation, pk=pk)
+    dissert.deactivate()
+    dissertation_update.add(request, dissert, dissert.status, justification="manager_set_active_false ")
     return redirect('dissertations_list')
 
 
 @login_required
 @user_passes_test(is_teacher)
 def dissertations_to_dir_submit(request, pk):
-    dissertation = get_object_or_404(Dissertation, pk=pk)
-    old_status = dissertation.status
-    dissertation.status = 'DIR_SUBMIT'
-    dissertation.save()
+    dissert = get_object_or_404(Dissertation, pk=pk)
+    old_status = dissert.status
+    dissert.go_forward()
+    dissertation_update.add(request, dissert, old_status)
 
-    dissertation_update.add(request, dissertation, old_status)
     return redirect('dissertations_detail', pk=pk)
 
 
 @login_required
 @user_passes_test(is_teacher)
 def dissertations_to_dir_ok(request, pk):
-    dissertation = get_object_or_404(Dissertation, pk=pk)
-    old_status = dissertation.status
-    offer_proposition = OfferProposition.objects.get(offer=dissertation.offer_year_start.offer)
-    if offer_proposition.validation_commission_exists and dissertation.status == 'DIR_SUBMIT':
-        dissertation.status = 'COM_SUBMIT'
-        dissertation.save()
-    elif offer_proposition.evaluation_first_year and (
-                    dissertation.status == 'DIR_SUBMIT' or dissertation.status == 'COM_SUBMIT'):
-        dissertation.status = 'EVA_SUBMIT'
-        dissertation.save()
-    elif dissertation.status == 'EVA_SUBMIT':
-        dissertation.status = 'TO_RECEIVE'
-        dissertation.save()
-    elif dissertation.status == 'DEFENDED':
-        dissertation.status = 'ENDED_WIN'
-        dissertation.save()
-    else:
-        dissertation.status = 'TO_RECEIVE'
-        dissertation.save()
+    dissert = get_object_or_404(Dissertation, pk=pk)
+    old_status = dissert.status
+    dissert.accept()
+    dissertation_update.add(request, dissert, old_status)
 
-    dissertation_update.add(request, dissertation, old_status)
     return redirect('dissertations_detail', pk=pk)
 
 
 @login_required
 @user_passes_test(is_teacher)
 def dissertations_to_dir_ko(request, pk):
-    dissertation = get_object_or_404(Dissertation, pk=pk)
-    old_status = dissertation.status
-    if dissertation.status == 'DIR_SUBMIT':
-        dissertation.status = 'DIR_KO'
-        dissertation.save()
-    elif dissertation.status == 'COM_SUBMIT':
-        dissertation.status = 'COM_KO'
-        dissertation.save()
-    elif dissertation.status == 'EVA_SUBMIT':
-        dissertation.status = 'EVA_KO'
-        dissertation.save()
-    elif dissertation.status == 'DEFENDED':
-        dissertation.status = 'ENDED_LOS'
-        dissertation.save()
-
+    dissert = get_object_or_404(Dissertation, pk=pk)
+    old_status = dissert.status
+    dissert.refuse()
     dissertation_update.add(request, dissertation, old_status)
+
     return redirect('dissertations_detail', pk=pk)
 
 
@@ -578,14 +549,7 @@ def dissertations_to_dir_ko(request, pk):
 def dissertations_wait_list(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
+    roles_list_dissertations = dissertation_role.search_by_adviser_and_role_and_status(adv, "PROMOTEUR", "DIR_SUBMIT")
 
-    queryset = DissertationRole.objects.all()
-    roles_list_dissertations = queryset.filter(Q(status='PROMOTEUR') &
-                                               Q(adviser__pk=adv.pk) &
-                                               Q(dissertation__active=True) &
-                                               Q(dissertation__status="DIR_SUBMIT"))
-    roles_list_dissertations = roles_list_dissertations.order_by(
-                                                    'dissertation__author__person__last_name',
-                                                    'dissertation__author__person__first_name')
     return layout.render(request, 'dissertations_wait_list.html',
                          {'roles_list_dissertations': roles_list_dissertations})
