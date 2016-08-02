@@ -44,17 +44,15 @@
       <table class="table table-hover">
         <tr>
           <th>{% trans 'adviser_name'%}</th>
-          <th>{% trans 'dissertation_title'%}</th>
-          <th>{% trans 'dissertation_status'%}</th>
-          <th>{% trans 'adviser_role'%}</th>
         </tr>
         {% for adviser_need_request in advisers_need_request %}
           <tr>
-            <td><a href="{% url 'manager_informations_detail_list' pk=adviser_need_request.adviser.pk %}">
-              {{ adviser_need_request.adviser }}</a></td>
-            <td>{{ adviser_need_request.dissertation.title }}</td>
-            <td>{{ adviser_need_request.dissertation.status }}</td>
-            <td>{{ adviser_need_request.status }}</td>
+            <td>
+                <a href="{% url 'manager_informations_detail_list' pk=adviser_need_request.adviser.pk %}">
+                    {{ adviser_need_request.adviser }}
+                </a>
+            </td>
+
           </tr>
         {% endfor %}
       </table>

@@ -122,3 +122,15 @@ def search_by_adviser_and_role_and_status(adviser, role, status):
                                         'dissertation__author__person__last_name',
                                         'dissertation__author__person__first_name'
                                     )
+
+
+def list_teachers_action_needed(offer):
+    return DissertationRole.objects.filter(
+                                        status='PROMOTEUR'
+                                    ).filter(
+                                        dissertation__status='DIR_SUBMIT'
+                                    ).filter(
+                                        dissertation__offer_year_start__offer=offer
+                                    ).filter(
+                                        dissertation__active=True
+                                    ).distinct('adviser')

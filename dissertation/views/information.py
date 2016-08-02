@@ -154,7 +154,7 @@ def informations_edit(request):
 @login_required
 @user_passes_test(is_manager)
 def manager_informations(request):
-    advisers = Adviser.objects.filter(type='PRF').order_by('person__last_name', 'person__first_name')
+    advisers = adviser.list_teachers()
     return layout.render(request, 'manager_informations_list.html', {'advisers': advisers})
 
 
@@ -215,12 +215,7 @@ def manager_informations_list_request(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     offer = faculty_adviser.search_by_adviser(adv).offer
-    queryset = DissertationRole.objects.all()
-    advisers_need_request = queryset.filter(Q(status='PROMOTEUR') &
-                                            Q(dissertation__status='DIR_SUBMIT') &
-                                            Q(dissertation__offer_year_start__offer=offer) &
-                                            Q(dissertation__active=True)).distinct('adviser')
-    advisers_need_request = advisers_need_request
+    advisers_need_request = dissertation_role.list_teachers_action_needed(offer)
 
     return layout.render(request, "manager_informations_list_request.html",
                          {'advisers_need_request': advisers_need_request})
