@@ -382,11 +382,12 @@ def manager_dissertations_wait_list(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     offer = faculty_adviser.search_by_adviser(adv).offer
-    offer_proposition = OfferProposition.objects.get(offer=offer)
-    disserts = Dissertation.objects.filter(Q(offer_year_start__offer=offer) & Q(status="DIR_SUBMIT"))
+    offer_prop = offer_proposition.search_by_offer(offer)
+    disserts = dissertation.search_by_offer_and_status(offer, "DIR_SUBMIT")
+
     return layout.render(request, 'manager_dissertations_wait_list.html',
                          {'dissertations': disserts,
-                          'offer_proposition': offer_proposition})
+                          'offer_proposition': offer_prop})
 
 
 @login_required
@@ -395,11 +396,12 @@ def manager_dissertations_wait_comm_list(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     offer = faculty_adviser.search_by_adviser(adv).offer
-    offer_proposition = OfferProposition.objects.get(offer=offer)
-    disserts = Dissertation.objects.filter(Q(offer_year_start__offer=offer) & Q(status="COM_SUBMIT"))
+    offer_prop = offer_proposition.search_by_offer(offer)
+    disserts = dissertation.search_by_offer_and_status(offer, "COM_SUBMIT")
+
     return layout.render(request, 'manager_dissertations_wait_commission_list.html',
                          {'dissertations': disserts,
-                          'offer_proposition': offer_proposition})
+                          'offer_proposition': offer_prop})
 
 
 @login_required
@@ -408,11 +410,12 @@ def manager_dissertations_wait_eval_list(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     offer = faculty_adviser.search_by_adviser(adv).offer
-    offer_proposition = OfferProposition.objects.get(offer=offer)
-    disserts = Dissertation.objects.filter(Q(offer_year_start__offer=offer) & Q(status="EVA_SUBMIT"))
+    offer_prop = offer_proposition.search_by_offer(offer)
+    disserts = dissertation.search_by_offer_and_status(offer, "EVA_SUBMIT")
+
     return layout.render(request, 'manager_dissertations_wait_eval_list.html',
                          {'dissertations': disserts,
-                          'offer_proposition': offer_proposition})
+                          'offer_proposition': offer_prop})
 
 
 @login_required
@@ -421,11 +424,12 @@ def manager_dissertations_wait_recep_list(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     offer = faculty_adviser.search_by_adviser(adv).offer
-    offer_proposition = OfferProposition.objects.get(offer=offer)
-    disserts = Dissertation.objects.filter(Q(offer_year_start__offer=offer) & Q(status="TO_RECEIVE"))
+    offer_prop = offer_proposition.search_by_offer(offer)
+    disserts = dissertation.search_by_offer_and_status(offer, "TO_RECEIVE")
+    
     return layout.render(request, 'manager_dissertations_wait_recep_list.html',
                          {'dissertations': disserts,
-                          'offer_proposition': offer_proposition})
+                          'offer_proposition': offer_prop})
 
 
 ##########################

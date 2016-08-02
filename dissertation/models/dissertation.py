@@ -156,3 +156,7 @@ def search_by_proposition_author(terms=None, active=True, proposition_author=Non
 
 def search_by_offer(offer):
     return Dissertation.objects.filter(offer_year_start__offer=offer)
+
+
+def search_by_offer_and_status(offer, status):
+    return search_by_offer(offer).filter(status=status)
