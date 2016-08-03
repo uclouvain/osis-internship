@@ -30,7 +30,8 @@ from base import models as mdl
 from dissertation.models import adviser
 from dissertation.models.dissertation import Dissertation
 from dissertation.models import faculty_adviser
-from dissertation.models.proposition_dissertation import PropositionDissertation, search_proposition_dissertation
+from dissertation.models.proposition_dissertation import PropositionDissertation
+from dissertation.models import proposition_dissertation
 from dissertation.models.proposition_role import PropositionRole
 from dissertation.forms import PropositionDissertationForm, ManagerPropositionDissertationForm,\
     PropositionRoleForm, ManagerPropositionRoleForm
@@ -51,8 +52,7 @@ def manager_proposition_dissertations(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     offer = faculty_adviser.search_by_adviser(adv).offer
-    prop_disserts = PropositionDissertation.objects.filter(Q(active=True) &
-                                                           Q(offer_proposition__offer=offer))
+    prop_disserts = proposition_dissertation.search_by_offer(offer)
     return layout.render(request, 'manager_proposition_dissertations_list.html',
                          {'proposition_dissertations': prop_disserts})
 
@@ -172,7 +172,7 @@ def manager_proposition_dissertation_new(request):
 @login_required
 @user_passes_test(is_manager)
 def manager_proposition_dissertations_search(request):
-    prop_disserts = search_proposition_dissertation(terms=request.GET['search']).filter(Q(active=True))
+    prop_disserts = proposition_dissertation.search(terms=request.GET['search']).filter(Q(active=True))
     return layout.render(request, "manager_proposition_dissertations_list.html",
                          {'proposition_dissertations': prop_disserts})
 
@@ -272,7 +272,7 @@ def proposition_dissertation_new(request):
 
 @login_required
 def proposition_dissertations_search(request):
-    prop_disserts = search_proposition_dissertation(terms=request.GET['search']).filter(
+    prop_disserts = proposition_dissertation.search(terms=request.GET['search']).filter(
         Q(visibility=True) & Q(active=True))
     return layout.render(request, "proposition_dissertations_list.html",
                          {'proposition_dissertations': prop_disserts})

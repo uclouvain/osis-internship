@@ -82,7 +82,7 @@ class PropositionDissertation(models.Model):
         ordering = ["author__person__last_name", "author__person__middle_name", "author__person__first_name", "title"]
 
 
-def search_proposition_dissertation(terms=None):
+def search(terms=None):
     queryset = PropositionDissertation.objects.all()
     if terms:
         queryset = queryset.filter(
@@ -97,6 +97,5 @@ def search_proposition_dissertation(terms=None):
 
 
 def search_by_offer(offer):
-    return PropositionDissertation.objects.filter(visibility=True,
-                                                  active=True,
+    return PropositionDissertation.objects.filter(active=True,
                                                   offer_proposition__offer=offer)
