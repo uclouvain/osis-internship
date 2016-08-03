@@ -28,27 +28,19 @@ from django.contrib.auth.decorators import login_required, permission_required
 from internship.models import Organization, OrganizationAddress, InternshipChoice, InternshipOffer
 from internship.forms import OrganizationForm
 
-
-@login_required
-@permission_required('internship.is_internship_manager', raise_exception=True)
-def internships_places(request):
-    # First get the value of the option for the sort
-    if request.method == 'GET':
-        city_sort_get = request.GET.get('city_sort')
-
-    # Second, import all the organizations with their address(es if they have more than one)
-    all_organizations = Organization.find_by_type("service partner", order_by=['reference'])
-
+def sort_organizations(datas):
+    tab = []
     number_ref = []
-    for organization in all_organizations:
-        if organization is not None:
-            number_ref.append(organization.reference)
+    for data in datas:
+        if data is not None:
+            number_ref.append(data.reference)
     number_ref=sorted(number_ref, key=int)
-    organizations = []
     for i in number_ref:
         organization = Organization.search(reference=i)
-        organizations.append(organization[0])
+        tab.append(organization[0])
+    return tab
 
+def set_organization_address(organizations):
     if organizations:
         for organization in organizations:
             organization.address = ""
@@ -58,31 +50,52 @@ def internships_places(request):
                 organization.address = address
             organization.student_choice = len(InternshipChoice.find_by(s_organization=organization))
 
+def sorted_organization(datas, sort_city):
+    tab=[]
+    index = 0
+    for data in datas:
+        flag_del = 1
+        if data.address:
+            for a in data.address:
+                if a.city == sort_city:
+                    flag_del = 0
+                    break
+        if flag_del == 0:
+            tab.append(data)
+        index += 1
+    return tab
+
+def get_cities(datas):
+    tab = []
+    for data in datas:
+        for a in data.address:
+            tab.append(a.city)
+    tab = list(set(tab))
+    tab.sort()
+    return tab
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def internships_places(request):
+    # Get the value of the option for the sort
+    if request.method == 'GET':
+        city_sort_get = request.GET.get('city_sort')
+
+    # Import all the organizations order by their reference and set their address
+    organizations = Organization.find_by_type("service partner")
+    organizations = sort_organizations(organizations)
+    set_organization_address(organizations)
+
     # Next, if there is a value for the sort, browse all the organizations and put which have the same city
     # in the address than the sort option
     l_organizations = []
     if city_sort_get and city_sort_get != "0":
-        index = 0
-        for orga in organizations:
-            flag_del = 1
-            if orga.address:
-                for a in orga.address:
-                    if a.city == city_sort_get:
-                        flag_del = 0
-                        break
-            if flag_del == 0:
-                l_organizations.append(orga)
-            index += 1
+        l_organizations = sorted_organization(organizations, city_sort_get)
     else:
         l_organizations = organizations
 
     # Create the options for the selected list, delete dubblons
-    organization_addresses = []
-    for orga in organizations:
-        for a in orga.address:
-            organization_addresses.append(a.city)
-    organization_addresses = list(set(organization_addresses))
-    organization_addresses.sort()
+    organization_addresses = get_cities(organizations)
 
     return render(request, "places.html", {'section': 'internship',
                                            'all_organizations': l_organizations,
@@ -96,42 +109,21 @@ def internships_places_stud(request):
     if request.method == 'GET':
         city_sort_get = request.GET.get('city_sort')
 
-    # Second, import all the organizations with their address(es if they have more than one)
-    organizations = Organization.find_by_type("service partner", order_by=['reference'])
-    if organizations:
-        for organization in organizations:
-            organization.address = ""
-            organization.student_choice = 0
-            address = OrganizationAddress.find_by_organization(organization)
-            if address:
-                organization.address = address
-            organization.student_choice = len(InternshipChoice.find_by(s_organization=organization))
+    # Import all the organizations order by their reference and set their address
+    organizations = Organization.find_by_type("service partner")
+    organizations = sort_organizations(organizations)
+    set_organization_address(organizations)
 
     # Next, if there is a value for the sort, browse all the organizations and put which have the same city
     # in the address than the sort option
     l_organizations = []
     if city_sort_get and city_sort_get != "0":
-        index = 0
-        for orga in organizations:
-            flag_del = 1
-            if orga.address:
-                for a in orga.address:
-                    if a.city == city_sort_get:
-                        flag_del = 0
-                        break
-            if flag_del == 0:
-                l_organizations.append(orga)
-            index += 1
+        l_organizations = sorted_organization(organizations, city_sort_get)
     else:
         l_organizations = organizations
 
     # Create the options for the selected list, delete dubblons
-    organization_addresses = []
-    for orga in organizations:
-        for a in orga.address:
-            organization_addresses.append(a.city)
-    organization_addresses = list(set(organization_addresses))
-    organization_addresses.sort()
+    organization_addresses = get_cities(organizations)
 
     return render(request, "places_stud.html", {'section': 'internship',
                                            'all_organizations': l_organizations,
