@@ -69,6 +69,10 @@ class InternshipOffer(models.Model):
         for i in internship:
             if int(i.id) == int(id):
                 return i
+    @staticmethod
+    def find_by(organization_reference = None):
+        internships = InternshipOffer.objects.filter(organization__reference=organization_reference)
+        return internships
 
     class Meta:
         permissions = (

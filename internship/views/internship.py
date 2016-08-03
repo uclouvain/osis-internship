@@ -117,6 +117,25 @@ def rebuild_the_lists(preference_list, speciality_list, organization_list):
             organization_list[index] = 0
         index += 1
 
+def delete_dublons_keep_order(seq):
+    seen = set()
+    seen_add = seen.add
+    return [x for x in seq if not (x in seen or seen_add(x))]
+
+def sort_internships(datas):
+    tab = []
+    number_ref = []
+    for data in datas:
+        if data is not None:
+            number_ref.append(data.organization.reference)
+    number_ref=sorted(number_ref, key=int)
+    number_ref=delete_dublons_keep_order(number_ref)
+    for i in number_ref:
+        internships = InternshipOffer.find_by(organization_reference=i)
+        for internship in internships:
+            tab.append(internship)
+    return tab
+
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships(request):
@@ -130,7 +149,10 @@ def internships(request):
     else:
         query = InternshipOffer.find_internships()
 
-    # Get The number of differents choices for the interhsips
+    # Sort the internships by the organization's reference
+    query = sort_internships(query)
+
+    # Get The number of differents choices for the internships
     get_number_choices(query)
 
     all_internships = InternshipOffer.find_internships()
@@ -156,6 +178,9 @@ def internships_stud(request):
     # Select all Internship Offer
     query = InternshipOffer.find_internships()
 
+    # Sort the internships by the organization's reference
+    query = sort_internships(query)
+
     # Change the query into a list
     query = list(query)
     # Delete the internships in query when they are in the student's selection then rebuild the query
@@ -177,7 +202,7 @@ def internships_stud(request):
     for choice in student_choice:
         query.insert(0, choice)
 
-    # Get The number of differents choices for the interhsips
+    # Get The number of differents choices for the internships
     get_number_choices(query)
 
     all_internships = InternshipOffer.find_internships()
@@ -195,7 +220,7 @@ def internships_stud(request):
 
 @login_required
 def internships_save(request):
-    # Check if the interhsips are selectable, if yes students can save their choices
+    # Check if the internships are selectable, if yes students can save their choices
     all_internships = InternshipOffer.find_internships()
     selectable = get_selectable(all_internships)
 
@@ -358,7 +383,7 @@ def internships_modification_student(request, registration_id):
     for choice in student_choice :
         query.insert(0,choice)
 
-    # Get The number of differents choices for the interhsips
+    # Get The number of differents choices for the internships
     get_number_choices(query)
 
     all_internships = InternshipOffer.find_internships()
@@ -385,7 +410,7 @@ def internship_save_modification_student(request) :
     # Delete all the student's choices present in the DB
     InternshipChoice.objects.filter(student=student).delete()
     InternshipEnrollment.objects.filter(student=student).delete()
-    
+
     #Build the list of the organizations and specialities get by the POST request
     organization_list = list()
     speciality_list = list()
