@@ -431,7 +431,7 @@ class InternshipStudentInformation(models.Model):
 
     @staticmethod
     def find_all():
-        return InternshipStudentInformation.objects.all()
+        return InternshipStudentInformation.objects.all().order_by('person__last_name', 'person__first_name')
 
 class InternshipStudentAffectationStat(models.Model):
     student = models.ForeignKey('base.Student')

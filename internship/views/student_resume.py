@@ -39,6 +39,14 @@ def internships_student_resume(request):
     # Get all stundents and the mandatory specialities
     students_list = InternshipChoice.find_by_all_student()
     specialities = InternshipSpeciality.find_by(mandatory=True)
+    student_informations = InternshipStudentInformation.find_all()
+
+    for si in student_informations:
+        student = mdl.student.find_by_person(si.person)
+        choices = InternshipChoice.find_by_student(student)
+        si.number_choices = len(choices)
+        if student:
+            si.registration_id = student.registration_id
 
     # Get the required number selection (4 for each speciality)
     # Get the number of student who have al least 4 corrects choice of internship
@@ -50,26 +58,26 @@ def internships_student_resume(request):
     students_ok = 0
     students_not_ok = 0
     # Set the number of the student who have their all selection of internships
-    # and who haven't
-    for si in students_list:
-        student = mdl.student.find_by_person(si.person)
+    # who have a partial selection
+    # who have no selection
+    for sl in students_list:
+        student = mdl.student.find_by_person(sl.person)
         choices = InternshipChoice.find_by_student(student)
-        si.number_choices = len(choices)
+        sl.number_choices = len(choices)
         if len(choices) == number_selection:
             students_ok += 1
         else :
             students_not_ok += 1
-
-
-
+    student_without_internship = students_can_have_internships - student_with_internships
     return render(request, "student_search.html", {'s_noma':    None,
                                                    's_name':    None,
-                                                   'students':  students_list,
+                                                   'students':  student_informations,
                                                    'number_selection' : number_selection,
                                                    'students_ok' : students_ok,
                                                    'students_not_ok' : students_not_ok,
                                                    'student_with_internships' : student_with_internships,
                                                    'students_can_have_internships' : students_can_have_internships,
+                                                   'student_without_internship' : student_without_internship,
                                                    })
 
 

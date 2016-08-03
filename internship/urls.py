@@ -61,7 +61,6 @@ urlpatterns = [
     url(r'^specialities/create/$', speciality.speciality_create, name='speciality_create'),
     url(r'^specialities/new/$', speciality.speciality_new, name='speciality_new'),
 
-    url(r'^students/$', student.internships_students, name='internships_students'),
     url(r'^students/resume/$', student_resume.internships_student_resume, name='internships_student_resume'),
     url(r'^students/search$', student_resume.internships_student_search, name='internships_student_search'),
     url(r'^students/([0-9]+)/resume/$', student_resume.internships_student_read, name='internships_student_read'),
