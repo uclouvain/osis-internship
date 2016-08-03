@@ -45,15 +45,17 @@ class DissertationRole(models.Model):
 
 
 def count_by_adviser(adviser, role, dissertation_status):
-    return DissertationRole.objects.filter(
-                                        adviser=adviser
-                                    ).filter(
-                                        status=role
-                                    ).filter(
-                                        dissertation__status=dissertation_status
-                                    ).filter(
-                                        dissertation__active=True
-                                    ).count()
+    query = DissertationRole.objects.filter(adviser=adviser)
+
+    if role:
+        query = query.filter(status=role)
+
+    if dissertation_status:
+        query = query.filter(dissertation__status=dissertation_status)
+
+    query = query.filter(dissertation__active=True).count()
+
+    return query
 
 
 def count_by_dissertation(dissertation):
@@ -100,6 +102,24 @@ def search_by_adviser_and_role(adviser, role):
                                         adviser=adviser
                                     ).filter(
                                         dissertation__active=True
+                                    ).exclude(
+                                        dissertation__status='DRAFT'
+                                    ).order_by(
+                                        'dissertation__status',
+                                        'dissertation__author__person__last_name',
+                                        'dissertation__author__person__first_name'
+                                    )
+
+
+def search_by_adviser_and_role_and_offer(adviser, role, offer):
+    return DissertationRole.objects.filter(
+                                        status=role
+                                    ).filter(
+                                        adviser=adviser
+                                    ).filter(
+                                        dissertation__active=True
+                                    ).filter(
+                                        dissertation__offer_year_start__offer=offer
                                     ).exclude(
                                         dissertation__status='DRAFT'
                                     ).order_by(
