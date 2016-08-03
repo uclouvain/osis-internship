@@ -36,15 +36,21 @@ from django.utils.translation import ugettext_lazy as _
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_resume(request):
+    # Get all stundents and the mandatory specialities
     students_list = InternshipChoice.find_by_all_student()
     specialities = InternshipSpeciality.find_by(mandatory=True)
 
+    # Get the required number selection (4 for each speciality)
+    # Get the number of student who have al least 4 corrects choice of internship
+    # Get the number of student who can choose their internships
     number_selection = 4 * len (specialities)
     student_with_internships = len(students_list)
     students_can_have_internships = len(InternshipStudentInformation.find_all())
 
     students_ok = 0
     students_not_ok = 0
+    # Set the number of the student who have their all selection of internships
+    # and who haven't
     for si in students_list:
         student = mdl.student.find_by_person(si.person)
         choices = InternshipChoice.find_by_student(student)
