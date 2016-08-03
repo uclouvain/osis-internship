@@ -158,20 +158,22 @@ def internships_stud(request):
 
     # Change the query into a list
     query = list(query)
-    # delete the internships in query when they are in the student's selection then rebuild the query
+    # Delete the internships in query when they are in the student's selection then rebuild the query
+    # Put datas wich need to be save in the student's choice list
     index = 0
     for choice in student_choice:
         for internship in query:
             if internship.organization == choice.organization and \
                internship.speciality == choice.speciality:
                     choice.maximum_enrollments = internship.maximum_enrollments
+                    choice.selectable = internship.selectable
                     query[index] = 0
             index += 1
         query = [x for x in query if x != 0]
         index = 0
     query = [x for x in query if x != 0]
 
-    # insert the student choice into the global query, at first position,
+    # Insert the student choice into the global query, at first position,
     for choice in student_choice:
         query.insert(0, choice)
 
@@ -313,19 +315,12 @@ def student_choice(request, id):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def internships_block(request, block):
+def internships_block(request):
     internships = InternshipOffer.find_internships()
-
+    # For each internship in the DB invert the selectable flag
     for internship in internships:
         edit_internship = InternshipOffer.find_intership_by_id(internship.id)
-        edit_internship.organization = internship.organization
-        edit_internship.speciality = internship.speciality
-        edit_internship.title = internship.title
-        edit_internship.maximum_enrollments = internship.maximum_enrollments
-        if block == '1':
-            edit_internship.selectable = False
-        else:
-            edit_internship.selectable = True
+        edit_internship.selectable = not edit_internship.selectable
         edit_internship.save()
 
     return HttpResponseRedirect(reverse('internships_home'))
@@ -333,73 +328,47 @@ def internships_block(request, block):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_modification_student(request, registration_id):
-    student = mdl.student.find_by(registration_id=registration_id, full_registration = True)
-    #get in order descending to have the first choices in first lines in the insert (line 114)
+	# Get the student base on the user
+    student = mdl.student.find_by(person_username=request.user, full_registration = True)
+    # Get in descending order the student's choices in first lines
     student_choice = InternshipChoice.find_by_student_desc(student)
-    #First get the value of the option's value for the sort
-    if request.method == 'GET':
-        organization_sort_value = request.GET.get('organization_sort')
-
-    #Then select Internship Offer depending of the option
-    if organization_sort_value and organization_sort_value != "0":
-        query = InternshipOffer.find_interships_by_organization(organization_sort_value)
-    else :
-        query = InternshipOffer.find_internships()
-
     student_enrollment = InternshipEnrollment.find_by(student)
-    #Change the query into a list
-    query=list(query)
-    #delete the internships in query when they are in the student's selection then rebuild the query
+
+    # Select all Internship Offer
+    query = InternshipOffer.find_internships()
+    # Change the query into a list
+    query = list(query)
+
+    # Delete the internships in query when they are in the student's selection then rebuild the query
+    # Put datas wich need to be save in the student's choice list
     index = 0
     for choice in student_choice:
-        for internship in query :
+        for internship in query:
             if internship.organization == choice.organization and \
-                internship.speciality == choice.speciality :
-                    choice.maximum_enrollments =  internship.maximum_enrollments
-                    choice.selectable =  internship.selectable
+               internship.speciality == choice.speciality:
+                    choice.maximum_enrollments = internship.maximum_enrollments
+                    choice.selectable = internship.selectable
                     query[index] = 0
             index += 1
         query = [x for x in query if x != 0]
         index = 0
     query = [x for x in query if x != 0]
 
-    #insert the student choice into the global query, at first position,
-    #if they are in organization_sort_value (if it exist)
+    # Insert the student choice into the global query, at first position
     for choice in student_choice :
-        if organization_sort_value and organization_sort_value != "0" :
-            if choice.organization.name == organization_sort_value :
-                query.insert(0,choice)
-        else :
-            query.insert(0,choice)
+        query.insert(0,choice)
 
-    for internship in query:
-        number_first_choice = len(InternshipChoice.find_by(internship.organization, internship.speciality, s_choice = 1))
-        internship.number_first_choice = number_first_choice
-
-    # Create the options for the selected list, delete duplicated
-    query_organizations = InternshipOffer.find_internships()
-    internship_organizations = []
-    for internship in query_organizations:
-        internship_organizations.append(internship.organization)
-    internship_organizations = list(set(internship_organizations))
+    # Get The number of differents choices for the interhsips
+    get_number_choices(query)
 
     all_internships = InternshipOffer.find_internships()
-    all_speciality = []
-    for choice in all_internships:
-        all_speciality.append(choice.speciality)
-    all_speciality = list(set(all_speciality))
-    for luy in all_speciality :
-        size = len(InternshipChoice.find_by(s_speciality=luy, s_student=student))
-        luy.size = size
-        tab = luy.name.replace(" ", "")
-        luy.tab = tab
+    all_speciality = get_all_specialities(all_internships)
+    set_tabs_name(all_speciality, student)
 
     periods = Period.find_all()
 
     return render(request, "internship_modification_student.html", {'section': 'internship',
                                                 'all_internships' : query,
-                                                'all_organizations' : internship_organizations,
-                                                'organization_sort_value' : organization_sort_value,
                                                 'all_speciality' : all_speciality,
                                                 'periods' : periods,
                                                 'registration_id':registration_id,
@@ -410,37 +379,48 @@ def internships_modification_student(request, registration_id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_save_modification_student(request) :
+    # Get the student
+    registration_id = request.POST.getlist('registration_id')
+    student = mdl.student.find_by(registration_id=registration_id[0], full_registration = True)
+    # Delete all the student's choices present in the DB
+    InternshipChoice.objects.filter(student=student).delete()
+    InternshipEnrollment.objects.filter(student=student).delete()
+    
+    #Build the list of the organizations and specialities get by the POST request
+    organization_list = list()
+    speciality_list = list()
+    periods_list = list()
+    fixthis_list = list()
+
     if request.POST.get('organization'):
         organization_list = request.POST.getlist('organization')
-
     if request.POST.get('speciality'):
         speciality_list = request.POST.getlist('speciality')
+    if request.POST.get('periods_s'):
+        periods_list = request.POST.getlist('periods_s')
+    if request.POST.get('fixthis'):
+        fixthis_list = request.POST.getlist('fixthis')
 
     all_internships = InternshipOffer.find_internships()
-    all_speciality = []
-    for choice in all_internships:
-        all_speciality.append(choice.speciality)
-    all_speciality = list(set(all_speciality))
-    for luy in all_speciality :
-        tab = luy.name.replace(" ", "")
-        luy.tab = tab
+    all_specialities = get_all_specialities(all_internships)
+    set_tabs_name(all_specialities)
 
+    # Create an array with all the tab name of the speciality
     preference_list_tab = []
-    for luy in all_speciality:
-        preference_list_tab.append('preference'+luy.tab)
+    for speciality in all_specialities:
+        preference_list_tab.append('preference'+speciality.tab)
 
-    preference_list= list()
+    # Create a list, for each element of the previous tab,
+    # check if this element(speciality) is in the post request
+    # If yes, add all the preference of the speciality in the list
+    preference_list = list()
     for pref_tab in preference_list_tab:
         if request.POST.get(pref_tab):
             for pref in request.POST.getlist(pref_tab) :
                 preference_list.append(pref)
 
-    periods_list = list()
-    if request.POST.get('periods_s'):
-        periods_list = request.POST.getlist('periods_s')
-
-    if request.POST.get('fixthis'):
-        fixthis_list = request.POST.getlist('fixthis')
+    # If the fix checkbox is checked, the list receive '0', '1' as data
+    # Delete the '0' value (the value before the '1', wich is required)
     index = 0
     fixthis_final_list = []
     for value in fixthis_list:
@@ -448,19 +428,13 @@ def internship_save_modification_student(request) :
             del fixthis_list[index-1]
         index += 1
 
-    index = 0
-    for r in preference_list:
-        if r == "0":
-            speciality_list[index] = 0
-            organization_list[index] = 0
-        index += 1
-
-    registration_id = request.POST.getlist('registration_id')
-    student = mdl.student.find_by(registration_id=registration_id[0], full_registration = True)
-
+    rebuild_the_lists(preference_list, speciality_list, organization_list)
+    # Rebuild the lists deleting the null value
     organization_list = [x for x in organization_list if x != 0]
     speciality_list = [x for x in speciality_list if x != 0]
-    periods_list = [x for x in periods_list if x != '0']
+    preference_list = [x for x in preference_list if x != '0']
+
+    # Create the list of all preference and the internships fixed
     final_preference_list = list()
     final_fixthis_list = list()
     index = 0
@@ -468,10 +442,9 @@ def internship_save_modification_student(request) :
         if p != '0':
             final_preference_list.append(p)
             final_fixthis_list.append(fixthis_list[index])
-
         index += 1
 
-    InternshipChoice.objects.filter(student=student).delete()
+    # Save the new choices
     index = final_preference_list.__len__()
     for x in range(0, index):
         new_choice = InternshipChoice()
@@ -487,8 +460,8 @@ def internship_save_modification_student(request) :
             new_choice.priority = False
         new_choice.save()
 
+    # Save in the enrollement if the internships are fixed and a period is selected
     index = periods_list.__len__()
-    InternshipEnrollment.objects.filter(student=student).delete()
     for x in range(0, index):
         if periods_list[x] != '0':
             new_enrollment = InternshipEnrollment()

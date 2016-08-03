@@ -32,7 +32,7 @@ urlpatterns = [
     # S'il vous plaît, organiser les urls par ordre alphabétique.
     url(r'^$', home.internships_home, name='internships_home'),
     url(r'^internships/$', internship.internships, name='internships'),
-    url(r'^internships/block/([0-9]+)/$', internship.internships_block, name='internships_block'),
+    url(r'^internships/block/$', internship.internships_block, name='internships_block'),
     url(r'^internships/std/$', internship.internships_stud, name='internships_stud'),
     url(r'^internships/student/([0-9]+)/modification/$', internship.internships_modification_student, name='internships_modification_student'),
     url(r'^internships/([0-9]+)/students/choice/$', internship.student_choice, name='internship_detail_student_choice'),

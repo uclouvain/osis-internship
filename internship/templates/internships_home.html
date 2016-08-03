@@ -67,13 +67,13 @@
           </li>
         </ul>
         {% if blockable %}
-          <a href="{% url 'internships_block' 1 %}">
+          <a href="{% url 'internships_block' %}">
             <button type="submit" class="btn btn-warning" title="{% trans 'block'%}" id="bt_interships_save">
               {% trans 'block_internship_selection' %}
             </button>
           </a>
         {%else%}
-          <a href="{% url 'internships_block' 2 %}">
+          <a href="{% url 'internships_block' %}">
             <button type="submit" class="btn btn-warning" title="{% trans 'activate'%}" id="bt_interships_save">
               {% trans 'activate_internship_selection' %}
             </button>
