@@ -27,14 +27,12 @@ from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from dissertation.models.adviser import Adviser, search_adviser
 from dissertation.models import adviser
-from dissertation.models.dissertation_role import DissertationRole
 from dissertation.models import dissertation_role
 from dissertation.models import faculty_adviser
 from base import models as mdl
 from dissertation.forms import AdviserForm, ManagerAdviserForm, ManagerAddAdviserForm
 from django.contrib.auth.decorators import user_passes_test
 from django.db import IntegrityError
-from django.db.models import Q
 from base.views import layout
 
 

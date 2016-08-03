@@ -99,7 +99,7 @@ class Dissertation(models.Model):
             self.set_status('DEFENDED')
 
     def accept(self):
-        offer_prop = offer_proposition.search_by_offer(self.offer_year_start.offer)
+        offer_prop = offer_proposition.get_by_offer(self.offer_year_start.offer)
         if offer_prop.validation_commission_exists and self.status == 'DIR_SUBMIT':
             self.set_status('COM_SUBMIT')
 

@@ -67,5 +67,9 @@ class OfferProposition(models.Model):
         return self.acronym
 
 
-def search_by_offer(an_offer):
+def get_by_offer(an_offer):
     return OfferProposition.objects.get(offer=an_offer)
+
+
+def search_by_offer(an_offer):
+    return OfferProposition.objects.filter(offer=an_offer).distinct().order_by('offer')
