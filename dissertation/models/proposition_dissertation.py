@@ -96,10 +96,6 @@ def search_proposition_dissertation(terms=None):
     return queryset
 
 
-def find_proposition_dissertation_by_id(proposition_dissertation_id):
-    return PropositionDissertation.objects.get(pk=proposition_dissertation_id)
-
-
 def search_by_offer(offer):
     return PropositionDissertation.objects.filter(visibility=True,
                                                   active=True,
