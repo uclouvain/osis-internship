@@ -86,7 +86,7 @@ class PropositionDissertation(models.Model):
         ordering = ["author__person__last_name", "author__person__middle_name", "author__person__first_name", "title"]
 
 
-def search(terms=None):
+def search(terms, active=None, visibility=None):
     queryset = PropositionDissertation.objects.all()
     if terms:
         queryset = queryset.filter(
@@ -96,7 +96,16 @@ def search(terms=None):
             Q(author__person__middle_name__icontains=terms) |
             Q(author__person__last_name__icontains=terms) |
             Q(offer_proposition__acronym__icontains=terms)
-        ).distinct()
+        )
+
+    if active is not None:
+        queryset = queryset.filter(active=active)
+
+    if visibility is not None:
+        queryset = queryset.filter(visibility=visibility)
+
+    queryset = queryset.distinct()
+
     return queryset
 
 

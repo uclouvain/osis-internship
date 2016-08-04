@@ -113,43 +113,43 @@ def manage_proposition_dissertation_edit(request, pk):
 @login_required
 @user_passes_test(is_manager)
 def manager_proposition_dissertations_jury_edit(request, pk):
-    proposition_role = get_object_or_404(PropositionRole, pk=pk)
+    prop_role = get_object_or_404(PropositionRole, pk=pk)
     if request.method == "POST":
-        form = ManagerPropositionRoleForm(request.POST, instance=proposition_role)
+        form = ManagerPropositionRoleForm(request.POST, instance=prop_role)
         if form.is_valid():
-            dissertation = form.save()
-            dissertation.save()
-            return redirect('manager_proposition_dissertation_detail', pk=proposition_role.proposition_dissertation.pk)
+            role = form.save()
+            role.save()
+            return redirect('manager_proposition_dissertation_detail', pk=prop_role.proposition_dissertation.pk)
     else:
-        form = ManagerPropositionRoleForm(instance=proposition_role)
+        form = ManagerPropositionRoleForm(instance=prop_role)
     return layout.render(request, 'manager_proposition_dissertations_jury_edit.html', {'form': form})
 
 
 @login_required
 @user_passes_test(is_manager)
 def manager_proposition_dissertations_jury_new(request, pk):
-    proposition_dissertation = get_object_or_404(PropositionDissertation, pk=pk)
-    count_proposition_role = PropositionRole.objects.filter(proposition_dissertation=proposition_dissertation).count()
-    if count_proposition_role < 5:
+    prop_dissert = get_object_or_404(PropositionDissertation, pk=pk)
+
+    if proposition_role.count_by_proposition(prop_dissert) < 5:
         if request.method == "POST":
             form = ManagerPropositionRoleForm(request.POST)
             if form.is_valid():
                 form.save()
-                return redirect('manager_proposition_dissertation_detail', pk=proposition_dissertation.pk)
+                return redirect('manager_proposition_dissertation_detail', pk=prop_dissert.pk)
         else:
-            form = ManagerPropositionRoleForm(initial={'proposition_dissertation': proposition_dissertation})
+            form = ManagerPropositionRoleForm(initial={'proposition_dissertation': prop_dissert})
             return layout.render(request, 'manager_proposition_dissertations_jury_edit.html', {'form': form})
     else:
-        return redirect('manager_proposition_dissertation_detail', pk=proposition_dissertation.pk)
+        return redirect('manager_proposition_dissertation_detail', pk=prop_dissert.pk)
 
 
 @login_required
 @user_passes_test(is_manager)
 def manager_proposition_dissertations_role_delete(request, pk):
-    proposition_role = get_object_or_404(PropositionRole, pk=pk)
-    proposition_dissertation = proposition_role.proposition_dissertation
-    proposition_role.delete()
-    return redirect('manager_proposition_dissertation_detail', pk=proposition_dissertation.pk)
+    prop_role = get_object_or_404(PropositionRole, pk=pk)
+    prop_dissert = prop_role.proposition_dissertation
+    prop_role.delete()
+    return redirect('manager_proposition_dissertation_detail', pk=prop_dissert.pk)
 
 
 @login_required
@@ -172,7 +172,7 @@ def manager_proposition_dissertation_new(request):
 @login_required
 @user_passes_test(is_manager)
 def manager_proposition_dissertations_search(request):
-    prop_disserts = proposition_dissertation.search(terms=request.GET['search']).filter(Q(active=True))
+    prop_disserts = proposition_dissertation.search(terms=request.GET['search'], active=True)
     return layout.render(request, "manager_proposition_dissertations_list.html",
                          {'proposition_dissertations': prop_disserts})
 
@@ -272,8 +272,7 @@ def proposition_dissertation_new(request):
 
 @login_required
 def proposition_dissertations_search(request):
-    prop_disserts = proposition_dissertation.search(terms=request.GET['search']).filter(
-        Q(visibility=True) & Q(active=True))
+    prop_disserts = proposition_dissertation.search(terms=request.GET['search'], active=True, visibility=True)
     return layout.render(request, "proposition_dissertations_list.html",
                          {'proposition_dissertations': prop_disserts})
 
