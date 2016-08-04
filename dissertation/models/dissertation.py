@@ -160,3 +160,13 @@ def search_by_offer(offer):
 
 def search_by_offer_and_status(offer, status):
     return search_by_offer(offer).filter(status=status)
+
+
+def count_by_proposition(prop_dissert):
+    return Dissertation.objects.filter(
+                                    active=True
+                                ).filter(
+                                    proposition_dissertation=prop_dissert
+                                ).exclude(
+                                    status='DRAFT'
+                                ).count()

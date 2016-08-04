@@ -49,3 +49,16 @@ def count_by_dissertation(dissertation):
 
 def search_by_dissertation(dissertation):
     return PropositionRole.objects.filter(proposition_dissertation=dissertation.proposition_dissertation)
+
+
+def count_by_proposition(prop_dissert):
+    return PropositionRole.objects.filter(proposition_dissertation=prop_dissert).count()
+
+
+def search_by_proposition(prop_dissert):
+    return PropositionRole.objects.filter(proposition_dissertation=prop_dissert)
+
+
+def add(status, adviser, proposition_dissertation):
+    pro = PropositionRole(status=status, adviser=adviser, proposition_dissertation=proposition_dissertation)
+    pro.save()
