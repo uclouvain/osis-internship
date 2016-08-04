@@ -31,15 +31,11 @@ from internship import upload_xls
 urlpatterns = [
     # S'il vous plaît, organiser les urls par ordre alphabétique.
     url(r'^$', home.internships_home, name='internships_home'),
-    url(r'^internships/edit/([0-9]+)/$', internship.internships_edit, name='internships_edit'),
     url(r'^internships/$', internship.internships, name='internships'),
-    url(r'^internships/block/([0-9]+)/$', internship.internships_block, name='internships_block'),
+    url(r'^internships/block/$', internship.internships_block, name='internships_block'),
     url(r'^internships/std/$', internship.internships_stud, name='internships_stud'),
     url(r'^internships/student/([0-9]+)/modification/$', internship.internships_modification_student, name='internships_modification_student'),
     url(r'^internships/([0-9]+)/students/choice/$', internship.student_choice, name='internship_detail_student_choice'),
-    url(r'^internships/create/$', internship.internships_create, name='internships_create'),
-    url(r'^internships/([0-9]+)/modification/$', internship.internship_modification, name='internship_modification'),
-    url(r'^internships/new/$', internship.internships_new, name='internships_new'),
     url(r'^internships/save/$', internship.internships_save, name='internships_save'),
     url(r'^internships/save/modification/student/$', internship.internship_save_modification_student, name='internship_save_modification_student'),
     url(r'^internships/upload/$', upload_xls.upload_internships_file,name='upload_internship'),
@@ -65,7 +61,6 @@ urlpatterns = [
     url(r'^specialities/create/$', speciality.speciality_create, name='speciality_create'),
     url(r'^specialities/new/$', speciality.speciality_new, name='speciality_new'),
 
-    url(r'^students/$', student.internships_students, name='internships_students'),
     url(r'^students/resume/$', student_resume.internships_student_resume, name='internships_student_resume'),
     url(r'^students/search$', student_resume.internships_student_search, name='internships_student_search'),
     url(r'^students/([0-9]+)/resume/$', student_resume.internships_student_read, name='internships_student_read'),
