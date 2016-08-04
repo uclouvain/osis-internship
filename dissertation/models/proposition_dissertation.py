@@ -112,3 +112,10 @@ def search(terms, active=None, visibility=None):
 def search_by_offer(offer):
     return PropositionDissertation.objects.filter(active=True,
                                                   offer_proposition__offer=offer)
+
+
+def get_all_for_teacher(adviser):
+    return PropositionDissertation.objects.filter(
+                                                    Q(active=True) &
+                                                    (Q(visibility=True) | Q(author=adviser))
+                                                  )

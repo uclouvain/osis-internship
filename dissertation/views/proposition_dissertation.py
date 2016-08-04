@@ -47,6 +47,10 @@ def is_manager(user):
     adv = adviser.search_by_person(person)
     return adv.type == 'MGR'
 
+##########################
+#      VUES MANAGER      #
+##########################
+
 
 @login_required
 @user_passes_test(is_manager)
@@ -176,13 +180,16 @@ def manager_proposition_dissertations_search(request):
     return layout.render(request, "manager_proposition_dissertations_list.html",
                          {'proposition_dissertations': prop_disserts})
 
+##########################
+#      VUES TEACHER      #
+##########################
+
 
 @login_required
 def proposition_dissertations(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-    prop_disserts = PropositionDissertation.objects.filter((Q(visibility=True) &
-                                                                       Q(active=True)) | Q(author=adv))
+    prop_disserts = proposition_dissertation.get_all_for_teacher(adv)
     return layout.render(request, 'proposition_dissertations_list.html',
                          {'proposition_dissertations': prop_disserts})
 
@@ -258,7 +265,7 @@ def proposition_dissertation_new(request):
         form = PropositionDissertationForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('proposition_dissertations')
+            return redirect('proposition_dissertation_my')
     else:
         person = mdl.person.find_by_user(request.user)
         adv = adviser.search_by_person(person)
