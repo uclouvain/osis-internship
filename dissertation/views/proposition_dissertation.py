@@ -60,9 +60,8 @@ def manager_proposition_dissertations(request):
 @login_required
 @user_passes_test(is_manager)
 def manager_proposition_dissertation_delete(request, pk):
-    proposition_dissertation = get_object_or_404(PropositionDissertation, pk=pk)
-    proposition_dissertation.active = False
-    proposition_dissertation.save()
+    prop_dissert = get_object_or_404(PropositionDissertation, pk=pk)
+    prop_dissert.deactivate()
     return redirect('manager_proposition_dissertations')
 
 

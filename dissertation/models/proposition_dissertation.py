@@ -78,6 +78,10 @@ class PropositionDissertation(models.Model):
         author = u"%s %s %s" % (last_name.upper(), first_name, middle_name)
         return author+" - "+str(self.title)
 
+    def deactivate(self):
+        self.active = False
+        self.save()
+
     class Meta:
         ordering = ["author__person__last_name", "author__person__middle_name", "author__person__first_name", "title"]
 
