@@ -86,7 +86,7 @@ class PropositionDissertation(models.Model):
         ordering = ["author__person__last_name", "author__person__middle_name", "author__person__first_name", "title"]
 
 
-def search(terms, active=None, visibility=None):
+def search(terms, active=None, visibility=None, connected_adviser=None):
     queryset = PropositionDissertation.objects.all()
     if terms:
         queryset = queryset.filter(
@@ -101,7 +101,10 @@ def search(terms, active=None, visibility=None):
     if active is not None:
         queryset = queryset.filter(active=active)
 
-    if visibility is not None:
+    if visibility and connected_adviser is not None:
+        queryset = queryset.filter(Q(visibility=visibility) | Q(author=connected_adviser))
+
+    elif visibility is not None:
         queryset = queryset.filter(visibility=visibility)
 
     queryset = queryset.distinct()
@@ -119,3 +122,7 @@ def get_all_for_teacher(adviser):
                                                     Q(active=True) &
                                                     (Q(visibility=True) | Q(author=adviser))
                                                   )
+
+
+def get_mine_for_teacher(adviser):
+    return PropositionDissertation.objects.filter(author=adviser).filter(active=True)
