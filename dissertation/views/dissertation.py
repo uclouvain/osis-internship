@@ -539,7 +539,7 @@ def dissertations_to_dir_ko(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     old_status = dissert.status
     dissert.refuse()
-    dissertation_update.add(request, dissertation, old_status)
+    dissertation_update.add(request, dissert, old_status)
 
     return redirect('dissertations_detail', pk=pk)
 
