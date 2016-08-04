@@ -234,7 +234,7 @@ def manager_dissertations_search(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     offer = faculty_adviser.search_by_adviser(adv).offer
-    offer_prop = OfferProposition.objects.get(offer=offer)
+    offer_prop = offer_proposition.get_by_offer(offer)
     xlsx = False
 
     if 'bt_xlsx' in request.GET:
