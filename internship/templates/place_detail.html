@@ -38,28 +38,28 @@
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
-      <label> Stage en Chirurgie </label>
-        {% for offer in offers %}
-          {% if offer.title == "Stage en Chirurgie" %}
-            capacité maximale : {{offer.maximum_enrollments}} | Nombre de 1er choix : {{offer.number_first_choice}}
-          {%endif%}
-        {%endfor%}<br/>
-        Liste des étudiants : <a role="button" data-toggle="collapse" data-target="#stch"
-           aria-expanded="false"
-           aria-controls="stch"
-           title="{% trans 'display_students_choose_chirurgie' %}">
-            <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-        </a>
-        <div class="collapse" id="stch">
-          <ul>
-            {% for choice in organization_choice %}
-              {% if choice.speciality.name == "Stage en Chirurgie" %}
-                <li> {{ choice.student }} | Choix : {{ choice.choice }}
-              {% endif %}
-            {% endfor %}
-          </ul>
-        </div>
-        <br/>
+        <label> Stage en Chirurgie </label>
+            {% for offer in offers %}
+              {% if offer.title == "Stage en Chirurgie" %}
+                capacité maximale : {{offer.maximum_enrollments}} | Nombre de 1er choix : {{offer.number_first_choice}}
+              {%endif%}
+            {%endfor%}<br/>
+            Liste des étudiants : <a role="button" data-toggle="collapse" data-target="#stch"
+               aria-expanded="false"
+               aria-controls="stch"
+               title="{% trans 'display_students_choose_chirurgie' %}">
+                <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+            </a>
+            <div class="collapse" id="stch">
+              <ul>
+                {% for choice in organization_choice %}
+                  {% if choice.speciality.name == "Stage en Chirurgie" %}
+                    <li> {{ choice.student }} | Choix : {{ choice.choice }}
+                  {% endif %}
+                {% endfor %}
+              </ul>
+            </div>
+            <br/>
       <label> Stage en Gériatrie </label>
         {% for offer in offers %}
           {% if offer.title == "Stage en Gériatrie" %}

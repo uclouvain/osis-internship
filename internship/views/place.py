@@ -45,10 +45,10 @@ def set_organization_address(organizations):
         for organization in organizations:
             organization.address = ""
             organization.student_choice = 0
-            address = OrganizationAddress.find_by_organization(organization)
+            address = OrganizationAddress.search(organization = organization)
             if address:
                 organization.address = address
-            organization.student_choice = len(InternshipChoice.find_by(s_organization=organization))
+            organization.student_choice = len(InternshipChoice.search(organization=organization))
 
 def sorted_organization(datas, sort_city):
     tab=[]
@@ -82,7 +82,7 @@ def internships_places(request):
         city_sort_get = request.GET.get('city_sort')
 
     # Import all the organizations order by their reference and set their address
-    organizations = Organization.find_by_type("service partner")
+    organizations = Organization.search(type="service partner")
     organizations = sort_organizations(organizations)
     set_organization_address(organizations)
 
@@ -110,7 +110,7 @@ def internships_places_stud(request):
         city_sort_get = request.GET.get('city_sort')
 
     # Import all the organizations order by their reference and set their address
-    organizations = Organization.find_by_type("service partner")
+    organizations = Organization.search(type="service partner")
     organizations = sort_organizations(organizations)
     set_organization_address(organizations)
 
@@ -136,7 +136,8 @@ def internships_places_stud(request):
 def place_save(request, organization_id, organization_address_id):
     form = OrganizationForm(data=request.POST)
     if organization_id:
-        organization = Organization.find_by_id(organization_id)
+        organization = Organization.search(pk = organization_id)
+        organization = organization[0]
     else:
         organization = Organization()
 
@@ -162,7 +163,8 @@ def place_save(request, organization_id, organization_address_id):
     organization.save()
 
     if organization_address_id:
-        organization_address = OrganizationAddress.find_by_id(organization_address_id)
+        organization_address = OrganizationAddress.search(pk = organization_address_id)
+        organization_address = organization_address[0]
     else:
         organization_address = OrganizationAddress()
 
@@ -194,7 +196,7 @@ def place_save(request, organization_id, organization_address_id):
         organization_address.country = None
 
     if request.POST.get('organization_id'):
-        organization_address.organization = Organization.find_by_id(int(request.POST.get('organization_id')))
+        organization_address.organization = Organization.search(pk = int(request.POST.get('organization_id')))
 
     organization_address.latitude = None
     organization_address.longitude = None
@@ -216,9 +218,9 @@ def organization_new(request):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def organization_edit(request, organization_id):
-    organization = Organization.find_by_id(organization_id)
-    organization_address = OrganizationAddress.find_by_organization(organization)
-    return render(request, "place_form.html", {'organization':          organization,
+    organization = Organization.search(pk = organization_id)
+    organization_address = OrganizationAddress.search(organization = organization)
+    return render(request, "place_form.html", {'organization':          organization[0],
                                                'organization_address':  organization_address[0], })
 
 
@@ -232,14 +234,14 @@ def organization_create(request):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def student_choice(request, reference):
-    organization_choice = InternshipChoice.find_by(s_organization_ref=reference)
+    organization_choice = InternshipChoice.search(organization__reference=reference)
     organization = Organization.search(reference=reference)
-    all_offers = InternshipOffer.find_interships_by_organization(organization[0])
+    all_offers = InternshipOffer.search(organization = organization)
 
     for al in all_offers:
-        number_first_choice = len(InternshipChoice.find_by(s_organization=al.organization,
-                                                           s_speciality=al.speciality,
-                                                           s_choice=1))
+        number_first_choice = len(InternshipChoice.search(organization=al.organization,
+                                                           speciality=al.speciality,
+                                                           choice=1))
         al.number_first_choice = number_first_choice
 
     return render(request, "place_detail.html", {'organization':        organization[0],

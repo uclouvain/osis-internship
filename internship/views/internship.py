@@ -51,12 +51,12 @@ def calc_dist(lat_a, long_a, lat_b, long_b):
 
 def work_dist(student, organizations):
     # Find the student's informations
-    student_informations = InternshipStudentInformation.find_by(person_name=student.person.last_name, person_first_name=student.person.first_name)
+    student_informations = InternshipStudentInformation.search(person__last_name=student.person.last_name, person__first_name=student.person.first_name)
 
     distance_student_organization = {}
     # For each organization in the list find the informations
     for organization in organizations :
-        organization_informations = OrganizationAddress.find_by_organization(organization)
+        organization_informations = OrganizationAddress.search(organization = organization)
         # If the latitude is not a fake number, compute the distance between the student and the organization
         if organization_informations[0].latitude != 999 :
             distance = calc_dist(student_informations[0].latitude, student_informations[0].longitude,
@@ -69,17 +69,18 @@ def work_dist(student, organizations):
 
 def get_number_choices(datas):
     for internship in datas:
-        number_first_choice = len(InternshipChoice.find_by(internship.organization, internship.speciality,
-                                                           s_choice=1))
-        number_other_choice = len(InternshipChoice.find_by(internship.organization, internship.speciality,
-                                                           s_choice=2))
+        number_first_choice = len(InternshipChoice.search(organization = internship.organization,
+                                                            speciality = internship.speciality,
+                                                           choice=1))
+        number_other_choice = len(InternshipChoice.search_other_choices(organization = internship.organization,
+                                                            speciality = internship.speciality))
         internship.number_first_choice = number_first_choice
         internship.number_other_choice = number_other_choice
 
 def set_tabs_name(datas, student=None):
     for data in datas:
         if student :
-            size = len(InternshipChoice.find_by(s_speciality=data, s_student=student))
+            size = len(InternshipChoice.search(speciality=data, student=student))
             data.size = size
         tab = data.name.replace(" ", "")
         data.tab = tab
@@ -131,7 +132,7 @@ def sort_internships(datas):
     number_ref=sorted(number_ref, key=int)
     number_ref=delete_dublons_keep_order(number_ref)
     for i in number_ref:
-        internships = InternshipOffer.find_by(organization_reference=i)
+        internships = InternshipOffer.search(organization__reference=i)
         for internship in internships:
             tab.append(internship)
     return tab
@@ -145,7 +146,7 @@ def internships(request):
 
     # Then select Internship Offer depending of the option
     if organization_sort_value and organization_sort_value != "0":
-        query = InternshipOffer.find_interships_by_organization(organization_sort_value)
+        query = InternshipOffer.search(organization__name = organization_sort_value)
     else:
         query = InternshipOffer.find_internships()
 
@@ -307,7 +308,7 @@ def internships_save(request):
             new_choice.student = student[0]
             organization = Organization.search(reference=organization_list[x])
             new_choice.organization = organization[0]
-            speciality = InternshipSpeciality.find_by(name=speciality_list[x])
+            speciality = InternshipSpeciality.search(name=speciality_list[x])
             new_choice.speciality = speciality[0]
             new_choice.choice = preference_list[x]
             new_choice.priority = False
@@ -322,15 +323,15 @@ def student_choice(request, id):
     # Get the internship by its id
     internship = InternshipOffer.find_intership_by_id(id)
     # Get the students who have choosen this internship
-    students = InternshipChoice.find_by(s_organization=internship.organization,
-                                        s_speciality=internship.speciality)
+    students = InternshipChoice.search(organization=internship.organization,
+                                        speciality=internship.speciality)
     number_choices = [None]*5
 
     # Get the choices' number for this internship
     for index in range(1, 5):
-        number_choices[index] = len(InternshipChoice.find_by(s_organization=internship.organization,
-                                                             s_speciality=internship.speciality,
-                                                             s_define_choice=index))
+        number_choices[index] = len(InternshipChoice.search(organization=internship.organization,
+                                                            speciality=internship.speciality,
+                                                            choice=index))
 
     return render(request, "internship_detail.html", {'section':        'internship',
                                                       'internship':     internship,
@@ -354,10 +355,10 @@ def internships_block(request):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_modification_student(request, registration_id):
 	# Get the student base on the user
-    student = mdl.student.find_by(person_username=request.user, full_registration = True)
+    student = mdl.student.find_by(registration_id=registration_id, full_registration = True)
     # Get in descending order the student's choices in first lines
     student_choice = InternshipChoice.find_by_student_desc(student)
-    student_enrollment = InternshipEnrollment.find_by(student)
+    student_enrollment = InternshipEnrollment.search(student = student)
 
     # Select all Internship Offer
     query = InternshipOffer.find_internships()
@@ -390,7 +391,7 @@ def internships_modification_student(request, registration_id):
     all_speciality = get_all_specialities(all_internships)
     set_tabs_name(all_speciality, student)
 
-    periods = Period.find_all()
+    periods = Period.search()
 
     return render(request, "internship_modification_student.html", {'section': 'internship',
                                                 'all_internships' : query,
@@ -454,10 +455,6 @@ def internship_save_modification_student(request) :
         index += 1
 
     rebuild_the_lists(preference_list, speciality_list, organization_list)
-    # Rebuild the lists deleting the null value
-    organization_list = [x for x in organization_list if x != 0]
-    speciality_list = [x for x in speciality_list if x != 0]
-    preference_list = [x for x in preference_list if x != '0']
 
     # Create the list of all preference and the internships fixed
     final_preference_list = list()
@@ -469,6 +466,11 @@ def internship_save_modification_student(request) :
             final_fixthis_list.append(fixthis_list[index])
         index += 1
 
+    # Rebuild the lists deleting the null value
+    organization_list = [x for x in organization_list if x != 0]
+    speciality_list = [x for x in speciality_list if x != 0]
+    preference_list = [x for x in preference_list if x != '0']
+
     # Save the new choices
     index = final_preference_list.__len__()
     for x in range(0, index):
@@ -476,7 +478,7 @@ def internship_save_modification_student(request) :
         new_choice.student = student[0]
         organization = Organization.search(reference=organization_list[x])
         new_choice.organization = organization[0]
-        speciality = InternshipSpeciality.find_by(name=speciality_list[x])
+        speciality = InternshipSpeciality.search(name=speciality_list[x])
         new_choice.speciality = speciality[0]
         new_choice.choice = final_preference_list[x]
         if final_fixthis_list[x] == '1':
@@ -491,10 +493,10 @@ def internship_save_modification_student(request) :
         if periods_list[x] != '0':
             new_enrollment = InternshipEnrollment()
             tab_period = periods_list[x].split('\\n')
-            period = Period.find_by(name=tab_period[0])
+            period = Period.search(name=tab_period[0])
             organization = Organization.search(reference=tab_period[1])
-            speciality = InternshipSpeciality.find_by(name=tab_period[2])
-            internship = InternshipOffer.find_interships_by_learning_unit_organization(speciality[0].name, organization[0].reference)
+            speciality = InternshipSpeciality.search(name=tab_period[2])
+            internship = InternshipOffer.search(speciality__name = speciality[0], organization__reference = organization[0].reference)
             new_enrollment.student = student[0]
             new_enrollment.internship_offer = internship[0]
             new_enrollment.place = organization[0]

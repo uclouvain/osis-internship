@@ -77,7 +77,7 @@ def __save_xls_place(request, file_name, user):
 
         place = Organization.search(reference=reference)
         if place :
-            organization = Organization.find_by_id(place[0].id)
+            organization = Organization.search(pk = place[0].id)
         else:
             organization = Organization()
 
@@ -108,7 +108,7 @@ def __save_xls_place(request, file_name, user):
         organization.save()
 
         if place :
-            organization_address = OrganizationAddress.find_by_organization(organization)
+            organization_address = OrganizationAddress.search(organization = organization)
             if not organization_address:
                 organization_address = OrganizationAddress()
             else :
@@ -215,7 +215,7 @@ def __save_xls_internships(request, file_name, user):
                 if spec_value == "UR":
                     spec = "Stage aux Urgences"
 
-                speciality = InternshipSpeciality.find_by(name=spec)
+                speciality = InternshipSpeciality.search(name=spec)
 
                 number_place = 0
                 for x in range (3,15):
@@ -225,7 +225,7 @@ def __save_xls_internships(request, file_name, user):
                         number_place += int(row[x].value)
 
                 for x in range(0,len(speciality)) :
-                    check_internship = InternshipOffer.find_interships_by_learning_unit_organization(speciality[x],organization[0].reference)
+                    check_internship = InternshipOffer.search(speciality__name = speciality[x], organization__reference = organization[0].reference)
                     if len(check_internship) != 0:
                         internship = InternshipOffer.find_intership_by_id(check_internship[0].id)
                     else :
@@ -242,11 +242,11 @@ def __save_xls_internships(request, file_name, user):
                     for x in range (3,15):
                         period_search = "P"+str(number_period)
                         number_period += 1
-                        period = Period.find_by(name=period_search)
-                        check_relation = PeriodInternshipPlaces.find_by(period, internship)
+                        period = Period.search(name=period_search)
+                        check_relation = PeriodInternshipPlaces.search(period = period, internship = internship)
 
                         if len(check_relation) != 0:
-                            relation = PeriodInternshipPlaces.find_by(relation_id = check_relation[0].id)
+                            relation = PeriodInternshipPlaces.search(pk = check_relation[0].id)
                         else :
                             relation = PeriodInternshipPlaces()
 
@@ -302,7 +302,7 @@ def __save_xls_masters(request, file_name, user):
 
         form = InternshipMasterForm(data=request.POST)
         if row[col_firstname].value and row[col_lastname].value:
-            master_check = InternshipMaster.find_master_by_firstname_name(row[col_firstname].value, row[col_lastname].value)
+            master_check = InternshipMaster.search(first_name = row[col_firstname].value, last_name = row[col_lastname].value)
             if len(master_check) == 0:
                 master = InternshipMaster()
             else:

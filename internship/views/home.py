@@ -54,8 +54,8 @@ def internships_home(request):
         blockable = True
 
     #Find all informations about students and organisation and fin the latitude and longitude of the address
-    student_informations = InternshipStudentInformation.find_all()
-    organization_informations = OrganizationAddress.find_all()
+    student_informations = InternshipStudentInformation.search()
+    organization_informations = OrganizationAddress.search()
     find_latitude_longitude(student_informations)
     find_latitude_longitude(organization_informations)
 

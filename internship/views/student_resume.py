@@ -38,7 +38,7 @@ from django.utils.translation import ugettext_lazy as _
 def internships_student_resume(request):
     # Get all stundents and the mandatory specialities
     students_list = InternshipChoice.find_by_all_student()
-    specialities = InternshipSpeciality.find_by(mandatory=True)
+    specialities = InternshipSpeciality.search(mandatory=True)
     student_informations = InternshipStudentInformation.find_all()
 
     for si in student_informations:
@@ -103,7 +103,7 @@ def internships_student_search(request):
 
     message = None
     if criteria_present:
-        students_list_check = InternshipStudentInformation.find_by(person_name=s_name, person_first_name = s_firstname)
+        students_list_check = InternshipStudentInformation.search(person__last_name=s_name, person__first_name = s_firstname)
 
         for slc in students_list_check:
             students_list.append( mdl.student.find_by(person_name = slc.person.last_name, person_first_name = slc.person.first_name ))
@@ -122,33 +122,35 @@ def internships_student_search(request):
 @permission_required('internship.can_access_internship', raise_exception=True)
 def internships_student_read(request, registration_id):
     student = mdl.student.find_by(registration_id=registration_id)
-    information = InternshipStudentInformation.find_by_person(student[0].person)
+    information = InternshipStudentInformation.search(person = student[0].person)
     student = student[0]
     internship_choice = InternshipChoice.find_by_student(student)
 
     return render(request, "student_resume.html",
                            {'student':             student,
-                            'information':         information,
+                            'information':         information[0],
                             'internship_choice':   internship_choice, })
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_student_information_modification(request, registration_id):
     student = mdl.student.find_by(registration_id=registration_id)
-    information = InternshipStudentInformation.find_by_person(student[0].person)
+    information = InternshipStudentInformation.search(person = student[0].person)
     student = student[0]
     return render(request, "student_information_modification.html",
                            {'student':             student,
-                            'information':         information, })
+                            'information':         information[0], })
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def student_save_information_modification(request, registration_id):
     student = mdl.student.find_by(registration_id=registration_id)
-    information = InternshipStudentInformation.find_by_person(student[0].person)
+    information = InternshipStudentInformation.search(person = student[0].person)
     if not information:
         information = InternshipStudentInformation()
         information.person = student[0].person
+    else:
+        information = information[0]
     information.email = request.POST.get('student_email')
     information.phone_mobile = request.POST.get('student_phone')
     information.location = request.POST.get('student_location')
