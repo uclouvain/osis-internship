@@ -29,7 +29,9 @@
 {% block breadcrumb %}
   <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
   <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'dissertations' %}</a></li>
-  <li><a href="{% url 'manager_dissertations_list' %}" id="lnk_dissertations_list">{% trans 'dissertations' %}</a></li>
+  <li><a href="{% url 'dissertations_list' %}" id="lnk_dissertations_list">{% trans 'dissertations' %}</a></li>
+  <li><a href="{% url 'dissertations_detail' pk=dissert.pk %}"
+         id="lnk_dissertations_detail">{{ dissert.title|truncatechars:24 }}</a></li>
   <li class="active">{% trans 'justification' %}</li>
 {% endblock %}
 {% block content %}

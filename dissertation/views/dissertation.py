@@ -327,7 +327,7 @@ def manager_dissertations_to_dir_submit(request, pk):
         form = ManagerDissertationUpdateForm()
 
     return layout.render(request, 'manager_dissertations_add_justification.html',
-                         {'form': form})
+                         {'form': form, 'dissert': dissert})
 
 
 @login_required
@@ -359,7 +359,7 @@ def manager_dissertations_to_dir_ok(request, pk):
     else:
         form = ManagerDissertationUpdateForm()
 
-    return layout.render(request, 'manager_dissertations_add_justification.html', {'form': form})
+    return layout.render(request, 'manager_dissertations_add_justification.html', {'form': form, 'dissert': dissert})
 
 
 @login_required
@@ -550,7 +550,7 @@ def dissertations_to_dir_ok(request, pk):
     else:
         form = ManagerDissertationUpdateForm()
 
-    return layout.render(request, 'dissertations_add_justification.html', {'form': form})
+    return layout.render(request, 'dissertations_add_justification.html', {'form': form, 'dissert': dissert})
 
 
 @login_required
