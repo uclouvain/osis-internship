@@ -312,11 +312,12 @@ def manager_dissertations_role_delete(request, pk):
 @user_passes_test(is_manager)
 def manager_dissertations_to_dir_submit(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
+    old_status = dissert.status
+    new_status = dissertation.get_next_status(dissert, "go_forward")
 
     if request.method == "POST":
         form = ManagerDissertationUpdateForm(request.POST)
         if form.is_valid():
-            old_status = dissert.status
             dissert.go_forward()
             data = form.cleaned_data
             justification = data['justification']
@@ -327,7 +328,7 @@ def manager_dissertations_to_dir_submit(request, pk):
         form = ManagerDissertationUpdateForm()
 
     return layout.render(request, 'manager_dissertations_add_justification.html',
-                         {'form': form, 'dissert': dissert})
+                         {'form': form, 'dissert': dissert, "old_status": old_status, "new_status": new_status})
 
 
 @login_required
@@ -345,11 +346,12 @@ def manager_dissertations_to_dir_submit_list(request, pk):
 @user_passes_test(is_manager)
 def manager_dissertations_to_dir_ok(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
+    old_status = dissert.status
+    new_status = dissertation.get_next_status(dissert, "accept")
 
     if request.method == "POST":
         form = ManagerDissertationUpdateForm(request.POST)
         if form.is_valid():
-            old_status = dissert.status
             dissert.accept()
             data = form.cleaned_data
             justification = data['justification']
@@ -359,7 +361,8 @@ def manager_dissertations_to_dir_ok(request, pk):
     else:
         form = ManagerDissertationUpdateForm()
 
-    return layout.render(request, 'manager_dissertations_add_justification.html', {'form': form, 'dissert': dissert})
+    return layout.render(request, 'manager_dissertations_add_justification.html',
+                         {'form': form, 'dissert': dissert, "old_status": old_status, "new_status": new_status})
 
 
 @login_required
@@ -536,11 +539,12 @@ def dissertations_delete(request, pk):
 @user_passes_test(is_teacher)
 def dissertations_to_dir_ok(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
+    old_status = dissert.status
+    new_status = dissertation.get_next_status(dissert, "accept")
 
     if request.method == "POST":
         form = ManagerDissertationUpdateForm(request.POST)
         if form.is_valid():
-            old_status = dissert.status
             dissert.accept()
             data = form.cleaned_data
             justification = data['justification']
@@ -550,7 +554,8 @@ def dissertations_to_dir_ok(request, pk):
     else:
         form = ManagerDissertationUpdateForm()
 
-    return layout.render(request, 'dissertations_add_justification.html', {'form': form, 'dissert': dissert})
+    return layout.render(request, 'dissertations_add_justification.html',
+                         {'form': form, 'dissert': dissert, "old_status": old_status, "new_status": new_status})
 
 
 @login_required

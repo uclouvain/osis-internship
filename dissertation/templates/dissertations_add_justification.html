@@ -32,11 +32,11 @@
   <li><a href="{% url 'dissertations_list' %}" id="lnk_dissertations_list">{% trans 'dissertations' %}</a></li>
   <li><a href="{% url 'dissertations_detail' pk=dissert.pk %}"
          id="lnk_dissertations_detail">{{ dissert.title|truncatechars:24 }}</a></li>
-  <li class="active">{% trans 'justification' %}</li>
+  <li class="active">{% trans 'add_justification' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'justification' %}</h2>
+    <h2>{% trans 'add_justification' %}</h2>
   </div>
   <div class="panel panel-default">
     <div class="panel-body">
@@ -47,6 +47,24 @@
                 <p>{% trans 'justification_instructions' %}</p>
             </div>
         </div>
+        <br>
+        <div class="row">
+            <div class="col-md-4">
+                {% trans 'current_status' %} :
+            </div>
+            <div class="col-md-8">
+                {{ old_status }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                {% trans 'next_status' %} :
+            </div>
+            <div class="col-md-8">
+                {{ new_status }}
+            </div>
+        </div>
+        <br>
         <div class="row">
             <div class="col-md-12">
                 <textarea class="form-control" id="txt_justification"  name="justification" style=""></textarea>

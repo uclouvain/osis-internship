@@ -170,3 +170,45 @@ def count_by_proposition(prop_dissert):
                                 ).exclude(
                                     status='DRAFT'
                                 ).count()
+
+
+def get_next_status(dissert, operation):
+    if operation == "go_forward":
+        if dissert.status == 'DRAFT' or dissert.status == 'DIR_KO':
+            return 'DIR_SUBMIT'
+
+        elif dissert.status == 'TO_RECEIVE':
+            return 'TO_DEFEND'
+
+        elif dissert.status == 'TO_DEFEND':
+            return 'DEFENDED'
+
+    elif operation == "accept":
+        offer_prop = offer_proposition.get_by_offer(dissert.offer_year_start.offer)
+        if offer_prop.validation_commission_exists and dissert.status == 'DIR_SUBMIT':
+            return 'COM_SUBMIT'
+
+        elif offer_prop.evaluation_first_year and (dissert.status == 'DIR_SUBMIT' or dissert.status == 'COM_SUBMIT'):
+            return 'EVA_SUBMIT'
+
+        elif dissert.status == 'EVA_SUBMIT':
+            return 'TO_RECEIVE'
+
+        elif dissert.status == 'DEFENDED':
+            return 'ENDED_WIN'
+
+        else:
+            return 'TO_RECEIVE'
+
+    elif operation == "refuse":
+        if dissert.status == 'DIR_SUBMIT':
+            return 'DIR_KO'
+
+        elif dissert.status == 'COM_SUBMIT':
+            return 'COM_KO'
+
+        elif dissert.status == 'EVA_SUBMIT':
+            return 'EVA_KO'
+
+        elif dissert.status == 'DEFENDED':
+            return 'ENDED_LOS'
