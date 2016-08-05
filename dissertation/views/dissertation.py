@@ -40,7 +40,8 @@ from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models import offer_proposition
 from dissertation.models import proposition_dissertation
 from dissertation.models import proposition_role
-from dissertation.forms import ManagerDissertationForm, ManagerDissertationEditForm, ManagerDissertationRoleForm
+from dissertation.forms import ManagerDissertationForm, ManagerDissertationEditForm, ManagerDissertationRoleForm, \
+    ManagerDissertationUpdateForm
 from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl import Workbook
 from django.http import HttpResponse
@@ -312,11 +313,22 @@ def manager_dissertations_role_delete(request, pk):
 @user_passes_test(is_manager)
 def manager_dissertations_to_dir_submit(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
-    old_status = dissert.status
-    dissert.go_forward()
-    dissertation_update.add(request, dissert, old_status)
 
-    return redirect('manager_dissertations_detail', pk=pk)
+    if request.method == "POST":
+        form = ManagerDissertationUpdateForm(request.POST)
+        if form.is_valid():
+            old_status = dissert.status
+            dissert.go_forward()
+            data = form.cleaned_data
+            justification = data['justification']
+            dissertation_update.add(request, dissert, old_status, justification=justification)
+            return redirect('manager_dissertations_detail', pk=pk)
+
+    else:
+        form = ManagerDissertationUpdateForm()
+
+    return layout.render(request, 'manager_dissertations_to_dir_submit.html',
+                         {'form': form})
 
 
 @login_required

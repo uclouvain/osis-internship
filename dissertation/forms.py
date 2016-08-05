@@ -31,6 +31,7 @@ from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models.proposition_dissertation import PropositionDissertation
 from dissertation.models.proposition_role import PropositionRole
 from dissertation.models.dissertation_role import DissertationRole
+from dissertation.models.dissertation_update import DissertationUpdate
 
 
 class AdviserForm(ModelForm):
@@ -128,3 +129,9 @@ class ManagerPropositionRoleForm(ModelForm):
         model = PropositionRole
         fields = ('proposition_dissertation', 'status', 'adviser')
         widgets = {'proposition_dissertation': forms.HiddenInput()}
+
+
+class ManagerDissertationUpdateForm(ModelForm):
+    class Meta:
+        model = DissertationUpdate
+        fields = ('justification',)
