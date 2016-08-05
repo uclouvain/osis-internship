@@ -36,75 +36,37 @@
     <h2>{{ internship.organization.name }} - {{ internship.speciality.name }}</h2>
 </div>
 <div class="panel panel-default">
+  {% for i in number_choices %}
     <div class="panel-body">
-      <label> {% trans 'first_choice' %} </label> : {{number_choices.1}}<br/>
-      {% trans 'student_list' %} : <a role="button" data-toggle="collapse" data-target="#choice1"
-         aria-expanded="false"
-         aria-controls="choice1"
-         title="{% trans 'display_students_first_choice' %}">
-          <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-      </a>
-      <div class="collapse" id="choice1">
-        <ul>
-          {% for student in students %}
-            {% if student.choice == 1 %}
-              <li> {{ student.student }}
-            {% endif %}
-          {% endfor %}
-        </ul>
-      </div>
-      <br/>
-      <label> {% trans 'second_choice' %} </label> : {{number_choices.2}}<br/>
-      {% trans 'student_list' %} : <a role="button" data-toggle="collapse" data-target="#choice2"
-         aria-expanded="false"
-         aria-controls="choice2"
-         title="{% trans 'display_students_second_choice' %}">
-          <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-      </a>
-      <div class="collapse" id="choice2">
-        <ul>
-          {% for student in students %}
-            {% if student.choice == 2 %}
-              <li> {{ student.student }}
-            {% endif %}
-          {% endfor %}
-        </ul>
-      </div>
-      <br/>
-      <label> {% trans 'third_choice' %} </label> : {{number_choices.3}}<br/>
-      {% trans 'student_list' %} : <a role="button" data-toggle="collapse" data-target="#choice3"
-         aria-expanded="false"
-         aria-controls="choice3"
-         title="{% trans 'display_students_third_choice' %}">
-          <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-      </a>
-      <div class="collapse" id="choice3">
-        <ul>
-          {% for student in students %}
-            {% if student.choice == 3 %}
-              <li> {{ student.student }}
-            {% endif %}
-          {% endfor %}
-        </ul>
-      </div>
-      <br/>
-      <label> {% trans 'fourth_choice' %} </label> : {{number_choices.4}}<br/>
-      {% trans 'student_list' %} : <a role="button" data-toggle="collapse" data-target="#choice4"
-         aria-expanded="false"
-         aria-controls="choice4"
-         title="{% trans 'display_students_fourth_choice' %}">
-          <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-      </a>
-      <div class="collapse" id="choice4">
-        <ul>
-          {% for student in students %}
-            {% if student.choice == 4 %}
-              <li> {{ student.student }}
-            {% endif %}
-          {% endfor %}
-        </ul>
-      </div>
-	</div>
+      {% if forloop.counter0 != 0 %}
+        {% if forloop.counter0 == 1 %}
+          <label> {% trans 'first_choice' %} </label> : {{i}}<br/>
+        {% elif forloop.counter0 == 2 %}
+          <label> {% trans 'second_choice' %} </label> : {{i}}<br/>
+        {% elif forloop.counter0 == 3 %}
+          <label> {% trans 'third_choice' %} </label> : {{i}}<br/>
+        {% elif forloop.counter0 == 4 %}
+          <label> {% trans 'fourth_choice' %} </label> : {{i}}<br/>
+        {% endif %}
+        {% trans 'student_list' %} : <a role="button" data-toggle="collapse" data-target="#choice{{ forloop.counter0 }}"
+           aria-expanded="false"
+           aria-controls="choice{{ forloop.counter0 }}"
+           title="{% trans 'display_students_first_choice' %}">
+            <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+        </a>
+        <div class="collapse" id="choice{{ forloop.counter0 }}">
+          <ul>
+            {% for student in students %}
+              {% if student.choice == i %}
+                <li> {{ student.student }}
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+        <br/>
+      {% endif %}
+    </div>
+  {% endfor %}
 </div>
 
   {% endblock %}
