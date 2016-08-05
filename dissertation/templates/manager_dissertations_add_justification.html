@@ -54,7 +54,10 @@
         <br>
         <div class="row">
             <div class="col-md-2">
-                <button type="submit" class="save btn btn-default" onclick="return confirm('{% trans 'dissertation_confirmation_message' %}')">Save</button>
+                <button type="submit" class="save btn btn-default"
+                        onclick="return confirm('{% trans 'justification_confirmation_message' %}')">
+                    {% trans 'save' %}
+                </button>
             </div>
         </div>
 
