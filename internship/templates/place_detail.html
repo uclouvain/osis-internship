@@ -28,9 +28,9 @@
 
 {% block breadcrumb %}
 <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-<li><a href="{% url 'internships_home' %}">{% trans 'internships' %}</a></li>
-<li><a href="{% url 'internships_places' %}">{% trans 'places' %}</a></li>
-<li class="active">{{ organization.name }}</li>
+<li><a href="{% url 'internships_home' %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'internships_places' %}">{% trans 'places' %}</a></li>
+    <li class="active">{{ organization.name }}</li>
 {% endblock %}
 {% block content %}
 <div class="page-header">
