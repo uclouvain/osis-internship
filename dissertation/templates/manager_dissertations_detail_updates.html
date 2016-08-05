@@ -65,7 +65,7 @@
                 </td>
                 <td>{{ dissertation_update.person }}</td>
                 <td>{{ dissertation_update.created|localtime }}</td>
-                <td style="text-align: justify;">{{ dissertation_update.justification }}</td>
+                <td style="text-align: justify;">{{ dissertation_update.justification|linebreaks }}</td>
             </tr>
         {% endfor %}
         </table>
