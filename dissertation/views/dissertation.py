@@ -36,7 +36,6 @@ from dissertation.models.dissertation_role import DissertationRole
 from dissertation.models import dissertation_role
 from dissertation.models import dissertation_update
 from dissertation.models import faculty_adviser
-from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models import offer_proposition
 from dissertation.models import proposition_dissertation
 from dissertation.models import proposition_role
@@ -521,17 +520,6 @@ def dissertations_delete(request, pk):
     dissert.deactivate()
     dissertation_update.add(request, dissert, dissert.status, justification="manager_set_active_false ")
     return redirect('dissertations_list')
-
-
-@login_required
-@user_passes_test(is_teacher)
-def dissertations_to_dir_submit(request, pk):
-    dissert = get_object_or_404(Dissertation, pk=pk)
-    old_status = dissert.status
-    dissert.go_forward()
-    dissertation_update.add(request, dissert, old_status)
-
-    return redirect('dissertations_detail', pk=pk)
 
 
 @login_required
