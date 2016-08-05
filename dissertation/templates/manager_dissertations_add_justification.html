@@ -43,6 +43,23 @@
       <form method="POST" class="post-form">
         {% csrf_token %}
         <div class="row">
+            <div class="col-md-4">
+                {% trans 'dissertation' %} :
+            </div>
+            <div class="col-md-8">
+                {{ dissert.title }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                {% trans 'author' %} :
+            </div>
+            <div class="col-md-8">
+                {{ dissert.author }}
+            </div>
+        </div>
+        <br>
+        <div class="row">
             <div class="col-md-12">
                 <p>{% trans 'justification_instructions' %}</p>
             </div>
