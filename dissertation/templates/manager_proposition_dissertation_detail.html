@@ -180,7 +180,8 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <a class="btn btn-default btn-primary" href="{% url 'manager_proposition_dissertation_edit' pk=proposition_dissertation.pk %}">
+                <a class="btn btn-default btn-primary"
+                   href="{% url 'manager_proposition_dissertation_edit' pk=proposition_dissertation.pk %}">
                 <span class="glyphicon glyphicon-edit"></span> {% trans 'edit_proposition_dissertation' %}</a>
                 <a class="btn btn-default btn-danger"
                 href="{% url 'manager_proposition_dissertation_delete' pk=proposition_dissertation.pk %}"

@@ -62,6 +62,16 @@ def count_by_dissertation(dissertation):
     return DissertationRole.objects.filter(dissertation=dissertation).count()
 
 
+def count_by_status_adviser_dissertation(status, adviser, dissertation):
+    return DissertationRole.objects.filter(
+                                        adviser=adviser
+                                    ).filter(
+                                        status=status
+                                    ).filter(
+                                        dissertation=dissertation
+                                    ).count()
+
+
 def search_by_adviser_and_role_stats(adviser, role):
     return DissertationRole.objects.filter(
                                         adviser=adviser
@@ -81,14 +91,15 @@ def count_by_adviser_and_role_stats(adviser, role):
 
 
 def add(status, adviser, dissertation):
-    role = DissertationRole(status=status,
-                            adviser=adviser,
-                            dissertation=dissertation)
-    role.save()
+    if count_by_status_adviser_dissertation(status, adviser, dissertation) == 0:
+        role = DissertationRole(status=status,
+                                adviser=adviser,
+                                dissertation=dissertation)
+        role.save()
 
 
 def search_by_dissertation(dissertation):
-    return DissertationRole.objects.filter(dissertation=dissertation)
+    return DissertationRole.objects.filter(dissertation=dissertation).order_by('pk')
 
 
 def search_by_dissertation_and_role(dissertation, role):
