@@ -34,7 +34,7 @@ from dissertation.models import proposition_dissertation
 from dissertation.models.proposition_role import PropositionRole
 from dissertation.models import proposition_role
 from dissertation.forms import PropositionDissertationForm, ManagerPropositionDissertationForm,\
-    PropositionRoleForm, ManagerPropositionRoleForm
+    PropositionRoleForm, ManagerPropositionRoleForm, ManagerPropositionDissertationEditForm
 from django.contrib.auth.decorators import user_passes_test
 from base.views import layout
 
@@ -98,15 +98,16 @@ def manager_proposition_dissertation_detail(request, pk):
 def manage_proposition_dissertation_edit(request, pk):
     prop_dissert = get_object_or_404(PropositionDissertation, pk=pk)
     if request.method == "POST":
-        form = ManagerPropositionDissertationForm(request.POST, instance=prop_dissert)
+        form = ManagerPropositionDissertationEditForm(request.POST, instance=prop_dissert)
         if form.is_valid():
             prop_dissert = form.save()
             prop_dissert.save()
             return redirect('manager_proposition_dissertation_detail', pk=prop_dissert.pk)
     else:
-        form = ManagerPropositionDissertationForm(instance=prop_dissert)
+        form = ManagerPropositionDissertationEditForm(instance=prop_dissert)
     return layout.render(request, 'manager_proposition_dissertation_edit.html',
                          {'form': form,
+                          'author': prop_dissert.author,
                           'types_choices': PropositionDissertation.TYPES_CHOICES,
                           'levels_choices': PropositionDissertation.LEVELS_CHOICES,
                           'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES})

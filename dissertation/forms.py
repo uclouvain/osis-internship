@@ -124,6 +124,15 @@ class ManagerPropositionDissertationForm(ModelForm):
         widgets = {'offer_proposition': forms.CheckboxSelectMultiple()}
 
 
+class ManagerPropositionDissertationEditForm(ModelForm):
+    class Meta:
+        model = PropositionDissertation
+        fields = (
+            'visibility', 'title', 'description', 'type', 'level', 'collaboration', 'max_number_student',
+            'offer_proposition')
+        widgets = {'offer_proposition': forms.CheckboxSelectMultiple()}
+
+
 class ManagerPropositionRoleForm(ModelForm):
     class Meta:
         model = PropositionRole
