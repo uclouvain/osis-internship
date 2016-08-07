@@ -141,7 +141,11 @@ def manager_proposition_dissertations_jury_new(request, pk):
         if request.method == "POST":
             form = ManagerPropositionRoleForm(request.POST)
             if form.is_valid():
-                form.save()
+                data = form.cleaned_data
+                status = data['status']
+                adv = data['adviser']
+                prop = data['proposition_dissertation']
+                proposition_role.add(status, adv, prop)
                 return redirect('manager_proposition_dissertation_detail', pk=prop_dissert.pk)
         else:
             form = ManagerPropositionRoleForm(initial={'proposition_dissertation': prop_dissert})
@@ -317,7 +321,11 @@ def proposition_dissertations_jury_new(request, pk):
         if request.method == "POST":
             form = PropositionRoleForm(request.POST)
             if form.is_valid():
-                form.save()
+                data = form.cleaned_data
+                status = data['status']
+                adv = data['adviser']
+                prop = data['proposition_dissertation']
+                proposition_role.add(status, adv, prop)
                 return redirect('proposition_dissertation_detail', pk=prop_dissert.pk)
         else:
             form = PropositionRoleForm(initial={'proposition_dissertation': prop_dissert})
