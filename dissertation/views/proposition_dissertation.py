@@ -116,7 +116,11 @@ def manage_proposition_dissertation_edit(request, pk):
 @user_passes_test(is_manager)
 def manager_proposition_dissertations_jury_edit(request, pk):
     prop_role = get_object_or_404(PropositionRole, pk=pk)
-    if request.method == "POST":
+
+    if prop_role.proposition_dissertation.author == prop_role.adviser and prop_role.status == 'PROMOTEUR':
+        return redirect('manager_proposition_dissertation_detail', pk=prop_role.proposition_dissertation.pk)
+
+    elif request.method == "POST":
         form = ManagerPropositionRoleForm(request.POST, instance=prop_role)
         if form.is_valid():
             role = form.save()
@@ -124,7 +128,7 @@ def manager_proposition_dissertations_jury_edit(request, pk):
             return redirect('manager_proposition_dissertation_detail', pk=prop_role.proposition_dissertation.pk)
     else:
         form = ManagerPropositionRoleForm(instance=prop_role)
-    return layout.render(request, 'manager_proposition_dissertations_jury_edit.html', {'form': form})
+        return layout.render(request, 'manager_proposition_dissertations_jury_edit.html', {'form': form})
 
 
 @login_required
@@ -150,7 +154,10 @@ def manager_proposition_dissertations_jury_new(request, pk):
 def manager_proposition_dissertations_role_delete(request, pk):
     prop_role = get_object_or_404(PropositionRole, pk=pk)
     prop_dissert = prop_role.proposition_dissertation
-    prop_role.delete()
+
+    if not (prop_role.proposition_dissertation.author == prop_role.adviser and prop_role.status == 'PROMOTEUR'):
+        prop_role.delete()
+
     return redirect('manager_proposition_dissertation_detail', pk=prop_dissert.pk)
 
 
@@ -286,7 +293,11 @@ def proposition_dissertations_search(request):
 @login_required
 def proposition_dissertations_jury_edit(request, pk):
     prop_role = get_object_or_404(PropositionRole, pk=pk)
-    if request.method == "POST":
+
+    if prop_role.proposition_dissertation.author == prop_role.adviser and prop_role.status == 'PROMOTEUR':
+        return redirect('proposition_dissertation_detail', pk=prop_role.proposition_dissertation.pk)
+
+    elif request.method == "POST":
         form = ManagerPropositionRoleForm(request.POST, instance=prop_role)
         if form.is_valid():
             role = form.save()
@@ -318,5 +329,8 @@ def proposition_dissertations_jury_new(request, pk):
 def proposition_dissertations_role_delete(request, pk):
     prop_role = get_object_or_404(PropositionRole, pk=pk)
     prop_dissert = prop_role.proposition_dissertation
-    prop_role.delete()
+
+    if not (prop_role.proposition_dissertation.author == prop_role.adviser and prop_role.status == 'PROMOTEUR'):
+        prop_role.delete()
+
     return redirect('proposition_dissertation_detail', pk=prop_dissert.pk)
