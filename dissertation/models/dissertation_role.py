@@ -47,10 +47,10 @@ class DissertationRole(models.Model):
 def count_by_adviser(adviser, role=None, dissertation_status=None):
     query = DissertationRole.objects.filter(adviser=adviser)
 
-    if role is not None:
+    if role:
         query = query.filter(status=role)
 
-    if dissertation_status is not None:
+    if dissertation_status:
         query = query.filter(dissertation__status=dissertation_status)
 
     query = query.filter(dissertation__active=True)\

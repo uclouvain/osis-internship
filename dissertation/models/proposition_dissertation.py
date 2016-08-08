@@ -98,14 +98,14 @@ def search(terms, active=None, visibility=None, connected_adviser=None):
             Q(offer_proposition__acronym__icontains=terms)
         )
 
-    if active is not None:
+    if active:
         queryset = queryset.filter(active=active)
 
-    if visibility and connected_adviser is not None:
+    if visibility and connected_adviser:
         queryset = queryset.filter(Q(visibility=visibility) |
                                    Q(author=connected_adviser))
 
-    elif visibility is not None:
+    elif visibility:
         queryset = queryset.filter(visibility=visibility)
 
     queryset = queryset.distinct()
