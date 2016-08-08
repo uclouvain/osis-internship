@@ -29,16 +29,11 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-<li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-<li><a href="{% url 'internships_home' %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
+    <li><a href="{% url 'internships_home' %}">{% trans 'internships_managment' %}</a></li>
     <li><a href="{% url 'internships_places' %}">{% trans 'all_places' %}</a></li>
     <li class="active">{% trans 'new_place' %}</li>
 {% endblock %}
-{% if message %}
-  <script language="javascript" type="text/javascript">
-    alert("Hôpital correctement créé");
-  </script>
-{% endif %}
 {% block content %}
 <div class="page-header">
     {% if organization.id%}

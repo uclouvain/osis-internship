@@ -202,20 +202,7 @@ def __save_xls_internships(request, file_name, user):
                 spec_value = spec_value.replace(" ","")
                 spec_value = spec_value.replace("*","")
 
-                if spec_value == "CH":
-                    spec = "Stage en Chirurgie"
-                if spec_value == "GE":
-                    spec = "Stage en Gériatrie"
-                if spec_value == "GO":
-                    spec = "Stage en Gynécologie-Obstétrique"
-                if spec_value == "MI":
-                    spec = "Stage en Médecine interne"
-                if spec_value == "PE":
-                    spec = "Stage en Pédiatrie"
-                if spec_value == "UR":
-                    spec = "Stage aux Urgences"
-
-                speciality = InternshipSpeciality.search(name=spec)
+                speciality = InternshipSpeciality.search(acronym=spec_value)
 
                 number_place = 0
                 for x in range (3,15):
@@ -233,7 +220,7 @@ def __save_xls_internships(request, file_name, user):
 
                     internship.organization = organization[0]
                     internship.speciality = speciality[x]
-                    internship.title = spec
+                    internship.title = speciality[x].name
                     internship.maximum_enrollments = number_place
                     internship.selectable = True
                     internship.save()

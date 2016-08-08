@@ -40,6 +40,7 @@
       <thead>
         <tr>
             <th style="text-align:center;">{% trans 'name' %}</th>
+            <th style="text-align:center;">{% trans 'acronym' %}</th>
             <th style="text-align:center;">{% trans 'mandatory' %}</th>
         </tr>
       </thead>
@@ -50,6 +51,9 @@
             <td style="text-align:center;">
               <input type="hidden" name="learning_unit" value={{learning_unit}}></input>
               <input type="text" name="name" placeholder="Stage en ..." required>
+            </td>
+            <td style="text-align:center;">
+              <input type="text" name="acronym" required>
             </td>
             <td style="text-align:center;">
               <input type="checkbox" name="mandatory">

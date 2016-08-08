@@ -186,6 +186,7 @@ class PeriodInternshipPlaces(models.Model):
 class InternshipSpeciality(models.Model):
     learning_unit = models.ForeignKey('base.LearningUnit')
     name = models.CharField(max_length=125, blank=False, null=False)
+    acronym = models.CharField(max_length=125, blank=False, null=False)
     mandatory = models.BooleanField(default=False)
 
     def __str__(self):
