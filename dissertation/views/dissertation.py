@@ -250,16 +250,16 @@ def manager_dissertations_search(request):
             copromoteur = dissertation_role.search_by_dissertation_and_role(dissert, 'CO_PROMOTEUR')
             reader = dissertation_role.search_by_dissertation_and_role(dissert, 'READER')
 
-            if promoteur.count() > 0:
+            if promoteur:
                 pro_name = str(promoteur[0].adviser)
             else:
                 pro_name = 'none'
 
-            if copromoteur.count() > 0:
+            if copromoteur:
                 copro_name = str(copromoteur[0].adviser)
             else:
                 copro_name = 'none'
-            if reader.count() > 0:
+            if reader:
                 reader1_name = str(reader[0].adviser)
                 if reader.count() > 1:
                     reader2_name = str(reader[1].adviser)
