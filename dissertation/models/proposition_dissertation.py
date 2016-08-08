@@ -76,7 +76,7 @@ class PropositionDissertation(models.Model):
         if self.author.person.last_name:
             last_name = self.author.person.last_name + ","
         author = u"%s %s %s" % (last_name.upper(), first_name, middle_name)
-        return author+" - "+str(self.title)
+        return "%s - %s" % (author, str(self.title))
 
     def deactivate(self):
         self.active = False

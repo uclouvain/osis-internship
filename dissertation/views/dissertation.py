@@ -238,13 +238,13 @@ def manager_dissertations_search(request):
     xlsx = False
 
     if 'bt_xlsx' in request.GET:
-        filename = 'EXPORT_dissertation_' + time.strftime("%Y-%m-%d %H:%M") + '.xlsx'
-        wb = Workbook(encoding='utf-8')
-        ws1 = wb.active
-        ws1.title = "dissertation"
-        ws1.append(['Date_de_création', 'Students', 'Dissertation_title',
-                    'Status', 'Offer_year_start', 'offer_year_start_short', 'promoteur', 'copromoteur', 'lecteur1',
-                    'lecteur2'])
+        filename = "%s%s%s" % ('EXPORT_dissertation_', time.strftime("%Y-%m-%d %H:%M"), '.xlsx')
+        workbook = Workbook(encoding='utf-8')
+        worksheet1 = workbook.active
+        worksheet1.title = "dissertation"
+        worksheet1.append(['Date_de_création', 'Students', 'Dissertation_title',
+                           'Status', 'Offer_year_start', 'offer_year_start_short', 'promoteur', 'copromoteur',
+                           'lecteur1', 'lecteur2'])
         for dissert in disserts:
             promoteur = dissertation_role.search_by_dissertation_and_role(dissert, 'PROMOTEUR')
             copromoteur = dissertation_role.search_by_dissertation_and_role(dissert, 'CO_PROMOTEUR')
@@ -269,15 +269,15 @@ def manager_dissertations_search(request):
                 reader1_name = 'none'
                 reader2_name = 'none'
 
-            ws1.append([dissert.creation_date,
-                        str(dissert.author),
-                        dissert.title,
-                        dissert.status,
-                        dissert.offer_year_start.title,
-                        dissert.offer_year_start.title_short, pro_name, copro_name, reader1_name, reader2_name])
+            worksheet1.append([dissert.creation_date,
+                               str(dissert.author),
+                               dissert.title,
+                               dissert.status,
+                               dissert.offer_year_start.title,
+                               dissert.offer_year_start.title_short, pro_name, copro_name, reader1_name, reader2_name])
 
-        response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.ms-excel')
-        response['Content-Disposition'] = "attachment; filename=" + filename
+        response = HttpResponse(save_virtual_workbook(workbook), content_type='application/vnd.ms-excel')
+        response['Content-Disposition'] = "%s%s" % ("attachment; filename=", filename)
         return response
 
     else:
@@ -303,7 +303,8 @@ def manager_dissertations_delete(request, pk):
 def manager_dissertations_role_delete(request, pk):
     dissert_role = get_object_or_404(DissertationRole, pk=pk)
     dissert = dissert_role.dissertation
-    dissertation_update.add(request, dissert, dissert.status, justification="manager_delete_jury "+str(dissert_role))
+    justification = "%s %s" % ("manager_delete_jury", str(dissert_role))
+    dissertation_update.add(request, dissert, dissert.status, justification=justification)
     dissert_role.delete()
     return redirect('manager_dissertations_detail', pk=dissert.pk)
 

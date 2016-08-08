@@ -41,9 +41,7 @@ class DissertationUpdate(models.Model):
     dissertation = models.ForeignKey(dissertation.Dissertation)
 
     def __str__(self):
-        desc = self.dissertation.title + ' / ' + self.status_from + ' >> ' + self.status_to \
-               + ' / ' + str(self.created)
-
+        desc = "%s / %s >> %s / %s" % (self.dissertation.title, self.status_from, self.status_to, str(self.created))
         return desc
 
 
@@ -61,7 +59,7 @@ def add(request, dissert, old_status, justification=""):
     if justification:
         update.justification = justification
     else:
-        update.justification = adv.type + JUSTIFICATION_LINK + dissert.status
+        update.justification = "%s%s%s" % (adv.type, JUSTIFICATION_LINK, dissert.status)
     update.person = person
     update.dissertation = dissert
     update.save()
