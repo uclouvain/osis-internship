@@ -99,7 +99,7 @@
                 {% endif %}
                 <td>{{ mandate.contract_duration }}</td>
                 <td>{{ mandate.contract_duration_fte }}</td>
-                <td>{{ mandate.fulltime_equivalent }} {{ mandate.review_set.all|length }}</td>
+                <td>{{ mandate.fulltime_equivalent }}</td>
                 {% if mandate.review_set.all|length == 0 %}
                         <td></td><td></td><td></td><td></td>
                 {% endif %}
