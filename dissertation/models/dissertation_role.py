@@ -107,16 +107,7 @@ def search_by_adviser_and_role(adviser, role):
 
 
 def search_by_adviser_and_role_and_offer(adviser, role, offer):
-    return DissertationRole.objects.filter(status=role)\
-                                   .filter(adviser=adviser)\
-                                   .filter(dissertation__active=True)\
-                                   .filter(dissertation__offer_year_start__offer=offer)\
-                                   .exclude(dissertation__status='DRAFT')\
-                                   .order_by(
-                                                'dissertation__status',
-                                                'dissertation__author__person__last_name',
-                                                'dissertation__author__person__first_name'
-                                            )
+    return search_by_adviser_and_role(adviser, role).filter(dissertation__offer_year_start__offer=offer)
 
 
 def search_by_adviser_and_role_and_status(adviser, role, status):
