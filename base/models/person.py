@@ -79,6 +79,9 @@ class Person(models.Model):
 
         return u"%s %s %s" % (last_name.upper(), first_name, middle_name)
 
+    def natural_key(self):
+        return (self.global_id)
+
     class Meta:
         permissions = (
             ("is_administrator", "Is administrator"),
@@ -117,6 +120,8 @@ def serialize_list_persons(list_persons):
     fields = ('id', 'external_id', 'changed', 'global_id', 'gender',
               'national_id', 'first_name', 'middle_name', 'last_name',
               'email', 'phone', 'phone_mobile', 'language')
-    return serializers.serialize("json", list_persons, fields=fields)
+    return serializers.serialize("json", list_persons, fields=fields,
+                                 use_natural_foreign_keys=True,
+                                 use_natural_primary_keys=True)
 
 
