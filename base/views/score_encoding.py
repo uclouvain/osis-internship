@@ -471,12 +471,12 @@ def get_data_online_double(learning_unit_year_id, request):
                                                                 learning_unit_year_id=learning_unit_year_id,
                                                                 offers_year=offer_years_managed))
         # We must know the total count of enrollments (not only the encoded one) ???
-        encoded_exam_enrollments = filter(lambda e: e.is_final, total_exam_enrollments)
+        encoded_exam_enrollments = list(filter(lambda e: e.is_final, total_exam_enrollments))
     elif mdl.tutor.is_tutor(request.user):
         total_exam_enrollments = list(mdl.exam_enrollment
                                       .find_for_score_encodings(mdl.session_exam.find_session_exam_number(),
                                                                 learning_unit_year_id=learning_unit_year_id))
-        encoded_exam_enrollments = filter(lambda e: e.is_draft and not e.is_final, total_exam_enrollments)
+        encoded_exam_enrollments = list(filter(lambda e: e.is_draft and not e.is_final, total_exam_enrollments))
     else:
         encoded_exam_enrollments = []
         total_exam_enrollments = []
