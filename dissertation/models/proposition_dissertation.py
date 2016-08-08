@@ -102,7 +102,8 @@ def search(terms, active=None, visibility=None, connected_adviser=None):
         queryset = queryset.filter(active=active)
 
     if visibility and connected_adviser is not None:
-        queryset = queryset.filter(Q(visibility=visibility) | Q(author=connected_adviser))
+        queryset = queryset.filter(Q(visibility=visibility) |
+                                   Q(author=connected_adviser))
 
     elif visibility is not None:
         queryset = queryset.filter(visibility=visibility)
@@ -125,4 +126,5 @@ def get_all_for_teacher(adviser):
 
 
 def get_mine_for_teacher(adviser):
-    return PropositionDissertation.objects.filter(author=adviser).filter(active=True)
+    return PropositionDissertation.objects.filter(author=adviser)\
+                                          .filter(active=True)

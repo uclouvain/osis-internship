@@ -53,27 +53,26 @@ def count_by_adviser(adviser, role=None, dissertation_status=None):
     if dissertation_status is not None:
         query = query.filter(dissertation__status=dissertation_status)
 
-    query = query.filter(dissertation__active=True).count()
+    query = query.filter(dissertation__active=True)\
+                 .count()
 
     return query
 
 
 def count_by_dissertation(dissertation):
-    return DissertationRole.objects.filter(dissertation=dissertation).count()
+    return DissertationRole.objects.filter(dissertation=dissertation)\
+                                   .count()
 
 
 def search_by_adviser_and_role_stats(adviser, role):
-    return DissertationRole.objects.filter(
-                                        adviser=adviser
-                                    ).filter(
-                                        status=role
-                                    ).filter(
-                                        dissertation__active=True
-                                    ).exclude(
-                                        Q(dissertation__status='DRAFT') |
-                                        Q(dissertation__status='ENDED') |
-                                        Q(dissertation__status='DEFENDED')
-                                    )
+    return DissertationRole.objects.filter(adviser=adviser)\
+                                   .filter(status=role)\
+                                   .filter(dissertation__active=True)\
+                                   .exclude(
+                                            Q(dissertation__status='DRAFT') |
+                                            Q(dissertation__status='ENDED') |
+                                            Q(dissertation__status='DEFENDED')
+                                           )
 
 
 def count_by_adviser_and_role_stats(adviser, role):
@@ -96,61 +95,44 @@ def search_by_dissertation_and_role(dissertation, role):
 
 
 def search_by_adviser_and_role(adviser, role):
-    return DissertationRole.objects.filter(
-                                        status=role
-                                    ).filter(
-                                        adviser=adviser
-                                    ).filter(
-                                        dissertation__active=True
-                                    ).exclude(
-                                        dissertation__status='DRAFT'
-                                    ).order_by(
-                                        'dissertation__status',
-                                        'dissertation__author__person__last_name',
-                                        'dissertation__author__person__first_name'
-                                    )
+    return DissertationRole.objects.filter(status=role)\
+                                   .filter(adviser=adviser)\
+                                   .filter(dissertation__active=True)\
+                                   .exclude(dissertation__status='DRAFT')\
+                                   .order_by(
+                                                'dissertation__status',
+                                                'dissertation__author__person__last_name',
+                                                'dissertation__author__person__first_name'
+                                            )
 
 
 def search_by_adviser_and_role_and_offer(adviser, role, offer):
-    return DissertationRole.objects.filter(
-                                        status=role
-                                    ).filter(
-                                        adviser=adviser
-                                    ).filter(
-                                        dissertation__active=True
-                                    ).filter(
-                                        dissertation__offer_year_start__offer=offer
-                                    ).exclude(
-                                        dissertation__status='DRAFT'
-                                    ).order_by(
-                                        'dissertation__status',
-                                        'dissertation__author__person__last_name',
-                                        'dissertation__author__person__first_name'
-                                    )
+    return DissertationRole.objects.filter(status=role)\
+                                   .filter(adviser=adviser)\
+                                   .filter(dissertation__active=True)\
+                                   .filter(dissertation__offer_year_start__offer=offer)\
+                                   .exclude(dissertation__status='DRAFT')\
+                                   .order_by(
+                                                'dissertation__status',
+                                                'dissertation__author__person__last_name',
+                                                'dissertation__author__person__first_name'
+                                            )
 
 
 def search_by_adviser_and_role_and_status(adviser, role, status):
-    return DissertationRole.objects.filter(
-                                        status=role
-                                    ).filter(
-                                        adviser=adviser
-                                    ).filter(
-                                        dissertation__active=True
-                                    ).filter(
-                                        dissertation__status=status
-                                    ).order_by(
-                                        'dissertation__author__person__last_name',
-                                        'dissertation__author__person__first_name'
-                                    )
+    return DissertationRole.objects.filter(status=role)\
+                                   .filter(adviser=adviser)\
+                                   .filter(dissertation__active=True)\
+                                   .filter(dissertation__status=status)\
+                                   .order_by(
+                                                'dissertation__author__person__last_name',
+                                                'dissertation__author__person__first_name'
+                                            )
 
 
 def list_teachers_action_needed(offer):
-    return DissertationRole.objects.filter(
-                                        status='PROMOTEUR'
-                                    ).filter(
-                                        dissertation__status='DIR_SUBMIT'
-                                    ).filter(
-                                        dissertation__offer_year_start__offer=offer
-                                    ).filter(
-                                        dissertation__active=True
-                                    ).distinct('adviser')
+    return DissertationRole.objects.filter(status='PROMOTEUR')\
+                                   .filter(dissertation__status='DIR_SUBMIT')\
+                                   .filter(dissertation__offer_year_start__offer=offer)\
+                                   .filter(dissertation__active=True)\
+                                   .distinct('adviser')

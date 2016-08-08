@@ -28,6 +28,8 @@ from base import models as mdl
 from . import adviser
 from . import dissertation
 
+JUSTIFICATION_LINK = "_set_to_"
+
 
 class DissertationUpdate(models.Model):
 
@@ -46,7 +48,8 @@ class DissertationUpdate(models.Model):
 
 
 def search_by_dissertation(dissert):
-    return DissertationUpdate.objects.filter(dissertation=dissert).order_by('created')
+    return DissertationUpdate.objects.filter(dissertation=dissert)\
+                                     .order_by('created')
 
 
 def add(request, dissert, old_status, justification=""):
@@ -58,7 +61,7 @@ def add(request, dissert, old_status, justification=""):
     if justification:
         update.justification = justification
     else:
-        update.justification = adv.type + "_set_to_" + dissert.status
+        update.justification = adv.type + JUSTIFICATION_LINK + dissert.status
     update.person = person
     update.dissertation = dissert
     update.save()
