@@ -125,11 +125,14 @@ def internships_student_read(request, registration_id):
     information = InternshipStudentInformation.search(person = student[0].person)
     student = student[0]
     internship_choice = InternshipChoice.find_by_student(student)
+    all_speciality = InternshipSpeciality.find_all()
 
     return render(request, "student_resume.html",
                            {'student':             student,
                             'information':         information[0],
-                            'internship_choice':   internship_choice, })
+                            'internship_choice':   internship_choice,
+                            'specialities':        all_speciality,
+                            })
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)

@@ -112,76 +112,18 @@
                 <div class="panel panel-default">
               	<div class="tab-content">
               		<div role="tabpanel" class="tab-pane fade in active" id="profile">
-                    <label> Stage en Chirurgie </label><br/>
+                    {% for speciality in specialities %}
+                      <label>{{speciality.name}}</label><br/>
                       <ul>
                         {% for choice in internship_choice %}
-                          {% if choice.speciality.name == "Stage en Chirurgie" %}
-                            <li> {% trans 'Hôpital' %} :
+                          {% if choice.speciality.name == speciality.name %}
+                            <li> {% trans 'organization' %} :
                                     {{ choice.organization.reference }} - {{ choice.organization.name }} |
                                     Choix : {{ choice.choice }}
                           {% endif %}
                         {% endfor %}
                       </ul>
-                    <label> Stage en Gynécologie-Obstétrique </label><br/>
-                      <ul>
-                        {% for choice in internship_choice %}
-                          {% if choice.speciality.name == "Stage en Gynécologie-Obstétrique" %}
-                            <li> {% trans 'Hôpital' %} :
-                                    {{ choice.organization.reference }} - {{ choice.organization.name }} |
-                                    Choix : {{ choice.choice }}
-                          {% endif %}
-                        {% endfor %}
-                      </ul>
-                    <label> Stage en Médecine Interne 1</label><br/>
-                      <ul>
-                        {% for choice in internship_choice %}
-                          {% if choice.speciality.name == "Stage en Médecine interne 1" %}
-                            <li> {% trans 'Hôpital' %} :
-                                    {{ choice.organization.reference }} - {{ choice.organization.name }} |
-                                    Choix : {{ choice.choice }}
-                          {% endif %}
-                        {% endfor %}
-                      </ul>
-                    <label> Stage en Médecine Interne 2</label><br/>
-                      <ul>
-                        {% for choice in internship_choice %}
-                          {% if choice.speciality.name == "Stage en Médecine interne 2" %}
-                            <li> {% trans 'Hôpital' %} :
-                                    {{ choice.organization.reference }} - {{ choice.organization.name }} |
-                                    Choix : {{ choice.choice }}
-                          {% endif %}
-                        {% endfor %}
-                      </ul>
-                      <label> Stage en Médecine Interne 3</label><br/>
-                        <ul>
-                          {% for choice in internship_choice %}
-                            {% if choice.speciality.name == "Stage en Médecine interne 3" %}
-                              <li> {% trans 'Hôpital' %} :
-                                      {{ choice.organization.reference }} - {{ choice.organization.name }} |
-                                      Choix : {{ choice.choice }}
-                            {% endif %}
-                          {% endfor %}
-                        </ul>
-                    <label> Stage en Pédiatrie </label><br/>
-                      <ul>
-                        {% for choice in internship_choice %}
-                          {% if choice.speciality.name == "Stage en Pédiatrie" %}
-                            <li> {% trans 'Hôpital' %} :
-                                    {{ choice.organization.reference }} - {{ choice.organization.name }} |
-                                    Choix : {{ choice.choice }}
-                          {% endif %}
-                        {% endfor %}
-                      </ul>
-                    <label> Stage aux Urgences </label><br/>
-                      <ul>
-                        {% for choice in internship_choice %}
-                          {% if choice.speciality.name == "Stage aux Urgences" %}
-                            <li> {% trans 'Hôpital' %} :
-                                    {{ choice.organization.reference }} - {{ choice.organization.name }} |
-                                    Choix : {{ choice.choice }}
-                          {% endif %}
-                        {% endfor %}
-                      </ul>
+                    {% endfor %}
                     <label> Stage au choix 1 </label><br/>
                     <label> Stage au choix 2 </label><br/>
                     <label> Stage au choix 3 </label><br/>
