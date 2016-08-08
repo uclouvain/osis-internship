@@ -344,7 +344,7 @@ def manager_dissertations_to_dir_ok(request, pk):
 
 @login_required
 @user_passes_test(is_manager)
-def manager_dissertations_to_dir_ok_comm_list(request, pk):
+def manager_dissertations_accept_comm_list(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     old_status = dissert.status
     dissert.accept()
@@ -355,7 +355,7 @@ def manager_dissertations_to_dir_ok_comm_list(request, pk):
 
 @login_required
 @user_passes_test(is_manager)
-def manager_dissertations_to_dir_ok_eval_list(request, pk):
+def manager_dissertations_accept_eval_list(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     old_status = dissert.status
     dissert.accept()
