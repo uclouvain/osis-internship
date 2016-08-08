@@ -25,7 +25,7 @@
 ##############################################################################
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
-from internship.models import Organization, OrganizationAddress, InternshipChoice, InternshipOffer
+from internship.models import Organization, OrganizationAddress, InternshipChoice, InternshipOffer, InternshipSpeciality
 from internship.forms import OrganizationForm
 
 def sort_organizations(datas):
@@ -73,6 +73,14 @@ def get_cities(datas):
     tab = list(set(tab))
     tab.sort()
     return tab
+
+def set_tabs_name(datas, student=None):
+    for data in datas:
+        if student :
+            size = len(InternshipChoice.search(speciality=data, student=student))
+            data.size = size
+        tab = data.name.replace(" ", "")
+        data.tab = tab
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
@@ -237,7 +245,8 @@ def student_choice(request, reference):
     organization_choice = InternshipChoice.search(organization__reference=reference)
     organization = Organization.search(reference=reference)
     all_offers = InternshipOffer.search(organization = organization)
-
+    all_speciality = InternshipSpeciality.find_all()
+    set_tabs_name(all_speciality)
     for al in all_offers:
         number_first_choice = len(InternshipChoice.search(organization=al.organization,
                                                            speciality=al.speciality,
@@ -246,4 +255,6 @@ def student_choice(request, reference):
 
     return render(request, "place_detail.html", {'organization':        organization[0],
                                                  'organization_choice': organization_choice,
-                                                 'offers':              all_offers, })
+                                                 'offers':              all_offers,
+                                                 'specialities':        all_speciality
+                                                  })
