@@ -50,15 +50,15 @@ import time
 # Used by decorator @user_passes_test(is_manager) to secure manager views
 def is_manager(user):
     person = mdl.person.find_by_user(user)
-    adv = adviser.search_by_person(person)
-    return adv.type == 'MGR'
+    this_adviser = adviser.search_by_person(person)
+    return this_adviser.type == 'MGR'
 
 
 # Used by decorator @user_passes_test(is_manager) to secure manager views
 def is_teacher(user):
     person = mdl.person.find_by_user(user)
-    adv = adviser.search_by_person(person)
-    return adv.type == 'PRF'
+    this_adviser = adviser.search_by_person(person)
+    return this_adviser.type == 'PRF'
 
 
 ##########################
