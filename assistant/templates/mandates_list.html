@@ -99,7 +99,7 @@
                 {% endif %}
                 <td>{{ mandate.contract_duration }}</td>
                 <td>{{ mandate.contract_duration_fte }}</td>
-                <td>{{ mandate.fulltime_equivalent }}</td>
+                <td>{{ mandate.fulltime_equivalent }} {{ mandate.review_set.all|length }}</td>
                 {% if mandate.review_set.all|length == 0 %}
                         <td></td><td></td><td></td><td></td>
                 {% endif %}
@@ -109,7 +109,7 @@
                     {% elif "SUPERVISION" in review.reviewer.role and forloop.counter < 3 %}
                         {% if forloop.counter == 1 %}
                             <td></td><td></td>
-                        {% else %}
+                        {% elif mandate.assistant_type == "TEACHING_ASSISTANT" %}
                             <td></td>
                         {% endif %}
                     {% elif "VICE-RECTOR" in review.reviewer.role and forloop.counter < 4 %}
