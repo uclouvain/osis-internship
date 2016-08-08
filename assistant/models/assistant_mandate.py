@@ -26,6 +26,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.core.validators import MaxValueValidator, MinValueValidator
+from assistant.models import mandate_structure
 
 
 class AssistantMandate(models.Model):
@@ -114,6 +115,9 @@ def find_mandate_by_academic_assistant(assistant):
 
 def find_before_year_for_assistant(year, assistant):
     return AssistantMandate.objects.filter(academic_year__year__lt=year).filter(assistant = assistant)
+
+def find_for_supervisor_for_academic_year(supervisor, academic_year):
+    return AssistantMandate.objects.filter(assistant__supervisor=supervisor).filter(academic_year=academic_year)
 
 
 

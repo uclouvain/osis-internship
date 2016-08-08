@@ -44,9 +44,12 @@ def find_by_mandate(mandate):
 def find_by_mandate_and_structure(mandate, structure):
     return MandateStructure.objects.filter(assistant_mandate=mandate, structure=structure)
 
-def find_by_mandate_and_type(mandate, struct_type):
-    return MandateStructure.objects.filter(assistant_mandate=mandate, structure__type=struct_type)
+def find_by_mandate_and_type(mandate, type):
+    return MandateStructure.objects.filter(assistant_mandate=mandate, structure__type=type)
 
-def find_by_mandate_and_part_of_type(mandate, struct_type):
-    return MandateStructure.objects.filter(assistant_mandate=mandate, structure__part_of__type=struct_type)
+def find_by_mandate_and_part_of_type(mandate, type):
+    return MandateStructure.objects.filter(assistant_mandate=mandate, structure__part_of__type=type)
+
+def find_by_mandate_and_part_of_struct(mandate, struct):
+    return MandateStructure.objects.filter(assistant_mandate=mandate, structure__part_of=struct)
 
