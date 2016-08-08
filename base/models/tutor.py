@@ -120,5 +120,6 @@ def serialize_list_tutors(list_tutors):
     """
     # Restrict fields for osis-portal
     fields = ('id', 'external_id', 'changed', 'person')
-    return serializers.serialize("json", list_tutors, fields=fields)
+    return serializers.serialize("json", list_tutors, fields=fields,
+                                 use_natural_foreign_keys=True)
 

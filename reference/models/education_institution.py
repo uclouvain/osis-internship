@@ -25,31 +25,45 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
+from reference.models import country
 from django.core import serializers
 
 
-class DecreeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'start_date', 'end_date')
-    fieldsets = ((None, {'fields': ('name', 'start_date', 'end_date')}),)
-    ordering = ('name',)
-    search_fields = ['name']
+class EducationInstitutionAdmin(admin.ModelAdmin):
+    list_display = ('name', 'institution_type', 'country', 'adhoc')
 
 
-class Decree(models.Model):
+class EducationInstitution(models.Model):
+    INSTITUTION_TYPE = (('SECONDARY', 'Secondaire'),
+                        ('UNIVERSITY', 'University'),
+                        ('HIGHER_NON_UNIVERSITY', 'Higher non-university'))
+
+    NATIONAL_COMMUNITY_TYPES = (
+        ('FRENCH', 'Communauté française de Belgique'),
+        ('GERMAN', 'Communauté germanophone'),
+        ('DUTCH', 'Communauté flamande'),
+        )
+
     external_id = models.CharField(max_length=100, blank=True, null=True)
-    name = models.CharField(max_length=80, unique=True)
-    start_date = models.DateField(blank=True, null=True)
-    end_date = models.DateField(blank=True, null=True)
+    name = models.CharField(max_length=100)
+    institution_type = models.CharField(max_length=25, choices=INSTITUTION_TYPE)
+    postal_code = models.CharField(max_length=20)
+    city = models.CharField(max_length=255)
+    country = models.ForeignKey('reference.Country', blank=True, null=True)
+    national_community = models.CharField(max_length=20, choices=NATIONAL_COMMUNITY_TYPES, blank=True, null=True)
+    adhoc = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
 
 
-def serialize_list(list_decrees):
+def serialize_list(list_education_institutions):
     """
-    Serialize a list of "Decree" objects using the json format.
+    Serialize a list of student objects using the json format.
     Use to send data to osis-portal.
-    :param list_decrees: a list of "Decree" objects
+    :param list_education_institutions: a list of "EducationInstitution" objects
     :return: the serialized list (a json)
     """
-    return serializers.serialize("json", list_decrees)
+    fields = ('id', 'name', 'institution_type', 'postal_code', 'city', 'country',
+              'national_community', 'adhoc')
+    return serializers.serialize("json", list_education_institutions, fields=fields)
