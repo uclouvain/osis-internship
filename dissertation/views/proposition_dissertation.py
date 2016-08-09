@@ -45,9 +45,9 @@ def is_manager(user):
     this_adviser = adviser.search_by_person(person)
     return this_adviser.type == 'MGR'
 
-##########################
-#      VUES MANAGER      #
-##########################
+###########################
+#      MANAGER VIEWS      #
+###########################
 
 
 @login_required
@@ -178,9 +178,9 @@ def manager_proposition_dissertations_search(request):
     return layout.render(request, "manager_proposition_dissertations_list.html",
                          {'proposition_dissertations': prop_disserts})
 
-##########################
-#      VUES TEACHER      #
-##########################
+###########################
+#      TEACHER VIEWS      #
+###########################
 
 
 @login_required

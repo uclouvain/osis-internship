@@ -49,9 +49,9 @@ def is_teacher(user):
     this_adviser = adviser.search_by_person(person)
     return this_adviser.type == 'PRF'
 
-##########################
-#      VUES TEACHER      #
-##########################
+###########################
+#      TEACHER VIEWS      #
+###########################
 
 
 @login_required
@@ -144,9 +144,9 @@ def informations_edit(request):
                                                              'phone': person.phone,
                                                              'phone_mobile': person.phone_mobile})
 
-##########################
-#      VUES MANAGER      #
-##########################
+###########################
+#      MANAGER VIEWS      #
+###########################
 
 
 @login_required

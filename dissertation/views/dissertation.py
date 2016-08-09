@@ -61,9 +61,9 @@ def is_teacher(user):
     return this_adviser.type == 'PRF'
 
 
-##########################
-#      VUE GENERALE      #
-##########################
+#########################
+#      GLOBAL VIEW      #
+#########################
 
 
 @login_required
@@ -86,9 +86,9 @@ def dissertations(request):
                           'count_advisers_pro_request': count_advisers_pro_request})
 
 
-##########################
-#      VUES MANAGER      #
-##########################
+###########################
+#      MANAGER VIEWS      #
+###########################
 
 @login_required
 @user_passes_test(is_manager)
@@ -422,9 +422,9 @@ def manager_dissertations_wait_recep_list(request):
                           'offer_proposition': offer_prop})
 
 
-##########################
-#      VUES TEACHER      #
-##########################
+###########################
+#      TEACHER VIEWS      #
+###########################
 
 @login_required
 @user_passes_test(is_teacher)

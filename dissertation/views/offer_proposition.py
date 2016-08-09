@@ -41,6 +41,10 @@ def is_manager(user):
     this_adviser = adviser.search_by_person(person)
     return this_adviser.type == 'MGR'
 
+###########################
+#      MANAGER VIEWS      #
+###########################
+
 
 @login_required
 @user_passes_test(is_manager)
