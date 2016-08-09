@@ -1265,6 +1265,12 @@ msgstr "Aucune données pour cette année académique"
 msgid "students"
 msgstr "étudiants"
 
+msgid "not_passed"
+msgstr "Non communiquée"
+
+msgid "date_not_passed"
+msgstr "Date non communiquée"
+
 msgid "complete"
 msgstr "Complet"
 
