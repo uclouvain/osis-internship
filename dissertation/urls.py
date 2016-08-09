@@ -140,6 +140,8 @@ urlpatterns = [
     url(r'^manager_proposition_dissertation_search$', proposition_dissertation.manager_proposition_dissertations_search,
         name='manager_proposition_dissertations_search'),
 
+    url(r'^my_dissertation_propositions$', proposition_dissertation.my_dissertation_propositions,
+        name='my_dissertation_propositions'),
     url(r'^proposition_dissertations/$', proposition_dissertation.proposition_dissertations,
         name='proposition_dissertations'),
     url(r'^proposition_dissertation/(?P<pk>[0-9]+)/delete/$', proposition_dissertation.proposition_dissertation_delete,
@@ -148,8 +150,6 @@ urlpatterns = [
         name='proposition_dissertation_detail'),
     url(r'^proposition_dissertation/(?P<pk>[0-9]+)/edit/$', proposition_dissertation.proposition_dissertation_edit,
         name='proposition_dissertation_edit'),
-    url(r'^proposition_dissertation_my$', proposition_dissertation.proposition_dissertation_my,
-        name='proposition_dissertation_my'),
     url(r'^proposition_dissertation_new$', proposition_dissertation.proposition_dissertation_new,
         name='proposition_dissertation_new'),
     url(r'^proposition_dissertations_search$', proposition_dissertation.proposition_dissertations_search,
