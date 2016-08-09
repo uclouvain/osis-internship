@@ -23,17 +23,21 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
-# Statements in alphabetic order.
-from assistant.models import academic_assistant
-from assistant.models import assistant_document
-from assistant.models import assistant_mandate
-from assistant.models import manager
-from assistant.models import mandate_structure
-from assistant.models import review
-from assistant.models import reviewer
-from assistant.models import settings
-from assistant.models import tutoring_learning_unit_year
+from django.db import models
+from django.utils.translation import ugettext_lazy as _
+from datetime import datetime
 
 
+class Settings(models.Model):
 
+    starting_date = models.DateField()
+    ending_date = models.DateField()
+
+    def __str__(self):
+        return u"%s - %s" % (self.starting_date, self.ending_date)
+    
+def get_settings():
+    return Settings.objects.first()
+
+def access_to_procedure_is_open():
+    return Settings.objects.filter(starting_date__lt=datetime.now(), ending_date__gt=datetime.now())

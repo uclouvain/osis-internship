@@ -109,6 +109,9 @@ def find_mandate_by_id(mandate_id):
     return AssistantMandate.objects.get(id=mandate_id)
 
 def find_mandate_by_academic_assistant(assistant):
-    return AssistantMandate.objects.get(assistant=assistant)  
+    return AssistantMandate.objects.get(assistant=assistant)
+
+def find_by_academic_year(academic_year):
+    return AssistantMandate.objects.filter(academic_year=academic_year)
 
 

@@ -26,14 +26,18 @@
 from django.conf.urls import url
 from assistant.views import mandate, home, assistant_form, assistant
 from assistant.views import mandates_list, reviewer_mandates_list, reviewer_delegation
+from assistant.views import manager_settings
 
 urlpatterns = [
     # S'il vous plaît, organiser les urls par ordre alphabétique.
     url(r'^home$', home.assistant_home, name='assistants_home'),
+    url(r'^manager$', home.manager_home, name='manager_home'),
     url(r'^manager/mandates/(?P<mandate_id>\d+)/edit/$', mandate.mandate_edit, name='mandate_read'),
     url(r'^manager/mandates/(?P<mandate_id>\d+)/save/$', mandate.mandate_save, name='mandate_save'),
     url(r'^manager/mandates/load/$', mandate.load_mandates, name='load_mandates'),
     url(r'^manager/mandates/$', mandates_list.MandatesListView.as_view(), name='mandates_list'),
+    url(r'^manager/settings/edit/$', manager_settings.settings_edit, name='settings_edit'),
+    url(r'^manager/settings/save/$', manager_settings.settings_save, name='settings_save'),
     url(r'^pst/access_denied$', home.access_denied, name='access_denied'),
     url(r'^pst/form_part1/edit/(?P<mandate_id>\d+)/$', assistant_form.form_part1_edit, name='form_part1_edit'),
     url(r'^pst/form_part1/save/(?P<mandate_id>\d+)/$', assistant_form.form_part1_save, name='form_part1_save'),

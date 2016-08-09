@@ -31,7 +31,7 @@ from assistant import models as mdl
 from base.models import structure, academic_year, person
 from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
-
+from django.forms import widgets
 
 class MandateForm(ModelForm):
     comment = forms.CharField(required=False, widget=Textarea(
@@ -200,3 +200,12 @@ class ReviewerDelegationForm(ModelForm):
             self.add_error('person', msg)
         except:
             pass
+
+
+class SettingsForm(ModelForm):
+    starting_date = forms.DateField(required=True, widget=widgets.SelectDateWidget)
+    ending_date = forms.DateField(required=True, widget=widgets.SelectDateWidget)
+
+    class Meta:
+        model = mdl.settings.Settings
+        fields = ('starting_date','ending_date')

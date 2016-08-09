@@ -32,6 +32,8 @@ from django.core.urlresolvers import reverse
 from django.views.generic.edit import FormMixin
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
+from assistant.models import settings
+
 
 class MandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMixin):
     context_object_name = 'reviewer_mandates_list'
@@ -40,7 +42,10 @@ class MandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMi
 
     def test_func(self):
         try:
-            return reviewer.Reviewer.objects.filter(person=self.request.user.person)
+            if settings.access_to_procedure_is_open():
+                return reviewer.Reviewer.objects.filter(person=self.request.user.person)
+            else:
+                return False
         except ObjectDoesNotExist:
             return False
         
@@ -52,8 +57,10 @@ class MandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMi
         form_class = MandatesArchivesForm
         form = form_class(self.request.GET)
         rev = reviewer.Reviewer.objects.filter(person=self.request.user.person)[0]
-        structures_id = structure.Structure.objects.filter(Q(id=rev.structure.id) | Q(part_of_id=rev.structure.id)).values_list('id', flat=True)
-        mandates_id = mandate_structure.MandateStructure.objects.filter(structure__in=structures_id).values_list('assistant_mandate_id', flat=True).distinct()
+        structures_id = structure.Structure.objects.filter(Q(id=rev.structure.id) | Q(part_of_id=rev.structure.id)).\
+            values_list('id', flat=True)
+        mandates_id = mandate_structure.MandateStructure.objects.filter(structure__in=structures_id).\
+            values_list('assistant_mandate_id', flat=True).distinct()
         if form.is_valid():
             self.request.session['selected_academic_year'] = form.cleaned_data[
                 'academic_year'].id
@@ -68,8 +75,8 @@ class MandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMi
             selected_academic_year = academic_year.current_academic_year()
             self.request.session[
                 'selected_academic_year'] = selected_academic_year.id
-            queryset = assistant_mandate.AssistantMandate.objects.filter(
-                academic_year=selected_academic_year).filter(id__in=mandates_id)
+            queryset = assistant_mandate.find_by_academic_year(
+                selected_academic_year).filter(id__in=mandates_id)
         return queryset
 
     def get_context_data(self, **kwargs):

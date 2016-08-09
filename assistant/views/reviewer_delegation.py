@@ -33,6 +33,7 @@ from django.db.models import Q
 from django.core.urlresolvers import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
+from assistant.models import settings
 
 class StructuresListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     context_object_name = 'reviewer_structures_list'
@@ -41,8 +42,11 @@ class StructuresListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
 
     def test_func(self):
         try:
-            return reviewer.Reviewer.objects.get(Q(person=self.request.user.person) &
+            if settings.access_to_procedure_is_open():
+                return reviewer.Reviewer.objects.get(Q(person=self.request.user.person) &
                                                    (Q(role="SUPERVISION") | Q(role="RESEARCH")))
+            else:
+                return False
         except ObjectDoesNotExist:
             return False
     
@@ -60,16 +64,18 @@ class StructuresListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         context['current_reviewer'] = reviewer.Reviewer.objects.get(person=self.request.user.person)
         return context
 
+
 def user_is_reviewer_and_can_delegate(user):
     """Use with a ``user_passes_test`` decorator to restrict access to
     authenticated users who are reviewer and can delegate."""
 
     try:
-        if user.is_authenticated():
+        if user.is_authenticated() and settings.access_to_procedure_is_open():
             return reviewer.Reviewer.objects.get(Q(person=user.person) &
                                                    (Q(role="SUPERVISION") | Q(role="RESEARCH")))
     except ObjectDoesNotExist:
         return False
+
 
 @user_passes_test(user_is_reviewer_and_can_delegate, login_url='assistants_home')
 def addReviewerForStructure(request, structure_id):
