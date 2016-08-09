@@ -127,3 +127,19 @@ def list_teachers_action_needed(offer):
                                    .filter(dissertation__offer_year_start__offer=offer)\
                                    .filter(dissertation__active=True)\
                                    .distinct('adviser')
+
+
+def get_promoteur_by_dissertation(dissert):
+    promoteur = search_by_dissertation_and_role(dissert, 'PROMOTEUR')
+    if promoteur:
+        return str(promoteur[0].adviser)
+    else:
+        return 'none'
+
+
+def get_copromoteur_by_dissertation(dissert):
+    copromoteur = search_by_dissertation_and_role(dissert, 'CO_PROMOTEUR')
+    if copromoteur:
+        return str(copromoteur[0].adviser)
+    else:
+        return 'none'

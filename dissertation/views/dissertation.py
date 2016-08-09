@@ -246,19 +246,10 @@ def manager_dissertations_search(request):
                            'Status', 'Offer_year_start', 'offer_year_start_short', 'promoteur', 'copromoteur',
                            'lecteur1', 'lecteur2'])
         for dissert in disserts:
-            promoteur = dissertation_role.search_by_dissertation_and_role(dissert, 'PROMOTEUR')
-            copromoteur = dissertation_role.search_by_dissertation_and_role(dissert, 'CO_PROMOTEUR')
+            pro_name = dissertation_role.get_promoteur_by_dissertation(dissert)
+            copro_name = dissertation_role.get_copromoteur_by_dissertation(dissert)
             reader = dissertation_role.search_by_dissertation_and_role(dissert, 'READER')
 
-            if promoteur:
-                pro_name = str(promoteur[0].adviser)
-            else:
-                pro_name = 'none'
-
-            if copromoteur:
-                copro_name = str(copromoteur[0].adviser)
-            else:
-                copro_name = 'none'
             if reader:
                 reader1_name = str(reader[0].adviser)
                 if reader.count() > 1:
