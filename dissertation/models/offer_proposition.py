@@ -65,3 +65,13 @@ class OfferProposition(models.Model):
 
     def __str__(self):
         return self.acronym
+
+
+def get_by_offer(an_offer):
+    return OfferProposition.objects.get(offer=an_offer)
+
+
+def search_by_offer(an_offer):
+    return OfferProposition.objects.filter(offer=an_offer)\
+                                   .distinct()\
+                                   .order_by('offer')

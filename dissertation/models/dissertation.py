@@ -29,6 +29,8 @@ from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from base.models import offer_year, student, academic_year
 from . import proposition_dissertation
+from . import offer_proposition
+
 
 class DissertationAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'status', 'active')
@@ -78,11 +80,59 @@ class Dissertation(models.Model):
     def __str__(self):
         return self.title
 
+    def deactivate(self):
+        self.active = False
+        self.save()
+
+    def set_status(self, status):
+        self.status = status
+        self.save()
+
+    def go_forward(self):
+        if self.status == 'DRAFT' or self.status == 'DIR_KO':
+            self.set_status('DIR_SUBMIT')
+
+        elif self.status == 'TO_RECEIVE':
+            self.set_status('TO_DEFEND')
+
+        elif self.status == 'TO_DEFEND':
+            self.set_status('DEFENDED')
+
+    def accept(self):
+        offer_prop = offer_proposition.get_by_offer(self.offer_year_start.offer)
+        if offer_prop.validation_commission_exists and self.status == 'DIR_SUBMIT':
+            self.set_status('COM_SUBMIT')
+
+        elif offer_prop.evaluation_first_year and (self.status == 'DIR_SUBMIT' or self.status == 'COM_SUBMIT'):
+            self.set_status('EVA_SUBMIT')
+
+        elif self.status == 'EVA_SUBMIT':
+            self.set_status('TO_RECEIVE')
+
+        elif self.status == 'DEFENDED':
+            self.set_status('ENDED_WIN')
+
+        else:
+            self.set_status('TO_RECEIVE')
+
+    def refuse(self):
+        if self.status == 'DIR_SUBMIT':
+            self.set_status('DIR_KO')
+
+        elif self.status == 'COM_SUBMIT':
+            self.set_status('COM_KO')
+
+        elif self.status == 'EVA_SUBMIT':
+            self.set_status('EVA_KO')
+
+        elif self.status == 'DEFENDED':
+            self.set_status('ENDED_LOS')
+
     class Meta:
         ordering = ["author__person__last_name", "author__person__middle_name", "author__person__first_name", "title"]
 
 
-def search_dissertation(terms=None):
+def search(terms=None, active=True):
     queryset = Dissertation.objects.all()
     if terms:
         queryset = queryset.filter(
@@ -96,5 +146,24 @@ def search_dissertation(terms=None):
             Q(proposition_dissertation__author__person__last_name__icontains=terms) |
             Q(status__icontains=terms) |
             Q(title__icontains=terms)
-        ).distinct()
+        ).filter(active=active).distinct()
     return queryset
+
+
+def search_by_proposition_author(terms=None, active=True, proposition_author=None):
+    return search(terms=terms, active=active).filter(proposition_dissertation__author=proposition_author)
+
+
+def search_by_offer(offer):
+    return Dissertation.objects.filter(offer_year_start__offer=offer)
+
+
+def search_by_offer_and_status(offer, status):
+    return search_by_offer(offer).filter(status=status)
+
+
+def count_by_proposition(prop_dissert):
+    return Dissertation.objects.filter(active=True)\
+                               .filter(proposition_dissertation=prop_dissert)\
+                               .exclude(status='DRAFT')\
+                               .count()

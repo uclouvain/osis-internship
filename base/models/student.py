@@ -120,3 +120,6 @@ def serialize_list_students(list_students):
     fields = ('id', 'registration_id', 'person')
     return serializers.serialize("json", list_students, fields=fields)
 
+
+def find_by_offer(offer):
+    return Student.objects.filter(offerenrollment__offer_year__offer=offer)
