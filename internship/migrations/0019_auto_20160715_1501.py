@@ -32,4 +32,9 @@ class Migration(migrations.Migration):
             name='longitude',
             field=models.FloatField(blank=True, null=True),
         ),
+        migrations.AddField(
+            model_name='internshipstudentaffectationstat',
+            name='type_of_internship',
+            field=models.CharField(default='N', max_length=1),
+        ),
     ]
