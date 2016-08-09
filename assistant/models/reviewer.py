@@ -62,3 +62,10 @@ class Reviewer(models.Model):
 
     def __str__(self):
         return u"%s - %s : %s" % (self.person, self.structure, self.role)
+
+
+def find_reviewers():
+    return Reviewer.objects.all().order_by('person')
+
+def find_by_id(reviewer_id):
+    return Reviewer.objects.get(id=reviewer_id)

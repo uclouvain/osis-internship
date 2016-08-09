@@ -200,3 +200,26 @@ class ReviewerDelegationForm(ModelForm):
             self.add_error('person', msg)
         except:
             pass
+
+
+class ReviewerForm(ModelForm):
+    person = forms.ModelChoiceField(required=True, queryset=person.Person.objects.all().order_by('last_name'),
+                                    to_field_name="email")
+    role = forms.ChoiceField(required=True, choices=mdl.reviewer.ROLE_CHOICES)
+    structure = forms.ModelChoiceField(required=True, queryset=(
+    structure.find_by_type('INSTITUTE') | structure.find_by_type('FACULTY') |
+    structure.find_by_type('SECTOR')).order_by('type','acronym'))
+
+    class Meta:
+        model = mdl.reviewer.Reviewer
+        fields = ('person', 'structure', 'role')
+
+    def clean(self):
+        super(ReviewerForm, self).clean()
+        selected_person = self.cleaned_data.get('person')
+        try:
+            mdl.reviewer.Reviewer.objects.get(person=selected_person)
+            msg = _("person_already_reviewer_msg")
+            self.add_error('person', msg)
+        except:
+            pass
