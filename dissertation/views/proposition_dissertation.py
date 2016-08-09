@@ -42,12 +42,12 @@ from base.views import layout
 # Used by decorator @user_passes_test(is_manager) to secure manager views
 def is_manager(user):
     person = mdl.person.find_by_user(user)
-    adv = adviser.search_by_person(person)
-    return adv.type == 'MGR'
+    this_adviser = adviser.search_by_person(person)
+    return this_adviser.type == 'MGR'
 
-##########################
-#      VUES MANAGER      #
-##########################
+###########################
+#      MANAGER VIEWS      #
+###########################
 
 
 @login_required
@@ -101,7 +101,6 @@ def manage_proposition_dissertation_edit(request, pk):
         form = ManagerPropositionDissertationForm(request.POST, instance=prop_dissert)
         if form.is_valid():
             prop_dissert = form.save()
-            prop_dissert.save()
             return redirect('manager_proposition_dissertation_detail', pk=prop_dissert.pk)
     else:
         form = ManagerPropositionDissertationForm(instance=prop_dissert)
@@ -119,8 +118,7 @@ def manager_proposition_dissertations_jury_edit(request, pk):
     if request.method == "POST":
         form = ManagerPropositionRoleForm(request.POST, instance=prop_role)
         if form.is_valid():
-            role = form.save()
-            role.save()
+            form.save()
             return redirect('manager_proposition_dissertation_detail', pk=prop_role.proposition_dissertation.pk)
     else:
         form = ManagerPropositionRoleForm(instance=prop_role)
@@ -178,9 +176,9 @@ def manager_proposition_dissertations_search(request):
     return layout.render(request, "manager_proposition_dissertations_list.html",
                          {'proposition_dissertations': prop_disserts})
 
-##########################
-#      VUES TEACHER      #
-##########################
+###########################
+#      TEACHER VIEWS      #
+###########################
 
 
 @login_required
@@ -232,7 +230,6 @@ def proposition_dissertation_edit(request, pk):
             form = PropositionDissertationForm(request.POST, instance=prop_dissert)
             if form.is_valid():
                 prop_dissert = form.save()
-                prop_dissert.save()
                 return redirect('proposition_dissertation_detail', pk=prop_dissert.pk)
         else:
             form = PropositionDissertationForm(instance=prop_dissert)
@@ -289,8 +286,7 @@ def proposition_dissertations_jury_edit(request, pk):
     if request.method == "POST":
         form = ManagerPropositionRoleForm(request.POST, instance=prop_role)
         if form.is_valid():
-            role = form.save()
-            role.save()
+            form.save()
             return redirect('proposition_dissertation_detail', pk=prop_role.proposition_dissertation.pk)
     else:
         form = PropositionRoleForm(instance=prop_role)

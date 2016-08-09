@@ -135,13 +135,10 @@ def search_by_offer_and_status(offer, status):
 
 
 def count_by_proposition(prop_dissert):
-    return Dissertation.objects.filter(
-                                    active=True
-                                ).filter(
-                                    proposition_dissertation=prop_dissert
-                                ).exclude(
-                                    status='DRAFT'
-                                ).count()
+    return Dissertation.objects.filter(active=True)\
+                               .filter(proposition_dissertation=prop_dissert)\
+                               .exclude(status='DRAFT')\
+                               .count()
 
 
 def get_next_status(dissert, operation):

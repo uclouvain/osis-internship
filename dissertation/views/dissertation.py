@@ -50,20 +50,20 @@ import time
 # Used by decorator @user_passes_test(is_manager) to secure manager views
 def is_manager(user):
     person = mdl.person.find_by_user(user)
-    adv = adviser.search_by_person(person)
-    return adv.type == 'MGR'
+    this_adviser = adviser.search_by_person(person)
+    return this_adviser.type == 'MGR'
 
 
 # Used by decorator @user_passes_test(is_manager) to secure manager views
 def is_teacher(user):
     person = mdl.person.find_by_user(user)
-    adv = adviser.search_by_person(person)
-    return adv.type == 'PRF'
+    this_adviser = adviser.search_by_person(person)
+    return this_adviser.type == 'PRF'
 
 
-##########################
-#      VUE GENERALE      #
-##########################
+#########################
+#      GLOBAL VIEW      #
+#########################
 
 
 @login_required
@@ -86,9 +86,9 @@ def dissertations(request):
                           'count_advisers_pro_request': count_advisers_pro_request})
 
 
-##########################
-#      VUES MANAGER      #
-##########################
+###########################
+#      MANAGER VIEWS      #
+###########################
 
 @login_required
 @user_passes_test(is_manager)
@@ -142,7 +142,6 @@ def manager_dissertations_edit(request, pk):
         form = ManagerDissertationEditForm(request.POST, instance=dissert)
         if form.is_valid():
             dissert = form.save()
-            dissert.save()
             return redirect('manager_dissertations_detail', pk=dissert.pk)
         else:
             form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offer(offer)
@@ -165,8 +164,7 @@ def manager_dissertations_jury_edit(request, pk):
     if request.method == "POST":
         form = ManagerDissertationRoleForm(request.POST, instance=dissert_role)
         if form.is_valid():
-            dissert = form.save()
-            dissert.save()
+            form.save()
             return redirect('manager_dissertations_detail', pk=dissert_role.dissertation.pk)
     else:
         form = ManagerDissertationRoleForm(instance=dissert_role)
@@ -238,28 +236,19 @@ def manager_dissertations_search(request):
     xlsx = False
 
     if 'bt_xlsx' in request.GET:
-        filename = 'EXPORT_dissertation_' + time.strftime("%Y-%m-%d %H:%M") + '.xlsx'
-        wb = Workbook(encoding='utf-8')
-        ws1 = wb.active
-        ws1.title = "dissertation"
-        ws1.append(['Date_de_création', 'Students', 'Dissertation_title',
-                    'Status', 'Offer_year_start', 'offer_year_start_short', 'promoteur', 'copromoteur', 'lecteur1',
-                    'lecteur2'])
+        filename = "%s%s%s" % ('EXPORT_dissertation_', time.strftime("%Y-%m-%d %H:%M"), '.xlsx')
+        workbook = Workbook(encoding='utf-8')
+        worksheet1 = workbook.active
+        worksheet1.title = "dissertation"
+        worksheet1.append(['Date_de_création', 'Students', 'Dissertation_title',
+                           'Status', 'Offer_year_start', 'offer_year_start_short', 'promoteur', 'copromoteur',
+                           'lecteur1', 'lecteur2'])
         for dissert in disserts:
-            promoteur = dissertation_role.search_by_dissertation_and_role(dissert, 'PROMOTEUR')
-            copromoteur = dissertation_role.search_by_dissertation_and_role(dissert, 'CO_PROMOTEUR')
+            pro_name = dissertation_role.get_promoteur_by_dissertation(dissert)
+            copro_name = dissertation_role.get_copromoteur_by_dissertation(dissert)
             reader = dissertation_role.search_by_dissertation_and_role(dissert, 'READER')
 
-            if promoteur.count() > 0:
-                pro_name = str(promoteur[0].adviser)
-            else:
-                pro_name = 'none'
-
-            if copromoteur.count() > 0:
-                copro_name = str(copromoteur[0].adviser)
-            else:
-                copro_name = 'none'
-            if reader.count() > 0:
+            if reader:
                 reader1_name = str(reader[0].adviser)
                 if reader.count() > 1:
                     reader2_name = str(reader[1].adviser)
@@ -269,15 +258,15 @@ def manager_dissertations_search(request):
                 reader1_name = 'none'
                 reader2_name = 'none'
 
-            ws1.append([dissert.creation_date,
-                        str(dissert.author),
-                        dissert.title,
-                        dissert.status,
-                        dissert.offer_year_start.title,
-                        dissert.offer_year_start.title_short, pro_name, copro_name, reader1_name, reader2_name])
+            worksheet1.append([dissert.creation_date,
+                               str(dissert.author),
+                               dissert.title,
+                               dissert.status,
+                               dissert.offer_year_start.title,
+                               dissert.offer_year_start.title_short, pro_name, copro_name, reader1_name, reader2_name])
 
-        response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.ms-excel')
-        response['Content-Disposition'] = "attachment; filename=" + filename
+        response = HttpResponse(save_virtual_workbook(workbook), content_type='application/vnd.ms-excel')
+        response['Content-Disposition'] = "%s%s" % ("attachment; filename=", filename)
         return response
 
     else:
@@ -303,7 +292,8 @@ def manager_dissertations_delete(request, pk):
 def manager_dissertations_role_delete(request, pk):
     dissert_role = get_object_or_404(DissertationRole, pk=pk)
     dissert = dissert_role.dissertation
-    dissertation_update.add(request, dissert, dissert.status, justification="manager_delete_jury "+str(dissert_role))
+    justification = "%s %s" % ("manager_delete_jury", str(dissert_role))
+    dissertation_update.add(request, dissert, dissert.status, justification=justification)
     dissert_role.delete()
     return redirect('manager_dissertations_detail', pk=dissert.pk)
 
@@ -367,7 +357,7 @@ def manager_dissertations_to_dir_ok(request, pk):
 
 @login_required
 @user_passes_test(is_manager)
-def manager_dissertations_to_dir_ok_comm_list(request, pk):
+def manager_dissertations_accept_comm_list(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     old_status = dissert.status
     dissert.accept()
@@ -378,7 +368,7 @@ def manager_dissertations_to_dir_ok_comm_list(request, pk):
 
 @login_required
 @user_passes_test(is_manager)
-def manager_dissertations_to_dir_ok_eval_list(request, pk):
+def manager_dissertations_accept_eval_list(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     old_status = dissert.status
     dissert.accept()
@@ -466,9 +456,9 @@ def manager_dissertations_wait_recep_list(request):
                           'offer_proposition': offer_prop})
 
 
-##########################
-#      VUES TEACHER      #
-##########################
+###########################
+#      TEACHER VIEWS      #
+###########################
 
 @login_required
 @user_passes_test(is_teacher)

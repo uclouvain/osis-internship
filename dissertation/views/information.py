@@ -39,19 +39,19 @@ from base.views import layout
 # Used by decorator @user_passes_test(is_manager) to secure manager views
 def is_manager(user):
     person = mdl.person.find_by_user(user)
-    adv = adviser.search_by_person(person)
-    return adv.type == 'MGR'
+    this_adviser = adviser.search_by_person(person)
+    return this_adviser.type == 'MGR'
 
 
 # Used by decorator @user_passes_test(is_manager) to secure manager views
 def is_teacher(user):
     person = mdl.person.find_by_user(user)
-    adv = adviser.search_by_person(person)
-    return adv.type == 'PRF'
+    this_adviser = adviser.search_by_person(person)
+    return this_adviser.type == 'PRF'
 
-##########################
-#      VUES TEACHER      #
-##########################
+###########################
+#      TEACHER VIEWS      #
+###########################
 
 
 @login_required
@@ -85,33 +85,15 @@ def informations_detail_stats(request):
     advisers_pro = dissertation_role.search_by_adviser_and_role_stats(adv, 'PROMOTEUR')
     count_advisers_pro = dissertation_role.count_by_adviser_and_role_stats(adv, 'PROMOTEUR')
     count_advisers_pro_request = dissertation_role.count_by_adviser(adv, 'PROMOTEUR', 'DIR_SUBMIT')
-    tab_offer_count_pro = {}
-    for dissertaion_role_pro in advisers_pro:
-        if dissertaion_role_pro.dissertation.offer_year_start.offer.title in tab_offer_count_pro:
-            tab_offer_count_pro[dissertaion_role_pro.dissertation.offer_year_start.offer.title] = \
-                tab_offer_count_pro[str(dissertaion_role_pro.dissertation.offer_year_start.offer.title)] + 1
-        else:
-            tab_offer_count_pro[dissertaion_role_pro.dissertation.offer_year_start.offer.title] = 1
+    tab_offer_count_pro = dissertation_role.get_tab_count_role_by_offer(advisers_pro)
 
     advisers_copro = dissertation_role.search_by_adviser_and_role_stats(adv, 'CO_PROMOTEUR')
     count_advisers_copro = dissertation_role.count_by_adviser_and_role_stats(adv, 'CO_PROMOTEUR')
-    tab_offer_count_copro = {}
-    for dissertaion_role_copro in advisers_copro:
-        if dissertaion_role_copro.dissertation.offer_year_start.offer.title in tab_offer_count_copro:
-            tab_offer_count_copro[dissertaion_role_copro.dissertation.offer_year_start.offer.title] = \
-                tab_offer_count_copro[str(dissertaion_role_copro.dissertation.offer_year_start.offer.title)] + 1
-        else:
-            tab_offer_count_copro[dissertaion_role_copro.dissertation.offer_year_start.offer.title] = 1
+    tab_offer_count_copro = dissertation_role.get_tab_count_role_by_offer(advisers_copro)
 
     advisers_reader = dissertation_role.search_by_adviser_and_role_stats(adv, 'READER')
     count_advisers_reader = dissertation_role.count_by_adviser_and_role_stats(adv, 'READER')
-    tab_offer_count_read = {}
-    for dissertaion_role_read in advisers_reader:
-        if dissertaion_role_read.dissertation.offer_year_start.offer.title in tab_offer_count_read:
-            tab_offer_count_read[dissertaion_role_read.dissertation.offer_year_start.offer.title] = \
-                tab_offer_count_read[str(dissertaion_role_read.dissertation.offer_year_start.offer.title)] + 1
-        else:
-            tab_offer_count_read[dissertaion_role_read.dissertation.offer_year_start.offer.title] = 1
+    tab_offer_count_read = dissertation_role.get_tab_count_role_by_offer(advisers_reader)
 
     return layout.render(request, 'informations_detail_stats.html',
                          {'adviser': adv,
@@ -144,9 +126,9 @@ def informations_edit(request):
                                                              'phone': person.phone,
                                                              'phone_mobile': person.phone_mobile})
 
-##########################
-#      VUES MANAGER      #
-##########################
+###########################
+#      MANAGER VIEWS      #
+###########################
 
 
 @login_required
@@ -246,33 +228,15 @@ def manager_informations_detail_stats(request, pk):
     advisers_pro = dissertation_role.search_by_adviser_and_role_stats(adv, 'PROMOTEUR')
     count_advisers_pro = dissertation_role.count_by_adviser_and_role_stats(adv, 'PROMOTEUR')
     count_advisers_pro_request = dissertation_role.count_by_adviser(adv, 'PROMOTEUR', 'DIR_SUBMIT')
-    tab_offer_count_pro = {}
-    for dissertaion_role_pro in advisers_pro:
-        if dissertaion_role_pro.dissertation.offer_year_start.offer.title in tab_offer_count_pro:
-            tab_offer_count_pro[dissertaion_role_pro.dissertation.offer_year_start.offer.title] = \
-                tab_offer_count_pro[str(dissertaion_role_pro.dissertation.offer_year_start.offer.title)] + 1
-        else:
-            tab_offer_count_pro[dissertaion_role_pro.dissertation.offer_year_start.offer.title] = 1
+    tab_offer_count_pro = dissertation_role.get_tab_count_role_by_offer(advisers_pro)
 
     advisers_copro = dissertation_role.search_by_adviser_and_role_stats(adv, 'CO_PROMOTEUR')
     count_advisers_copro = dissertation_role.count_by_adviser_and_role_stats(adv, 'CO_PROMOTEUR')
-    tab_offer_count_copro = {}
-    for dissertaion_role_copro in advisers_copro:
-        if dissertaion_role_copro.dissertation.offer_year_start.offer.title in tab_offer_count_copro:
-            tab_offer_count_copro[dissertaion_role_copro.dissertation.offer_year_start.offer.title] = \
-                tab_offer_count_copro[str(dissertaion_role_copro.dissertation.offer_year_start.offer.title)] + 1
-        else:
-            tab_offer_count_copro[dissertaion_role_copro.dissertation.offer_year_start.offer.title] = 1
+    tab_offer_count_copro = dissertation_role.get_tab_count_role_by_offer(advisers_copro)
 
     advisers_reader = dissertation_role.search_by_adviser_and_role_stats(adv, 'READER')
     count_advisers_reader = dissertation_role.count_by_adviser_and_role_stats(adv, 'READER')
-    tab_offer_count_read = {}
-    for dissertaion_role_read in advisers_reader:
-        if dissertaion_role_read.dissertation.offer_year_start.offer.title in tab_offer_count_read:
-            tab_offer_count_read[dissertaion_role_read.dissertation.offer_year_start.offer.title] = \
-                tab_offer_count_read[str(dissertaion_role_read.dissertation.offer_year_start.offer.title)] + 1
-        else:
-            tab_offer_count_read[dissertaion_role_read.dissertation.offer_year_start.offer.title] = 1
+    tab_offer_count_read = dissertation_role.get_tab_count_role_by_offer(advisers_reader)
 
     return layout.render(request, 'manager_informations_detail_stats.html',
                          {'adviser': adv,
