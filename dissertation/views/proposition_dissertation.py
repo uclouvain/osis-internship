@@ -101,7 +101,6 @@ def manage_proposition_dissertation_edit(request, pk):
         form = ManagerPropositionDissertationForm(request.POST, instance=prop_dissert)
         if form.is_valid():
             prop_dissert = form.save()
-            prop_dissert.save()
             return redirect('manager_proposition_dissertation_detail', pk=prop_dissert.pk)
     else:
         form = ManagerPropositionDissertationForm(instance=prop_dissert)
@@ -232,7 +231,6 @@ def proposition_dissertation_edit(request, pk):
             form = PropositionDissertationForm(request.POST, instance=prop_dissert)
             if form.is_valid():
                 prop_dissert = form.save()
-                prop_dissert.save()
                 return redirect('proposition_dissertation_detail', pk=prop_dissert.pk)
         else:
             form = PropositionDissertationForm(instance=prop_dissert)
