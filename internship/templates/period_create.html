@@ -51,16 +51,16 @@
       </thead>
       <tbody>
         <form action="
-          {% if period.id%}
+          {% if period.id %}
             {% url 'period_save' period.id %}
-          {%else%} µ
-            {% url 'period_new'%}
-          {%endif%}"
+          {% else %}
+            {% url 'period_new' %}
+          {% endif %}"
           method="post">
           {% csrf_token %}
           <tr>
             <td style="text-align:center;">
-              <input type="text" name="period_name" placeholder="P..." value="{{ period.name | default_if_none:'' }}" required />
+              <input type="text" name="name" placeholder="P..." value="{{ period.name | default_if_none:'' }}" required />
             </td>
             <td style="text-align:center;">
               <input type="date" name="date_start" placeholder="AAAA-MM-JJ" value="{{ period.date_start | default_if_none:'' }}" required />

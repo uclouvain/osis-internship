@@ -49,16 +49,10 @@ def period_create(request):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def period_save(request, period_id):
-    form = PeriodForm(data=request.POST)
     period = Period.find_by_id(period_id)
-    if not period:
-        period = Period()
+    form = PeriodForm(data=request.POST, instance=period)
+    form.save()
 
-    period.name = request.POST.get('period_name')
-    period.date_start = request.POST.get('date_start')
-    period.date_end = request.POST.get('date_end')
-
-    period.save()
     return HttpResponseRedirect(reverse('internships_periods'))
 
 @login_required

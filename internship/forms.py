@@ -53,10 +53,13 @@ class InternshipSpecialityForm(ModelForm):
         model = InternshipSpeciality
         fields = ['learning_unit', 'name', 'mandatory']
 
-class PeriodForm(forms.Form):
-    name = forms.CharField()
-    start_date = forms.DateField(widget=DateInput())
-    end_date = forms.DateField(widget=DateInput())
+class PeriodForm(ModelForm):
+    class Meta:
+        model = Period
+        fields = ['name', 'date_start', 'date_end']
+        widgets = {'date_start': forms.DateInput(format='%d/%m/%Y'),
+                'date_start': forms.DateInput(format='%d/%m/%Y'),
+        }
 
 class InternshipMasterForm(ModelForm):
     file = forms.FileField()
