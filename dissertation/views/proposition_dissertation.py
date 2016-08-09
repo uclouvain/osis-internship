@@ -118,8 +118,7 @@ def manager_proposition_dissertations_jury_edit(request, pk):
     if request.method == "POST":
         form = ManagerPropositionRoleForm(request.POST, instance=prop_role)
         if form.is_valid():
-            role = form.save()
-            role.save()
+            form.save()
             return redirect('manager_proposition_dissertation_detail', pk=prop_role.proposition_dissertation.pk)
     else:
         form = ManagerPropositionRoleForm(instance=prop_role)
@@ -287,8 +286,7 @@ def proposition_dissertations_jury_edit(request, pk):
     if request.method == "POST":
         form = ManagerPropositionRoleForm(request.POST, instance=prop_role)
         if form.is_valid():
-            role = form.save()
-            role.save()
+            form.save()
             return redirect('proposition_dissertation_detail', pk=prop_role.proposition_dissertation.pk)
     else:
         form = PropositionRoleForm(instance=prop_role)

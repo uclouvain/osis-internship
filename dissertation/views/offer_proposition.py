@@ -71,7 +71,6 @@ def manager_offer_parameters_edit(request, pk):
         form = ManagerOfferPropositionForm(request.POST, instance=offer_prop)
         if form.is_valid():
             offer_prop = form.save()
-            offer_prop.save()
             return redirect('manager_offer_parameters_detail', pk=offer_prop.pk)
     else:
         form = ManagerOfferPropositionForm(instance=offer_prop)

@@ -142,7 +142,6 @@ def manager_dissertations_edit(request, pk):
         form = ManagerDissertationEditForm(request.POST, instance=dissert)
         if form.is_valid():
             dissert = form.save()
-            dissert.save()
             return redirect('manager_dissertations_detail', pk=dissert.pk)
         else:
             form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offer(offer)
@@ -165,8 +164,7 @@ def manager_dissertations_jury_edit(request, pk):
     if request.method == "POST":
         form = ManagerDissertationRoleForm(request.POST, instance=dissert_role)
         if form.is_valid():
-            dissert = form.save()
-            dissert.save()
+            form.save()
             return redirect('manager_dissertations_detail', pk=dissert_role.dissertation.pk)
     else:
         form = ManagerDissertationRoleForm(instance=dissert_role)
