@@ -87,6 +87,7 @@ def internships_student_search(request):
     s_name = request.GET['s_name']
     s_firstname = request.GET['s_firstname']
     students_list = []
+    students_list_creation = []
     criteria_present = False
 
     s_name = s_name.strip()
@@ -105,11 +106,16 @@ def internships_student_search(request):
     if criteria_present:
         students_list_check = InternshipStudentInformation.search(person__last_name=s_name, person__first_name = s_firstname)
 
-        for slc in students_list_check:
-            students_list.append( mdl.student.find_by(person_name = slc.person.last_name, person_first_name = slc.person.first_name ))
+        students_list_creation = InternshipChoice.find_by_all_student()
+
+        for student_check in students_list_check :
+            for student_creation in students_list_creation:
+                    if student_check.person == student_creation.person:
+                        students_list.append(student_creation)
     else:
         students_list = InternshipChoice.find_by_all_student()
-        # message = "%s" % _('You must choose at least one criteria!')
+
+
     return render(request, "student_search.html",
                            {'s_name':       s_name,
                             's_firstname':  s_firstname,
