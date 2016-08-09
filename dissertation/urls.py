@@ -43,8 +43,6 @@ urlpatterns = [
         name='dissertations_to_dir_ko'),
     url(r'^dissertations_to_dir_ok/(?P<pk>[0-9]+)$', dissertation.dissertations_to_dir_ok,
         name='dissertations_to_dir_ok'),
-    url(r'^dissertations_to_dir_submit/(?P<pk>[0-9]+)$', dissertation.dissertations_to_dir_submit,
-        name='dissertations_to_dir_submit'),
     url(r'^dissertations_wait_list$', dissertation.dissertations_wait_list,
         name='dissertations_wait_list'),
 

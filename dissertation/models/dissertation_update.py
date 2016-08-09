@@ -36,7 +36,7 @@ class DissertationUpdate(models.Model):
     status_from = models.CharField(max_length=12, choices=dissertation.STATUS_CHOICES, default='DRAFT')
     status_to = models.CharField(max_length=12, choices=dissertation.STATUS_CHOICES, default='DRAFT')
     created = models.DateTimeField(auto_now_add=True)
-    justification = models.TextField(default=' ')
+    justification = models.TextField(default='')
     person = models.ForeignKey('base.Person')
     dissertation = models.ForeignKey(dissertation.Dissertation)
 
@@ -50,13 +50,13 @@ def search_by_dissertation(dissert):
                                      .order_by('created')
 
 
-def add(request, dissert, old_status, justification=""):
+def add(request, dissert, old_status, justification=None):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     update = DissertationUpdate()
     update.status_from = old_status
     update.status_to = dissert.status
-    if justification:
+    if justification is not None:
         update.justification = justification
     else:
         update.justification = "%s%s%s" % (adv.type, JUSTIFICATION_LINK, dissert.status)
