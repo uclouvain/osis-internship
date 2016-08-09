@@ -80,8 +80,7 @@ def speciality_new(request):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def speciality_modification(request, speciality_id):
 
-    spec = InternshipSpeciality.find_by(id = speciality_id)
-    speciality = spec[0]
+    speciality = InternshipSpeciality.find_by_id(speciality_id)
     learning_unit = mdl.learning_unit.search(acronym='WMDS2333')
     return render(request, "speciality_create.html", {'section': 'internship',
                                                     'learning_unit' : learning_unit[0],

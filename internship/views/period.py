@@ -50,10 +50,8 @@ def period_create(request):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def period_save(request, period_id):
     form = PeriodForm(data=request.POST)
-    check_period = Period.find_by(id=period_id)
-    if check_period :
-        period = check_period[0]
-    else :
+    period = Period.find_by_id(period_id)
+    if not period:
         period = Period()
 
     period.name = request.POST.get('period_name')
@@ -71,14 +69,14 @@ def period_new(request):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def period_delete(request, period_id):
-    Period.objects.filter(pk=period_id).delete()
+    period = Period.find_by_id(period_id)
+    period.delete()
     return HttpResponseRedirect(reverse('internships_periods'))
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def period_modification(request, period_id):
-    period_check = Period.objects.filter(pk=period_id)
-    period = period_check[0]
+    period = Period.find_by_id(period_id)
     period.date_start = period.date_start.strftime("%Y-%m-%d")
     period.date_end = period.date_end.strftime("%Y-%m-%d")
 

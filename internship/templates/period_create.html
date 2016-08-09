@@ -50,10 +50,13 @@
         </tr>
       </thead>
       <tbody>
-        <form action="{% if period.id%}
-        {% url 'period_save' period.id %}
-        {%else%} {% url 'period_new'%} {%endif%}"
-         method="post">
+        <form action="
+          {% if period.id%}
+            {% url 'period_save' period.id %}
+          {%else%} µ
+            {% url 'period_new'%}
+          {%endif%}"
+          method="post">
           {% csrf_token %}
           <tr>
             <td style="text-align:center;">
