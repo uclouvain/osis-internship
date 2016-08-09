@@ -28,4 +28,5 @@ from reference.models import country
 from reference.models import currency
 from reference.models import decree
 from reference.models import domain
+from reference.models import education_institution
 from reference.models import language

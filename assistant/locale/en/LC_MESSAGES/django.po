@@ -249,3 +249,123 @@ msgstr "Dean of faculty"
 
 msgid "vice_rector"
 msgstr "Vice Rector"
+
+msgid "equivalent_full_time"
+msgstr "EFT"
+
+msgid "percentage_equivalent_full_time"
+msgstr "% EFT"
+
+msgid "program_commission"
+msgstr "Program Commission"
+
+msgid "action"
+msgstr "Action"
+
+msgid "contact_details"
+msgstr "Administrative information"
+
+msgid "date_of_first_nomination"
+msgstr "First nomination date"
+
+msgid "summary"
+msgstr "Summary"
+
+msgid "total_must_be_100_message"
+msgstr "Total should equal 100"
+
+msgid "tutoring_percent"
+msgstr "Tutoring percentage"
+
+msgid "research_percent"
+msgstr "Research percentage"
+
+msgid "service_activities_percent"
+msgstr "Service activities percentage"
+
+msgid "formation_activities_percent"
+msgstr "Formation activities percentage"
+
+msgid "activities_report_remark"
+msgstr "Activities report remark"
+
+msgid "general_comment"
+msgstr "General Comment"
+
+msgid "validate_and_submit"
+msgstr "Validate and submit"
+
+msgid "confirm_validation"
+msgstr "Are you sure you want to validate et submit ? This action can not be undone."
+
+msgid "renewal_form"
+msgstr "Renewal form"
+
+msgid "representation_activities"
+msgstr "Representation activities"
+
+msgid "hours_per_year_message"
+msgstr "Enter the number of hours per annum"
+
+msgid "faculty_representation"
+msgstr "Faculty representation activities"
+
+msgid "institute_representation"
+msgstr "Institute representation activities"
+
+msgid "sector_representation"
+msgstr "Sector representation activities"
+
+msgid "governing_body_representation"
+msgstr "Governing body representation activities"
+
+msgid "corsci_representation"
+msgstr "CORSCI representation activities"
+
+msgid "service_activities"
+msgstr "Service activities"
+
+msgid "students_service"
+msgstr "Information to future students"
+
+msgid "infrastructure_mgmt_service"
+msgstr "Managing public infrastructure"
+
+msgid "events_organisation_service"
+msgstr "Social organization (internships, conferences, study tours, seminars,...)"
+
+msgid "publishing_field_service"
+msgstr "Publishing activities"
+
+msgid "scientific_jury_service"
+msgstr "Juries and scientific commissions participation"
+
+msgid "formation_activities"
+msgstr "Formation activities"
+
+msgid "degrees"
+msgstr "Obtained diplomas"
+
+msgid "formations"
+msgstr "Scientific or educational formations"
+
+msgid "renewal_short_name"
+msgstr "Renewal"
+
+msgid "phd"
+msgstr "PhD"
+
+msgid "research_short_name"
+msgstr "RES"
+
+msgid "tutoring_short_name"
+msgstr "TUT"
+
+msgid "sector_vice-rector_short_name"
+msgstr "S. V-R"
+
+
+
+
+
+
