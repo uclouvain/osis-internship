@@ -183,6 +183,10 @@ class PeriodInternshipPlaces(models.Model):
         queryset = PeriodInternshipPlaces.objects.filter(**kwargs)
         return queryset
 
+    @staticmethod
+    def find_by_id(id):
+        return PeriodInternshipPlaces.objects.get(pk=id)
+
 class InternshipSpeciality(models.Model):
     learning_unit = models.ForeignKey('base.LearningUnit')
     name = models.CharField(max_length=125, blank=False, null=False)
@@ -219,6 +223,10 @@ class Organization(models.Model):
         queryset = Organization.objects.filter(**kwargs)
         return queryset
 
+    @staticmethod
+    def find_by_id(organization_id):
+        return Organization.objects.get(pk=organization_id)
+
 class OrganizationAddress(models.Model):
     organization = models.ForeignKey('Organization')
     label = models.CharField(max_length=20)
@@ -235,6 +243,9 @@ class OrganizationAddress(models.Model):
         queryset = OrganizationAddress.objects.filter(**kwargs)
         return queryset
 
+    @staticmethod
+    def find_by_id(organization_address_id):
+        return OrganizationAddress.objects.get(pk=organization_address_id)
 
 class InternshipStudentInformation(models.Model):
     person = models.ForeignKey('base.Person')

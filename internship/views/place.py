@@ -144,8 +144,7 @@ def internships_places_stud(request):
 def place_save(request, organization_id, organization_address_id):
     form = OrganizationForm(data=request.POST)
     if organization_id:
-        organization = Organization.search(pk = organization_id)
-        organization = organization[0]
+        organization = Organization.find_by_id(organization_id)
     else:
         organization = Organization()
 
@@ -171,8 +170,8 @@ def place_save(request, organization_id, organization_address_id):
     organization.save()
 
     if organization_address_id:
-        organization_address = OrganizationAddress.search(pk = organization_address_id)
-        organization_address = organization_address[0]
+        organization_address = OrganizationAddress.find_by_id(organization_address_id)
+        organization_address = organization_address
     else:
         organization_address = OrganizationAddress()
 
@@ -204,7 +203,7 @@ def place_save(request, organization_id, organization_address_id):
         organization_address.country = None
 
     if request.POST.get('organization_id'):
-        organization_address.organization = Organization.search(pk = int(request.POST.get('organization_id')))
+        organization_address.organization = Organization.find_by_id(int(request.POST.get('organization_id')))
 
     organization_address.latitude = None
     organization_address.longitude = None
@@ -226,9 +225,9 @@ def organization_new(request):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def organization_edit(request, organization_id):
-    organization = Organization.search(pk = organization_id)
+    organization = Organization.find_by_id(organization_id)
     organization_address = OrganizationAddress.search(organization = organization)
-    return render(request, "place_form.html", {'organization':          organization[0],
+    return render(request, "place_form.html", {'organization':          organization,
                                                'organization_address':  organization_address[0], })
 
 

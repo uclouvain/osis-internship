@@ -77,7 +77,7 @@ def __save_xls_place(request, file_name, user):
 
         place = Organization.search(reference=reference)
         if place :
-            organization = Organization.search(pk = place[0].id)
+            organization = Organization.find_by_id(place[0].id)
         else:
             organization = Organization()
 
@@ -233,7 +233,7 @@ def __save_xls_internships(request, file_name, user):
                         check_relation = PeriodInternshipPlaces.search(period = period, internship = internship)
 
                         if len(check_relation) != 0:
-                            relation = PeriodInternshipPlaces.search(pk = check_relation[0].id)
+                            relation = PeriodInternshipPlaces.find_by_id(check_relation[0].id)
                         else :
                             relation = PeriodInternshipPlaces()
 
