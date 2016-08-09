@@ -154,7 +154,10 @@ def manager_dissertations_edit(request, pk):
         form.fields["offer_year_start"].queryset = mdl.offer_year.find_by_offer(offer)
 
     return layout.render(request, 'manager_dissertations_edit.html',
-                         {'form': form, 'defend_periode_choices': Dissertation.DEFEND_PERIODE_CHOICES})
+                         {'form': form,
+                          'defend_periode_choices': Dissertation.DEFEND_PERIODE_CHOICES,
+                          'dissert': dissert
+                          })
 
 
 @login_required
