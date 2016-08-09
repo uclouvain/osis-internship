@@ -76,7 +76,7 @@ class PropositionDissertation(models.Model):
         if self.author.person.last_name:
             last_name = self.author.person.last_name + ","
         author = u"%s %s %s" % (last_name.upper(), first_name, middle_name)
-        return author+" - "+str(self.title)
+        return "%s - %s" % (author, str(self.title))
 
     def deactivate(self):
         self.active = False
@@ -98,13 +98,14 @@ def search(terms, active=None, visibility=None, connected_adviser=None):
             Q(offer_proposition__acronym__icontains=terms)
         )
 
-    if active is not None:
+    if active:
         queryset = queryset.filter(active=active)
 
-    if visibility and connected_adviser is not None:
-        queryset = queryset.filter(Q(visibility=visibility) | Q(author=connected_adviser))
+    if visibility and connected_adviser:
+        queryset = queryset.filter(Q(visibility=visibility) |
+                                   Q(author=connected_adviser))
 
-    elif visibility is not None:
+    elif visibility:
         queryset = queryset.filter(visibility=visibility)
 
     queryset = queryset.distinct()
@@ -125,4 +126,5 @@ def get_all_for_teacher(adviser):
 
 
 def get_mine_for_teacher(adviser):
-    return PropositionDissertation.objects.filter(author=adviser).filter(active=True)
+    return PropositionDissertation.objects.filter(author=adviser)\
+                                          .filter(active=True)

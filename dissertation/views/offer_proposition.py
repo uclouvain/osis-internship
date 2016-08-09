@@ -38,8 +38,12 @@ from base.views import layout
 # Used by decorator @user_passes_test(is_manager) to secure manager views
 def is_manager(user):
     person = mdl.person.find_by_user(user)
-    adv = adviser.search_by_person(person)
-    return adv.type == 'MGR'
+    this_adviser = adviser.search_by_person(person)
+    return this_adviser.type == 'MGR'
+
+###########################
+#      MANAGER VIEWS      #
+###########################
 
 
 @login_required
@@ -67,7 +71,6 @@ def manager_offer_parameters_edit(request, pk):
         form = ManagerOfferPropositionForm(request.POST, instance=offer_prop)
         if form.is_valid():
             offer_prop = form.save()
-            offer_prop.save()
             return redirect('manager_offer_parameters_detail', pk=offer_prop.pk)
     else:
         form = ManagerOfferPropositionForm(instance=offer_prop)

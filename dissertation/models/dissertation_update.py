@@ -28,6 +28,8 @@ from base import models as mdl
 from . import adviser
 from . import dissertation
 
+JUSTIFICATION_LINK = "_set_to_"
+
 
 class DissertationUpdate(models.Model):
 
@@ -39,14 +41,13 @@ class DissertationUpdate(models.Model):
     dissertation = models.ForeignKey(dissertation.Dissertation)
 
     def __str__(self):
-        desc = self.dissertation.title + ' / ' + self.status_from + ' >> ' + self.status_to \
-               + ' / ' + str(self.created)
-
+        desc = "%s / %s >> %s / %s" % (self.dissertation.title, self.status_from, self.status_to, str(self.created))
         return desc
 
 
 def search_by_dissertation(dissert):
-    return DissertationUpdate.objects.filter(dissertation=dissert).order_by('created')
+    return DissertationUpdate.objects.filter(dissertation=dissert)\
+                                     .order_by('created')
 
 
 def add(request, dissert, old_status, justification=None):
@@ -58,7 +59,7 @@ def add(request, dissert, old_status, justification=None):
     if justification is not None:
         update.justification = justification
     else:
-        update.justification = adv.type + "_set_to_" + dissert.status
+        update.justification = "%s%s%s" % (adv.type, JUSTIFICATION_LINK, dissert.status)
     update.person = person
     update.dissertation = dissert
     update.save()
