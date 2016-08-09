@@ -421,3 +421,16 @@ class InternshipStudentInformation(models.Model):
     @staticmethod
     def find_all():
         return InternshipStudentInformation.objects.all()
+
+class InternshipStudentAffectationStat(models.Model):
+    student = models.ForeignKey('base.Student')
+    organization = models.ForeignKey('internship.Organization')
+    speciality = models.ForeignKey('internship.InternshipSpeciality')
+    period = models.ForeignKey('internship.Period')
+    choice = models.IntegerField(blank=False, null=False)
+    cost = models.IntegerField(blank=False, null=False)
+    consecutive_month = models.BooleanField(default=False, null=False)
+
+    @staticmethod
+    def find_all():
+        return InternshipStudentAffectationStat.objects.all()
