@@ -191,7 +191,8 @@ def manager_dissertations_jury_new(request, pk):
                 return redirect('manager_dissertations_detail', pk=dissert.pk)
         else:
             form = ManagerDissertationRoleForm(initial={'dissertation': dissert})
-            return layout.render(request, 'manager_dissertations_jury_edit.html', {'form': form})
+            return layout.render(request, 'manager_dissertations_jury_edit.html', {'form': form,
+                                                                                   'dissert': dissert})
     else:
         return redirect('manager_dissertations_detail', pk=dissert.pk)
 
