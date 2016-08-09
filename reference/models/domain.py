@@ -25,6 +25,7 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
+from django.core import serializers
 
 
 class DomainAdmin(admin.ModelAdmin):
@@ -51,3 +52,14 @@ def find_all_for_sync():
     fields = ['id', 'external_id', 'name', 'parent_id']
     # list() to force the evaluation of the queryset
     return list(Domain.objects.values(*fields).order_by('name'))
+
+
+def serialize_list(list_domains):
+    """
+    Serialize a list of "Domain" objects using the json format.
+    Use to send data to osis-portal.
+    :param list_domains: a list of "Domain" objects
+    :return: the serialized list (a json)
+    """
+    fields = ('id', 'external_id', 'name', 'parent')
+    return serializers.serialize("json", list_domains, fields=fields)
