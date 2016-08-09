@@ -256,7 +256,7 @@ def proposition_dissertation_edit(request, pk):
 
 
 @login_required
-def proposition_dissertation_my(request):
+def my_dissertation_propositions(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     prop_disserts = proposition_dissertation.get_mine_for_teacher(adv)
@@ -270,7 +270,7 @@ def proposition_dissertation_new(request):
         form = PropositionDissertationForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('proposition_dissertation_my')
+            return redirect('my_dissertation_propositions')
     else:
         person = mdl.person.find_by_user(request.user)
         adv = adviser.search_by_person(person)
