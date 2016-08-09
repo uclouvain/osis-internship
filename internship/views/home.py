@@ -96,7 +96,7 @@ def strip_accents(s):
 def find_latitude_longitude(infos):
     #for each data in the infos, check if the lat exist
     for data in infos:
-        if data.latitude == None :
+        if data.latitude is None :
             #if it exist, compile the address with the location / postal / city / country
             address = data.location + " " + data.postal_code + " " \
                             + data.city + " " + data.country
@@ -104,7 +104,7 @@ def find_latitude_longitude(infos):
             #Compute the geolocalisation
             address_lat_long = geocode(address)
             #if the geolac is fing put the data, if not put fake data
-            if address_lat_long[0] != None:
+            if address_lat_long:
                 data.latitude = address_lat_long[0]
                 data.longitude = address_lat_long[1]
             else :
