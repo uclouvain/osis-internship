@@ -216,10 +216,10 @@ class InternshipSpeciality(models.Model):
 
 class Organization(models.Model):
     name = models.CharField(max_length=255)
-    acronym = models.CharField(max_length=15)
+    acronym = models.CharField(max_length=15, blank=True)
     website = models.URLField(max_length=255, blank=True, null=True)
     reference = models.CharField(max_length=30, blank=True, null=True)
-    type = models.CharField(max_length=30, blank=True, null=True)
+    type = models.CharField(max_length=30, blank=True, null=True, default="service partner")
 
     def __str__(self):
         return self.name
@@ -233,6 +233,10 @@ class Organization(models.Model):
     @staticmethod
     def find_by_id(organization_id):
         return Organization.objects.get(pk=organization_id)
+
+    def save(self, *args, **kwargs):
+        self.acronym = self.name[:14]
+        super(Organization, self).save(*args, **kwargs)
 
 class OrganizationAddress(models.Model):
     organization = models.ForeignKey('Organization')

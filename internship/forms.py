@@ -42,16 +42,14 @@ class InternshipOfferForm(ModelForm):
         fields = ['organization', 'speciality', 'title', 'maximum_enrollments', 'selectable']
 
 class OrganizationForm(ModelForm):
-    file = forms.FileField()
     class Meta:
         model = Organization
-        fields = ['acronym', 'name', 'website', 'reference']
+        fields = ['name', 'website', 'reference']
 
 class InternshipSpecialityForm(ModelForm):
-    file = forms.FileField()
     class Meta:
         model = InternshipSpeciality
-        fields = ['learning_unit', 'name', 'mandatory']
+        fields = ['learning_unit', 'name', 'acronym', 'mandatory']
 
 class PeriodForm(ModelForm):
     class Meta:
@@ -62,7 +60,6 @@ class PeriodForm(ModelForm):
         }
 
 class InternshipMasterForm(ModelForm):
-    file = forms.FileField()
     class Meta:
         model = InternshipMaster
         fields = ['organization', 'first_name', 'last_name', 'reference', 'civility', 'type_mastery', 'speciality']

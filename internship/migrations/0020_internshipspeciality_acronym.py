@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('internship', '0022_auto_20160802_1139'),
+        ('internship', '0019_auto_20160715_1501'),
     ]
 
     operations = [
@@ -17,5 +17,15 @@ class Migration(migrations.Migration):
             name='acronym',
             field=models.CharField(default=' ', max_length=125),
             preserve_default=False,
+        ),
+        migrations.AlterField(
+            model_name='organization',
+            name='acronym',
+            field=models.CharField(blank=True, max_length=15),
+        ),
+        migrations.AlterField(
+            model_name='organization',
+            name='type',
+            field=models.CharField(blank=True, default='service partner', max_length=30, null=True),
         ),
     ]

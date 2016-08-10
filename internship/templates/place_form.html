@@ -37,7 +37,7 @@
 {% block content %}
 <div class="page-header">
     {% if organization.id%}
-      <h2>{{ organization.acronym }}</h2>
+      <h2>{{ organization.name }}</h2>
     {% else %}
       <h2>{% trans 'new_place' %}</h2>
     {% endif %}
@@ -53,18 +53,18 @@
             <div class="row">
                 <div class="col-md-4">
                     <label for="txt_reference">{% trans 'reference'%}</label>
-                    <input class="form-control" value="{{ organization.reference | default_if_none:'' }}" name="reference" id="txt_reference" maxlength="30"><font class="error">{{ form.reference.errors }}</font>
+                    <input class="form-control" value="{{ organization.reference | default_if_none:'' }}" name="reference" id="txt_reference" maxlength="30" required><font class="error">{{ form.reference.errors }}</font>
                 </div>
                 <div class="col-md-5">
                     <label for="txt_name">{% trans 'name'%}</label>
-                    <input class="form-control" value="{{ organization.name| default_if_none:'' }}" name="name" id="txt_name" maxlength="255"><font class="error">{{ form.name.errors }}</font>
+                    <input class="form-control" value="{{ organization.name| default_if_none:'' }}" name="name" id="txt_name" maxlength="255"><font class="error" required>{{ form.name.errors }}</font>
                 </div>
             </div>
             <br>
             <div class="row">
                 <div class="col-md-6">
                     <label for="txt_website">{% trans 'website' %}</label>
-                    <input class="form-control" value="{{ organization.website | default_if_none:'' }}" name="website" id="txt_website" maxlength="255"><font class="error">{{ form.website.errors }}</font>
+                    <input class="form-control" value="{{ organization.website | default_if_none:'' }}" name="website" id="txt_website" maxlength="255"><font class="error" required>{{ form.website.errors }}</font>
                 </div>
             </div>
             <input type="hidden" value="{{ organization_address.id }}" name="organization_address_id"/>

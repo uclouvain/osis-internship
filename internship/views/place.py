@@ -142,77 +142,17 @@ def internships_places_stud(request):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def place_save(request, organization_id, organization_address_id):
-    form = OrganizationForm(data=request.POST)
     if organization_id:
         organization = Organization.find_by_id(organization_id)
-    else:
+    else :
         organization = Organization()
 
-    # get the screen modifications
-    if request.POST.get('name'):
-        organization.name = request.POST.get('name')
-        organization.acronym = request.POST.get('name')[:14]
-    else:
-        organization.name = None
-
-    if request.POST.get('website'):
-        organization.website = request.POST.get('website')
-    else:
-        organization.website = ""
-
-    if request.POST.get('reference'):
-        organization.reference = request.POST.get('reference')
-    else:
-        organization.reference = None
-
-    organization.type = "service partner"
-
-    organization.save()
-
-    if organization_address_id:
-        organization_address = OrganizationAddress.find_by_id(organization_address_id)
-        organization_address = organization_address
-    else:
-        organization_address = OrganizationAddress()
-
-    organization_address.organization = organization
-
-    if organization:
-        organization_address.label = "Addr"+organization.name[:14]
-    else:
-        organization_address.label = None
-
-    if request.POST.get('organization_address_location'):
-        organization_address.location = request.POST.get('organization_address_location')
-    else:
-        organization_address.location = None
-
-    if request.POST.get('organization_address_postal_code'):
-        organization_address.postal_code = request.POST.get('organization_address_postal_code')
-    else:
-        organization_address.postal_code = None
-
-    if request.POST.get('organization_address_city'):
-        organization_address.city = request.POST.get('organization_address_city')
-    else:
-        organization_address.city = None
-
-    if request.POST.get('organization_address_country'):
-        organization_address.country = request.POST.get('organization_address_country')
-    else:
-        organization_address.country = None
-
-    if request.POST.get('organization_id'):
-        organization_address.organization = Organization.find_by_id(int(request.POST.get('organization_id')))
-
-    organization_address.latitude = None
-    organization_address.longitude = None
-    organization_address.save()
+    form = OrganizationForm(data=request.POST, instance=organization)
+    if form.is_valid():
+        form.save()
 
     return render(request, "place_form.html", {'organization': organization,
-                                                'organization_address':organization_address,
                                                 'form': form,
-                                                'message':"Hôpital correctement créé"
                                                 })
 
 
