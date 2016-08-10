@@ -60,10 +60,7 @@
             <th>{% trans 'mandate' %}</th>
             <th>{% trans 'equivalent_full_time' %}</th>
             <th>{% trans 'percentage_equivalent_full_time' %}</th>
-            <th>{% trans 'phd' %}</th>
-            <th>{% trans 'research_short_name' %}</th>
-            <th>{% trans 'tutoring_short_name' %}</th>
-            <th>{% trans 'sector_vice-rector_short_name' %}</th>
+            <th>{% trans 'reviews' %}</th>
             </tr>
             </thead>
             <tbody>
@@ -100,47 +97,29 @@
                 <td>{{ mandate.contract_duration }}</td>
                 <td>{{ mandate.contract_duration_fte }}</td>
                 <td>{{ mandate.fulltime_equivalent }}</td>
-                {% if mandate.review_set.all|length == 0 %}
-                        <td></td><td></td><td></td><td></td>
-                {% endif %}
+                <td>
                 {% for review in mandate.review_set.all|dictsort:"changed" %}
-                    {% if "RESEARCH" in review.reviewer.role and forloop.counter == 1 %}
-                        <td></td>
-                    {% elif "SUPERVISION" in review.reviewer.role and forloop.counter < 3 %}
-                        {% if forloop.counter == 1 %}
-                            <td></td><td></td>
-                        {% elif mandate.assistant_type == "TEACHING_ASSISTANT" %}
-                            <td></td>
-                        {% endif %}
-                    {% elif "VICE-RECTOR" in review.reviewer.role and forloop.counter < 4 %}
-                        {% if forloop.counter == 2 %}
-                            <td></td><td></td>
-                        {% else %}
-                            <td></td>
-                        {% endif %}
-                    {% endif %}
-                    <td align="center">
-                    {% if review.advice == "FAVORABLE" %}
-                        <span class="glyphicon glyphicon-thumbs-up" style="font-size: 14pt; color: green"
-                              aria-hidden="true"></span>
-                    {% elif rev.advice == "UNFAVOURABLE" %}
-                        <span class="glyphicon glyphicon-thumbs-down" style="font-size: 14pt; color: red"
-                              aria-hidden="true"></span>
-                    {% else %}
-                        <span class="glyphicon glyphicon-alert" style="font-size: 14pt; color: orange"
-                              aria-hidden="true"></span>
-                    {% endif %}
-                    </td>
-                    {% if forloop.last %}
-                        {% if "RESEARCH" in review.reviewer.role %}
-                            <td></td><td></td>
+                    {% if review.status == "DONE" %}
+                        {% if not review.reviewer %}
+                            <i class="fa fa-battery-1" style="font-size: 100%;
+                        {% elif "RESEARCH" in review.reviewer.role %}
+                            <i class="fa fa-battery-2" style="font-size: 100%;
                         {% elif "SUPERVISION" in review.reviewer.role %}
-                            <td></td>
-                        {% elif review.reviewer.role == None %}
-                            <td></td><td></td><td></td>
+                            <i class="fa fa-battery-3" style="font-size: 100%;
+                        {% elif "VICE_RECTOR" in review.reviewer.role %}
+                            <i class="fa fa-battery-4" style="font-size: 100%;
                         {% endif %}
+                        {% if review.advice == "FAVORABLE" %}
+                             color: #79C84F;">
+                        {% elif review.advice == "UNFAVOURABLE" %}
+                             color: #E06D5A;">
+                        {% else %}
+                             color: #EFC345;">
+                        {% endif %}
+                        </i>
                     {% endif %}
                 {% endfor %}
+                </td>
             </tr>
             {% endfor %}
             </tbody>
