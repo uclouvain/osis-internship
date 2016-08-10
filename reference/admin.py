@@ -32,4 +32,12 @@ admin.site.register(currency.Currency, currency.CurrencyAdmin)
 
 admin.site.register(country.Country, country.CountryAdmin)
 
+admin.site.register(decree.Decree, decree.DecreeAdmin)
+
+admin.site.register(domain.Domain,
+                    domain.DomainAdmin)
+
+admin.site.register(education_institution.EducationInstitution,
+                    education_institution.EducationInstitutionAdmin)
+
 admin.site.register(language.Language, language.LanguageAdmin)

@@ -29,13 +29,14 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
+from django.core import serializers
 
 
 class PersonAdmin(admin.ModelAdmin):
-    list_display = ('first_name' , 'middle_name', 'last_name', 'username', 'email', 'gender', 'birth_date', 'global_id',
+    list_display = ('first_name' , 'middle_name', 'last_name', 'username', 'email', 'gender', 'global_id',
                     'national_id', 'changed')
     search_fields = ['first_name', 'middle_name', 'last_name', 'user__username', 'email']
-    fieldsets = ((None, {'fields': ('user', 'global_id', 'national_id', 'gender', 'birth_date', 'first_name',
+    fieldsets = ((None, {'fields': ('user', 'global_id', 'national_id', 'gender', 'first_name',
                                     'middle_name', 'last_name', 'email', 'phone', 'phone_mobile', 'language')}),)
     raw_id_fields = ('user',)
 
@@ -59,7 +60,6 @@ class Person(models.Model):
     phone = models.CharField(max_length=30, blank=True, null=True)
     phone_mobile = models.CharField(max_length=30, blank=True, null=True)
     language = models.CharField(max_length=30, null=True, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE)
-    birth_date = models.DateField(blank=True, null=True)
 
     def username(self):
         if self.user is None:
@@ -70,14 +70,17 @@ class Person(models.Model):
         first_name = ""
         middle_name = ""
         last_name = ""
-        if self.first_name :
+        if self.first_name:
             first_name = self.first_name
-        if self.middle_name :
+        if self.middle_name:
             middle_name = self.middle_name
-        if self.last_name :
+        if self.last_name:
             last_name = self.last_name + ","
 
         return u"%s %s %s" % (last_name.upper(), first_name, middle_name)
+
+    def natural_key(self):
+        return (self.global_id)
 
     class Meta:
         permissions = (
@@ -104,3 +107,21 @@ def change_language(user, new_language):
 
 def find_by_global_id(global_id):
     return Person.objects.filter(global_id=global_id).first()
+
+
+def serialize_list_persons(list_persons):
+    """
+    Serialize a list of person objects using the json format.
+    Use to send data to osis-portal.
+    :param list_persons: a list of person objects
+    :return: a string
+    """
+    # Restrict fields for osis-portal
+    fields = ('id', 'external_id', 'changed', 'global_id', 'gender',
+              'national_id', 'first_name', 'middle_name', 'last_name',
+              'email', 'phone', 'phone_mobile', 'language')
+    return serializers.serialize("json", list_persons, fields=fields,
+                                 use_natural_foreign_keys=True,
+                                 use_natural_primary_keys=True)
+
+

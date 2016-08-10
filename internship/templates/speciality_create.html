@@ -44,15 +44,18 @@
         </tr>
       </thead>
       <tbody>
-        <form action="{%url 'speciality_new' %}" method="post">
+        <form action="{% if speciality.id%}
+        {% url 'speciality_save' speciality.id %}
+        {%else%} {% url 'speciality_new'%} {%endif%}"
+         method="post">
           {% csrf_token %}
           <tr>
             <td style="text-align:center;">
-              <input type="hidden" name="learning_unit" value={{learning_unit}}></input>
-              <input type="text" name="name" placeholder="Stage en ..." required>
+              <input type="hidden" name="learning_unit" value={{learning_unit}}>
+              <input type="text" name="name" placeholder="Stage en ..." required value="{{ speciality.name | default_if_none:'' }}">
             </td>
             <td style="text-align:center;">
-              <input type="checkbox" name="mandatory">
+              <input type="checkbox" name="mandatory" {%if speciality.mandatory %}checked{%endif%}>
             </td>
           </tr>
       </tbody>

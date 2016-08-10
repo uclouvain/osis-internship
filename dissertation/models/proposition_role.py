@@ -25,7 +25,6 @@
 ##############################################################################
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from . import proposition_dissertation, adviser
 
 
 class PropositionRole(models.Model):
@@ -36,9 +35,32 @@ class PropositionRole(models.Model):
     )
 
     status = models.CharField(max_length=12, choices=STATUS_CHOICES, default="PROMOTEUR")
-    adviser = models.ForeignKey(adviser.Adviser)
-    proposition_dissertation = models.ForeignKey(proposition_dissertation.PropositionDissertation)
+    adviser = models.ForeignKey('Adviser')
+    proposition_dissertation = models.ForeignKey('PropositionDissertation')
 
     def __str__(self):
         return u"%s %s" % (self.status if self.status else "",
                            self.adviser if self.adviser else "")
+
+
+def count_by_dissertation(dissertation):
+    return PropositionRole.objects.filter(proposition_dissertation=dissertation.proposition_dissertation)\
+                                  .count()
+
+
+def search_by_dissertation(dissertation):
+    return PropositionRole.objects.filter(proposition_dissertation=dissertation.proposition_dissertation)
+
+
+def count_by_proposition(prop_dissert):
+    return PropositionRole.objects.filter(proposition_dissertation=prop_dissert)\
+                                  .count()
+
+
+def search_by_proposition(prop_dissert):
+    return PropositionRole.objects.filter(proposition_dissertation=prop_dissert)
+
+
+def add(status, adviser, proposition_dissertation):
+    pro = PropositionRole(status=status, adviser=adviser, proposition_dissertation=proposition_dissertation)
+    pro.save()
