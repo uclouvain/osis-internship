@@ -193,9 +193,9 @@ def manager_proposition_dissertations_search(request):
         workbook = Workbook(encoding='utf-8')
         worksheet1 = workbook.active
         worksheet1.title = "proposition_dissertation"
-        worksheet1.append(['Date_de_création', 'Teatcher', 'Title',
-                           'Type', 'Level', 'collaboration', 'max_number_student', 'visibility',
-                           'active', 'offer_proposition'])
+        worksheet1.append(['Date_de_création', 'Teacher', 'Title',
+                           'Type', 'Level', 'Collaboration', 'Max_number_student', 'Visibility',
+                           'Active', 'Programme(s)'])
         for prop_dissert in prop_disserts:
             worksheet1.append([prop_dissert.created_date,
                                str(prop_dissert.author),
