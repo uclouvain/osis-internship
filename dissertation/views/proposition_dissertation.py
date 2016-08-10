@@ -197,8 +197,6 @@ def manager_proposition_dissertations_search(request):
                            'Type', 'Level', 'collaboration', 'max_number_student', 'visibility',
                            'active', 'offer_proposition'])
         for prop_dissert in prop_disserts:
-
-            convert_offer_prop=(str(conv.acronym) for conv  in prop_dissert.offer_proposition.all())
             worksheet1.append([prop_dissert.created_date,
                                str(prop_dissert.author),
                                prop_dissert.title,
@@ -208,7 +206,7 @@ def manager_proposition_dissertations_search(request):
                                prop_dissert.max_number_student,
                                prop_dissert.visibility,
                                prop_dissert.active,
-                               ', '.join(convert_offer_prop)])
+                               ', '.join((str(conv.acronym) for conv  in prop_dissert.offer_proposition.all()))])
 
         response = HttpResponse(save_virtual_workbook(workbook), content_type='application/vnd.ms-excel')
         response['Content-Disposition'] = "%s%s" % ("attachment; filename=", filename)
