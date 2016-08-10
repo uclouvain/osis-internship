@@ -45,6 +45,7 @@
                   <th>{% trans 'name' %}</th>
                   <th>{% trans 'acronym' %}</th>
                   <th>{% trans 'mandatory' %}</th>
+                  <th> <th>
               </tr>
             </thead>
             <tbody>
@@ -62,6 +63,17 @@
                     {%else%}
                       <span class="glyphicon glyphicon-remove"></span>
                     {%endif%}
+                  </td>
+                  <td>
+                    <a class="btn btn-warning" id="lnk_speciality_{{speciality.id}}"
+                      href="{% url 'speciality_modification' speciality.id %}">
+                      <span class="glyphicon glyphicon-pencil" aria-hidden="true">
+                      </span>
+                    </a>
+                    <a class="btn btn-danger" id="lnk_speciality_{{speciality.id}}"
+                      href="{% url 'speciality_delete' speciality.id %}">
+                      <span class="glyphicon glyphicon-trash" aria-hidden="true">
+                      </span>
                   </td>
               </tr>
               {%endfor%}

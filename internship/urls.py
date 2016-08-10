@@ -46,7 +46,10 @@ urlpatterns = [
 
     url(r'^periods/$', period.internships_periods, name='internships_periods'),
     url(r'^periods/create/$', period.period_create, name='periods_create'),
+    url(r'^periods/delete/([0-9]+)/$', period.period_delete, name='period_delete'),
+    url(r'^periods/modification/([0-9]+)/$', period.period_modification, name='period_modification'),
     url(r'^periods/new/$', period.period_new, name='periods_new'),
+    url(r'^periods/save/([0-9]+)/$', period.period_save, name='period_save'),
 
     url(r'^places/$', place.internships_places, name='internships_places'),
     url(r'^places/([0-9]+)/students/choice/$', place.student_choice, name='place_detail_student_choice'),
@@ -59,7 +62,10 @@ urlpatterns = [
 
     url(r'^specialities/$', speciality.specialities, name='internships_specialities'),
     url(r'^specialities/create/$', speciality.speciality_create, name='speciality_create'),
+    url(r'^specialities/delete/([0-9]+)/$', speciality.speciality_delete, name='speciality_delete'),
+    url(r'^specialities/modification/([0-9]+)/$', speciality.speciality_modification, name='speciality_modification'),
     url(r'^specialities/new/$', speciality.speciality_new, name='speciality_new'),
+    url(r'^specialities/save/([0-9]+)/$', speciality.speciality_save, name='speciality_save'),
 
     url(r'^students/([0-9]+)/information/modification/$', student_resume.internship_student_information_modification, name='internship_student_information_modification'),
     url(r'^students/([0-9]+)/resume/$', student_resume.internships_student_read, name='internships_student_read'),

@@ -28,7 +28,8 @@ from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
 from internship.models import InternshipSpeciality
 from internship.forms import InternshipSpecialityForm
-
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
@@ -47,11 +48,17 @@ def speciality_create(request):
                                                     'learning_unit' : learning_unit[0],
                                                     'form' : f
                                                     })
+
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def speciality_new(request):
+def speciality_save(request, speciality_id):
     form = InternshipSpecialityForm(data=request.POST)
-    speciality = InternshipSpeciality()
+    check_speciality = InternshipSpeciality.find_by(id=speciality_id)
+    if check_speciality :
+        speciality = check_speciality[0]
+    else :
+        speciality = InternshipSpeciality()
+
     mandatory = False
     if request.POST.get('mandatory') :
         mandatory = True
@@ -63,6 +70,26 @@ def speciality_new(request):
     speciality.mandatory = mandatory
 
     speciality.save()
+    return HttpResponseRedirect(reverse('internships_specialities'))
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def speciality_new(request):
+    return speciality_save(request, None)
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def speciality_modification(request, speciality_id):
+
+    speciality = InternshipSpeciality.find_by_id(speciality_id)
+    learning_unit = mdl.learning_unit.search(acronym='WMDS2333')
     return render(request, "speciality_create.html", {'section': 'internship',
                                                     'learning_unit' : learning_unit[0],
+                                                    'speciality' : speciality
                                                     })
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def speciality_delete(request, speciality_id):
+    InternshipSpeciality.objects.filter(pk=speciality_id).delete()
+    return HttpResponseRedirect(reverse('internships_specialities'))

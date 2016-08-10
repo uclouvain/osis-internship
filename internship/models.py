@@ -172,6 +172,10 @@ class Period(models.Model):
         queryset = Period.objects.filter(**kwargs)
         return queryset
 
+    @staticmethod
+    def find_by_id(period_id):
+        return Period.objects.get(pk=period_id)
+
 class PeriodInternshipPlaces(models.Model):
     period = models.ForeignKey('internship.Period')
     internship = models.ForeignKey('internship.InternshipOffer')
@@ -206,6 +210,9 @@ class InternshipSpeciality(models.Model):
     def find_all():
         return InternshipSpeciality.objects.all().order_by('name')
 
+    @staticmethod
+    def find_by_id(speciality_id):
+        return InternshipSpeciality.objects.get(pk=speciality_id)
 
 class Organization(models.Model):
     name = models.CharField(max_length=255)

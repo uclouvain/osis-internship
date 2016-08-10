@@ -48,13 +48,32 @@ def period_create(request):
                                                     })
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
+def period_save(request, period_id):
+    period = Period.find_by_id(period_id)
+    form = PeriodForm(data=request.POST, instance=period)
+    form.save()
+
+    return HttpResponseRedirect(reverse('internships_periods'))
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def period_new(request):
-    form = PeriodForm(data=request.POST)
-    period = Period()
+    return period_save(request, None)
 
-    period.name = request.POST.get('period_name')
-    period.date_start = request.POST.get('date_start')
-    period.date_end = request.POST.get('date_end')
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def period_delete(request, period_id):
+    period = Period.find_by_id(period_id)
+    period.delete()
+    return HttpResponseRedirect(reverse('internships_periods'))
 
-    period.save()
-    return render(request, "period_create.html", {'section': 'internship'})
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def period_modification(request, period_id):
+    period = Period.find_by_id(period_id)
+    period.date_start = period.date_start.strftime("%Y-%m-%d")
+    period.date_end = period.date_end.strftime("%Y-%m-%d")
+
+    return render(request, "period_create.html", {'section': 'internship',
+                                                    'period' : period
+                                                    })
