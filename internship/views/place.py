@@ -204,6 +204,8 @@ def place_save(request, organization_id, organization_address_id):
     if request.POST.get('organization_id'):
         organization_address.organization = Organization.find_by_id(int(request.POST.get('organization_id')))
 
+    organization_address.latitude = None
+    organization_address.longitude = None
     organization_address.save()
 
     return render(request, "place_form.html", {'organization': organization,
