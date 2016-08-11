@@ -146,7 +146,6 @@ def manager_informations_add(request):
             form = ManagerAddAdviserPreForm(request.POST)
             if form.is_valid():  # mail format is valid
                 data = form.cleaned_data
-                select_form = ManagerAddAdviserForm(initial={'type': "PRF"})
                 person = mdl.person.search_by_email(data['email'])
 
                 if not data['email']:  # empty search -> step 1
@@ -163,6 +162,7 @@ def manager_informations_add(request):
                                                                                            'message': message,
                                                                                            'email': email})
                 elif mdl.person.count_by_email(data['email']) > 0:  # person found and not adviser -> go forward
+                    select_form = ManagerAddAdviserForm(initial={'type': "PRF"})
                     select_form.fields['person'].queryset = person
                     return layout.render(request, 'manager_informations_add.html', {'form': select_form})
 
@@ -173,7 +173,7 @@ def manager_informations_add(request):
                     return layout.render(request, 'manager_informations_add_search.html', {'form': form,
                                                                                            'message': message,
                                                                                            'email': email})
-            else:  # invalid form (invalid format for mail)
+            else:  # invalid form (invalid format for email)
                 form = ManagerAddAdviserPreForm()
                 message = "invalid_data"
                 return layout.render(request, 'manager_informations_add_search.html', {'form': form,
