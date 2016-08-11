@@ -159,8 +159,7 @@ def place_save(request, organization_id, organization_address_id):
     form_address = OrganizationAddressForm(data=request.POST, instance=organization_address)
     if form_address.is_valid():
         form_address.save()
-    else :
-        print(form_address.errors)
+    
     return render(request, "place_form.html", { 'organization': organization,
                                                 'organization_address':organization_address,
                                                 'form': form,

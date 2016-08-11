@@ -32,7 +32,7 @@ from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 
 from internship.models import Organization, OrganizationAddress, InternshipOffer, InternshipMaster, Period, PeriodInternshipPlaces, InternshipSpeciality
-from internship.forms import OrganizationForm, InternshipOfferForm, InternshipMasterForm
+from internship.forms import OrganizationForm
 from base import models as mdl
 
 @login_required
@@ -155,7 +155,6 @@ def _is_registration_id(registration_id):
 @login_required
 def upload_internships_file(request):
     if request.method == 'POST':
-        form = InternshipOfferForm(request.POST, request.FILES)
         file_name = request.FILES['file']
         if file_name is not None:
             if ".xls" not in str(file_name):
@@ -169,7 +168,6 @@ def upload_internships_file(request):
 def __save_xls_internships(request, file_name, user):
     workbook = load_workbook(file_name, read_only=True)
     worksheet = workbook.active
-    form = InternshipOfferForm(request)
     col_reference = 0
     col_spec = 1
     index = 1
@@ -185,7 +183,6 @@ def __save_xls_internships(request, file_name, user):
         if row[col_spec].value is not None:
             success = 0
             check_internship = 0
-            form = InternshipOfferForm(data=request.POST)
 
             if row[col_reference].value:
                 reference = ""
@@ -248,7 +245,6 @@ def __save_xls_internships(request, file_name, user):
 @login_required
 def upload_masters_file(request):
     if request.method == 'POST':
-        form = InternshipOfferForm(request.POST, request.FILES)
         file_name = request.FILES['file']
         if file_name is not None:
             if ".xls" not in str(file_name):
@@ -262,7 +258,6 @@ def upload_masters_file(request):
 def __save_xls_masters(request, file_name, user):
     workbook = load_workbook(file_name, read_only=True)
     worksheet = workbook.active
-    form = InternshipMasterForm(request)
 
     col_reference = 2
     col_firstname = 3
@@ -286,8 +281,6 @@ def __save_xls_masters(request, file_name, user):
         if not _is_registration_id(check_reference):
             continue
 
-
-        form = InternshipMasterForm(data=request.POST)
         if row[col_firstname].value and row[col_lastname].value:
             master_check = InternshipMaster.search(first_name = row[col_firstname].value, last_name = row[col_lastname].value)
             if len(master_check) == 0:

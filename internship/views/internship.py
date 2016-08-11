@@ -28,7 +28,6 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from internship.models import InternshipEnrollment, InternshipOffer, InternshipChoice, Organization, Period, InternshipSpeciality
-from internship.forms import InternshipChoiceForm, InternshipOfferForm
 from base import models as mdl
 from django.utils.translation import ugettext_lazy as _
 from collections import OrderedDict
@@ -231,7 +230,6 @@ def internships_save(request):
         # Delete all the student's choices present in the DB
         InternshipChoice.objects.filter(student=student).delete()
 
-        form = InternshipChoiceForm(data=request.POST)
         #Build the list of the organizations and specialities get by the POST request
         organization_list = list()
         speciality_list = list()
