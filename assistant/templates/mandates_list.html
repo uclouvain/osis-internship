@@ -101,7 +101,7 @@
                 {% for review in mandate.review_set.all|dictsort:"changed" %}
                     {% if review.status == "DONE" %}
                         {% if not review.reviewer %}
-                            <i class="fa fa-battery-1" style="font-size: 100%;
+                            <i id="rev" class="fa fa-battery-1" style="font-size: 100%;
                         {% elif "RESEARCH" in review.reviewer.role %}
                             <i class="fa fa-battery-2" style="font-size: 100%;
                         {% elif "SUPERVISION" in review.reviewer.role %}
@@ -110,11 +110,16 @@
                             <i class="fa fa-battery-4" style="font-size: 100%;
                         {% endif %}
                         {% if review.advice == "FAVORABLE" %}
-                             color: #79C84F;">
+                             color: #79C84F;"
                         {% elif review.advice == "UNFAVOURABLE" %}
-                             color: #E06D5A;">
+                             color: #E06D5A;"
                         {% else %}
-                             color: #EFC345;">
+                             color: #EFC345;"
+                        {% endif %}
+                        {% if review.reviewer %}
+                            title="{{ review.reviewer }}">
+                        {% else %}
+                            title="{{ mandate.assistant.supervisor }} : {% trans 'phd_supervisor' %}">
                         {% endif %}
                         </i>
                     {% endif %}
