@@ -30,7 +30,7 @@ from dissertation.models import adviser
 from dissertation.models import dissertation_role
 from dissertation.models import faculty_adviser
 from base import models as mdl
-from dissertation.forms import AdviserForm, ManagerAdviserForm, ManagerAddAdviserForm
+from dissertation.forms import AdviserForm, ManagerAdviserForm, ManagerAddAdviserForm, ManagerAddAdviserPreForm
 from django.contrib.auth.decorators import user_passes_test
 from django.db import IntegrityError
 from base.views import layout
@@ -142,13 +142,27 @@ def manager_informations(request):
 @user_passes_test(is_manager)
 def manager_informations_add(request):
     if request.method == "POST":
-        form = ManagerAddAdviserForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('manager_informations')
-    else:
-        form = ManagerAddAdviserForm(initial={'type': "PRF"})
-    return layout.render(request, 'manager_informations_add.html', {'form': form})
+        if 'search_form' in request.POST:  # step 2 : second form to select person in list
+            form = ManagerAddAdviserPreForm(request.POST)
+            if form.is_valid():
+                data = form.cleaned_data
+                select_form = ManagerAddAdviserForm(initial={'type': "PRF"})
+                if mdl.person.count_by_email(data['email']):
+                    select_form.fields['person'].queryset = mdl.person.search_by_email(data['email'])
+                    return layout.render(request, 'manager_informations_add.html', {'form': select_form})
+                else:  # person not found by email -> step 1 : initial form to search person by email
+                    form = ManagerAddAdviserPreForm()
+                    return layout.render(request, 'manager_informations_add_search.html', {'form': form})
+
+        else:  # step 3 : finally register the person as adviser
+            form = ManagerAddAdviserForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return redirect('manager_informations')
+
+    else:  # step 1 : initial form to search person by email
+        form = ManagerAddAdviserPreForm()
+        return layout.render(request, 'manager_informations_add_search.html', {'form': form})
 
 
 @login_required

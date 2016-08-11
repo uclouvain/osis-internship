@@ -125,3 +125,9 @@ def serialize_list_persons(list_persons):
                                  use_natural_primary_keys=True)
 
 
+def search_by_email(email):
+    return Person.objects.filter(email=email)
+
+
+def count_by_email(email):
+    return search_by_email(email).count()
