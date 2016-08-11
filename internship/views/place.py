@@ -26,7 +26,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from internship.models import Organization, OrganizationAddress, InternshipChoice, InternshipOffer, InternshipSpeciality
-from internship.forms import OrganizationForm
+from internship.forms import OrganizationForm, OrganizationAddressForm
 
 def sort_organizations(datas):
     tab = []
@@ -151,7 +151,18 @@ def place_save(request, organization_id, organization_address_id):
     if form.is_valid():
         form.save()
 
-    return render(request, "place_form.html", {'organization': organization,
+    if organization_address_id:
+        organization_address = OrganizationAddress.find_by_id(organization_address_id)
+    else:
+        organization_address = OrganizationAddress()
+
+    form_address = OrganizationAddressForm(data=request.POST, instance=organization_address)
+    if form_address.is_valid():
+        form_address.save()
+    else :
+        print(form_address.errors)
+    return render(request, "place_form.html", { 'organization': organization,
+                                                'organization_address':organization_address,
                                                 'form': form,
                                                 })
 

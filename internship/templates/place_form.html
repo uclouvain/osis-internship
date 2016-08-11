@@ -73,22 +73,22 @@
             <div class="row">
                 <div class="col-md-6">
                     <label for="address_location">{% trans 'location' %}</label>
-                    <input class="form-control" value="{{ organization_address.location | default_if_none:'' }}" name="organization_address_location" id="txt_organization_address_location" maxlength="255" required>
+                    <input class="form-control" value="{{ organization_address.location | default_if_none:'' }}" name="location" id="txt_organization_address_location" maxlength="255" required>
                 </div>
             </div>
             <br>
             <div class="row">
                 <div class="col-md-4">
                     <label for="address_postal_code">{% trans 'postal_code' %}</label>
-                    <input class="form-control" value="{{ organization_address.postal_code | default_if_none:'' }}" name="organization_address_postal_code" id="txt_organization_address_postal_code" maxlength="20" required>
+                    <input class="form-control" value="{{ organization_address.postal_code | default_if_none:'' }}" name="postal_code" id="txt_organization_address_postal_code" maxlength="20" required>
                 </div>
                 <div class="col-md-4">
                     <label for="address_city">{% trans 'city' %}</label>
-                    <input class="form-control" value="{{ organization_address.city | default_if_none:'' }}" name="organization_address_city" id="txt_organization_address_city" maxlength="255" required>
+                    <input class="form-control" value="{{ organization_address.city | default_if_none:'' }}" name="city" id="txt_organization_address_city" maxlength="255" required>
                 </div>
                 <div class="col-md-4">
                     <label for="country">{% trans 'country'%}</label><br>
-                    <input class="form-control" value="{{ organization_address.country | default_if_none:'' }}" name="organization_address_country" id="txt_organization_address_country" maxlength="255" required>
+                    <input class="form-control" value="{{ organization_address.country | default_if_none:'' }}" name="country" id="txt_organization_address_country" maxlength="255" required>
                 </div>
             </div>
             <br>

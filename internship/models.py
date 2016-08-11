@@ -258,6 +258,12 @@ class OrganizationAddress(models.Model):
     def find_by_id(organization_address_id):
         return OrganizationAddress.objects.get(pk=organization_address_id)
 
+    def save(self, *args, **kwargs):
+        self.label = "Addr"+self.organization.name[:14]
+        self.latitude = None
+        self.longitude = None
+        super(OrganizationAddress, self).save(*args, **kwargs)
+
 class InternshipStudentInformation(models.Model):
     person = models.ForeignKey('base.Person')
     location = models.CharField(max_length=255)

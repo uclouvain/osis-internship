@@ -26,7 +26,7 @@
 
 from django import forms
 from django.forms import ModelForm
-from internship.models import InternshipChoice, InternshipOffer, Organization, Period, InternshipMaster, InternshipSpeciality
+from internship.models import InternshipChoice, InternshipOffer, Organization, OrganizationAddress, Period, InternshipMaster, InternshipSpeciality
 from functools import partial
 DateInput = partial(forms.DateInput, {'class': 'datepicker'})
 
@@ -45,6 +45,11 @@ class OrganizationForm(ModelForm):
     class Meta:
         model = Organization
         fields = ['name', 'website', 'reference']
+
+class OrganizationAddressForm(ModelForm):
+    class Meta:
+        model = OrganizationAddress
+        fields = ['location', 'postal_code', 'city', 'country']
 
 class InternshipSpecialityForm(ModelForm):
     class Meta:
