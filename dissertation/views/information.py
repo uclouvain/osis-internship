@@ -144,21 +144,47 @@ def manager_informations_add(request):
     if request.method == "POST":
         if 'search_form' in request.POST:  # step 2 : second form to select person in list
             form = ManagerAddAdviserPreForm(request.POST)
-            if form.is_valid():
+            if form.is_valid():  # mail format is valid
                 data = form.cleaned_data
                 select_form = ManagerAddAdviserForm(initial={'type': "PRF"})
-                if mdl.person.count_by_email(data['email']):
-                    select_form.fields['person'].queryset = mdl.person.search_by_email(data['email'])
-                    return layout.render(request, 'manager_informations_add.html', {'form': select_form})
-                else:  # person not found by email -> step 1 : initial form to search person by email
-                    form = ManagerAddAdviserPreForm()
-                    return layout.render(request, 'manager_informations_add_search.html', {'form': form})
+                person = mdl.person.search_by_email(data['email'])
 
-        else:  # step 3 : finally register the person as adviser
+                if not data['email']:  # empty search -> step 1
+                    form = ManagerAddAdviserPreForm()
+                    message = "empty_data"
+                    return layout.render(request, 'manager_informations_add_search.html', {'form': form,
+                                                                                           'message': message})
+
+                elif person and adviser.find_by_person(person):  # person already adviser -> step 1
+                    form = ManagerAddAdviserPreForm()
+                    email = data['email']
+                    message = "person_already_adviser"
+                    return layout.render(request, 'manager_informations_add_search.html', {'form': form,
+                                                                                           'message': message,
+                                                                                           'email': email})
+                elif mdl.person.count_by_email(data['email']) > 0:  # person found and not adviser -> go forward
+                    select_form.fields['person'].queryset = person
+                    return layout.render(request, 'manager_informations_add.html', {'form': select_form})
+
+                else:  # person not found by email -> step 1
+                    form = ManagerAddAdviserPreForm()
+                    email = data['email']
+                    message = "person_not_found_by_mail"
+                    return layout.render(request, 'manager_informations_add_search.html', {'form': form,
+                                                                                           'message': message,
+                                                                                           'email': email})
+            else:  # invalid form (invalid format for mail)
+                form = ManagerAddAdviserPreForm()
+                message = "invalid_data"
+                return layout.render(request, 'manager_informations_add_search.html', {'form': form,
+                                                                                       'message': message})
+
+        else:  # step 3 : everything ok, register the person as adviser
             form = ManagerAddAdviserForm(request.POST)
             if form.is_valid():
                 form.save()
-                return redirect('manager_informations')
+
+            return redirect('manager_informations')
 
     else:  # step 1 : initial form to search person by email
         form = ManagerAddAdviserPreForm()
