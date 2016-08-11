@@ -252,3 +252,126 @@ msgstr "Doyen de faculté"
 
 msgid "vice_rector"
 msgstr "Vice-recteur"
+
+msgid "equivalent_full_time"
+msgstr "ETP"
+
+msgid "percentage_equivalent_full_time"
+msgstr "% ETP"
+
+msgid "tutoring"
+msgstr "Ens."
+
+msgid "program_commission"
+msgstr "Commission de Prog."
+
+msgid "action"
+msgstr "Action"
+
+msgid "my_mandates"
+msgstr "Mes mandats"
+
+msgid "contact_details"
+msgstr "Coordonnées administratives"
+
+msgid "date_of_first_nomination"
+msgstr "Date de la première nomination"
+
+msgid "summary"
+msgstr "Récapitulatif"
+
+msgid "total_must_be_100_message"
+msgstr "Le total doit être égal à 100"
+
+msgid "tutoring_percent"
+msgstr "Pourcentage pour l'enseignement"
+
+msgid "research_percent"
+msgstr "Pourcentage pour la recherche et le doctorat"
+
+msgid "service_activities_percent"
+msgstr "Pourcentage pour les activités de service"
+
+msgid "formation_activities_percent"
+msgstr "Pourcentage de participation, comme bénéficiaire, à des activités de formation"
+
+msgid "activities_report_remark"
+msgstr "Remarque concernant le rapport d'activité"
+
+msgid "general_comment"
+msgstr "Commentaire général"
+
+msgid "validate_and_submit"
+msgstr "Valider et soumettre"
+
+msgid "confirm_validation"
+msgstr "Êtes-vous certain de vouloir valider et soumettre ? Cette action ne pourra pas être annulée."
+
+msgid "renewal_form"
+msgstr "Formulaire de demande de renouvellement"
+
+msgid "representation_activities"
+msgstr "Activités de représentation à l'UCL"
+
+msgid "hours_per_year_message"
+msgstr "Veuillez introduire le nombre d'heures par an"
+
+msgid "faculty_representation"
+msgstr "Au sein de la faculté (commissions de programme, bureau de faculté, conseil de faculté)"
+
+msgid "institute_representation"
+msgstr "Au sein de l’institut (bureau d’institut, conseil d’institut...)"
+
+msgid "sector_representation"
+msgstr "Au sein du secteur (bureau et/ou conseil)"
+
+msgid "governing_body_representation"
+msgstr "Au sein des organes de l’Université (conseil académique, autres conseils ou commissions...)"
+
+msgid "corsci_representation"
+msgstr "Au sein du CORSCI"
+
+msgid "service_activities"
+msgstr "Activités de services"
+
+msgid "students_service"
+msgstr "Informations aux futurs étudiants (CIO, salons, Campus Days, Midi Masters...)"
+
+msgid "infrastructure_mgmt_service"
+msgstr "Gestion d’équipements collectifs (labo, atelier, bibliothèque, service informatique, site web...)"
+
+msgid "events_organisation_service"
+msgstr "Organisation de stages, colloques, visites, voyages d’études, terrains, séminaires..."
+
+msgid "publishing_field_service"
+msgstr "Activités dans le domaine de l’édition (comité(s) de rédaction...)"
+
+msgid "scientific_jury_service"
+msgstr "Participation à des jurys et/ou des commissions scientifiques"
+
+msgid "formation_activities"
+msgstr "Activités de formation"
+
+msgid "degrees"
+msgstr "Diplôme(s) obtenu(s)"
+
+msgid "formations"
+msgstr "Formations scientifiques, pédagogiques ou autres auxquelles vous avez participé \
+(LLL, SMCS, RHUM, Summer School)"
+
+msgid "renewal_short_name"
+msgstr "Statut"
+
+msgid "phd"
+msgstr "PhD"
+
+msgid "research_short_name"
+msgstr "RCH"
+
+msgid "tutoring_short_name"
+msgstr "ENS"
+
+msgid "sector_vice-rector_short_name"
+msgstr "V-R S."
+
+

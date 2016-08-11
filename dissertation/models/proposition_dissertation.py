@@ -76,13 +76,17 @@ class PropositionDissertation(models.Model):
         if self.author.person.last_name:
             last_name = self.author.person.last_name + ","
         author = u"%s %s %s" % (last_name.upper(), first_name, middle_name)
-        return author+" - "+str(self.title)
+        return "%s - %s" % (author, str(self.title))
+
+    def deactivate(self):
+        self.active = False
+        self.save()
 
     class Meta:
         ordering = ["author__person__last_name", "author__person__middle_name", "author__person__first_name", "title"]
 
 
-def search_proposition_dissertation(terms=None):
+def search(terms, active=None, visibility=None, connected_adviser=None):
     queryset = PropositionDissertation.objects.all()
     if terms:
         queryset = queryset.filter(
@@ -92,9 +96,35 @@ def search_proposition_dissertation(terms=None):
             Q(author__person__middle_name__icontains=terms) |
             Q(author__person__last_name__icontains=terms) |
             Q(offer_proposition__acronym__icontains=terms)
-        ).distinct()
+        )
+
+    if active:
+        queryset = queryset.filter(active=active)
+
+    if visibility and connected_adviser:
+        queryset = queryset.filter(Q(visibility=visibility) |
+                                   Q(author=connected_adviser))
+
+    elif visibility:
+        queryset = queryset.filter(visibility=visibility)
+
+    queryset = queryset.distinct()
+
     return queryset
 
 
-def find_proposition_dissertation_by_id(proposition_dissertation_id):
-    return PropositionDissertation.objects.get(pk=proposition_dissertation_id)
+def search_by_offer(offer):
+    return PropositionDissertation.objects.filter(active=True,
+                                                  offer_proposition__offer=offer)
+
+
+def get_all_for_teacher(adviser):
+    return PropositionDissertation.objects.filter(
+                                                    Q(active=True) &
+                                                    (Q(visibility=True) | Q(author=adviser))
+                                                  )
+
+
+def get_mine_for_teacher(adviser):
+    return PropositionDissertation.objects.filter(author=adviser)\
+                                          .filter(active=True)

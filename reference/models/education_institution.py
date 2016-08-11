@@ -26,6 +26,7 @@
 from django.db import models
 from django.contrib import admin
 from reference.models import country
+from django.core import serializers
 
 
 class EducationInstitutionAdmin(admin.ModelAdmin):
@@ -54,3 +55,15 @@ class EducationInstitution(models.Model):
 
     def __str__(self):
         return self.name
+
+
+def serialize_list(list_education_institutions):
+    """
+    Serialize a list of student objects using the json format.
+    Use to send data to osis-portal.
+    :param list_education_institutions: a list of "EducationInstitution" objects
+    :return: the serialized list (a json)
+    """
+    fields = ('id', 'name', 'institution_type', 'postal_code', 'city', 'country',
+              'national_community', 'adhoc')
+    return serializers.serialize("json", list_education_institutions, fields=fields)
