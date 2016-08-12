@@ -85,6 +85,10 @@ def search_by_adviser_and_role_stats(adviser, role):
                                            )
 
 
+def search_by_adviser_and_role_and_waiting(adviser, offer):
+    return list_teachers_action_needed(offer).filter(adviser=adviser)
+
+
 def count_by_adviser_and_role_stats(adviser, role):
     return search_by_adviser_and_role_stats(adviser, role).count()
 

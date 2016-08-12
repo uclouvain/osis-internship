@@ -28,6 +28,9 @@ msgstr "adviser_can_suggest_reader"
 msgid "adviser_dissertations"
 msgstr "adviser_dissertations"
 
+msgid "adviser_dissertations_wait"
+msgstr "dissertation awaiting professor"
+
 msgid "adviser_profile"
 msgstr "teacher profil"
 
