@@ -1,0 +1,56 @@
+[
+  {
+    "model": "base.offer",
+    "pk": 1,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-03-04T22:38:39.964Z",
+      "title": "Bachelier en sciences de l'ing\u00e9nieur"
+    }
+  },
+  {
+    "model": "base.offer",
+    "pk": 2,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-03-04T22:39:30.883Z",
+      "title": "Bachelier en droit"
+    }
+  },
+  {
+    "model": "base.offer",
+    "pk": 3,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-03-04T22:40:37.542Z",
+      "title": "Bachelier en sciences informatiques"
+    }
+  },
+  {
+    "model": "base.offer",
+    "pk": 4,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-03-04T22:42:32.504Z",
+      "title": "Bachelier en information et communication"
+    }
+  },
+  {
+    "model": "base.offer",
+    "pk": 5,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-03-04T22:43:16.381Z",
+      "title": "Bachelier en sciences biom\u00e9dicales"
+    }
+  },
+  {
+    "model": "base.offer",
+    "pk": 6,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-03-04T22:44:58.315Z",
+      "title": "Bachelier en histoire"
+    }
+  }
+]
