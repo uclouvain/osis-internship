@@ -1,0 +1,14 @@
+[
+  {
+    "model": "base.organizationaddress",
+    "pk": 1,
+    "fields": {
+      "organization": 1,
+      "label": "UCL",
+      "location": "Place de l'Université 1-B",
+      "postal_code": "1348",
+      "city": "Louvain-la-Neuve" ,
+      "country": 1
+    }
+  }
+]
