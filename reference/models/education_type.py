@@ -23,12 +23,23 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from reference.models import assimilation_criteria
-from reference.models import continent
-from reference.models import country
-from reference.models import currency
-from reference.models import decree
-from reference.models import domain
-from reference.models import education_institution
-from reference.models import education_type
-from reference.models import language
+from django.db import models
+from django.contrib import admin
+
+
+class EducationTypeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'type', 'adhoc')
+
+
+class EducationType(models.Model):
+    EDUCATION_TYPE = (('TRANSITION','Transition'),
+            ('QUALIFICATION','Qualification'),
+            ('ANOTHER','Autre'))
+
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    type = models.CharField(max_length=20, choices=EDUCATION_TYPE)
+    name = models.CharField(max_length=100)
+    adhoc = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name

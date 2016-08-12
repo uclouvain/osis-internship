@@ -47,5 +47,8 @@ admin.site.register(domain.Domain,
 admin.site.register(education_institution.EducationInstitution,
                     education_institution.EducationInstitutionAdmin)
 
+admin.site.register(education_type.EducationType,
+                    education_type.EducationTypeAdmin)
+
 admin.site.register(language.Language,
                     language.LanguageAdmin)
