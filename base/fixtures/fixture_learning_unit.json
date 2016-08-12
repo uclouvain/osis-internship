@@ -1,0 +1,41 @@
+[
+  {
+    "model": "base.learningunit",
+    "pk": 1,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-03-07T09:33:47.209Z",
+      "acronym": "LDROI1003",
+      "title": "Fondements romains du droit",
+      "description": "",
+      "start_year": 2015,
+      "end_year": null
+    }
+  },
+  {
+    "model": "base.learningunit",
+    "pk": 2,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-03-07T09:34:11.410Z",
+      "acronym": "LDROI1004",
+      "title": "Histoire du droit",
+      "description": "",
+      "start_year": 2015,
+      "end_year": null
+    }
+  },
+  {
+    "model": "base.learningunit",
+    "pk": 3,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-03-07T09:43:27.924Z",
+      "acronym": "LCOPS1113",
+      "title": "Histoire moderne et contemporaine",
+      "description": "",
+      "start_year": 2015,
+      "end_year": null
+    }
+  }
+]
