@@ -1,0 +1,42 @@
+[
+  {
+    "model": "base.programmanager",
+    "pk": 1,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T12:23:38.683Z",
+      "person": 18,
+      "offer_year": 1
+    }
+  },
+  {
+    "model": "base.programmanager",
+    "pk": 2,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T12:24:05.197Z",
+      "person": 17,
+      "offer_year": 1
+    }
+  },
+  {
+    "model": "base.programmanager",
+    "pk": 3,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T12:25:04.322Z",
+      "person": 16,
+      "offer_year": 2
+    }
+  },
+  {
+    "model": "base.programmanager",
+    "pk": 4,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T12:25:39.383Z",
+      "person": 15,
+      "offer_year": 2
+    }
+  }
+]

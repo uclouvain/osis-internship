@@ -1,0 +1,152 @@
+[
+  {
+    "model": "base.student",
+    "pk": 1,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T13:29:24.768Z",
+      "registration_id": "1",
+      "person": 2
+    }
+  },
+  {
+    "model": "base.student",
+    "pk": 2,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T13:29:57.826Z",
+      "registration_id": "2",
+      "person": 19
+    }
+  },
+  {
+    "model": "base.student",
+    "pk": 3,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T13:29:24.768Z",
+      "registration_id": "3",
+      "person": 20
+    }
+  },
+  {
+    "model": "base.student",
+    "pk": 4,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T13:29:57.826Z",
+      "registration_id": "4",
+      "person": 21
+    }
+  },
+  {
+    "model": "base.student",
+    "pk": 5,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T13:29:24.768Z",
+      "registration_id": "5",
+      "person": 22
+    }
+  },
+  {
+    "model": "base.student",
+    "pk": 6,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T13:29:57.826Z",
+      "registration_id": "6",
+      "person": 23
+    }
+  },
+  {
+    "model": "base.student",
+    "pk": 7,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T13:29:24.768Z",
+      "registration_id": "7",
+      "person": 24
+    }
+  },
+  {
+    "model": "base.student",
+    "pk": 8,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T13:29:57.826Z",
+      "registration_id": "8",
+      "person": 25
+    }
+  },
+  {
+    "model": "base.student",
+    "pk": 9,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T13:29:24.768Z",
+      "registration_id": "9",
+      "person": 26
+    }
+  },
+  {
+    "model": "base.student",
+    "pk": 10,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T13:29:57.826Z",
+      "registration_id": "10",
+      "person": 27
+    }
+  },
+  {
+    "model": "base.student",
+    "pk": 11,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T13:29:24.768Z",
+      "registration_id": "11",
+      "person": 28
+    }
+  },
+  {
+    "model": "base.student",
+    "pk": 12,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T13:29:57.826Z",
+      "registration_id": "12",
+      "person": 29
+    }
+  },
+  {
+    "model": "base.student",
+    "pk": 13,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T13:29:24.768Z",
+      "registration_id": "13",
+      "person": 30
+    }
+  },
+  {
+    "model": "base.student",
+    "pk": 14,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T13:29:57.826Z",
+      "registration_id": "14",
+      "person": 31
+    }
+  },
+  {
+    "model": "base.student",
+    "pk": 15,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T13:29:24.768Z",
+      "registration_id": "15",
+      "person": 32
+    }
+  }
+]
