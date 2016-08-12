@@ -182,9 +182,11 @@ def manager_informations_add(request):
         else:  # step 3 : everything ok, register the person as adviser
             form = ManagerAddAdviserForm(request.POST)
             if form.is_valid():
-                form.save()
-
-            return redirect('manager_informations')
+                adv = form.save(commit=False)
+                adv.save()
+                return redirect('manager_informations_detail', pk=adv.pk)
+            else:
+                return redirect('manager_informations')
 
     else:  # step 1 : initial form to search person by email
         form = ManagerAddAdviserPreForm()
