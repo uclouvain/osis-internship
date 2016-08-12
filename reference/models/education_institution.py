@@ -31,6 +31,8 @@ from django.core import serializers
 
 class EducationInstitutionAdmin(admin.ModelAdmin):
     list_display = ('name', 'institution_type', 'country', 'adhoc')
+    search_fields = ['name']
+    list_filter = ('institution_type',)
 
 
 class EducationInstitution(models.Model):

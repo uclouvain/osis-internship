@@ -23,11 +23,20 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from reference.models import assimilation_criteria
-from reference.models import continent
-from reference.models import country
-from reference.models import currency
-from reference.models import decree
-from reference.models import domain
-from reference.models import education_institution
-from reference.models import language
+
+from django.db import models
+from django.contrib import admin
+
+
+class AssimilationCriteriaAdmin(admin.ModelAdmin):
+    list_display = ('criteria', 'order')
+    fieldsets = ((None, {'fields': ('criteria', 'order')}),)
+
+
+class AssimilationCriteria(models.Model):
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    criteria = models.CharField(max_length=255, unique=True)
+    order = models.IntegerField(blank=True, null=True)
+
+    def __str__(self):
+        return self.criteria

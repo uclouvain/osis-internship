@@ -26,13 +26,20 @@
 from django.contrib import admin
 from reference.models import *
 
-admin.site.register(continent.Continent, continent.ContinentAdmin)
+admin.site.register(assimilation_criteria.AssimilationCriteria,
+                    assimilation_criteria.AssimilationCriteriaAdmin)
 
-admin.site.register(currency.Currency, currency.CurrencyAdmin)
+admin.site.register(continent.Continent,
+                    continent.ContinentAdmin)
 
-admin.site.register(country.Country, country.CountryAdmin)
+admin.site.register(currency.Currency,
+                    currency.CurrencyAdmin)
 
-admin.site.register(decree.Decree, decree.DecreeAdmin)
+admin.site.register(country.Country,
+                    country.CountryAdmin)
+
+admin.site.register(decree.Decree,
+                    decree.DecreeAdmin)
 
 admin.site.register(domain.Domain,
                     domain.DomainAdmin)
@@ -40,4 +47,5 @@ admin.site.register(domain.Domain,
 admin.site.register(education_institution.EducationInstitution,
                     education_institution.EducationInstitutionAdmin)
 
-admin.site.register(language.Language, language.LanguageAdmin)
+admin.site.register(language.Language,
+                    language.LanguageAdmin)
