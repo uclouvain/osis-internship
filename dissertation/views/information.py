@@ -162,9 +162,11 @@ def manager_informations_add(request):
                                                                                            'message': message,
                                                                                            'email': email})
                 elif mdl.person.count_by_email(data['email']) > 0:  # person found and not adviser -> go forward
-                    select_form = ManagerAddAdviserForm(initial={'type': "PRF"})
-                    select_form.fields['person'].queryset = person
-                    return layout.render(request, 'manager_informations_add.html', {'form': select_form})
+                    person_list = list(person)
+                    pers = person_list[0]
+                    select_form = ManagerAddAdviserForm(initial={'type': "PRF", 'person_id': pers.id})
+                    # select_form.fields['person'].queryset = person
+                    return layout.render(request, 'manager_informations_add.html', {'form': select_form, 'pers': pers})
 
                 else:  # person not found by email -> step 1
                     form = ManagerAddAdviserPreForm()
