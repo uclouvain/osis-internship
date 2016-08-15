@@ -118,11 +118,7 @@ def serialize_all_students():
         list_students.append(stud)
         list_persons.append(stud.person)
     data_students = serialize_list_students(list_students)
-    print('datastudent')
-    print(data_students)
     data_persons = person.serialize_list_persons(list_persons)
-    print('dataperson')
-    print(data_persons)
     data_dict = {'students': data_students, 'persons': data_persons}
     return data_dict
 
