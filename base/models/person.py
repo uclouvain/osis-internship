@@ -41,7 +41,15 @@ class PersonAdmin(admin.ModelAdmin):
     raw_id_fields = ('user',)
 
 
+class PersonManager(models.Manager):
+    def get_by_natural_key(self, global_id):
+        return self.get(global_id=global_id)
+
+
 class Person(models.Model):
+
+    objects = PersonManager()
+
     GENDER_CHOICES = (
         ('F', _('female')),
         ('M', _('male')),
@@ -80,7 +88,7 @@ class Person(models.Model):
         return u"%s %s %s" % (last_name.upper(), first_name, middle_name)
 
     def natural_key(self):
-        return (self.global_id)
+        return (self.global_id, )
 
     class Meta:
         permissions = (
