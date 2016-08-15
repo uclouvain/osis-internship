@@ -1,11 +1,83 @@
 [
-  {"model": "reference.currency", "pk": 1, "fields": {"code": "ARS", "name": "Argentine peso", "symbol": "$"}},
-  {"model": "reference.currency", "pk": 2, "fields": {"code": "BRL", "name": "Brazilian real", "symbol": "‎R$"}},
-  {"model": "reference.currency", "pk": 3, "fields": {"code": "CHF", "name": "Swiss franc", "symbol": "CHF"}},
-  {"model": "reference.currency", "pk": 4, "fields": {"code": "EUR", "name": "Euro", "symbol": "€"}},
-  {"model": "reference.currency", "pk": 5, "fields": {"code": "GBP", "name": "Pound Sterling", "symbol": "£"}},
-  {"model": "reference.currency", "pk": 6, "fields": {"code": "JPY", "name": "Japanese Yen", "symbol": "¥"}},
-  {"model": "reference.currency", "pk": 7, "fields": {"code": "NGN", "name": "Nigerian naira", "symbol": "₦"}},
-  {"model": "reference.currency", "pk": 8, "fields": {"code": "USD", "name": "United States Dollar", "symbol": "$"}},
-  {"model": "reference.currency", "pk": 9, "fields": {"code": "RUB", "name": "Russian Ruble", "symbol": "руб"}}
+  {
+    "model": "reference.currency",
+    "pk": 1,
+    "fields": {
+      "code": "ARS",
+      "name": "Argentine peso",
+      "symbol": "$"
+    }
+  },
+  {
+    "model": "reference.currency",
+    "pk": 2,
+    "fields": {
+      "code": "BRL",
+      "name": "Brazilian real",
+      "symbol": "‎R$"
+    }
+  },
+  {
+    "model": "reference.currency",
+    "pk": 3,
+    "fields": {
+      "code": "CHF",
+      "name": "Swiss franc",
+      "symbol": "CHF"
+    }
+  },
+  {
+    "model": "reference.currency",
+    "pk": 4,
+    "fields": {
+      "code": "EUR",
+      "name": "Euro",
+      "symbol": "€"
+    }
+  },
+  {
+    "model": "reference.currency",
+    "pk": 5,
+    "fields": {
+      "code": "GBP",
+      "name": "Pound Sterling",
+      "symbol": "£"
+    }
+  },
+  {
+    "model": "reference.currency",
+    "pk": 6,
+    "fields": {
+      "code": "JPY",
+      "name": "Japanese Yen",
+      "symbol": "¥"
+    }
+  },
+  {
+    "model": "reference.currency",
+    "pk": 7,
+    "fields": {
+      "code": "NGN",
+      "name": "Nigerian naira",
+      "symbol": "₦"
+    }
+  },
+  {
+    "model": "reference.currency",
+    "pk": 8,
+    "fields": {
+      "code": "USD",
+      "name": "United States Dollar",
+      "symbol": "$"
+    }
+  },
+  {
+    "model": "reference.currency",
+    "pk": 9,
+    "fields": {
+      "code": "RUB",
+      "name": "Russian Ruble",
+      "symbol": "руб"
+    }
+  }
 ]
