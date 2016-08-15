@@ -37,13 +37,25 @@ class TutorAdmin(admin.ModelAdmin):
     search_fields = ['person__first_name', 'person__last_name']
 
 
+class TutorManager(models.Manager):
+    def get_by_natural_key(self, global_id):
+        return self.get(person__global_id=global_id)
+
+
 class Tutor(models.Model):
+    objects = TutorManager()
+
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     person = models.OneToOneField('Person')
 
     def __str__(self):
         return u"%s" % self.person
+
+    def natural_key(self):
+        return (self.person.global_id, )
+
+    natural_key.dependencies = ['base.person']
 
 
 def find_by_user(user):
@@ -121,5 +133,6 @@ def serialize_list_tutors(list_tutors):
     # Restrict fields for osis-portal
     fields = ('id', 'external_id', 'changed', 'person')
     return serializers.serialize("json", list_tutors, fields=fields,
-                                 use_natural_foreign_keys=True)
+                                 use_natural_foreign_keys=True,
+                                 use_natural_primary_keys=True)
 
