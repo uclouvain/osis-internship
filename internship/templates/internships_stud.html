@@ -65,7 +65,7 @@
     <div class="panel-body">
         <ul class="nav nav-tabs">
           {% for luy in all_speciality %}
-            <li><a data-toggle="tab" href="#tab_{{luy.tab}}">{{luy.name}}
+            <li {% if forloop.first %}class="active"{% endif %}><a data-toggle="tab" href="#tab_{{luy.tab}}">{{luy.name}}
               {%if luy.size = 4 %}
                 <span class="glyphicon glyphicon-ok" style="color:green"></span>
               {%else%}
@@ -82,7 +82,7 @@
         {% csrf_token %}
         <div class="tab-content">
           {% for luy in all_speciality %}
-          <div id="tab_{{luy.tab}}" class="tab-pane fade in active">
+          <div id="tab_{{luy.tab}}" class="tab-pane fade {% if forloop.first %}in active{% endif %}">
             <h3>{{luy.name}}</h3>
               <div class="panel panel-default">
                 <div class="tab-content">
