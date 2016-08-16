@@ -56,7 +56,7 @@ def add(request, dissert, old_status, justification=None):
     update = DissertationUpdate()
     update.status_from = old_status
     update.status_to = dissert.status
-    if justification is not None:
+    if justification:
         update.justification = justification
     else:
         update.justification = "%s%s%s" % (adv.type, JUSTIFICATION_LINK, dissert.status)
