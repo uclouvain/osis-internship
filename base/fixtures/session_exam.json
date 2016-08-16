@@ -6,7 +6,6 @@
       "external_id": null,
       "changed": "2016-05-03T14:25:31.160Z",
       "number_session": 1,
-      "status": "CLOSED",
       "learning_unit_year": 1,
       "offer_year_calendar": 3
     }
@@ -18,7 +17,6 @@
       "external_id": null,
       "changed": "2016-05-03T14:26:10.108Z",
       "number_session": 3,
-      "status": "OPEN",
       "learning_unit_year": 1,
       "offer_year_calendar": 5
     }
@@ -30,7 +28,6 @@
       "external_id": null,
       "changed": "2016-05-03T14:26:30.519Z",
       "number_session": 2,
-      "status": "OPEN",
       "learning_unit_year": 2,
       "offer_year_calendar": 4
     }
@@ -42,7 +39,6 @@
       "external_id": null,
       "changed": "2016-05-03T14:25:31.160Z",
       "number_session": 3,
-      "status": "CLOSED",
       "learning_unit_year": 2,
       "offer_year_calendar": 5
     }
@@ -54,9 +50,8 @@
       "external_id": null,
       "changed": "2016-05-03T14:26:10.108Z",
       "number_session": 2,
-      "status": "OPEN",
       "learning_unit_year": 2,
-      "offer_year_calendar": 20
+      "offer_year_calendar": 19
     }
   },
   {
@@ -66,9 +61,8 @@
       "external_id": null,
       "changed": "2016-05-03T14:26:30.519Z",
       "number_session": 3,
-      "status": "CLOSED",
       "learning_unit_year": 2,
-      "offer_year_calendar": 21
+      "offer_year_calendar": 18
     }
   },
   {
@@ -78,7 +72,6 @@
       "external_id": null,
       "changed": "2016-05-03T14:25:31.160Z",
       "number_session": 3,
-      "status": "CLOSED",
       "learning_unit_year": 3,
       "offer_year_calendar": 9
     }
@@ -90,7 +83,6 @@
       "external_id": null,
       "changed": "2016-05-03T14:26:10.108Z",
       "number_session": 2,
-      "status": "OPEN",
       "learning_unit_year": 4,
       "offer_year_calendar": 12
     }

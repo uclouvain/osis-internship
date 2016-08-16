@@ -96,6 +96,25 @@
   },
   {
     "model": "base.person",
+    "pk": 6,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T10:07:07.766Z",
+      "user": null,
+      "global_id": "3333333",
+      "gender": "F",
+      "national_id": "3333333",
+      "first_name": "Jean",
+      "middle_name": "",
+      "last_name": "Dujardin",
+      "email": "jean.dujardin@uclouvain.be",
+      "phone": "",
+      "phone_mobile": "",
+      "language": "en"
+    }
+  },
+  {
+    "model": "base.person",
     "pk": 7,
     "fields": {
       "external_id": null,
@@ -138,7 +157,7 @@
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T17:58:43.226Z",
-      "user": 10,
+      "user": null,
       "global_id": "9999999",
       "gender": "F",
       "national_id": "9999999",
@@ -176,7 +195,7 @@
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T17:57:54.397Z",
-      "user": 11,
+      "user": null,
       "global_id": "011101111",
       "gender": "F",
       "national_id": "011101111",
@@ -195,7 +214,7 @@
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T17:57:47.542Z",
-      "user": 12,
+      "user": null,
       "global_id": "121212121",
       "gender": "F",
       "national_id": "121212121",

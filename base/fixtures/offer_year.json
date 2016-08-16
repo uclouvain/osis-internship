@@ -12,7 +12,10 @@
             "title_international": "",
             "title_short": "",
             "title_printable": "",
-            "structure": 1,
+            "entity_administration": 1,
+            "entity_administration_fac": null,
+            "entity_management": 1,
+            "entity_management_fac": null,
             "parent": null,
             "grade": "BACHELOR"
         }
@@ -30,7 +33,10 @@
             "title_international": "",
             "title_short": "",
             "title_printable": "",
-            "structure": 1,
+            "entity_administration": 1,
+            "entity_administration_fac": null,
+            "entity_management": 1,
+            "entity_management_fac": null,
             "parent": null,
             "grade": "BACHELOR"
         }
@@ -48,7 +54,10 @@
             "title_international": "",
             "title_short": "",
             "title_printable": "",
-            "structure": 1,
+            "entity_administration": 1,
+            "entity_administration_fac": null,
+            "entity_management": 1,
+            "entity_management_fac": null,
             "parent": null,
             "grade": "BACHELOR"
         }
@@ -66,7 +75,10 @@
             "title_international": "",
             "title_short": "",
             "title_printable": "",
-            "structure": 1,
+            "entity_administration": 1,
+            "entity_administration_fac": null,
+            "entity_management": 1,
+            "entity_management_fac": null,
             "parent": null,
             "grade": "MASTER"
         }
