@@ -101,8 +101,8 @@ def find_all_for_sync():
     """
     :return: All records in the 'Student' model (table). Used to synchronize date from Osis to Osis-portal.
     """
-    records = serialize_all_students()
-    return records
+    datas = serialize_all_students()
+    return datas
 
 
 def serialize_all_students():
@@ -114,14 +114,13 @@ def serialize_all_students():
     students = Student.objects.select_related('person').all()
     list_students = []
     list_persons = []
+    datas = []
     for stud in students:
-        list_students.append(stud)
-        list_persons.append(stud.person)
-    data_students = serialize_list_students(list_students)
-    data_persons = person.serialize_list_persons(list_persons)
-    data_dict = {'students': data_students, 'persons': data_persons}
-    return data_dict
-
+        datas.append({
+            'students': serialize_list_students([stud]),
+            'persons': person.serialize_list_persons([stud.person])
+        })
+    return datas
 
 def serialize_list_students(list_students):
     """
