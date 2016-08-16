@@ -114,20 +114,13 @@ def find_by_id(offer_year_calendar_id):
 
 
 def find_deliberation_date(session_exam):
-    scores_encodings_end_date = session_exam.offer_year_calendar.end_date
-    # The deliberation date is the end date of the scores encodings +1 day
-    scores_encodings_end_date += datetime.timedelta(days=1)
+    scores_encodings_end_date = None
+    offer_year_cal = session_exam.offer_year_calendar
+    if offer_year_cal.customized: # if the date is set by EPC (from deliberation date)
+        scores_encodings_end_date = offer_year_cal.end_date
+        # The deliberation date is the end date of the scores encodings +1 day
+        scores_encodings_end_date += datetime.timedelta(days=1)
     return scores_encodings_end_date
-
-
-def get_min_start_date(academic_calendar_id):
-    try:
-        return OfferYearCalendar.objects.filter(academic_calendar_id=academic_calendar_id) \
-                                        .filter(customized=True) \
-                                        .filter(start_date__isnull=False)\
-                                        .earliest('start_date')
-    except ObjectDoesNotExist:
-        return None
 
 
 def get_max_end_date(academic_calendar_id):

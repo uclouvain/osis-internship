@@ -27,12 +27,9 @@
 
 ###########################################################################
 # TO RUN THE SCRIPT ALONE, UNCOMMENT 6 NEXT LINES
-# from sys import path
-# import os
-# import django
-# path.append('./osis')
-# os.environ["DJANGO_SETTINGS_MODULE"] = "backoffice.settings"
-# django.setup()
+# launch "python manage.py shell" in console
+# > import backoffice.portal_migration as portal
+# > portal.migrate_base_student() # migration of all students
 ###########################################################################
 
 from reference import models as mdl_ref
@@ -47,16 +44,14 @@ def get_all_data(model_class, fields=None, order_by=None):
     :param order_by: A string represent the name of a column in the model.
     :return: Liste des records sous forme de dictionnaire
     """
-    print("Retrieving data from " + str(model_class) + "...")
     queryset = model_class.objects
-    if fields :
+    if fields:
         queryset = queryset.values(*fields)
-    else :
+    else:
         queryset = queryset.values()
-    if order_by :
+    if order_by:
         queryset = queryset.order_by(order_by)
-    print("Done.")
-    return list(queryset) # list() to force the evaluation of the queryset
+    return list(queryset)  # list() to force the evaluation of the queryset
 
 
 def get_model_class_str(model_class):
@@ -65,8 +60,16 @@ def get_model_class_str(model_class):
     :return: un String qui représente le model_class passé en paramètre.
     """
     map_classes = {
-        mdl_ref.country.Country: 'reference.Country',
-        mdl_base.domain.Domain: 'admission.Domain',
+        mdl_ref.continent.Continent: 'reference.continent.Continent',
+        mdl_ref.country.Country: 'reference.country.Country',
+        mdl_ref.currency.Currency: 'reference.currency.Currency',
+        mdl_ref.decree.Decree: 'reference.decree.Decree',
+        mdl_ref.domain.Domain: 'reference.domain.Domain',
+        mdl_ref.education_institution.EducationInstitution: 'reference.education_institution.EducationInstitution',
+        mdl_ref.language.Language: 'reference.language.Language',
+        mdl_base.student.Student: 'base.student.Student',
+        mdl_base.tutor.Tutor: 'base.tutor.Tutor'
+
     }
     return map_classes[model_class]
 
@@ -78,13 +81,11 @@ def migrate(model_class, records, queue_name):
     :param queue_name: The name of the queue in which data are sent.
     :param records: List of records to send into the queue.
     """
-    print("Sending records into the queue named '" + queue_name + "'...")
     data = {
         'model_class_str': get_model_class_str(model_class),
         'records': records,
     }
     queue_actions.send_message(queue_name, data)
-    print("Done.")
 
 
 def migrate_reference_country():
@@ -92,6 +93,23 @@ def migrate_reference_country():
     migrate(mdl_ref.country.Country, records, 'reference')
 
 
-def migrate_base_domain():
-    records = mdl_base.domain.find_all_for_sync()
-    migrate(mdl_base.domain.Domain, records, 'admission')
+def migrate_reference_domain():
+    records = mdl_ref.domain.find_all_for_sync()
+    migrate(mdl_ref.domain.Domain, records, 'reference')
+
+
+def migrate_base_student():
+    datas = mdl_base.student.find_all_for_sync()
+    for records in datas:
+        migrate(mdl_base.student.Student, records, 'osis_base')
+
+
+def migrate_base_tutor():
+    datas = mdl_base.tutor.find_all_for_sync()
+    for records in datas:
+        migrate(mdl_base.tutor.Tutor, records, 'osis_base')
+
+
+def migrate_records(records, model_class, queue_name):
+    migrate(model_class, records, queue_name)
+

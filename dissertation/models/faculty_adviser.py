@@ -36,6 +36,5 @@ class FacultyAdviser(models.Model):
         return self.offer.title
 
 
-def find_by_adviser(a_adviser):
-    faculty_adviser = FacultyAdviser.objects.get(adviser=a_adviser)
-    return faculty_adviser.offer
+def search_by_adviser(a_adviser):
+    return FacultyAdviser.objects.get(adviser=a_adviser)

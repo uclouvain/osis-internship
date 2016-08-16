@@ -41,3 +41,37 @@ class PropositionRole(models.Model):
     def __str__(self):
         return u"%s %s" % (self.status if self.status else "",
                            self.adviser if self.adviser else "")
+
+
+def count_by_dissertation(dissertation):
+    return PropositionRole.objects.filter(proposition_dissertation=dissertation.proposition_dissertation)\
+                                  .count()
+
+
+def search_by_dissertation(dissertation):
+    return PropositionRole.objects.filter(proposition_dissertation=dissertation.proposition_dissertation)
+
+
+def count_by_proposition(prop_dissert):
+    return PropositionRole.objects.filter(proposition_dissertation=prop_dissert)\
+                                  .count()
+
+
+def search_by_proposition(prop_dissert):
+    return PropositionRole.objects.filter(proposition_dissertation=prop_dissert)
+
+
+def add(status, adviser, proposition_dissertation):
+    if count_by_status_adviser_proposition(status, adviser, proposition_dissertation) == 0:
+        role = PropositionRole(status=status, adviser=adviser, proposition_dissertation=proposition_dissertation)
+        role.save()
+
+
+def count_by_status_adviser_proposition(status, adviser, proposition_dissertation):
+    return PropositionRole.objects.filter(
+                                        proposition_dissertation=proposition_dissertation
+                                    ).filter(
+                                        status=status
+                                    ).filter(
+                                        adviser=adviser
+                                    ).count()

@@ -173,3 +173,7 @@ def find_by_user(user, academic_yr):
     program_manager_queryset = program_manager.find_by_user(user, academic_year=academic_yr)
     offer_year_ids = program_manager_queryset.values_list('offer_year', flat=True).distinct('offer_year')
     return OfferYear.objects.filter(pk__in=offer_year_ids).order_by('acronym')
+
+
+def find_by_offer(off):
+    return OfferYear.objects.filter(offer=off)
