@@ -145,6 +145,7 @@ def internships(request):
         if request.GET.get('speciality_sort') != '0':
             speciality_sort_value = request.GET.get('speciality_sort')
         else :
+            print(request.GET.get('speciality_sort'))
             speciality_sort_value = None
     # Then select Internship Offer depending of the option
     if organization_sort_value and organization_sort_value != "0":
@@ -162,9 +163,17 @@ def internships(request):
     all_organizations = get_all_organizations(all_internships)
     all_specialities = get_all_specialities(all_internships)
     set_tabs_name(all_specialities)
-    all_non_mandatory_speciality=InternshipSpeciality.find_non_mandatory()
+    all_non_mandatory_speciality = InternshipSpeciality.find_non_mandatory()
+    if speciality_sort_value:
+        print(speciality_sort_value)
+        all_non_mandatory_internships = InternshipOffer.find_non_mandatory_internships(speciality__name=speciality_sort_value)
+    else:
+        all_non_mandatory_internships = InternshipOffer.find_non_mandatory_internships(speciality__mandatory=0)
+    get_number_choices(all_non_mandatory_internships)
+
     return render(request, "internships.html", {'section':                  'internship',
                                                 'all_internships':          query,
+                                                'all_non_mandatory_internships': all_non_mandatory_internships,
                                                 'all_organizations':        all_organizations,
                                                 'all_speciality':           all_specialities,
                                                 'organization_sort_value':  organization_sort_value,

@@ -160,6 +160,9 @@
                       </form>
                       <thead>
                         <tr>
+                          {% if not speciality_sort_value %}
+                            <th align="center">{% trans 'speciality' %}</th>
+                          {% endif %}
                           <th align="center">{% trans 'organization' %}</th>
                           <th align="center">{% trans 'student_max' %}</th>
                           <th align="center">{% trans 'Nombre de 1er choix' %}</th>
@@ -168,9 +171,11 @@
                         </tr>
                       </thead>
                       <tbody>
-                        {% for internship in all_internships %}
-                        {% if internship.speciality == luy %}
+                        {% for internship in all_non_mandatory_internships %}
                           <tr>
+                            {% if not speciality_sort_value %}
+                              <td>{{ internship.speciality.name }}</td>
+                            {% endif %}
                             <td>
                               {{ internship.organization.reference }} - {{ internship.organization }}
                             </td>
@@ -191,7 +196,6 @@
                               </a>
                             </td>
                           </tr>
-                        {% endif %}
                         {% endfor %}
                       </tbody>
                   </table>
