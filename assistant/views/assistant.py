@@ -32,6 +32,7 @@ from assistant.models import academic_assistant, assistant_mandate
 from django.views.generic.list import ListView
 from django.views.generic.edit import FormMixin
 from django.http.response import HttpResponseRedirect
+from assistant.models import tutoring_learning_unit_year
 
 
 class AssistantMandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMixin):
@@ -70,3 +71,31 @@ def mandate_change_state(request, mandate_id):
     #elif 'bt_mandate_edit' in request.POST:
     mandate.save()
     return HttpResponseRedirect(reverse('assistant_mandates'))
+
+
+class AssistantLearningUnitsListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMixin):
+    context_object_name = 'mandate_learning_units_list'
+    template_name = 'mandate_learning_unit_list.html'
+    form_class = forms.Form
+
+    def test_func(self):
+        try:
+            return academic_assistant.find_by_person(person=self.request.user.person)
+        except ObjectDoesNotExist:
+            return False
+
+    def get_login_url(self):
+        return reverse('access_denied')
+
+    def get_queryset(self):
+        mandate_id = self.kwargs['mandate_id']
+        queryset = tutoring_learning_unit_year.find_by_mandate(
+            assistant_mandate.find_mandate_by_id(mandate_id))
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super(AssistantLearningUnitsListView, self).get_context_data(**kwargs)
+        context['mandate_id'] = self.kwargs['mandate_id']
+        return context
+

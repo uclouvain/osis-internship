@@ -37,3 +37,17 @@ class TutoringLearningUnitYear(models.Model):
     preparation_duration = models.PositiveIntegerField(null=True, blank=True)
     exams_supervision_duration = models.PositiveIntegerField(null=True, blank=True)
     others_delivery = models.TextField(null=True, blank=True)
+
+
+def find_by_id(tutoring_learning_unit_id):
+    return TutoringLearningUnitYear.objects.get(id=tutoring_learning_unit_id)
+
+def find_for_mandate_for_academic_year(mandate, academic_year):
+    return TutoringLearningUnitYear.objects.filter(mandate=mandate, learning_unit_year__academic_year=academic_year)
+
+def find_by_mandate(mandate):
+    return TutoringLearningUnitYear.objects.filter(mandate=mandate).order_by('learning_unit_year__academic_year')
+
+def find_by_mandate_and_learning_unit(mandate, learning_unit):
+    return TutoringLearningUnitYear.objects.filter(mandate=mandate).\
+        filter(learning_unit_year=learning_unit)

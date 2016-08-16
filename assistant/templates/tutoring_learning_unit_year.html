@@ -1,0 +1,196 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block breadcrumb %}
+<li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'institution' %}</a></li>
+<li><a href="{% url 'mandates' %}" id="lnk_mandates">{% trans 'mandates' %}</a></li>
+<li><a href="{% url 'assistant_mandates' %}" id="lnk_mandates">{% trans 'my_mandates' %}</a></li>
+<li class="active">{% trans 'renewal_form' %}</li>
+{% endblock %}
+
+{% block content %}
+<ul class="nav nav-tabs ">
+<li><a href="{% url 'assistant_mandates' %}">{% trans 'my_mandates' %}</a></li>
+<li><a href="{% url 'form_part1_edit' mandate_id %}">{% trans 'assistant_form_part1' %}</a></li>
+<li class="active"><a href="{% url 'mandate_learning_units' mandate_id %}">{% trans 'assistant_form_part2' %}</a></li>
+<li><a href="{% url 'form_part5_edit' mandate_id %}">{% trans 'assistant_form_part5' %}</a></li>
+<li><a href="{% url 'form_part6_edit' mandate_id %}">{% trans 'assistant_form_part6' %}</a></li>
+</ul>
+    <div class="panel panel-default">
+        <div class="panel-body">
+        <form method="POST" action="{% url 'tutoring_learning_unit_save' mandate_id%}">
+        {{ form.non_field_errors }}
+        {% csrf_token %}
+ 		{% for hidden in form.hidden_fields %}
+			{{ hidden }}
+		{% endfor %}
+        <div class="panel-info">
+            <div class="panel-heading">
+                <font size="4">{% trans 'tutoring_learning_unit' %}</font>
+            </div>
+        </div><p>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="txt_academic_year">{% trans 'academic_year' %}</label>
+                </div>
+                <div class="col-md-3">
+                    <div class="controls">{{ form.academic_year }}</div>
+                    <font class="error">{{ form.academic_year.errors }}</font>
+                </div>
+            </div><p>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="txt_learning_unit_acronym">{% trans 'learning_unit_acronym' %}</label>
+                </div>
+                <div class="col-md-3">
+                    <div class="controls">{{ form.learning_unit_year }}</div>
+                    <font class="error">{{ form.learning_unit_year.errors }}</font>
+                </div>
+            </div><p>
+        </div>
+        <div id="inputs">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="txt_sessions_number">{% trans 'sessions_number' %}</label>
+                </div>
+                <div class="col-md-3">
+                    <div class="controls">{{ form.sessions_number }}</div>
+                    <font class="error">{{ form.sessions_number.errors }}</font>
+                </div>
+            </div><p>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="txt_sessions_duration">{% trans 'sessions_duration' %}</label>
+                </div>
+                <div class="col-md-3">
+                    <div class="controls">{{ form.sessions_duration }}</div>
+                    <font class="error">{{ form.sessions_duration.errors }}</font>
+                </div>
+            </div><p>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="txt_series_number">{% trans 'series_number' %}</label>
+                </div>
+                <div class="col-md-3">
+                    <div class="controls">{{ form.series_number }}</div>
+                    <font class="error">{{ form.series_number.errors }}</font>
+                </div>
+            </div><p>
+        </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="txt_sector_face_to_face_duration">{% trans 'face_to_face_duration' %}</label>
+                </div>
+                <div class="col-md-3">
+                    <div class="controls">{{ form.face_to_face_duration }}</div>
+                    <font class="error">{{ form.face_to_face_duration.errors }}</font>
+                </div>
+            </div><p>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="txt_sector_attendees">{% trans 'attendees' %}</label>
+                </div>
+                <div class="col-md-3">
+                    <div class="controls">{{ form.attendees }}</div>
+                    <font class="error">{{ form.attendees.errors }}</font>
+                </div>
+            </div><p>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="txt_sector_exams_supervision_duration">{% trans 'exams_supervision_duration' %}</label>
+                </div>
+                <div class="col-md-3">
+                    <div class="controls">{{ form.exams_supervision_duration }}</div>
+                    <font class="error">{{ form.exams_supervision_duration.errors }}</font>
+                </div>
+            </div><p>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="txt_sector_others_delivery">{% trans 'others_delivery' %}</label>
+                </div>
+                <div class="col-md-3">
+                    <div class="controls">{{ form.others_delivery }}</div>
+                    <font class="error">{{ form.others_delivery.errors }}</font>
+                </div>
+            </div><p>
+        </div>
+        <button type="submit" class="btn btn-primary" title="{% trans 'save'%}" id="bt_save_tutoring_learning_unit">
+        <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}</button>
+        <a class="btn btn-default" id="lnk_cancel" href="{% url 'mandate_learning_units' mandate_id %}">
+        <span class="glyphicon glyphicon-cancel" aria-hidden="true"></span> {% trans 'cancel'%}</a>
+    </form>
+    </div>
+      </div>
+{% endblock %}
+
+{% block style %}
+  <style>
+    input[type=number]{
+      width: 50px;
+    }
+    textarea{
+      display:inline-block;
+      vertical-align:middle;
+    }
+  </style>
+{% endblock %}
+
+{% block script %}
+  <script type="text/javascript">
+  window.onload = function () {
+    var session_number = document.getElementById('id_sessions_number');
+    var session_duration = document.getElementById('id_sessions_duration');
+    var series_number = document.getElementById('id_series_number');
+    var face_to_face_duration = document.getElementById('id_face_to_face_duration');
+
+var trigFunc = function()
+{
+    face_to_face_duration.value = session_number.value * session_duration.value * series_number.value
+};
+session_number.onchange = trigFunc;
+session_duration.onchange = trigFunc;
+series_number.onchange = trigFunc;
+};
+  </script>
+{% endblock %}

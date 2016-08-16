@@ -32,12 +32,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
-from django.template.context_processors import request
 from assistant.forms import *
-from base.models import person_address, person
-from assistant.models.academic_assistant import find_by_id
-from assistant.models.assistant_mandate import find_mandate_by_id, find_mandate_by_academic_assistant
-from base.models.person import find_by_user
 from base.models import person_address, person
 
 
@@ -62,7 +57,8 @@ def form_part1_edit(request, mandate_id):
                                                          'addresses': addresses,
                                                          'form': form,
                                                          'form2': form2}) 
-    
+
+
 @login_required    
 def form_part1_save(request, mandate_id):
     """Use to save an assistant form part1."""
@@ -82,6 +78,60 @@ def form_part1_save(request, mandate_id):
                                                      'form': form,
                                                      'form2': form2})
 
+
+@login_required
+def tutoring_learning_unit_add(request, mandate_id):
+    form = TutoringLearningUnitForm(initial={'mandate_id': mandate_id,
+                                             'tutoring_learning_unit_year_id': None
+                                             })
+    return render(request, "tutoring_learning_unit_year.html", {'form': form,
+                                                                'mandate_id': mandate_id
+                                                                })
+
+
+@login_required
+def tutoring_learning_unit_edit(request, tutoring_learning_unit_id=None):
+    edited_learning_unit_year = mdl.tutoring_learning_unit_year.find_by_id(tutoring_learning_unit_id)
+    academic_year = edited_learning_unit_year.learning_unit_year.academic_year
+    mandate_id = edited_learning_unit_year.mandate_id
+    form = TutoringLearningUnitForm(initial={'mandate_id': edited_learning_unit_year.mandate_id,
+                                    'tutoring_learning_unit_year_id': edited_learning_unit_year.id,
+                                    'learning_unit_year': edited_learning_unit_year.learning_unit_year.acronym,
+                                    'sessions_duration': edited_learning_unit_year.sessions_duration,
+                                    'sessions_number': edited_learning_unit_year.sessions_number,
+                                    'series_number': edited_learning_unit_year.series_number,
+                                    'face_to_face_duration': edited_learning_unit_year.face_to_face_duration,
+                                    'attendees': edited_learning_unit_year.attendees,
+                                    'preparation_duration': edited_learning_unit_year.preparation_duration,
+                                    'exams_supervision_duration': edited_learning_unit_year.exams_supervision_duration,
+                                    'others_delivery': edited_learning_unit_year.others_delivery,
+                                    'academic_year': academic_year.id
+                                             })
+    return render(request, "tutoring_learning_unit_year.html", {'form': form,
+                                                                'mandate_id': mandate_id
+                                                                    })
+
+
+@login_required
+def tutoring_learning_unit_save(request, mandate_id):
+
+    form = TutoringLearningUnitForm(data=request.POST)
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect(reverse('mandate_learning_units', kwargs={'mandate_id':mandate_id}))
+    else:
+        return render(request, "tutoring_learning_unit_year.html", {'form': form,
+                                                                    'mandate_id': mandate_id})
+
+
+@login_required
+def tutoring_learning_unit_delete(request, tutoring_learning_unit_id):
+    learning_unit_year = mdl.tutoring_learning_unit_year.find_by_id(tutoring_learning_unit_id)
+    mandate_id = learning_unit_year.mandate_id
+    mdl.tutoring_learning_unit_year.find_by_id(tutoring_learning_unit_id).delete()
+    return HttpResponseRedirect(reverse('mandate_learning_units', kwargs={'mandate_id':mandate_id}))
+
+
 def form_part6_edit(request, mandate_id):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     person = request.user.person
@@ -96,8 +146,9 @@ def form_part6_edit(request, mandate_id):
                                        }, prefix='mand')
     return render(request, "assistant_form_part6.html", {'assistant': assistant,
                                                          'mandate': mandate,
-                                                         'form': form}) 
-    
+                                                         'form': form})
+
+
 def form_part6_save(request, mandate_id):
     """Use to save an assistant form part6."""
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
@@ -123,6 +174,7 @@ def form_part6_save(request, mandate_id):
                                                              'mandate': mandate,
                                                              'form': form})
 
+
 def form_part5_edit(request, mandate_id):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     person = request.user.person
@@ -145,7 +197,8 @@ def form_part5_edit(request, mandate_id):
     return render(request, "assistant_form_part5.html", {'assistant': assistant,
                                                          'mandate': mandate,
                                                          'form': form}) 
-    
+
+
 def form_part5_save(request, mandate_id):
     """Use to save an assistant form part5."""
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
