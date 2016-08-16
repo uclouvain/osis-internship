@@ -44,12 +44,15 @@ def internships_periods(request):
 def period_create(request):
     f = PeriodForm(data=request.POST)
     return render(request, "period_create.html", {'section': 'internship',
-                                                    'form' : f
-                                                    })
+                                                'form' : f,
+                                                })
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def period_save(request, period_id):
-    period = Period.find_by_id(period_id)
+    if period_id:
+        period = Period.find_by_id(period_id)
+    else:
+        period = Period()
     form = PeriodForm(data=request.POST, instance=period)
     form.save()
 
