@@ -31,26 +31,8 @@
     "pk": 4,
     "fields": {
       "external_id": null,
-      "changed": "2016-03-04T22:42:32.504Z",
-      "title": "Bachelier en information et communication"
-    }
-  },
-  {
-    "model": "base.offer",
-    "pk": 5,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-03-04T22:43:16.381Z",
-      "title": "Bachelier en sciences biom\u00e9dicales"
-    }
-  },
-  {
-    "model": "base.offer",
-    "pk": 6,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-03-04T22:44:58.315Z",
-      "title": "Bachelier en histoire"
+      "changed": null,
+      "title": "Master en sciences informatiques"
     }
   }
 ]

@@ -8,7 +8,7 @@
       "start_date": "2016-03-07",
       "end_date": "2016-03-07",
       "function": "PROFESSOR",
-      "learning_unit": 3,
+      "learning_unit": 1,
       "tutor": 1
     }
   },
@@ -34,8 +34,21 @@
       "start_date": "2016-03-07",
       "end_date": "2016-03-07",
       "function": "PROFESSOR",
-      "learning_unit": 1,
+      "learning_unit": 3,
       "tutor": 3
+    }
+  },
+  {
+    "model": "base.attribution",
+    "pk": 4,
+    "fields": {
+      "external_id": null,
+      "changed": null,
+      "start_date": "2016-03-07",
+      "end_date": "2016-03-07",
+      "function": "COORDINATOR",
+      "learning_unit": 3,
+      "tutor": 4
     }
   }
 ]
