@@ -8,7 +8,7 @@
       "number_session": 1,
       "status": "CLOSED",
       "learning_unit_year": 1,
-      "offer_year_calendar": 19
+      "offer_year_calendar": 3
     }
   },
   {
@@ -17,10 +17,10 @@
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T14:26:10.108Z",
-      "number_session": 2,
+      "number_session": 3,
       "status": "OPEN",
       "learning_unit_year": 1,
-      "offer_year_calendar": 20
+      "offer_year_calendar": 5
     }
   },
   {
@@ -29,10 +29,10 @@
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T14:26:30.519Z",
-      "number_session": 3,
+      "number_session": 2,
       "status": "OPEN",
-      "learning_unit_year": 1,
-      "offer_year_calendar": 21
+      "learning_unit_year": 2,
+      "offer_year_calendar": 4
     }
   },
   {
@@ -41,10 +41,10 @@
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T14:25:31.160Z",
-      "number_session": 1,
+      "number_session": 3,
       "status": "CLOSED",
       "learning_unit_year": 2,
-      "offer_year_calendar": 19
+      "offer_year_calendar": 5
     }
   },
   {
@@ -66,7 +66,7 @@
       "external_id": null,
       "changed": "2016-05-03T14:26:30.519Z",
       "number_session": 3,
-      "status": "OPEN",
+      "status": "CLOSED",
       "learning_unit_year": 2,
       "offer_year_calendar": 21
     }
@@ -77,10 +77,10 @@
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T14:25:31.160Z",
-      "number_session": 1,
+      "number_session": 3,
       "status": "CLOSED",
       "learning_unit_year": 3,
-      "offer_year_calendar": 19
+      "offer_year_calendar": 9
     }
   },
   {
@@ -91,344 +91,8 @@
       "changed": "2016-05-03T14:26:10.108Z",
       "number_session": 2,
       "status": "OPEN",
-      "learning_unit_year": 3,
-      "offer_year_calendar": 20
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 9,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:26:30.519Z",
-      "number_session": 3,
-      "status": "OPEN",
-      "learning_unit_year": 3,
-      "offer_year_calendar": 21
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 10,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:25:31.160Z",
-      "number_session": 1,
-      "status": "CLOSED",
       "learning_unit_year": 4,
-      "offer_year_calendar": 19
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 11,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:26:10.108Z",
-      "number_session": 2,
-      "status": "OPEN",
-      "learning_unit_year": 4,
-      "offer_year_calendar": 20
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 12,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:26:30.519Z",
-      "number_session": 3,
-      "status": "OPEN",
-      "learning_unit_year": 4,
-      "offer_year_calendar": 21
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 13,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:25:31.160Z",
-      "number_session": 1,
-      "status": "CLOSED",
-      "learning_unit_year": 5,
-      "offer_year_calendar": 19
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 14,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:26:10.108Z",
-      "number_session": 2,
-      "status": "OPEN",
-      "learning_unit_year": 5,
-      "offer_year_calendar": 20
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 15,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:26:30.519Z",
-      "number_session": 3,
-      "status": "OPEN",
-      "learning_unit_year": 5,
-      "offer_year_calendar": 21
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 17,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:25:31.160Z",
-      "number_session": 1,
-      "status": "CLOSED",
-      "learning_unit_year": 6,
-      "offer_year_calendar": 5
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 18,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:26:10.108Z",
-      "number_session": 2,
-      "status": "OPEN",
-      "learning_unit_year": 6,
-      "offer_year_calendar": 6
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 19,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:26:30.519Z",
-      "number_session": 3,
-      "status": "OPEN",
-      "learning_unit_year": 6,
-      "offer_year_calendar": 7
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 20,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:25:31.160Z",
-      "number_session": 1,
-      "status": "CLOSED",
-      "learning_unit_year": 7,
-      "offer_year_calendar": 5
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 21,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:26:10.108Z",
-      "number_session": 2,
-      "status": "OPEN",
-      "learning_unit_year": 7,
-      "offer_year_calendar": 6
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 22,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:26:30.519Z",
-      "number_session": 3,
-      "status": "OPEN",
-      "learning_unit_year": 7,
-      "offer_year_calendar": 7
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 23,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:25:31.160Z",
-      "number_session": 1,
-      "status": "CLOSED",
-      "learning_unit_year": 8,
-      "offer_year_calendar": 5
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 24,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:26:10.108Z",
-      "number_session": 2,
-      "status": "OPEN",
-      "learning_unit_year": 8,
-      "offer_year_calendar": 6
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 25,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:26:30.519Z",
-      "number_session": 3,
-      "status": "OPEN",
-      "learning_unit_year": 8,
-      "offer_year_calendar": 7
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 26,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:25:31.160Z",
-      "number_session": 1,
-      "status": "CLOSED",
-      "learning_unit_year": 9,
-      "offer_year_calendar": 5
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 27,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:26:10.108Z",
-      "number_session": 2,
-      "status": "OPEN",
-      "learning_unit_year": 9,
-      "offer_year_calendar": 6
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 28,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:26:30.519Z",
-      "number_session": 3,
-      "status": "OPEN",
-      "learning_unit_year": 9,
-      "offer_year_calendar": 7
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 29,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:25:31.160Z",
-      "number_session": 1,
-      "status": "CLOSED",
-      "learning_unit_year": 10,
-      "offer_year_calendar": 5
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 30,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:26:10.108Z",
-      "number_session": 2,
-      "status": "OPEN",
-      "learning_unit_year": 10,
-      "offer_year_calendar": 6
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 31,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:26:30.519Z",
-      "number_session": 3,
-      "status": "OPEN",
-      "learning_unit_year": 10,
-      "offer_year_calendar": 7
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 32,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-08T20:13:17.195Z",
-      "number_session": 1,
-      "status": "CLOSED",
-      "learning_unit_year": 11,
-      "offer_year_calendar": 19
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 33,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-08T20:13:34.852Z",
-      "number_session": 2,
-      "status": "OPEN",
-      "learning_unit_year": 11,
-      "offer_year_calendar": 20
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 34,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-08T20:14:11.496Z",
-      "number_session": 3,
-      "status": "OPEN",
-      "learning_unit_year": 11,
-      "offer_year_calendar": 21
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 35,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-08T20:30:04.606Z",
-      "number_session": 1,
-      "status": "CLOSED",
-      "learning_unit_year": 12,
-      "offer_year_calendar": 19
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 36,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-08T20:30:16.556Z",
-      "number_session": 2,
-      "status": "OPEN",
-      "learning_unit_year": 12,
-      "offer_year_calendar": 20
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 37,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-08T20:30:33.720Z",
-      "number_session": 3,
-      "status": "OPEN",
-      "learning_unit_year": 12,
-      "offer_year_calendar": 21
+      "offer_year_calendar": 12
     }
   }
 ]

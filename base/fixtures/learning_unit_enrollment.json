@@ -72,7 +72,7 @@
       "external_id": null,
       "changed": "2016-05-03T13:47:49.564Z",
       "date_enrollment": "2016-05-03",
-      "learning_unit_year": 2,
+      "learning_unit_year": 3,
       "offer_enrollment": 2
     }
   },
@@ -83,7 +83,7 @@
       "external_id": null,
       "changed": "2016-05-03T13:47:49.564Z",
       "date_enrollment": "2016-05-03",
-      "learning_unit_year": 3,
+      "learning_unit_year": 5,
       "offer_enrollment": 2
     }
   },
@@ -94,7 +94,7 @@
       "external_id": null,
       "changed": "2016-05-03T13:47:49.564Z",
       "date_enrollment": "2016-05-03",
-      "learning_unit_year": 4,
+      "learning_unit_year": 7,
       "offer_enrollment": 2
     }
   },
@@ -105,8 +105,8 @@
       "external_id": null,
       "changed": "2016-05-03T13:47:49.564Z",
       "date_enrollment": "2016-05-03",
-      "learning_unit_year": 5,
-      "offer_enrollment": 2
+      "learning_unit_year": 10,
+      "offer_enrollment": 3
     }
   },
   {
@@ -116,7 +116,7 @@
       "external_id": null,
       "changed": "2016-05-03T13:47:49.564Z",
       "date_enrollment": "2016-05-03",
-      "learning_unit_year": 1,
+      "learning_unit_year": 11,
       "offer_enrollment": 3
     }
   },
@@ -127,7 +127,7 @@
       "external_id": null,
       "changed": "2016-05-03T13:47:49.564Z",
       "date_enrollment": "2016-05-03",
-      "learning_unit_year": 2,
+      "learning_unit_year": 12,
       "offer_enrollment": 3
     }
   },
@@ -138,8 +138,8 @@
       "external_id": null,
       "changed": "2016-05-03T13:47:49.564Z",
       "date_enrollment": "2016-05-03",
-      "learning_unit_year": 3,
-      "offer_enrollment": 3
+      "learning_unit_year": 9,
+      "offer_enrollment": 4
     }
   },
   {
@@ -149,8 +149,8 @@
       "external_id": null,
       "changed": "2016-05-03T13:47:49.564Z",
       "date_enrollment": "2016-05-03",
-      "learning_unit_year": 4,
-      "offer_enrollment": 3
+      "learning_unit_year": 10,
+      "offer_enrollment": 4
     }
   },
   {
@@ -160,8 +160,8 @@
       "external_id": null,
       "changed": "2016-05-03T13:47:49.564Z",
       "date_enrollment": "2016-05-03",
-      "learning_unit_year": 5,
-      "offer_enrollment": 3
+      "learning_unit_year": 9,
+      "offer_enrollment": 5
     }
   },
   {
@@ -171,8 +171,8 @@
       "external_id": null,
       "changed": "2016-05-03T13:47:49.564Z",
       "date_enrollment": "2016-05-03",
-      "learning_unit_year": 1,
-      "offer_enrollment": 4
+      "learning_unit_year": 10,
+      "offer_enrollment": 5
     }
   },
   {
@@ -182,8 +182,8 @@
       "external_id": null,
       "changed": "2016-05-03T13:47:49.564Z",
       "date_enrollment": "2016-05-03",
-      "learning_unit_year": 2,
-      "offer_enrollment": 4
+      "learning_unit_year": 11,
+      "offer_enrollment": 5
     }
   },
   {
@@ -193,8 +193,8 @@
       "external_id": null,
       "changed": "2016-05-03T13:47:49.564Z",
       "date_enrollment": "2016-05-03",
-      "learning_unit_year": 3,
-      "offer_enrollment": 4
+      "learning_unit_year": 12,
+      "offer_enrollment": 5
     }
   },
   {
@@ -204,8 +204,8 @@
       "external_id": null,
       "changed": "2016-05-03T13:47:49.564Z",
       "date_enrollment": "2016-05-03",
-      "learning_unit_year": 4,
-      "offer_enrollment": 4
+      "learning_unit_year": 13,
+      "offer_enrollment": 5
     }
   },
   {
@@ -215,8 +215,8 @@
       "external_id": null,
       "changed": "2016-05-03T13:47:49.564Z",
       "date_enrollment": "2016-05-03",
-      "learning_unit_year": 5,
-      "offer_enrollment": 4
+      "learning_unit_year": 7,
+      "offer_enrollment": 6
     }
   },
   {
@@ -226,8 +226,8 @@
       "external_id": null,
       "changed": "2016-05-03T13:47:49.564Z",
       "date_enrollment": "2016-05-03",
-      "learning_unit_year": 1,
-      "offer_enrollment": 5
+      "learning_unit_year": 8,
+      "offer_enrollment": 7
     }
   },
   {
@@ -237,8 +237,8 @@
       "external_id": null,
       "changed": "2016-05-03T13:47:49.564Z",
       "date_enrollment": "2016-05-03",
-      "learning_unit_year": 2,
-      "offer_enrollment": 5
+      "learning_unit_year": 11,
+      "offer_enrollment": 7
     }
   },
   {
@@ -248,8 +248,8 @@
       "external_id": null,
       "changed": "2016-05-03T13:47:49.564Z",
       "date_enrollment": "2016-05-03",
-      "learning_unit_year": 3,
-      "offer_enrollment": 5
+      "learning_unit_year": 14,
+      "offer_enrollment": 7
     }
   },
   {
@@ -260,7 +260,7 @@
       "changed": "2016-05-03T13:47:49.564Z",
       "date_enrollment": "2016-05-03",
       "learning_unit_year": 4,
-      "offer_enrollment": 5
+      "offer_enrollment": 8
     }
   },
   {
@@ -270,547 +270,63 @@
       "external_id": null,
       "changed": "2016-05-03T13:47:49.564Z",
       "date_enrollment": "2016-05-03",
-      "learning_unit_year": 5,
-      "offer_enrollment": 5
+      "learning_unit_year": 8,
+      "offer_enrollment": 8
     }
   },
   {
     "model": "base.learningunitenrollment",
-    "pk": 31,
+    "pk": 26,
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T13:47:49.564Z",
       "date_enrollment": "2016-05-03",
-      "learning_unit_year": 5,
-      "offer_enrollment": 6
+      "learning_unit_year": 9,
+      "offer_enrollment": 8
     }
   },
   {
     "model": "base.learningunitenrollment",
-    "pk": 32,
+    "pk": 27,
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T13:47:49.564Z",
       "date_enrollment": "2016-05-03",
-      "learning_unit_year": 1,
-      "offer_enrollment": 6
+      "learning_unit_year": 13,
+      "offer_enrollment": 8
     }
   },
   {
     "model": "base.learningunitenrollment",
-    "pk": 33,
+    "pk": 28,
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T13:47:49.564Z",
       "date_enrollment": "2016-05-03",
       "learning_unit_year": 2,
-      "offer_enrollment": 6
+      "offer_enrollment": 9
     }
   },
   {
     "model": "base.learningunitenrollment",
-    "pk": 34,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 3,
-      "offer_enrollment": 6
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 35,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 4,
-      "offer_enrollment": 6
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 36,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 1,
-      "offer_enrollment": 7
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 37,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 2,
-      "offer_enrollment": 7
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 38,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 3,
-      "offer_enrollment": 7
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 39,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 4,
-      "offer_enrollment": 7
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 40,
+    "pk": 29,
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T13:47:49.564Z",
       "date_enrollment": "2016-05-03",
       "learning_unit_year": 5,
-      "offer_enrollment": 7
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 41,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 1,
-      "offer_enrollment": 8
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 42,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 2,
-      "offer_enrollment": 8
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 43,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 3,
-      "offer_enrollment": 8
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 44,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 4,
-      "offer_enrollment": 8
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 45,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 5,
-      "offer_enrollment": 8
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 46,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 6,
-      "offer_enrollment": 9
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 47,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 7,
-      "offer_enrollment": 9
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 48,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 8,
-      "offer_enrollment": 9
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 49,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 9,
-      "offer_enrollment": 9
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 50,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 10,
-      "offer_enrollment": 9
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 51,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 6,
       "offer_enrollment": 10
     }
   },
   {
     "model": "base.learningunitenrollment",
-    "pk": 52,
+    "pk": 30,
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T13:47:49.564Z",
       "date_enrollment": "2016-05-03",
-      "learning_unit_year": 7,
+      "learning_unit_year": 10,
       "offer_enrollment": 10
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 53,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 8,
-      "offer_enrollment": 10
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 54,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 9,
-      "offer_enrollment": 10
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 55,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:18:11.073Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 10,
-      "offer_enrollment": 11
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 56,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 6,
-      "offer_enrollment": 12
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 57,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 7,
-      "offer_enrollment": 12
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 58,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 8,
-      "offer_enrollment": 12
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 59,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 9,
-      "offer_enrollment": 12
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 60,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 10,
-      "offer_enrollment": 12
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 61,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 6,
-      "offer_enrollment": 13
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 62,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 7,
-      "offer_enrollment": 13
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 63,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 8,
-      "offer_enrollment": 13
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 64,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 9,
-      "offer_enrollment": 13
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 65,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 10,
-      "offer_enrollment": 13
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 66,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 6,
-      "offer_enrollment": 14
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 67,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 7,
-      "offer_enrollment": 14
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 68,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 8,
-      "offer_enrollment": 14
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 69,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 9,
-      "offer_enrollment": 14
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 70,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 10,
-      "offer_enrollment": 14
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 71,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 6,
-      "offer_enrollment": 15
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 72,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 7,
-      "offer_enrollment": 15
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 73,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 8,
-      "offer_enrollment": 15
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 74,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 9,
-      "offer_enrollment": 15
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 75,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 10,
-      "offer_enrollment": 15
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 76,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 6,
-      "offer_enrollment": 11
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 77,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 7,
-      "offer_enrollment": 11
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 78,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 8,
-      "offer_enrollment": 11
-    }
-  },
-  {
-    "model": "base.learningunitenrollment",
-    "pk": 79,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T13:47:49.564Z",
-      "date_enrollment": "2016-05-03",
-      "learning_unit_year": 9,
-      "offer_enrollment": 11
     }
   }
 ]

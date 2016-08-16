@@ -31,8 +31,8 @@
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T18:31:16.193Z",
-      "academic_calendar": 1,
-      "offer_year": 2,
+      "academic_calendar": 4,
+      "offer_year": 1,
       "start_date": null,
       "end_date": null,
       "customized": false
@@ -44,8 +44,8 @@
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T18:31:16.193Z",
-      "academic_calendar": 2,
-      "offer_year": 2,
+      "academic_calendar": 5,
+      "offer_year": 1,
       "start_date": null,
       "end_date": null,
       "customized": false
@@ -57,8 +57,8 @@
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T18:31:16.193Z",
-      "academic_calendar": 1,
-      "offer_year": 3,
+      "academic_calendar": 6,
+      "offer_year": 1,
       "start_date": null,
       "end_date": null,
       "customized": false
@@ -70,8 +70,8 @@
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T18:31:16.193Z",
-      "academic_calendar": 2,
-      "offer_year": 3,
+      "academic_calendar": 1,
+      "offer_year": 2,
       "start_date": null,
       "end_date": null,
       "customized": false
@@ -83,8 +83,8 @@
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T18:31:16.193Z",
-      "academic_calendar": 1,
-      "offer_year": 14,
+      "academic_calendar": 2,
+      "offer_year": 2,
       "start_date": null,
       "end_date": null,
       "customized": false
@@ -93,6 +93,123 @@
   {
     "model": "base.offeryearcalendar",
     "pk": 8,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T18:31:16.193Z",
+      "academic_calendar": 4,
+      "offer_year": 2,
+      "start_date": null,
+      "end_date": null,
+      "customized": false
+    }
+  },
+  {
+    "model": "base.offeryearcalendar",
+    "pk": 9,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T18:31:16.193Z",
+      "academic_calendar": 5,
+      "offer_year": 2,
+      "start_date": null,
+      "end_date": null,
+      "customized": false
+    }
+  },
+  {
+    "model": "base.offeryearcalendar",
+    "pk": 9,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T18:31:16.193Z",
+      "academic_calendar": 6,
+      "offer_year": 2,
+      "start_date": null,
+      "end_date": null,
+      "customized": false
+    }
+  },
+  {
+    "model": "base.offeryearcalendar",
+    "pk": 10,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T18:31:16.193Z",
+      "academic_calendar": 1,
+      "offer_year": 3,
+      "start_date": null,
+      "end_date": null,
+      "customized": false
+    }
+  },
+  {
+    "model": "base.offeryearcalendar",
+    "pk": 11,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T18:31:16.193Z",
+      "academic_calendar": 2,
+      "offer_year": 3,
+      "start_date": null,
+      "end_date": null,
+      "customized": false
+    }
+  },
+  {
+    "model": "base.offeryearcalendar",
+    "pk": 12,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T18:31:16.193Z",
+      "academic_calendar": 4,
+      "offer_year": 3,
+      "start_date": null,
+      "end_date": null,
+      "customized": false
+    }
+  },
+  {
+    "model": "base.offeryearcalendar",
+    "pk": 13,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T18:31:16.193Z",
+      "academic_calendar": 5,
+      "offer_year": 3,
+      "start_date": null,
+      "end_date": null,
+      "customized": false
+    }
+  },
+  {
+    "model": "base.offeryearcalendar",
+    "pk": 14,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T18:31:16.193Z",
+      "academic_calendar": 6,
+      "offer_year": 3,
+      "start_date": null,
+      "end_date": null,
+      "customized": false
+    }
+  },
+  {
+    "model": "base.offeryearcalendar",
+    "pk": 15,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T18:31:16.193Z",
+      "academic_calendar": 1,
+      "offer_year": 4,
+      "start_date": null,
+      "end_date": null,
+      "customized": false
+    }
+  },
+  {
+    "model": "base.offeryearcalendar",
+    "pk": 16,
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T18:31:16.193Z",
@@ -105,11 +222,11 @@
   },
   {
     "model": "base.offeryearcalendar",
-    "pk": 9,
+    "pk": 17,
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T18:31:16.193Z",
-      "academic_calendar": 16,
+      "academic_calendar": 4,
       "offer_year": 4,
       "start_date": null,
       "end_date": null,
@@ -118,15 +235,28 @@
   },
   {
     "model": "base.offeryearcalendar",
-    "pk": 10,
+    "pk": 18,
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T18:31:16.193Z",
-      "academic_calendar": 17,
+      "academic_calendar": 5,
       "offer_year": 4,
       "start_date": null,
       "end_date": null,
       "customized": false
     }
-  }
+  },
+  {
+    "model": "base.offeryearcalendar",
+    "pk": 19,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T18:31:16.193Z",
+      "academic_calendar": 6,
+      "offer_year": 4,
+      "start_date": null,
+      "end_date": null,
+      "customized": false
+    }
+  },
 ]
