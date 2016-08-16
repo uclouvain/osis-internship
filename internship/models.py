@@ -40,7 +40,7 @@ class InternshipOffer(models.Model):
 
     @staticmethod
     def find_internships():
-        return InternshipOffer.objects.all().order_by('speciality__name', 'organization__reference')
+        return InternshipOffer.objects.filter(speciality__mandatory=1).order_by('speciality__name', 'organization__reference')
 
     @staticmethod
     def search(**kwargs):
@@ -169,7 +169,7 @@ class Period(models.Model):
     @staticmethod
     def search(**kwargs):
         kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = Period.objects.filter(**kwargs)
+        queryset = Period.objects.filter(**kwargs).order_by('date_start')
         return queryset
 
     @staticmethod
@@ -213,6 +213,10 @@ class InternshipSpeciality(models.Model):
     @staticmethod
     def find_by_id(speciality_id):
         return InternshipSpeciality.objects.get(pk=speciality_id)
+
+    @staticmethod
+    def find_non_mandatory():
+        return InternshipSpeciality.objects.filter(mandatory=False).order_by('name')
 
 class Organization(models.Model):
     name = models.CharField(max_length=255)
