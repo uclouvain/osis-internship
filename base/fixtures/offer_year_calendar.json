@@ -33,8 +33,8 @@
       "changed": "2016-05-03T18:31:16.193Z",
       "academic_calendar": 4,
       "offer_year": 1,
-      "start_date": null,
-      "end_date": null,
+      "start_date": "2015-01-01",
+      "end_date": "2016-01-30",
       "customized": false
     }
   },
@@ -46,8 +46,8 @@
       "changed": "2016-05-03T18:31:16.193Z",
       "academic_calendar": 5,
       "offer_year": 1,
-      "start_date": null,
-      "end_date": null,
+      "start_date": "2015-05-15",
+      "end_date": "2016-07-02",
       "customized": false
     }
   },
@@ -59,9 +59,9 @@
       "changed": "2016-05-03T18:31:16.193Z",
       "academic_calendar": 6,
       "offer_year": 1,
-      "start_date": null,
-      "end_date": null,
-      "customized": false
+      "start_date": "2016-08-01",
+      "end_date": "2016-09-01",
+      "customized": true
     }
   },
   {
@@ -124,9 +124,9 @@
       "changed": "2016-05-03T18:31:16.193Z",
       "academic_calendar": 6,
       "offer_year": 2,
-      "start_date": null,
-      "end_date": null,
-      "customized": false
+      "start_date": "2016-08-01",
+      "end_date": "2016-09-28",
+      "customized": true
     }
   },
   {
@@ -163,8 +163,8 @@
       "changed": "2016-05-03T18:31:16.193Z",
       "academic_calendar": 4,
       "offer_year": 3,
-      "start_date": null,
-      "end_date": null,
+     "start_date": "2015-05-15",
+      "end_date": "2016-06-15",
       "customized": false
     }
   },
@@ -189,9 +189,9 @@
       "changed": "2016-05-03T18:31:16.193Z",
       "academic_calendar": 6,
       "offer_year": 3,
-      "start_date": null,
-      "end_date": null,
-      "customized": false
+      "start_date": "2016-08-01",
+      "end_date": "2016-09-15",
+      "customized": true
     }
   },
   {
@@ -241,9 +241,9 @@
       "changed": "2016-05-03T18:31:16.193Z",
       "academic_calendar": 5,
       "offer_year": 4,
-      "start_date": null,
-      "end_date": null,
-      "customized": false
+      "start_date": "2015-05-15",
+      "end_date": "2016-06-15",
+      "customized": true
     }
   },
   {
@@ -254,8 +254,8 @@
       "changed": "2016-05-03T18:31:16.193Z",
       "academic_calendar": 6,
       "offer_year": 4,
-      "start_date": null,
-      "end_date": null,
+      "start_date": "2016-08-01",
+      "end_date": "2016-09-28",
       "customized": false
     }
   }
