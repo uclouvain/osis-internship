@@ -35,10 +35,10 @@ from django.core.exceptions import ValidationError
 
 class MandateForm(ModelForm):
     comment = forms.CharField(required=False, widget=Textarea(
-        attrs={'rows': '3', 'cols': '50'}))
+        attrs={'rows': '4', 'cols': '80'}))
     absences = forms.CharField(required=False, widget=Textarea(
-        attrs={'rows': '3', 'cols': '50'}))
-    other_status = forms.CharField(required=False)
+        attrs={'rows': '4', 'cols': '80'}))
+    other_status = forms.CharField(max_length=50, required=False)
     renewal_type = forms.ChoiceField(
         choices=mdl.assistant_mandate.AssistantMandate.RENEWAL_TYPE_CHOICES)
     assistant_type = forms.ChoiceField(
@@ -48,11 +48,11 @@ class MandateForm(ModelForm):
         required=True, max_length=30, strip=True)
     contract_duration_fte = forms.CharField(
         required=True, max_length=30, strip=True)
-
+    fulltime_equivalent = forms.NumberInput()
     class Meta:
         model = mdl.assistant_mandate.AssistantMandate
         fields = ('comment', 'absences', 'other_status', 'renewal_type', 'assistant_type', 'sap_id',
-                  'contract_duration', 'contract_duration_fte')
+                  'contract_duration', 'contract_duration_fte','fulltime_equivalent')
 
 
 class MandateStructureForm(ModelForm):

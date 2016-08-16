@@ -37,7 +37,15 @@ class StudentAdmin(admin.ModelAdmin):
     search_fields = ['person__first_name', 'person__last_name']
 
 
+class StudentManager(models.Manager):
+    def get_by_natural_key(self, global_id, registration_id):
+        return self.get(registration_id=registration_id, person__global_id=global_id)
+
+
 class Student(models.Model):
+
+    objects = StudentManager()
+
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     registration_id = models.CharField(max_length=10, unique=True)
@@ -45,6 +53,11 @@ class Student(models.Model):
 
     def __str__(self):
         return u"%s (%s)" % (self.person, self.registration_id)
+
+    def natural_key(self):
+        return (self.registration_id, self.person.global_id)
+
+    natural_key.dependencies = ['base.person']
 
 
 def find_by(registration_id=None, person_name=None, person_username=None, person_first_name=None, full_registration = None):
@@ -74,6 +87,7 @@ def find_by(registration_id=None, person_name=None, person_username=None, person
         out = queryset
 
     return out
+
 
 def find_by_person(a_person):
     try:
@@ -118,7 +132,8 @@ def serialize_list_students(list_students):
     """
     # Restrict fields for osis-portal
     fields = ('id', 'registration_id', 'person')
-    return serializers.serialize("json", list_students, fields=fields)
+    return serializers.serialize("json", list_students, fields=fields,use_natural_foreign_keys=True,
+                                 use_natural_primary_keys=True)
 
 
 def find_by_offer(offer):
