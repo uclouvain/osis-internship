@@ -152,7 +152,7 @@ def get_next_status(dissert, operation):
         elif dissert.status == 'TO_DEFEND':
             return 'DEFENDED'
         else:
-            return '* UNDEFINED *'
+            return dissert.status
 
     elif operation == "accept":
         offer_prop = offer_proposition.get_by_offer(dissert.offer_year_start.offer)
@@ -184,7 +184,7 @@ def get_next_status(dissert, operation):
         elif dissert.status == 'DEFENDED':
             return 'ENDED_LOS'
         else:
-            return '* UNDEFINED *'
+            return dissert.status
 
     else:
-        return '* UNDEFINED *'
+        return dissert.status
