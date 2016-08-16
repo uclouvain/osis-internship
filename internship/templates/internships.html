@@ -54,6 +54,7 @@
                   </option>
                {% endfor %}
               </select>
+              <input type="hidden" name="speciality_sort" value="{{speciality_sort_value}}"/>
             </td>
           </tr>
         </form>
@@ -67,14 +68,14 @@
     <div class="panel-body">
         <ul class="nav nav-tabs">
           {% for luy in all_speciality %}
-            <li><a data-toggle="tab" href="#tab_{{luy.tab}}">{{luy.name}}</a></li>
+            <li {% if not speciality_sort_value %}{% if forloop.first %}class="active"{% endif %}{%endif%}><a data-toggle="tab" href="#tab_{{luy.tab}}">{{luy.name}}</a></li>
           {% endfor %}
-            <li><a data-toggle="tab" href="#tab_choice">{% trans 'internship_choice' %}</a></li>
+            <li {%if speciality_sort_value%}class="active"{%endif%}><a data-toggle="tab" href="#tab_choice">{% trans 'internship_choice' %}</a></li>
         </ul>
         {% csrf_token %}
         <div class="tab-content">
           {% for luy in all_speciality %}
-            <div id="tab_{{luy.tab}}" class="tab-pane fade in active">
+            <div id="tab_{{luy.tab}}" class="tab-pane fade {% if not speciality_sort_value %}{% if forloop.first %}in active{% endif %}{%endif%}">
               <h3>{{luy.name}}</h3>
               <div class="panel panel-default">
                 <div class="tab-content">
@@ -122,11 +123,23 @@
               </div>
             </div>
           {%endfor%}
-          <div id="tab_choice" class="tab-pane fade in active">
+          <div id="tab_choice" class="tab-pane fade {% if speciality_sort_value %}in active{%endif%}">
             <div class="panel panel-default">
               <div class="tab-content">
                 <div role="tabpanel" class="tab-pane fade in active" id="profile">
                   <table class="table table-hover">
+                      <form action="{%url 'internships' %}" method="get">
+                        <select name="speciality_sort" onChange="javascript: this.form.submit();">
+                           <option value="0">--</option>
+                           {% for spec in non_mandatory_speciality %}
+                             <option value="{{ spec.name }}"
+                             {% if spec.name == speciality_sort_value %}selected{% endif %}>
+                               {{ spec.name }}
+                             </option>
+                           {% endfor %}
+                         </select>
+                         <input type="hidden" name="organization_sort" value="{{organization_sort_value}}"/>
+                      </form>
                       <thead>
                         <tr>
                           <th align="center">{% trans 'organization' %}</th>
