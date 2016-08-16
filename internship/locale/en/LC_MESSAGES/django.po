@@ -243,3 +243,9 @@ msgstr "Return"
 
 msgid "already_internship_preference_speciality"
 msgstr "You already have an internship with this preference for this speciality."
+
+msgid "selection_currently_active"
+msgstr "The internships' election is currently active"
+
+msgid "selection_currently_block"
+msgstr "The internships' election is currently blocked"
