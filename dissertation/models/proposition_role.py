@@ -62,5 +62,16 @@ def search_by_proposition(prop_dissert):
 
 
 def add(status, adviser, proposition_dissertation):
-    pro = PropositionRole(status=status, adviser=adviser, proposition_dissertation=proposition_dissertation)
-    pro.save()
+    if count_by_status_adviser_proposition(status, adviser, proposition_dissertation) == 0:
+        role = PropositionRole(status=status, adviser=adviser, proposition_dissertation=proposition_dissertation)
+        role.save()
+
+
+def count_by_status_adviser_proposition(status, adviser, proposition_dissertation):
+    return PropositionRole.objects.filter(
+                                        proposition_dissertation=proposition_dissertation
+                                    ).filter(
+                                        status=status
+                                    ).filter(
+                                        adviser=adviser
+                                    ).count()

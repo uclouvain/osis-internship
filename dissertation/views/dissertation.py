@@ -180,7 +180,11 @@ def manager_dissertations_jury_new(request, pk):
         if request.method == "POST":
             form = ManagerDissertationRoleForm(request.POST)
             if form.is_valid():
-                form.save()
+                data = form.cleaned_data
+                status = data['status']
+                adv = data['adviser']
+                diss = data['dissertation']
+                dissertation_role.add(status, adv, diss)
                 return redirect('manager_dissertations_detail', pk=dissert.pk)
         else:
             form = ManagerDissertationRoleForm(initial={'dissertation': dissert})
