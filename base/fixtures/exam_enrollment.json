@@ -1,0 +1,66 @@
+[
+  {
+    "model": "base.examenrollment",
+    "pk": 1,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T14:50:22.403Z",
+      "score_draft": null,
+      "score_reencoded": null,
+      "score_final": null,
+      "justification_draft": null,
+      "justification_reencoded": null,
+      "justification_final": null,
+      "session_exam": 1,
+      "learning_unit_enrollment": 1
+    }
+  },
+  {
+    "model": "base.examenrollment",
+    "pk": 2,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T14:51:23.960Z",
+      "score_draft": null,
+      "score_reencoded": null,
+      "score_final": null,
+      "justification_draft": null,
+      "justification_reencoded": null,
+      "justification_final": null,
+      "session_exam": 2,
+      "learning_unit_enrollment": 1
+    }
+  },
+  {
+    "model": "base.examenrollment",
+    "pk": 3,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T14:51:23.960Z",
+      "score_draft": null,
+      "score_reencoded": null,
+      "score_final": null,
+      "justification_draft": null,
+      "justification_reencoded": null,
+      "justification_final": null,
+      "session_exam": 3,
+      "learning_unit_enrollment": 2
+    }
+  },
+  {
+    "model": "base.examenrollment",
+    "pk": 4,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T14:52:33.413Z",
+      "score_draft": null,
+      "score_reencoded": null,
+      "score_final": null,
+      "justification_draft": null,
+      "justification_reencoded": null,
+      "justification_final": null,
+      "session_exam": 7,
+      "learning_unit_enrollment": 3
+    }
+  }
+]

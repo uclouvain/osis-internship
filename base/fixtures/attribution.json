@@ -1,0 +1,54 @@
+[
+  {
+    "model": "base.attribution",
+    "pk": 1,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-03-07T09:59:13.700Z",
+      "start_date": "2016-03-07",
+      "end_date": "2016-03-07",
+      "function": "PROFESSOR",
+      "learning_unit": 1,
+      "tutor": 1
+    }
+  },
+  {
+    "model": "base.attribution",
+    "pk": 2,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-03-07T10:00:19.272Z",
+      "start_date": "2016-03-07",
+      "end_date": "2016-03-07",
+      "function": "PROFESSOR",
+      "learning_unit": 2,
+      "tutor": 2
+    }
+  },
+  {
+    "model": "base.attribution",
+    "pk": 3,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-03-09T09:53:54.455Z",
+      "start_date": "2016-03-07",
+      "end_date": "2016-03-07",
+      "function": "PROFESSOR",
+      "learning_unit": 3,
+      "tutor": 3
+    }
+  },
+  {
+    "model": "base.attribution",
+    "pk": 4,
+    "fields": {
+      "external_id": null,
+      "changed": null,
+      "start_date": "2016-03-07",
+      "end_date": "2016-03-07",
+      "function": "COORDINATOR",
+      "learning_unit": 3,
+      "tutor": 4
+    }
+  }
+]

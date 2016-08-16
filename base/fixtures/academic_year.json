@@ -1,0 +1,27 @@
+[
+  {
+    "model": "base.academicyear",
+    "pk": 1,
+    "fields": {
+      "year": "2016",
+      "start_date": "2016-09-01",
+      "end_date": "2017-06-30"
+    }
+  },
+  {
+    "model": "base.academicyear",
+    "pk": 2,
+    "fields": {
+      "year": "2015",
+      "start_date": "2015-09-01",
+      "end_date": "2016-06-30"
+    }
+  },
+  {
+    "model": "base.academicyear",
+    "pk": 3,
+    "fields": {
+      "year": "2014"
+    }
+  }
+]
