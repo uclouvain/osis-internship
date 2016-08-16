@@ -41,11 +41,9 @@ def specialities(request):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def speciality_create(request):
-    f = InternshipSpecialityForm(data=request.POST)
     learning_unit = mdl.learning_unit.search(acronym='WMDS2333')
     return render(request, "speciality_create.html", {'section': 'internship',
                                                     'learning_unit' : learning_unit[0],
-                                                    'form' : f
                                                     })
 
 @login_required
