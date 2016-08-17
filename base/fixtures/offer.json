@@ -4,22 +4,13 @@
     "pk": 1,
     "fields": {
       "external_id": null,
-      "changed": "2016-03-04T22:38:39.964Z",
-      "title": "Bachelier en sciences de l'ing\u00e9nieur"
-    }
-  },
-  {
-    "model": "base.offer",
-    "pk": 2,
-    "fields": {
-      "external_id": null,
       "changed": "2016-03-04T22:39:30.883Z",
       "title": "Bachelier en droit"
     }
   },
   {
     "model": "base.offer",
-    "pk": 3,
+    "pk": 2,
     "fields": {
       "external_id": null,
       "changed": "2016-03-04T22:40:37.542Z",
@@ -28,7 +19,7 @@
   },
   {
     "model": "base.offer",
-    "pk": 4,
+    "pk": 3,
     "fields": {
       "external_id": null,
       "changed": null,

@@ -59,10 +59,10 @@
     "pk": 6,
     "fields": {
       "external_id": null,
-      "changed": "2016-05-03T13:29:38.679Z",
+      "changed": "2016-05-03T13:45:27.358Z",
       "date_enrollment": "2016-05-03",
-      "offer_year": 3,
-      "student": 6
+      "offer_year": 4,
+      "student": 1
     }
   },
   {
@@ -70,10 +70,10 @@
     "pk": 7,
     "fields": {
       "external_id": null,
-      "changed": "2016-05-03T13:29:38.679Z",
+      "changed": "2016-05-03T13:45:27.358Z",
       "date_enrollment": "2016-05-03",
-      "offer_year": 3,
-      "student": 7
+      "offer_year": 4,
+      "student": 2
     }
   },
   {
@@ -83,8 +83,8 @@
       "external_id": null,
       "changed": "2016-05-03T13:29:38.679Z",
       "date_enrollment": "2016-05-03",
-      "offer_year": 3,
-      "student": 8
+      "offer_year": 4,
+      "student": 3
     }
   },
   {
@@ -94,8 +94,8 @@
       "external_id": null,
       "changed": "2016-05-03T13:29:38.679Z",
       "date_enrollment": "2016-05-03",
-      "offer_year": 4,
-      "student": 9
+      "offer_year": 5,
+      "student": 4
     }
   },
   {
@@ -105,8 +105,8 @@
       "external_id": null,
       "changed": "2016-05-03T13:29:38.679Z",
       "date_enrollment": "2016-05-03",
-      "offer_year": 4,
-      "student": 10
+      "offer_year": 6,
+      "student": 5
     }
   }
 ]

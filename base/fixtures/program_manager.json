@@ -5,7 +5,7 @@
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T12:23:38.683Z",
-      "person": 18,
+      "person": 11,
       "offer_year": 1
     }
   },
@@ -15,8 +15,8 @@
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T12:24:05.197Z",
-      "person": 17,
-      "offer_year": 1
+      "person": 12,
+      "offer_year": 2
     }
   },
   {
@@ -25,8 +25,8 @@
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T12:25:04.322Z",
-      "person": 16,
-      "offer_year": 2
+      "person": 13,
+      "offer_year": 3
     }
   },
   {
@@ -34,9 +34,29 @@
     "pk": 4,
     "fields": {
       "external_id": null,
-      "changed": "2016-05-03T12:25:39.383Z",
-      "person": 15,
-      "offer_year": 2
+      "changed": "2016-05-03T12:23:38.683Z",
+      "person": 11,
+      "offer_year": 4
+    }
+  },
+  {
+    "model": "base.programmanager",
+    "pk": 5,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T12:24:05.197Z",
+      "person": 12,
+      "offer_year": 5
+    }
+  },
+  {
+    "model": "base.programmanager",
+    "pk": 6,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T12:25:04.322Z",
+      "person": 13,
+      "offer_year": 6
     }
   }
 ]

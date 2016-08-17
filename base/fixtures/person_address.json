@@ -3,7 +3,7 @@
     "model": "base.personaddress",
     "pk": 1,
     "fields": {
-      "person": 33,
+      "person": 1,
       "label": "Work",
       "location": "Rue de l'Universit\u00e9 1",
       "postal_code": "1348",

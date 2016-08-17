@@ -7,8 +7,8 @@
       "changed": "2016-05-03T18:31:16.193Z",
       "academic_calendar": 1,
       "offer_year": 1,
-      "start_date": null,
-      "end_date": null,
+      "start_date": "2016-01-01",
+      "end_date": "2016-02-20",
       "customized": false
     }
   },
@@ -18,10 +18,10 @@
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T18:31:16.193Z",
-      "academic_calendar": 2,
-      "offer_year": 1,
-      "start_date": null,
-      "end_date": null,
+      "academic_calendar": 1,
+      "offer_year": 2,
+      "start_date": "2016-01-01",
+      "end_date": "2016-02-20",
       "customized": false
     }
   },
@@ -31,10 +31,10 @@
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T18:31:16.193Z",
-      "academic_calendar": 4,
-      "offer_year": 1,
-      "start_date": "2015-01-01",
-      "end_date": "2016-01-30",
+      "academic_calendar": 1,
+      "offer_year": 3,
+      "start_date": "2016-01-01",
+      "end_date": "2016-02-20",
       "customized": false
     }
   },
@@ -44,9 +44,9 @@
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T18:31:16.193Z",
-      "academic_calendar": 5,
+      "academic_calendar": 2,
       "offer_year": 1,
-      "start_date": "2015-05-15",
+      "start_date": "2016-05-15",
       "end_date": "2016-07-02",
       "customized": false
     }
@@ -57,10 +57,10 @@
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T18:31:16.193Z",
-      "academic_calendar": 6,
-      "offer_year": 1,
-      "start_date": "2016-08-01",
-      "end_date": "2016-09-01",
+      "academic_calendar": 2,
+      "offer_year": 2,
+      "start_date": "2016-05-15",
+      "end_date": "2016-07-02",
       "customized": true
     }
   },
@@ -70,10 +70,10 @@
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T18:31:16.193Z",
-      "academic_calendar": 1,
-      "offer_year": 2,
-      "start_date": null,
-      "end_date": null,
+      "academic_calendar": 2,
+      "offer_year": 3,
+      "start_date": "2016-05-15",
+      "end_date": "2016-07-02",
       "customized": false
     }
   },
@@ -83,10 +83,10 @@
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T18:31:16.193Z",
-      "academic_calendar": 2,
-      "offer_year": 2,
-      "start_date": null,
-      "end_date": null,
+      "academic_calendar": 3,
+      "offer_year": 1,
+      "start_date": "2016-08-01",
+      "end_date": "2016-09-28",
       "customized": false
     }
   },
@@ -96,37 +96,24 @@
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T18:31:16.193Z",
-      "academic_calendar": 4,
-      "offer_year": 2,
-      "start_date": null,
-      "end_date": null,
-      "customized": false
-    }
-  },
-  {
-    "model": "base.offeryearcalendar",
-    "pk": 9,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T18:31:16.193Z",
-      "academic_calendar": 5,
-      "offer_year": 2,
-      "start_date": null,
-      "end_date": null,
-      "customized": false
-    }
-  },
-  {
-    "model": "base.offeryearcalendar",
-    "pk": 9,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T18:31:16.193Z",
-      "academic_calendar": 6,
+      "academic_calendar": 3,
       "offer_year": 2,
       "start_date": "2016-08-01",
-      "end_date": "2016-09-28",
+      "end_date": "2016-09-10",
       "customized": true
+    }
+  },
+  {
+    "model": "base.offeryearcalendar",
+    "pk": 9,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T18:31:16.193Z",
+      "academic_calendar": 3,
+      "offer_year": 3,
+      "start_date": "2016-08-01",
+      "end_date": "2016-09-28",
+      "customized": false
     }
   },
   {
@@ -135,10 +122,10 @@
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T18:31:16.193Z",
-      "academic_calendar": 1,
-      "offer_year": 3,
-      "start_date": null,
-      "end_date": null,
+      "academic_calendar": 4,
+      "offer_year": 1,
+      "start_date": "2017-01-01",
+      "end_date": "2017-02-20",
       "customized": false
     }
   },
@@ -148,11 +135,11 @@
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T18:31:16.193Z",
-      "academic_calendar": 2,
-      "offer_year": 3,
-      "start_date": null,
-      "end_date": null,
-      "customized": false
+      "academic_calendar": 4,
+      "offer_year": 2,
+      "start_date": "2017-01-01",
+      "end_date": "2017-02-10",
+      "customized": true
     }
   },
   {
@@ -163,9 +150,9 @@
       "changed": "2016-05-03T18:31:16.193Z",
       "academic_calendar": 4,
       "offer_year": 3,
-     "start_date": "2015-05-15",
-      "end_date": "2016-06-15",
-      "customized": false
+      "start_date": "2017-01-01",
+      "end_date": "2017-02-01",
+      "customized": true
     }
   },
   {
@@ -175,9 +162,9 @@
       "external_id": null,
       "changed": "2016-05-03T18:31:16.193Z",
       "academic_calendar": 5,
-      "offer_year": 3,
-      "start_date": null,
-      "end_date": null,
+      "offer_year": 1,
+      "start_date": "2017-05-15",
+      "end_date": "2017-07-02",
       "customized": false
     }
   },
@@ -187,10 +174,10 @@
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T18:31:16.193Z",
-      "academic_calendar": 6,
-      "offer_year": 3,
-      "start_date": "2016-08-01",
-      "end_date": "2016-09-15",
+      "academic_calendar": 5,
+      "offer_year": 2,
+      "start_date": "2017-05-15",
+      "end_date": "2017-07-02",
       "customized": true
     }
   },
@@ -200,10 +187,10 @@
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T18:31:16.193Z",
-      "academic_calendar": 1,
-      "offer_year": 4,
-      "start_date": null,
-      "end_date": null,
+      "academic_calendar": 5,
+      "offer_year": 3,
+      "start_date": "2017-05-15",
+      "end_date": "2017-07-02",
       "customized": false
     }
   },
@@ -213,10 +200,10 @@
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T18:31:16.193Z",
-      "academic_calendar": 2,
-      "offer_year": 4,
-      "start_date": null,
-      "end_date": null,
+      "academic_calendar": 6,
+      "offer_year": 1,
+      "start_date": "2017-08-01",
+      "end_date": "2017-09-28",
       "customized": false
     }
   },
@@ -226,11 +213,11 @@
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T18:31:16.193Z",
-      "academic_calendar": 4,
-      "offer_year": 4,
-      "start_date": null,
-      "end_date": null,
-      "customized": false
+      "academic_calendar": 6,
+      "offer_year": 2,
+      "start_date": "2017-08-01",
+      "end_date": "2017-09-10",
+      "customized": true
     }
   },
   {
@@ -239,23 +226,10 @@
     "fields": {
       "external_id": null,
       "changed": "2016-05-03T18:31:16.193Z",
-      "academic_calendar": 5,
-      "offer_year": 4,
-      "start_date": "2015-05-15",
-      "end_date": "2016-06-15",
-      "customized": true
-    }
-  },
-  {
-    "model": "base.offeryearcalendar",
-    "pk": 19,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T18:31:16.193Z",
       "academic_calendar": 6,
-      "offer_year": 4,
-      "start_date": "2016-08-01",
-      "end_date": "2016-09-28",
+      "offer_year": 3,
+      "start_date": "2017-08-01",
+      "end_date": "2017-09-28",
       "customized": false
     }
   }
