@@ -179,7 +179,7 @@ msgid "academic_year"
 msgstr "Année académique"
 
 msgid "internship_choice"
-msgstr "Choix de stage"
+msgstr "Stage au choix"
 
 msgid "import_internships"
 msgstr "Importer les stages"
