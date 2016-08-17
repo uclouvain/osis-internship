@@ -32,7 +32,9 @@ from django.db.models import Q
 from django.core.urlresolvers import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.decorators import user_passes_test
 from assistant.models import settings
+
 
 class StructuresListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     context_object_name = 'reviewer_structures_list'
@@ -42,16 +44,12 @@ class StructuresListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     def test_func(self):
         try:
             if settings.access_to_procedure_is_open():
-                return reviewer.Reviewer.objects.get(Q(person=self.request.user.person) &
-                                                     (Q(role="SUPERVISION") | Q(role="RESEARCH")))
-            else:
-                return False
-            return reviewer.can_delegate(reviewer.find_by_person(self.request.user.person))
+                return reviewer.can_delegate(reviewer.find_by_person(self.request.user.person))
         except ObjectDoesNotExist:
             return False
     
     def get_login_url(self):
-        return reverse('assistants_home')
+        return reverse('access_denied')
 
     def get_queryset(self):
         rev = reviewer.find_by_person(self.request.user.person)
@@ -93,7 +91,6 @@ def addReviewerForStructure(request, structure_id):
     if request.POST:
         form = ReviewerDelegationForm(data=request.POST)
         if form.is_valid():
-            
             form.save()
             return redirect('reviewer_delegation')
         else:

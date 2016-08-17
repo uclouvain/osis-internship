@@ -40,4 +40,7 @@ def get_settings():
     return Settings.objects.first()
 
 def access_to_procedure_is_open():
-    return Settings.objects.filter(starting_date__lt=datetime.now(), ending_date__gt=datetime.now())
+    if not Settings.objects.filter(starting_date__lt=datetime.now(), ending_date__gt=datetime.now()):
+        return False
+    else:
+        return True

@@ -41,18 +41,15 @@ class MandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMi
     form_class = MandatesArchivesForm
 
     def test_func(self):
-        try:
-            if settings.access_to_procedure_is_open():
-                return reviewer.Reviewer.objects.filter(person=self.request.user.person)
-            else:
+        if settings.access_to_procedure_is_open():
+            try:
+                return reviewer.find_by_person(self.request.user.person)
+            except ObjectDoesNotExist:
                 return False
-            return reviewer.find_by_person(self.request.user.person)
-        except ObjectDoesNotExist:
-            return False
-        
-    
+
+
     def get_login_url(self):
-        return reverse('assistants_home')
+        return reverse('access_denied')
 
     def get_queryset(self):
         form_class = MandatesArchivesForm
