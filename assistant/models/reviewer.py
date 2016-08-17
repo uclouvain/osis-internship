@@ -28,6 +28,7 @@ from django.contrib import admin
 from base.models import structure
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
+from assistant.models import mandate_structure, assistant_mandate
 
 
 class ReviewerAdmin(admin.ModelAdmin):
@@ -42,7 +43,6 @@ class ReviewerAdmin(admin.ModelAdmin):
         form = super(ReviewerAdmin, self).get_form(request, obj, **kwargs)
         form.base_fields['structure'].queryset = structure.Structure.objects.filter(
         Q(type='INSTITUTE') | Q(type='FACULTY') | Q(type='SECTOR') | Q(type='POLE') | Q(type='PROGRAM_COMMISSION'))
-
         return form
 
 ROLE_CHOICES = (
@@ -67,5 +67,49 @@ class Reviewer(models.Model):
 def find_reviewers():
     return Reviewer.objects.all().order_by('person')
 
+
 def find_by_id(reviewer_id):
     return Reviewer.objects.get(id=reviewer_id)
+
+
+def find_by_person(person):
+    return Reviewer.objects.get(person=person)
+
+
+def canEditReview(reviewer_id, mandate_id):
+    if assistant_mandate.find_mandate_by_id(mandate_id).state not in find_by_id(reviewer_id).role:
+        return None
+    if not mandate_structure.find_by_mandate_and_structure(
+        assistant_mandate.find_mandate_by_id(mandate_id),find_by_id(reviewer_id).structure):
+        if not mandate_structure.find_by_mandate_and_part_of_struct(
+                assistant_mandate.find_mandate_by_id(mandate_id), find_by_id(reviewer_id).structure):
+            return None
+        else:
+            return find_by_id(reviewer_id)
+    else:
+        return find_by_id(reviewer_id)
+
+
+def can_delegate_to_structure(reviewer, structure):
+    """
+    Détermine si le reviewer passé en argmument peut déléguer son rôle pour la structure.
+    Pour pouvoir déléguer :
+    - Le reviewer doit avoir un rôle de SUPERVISION ou de RESEARCH.
+    - Il doit avoir ce rôle pour la structure passée en argument ou cette dernière doit faire partie
+    d'une structure pour laquelle le reviewer a ce rôle.
+    """
+    if reviewer.role != "SUPERVISION" and reviewer.role != "RESEARCH":
+        return False
+    if structure == reviewer.structure:
+        return True
+    if structure.part_of == reviewer.structure:
+        return True
+    else:
+        return False
+
+
+def can_delegate(reviewer):
+    if reviewer.role != "SUPERVISION" and reviewer.role != "RESEARCH":
+        return False
+    else:
+        return True

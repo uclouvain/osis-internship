@@ -40,6 +40,7 @@
   <ul class="nav nav-tabs">
     <li class="active"><a href="#">{% trans 'adviser_profile' %}</a></li>
     <li><a href="{% url 'manager_informations_detail_list' pk=adviser.pk %}">{% trans 'adviser_dissertations' %}</a></li>
+    <li><a href="{% url 'manager_informations_detail_list_wait' pk=adviser.pk %}">{% trans 'adviser_dissertations_wait' %}</a></li>
     <li><a href="{% url 'manager_informations_detail_stats' pk=adviser.pk %}">{% trans 'adviser_stats' %}</a></li>
   </ul>
   <div class="panel panel-default">
@@ -59,6 +60,7 @@
                                 <span>{{  first_name }} {{ last_name }}</span>
                             </div>
                         </div>
+                        {% if adviser.person.email %}
                         <div class="row">
                             <div class="col-md-3" style="text-align: right">
                                 <label>{% trans 'email' %}</label>
@@ -78,6 +80,8 @@
                                 {% endif %}
                             </div>
                         </div>
+                        {% endif %}
+                        {% if adviser.person.phone %}
                         <div class="row">
                             <div class="col-md-3" style="text-align: right">
                                 <label>{% trans 'phone' %}</label>
@@ -90,13 +94,15 @@
                                 {% endif %}
                             </div>
                             <div class="col-md-1">
-                                {% if adviser.available_at_office %}
+                                {% if adviser.available_by_phone %}
                                     <span class="glyphicon glyphicon-ok" style="color:green"></span>
                                 {% else %}
                                     <span class="glyphicon glyphicon-remove" style="color:red"></span>
                                 {% endif %}
                             </div>
                         </div>
+                        {% endif %}
+                        {% if adviser.person.phone_mobile %}
                         <div class="row">
                             <div class="col-md-3" style="text-align: right">
                                 <label>{% trans 'phone_mobile' %}</label>
@@ -110,6 +116,26 @@
                             </div>
                             <div class="col-md-1">
                                 {% if adviser.available_by_phone %}
+                                    <span class="glyphicon glyphicon-ok" style="color:green"></span>
+                                {% else %}
+                                    <span class="glyphicon glyphicon-remove" style="color:red"></span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+                        <div class="row">
+                            <div class="col-md-3" style="text-align: right">
+                                <label>{% trans 'available_at_office' %}</label>
+                            </div>
+                            <div class="col-md-4">
+                                {% if adviser.available_at_office %}
+                                    <span style="color:green">{% trans 'yes' %}</span>
+                                {% else %}
+                                    <span style="color:red">{% trans 'no' %}</span>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-1">
+                                {% if adviser.available_at_office %}
                                     <span class="glyphicon glyphicon-ok" style="color:green"></span>
                                 {% else %}
                                     <span class="glyphicon glyphicon-remove" style="color:red"></span>
