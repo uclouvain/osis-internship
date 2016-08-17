@@ -35,9 +35,12 @@ from dissertation.models.proposition_role import PropositionRole
 from dissertation.models import proposition_role
 from dissertation.forms import PropositionDissertationForm, ManagerPropositionDissertationForm,\
     PropositionRoleForm, ManagerPropositionRoleForm, ManagerPropositionDissertationEditForm
+from openpyxl.writer.excel import save_virtual_workbook
+from openpyxl import Workbook
 from django.contrib.auth.decorators import user_passes_test
 from base.views import layout
-
+import time
+from django.http import HttpResponse
 
 # Used by decorator @user_passes_test(is_manager) to secure manager views
 def is_manager(user):
@@ -185,7 +188,32 @@ def manager_proposition_dissertation_new(request):
 @user_passes_test(is_manager)
 def manager_proposition_dissertations_search(request):
     prop_disserts = proposition_dissertation.search(terms=request.GET['search'], active=True)
-    return layout.render(request, "manager_proposition_dissertations_list.html",
+    if 'bt_xlsx' in request.GET:
+        filename = "%s%s%s" % ('EXPORT_dissertation_', time.strftime("%Y-%m-%d %H:%M"), '.xlsx')
+        workbook = Workbook(encoding='utf-8')
+        worksheet1 = workbook.active
+        worksheet1.title = "proposition_dissertation"
+        worksheet1.append(['Date_de_création', 'Teacher', 'Title',
+                           'Type', 'Level', 'Collaboration', 'Max_number_student', 'Visibility',
+                           'Active', 'Programme(s)'])
+        for prop_dissert in prop_disserts:
+            worksheet1.append([prop_dissert.created_date,
+                               str(prop_dissert.author),
+                               prop_dissert.title,
+                               prop_dissert.type,
+                               prop_dissert.level,
+                               prop_dissert.collaboration,
+                               prop_dissert.max_number_student,
+                               prop_dissert.visibility,
+                               prop_dissert.active,
+                               ', '.join((str(conv.acronym) for conv  in prop_dissert.offer_proposition.all()))])
+
+        response = HttpResponse(save_virtual_workbook(workbook), content_type='application/vnd.ms-excel')
+        response['Content-Disposition'] = "%s%s" % ("attachment; filename=", filename)
+        return response
+
+    else:
+        return layout.render(request, "manager_proposition_dissertations_list.html",
                          {'proposition_dissertations': prop_disserts})
 
 ###########################
