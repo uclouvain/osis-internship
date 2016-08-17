@@ -344,7 +344,7 @@ msgid "encode"
 msgstr "Encode"
 
 msgid "double_encoding"
-msgstr "Dubble encoding"
+msgstr "Double encoding"
 
 msgid "print"
 msgstr "Print"
