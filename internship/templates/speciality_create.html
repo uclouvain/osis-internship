@@ -28,7 +28,7 @@
 
 {% block breadcrumb %}
   <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-  <li><a href="{% url 'internships_home' %}">{% trans 'internships' %}</a></li>
+  <li><a href="{% url 'internships_home' %}">{% trans 'internships_managment' %}</a></li>
   <li><a href="{% url 'internships_specialities' %}">{% trans 'internships_specialities' %}</a></li>
   <li class="active">{% trans 'add_speciality' %}</li>
 {% endblock %}
@@ -40,6 +40,7 @@
       <thead>
         <tr>
             <th style="text-align:center;">{% trans 'name' %}</th>
+            <th style="text-align:center;">{% trans 'acronym' %}</th>
             <th style="text-align:center;">{% trans 'mandatory' %}</th>
         </tr>
       </thead>
@@ -53,6 +54,9 @@
             <td style="text-align:center;">
               <input type="hidden" name="learning_unit" value={{learning_unit}}>
               <input type="text" name="name" placeholder="Stage en ..." required value="{{ speciality.name | default_if_none:'' }}">
+            </td>
+            <td style="text-align:center;">
+              <input type="text" name="acronym" required value="{{ speciality.acronym | default_if_none:'' }}">
             </td>
             <td style="text-align:center;">
               <input type="checkbox" name="mandatory" {%if speciality.mandatory %}checked{%endif%}>

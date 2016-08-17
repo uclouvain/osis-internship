@@ -28,7 +28,7 @@
 
 {% block breadcrumb %}
   <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-  <li><a href="{% url 'internships_home' %}">{% trans 'internships' %}</a></li>
+  <li><a href="{% url 'internships_home' %}">{% trans 'internships_managment' %}</a></li>
   <li class="active">{% trans 'internships_specialities' %}</li>
 {% endblock %}
 {% block content %}
@@ -43,6 +43,7 @@
             <thead>
               <tr>
                   <th>{% trans 'name' %}</th>
+                  <th>{% trans 'acronym' %}</th>
                   <th>{% trans 'mandatory' %}</th>
                   <th> <th>
               </tr>
@@ -52,6 +53,9 @@
               <tr>
                   <td>
                     {{speciality.name}}
+                  </td>
+                  <td>
+                    {{speciality.acronym}}
                   </td>
                   <td>
                     {%if speciality.mandatory%}

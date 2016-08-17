@@ -36,34 +36,48 @@ from django.utils.translation import ugettext_lazy as _
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_resume(request):
+    # Get all stundents and the mandatory specialities
     students_list = InternshipChoice.find_by_all_student()
-    specialities = InternshipSpeciality.find_by(mandatory=True)
+    specialities = InternshipSpeciality.search(mandatory=True)
+    student_informations = InternshipStudentInformation.find_all()
 
+    for si in student_informations:
+        student = mdl.student.find_by_person(si.person)
+        choices = InternshipChoice.find_by_student(student)
+        si.number_choices = len(choices)
+        if student:
+            si.registration_id = student.registration_id
+
+    # Get the required number selection (4 for each speciality)
+    # Get the number of student who have al least 4 corrects choice of internship
+    # Get the number of student who can choose their internships
     number_selection = 4 * len (specialities)
     student_with_internships = len(students_list)
     students_can_have_internships = len(InternshipStudentInformation.find_all())
 
     students_ok = 0
     students_not_ok = 0
-    for si in students_list:
-        student = mdl.student.find_by_person(si.person)
+    # Set the number of the student who have their all selection of internships
+    # who have a partial selection
+    # who have no selection
+    for sl in students_list:
+        student = mdl.student.find_by_person(sl.person)
         choices = InternshipChoice.find_by_student(student)
-        si.number_choices = len(choices)
+        sl.number_choices = len(choices)
         if len(choices) == number_selection:
             students_ok += 1
         else :
             students_not_ok += 1
-
-
-
+    student_without_internship = students_can_have_internships - student_with_internships
     return render(request, "student_search.html", {'s_noma':    None,
                                                    's_name':    None,
-                                                   'students':  students_list,
+                                                   'students':  student_informations,
                                                    'number_selection' : number_selection,
                                                    'students_ok' : students_ok,
                                                    'students_not_ok' : students_not_ok,
                                                    'student_with_internships' : student_with_internships,
                                                    'students_can_have_internships' : students_can_have_internships,
+                                                   'student_without_internship' : student_without_internship,
                                                    })
 
 
@@ -73,6 +87,7 @@ def internships_student_search(request):
     s_name = request.GET['s_name']
     s_firstname = request.GET['s_firstname']
     students_list = []
+    students_list_creation = []
     criteria_present = False
 
     s_name = s_name.strip()
@@ -89,13 +104,18 @@ def internships_student_search(request):
 
     message = None
     if criteria_present:
-        students_list_check = InternshipStudentInformation.find_by(person_name=s_name, person_first_name = s_firstname)
+        students_list_check = InternshipStudentInformation.search(person__last_name=s_name, person__first_name = s_firstname)
 
-        for slc in students_list_check:
-            students_list.append( mdl.student.find_by(person_name = slc.person.last_name, person_first_name = slc.person.first_name ))
+        students_list_creation = InternshipChoice.find_by_all_student()
+
+        for student_check in students_list_check :
+            for student_creation in students_list_creation:
+                    if student_check.person == student_creation.person:
+                        students_list.append(student_creation)
     else:
         students_list = InternshipChoice.find_by_all_student()
-        # message = "%s" % _('You must choose at least one criteria!')
+
+
     return render(request, "student_search.html",
                            {'s_name':       s_name,
                             's_firstname':  s_firstname,
@@ -108,33 +128,38 @@ def internships_student_search(request):
 @permission_required('internship.can_access_internship', raise_exception=True)
 def internships_student_read(request, registration_id):
     student = mdl.student.find_by(registration_id=registration_id)
-    information = InternshipStudentInformation.find_by_person(student[0].person)
+    information = InternshipStudentInformation.search(person = student[0].person)
     student = student[0]
     internship_choice = InternshipChoice.find_by_student(student)
+    all_speciality = InternshipSpeciality.find_all()
 
     return render(request, "student_resume.html",
                            {'student':             student,
-                            'information':         information,
-                            'internship_choice':   internship_choice, })
+                            'information':         information[0],
+                            'internship_choice':   internship_choice,
+                            'specialities':        all_speciality,
+                            })
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_student_information_modification(request, registration_id):
     student = mdl.student.find_by(registration_id=registration_id)
-    information = InternshipStudentInformation.find_by_person(student[0].person)
+    information = InternshipStudentInformation.search(person = student[0].person)
     student = student[0]
     return render(request, "student_information_modification.html",
                            {'student':             student,
-                            'information':         information, })
+                            'information':         information[0], })
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def student_save_information_modification(request, registration_id):
     student = mdl.student.find_by(registration_id=registration_id)
-    information = InternshipStudentInformation.find_by_person(student[0].person)
+    information = InternshipStudentInformation.search(person = student[0].person)
     if not information:
         information = InternshipStudentInformation()
         information.person = student[0].person
+    else:
+        information = information[0]
     information.email = request.POST.get('student_email')
     information.phone_mobile = request.POST.get('student_phone')
     information.location = request.POST.get('student_location')
