@@ -26,6 +26,9 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+import urllib.request
+import unicodedata
+from xml.dom import minidom
 
 
 class InternshipOffer(models.Model):
@@ -259,10 +262,62 @@ class OrganizationAddress(models.Model):
         return OrganizationAddress.objects.get(pk=organization_address_id)
 
     def save(self, *args, **kwargs):
+        from internship.views.internship import find_latitude_longitude
+
         self.label = "Addr"+self.organization.name[:14]
         self.latitude = None
         self.longitude = None
+        find_latitude_longitude(self)
         super(OrganizationAddress, self).save(*args, **kwargs)
+
+    def geocode(addr):
+        lat_long = [None]*2
+        # Transform the address for a good url and delete all accents
+        addr = addr.replace(" ", "+")
+        addr = addr.replace("'", "\'")
+        addr = OrganizationAddress.strip_accents(addr)
+        # get the complete url
+        url = "https://maps.googleapis.com/maps/api/geocode/xml?address=%s&key=AIzaSyCWeZdraxzqRTMxXxbXY3bncaD6Ijq_EvE" % addr
+
+        # using urllib get the xml
+        req = urllib.request.Request(url)
+        with urllib.request.urlopen(req) as response:
+            data = response.read().decode('utf-8')
+
+        # Parse the xml to have the latitude and longitude of the address
+        xmldoc = minidom.parseString(data)
+        lat = xmldoc.getElementsByTagName('location')
+        for l in lat:
+            c = l.getElementsByTagName('lat')[0].firstChild.data
+            d = l.getElementsByTagName('lng')[0].firstChild.data
+            lat_long[0] = c
+            lat_long[1] = d
+        # return the value
+        return lat_long
+
+    def strip_accents(s):
+        return ''.join(c for c in unicodedata.normalize('NFD', s)
+                       if unicodedata.category(c) != 'Mn')
+
+    def find_latitude_longitude(infos):
+        #for each data in the infos, check if the lat exist
+        for data in infos:
+            if data.latitude is None :
+                #if it exist, compile the address with the location / postal / city / country
+                address = data.location + " " + data.postal_code + " " \
+                                + data.city + " " + data.country
+                address = address.replace('\n','')
+                #Compute the geolocalisation
+                address_lat_long = OrganizationAddress.geocode(address)
+                #if the geolac is fing put the data, if not put fake data
+                if address_lat_long[0]:
+                    data.latitude = address_lat_long[0]
+                    data.longitude = address_lat_long[1]
+                else :
+                    data.latitude = 999
+                    data.longitude = 999
+                #save the data
+                data.save()
 
 class InternshipStudentInformation(models.Model):
     person = models.ForeignKey('base.Person')
@@ -290,7 +345,7 @@ class InternshipStudentAffectationStat(models.Model):
     organization = models.ForeignKey('internship.Organization')
     speciality = models.ForeignKey('internship.InternshipSpeciality')
     period = models.ForeignKey('internship.Period')
-    choice = models.IntegerField(blank=False, null=False)
+    choice = models.CharField(max_length=1, blank=False, null=False, default='0')
     cost = models.IntegerField(blank=False, null=False)
     consecutive_month = models.BooleanField(default=False, null=False)
     type_of_internship = models.CharField(max_length=1, blank=False, null=False, default='N')
