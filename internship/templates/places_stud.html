@@ -27,8 +27,8 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-  <li><a href="{% url 'internships_home' %}">{% trans 'internships' %}</a></li>
+<li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
+<li><a href="{% url 'internships_home' %}">{% trans 'internships_managment' %}</a></li>
   <li class="active">{% trans 'all_places' %}</li>
 {% endblock %}
 {% block content %}
@@ -44,7 +44,7 @@
             </thead>
             <tbody>
               <tr>
-                <form action="{%url 'internships_places' %}" method="get">
+                <form action="{%url 'internships_places_stud' %}" method="get">
                   <td style="text-align:center; width:50%;">
                     <select name="city_sort" onChange="javascript: this.form.submit();">
                       <option value="0">{% trans 'all_city' %}</option>

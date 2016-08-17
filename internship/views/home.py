@@ -53,37 +53,11 @@ def internships_home(request):
     else:
         blockable = True
 
-    student_informations = InternshipStudentInformation.find_all()
-    for student_info in student_informations:
-        if student_info.latitude is None :
-            student_address = student_info.location + " " + student_info.postal_code + " " \
-                            + student_info.city + " " + student_info.country
-            student_address = student_address.replace('\n','')
-            student_address_lat_long = geocode(student_address)
-            if student_address_lat_long:
-                student_info.latitude = student_address_lat_long[0]
-                student_info.longitude = student_address_lat_long[1]
-            else :
-                student_info.latitude = 999
-                student_info.longitude = 999
-            student_info.check_coordonates = True
-            student_info.save()
-
-    organization_informations = OrganizationAddress.find_all()
-    for organization_info in organization_informations:
-        if organization_info.latitude is None :
-            organization_address = organization_info.location + " " + organization_info.postal_code + " " \
-                            + organization_info.city + " " + organization_info.country
-            organization_address = organization_address.replace('\n','')
-            organization_address_lat_long = geocode(organization_address)
-            if organization_address_lat_long:
-                organization_info.latitude = organization_address_lat_long[0]
-                organization_info.longitude = organization_address_lat_long[1]
-            else :
-                organization_info.latitude = 999
-                organization_info.longitude = 999
-            organization_info.check_coordonates = True
-            organization_info.save()
+    #Find all informations about students and organisation and fin the latitude and longitude of the address
+    student_informations = InternshipStudentInformation.search()
+    organization_informations = OrganizationAddress.search()
+    find_latitude_longitude(student_informations)
+    find_latitude_longitude(organization_informations)
 
     return render(request, "internships_home.html", {'section':   'internship',
                                                      'noma':      noma,
@@ -118,3 +92,23 @@ def geocode(addr):
 def strip_accents(s):
     return ''.join(c for c in unicodedata.normalize('NFD', s)
                    if unicodedata.category(c) != 'Mn')
+
+def find_latitude_longitude(infos):
+    #for each data in the infos, check if the lat exist
+    for data in infos:
+        if data.latitude is None :
+            #if it exist, compile the address with the location / postal / city / country
+            address = data.location + " " + data.postal_code + " " \
+                            + data.city + " " + data.country
+            address = address.replace('\n','')
+            #Compute the geolocalisation
+            address_lat_long = geocode(address)
+            #if the geolac is fing put the data, if not put fake data
+            if address_lat_long:
+                data.latitude = address_lat_long[0]
+                data.longitude = address_lat_long[1]
+            else :
+                data.latitude = 999
+                data.longitude = 999
+        #save the data
+        data.save()
