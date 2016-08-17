@@ -31,7 +31,7 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class PropositionDissertationAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'visibility', 'active')
+    list_display = ('title', 'author', 'visibility', 'active', 'get_offer_propositions')
 
 
 class PropositionDissertation(models.Model):
@@ -81,6 +81,9 @@ class PropositionDissertation(models.Model):
     def deactivate(self):
         self.active = False
         self.save()
+
+    def get_offer_propositions(self):
+        return " - ".join([str(s) for s in self.offer_proposition.all()])
 
     class Meta:
         ordering = ["author__person__last_name", "author__person__middle_name", "author__person__first_name", "title"]
