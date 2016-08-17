@@ -99,13 +99,15 @@ def migrate_reference_domain():
 
 
 def migrate_base_student():
-    records = mdl_base.student.find_all_for_sync()
-    migrate(mdl_base.student.Student, records, 'osis_base')
+    datas = mdl_base.student.find_all_for_sync()
+    for records in datas:
+        migrate(mdl_base.student.Student, records, 'osis_base')
 
 
 def migrate_base_tutor():
-    records = mdl_base.tutor.find_all_for_sync()
-    migrate(mdl_base.tutor.Tutor, records, 'osis_base')
+    datas = mdl_base.tutor.find_all_for_sync()
+    for records in datas:
+        migrate(mdl_base.tutor.Tutor, records, 'osis_base')
 
 
 def migrate_records(records, model_class, queue_name):

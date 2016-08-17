@@ -26,8 +26,10 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
-from internship.models import InternshipOffer
-
+from internship.models import InternshipOffer, InternshipStudentInformation, OrganizationAddress
+import urllib.request
+import unicodedata
+from xml.dom import minidom
 
 @login_required
 @permission_required('internship.can_access_internship', raise_exception=True)
@@ -51,7 +53,68 @@ def internships_home(request):
     else:
         blockable = True
 
+    student_informations = InternshipStudentInformation.find_all()
+    for student_info in student_informations:
+        if student_info.latitude is None :
+            student_address = student_info.location + " " + student_info.postal_code + " " \
+                            + student_info.city + " " + student_info.country
+            student_address = student_address.replace('\n','')
+            student_address_lat_long = geocode(student_address)
+            if student_address_lat_long:
+                student_info.latitude = student_address_lat_long[0]
+                student_info.longitude = student_address_lat_long[1]
+            else :
+                student_info.latitude = 999
+                student_info.longitude = 999
+            student_info.check_coordonates = True
+            student_info.save()
+
+    organization_informations = OrganizationAddress.find_all()
+    for organization_info in organization_informations:
+        if organization_info.latitude is None :
+            organization_address = organization_info.location + " " + organization_info.postal_code + " " \
+                            + organization_info.city + " " + organization_info.country
+            organization_address = organization_address.replace('\n','')
+            organization_address_lat_long = geocode(organization_address)
+            if organization_address_lat_long:
+                organization_info.latitude = organization_address_lat_long[0]
+                organization_info.longitude = organization_address_lat_long[1]
+            else :
+                organization_info.latitude = 999
+                organization_info.longitude = 999
+            organization_info.check_coordonates = True
+            organization_info.save()
+
     return render(request, "internships_home.html", {'section':   'internship',
                                                      'noma':      noma,
                                                      'blockable': blockable
                                                     })
+
+def geocode(addr):
+    lat_long = [None]*2
+    # Transform the address for a good url and delete all accents
+    addr = addr.replace(" ", "+")
+    addr = addr.replace("'", "\'")
+    addr = strip_accents(addr)
+    # get the complete url
+    url = "https://maps.googleapis.com/maps/api/geocode/xml?address=%s&key=AIzaSyCWeZdraxzqRTMxXxbXY3bncaD6Ijq_EvE" % addr
+
+    # using urllib get the xml
+    req = urllib.request.Request(url)
+    with urllib.request.urlopen(req) as response:
+        data = response.read().decode('utf-8')
+
+    # Parse the xml to have the latitude and longitude of the address
+    xmldoc = minidom.parseString(data)
+    lat = xmldoc.getElementsByTagName('location')
+    for l in lat:
+        c = l.getElementsByTagName('lat')[0].firstChild.data
+        d = l.getElementsByTagName('lng')[0].firstChild.data
+        lat_long[0] = c
+        lat_long[1] = d
+    # return the value
+    return lat_long
+
+def strip_accents(s):
+    return ''.join(c for c in unicodedata.normalize('NFD', s)
+                   if unicodedata.category(c) != 'Mn')

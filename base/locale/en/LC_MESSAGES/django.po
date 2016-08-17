@@ -1252,5 +1252,11 @@ msgstr "No data for this academic year"
 msgid "students"
 msgstr "students"
 
+msgid "not_passed"
+msgstr "Not passed"
+
+msgid "date_not_passed"
+msgstr "Date not passed"
+
 msgid "complete"
 msgstr "Complete"

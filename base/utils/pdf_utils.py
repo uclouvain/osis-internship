@@ -299,6 +299,8 @@ def end_page_infos_building(content, end_date):
     p = ParagraphStyle('info')
     p.fontSize = 10
     p.alignment = TA_LEFT
+    if not end_date:
+        end_date = '(%s)' % _('date_not_passed')
     content.append(Paragraph(_("return_doc_to_administrator") % end_date
                              , p))
     content.append(Paragraph('''

@@ -130,6 +130,8 @@ def form_part6_save(request, mandate_id):
             if 'validate_and_submit' in request.POST:
                 if assistant.supervisor:
                     mandate.state='PHD_SUPERVISOR'
+                elif mandate.assistant_type == "TEACHING_ASSISTANT":
+                    mandate.state='SUPERVISION'
                 else:
                     mandate.state='RESEARCH'
                 form.save()

@@ -30,7 +30,7 @@
 <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
 <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'dissertations' %}</a></li>
 <li><a href="{% url 'manager_dissertations_list' %}" id="lnk_propositions">{% trans 'dissertations' %}</a></li>
-<li class="active">{{ dissertation.title }}</li>
+<li class="active">{{ dissertation.title|truncatechars:24 }}</li>
 {% endblock %}
 {% block content %}
 <div class="page-header">
@@ -145,7 +145,7 @@
                 {% for dissertation_role in dissertation_roles %}
                 <div class="row">
                   <div class="col-md-3" style="text-align: right">
-                      <label><a href="{% url 'manager_dissertations_jury_edit' pk=dissertation_role.pk %}">{{ dissertation_role.status }}</a></label>
+                      <label>{{ dissertation_role.status }}</label>
                   </div>
                   <div class="col-md-4">
                       {{ dissertation_role.adviser }}
