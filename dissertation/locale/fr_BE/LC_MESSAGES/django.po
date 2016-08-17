@@ -28,6 +28,9 @@ msgstr "les enseignants peuvent proposer un lecteur"
 msgid "adviser_dissertations"
 msgstr "mémoires reliés"
 
+msgid "adviser_dissertations_wait"
+msgstr "mémoires en attentes"
+
 msgid "adviser_profile"
 msgstr "profil enseignant"
 

@@ -261,6 +261,18 @@ def manager_informations_detail_list(request, pk):
                           'adviser_list_dissertations_copro': adv_list_disserts_copro,
                           'adviser_list_dissertations_reader': adv_list_disserts_reader})
 
+@login_required
+@user_passes_test(is_manager)
+def manager_informations_detail_list_wait(request, pk):
+    person = mdl.person.find_by_user(request.user)
+    connected_adviser = adviser.search_by_person(person)
+    offer = faculty_adviser.search_by_adviser(connected_adviser).offer
+    adv = get_object_or_404(Adviser, pk=pk)
+    disserts_role=dissertation_role.search_by_adviser_and_role_and_waiting(adv, offer)
+
+    return layout.render(request, "manager_informations_detail_list_wait.html",
+                         {'disserts_role': disserts_role,'adviser':adv})
+
 
 @login_required
 @user_passes_test(is_manager)
