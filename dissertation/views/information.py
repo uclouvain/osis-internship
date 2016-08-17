@@ -30,7 +30,7 @@ from dissertation.models import adviser
 from dissertation.models import dissertation_role
 from dissertation.models import faculty_adviser
 from base import models as mdl
-from dissertation.forms import AdviserForm, ManagerAdviserForm, ManagerAddAdviserForm
+from dissertation.forms import AdviserForm, ManagerAdviserForm, ManagerAddAdviserForm, ManagerAddAdviserPreForm
 from django.contrib.auth.decorators import user_passes_test
 from django.db import IntegrityError
 from base.views import layout
@@ -142,13 +142,55 @@ def manager_informations(request):
 @user_passes_test(is_manager)
 def manager_informations_add(request):
     if request.method == "POST":
-        form = ManagerAddAdviserForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('manager_informations')
-    else:
-        form = ManagerAddAdviserForm(initial={'type': "PRF"})
-    return layout.render(request, 'manager_informations_add.html', {'form': form})
+        if 'search_form' in request.POST:  # step 2 : second form to select person in list
+            form = ManagerAddAdviserPreForm(request.POST)
+            if form.is_valid():  # mail format is valid
+                data = form.cleaned_data
+                person = mdl.person.search_by_email(data['email'])
+
+                if not data['email']:  # empty search -> step 1
+                    form = ManagerAddAdviserPreForm()
+                    message = "empty_data"
+                    return layout.render(request, 'manager_informations_add_search.html', {'form': form,
+                                                                                           'message': message})
+
+                elif person and adviser.find_by_person(person):  # person already adviser -> step 1
+                    form = ManagerAddAdviserPreForm()
+                    email = "%s (%s)" % (list(person)[0], data['email'])
+                    message = "person_already_adviser"
+                    return layout.render(request, 'manager_informations_add_search.html', {'form': form,
+                                                                                           'message': message,
+                                                                                           'email': email})
+                elif mdl.person.count_by_email(data['email']) > 0:  # person found and not adviser -> go forward
+                    pers = list(person)[0]
+                    select_form = ManagerAddAdviserForm()
+                    return layout.render(request, 'manager_informations_add.html', {'form': select_form, 'pers': pers})
+
+                else:  # person not found by email -> step 1
+                    form = ManagerAddAdviserPreForm()
+                    email = data['email']
+                    message = "person_not_found_by_mail"
+                    return layout.render(request, 'manager_informations_add_search.html', {'form': form,
+                                                                                           'message': message,
+                                                                                           'email': email})
+            else:  # invalid form (invalid format for email)
+                form = ManagerAddAdviserPreForm()
+                message = "invalid_data"
+                return layout.render(request, 'manager_informations_add_search.html', {'form': form,
+                                                                                       'message': message})
+
+        else:  # step 3 : everything ok, register the person as adviser
+            form = ManagerAddAdviserForm(request.POST)
+            if form.is_valid():
+                adv = form.save(commit=False)
+                adv.save()
+                return redirect('manager_informations_detail', pk=adv.pk)
+            else:
+                return redirect('manager_informations')
+
+    else:  # step 1 : initial form to search person by email
+        form = ManagerAddAdviserPreForm()
+        return layout.render(request, 'manager_informations_add_search.html', {'form': form})
 
 
 @login_required

@@ -37,7 +37,15 @@ class StudentAdmin(admin.ModelAdmin):
     search_fields = ['person__first_name', 'person__last_name']
 
 
+class StudentManager(models.Manager):
+    def get_by_natural_key(self, global_id, registration_id):
+        return self.get(registration_id=registration_id, person__global_id=global_id)
+
+
 class Student(models.Model):
+
+    objects = StudentManager()
+
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     registration_id = models.CharField(max_length=10, unique=True)
@@ -45,6 +53,11 @@ class Student(models.Model):
 
     def __str__(self):
         return u"%s (%s)" % (self.person, self.registration_id)
+
+    def natural_key(self):
+        return (self.registration_id, self.person.global_id)
+
+    natural_key.dependencies = ['base.person']
 
 
 def find_by(registration_id=None, person_name=None, person_username=None, person_first_name=None, full_registration = None):
@@ -75,6 +88,7 @@ def find_by(registration_id=None, person_name=None, person_username=None, person
 
     return out
 
+
 def find_by_person(a_person):
     try:
         student = Student.objects.get(person=a_person)
@@ -87,8 +101,8 @@ def find_all_for_sync():
     """
     :return: All records in the 'Student' model (table). Used to synchronize date from Osis to Osis-portal.
     """
-    records = serialize_all_students()
-    return records
+    datas = serialize_all_students()
+    return datas
 
 
 def serialize_all_students():
@@ -100,14 +114,13 @@ def serialize_all_students():
     students = Student.objects.select_related('person').all()
     list_students = []
     list_persons = []
+    datas = []
     for stud in students:
-        list_students.append(stud)
-        list_persons.append(stud.person)
-    data_students = serialize_list_students(list_students)
-    data_persons = person.serialize_list_persons(list_persons)
-    data_dict = {'students': data_students, 'persons': data_persons}
-    return data_dict
-
+        datas.append({
+            'students': serialize_list_students([stud]),
+            'persons': person.serialize_list_persons([stud.person])
+        })
+    return datas
 
 def serialize_list_students(list_students):
     """
@@ -118,7 +131,8 @@ def serialize_list_students(list_students):
     """
     # Restrict fields for osis-portal
     fields = ('id', 'registration_id', 'person')
-    return serializers.serialize("json", list_students, fields=fields)
+    return serializers.serialize("json", list_students, fields=fields,use_natural_foreign_keys=True,
+                                 use_natural_primary_keys=True)
 
 
 def find_by_offer(offer):

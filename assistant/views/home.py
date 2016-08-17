@@ -33,15 +33,15 @@ from assistant.models import academic_assistant, manager, reviewer
 @login_required
 def assistant_home(request):
     try:
-        academic_assistant.AcademicAssistant.objects.get(person=request.user.person)
+        academic_assistant.find_by_person(person=request.user.person)
         return HttpResponseRedirect(reverse('assistant_mandates'))
     except academic_assistant.AcademicAssistant.DoesNotExist:
         try:
-            manager.Manager.objects.get(person=request.user.person)
+            manager.find_by_person(person=request.user.person)
             return HttpResponseRedirect(reverse('mandates_list'))
         except manager.Manager.DoesNotExist:
             try:
-                reviewer.Reviewer.objects.get(person=request.user.person)
+                reviewer.find_by_person(person=request.user.person)
                 return HttpResponseRedirect(reverse('reviewer_mandates_list'))
             except reviewer.Reviewer.DoesNotExist:
                 return HttpResponseRedirect(reverse('access_denied'))

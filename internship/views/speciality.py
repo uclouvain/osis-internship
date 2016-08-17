@@ -27,7 +27,6 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
 from internship.models import InternshipSpeciality
-from internship.forms import InternshipSpecialityForm
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
@@ -42,20 +41,17 @@ def specialities(request):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def speciality_create(request):
-    f = InternshipSpecialityForm(data=request.POST)
     learning_unit = mdl.learning_unit.search(acronym='WMDS2333')
     return render(request, "speciality_create.html", {'section': 'internship',
                                                     'learning_unit' : learning_unit[0],
-                                                    'form' : f
                                                     })
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def speciality_save(request, speciality_id):
-    form = InternshipSpecialityForm(data=request.POST)
-    check_speciality = InternshipSpeciality.find_by(id=speciality_id)
+    check_speciality = InternshipSpeciality.find_by_id(speciality_id)
     if check_speciality :
-        speciality = check_speciality[0]
+        speciality = check_speciality
     else :
         speciality = InternshipSpeciality()
 
@@ -66,6 +62,7 @@ def speciality_save(request, speciality_id):
     learning_unit = mdl.learning_unit.search(acronym=request.POST.get('learning_unit'))
     speciality.learning_unit = learning_unit[0]
     speciality.name = request.POST.get('name')
+    speciality.acronym = request.POST.get('acronym')
     speciality.mandatory = mandatory
 
     speciality.save()
