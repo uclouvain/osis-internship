@@ -790,7 +790,7 @@ def generate_and_save():
     fill_normal_choices(False)
 
     InternshipStudentAffectationStat.objects.all().delete()
-    periods = Period.find_all().order_by('id')
+    periods = Period.search().order_by('id')
 
     for student, internships in solution.items():
         for period, internship in internships.items():
