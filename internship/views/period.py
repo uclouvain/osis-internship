@@ -34,7 +34,7 @@ from internship.forms import PeriodForm
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_periods(request):
-    periods = Period.find_all()
+    periods = Period.search()
     return render(request, "periods.html", {'section': 'internship',
                                             'periods' : periods})
 
