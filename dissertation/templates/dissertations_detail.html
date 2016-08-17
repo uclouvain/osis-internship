@@ -30,7 +30,7 @@
 <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
 <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'dissertations' %}</a></li>
 <li><a href="{% url 'dissertations_list' %}" id="lnk_propositions">{% trans 'dissertations' %}</a></li>
-<li class="active">{{ dissertation.title }}</li>
+<li class="active">{{ dissertation.title|truncatechars:24 }}</li>
 {% endblock %}
 {% block content %}
 <div class="page-header">
@@ -125,6 +125,14 @@
                   </div>
                   <div class="col-md-9">
                       {{ dissertation.defend_periode }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3" style="text-align: right">
+                      <label>{% trans 'defend_year' %}</label>
+                  </div>
+                  <div class="col-md-9">
+                      {{ dissertation.defend_year }}
                   </div>
                 </div>
             </div>

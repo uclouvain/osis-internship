@@ -30,11 +30,14 @@
   <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
   <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'dissertations' %}</a></li>
   <li><a href="{% url 'manager_dissertations_list' %}" id="lnk_dissertations_list">{% trans 'dissertations' %}</a></li>
-  <li class="active">{% trans 'new_or_edit_dissertation' %}</li>
+  <li><a href="{% url 'manager_dissertations_detail' pk=dissert.pk %}" id="lnk_dissertations_detail">
+      {{ dissert.title|truncatechars:24 }}
+  </a></li>
+  <li class="active">{% trans 'new_or_edit_jury_dissertation' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'new_or_edit_dissertation' %}</h2>
+    <h2>{% trans 'new_or_edit_jury_dissertation' %}</h2>
   </div>
   <div class="panel panel-default">
     <div class="panel-body">

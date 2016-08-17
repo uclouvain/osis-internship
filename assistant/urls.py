@@ -25,7 +25,7 @@
 ##############################################################################
 from django.conf.urls import url
 from assistant.views import mandate, home, assistant_form, assistant
-from assistant.views import mandates_list, reviewer_mandates_list
+from assistant.views import mandates_list, reviewer_mandates_list, reviewer_review, reviewer_delegation
 
 urlpatterns = [
     # S'il vous plaît, organiser les urls par ordre alphabétique.
@@ -43,6 +43,14 @@ urlpatterns = [
     url(r'^pst/form_part6/save/(?P<mandate_id>\d+)/$', assistant_form.form_part6_save, name='form_part6_save'),
     url(r'^pst/mandate/(?P<mandate_id>\d+)/state/$', assistant.mandate_change_state, name='mandate_change_state'),
     url(r'^pst/mandates/$', assistant.AssistantMandatesListView.as_view(), name='assistant_mandates'),
+    url(r'^reviewer/delegation/$', reviewer_delegation.StructuresListView.as_view(), name='reviewer_delegation'),
+    url(r'^reviewer/structure/(?P<structure_id>\d+)/add_reviewer$',
+        reviewer_delegation.addReviewerForStructure, name='reviewer_delegation_add'),
     url(r'^reviewer/mandates/$', reviewer_mandates_list.MandatesListView.as_view(), name='reviewer_mandates_list'),
-    
+    url(r'^reviewer/review/edit/(?P<mandate_id>\d+)/$', reviewer_review.review_edit, name='review_edit'),
+    url(r'^reviewer/review/save/(?P<review_id>\d+)/(?P<mandate_id>\d+)/$',
+        reviewer_review.review_save, name='review_save'),
+    url(r'^reviewer/review/view/(?P<mandate_id>\d+)/$', reviewer_review.review_view, name='review_view'),
+    url(r'^reviewer/review/view/(?P<reviewer_id>\d+)/(?P<mandate_id>\d+)/$',
+        reviewer_review.review_view, name='review_view'),
 ]

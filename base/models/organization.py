@@ -64,30 +64,25 @@ def find_by_id(organization_id):
 
 
 def search(acronym=None, name=None, type=None, reference=None):
-    has_criteria = False
+    out  = None
     queryset = Organization.objects
 
     if acronym:
         queryset = queryset.filter(acronym=acronym)
-        has_criteria = True
 
     if name:
         queryset = queryset.filter(name=name)
-        has_criteria = True
 
     if type:
         queryset = queryset.filter(type=type)
-        has_criteria = True
 
     if reference:
         queryset = queryset.filter(reference=reference)
-        has_criteria = True
 
-    if has_criteria:
-        return queryset
-    else:
-        return None
+    if acronym or name or type or reference:
+        out = queryset
 
+    return out
 
 def find_by_type(type, order_by=None):
 

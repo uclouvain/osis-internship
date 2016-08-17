@@ -78,15 +78,20 @@ class ExamEnrollment(models.Model):
         return u"%s - %s" % (self.session_exam, self.learning_unit_enrollment)
 
     @property
+    def is_final(self):
+        return self.score_final is not None or self.justification_final
+
+    @property
+    def is_draft(self):
+        return self.score_draft is not None or self.justification_draft
+
+    @property
     def to_validate_by_program_manager(self):
         sc_reencoded = None
         if self.score_reencoded is not None:
             sc_reencoded = Decimal('%.2f' % self.score_reencoded)
 
-        if self.score_final != sc_reencoded or self.justification_final != self.justification_reencoded:
-            return True
-        else:
-            return False
+        return self.score_final != sc_reencoded or self.justification_final != self.justification_reencoded
 
     @property
     def to_validate_by_tutor(self):
@@ -94,10 +99,7 @@ class ExamEnrollment(models.Model):
         if self.score_reencoded is not None:
             sc_reencoded = Decimal('%.2f' % self.score_reencoded)
 
-        if self.score_draft != sc_reencoded or self.justification_draft != self.justification_reencoded:
-            return True
-        else:
-            return False
+        return self.score_draft != sc_reencoded or self.justification_draft != self.justification_reencoded
 
     @property
     def justification_draft_display(self):
@@ -234,7 +236,9 @@ def find_for_score_encodings(session_exam_number,
                              student_first_name=None,
                              justification=None):
     """
-    :param session_exam_number: Integer represents the number_session of the Session_exam (1,2,3,4 or 5).
+    :param session_exam_number: Integer represents the number_session of the Session_exam (1,2,3,4 or 5). It's
+                                a mandatory field to not confuse exam scores from different sessions. With this
+                                parameter, it's not necessary to check the start_date/end_date in OfferYearCalendar.
     :param learning_unit_year_id: Filter OfferEnrollments by learning_unit_year.
     :param learning_unit_year_ids: Filter OfferEnrollments by a list of learning_unit_year.
     :param tutor: Filter OfferEnrollments by Tutor.
@@ -285,11 +289,7 @@ def find_for_score_encodings(session_exam_number,
         queryset = queryset.filter(
             learning_unit_enrollment__offer_enrollment__student__person__first_name__icontains=student_first_name)
 
-    now = timezone.now()
-    return queryset.filter(session_exam__offer_year_calendar__start_date__lte=now)\
-                   .filter(session_exam__offer_year_calendar__end_date__gte=now)\
-                   .select_related('learning_unit_enrollment__offer_enrollment__offer_year')\
-                   .select_related('session_exam__offer_year_calendar') \
+    return queryset.select_related('learning_unit_enrollment__offer_enrollment__offer_year')\
                    .select_related('learning_unit_enrollment__offer_enrollment__student__person')
 
 
@@ -362,12 +362,11 @@ def scores_sheet_data(exam_enrollments, tutor=None):
             exam_enrollment = list_enrollments[0]
             offer_year = exam_enrollment.learning_unit_enrollment.offer_enrollment.offer_year
 
-            deliberation_date = offer_year_calendar.find_deliberation_date(offer_year,
-                                                                           exam_enrollment.session_exam.number_session)
+            deliberation_date = offer_year_calendar.find_deliberation_date(exam_enrollment.session_exam)
             if deliberation_date:
                 deliberation_date = deliberation_date.strftime("%d/%m/%Y")
             else:
-                deliberation_date = '-'
+                deliberation_date = _('not_passed')
             deadline = ""
             if exam_enrollment.session_exam.deadline:
                 deadline = exam_enrollment.session_exam.deadline.strftime('%d/%m/%Y')

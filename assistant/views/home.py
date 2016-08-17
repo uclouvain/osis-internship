@@ -27,16 +27,24 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http.response import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from assistant.models import academic_assistant, manager, reviewer
 
 
 @login_required
 def assistant_home(request):
-    if request.user.groups.filter(name='academic_assistants'):
+    try:
+        academic_assistant.find_by_person(person=request.user.person)
         return HttpResponseRedirect(reverse('assistant_mandates'))
-    elif request.user.groups.filter(name='hr_department'):
-        return HttpResponseRedirect(reverse('mandates_list'))
-    else:
-        return HttpResponseRedirect(reverse('access_denied'))
-
+    except academic_assistant.AcademicAssistant.DoesNotExist:
+        try:
+            manager.find_by_person(person=request.user.person)
+            return HttpResponseRedirect(reverse('mandates_list'))
+        except manager.Manager.DoesNotExist:
+            try:
+                reviewer.find_by_person(person=request.user.person)
+                return HttpResponseRedirect(reverse('reviewer_mandates_list'))
+            except reviewer.Reviewer.DoesNotExist:
+                return HttpResponseRedirect(reverse('access_denied'))
+    
 def access_denied(request):
     return render(request, "access_denied.html")
