@@ -37,7 +37,7 @@ from collections import OrderedDict
 from random import randint, choice
 from internship.models import *
 from statistics import mean, stdev
-# from internship.views.internship import calc_dist, geocode
+from internship.views.internship import calc_dist
 
 ################################################# Global vars #################################################
 errors = []
@@ -406,24 +406,21 @@ def valid_distance():
 def compute_distance(addr1, addr2):
     """
     Compute the distance between 2 addresses
-    :param addr1: Organization address
-    :param addr2:  Student Address
+    :param addr1:  Student address
+    :param addr2:  Organization Address
     :return: Distance in km between the organization and the student address
     """
 
-    # TODO This code works but can't be used for the moment, because google api has a daily limit of free requests
-    # geo_1 = geocode(addr1)
-    # geo_2 = geocode(addr2)
-    # distance = calc_dist(geo_1[0], geo_1[1], geo_2[0], geo_2[1])
-    # return distance
+    distance = calc_dist(addr1.latitude, addr1.longitude, addr2.latitude, addr2.longitude)
+    return distance
 
     # For the moment we use the random distance
-    global total_maps_requests
-    distance = random.randint(1, 200)
-    global current_distance
-    current_distance = distance
-    total_maps_requests += 1
-    return random.randint(1, 200)
+    #global total_maps_requests
+    #distance = random.randint(1, 200)
+    #global current_distance
+    #current_distance = distance
+    #total_maps_requests += 1
+    #return random.randint(1, 200)
 
 def get_student_mandatory_choices(priority):
     """
@@ -470,24 +467,18 @@ def find_nearest_hopital(student, speciality, exclude):
     """
     # Check if the student has already computed the distances.
     if student not in distance_students:
-        internships = InternshipOffer.find_interships_by_learning_unit(speciality)
-        addr_student = InternshipStudentInformation.find_by_person(student.person)
-        # String representation of the student address
-        addr_student_str = str(addr_student.location) + ", " + str(addr_student.postal_code) + " " + str(
-            addr_student.city) + " " + str(addr_student.country)
+        internships = InternshipOffer.search(speciality=speciality)
+        addr_student = InternshipStudentInformation.search(person=student.person)[0]
         data = {}
         for internship in internships:
             # Ignore erasmus organizations
             if int(internship.organization.reference) < 500:
                 if student not in distance_students:
                     distance_students[student] = {}
-                addr_organization = OrganizationAddress.find_by_organization(internship.organization)[0]
-                # String representation of hospital address
-                addr_organization_str = str(addr_organization.location) + ", " + str(
-                    addr_organization.postal_code) + " " + str(addr_organization.city) + " " + str(
-                    addr_organization.country)
+                addr_organization = OrganizationAddress.search(organization=internship.organization)[0]
                 # Compute the distance between 2 addresses and store it in the dict
-                data[internship.organization] = compute_distance(addr_student_str, addr_organization_str)
+                if addr_organization.latitude is not None and addr_student.latitude is not None:
+                    data[internship.organization] = compute_distance(addr_student, addr_organization)
 
         # Sort organizations by distance
         ordered_data = OrderedDict(sorted(data.items(), key=lambda t: t[1]))
@@ -857,7 +848,7 @@ def internship_affectation_statistics_generate(request):
 def internship_affectation_statistics(request):
     init_organizations()
     sol, table, stats, errors = None, None, None, None
-    data = InternshipStudentAffectationStat.find_all()
+    data = InternshipStudentAffectationStat.search()
 
     if len(data) > 0:
         sol, table = load_solution(data)
