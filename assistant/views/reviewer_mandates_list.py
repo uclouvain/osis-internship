@@ -40,7 +40,7 @@ class MandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMi
 
     def test_func(self):
         try:
-            return reviewer.Reviewer.objects.filter(person=self.request.user.person)
+            return reviewer.find_by_person(self.request.user.person)
         except ObjectDoesNotExist:
             return False
         
@@ -51,9 +51,12 @@ class MandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMi
     def get_queryset(self):
         form_class = MandatesArchivesForm
         form = form_class(self.request.GET)
-        rev = reviewer.Reviewer.objects.filter(person=self.request.user.person)[0]
-        structures_id = structure.Structure.objects.filter(Q(id=rev.structure.id) | Q(part_of_id=rev.structure.id)).values_list('id', flat=True)
-        mandates_id = mandate_structure.MandateStructure.objects.filter(structure__in=structures_id).values_list('assistant_mandate_id', flat=True).distinct()
+        current_reviewer =  reviewer.find_by_person(self.request.user.person)
+        structures_id = structure.Structure.objects.filter(Q(id=current_reviewer.structure.id) |
+                                                           Q(part_of_id=current_reviewer.structure.id)).\
+            values_list('id', flat=True)
+        mandates_id = mandate_structure.MandateStructure.objects.filter(structure__in=structures_id).\
+            values_list('assistant_mandate_id', flat=True).distinct()
         if form.is_valid():
             self.request.session['selected_academic_year'] = form.cleaned_data[
                 'academic_year'].id
@@ -68,32 +71,33 @@ class MandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMi
             selected_academic_year = academic_year.current_academic_year()
             self.request.session[
                 'selected_academic_year'] = selected_academic_year.id
+
             queryset = assistant_mandate.AssistantMandate.objects.filter(
                 academic_year=selected_academic_year).filter(id__in=mandates_id)
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super(MandatesListView, self).get_context_data(**kwargs)
-        research_list = ['RESEARCH','SUPERVISION','VICE_RECTOR']
-        supervision_list = ['SUPERVISION','VICE_RECTOR']
-        can_delegate = False
-        try:
-            reviewer.Reviewer.objects.get(Q(person=self.request.user.person) &
-                                      (Q(role="SUPERVISION") | Q(role="RESEARCH")))
-            can_delegate = True
-        except:
-            can_delegate = False
-        context['can_delegate'] = can_delegate
+        phd_list = ['RESEARCH', 'SUPERVISION', 'VICE_RECTOR', 'DONE']
+        research_list = ['SUPERVISION','VICE_RECTOR','DONE']
+        supervision_list = ['VICE_RECTOR','DONE']
+        vice_rector_list = ['VICE_RECTOR', 'DONE']
+        current_reviewer = reviewer.find_by_person(self.request.user.person)
+        can_delegate = reviewer.can_delegate(current_reviewer)
+        context['can_delegate']=can_delegate
+        context['reviewer'] = current_reviewer
+        context['phd_list'] = phd_list
         context['research_list'] = research_list
         context['supervision_list'] = supervision_list
-        context['year'] = academic_year.AcademicYear.objects.get(
-                id=self.request.session.get('selected_academic_year')).year
+        context['vice_rector_list'] = vice_rector_list
+        context['year'] = academic_year.find_academic_year_by_id(
+            self.request.session.get('selected_academic_year')).year
         return context
 
     def get_initial(self):
         if self.request.session.get('selected_academic_year'):
-            selected_academic_year = academic_year.AcademicYear.objects.get(
-                id=self.request.session.get('selected_academic_year'))
+            selected_academic_year = academic_year.find_academic_year_by_id(
+                self.request.session.get('selected_academic_year'))
         else:
             selected_academic_year = academic_year.current_academic_year()
             self.request.session[

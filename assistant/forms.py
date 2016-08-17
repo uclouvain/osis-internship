@@ -35,10 +35,10 @@ from django.core.exceptions import ValidationError
 
 class MandateForm(ModelForm):
     comment = forms.CharField(required=False, widget=Textarea(
-        attrs={'rows': '3', 'cols': '50'}))
+        attrs={'rows': '4', 'cols': '80'}))
     absences = forms.CharField(required=False, widget=Textarea(
-        attrs={'rows': '3', 'cols': '50'}))
-    other_status = forms.CharField(required=False)
+        attrs={'rows': '4', 'cols': '80'}))
+    other_status = forms.CharField(max_length=50, required=False)
     renewal_type = forms.ChoiceField(
         choices=mdl.assistant_mandate.AssistantMandate.RENEWAL_TYPE_CHOICES)
     assistant_type = forms.ChoiceField(
@@ -48,11 +48,11 @@ class MandateForm(ModelForm):
         required=True, max_length=30, strip=True)
     contract_duration_fte = forms.CharField(
         required=True, max_length=30, strip=True)
-
+    fulltime_equivalent = forms.NumberInput()
     class Meta:
         model = mdl.assistant_mandate.AssistantMandate
         fields = ('comment', 'absences', 'other_status', 'renewal_type', 'assistant_type', 'sap_id',
-                  'contract_duration', 'contract_duration_fte')
+                  'contract_duration', 'contract_duration_fte','fulltime_equivalent')
 
 
 class MandateStructureForm(ModelForm):
@@ -154,6 +154,32 @@ class AssistantFormPart5(ModelForm):
                   'governing_body_representation','corsci_representation','students_service',
                   'infrastructure_mgmt_service','events_organisation_service','publishing_field_service',
                   'scientific_jury_service','degrees','formations')
+
+
+class ReviewForm(ModelForm):
+    justification = forms.CharField(help_text=_("justification_required_if_conditional"),
+        required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '5'}))
+    remark = forms.CharField(
+        required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '5'}))
+    confidential = forms.CharField(help_text=_("information_not_provided_to_assistant"),
+        required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '5'}))
+    advice = forms.ChoiceField(required=True, widget=forms.RadioSelect(renderer=HorizontalRadioRenderer, attrs={
+        "onChange": 'Hide()'}), choices=mdl.review.Review.ADVICE_CHOICES)
+    reviewer = forms.ChoiceField(required=False)
+
+    class Meta:
+        model = mdl.review.Review
+        fields = ('mandate','reviewer','advice','status','justification','remark','confidential','changed')
+        widgets = {'mandate': forms.HiddenInput(), 'reviewer': forms.HiddenInput, 'status': forms.HiddenInput,
+                'changed': forms.HiddenInput}
+
+    def clean(self):
+        super(ReviewForm, self).clean()
+        advice = self.cleaned_data.get("advice")
+        justification = self.cleaned_data.get('justification')
+        if advice == 'CONDITIONAL' and not justification:
+            msg = _("justification_required_if_conditional")
+            self.add_error('justification', msg)
 
 
 class AssistantFormPart6(ModelForm):
