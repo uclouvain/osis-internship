@@ -51,8 +51,8 @@ def is_manager(user):
 def manager_offer_parameters(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-    offer = faculty_adviser.search_by_adviser(adv).offer
-    offer_props = offer_proposition.search_by_offer(offer)
+    offers = faculty_adviser.search_by_adviser(adv)
+    offer_props = offer_proposition.search_by_offer(offers)
     return layout.render(request, 'manager_offer_parameters.html', {'offer_propositions': offer_props})
 
 

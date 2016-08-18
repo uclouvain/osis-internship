@@ -236,8 +236,8 @@ def manager_informations_search(request):
 def manager_informations_list_request(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-    offer = faculty_adviser.search_by_adviser(adv).offer
-    advisers_need_request = dissertation_role.list_teachers_action_needed(offer)
+    offers = faculty_adviser.search_by_adviser(adv)
+    advisers_need_request = dissertation_role.list_teachers_action_needed(offers)
 
     return layout.render(request, "manager_informations_list_request.html",
                          {'advisers_need_request': advisers_need_request})
@@ -248,12 +248,12 @@ def manager_informations_list_request(request):
 def manager_informations_detail_list(request, pk):
     person = mdl.person.find_by_user(request.user)
     connected_adviser = adviser.search_by_person(person)
-    offer = faculty_adviser.search_by_adviser(connected_adviser).offer
+    offers = faculty_adviser.search_by_adviser(connected_adviser)
     adv = get_object_or_404(Adviser, pk=pk)
 
-    adv_list_disserts_pro = dissertation_role.search_by_adviser_and_role_and_offer(adv, 'PROMOTEUR', offer)
-    adv_list_disserts_copro = dissertation_role.search_by_adviser_and_role_and_offer(adv, 'CO_PROMOTEUR', offer)
-    adv_list_disserts_reader = dissertation_role.search_by_adviser_and_role_and_offer(adv, 'READER', offer)
+    adv_list_disserts_pro = dissertation_role.search_by_adviser_and_role_and_offers(adv, 'PROMOTEUR', offers)
+    adv_list_disserts_copro = dissertation_role.search_by_adviser_and_role_and_offers(adv, 'CO_PROMOTEUR', offers)
+    adv_list_disserts_reader = dissertation_role.search_by_adviser_and_role_and_offers(adv, 'READER', offers)
 
     return layout.render(request, "manager_informations_detail_list.html",
                          {'adviser': adv,
@@ -266,9 +266,9 @@ def manager_informations_detail_list(request, pk):
 def manager_informations_detail_list_wait(request, pk):
     person = mdl.person.find_by_user(request.user)
     connected_adviser = adviser.search_by_person(person)
-    offer = faculty_adviser.search_by_adviser(connected_adviser).offer
+    offers = faculty_adviser.search_by_adviser(connected_adviser)
     adv = get_object_or_404(Adviser, pk=pk)
-    disserts_role=dissertation_role.search_by_adviser_and_role_and_waiting(adv, offer)
+    disserts_role=dissertation_role.search_by_adviser_and_role_and_waiting(adv, offers)
 
     return layout.render(request, "manager_informations_detail_list_wait.html",
                          {'disserts_role': disserts_role,'adviser':adv})

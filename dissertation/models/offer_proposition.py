@@ -76,7 +76,7 @@ def get_by_offer(an_offer):
     return OfferProposition.objects.get(offer=an_offer)
 
 
-def search_by_offer(an_offer):
-    return OfferProposition.objects.filter(offer=an_offer)\
+def search_by_offer(offers):
+    return OfferProposition.objects.filter(offer__in=offers)\
                                    .distinct()\
                                    .order_by('offer')
