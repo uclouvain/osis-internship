@@ -25,21 +25,20 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
+from django.core import serializers
+from reference.enums import domain_type
 
 
-class EducationTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'type', 'adhoc')
+class OfferYearDomainAdmin(admin.ModelAdmin):
+    list_display = ('domain', 'offer_year')
+    fieldsets = ((None, {'fields': ('domain', 'offer_year')}),)
+    search_fields = ['offer_year__acronym', 'domain__name']
 
 
-class EducationType(models.Model):
-    EDUCATION_TYPE = (('TRANSITION','Transition'),
-            ('QUALIFICATION','Qualification'),
-            ('ANOTHER','Autre'))
-
+class OfferYearDomain(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
-    type = models.CharField(max_length=20, choices=EDUCATION_TYPE)
-    name = models.CharField(max_length=100)
-    adhoc = models.BooleanField(default=True)
+    domain = models.ForeignKey('Domain', null=True, blank=True)
+    offer_year = models.ForeignKey('base.OfferYear', null=True, blank=True)
 
     def __str__(self):
-        return self.name
+        return "%s%s" % (self.domain, self.offer_year)

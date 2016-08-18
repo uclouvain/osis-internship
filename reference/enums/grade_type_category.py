@@ -23,23 +23,20 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
 
 
-class EducationTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'type', 'adhoc')
+BACHELOR = "BACHELOR"
+MASTER = "MASTER"
+DOCTORATE = "DOCTORATE"
+# TRAINING_CERTIFICATE = "TRAINING_CERTIFICATE"
+CERTIFICATE = "CERTIFICATE"
+OTHER = "OTHER"
 
+GRADE_CHOICES = (
+    (BACHELOR, 'bachelor'),
+    (MASTER, 'master'),
+    (DOCTORATE, 'ph_d'),
+    # (TRAINING_CERTIFICATE, _('teacher_training_certificate')),
+    (CERTIFICATE, 'certificate'),
+    (OTHER, 'other'))
 
-class EducationType(models.Model):
-    EDUCATION_TYPE = (('TRANSITION','Transition'),
-            ('QUALIFICATION','Qualification'),
-            ('ANOTHER','Autre'))
-
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    type = models.CharField(max_length=20, choices=EDUCATION_TYPE)
-    name = models.CharField(max_length=100)
-    adhoc = models.BooleanField(default=True)
-
-    def __str__(self):
-        return self.name

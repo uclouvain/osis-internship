@@ -23,23 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
+
+from django.utils.translation import ugettext_lazy as _
 
 
-class EducationTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'type', 'adhoc')
+SECONDARY = "SECONDARY"
+UNIVERSITY = "UNIVERSITY"
+HIGHER_NON_UNIVERSITY = "HIGHER_NON_UNIVERSITY"
 
 
-class EducationType(models.Model):
-    EDUCATION_TYPE = (('TRANSITION','Transition'),
-            ('QUALIFICATION','Qualification'),
-            ('ANOTHER','Autre'))
-
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    type = models.CharField(max_length=20, choices=EDUCATION_TYPE)
-    name = models.CharField(max_length=100)
-    adhoc = models.BooleanField(default=True)
-
-    def __str__(self):
-        return self.name
+INSTITUTION_TYPE = ((SECONDARY, _("secondary")),
+                    (UNIVERSITY, _('university')),
+                    (HIGHER_NON_UNIVERSITY, _('higher_non_university')))

@@ -25,21 +25,21 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
+from reference.enums import grade_type_category, grade_type_coverage
 
 
-class EducationTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'type', 'adhoc')
+class GradeTypeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'grade')
+    fieldsets = ((None, {'fields': ('name', 'grade')}),)
 
 
-class EducationType(models.Model):
-    EDUCATION_TYPE = (('TRANSITION','Transition'),
-            ('QUALIFICATION','Qualification'),
-            ('ANOTHER','Autre'))
-
+class GradeType(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
-    type = models.CharField(max_length=20, choices=EDUCATION_TYPE)
-    name = models.CharField(max_length=100)
-    adhoc = models.BooleanField(default=True)
+    name = models.CharField(max_length=255)
+    category = models.CharField(max_length=20, choices=grade_type_category)
+    coverage = models.CharField(max_length=20, choices=grade_type_coverage)
+    adhoc = models.BooleanField(default=True)  # If False == Official/validated, if True == Not Official/not validated
+    institutional = models.BooleanField(default=False)  # True if the domain is in UCL else False
 
     def __str__(self):
         return self.name

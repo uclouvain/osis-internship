@@ -52,3 +52,6 @@ admin.site.register(education_type.EducationType,
 
 admin.site.register(language.Language,
                     language.LanguageAdmin)
+
+admin.site.register(offer_year_domain.OfferYearDomain,
+                    offer_year_domain.OfferYearDomainAdmin)
