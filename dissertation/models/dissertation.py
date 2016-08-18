@@ -126,12 +126,12 @@ def search_by_proposition_author(terms=None, active=True, proposition_author=Non
     return search(terms=terms, active=active).filter(proposition_dissertation__author=proposition_author)
 
 
-def search_by_offer(offer):
-    return Dissertation.objects.filter(offer_year_start__offer=offer)
+def search_by_offer(offers):
+    return Dissertation.objects.filter(offer_year_start__offer__in=offers)
 
 
-def search_by_offer_and_status(offer, status):
-    return search_by_offer(offer).filter(status=status)
+def search_by_offer_and_status(offers, status):
+    return search_by_offer(offers).filter(status=status)
 
 
 def count_by_proposition(prop_dissert):
