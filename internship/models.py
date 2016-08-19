@@ -29,6 +29,7 @@ from django.utils.translation import ugettext_lazy as _
 import urllib.request
 import unicodedata
 from xml.dom import minidom
+import logging
 
 
 class InternshipOffer(models.Model):
@@ -262,12 +263,7 @@ class OrganizationAddress(models.Model):
         return OrganizationAddress.objects.get(pk=organization_address_id)
 
     def save(self, *args, **kwargs):
-        from internship.views.internship import find_latitude_longitude
-
         self.label = "Addr"+self.organization.name[:14]
-        self.latitude = None
-        self.longitude = None
-        find_latitude_longitude(self)
         super(OrganizationAddress, self).save(*args, **kwargs)
 
     def geocode(addr):
@@ -275,9 +271,11 @@ class OrganizationAddress(models.Model):
         # Transform the address for a good url and delete all accents
         addr = addr.replace(" ", "+")
         addr = addr.replace("'", "\'")
+        addr = addr.encode('utf8','replace').decode('utf8')
         addr = OrganizationAddress.strip_accents(addr)
         # get the complete url
-        url = "https://maps.googleapis.com/maps/api/geocode/xml?address=%s&key=AIzaSyCWeZdraxzqRTMxXxbXY3bncaD6Ijq_EvE" % addr
+        url = ''.join(['https://maps.googleapis.com/maps/api/geocode/xml?address=', addr, '&key=AIzaSyCWeZdraxzqRTMxXxbXY3bncaD6Ijq_EvE'])
+        logging.info(url)
 
         # using urllib get the xml
         req = urllib.request.Request(url)
@@ -339,6 +337,13 @@ class InternshipStudentInformation(models.Model):
     @staticmethod
     def find_all():
         return InternshipStudentInformation.objects.all().order_by('person__last_name', 'person__first_name')
+
+    @staticmethod
+    def find_by_person(person):
+        try:
+            return InternshipStudentInformation.objects.get(person=person)
+        except ObjectDoesNotExist:
+            return None
 
 class InternshipStudentAffectationStat(models.Model):
     student = models.ForeignKey('base.Student')
