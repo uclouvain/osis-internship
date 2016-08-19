@@ -86,6 +86,7 @@ def set_tabs_name(datas, student=None):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_places(request):
     # Get the value of the option for the sort
+    city_sort_get = "0"
     if request.method == 'GET':
         city_sort_get = request.GET.get('city_sort')
 
@@ -114,6 +115,7 @@ def internships_places(request):
 @permission_required('internship.can_access_internship', raise_exception=True)
 def internships_places_stud(request):
     # First get the value of the option for the sort
+    city_sort_get = "0"
     if request.method == 'GET':
         city_sort_get = request.GET.get('city_sort')
 
@@ -157,7 +159,6 @@ def place_save(request, organization_id, organization_address_id):
         organization_address = OrganizationAddress()
 
     form_address = OrganizationAddressForm(data=request.POST, instance=organization_address)
-    print(form_address)
     if form_address.is_valid():
         form_address.save()
 
