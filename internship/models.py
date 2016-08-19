@@ -29,6 +29,7 @@ from django.utils.translation import ugettext_lazy as _
 import urllib.request
 import unicodedata
 from xml.dom import minidom
+import logging
 
 
 class InternshipOffer(models.Model):
@@ -270,9 +271,11 @@ class OrganizationAddress(models.Model):
         # Transform the address for a good url and delete all accents
         addr = addr.replace(" ", "+")
         addr = addr.replace("'", "\'")
+        addr = addr.encode('utf8','replace').decode('utf8')
         addr = OrganizationAddress.strip_accents(addr)
         # get the complete url
-        url = "https://maps.googleapis.com/maps/api/geocode/xml?address=%s&key=AIzaSyCWeZdraxzqRTMxXxbXY3bncaD6Ijq_EvE" % addr
+        url = ''.join(['https://maps.googleapis.com/maps/api/geocode/xml?address=', addr, '&key=AIzaSyCWeZdraxzqRTMxXxbXY3bncaD6Ijq_EvE'])
+        logging.info(url)
 
         # using urllib get the xml
         req = urllib.request.Request(url)
