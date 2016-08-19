@@ -26,8 +26,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
-from internship.models import InternshipOffer
-
+from internship.models import InternshipOffer, InternshipStudentInformation, OrganizationAddress
 
 @login_required
 @permission_required('internship.can_access_internship', raise_exception=True)
@@ -50,6 +49,12 @@ def internships_home(request):
             blockable = False
     else:
         blockable = True
+
+    #Find all informations about students and organisation and fin the latitude and longitude of the address
+    student_informations = InternshipStudentInformation.search()
+    organization_informations = OrganizationAddress.search()
+    OrganizationAddress.find_latitude_longitude(student_informations)
+    OrganizationAddress.find_latitude_longitude(organization_informations)
 
     return render(request, "internships_home.html", {'section':   'internship',
                                                      'noma':      noma,

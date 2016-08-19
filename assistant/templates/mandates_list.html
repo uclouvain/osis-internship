@@ -32,6 +32,7 @@
 {% block breadcrumb %}
 <li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'institution' %}</a></li>
 <li><a href="{% url 'mandates' %}" id="lnk_mandates">{% trans 'mandates' %}</a></li>
+<li><a href="{% url 'manager_home' %}" id="lnk_manager_home">{% trans 'assistants' %}</a></li>
 <li class="active">{% trans 'mandates_list' %}</li>
 {% endblock %}
 {% block content %}
@@ -55,20 +56,17 @@
             <th>{% trans 'assistant' %}</th>
             <th>{% trans 'structures' %}</th>
             <th>{% trans 'stream' %}</th>
-            <th>{% trans 'renewal' %}</th>
+            <th>{% trans 'renewal_short_name' %}</th>
             <th>{% trans 'doctorate' %}</th>
             <th>{% trans 'mandate' %}</th>
             <th>{% trans 'equivalent_full_time' %}</th>
             <th>{% trans 'percentage_equivalent_full_time' %}</th>
-            <th>{% trans 'research' %}</th>
-            <th>{% trans 'tutoring' %}</th>
-            <th>{% trans 'sector_vice-rector' %}</th>
+            <th>{% trans 'reviews' %}</th>
             </tr>
             </thead>
             <tbody>
-            <tr>
             {% for mandate in object_list %}
-                <td>{{ mandate.sap_id }}</td>
+                <tr><td>{{ mandate.sap_id }}</td>
                 <td><a href="{% url 'mandate_read' mandate.id %}">{{ mandate.assistant.person }}</a></td>
                 <td><ul>
                 {% for struct in mandate.mandatestructure_set.all|dictsort:"structure.type" %}
@@ -100,18 +98,35 @@
                 <td>{{ mandate.contract_duration }}</td>
                 <td>{{ mandate.contract_duration_fte }}</td>
                 <td>{{ mandate.fulltime_equivalent }}</td>
-                <td></td>
-                <td align="center">
-                {% for rev in mandate.review_set.all %}
-                    {% if rev.advice == "FAVORABLE" %}
-                    <span class="glyphicon glyphicon-thumbs-up" style="font-size: 14pt; color: green" aria-hidden="true"></span>
-                    {% elif rev.advice == "UNFAVOURABLE" %}
-                    <span class="glyphicon glyphicon-thumbs-down" style="font-size: 14pt; color: red" aria-hidden="true"></span>
-                    {% else %}
-                    <span class="glyphicon glyphicon-alert" style="font-size: 14pt; color: orange" aria-hidden="true"></span>
+                <td>
+                {% for review in mandate.review_set.all|dictsort:"changed" %}
+                    {% if review.status == "DONE" %}
+                        {% if not review.reviewer %}
+                            <i id="rev" class="fa fa-battery-1" style="font-size: 100%;
+                        {% elif "RESEARCH" in review.reviewer.role %}
+                            <i class="fa fa-battery-2" style="font-size: 100%;
+                        {% elif "SUPERVISION" in review.reviewer.role %}
+                            <i class="fa fa-battery-3" style="font-size: 100%;
+                        {% elif "VICE_RECTOR" in review.reviewer.role %}
+                            <i class="fa fa-battery-4" style="font-size: 100%;
+                        {% endif %}
+                        {% if review.advice == "FAVORABLE" %}
+                             color: #79C84F;"
+                        {% elif review.advice == "UNFAVOURABLE" %}
+                             color: #E06D5A;"
+                        {% else %}
+                             color: #EFC345;"
+                        {% endif %}
+                        {% if review.reviewer %}
+                            title="{{ review.reviewer }}">
+                        {% else %}
+                            title="{{ mandate.assistant.supervisor }} : {% trans 'phd_supervisor' %}">
+                        {% endif %}
+                        </i>
                     {% endif %}
                 {% endfor %}
-                </td><td></td></tr>
+                </td>
+            </tr>
             {% endfor %}
             </tbody>
             </table>

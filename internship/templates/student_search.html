@@ -28,7 +28,7 @@
 
 {% block breadcrumb %}
   <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-  <li><a href="{% url 'internships_home' %}">{% trans 'internships' %}</a></li>
+  <li><a href="{% url 'internships_home' %}">{% trans 'internships_managment' %}</a></li>
   <li class="active">{% trans 'students' %}</li>
 {% endblock %}
 {% block content %}
@@ -79,6 +79,12 @@
           <span class="glyphicon glyphicon-remove" aria-hidden="true"> : {{students_not_ok}}</span>
         </button>
       </div>
+      <div class="col-md-2">
+        <br>
+        <button type="button">
+          <span class="glyphicon glyphicon-ban-circle" aria-hidden="true"> : {{student_without_internship}}</span>
+        </button>
+      </div>
       {% if message %}
       <div>
           <label class="alert alert-warning" style="margin:5px">{{message}}</label>
@@ -121,7 +127,11 @@
                         {% endif %}
                       </td>
                       <td>
-                        {% if student.registration_id %}
+                        {% if student.number_choices == 0 %}
+                          <button type="button">
+                            <span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>
+                          </button>
+                        {% else %}
                           {% if student.number_choices == number_selection %}
                             <button type="button" class="btn btn-success">
                               <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
