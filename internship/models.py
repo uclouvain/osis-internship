@@ -262,12 +262,7 @@ class OrganizationAddress(models.Model):
         return OrganizationAddress.objects.get(pk=organization_address_id)
 
     def save(self, *args, **kwargs):
-        from internship.views.internship import find_latitude_longitude
-
         self.label = "Addr"+self.organization.name[:14]
-        self.latitude = None
-        self.longitude = None
-        find_latitude_longitude(self)
         super(OrganizationAddress, self).save(*args, **kwargs)
 
     def geocode(addr):
@@ -339,6 +334,13 @@ class InternshipStudentInformation(models.Model):
     @staticmethod
     def find_all():
         return InternshipStudentInformation.objects.all().order_by('person__last_name', 'person__first_name')
+
+    @staticmethod
+    def find_by_person(person):
+        try:
+            return InternshipStudentInformation.objects.get(person=person)
+        except ObjectDoesNotExist:
+            return None
 
 class InternshipStudentAffectationStat(models.Model):
     student = models.ForeignKey('base.Student')
