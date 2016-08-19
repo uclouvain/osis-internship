@@ -79,7 +79,7 @@ def get_by_offer(an_offer):
 def search_by_offer(offers):
     return OfferProposition.objects.filter(offer__in=offers)\
                                    .distinct()\
-                                   .order_by('offer')
+                                   .order_by('acronym')
 
 
 def show_validation_commission(offer_props):
