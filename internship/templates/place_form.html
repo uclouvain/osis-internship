@@ -89,6 +89,8 @@
                 <div class="col-md-4">
                     <label for="country">{% trans 'country'%}</label><br>
                     <input class="form-control" value="{{ organization_address.country | default_if_none:'' }}" name="country" id="txt_organization_address_country" maxlength="255" required>
+                    <input type="hidden" class="form-control" value="{{ '' }}" name="latitude">
+                    <input type="hidden" class="form-control" value="{{ '' }}" name="longitude">
                 </div>
             </div>
             <br>

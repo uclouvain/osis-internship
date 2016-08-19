@@ -262,12 +262,7 @@ class OrganizationAddress(models.Model):
         return OrganizationAddress.objects.get(pk=organization_address_id)
 
     def save(self, *args, **kwargs):
-        from internship.views.internship import find_latitude_longitude
-
         self.label = "Addr"+self.organization.name[:14]
-        self.latitude = None
-        self.longitude = None
-        find_latitude_longitude(self)
         super(OrganizationAddress, self).save(*args, **kwargs)
 
     def geocode(addr):
