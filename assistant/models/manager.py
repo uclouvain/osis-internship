@@ -37,3 +37,6 @@ class Manager(models.Model):
     
     def __str__(self):
         return u"%s" % (self.person)
+
+def find_by_person(person):
+    return Manager.objects.get(person=person)

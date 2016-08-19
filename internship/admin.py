@@ -67,8 +67,8 @@ class PeriodInternshipPlacesAdmin(admin.ModelAdmin):
 admin.site.register(PeriodInternshipPlaces, PeriodInternshipPlacesAdmin)
 
 class InternshipSpecialityAdmin(admin.ModelAdmin):
-    list_display = ('learning_unit', 'name', 'mandatory')
-    fieldsets = ((None, {'fields': ('learning_unit', 'name', 'mandatory')}),)
+    list_display = ('learning_unit', 'name', 'acronym', 'mandatory')
+    fieldsets = ((None, {'fields': ('learning_unit', 'name', 'acronym', 'mandatory')}),)
     raw_id_fields = ('learning_unit',)
 
 admin.site.register(InternshipSpeciality, InternshipSpecialityAdmin)
@@ -82,15 +82,21 @@ class OrganizationAdmin(admin.ModelAdmin):
 admin.site.register(Organization, OrganizationAdmin)
 
 class OrganizationAddressAdmin(admin.ModelAdmin):
-    list_display = ('organization', 'label', 'location', 'postal_code', 'city', 'country')
-    fieldsets = ((None, {'fields': ('organization', 'label', 'location', 'postal_code', 'city', 'country')}),)
+    list_display = ('organization', 'label', 'location', 'postal_code', 'city', 'country','latitude', 'longitude')
+    fieldsets = ((None, {'fields': ('organization', 'label', 'location', 'postal_code', 'city', 'country', 'latitude', 'longitude')}),)
 
 admin.site.register(OrganizationAddress, OrganizationAddressAdmin)
 
 class InternshipStudentInformationAdmin(admin.ModelAdmin):
-    list_display = ('person', 'location', 'postal_code', 'city', 'country', 'email', 'phone_mobile')
-    fieldsets = ((None, {'fields': ('person', 'location', 'postal_code', 'city', 'country', 'email', 'phone_mobile')}),)
+    list_display = ('person', 'location', 'postal_code', 'city', 'country', 'latitude', 'longitude', 'email', 'phone_mobile')
+    fieldsets = ((None, {'fields': ('person', 'location', 'postal_code', 'city', 'latitude', 'longitude', 'country', 'email', 'phone_mobile')}),)
     raw_id_fields = ('person',)
     search_fields = ['person__user__username', 'person__last_name', 'person__first_name']
 
 admin.site.register(InternshipStudentInformation, InternshipStudentInformationAdmin)
+
+class InternshipStudentAffectationStatAdmin(admin.ModelAdmin):
+    list_display = ('student', 'organization', 'speciality', 'period', 'choice', 'cost', 'consecutive_month', 'type_of_internship')
+    fieldsets = ((None, {'fields': ('student', 'organization', 'speciality', 'period', 'choice', 'cost', 'consecutive_month', 'type_of_internship')}),)
+
+admin.site.register(InternshipStudentAffectationStat, InternshipStudentAffectationStatAdmin)
