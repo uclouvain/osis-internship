@@ -254,8 +254,6 @@ def internships_stud(request):
         else:
             all_non_mandatory_internships[x] = None
 
-
-
     return render(request, "internships_stud.html", {'section': 'internship',
                                                 'all_internships' : query,
                                                 'non_mandatory_speciality' : all_non_mandatory_speciality,
