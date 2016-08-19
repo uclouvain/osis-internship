@@ -335,6 +335,13 @@ class InternshipStudentInformation(models.Model):
     def find_all():
         return InternshipStudentInformation.objects.all().order_by('person__last_name', 'person__first_name')
 
+    @staticmethod
+    def find_by_person(person):
+        try:
+            return InternshipStudentInformation.objects.get(person=person)
+        except ObjectDoesNotExist:
+            return None
+
 class InternshipStudentAffectationStat(models.Model):
     student = models.ForeignKey('base.Student')
     organization = models.ForeignKey('internship.Organization')
