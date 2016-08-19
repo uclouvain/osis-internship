@@ -46,20 +46,26 @@ class Review(models.Model):
     confidential = models.TextField(null=True, blank=True)
     changed = models.DateTimeField(default=timezone.now, null=True)
 
+
 def find_by_id(review_id):
     return Review.objects.get(id=review_id)
+
 
 def find_by_mandate(mandate_id):
     return Review.objects.filter(mandate=mandate_id)
 
+
 def find_review_for_mandate_by_role(mandate, role):
     return Review.objects.filter(mandate=mandate).filter(reviewer__role__icontains=role.split('_', 1)[0]).first()
+
 
 def find_by_reviewer(reviewer):
     return Review.objects.filter(reviewer=reviewer)
 
+
 def find_by_reviewer_for_mandate(reviewer, mandate):
     return Review.objects.get(reviewer=reviewer, mandate=mandate)
+
 
 def find_done_by_supervisor_for_mandate(mandate):
     return Review.objects.get(reviewer=None, mandate=mandate, status='DONE')

@@ -26,7 +26,6 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.core.validators import MaxValueValidator, MinValueValidator
-from assistant.models import mandate_structure
 
 
 class AssistantMandate(models.Model):
@@ -78,8 +77,10 @@ class AssistantMandate(models.Model):
     activities_report_remark = models.TextField(null=True, blank=True)
     research_percent = models.PositiveIntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)], default=0)
     tutoring_percent = models.PositiveIntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)], default=0)
-    service_activities_percent = models.PositiveIntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)], default=0)
-    formation_activities_percent  = models.PositiveIntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)], default=0)
+    service_activities_percent = models.PositiveIntegerField(validators=[MinValueValidator(0),
+                                                                         MaxValueValidator(100)], default=0)
+    formation_activities_percent  = models.PositiveIntegerField(validators=[MinValueValidator(0),
+                                                                            MaxValueValidator(100)], default=0)
     internships = models.TextField(null=True, blank=True)
     conferences = models.TextField(null=True, blank=True)
     publications = models.TextField(null=True, blank=True)
@@ -104,21 +105,26 @@ class AssistantMandate(models.Model):
     contract_duration_fte = models.CharField(max_length=30)
     service_activities_remark = models.TextField(null=True, blank=True)
 
+
 def find_mandate_by_assistant_for_academic_year(assistant, this_academic_year):
     return AssistantMandate.objects.filter(assistant=assistant, academic_year=this_academic_year)  
+
 
 def find_mandate_by_id(mandate_id):
     return AssistantMandate.objects.get(id=mandate_id)
 
+
 def find_mandate_by_academic_assistant(assistant):
     return AssistantMandate.objects.get(assistant=assistant)
 
+
+def find_by_academic_year(academic_year):
+    return AssistantMandate.objects.filter(academic_year=academic_year)
+
+
 def find_before_year_for_assistant(year, assistant):
-    return AssistantMandate.objects.filter(academic_year__year__lt=year).filter(assistant = assistant)
+    return AssistantMandate.objects.filter(academic_year__year__lt=year).filter(assistant=assistant)
+
 
 def find_for_supervisor_for_academic_year(supervisor, academic_year):
     return AssistantMandate.objects.filter(assistant__supervisor=supervisor).filter(academic_year=academic_year)
-
-
-
-
