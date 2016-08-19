@@ -136,7 +136,7 @@ def manager_dissertations_edit(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-    offer = faculty_adviser.search_by_adviser(adv).offer
+    offers = faculty_adviser.search_by_adviser(adv)
 
     if request.method == "POST":
         form = ManagerDissertationEditForm(request.POST, instance=dissert)
@@ -144,14 +144,14 @@ def manager_dissertations_edit(request, pk):
             dissert = form.save()
             return redirect('manager_dissertations_detail', pk=dissert.pk)
         else:
-            form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offer(offer)
-            form.fields["author"].queryset = mdl.student.find_by_offer(offer)
-            form.fields["offer_year_start"].queryset = mdl.offer_year.find_by_offer(offer)
+            form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offer(offers)
+            form.fields["author"].queryset = mdl.student.find_by_offer(offers)
+            form.fields["offer_year_start"].queryset = mdl.offer_year.find_by_offer(offers)
     else:
         form = ManagerDissertationEditForm(instance=dissert)
-        form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offer(offer)
-        form.fields["author"].queryset = mdl.student.find_by_offer(offer)
-        form.fields["offer_year_start"].queryset = mdl.offer_year.find_by_offer(offer)
+        form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offer(offers)
+        form.fields["author"].queryset = mdl.student.find_by_offer(offers)
+        form.fields["offer_year_start"].queryset = mdl.offer_year.find_by_offer(offers)
 
     return layout.render(request, 'manager_dissertations_edit.html',
                          {'form': form,
@@ -202,11 +202,15 @@ def manager_dissertations_jury_new(request, pk):
 def manager_dissertations_list(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-    offer = faculty_adviser.search_by_adviser(adv).offer
-    disserts = dissertation.search_by_offer(offer)
-    offer_prop = offer_proposition.get_by_offer(offer)
-    return layout.render(request, 'manager_dissertations_list.html', {'dissertations': disserts,
-                                                                      'offer_proposition': offer_prop})
+    offers = faculty_adviser.search_by_adviser(adv)
+    disserts = dissertation.search_by_offer(offers)
+    offer_props = offer_proposition.search_by_offer(offers)
+    show_validation_commission = offer_proposition.show_validation_commission(offer_props)
+    show_evaluation_first_year = offer_proposition.show_evaluation_first_year(offer_props)
+    return layout.render(request, 'manager_dissertations_list.html',
+                         {'dissertations': disserts,
+                          'show_validation_commission': show_validation_commission,
+                          'show_evaluation_first_year': show_evaluation_first_year})
 
 
 @login_required
@@ -214,22 +218,22 @@ def manager_dissertations_list(request):
 def manager_dissertations_new(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-    offer = faculty_adviser.search_by_adviser(adv).offer
+    offers = faculty_adviser.search_by_adviser(adv)
     if request.method == "POST":
         form = ManagerDissertationForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('manager_dissertations_list')
         else:
-            form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offer(offer)
-            form.fields["author"].queryset = mdl.student.find_by_offer(offer)
-            form.fields["offer_year_start"].queryset = mdl.offer_year.find_by_offer(offer)
+            form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offer(offers)
+            form.fields["author"].queryset = mdl.student.find_by_offer(offers)
+            form.fields["offer_year_start"].queryset = mdl.offer_year.find_by_offer(offers)
 
     else:
         form = ManagerDissertationForm(initial={'active': True})
-        form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offer(offer)
-        form.fields["author"].queryset = mdl.student.find_by_offer(offer)
-        form.fields["offer_year_start"].queryset = mdl.offer_year.find_by_offer(offer)
+        form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offer(offers)
+        form.fields["author"].queryset = mdl.student.find_by_offer(offers)
+        form.fields["offer_year_start"].queryset = mdl.offer_year.find_by_offer(offers)
     return layout.render(request, 'manager_dissertations_new.html', {'form': form})
 
 
@@ -239,8 +243,10 @@ def manager_dissertations_search(request):
     disserts = dissertation.search(terms=request.GET['search'], active=True)
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-    offer = faculty_adviser.search_by_adviser(adv).offer
-    offer_prop = offer_proposition.get_by_offer(offer)
+    offers = faculty_adviser.search_by_adviser(adv)
+    offer_props = offer_proposition.search_by_offer(offers)
+    show_validation_commission = offer_proposition.show_validation_commission(offer_props)
+    show_evaluation_first_year = offer_proposition.show_evaluation_first_year(offer_props)
     xlsx = False
 
     if 'bt_xlsx' in request.GET:
@@ -280,7 +286,8 @@ def manager_dissertations_search(request):
     else:
         return layout.render(request, "manager_dissertations_list.html",
                                       {'dissertations': disserts,
-                                       'offer_proposition': offer_prop,
+                                       'show_validation_commission': show_validation_commission,
+                                       'show_evaluation_first_year': show_evaluation_first_year,
                                        'xlsx': xlsx})
 
 
@@ -413,13 +420,16 @@ def manager_dissertations_to_dir_ko(request, pk):
 def manager_dissertations_wait_list(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-    offer = faculty_adviser.search_by_adviser(adv).offer
-    offer_prop = offer_proposition.get_by_offer(offer)
-    disserts = dissertation.search_by_offer_and_status(offer, "DIR_SUBMIT")
+    offers = faculty_adviser.search_by_adviser(adv)
+    offer_props = offer_proposition.search_by_offer(offers)
+    show_validation_commission = offer_proposition.show_validation_commission(offer_props)
+    show_evaluation_first_year = offer_proposition.show_evaluation_first_year(offer_props)
+    disserts = dissertation.search_by_offer_and_status(offers, "DIR_SUBMIT")
 
     return layout.render(request, 'manager_dissertations_wait_list.html',
                          {'dissertations': disserts,
-                          'offer_proposition': offer_prop})
+                          'show_validation_commission': show_validation_commission,
+                          'show_evaluation_first_year': show_evaluation_first_year})
 
 
 @login_required
@@ -427,13 +437,16 @@ def manager_dissertations_wait_list(request):
 def manager_dissertations_wait_comm_list(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-    offer = faculty_adviser.search_by_adviser(adv).offer
-    offer_prop = offer_proposition.get_by_offer(offer)
-    disserts = dissertation.search_by_offer_and_status(offer, "COM_SUBMIT")
+    offers = faculty_adviser.search_by_adviser(adv)
+    offer_props = offer_proposition.search_by_offer(offers)
+    show_validation_commission = offer_proposition.show_validation_commission(offer_props)
+    show_evaluation_first_year = offer_proposition.show_evaluation_first_year(offer_props)
+    disserts = dissertation.search_by_offer_and_status(offers, "COM_SUBMIT")
 
     return layout.render(request, 'manager_dissertations_wait_commission_list.html',
                          {'dissertations': disserts,
-                          'offer_proposition': offer_prop})
+                          'show_validation_commission': show_validation_commission,
+                          'show_evaluation_first_year': show_evaluation_first_year})
 
 
 @login_required
@@ -441,13 +454,16 @@ def manager_dissertations_wait_comm_list(request):
 def manager_dissertations_wait_eval_list(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-    offer = faculty_adviser.search_by_adviser(adv).offer
-    offer_prop = offer_proposition.get_by_offer(offer)
-    disserts = dissertation.search_by_offer_and_status(offer, "EVA_SUBMIT")
+    offers = faculty_adviser.search_by_adviser(adv)
+    offer_props = offer_proposition.search_by_offer(offers)
+    show_validation_commission = offer_proposition.show_validation_commission(offer_props)
+    show_evaluation_first_year = offer_proposition.show_evaluation_first_year(offer_props)
+    disserts = dissertation.search_by_offer_and_status(offers, "EVA_SUBMIT")
 
     return layout.render(request, 'manager_dissertations_wait_eval_list.html',
                          {'dissertations': disserts,
-                          'offer_proposition': offer_prop})
+                          'show_validation_commission': show_validation_commission,
+                          'show_evaluation_first_year': show_evaluation_first_year})
 
 
 @login_required
@@ -455,13 +471,16 @@ def manager_dissertations_wait_eval_list(request):
 def manager_dissertations_wait_recep_list(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-    offer = faculty_adviser.search_by_adviser(adv).offer
-    offer_prop = offer_proposition.get_by_offer(offer)
-    disserts = dissertation.search_by_offer_and_status(offer, "TO_RECEIVE")
+    offers = faculty_adviser.search_by_adviser(adv)
+    offer_props = offer_proposition.search_by_offer(offers)
+    show_validation_commission = offer_proposition.show_validation_commission(offer_props)
+    show_evaluation_first_year = offer_proposition.show_evaluation_first_year(offer_props)
+    disserts = dissertation.search_by_offer_and_status(offers, "TO_RECEIVE")
 
     return layout.render(request, 'manager_dissertations_wait_recep_list.html',
                          {'dissertations': disserts,
-                          'offer_proposition': offer_prop})
+                          'show_validation_commission': show_validation_commission,
+                          'show_evaluation_first_year': show_evaluation_first_year})
 
 
 ###########################

@@ -45,4 +45,6 @@ class FacultyAdviser(models.Model):
 
 
 def search_by_adviser(a_adviser):
-    return FacultyAdviser.objects.get(adviser=a_adviser)
+    objects = FacultyAdviser.objects.filter(adviser=a_adviser)
+    offers = [obj.offer for obj in list(objects)]
+    return offers
