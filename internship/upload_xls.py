@@ -142,6 +142,8 @@ def __save_xls_place(request, file_name, user):
         else:
             organization_address.country = " "
         organization_address.organization = organization
+        organization_address.latitude = None
+        organization_address.longitude = None
         organization_address.save()
 
 def _is_registration_id(registration_id):
