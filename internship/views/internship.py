@@ -201,12 +201,17 @@ def internships(request):
 @login_required
 @permission_required('internship.can_access_internship', raise_exception=True)
 def internships_stud(request):
+    # Set the number of non mandatory internship and the sort array depending
+    size_non_mandatory = 4
+    speciality_sort_value = [None] * size_non_mandatory
+    # Check if there is a speciality selected in a tab of non mandatory internship
     if request.method == 'GET':
-        if request.GET.get('speciality_sort1') != '0':
-            speciality_sort_value1 = request.GET.get('speciality_sort1')
-        else :
-            speciality_sort_value1 = None
-    print(speciality_sort_value1)
+        for x in range(0,size_non_mandatory):
+            if request.GET.get("speciality_sort"+str(x+1)) != '0':
+                speciality_sort_value[x] = request.GET.get("speciality_sort"+str(x+1))
+            else :
+                speciality_sort_value[x] = None
+
     # Get the student base on the user
     student = mdl.student.find_by(person_username=request.user)
     # Get in descending order the student's choices in first lines
@@ -236,24 +241,26 @@ def internships_stud(request):
     selectable = get_selectable(all_internships)
     set_tabs_name(all_speciality, student)
 
-
+    # Set all non mandatory speciality for the dropdown list
     all_non_mandatory_speciality = InternshipSpeciality.find_non_mandatory()
-    all_non_mandatory_internships = [None] * 5
-    if speciality_sort_value1:
-        print("check")
-        all_non_mandatory_internships[1] = InternshipOffer.find_non_mandatory_internships(speciality__name=speciality_sort_value1)
-        get_number_choices(all_non_mandatory_internships[1])
-        set_tabs_name(all_non_mandatory_internships[1])
-    else:
-        print("no check")
-        all_non_mandatory_internships[1] = None
+    # Create an array of the number of non mandatory internship and put all the internship of the speciality selected in
+    all_non_mandatory_internships = [None] * size_non_mandatory
+    for x in range(0,size_non_mandatory):
+        print(x)
+        if speciality_sort_value[x]:
+            all_non_mandatory_internships[x] = InternshipOffer.find_non_mandatory_internships(speciality__name=speciality_sort_value[x])
+            get_number_choices(all_non_mandatory_internships[x])
+            set_tabs_name(all_non_mandatory_internships[x])
+        else:
+            all_non_mandatory_internships[x] = None
+
 
 
     return render(request, "internships_stud.html", {'section': 'internship',
                                                 'all_internships' : query,
                                                 'non_mandatory_speciality' : all_non_mandatory_speciality,
                                                 'all_non_mandatory_internships': all_non_mandatory_internships,
-                                                'speciality_sort_value1' : speciality_sort_value1,
+                                                'speciality_sort_value': speciality_sort_value,
                                                 'all_speciality' : all_speciality,
                                                 'selectable' : selectable,
                                                  })

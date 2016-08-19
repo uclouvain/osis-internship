@@ -72,8 +72,8 @@
                 <span class="glyphicon glyphicon-remove" style="color:red"></span>
               {%endif%}</a></li>
           {% endfor %}
-          {% for i in "xxxx" %}
-            <li><a data-toggle="tab" href="#tab_CHOIX{{ forloop.counter }}">{% trans 'internship_choice'%} {{ forloop.counter }}</a></li>
+          {% for i in all_non_mandatory_internships %}
+              <li><a data-toggle="tab" href="#tab_CHOIX{{ forloop.counter0 }}">{% trans 'internship_choice'%} {{ forloop.counter }}</a></li>
           {%endfor%}
         </ul>
         <form  method="post" action="{% url 'internships_save' %}" >
@@ -144,18 +144,17 @@
             </div>
           {%endfor%}
           {% for internships in all_non_mandatory_internships %}
-          {% if not foorloop.first %}
             <div id="tab_CHOIX{{ forloop.counter0 }}" class="tab-pane fade">
               <div class="panel panel-default">
                 <div class="tab-content">
                   <div role="tabpanel" class="tab-pane fade in active" id="profile">
                     <table class="table table-hover">
                       <form action="{%url 'internships_stud' %}" method="get">
-                        <select name="speciality_sort{{ forloop.counter0 }}" onChange="javascript: this.form.submit();">
+                        <select name="speciality_sort{{ forloop.counter }}" onChange="javascript: this.form.submit();">
                            <option value="0">--</option>
                            {% for spec in non_mandatory_speciality %}
                              <option value="{{ spec.name }}"
-                             {% if spec.name == speciality_sort_value{{ forloop.counter0 }} %}selected{% endif %}>
+                             {% if spec.name == speciality_sort_value1 %}selected{% endif %}>
                                {{ spec.name }}
                              </option>
                            {% endfor %}
@@ -221,7 +220,6 @@
                 </div>
               </div>
             </div>
-          {%endif%}
           {% endfor %}
           </div>
           {% if selectable == True %}
