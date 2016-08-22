@@ -33,7 +33,7 @@ from . import offer_proposition
 
 
 class DissertationAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'status', 'active')
+    list_display = ('title', 'author', 'status', 'active', 'proposition_dissertation', 'modification_date')
 
 
 STATUS_CHOICES = (

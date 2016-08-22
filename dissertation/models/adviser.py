@@ -145,6 +145,11 @@ def search_by_person(a_person):
     return adviser
 
 
+def find_by_person(a_person):
+    adviser = Adviser.objects.filter(person=a_person)
+    return adviser
+
+
 def search_adviser(terms):
     queryset = Adviser.objects.all().filter(type='PRF')
     if terms:
