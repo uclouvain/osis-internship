@@ -15,357 +15,351 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+msgid	 "2nd_renewal"
+msgstr	 "(for the 2nd renewal)"
 
-msgid "institution"
-msgstr "Institution"
+msgid	 "absences"
+msgstr	 "Absences"
 
-msgid "mandates"
-msgstr "Mandates"
+msgid	 "academic_year"
+msgstr	 "Academic year"
 
-msgid "mandate"
-msgstr "Mandate"
+msgid	 "action"
+msgstr	 "Action"
 
-msgid "assistants"
-msgstr "Assistants"
+msgid	 "activities_report_remark"
+msgstr	 "Activities report remark"
 
-msgid "assistantship_mandate_renewal_part1"
-msgstr "Assistantship mandate renewal - Part 1"
+msgid	 "address"
+msgstr	 "Address"
 
-msgid "assistant_form_part1"
-msgstr "Assistantship form - Part 1"
+msgid	 "assistant_form_part1"
+msgstr	 "Assistantship form - Part 1"
 
-msgid "name_firstame"
-msgstr "Name & First name"
+msgid	 "assistant_mandates_renewal"
+msgstr	 "Assistantship mandate renewal"
 
-msgid "birthdate"
-msgstr "Birth date"
+msgid	 "assistant_type"
+msgstr	 "Assistant type"
 
-msgid "address"
-msgstr "Address"
+msgid	 "assistants"
+msgstr	 "Assistants"
 
-msgid "type_of_renewal"
-msgstr "Type of renewal"
+msgid	 "assistantship_mandate_renewal_part1"
+msgstr	 "Assistantship mandate renewal - Part 1"
 
-msgid "contract"
-msgstr "Contract"
+msgid	 "assistantship_mandate_renewal_part2"
+msgstr	 "Assistantship mandate renewal - Part 2"
 
-msgid "faculty"
-msgstr "Faculty"
+msgid	 "attendees"
+msgstr	 "Number of students per serie"
 
-msgid "institute"
-msgstr "Institute"
+msgid	 "birth_date"
+msgstr	 "Birth date"
 
-msgid "full_time_equivalent"
-msgstr "Full time equivalent"
+msgid	 "birthdate"
+msgstr	 "Birth date"
 
-msgid "field"
-msgstr "Field"
+msgid	 "cancel"
+msgstr	 "Cancel"
 
-msgid "grade"
-msgstr "Grade"
+msgid	 "comment"
+msgstr	 "Comment"
 
-msgid "doctorate"
-msgstr "Doctorate"
+msgid	 "confirm_validation"
+msgstr	 "Are you sure you want to validate et submit ? This action can not be undone."
 
-msgid "registered_phd"
-msgstr "Registered Ph.D."
+msgid	 "confirmatory_test_date"
+msgstr	 "Confirmatory test date"
 
-msgid "yes"
-msgstr "Yes"
+msgid	 "contact_details"
+msgstr	 "Administrative information"
 
-msgid "no"
-msgstr "No"
+msgid	 "contract duration"
+msgstr	 "Contract duration"
 
-msgid "in_progress"
-msgstr "In progress"
+msgid	 "contract"
+msgstr	 "Contract"
 
-msgid "expected_registering_date"
-msgstr "Expected registering date"
+msgid	 "contract_duration_fte"
+msgstr	 "Contract full time equivalent"
 
-msgid "supervisor_email_address"
-msgstr "Supervisor email address"
+msgid	 "corsci_representation"
+msgstr	 "CORSCI representation activities"
 
-msgid "firstname"
-msgstr "First name"
+msgid	 "course"
+msgstr	 "Course"
 
-msgid "lastname"
-msgstr "Last name"
+msgid	 "course_code"
+msgstr	 "Course code"
 
-msgid "no_supervisor"
-msgstr "No supervisor"
+msgid	 "date_of_first_nomination"
+msgstr	 "First nomination date"
 
-msgid "supervisor"
-msgstr "Supervisor"
+msgid	 "dean"
+msgstr	 "Dean of faculty"
 
-msgid "phd_inscription_date"
-msgstr "Ph.D. Inscription date"
+msgid	 "degrees"
+msgstr	 "Obtained diplomas"
 
-msgid "phd_inscription"
-msgstr "Ph.D. Inscription"
+msgid	 "delete"
+msgstr	 "Delete"
 
-msgid "confirmatory_test_date"
-msgstr "Confirmatory test date"
+msgid	 "doctorate"
+msgstr	 "Doctorate"
 
-msgid "2nd_renewal"
-msgstr "(for the 2nd renewal)"
+msgid	 "email"
+msgstr	 "Email"
 
-msgid "thesis_defence_date"
-msgstr "Thesis defence date"
+msgid	 "equivalent_full_time"
+msgstr	 "EFT"
 
-msgid "various"
-msgstr "Various"
+msgid	 "events_organisation_service"
+msgstr	 "Social organization (internships, conferences, study tours, seminars,...)"
 
-msgid "function_outside_university"
-msgstr "Current function held outside the university and % of time spent"
+msgid	 "exams_supervision_duration"
+msgstr	 "Preparation, coordination and evaluation"
 
-msgid "external_post"
-msgstr "External post asked outside (FNRS, FRIA, ...)"
+msgid	 "exceptional_justification"
+msgstr	 "To the extent that you no longer meet the conditions for a 'normal' renewal, can you clarify the circumstances justifying a request for an 'exceptional' renewal (art. 51 of the RAMCS)"
 
-msgid "exceptional_justification"
-msgstr "To the extent that you no longer meet the conditions for a 'normal' renewal, can you clarify the circumstances justifying a request for an 'exceptional' renewal (art. 51 of the RAMCS)"
+msgid	 "exercises_tp"
+msgstr	 "Exercises, practicals, seminars - associated with volume 2 hours, you assume personally"
 
-msgid "next_part"
-msgstr "Next part"
+msgid	 "expected_registering_date"
+msgstr	 "Expected registering date"
 
-msgid "assistantship_mandate_renewal_part2"
-msgstr "Assistantship mandate renewal - Part 2"
+msgid	 "external_post"
+msgstr	 "External post asked outside (FNRS, FRIA, ...)"
 
-msgid "period_covered"
-msgstr "Period covered"
+msgid	 "face_to_face"
+msgstr	 "Number presential sessions hours"
 
-msgid "supervision"
-msgstr "Supervision"
+msgid	 "faculty"
+msgstr	 "Faculty"
 
-msgid "academic_year"
-msgstr "Academic year"
+msgid	 "faculty_representation"
+msgstr	 "Faculty representation activities"
 
-msgid "course"
-msgstr "Course"
+msgid	 "field"
+msgstr	 "Field"
 
-msgid "course_code"
-msgstr "Course code"
+msgid	 "firstname"
+msgstr	 "First name"
 
-msgid "exercises_tp"
-msgstr "Exercises, practicals, seminars - associated with volume 2 hours, you assume personally"
+msgid	 "formation_activities"
+msgstr	 "Formation activities"
 
-msgid "sessions_number"
-msgstr "Number of sessions scheduled for this course"
+msgid	 "formation_activities_percent"
+msgstr	 "Formation activities percentage"
 
-msgid "sessions_duration"
-msgstr "Duration of one session"
+msgid	 "formations"
+msgstr	 "Scientific or educational formations"
 
-msgid "series_number"
-msgstr "Number of series"
+msgid	 "full_time_equivalent"
+msgstr	 "Full time equivalent"
 
-msgid "face_to_face"
-msgstr "Number presential sessions hours"
+msgid	 "function_outside_university"
+msgstr	 "Current function held outside the university and % of time spent"
 
-msgid "attendees"
-msgstr "Number of students per serie"
+msgid	 "gender"
+msgstr	 "Gender"
 
-msgid "exams_supervision_duration"
-msgstr "Preparation, coordination and evaluation"
+msgid	 "general_comment"
+msgstr	 "General Comment"
 
-msgid "others_delivery"
-msgstr "Other types of activities associated with this course"
+msgid	 "governing_body_representation"
+msgstr	 "Governing body representation activities"
 
-msgid "previous_part"
-msgstr "Back to previous part"
+msgid	 "grade"
+msgstr	 "Grade"
 
-msgid "next_course"
-msgstr "Encode another course"
+msgid	 "head_institute"
+msgstr	 "Head of institute"
 
-msgid "save"
-msgstr "Save"
+msgid	 "hours_per_year_message"
+msgstr	 "Enter the number of hours per annum"
 
-msgid "import"
-msgstr "Import"
+msgid	 "import"
+msgstr	 "Import"
 
-msgid "cancel"
-msgstr "Cancel"
+msgid	 "in_progress"
+msgstr	 "In progress"
 
-msgid "mandates_list"
-msgstr "Mandates list"
+msgid	 "infrastructure_mgmt_service"
+msgstr	 "Managing public infrastructure"
 
-msgid "assistant_mandates_renewal"
-msgstr "Assistantship mandate renewal"
+msgid	 "institute"
+msgstr	 "Institute"
 
-msgid "email"
-msgstr "Email"
+msgid	 "institute_representation"
+msgstr	 "Institute representation activities"
 
-msgid "gender"
-msgstr "Gender"
+msgid	 "institution"
+msgstr	 "Institution"
 
-msgid "birth_date"
-msgstr "Birth date"
+msgid	 "lastname"
+msgstr	 "Last name"
 
-msgid "assistant_type"
-msgstr "Assistant type"
+msgid	 "mandate"
+msgstr	 "Mandate"
 
-msgid "matricule_number"
-msgstr "Employee number"
+msgid	 "mandates"
+msgstr	 "Mandates"
 
-msgid "renewal_type"
-msgstr "Type of renewal"
+msgid	 "mandates_list"
+msgstr	 "Mandates list"
 
-msgid "contract duration"
-msgstr "Contract duration"
+msgid	 "matricule_number"
+msgstr	 "Employee number"
 
-msgid "contract_duration_fte"
-msgstr "Contract full time equivalent"
+msgid	 "name_firstame"
+msgstr	 "Name & First name"
 
-msgid "structures"
-msgstr "Structures"
+msgid	 "next_course"
+msgstr	 "Encode another course"
 
-msgid "delete"
-msgstr "Delete"
+msgid	 "next_part"
+msgstr	 "Next part"
 
-msgid "comment"
-msgstr "Comment"
+msgid	 "no"
+msgstr	 "No"
 
-msgid "absences"
-msgstr "Absences"
+msgid	 "no_answer"
+msgstr	 "did not respond"
 
-msgid "other_status"
-msgstr "Other status"
+msgid	 "no_supervisor"
+msgstr	 "No supervisor"
 
-msgid "renewal"
-msgstr "Renewal"
+msgid	 "other_status"
+msgstr	 "Other status"
 
-msgid "research"
-msgstr "Research"
+msgid	 "others_delivery"
+msgstr	 "Other types of activities associated with this course"
 
-msgid "svr"
-msgstr "SVR"
+msgid	 "percentage_equivalent_full_time"
+msgstr	 "% EFT"
 
-msgid "no_answer"
-msgstr "did not respond"
+msgid	 "period_covered"
+msgstr	 "Period covered"
 
-msgid "head_institute"
-msgstr "Head of institute"
+msgid	 "phd"
+msgstr	 "PhD"
 
-msgid "dean"
-msgstr "Dean of faculty"
+msgid	 "phd_inscription"
+msgstr	 "Ph.D. Inscription"
 
-msgid "vice_rector"
-msgstr "Vice Rector"
+msgid	 "phd_inscription_date"
+msgstr	 "Ph.D. Inscription date"
 
-msgid "equivalent_full_time"
-msgstr "EFT"
+msgid	 "previous_part"
+msgstr	 "Back to previous part"
 
-msgid "percentage_equivalent_full_time"
-msgstr "% EFT"
+msgid	 "program_commission"
+msgstr	 "Program Commission"
 
-msgid "program_commission"
-msgstr "Program Commission"
+msgid	 "publishing_field_service"
+msgstr	 "Publishing activities"
 
-msgid "action"
-msgstr "Action"
+msgid	 "registered_phd"
+msgstr	 "Registered Ph.D."
 
-msgid "contact_details"
-msgstr "Administrative information"
+msgid	 "renewal"
+msgstr	 "Renewal"
 
-msgid "date_of_first_nomination"
-msgstr "First nomination date"
+msgid	 "renewal_form"
+msgstr	 "Renewal form"
 
-msgid "summary"
-msgstr "Summary"
+msgid	 "renewal_short_name"
+msgstr	 "Renewal"
 
-msgid "total_must_be_100_message"
-msgstr "Total should equal 100"
+msgid	 "renewal_type"
+msgstr	 "Type of renewal"
 
-msgid "tutoring_percent"
-msgstr "Tutoring percentage"
+msgid	 "representation_activities"
+msgstr	 "Representation activities"
 
-msgid "research_percent"
-msgstr "Research percentage"
+msgid	 "research"
+msgstr	 "Research"
 
-msgid "service_activities_percent"
-msgstr "Service activities percentage"
+msgid	 "research_percent"
+msgstr	 "Research percentage"
 
-msgid "formation_activities_percent"
-msgstr "Formation activities percentage"
+msgid	 "research_short_name"
+msgstr	 "RES"
 
-msgid "activities_report_remark"
-msgstr "Activities report remark"
+msgid	 "save"
+msgstr	 "Save"
 
-msgid "general_comment"
-msgstr "General Comment"
+msgid	 "scientific_jury_service"
+msgstr	 "Juries and scientific commissions participation"
 
-msgid "validate_and_submit"
-msgstr "Validate and submit"
+msgid	 "sector_representation"
+msgstr	 "Sector representation activities"
 
-msgid "confirm_validation"
-msgstr "Are you sure you want to validate et submit ? This action can not be undone."
+msgid	 "sector_vice-rector_short_name"
+msgstr	 "S. V-R"
 
-msgid "renewal_form"
-msgstr "Renewal form"
+msgid	 "series_number"
+msgstr	 "Number of series"
 
-msgid "representation_activities"
-msgstr "Representation activities"
+msgid	 "service_activities"
+msgstr	 "Service activities"
 
-msgid "hours_per_year_message"
-msgstr "Enter the number of hours per annum"
+msgid	 "service_activities_percent"
+msgstr	 "Service activities percentage"
 
-msgid "faculty_representation"
-msgstr "Faculty representation activities"
+msgid	 "sessions_duration"
+msgstr	 "Duration of one session"
 
-msgid "institute_representation"
-msgstr "Institute representation activities"
+msgid	 "sessions_number"
+msgstr	 "Number of sessions scheduled for this course"
 
-msgid "sector_representation"
-msgstr "Sector representation activities"
+msgid	 "structures"
+msgstr	 "Structures"
 
-msgid "governing_body_representation"
-msgstr "Governing body representation activities"
+msgid	 "students_service"
+msgstr	 "Information to future students"
 
-msgid "corsci_representation"
-msgstr "CORSCI representation activities"
+msgid	 "summary"
+msgstr	 "Summary"
 
-msgid "service_activities"
-msgstr "Service activities"
+msgid	 "supervision"
+msgstr	 "Supervision"
 
-msgid "students_service"
-msgstr "Information to future students"
+msgid	 "supervisor"
+msgstr	 "Supervisor"
 
-msgid "infrastructure_mgmt_service"
-msgstr "Managing public infrastructure"
+msgid	 "supervisor_email_address"
+msgstr	 "Supervisor email address"
 
-msgid "events_organisation_service"
-msgstr "Social organization (internships, conferences, study tours, seminars,...)"
+msgid	 "svr"
+msgstr	 "SVR"
 
-msgid "publishing_field_service"
-msgstr "Publishing activities"
+msgid	 "thesis_defence_date"
+msgstr	 "Thesis defence date"
 
-msgid "scientific_jury_service"
-msgstr "Juries and scientific commissions participation"
+msgid	 "total_must_be_100_message"
+msgstr	 "Total should equal 100"
 
-msgid "formation_activities"
-msgstr "Formation activities"
+msgid	 "tutoring_percent"
+msgstr	 "Tutoring percentage"
 
-msgid "degrees"
-msgstr "Obtained diplomas"
+msgid	 "tutoring_short_name"
+msgstr	 "TUT"
 
-msgid "formations"
-msgstr "Scientific or educational formations"
+msgid	 "type_of_renewal"
+msgstr	 "Type of renewal"
 
-msgid "renewal_short_name"
-msgstr "Renewal"
+msgid	 "validate_and_submit"
+msgstr	 "Validate and submit"
 
-msgid "phd"
-msgstr "PhD"
+msgid	 "various"
+msgstr	 "Various"
 
-msgid "research_short_name"
-msgstr "RES"
+msgid	 "vice_rector"
+msgstr	 "Vice Rector"
 
-msgid "tutoring_short_name"
-msgstr "TUT"
-
-msgid "sector_vice-rector_short_name"
-msgstr "S. V-R"
-
-
-
-
-
+msgid	 "yes"
+msgstr	 "Yes"
 
