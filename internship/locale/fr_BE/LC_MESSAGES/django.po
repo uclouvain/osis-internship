@@ -180,13 +180,11 @@ msgstr	 "Aucun résultat"
 msgid	 "noma"
 msgstr	 "Noma"
 
-<<<<<<< HEAD
 msgid "internship_choice"
 msgstr "Stage au choix"
-=======
+
 msgid	 "not_4_choice_spec"
 msgstr	 "Vous n'avez pas encore soumis vos 4 choix pour cette spécialité."
->>>>>>> dev
 
 msgid	 "organization"
 msgstr	 "Hôpital"
