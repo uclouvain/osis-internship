@@ -31,6 +31,7 @@ from . import adviser
 
 class FacultyAdviserAdmin(admin.ModelAdmin):
     list_display = ('offer', 'adviser', 'get_adviser_type')
+    raw_id_fields = ('offer',)
 
 
 class FacultyAdviser(models.Model):
