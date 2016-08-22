@@ -202,13 +202,14 @@ def internships(request):
 @permission_required('internship.can_access_internship', raise_exception=True)
 def internships_stud(request):
     # Set the number of non mandatory internship and the sort array depending
-    size_non_mandatory = 4
+    size_non_mandatory = 5
     speciality_sort_value = [None] * size_non_mandatory
+
     # Check if there is a speciality selected in a tab of non mandatory internship
     if request.method == 'GET':
-        for x in range(0,size_non_mandatory):
-            if request.GET.get("speciality_sort"+str(x+1)) != '0':
-                speciality_sort_value[x] = request.GET.get("speciality_sort"+str(x+1))
+        for x in range(1,size_non_mandatory):
+            if request.GET.get("speciality_sort"+str(x)) != '0':
+                speciality_sort_value[x] = request.GET.get("speciality_sort"+str(x))
             else :
                 speciality_sort_value[x] = None
 
@@ -246,7 +247,6 @@ def internships_stud(request):
     # Create an array of the number of non mandatory internship and put all the internship of the speciality selected in
     all_non_mandatory_internships = [None] * size_non_mandatory
     for x in range(0,size_non_mandatory):
-        print(x)
         if speciality_sort_value[x]:
             all_non_mandatory_internships[x] = InternshipOffer.find_non_mandatory_internships(speciality__name=speciality_sort_value[x])
             get_number_choices(all_non_mandatory_internships[x])

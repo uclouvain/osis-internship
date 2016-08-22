@@ -73,7 +73,9 @@
               {%endif%}</a></li>
           {% endfor %}
           {% for i in all_non_mandatory_internships %}
-              <li><a data-toggle="tab" href="#tab_CHOIX{{ forloop.counter }}">{% trans 'internship_choice'%} {{ forloop.counter }}</a></li>
+            {% if not forloop.first %}
+              <li><a data-toggle="tab" href="#tab_CHOIX{{ forloop.counter0 }}">{% trans 'internship_choice'%} {{ forloop.counter0 }}</a></li>
+            {% endif %}
           {%endfor%}
         </ul>
         <form  method="post" action="{% url 'internships_save' %}" >
@@ -144,23 +146,29 @@
             </div>
           {%endfor%}
           {% for internships in all_non_mandatory_internships %}
-            <div id="tab_CHOIX{{ forloop.counter0 }}" class="tab-pane fade">
-              <div class="panel panel-default">
-                <div class="tab-content">
-                  <div role="tabpanel" class="tab-pane fade in active" id="profile">
-                    <table class="table table-hover">
-                      <form action="{%url 'internships_stud' %}" method="get">
-                        <select name="speciality_sort{{ forloop.counter0 }}" onChange="javascript: this.form.submit();">
-                           <option value="0">--</option>
-                             {% for spec in non_mandatory_speciality %}
-                               <option value="{{ spec.name }}"
-                               {% if spec.name == spec_sort %}selected{% endif %}>
-                                 {{ spec.name }} -- {{speciality_sort_value.1}}
-                               </option>
-                             {% endfor %}
-                         </select>
-                      </form>
-                      <thead>
+          <div id="tab_CHOIX{{ forloop.counter0 }}" class="tab-pane fade">
+            <div class="panel panel-default">
+              <div class="tab-content">
+                <div role="tabpanel" class="tab-pane fade in active" id="profile">
+                  <table class="table table-hover">
+                    <form action="{%url 'internships_stud' %}" method="get">
+                      <select name="speciality_sort{{ forloop.counter0 }}" onChange="javascript: this.form.submit();">
+                         <option value="0">--</option>
+                           {% for spec in non_mandatory_speciality %}
+                             <option value="{{ spec.name }}"
+                              {% for spec_sort in speciality_sort_value %}
+                                {% if forloop.counter == forloop.parentloop.parentloop.counter %}
+                                  {% if spec.name == spec_sort %}
+                                    selected
+                                  {%endif%}
+                                {%endif%}
+                              {% endfor %}>
+                              {{ spec.name }}
+                             </option>
+                           {% endfor %}
+                      </select>
+                    </form>
+                    <thead>
                         <tr>
                           {% if not speciality_sort_value %}
                             <th align="center">{% trans 'speciality' %}</th>
@@ -191,7 +199,6 @@
                               {{ internship.number_first_choice }}
                             </td>
                             <td>
-                              {{internship.choice}}
                               <select name="preference{{internship.tab}}">
                                <option value=0 {% if internship.selectable == False %} disabled {%endif%}>0</option>
                                <option value=1 {% if internship.choice == 1 %} selected{%endif%}
@@ -215,11 +222,11 @@
                           </tr>
                         {% endfor %}
                       </tbody>
-                    </table>
-                  </div>
+                  </table>
                 </div>
               </div>
             </div>
+          </div>
           {% endfor %}
           </div>
           {% if selectable == True %}
