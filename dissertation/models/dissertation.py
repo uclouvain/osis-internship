@@ -33,7 +33,7 @@ from . import offer_proposition
 
 
 class DissertationAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'status', 'active')
+    list_display = ('title', 'author', 'status', 'active', 'proposition_dissertation', 'modification_date')
 
 
 STATUS_CHOICES = (
@@ -89,44 +89,16 @@ class Dissertation(models.Model):
         self.save()
 
     def go_forward(self):
-        if self.status == 'DRAFT' or self.status == 'DIR_KO':
-            self.set_status('DIR_SUBMIT')
-
-        elif self.status == 'TO_RECEIVE':
-            self.set_status('TO_DEFEND')
-
-        elif self.status == 'TO_DEFEND':
-            self.set_status('DEFENDED')
+        next_status = get_next_status(self, "go_forward")
+        self.set_status(next_status)
 
     def accept(self):
-        offer_prop = offer_proposition.get_by_offer(self.offer_year_start.offer)
-        if offer_prop.validation_commission_exists and self.status == 'DIR_SUBMIT':
-            self.set_status('COM_SUBMIT')
-
-        elif offer_prop.evaluation_first_year and (self.status == 'DIR_SUBMIT' or self.status == 'COM_SUBMIT'):
-            self.set_status('EVA_SUBMIT')
-
-        elif self.status == 'EVA_SUBMIT':
-            self.set_status('TO_RECEIVE')
-
-        elif self.status == 'DEFENDED':
-            self.set_status('ENDED_WIN')
-
-        else:
-            self.set_status('TO_RECEIVE')
+        next_status = get_next_status(self, "accept")
+        self.set_status(next_status)
 
     def refuse(self):
-        if self.status == 'DIR_SUBMIT':
-            self.set_status('DIR_KO')
-
-        elif self.status == 'COM_SUBMIT':
-            self.set_status('COM_KO')
-
-        elif self.status == 'EVA_SUBMIT':
-            self.set_status('EVA_KO')
-
-        elif self.status == 'DEFENDED':
-            self.set_status('ENDED_LOS')
+        next_status = get_next_status(self, "refuse")
+        self.set_status(next_status)
 
     class Meta:
         ordering = ["author__person__last_name", "author__person__middle_name", "author__person__first_name", "title"]
@@ -167,3 +139,52 @@ def count_by_proposition(prop_dissert):
                                .filter(proposition_dissertation=prop_dissert)\
                                .exclude(status='DRAFT')\
                                .count()
+
+
+def get_next_status(dissert, operation):
+    if operation == "go_forward":
+        if dissert.status == 'DRAFT' or dissert.status == 'DIR_KO':
+            return 'DIR_SUBMIT'
+
+        elif dissert.status == 'TO_RECEIVE':
+            return 'TO_DEFEND'
+
+        elif dissert.status == 'TO_DEFEND':
+            return 'DEFENDED'
+        else:
+            return dissert.status
+
+    elif operation == "accept":
+        offer_prop = offer_proposition.get_by_offer(dissert.offer_year_start.offer)
+        if offer_prop.validation_commission_exists and dissert.status == 'DIR_SUBMIT':
+            return 'COM_SUBMIT'
+
+        elif offer_prop.evaluation_first_year and (dissert.status == 'DIR_SUBMIT' or dissert.status == 'COM_SUBMIT'):
+            return 'EVA_SUBMIT'
+
+        elif dissert.status == 'EVA_SUBMIT':
+            return 'TO_RECEIVE'
+
+        elif dissert.status == 'DEFENDED':
+            return 'ENDED_WIN'
+
+        else:
+            return 'TO_RECEIVE'
+
+    elif operation == "refuse":
+        if dissert.status == 'DIR_SUBMIT':
+            return 'DIR_KO'
+
+        elif dissert.status == 'COM_SUBMIT':
+            return 'COM_KO'
+
+        elif dissert.status == 'EVA_SUBMIT':
+            return 'EVA_KO'
+
+        elif dissert.status == 'DEFENDED':
+            return 'ENDED_LOS'
+        else:
+            return dissert.status
+
+    else:
+        return dissert.status

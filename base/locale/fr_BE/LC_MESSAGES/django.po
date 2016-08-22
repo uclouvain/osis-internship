@@ -16,313 +16,14 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "absent"
-msgstr "Absent"
-
-msgid "application_management"
-msgstr "Gestion de l'application"
-
-msgid "absent_pdf_legend"
-msgstr "A=Absent"
-
-msgid "are_you_sure"
-msgstr "Êtes-vous sûr?"
-
-msgid "too_many_results"
-msgstr "Votre recherche retourne trop de résultats, veuillez spécifier la recherche."
-
-msgid "birth_date"
-msgstr "Date de naissance"
-
-msgid "CHEATING"
-msgstr "Tricherie"
-
-msgid "cheating_pdf_legend"
-msgstr "T=Tricherie"
-
-msgid "data_management"
-msgstr "Gestion de données"
-
-msgid "desc_lnk_data_management"
-msgstr "Gestion des données par entité du métier"
-
-msgid "data_maintenance"
-msgstr "Maintenance de données"
-
-msgid "desc_lnk_data_maintenance"
-msgstr "La maintenance de données avec la langage SQL"
-
-msgid "desc_lnk_storage"
-msgstr "Surveillance de la capacité de stockage"
-
-msgid "function"
-msgstr "Fonction"
-
-msgid "message_resent_ok"
-msgstr "Le message à bien été réenvoyé."
-
-msgid "message_not_resent_no_email"
-msgstr "Le message ne peut être réenvoyé , l'utilisateur n'a pas d'adresse mail."
-
-msgid "ill"
-msgstr "Malade"
-
-msgid "ill_pdf_legend"
-msgstr "M=Malade"
+msgid "ABSENCE_JUSTIFIED"
+msgstr "Absence justifiée"
 
 msgid "ABSENCE_UNJUSTIFIED"
 msgstr "Absence injustifiée"
 
-msgid "ABSENCE_JUSTIFIED"
-msgstr "Absence justifiée"
-
-msgid "SCORE_MISSING"
-msgstr "Note manquante"
-
-msgid "score_missing_pdf_legend"
-msgstr "?=Note manquante"
-
-msgid "score_already_submitted"
-msgstr "Note déjà soumise "
-
-msgid "presence_note_pdf_legend"
-msgstr "0=Cote de présence"
-
-msgid "empty_note_pdf_legend"
-msgstr "(vide)=Pas encore de note"
-
-msgid "saving"
-msgstr "Sauvegarde en cours"
-
-msgid "registration_id"
-msgstr "NOMA"
-
-msgid "saved"
-msgstr "Enregistré"
-
-msgid "submitted"
-msgstr "Soumis"
-
-msgid "plain"
-msgstr "Plain"
-
-msgid "plain_and_html"
-msgstr "Plain et HTML"
-
-msgid "bachelor"
-msgstr "Bachelier"
-
-msgid "master"
-msgstr "Master"
-
-msgid "ph_d"
-msgstr "Ph.D"
-
-msgid "female"
-msgstr "Féminin"
-
-msgid "male"
-msgstr "Masculin"
-
-msgid "unknown"
-msgstr "Indéfini"
-
-msgid "residential"
-msgstr ""
-
-msgid "professional"
-msgstr "Professionnel"
-
-msgid "idle"
-msgstr "En attente"
-
-msgid "open"
-msgstr "Ouvert"
-
-msgid "closed"
-msgstr "Fermé"
-
-msgid "formation_catalogue"
-msgstr "Catalogue de formation"
-
-msgid "academic_year"
-msgstr "Année académique"
-
-msgid "academic_calendars"
-msgstr "Calendriers académique"
-
-msgid "event"
-msgstr "Événement"
-
-msgid "title"
-msgstr "Intitulé"
-
-msgid "start_date"
-msgstr "Date de début"
-
-msgid "end_date"
-msgstr "Date de fin"
-
-msgid "submission_date"
-msgstr "Date de remise"
-
-msgid "description"
-msgstr "Description"
-
-msgid "label_jumbotron_details_academic_cal"
-msgstr "Comme présenté sur la page d'accueil"
-
-msgid "go"
-msgstr "Continuer"
-
-msgid "edit"
-msgstr "Éditer"
-
-msgid "academic_calendar"
-msgstr "Calendrier académique"
-
-msgid "highlight_title"
-msgstr "Titre de l'événement"
-
-msgid "highlight_shortcut"
-msgstr "Titre raccourcis de l'événement"
-
-msgid "highlight_description"
-msgstr "Description de l'événement"
-
-msgid "save"
-msgstr "Sauvegarder"
-
-msgid "cancel"
-msgstr "Annuler"
-
-msgid "no_result"
-msgstr "Aucun résultat!"
-
-msgid "academic_calendar_management"
-msgstr "Gestion du calendrier académique"
-
-msgid "acces_denied"
-msgstr "Accès refusé!"
-
-msgid "storage"
-msgstr "Stockage"
-
-msgid "files"
-msgstr "Fichiers"
-
-msgid "file"
-msgstr "Fichier"
-
-msgid "type"
-msgstr "Type"
-
-msgid "creation_date"
-msgstr "Date de création"
-
-msgid "user"
-msgstr "Utilisateur"
-
-msgid "search_for_a_file"
-msgstr "Recherche d'un fichier"
-
-msgid "name"
-msgstr "Nom"
-
-msgid "date"
-msgstr "Date de remise"
-
-msgid "size"
-msgstr "Taille"
-
-msgid "storage_duration"
-msgstr "Temps de stockage"
-
-msgid "desc_lnk_files"
-msgstr "Consultation des fichiers gérés par l'application."
-
-msgid "student_path"
-msgstr "Parcours de l'étudiant"
-
-msgid "evaluations"
-msgstr "Évaluations"
-
-msgid "scores_encoding"
-msgstr "Encodage des notes"
-
-msgid "desc_lnk_score_encoding"
-msgstr ""
-"Ce processus aide les enseignants à encoder les notes pendant les sessions "
-"d'examen."
-
-msgid "studies"
-msgstr "Études"
-
-msgid "online_scores_encoding"
-msgstr "Encodage de notes en ligne"
-
-msgid "dubble_online_scores_encoding"
-msgstr "Double encodage de notes en ligne"
-
-msgid "responsible"
-msgstr "Responsable"
-
-msgid "number_of_enrollments"
-msgstr "Nombre d'inscrits"
-
-msgid "offer"
-msgstr "Programme"
-
-msgid "registration_number"
-msgstr "Noma"
-
-msgid "lastname"
-msgstr "Nom"
-
-msgid "firstname"
-msgstr "Prénom"
-
-msgid "score"
-msgstr "Note"
-
-msgid "justification"
-msgstr "Justification"
-
-msgid "justifications"
-msgstr "Justifications"
-
-msgid "compare"
-msgstr "Comparer"
-
-msgid "scores"
-msgstr "Notes"
-
-msgid "other_score"
-msgstr "Autre note"
-
-msgid "encoding"
-msgstr "Encodage"
-
-msgid "dubble_encoding"
-msgstr "Double encodage"
-
-msgid "final"
-msgstr "Final"
-
-msgid "online_encoding"
-msgstr "Encodage en ligne"
-
-msgid "progress"
-msgstr "Progression"
-
-msgid "encode"
-msgstr "Encoder"
-
-msgid "double_encoding"
-msgstr "Double encodage"
-
-msgid "print"
-msgstr "Imprimer"
+msgid "CHEATING"
+msgstr "Tricherie"
 
 msgid "Create a xls file while activity\\"
 msgstr ""
@@ -330,50 +31,208 @@ msgstr ""
 msgid "Get xls"
 msgstr ""
 
-msgid "select_a_xls_file_from_which_to_inject_scores"
+msgid "ID"
+msgstr "ID"
+
+msgid "Legend : values allowed for 'justification'"
 msgstr ""
 
-msgid "inject_xls_file"
-msgstr "Injecter fichier excel"
+msgid "Line"
+msgstr "Ligne"
 
-msgid "submission"
-msgstr "Soumettre"
-
-msgid "status"
-msgstr "Statut"
-
-msgid "program"
-msgstr "Programme"
-
-msgid "sessionn"
-msgstr "Session"
-
-msgid "number_session"
-msgstr "No. session"
-
-msgid "score_submitted"
-msgstr "Soumis"
-
-msgid "print_all_courses"
-msgstr "Imprimer tous les cours"
-
-msgid "print_warning_and_info_messages"
+msgid "Note already submitted"
 msgstr ""
 
-msgid "scores_injection"
-msgstr "Injection des notes"
+msgid "OSIS"
+msgstr "OSIS"
+
+msgid "Print scores for all activities"
+msgstr ""
+
+msgid "SCORE_MISSING"
+msgstr "Note manquante"
+
+msgid "Save"
+msgstr ""
+
+msgid "absent"
+msgstr "Absent"
+
+msgid "absent_pdf_legend"
+msgstr "A=Absent"
+
+msgid "academic_calendar"
+msgstr "Calendrier académique"
+
+msgid "academic_calendar_management"
+msgstr "Gestion du calendrier académique"
+
+msgid "academic_calendar_offer_year_calendar_end_date_error"
+msgstr "La date de fermeture de l'encodage des notes du calendrier académique ne peut pas être inférieure au %s "
+       "(date de fin de l'encodage des notes du programme '%s')"
+
+msgid "academic_calendar_offer_year_calendar_start_date_error"
+msgstr "La date d'ouverture de l'encodage des notes du calendrier académique ne peut pas être supérieure au %s "
+       "(date de début de l'encodage des notes du programme '%s')"
+
+msgid "academic_calendars"
+msgstr "Calendriers académique"
+
+msgid "academic_year"
+msgstr "Année académique"
+
+msgid "academic_year_not_exist"
+msgstr "L'année académique (%d) n'existe pas"
+
+msgid "acces_denied"
+msgstr "Accès refusé!"
+
+msgid "acronym"
+msgstr "Sigle"
+
+msgid "activity"
+msgstr "Activité"
+
+msgid "activity_code"
+msgstr "Activité"
+
+msgid "activity_not_exit"
+msgstr "L'activité %s n'existe pas"
+
+msgid "add_an_address_to_the_organization"
+msgstr "Ajouter une adresse à l'organisation"
+
+msgid "address(ses)"
+msgstr "Adresse(s)"
+
+msgid "addresses"
+msgstr "Adresses"
+
+msgid "administration"
+msgstr "Administration"
+
+msgid "after_submission_a_message_must_be_sent"
+msgstr "Si un encodage est soumis , um message est envoyé au professeur de ce cours"
+
+msgid "all"
+msgstr "Tout"
+
+msgid "application_management"
+msgstr "Gestion de l'application"
+
+msgid "are_you_sure"
+msgstr "Êtes-vous sûr?"
+
+msgid "assistants"
+msgstr "Assistants"
+
+msgid "attributions"
+msgstr "Attributions"
+
+msgid "authorized_decimal_for_this_activity"
+msgstr "Les notes décimales sont autorisées pour ce cours"
+
+msgid "bachelor"
+msgstr "Bachelier"
+
+msgid "back"
+msgstr "Retour"
+
+msgid "begin_date_lt_end_date"
+msgstr "La date de début doit etre égale ou inferieure à la date de fin"
+
+msgid "birth_date"
+msgstr "Date de naissance"
+
+msgid "btn_messages_history_search"
+msgstr "Recherche dans l'historique des messages"
+
+msgid "btn_send_message_again_title"
+msgstr "Réenvoie le message au destinataire"
+
+msgid "by_learning_unit"
+msgstr "Par unité d'enseignement"
+
+msgid "by_specific_criteria"
+msgstr "Par critère spécifique"
+
+msgid "cancel"
+msgstr "Annuler"
+
+msgid "catalogue"
+msgstr "Catalogue de formation"
+
+msgid "chair_of_the_exam_board"
+msgstr "Président du jury"
+
+msgid "cheating_pdf_legend"
+msgstr "T=Tricherie"
+
+msgid "child_entities"
+msgstr "Entités 'enfant'"
 
 msgid "choose_file"
 msgstr "Parcourir"
 
-msgid "help_pnl_selectedfiles"
-msgstr "Veuillez sélectionner un fichier xls pour l'injection des notes"
+msgid "city"
+msgstr "Ville"
 
-msgid "inject"
-msgstr "Injecter"
+msgid "close"
+msgstr "Fermer"
 
-msgid "help_submission_scores_label"
-msgstr "Vous êtes sur le point de soumettre %s note(s) à la (aux) faculté(s). Attention : les notes soumises <b>ne peuvent plus être modifiées.</b>"
+msgid "closed"
+msgstr "Fermé"
+
+msgid "code"
+msgstr "Code"
+
+msgid "compare"
+msgstr "Comparer"
+
+msgid "complete"
+msgstr "Complet"
+
+msgid "constraint_score_other_score"
+msgstr "Vous ne pouvez pas remplir simultanément les colonnes 'Note chiffrée' et 'Justification'"
+
+msgid "coordinator"
+msgstr "Coordinateur(trice)"
+
+msgid "coordinators_can_submit_partial_encoding"
+msgstr "Les coordinateurs peuvent soumettre des encodages partiels"
+
+msgid "country"
+msgstr "Pays"
+
+msgid "create_an_organization"
+msgstr "Créer une organisation"
+
+msgid "creation_date"
+msgstr "Date de création"
+
+msgid "credits"
+msgstr "Crédits"
+
+msgid "data"
+msgstr "Données"
+
+msgid "data_maintenance"
+msgstr "Maintenance de données"
+
+msgid "data_management"
+msgstr "Gestion de données"
+
+msgid "date"
+msgstr "Date de remise"
+
+msgid "date_not_passed"
+msgstr "Date non communiquée"
+
+msgid "decimal_score_allowed"
+msgstr "Note décimale autorisée"
+
+msgid "decimal_score_not_allowed"
+msgstr "Note décimale non autorisée"
 
 msgid "decimal_values_accepted"
 msgstr "Les notes de ce cours peuvent recevoir des valeurs décimales."
@@ -382,579 +241,134 @@ msgid "decimal_values_ignored"
 msgstr ""
 "Les notes de ce cours ne peuvent PAS recevoir de valeurs décimales."
 
-msgid "decimal_score_allowed"
-msgstr "Note décimale autorisée"
+msgid "definitive_save"
+msgstr "Sauvegarde définitive (soumettre à la faculté)"
 
-msgid "decimal_score_not_allowed"
-msgstr "Note décimale non autorisée"
+msgid "delete"
+msgstr "Supprimer"
 
-msgid "Save"
-msgstr ""
+msgid "delete_selected_messages"
+msgstr "Supprimer les messages sélectionnés"
 
-msgid "tutor"
-msgstr "Enseignant(e)"
+msgid "deliberation_date"
+msgstr "Date de délibération"
 
-msgid "tutors"
-msgstr "Enseignants"
-
-msgid "faculty"
-msgstr "Faculté"
-
-msgid "select"
-msgstr "Sélectionnez"
-
-msgid "message_address_papersheet"
-msgstr "Réutilisez l'adresse d'une entité liée au programme ou informez l'adresse d'affichage pour la feuille des notes"
-
-msgid "info_address_changed_for_papersheet"
-msgstr "Si vous choisissez de modifier un des champs de l'adresse ci-dessous, cela modifiera uniquement l'adresse "
-       "affichée sur la feuille de notes pour le programme %s. Vous ne modifierez jamais l'adresse d'une entité/structure "
-       "via ce formulaire. La liste des entités ci-dessous n'est proposée que pour vous aider à remplir les champs"
-
-msgid "reuse_address_entity"
-msgstr "Réutiliser l'adresse de"
-
-msgid "select_an_encoding_type"
-msgstr "Sélectionnez un type d'encodage"
-
-msgid "online"
-msgstr "En ligne"
-
-msgid "via_paper"
-msgstr "Sur papier"
-
-msgid "via_excel"
-msgstr "Via fichier Excel"
-
-msgid "code"
-msgstr "Code"
-
-msgid "activity"
-msgstr "Activité"
-
-msgid "Print scores for all activities"
-msgstr ""
-
-msgid "all"
-msgstr "Tout"
-
-msgid "refresh_list"
-msgstr "Rechercher/mettre à jour la liste"
-
-msgid "learning_unit"
-msgstr "Unité d'enseignement"
-
-msgid "offers"
-msgstr "Programmes"
-
-msgid "desc_lnk_offers"
-msgstr "Gestion des programmes."
-
-msgid "learning_units"
-msgstr "Unités d'enseignement"
-
-msgid "desc_lnk_learning_units"
-msgstr ""
-"Gestion des cours, des formations et d'autres activités qui composent le "
-"programme."
+msgid "desc_assistants"
+msgstr "Processus visant à aider les enseignants pour l'encodage des notes."
 
 msgid "desc_lnk_academic_year"
 msgstr "Gestion du programme annualisé."
 
+msgid "desc_lnk_assessments"
+msgstr "Processus visant à aider les enseignants pour l'encodage des notes."
+
+msgid "desc_lnk_data_maintenance"
+msgstr "La maintenance de données avec la langage SQL"
+
+msgid "desc_lnk_data_management"
+msgstr "Gestion des données par entité du métier"
+
+msgid "desc_lnk_entities"
+msgstr "Gestion des la structure organisationnelle."
+
+msgid "desc_lnk_files"
+msgstr "Consultation des fichiers gérés par l'application."
+
 msgid "desc_lnk_home_catalog"
 msgstr "Elaboration et gestion du catalogue de formation."
+
+msgid "desc_lnk_home_institution"
+msgstr "Gestion de l'institution."
 
 msgid "desc_lnk_home_studies"
 msgstr ""
 "Gestion du parcours des étudiants depuis leur inscription jusqu'à leur "
 "diplôme."
 
-msgid "institution"
-msgstr "Institution"
+msgid "desc_lnk_internships"
+msgstr "Gestion des stages des étudiants."
 
-msgid "desc_lnk_home_institution"
-msgstr "Gestion de l'institution."
+msgid "desc_lnk_learning_units"
+msgstr ""
+"Gestion des cours, des formations et d'autres activités qui composent le "
+"programme."
 
-msgid "organizations"
-msgstr "Organisations"
+msgid "desc_lnk_offers"
+msgstr "Gestion des programmes."
 
 msgid "desc_lnk_organizations"
 msgstr "Gestion des organisations."
 
-msgid "entities"
-msgstr "Entités"
-
-msgid "desc_lnk_entities"
-msgstr "Gestion des la structure organisationnelle."
-
-msgid "mandates"
-msgstr "Mandates"
-
-msgid "internships"
-msgstr "Stages"
-
-msgid "administration"
-msgstr "Administration"
-
-msgid "data"
-msgstr "Données"
-
-msgid "logout"
-msgstr "Logout"
-
-msgid "profile"
-msgstr "Profil"
-
-msgid "login"
-msgstr "Login"
-
-msgid "documentation"
-msgstr "Justification"
-
-msgid "website"
-msgstr "Site internet"
-
-msgid "source_code"
-msgstr "Code source"
-
-msgid "catalogue"
-msgstr "Catalogue de formation"
-
-msgid "general_informations"
-msgstr "Informations générales"
-
-msgid "acronym"
-msgstr "Sigle"
-
-msgid "credits"
-msgstr "Crédits"
-
-msgid "learning_unit_search"
-msgstr "Recherche d'unités d'enseignement"
-
-msgid "assistants"
-msgstr "Assistants"
-
-msgid "desc_assistants"
-msgstr "Processus visant à aider les enseignants pour l'encodage des notes."
-
-msgid "identification"
-msgstr "Identification"
-
-msgid "program_managers"
-msgstr "Program managers"
-
-msgid "structure"
-msgstr "Structure"
-
-msgid "international_title"
-msgstr "Titre international"
-
-msgid "short_title"
-msgstr "Titre abrégé"
-
-msgid "printable_title"
-msgstr "Titre imprimable"
-
-msgid "grade"
-msgstr "Niveau"
-
-msgid "person"
+msgid "desc_lnk_score_encoding"
 msgstr ""
+"Ce processus aide les enseignants à encoder les notes pendant les sessions "
+"d'examen."
 
-msgid "focuses"
-msgstr "Finalités"
+msgid "desc_lnk_storage"
+msgstr "Surveillance de la capacité de stockage"
 
-msgid "other_sibling_offers"
-msgstr "Autres finalités associées"
-
-msgid "other_sibling_orientations"
-msgstr "Autres orientations associées"
-
-msgid "offer_year_calendar"
-msgstr "Calendrier des programmes"
-
-msgid "entity"
-msgstr "Entité"
-
-msgid "offer_year_search"
-msgstr "Recherche des programmes annualisés"
-
-msgid "organization"
-msgstr "Organisation"
-
-msgid "reference"
-msgstr "Référence"
-
-msgid "address(ses)"
-msgstr "Adresse(s)"
-
-msgid "add_an_address_to_the_organization"
-msgstr "Ajouter une adresse à l'organisation"
-
-msgid "organization_address"
-msgstr "Adresse de l'organisation"
-
-msgid "label"
-msgstr "Label"
-
-msgid "location"
-msgstr "Rue et numéro"
-
-msgid "postal_code"
-msgstr "Code postal"
-
-msgid "city"
-msgstr "Ville"
-
-msgid "country"
-msgstr "Pays"
-
-msgid "delete"
-msgstr "Supprimer"
-
-msgid "back"
-msgstr "Retour"
-
-msgid "types"
-msgstr "Types"
-
-msgid "search_for_an_organization"
-msgstr "Recherche d'organisations"
-
-msgid "create_an_organization"
-msgstr "Créer une organisation"
-
-msgid "page_not_found"
-msgstr "Page inexistante"
-
-msgid "attributions"
-msgstr "Attributions"
-
-msgid "my_studies"
-msgstr "Mes études"
-
-msgid "programs"
-msgstr "Programmes"
-
-msgid "program_s"
-msgstr "programme(s)"
-
-msgid "preferences"
-msgstr "Préférences"
-
-msgid "global_identifiant"
-msgstr "Identifiant global"
-
-msgid "gender"
-msgstr "Genre"
-
-msgid "national_register"
-msgstr "Numéro de registre nationnal"
-
-msgid "email"
-msgstr "Email"
-
-msgid "fixed_line_phone"
-msgstr "Téléphone fixe"
-
-msgid "mobile_phone"
-msgstr "Téléphone mobile (GSM)"
-
-msgid "language"
-msgstr "Langue"
-
-msgid "addresses"
-msgstr "Adresses"
-
-msgid "managed_programs"
-msgstr "Programmes gérés"
-
-msgid "user_interface_language"
-msgstr "Langue de l'interface utilisateur"
-
-msgid "log-in"
-msgstr "Log-in"
-
-msgid "msg_error_username_password_not_matching"
-msgstr ""
-"La combinaison login/mot de passe entrée n'est pas valide. Veuillez "
-"réessayer."
-
-msgid "password"
-msgstr "Mot de passe"
-
-msgid "child_entities"
-msgstr "Entités 'enfant'"
-
-msgid "OSIS"
-msgstr "OSIS"
-
-msgid "search_for_an_entity"
-msgstr "Rechercher une entité"
-
-msgid "desc_lnk_assessments"
-msgstr "Processus visant à aider les enseignants pour l'encodage des notes."
-
-msgid "stages"
-msgstr "Stages"
-
-msgid "desc_lnk_internships"
-msgstr "Gestion des stages des étudiants."
-
-msgid "activity_code"
-msgstr "Activité"
-
-msgid "numbered_score"
-msgstr "Note chiffrée"
-
-msgid "ID"
-msgstr "ID"
-
-msgid "Legend : values allowed for 'justification'"
-msgstr ""
-
-msgid "scores_sheet"
-msgstr "Feuille de notes"
-
-msgid "scores_transcript"
-msgstr "Feuille de notes"
-
-msgid "ucl_denom_location"
-msgstr "Université catholique de Louvain"
-
-msgid "justification_legend"
-msgstr "Légende pour le champ 'Justification': %s"
-
-msgid "score_legend"
-msgstr "Légende pour le champ 'Note chiffrée': %s (0=Cote de présence)"
-
-msgid "unauthorized_decimal_for_this_activity"
-msgstr "Attention : décimales non autorisées pour ce cours"
-
-msgid "authorized_decimal_for_this_activity"
-msgstr "Les notes décimales sont autorisées pour ce cours"
-
-msgid "phone"
-msgstr "téléphone"
-
-msgid "fax"
-msgstr ""
-
-msgid "deliberation_date"
-msgstr "Date de délibération"
-
-msgid "chair_of_the_exam_board"
-msgstr "Président du jury"
-
-msgid "exam_board_secretary"
-msgstr "Secrétaire du jury"
-
-msgid "return_doc_to_administrator"
-msgstr ""
-"Veuillez envoyer ce formulaire au secrétariat de l'entité gestionnaire avant le %s."
-
-msgid "done_at"
-msgstr "Fait à"
-
-msgid "the"
-msgstr "le"
-
-msgid "signature"
-msgstr "Signature"
-
-msgid "submission_of_scores_for"
-msgstr "Soumission des score pour {0}"
-
-msgid "mister"
-msgstr "Monsieur"
-
-msgid "miss"
-msgstr "Madame"
-
-msgid "file_must_be_xlsx"
-msgstr "Le fichier doit être un fichier excel valide au format 'XLSX'"
-
-msgid "invalid_file"
-msgstr "Fichier invalide"
-
-msgid "no_file_submitted"
-msgstr "Vous n'avez pas selectionné de fichier excel à soumettre."
-
-msgid "Line"
-msgstr "Ligne"
-
-msgid "student_not_exist"
-msgstr "L'étudiant (%s) n'existe pas"
-
-msgid "academic_year_not_exist"
-msgstr "L'année académique (%d) n'existe pas"
-
-msgid "offer_year_not_exist"
-msgstr "Le programme annualisé (%s) (%d) - n'existe pas"
-
-msgid "offer_enrollment_not_exist"
-msgstr "L'inscription à ce programme n'existe pas"
-
-msgid "activity_not_exit"
-msgstr "L'activité %s n'existe pas"
-
-msgid "enrollment_activity_not_exist"
-msgstr "L'inscription à l'activité %s n'existe pas"
-
-msgid "enrollment_exam_not_exists"
-msgstr "L'inscription à l'unité d'enseignement %s n'existe pas"
-
-msgid "Note already submitted"
-msgstr ""
-
-msgid "server_error"
-msgstr "Une erreur innatendue s'est produite"
-
-msgid "server_error_message"
-msgstr "Nous mettons tout en oeuvre pour résoudre ce problème."
-
-msgid "scores_gt_0_lt_20"
-msgstr "La note encodée est incorrecte (elle doit être comprise entre 0 et 20)"
-
-msgid "score_decimal_not_allowed"
-msgstr "La note encodée est incorrecte : décimales non autorisées"
-
-msgid "constraint_score_other_score"
-msgstr "Vous ne pouvez pas remplir simultanément les colonnes 'Note chiffrée' et 'Justification'"
-
-msgid "score_saved"
-msgstr "note(s) injectée(s)"
-
-msgid "score_invalid"
-msgstr "Note invalide"
-
-msgid "scores_saved"
-msgstr "note(s) enregistrée(s)"
-
-msgid "the_coordinator_must_still_submit_scores"
-msgstr "Le coordinateur doit toujours soumettre les notes"
-
-msgid "no_score_injected"
-msgstr "Aucune note injectée (NB: les notes de votre fichier excel ne sont injectées que si elles sont différentes "
-       "de celles déjà enregistrées précédemment)."
-
-msgid "begin_date_lt_end_date"
-msgstr "La date de début doit etre égale ou inferieure à la date de fin"
-
-msgid "no_score_encoded_double_encoding_impossible"
-msgstr ""
- "Aucune nouvelle note encodée. "
- "Le double encodage n'est pas accessible car il n'y a pas de nouvelles notes encodés."
-
-msgid "minimum_one_criteria"
-msgstr "Veuillez remplir au moins 1 critère de recherche"
-
-msgid "get_excel_file"
-msgstr "Produire le fichier Excel"
-
-msgid "no_exam_session_opened_for_the_moment"
-msgstr "Aucune session d'encodage de notes ouverte pour le moment. "
-
-msgid "you_manage"
-msgstr "Vous gérez"
-
-msgid "learning_units_in"
-msgstr "unités d'enseignement dans"
-
-msgid "no_dubble_score_encoded_comparison_impossible"
-msgstr "Aucune note n'a été double encodée ; aucune comparaison à effectuer."
-
-#~ msgid "title_btn_upload_score"
-#~ msgstr ""
-#~ "Sélectionnez votre fichier excel à partir duquel il faut injecter les "
-#~ "notes"
-
-#~ msgid "submit"
-#~ msgstr "Envoyer"
-
-#~ msgid "download_xls_file"
-#~ msgstr "Télécharger le fichier Excel"
-
-#~ msgid "not_in_choices_list"
-#~ msgstr "Le choix entré ne se trouve pas dans la liste proposée"
-
-#~ msgid "invalid_entry"
-#~ msgstr "Entrée invalide"
-
-#~ msgid "please_choose_in_the_list"
-#~ msgstr "Veuillez sélectionner un élément de la liste"
-
-#~ msgid "choices_list"
-#~ msgstr "Liste des choix"
-
-#~ msgid "changes_on_offer_year_and_academic_calendar"
-#~ msgstr ""
-#~ "Attention - Des changements ont été effectués sur %s, calendrier "
-#~ "académique %s"
-
-#~ msgid "score_injected"
-#~ msgstr "Note injectée"
-
-#~ msgid "scores_injected"
-#~ msgstr "Notes injectées"
-
-#~ msgid "add_address"
-#~ msgstr "Ajouter une adresse"
-
-msgid "sector"
-msgstr "Secteur"
-
-msgid "institute"
-msgstr "Institut"
-
-msgid "pole"
-msgstr "Pole"
-
-msgid "doctoral_commission"
-msgstr "Commision doctorale"
-
-msgid "program_commission"
-msgstr "Commison d'enseignement/programme"
-
-msgid "logistic"
-msgstr "Logistique"
-
-msgid "research_center"
-msgstr "Centre de recherche"
-
-msgid "technologic_platform"
-msgstr "Plateforme technologique"
-
-msgid "by_specific_criteria"
-msgstr "Par critère spécifique"
-
-msgid "by_learning_unit"
-msgstr "Par unité d'enseignement"
-
-msgid "undefined"
-msgstr "Non défini"
-
-msgid "messages"
-msgstr "Messages"
-
-msgid "html_message"
-msgstr "Message HTML"
-
-msgid "txt_message"
-msgstr "Message texte"
-
-msgid "messages_templates"
-msgstr "Modèles de messages"
+msgid "desc_messages_history"
+msgstr "L'historique des messages vous permet d'accéder aux messages envoyés par courier électronique"
 
 msgid "desc_messages_template"
 msgstr "Le modèles de message permet la personnalisation dynamique des e-mails."
 
-msgid "messages_history"
-msgstr "Historique des messages"
+msgid "desc_my_messages"
+msgstr "La liste des messages qui vous ont été envoyés par l'application"
 
-msgid "desc_messages_history"
-msgstr "L'historique des messages vous permet d'accéder aux messages envoyés par courier électronique"
+msgid "desc_profile"
+msgstr "informations liées à votre profile"
+
+msgid "description"
+msgstr "Description"
+
+msgid "display_tutors"
+msgstr "Afficher tous les enseignants pour ce cours"
+
+msgid "doctoral_commission"
+msgstr "Commision doctorale"
+
+msgid "documentation"
+msgstr "Justification"
+
+msgid "done_at"
+msgstr "Fait à"
+
+msgid "double_encoding"
+msgstr "Double encodage"
+
+msgid "double_encoding_test"
+msgstr "Double encodage des notes"
+
+msgid "dubble_encoding"
+msgstr "Double encodage"
+
+msgid "dubble_online_scores_encoding"
+msgstr "Double encodage de notes en ligne"
+
+msgid "edit"
+msgstr "Éditer"
+
+msgid "email"
+msgstr "Email"
+
+msgid "empty_note_pdf_legend"
+msgstr "(vide)=Pas encore de note"
+
+msgid "encode"
+msgstr "Encoder"
+
+msgid "encode_as_coordinator"
+msgstr "Encoder en tant que coordinateur"
+
+msgid "encode_as_pgm"
+msgstr "Encoder en tant que gestionnaire de programme"
+
+msgid "encode_as_professor"
+msgstr "Encoder en tant que professeur"
+
+msgid "encoding"
+msgstr "Encodage"
 
 msgid "encoding_status_ended"
 msgstr "Toutes les notes ont été soumises."
@@ -962,114 +376,205 @@ msgstr "Toutes les notes ont été soumises."
 msgid "encoding_status_notended"
 msgstr "Il reste encore des notes à encoder."
 
-msgid "origin"
-msgstr "Origine"
+msgid "end_date"
+msgstr "Date de fin"
 
-msgid "recipient"
-msgstr "Destinataire"
+msgid "enrollment_activity_not_exist"
+msgstr "L'inscription à l'activité %s n'existe pas"
 
-msgid "subject"
-msgstr "Sujet"
+msgid "enrollment_exam_not_exists"
+msgstr "L'inscription à l'unité d'enseignement %s n'existe pas"
 
-msgid "my_osis"
-msgstr "Mon OSIS"
+msgid "enrollments"
+msgstr "Inscriptions"
 
-msgid "my_messages"
-msgstr "Mes messages"
+msgid "entities"
+msgstr "Entités"
 
-msgid "received_on"
-msgstr "Reçu le"
+msgid "entity"
+msgstr "Entité"
 
-msgid "tooltip_my_message_read"
-msgstr "Lire le message"
+msgid "evaluations"
+msgstr "Évaluations"
 
-msgid "no_messages"
-msgstr "Pas de messages"
+msgid "event"
+msgstr "Événement"
 
-msgid "tooltip_delete_message"
-msgstr "Supprimer le message"
-
-msgid "desc_profile"
-msgstr "informations liées à votre profile"
-
-msgid "desc_my_messages"
-msgstr "La liste des messages qui vous ont été envoyés par l'application"
-
-msgid "sent"
-msgstr "Envoyé"
-
-msgid "not_sent"
-msgstr "Pas envoyé"
-
-msgid "message"
-msgstr "Message"
-
-msgid "send_message_again"
-msgstr "Réenvoyer"
-
-msgid "btn_send_message_again_title"
-msgstr "Réenvoie le message au destinataire"
-
-msgid "lnk_message_history_read_title"
-msgstr "Afficher le message"
-
-msgid "txt_origin_title"
-msgstr "Origine du message"
-
-msgid "txt_recipient_title"
-msgstr "Destinataire du message (email ou nom ou nom d'utilisateur)"
-
-msgid "txt_subject_title"
-msgstr "Sujet du message"
-
-msgid "txt_reference_title"
-msgstr "Référence du template du message"
-
-msgid "btn_messages_history_search"
-msgstr "Recherche dans l'historique des messages"
-
-
-msgid "delete_selected_messages"
-msgstr "Supprimer les messages sélectionnés"
-
-msgid "mark_selected_messages_as_read"
-msgstr "Marquer les messages sélectionnés comme lus"
-
-msgid "tooltip_execute_my_message_action"
-msgstr "Exécuter l'action sélectionnée"
-
-msgid "tooltip_select_action"
-msgstr "Sélectionner l'action à exécuter"
-
-msgid "tooltip_select_all_messages"
-msgstr "Sélectionner tous les messages"
-
-msgid "close"
-msgstr "Fermer"
+msgid "exam_board_secretary"
+msgstr "Secrétaire du jury"
 
 msgid "execute"
 msgstr "Exécuter"
 
-msgid "tooltip_to_my_messages"
-msgstr "Retourner à la liste des messages"
+msgid "faculty"
+msgstr "Faculté"
 
-msgid "javascript_is_disabled"
-msgstr "JavaScript est désactivé dans votre navigateur, mais OSIS ne fonctionne pas sans JavaScript."
+msgid "fax"
+msgstr ""
 
-msgid "please_enable_javascript"
-msgstr "Veuillez <a href='http://enable-javascript.com/fr/' target='_blank'>activer le JavaScript</a> pour utiliser l'application."
+msgid "female"
+msgstr "Féminin"
 
-msgid "old_browser_warning"
-msgstr "Votre navigateur n'est pas à jour. Certaines fonctionnalités peuvent ne pas fonctionner correctement."
+msgid "file"
+msgstr "Fichier"
+
+msgid "file_must_be_xlsx"
+msgstr "Le fichier doit être un fichier excel valide au format 'XLSX'"
+
+msgid "file_production_date"
+msgstr "Date de production du fichier excel"
+
+msgid "files"
+msgstr "Fichiers"
+
+msgid "final"
+msgstr "Final"
+
+msgid "firstname"
+msgstr "Prénom"
+
+msgid "fixed_line_phone"
+msgstr "Téléphone fixe"
+
+msgid "focuses"
+msgstr "Finalités"
+
+msgid "formation_catalogue"
+msgstr "Catalogue de formation"
+
+msgid "function"
+msgstr "Fonction"
+
+msgid "gender"
+msgstr "Genre"
+
+msgid "general_informations"
+msgstr "Informations générales"
+
+msgid "get_excel_file"
+msgstr "Produire le fichier Excel"
+
+msgid "global_identifiant"
+msgstr "Identifiant global"
+
+msgid "go"
+msgstr "Continuer"
+
+msgid "grade"
+msgstr "Niveau"
+
+msgid "help_pnl_selectedfiles"
+msgstr "Veuillez sélectionner un fichier xls pour l'injection des notes"
+
+msgid "help_submission_scores_label"
+msgstr "Vous êtes sur le point de soumettre %s note(s) à la (aux) faculté(s). Attention : les notes soumises <b>ne peuvent plus être modifiées.</b>"
+
+msgid "highlight_description"
+msgstr "Description de l'événement"
+
+msgid "highlight_shortcut"
+msgstr "Titre raccourcis de l'événement"
+
+msgid "highlight_title"
+msgstr "Titre de l'événement"
 
 msgid "home"
 msgstr "Page d'accueil"
 
-msgid "none"
-msgstr "Aucun"
+msgid "html_message"
+msgstr "Message HTML"
+
+msgid "identification"
+msgstr "Identification"
+
+msgid "idle"
+msgstr "En attente"
+
+msgid "ill"
+msgstr "Malade"
+
+msgid "ill_pdf_legend"
+msgstr "M=Malade"
+
+msgid "in_accordance_to_regulation"
+msgstr "Conformément aux articles 104, 109 et 111 RGEE (Règlement Général des Examens) disponible au lien suivant"
+
+msgid "incomplete"
+msgstr "Incomplet"
+
+msgid "info_address_changed_for_papersheet"
+msgstr "Si vous choisissez de modifier un des champs de l'adresse ci-dessous, cela modifiera uniquement l'adresse "
+       "affichée sur la feuille de notes pour le programme %s. Vous ne modifierez jamais l'adresse d'une entité/structure "
+       "via ce formulaire. La liste des entités ci-dessous n'est proposée que pour vous aider à remplir les champs"
+
+msgid "inject"
+msgstr "Injecter"
+
+msgid "inject_xls_file"
+msgstr "Injecter fichier excel"
+
+msgid "institute"
+msgstr "Institut"
+
+msgid "institution"
+msgstr "Institution"
+
+msgid "international_title"
+msgstr "Titre international"
+
+msgid "internships"
+msgstr "Stages"
+
+msgid "invalid_file"
+msgstr "Fichier invalide"
+
+msgid "javascript_is_disabled"
+msgstr "JavaScript est désactivé dans votre navigateur, mais OSIS ne fonctionne pas sans JavaScript."
+
+msgid "justification"
+msgstr "Justification"
+
+msgid "justification_invalid"
+msgstr "Justification invalide"
+
+msgid "justification_legend"
+msgstr "Légende pour le champ 'Justification': %s"
+
+msgid "justifications"
+msgstr "Justifications"
+
+msgid "label"
+msgstr "Label"
+
+msgid "label_jumbotron_details_academic_cal"
+msgstr "Comme présenté sur la page d'accueil"
+
+msgid "language"
+msgstr "Langue"
+
+msgid "lastname"
+msgstr "Nom"
+
+msgid "learning_unit"
+msgstr "Unité d'enseignement"
+
+msgid "learning_unit_not_access"
+msgstr "Vous n'avez pas les droits d'accès à cette unité d'enseignement ou elle n'existe pas en pas de données"
+
+msgid "learning_unit_not_access_or_not_exist"
+msgstr "Vous n'avez pas les droits d'accès pour cette unité d'enseignement ou elle n'existe pas en base de données"
 
 msgid "learning_unit_responsible"
 msgstr "Responsable du cours"
+
+msgid "learning_unit_search"
+msgstr "Recherche d'unités d'enseignement"
+
+msgid "learning_units"
+msgstr "Unités d'enseignement"
+
+msgid "learning_units_in"
+msgstr "unités d'enseignement dans"
 
 msgid "learning_units_with_inscription_must_be_shown"
 msgstr "Tous les cours du professeur qui possèdent des inscriptions doivent être présents"
@@ -1077,59 +582,656 @@ msgstr "Tous les cours du professeur qui possèdent des inscriptions doivent êt
 msgid "learning_units_without_inscription_must_not_be_shown"
 msgstr "Les cours qui ne possèdent pas d'inscriptions ne devraient pas être présents"
 
-msgid "scores_saved_cannot_be_saved_anymore"
-msgstr "Notes sauvegardées, le bouton sauvegarder n'est plus présent"
-
-msgid "professors_must_not_submit_scores"
-msgstr "Les professeurs ne peuvent pas soumettre de notes"
-
-msgid "scores_encoding_tests"
-msgstr "Tests de l'encodage des notes"
-
-msgid "encode_as_coordinator"
-msgstr "Encoder en tant que coordinateur"
-
-msgid "encode_as_professor"
-msgstr "Encoder en tant que professeur"
-
-msgid "coordinator"
-msgstr "Coordinateur(trice)"
-
-msgid "encode_as_pgm"
-msgstr "Encoder en tant que gestionnaire de programme"
-
-msgid "coordinators_can_submit_partial_encoding"
-msgstr "Les coordinateurs peuvent soumettre des encodages partiels"
-
-msgid "submitted_scores_cannot_be_encoded_anymore"
-msgstr "Les notes soumises ne peuvent plus être encodées"
-
-msgid "double_encoding_test"
-msgstr "Double encodage des notes"
-
-msgid "in_accordance_to_regulation"
-msgstr "Conformément aux articles 104, 109 et 111 RGEE (Règlement Général des Examens) disponible au lien suivant"
-
 msgid "link_to_RGEE"
 msgstr "https://www.uclouvain.be/enseignement-reglements.html"
 
-msgid "warning_all_scores_not_sumitted_yet"
-msgstr "Attention : vous avez des notes enregistrées qui n'ont pas encore été soumises."
+msgid "lnk_message_history_read_title"
+msgstr "Afficher le message"
 
-msgid "definitive_save"
-msgstr "Sauvegarde définitive (soumettre à la faculté)"
+msgid "location"
+msgstr "Rue et numéro"
 
-msgid "temporary_save"
-msgstr "Sauvegarde temporaire (non soumis à la faculté)"
+msgid "log-in"
+msgstr "Log-in"
 
-msgid "only_submited_scores_can_be_double_encoded"
-msgstr "Seules les notes soumises peuvent être double encodées"
+msgid "login"
+msgstr "Login"
+
+msgid "logistic"
+msgstr "Logistique"
+
+msgid "logout"
+msgstr "Logout"
+
+msgid "lu_could_contain_decimal_scores"
+msgstr "Cette année d'étude accepte les notes décimales"
 
 msgid "lu_must_not_contain_decimal_scores"
 msgstr "Cette année d'étude n'accepte pas les notes décimales"
 
-msgid "lu_could_contain_decimal_scores"
-msgstr "Cette année d'étude accepte les notes décimales"
+msgid "male"
+msgstr "Masculin"
+
+msgid "managed_programs"
+msgstr "Programmes gérés"
+
+msgid "mandates"
+msgstr "Mandates"
+
+msgid "mark_selected_messages_as_read"
+msgstr "Marquer les messages sélectionnés comme lus"
+
+msgid "master"
+msgstr "Master"
+
+msgid "message"
+msgstr "Message"
+
+msgid "message_address_papersheet"
+msgstr "Réutilisez l'adresse d'une entité liée au programme ou informez l'adresse d'affichage pour la feuille des notes"
+
+msgid "message_not_resent_no_email"
+msgstr "Le message ne peut être réenvoyé , l'utilisateur n'a pas d'adresse mail."
+
+msgid "message_resent_ok"
+msgstr "Le message à bien été réenvoyé."
+
+msgid "messages"
+msgstr "Messages"
+
+msgid "messages_history"
+msgstr "Historique des messages"
+
+msgid "messages_templates"
+msgstr "Modèles de messages"
+
+msgid "minimum_one_criteria"
+msgstr "Veuillez remplir au moins 1 critère de recherche"
+
+msgid "miss"
+msgstr "Madame"
+
+msgid "missing_column_session"
+msgstr "Veuillez remplir la colonne 'session' de votre fichier excel."
+
+msgid "mister"
+msgstr "Monsieur"
+
+msgid "mobile_phone"
+msgstr "Téléphone mobile (GSM)"
+
+msgid "more_than_one_academic_year_error"
+msgstr "Il y a plusieurs années académiques dans la colonne 'Année académique' de votre fichier excel. "
+      "Veuiller corriger votre fichier excel de manière à ce qu'il n'y ai qu'une seule année académique"
+
+msgid "more_than_one_exam_enrol_for_one_learn_unit"
+msgstr "Cet étudiant possède plusieurs inscriptions au même examen "
+       "(il est inscrit à un même cours dans 2 programmes différents). "
+       "Veuillez encoder cette note via l'onglet 'en ligne' de l'interface svp."
+
+msgid "more_than_one_learning_unit_error"
+msgstr "Vous avez encodé des notes pour plusieurs unités d'enseignements dans votre fichier excel "
+       "(colonne 'Unité d'enseignement'). Veillez à ne faire qu'un seul fichier excel par unité d'enseignement."
+
+msgid "more_than_one_session_error"
+msgstr "Il y a plusieurs numéros de sessions dans la colonne 'Session' de votre fichier excel. "
+      "Veuiller corriger votre fichier excel de manière à ce qu'il n'y ai qu'un seul numéro de session"
+
+msgid "msg_error_username_password_not_matching"
+msgstr ""
+"La combinaison login/mot de passe entrée n'est pas valide. Veuillez "
+"réessayer."
+
+msgid "my_messages"
+msgstr "Mes messages"
+
+msgid "my_osis"
+msgstr "Mon OSIS"
+
+msgid "my_studies"
+msgstr "Mes études"
+
+msgid "name"
+msgstr "Nom"
+
+msgid "national_register"
+msgstr "Numéro de registre nationnal"
+
+msgid "no_data_for_this_academic_year"
+msgstr "Aucune données pour cette année académique"
+
+msgid "no_dubble_score_encoded_comparison_impossible"
+msgstr "Aucune note n'a été double encodée ; aucune comparaison à effectuer."
+#~ msgid "title_btn_upload_score"
+#~ msgstr ""
+#~ "Sélectionnez votre fichier excel à partir duquel il faut injecter les "
+#~ "notes"
+#~ msgid "submit"
+#~ msgstr "Envoyer"
+#~ msgid "download_xls_file"
+#~ msgstr "Télécharger le fichier Excel"
+#~ msgid "not_in_choices_list"
+#~ msgstr "Le choix entré ne se trouve pas dans la liste proposée"
+#~ msgid "invalid_entry"
+#~ msgstr "Entrée invalide"
+#~ msgid "please_choose_in_the_list"
+#~ msgstr "Veuillez sélectionner un élément de la liste"
+#~ msgid "choices_list"
+#~ msgstr "Liste des choix"
+#~ msgid "changes_on_offer_year_and_academic_calendar"
+#~ msgstr ""
+#~ "Attention - Des changements ont été effectués sur %s, calendrier "
+#~ "académique %s"
+#~ msgid "score_injected"
+#~ msgstr "Note injectée"
+#~ msgid "scores_injected"
+#~ msgstr "Notes injectées"
+#~ msgid "add_address"
+#~ msgstr "Ajouter une adresse"
+
+msgid "no_exam_session_opened_for_the_moment"
+msgstr "Aucune session d'encodage de notes ouverte pour le moment. "
+
+msgid "no_file_submitted"
+msgstr "Vous n'avez pas selectionné de fichier excel à soumettre."
+
+msgid "no_messages"
+msgstr "Pas de messages"
+
+msgid "no_result"
+msgstr "Aucun résultat!"
+
+msgid "no_score_encoded_double_encoding_impossible"
+msgstr ""
+ "Aucune nouvelle note encodée. "
+ "Le double encodage n'est pas accessible car il n'y a pas de nouvelles notes encodés."
+
+msgid "no_score_injected"
+msgstr "Aucune note injectée (NB: les notes de votre fichier excel ne sont injectées que si elles sont différentes "
+       "de celles déjà enregistrées précédemment)."
+
+msgid "no_score_to_encode"
+msgstr "Vous n'avez aucune note à encoder."
+
+msgid "no_valid_academic_year_error"
+msgstr "Aucune année académique au format valide n'a été trouvé dans votre fichier excel. La date doit être formatée comme suit ; '2015-2016' ou '2015'."
+
+msgid "none"
+msgstr "Aucun"
+
+msgid "not_passed"
+msgstr "Non communiquée"
+
+msgid "not_sent"
+msgstr "Pas envoyé"
+
+msgid "number_of_enrollments"
+msgstr "Nombre d'inscrits"
+
+msgid "number_session"
+msgstr "No. session"
+
+msgid "numbered_score"
+msgstr "Note chiffrée"
+
+msgid "offer"
+msgstr "Programme"
+
+msgid "offer_enrollment_not_exist"
+msgstr "L'inscription à ce programme n'existe pas"
+
+msgid "offer_year_calendar"
+msgstr "Calendrier des programmes"
+
+msgid "offer_year_calendar_academic_calendar_end_date_error"
+msgstr "La date de fin de l'encodage des notes de votre programme ne peut pas être ultérieure à la date de fermeture "
+       "de l'encodage des notes du calendrier académique"
+
+msgid "offer_year_calendar_academic_calendar_start_date_error"
+msgstr "La date de début de l'encodage des notes de votre programme ne peut pas être antérieure à la date d'ouverture "
+       "de l'encodage des notes du calendrier académique"
+
+msgid "offer_year_not_access_or_not_exist"
+msgstr "Vous n'avez pas les droits d'accès pour cette offre ou elle n'existe pas en base de données"
+
+msgid "offer_year_not_exist"
+msgstr "Le programme annualisé (%s) (%d) - n'existe pas"
+
+msgid "offer_year_search"
+msgstr "Recherche des programmes annualisés"
+
+msgid "offers"
+msgstr "Programmes"
+
+msgid "old_browser_warning"
+msgstr "Votre navigateur n'est pas à jour. Certaines fonctionnalités peuvent ne pas fonctionner correctement."
+
+msgid "online"
+msgstr "En ligne"
+
+msgid "online_encoding"
+msgstr "Encodage en ligne"
+
+msgid "online_scores_encoding"
+msgstr "Encodage de notes en ligne"
+
+msgid "only_submited_scores_can_be_double_encoded"
+msgstr "Seules les notes soumises peuvent être double encodées"
+
+msgid "open"
+msgstr "Ouvert"
+
+msgid "organization"
+msgstr "Organisation"
+
+msgid "organization_address"
+msgstr "Adresse de l'organisation"
+
+msgid "organizations"
+msgstr "Organisations"
+
+msgid "origin"
+msgstr "Origine"
+
+msgid "other_score"
+msgstr "Autre note"
+
+msgid "other_sibling_offers"
+msgstr "Autres finalités associées"
+
+msgid "other_sibling_orientations"
+msgstr "Autres orientations associées"
+
+msgid "outside_scores_encodings_period"
+msgstr "Vous êtes en dehors de la période d'encodage de notes: la dernière session d'examens est fermée depuis le %s."
+
+msgid "page_not_found"
+msgstr "Page inexistante"
+
+msgid "password"
+msgstr "Mot de passe"
+
+msgid "person"
+msgstr ""
+
+msgid "ph_d"
+msgstr "Ph.D"
+
+msgid "phone"
+msgstr "téléphone"
+
+msgid "plain"
+msgstr "Plain"
+
+msgid "plain_and_html"
+msgstr "Plain et HTML"
+
+msgid "please_enable_javascript"
+msgstr "Veuillez <a href='http://enable-javascript.com/fr/' target='_blank'>activer le JavaScript</a> pour utiliser l'application."
+
+msgid "pole"
+msgstr "Pole"
+
+msgid "postal_code"
+msgstr "Code postal"
+
+msgid "preferences"
+msgstr "Préférences"
+
+msgid "presence_note_pdf_legend"
+msgstr "0=Cote de présence"
+
+msgid "print"
+msgstr "Imprimer"
+
+msgid "print_all_courses"
+msgstr "Imprimer tous les cours"
+
+msgid "print_warning_and_info_messages"
+msgstr ""
+
+msgid "printable_title"
+msgstr "Titre imprimable"
+
+msgid "printing_date"
+msgstr "Date d'impression"
+
+msgid "professional"
+msgstr "Professionnel"
+
+msgid "professors_must_not_submit_scores"
+msgstr "Les professeurs ne peuvent pas soumettre de notes"
+
+msgid "profile"
+msgstr "Profil"
+
+msgid "program"
+msgstr "Programme"
+
+msgid "program_commission"
+msgstr "Commison d'enseignement/programme"
+
+msgid "program_managers"
+msgstr "Program managers"
+
+msgid "program_s"
+msgstr "programme(s)"
+
+msgid "programs"
+msgstr "Programmes"
+
+msgid "progress"
+msgstr "Progression"
+
+msgid "received_on"
+msgstr "Reçu le"
+
+msgid "recipient"
+msgstr "Destinataire"
+
+msgid "redirect_to_login"
+msgstr "Cliquez pour vous reconnectez"
+
+msgid "reference"
+msgstr "Référence"
+
+msgid "refresh_list"
+msgstr "Rechercher/mettre à jour la liste"
+
+msgid "registration_id"
+msgstr "NOMA"
+
+msgid "registration_id_not_access_or_not_exist"
+msgstr "Vous n'avez pas des droits accès pour cet étudiant ou il n'existe pas en base de données"
+
+msgid "registration_number"
+msgstr "Noma"
+
+msgid "research_center"
+msgstr "Centre de recherche"
+
+msgid "residential"
+msgstr ""
+
+msgid "responsible"
+msgstr "Responsable"
+
+msgid "return_doc_to_administrator"
+msgstr ""
+"Veuillez envoyer ce formulaire au secrétariat de l'entité gestionnaire avant le %s."
+
+msgid "reuse_address_entity"
+msgstr "Réutiliser l'adresse de"
+
+msgid "save"
+msgstr "Sauvegarder"
+
+msgid "saved"
+msgstr "Enregistré"
+
+msgid "saving"
+msgstr "Sauvegarde en cours"
+
+msgid "score"
+msgstr "Note"
+
+msgid "score_already_submitted"
+msgstr "Note déjà soumise "
+
+msgid "score_decimal_not_allowed"
+msgstr "La note encodée est incorrecte : décimales non autorisées"
+
+msgid "score_invalid"
+msgstr "Note invalide"
+
+msgid "score_legend"
+msgstr "Légende pour le champ 'Note chiffrée': %s (0=Cote de présence)"
+
+msgid "score_missing_pdf_legend"
+msgstr "?=Note manquante"
+
+msgid "score_saved"
+msgstr "note(s) injectée(s)"
+
+msgid "score_submitted"
+msgstr "Soumis"
+
+msgid "scores"
+msgstr "Notes"
+
+msgid "scores_encoding"
+msgstr "Encodage des notes"
+
+msgid "scores_encoding_tests"
+msgstr "Tests de l'encodage des notes"
+
+msgid "scores_gt_0_lt_20"
+msgstr "La note encodée est incorrecte (elle doit être comprise entre 0 et 20)"
+
+msgid "scores_injection"
+msgstr "Injection des notes"
+
+msgid "scores_saved"
+msgstr "note(s) enregistrée(s)"
+
+msgid "scores_saved_cannot_be_saved_anymore"
+msgstr "Notes sauvegardées, le bouton sauvegarder n'est plus présent"
+
+msgid "scores_sheet"
+msgstr "Feuille de notes"
+
+msgid "scores_transcript"
+msgstr "Feuille de notes"
+
+msgid "search_for_a_file"
+msgstr "Recherche d'un fichier"
+
+msgid "search_for_an_entity"
+msgstr "Rechercher une entité"
+
+msgid "search_for_an_organization"
+msgstr "Recherche d'organisations"
+
+msgid "sector"
+msgstr "Secteur"
+
+msgid "select"
+msgstr "Sélectionnez"
+
+msgid "select_a_xls_file_from_which_to_inject_scores"
+msgstr ""
+
+msgid "select_an_encoding_type"
+msgstr "Sélectionnez un type d'encodage"
+
+msgid "send_message_again"
+msgstr "Réenvoyer"
+
+msgid "sent"
+msgstr "Envoyé"
+
+msgid "server_error"
+msgstr "Une erreur innatendue s'est produite"
+
+msgid "server_error_message"
+msgstr "Nous mettons tout en oeuvre pour résoudre ce problème."
+
+msgid "sessionn"
+msgstr "Session"
+
+msgid "short_title"
+msgstr "Titre abrégé"
+
+msgid "signature"
+msgstr "Signature"
+
+msgid "size"
+msgstr "Taille"
+
+msgid "source_code"
+msgstr "Code source"
+
+msgid "stages"
+msgstr "Stages"
+
+msgid "start_date"
+msgstr "Date de début"
+
+msgid "status"
+msgstr "Statut"
+
+msgid "storage"
+msgstr "Stockage"
+
+msgid "storage_duration"
+msgstr "Temps de stockage"
+
+msgid "structure"
+msgstr "Structure"
+
+msgid "student_not_exist"
+msgstr "L'étudiant (%s) n'existe pas"
+
+msgid "student_path"
+msgstr "Parcours de l'étudiant"
+
+msgid "students"
+msgstr "étudiants"
+
+msgid "studies"
+msgstr "Études"
+
+msgid "subject"
+msgstr "Sujet"
+
+msgid "submission"
+msgstr "Soumettre"
+
+msgid "submission_date"
+msgstr "Date de remise"
+
+msgid "submission_of_scores_for"
+msgstr "Soumission des score pour {0}"
+
+msgid "submitted"
+msgstr "Soumis"
+
+msgid "submitted_scores_cannot_be_encoded_anymore"
+msgstr "Les notes soumises ne peuvent plus être encodées"
+
+msgid "succesfull_logout"
+msgstr "Vous êtes à présent déconnecté."
+
+msgid "technologic_platform"
+msgstr "Plateforme technologique"
+
+msgid "template_error"
+msgstr "Aucun message n'a été envoyé : le modèle de message {} n'existe pas."
+
+msgid "temporary_save"
+msgstr "Sauvegarde temporaire (non soumis à la faculté)"
+
+msgid "the"
+msgstr "le"
+
+msgid "the_coordinator_must_still_submit_scores"
+msgstr "Le coordinateur doit toujours soumettre les notes"
+
+msgid "title"
+msgstr "Intitulé"
+
+msgid "too_many_results"
+msgstr "Votre recherche retourne trop de résultats, veuillez spécifier la recherche."
+
+msgid "tooltip_delete_message"
+msgstr "Supprimer le message"
+
+msgid "tooltip_double_encode_for"
+msgstr "Double encoder les notes"
+
+msgid "tooltip_double_encode_no_more_possible_for"
+msgstr "Toutes les notes ont été soumises.Il n'est plus possible de double encoder des notes pour ce cours."
+
+msgid "tooltip_dowload_excel_file"
+msgstr "Télécharger le fichier excel"
+
+msgid "tooltip_encode_for"
+msgstr "Encoder les notes"
+
+msgid "tooltip_encode_no_more_possible_for"
+msgstr "Toutes les notes ont été soumises.Il n'est plus possible d'encoder de notes pour ce cours."
+
+msgid "tooltip_execute_my_message_action"
+msgstr "Exécuter l'action sélectionnée"
+
+msgid "tooltip_inject_excel_no_more_possible_for"
+msgstr "Toutes les notes ont été soumises.Il n'est plus possible de soumettre de fichier excel pour ce cours."
+
+msgid "tooltip_my_message_read"
+msgstr "Lire le message"
+
+msgid "tooltip_print_scores"
+msgstr "Imprimer les notes"
+
+msgid "tooltip_select_action"
+msgstr "Sélectionner l'action à exécuter"
+
+msgid "tooltip_select_all_messages"
+msgstr "Sélectionner tous les messages"
+
+msgid "tooltip_select_excel_file_to_inject_scores"
+msgstr "Séclectionnez le fichier excel à soumettre"
+
+msgid "tooltip_to_my_messages"
+msgstr "Retourner à la liste des messages"
+
+msgid "tutor"
+msgstr "Enseignant(e)"
+
+msgid "tutors"
+msgstr "Enseignants"
+
+msgid "txt_message"
+msgstr "Message texte"
+
+msgid "txt_origin_title"
+msgstr "Origine du message"
+
+msgid "txt_recipient_title"
+msgstr "Destinataire du message (email ou nom ou nom d'utilisateur)"
+
+msgid "txt_reference_title"
+msgstr "Référence du template du message"
+
+msgid "txt_subject_title"
+msgstr "Sujet du message"
+
+msgid "type"
+msgstr "Type"
+
+msgid "types"
+msgstr "Types"
+
+msgid "ucl_denom_location"
+msgstr "Université catholique de Louvain"
+
+msgid "unauthorized_decimal_for_this_activity"
+msgstr "Attention : décimales non autorisées pour ce cours"
+
+msgid "undefined"
+msgstr "Non défini"
+
+msgid "unknown"
+msgstr "Indéfini"
+
+msgid "user"
+msgstr "Utilisateur"
+
+msgid "user_interface_language"
+msgstr "Langue de l'interface utilisateur"
+
+msgid "user_is_not_program_manager"
+msgstr "Vous n'êtes pas un gestionnaire de programme. Par conséquent, vous n'avez pas accès à cette interface."
 
 msgid "validated_double_encoding_cannot_be_validated_anymore"
 msgstr "Un double encodage validé ne peut l'être une seconde fois"
@@ -1138,140 +1240,24 @@ msgid "validation_dubble_encoding_mandatory"
 msgstr "Veuillez sélectionner une note finale pour toutes les différences détectées entre le premier encodage et le "
        "double encodage (ci-dessous). Si vous choisissez d'annuler, votre double encodage sera perdu."
 
-msgid "after_submission_a_message_must_be_sent"
-msgstr "Si un encodage est soumis , um message est envoyé au professeur de ce cours"
+msgid "via_excel"
+msgstr "Via fichier Excel"
 
-msgid "template_error"
-msgstr "Aucun message n'a été envoyé : le modèle de message {} n'existe pas."
+msgid "via_paper"
+msgstr "Sur papier"
 
-msgid "tooltip_encode_for"
-msgstr "Encoder les notes"
+msgid "warning_all_scores_not_sumitted_yet"
+msgstr "Attention : vous avez des notes enregistrées qui n'ont pas encore été soumises."
 
-msgid "tooltip_encode_no_more_possible_for"
-msgstr "Toutes les notes ont été soumises.Il n'est plus possible d'encoder de notes pour ce cours."
-
-msgid "tooltip_inject_excel_no_more_possible_for"
-msgstr "Toutes les notes ont été soumises.Il n'est plus possible de soumettre de fichier excel pour ce cours."
-
-msgid "tooltip_double_encode_no_more_possible_for"
-msgstr "Toutes les notes ont été soumises.Il n'est plus possible de double encoder des notes pour ce cours."
-
-msgid "tooltip_double_encode_for"
-msgstr "Double encoder les notes"
-
-msgid "tooltip_select_excel_file_to_inject_scores"
-msgstr "Séclectionnez le fichier excel à soumettre"
-
-msgid "display_tutors"
-msgstr "Afficher tous les enseignants pour ce cours"
-
-msgid "no_score_to_encode"
-msgstr "Vous n'avez aucune note à encoder."
-
-msgid "tooltip_dowload_excel_file"
-msgstr "Télécharger le fichier excel"
-
-msgid "tooltip_print_scores"
-msgstr "Imprimer les notes"
+msgid "website"
+msgstr "Site internet"
 
 msgid "without_attribution"
 msgstr "Sans attribution"
-
-msgid "learning_unit_not_access"
-msgstr "Vous n'avez pas les droits d'accès à cette unité d'enseignement ou elle n'existe pas en pas de données"
-
-msgid "registration_id_not_access_or_not_exist"
-msgstr "Vous n'avez pas des droits accès pour cet étudiant ou il n'existe pas en base de données"
-
-msgid "more_than_one_academic_year_error"
-msgstr "Il y a plusieurs années académiques dans la colonne 'Année académique' de votre fichier excel. "
-      "Veuiller corriger votre fichier excel de manière à ce qu'il n'y ai qu'une seule année académique"
-
-msgid "more_than_one_session_error"
-msgstr "Il y a plusieurs numéros de sessions dans la colonne 'Session' de votre fichier excel. "
-      "Veuiller corriger votre fichier excel de manière à ce qu'il n'y ai qu'un seul numéro de session"
-
-msgid "offer_year_not_access_or_not_exist"
-msgstr "Vous n'avez pas les droits d'accès pour cette offre ou elle n'existe pas en base de données"
-
-msgid "learning_unit_not_access_or_not_exist"
-msgstr "Vous n'avez pas les droits d'accès pour cette unité d'enseignement ou elle n'existe pas en base de données"
-
-msgid "more_than_one_exam_enrol_for_one_learn_unit"
-msgstr "Cet étudiant possède plusieurs inscriptions au même examen "
-       "(il est inscrit à un même cours dans 2 programmes différents). "
-       "Veuillez encoder cette note via l'onglet 'en ligne' de l'interface svp."
-
-msgid "justification_invalid"
-msgstr "Justification invalide"
-
-msgid "outside_scores_encodings_period"
-msgstr "Vous êtes en dehors de la période d'encodage de notes: la dernière session d'examens est fermée depuis le %s."
-
-msgid "offer_year_calendar_academic_calendar_start_date_error"
-msgstr "La date de début de l'encodage des notes de votre programme ne peut pas être antérieure à la date d'ouverture "
-       "de l'encodage des notes du calendrier académique"
-
-msgid "offer_year_calendar_academic_calendar_end_date_error"
-msgstr "La date de fin de l'encodage des notes de votre programme ne peut pas être ultérieure à la date de fermeture "
-       "de l'encodage des notes du calendrier académique"
-
-msgid "academic_calendar_offer_year_calendar_start_date_error"
-msgstr "La date d'ouverture de l'encodage des notes du calendrier académique ne peut pas être supérieure au %s "
-       "(date de début de l'encodage des notes du programme '%s')"
-
-msgid "academic_calendar_offer_year_calendar_end_date_error"
-msgstr "La date de fermeture de l'encodage des notes du calendrier académique ne peut pas être inférieure au %s "
-       "(date de fin de l'encodage des notes du programme '%s')"
-
-msgid "more_than_one_learning_unit_error"
-msgstr "Vous avez encodé des notes pour plusieurs unités d'enseignements dans votre fichier excel "
-       "(colonne 'Unité d'enseignement'). Veillez à ne faire qu'un seul fichier excel par unité d'enseignement."
-
-msgid "user_is_not_program_manager"
-msgstr "Vous n'êtes pas un gestionnaire de programme. Par conséquent, vous n'avez pas accès à cette interface."
-
-msgid "enrollments"
-msgstr "Inscriptions"
-
-msgid "missing_column_session"
-msgstr "Veuillez remplir la colonne 'session' de votre fichier excel."
-
-msgid "incomplete"
-msgstr "Incomplet"
 
 msgid "xls_columns_structure_error"
 msgstr "Votre fichier excel n'est pas bien structuré. Veuillez respecter l'ordre des colonnes fournie lors du "
        "téléchargement de votre fichier (bouton '{}')."
 
-msgid "succesfull_logout"
-msgstr "Vous êtes à présent déconnecté."
-
-msgid "redirect_to_login"
-msgstr "Cliquez pour vous reconnectez"
-
-msgid "no_valid_academic_year_error"
-msgstr "Aucune année académique au format valide n'a été trouvé dans votre fichier excel. La date doit être formatée comme suit ; '2015-2016' ou '2015'."
-
-msgid "printing_date"
-msgstr "Date d'impression"
-
-msgid "file_production_date"
-msgstr "Date de production du fichier excel"
-
-msgid "no_data_for_this_academic_year"
-msgstr "Aucune données pour cette année académique"
-
-msgid "students"
-msgstr "étudiants"
-
-msgid "not_passed"
-msgstr "Non communiquée"
-
-msgid "date_not_passed"
-msgstr "Date non communiquée"
-
-msgid "complete"
-msgstr "Complet"
-
-
+msgid "you_manage"
+msgstr "Vous gérez"
