@@ -167,6 +167,13 @@
                              </option>
                            {% endfor %}
                       </select>
+                      {% for spec_sort in speciality_sort_value %}
+                        {% if spec_sort != None %}
+                          {% if forloop.counter0 != forloop.parentloop.counter0 %}
+                            <input type="hidden" name="speciality_sort{{forloop.counter0}}" value="{{spec_sort}}"/>
+                          {%endif%}
+                        {% endif %}
+                      {% endfor %}
                     </form>
                     <thead>
                         <tr>
