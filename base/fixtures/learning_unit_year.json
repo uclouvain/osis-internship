@@ -9,8 +9,7 @@
       "title": "Spectroscopie atmosph\u00e9rique et t\u00e9l\u00e9d\u00e9tection spatiale (ULB)",
       "credits": "4.00",
       "decimal_scores": true,
-      "academic_year": 1,
-      "learning_unit": 1
+      "academic_year": 1
     }
   },
   {
@@ -23,8 +22,7 @@
       "title": "Recent Continental Philosophy",
       "credits": "7.00",
       "decimal_scores": true,
-      "academic_year": 1,
-      "learning_unit": 2
+      "academic_year": 1
     }
   },
   {
@@ -37,8 +35,7 @@
       "title": "Traduccion espanol-franc\u00e9s (105620) (6)",
       "credits": "2.00",
       "decimal_scores": false,
-      "academic_year": 1,
-      "learning_unit": 3
+      "academic_year": 1
     }
   },
   {
@@ -51,8 +48,7 @@
       "title": "S\u00e9minaire approfondi: Questions approfondies de psychologie de la personnalit\u00e9",
       "credits": "7.00",
       "decimal_scores": false,
-      "academic_year": 1,
-      "learning_unit": 4
+      "academic_year": 1
     }
   },
   {
@@ -65,8 +61,7 @@
       "title": "Introduction aux syst\u00e8mes d'information",
       "credits": "8.00",
       "decimal_scores": true,
-      "academic_year": 1,
-      "learning_unit": 5
+      "academic_year": 1
     }
   },
   {
@@ -79,8 +74,7 @@
       "title": "S\u00e9minaires de chimie analytique",
       "credits": "2.00",
       "decimal_scores": false,
-      "academic_year": 1,
-      "learning_unit": 6
+      "academic_year": 1
     }
   },
   {
@@ -93,8 +87,7 @@
       "title": "Stage en Master: partim A",
       "credits": "2.00",
       "decimal_scores": false,
-      "academic_year": 1,
-      "learning_unit": 7
+      "academic_year": 1
     }
   },
   {
@@ -107,8 +100,7 @@
       "title": "Ontwerp van constructiecomponenten: beton, deel 2 (Katholieke Universiteit te Leuven)",
       "credits": "2.00",
       "decimal_scores": false,
-      "academic_year": 1,
-      "learning_unit": 8
+      "academic_year": 1
     }
   },
   {
@@ -121,8 +113,7 @@
       "title": "Estudios de mercado y gesti\u00f3n de calidad en la industria alimentaria",
       "credits": "3.00",
       "decimal_scores": false,
-      "academic_year": 1,
-      "learning_unit": 9
+      "academic_year": 1
     }
   },
   {
@@ -135,8 +126,7 @@
       "title": "Elektrische actuatoren: gevorderde aspecten en toepassingen m.i.v. transport (Katholieke Universiteit te Leuven)",
       "credits": "6.00",
       "decimal_scores": false,
-      "academic_year": 1,
-      "learning_unit": 10
+      "academic_year": 1
     }
   },
   {
@@ -149,8 +139,7 @@
       "title": "Spectroscopie atmosph\u00e9rique et t\u00e9l\u00e9d\u00e9tection spatiale (ULB)",
       "credits": "4.00",
       "decimal_scores": true,
-      "academic_year": 2,
-      "learning_unit": 1
+      "academic_year": 2
     }
   },
   {
@@ -163,8 +152,7 @@
       "title": "Recent Continental Philosophy",
       "credits": "7.00",
       "decimal_scores": true,
-      "academic_year": 2,
-      "learning_unit": 2
+      "academic_year": 2
     }
   },
   {
@@ -177,8 +165,7 @@
       "title": "Traduccion espanol-franc\u00e9s (105620) (6)",
       "credits": "2.00",
       "decimal_scores": false,
-      "academic_year": 2,
-      "learning_unit": 3
+      "academic_year": 2
     }
   },
   {
@@ -191,8 +178,7 @@
       "title": "S\u00e9minaire approfondi: Questions approfondies de psychologie de la personnalit\u00e9",
       "credits": "7.00",
       "decimal_scores": false,
-      "academic_year": 2,
-      "learning_unit": 4
+      "academic_year": 2
     }
   },
   {
@@ -205,8 +191,7 @@
       "title": "Introduction aux syst\u00e8mes d'information",
       "credits": "8.00",
       "decimal_scores": true,
-      "academic_year": 2,
-      "learning_unit": 5
+      "academic_year": 2
     }
   },
   {
@@ -219,8 +204,7 @@
       "title": "S\u00e9minaires de chimie analytique",
       "credits": "2.00",
       "decimal_scores": false,
-      "academic_year": 2,
-      "learning_unit": 6
+      "academic_year": 2
     }
   },
   {
@@ -233,8 +217,7 @@
       "title": "Stage en Master: partim A",
       "credits": "2.00",
       "decimal_scores": false,
-      "academic_year": 2,
-      "learning_unit": 7
+      "academic_year": 2
     }
   },
   {
@@ -247,8 +230,7 @@
       "title": "Ontwerp van constructiecomponenten: beton, deel 2 (Katholieke Universiteit te Leuven)",
       "credits": "2.00",
       "decimal_scores": false,
-      "academic_year": 2,
-      "learning_unit": 8
+      "academic_year": 2
     }
   },
   {
@@ -261,8 +243,7 @@
       "title": "Estudios de mercado y gesti\u00f3n de calidad en la industria alimentaria",
       "credits": "3.00",
       "decimal_scores": false,
-      "academic_year": 2,
-      "learning_unit": 9
+      "academic_year": 2
     }
   },
   {
@@ -275,8 +256,7 @@
       "title": "Elektrische actuatoren: gevorderde aspecten en toepassingen m.i.v. transport (Katholieke Universiteit te Leuven)",
       "credits": "6.00",
       "decimal_scores": false,
-      "academic_year": 2,
-      "learning_unit": 10
+      "academic_year": 2
     }
   }
 ]

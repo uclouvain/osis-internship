@@ -45,7 +45,7 @@ class Attribution(models.Model):
     start_date = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
     end_date = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
     function = models.CharField(max_length=15, blank=True, null=True, choices=FUNCTION_CHOICES, db_index=True)
-    learning_unit_year = models.ForeignKey('LearningUnitYear')
+    learning_unit_year = models.ForeignKey('LearningUnitYear', blank=True, null=True, default=None)
     tutor = models.ForeignKey('Tutor')
 
     def __str__(self):
