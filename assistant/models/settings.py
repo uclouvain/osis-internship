@@ -23,28 +23,24 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
-from django import forms
-from django.forms import ModelForm
-from internship.models import Organization, OrganizationAddress, Period
-from functools import partial
-DateInput = partial(forms.DateInput, {'class': 'datepicker'})
+from django.db import models
+from django.utils.translation import ugettext_lazy as _
+from datetime import datetime
 
 
-class OrganizationForm(ModelForm):
-    class Meta:
-        model = Organization
-        fields = ['name', 'website', 'reference']
+class Settings(models.Model):
 
-class OrganizationAddressForm(ModelForm):
-    class Meta:
-        model = OrganizationAddress
-        fields = ['location', 'postal_code', 'city', 'country', 'latitude', 'longitude']
+    starting_date = models.DateField()
+    ending_date = models.DateField()
 
-class PeriodForm(ModelForm):
-    class Meta:
-        model = Period
-        fields = ['name', 'date_start', 'date_end']
-        widgets = {'date_start': forms.DateInput(format='%d/%m/%Y'),
-                'date_start': forms.DateInput(format='%d/%m/%Y'),
-        }
+    def __str__(self):
+        return u"%s - %s" % (self.starting_date, self.ending_date)
+    
+def get_settings():
+    return Settings.objects.first()
+
+def access_to_procedure_is_open():
+    if not Settings.objects.filter(starting_date__lt=datetime.now(), ending_date__gt=datetime.now()):
+        return False
+    else:
+        return True

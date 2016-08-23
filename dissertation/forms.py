@@ -25,6 +25,7 @@
 ##############################################################################
 from django import forms
 from django.forms import ModelForm
+from base import models as mdl
 from dissertation.models.adviser import Adviser
 from dissertation.models.dissertation import Dissertation
 from dissertation.models.offer_proposition import OfferProposition
@@ -59,6 +60,12 @@ class PropositionRoleForm(ModelForm):
         model = PropositionRole
         fields = ('proposition_dissertation', 'status', 'adviser')
         widgets = {'proposition_dissertation': forms.HiddenInput()}
+
+
+class ManagerAddAdviserPreForm(ModelForm):
+    class Meta:
+        model = mdl.person.Person
+        fields = ('email', )
 
 
 class ManagerAddAdviserForm(ModelForm):

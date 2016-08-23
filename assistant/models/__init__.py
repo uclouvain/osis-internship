@@ -32,6 +32,8 @@ from assistant.models import manager
 from assistant.models import mandate_structure
 from assistant.models import review
 from assistant.models import reviewer
+from assistant.models import settings
 from assistant.models import tutoring_learning_unit_year
+
 
 

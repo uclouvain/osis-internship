@@ -35,9 +35,12 @@ from dissertation.models.proposition_role import PropositionRole
 from dissertation.models import proposition_role
 from dissertation.forms import PropositionDissertationForm, ManagerPropositionDissertationForm,\
     PropositionRoleForm, ManagerPropositionRoleForm, ManagerPropositionDissertationEditForm
+from openpyxl.writer.excel import save_virtual_workbook
+from openpyxl import Workbook
 from django.contrib.auth.decorators import user_passes_test
 from base.views import layout
-
+import time
+from django.http import HttpResponse
 
 # Used by decorator @user_passes_test(is_manager) to secure manager views
 def is_manager(user):
@@ -116,40 +119,14 @@ def manage_proposition_dissertation_edit(request, pk):
 @user_passes_test(is_manager)
 def manager_proposition_dissertations_jury_edit(request, pk):
     prop_role = get_object_or_404(PropositionRole, pk=pk)
-
-    if prop_role.proposition_dissertation.author == prop_role.adviser and prop_role.status == 'PROMOTEUR':
-        return redirect('manager_proposition_dissertation_detail', pk=prop_role.proposition_dissertation.pk)
-
-    elif request.method == "POST":
-        form = ManagerPropositionRoleForm(request.POST, instance=prop_role)
-        if form.is_valid():
-            form.save()
-            return redirect('manager_proposition_dissertation_detail', pk=prop_role.proposition_dissertation.pk)
-    else:
-        form = ManagerPropositionRoleForm(instance=prop_role)
-        return layout.render(request, 'manager_proposition_dissertations_jury_edit.html', {'form': form})
+    prop_dissert = prop_role.proposition_dissertation
+    return redirect('manager_proposition_dissertation_detail', pk=prop_dissert.pk)
 
 
 @login_required
 @user_passes_test(is_manager)
 def manager_proposition_dissertations_jury_new(request, pk):
-    prop_dissert = get_object_or_404(PropositionDissertation, pk=pk)
-
-    if proposition_role.count_by_proposition(prop_dissert) < 5:
-        if request.method == "POST":
-            form = ManagerPropositionRoleForm(request.POST)
-            if form.is_valid():
-                data = form.cleaned_data
-                status = data['status']
-                adv = data['adviser']
-                prop = data['proposition_dissertation']
-                proposition_role.add(status, adv, prop)
-                return redirect('manager_proposition_dissertation_detail', pk=prop_dissert.pk)
-        else:
-            form = ManagerPropositionRoleForm(initial={'proposition_dissertation': prop_dissert})
-            return layout.render(request, 'manager_proposition_dissertations_jury_edit.html', {'form': form})
-    else:
-        return redirect('manager_proposition_dissertation_detail', pk=prop_dissert.pk)
+    return redirect('manager_proposition_dissertation_detail', pk=pk)
 
 
 @login_required
@@ -157,10 +134,6 @@ def manager_proposition_dissertations_jury_new(request, pk):
 def manager_proposition_dissertations_role_delete(request, pk):
     prop_role = get_object_or_404(PropositionRole, pk=pk)
     prop_dissert = prop_role.proposition_dissertation
-
-    if not (prop_role.proposition_dissertation.author == prop_role.adviser and prop_role.status == 'PROMOTEUR'):
-        prop_role.delete()
-
     return redirect('manager_proposition_dissertation_detail', pk=prop_dissert.pk)
 
 
@@ -185,7 +158,32 @@ def manager_proposition_dissertation_new(request):
 @user_passes_test(is_manager)
 def manager_proposition_dissertations_search(request):
     prop_disserts = proposition_dissertation.search(terms=request.GET['search'], active=True)
-    return layout.render(request, "manager_proposition_dissertations_list.html",
+    if 'bt_xlsx' in request.GET:
+        filename = "%s%s%s" % ('EXPORT_dissertation_', time.strftime("%Y-%m-%d %H:%M"), '.xlsx')
+        workbook = Workbook(encoding='utf-8')
+        worksheet1 = workbook.active
+        worksheet1.title = "proposition_dissertation"
+        worksheet1.append(['Date_de_création', 'Teacher', 'Title',
+                           'Type', 'Level', 'Collaboration', 'Max_number_student', 'Visibility',
+                           'Active', 'Programme(s)'])
+        for prop_dissert in prop_disserts:
+            worksheet1.append([prop_dissert.created_date,
+                               str(prop_dissert.author),
+                               prop_dissert.title,
+                               prop_dissert.type,
+                               prop_dissert.level,
+                               prop_dissert.collaboration,
+                               prop_dissert.max_number_student,
+                               prop_dissert.visibility,
+                               prop_dissert.active,
+                               ', '.join((str(conv.acronym) for conv  in prop_dissert.offer_proposition.all()))])
+
+        response = HttpResponse(save_virtual_workbook(workbook), content_type='application/vnd.ms-excel')
+        response['Content-Disposition'] = "%s%s" % ("attachment; filename=", filename)
+        return response
+
+    else:
+        return layout.render(request, "manager_proposition_dissertations_list.html",
                          {'proposition_dissertations': prop_disserts})
 
 ###########################
@@ -295,47 +293,16 @@ def proposition_dissertations_search(request):
 @login_required
 def proposition_dissertations_jury_edit(request, pk):
     prop_role = get_object_or_404(PropositionRole, pk=pk)
-
-    if prop_role.proposition_dissertation.author == prop_role.adviser and prop_role.status == 'PROMOTEUR':
-        return redirect('proposition_dissertation_detail', pk=prop_role.proposition_dissertation.pk)
-
-    elif request.method == "POST":
-        form = ManagerPropositionRoleForm(request.POST, instance=prop_role)
-        if form.is_valid():
-            form.save()
-            return redirect('proposition_dissertation_detail', pk=prop_role.proposition_dissertation.pk)
-    else:
-        form = PropositionRoleForm(instance=prop_role)
-    return layout.render(request, 'proposition_dissertations_jury_edit.html', {'form': form})
+    prop_dissert = prop_role.proposition_dissertation
+    return redirect('proposition_dissertation_detail', pk=prop_dissert.pk)
 
 
 @login_required
 def proposition_dissertations_jury_new(request, pk):
-    prop_dissert = get_object_or_404(PropositionDissertation, pk=pk)
-
-    if proposition_role.count_by_proposition(prop_dissert) < 5:
-        if request.method == "POST":
-            form = PropositionRoleForm(request.POST)
-            if form.is_valid():
-                data = form.cleaned_data
-                status = data['status']
-                adv = data['adviser']
-                prop = data['proposition_dissertation']
-                proposition_role.add(status, adv, prop)
-                return redirect('proposition_dissertation_detail', pk=prop_dissert.pk)
-        else:
-            form = PropositionRoleForm(initial={'proposition_dissertation': prop_dissert})
-            return layout.render(request, 'proposition_dissertations_jury_edit.html', {'form': form})
-    else:
-        return redirect('proposition_dissertation_detail', pk=prop_dissert.pk)
-
+    return redirect('proposition_dissertation_detail', pk=pk)
 
 @login_required
 def proposition_dissertations_role_delete(request, pk):
     prop_role = get_object_or_404(PropositionRole, pk=pk)
     prop_dissert = prop_role.proposition_dissertation
-
-    if not (prop_role.proposition_dissertation.author == prop_role.adviser and prop_role.status == 'PROMOTEUR'):
-        prop_role.delete()
-
     return redirect('proposition_dissertation_detail', pk=prop_dissert.pk)

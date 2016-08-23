@@ -23,9 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.contrib import admin
 from django.db import models
 from django.utils import timezone
 from base.models import offer
+
+
+class OfferPropositionAdmin(admin.ModelAdmin):
+    list_display = ('acronym', 'offer')
+    raw_id_fields = ('offer',)
 
 
 class OfferProposition(models.Model):
