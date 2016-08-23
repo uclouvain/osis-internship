@@ -97,7 +97,12 @@ def get_all_specialities(datas):
     # Create the list of the specialities, delete dpulicated and order alphabetical
     tab = []
     for data in datas:
-        tab.append(data.speciality)
+        if data.speciality.mandatory:
+            tab.append(data.speciality)
+    for data in datas:
+        if not data.speciality.mandatory:
+            tab.append(data.speciality)
+
     tab = list(OrderedDict.fromkeys(tab))
     return tab
 
@@ -109,7 +114,7 @@ def get_all_organizations(datas):
     tab = list(set(tab))
     return tab
 
-def rebuild_the_lists(preference_list, speciality_list, organization_list):
+def rebuild_the_lists(preference_list, speciality_list, organization_list, internship_choice_tab):
     # Look over each value of the preference list
     # If the value is 0, the student doesn't choice this organization or speciality
     # So their value is 0
@@ -118,6 +123,7 @@ def rebuild_the_lists(preference_list, speciality_list, organization_list):
         if r == "0":
             speciality_list[index] = 0
             organization_list[index] = 0
+            internship_choice_tab[index] = 0
         index += 1
 
 def delete_dublons_keep_order(seq):
@@ -229,7 +235,6 @@ def internships_stud(request):
     # Delete the internships in query when they are in the student's selection then rebuild the query
     # Put datas wich need to be save in the student's choice list
     query = set_student_choice_list(query, student_choice)
-
     # Insert the student choice into the global query, at first position,
     for choice in student_choice:
         query.insert(0, choice)
@@ -273,8 +278,8 @@ def internships_save(request):
     if selectable :
         # Get the student
         student = mdl.student.find_by(person_username=request.user)
-        # Delete all the student's choices present in the DB
-        InternshipChoice.objects.filter(student=student).delete()
+        # Delete all the student's choices for mandatory internships present in the DB
+        InternshipChoice.objects.filter(student=student, internship_choice=0).delete()
 
         #Build the list of the organizations and specialities get by the POST request
         organization_list = list()
@@ -283,6 +288,11 @@ def internships_save(request):
             organization_list = request.POST.getlist('organization')
         if request.POST.get('speciality'):
             speciality_list = request.POST.getlist('speciality')
+        if request.POST.getlist('is_choice'):
+            internship_choice_tab = request.POST.getlist('is_choice')
+            internship_choice_tab_del = list(set(internship_choice_tab))
+            for choice_tab in internship_choice_tab_del:
+                    InternshipChoice.objects.filter(student=student, internship_choice=choice_tab).delete()
 
         all_specialities = get_all_specialities(all_internships)
         set_tabs_name(all_specialities)
@@ -300,11 +310,12 @@ def internships_save(request):
                 for pref in request.POST.getlist(pref_tab) :
                     preference_list.append(pref)
 
-        rebuild_the_lists(preference_list, speciality_list, organization_list)
+        rebuild_the_lists(preference_list, speciality_list, organization_list, internship_choice_tab)
         # Rebuild the lists deleting the null value
         organization_list = [x for x in organization_list if x != 0]
         speciality_list = [x for x in speciality_list if x != 0]
         preference_list = [x for x in preference_list if x != '0']
+        internship_choice_tab = [x for x in internship_choice_tab if x != 0]
 
         if len(speciality_list) > 0:
             # Check if the student sent correctly send 4 choice.
@@ -337,11 +348,12 @@ def internships_save(request):
                         if i < len(preference_list):
                             preference_list[i] = 0
 
-        rebuild_the_lists(preference_list, speciality_list, organization_list)
+        rebuild_the_lists(preference_list, speciality_list, organization_list, internship_choice_tab)
         # Rebuild the lists deleting the null value
         organization_list = [x for x in organization_list if x != 0]
         speciality_list = [x for x in speciality_list if x != 0]
         preference_list = [x for x in preference_list if x != '0']
+        internship_choice_tab = [x for x in internship_choice_tab if x != 0]
 
         index = preference_list.__len__()
 
@@ -354,6 +366,7 @@ def internships_save(request):
             speciality = InternshipSpeciality.search(name=speciality_list[x])
             new_choice.speciality = speciality[0]
             new_choice.choice = preference_list[x]
+            new_choice.internship_choice = internship_choice_tab[x]
             new_choice.priority = False
             new_choice.save()
 

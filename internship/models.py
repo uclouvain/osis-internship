@@ -55,7 +55,7 @@ class InternshipOffer(models.Model):
     @staticmethod
     def search(**kwargs):
         kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = InternshipOffer.objects.filter(**kwargs)
+        queryset = InternshipOffer.objects.filter(**kwargs).order_by('speciality__name', 'organization__reference')
         return queryset
 
     @staticmethod
@@ -133,6 +133,7 @@ class InternshipChoice(models.Model):
     organization        = models.ForeignKey('internship.Organization')
     speciality          = models.ForeignKey('internship.InternshipSpeciality',null=True)
     choice              = models.IntegerField()
+    internship_choice   = models.IntegerField(default=0)
     priority            = models.BooleanField()
 
     @staticmethod

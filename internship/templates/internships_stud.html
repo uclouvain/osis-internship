@@ -104,6 +104,8 @@
                             <td>
                               <input type="hidden" name="organization"
                               value="{{ internship.organization.reference }}"/>
+                              <input type="hidden" name="is_choice"
+                              value="-1"/>
                                 {{ internship.organization.reference }} - {{ internship.organization }}
                             </td>
                             <td align="center">
@@ -195,6 +197,8 @@
                             <td>
                               <input type="hidden" name="organization"
                               value="{{ internship.organization.reference }}"/>
+                              <input type="hidden" name="is_choice"
+                              value="{{forloop.parentloop.counter0}}"/>
                                 {{ internship.organization.reference }} - {{ internship.organization }}
                             </td>
                             <td align="center">
