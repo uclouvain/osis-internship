@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 ##############################################################################
 #
 #    OSIS stands for Open Student Information System. It's an application
@@ -24,44 +23,38 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from functools import reduce
-import os
 
-# Add your fixtures at the end of the list so that model dependencies are respected.
-DATA_FIXTURES = [
-    'user.json',
-    'person.json',
-    'tutor.json',
-    'student.json',
-    'academic_year.json',
-    'academic_calendar.json',
-    'learning_unit.json',
-    'learning_unit_year.json',
-    'messages_templates.json',
-    'offer.json',
-    'organization.json',
-    'structure.json',
-    'attribution.json',
-    'continent.json',
-    'currency.json',
-    'country.json',
-    'decree.json',
-    'domain.json',
-    'education_institution.json',
-    'language.json',
-    'continent.json',
-    'person_address.json',
-    'organization_address.json',
-    'offer_year.json',
-    'offer_year_calendar.json',
-    'session_exam.json',
-    'program_manager.json',
-    'offer_enrollment.json',
-    'learning_unit_enrollment.json',
-    'exam_enrollment.json'
-    ]
+from django.contrib.auth.models import User
+import scripts.populate_utility as utility
 
-ARGS = reduce(lambda s1,s2 : s1 + ' ' + s2,DATA_FIXTURES)
-COMMAND = 'python manage.py loaddata '+ARGS
-print(COMMAND)
-os.system(COMMAND)
+
+def create_user(first_name=None, last_name=None):
+    """
+    Creates a user and saves it.
+    :param: first_name: first name of the user (string)
+    :param: last_name: last name of the user (string)
+    :return: a user object
+    """
+    username = utility.random_string()
+    password = utility.random_password()
+    email = utility.email_based_on_username(username)
+    user = User.objects.create_user(username=username, password=password,
+                                    email=email, first_name=first_name,
+                                    last_name=last_name)
+    user.save()
+    return user
+
+
+def create_users(number=20):
+    """
+    Creates users and saves them.
+    :param number: number of users to create (int)
+    :return: a list of users
+    """
+    list_users = []
+
+    for i in range(0, number):
+        user = create_user()
+        list_users.append(user)
+
+    return list_users

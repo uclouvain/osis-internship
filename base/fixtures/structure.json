@@ -1,0 +1,15 @@
+[
+  {
+    "model": "base.structure",
+    "pk": 1,
+    "fields": {
+        "external_id": null,
+        "changed": "2016-05-03T12:22:39.521Z",
+        "acronym": "OSIS",
+        "title": "OSIS",
+        "organization": 1,
+        "part_of": null,
+        "type": "UNDEFINED"
+    }
+  }
+]

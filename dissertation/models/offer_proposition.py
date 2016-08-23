@@ -31,6 +31,7 @@ from base.models import offer
 
 class OfferPropositionAdmin(admin.ModelAdmin):
     list_display = ('acronym', 'offer')
+    raw_id_fields = ('offer',)
 
 
 class OfferProposition(models.Model):
