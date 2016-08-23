@@ -374,13 +374,9 @@ def get_score_encoded(enrollments):
 def get_data(request, offer_year_id=None):
     offer_year_id = int(offer_year_id) if offer_year_id else None
     academic_yr = mdl.academic_year.current_academic_year()
-    tutor = mdl.attribution.get_assigned_tutor(request.user)
-    exam_enrollments = []
-    if tutor is not None:
-        exam_enrollments = list(mdl.exam_enrollment.find_for_score_encodings(
-            mdl.session_exam.find_session_exam_number(),
-            tutor=tutor)
-        )
+    tutor = mdl.tutor.find_by_user(request.user)
+    exam_enrollments = list(mdl.exam_enrollment.find_for_score_encodings(mdl.session_exam.find_session_exam_number(),
+                                                                         tutor=tutor))
 
     all_offers = []
     for exam_enrol in exam_enrollments:

@@ -70,14 +70,6 @@ def search(tutor=None, learning_unit_year_id=None, function=None, learning_unit_
     return queryset.select_related('tutor', 'learning_unit_year')
 
 
-def get_assigned_tutor(user):
-    attribution = Attribution.objects.filter(tutor__person__user=user).first()
-    if attribution:
-        return attribution.tutor
-    else:
-        return None
-
-
 def find_responsible(a_learning_unit_year):
     # If there are more than 1 coordinator, we take the first in alphabetic order
     attribution_list = Attribution.objects.filter(learning_unit_year=a_learning_unit_year)\

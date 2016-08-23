@@ -49,6 +49,7 @@ class Tutor(models.Model):
     changed = models.DateTimeField(null=True)
     person = models.OneToOneField('Person')
 
+
     def __str__(self):
         return u"%s" % self.person
 
