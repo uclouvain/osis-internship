@@ -29,6 +29,7 @@ from base import models as mdl
 from dissertation.models import adviser
 from dissertation.models import dissertation
 from dissertation.models import faculty_adviser
+from dissertation.models import offer_proposition
 from dissertation.models.proposition_dissertation import PropositionDissertation
 from dissertation.models import proposition_dissertation
 from dissertation.models.proposition_role import PropositionRole
@@ -58,8 +59,8 @@ def is_manager(user):
 def manager_proposition_dissertations(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-    offer = faculty_adviser.search_by_adviser(adv).offer
-    prop_disserts = proposition_dissertation.search_by_offer(offer)
+    offers = faculty_adviser.search_by_adviser(adv)
+    prop_disserts = proposition_dissertation.search_by_offer(offers)
     return layout.render(request, 'manager_proposition_dissertations_list.html',
                          {'proposition_dissertations': prop_disserts})
 
@@ -145,9 +146,24 @@ def manager_proposition_dissertation_new(request):
         if form.is_valid():
             form.save()
             return redirect('manager_proposition_dissertations')
+        else:
+            form = ManagerPropositionDissertationForm(initial={'active': True})
+            person = mdl.person.find_by_user(request.user)
+            adv = adviser.search_by_person(person)
+            offers = faculty_adviser.search_by_adviser(adv)
+            form.fields["offer_proposition"].queryset = offer_proposition.search_by_offer(offers)
+            return layout.render(request, 'manager_proposition_dissertation_new.html',
+                                 {'form': form,
+                                  'types_choices': PropositionDissertation.TYPES_CHOICES,
+                                  'levels_choices': PropositionDissertation.LEVELS_CHOICES,
+                                  'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES})
     else:
         form = ManagerPropositionDissertationForm(initial={'active': True})
-    return layout.render(request, 'manager_proposition_dissertation_new.html',
+        person = mdl.person.find_by_user(request.user)
+        adv = adviser.search_by_person(person)
+        offers = faculty_adviser.search_by_adviser(adv)
+        form.fields["offer_proposition"].queryset = offer_proposition.search_by_offer(offers)
+        return layout.render(request, 'manager_proposition_dissertation_new.html',
                          {'form': form,
                           'types_choices': PropositionDissertation.TYPES_CHOICES,
                           'levels_choices': PropositionDissertation.LEVELS_CHOICES,
