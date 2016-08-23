@@ -375,8 +375,12 @@ def get_data(request, offer_year_id=None):
     offer_year_id = int(offer_year_id) if offer_year_id else None
     academic_yr = mdl.academic_year.current_academic_year()
     tutor = mdl.attribution.get_assigned_tutor(request.user)
-    exam_enrollments = list(mdl.exam_enrollment.find_for_score_encodings(mdl.session_exam.find_session_exam_number(),
-                                                                         tutor=tutor))
+    exam_enrollments = []
+    if tutor is not None:
+        exam_enrollments = list(mdl.exam_enrollment.find_for_score_encodings(
+            mdl.session_exam.find_session_exam_number(),
+            tutor=tutor)
+        )
 
     all_offers = []
     for exam_enrol in exam_enrollments:
@@ -545,18 +549,18 @@ def get_data_pgmer(request,
         # all data and tutors below
         if tutor_id != NOBODY:
             tutor = mdl.tutor.find_by_id(tutor_id)
-            learning_unit_ids_by_tutor = set(mdl.attribution.search(tutor=tutor).values_list('learning_unit', flat=True))
+            learning_unit_ids_by_tutor = set(mdl.attribution.search(tutor=tutor).values_list('learning_unit_year', flat=True))
             # learning_unit_ids_attrib = [attr.learning_unit.id for attr in attributions_by_tutor]
             scores_encodings = [score_encoding for score_encoding in scores_encodings
-                                if score_encoding.learning_unit_year.learning_unit.id in learning_unit_ids_by_tutor]
+                                if score_encoding.learning_unit_year.id in learning_unit_ids_by_tutor]
 
     data = []
     all_attributions = []
     if scores_encodings:  # Empty in case there isn't any score to encode (not inside the period of scores' encoding)
         # Adding coordinator for each learningUnit
-        learning_unit_ids = [score_encoding.learning_unit_year.learning_unit.id for score_encoding in scores_encodings]
-        all_attributions = list(mdl.attribution.search(learning_unit_ids=learning_unit_ids))
-        coord_grouped_by_learning_unit = {attrib.learning_unit.id: attrib.tutor for attrib in all_attributions
+        learning_unit_ids = [score_encoding.learning_unit_year.id for score_encoding in scores_encodings]
+        all_attributions = list(mdl.attribution.search(learning_unit_year_ids=learning_unit_ids))
+        coord_grouped_by_learning_unit = {attrib.learning_unit_year.id: attrib.tutor for attrib in all_attributions
                                           if attrib.function == 'COORDINATOR'}
         for score_encoding in scores_encodings:
             progress = (score_encoding.exam_enrollments_encoded / score_encoding.total_exam_enrollments) * 100
@@ -564,7 +568,7 @@ def get_data_pgmer(request,
             line['learning_unit_year'] = score_encoding.learning_unit_year
             line['exam_enrollments_encoded'] = score_encoding.exam_enrollments_encoded
             line['total_exam_enrollments'] = score_encoding.total_exam_enrollments
-            line['tutor'] = coord_grouped_by_learning_unit.get(score_encoding.learning_unit_year.learning_unit.id,
+            line['tutor'] = coord_grouped_by_learning_unit.get(score_encoding.learning_unit_year.id,
                                                                None)
             line['progress'] = "{0:.0f}".format(progress)
             line['progress_int'] = progress
