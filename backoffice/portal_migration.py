@@ -35,6 +35,7 @@
 from reference import models as mdl_ref
 from base import models as mdl_base
 from backoffice.queue import queue_actions
+from dissertation.models.adviser import Adviser
 
 
 def get_all_data(model_class, fields=None, order_by=None):
@@ -60,6 +61,7 @@ def get_model_class_str(model_class):
     :return: un String qui représente le model_class passé en paramètre.
     """
     map_classes = {
+
         mdl_ref.continent.Continent: 'reference.continent.Continent',
         mdl_ref.country.Country: 'reference.country.Country',
         mdl_ref.currency.Currency: 'reference.currency.Currency',
@@ -68,7 +70,8 @@ def get_model_class_str(model_class):
         mdl_ref.education_institution.EducationInstitution: 'reference.education_institution.EducationInstitution',
         mdl_ref.language.Language: 'reference.language.Language',
         mdl_base.student.Student: 'base.student.Student',
-        mdl_base.tutor.Tutor: 'base.tutor.Tutor'
+        mdl_base.tutor.Tutor: 'base.tutor.Tutor',
+        Adviser: 'dissertation.adviser.Adviser'
 
     }
     return map_classes[model_class]

@@ -23,6 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+
+from django.core import serializers
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
@@ -40,6 +42,7 @@ class Adviser(models.Model):
         ('MGR', _('Manager')),
     )
 
+    external_id = models.CharField(max_length=100, blank=True, null=True)
     person = models.OneToOneField('base.Person', on_delete=models.CASCADE)
     type = models.CharField(max_length=3, choices=TYPES_CHOICES, default='PRF')
     available_by_email = models.BooleanField(default=False)
@@ -165,3 +168,14 @@ def search_adviser(terms):
 def list_teachers():
     return Adviser.objects.filter(type='PRF')\
                           .order_by('person__last_name', 'person__first_name')
+
+
+def serialize_list(list_advisers):
+    """
+    Serialize a list of "Adviser" objects using the json format.
+    Use to send data to osis-portal.
+    :param list_advisers: a list of "Adviser" objects
+    :return: the serialized list (a json)
+    """
+    fields = ('id', 'person', 'type', 'available_by_email', 'available_by_phone', 'available_at_office', 'comment')
+    return serializers.serialize("json", list_advisers, fields=fields)
