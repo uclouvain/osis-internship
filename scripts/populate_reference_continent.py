@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 ##############################################################################
 #
 #    OSIS stands for Open Student Information System. It's an application
@@ -24,44 +23,56 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from functools import reduce
-import os
 
-# Add your fixtures at the end of the list so that model dependencies are respected.
-DATA_FIXTURES = [
-    'user.json',
-    'person.json',
-    'tutor.json',
-    'student.json',
-    'academic_year.json',
-    'academic_calendar.json',
-    'learning_unit.json',
-    'learning_unit_year.json',
-    'messages_templates.json',
-    'offer.json',
-    'organization.json',
-    'structure.json',
-    'attribution.json',
-    'continent.json',
-    'currency.json',
-    'country.json',
-    'decree.json',
-    'domain.json',
-    'education_institution.json',
-    'language.json',
-    'continent.json',
-    'person_address.json',
-    'organization_address.json',
-    'offer_year.json',
-    'offer_year_calendar.json',
-    'session_exam.json',
-    'program_manager.json',
-    'offer_enrollment.json',
-    'learning_unit_enrollment.json',
-    'exam_enrollment.json'
-    ]
+from reference.models import continent
 
-ARGS = reduce(lambda s1,s2 : s1 + ' ' + s2,DATA_FIXTURES)
-COMMAND = 'python manage.py loaddata '+ARGS
-print(COMMAND)
-os.system(COMMAND)
+
+# Dictionnary containing all the continents. The key is the code of the
+# continent.
+dic_code_continent = {
+    "AF": "Africa",
+    "AN": "Antartica",
+    "AS": "Asia",
+    "EU": "Europe",
+    "NA": "North America",
+    "OC": "Oceania",
+    "SA": "South America"
+}
+
+
+def create_continent(code, name):
+    """
+    Creates a continent object and saves it.
+    :param code: code of the continent
+    :param name: name of the continent
+    :return: a continent object or None
+    """
+    if continent_exists(code):
+        return None
+
+    c = continent.Continent(code=code,
+                            name=name)
+    c.save()
+    return c
+
+
+def continent_exists(code):
+    """
+    Check if the continent already exists.
+    :param code: code of the continent
+    :return: true if the continent is already present in the database.
+    """
+    if continent.Continent.objects.filter(code=code).exists():
+        return True
+    return False
+
+
+def add_continents():
+    """
+    Add the continent contained in the 'dic_code_continent'
+    to the database.
+    :return:
+    """
+    # k corresponds to the code and v to the continent's name.
+    for (k, v) in dic_code_continent.items():
+        create_continent(k, v)
