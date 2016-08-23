@@ -134,7 +134,7 @@ def __send_message_if_all_encoded_in_pgm(enrollments, learning_unit_year):
     sent_error_message = None
     if progress == 100:
         persons = list(set([tutor.person for tutor
-                            in mdl.tutor.find_by_learning_unit(learning_unit_year.learning_unit_id)]))
+                            in mdl.tutor.find_by_learning_unit(learning_unit_year.id)]))
         sent_error_message = send_mail.send_message_after_all_encoded_by_manager(persons, enrollments,
                                                                                  learning_unit_year.acronym,
                                                                                  offer_acronym)
@@ -318,7 +318,7 @@ def online_encoding_submission(request, learning_unit_year_id):
     # Send mail to all the teachers of the submitted learning unit on any submission
     all_encoded = len(sessions_exam_still_open) == 0
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
-    attributions = mdl.attribution.Attribution.objects.filter(learning_unit=learning_unit_year.learning_unit)
+    attributions = mdl.attribution.Attribution.objects.filter(learning_unit_year=learning_unit_year)
     persons = list(set([attribution.tutor.person for attribution in attributions]))
     sent_error_message = send_mail.send_mail_after_scores_submission(persons, learning_unit_year.acronym,
                                                                      submitted_enrollments, all_encoded)
@@ -441,7 +441,7 @@ def get_data_online(learning_unit_year_id, request):
 
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
 
-    coordinator = mdl.attribution.find_responsible(learning_unit_year.learning_unit)
+    coordinator = mdl.attribution.find_responsible(learning_unit_year)
     progress = mdl.exam_enrollment.calculate_exam_enrollment_progress(exam_enrollments)
 
     draft_scores_not_submitted = len([exam_enrol for exam_enrol in exam_enrollments
@@ -454,10 +454,10 @@ def get_data_online(learning_unit_year_id, request):
             'learning_unit_year': learning_unit_year,
             'coordinator': coordinator,
             'is_program_manager': is_program_manager,
-            'is_coordinator': mdl.attribution.is_coordinator(request.user, learning_unit_year.learning_unit.id),
+            'is_coordinator': mdl.attribution.is_coordinator(request.user, learning_unit_year.id),
             'draft_scores_not_submitted': draft_scores_not_submitted,
             'number_session': exam_enrollments[0].session_exam.number_session if len(exam_enrollments) > 0 else _('none'),
-            'tutors': mdl.tutor.find_by_learning_unit(learning_unit_year.learning_unit_id),
+            'tutors': mdl.tutor.find_by_learning_unit(learning_unit_year.id),
             'exam_enrollments_encoded': get_score_encoded(exam_enrollments),
             'total_exam_enrollments': len(exam_enrollments)}
 
@@ -483,7 +483,7 @@ def get_data_online_double(learning_unit_year_id, request):
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
 
     nb_final_scores = get_score_encoded(encoded_exam_enrollments)
-    coordinator = mdl.attribution.find_responsible(learning_unit_year.learning_unit)
+    coordinator = mdl.attribution.find_responsible(learning_unit_year)
 
     encoded_exam_enrollments = mdl.exam_enrollment.sort_for_encodings(encoded_exam_enrollments)
 
@@ -498,7 +498,7 @@ def get_data_online_double(learning_unit_year_id, request):
             'count_total_enrollments': len(total_exam_enrollments),
             'number_session': encoded_exam_enrollments[0].session_exam.number_session
                               if len(encoded_exam_enrollments) > 0 else _('none'),
-            'tutors': mdl.tutor.find_by_learning_unit(learning_unit_year.learning_unit_id)}
+            'tutors': mdl.tutor.find_by_learning_unit(learning_unit_year.id)}
 
 
 def get_data_pgmer(request,

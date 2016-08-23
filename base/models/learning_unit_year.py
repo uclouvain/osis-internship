@@ -31,8 +31,7 @@ from base.models import attribution
 
 class LearningUnitYearAdmin(admin.ModelAdmin):
     list_display = ('acronym', 'title', 'academic_year', 'credits', 'changed')
-    fieldsets = ((None, {'fields': ('learning_unit', 'academic_year', 'acronym', 'title', 'credits', 'decimal_scores')}),)
-    raw_id_fields = ('learning_unit',)
+    fieldsets = ((None, {'fields': ('academic_year', 'acronym', 'title', 'credits', 'decimal_scores')}),)
     search_fields = ['acronym']
 
 
@@ -44,17 +43,16 @@ class LearningUnitYear(models.Model):
     credits = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     decimal_scores = models.BooleanField(default=False)
     academic_year = models.ForeignKey('AcademicYear')
-    learning_unit = models.ForeignKey('LearningUnit')
 
     def __str__(self):
-        return u"%s - %s" % (self.academic_year,self.learning_unit)
+        return u"%s - %s" % (self.academic_year,self.title)
 
 
 def find_by_id(learning_unit_year_id):
     return LearningUnitYear.objects.get(pk=learning_unit_year_id)
 
 
-def search(academic_year_id=None, acronym=None, learning_unit=None, title=None):
+def search(academic_year_id=None, acronym=None, title=None):
     queryset = LearningUnitYear.objects
 
     if academic_year_id:
@@ -62,9 +60,6 @@ def search(academic_year_id=None, acronym=None, learning_unit=None, title=None):
 
     if acronym:
         queryset = queryset.filter(acronym__icontains=acronym)
-
-    if learning_unit:
-        queryset = queryset.filter(learning_unit=learning_unit)
 
     if title:
         queryset = queryset.filter(title__icontains=title)
@@ -74,7 +69,6 @@ def search(academic_year_id=None, acronym=None, learning_unit=None, title=None):
 
 def find_by_tutor(tutor_id):
     if tutor_id:
-        learning_unit_ids = attribution.Attribution.objects.filter(tutor_id=tutor_id).values('learning_unit_id')
-        return LearningUnitYear.objects.filter(learning_unit_id__in=learning_unit_ids)
+        return attribution.Attribution.objects.filter(tutor_id=tutor_id).values('learning_unit_year')
     else:
         return None

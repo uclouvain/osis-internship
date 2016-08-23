@@ -28,11 +28,11 @@ from django.contrib import admin
 
 
 class AttributionAdmin(admin.ModelAdmin):
-    list_display = ('tutor', 'function', 'learning_unit', 'start_date', 'end_date', 'changed')
+    list_display = ('tutor', 'function', 'learning_unit_year', 'start_date', 'end_date', 'changed')
     list_filter = ('function',)
-    fieldsets = ((None, {'fields': ('learning_unit', 'tutor', 'function', 'start_date', 'end_date')}),)
-    raw_id_fields = ('learning_unit', 'tutor')
-    search_fields = ['tutor__person__first_name', 'tutor__person__last_name', 'learning_unit__acronym']
+    fieldsets = ((None, {'fields': ('learning_unit_year', 'tutor', 'function', 'start_date', 'end_date')}),)
+    raw_id_fields = ('learning_unit_year', 'tutor')
+    search_fields = ['tutor__person__first_name', 'tutor__person__last_name', 'learning_unit_year__acronym']
 
 
 class Attribution(models.Model):
@@ -45,29 +45,29 @@ class Attribution(models.Model):
     start_date = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
     end_date = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
     function = models.CharField(max_length=15, blank=True, null=True, choices=FUNCTION_CHOICES, db_index=True)
-    learning_unit = models.ForeignKey('LearningUnit')
+    learning_unit_year = models.ForeignKey('LearningUnitYear')
     tutor = models.ForeignKey('Tutor')
 
     def __str__(self):
         return u"%s - %s" % (self.tutor.person, self.function)
 
 
-def search(tutor=None, learning_unit_id=None, function=None, learning_unit_ids=None):
+def search(tutor=None, learning_unit_year_id=None, function=None, learning_unit_year_ids=None):
     queryset = Attribution.objects
 
     if tutor:
         queryset = queryset.filter(tutor=tutor)
 
-    if learning_unit_id:
-        queryset = queryset.filter(learning_unit__id=learning_unit_id)
+    if learning_unit_year_id:
+        queryset = queryset.filter(learning_unit_year__id=learning_unit_year_id)
 
     if function:
         queryset = queryset.filter(function=function)
 
-    if learning_unit_ids:
-        queryset = queryset.filter(learning_unit__id__in=learning_unit_ids)
+    if learning_unit_year_ids:
+        queryset = queryset.filter(learning_unit_year__id__in=learning_unit_year_ids)
 
-    return queryset.select_related('tutor', 'learning_unit')
+    return queryset.select_related('tutor', 'learning_unit_year')
 
 
 def get_assigned_tutor(user):
@@ -78,9 +78,9 @@ def get_assigned_tutor(user):
         return None
 
 
-def find_responsible(a_learning_unit):
+def find_responsible(a_learning_unit_year):
     # If there are more than 1 coordinator, we take the first in alphabetic order
-    attribution_list = Attribution.objects.filter(learning_unit=a_learning_unit)\
+    attribution_list = Attribution.objects.filter(learning_unit_year=a_learning_unit_year)\
                                                       .filter(function='COORDINATOR')
 
     if attribution_list and len(attribution_list) > 0:
@@ -94,13 +94,13 @@ def find_responsible(a_learning_unit):
     return None
 
 
-def is_coordinator(user, learning_unit_id):
+def is_coordinator(user, learning_unit_year_id):
     """
     :param user:
-    :param learning_unit_id:
+    :param learning_unit_year_id:
     :return: True is the user is coordinator for the learningUnit passed in parameter.
     """
-    attributions = Attribution.objects.filter(learning_unit_id=learning_unit_id)\
+    attributions = Attribution.objects.filter(learning_unit_year_id=learning_unit_year_id)\
                                       .filter(function='COORDINATOR')\
                                       .filter(tutor__person__user=user)\
                                       .count()

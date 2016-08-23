@@ -196,7 +196,7 @@ class PeriodInternshipPlaces(models.Model):
         return PeriodInternshipPlaces.objects.get(pk=id)
 
 class InternshipSpeciality(models.Model):
-    learning_unit = models.ForeignKey('base.LearningUnit')
+    learning_unit_year = models.ForeignKey('base.LearningUnitYear')
     name = models.CharField(max_length=125, blank=False, null=False)
     acronym = models.CharField(max_length=125, blank=False, null=False)
     mandatory = models.BooleanField(default=False)
