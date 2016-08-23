@@ -27,6 +27,7 @@ from django.contrib import admin
 from django.db import models
 from django.utils import timezone
 from base.models import offer
+from datetime import datetime
 
 
 class OfferPropositionAdmin(admin.ModelAdmin):
@@ -48,25 +49,19 @@ class OfferProposition(models.Model):
 
     @property
     def in_periode_visibility_proposition(self):
-        c = timezone.now()
-        a = self.start_visibility_proposition
-        b = self.end_visibility_proposition
+        now = datetime.date(datetime.now())
+        start = self.start_visibility_proposition
+        end = self.end_visibility_proposition
 
-        if a <= b and a <= c <= b:
-            return True
-        else:
-            return False
+        return start <= now <= end
 
     @property
     def in_periode_visibility_dissertation(self):
-        c = timezone.now()
-        a = self.start_visibility_dissertation
-        b = self.end_visibility_dissertation
+        now = datetime.date(datetime.now())
+        start = self.start_visibility_dissertation
+        end = self.end_visibility_dissertation
 
-        if a <= b and a <= c <= b:
-            return True
-        else:
-            return False
+        return start <= now <= end
 
     def __str__(self):
         return self.acronym
