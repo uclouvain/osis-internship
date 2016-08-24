@@ -251,6 +251,7 @@ def internships_stud(request):
     all_non_mandatory_speciality = InternshipSpeciality.find_non_mandatory()
     # Create an array of the number of non mandatory internship and put all the internship of the speciality selected in
     all_non_mandatory_internships = [None] * size_non_mandatory
+    all_non_mandatory_selected_internships = [None] * size_non_mandatory
     for x in range(0,size_non_mandatory):
         if speciality_sort_value[x]:
             all_non_mandatory_internships[x] = InternshipOffer.find_non_mandatory_internships(speciality__name=speciality_sort_value[x])
@@ -258,6 +259,9 @@ def internships_stud(request):
             set_tabs_name(all_non_mandatory_internships[x])
         else:
             all_non_mandatory_internships[x] = None
+        all_non_mandatory_selected_internships[x]=InternshipChoice.search(internship_choice=x+1)
+
+    print(all_non_mandatory_selected_internships)
 
     return render(request, "internships_stud.html", {'section': 'internship',
                                                 'all_internships' : query,
