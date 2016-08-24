@@ -104,9 +104,8 @@ class ManagerOfferPropositionForm(ModelForm):
     class Meta:
         model = OfferProposition
         fields = ('offer', 'acronym', 'adviser_can_suggest_reader', 'validation_commission_exists',
-                  'student_can_manage_readers', 'evaluation_first_year', 'readers_visibility_date_for_students',
-                  'start_visibility_proposition', 'end_visibility_proposition', 'start_visibility_dissertation',
-                  'end_visibility_dissertation')
+                  'student_can_manage_readers', 'evaluation_first_year', 'start_visibility_proposition',
+                  'end_visibility_proposition', 'start_visibility_dissertation', 'end_visibility_dissertation')
         widgets = {'offer': forms.HiddenInput(), 'acronym': forms.HiddenInput()}
         start_visibility_proposition = forms.DateField(widget=forms.DateInput(format='%d/%m/%Y'),
                                                        input_formats=('%d/%m/%Y', ),
