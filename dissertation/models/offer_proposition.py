@@ -67,6 +67,22 @@ class OfferProposition(models.Model):
 
         return start <= now <= end
 
+    @property
+    def in_periode_jury_visibility(self):
+        now = datetime.date(datetime.now())
+        start = self.start_jury_visibility
+        end = self.end_jury_visibility
+
+        return start <= now <= end
+
+    @property
+    def in_periode_edit_title(self):
+        now = datetime.date(datetime.now())
+        start = self.start_edit_title
+        end = self.end_edit_title
+
+        return start <= now <= end
+
     def __str__(self):
         return self.acronym
 

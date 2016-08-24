@@ -114,6 +114,40 @@
             {{ offer_proposition.end_jury_visibility|date:"d/m/Y" }}
           </div>
         </div>
+        <div class="row">
+          <div class="col-md-6">
+            <label>{% trans 'in_jury_visibility' %}</label> :
+          </div>
+          <div class="col-md-3">
+            {{ offer_proposition.in_periode_jury_visibility|yesno:_("yes,no") }}
+          </div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-6">
+            <label>{% trans 'start_edit_title'%}</label> :
+          </div>
+          <div class="col-md-3">
+           {{ offer_proposition.start_edit_title|date:"d/m/Y" }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <label>{% trans 'end_edit_title'%}</label> :
+          </div>
+          <div class="col-md-3">
+            {{ offer_proposition.end_edit_title|date:"d/m/Y" }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <label>{% trans 'in_edit_title' %}</label> :
+          </div>
+          <div class="col-md-3">
+            {{ offer_proposition.in_periode_edit_title|yesno:_("yes,no") }}
+          </div>
+        </div>
       </div>
       <div class="panel-body">
           <div class="row">
