@@ -29,15 +29,15 @@ from reference.enums import grade_type_category, grade_type_coverage
 
 
 class GradeTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'grade')
-    fieldsets = ((None, {'fields': ('name', 'grade')}),)
+    list_display = ('name', 'category', 'coverage', 'adhoc', 'institutional')
+    fieldsets = ((None, {'fields': ('name', 'category', 'coverage', 'adhoc', 'institutional')}),)
 
 
 class GradeType(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     name = models.CharField(max_length=255)
-    category = models.CharField(max_length=20, choices=grade_type_category)
-    coverage = models.CharField(max_length=20, choices=grade_type_coverage)
+    category = models.CharField(max_length=20, choices=grade_type_category.GRADE_CHOICES)
+    coverage = models.CharField(max_length=30, choices=grade_type_coverage.COVERAGE_CHOICES)
     adhoc = models.BooleanField(default=True)  # If False == Official/validated, if True == Not Official/not validated
     institutional = models.BooleanField(default=False)  # True if the domain is in UCL else False
 

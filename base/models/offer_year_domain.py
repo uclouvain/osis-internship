@@ -23,40 +23,23 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.db import models
 from django.contrib import admin
 
-from reference.models import *
 
-admin.site.register(assimilation_criteria.AssimilationCriteria,
-                    assimilation_criteria.AssimilationCriteriaAdmin)
+class OfferYearDomainAdmin(admin.ModelAdmin):
+    list_display = ('domain', 'offer_year', 'changed')
+    fieldsets = ((None, {'fields': ('domain', 'offer_year')}),)
+    raw_id_fields = ('domain', 'offer_year')
+    search_fields = ['domain__name', 'offer_year__acronym']
 
-admin.site.register(continent.Continent,
-                    continent.ContinentAdmin)
 
-admin.site.register(currency.Currency,
-                    currency.CurrencyAdmin)
+class OfferYearDomain(models.Model):
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    changed = models.DateTimeField(null=True)
+    domain = models.ForeignKey('reference.Domain', blank=True, null=True)
+    offer_year = models.ForeignKey('base.OfferYear', blank=True, null=True)
 
-admin.site.register(country.Country,
-                    country.CountryAdmin)
-
-admin.site.register(decree.Decree,
-                    decree.DecreeAdmin)
-
-admin.site.register(domain.Domain,
-                    domain.DomainAdmin)
-
-admin.site.register(education_institution.EducationInstitution,
-                    education_institution.EducationInstitutionAdmin)
-
-admin.site.register(education_type.EducationType,
-                    education_type.EducationTypeAdmin)
-
-admin.site.register(external_offer.ExternalOffer,
-                    external_offer.ExternalOfferAdmin)
-
-admin.site.register(grade_type.GradeType,
-                    grade_type.GradeTypeAdmin)
-
-admin.site.register(language.Language,
-                    language.LanguageAdmin)
+    def __str__(self):
+        return u"%s - %s" % (self.domain, self.offer_year)
 

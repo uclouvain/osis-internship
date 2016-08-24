@@ -68,6 +68,7 @@ class OfferYear(models.Model):
     phone = models.CharField(max_length=30, blank=True, null=True)
     fax = models.CharField(max_length=30, blank=True, null=True)
     campus = models.ForeignKey('Campus', blank=True, null=True)
+    grade_type = models.ForeignKey('reference.GradeType', blank=True, null=True)
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.acronym)

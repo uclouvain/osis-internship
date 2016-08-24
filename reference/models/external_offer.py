@@ -25,20 +25,24 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-from django.core import serializers
-from reference.enums import domain_type
 
 
-class OfferYearDomainAdmin(admin.ModelAdmin):
-    list_display = ('domain', 'offer_year')
-    fieldsets = ((None, {'fields': ('domain', 'offer_year')}),)
-    search_fields = ['offer_year__acronym', 'domain__name']
+class ExternalOfferAdmin(admin.ModelAdmin):
+    list_display = ('name', 'adhoc', 'domain', 'grade_type', 'offer_year', 'changed')
+    fieldsets = ((None, {'fields': ('name', 'adhoc', 'domain', 'grade_type', 'offer_year')}),)
+    ordering = ('name',)
+    search_fields = ['name']
 
 
-class OfferYearDomain(models.Model):
+class ExternalOffer(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
-    domain = models.ForeignKey('Domain', null=True, blank=True)
-    offer_year = models.ForeignKey('base.OfferYear', null=True, blank=True)
+    changed = models.DateTimeField(null=True)
+    name = models.CharField(max_length=100, unique=True)
+    adhoc = models.BooleanField(default=True)  # If False == Official/validated, if True == Not Official/not validated
+    domain = models.ForeignKey('Domain', on_delete=models.CASCADE)
+    grade_type = models.ForeignKey('GradeType', on_delete=models.CASCADE)
+    offer_year = models.ForeignKey('base.OfferYear', blank=True, null=True, on_delete=models.CASCADE) # Institution equivalence ("intern" offer)
 
     def __str__(self):
-        return "%s%s" % (self.domain, self.offer_year)
+        return self.name
+
