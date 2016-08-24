@@ -258,7 +258,7 @@ def manager_dissertations_search(request):
                            'Status', 'Offer_year_start', 'offer_year_start_short', 'promoteur', 'copromoteur',
                            'lecteur1', 'lecteur2'])
         for dissert in disserts:
-            pro_name = dissertation_role.get_promoteur_by_dissertation(dissert)
+            pro_name = dissertation_role.get_promoteur_by_dissertation_str(dissert)
             copro_name = dissertation_role.get_copromoteur_by_dissertation(dissert)
             reader = dissertation_role.search_by_dissertation_and_role(dissert, 'READER')
 
