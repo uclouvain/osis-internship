@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 ##############################################################################
 #
 #    OSIS stands for Open Student Information System. It's an application
@@ -24,44 +23,53 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from functools import reduce
-import os
 
-# Add your fixtures at the end of the list so that model dependencies are respected.
-DATA_FIXTURES = [
-    'user.json',
-    'person.json',
-    'tutor.json',
-    'student.json',
-    'academic_year.json',
-    'academic_calendar.json',
-    'learning_unit.json',
-    'learning_unit_year.json',
-    'messages_templates.json',
-    'offer.json',
-    'organization.json',
-    'structure.json',
-    'attribution.json',
-    'continent.json',
-    'currency.json',
-    'country.json',
-    'decree.json',
-    'domain.json',
-    'education_institution.json',
-    'language.json',
-    'continent.json',
-    'person_address.json',
-    'organization_address.json',
-    'offer_year.json',
-    'offer_year_calendar.json',
-    'session_exam.json',
-    'program_manager.json',
-    'offer_enrollment.json',
-    'learning_unit_enrollment.json',
-    'exam_enrollment.json'
-    ]
+from reference.models import language
 
-ARGS = reduce(lambda s1,s2 : s1 + ' ' + s2,DATA_FIXTURES)
-COMMAND = 'python manage.py loaddata '+ARGS
-print(COMMAND)
-os.system(COMMAND)
+
+dic_code_language = {
+    "chi": "chinese",
+    "eng": "english",
+    "fre": "french",
+    "ger": "german",
+    "jpn": "japanese"
+}
+
+
+def create_language(code, name):
+    """
+    Creates a language.
+    :param code: code of the language (4 characters at max)
+    :param name: name of the language
+    :return: a language object
+    """
+    if language_exists(code, name):
+        return None
+
+    lang = language.Language(code=code, name=name)
+    lang.save()
+    return lang
+
+
+def language_exists(code, name):
+    """
+    Check if the language already exists in the database.
+    :param code: code of the language
+    :param name: name of the language
+    :return: true if the language already exists
+    """
+    if language.Language.objects.filter(code=code).exists():
+        return True
+    elif language.Language.objects.filter(name=name).exists():
+        return True
+    return False
+
+
+def add_languages():
+    """
+    Add languages to the database
+    :return:
+    """
+    # k corresponds to the code and v to the name.
+    for (k,v) in dic_code_language.items():
+        create_language(k, v)

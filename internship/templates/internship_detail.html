@@ -58,7 +58,7 @@
         <div class="collapse" id="choice{{ forloop.counter0 }}">
           <ul>
             {% for student in students %}
-              {% if student.choice == i %}
+              {% if student.choice == forloop.parentloop.counter0 %}
                 <li> {{ student.student }}
               {% endif %}
             {% endfor %}
