@@ -224,8 +224,10 @@ def manager_dissertations_new(request):
     if request.method == "POST":
         form = ManagerDissertationForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('manager_dissertations_list')
+            dissert = form.save()
+            justification = "creation_dissertation"
+            dissertation_update.add(request, dissert, dissert.status, justification=justification)
+            return redirect('manager_dissertations_detail', pk=dissert.pk)
         else:
             form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offer(offers)
             form.fields["author"].queryset = mdl.student.find_by_offer(offers)
@@ -562,7 +564,7 @@ def dissertations_detail_updates(request, pk):
 def dissertations_delete(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     dissert.deactivate()
-    dissertation_update.add(request, dissert, dissert.status, justification="manager_set_active_false ")
+    dissertation_update.add(request, dissert, dissert.status, justification="teacher_set_active_false ")
     return redirect('dissertations_list')
 
 
