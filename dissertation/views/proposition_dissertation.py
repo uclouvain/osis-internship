@@ -43,6 +43,7 @@ from base.views import layout
 import time
 from django.http import HttpResponse
 
+
 # Used by decorator @user_passes_test(is_manager) to secure manager views
 def is_manager(user):
     person = mdl.person.find_by_user(user)
@@ -281,13 +282,14 @@ def my_dissertation_propositions(request):
 
 @login_required
 def proposition_dissertation_new(request):
+    person = mdl.person.find_by_user(request.user)
     if request.method == "POST":
         form = PropositionDissertationForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('my_dissertation_propositions')
+            prop_dissert = form.save()
+            prop_dissert.set_creator(person)
+            return redirect('proposition_dissertation_detail', pk=prop_dissert.pk)
     else:
-        person = mdl.person.find_by_user(request.user)
         adv = adviser.search_by_person(person)
         form = PropositionDissertationForm(initial={'author': adv, 'active': True})
     return layout.render(request, 'proposition_dissertation_new.html',
