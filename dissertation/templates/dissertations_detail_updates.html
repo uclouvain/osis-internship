@@ -59,9 +59,11 @@
         {% for dissertation_update in dissertation_updates %}
             <tr>
                 <td>
+                    {% if dissertation_update.status_from != dissertation_update.status_to %}
                     <span class="label label-default">{{ dissertation_update.status_from }}</span><br>
                     &nbsp; &nbsp;<span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span><br>
                     <span class="label label-default">{{ dissertation_update.status_to }}</span>
+                    {% endif %}
                 </td>
                 <td>{{ dissertation_update.person }}</td>
                 <td>{{ dissertation_update.created|localtime }}</td>

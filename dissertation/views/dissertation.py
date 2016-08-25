@@ -187,6 +187,8 @@ def manager_dissertations_jury_new(request, pk):
                 status = data['status']
                 adv = data['adviser']
                 diss = data['dissertation']
+                justification = "%s %s %s" % ("manager_add_jury", str(status), str(adv))
+                dissertation_update.add(request, dissert, dissert.status, justification=justification)
                 dissertation_role.add(status, adv, diss)
                 return redirect('manager_dissertations_detail', pk=dissert.pk)
         else:
