@@ -147,11 +147,31 @@
                   <div class="col-md-3" style="text-align: right">
                       <label>{{ dissertation_role.status }}</label>
                   </div>
-                  <div class="col-md-9">
+                  <div class="col-md-4">
                       {{ dissertation_role.adviser }}
                   </div>
+                  {% if offer_prop.adviser_can_suggest_reader %}
+                    <div class="col-md-5">
+                      <a class="btn btn-danger btn-sm" style="width:auto;padding:0;margin:0"
+                         href="{% url 'dissertations_role_delete' pk=dissertation_role.pk %}"
+                         onclick="return confirm('{% trans 'delete_adviser_role_confirmation_message' %}')">
+                          <span class="glyphicon glyphicon-remove span2"></span> {% trans 'delete'%} {{ dissertation_role.adviser }}</a>
+                    </div>
+                   {% endif %}
                 </div>
                 {% endfor %}
+                {% if count_dissertation_role < 4 and offer_prop.adviser_can_suggest_reader %}
+                <br>
+                <div class="row">
+                    <div class="col-md-5 pull-right">
+                        <a href="{% url 'dissertations_jury_new' pk=dissertation.pk %}"
+                             id="lnk_add_dissertation_jury_member" class="btn btn-default btn-sm"
+                             role="button" title="{% trans 'add_dissertation_jury_member'%}"><span
+                                  class="glyphicon glyphicon-plus"
+                                  aria-hidden="true"></span> {% trans 'add_dissertation_jury_member'%}</a>
+                    </div>
+                </div>
+                {% endif %}
             </div>
         </div>
         <div class="panel panel-default">

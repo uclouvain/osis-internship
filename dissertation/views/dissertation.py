@@ -530,7 +530,7 @@ def dissertations_detail(request, pk):
     count_dissertation_role = dissertation_role.count_by_dissertation(dissert)
     count_proposition_role = proposition_role.count_by_dissertation(dissert)
     proposition_roles = proposition_role.search_by_dissertation(dissert)
-
+    offer_prop = offer_proposition.get_by_dissertation(dissert)
     if count_proposition_role == 0:
         if count_dissertation_role == 0:
             dissertation_role.add('PROMOTEUR', dissert.proposition_dissertation.author, dissert)
@@ -545,7 +545,8 @@ def dissertations_detail(request, pk):
                          {'dissertation': dissert,
                           'adviser': adv,
                           'dissertation_roles': dissertation_roles,
-                          'count_dissertation_role': count_dissertation_role})
+                          'count_dissertation_role': count_dissertation_role,
+                          'offer_prop': offer_prop})
 
 
 @login_required
@@ -625,3 +626,39 @@ def dissertations_wait_list(request):
 
     return layout.render(request, 'dissertations_wait_list.html',
                          {'roles_list_dissertations': roles_list_dissertations})
+
+
+@login_required
+@user_passes_test(is_teacher)
+def dissertations_role_delete(request, pk):
+    dissert_role = get_object_or_404(DissertationRole, pk=pk)
+    dissert = dissert_role.dissertation
+    justification = "%s %s" % ("teacher_delete_jury", str(dissert_role))
+    dissertation_update.add(request, dissert, dissert.status, justification=justification)
+    dissert_role.delete()
+    return redirect('dissertations_detail', pk=dissert.pk)
+
+
+@login_required
+@user_passes_test(is_teacher)
+def dissertations_jury_new(request, pk):
+    dissert = get_object_or_404(Dissertation, pk=pk)
+    count_dissertation_role = dissertation_role.count_by_dissertation(dissert)
+    if count_dissertation_role < 5:
+        if request.method == "POST":
+            form = ManagerDissertationRoleForm(request.POST)
+            if form.is_valid():
+                data = form.cleaned_data
+                status = data['status']
+                adv = data['adviser']
+                diss = data['dissertation']
+                justification = "%s %s %s" % ("teacher_add_jury", str(status), str(adv))
+                dissertation_update.add(request, dissert, dissert.status, justification=justification)
+                dissertation_role.add(status, adv, diss)
+                return redirect('dissertations_detail', pk=dissert.pk)
+        else:
+            form = ManagerDissertationRoleForm(initial={'dissertation': dissert})
+            return layout.render(request, 'dissertations_jury_edit.html', {'form': form, 'dissert': dissert})
+    else:
+        return redirect('dissertations_detail', pk=dissert.pk)
+
