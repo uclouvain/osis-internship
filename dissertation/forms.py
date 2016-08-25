@@ -108,30 +108,6 @@ class ManagerOfferPropositionForm(ModelForm):
                   'end_visibility_proposition', 'start_visibility_dissertation', 'end_visibility_dissertation',
                   'start_jury_visibility', 'end_jury_visibility', 'start_edit_title', 'end_edit_title')
         widgets = {'offer': forms.HiddenInput(), 'acronym': forms.HiddenInput()}
-        start_visibility_proposition = forms.DateField(widget=forms.DateInput(format='%d/%m/%Y'),
-                                                       input_formats=('%d/%m/%Y', ),
-                                                       required=True)
-        end_visibility_proposition = forms.DateField(widget=forms.DateInput(format='%d/%m/%Y'),
-                                                     input_formats=('%d/%m/%Y', ),
-                                                     required=True)
-        start_visibility_dissertation = forms.DateField(widget=forms.DateInput(format='%d/%m/%Y'),
-                                                        input_formats=('%d/%m/%Y', ),
-                                                        required=True)
-        end_visibility_dissertation = forms.DateField(widget=forms.DateInput(format='%d/%m/%Y'),
-                                                      input_formats=('%d/%m/%Y', ),
-                                                      required=True)
-        start_jury_visibility = forms.DateField(widget=forms.DateInput(format='%d/%m/%Y'),
-                                                input_formats=('%d/%m/%Y',),
-                                                required=True)
-        end_jury_visibility = forms.DateField(widget=forms.DateInput(format='%d/%m/%Y'),
-                                              input_formats=('%d/%m/%Y',),
-                                              required=True)
-        start_edit_title = forms.DateField(widget=forms.DateInput(format='%d/%m/%Y'),
-                                           input_formats=('%d/%m/%Y',),
-                                           required=True)
-        end_edit_title = forms.DateField(widget=forms.DateInput(format='%d/%m/%Y'),
-                                         input_formats=('%d/%m/%Y',),
-                                         required=True)
 
 
 class ManagerPropositionDissertationForm(ModelForm):
