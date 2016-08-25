@@ -29,7 +29,7 @@ from dissertation.models import adviser
 import backoffice.portal_migration as portal_migration
 import sys
 
-queue_name = 'dissertation'
+queue_name = 'dissertation_to_portal'
 
 
 @receiver(post_save, sender=adviser.Adviser)

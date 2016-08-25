@@ -35,10 +35,11 @@ logger = logging.getLogger(settings.DEFAULT_LOGGER)
 
 class DissertationConfig(AppConfig):
     name = 'dissertation'
+    queue_name = 'dissertation_to_osis'
 
     def ready(self):
         from dissertation.models.models_signal import on_post_save_dissertation
-        queue.listen_queue(self.name, insert)
+        queue.listen_queue(self.queue_name, insert)
 
 
 def insert(json_data):
