@@ -641,9 +641,11 @@ def dissertations_wait_list(request):
 def dissertations_role_delete(request, pk):
     dissert_role = get_object_or_404(DissertationRole, pk=pk)
     dissert = dissert_role.dissertation
-    justification = "%s %s" % ("teacher_delete_jury", str(dissert_role))
-    dissertation_update.add(request, dissert, dissert.status, justification=justification)
-    dissert_role.delete()
+    offer_prop = offer_proposition.get_by_dissertation(dissert)
+    if offer_prop.adviser_can_suggest_reader:
+        justification = "%s %s" % ("teacher_delete_jury", str(dissert_role))
+        dissertation_update.add(request, dissert, dissert.status, justification=justification)
+        dissert_role.delete()
     return redirect('dissertations_detail', pk=dissert.pk)
 
 
@@ -652,7 +654,8 @@ def dissertations_role_delete(request, pk):
 def dissertations_jury_new(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     count_dissertation_role = dissertation_role.count_by_dissertation(dissert)
-    if count_dissertation_role < 5:
+    offer_prop = offer_proposition.get_by_dissertation(dissert)
+    if count_dissertation_role < 5 and offer_prop.adviser_can_suggest_reader:
         if request.method == "POST":
             form = ManagerDissertationRoleForm(request.POST)
             if form.is_valid():
