@@ -122,8 +122,9 @@ def search(terms, active=None, visibility=None, connected_adviser=None):
 
 
 def search_by_offer(offers):
-    return PropositionDissertation.objects.filter(active=True,
-                                                  offer_proposition__offer__in=offers)
+    return PropositionDissertation.objects.filter(active=True)\
+                                          .filter(offer_proposition__offer__in=offers)\
+                                          .distinct()
 
 
 def get_all_for_teacher(adviser):
@@ -135,4 +136,5 @@ def get_all_for_teacher(adviser):
 
 def get_mine_for_teacher(adviser):
     return PropositionDissertation.objects.filter(author=adviser)\
-                                          .filter(active=True)
+                                          .filter(active=True)\
+                                          .distinct()
