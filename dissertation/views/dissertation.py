@@ -185,7 +185,7 @@ def manager_dissertations_jury_edit(request, pk):
 def manager_dissertations_jury_new(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     count_dissertation_role = dissertation_role.count_by_dissertation(dissert)
-    if count_dissertation_role < 5:
+    if count_dissertation_role < 5 and dissert.status != 'DRAFT':
         if request.method == "POST":
             form = ManagerDissertationRoleForm(request.POST)
             if form.is_valid():
@@ -317,9 +317,10 @@ def manager_dissertations_delete(request, pk):
 def manager_dissertations_role_delete(request, pk):
     dissert_role = get_object_or_404(DissertationRole, pk=pk)
     dissert = dissert_role.dissertation
-    justification = "%s %s" % ("manager_delete_jury", str(dissert_role))
-    dissertation_update.add(request, dissert, dissert.status, justification=justification)
-    dissert_role.delete()
+    if dissert.status != 'DRAFT':
+        justification = "%s %s" % ("manager_delete_jury", str(dissert_role))
+        dissertation_update.add(request, dissert, dissert.status, justification=justification)
+        dissert_role.delete()
     return redirect('manager_dissertations_detail', pk=dissert.pk)
 
 
