@@ -142,6 +142,8 @@ def manager_dissertations_edit(request, pk):
         form = ManagerDissertationEditForm(request.POST, instance=dissert)
         if form.is_valid():
             dissert = form.save()
+            justification = "manager_edit_dissertation"
+            dissertation_update.add(request, dissert, dissert.status, justification=justification)
             return redirect('manager_dissertations_detail', pk=dissert.pk)
         else:
             form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offer(offers)
@@ -225,7 +227,7 @@ def manager_dissertations_new(request):
         form = ManagerDissertationForm(request.POST)
         if form.is_valid():
             dissert = form.save()
-            justification = "creation_dissertation"
+            justification = "manager_creation_dissertation"
             dissertation_update.add(request, dissert, dissert.status, justification=justification)
             return redirect('manager_dissertations_detail', pk=dissert.pk)
         else:
