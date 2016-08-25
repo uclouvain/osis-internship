@@ -116,9 +116,9 @@ def search(terms, active=None, visibility=None, connected_adviser=None):
     return queryset
 
 
-def search_by_offer(offer):
+def search_by_offer(offers):
     return PropositionDissertation.objects.filter(active=True,
-                                                  offer_proposition__offer=offer)
+                                                  offer_proposition__offer__in=offers)
 
 
 def get_all_for_teacher(adviser):
