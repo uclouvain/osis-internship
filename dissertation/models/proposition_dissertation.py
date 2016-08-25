@@ -86,6 +86,10 @@ class PropositionDissertation(models.Model):
     def get_offer_propositions(self):
         return " - ".join([str(s) for s in self.offer_proposition.all()])
 
+    def set_creator(self, person):
+        self.creator = person
+        self.save()
+
     class Meta:
         ordering = ["author__person__last_name", "author__person__middle_name", "author__person__first_name", "title"]
 

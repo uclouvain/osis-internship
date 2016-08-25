@@ -142,13 +142,14 @@ def manager_proposition_dissertations_role_delete(request, pk):
 @user_passes_test(is_manager)
 def manager_proposition_dissertation_new(request):
     if request.method == "POST":
+        person = mdl.person.find_by_user(request.user)
         form = ManagerPropositionDissertationForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('manager_proposition_dissertations')
+            prop_dissert = form.save()
+            prop_dissert.set_creator(person)
+            return redirect('manager_proposition_dissertation_detail', pk=prop_dissert.pk)
         else:
             form = ManagerPropositionDissertationForm(initial={'active': True})
-            person = mdl.person.find_by_user(request.user)
             adv = adviser.search_by_person(person)
             offers = faculty_adviser.search_by_adviser(adv)
             form.fields["offer_proposition"].queryset = offer_proposition.search_by_offer(offers)
