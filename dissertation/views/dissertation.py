@@ -102,10 +102,14 @@ def manager_dissertations_detail(request, pk):
 
     if count_proposition_role == 0:
         if count_dissertation_role == 0:
+            justification = "%s %s %s" % ("auto_add_jury", 'PROMOTEUR', str(dissert.proposition_dissertation.author))
+            dissertation_update.add(request, dissert, dissert.status, justification=justification)
             dissertation_role.add('PROMOTEUR', dissert.proposition_dissertation.author, dissert)
     else:
         if count_dissertation_role == 0:
             for role in proposition_roles:
+                justification = "%s %s %s" % ("auto_add_jury", role.status, str(role.adviser))
+                dissertation_update.add(request, dissert, dissert.status, justification=justification)
                 dissertation_role.add(role.status, role.adviser, dissert)
 
     dissertation_roles = dissertation_role.search_by_dissertation(dissert)
@@ -533,11 +537,15 @@ def dissertations_detail(request, pk):
     offer_prop = offer_proposition.get_by_dissertation(dissert)
     if count_proposition_role == 0:
         if count_dissertation_role == 0:
+            justification = "%s %s %s" % ("auto_add_jury", 'PROMOTEUR', str(dissert.proposition_dissertation.author))
+            dissertation_update.add(request, dissert, dissert.status, justification=justification)
             dissertation_role.add('PROMOTEUR', dissert.proposition_dissertation.author, dissert)
 
     else:
         if count_dissertation_role == 0:
             for role in proposition_roles:
+                justification = "%s %s %s" % ("auto_add_jury", role.status, str(role.adviser))
+                dissertation_update.add(request, dissert, dissert.status, justification=justification)
                 dissertation_role.add(role.status, role.adviser, dissert)
 
     dissertation_roles = dissertation_role.search_by_dissertation(dissert)
