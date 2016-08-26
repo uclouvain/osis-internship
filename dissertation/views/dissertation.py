@@ -36,11 +36,11 @@ from dissertation.models.dissertation_role import DissertationRole
 from dissertation.models import dissertation_role
 from dissertation.models import dissertation_update
 from dissertation.models import faculty_adviser
-from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models import offer_proposition
 from dissertation.models import proposition_dissertation
 from dissertation.models import proposition_role
-from dissertation.forms import ManagerDissertationForm, ManagerDissertationEditForm, ManagerDissertationRoleForm
+from dissertation.forms import ManagerDissertationForm, ManagerDissertationEditForm, ManagerDissertationRoleForm, \
+    ManagerDissertationUpdateForm
 from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl import Workbook
 from django.http import HttpResponse
@@ -154,7 +154,10 @@ def manager_dissertations_edit(request, pk):
         form.fields["offer_year_start"].queryset = mdl.offer_year.find_by_offer(offer)
 
     return layout.render(request, 'manager_dissertations_edit.html',
-                         {'form': form, 'defend_periode_choices': Dissertation.DEFEND_PERIODE_CHOICES})
+                         {'form': form,
+                          'defend_periode_choices': Dissertation.DEFEND_PERIODE_CHOICES,
+                          'dissert': dissert
+                          })
 
 
 @login_required
@@ -180,11 +183,16 @@ def manager_dissertations_jury_new(request, pk):
         if request.method == "POST":
             form = ManagerDissertationRoleForm(request.POST)
             if form.is_valid():
-                form.save()
+                data = form.cleaned_data
+                status = data['status']
+                adv = data['adviser']
+                diss = data['dissertation']
+                dissertation_role.add(status, adv, diss)
                 return redirect('manager_dissertations_detail', pk=dissert.pk)
         else:
             form = ManagerDissertationRoleForm(initial={'dissertation': dissert})
-            return layout.render(request, 'manager_dissertations_jury_edit.html', {'form': form})
+            return layout.render(request, 'manager_dissertations_jury_edit.html', {'form': form,
+                                                                                   'dissert': dissert})
     else:
         return redirect('manager_dissertations_detail', pk=dissert.pk)
 
@@ -303,10 +311,22 @@ def manager_dissertations_role_delete(request, pk):
 def manager_dissertations_to_dir_submit(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     old_status = dissert.status
-    dissert.go_forward()
-    dissertation_update.add(request, dissert, old_status)
+    new_status = dissertation.get_next_status(dissert, "go_forward")
 
-    return redirect('manager_dissertations_detail', pk=pk)
+    if request.method == "POST":
+        form = ManagerDissertationUpdateForm(request.POST)
+        if form.is_valid():
+            dissert.go_forward()
+            data = form.cleaned_data
+            justification = data['justification']
+            dissertation_update.add(request, dissert, old_status, justification=justification)
+            return redirect('manager_dissertations_detail', pk=pk)
+
+    else:
+        form = ManagerDissertationUpdateForm()
+
+    return layout.render(request, 'manager_dissertations_add_justification.html',
+                         {'form': form, 'dissert': dissert, "old_status": old_status, "new_status": new_status})
 
 
 @login_required
@@ -325,10 +345,22 @@ def manager_dissertations_to_dir_submit_list(request, pk):
 def manager_dissertations_to_dir_ok(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     old_status = dissert.status
-    dissert.accept()
-    dissertation_update.add(request, dissert, old_status)
+    new_status = dissertation.get_next_status(dissert, "accept")
 
-    return redirect('manager_dissertations_detail', pk=pk)
+    if request.method == "POST":
+        form = ManagerDissertationUpdateForm(request.POST)
+        if form.is_valid():
+            dissert.accept()
+            data = form.cleaned_data
+            justification = data['justification']
+            dissertation_update.add(request, dissert, old_status, justification=justification)
+            return redirect('manager_dissertations_detail', pk=pk)
+
+    else:
+        form = ManagerDissertationUpdateForm()
+
+    return layout.render(request, 'manager_dissertations_add_justification.html',
+                         {'form': form, 'dissert': dissert, "old_status": old_status, "new_status": new_status})
 
 
 @login_required
@@ -358,10 +390,22 @@ def manager_dissertations_accept_eval_list(request, pk):
 def manager_dissertations_to_dir_ko(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     old_status = dissert.status
-    dissert.refuse()
-    dissertation_update.add(request, dissert, old_status)
+    new_status = dissertation.get_next_status(dissert, "refuse")
 
-    return redirect('manager_dissertations_detail', pk=pk)
+    if request.method == "POST":
+        form = ManagerDissertationUpdateForm(request.POST)
+        if form.is_valid():
+            dissert.refuse()
+            data = form.cleaned_data
+            justification = data['justification']
+            dissertation_update.add(request, dissert, old_status, justification=justification)
+            return redirect('manager_dissertations_detail', pk=pk)
+
+    else:
+        form = ManagerDissertationUpdateForm()
+
+    return layout.render(request, 'manager_dissertations_add_justification.html',
+                         {'form': form, 'dissert': dissert, "old_status": old_status, "new_status": new_status})
 
 
 @login_required
@@ -503,24 +547,25 @@ def dissertations_delete(request, pk):
 
 @login_required
 @user_passes_test(is_teacher)
-def dissertations_to_dir_submit(request, pk):
-    dissert = get_object_or_404(Dissertation, pk=pk)
-    old_status = dissert.status
-    dissert.go_forward()
-    dissertation_update.add(request, dissert, old_status)
-
-    return redirect('dissertations_detail', pk=pk)
-
-
-@login_required
-@user_passes_test(is_teacher)
 def dissertations_to_dir_ok(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     old_status = dissert.status
-    dissert.accept()
-    dissertation_update.add(request, dissert, old_status)
+    new_status = dissertation.get_next_status(dissert, "accept")
 
-    return redirect('dissertations_detail', pk=pk)
+    if request.method == "POST":
+        form = ManagerDissertationUpdateForm(request.POST)
+        if form.is_valid():
+            dissert.accept()
+            data = form.cleaned_data
+            justification = data['justification']
+            dissertation_update.add(request, dissert, old_status, justification=justification)
+            return redirect('dissertations_detail', pk=pk)
+
+    else:
+        form = ManagerDissertationUpdateForm()
+
+    return layout.render(request, 'dissertations_add_justification.html',
+                         {'form': form, 'dissert': dissert, "old_status": old_status, "new_status": new_status})
 
 
 @login_required
@@ -528,10 +573,22 @@ def dissertations_to_dir_ok(request, pk):
 def dissertations_to_dir_ko(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     old_status = dissert.status
-    dissert.refuse()
-    dissertation_update.add(request, dissert, old_status)
+    new_status = dissertation.get_next_status(dissert, "refuse")
 
-    return redirect('dissertations_detail', pk=pk)
+    if request.method == "POST":
+        form = ManagerDissertationUpdateForm(request.POST)
+        if form.is_valid():
+            dissert.refuse()
+            data = form.cleaned_data
+            justification = data['justification']
+            dissertation_update.add(request, dissert, old_status, justification=justification)
+            return redirect('dissertations_detail', pk=pk)
+
+    else:
+        form = ManagerDissertationUpdateForm()
+
+    return layout.render(request, 'dissertations_add_justification.html',
+                         {'form': form, 'dissert': dissert, "old_status": old_status, "new_status": new_status})
 
 
 @login_required

@@ -66,7 +66,6 @@
         <th>{% trans 'workflow' %}</th>
         <th>{% trans 'edit' %}</th>
         <th>{% trans 'view' %}</th>
-        <th>{% trans 'download' %}</th>
         </tr>
         </thead>
         <tbody>
@@ -104,45 +103,46 @@
 	        <td>{% trans 'supervision' %}</td>
             {% elif mandate.state == "VICE_RECTOR" %}
 	        <td>{% trans 'sector_vice_rector' %}</td>
+            {% elif mandate.state == "DONE" %}
+	        <td>{% trans 'done' %}</td>
             {% endif %}
-            <td align="center">
-            {% if mandate.state in request.user.person.reviewer_set.first.role %}
-	        <button type="submit" class="btn btn-primary" title="{% trans 'edit'%}" id="bt_review_edit">
-                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>
-            {% endif %}
-            </td><td align="center">
-            {% if request.user.person.reviewer_set.first.role == "SECTOR_VICE_RECTOR_ASSISTANT" and mandate.state == "VICE_RECTOR" %}
-	        <button type="submit" class="btn btn-primary" title="{% trans 'view'%}" id="bt_review_view">
-                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></button>
-	        </td><td align="center"><button type="submit" class="btn btn-primary"
-                                            title="{% trans 'download'%}" id="bt_review_download">
-                <span class="glyphicon glyphicon-download" aria-hidden="true"></span></button>
-	        </td>
-            {% elif request.user.person.reviewer_set.first.role == 'SECTOR_VICE_RECTOR' and mandate.state == 'VICE_RECTOR' %}
-	        <button type="submit" class="btn btn-primary" title="{% trans 'view'%}" id="bt_review_view">
-                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></button>
-	        </td><td align="center"><button type="submit" class="btn btn-primary"
-                                            title="{% trans 'download'%}" id="bt_review_download">
-                <span class="glyphicon glyphicon-download" aria-hidden="true"></span></button>
-	        </td>
-            {% elif "SUPERVISION" in request.user.person.reviewer_set.first.role and mandate.state in supervision_list %}
-	        <button type="submit" class="btn btn-primary" title="{% trans 'view'%}" id="bt_review_view">
-                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></button>
-	        </td><td align="center"><button type="submit" class="btn btn-primary"
-                                            title="{% trans 'download'%}" id="bt_review_download">
-                <span class="glyphicon glyphicon-download" aria-hidden="true"></span></button>
-	        </td>
-            {% elif "RESEARCH" in request.user.person.reviewer_set.first.role and mandate.state in research_list %}
-	        <button type="submit" class="btn btn-primary" title="{% trans 'view'%}" id="bt_review_view">
-                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></button>
-	        </td><td align="center"><button type="submit" class="btn btn-primary"
-                                            title="{% trans 'download'%}" id="bt_review_download">
-                <span class="glyphicon glyphicon-download" aria-hidden="true"></span></button>
-	        </td>
+            {% if mandate.state in reviewer.role %}
+                <td align="center"><a href="{% url 'review_edit' mandate.id %}">
+                <button type="button" class="btn btn-link btn-lg" title="{% trans 'edit'%}" id="bt_review_edit">
+                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                </button>{% trans 'edit'%}</a></td><td></td>
+            {% elif mandate.assistant.supervisor == request.user.person and mandate.state == "PHD_SUPERVISOR" %}
+                <td align="center"><a href="{% url 'review_edit' mandate.id %}">
+                <button type="button" class="btn btn-link btn-lg" title="{% trans 'edit'%}" id="bt_review_edit">
+                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                </button>{% trans 'edit'%}</a></td><td></td>
+            {% elif mandate.assistant.supervisor == request.user.person and mandate.state in phd_list %}
+                <td></td><td align="center">
+                <a href="{% url 'review_view' reviewer_id=reviewer.id mandate_id=mandate.id %}">
+                <button type="button" class="btn btn-link btn-lg" title="{% trans 'view'%}" id="bt_view_view">
+                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                </button>{% trans 'view'%}</a></td>
+            {% elif "RESEARCH" in reviewer.role and mandate.state in research_list %}
+                <td></td><td align="center">
+                <a href="{% url 'review_view' reviewer_id=reviewer.id mandate_id=mandate.id %}">
+                <button type="button" class="btn btn-link btn-lg" title="{% trans 'view'%}" id="bt_view_view">
+                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                </button>{% trans 'view'%}</a></td>
+            {% elif "SUPERVISION" in reviewer.role and mandate.state in supervision_list %}
+                <td></td><td align="center">
+                <a href="{% url 'review_view' reviewer_id=reviewer.id mandate_id=mandate.id %}">
+                <button type="button" class="btn btn-link btn-lg" title="{% trans 'view'%}" id="bt_view_view">
+                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                </button>{% trans 'view'%}</a></td>
+            {% elif "VICE_RECTOR" in reviewer.role and mandate.state in vice_rector_list %}
+                <td></td><td align="center">
+                <a href="{% url 'review_view' reviewer_id=reviewer.id mandate_id=mandate.id %}">
+                <button type="button" class="btn btn-link btn-lg" title="{% trans 'view'%}" id="bt_view_view">
+                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                </button>{% trans 'view'%}</a></td>
             {% else %}
-	        </td><td></td>
+                <td></td><td></td>
             {% endif %}
-            </td>
             </tr>
         {% endfor %}
         </tbody>

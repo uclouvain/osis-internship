@@ -28,14 +28,17 @@ msgstr "les enseignants peuvent proposer un lecteur"
 msgid "adviser_dissertations"
 msgstr "mémoires reliés"
 
+msgid "adviser_dissertations_wait"
+msgstr "mémoires en attentes"
+
 msgid "adviser_profile"
 msgstr "profil enseignant"
 
-msgid "adviser_type"
-msgstr "Type de la personne"
-
 msgid "adviser_stats"
 msgstr "statistiques enseignant"
+
+msgid "adviser_type"
+msgstr "Type de la personne"
 
 msgid "all_advisers"
 msgstr "tous les enseignants"
@@ -58,11 +61,11 @@ msgstr "disponible par email"
 msgid "available_by_phone"
 msgstr "disponible par téléphone"
 
-msgid "chart_pie_adviser_promoteur"
-msgstr "Mémoire(s) en tant que promoteur "
-
 msgid "chart_pie_adviser_copro"
 msgstr "Mémoire(s) en tant que copromoteur "
+
+msgid "chart_pie_adviser_promoteur"
+msgstr "Mémoire(s) en tant que promoteur "
 
 msgid "chart_pie_adviser_reading"
 msgstr "Mémoire(s) en tant que lecteur "
@@ -151,11 +154,11 @@ msgstr "dissertation_person"
 msgid "dissertation_titre"
 msgstr "titre du mémoire"
 
-msgid "dissertations"
-msgstr "mémoires"
-
 msgid "dissertation_updates"
 msgstr "Mises-à-jour du mémoire"
+
+msgid "dissertations"
+msgstr "mémoires"
 
 msgid "edit_adviser"
 msgstr "Modifier l'enseignant"
@@ -190,9 +193,6 @@ msgstr "quantité de mémoires en tant que lecteur"
 msgid "import_xlsx"
 msgstr "import xlsx"
 
-msgid "informations"
-msgstr "informations"
-
 msgid "in_this_offer"
 msgstr "dans cette offre"
 
@@ -201,6 +201,9 @@ msgstr "Mémoires visibles pour l'instant"
 
 msgid "in_visibility_proposition"
 msgstr "Sujets de mémoires visibles pour l'instant"
+
+msgid "informations"
+msgstr "informations"
 
 msgid "invisible"
 msgstr "invisible"
@@ -256,11 +259,11 @@ msgstr "aucun résultat"
 msgid "number_of_dissertation_active_total"
 msgstr "Nombre total de projet(s) en cours"
 
-msgid "number_of_dissertation_pro"
-msgstr "propmoteur"
-
 msgid "number_of_dissertation_copro"
 msgstr "copropmoteur"
+
+msgid "number_of_dissertation_pro"
+msgstr "propmoteur"
 
 msgid "number_of_dissertation_reader"
 msgstr "lecteur"
@@ -307,11 +310,11 @@ msgstr "rechercher un enseignant"
 msgid "see_my_waiting_dissertations"
 msgstr "Voir les mémoires en attente de réponse"
 
-msgid "stats_person"
-msgstr "stats_person"
-
 msgid "stats"
 msgstr "statistiques"
+
+msgid "stats_person"
+msgstr "stats_person"
 
 msgid "status"
 msgstr "état"

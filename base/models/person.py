@@ -41,7 +41,15 @@ class PersonAdmin(admin.ModelAdmin):
     raw_id_fields = ('user',)
 
 
+class PersonManager(models.Manager):
+    def get_by_natural_key(self, global_id):
+        return self.get(global_id=global_id)
+
+
 class Person(models.Model):
+
+    objects = PersonManager()
+
     GENDER_CHOICES = (
         ('F', _('female')),
         ('M', _('male')),
@@ -80,7 +88,7 @@ class Person(models.Model):
         return u"%s %s %s" % (last_name.upper(), first_name, middle_name)
 
     def natural_key(self):
-        return (self.global_id)
+        return (self.global_id, )
 
     class Meta:
         permissions = (
@@ -106,7 +114,7 @@ def change_language(user, new_language):
 
 
 def find_by_global_id(global_id):
-    return Person.objects.filter(global_id=global_id).first()
+    return Person.objects.filter(global_id=global_id).first() if global_id else None
 
 
 def serialize_list_persons(list_persons):
@@ -125,3 +133,9 @@ def serialize_list_persons(list_persons):
                                  use_natural_primary_keys=True)
 
 
+def search_by_email(email):
+    return Person.objects.filter(email=email)
+
+
+def count_by_email(email):
+    return search_by_email(email).count()
