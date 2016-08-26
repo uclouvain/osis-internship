@@ -99,6 +99,7 @@ def manager_dissertations_detail(request, pk):
     count_dissertation_role = dissertation_role.count_by_dissertation(dissert)
     count_proposition_role = proposition_role.count_by_dissertation(dissert)
     proposition_roles = proposition_role.search_by_dissertation(dissert)
+    offer_prop = offer_proposition.get_by_dissertation(dissert)
 
     if count_proposition_role == 0:
         if count_dissertation_role == 0:
@@ -112,12 +113,56 @@ def manager_dissertations_detail(request, pk):
                 dissertation_update.add(request, dissert, dissert.status, justification=justification)
                 dissertation_role.add(role.status, role.adviser, dissert)
 
+    if dissert.status == "DRAFT":
+        jury_manager_visibility = True
+        jury_manager_can_edit = False
+        jury_manager_message = 'manager_jury_draft'
+
+        jury_teacher_visibility = False
+        jury_teacher_can_edit = False
+        jury_teacher_message = 'teacher_jury_draft'
+
+        jury_student_visibility = True
+        jury_student_can_edit = offer_prop.student_can_manage_readers
+        if jury_student_can_edit:
+            jury_student_message = 'student_jury_draft_can_edit_param'
+        else:
+            jury_student_message = 'student_jury_draft_no_edit_param'
+    else:
+
+        jury_manager_visibility = True
+        jury_manager_can_edit = True
+        jury_manager_message = 'manager_jury_editable'
+
+        jury_teacher_visibility = True
+        jury_teacher_can_edit = offer_prop.adviser_can_suggest_reader
+        if jury_teacher_can_edit:
+            jury_teacher_message = 'teacher_jury_visible_editable_parameter'
+        else:
+            jury_teacher_message = 'teacher_jury_visible_not_editable_parameter'
+
+        jury_student_visibility = offer_prop.in_periode_jury_visibility
+        jury_student_can_edit = False
+        if jury_student_visibility:
+            jury_student_message = 'student_jury_visible_dates'
+        else:
+            jury_student_message = 'student_jury_invisible_dates'
+
     dissertation_roles = dissertation_role.search_by_dissertation(dissert)
     return layout.render(request, 'manager_dissertations_detail.html',
                          {'dissertation': dissert,
                           'adviser': adv,
                           'dissertation_roles': dissertation_roles,
-                          'count_dissertation_role': count_dissertation_role})
+                          'count_dissertation_role': count_dissertation_role,
+                          'jury_manager_visibility': jury_manager_visibility,
+                          'jury_manager_can_edit': jury_manager_can_edit,
+                          'jury_manager_message': jury_manager_message,
+                          'jury_teacher_visibility': jury_teacher_visibility,
+                          'jury_teacher_can_edit': jury_teacher_can_edit,
+                          'jury_teacher_message': jury_teacher_message,
+                          'jury_student_visibility': jury_student_visibility,
+                          'jury_student_can_edit': jury_student_can_edit,
+                          'jury_student_message': jury_student_message})
 
 
 @login_required
