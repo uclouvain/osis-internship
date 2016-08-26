@@ -25,10 +25,15 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
+from base.enums import exam_enrollment_state
 
 
 class ScoresEncodingAdmin(admin.ModelAdmin):
-    list_display = ('pgm_manager_person', 'offer_year', 'learning_unit_year', 'total_exam_enrollments', 'exam_enrollments_encoded')
+    list_display = ('pgm_manager_person',
+                    'offer_year',
+                    'learning_unit_year',
+                    'total_exam_enrollments',
+                    'exam_enrollments_encoded')
     search_fields = ['pgm_manager_person__last_name', 'pgm_manager_person__first_name']
 
 
@@ -50,9 +55,8 @@ class ScoresEncoding(models.Model):
         )
 
 
-
 def search(user, learning_unit_year_id=None, offer_year_id=None, learning_unit_year_ids=None):
-    queryset = ScoresEncoding.objects
+    queryset = ScoresEncoding.objects.filter(enrollment_state=exam_enrollment_state.ENROLLED)
 
     if offer_year_id:
         queryset = queryset.filter(offer_year_id=offer_year_id)
