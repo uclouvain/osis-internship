@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 ##############################################################################
 #
 #    OSIS stands for Open Student Information System. It's an application
@@ -24,44 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from functools import reduce
-import os
 
-# Add your fixtures at the end of the list so that model dependencies are respected.
-DATA_FIXTURES = [
-    'user.json',
-    'person.json',
-    'tutor.json',
-    'student.json',
-    'academic_year.json',
-    'academic_calendar.json',
-    'learning_unit.json',
-    'learning_unit_year.json',
-    'messages_templates.json',
-    'offer.json',
-    'organization.json',
-    'structure.json',
-    'attribution.json',
-    'continent.json',
-    'currency.json',
-    'country.json',
-    'decree.json',
-    'domain.json',
-    'education_institution.json',
-    'language.json',
-    'continent.json',
-    'person_address.json',
-    'organization_address.json',
-    'offer_year.json',
-    'offer_year_calendar.json',
-    'session_exam.json',
-    'program_manager.json',
-    'offer_enrollment.json',
-    'learning_unit_enrollment.json',
-    'exam_enrollment.json'
-    ]
+import scripts.populate_base_student as populate_student
+import scripts.populate_base_tutor as populate_tutor
+import scripts.populate_reference_continent as populate_continent
+import scripts.populate_reference_currency as populate_currency
+import scripts.populate_reference_language as populate_language
 
-ARGS = reduce(lambda s1,s2 : s1 + ' ' + s2,DATA_FIXTURES)
-COMMAND = 'python manage.py loaddata '+ARGS
-print(COMMAND)
-os.system(COMMAND)
+
+populate_tutor.create_tutor_and_person_and_user()
+populate_student.create_student_and_person_and_user()
+populate_continent.add_continents()
+populate_currency.add_currencies()
+populate_language.add_languages()
