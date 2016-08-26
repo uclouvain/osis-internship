@@ -159,10 +159,12 @@ def get_next_status(dissert, operation):
         if offer_prop.validation_commission_exists and dissert.status == 'DIR_SUBMIT':
             return 'COM_SUBMIT'
 
-        elif offer_prop.evaluation_first_year and (dissert.status == 'DIR_SUBMIT' or dissert.status == 'COM_SUBMIT'):
+        elif offer_prop.evaluation_first_year and (dissert.status == 'DIR_SUBMIT' or
+                                                   dissert.status == 'COM_SUBMIT' or
+                                                   dissert.status == 'COM_KO'):
             return 'EVA_SUBMIT'
 
-        elif dissert.status == 'EVA_SUBMIT':
+        elif dissert.status == 'EVA_SUBMIT' or dissert.status == 'EVA_KO':
             return 'TO_RECEIVE'
 
         elif dissert.status == 'DEFENDED':
