@@ -35,8 +35,8 @@ class DissertationRoleAdmin(admin.ModelAdmin):
 
 class DissertationRole(models.Model):
     STATUS_CHOICES = (
-        ('PROMOTEUR', _('pro')),
-        ('CO_PROMOTEUR', _('copro')),
+        ('PROMOTEUR', _('promotor')),
+        ('CO_PROMOTEUR', _('copromotor')),
         ('READER', _('reader')),
     )
 

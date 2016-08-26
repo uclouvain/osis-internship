@@ -36,21 +36,21 @@ class PropositionDissertationAdmin(admin.ModelAdmin):
 
 class PropositionDissertation(models.Model):
     TYPES_CHOICES = (
-        ('RDL', _('Litterature review')),
-        ('EDC', _('Case study')),
+        ('RDL', _('litterature_review')),
+        ('EDC', _('case_study')),
         )
 
     LEVELS_CHOICES = (
-        ('DOMAIN', _('Domain')),
-        ('WORK', _('Work')),
-        ('QUESTION', _('Question')),
-        ('THEME', _('Theme')),
+        ('DOMAIN', _('level_domain')),
+        ('WORK', _('level_work')),
+        ('QUESTION', _('level_question')),
+        ('THEME', _('level_theme')),
         )
 
     COLLABORATION_CHOICES = (
-        ('POSSIBLE', _('Possible')),
-        ('REQUIRED', _('Required')),
-        ('FORBIDDEN', _('Forbidden')),
+        ('POSSIBLE', _('possible')),
+        ('REQUIRED', _('required')),
+        ('FORBIDDEN', _('forbidden')),
         )
 
     author = models.ForeignKey('Adviser')
