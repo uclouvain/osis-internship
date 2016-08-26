@@ -257,3 +257,6 @@ msgstr "La sélection des stages est actuellement bloquée"
 
 msgid "selected_internships"
 msgstr "Stages sélectionnés"
+
+msgid "select_speciality_change_internships"
+msgstr "Sélectionnez une spécialité pour ajouter/modifier vos choix pour ce stage au choix"

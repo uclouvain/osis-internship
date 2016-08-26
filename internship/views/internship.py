@@ -261,8 +261,6 @@ def internships_stud(request):
             all_non_mandatory_internships[x] = None
         all_non_mandatory_selected_internships[x]=InternshipChoice.search(internship_choice=x+1)
 
-    print(all_non_mandatory_selected_internships)
-
     return render(request, "internships_stud.html", {'section': 'internship',
                                                 'all_internships' : query,
                                                 'non_mandatory_speciality' : all_non_mandatory_speciality,

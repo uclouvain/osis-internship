@@ -158,13 +158,14 @@
                           <ul>
                             {% for i in internships %}
                               {% if forloop.first %}
-                                {% trans 'selected_internships' %} : {{i.speciality}} <br>
+                                <b>{% trans 'selected_internships' %}</b> : {{i.speciality}} <br>
                               {% endif %}
                               <li>{{i.organization}} - {{i.choice}}</li>
                             {% endfor %}
                           </ul>
                         {%endif%}
                       {% endfor %}
+                    {% trans 'select_speciality_change_internships' %}:<br/>
                     <form action="{%url 'internships_stud' %}" method="get">
                       <select name="speciality_sort{{ forloop.counter0 }}" onChange="javascript: this.form.submit();">
                          <option value="0">--</option>
