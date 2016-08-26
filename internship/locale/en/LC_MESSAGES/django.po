@@ -251,3 +251,6 @@ msgstr "The internships' selection is currently active"
 
 msgid "selection_currently_block"
 msgstr "The internships' selection is currently blocked"
+
+msgid "selected_internships"
+msgstr "Selected internships"

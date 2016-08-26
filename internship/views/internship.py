@@ -267,6 +267,7 @@ def internships_stud(request):
                                                 'all_internships' : query,
                                                 'non_mandatory_speciality' : all_non_mandatory_speciality,
                                                 'all_non_mandatory_internships': all_non_mandatory_internships,
+                                                'all_non_mandatory_selected_internships': all_non_mandatory_selected_internships,
                                                 'speciality_sort_value': speciality_sort_value,
                                                 'all_speciality' : all_speciality,
                                                 'selectable' : selectable,
