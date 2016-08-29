@@ -31,6 +31,7 @@ from assistant import models as mdl
 from base.models import structure, academic_year, person
 from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
+from django.forms import widgets
 
 
 class MandateForm(ModelForm):
@@ -57,6 +58,7 @@ class MandateForm(ModelForm):
 
 
 class MandateStructureForm(ModelForm):
+
     class Meta:
         model = mdl.mandate_structure.MandateStructure
         fields = ('structure', 'assistant_mandate')
@@ -109,8 +111,8 @@ class AssistantFormPart1(ModelForm):
 
     class Meta:
         model = mdl.assistant_mandate.AssistantMandate
-        fields = ('inscription', 'expected_phd_date', 'phd_inscription_date',
-                  'confirmation_test_date', 'thesis_date', 'supervisor')
+        fields = ('inscription', 'expected_phd_date', 'phd_inscription_date', 'confirmation_test_date',
+                  'thesis_date', 'supervisor')
 
     def clean(self):
         super(AssistantFormPart1, self).clean()
@@ -249,3 +251,12 @@ class ReviewerForm(ModelForm):
             self.add_error('person', msg)
         except:
             pass
+
+
+class SettingsForm(ModelForm):
+    starting_date = forms.DateField(required=True, widget=widgets.SelectDateWidget)
+    ending_date = forms.DateField(required=True, widget=widgets.SelectDateWidget)
+
+    class Meta:
+        model = mdl.settings.Settings
+        fields = ('starting_date', 'ending_date')

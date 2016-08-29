@@ -7,3 +7,4 @@ To have your pull request accepted you have to make sure that:
 - [ ] the code seems **readable for other developers** who will maintain this code in the future.
 - [ ] in case complexity is needed, then the code is very **well documented**.
 - [ ] all files contain the **license header**.
+- [ ] if a ***model*** is modified or created, ***fixtures*** files should be modified to reflect the modification.

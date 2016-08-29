@@ -16,20 +16,23 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "institution"
-msgstr "Institution"
+msgid "2nd_renewal"
+msgstr "(pour le 2ème renouvellement)"
 
-msgid "mandates"
-msgstr "Mandats"
+msgid "absences"
+msgstr "Absences"
 
-msgid "mandate"
-msgstr "Mandat"
+msgid "academic_year"
+msgstr "Année académique"
 
-msgid "assistants"
-msgstr "Assistants"
+msgid "action"
+msgstr "Action"
 
-msgid "assistantship_mandate_renewal_part1"
-msgstr "Renouvellement du mandat d'assistant - Partie 1"
+msgid "activities_report_remark"
+msgstr "Remarque concernant le rapport d'activité"
+
+msgid "address"
+msgstr "Adresse"
 
 msgid "assistant_form_part1"
 msgstr "Formulaire assistant - Partie 1"
@@ -37,110 +40,56 @@ msgstr "Formulaire assistant - Partie 1"
 msgid "assistant_form_part2"
 msgstr "Formulaire assistant - Partie 2"
 
-msgid "name_firstame"
-msgstr "Nom et prénom"
+msgid "assistant_mandates_renewal"
+msgstr "Renouvellement du mandat d'assistant"
 
-msgid "birthdate"
-msgstr "Date de naissance"
+msgid "assistant_type"
+msgstr "Type d'assistant"
 
-msgid "address"
-msgstr "Adresse"
+msgid "assistants"
+msgstr "Assistants"
 
-msgid "type_of_renewal"
-msgstr "Type de renouvellement"
-
-msgid "contract"
-msgstr "Contrat"
-
-msgid "faculty"
-msgstr "Faculté"
-
-msgid "institute"
-msgstr "Institut"
-
-msgid "full_time_equivalent"
-msgstr "Equivalent temps plein"
-
-msgid "field"
-msgstr "Filière"
-
-msgid "grade"
-msgstr "Grade"
-
-msgid "doctorate"
-msgstr "Doctorat"
-
-msgid "registered_phd"
-msgstr "Inscrit au doctorat"
-
-msgid "yes"
-msgstr "Oui"
-
-msgid "no"
-msgstr "Non"
-
-msgid "in_progress"
-msgstr "En cours"
-
-msgid "expected_registering_date"
-msgstr "Date prévue d'inscription"
-
-msgid "supervisor_email_address"
-msgstr "Adresse email du promoteur"
-
-msgid "firstname"
-msgstr "Prénom"
-
-msgid "lastname"
-msgstr "Nom"
-
-msgid "no_supervisor"
-msgstr "Pas de promoteur"
-
-msgid "supervisor"
-msgstr "Promoteur"
-
-msgid "phd_inscription_date"
-msgstr "Date d'inscription au doctorat"
-
-msgid "phd_inscription"
-msgstr "Inscription au doctorat"
-
-msgid "confirmatory_test_date"
-msgstr "Date de l'épreuve de confirmation"
-
-msgid "2nd_renewal"
-msgstr "(pour le 2ème renouvellement)"
-
-msgid "thesis_defence_date"
-msgstr "Date de défense de thèse"
-
-msgid "various"
-msgstr "Divers"
-
-msgid "function_outside_university"
-msgstr "Fonctions actuelles exercées en dehors de l'université et % de temps consacré"
-
-msgid "external_post"
-msgstr "Mandat demandé à l'extérieur (FNRS, FRIA, ...)"
-
-msgid "exceptional_justification"
-msgstr "Dans la mesure où vous ne rempliriez plus les conditions pour bénéficier d'un renouvellement 'normal', pouvez-vous préciser les circonstances justifiant une demande de renouvellement exceptionnel (art. 51 du RAMCS)"
-
-msgid "next_part"
-msgstr "Partie suivante"
+msgid "assistantship_mandate_renewal_part1"
+msgstr "Renouvellement du mandat d'assistant - Partie 1"
 
 msgid "assistantship_mandate_renewal_part2"
 msgstr "Renouvellement du mandat d'assistant - Partie 2"
 
-msgid "period_covered"
-msgstr "Période couverte par le rapport (depuis le 1er engagement ou la précédente demande de renouvellement)"
+msgid "attendees"
+msgstr "Nombre d'étudiants par série"
 
-msgid "supervision"
-msgstr "Encadrement"
+msgid "birth_date"
+msgstr "Date de naissance"
 
-msgid "academic_year"
-msgstr "Année académique"
+msgid "birthdate"
+msgstr "Date de naissance"
+
+msgid "cancel"
+msgstr "Annuler"
+
+msgid "comment"
+msgstr "Commentaire"
+
+msgid "confirm_validation"
+msgstr "Êtes-vous certain de vouloir valider et soumettre ? Cette action ne pourra pas être annulée."
+
+msgid "confirmatory_test_date"
+msgstr "Date de l'épreuve de confirmation"
+
+msgid "contact_details"
+msgstr "Coordonnées administratives"
+
+msgid "contract duration"
+msgstr "Durée du contrat"
+
+msgid "contract"
+msgstr "Contrat"
+
+msgid "contract_duration_fte"
+msgstr "Equivalent temps plein"
+
+msgid "corsci_representation"
+msgstr "Au sein du CORSCI"
 
 msgid "course"
 msgstr "Cours"
@@ -148,230 +97,279 @@ msgstr "Cours"
 msgid "course_code"
 msgstr "Code cours"
 
-msgid "exercises_tp"
-msgstr "Exercices, TP, séminaires - associés aux heures de volume 2, que vous assumez personnellement"
-
-msgid "sessions_number"
-msgstr "Nombre de séances prévues pour ce cours"
-
-msgid "sessions_duration"
-msgstr "Durée d'une séance"
-
-msgid "series_number"
-msgstr "Nombre de séries"
-
-msgid "face_to_face"
-msgstr "Nombre d'heures en présentiel"
-
-msgid "attendees"
-msgstr "Nombre d'étudiants par série"
-
-msgid "exams_supervision_duration"
-msgstr "Préparation, coordination et évaluation"
-
-msgid "others_delivery"
-msgstr "Autres types de prestations associées à ce cours"
-
-msgid "previous_part"
-msgstr "Retour à la partie précédente"
-
-msgid "next_course"
-msgstr "Encoder un autre cours"
-
-msgid "save"
-msgstr "Sauver"
-
-msgid "import"
-msgstr "Importer"
-
-msgid "cancel"
-msgstr "Annuler"
-
-msgid "mandates_list"
-msgstr "Liste des mandats"
-
-msgid "assistant_mandates_renewal"
-msgstr "Renouvellement du mandat d'assistant"
-
-msgid "email"
-msgstr "Email"
-
-msgid "gender"
-msgstr "Sexe"
-
-msgid "birth_date"
-msgstr "Date de naissance"
-
-msgid "assistant_type"
-msgstr "Type d'assistant"
-
-msgid "matricule_number"
-msgstr "Numéro de matricule"
-
-msgid "renewal_type"
-msgstr "Type de renouvellement"
-
-msgid "contract duration"
-msgstr "Durée du contrat"
-
-msgid "contract_duration_fte"
-msgstr "Equivalent temps plein"
-
-msgid "structures"
-msgstr "Structures"
-
-msgid "delete"
-msgstr "Supprimer"
-
-msgid "comment"
-msgstr "Commentaire"
-
-msgid "absences"
-msgstr "Absences"
-
-msgid "other_status"
-msgstr "Autre status"
-
-msgid "renewal"
-msgstr "Renouvellement"
-
-msgid "research"
-msgstr "Recherche"
-
-msgid "svr"
-msgstr "VRS"
-
-msgid "no_answer"
-msgstr "pas répondu"
-
-msgid "head_institute"
-msgstr "Président d'institut"
+msgid "date_of_first_nomination"
+msgstr "Date de la première nomination"
 
 msgid "dean"
 msgstr "Doyen de faculté"
 
-msgid "vice_rector"
-msgstr "Vice-recteur"
+msgid "degrees"
+msgstr "Diplôme(s) obtenu(s)"
+
+msgid "delete"
+msgstr "Supprimer"
+
+msgid "doctorate"
+msgstr "Doctorat"
+
+msgid "email"
+msgstr "Email"
 
 msgid "equivalent_full_time"
 msgstr "ETP"
 
-msgid "percentage_equivalent_full_time"
-msgstr "% ETP"
+msgid "events_organisation_service"
+msgstr "Organisation de stages, colloques, visites, voyages d’études, terrains, séminaires..."
 
-msgid "tutoring"
-msgstr "Ens."
+msgid "exams_supervision_duration"
+msgstr "Préparation, coordination et évaluation"
 
-msgid "program_commission"
-msgstr "Commission de Prog."
+msgid "exceptional_justification"
+msgstr "Dans la mesure où vous ne rempliriez plus les conditions pour bénéficier d'un renouvellement 'normal', pouvez-vous préciser les circonstances justifiant une demande de renouvellement exceptionnel (art. 51 du RAMCS)"
 
-msgid "action"
-msgstr "Action"
+msgid "exercises_tp"
+msgstr "Exercices, TP, séminaires - associés aux heures de volume 2, que vous assumez personnellement"
 
-msgid "my_mandates"
-msgstr "Mes mandats"
+msgid "expected_registering_date"
+msgstr "Date prévue d'inscription"
 
-msgid "contact_details"
-msgstr "Coordonnées administratives"
+msgid "external_post"
+msgstr "Mandat demandé à l'extérieur (FNRS, FRIA, ...)"
 
-msgid "date_of_first_nomination"
-msgstr "Date de la première nomination"
+msgid "face_to_face"
+msgstr "Nombre d'heures en présentiel"
 
-msgid "summary"
-msgstr "Récapitulatif"
-
-msgid "total_must_be_100_message"
-msgstr "Le total doit être égal à 100"
-
-msgid "tutoring_percent"
-msgstr "Pourcentage pour l'enseignement"
-
-msgid "research_percent"
-msgstr "Pourcentage pour la recherche et le doctorat"
-
-msgid "service_activities_percent"
-msgstr "Pourcentage pour les activités de service"
-
-msgid "formation_activities_percent"
-msgstr "Pourcentage de participation, comme bénéficiaire, à des activités de formation"
-
-msgid "activities_report_remark"
-msgstr "Remarque concernant le rapport d'activité"
-
-msgid "general_comment"
-msgstr "Commentaire général"
-
-msgid "validate_and_submit"
-msgstr "Valider et soumettre"
-
-msgid "confirm_validation"
-msgstr "Êtes-vous certain de vouloir valider et soumettre ? Cette action ne pourra pas être annulée."
-
-msgid "renewal_form"
-msgstr "Formulaire de demande de renouvellement"
-
-msgid "representation_activities"
-msgstr "Activités de représentation à l'UCL"
-
-msgid "hours_per_year_message"
-msgstr "Veuillez introduire le nombre d'heures par an"
+msgid "faculty"
+msgstr "Faculté"
 
 msgid "faculty_representation"
 msgstr "Au sein de la faculté (commissions de programme, bureau de faculté, conseil de faculté)"
 
-msgid "institute_representation"
-msgstr "Au sein de l’institut (bureau d’institut, conseil d’institut...)"
+msgid "field"
+msgstr "Filière"
 
-msgid "sector_representation"
-msgstr "Au sein du secteur (bureau et/ou conseil)"
-
-msgid "governing_body_representation"
-msgstr "Au sein des organes de l’Université (conseil académique, autres conseils ou commissions...)"
-
-msgid "corsci_representation"
-msgstr "Au sein du CORSCI"
-
-msgid "service_activities"
-msgstr "Activités de services"
-
-msgid "students_service"
-msgstr "Informations aux futurs étudiants (CIO, salons, Campus Days, Midi Masters...)"
-
-msgid "infrastructure_mgmt_service"
-msgstr "Gestion d’équipements collectifs (labo, atelier, bibliothèque, service informatique, site web...)"
-
-msgid "events_organisation_service"
-msgstr "Organisation de stages, colloques, visites, voyages d’études, terrains, séminaires..."
-
-msgid "publishing_field_service"
-msgstr "Activités dans le domaine de l’édition (comité(s) de rédaction...)"
-
-msgid "scientific_jury_service"
-msgstr "Participation à des jurys et/ou des commissions scientifiques"
+msgid "firstname"
+msgstr "Prénom"
 
 msgid "formation_activities"
 msgstr "Activités de formation"
 
-msgid "degrees"
-msgstr "Diplôme(s) obtenu(s)"
+msgid "formation_activities_percent"
+msgstr "Pourcentage de participation, comme bénéficiaire, à des activités de formation"
 
 msgid "formations"
 msgstr "Formations scientifiques, pédagogiques ou autres auxquelles vous avez participé \
 (LLL, SMCS, RHUM, Summer School)"
 
-msgid "renewal_short_name"
-msgstr "Statut"
+msgid "full_time_equivalent"
+msgstr "Equivalent temps plein"
+
+msgid "function_outside_university"
+msgstr "Fonctions actuelles exercées en dehors de l'université et % de temps consacré"
+
+msgid "gender"
+msgstr "Sexe"
+
+msgid "general_comment"
+msgstr "Commentaire général"
+
+msgid "governing_body_representation"
+msgstr "Au sein des organes de l’Université (conseil académique, autres conseils ou commissions...)"
+
+msgid "grade"
+msgstr "Grade"
+
+msgid "head_institute"
+msgstr "Président d'institut"
+
+msgid "hours_per_year_message"
+msgstr "Veuillez introduire le nombre d'heures par an"
+
+msgid "import"
+msgstr "Importer"
+
+msgid "in_progress"
+msgstr "En cours"
+
+msgid "infrastructure_mgmt_service"
+msgstr "Gestion d’équipements collectifs (labo, atelier, bibliothèque, service informatique, site web...)"
+
+msgid "institute"
+msgstr "Institut"
+
+msgid "institute_representation"
+msgstr "Au sein de l’institut (bureau d’institut, conseil d’institut...)"
+
+msgid "institution"
+msgstr "Institution"
+
+msgid "lastname"
+msgstr "Nom"
+
+msgid "mandate"
+msgstr "Mandat"
+
+msgid "mandates"
+msgstr "Mandats"
+
+msgid "mandates_list"
+msgstr "Liste des mandats"
+
+msgid "matricule_number"
+msgstr "Numéro de matricule"
+
+msgid "my_mandates"
+msgstr "Mes mandats"
+
+msgid "name_firstame"
+msgstr "Nom et prénom"
+
+msgid "next_course"
+msgstr "Encoder un autre cours"
+
+msgid "next_part"
+msgstr "Partie suivante"
+
+msgid "no"
+msgstr "Non"
+
+msgid "no_answer"
+msgstr "pas répondu"
+
+msgid "no_supervisor"
+msgstr "Pas de promoteur"
+
+msgid "other_status"
+msgstr "Autre status"
+
+msgid "others_delivery"
+msgstr "Autres types de prestations associées à ce cours"
+
+msgid "percentage_equivalent_full_time"
+msgstr "% ETP"
+
+msgid "period_covered"
+msgstr "Période couverte par le rapport (depuis le 1er engagement ou la précédente demande de renouvellement)"
 
 msgid "phd"
 msgstr "PhD"
 
+msgid "phd_inscription"
+msgstr "Inscription au doctorat"
+
+msgid "phd_inscription_date"
+msgstr "Date d'inscription au doctorat"
+
+msgid "previous_part"
+msgstr "Retour à la partie précédente"
+
+msgid "program_commission"
+msgstr "Commission de Prog."
+
+msgid "publishing_field_service"
+msgstr "Activités dans le domaine de l’édition (comité(s) de rédaction...)"
+
+msgid "registered_phd"
+msgstr "Inscrit au doctorat"
+
+msgid "renewal"
+msgstr "Renouvellement"
+
+msgid "renewal_form"
+msgstr "Formulaire de demande de renouvellement"
+
+msgid "renewal_short_name"
+msgstr "Statut"
+
+msgid "renewal_type"
+msgstr "Type de renouvellement"
+
+msgid "representation_activities"
+msgstr "Activités de représentation à l'UCL"
+
+msgid "research"
+msgstr "Recherche"
+
+msgid "research_percent"
+msgstr "Pourcentage pour la recherche et le doctorat"
+
 msgid "research_short_name"
 msgstr "RCH"
 
-msgid "tutoring_short_name"
-msgstr "ENS"
+msgid "save"
+msgstr "Sauver"
+
+msgid "scientific_jury_service"
+msgstr "Participation à des jurys et/ou des commissions scientifiques"
+
+msgid "sector_representation"
+msgstr "Au sein du secteur (bureau et/ou conseil)"
 
 msgid "sector_vice-rector_short_name"
 msgstr "V-R S."
 
+msgid "series_number"
+msgstr "Nombre de séries"
 
+msgid "service_activities"
+msgstr "Activités de services"
+
+msgid "service_activities_percent"
+msgstr "Pourcentage pour les activités de service"
+
+msgid "sessions_duration"
+msgstr "Durée d'une séance"
+
+msgid "sessions_number"
+msgstr "Nombre de séances prévues pour ce cours"
+
+msgid "structures"
+msgstr "Structures"
+
+msgid "students_service"
+msgstr "Informations aux futurs étudiants (CIO, salons, Campus Days, Midi Masters...)"
+
+msgid "summary"
+msgstr "Récapitulatif"
+
+msgid "supervision"
+msgstr "Encadrement"
+
+msgid "supervisor"
+msgstr "Promoteur"
+
+msgid "supervisor_email_address"
+msgstr "Adresse email du promoteur"
+
+msgid "svr"
+msgstr "VRS"
+
+msgid "thesis_defence_date"
+msgstr "Date de défense de thèse"
+
+msgid "total_must_be_100_message"
+msgstr "Le total doit être égal à 100"
+
+msgid "tutoring"
+msgstr "Ens."
+
+msgid "tutoring_percent"
+msgstr "Pourcentage pour l'enseignement"
+
+msgid "tutoring_short_name"
+msgstr "ENS"
+
+msgid "type_of_renewal"
+msgstr "Type de renouvellement"
+
+msgid "validate_and_submit"
+msgstr "Valider et soumettre"
+
+msgid "various"
+msgstr "Divers"
+
+msgid "vice_rector"
+msgstr "Vice-recteur"
+
+msgid "yes"
+msgstr "Oui"
