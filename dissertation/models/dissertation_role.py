@@ -155,13 +155,19 @@ def list_teachers_action_needed(offers):
                                    .distinct('adviser')
 
 
-def get_promoteur_by_dissertation(dissert):
+def get_promoteur_by_dissertation_str(dissert):
     promoteur = search_by_dissertation_and_role(dissert, 'PROMOTEUR')
     if promoteur:
         return str(promoteur[0].adviser)
     else:
         return 'none'
 
+def get_promoteur_by_dissertation(dissert):
+    promoteur = search_by_dissertation_and_role(dissert, 'PROMOTEUR')
+    if promoteur:
+        return promoteur[0].adviser
+    else:
+        return 'none'
 
 def get_copromoteur_by_dissertation(dissert):
     copromoteur = search_by_dissertation_and_role(dissert, 'CO_PROMOTEUR')
