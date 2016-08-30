@@ -25,6 +25,7 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
+from django.core import serializers
 
 
 class LanguageAdmin(admin.ModelAdmin):
@@ -40,3 +41,13 @@ class Language(models.Model):
 
     def __str__(self):
         return self.name
+
+
+def serialize_list(list_languages):
+    """
+    Serialize a list of "Language" objects using the json format.
+    Use to send data to osis-portal.
+    :param list_languages: a list of "Language" objects
+    :return: the serialized list (a json)
+    """
+    return serializers.serialize("json", list_languages)

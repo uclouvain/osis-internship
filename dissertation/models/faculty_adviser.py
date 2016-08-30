@@ -23,9 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.contrib import admin
 from django.db import models
 from base.models import offer
 from . import adviser
+
+
+class FacultyAdviserAdmin(admin.ModelAdmin):
+    list_display = ('offer', 'adviser', 'get_adviser_type')
+    raw_id_fields = ('offer',)
 
 
 class FacultyAdviser(models.Model):
@@ -35,7 +41,9 @@ class FacultyAdviser(models.Model):
     def __str__(self):
         return self.offer.title
 
+    def get_adviser_type(self):
+        return self.adviser.type
 
-def find_by_adviser(a_adviser):
-    faculty_adviser = FacultyAdviser.objects.get(adviser=a_adviser)
-    return faculty_adviser.offer
+
+def search_by_adviser(a_adviser):
+    return FacultyAdviser.objects.get(adviser=a_adviser)

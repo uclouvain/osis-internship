@@ -27,12 +27,13 @@ from django.contrib import admin
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
-from base.models import offer_year, student
+from base.models import offer_year, student, academic_year
 from . import proposition_dissertation
+from . import offer_proposition
 
 
 class DissertationAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'status', 'active')
+    list_display = ('title', 'author', 'status', 'active', 'proposition_dissertation', 'modification_date')
 
 
 STATUS_CHOICES = (
@@ -68,6 +69,7 @@ class Dissertation(models.Model):
     author = models.ForeignKey(student.Student)
     status = models.CharField(max_length=12, choices=STATUS_CHOICES, default='DRAFT')
     defend_periode = models.CharField(max_length=12, choices=DEFEND_PERIODE_CHOICES, default='UNDEFINED')
+    defend_year = models.ForeignKey(academic_year.AcademicYear, blank=True, null=True)
     offer_year_start = models.ForeignKey(offer_year.OfferYear)
     proposition_dissertation = models.ForeignKey(proposition_dissertation.PropositionDissertation)
     description = models.TextField(blank=True, null=True)
@@ -78,11 +80,31 @@ class Dissertation(models.Model):
     def __str__(self):
         return self.title
 
+    def deactivate(self):
+        self.active = False
+        self.save()
+
+    def set_status(self, status):
+        self.status = status
+        self.save()
+
+    def go_forward(self):
+        next_status = get_next_status(self, "go_forward")
+        self.set_status(next_status)
+
+    def accept(self):
+        next_status = get_next_status(self, "accept")
+        self.set_status(next_status)
+
+    def refuse(self):
+        next_status = get_next_status(self, "refuse")
+        self.set_status(next_status)
+
     class Meta:
         ordering = ["author__person__last_name", "author__person__middle_name", "author__person__first_name", "title"]
 
 
-def search_dissertation(terms=None):
+def search(terms=None, active=True):
     queryset = Dissertation.objects.all()
     if terms:
         queryset = queryset.filter(
@@ -96,5 +118,73 @@ def search_dissertation(terms=None):
             Q(proposition_dissertation__author__person__last_name__icontains=terms) |
             Q(status__icontains=terms) |
             Q(title__icontains=terms)
-        ).distinct()
+        ).filter(active=active).distinct()
     return queryset
+
+
+def search_by_proposition_author(terms=None, active=True, proposition_author=None):
+    return search(terms=terms, active=active).filter(proposition_dissertation__author=proposition_author)
+
+
+def search_by_offer(offer):
+    return Dissertation.objects.filter(offer_year_start__offer=offer)
+
+
+def search_by_offer_and_status(offer, status):
+    return search_by_offer(offer).filter(status=status)
+
+
+def count_by_proposition(prop_dissert):
+    return Dissertation.objects.filter(active=True)\
+                               .filter(proposition_dissertation=prop_dissert)\
+                               .exclude(status='DRAFT')\
+                               .count()
+
+
+def get_next_status(dissert, operation):
+    if operation == "go_forward":
+        if dissert.status == 'DRAFT' or dissert.status == 'DIR_KO':
+            return 'DIR_SUBMIT'
+
+        elif dissert.status == 'TO_RECEIVE':
+            return 'TO_DEFEND'
+
+        elif dissert.status == 'TO_DEFEND':
+            return 'DEFENDED'
+        else:
+            return dissert.status
+
+    elif operation == "accept":
+        offer_prop = offer_proposition.get_by_offer(dissert.offer_year_start.offer)
+        if offer_prop.validation_commission_exists and dissert.status == 'DIR_SUBMIT':
+            return 'COM_SUBMIT'
+
+        elif offer_prop.evaluation_first_year and (dissert.status == 'DIR_SUBMIT' or dissert.status == 'COM_SUBMIT'):
+            return 'EVA_SUBMIT'
+
+        elif dissert.status == 'EVA_SUBMIT':
+            return 'TO_RECEIVE'
+
+        elif dissert.status == 'DEFENDED':
+            return 'ENDED_WIN'
+
+        else:
+            return 'TO_RECEIVE'
+
+    elif operation == "refuse":
+        if dissert.status == 'DIR_SUBMIT':
+            return 'DIR_KO'
+
+        elif dissert.status == 'COM_SUBMIT':
+            return 'COM_KO'
+
+        elif dissert.status == 'EVA_SUBMIT':
+            return 'EVA_KO'
+
+        elif dissert.status == 'DEFENDED':
+            return 'ENDED_LOS'
+        else:
+            return dissert.status
+
+    else:
+        return dissert.status

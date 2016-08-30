@@ -25,7 +25,7 @@
 ##############################################################################
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-
+from django.utils import timezone
 
 class Review(models.Model):
     ADVICE_CHOICES = (
@@ -38,10 +38,34 @@ class Review(models.Model):
         ('DONE', _('Done')))
 
     mandate = models.ForeignKey('AssistantMandate')
-    reviewer = models.ForeignKey('Reviewer')
+    reviewer = models.ForeignKey('Reviewer', null=True)
     advice = models.CharField(max_length=20, choices=ADVICE_CHOICES)
-    status = models.CharField(max_length=10, choices=REVIEW_STATUS, null=True)
+    status = models.CharField(max_length=15, choices=REVIEW_STATUS, null=True)
     justification = models.TextField(null=True, blank=True)
     remark = models.TextField(null=True, blank=True)
     confidential = models.TextField(null=True, blank=True)
-    changed = models.DateTimeField(null=True)
+    changed = models.DateTimeField(default=timezone.now, null=True)
+
+
+def find_by_id(review_id):
+    return Review.objects.get(id=review_id)
+
+
+def find_by_mandate(mandate_id):
+    return Review.objects.filter(mandate=mandate_id)
+
+
+def find_review_for_mandate_by_role(mandate, role):
+    return Review.objects.filter(mandate=mandate).filter(reviewer__role__icontains=role.split('_', 1)[0]).first()
+
+
+def find_by_reviewer(reviewer):
+    return Review.objects.filter(reviewer=reviewer)
+
+
+def find_by_reviewer_for_mandate(reviewer, mandate):
+    return Review.objects.get(reviewer=reviewer, mandate=mandate)
+
+
+def find_done_by_supervisor_for_mandate(mandate):
+    return Review.objects.get(reviewer=None, mandate=mandate, status='DONE')

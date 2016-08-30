@@ -29,6 +29,7 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
+from django.core import serializers
 
 
 class PersonAdmin(admin.ModelAdmin):
@@ -40,7 +41,15 @@ class PersonAdmin(admin.ModelAdmin):
     raw_id_fields = ('user',)
 
 
+class PersonManager(models.Manager):
+    def get_by_natural_key(self, global_id):
+        return self.get(global_id=global_id)
+
+
 class Person(models.Model):
+
+    objects = PersonManager()
+
     GENDER_CHOICES = (
         ('F', _('female')),
         ('M', _('male')),
@@ -69,14 +78,17 @@ class Person(models.Model):
         first_name = ""
         middle_name = ""
         last_name = ""
-        if self.first_name :
+        if self.first_name:
             first_name = self.first_name
-        if self.middle_name :
+        if self.middle_name:
             middle_name = self.middle_name
-        if self.last_name :
+        if self.last_name:
             last_name = self.last_name + ","
 
         return u"%s %s %s" % (last_name.upper(), first_name, middle_name)
+
+    def natural_key(self):
+        return (self.global_id, )
 
     class Meta:
         permissions = (
@@ -102,4 +114,28 @@ def change_language(user, new_language):
 
 
 def find_by_global_id(global_id):
-    return Person.objects.filter(global_id=global_id).first()
+    return Person.objects.filter(global_id=global_id).first() if global_id else None
+
+
+def serialize_list_persons(list_persons):
+    """
+    Serialize a list of person objects using the json format.
+    Use to send data to osis-portal.
+    :param list_persons: a list of person objects
+    :return: a string
+    """
+    # Restrict fields for osis-portal
+    fields = ('id', 'external_id', 'changed', 'global_id', 'gender',
+              'national_id', 'first_name', 'middle_name', 'last_name',
+              'email', 'phone', 'phone_mobile', 'language')
+    return serializers.serialize("json", list_persons, fields=fields,
+                                 use_natural_foreign_keys=True,
+                                 use_natural_primary_keys=True)
+
+
+def search_by_email(email):
+    return Person.objects.filter(email=email)
+
+
+def count_by_email(email):
+    return search_by_email(email).count()

@@ -25,11 +25,14 @@
 ##############################################################################
 from django import forms
 from django.forms import ModelForm
+from base import models as mdl
 from dissertation.models.adviser import Adviser
 from dissertation.models.dissertation import Dissertation
 from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models.proposition_dissertation import PropositionDissertation
+from dissertation.models.proposition_role import PropositionRole
 from dissertation.models.dissertation_role import DissertationRole
+from dissertation.models.dissertation_update import DissertationUpdate
 
 
 class AdviserForm(ModelForm):
@@ -50,6 +53,19 @@ class PropositionDissertationForm(ModelForm):
         fields = ('author', 'visibility', 'title', 'description', 'type', 'level', 'collaboration',
                   'max_number_student', 'offer_proposition')
         widgets = {'author': forms.HiddenInput(), 'offer_proposition': forms.CheckboxSelectMultiple()}
+
+
+class PropositionRoleForm(ModelForm):
+    class Meta:
+        model = PropositionRole
+        fields = ('proposition_dissertation', 'status', 'adviser')
+        widgets = {'proposition_dissertation': forms.HiddenInput()}
+
+
+class ManagerAddAdviserPreForm(ModelForm):
+    class Meta:
+        model = mdl.person.Person
+        fields = ('email', )
 
 
 class ManagerAddAdviserForm(ModelForm):
@@ -73,7 +89,8 @@ class ManagerDissertationForm(ModelForm):
 class ManagerDissertationEditForm(ModelForm):
     class Meta:
         model = Dissertation
-        fields = ('title', 'author', 'offer_year_start', 'proposition_dissertation', 'description', 'defend_periode')
+        fields = ('title', 'author', 'offer_year_start', 'proposition_dissertation', 'description', 'defend_year',
+                  'defend_periode')
 
 
 class ManagerDissertationRoleForm(ModelForm):
@@ -112,3 +129,25 @@ class ManagerPropositionDissertationForm(ModelForm):
             'author', 'visibility', 'title', 'description', 'type', 'level', 'collaboration', 'max_number_student',
             'offer_proposition')
         widgets = {'offer_proposition': forms.CheckboxSelectMultiple()}
+
+
+class ManagerPropositionDissertationEditForm(ModelForm):
+    class Meta:
+        model = PropositionDissertation
+        fields = (
+            'visibility', 'title', 'description', 'type', 'level', 'collaboration', 'max_number_student',
+            'offer_proposition')
+        widgets = {'offer_proposition': forms.CheckboxSelectMultiple()}
+
+
+class ManagerPropositionRoleForm(ModelForm):
+    class Meta:
+        model = PropositionRole
+        fields = ('proposition_dissertation', 'status', 'adviser')
+        widgets = {'proposition_dissertation': forms.HiddenInput()}
+
+
+class ManagerDissertationUpdateForm(ModelForm):
+    class Meta:
+        model = DissertationUpdate
+        fields = ('justification',)

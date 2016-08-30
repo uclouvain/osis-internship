@@ -28,11 +28,17 @@ msgstr "adviser_can_suggest_reader"
 msgid "adviser_dissertations"
 msgstr "adviser_dissertations"
 
+msgid "adviser_dissertations_wait"
+msgstr "dissertation awaiting professor"
+
 msgid "adviser_profile"
-msgstr "adviser_profile"
+msgstr "teacher profil"
 
 msgid "adviser_stats"
-msgstr "adviser_stats"
+msgstr "teacher statistics"
+
+msgid "adviser_type"
+msgstr "Type of person"
 
 msgid "all_advisers"
 msgstr "all_advisers"
@@ -54,6 +60,15 @@ msgstr "available_by_email"
 
 msgid "available_by_phone"
 msgstr "available_by_phone"
+
+msgid "chart_pie_adviser_copro"
+msgstr "Dissertation as second supervisor"
+
+msgid "chart_pie_adviser_promoteur"
+msgstr "Dissertation as supervisor"
+
+msgid "chart_pie_adviser_reading"
+msgstr "Dissertation as reader"
 
 msgid "collaboration"
 msgstr "collaboration"
@@ -136,11 +151,11 @@ msgstr "dissertation_jury"
 msgid "dissertation_person"
 msgstr "dissertation_person"
 
-msgid "dissertations"
-msgstr "dissertations"
-
 msgid "dissertation_updates"
 msgstr "dissertation_updates"
+
+msgid "dissertations"
+msgstr "dissertations"
 
 msgid "edit_adviser"
 msgstr "edit_adviser"
@@ -175,9 +190,6 @@ msgstr "how_many_dissertation_reader"
 msgid "import_xlsx"
 msgstr "import_xlsx"
 
-msgid "informations"
-msgstr "informations"
-
 msgid "in_this_offer"
 msgstr "in_this_offer"
 
@@ -186,6 +198,9 @@ msgstr "in_visibility_dissertation"
 
 msgid "in_visibility_proposition"
 msgstr "in_visibility_proposition"
+
+msgid "informations"
+msgstr "informations"
 
 msgid "invisible"
 msgstr "invisible"
@@ -236,7 +251,19 @@ msgid "new_or_edit_subject"
 msgstr "new_or_edit_subject"
 
 msgid "no_result"
-msgstr "no_result"
+msgstr "no result"
+
+msgid "number_of_dissertation_active_total"
+msgstr "Total of current projects"
+
+msgid "number_of_dissertation_copro"
+msgstr "Dissertation as second supervisor"
+
+msgid "number_of_dissertation_pro"
+msgstr "Dissertation as supervisor"
+
+msgid "number_of_dissertation_reader"
+msgstr "Dissertation as reader "
 
 msgid "of"
 msgstr "of"
@@ -280,11 +307,11 @@ msgstr "search_teacher"
 msgid "see_my_waiting_dissertations"
 msgstr "see_my_waiting_dissertations"
 
-msgid "stats_person"
-msgstr "stats_person"
-
 msgid "stats"
 msgstr "stats"
+
+msgid "stats_person"
+msgstr "stats_person"
 
 msgid "status"
 msgstr "status"
