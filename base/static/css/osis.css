@@ -1,0 +1,65 @@
+/* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+*
+* OSIS Custom layout
+*/
+
+
+/* Indication Status QA - DEV */
+
+.boxorange {
+    background: #ff8400;
+    width: 40px;
+    height: 100%;
+    line-height: 45px;
+    text-align: center;
+    color: #fff;
+    font-size: 12px;
+    font-style: italic;
+    margin-right: 20px;
+}
+
+.activewindoworange {
+    border-style: solid;
+    border-width: 2px 10px 4px 10px;
+    border-bottom: none;
+    border-color: #ff8400;
+}
+
+.boxgreen {
+    background: #9eb94f;
+    width: 40px;
+    height: 100%;
+    line-height: 45px;
+    text-align: center;
+    color: #fff;
+    font-size: 12px;
+    font-style: italic;
+    margin-right: 20px;
+}
+
+.activewindowgreen {
+    border-style: solid;
+    border-width: 2px 10px 4px 10px;
+    border-bottom: none;
+    border-color: #9eb94f;
+}

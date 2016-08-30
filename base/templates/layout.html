@@ -37,6 +37,7 @@
     <link rel="stylesheet" href="{% static 'css/armata.css' %}" type='text/css'>
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/custom.css' %}?version={{ js }}">
+    <link rel="stylesheet" href="{% static 'css/osis.css' %}?version={{ js }}">
     <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/tree.css' %}">
     {% block header %}
@@ -55,7 +56,7 @@
         }
     </style>
 </head>
-<body>
+<body class="activewindowgreen">
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
@@ -74,6 +75,9 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 {% if request.user.is_authenticated %}
                     <ul class="nav navbar-nav">
+                        <li>
+                            <div class="boxgreen">DEV</div>
+                        </li>
                         {% if perms.base.can_access_catalog %}
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
