@@ -41,10 +41,10 @@ def specialities(request):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def speciality_create(request):
-    learning_unit_year = mdl.learning_unit_year.search(acronym='WMDS2333')
+    learning_unit = mdl.learning_unit.search(acronym='WMDS2333')
     return render(request, "speciality_create.html", {'section': 'internship',
-                                                      'learning_unit': learning_unit_year[0],
-                                                      })
+                                                    'learning_unit' : learning_unit[0],
+                                                    })
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
@@ -59,10 +59,8 @@ def speciality_save(request, speciality_id):
     if request.POST.get('mandatory') :
         mandatory = True
 
-    current_academic_year = mdl.academic_year.current_academic_year()
-    learning_unit_year = mdl.learning_unit_year.search(academic_year_id=current_academic_year.id,
-                                                       acronym=request.POST.get('learning_unit'))
-    speciality.learning_unit = learning_unit_year[0]
+    learning_unit = mdl.learning_unit.search(acronym=request.POST.get('learning_unit'))
+    speciality.learning_unit = learning_unit[0]
     speciality.name = request.POST.get('name')
     speciality.acronym = request.POST.get('acronym')
     speciality.mandatory = mandatory
@@ -80,11 +78,11 @@ def speciality_new(request):
 def speciality_modification(request, speciality_id):
 
     speciality = InternshipSpeciality.find_by_id(speciality_id)
-    learning_unit_year = mdl.learning_unit_year.search(acronym='WMDS2333')
+    learning_unit = mdl.learning_unit.search(acronym='WMDS2333')
     return render(request, "speciality_create.html", {'section': 'internship',
-                                                      'learning_unit': learning_unit_year[0],
-                                                      'speciality': speciality
-                                                      })
+                                                    'learning_unit' : learning_unit[0],
+                                                    'speciality' : speciality
+                                                    })
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)

@@ -33,6 +33,7 @@ from base.models import campus
 from base.models import document_file
 from base.models import domain_offer
 from base.models import exam_enrollment
+from base.models import learning_unit
 from base.models import learning_unit_enrollment
 from base.models import learning_unit_year
 from base.models import message_history
