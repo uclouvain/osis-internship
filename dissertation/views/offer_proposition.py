@@ -76,5 +76,4 @@ def manager_offer_parameters_edit(request, pk):
         form = ManagerOfferPropositionForm(instance=offer_prop)
     return layout.render(request, "manager_offer_parameters_edit.html",
                          {'offer_proposition': offer_prop,
-                          'form': form,
-                          'range': range(12)})
+                          'form': form})
