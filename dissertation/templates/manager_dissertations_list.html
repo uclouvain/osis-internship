@@ -102,13 +102,13 @@
                     {% elif dissertation.status == 'COM_OK' %}
                     <span class="label label-default">
                     {% elif dissertation.status == 'COM_KO' %}
-                    <span class="label label-default">
+                    <span class="label label-danger">
                     {% elif dissertation.status == 'EVA_SUBMIT' %}
                     <span class="label label-default">
                     {% elif dissertation.status == 'EVA_OK' %}
                     <span class="label label-default">
                     {% elif dissertation.status == 'EVA_KO' %}
-                    <span class="label label-default">
+                    <span class="label label-danger">
                     {% elif dissertation.status == 'TO_RECEIVE' %}
                     <span class="label label-default">
                     {% elif dissertation.status == 'TO_DEFEND' %}
@@ -120,7 +120,7 @@
                     {% elif dissertation.status == 'ENDED_WIN' %}
                     <span class="label label-default">
                     {% elif dissertation.status == 'ENDED_LOS' %}
-                    <span class="label label-default">
+                    <span class="label label-danger">
                     {% endif %}
                         {{ dissertation.status }}
                     </span>

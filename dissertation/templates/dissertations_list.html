@@ -74,20 +74,24 @@
                             {% elif adviser_list_dissertation.dissertation.status == 'COM_OK' %}
                             <span class="label label-default">{{ adviser_list_dissertation.dissertation.status }}</span>
                             {% elif adviser_list_dissertation.dissertation.status == 'COM_KO' %}
-                            <span class="label label-default">{{ adviser_list_dissertation.dissertation.status }}</span>
+                            <span class="label label-danger">{{ adviser_list_dissertation.dissertation.status }}</span>
                             {% elif adviser_list_dissertation.dissertation.status == 'EVA_SUBMIT' %}
                             <span class="label label-default">{{ adviser_list_dissertation.dissertation.status }}</span>
                             {% elif adviser_list_dissertation.dissertation.status == 'EVA_OK' %}
                             <span class="label label-default">{{ adviser_list_dissertation.dissertation.status }}</span>
                             {% elif adviser_list_dissertation.dissertation.status == 'EVA_KO' %}
-                            <span class="label label-default">{{ adviser_list_dissertation.dissertation.status }}</span>
+                            <span class="label label-danger">{{ adviser_list_dissertation.dissertation.status }}</span>
                             {% elif adviser_list_dissertation.dissertation.status == 'TO_RECEIVE' %}
                             <span class="label label-default">{{ adviser_list_dissertation.dissertation.status }}</span>
                             {% elif adviser_list_dissertation.dissertation.status == 'TO_DEFEND' %}
                             <span class="label label-default">{{ adviser_list_dissertation.dissertation.status }}</span>
                             {% elif adviser_list_dissertation.dissertation.status == 'DEFENDED' %}
                             <span class="label label-default">{{ adviser_list_dissertation.dissertation.status }}</span>
-                            {% elif adviser_list_dissertation.dissertation.status == 'ENDED' %}
+                            {% elif adviser_list_dissertation.dissertation.status == 'ENDED_WIN' %}
+                            <span class="label label-default">{{ adviser_list_dissertation.dissertation.status }}</span>
+                            {% elif adviser_list_dissertation.dissertation.status == 'ENDED_LOS' %}
+                            <span class="label label-danger">{{ adviser_list_dissertation.dissertation.status }}</span>
+                            {% else %}
                             <span class="label label-default">{{ adviser_list_dissertation.dissertation.status }}</span>
                             {% endif %}
                         </td>
