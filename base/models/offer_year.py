@@ -175,5 +175,5 @@ def find_by_user(user, academic_yr):
     return OfferYear.objects.filter(pk__in=offer_year_ids).order_by('acronym')
 
 
-def find_by_offer(off):
-    return OfferYear.objects.filter(offer=off)
+def find_by_offer(offers):
+    return OfferYear.objects.filter(offer__in=offers)
