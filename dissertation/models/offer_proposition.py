@@ -107,3 +107,7 @@ def show_evaluation_first_year(offer_props):
     # True si evaluation_first_year est True pour au moins une offer_prop dans offer_props
     # False sinon
     return any([offer_prop.evaluation_first_year for offer_prop in offer_props])
+
+
+def get_by_dissertation(dissert):
+    return get_by_offer(dissert.offer_year_start.offer)

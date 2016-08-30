@@ -150,15 +150,17 @@
                   <div class="col-md-4">
                       {{ dissertation_role.adviser }}
                   </div>
+                  {% if dissertation.status != 'DRAFT' %}
                   <div class="col-md-5">
                       <a class="btn btn-danger btn-sm" style="width:auto;padding:0;margin:0"
                          href="{% url 'manager_dissertations_role_delete' pk=dissertation_role.pk %}"
                          onclick="return confirm('{% trans 'delete_adviser_role_confirmation_message' %}')">
                           <span class="glyphicon glyphicon-remove span2"></span> {% trans 'delete'%} {{ dissertation_role.adviser }}</a>
                   </div>
+                  {% endif %}
                 </div>
                 {% endfor %}
-                {% if count_dissertation_role < 4 %}
+                {% if count_dissertation_role < 4 and dissertation.status != 'DRAFT' %}
                 <br>
                 <div class="row">
                     <div class="col-md-5 pull-right">
@@ -170,6 +172,73 @@
                     </div>
                 </div>
                 {% endif %}
+                <br>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="well well-sm">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>{% trans 'jury_status' %}</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3" style="text-align: right">
+                                    <label>{% trans 'for_managers' %}</label>
+                                </div>
+                                <div class="col-md-9">
+                                    {% if jury_manager_visibility %}
+                                        <span class="label label-success">{% trans 'visible' %}</span>
+                                    {% else %}
+                                        <span class="label label-danger">{% trans 'invisible' %}</span>
+                                    {% endif %}
+                                    {% if jury_manager_can_edit %}
+                                        <span class="label label-success">{% trans 'editable' %}</span>
+                                    {% else %}
+                                        <span class="label label-danger">{% trans 'non_editable' %}</span>
+                                    {% endif %}
+                                    <br>{% trans jury_manager_message %}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3" style="text-align: right">
+                                    <label>{% trans 'for_teachers' %}</label>
+                                </div>
+                                <div class="col-md-9">
+                                    {% if jury_teacher_visibility %}
+                                        <span class="label label-success">{% trans 'visible' %}</span>
+                                    {% else %}
+                                        <span class="label label-danger">{% trans 'invisible' %}</span>
+                                    {% endif %}
+                                    {% if jury_teacher_can_edit %}
+                                        <span class="label label-success">{% trans 'editable' %}</span>
+                                    {% else %}
+                                        <span class="label label-danger">{% trans 'non_editable' %}</span>
+                                    {% endif %}
+                                    <br>{% trans jury_teacher_message %}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3" style="text-align: right">
+                                    <label>{% trans 'for_students' %}</label>
+                                </div>
+                                <div class="col-md-9">
+                                    {% if jury_student_visibility %}
+                                        <span class="label label-success">{% trans 'visible' %}</span>
+                                    {% else %}
+                                        <span class="label label-danger">{% trans 'invisible' %}</span>
+                                    {% endif %}
+                                    {% if jury_student_can_edit %}
+                                        <span class="label label-success">{% trans 'editable' %}</span>
+                                    {% else %}
+                                        <span class="label label-danger">{% trans 'non_editable' %}</span>
+                                    {% endif %}
+                                    <br>{% trans jury_student_message %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
         <div class="panel panel-default">
@@ -179,7 +248,7 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-3" style="text-align: right">
-                        <label>{% trans 'author' %}</label>
+                        <label>{% trans 'promotor' %}</label>
                     </div>
                     <div class="col-md-9">
                         {{ dissertation.proposition_dissertation.author }}
