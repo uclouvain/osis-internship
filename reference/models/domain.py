@@ -43,7 +43,7 @@ class Domain(models.Model):
     type = models.CharField(max_length=50, choices=domain_type.TYPES, default=domain_type.UNKNOWN)
     adhoc = models.BooleanField(default=True) # If False == Official/validated, if True == Not Official/not validated
     national = models.BooleanField(default=False) # True if is Belgian else False
-    institutional = models.BooleanField(default=False) # True if the domain is in UCL else False
+    reference = models.CharField(max_length=10, blank=True, null=True)
 
     def __str__(self):
         return self.name

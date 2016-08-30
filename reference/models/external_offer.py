@@ -37,11 +37,12 @@ class ExternalOfferAdmin(admin.ModelAdmin):
 class ExternalOffer(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=150, unique=True)
     adhoc = models.BooleanField(default=True)  # If False == Official/validated, if True == Not Official/not validated
     domain = models.ForeignKey('Domain', on_delete=models.CASCADE)
     grade_type = models.ForeignKey('GradeType', on_delete=models.CASCADE)
     offer_year = models.ForeignKey('base.OfferYear', blank=True, null=True, on_delete=models.CASCADE) # Institution equivalence ("intern" offer)
+    national = models.BooleanField(default=False) # True if is Belgian else False
 
     def __str__(self):
         return self.name
