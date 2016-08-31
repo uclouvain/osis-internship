@@ -55,17 +55,19 @@
         </div>
         <br>
         <div class="row">
+            <form method="get" action="{% url 'offer_read' offer_form.offer_year.id %}">
+            <input type="hidden" name="displaytab" value="tab_dynamic_form">
             <div class="col-md-4">
                 <a href="{% url 'offer_form_edit' offer_form.id %}" title="{%trans 'edit'%}"
                    class="btn btn-primary" role="button" id="lnk_offer_form_edit">
                     <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> {% trans 'edit'%}
                 </a>
-                <a href="{% url 'offer_read' offer_form.offer_year.id %}"
-                   id="lnk_offer_read_{{offer_form.offer_year.id}}" title="{%trans 'back'%}"
-                   class="btn btn-default" role="button">
-                    <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span> {% trans 'back'%}
-                </a>
+                <button type="submit" id="bt_submit_offer_year_search" class="btn btn-default" role="button"
+                            title="{%trans 'back'%}">
+                           <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span> {% trans 'back'%}</button>
             </div>
+            </form>
+
             <div class="col-md-8">
 
             </div>

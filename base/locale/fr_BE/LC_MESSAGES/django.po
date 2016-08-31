@@ -1194,6 +1194,9 @@ msgstr "Formulaire d'admission"
 msgid "order"
 msgstr "Ordonner"
 
+msgid "options"
+msgstr "Options"
+
 msgid "required"
 msgstr "Obligatoire"
 

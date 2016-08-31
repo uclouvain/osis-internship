@@ -78,13 +78,17 @@ def offer_read(request, offer_year_id):
     program_managers = mdl.program_manager.find_by_offer_year(offer_yr)
     is_program_manager = mdl.program_manager.is_program_manager(request.user, offer_year=offer_yr)
     countries = mdl_ref.country.find_all()
+    displaytab = request.GET.get('displaytab', '')
     return layout.render(request, "offer.html", {'offer_year': offer_yr,
                                                  'offer_year_events': offer_yr_events,
                                                  'admission_form': admission_form,
                                                  'program_managers': program_managers,
                                                  'is_program_manager': is_program_manager,
+                                                 'is_admission_form': True,
+                                                 'displaytab': displaytab,
                                                  'countries': countries,
                                                  'tab': 0})
+
 
 
 def score_encoding(request, offer_year_id):
@@ -142,41 +146,6 @@ def offer_question_save(request, question_id=None):
 
     question = admission.question.find_by_id(question_id)
     question_form = OfferQuestionForm(data=request.POST, instance=question)
-
-    # if id:
-    #     offer_question = admission.question.find_by_id(id)
-    # else:
-    #     offer_question = admission.question.Question()
-    # form_id = request.POST['form']
-    #
-    # if form_id:
-    #     localform = get_object_or_404(admission.form.Form, pk=form_id)
-    #     offer_question.form = localform
-    # else:
-    #     offer_question.form = None
-    #
-    # if request.POST['label']:
-    #     offer_question.label = request.POST['label']
-    # else:
-    #     offer_question.label = None
-    #
-    # if request.POST['description']:
-    #     offer_question.description = request.POST['description']
-    # else:
-    #     offer_question.description = None
-    #
-    # if request.POST['type']:
-    #     offer_question.type = request.POST['type']
-    # else:
-    #     offer_question.type = None
-    #
-    # if request.POST['order']:
-    #     offer_question.order = request.POST['order']
-    # else:
-    #     offer_question.order = None
-
-    #quest_required = request.POST.get('quest_required', False)
-    #question_form.required = quest_required
 
     if question_form.is_valid():
         instance = question_form.save()

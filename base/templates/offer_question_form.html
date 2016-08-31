@@ -90,7 +90,7 @@
                 <div class="row">
                     <div class="col-md-2">
                         <label for="txt_order">{% trans 'order'%}</label>
-                        <input class="form-control" type="number" min="0" max="100"
+                        <input class="form-control" type="number" min="0"
                                value="{{ question.order | default_if_none:'' }}"
                                name="order" id="txt_order"><font class="error">{{ question.order.errors }}</font>
                         <font class="error">{{ form.order.errors }}</font>
@@ -99,14 +99,16 @@
                 <div class="row checkbox" style="margin-top:25px">
                     <div class="col-md-12">
                         <label>
-                            <input type="checkbox" id="chk_required" name="quest_required" value="{{ question.required | default_if_none:'False'}}"
+                            <input type="checkbox" id="quest_required" name="required"
                                    {% if question.required %}checked{%endif%}/>&nbsp;<b>{% trans 'required'%}</b>
                         </label>
                     </div>
                 </div>
-                <a id="remove_row" class="btn btn-default pull-right" style="display:none" role="button"> <span class="glyphicon glyphicon-minus" aria-hidden="true"></span></a>
-                <a id="add_row" class="btn btn-default pull-right" style="display:none" role="button"> <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+                <a id="remove_row" class="btn btn-default pull-right" role="button"> <span class="glyphicon glyphicon-minus" aria-hidden="true"></span></a>
+                <a id="add_row" class="btn btn-default pull-right" role="button"> <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
                 <div id="dynamic_quest">
+                        {% if question.type == 'DROPDOWN_LIST' %}
+                        <h3>{% trans 'options' %}</h3>
                         <div class="row">
                         <div class="col-md-12">
                         <br>
@@ -137,6 +139,7 @@
                         </table>
                         </div>
                         </div>
+                        {% endif %}
                 </div>
                 <br>
                 <button type="submit" class="btn btn-primary" title="{% trans 'save'%}" id="bt_offer_form_save">
@@ -154,6 +157,18 @@
 {% block script %}
 <script>
         $(document).ready(function() {
+            questtype=$('#quest_type').val();
+            if ((questtype == 'RADIO_BUTTON') || (questtype == 'CHECKBOX') || (questtype == 'DROPDOWN_LIST'))
+            {
+               $("#add_row").show();
+               $("#remove_row").show();
+            }
+            else
+            {
+               $("#add_row").hide();
+               $("#remove_row").hide();
+            }
+
             $('#quest_type').change(function() {
                 $('#dynamic_quest').empty();
                 questtype=$('#quest_type').val();
@@ -162,8 +177,8 @@
                 {
                     $("#add_row").show();
                     $("#remove_row").show();
-
-                    $('#dynamic_quest').append($("<test></test>"));
+                    $('#dynamic_quest').append($("<br />"));
+                    $('#dynamic_quest').append($("<h3>{% trans 'options' %}</h3>"));
                     $('#dynamic_quest').append($("<div></div>")
                                        .attr("class", "row"));
                     $('#dynamic_quest').append($("<div></div>")
@@ -199,7 +214,7 @@
                     if (questtype == 'DROPDOWN_LIST') { maxcol = 4; }
                     for (i = 1; i < maxcol; i++) {
                         input ='<input ';
-                        if (i==2 || i==3) {  input+=' type="number" min="0" max="100" value="0" '; } else { input+=' type="text" '; }
+                        if (i==2 || i==3) {  input+=' type="number" min="0" value="0" '; } else { input+=' type="text" '; }
                         if (i==1) input+=' name="labelQuest' + 1 + '" class="form-control" />';
                         if (i==2) input+=' name="valueQuest' + 1 + '" class="form-control" />';
                         if (i==3) input+=' name="orderQuest' + 1 + '" class="form-control" />';
@@ -212,6 +227,7 @@
                 else
                 {
                     $("#add_row").hide();
+                    $("#remove_row").hide();
                 }
             });
 
@@ -224,7 +240,7 @@
                   totalcomp = (rowCount * maxcol) - rowCount;
                     for (i = 1; i < maxcol; i++) {
                         input ='<input ';
-                        if (i==2 || i==3) {  input+=' type="number" min="0" max="100" value="0" '; } else { input+=' type="text" '; }
+                        if (i==2 || i==3) {  input+=' type="number" min="0" value="0" '; } else { input+=' type="text" '; }
                         if (i==1) input+=' name="labelQuest' + (rowCount+1) + '" class="form-control" />';
                         if (i==2) input+=' name="valueQuest' + (rowCount+1) + '" class="form-control" />';
                         if (i==3) input+=' name="orderQuest' + (rowCount+1) + '" class="form-control" />';
