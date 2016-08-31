@@ -656,10 +656,10 @@ msgid "start_jury_visibility"
 msgstr "Début de la période de visibilité du jury"
 
 msgid "start_visibility_dissertation"
-msgstr ""
+msgstr "Début de la période de création des mémoires"
 
 msgid "start_visibility_proposition"
-msgstr ""
+msgstr "Début de la période de visibilité des sujets"
 
 msgid "stats"
 msgstr "Statistiques"
