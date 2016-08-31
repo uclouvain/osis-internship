@@ -24,14 +24,11 @@
 #
 ##############################################################################
 
-from django.utils.translation import ugettext_lazy as _
-
-
 SECONDARY = "SECONDARY"
 UNIVERSITY = "UNIVERSITY"
 HIGHER_NON_UNIVERSITY = "HIGHER_NON_UNIVERSITY"
 
 
-INSTITUTION_TYPE = ((SECONDARY, _("secondary")),
-                    (UNIVERSITY, _('university')),
-                    (HIGHER_NON_UNIVERSITY, _('higher_non_university')))
+INSTITUTION_TYPE = ((SECONDARY, SECONDARY),
+                    (UNIVERSITY, UNIVERSITY),
+                    (HIGHER_NON_UNIVERSITY, HIGHER_NON_UNIVERSITY))

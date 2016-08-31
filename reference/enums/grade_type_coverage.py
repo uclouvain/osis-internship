@@ -24,15 +24,12 @@
 #
 ##############################################################################
 
-from django.utils.translation import ugettext_lazy as _
-
-
 HIGH_EDUC_NOT_UNIVERSITY = "HIGH_EDUC_NOT_UNIVERSITY"
 UNIVERSITY = "UNIVERSITY"
 UNKNOWN = "UNKNOWN"
 
 COVERAGE_CHOICES = (
-    (HIGH_EDUC_NOT_UNIVERSITY, _('high_educ_not_university')),
-    (UNIVERSITY, _('university')),
-    (UNKNOWN, _('unknown')))
+    (HIGH_EDUC_NOT_UNIVERSITY, HIGH_EDUC_NOT_UNIVERSITY),
+    (UNIVERSITY, UNIVERSITY),
+    (UNKNOWN, UNKNOWN))
 

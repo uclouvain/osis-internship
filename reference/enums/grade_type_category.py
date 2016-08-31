@@ -24,7 +24,6 @@
 #
 ##############################################################################
 
-
 BACHELOR = "BACHELOR"
 MASTER = "MASTER"
 DOCTORATE = "DOCTORATE"
@@ -33,10 +32,10 @@ CERTIFICATE = "CERTIFICATE"
 OTHER = "OTHER"
 
 GRADE_CHOICES = (
-    (BACHELOR, 'bachelor'),
-    (MASTER, 'master'),
-    (DOCTORATE, 'ph_d'),
+    (BACHELOR, BACHELOR),
+    (MASTER, MASTER),
+    (DOCTORATE, DOCTORATE),
     # (TRAINING_CERTIFICATE, _('teacher_training_certificate')),
-    (CERTIFICATE, 'certificate'),
-    (OTHER, 'other'))
+    (CERTIFICATE, CERTIFICATE),
+    (OTHER, OTHER))
 

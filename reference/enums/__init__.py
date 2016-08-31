@@ -1,0 +1,5 @@
+from reference.enums import domain_type
+from reference.enums import education_institution_national_comunity
+from reference.enums import education_institution_type
+from reference.enums import grade_type_category
+from reference.enums import grade_type_coverage
