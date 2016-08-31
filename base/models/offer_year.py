@@ -33,7 +33,7 @@ class OfferYearAdmin(admin.ModelAdmin):
     list_display = ('acronym', 'offer', 'parent', 'title', 'academic_year', 'changed')
     fieldsets = ((None, {'fields': ('offer', 'academic_year', 'entity_administration', 'entity_administration_fac',
                                     'entity_management', 'entity_management_fac', 'acronym', 'title', 'parent',
-                                    'title_international', 'title_short', 'title_printable', 'grade')}),)
+                                    'title_international', 'title_short', 'title_printable', 'grade', 'campus')}),)
     raw_id_fields = ('offer', 'parent')
     search_fields = ['acronym']
 
@@ -67,6 +67,7 @@ class OfferYear(models.Model):
     country = models.ForeignKey('reference.Country', blank=True, null=True)
     phone = models.CharField(max_length=30, blank=True, null=True)
     fax = models.CharField(max_length=30, blank=True, null=True)
+    campus = models.ForeignKey('Campus', blank=True, null=True)
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.acronym)
@@ -139,26 +140,22 @@ def search(entity=None, academic_yr=None, acronym=None):
     """
     Offers are organized hierarchically. This function returns only root offers.
     """
-    has_criteria = False
+    out = None
     queryset = OfferYear.objects
 
     if entity:
         queryset = queryset.filter(entity_management__acronym__icontains=entity)
-        has_criteria = True
 
     if academic_yr:
         queryset = queryset.filter(academic_year=academic_yr)
-        has_criteria = True
 
     if acronym:
         queryset = queryset.filter(acronym__icontains=acronym)
-        has_criteria = True
 
-    if has_criteria:
-        queryset = queryset.order_by('acronym')
-        return queryset
-    else:
-        return None
+    if entity or academic_yr or acronym:
+        out = queryset.order_by('acronym')
+               
+    return out
 
 
 def find_by_academicyear_acronym(academic_yr, acronym):
@@ -176,3 +173,7 @@ def find_by_user(user, academic_yr):
     program_manager_queryset = program_manager.find_by_user(user, academic_year=academic_yr)
     offer_year_ids = program_manager_queryset.values_list('offer_year', flat=True).distinct('offer_year')
     return OfferYear.objects.filter(pk__in=offer_year_ids).order_by('acronym')
+
+
+def find_by_offer(off):
+    return OfferYear.objects.filter(offer=off)

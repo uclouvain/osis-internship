@@ -1,0 +1,164 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+{% endcomment %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/custom.css' %}">
+<link rel="stylesheet" href="{% static 'css/dataTables.bootstrap.min.css' %}">
+{% endblock %}
+{% block breadcrumb %}
+<li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'institution' %}</a></li>
+<li><a href="{% url 'mandates' %}" id="lnk_mandates">{% trans 'mandates' %}</a></li>
+<li class="active">{% trans 'reviewer_mandates_list' %}</li>
+{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h3>{% trans 'assistantship_mandate_renewal' %} {{ year|add:1 }}</h3>
+</div>
+<div class="panel panel-default">
+    {% if can_delegate %}
+    <ul class="nav nav-tabs">
+    <li class="active"><a href="#">{% trans 'reviewer_mandates_list' %}</a></li>
+    <li><a href="{% url 'reviewer_delegation' %}">{% trans 'reviewer_delegation' %}</a></li>
+    </ul>
+    {% endif %}
+    <div class="panel-body">
+        <div class="row">
+	        <div class="col-md-12 text-right">
+            <form action=" {% url 'reviewer_mandates_list' %} " method="GET">
+            {{ form }}
+            </form></br>
+            </div>
+        </div>
+        <div class="table-responsive">
+        <table id="myTable" class="table table-hover table-condensed table-bordered" cellspacing="0" width="100%">
+        <thead>
+        <tr>
+        <th>{% trans 'global_id' %}</th>
+        <th>{% trans 'assistant' %}</th>
+        <th>{% trans 'structures' %}</th>
+        <th>{% trans 'branche' %}</th>
+        <th>{% trans 'mandate' %}</th>
+        <th>{% trans 'eq_fte' %}</th>
+        <th>{% trans 'workflow' %}</th>
+        <th>{% trans 'edit' %}</th>
+        <th>{% trans 'view' %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for mandate in object_list %}
+            <tr>
+            <td>{{ mandate.sap_id }}</td>
+            <td>{{ mandate.assistant.person }}</td><td><ul>
+            {% for struct in mandate.mandatestructure_set.all|dictsort:"structure.type" %}
+                {% if struct.structure.part_of %}
+                <li>{% trans struct.structure.type|lower %} :
+                {{ struct.structure.acronym }} ({{ struct.structure.part_of.acronym }})</li>
+                {% else %}
+                <li>{% trans struct.structure.type|lower %} : {{ struct.structure.acronym }}</li>
+                {% endif %}
+            {% endfor %}
+            </ul> </td>
+            {% if mandate.assistant_type == "TEACHING_ASSISTANT" %}
+	        <td>AS</td>
+            {% else %}
+	        <td>ST</td>
+            {% endif %}
+            <td>{{ mandate.contract_duration }}</td>
+            <td>{{ mandate.contract_duration_fte }}</td>
+            {% if mandate.state == "TO_DO" %}
+	        <td>{% trans 'pending' %}</td>
+            {% elif mandate.state == "DECLINED" %}
+	        <td>{% trans 'declined' %}</td>
+            {% elif mandate.state == "TRTS" %}
+	        <td>{% trans 'assistant' %}</td>
+            {% elif mandate.state == "PHD_SUPERVISOR" %}
+	        <td>{% trans 'phd_supervisor' %}</td>
+            {% elif mandate.state == "RESEARCH" %}
+	        <td>{% trans 'research' %}</td>
+            {% elif mandate.state == "SUPERVISION" %}
+	        <td>{% trans 'supervision' %}</td>
+            {% elif mandate.state == "VICE_RECTOR" %}
+	        <td>{% trans 'sector_vice_rector' %}</td>
+            {% elif mandate.state == "DONE" %}
+	        <td>{% trans 'done' %}</td>
+            {% endif %}
+            {% if mandate.state in reviewer.role %}
+                <td align="center"><a href="{% url 'review_edit' mandate.id %}">
+                <button type="button" class="btn btn-link btn-lg" title="{% trans 'edit'%}" id="bt_review_edit">
+                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                </button>{% trans 'edit'%}</a></td><td></td>
+            {% elif mandate.assistant.supervisor == request.user.person and mandate.state == "PHD_SUPERVISOR" %}
+                <td align="center"><a href="{% url 'review_edit' mandate.id %}">
+                <button type="button" class="btn btn-link btn-lg" title="{% trans 'edit'%}" id="bt_review_edit">
+                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                </button>{% trans 'edit'%}</a></td><td></td>
+            {% elif mandate.assistant.supervisor == request.user.person and mandate.state in phd_list %}
+                <td></td><td align="center">
+                <a href="{% url 'review_view' reviewer_id=reviewer.id mandate_id=mandate.id %}">
+                <button type="button" class="btn btn-link btn-lg" title="{% trans 'view'%}" id="bt_view_view">
+                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                </button>{% trans 'view'%}</a></td>
+            {% elif "RESEARCH" in reviewer.role and mandate.state in research_list %}
+                <td></td><td align="center">
+                <a href="{% url 'review_view' reviewer_id=reviewer.id mandate_id=mandate.id %}">
+                <button type="button" class="btn btn-link btn-lg" title="{% trans 'view'%}" id="bt_view_view">
+                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                </button>{% trans 'view'%}</a></td>
+            {% elif "SUPERVISION" in reviewer.role and mandate.state in supervision_list %}
+                <td></td><td align="center">
+                <a href="{% url 'review_view' reviewer_id=reviewer.id mandate_id=mandate.id %}">
+                <button type="button" class="btn btn-link btn-lg" title="{% trans 'view'%}" id="bt_view_view">
+                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                </button>{% trans 'view'%}</a></td>
+            {% elif "VICE_RECTOR" in reviewer.role and mandate.state in vice_rector_list %}
+                <td></td><td align="center">
+                <a href="{% url 'review_view' reviewer_id=reviewer.id mandate_id=mandate.id %}">
+                <button type="button" class="btn btn-link btn-lg" title="{% trans 'view'%}" id="bt_view_view">
+                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                </button>{% trans 'view'%}</a></td>
+            {% else %}
+                <td></td><td></td>
+            {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/dataTables.bootstrap.min.js' %}"></script>
+<script>
+$(document).ready(function() {
+    $('#myTable').DataTable( {
+        stateSave: true
+        } );
+    } );
+</script>
+{% endblock %}

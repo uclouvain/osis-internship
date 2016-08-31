@@ -23,39 +23,34 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+import urllib.request
+import unicodedata
+from xml.dom import minidom
+import logging
 
 
 class InternshipOffer(models.Model):
     organization        = models.ForeignKey('internship.Organization')
-    learning_unit_year  = models.ForeignKey('base.LearningUnitYear')
+    speciality          = models.ForeignKey('internship.InternshipSpeciality',null=True)
     title = models.CharField(max_length=255)
     maximum_enrollments = models.IntegerField()
-    selectable          = models.BooleanField()
+    selectable          = models.BooleanField(default=True)
 
     def __str__(self):
         return self.title
 
     @staticmethod
     def find_internships():
-        return InternshipOffer.objects.all().order_by('organization__reference')
+        return InternshipOffer.objects.all().order_by('speciality__name', 'organization__reference')
 
     @staticmethod
-    def find_interships_by_learning_unit_organization(learning_unit_year, organization):
-        internships = InternshipOffer.objects.filter(learning_unit_year__title=learning_unit_year)\
-                                            .filter(organization__reference=organization)
-        return internships
-
-    @staticmethod
-    def find_interships_by_learning_unit(learning_unit_year):
-        internships = InternshipOffer.objects.filter(learning_unit_year__title=learning_unit_year)
-        return internships
-
-    @staticmethod
-    def find_interships_by_organization(organization):
-        internships = InternshipOffer.objects.filter(organization__name=organization)
-        return internships
+    def search(**kwargs):
+        kwargs = {k: v for k, v in kwargs.items() if v}
+        queryset = InternshipOffer.objects.filter(**kwargs)
+        return queryset
 
     @staticmethod
     def find_intership_by_id(id):
@@ -69,14 +64,27 @@ class InternshipOffer(models.Model):
             if int(i.id) == int(id):
                 return i
 
+    class Meta:
+        permissions = (
+            ("is_internship_manager", "Is Internship Manager"),
+            ("can_access_internship","Can access internships"),
+        )
+
+
 class InternshipEnrollment(models.Model):
-    learning_unit_enrollment = models.ForeignKey('base.LearningUnitEnrollment')
+    student = models.ForeignKey('base.student')
     internship_offer = models.ForeignKey(InternshipOffer)
-    start_date = models.DateField()
-    end_date = models.DateField()
+    place = models.ForeignKey('internship.Organization')
+    period = models.ForeignKey('internship.Period')
 
     def __str__(self):
         return u"%s" % self.learning_unit_enrollment.student
+
+    @staticmethod
+    def search(**kwargs):
+        kwargs = {k: v for k, v in kwargs.items() if v}
+        queryset = InternshipEnrollment.objects.filter(**kwargs)
+        return queryset
 
 
 class InternshipMaster(models.Model):
@@ -91,53 +99,44 @@ class InternshipMaster(models.Model):
                         ('EMERGENCY',_('Emergency')),
                         ('GERIATRICS',_('Geriatrics')))
 
-    organization     = models.ForeignKey('internship.Organization')
-    internship_offer = models.ForeignKey(InternshipOffer)
-    person = models.ForeignKey('base.Person')
-    reference = models.CharField(max_length=30, blank=True, null=True)
-    civility = models.CharField(max_length=20, blank=True, null=True, choices=CIVILITY_CHOICE)
-    type_mastery = models.CharField(max_length=20, blank=True, null=True, choices=TYPE_CHOICE)
-    speciality = models.CharField(max_length=20, blank=True, null=True, choices=SPECIALITY_CHOICE)
+    organization     = models.ForeignKey('internship.Organization', null=True)
+    #internship_offer = models.ForeignKey(InternshipOffer)
+    first_name = models.CharField(max_length=50, blank=True, null=True, db_index=True)
+    last_name = models.CharField(max_length=50, blank=True, null=True, db_index=True)
+    reference = models.CharField(max_length=50, blank=True, null=True)
+    civility = models.CharField(max_length=50, blank=True, null=True)
+    type_mastery = models.CharField(max_length=50, blank=True, null=True)
+    speciality = models.CharField(max_length=50, blank=True, null=True)
 
     @staticmethod
     def find_masters():
         return InternshipMaster.objects.all()
 
     def __str__(self):
-        return u"%s - %s" % (self.person, self.reference)
+        return u"%s" % (self.reference)
 
     @staticmethod
-    def find_masters_by_speciality_and_organization(speciality, organization):
-        masters = InternshipMaster.objects.filter(speciality=speciality)\
-                                            .filter(organization__reference=organization)
-        return masters
-
-    @staticmethod
-    def find_masters_by_speciality(speciality):
-        masters = InternshipMaster.objects.filter(speciality=speciality)
-        return masters
-
-    @staticmethod
-    def find_masters_by_organization(organization):
-        masters = InternshipMaster.objects.filter(organization__name=organization)
-        return masters
+    def search(**kwargs):
+        kwargs = {k: v for k, v in kwargs.items() if v}
+        queryset = InternshipMaster.objects.filter(**kwargs)
+        return queryset
 
 
 class InternshipChoice(models.Model):
     student             = models.ForeignKey('base.Student')
     organization        = models.ForeignKey('internship.Organization')
-    learning_unit_year  = models.ForeignKey('base.LearningUnitYear')
+    speciality          = models.ForeignKey('internship.InternshipSpeciality',null=True)
     choice              = models.IntegerField()
+    priority            = models.BooleanField()
 
     @staticmethod
     def find_by_all_student():
-        all = InternshipChoice.objects.all()
+        all = InternshipChoice.objects.all().order_by('student__person__last_name')
         students_list=[]
         for a in all:
             students_list.append(a.student)
         unique = []
         [unique.append(item) for item in students_list if item not in unique]
-
         return unique
 
     @staticmethod
@@ -151,98 +150,97 @@ class InternshipChoice(models.Model):
         return internships
 
     @staticmethod
-    def find_by(s_organization=None, s_learning_unit_year=None, s_organization_ref=None, s_choice=None,
-                s_define_choice=None, s_student=None):
+    def search(**kwargs):
+        kwargs = {k: v for k, v in kwargs.items() if v}
+        queryset = InternshipChoice.objects.filter(**kwargs)
+        return queryset
 
-        has_criteria = False
-        queryset = InternshipChoice.objects
-
-        if s_organization:
-            queryset = queryset.filter(organization=s_organization)
-            has_criteria = True
-
-        if s_learning_unit_year:
-            queryset = queryset.filter(learning_unit_year=s_learning_unit_year)
-            has_criteria = True
-
-        if s_organization_ref:
-            queryset = queryset.filter(organization__reference=s_organization_ref).order_by('choice')
-            has_criteria = True
-
-        if s_define_choice:
-            queryset = queryset.filter(choice=s_define_choice)
-            has_criteria = True
-
-        if s_choice:
-            if s_choice == 1 :
-                queryset = queryset.filter(choice=s_choice)
-            else :
-                queryset = queryset.exclude(choice=1)
-            has_criteria = True
-
-        if s_student:
-            queryset = queryset.filter(student = s_student).order_by('choice')
-            has_criteria = True
-
-        if has_criteria:
-            return queryset
-        else:
-            return None
+    @staticmethod
+    def search_other_choices(**kwargs):
+        kwargs = {k: v for k, v in kwargs.items() if v}
+        queryset = InternshipChoice.objects.filter(**kwargs)
+        queryset = queryset.exclude(choice=1)
+        return queryset
 
 class Period(models.Model):
     name = models.CharField(max_length=255)
-    date_start = models.DateField()
-    date_end = models.DateField()
+    date_start = models.DateField(blank=False)
+    date_end = models.DateField(blank=False)
 
-class Organization(models.Model):
-    name = models.CharField(max_length=255)
-    acronym = models.CharField(max_length=15)
-    website = models.URLField(max_length=255, blank=True, null=True)
-    reference = models.CharField(max_length=30, blank=True, null=True)
-    type = models.CharField(max_length=30, blank=True, null=True)
+    def __str__(self):
+        return u"%s" % (self.name)
+
+    @staticmethod
+    def search(**kwargs):
+        kwargs = {k: v for k, v in kwargs.items() if v}
+        queryset = Period.objects.filter(**kwargs)
+        return queryset
+
+    @staticmethod
+    def find_by_id(period_id):
+        return Period.objects.get(pk=period_id)
+
+class PeriodInternshipPlaces(models.Model):
+    period = models.ForeignKey('internship.Period')
+    internship = models.ForeignKey('internship.InternshipOffer')
+    number_places = models.IntegerField(blank=None, null=False)
+
+    @staticmethod
+    def search(**kwargs):
+        kwargs = {k: v for k, v in kwargs.items() if v}
+        queryset = PeriodInternshipPlaces.objects.filter(**kwargs)
+        return queryset
+
+    @staticmethod
+    def find_by_id(id):
+        return PeriodInternshipPlaces.objects.get(pk=id)
+
+class InternshipSpeciality(models.Model):
+    learning_unit = models.ForeignKey('base.LearningUnit')
+    name = models.CharField(max_length=125, blank=False, null=False)
+    acronym = models.CharField(max_length=125, blank=False, null=False)
+    mandatory = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
 
     @staticmethod
+    def search(**kwargs):
+        kwargs = {k: v for k, v in kwargs.items() if v}
+        queryset = InternshipSpeciality.objects.filter(**kwargs)
+        return queryset
+
+    @staticmethod
+    def find_all():
+        return InternshipSpeciality.objects.all().order_by('name')
+
+    @staticmethod
+    def find_by_id(speciality_id):
+        return InternshipSpeciality.objects.get(pk=speciality_id)
+
+class Organization(models.Model):
+    name = models.CharField(max_length=255)
+    acronym = models.CharField(max_length=15, blank=True)
+    website = models.URLField(max_length=255, blank=True, null=True)
+    reference = models.CharField(max_length=30, blank=True, null=True)
+    type = models.CharField(max_length=30, blank=True, null=True, default="service partner")
+
+    def __str__(self):
+        return self.name
+
+    @staticmethod
+    def search(**kwargs):
+        kwargs = {k: v for k, v in kwargs.items() if v}
+        queryset = Organization.objects.filter(**kwargs)
+        return queryset
+
+    @staticmethod
     def find_by_id(organization_id):
         return Organization.objects.get(pk=organization_id)
 
-    @staticmethod
-    def search(acronym=None, name=None, reference=None):
-        has_criteria = False
-        queryset = Organization.objects
-
-        if acronym:
-            queryset = queryset.filter(acronym=acronym)
-            has_criteria = True
-
-        if name:
-            queryset = queryset.filter(name=name)
-            has_criteria = True
-
-        if reference:
-            queryset = queryset.filter(reference=reference)
-            has_criteria = True
-
-        if has_criteria:
-            return queryset
-        else:
-            return None
-
-    @staticmethod
-    def find_all_order_by_reference():
-        return Organization.objects.all().order_by('reference')
-
-
-    @staticmethod
-    def find_by_type(type=None, order_by=None):
-        if order_by:
-            queryset = Organization.objects.filter(type=type).order_by(*order_by)
-        else:
-            queryset = Organization.objects.filter(type=type)
-
-        return queryset
+    def save(self, *args, **kwargs):
+        self.acronym = self.name[:14]
+        super(Organization, self).save(*args, **kwargs)
 
 class OrganizationAddress(models.Model):
     organization = models.ForeignKey('Organization')
@@ -250,13 +248,129 @@ class OrganizationAddress(models.Model):
     location = models.CharField(max_length=255)
     postal_code = models.CharField(max_length=20)
     city = models.CharField(max_length=255)
+    latitude = models.FloatField(blank=True, null=True)
+    longitude = models.FloatField(blank=True, null=True)
     country = models.CharField(max_length=255)
 
     @staticmethod
-    def find_by_organization(organization):
-        return OrganizationAddress.objects.filter(organization=organization).order_by('label')
-
+    def search(**kwargs):
+        kwargs = {k: v for k, v in kwargs.items() if v}
+        queryset = OrganizationAddress.objects.filter(**kwargs)
+        return queryset
 
     @staticmethod
     def find_by_id(organization_address_id):
         return OrganizationAddress.objects.get(pk=organization_address_id)
+
+    def save(self, *args, **kwargs):
+        self.label = "Addr"+self.organization.name[:14]
+        super(OrganizationAddress, self).save(*args, **kwargs)
+
+    def geocode(addr):
+        lat_long = [None]*2
+        # Transform the address for a good url and delete all accents
+        addr = addr.replace('\n','')
+        addr = addr.replace(" ", "+")
+        addr = addr.replace("'", "\'")
+        addr = addr.replace("n°", "")
+        addr = addr.replace("n °", "")
+        addr = addr.replace("Œ", "Oe")
+        addr = addr.encode('utf8','replace').decode('utf8')
+        addr = OrganizationAddress.strip_accents(addr)
+        # get the complete url
+        url = ''.join(['https://maps.googleapis.com/maps/api/geocode/xml?address=', addr, '&key=AIzaSyCWeZdraxzqRTMxXxbXY3bncaD6Ijq_EvE'])
+        logging.info(url)
+
+        # using urllib get the xml
+        req = urllib.request.Request(url)
+        with urllib.request.urlopen(req) as response:
+            data = response.read().decode('utf-8')
+
+        # Parse the xml to have the latitude and longitude of the address
+        xmldoc = minidom.parseString(data)
+        status = xmldoc.getElementsByTagName('status')[0].firstChild.data
+        if status == "OK":
+            lat = xmldoc.getElementsByTagName('location')
+            for l in lat:
+                c = l.getElementsByTagName('lat')[0].firstChild.data
+                d = l.getElementsByTagName('lng')[0].firstChild.data
+                lat_long[0] = c
+                lat_long[1] = d
+        # return the value
+        return lat_long
+
+    def strip_accents(s):
+        return ''.join(c for c in unicodedata.normalize('NFD', s)
+                       if unicodedata.category(c) != 'Mn')
+
+    def find_latitude_longitude(infos):
+        #for each data in the infos, check if the lat exist
+        for data in infos:
+            if data.latitude is None :
+                #if it exist, compile the address with the location / postal / city / country
+                address = data.location + " " + data.postal_code + " " \
+                                + data.city + " " + data.country
+                #Compute the geolocalisation
+                address_lat_long = OrganizationAddress.geocode(address)
+                #if the geolac is fing put the data, if not put fake data
+                if address_lat_long[0]:
+                    data.latitude = address_lat_long[0]
+                    data.longitude = address_lat_long[1]
+                else :
+                    address = data.location + " " + data.postal_code + " " \
+                                    + data.country
+                    #Compute the geolocalisation
+                    address_lat_long = OrganizationAddress.geocode(address)
+                    #if the geolac is fing put the data, if not put fake data
+                    if address_lat_long[0]:
+                        data.latitude = address_lat_long[0]
+                        data.longitude = address_lat_long[1]
+                    else :
+                        data.latitude = 999
+                        data.longitude = 999
+                #save the data
+                data.save()
+
+class InternshipStudentInformation(models.Model):
+    person = models.ForeignKey('base.Person')
+    location = models.CharField(max_length=255)
+    postal_code = models.CharField(max_length=20)
+    city = models.CharField(max_length=255)
+    country = models.CharField(max_length=255)
+    latitude = models.FloatField(blank=True, null=True)
+    longitude = models.FloatField(blank=True, null=True)
+    email = models.EmailField(max_length=255, blank=True, null=True)
+    phone_mobile = models.CharField(max_length=100, blank=True, null=True)
+
+    @staticmethod
+    def search(**kwargs):
+        kwargs = {k: v for k, v in kwargs.items() if v}
+        queryset = InternshipStudentInformation.objects.filter(**kwargs)
+        return queryset
+
+    @staticmethod
+    def find_all():
+        return InternshipStudentInformation.objects.all().order_by('person__last_name', 'person__first_name')
+
+    @staticmethod
+    def find_by_person(person):
+        try:
+            return InternshipStudentInformation.objects.get(person=person)
+        except ObjectDoesNotExist:
+            return None
+
+class InternshipStudentAffectationStat(models.Model):
+    student = models.ForeignKey('base.Student')
+    organization = models.ForeignKey('internship.Organization')
+    speciality = models.ForeignKey('internship.InternshipSpeciality')
+    period = models.ForeignKey('internship.Period')
+    choice = models.CharField(max_length=1, blank=False, null=False, default='0')
+    cost = models.IntegerField(blank=False, null=False)
+    consecutive_month = models.BooleanField(default=False, null=False)
+    type_of_internship = models.CharField(max_length=1, blank=False, null=False, default='N')
+
+    @staticmethod
+    def search(**kwargs):
+        kwargs = {k: v for k, v in kwargs.items() if v}
+        queryset = InternshipStudentAffectationStat.objects.filter(**kwargs)
+        return queryset

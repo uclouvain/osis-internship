@@ -47,7 +47,6 @@ QUESTION_TYPES = (
 
 
 class Question(models.Model):
-
     form = models.ForeignKey('Form')
     label = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)

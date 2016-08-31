@@ -24,23 +24,39 @@
 #
 ##############################################################################
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
-from internship.models import InternshipOffer
+from internship.models import InternshipOffer, InternshipStudentInformation, OrganizationAddress
 
 @login_required
+@permission_required('internship.can_access_internship', raise_exception=True)
 def internships_home(request):
     student = mdl.student.find_by(person_username=request.user)
-    for s in student:
-        noma = s.registration_id
+    #Check if the user is a student, if not the noma is not requiered so it's 0
+    if len(student) > 0:
+        for s in student:
+            noma = s.registration_id
+    else:
+        noma = 0
 
     internships = InternshipOffer.find_internships()
-    if internships[0].selectable:
+    #Check if there is a internship offers in data base. If not, the internships
+    #can be block, but there is no effect
+    if len(internships) > 0:
+        if internships[0].selectable:
+            blockable = True
+        else:
+            blockable = False
+    else:
         blockable = True
-    else :
-        blockable = False
 
-    return render(request, "internships_home.html", {'section': 'internship',
-                                                        'noma' : noma,
-                                                        'blockable' : blockable
+    #Find all informations about students and organisation and fin the latitude and longitude of the address
+    student_informations = InternshipStudentInformation.search()
+    organization_informations = OrganizationAddress.search()
+    OrganizationAddress.find_latitude_longitude(student_informations)
+    OrganizationAddress.find_latitude_longitude(organization_informations)
+
+    return render(request, "internships_home.html", {'section':   'internship',
+                                                     'noma':      noma,
+                                                     'blockable': blockable
                                                     })

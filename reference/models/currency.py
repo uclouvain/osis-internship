@@ -25,6 +25,7 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
+from django.core import serializers
 
 
 class CurrencyAdmin(admin.ModelAdmin):
@@ -41,3 +42,13 @@ class Currency(models.Model):
 
     def __str__(self):
         return self.name
+
+
+def serialize_list(list_currencies):
+    """
+    Serialize a list of "Currency" objects using the json format.
+    Use to send data to osis-portal.
+    :param list_currencies: a list of "Currency" objects
+    :return: the serialized list (a json)
+    """
+    return serializers.serialize("json", list_currencies)

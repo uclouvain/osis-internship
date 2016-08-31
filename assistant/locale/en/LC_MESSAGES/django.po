@@ -1,0 +1,365 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-04-22 15:14+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "2nd_renewal"
+msgstr "(for the 2nd renewal)"
+
+msgid "absences"
+msgstr "Absences"
+
+msgid "academic_year"
+msgstr "Academic year"
+
+msgid "action"
+msgstr "Action"
+
+msgid "activities_report_remark"
+msgstr "Activities report remark"
+
+msgid "address"
+msgstr "Address"
+
+msgid "assistant_form_part1"
+msgstr "Assistantship form - Part 1"
+
+msgid "assistant_mandates_renewal"
+msgstr "Assistantship mandate renewal"
+
+msgid "assistant_type"
+msgstr "Assistant type"
+
+msgid "assistants"
+msgstr "Assistants"
+
+msgid "assistantship_mandate_renewal_part1"
+msgstr "Assistantship mandate renewal - Part 1"
+
+msgid "assistantship_mandate_renewal_part2"
+msgstr "Assistantship mandate renewal - Part 2"
+
+msgid "attendees"
+msgstr "Number of students per serie"
+
+msgid "birth_date"
+msgstr "Birth date"
+
+msgid "birthdate"
+msgstr "Birth date"
+
+msgid "cancel"
+msgstr "Cancel"
+
+msgid "comment"
+msgstr "Comment"
+
+msgid "confirm_validation"
+msgstr "Are you sure you want to validate et submit ? This action can not be undone."
+
+msgid "confirmatory_test_date"
+msgstr "Confirmatory test date"
+
+msgid "contact_details"
+msgstr "Administrative information"
+
+msgid "contract duration"
+msgstr "Contract duration"
+
+msgid "contract"
+msgstr "Contract"
+
+msgid "contract_duration_fte"
+msgstr "Contract full time equivalent"
+
+msgid "corsci_representation"
+msgstr "CORSCI representation activities"
+
+msgid "course"
+msgstr "Course"
+
+msgid "course_code"
+msgstr "Course code"
+
+msgid "date_of_first_nomination"
+msgstr "First nomination date"
+
+msgid "dean"
+msgstr "Dean of faculty"
+
+msgid "degrees"
+msgstr "Obtained diplomas"
+
+msgid "delete"
+msgstr "Delete"
+
+msgid "doctorate"
+msgstr "Doctorate"
+
+msgid "email"
+msgstr "Email"
+
+msgid "equivalent_full_time"
+msgstr "EFT"
+
+msgid "events_organisation_service"
+msgstr "Social organization (internships, conferences, study tours, seminars,...)"
+
+msgid "exams_supervision_duration"
+msgstr "Preparation, coordination and evaluation"
+
+msgid "exceptional_justification"
+msgstr "To the extent that you no longer meet the conditions for a 'normal' renewal, can you clarify the circumstances justifying a request for an 'exceptional' renewal (art. 51 of the RAMCS)"
+
+msgid "exercises_tp"
+msgstr "Exercises, practicals, seminars - associated with volume 2 hours, you assume personally"
+
+msgid "expected_registering_date"
+msgstr "Expected registering date"
+
+msgid "external_post"
+msgstr "External post asked outside (FNRS, FRIA, ...)"
+
+msgid "face_to_face"
+msgstr "Number presential sessions hours"
+
+msgid "faculty"
+msgstr "Faculty"
+
+msgid "faculty_representation"
+msgstr "Faculty representation activities"
+
+msgid "field"
+msgstr "Field"
+
+msgid "firstname"
+msgstr "First name"
+
+msgid "formation_activities"
+msgstr "Formation activities"
+
+msgid "formation_activities_percent"
+msgstr "Formation activities percentage"
+
+msgid "formations"
+msgstr "Scientific or educational formations"
+
+msgid "full_time_equivalent"
+msgstr "Full time equivalent"
+
+msgid "function_outside_university"
+msgstr "Current function held outside the university and % of time spent"
+
+msgid "gender"
+msgstr "Gender"
+
+msgid "general_comment"
+msgstr "General Comment"
+
+msgid "governing_body_representation"
+msgstr "Governing body representation activities"
+
+msgid "grade"
+msgstr "Grade"
+
+msgid "head_institute"
+msgstr "Head of institute"
+
+msgid "hours_per_year_message"
+msgstr "Enter the number of hours per annum"
+
+msgid "import"
+msgstr "Import"
+
+msgid "in_progress"
+msgstr "In progress"
+
+msgid "infrastructure_mgmt_service"
+msgstr "Managing public infrastructure"
+
+msgid "institute"
+msgstr "Institute"
+
+msgid "institute_representation"
+msgstr "Institute representation activities"
+
+msgid "institution"
+msgstr "Institution"
+
+msgid "lastname"
+msgstr "Last name"
+
+msgid "mandate"
+msgstr "Mandate"
+
+msgid "mandates"
+msgstr "Mandates"
+
+msgid "mandates_list"
+msgstr "Mandates list"
+
+msgid "matricule_number"
+msgstr "Employee number"
+
+msgid "name_firstame"
+msgstr "Name & First name"
+
+msgid "next_course"
+msgstr "Encode another course"
+
+msgid "next_part"
+msgstr "Next part"
+
+msgid "no"
+msgstr "No"
+
+msgid "no_answer"
+msgstr "did not respond"
+
+msgid "no_supervisor"
+msgstr "No supervisor"
+
+msgid "other_status"
+msgstr "Other status"
+
+msgid "others_delivery"
+msgstr "Other types of activities associated with this course"
+
+msgid "percentage_equivalent_full_time"
+msgstr "% EFT"
+
+msgid "period_covered"
+msgstr "Period covered"
+
+msgid "phd"
+msgstr "PhD"
+
+msgid "phd_inscription"
+msgstr "Ph.D. Inscription"
+
+msgid "phd_inscription_date"
+msgstr "Ph.D. Inscription date"
+
+msgid "previous_part"
+msgstr "Back to previous part"
+
+msgid "program_commission"
+msgstr "Program Commission"
+
+msgid "publishing_field_service"
+msgstr "Publishing activities"
+
+msgid "registered_phd"
+msgstr "Registered Ph.D."
+
+msgid "renewal"
+msgstr "Renewal"
+
+msgid "renewal_form"
+msgstr "Renewal form"
+
+msgid "renewal_short_name"
+msgstr "Renewal"
+
+msgid "renewal_type"
+msgstr "Type of renewal"
+
+msgid "representation_activities"
+msgstr "Representation activities"
+
+msgid "research"
+msgstr "Research"
+
+msgid "research_percent"
+msgstr "Research percentage"
+
+msgid "research_short_name"
+msgstr "RES"
+
+msgid "save"
+msgstr "Save"
+
+msgid "scientific_jury_service"
+msgstr "Juries and scientific commissions participation"
+
+msgid "sector_representation"
+msgstr "Sector representation activities"
+
+msgid "sector_vice-rector_short_name"
+msgstr "S. V-R"
+
+msgid "series_number"
+msgstr "Number of series"
+
+msgid "service_activities"
+msgstr "Service activities"
+
+msgid "service_activities_percent"
+msgstr "Service activities percentage"
+
+msgid "sessions_duration"
+msgstr "Duration of one session"
+
+msgid "sessions_number"
+msgstr "Number of sessions scheduled for this course"
+
+msgid "structures"
+msgstr "Structures"
+
+msgid "students_service"
+msgstr "Information to future students"
+
+msgid "summary"
+msgstr "Summary"
+
+msgid "supervision"
+msgstr "Supervision"
+
+msgid "supervisor"
+msgstr "Supervisor"
+
+msgid "supervisor_email_address"
+msgstr "Supervisor email address"
+
+msgid "svr"
+msgstr "SVR"
+
+msgid "thesis_defence_date"
+msgstr "Thesis defence date"
+
+msgid "total_must_be_100_message"
+msgstr "Total should equal 100"
+
+msgid "tutoring_percent"
+msgstr "Tutoring percentage"
+
+msgid "tutoring_short_name"
+msgstr "TUT"
+
+msgid "type_of_renewal"
+msgstr "Type of renewal"
+
+msgid "validate_and_submit"
+msgstr "Validate and submit"
+
+msgid "various"
+msgstr "Various"
+
+msgid "vice_rector"
+msgstr "Vice Rector"
+
+msgid "yes"
+msgstr "Yes"

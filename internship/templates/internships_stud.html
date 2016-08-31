@@ -27,8 +27,8 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
-  <li><a href="{% url 'internships_home' %}">{% trans 'internships' %}</a></li>
+<li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
+<li><a href="{% url 'internships_home' %}">{% trans 'internships_managment' %}</a></li>
   <li class="active">{% trans 'all_internships' %}</li>
 {% endblock %}
 {% block content %}
@@ -46,7 +46,7 @@
       }
     }
     if (check > 1) {
-      alert('Vous avez déjà un stage avec cette préférence dans cette spécialité.')
+      alert("{% trans 'already_internship_preference_speciality' %}")
       element.value = 0
     }
   }
@@ -54,42 +54,18 @@
   <div class="page-header">
     <h2>{% trans 'internships' %}</h2>
   </div>
-  <table style="height:100%; width:100%;">
-      <thead>
-        <tr>
-            <th style="text-align:center; width:50%;">{% trans 'organization' %}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <form action="{%url 'internships' %}" method="get">
-          <tr>
-            <td style="text-align:center; width:50%;">
-              <select name="organization_sort" onChange="javascript: this.form.submit();">
-               <option value="0">{% trans 'choose_a_hospital' %}</option>
-               {% for organization in all_organizations %}
-                  <option value="{{ organization.name }}"
-                  {% if organization.name == organization_sort_value %}selected{% endif %}>
-                      {{ organization.reference }} - {{ organization.name }}
-                  </option>
-               {% endfor %}
-              </select>
-            </td>
-          </tr>
-        </form>
-      </tbody>
-  </table>
   <br/>
   {% trans 'choose_spec_see_record_choice' %}<br/>
   <span class="glyphicon glyphicon-ok" style="color:green"></span> :
   {% trans 'all_ready_4_choice_spec' %}<br/>
   <span class="glyphicon glyphicon-remove" style="color:red"></span> :
   {% trans 'not_4_choice_spec' %}<br/>
-  {% if selectable == False %}<b><u>{% trans 'internship_block_moment' %}</u></b>{%endif%}
+  {% if selectable == False %}<h3><b><u>{% trans 'internship_block_moment' %}</u></b></h3>{%endif%}
   <div class="panel panel-default">
     <div class="panel-body">
         <ul class="nav nav-tabs">
-          {% for luy in all_learning_unit_year %}
-            <li><a data-toggle="tab" href="#tab_{{luy.tab}}">{{luy.title}}
+          {% for luy in all_speciality %}
+            <li><a data-toggle="tab" href="#tab_{{luy.tab}}">{{luy.name}}
               {%if luy.size = 4 %}
                 <span class="glyphicon glyphicon-ok" style="color:green"></span>
               {%else%}
@@ -105,8 +81,9 @@
         <input type="hidden" name="organization_sort" value="{{ organization.name }}"/>
         {% csrf_token %}
         <div class="tab-content">
-          {% for luy in all_learning_unit_year %}
+          {% for luy in all_speciality %}
           <div id="tab_{{luy.tab}}" class="tab-pane fade in active">
+            <h3>{{luy.name}}</h3>
               <div class="panel panel-default">
                 <div class="tab-content">
                   <div role="tabpanel" class="tab-pane fade in active" id="profile">
@@ -121,7 +98,7 @@
                       </thead>
                       <tbody>
                         {% for internship in all_internships %}
-                        {% if internship.learning_unit_year == luy %}
+                        {% if internship.speciality == luy %}
                           <tr>
                             <td>
                               <input type="hidden" name="organization"
@@ -129,8 +106,8 @@
                                 {{ internship.organization.reference }} - {{ internship.organization }}
                             </td>
                             <td align="center">
-                              <input type="hidden" name="learning_unit_year"
-                              value="{{ internship.learning_unit_year.title }}"/>
+                              <input type="hidden" name="speciality"
+                              value="{{ internship.speciality.name }}"/>
                               {{ internship.maximum_enrollments }}
                             </td>
                             <td align="center">
@@ -182,7 +159,7 @@
                       </thead>
                       <tbody>
                         {% for internship in all_internships %}
-                        {% if internship.learning_unit_year.title = "Stage au choix"%}
+                        {% if internship.speciality.name = "Stage au choix"%}
                           <tr>
                             <td>
                               <input type="hidden" name="organization"
@@ -190,8 +167,8 @@
                                 {{ internship.organization.reference }} - {{ internship.organization }}
                             </td>
                             <td align="center">
-                              <input type="hidden" name="learning_unit_year"
-                              value="{{ internship.learning_unit_year.title }}"/>
+                              <input type="hidden" name="speciality"
+                              value="{{ internship.speciality.name }}"/>
                               {{ internship.maximum_enrollments }}
                             </td>
                             <td align="center">
@@ -242,7 +219,7 @@
                       </thead>
                       <tbody>
                         {% for internship in all_internships %}
-                        {% if internship.learning_unit_year.title = "Stage au choix"%}
+                        {% if internship.speciality.name = "Stage au choix"%}
                           <tr>
                             <td>
                               <input type="hidden" name="organization"
@@ -250,8 +227,8 @@
                                 {{ internship.organization.reference }} - {{ internship.organization }}
                             </td>
                             <td align="center">
-                              <input type="hidden" name="learning_unit_year"
-                              value="{{ internship.learning_unit_year.title }}"/>
+                              <input type="hidden" name="speciality"
+                              value="{{ internship.speciality.name }}"/>
                               {{ internship.maximum_enrollments }}
                             </td>
                             <td align="center">
@@ -288,9 +265,11 @@
               </div>
             </div>
           </div>
-          <button type="submit" class="btn btn-primary" title="{% trans 'Send'%}" id="bt_interships_save">
-              <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Soumettre
-          </button>
+          {% if selectable == True %}
+            <button type="submit" class="btn btn-primary" title="{% trans 'submission' %}" id="bt_interships_save">
+                <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'submission' %}
+            </button>
+          {%endif%}
         </div>
         </form>
   </div>

@@ -26,6 +26,7 @@
 from django.db import models
 from django.contrib import admin
 from django.utils import timezone
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class AcademicYearAdmin(admin.ModelAdmin):
@@ -47,6 +48,11 @@ class AcademicYear(models.Model):
     def __str__(self):
         return u"%s-%s" % (self.year, self.year + 1)
 
+    class Meta:
+        permissions = (
+            ("can_access_academicyear", "Can access academic year"),
+        )
+
 
 def find_academic_year_by_id(academic_year_id):
     return AcademicYear.objects.get(pk=academic_year_id)
@@ -66,4 +72,7 @@ def current_academic_year():
 
 
 def find_academic_year_by_year(year):
-    return AcademicYear.objects.get(year=year)
+    try :
+        return AcademicYear.objects.get(year=year)
+    except ObjectDoesNotExist:
+        return None
