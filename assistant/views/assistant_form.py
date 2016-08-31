@@ -99,6 +99,60 @@ def form_part1_save(request, mandate_id):
 
 
 @user_passes_test(user_is_assistant_and_procedure_is_open, login_url='access_denied')
+def form_part3_edit(request, mandate_id):
+    mandate = assistant_mandate.find_mandate_by_id(mandate_id)
+    person = request.user.person
+    assistant = mandate.assistant
+    if person != assistant.person:
+        return HttpResponseRedirect(reverse('assistant_mandates'))
+    form = AssistantFormPart3(initial={'phd_inscription_date': assistant.phd_inscription_date,
+                                       'confirmation_test_date': assistant.confirmation_test_date,
+                                       'thesis_title': assistant.thesis_title,
+                                       'confirmation_test_date': assistant.confirmation_test_date,
+                                       'remark': assistant.remark,
+                                       }, prefix='mand')
+
+    formset = FilesInLineFormSet(instance=mandate, queryset=
+    assistant_document.AssistantDocument.objects.filter(doc_type='PHD'), prefix='files',
+                                 initial=[{'assistant': assistant, 'doc_type': 'PHD'}])
+
+    return render(request, "assistant_form_part3.html", {'assistant': assistant,
+                                                         'mandate': mandate,
+                                                         'form': form,
+                                                         'formset': formset})
+
+
+@user_passes_test(user_is_assistant_and_procedure_is_open, login_url='access_denied')
+def form_part3_save(request, mandate_id):
+    """Use to save an assistant form part3."""
+    mandate = assistant_mandate.find_mandate_by_id(mandate_id)
+    assistant = mandate.assistant
+    person = request.user.person
+    if person != assistant.person:
+        return HttpResponseRedirect(reverse('assistant_mandates'))
+    elif request.method == 'POST':
+        if 'add_file' in request.POST:
+            form = AssistantDocumentForm(initial={'mandate': mandate,
+                                                  'assistant': assistant,
+                                                  'doc_type': 'PHD'
+                                                  }, prefix='file')
+            return render(request, "add_file.html", {'assistant': assistant,
+                                                     'mandate': mandate,
+                                                     'form': form})
+        else:
+            form = AssistantFormPart3(data=request.POST, instance=assistant, prefix='mand')
+            formset = FilesInLineFormSet(request.POST, request.FILES, instance=mandate, prefix='files')
+            if form.is_valid() and formset.is_valid():
+                form.save()
+                formset.save()
+                return form_part3_edit(request, mandate.id)
+            else:
+                return render(request, "assistant_form_part3.html", {'assistant': assistant,
+                                                                     'mandate': mandate,
+                                                                     'form': form,
+                                                                     'formset': formset})
+
+@user_passes_test(user_is_assistant_and_procedure_is_open, login_url='access_denied')
 def form_part6_edit(request, mandate_id):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     person = request.user.person
