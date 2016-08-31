@@ -95,25 +95,26 @@
                             {{ count_advisers_reader }}
                         </div>
                     </div>
+                    <br>
                     <div class="row">
-                        <div class="col-md-3">
-                          <h2 class="panel-title">{% trans 'chart_pie_adviser_promoteur'  %}</h2>
+                        <div class="col-md-4">
+                          <h4 class="panel-title">{% trans 'chart_pie_adviser_promoteur'  %}</h4>
                           {% if count_advisers_pro > 0 %}
                               <canvas id="pie_chart_pro" width="100" height="100"></canvas>
                           {% else %}
                               <label>{% trans 'no_data' %}</label>
                           {% endif %}
                         </div>
-                        <div class="col-md-3">
-                          <h2 class="panel-title">{% trans 'chart_pie_adviser_copro'  %}</h2>
+                        <div class="col-md-4">
+                          <h4 class="panel-title">{% trans 'chart_pie_adviser_copro'  %}</h4>
                           {% if count_advisers_copro > 0 %}
                           <canvas id="pie_chart_copro" width="100" height="100"></canvas>
                           {% else %}
                               <label>{% trans 'no_data' %}</label>
                           {% endif %}
                         </div>
-                        <div class="col-md-3">
-                          <h2 class="panel-title">{% trans 'chart_pie_adviser_reading'  %}</h2>
+                        <div class="col-md-4">
+                          <h4 class="panel-title">{% trans 'chart_pie_adviser_reading'  %}</h2>
                           {% if count_advisers_reader > 0 %}
                           <canvas id="pie_chart_read" width="100" height="100"></canvas>
                           {% else %}

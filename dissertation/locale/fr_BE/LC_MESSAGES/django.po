@@ -28,11 +28,23 @@ msgstr "Évaluation de première année réussie"
 msgid "action_needed"
 msgstr "Action requise"
 
+msgid "action"
+msgstr "Action"
+
 msgid "actions"
 msgstr "Actions"
 
+msgid "active"
+msgstr "Actif"
+
 msgid "add_advisers"
 msgstr "Ajouter un enseignant"
+
+msgid "add_dissertation"
+msgstr "Ajouter un mémoire"
+
+msgid "add_dissertation_jury_member"
+msgstr "Ajouter un membre au jury"
 
 msgid "add_justification"
 msgstr "Ajouter une justification"
@@ -80,13 +92,25 @@ msgid "available_at_office"
 msgstr "Disponible au bureau"
 
 msgid "available_by_email"
-msgstr "Disponible par email"
+msgstr "Disponible par e-mail"
 
 msgid "available_by_phone"
 msgstr "Disponible par téléphone"
 
 msgid "case_study"
 msgstr "Étude de cas"
+
+msgid "change"
+msgstr "Changement"
+
+msgid "chart_pie_adviser_copro"
+msgstr "Graphe en tant que copromoteur"
+
+msgid "chart_pie_adviser_promoteur"
+msgstr "Graphe en tant que promoteur"
+
+msgid "chart_pie_adviser_reading"
+msgstr "Graphe en tant que lecteur"
 
 msgid "collaboration"
 msgstr "Collaboration"
@@ -97,6 +121,12 @@ msgstr "Commentaire"
 msgid "copromotor"
 msgstr "Co-Promoteur"
 
+msgid "create_dissertation"
+msgstr "Ajouter un mémoire"
+
+msgid "create_proposition_dissertation"
+msgstr "Ajouter un sujet de mémoire"
+
 msgid "creation_date"
 msgstr "Date de création"
 
@@ -106,6 +136,18 @@ msgstr "Créé par"
 msgid "current_status"
 msgstr "Statut actuel"
 
+msgid "date_end_visibility_dissertation"
+msgstr "Date de fin de la période de création des mémoires"
+
+msgid "date_end_visibility_proposition"
+msgstr "Date de fin de la période de visibilité des sujets de mémoires"
+
+msgid "date_start_visibility_dissertation"
+msgstr "Date de début de la période de création des mémoires"
+
+msgid "date_start_visibility_proposition"
+msgstr "Date de début de la période de visibilité des sujets de mémoires"
+
 msgid "defend_periode"
 msgstr "Session de la défense"
 
@@ -114,6 +156,9 @@ msgstr "Année de la défense"
 
 msgid "defended"
 msgstr "Défendu"
+
+msgid "delete"
+msgstr "Supprimer"
 
 msgid "delete_adviser_role_confirmation_message"
 msgstr "Vous allez définitivement supprimer ce membre du jury. Êtes-vous certain de vouloir continuer ?"
@@ -181,6 +226,12 @@ msgstr "Jury du mémoire"
 msgid "dissertations"
 msgstr "Mémoires"
 
+msgid "dissertations_to_dir_ko"
+msgstr "Refuser le projet de mémoire"
+
+msgid "dissertations_to_dir_ok"
+msgstr "Accepter le projet de mémoire"
+
 msgid "dissertation_title"
 msgstr "Titre"
 
@@ -205,11 +256,17 @@ msgstr "Modifier"
 msgid "edit_manager_dissertation"
 msgstr "Modifier"
 
+msgid "edit_parameters"
+msgstr "Modifier les paramètres"
+
 msgid "edit_proposition_dissertation"
 msgstr "Modifier"
 
 msgid "email"
 msgstr "E-mail"
+
+msgid "empty_data"
+msgstr "Pas de données introduites"
 
 msgid "end_edit_title"
 msgstr "Fin de la période de modification du titre"
@@ -283,6 +340,9 @@ msgstr "Possible de créer un mémoire actuellement"
 msgid "in_visibility_proposition"
 msgstr "Sujets visibles actuellement"
 
+msgid "invalid_data"
+msgstr "Données invalides"
+
 msgid "invisible"
 msgstr "Invisible"
 
@@ -294,6 +354,9 @@ msgstr "Juin"
 
 msgid "jury_status"
 msgstr "État du jury"
+
+msgid "justification"
+msgstr "Justification"
 
 msgid "justification_confirmation_message"
 msgstr "Vous allez enregistrer le changement de statut et sa justification. Voulez-vous continuer ?"
@@ -325,8 +388,62 @@ msgstr "Principal"
 msgid "manager"
 msgstr "Gestionnaire"
 
+msgid "manager_commission_accept"
+msgstr "Acceptation de la commission"
+
+msgid "manager_commission_refuse"
+msgstr "Refus de la commission"
+
+msgid "manager_dissertations_accept_comm_list"
+msgstr "Acceptation de la commission"
+
+msgid "manager_dissertations_accept_eval_list"
+msgstr "Réussite de l'évaluation de première année"
+
+msgid "manager_dissertations_defended"
+msgstr "Mémoire défendu"
+
+msgid "manager_dissertations_receive"
+msgstr "Mémoire réceptionné"
+
+msgid "manager_dissertations_reported"
+msgstr "Mémoire reporté"
+
+msgid "manager_dissertations_success"
+msgstr "Mémoire réussi"
+
+msgid "manager_dissertations_to_dir_ko"
+msgstr "Refus par le promoteur"
+
+msgid "manager_dissertations_to_dir_ok"
+msgstr "Acceptation par le promoteur"
+
+msgid "manager_dissertations_to_dir_submit"
+msgstr "Soumettre au promoteur"
+
+msgid "manager_evaluation_accept"
+msgstr "Évaluation de première année réussie"
+
+msgid "manager_evaluation_refuse"
+msgstr "Évaluation de première année échouée"
+
+msgid "manager_informations_add"
+msgstr "Ajouter un enseignant"
+
 msgid "manager_informations_list_request"
 msgstr "Enseignants devant répondre à une demande"
+
+msgid "manager_promotor_accept"
+msgstr "Acceptation par le promoteur"
+
+msgid "manager_promotor_refuse"
+msgstr "Refus par le promoteur"
+
+msgid "manager_reception_accept"
+msgstr "Réception du mémoire"
+
+msgid "max_students"
+msgstr "Nombre maximum d'étudiants"
 
 msgid "max_students_number"
 msgstr "Nombre maximum d'étudiants"
@@ -336,6 +453,9 @@ msgstr "Vous allez indiquer l'acceptation de ce mémoire par la commission. Ête
 
 msgid "mgr_com_refuse_confirmation_message"
 msgstr "Vous allez indiquer le refus de ce mémoire par la commission. Êtes-vous certain de vouloir continuer ?"
+
+msgid "mgr_dissertations_to_dir_submit"
+msgstr "Soumette au promoteur"
 
 msgid "mgr_defended_confirmation_message"
 msgstr "Vous allez indiquer que ce mémoire a été défendu. Êtes-vous certain de vouloir continuer ?"
@@ -436,8 +556,14 @@ msgstr "Nombre de mémoires en tant que lecteur"
 msgid "of"
 msgstr "sur"
 
+msgid "offer"
+msgstr "Programme"
+
+msgid "offer_proposition"
+msgstr "Programme"
+
 msgid "offer_propositions"
-msgstr "Sujets de mémoire"
+msgstr "Programmes"
 
 msgid "offer_year_start"
 msgstr "Programme/Année de début"
@@ -445,8 +571,17 @@ msgstr "Programme/Année de début"
 msgid "parameters"
 msgstr "Paramètres"
 
+msgid "person"
+msgstr "Personne"
+
+msgid "person_already_adviser"
+msgstr "Cette personne existe déjà en tant qu'enseignant"
+
 msgid "person_to_add"
 msgstr "Personne à ajouter"
+
+msgid "person_not_found_by_mail "
+msgstr "Aucune personne ne correspond à cet adresse e-mail"
 
 msgid "phone"
 msgstr "Téléphone"
@@ -500,7 +635,7 @@ msgid "search"
 msgstr "Rechercher"
 
 msgid "search_person_explanation"
-msgstr "Cet écran permet de rajouter dans l'application Mémoires, en tant qu'enseignant, un membre du personnel qui ne s'est pas encore connecté à l'application Mémoires. Veuillez rechercher la personne via son email."
+msgstr "Cet écran permet de rajouter dans l'application Mémoires, en tant qu'enseignant, un membre du personnel qui ne s'est pas encore connecté à l'application Mémoires. Veuillez rechercher la personne via son e-mail."
 
 msgid "search_proposition_dissertation"
 msgstr "Rechercher un sujet de mémoire"
@@ -513,6 +648,18 @@ msgstr "Voir les mémoires en attente"
 
 msgid "september"
 msgstr "Septembre"
+
+msgid "start_edit_title"
+msgstr "Début de la période de modification du titre"
+
+msgid "start_jury_visibility"
+msgstr "Début de la période de visibilité du jury"
+
+msgid "start_visibility_dissertation"
+msgstr ""
+
+msgid "start_visibility_proposition"
+msgstr ""
 
 msgid "stats"
 msgstr "Statistiques"
@@ -576,6 +723,9 @@ msgstr "Type de sujet"
 
 msgid "undefined"
 msgstr "Indéfini"
+
+msgid "update_date"
+msgstr "Date de mise-à-jour"
 
 msgid "updates"
 msgstr "Mises-à-jour"
