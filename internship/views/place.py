@@ -202,7 +202,10 @@ def student_choice(request, reference):
         number_first_choice = len(InternshipChoice.search(organization=al.organization,
                                                            speciality=al.speciality,
                                                            choice=1))
+        number_all_choice = len(InternshipChoice.search(organization=al.organization,
+                                                           speciality=al.speciality))
         al.number_first_choice = number_first_choice
+        al.number_all_choice = number_all_choice
 
     return render(request, "place_detail.html", {'organization':        organization[0],
                                                  'organization_choice': organization_choice,

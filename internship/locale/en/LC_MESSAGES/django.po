@@ -243,3 +243,11 @@ msgstr	 "Third Choice"
 msgid	 "type"
 msgstr	 "Type"
 
+msgid	 "capacity"
+msgstr	 "capacity"
+
+msgid	 "number_first_choice"
+msgstr	 "Number of first choice"
+
+msgid	 "number_total_student"
+msgstr	 "Number of student who choose this organization"

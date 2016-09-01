@@ -243,3 +243,11 @@ msgstr	 "3ème choix"
 msgid	 "type"
 msgstr	 "Type"
 
+msgid	 "capacity"
+msgstr	 "capacité maximale"
+
+msgid	 "number_first_choice"
+msgstr	 "Nombre de 1er choix"
+
+msgid	 "number_total_student"
+msgstr	 "Nombre total d'étudiant ayant choisi cet hôpital"
