@@ -145,7 +145,7 @@ def sort_internships(datas):
             tab.append(internship)
     return tab
 
-def set_student_choice_list(query,student_choice):
+def set_student_choices_list(query,student_choice):
     index = 0
     for choice in student_choice:
         for internship in query:
@@ -234,7 +234,7 @@ def internships_stud(request):
     query = list(query)
     # Delete the internships in query when they are in the student's selection then rebuild the query
     # Put datas wich need to be save in the student's choice list
-    query = set_student_choice_list(query, student_choice)
+    query = set_student_choices_list(query, student_choice)
     # Insert the student choice into the global query, at first position,
     for choice in student_choice:
         query.insert(0, choice)
