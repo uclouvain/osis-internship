@@ -42,9 +42,9 @@ def internships_periods(request):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def period_create(request):
-    f = PeriodForm(data=request.POST)
+    period_form = PeriodForm(data=request.POST)
     return render(request, "period_create.html", {'section': 'internship',
-                                                'form' : f,
+                                                'form' : period_form,
                                                 })
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
