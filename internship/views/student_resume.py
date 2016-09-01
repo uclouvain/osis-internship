@@ -32,21 +32,21 @@ from internship.models import InternshipChoice, InternshipStudentInformation, In
 
 from django.utils.translation import ugettext_lazy as _
 
-def set_number_choices(datas):
-    for si in datas:
+def set_number_choices(student_informations):
+    for si in student_informations:
         student = mdl.student.find_by_person(si.person)
         choices = InternshipChoice.find_by_student(student)
         si.number_choices = len(choices)
         if student:
             si.registration_id = student.registration_id
 
-def get_number_ok_student(datas, number_selection):
-    datas = list(datas)
+def get_number_ok_student(students_list, number_selection):
+    students_list = list(students_list)
     nbr_student = [0]*2
     # Set the number of the student who have their all selection of internships
     # who have a partial selection
     # who have no selection
-    for sl in datas:
+    for sl in students_list:
         student = mdl.student.find_by_person(sl.person)
         choices = InternshipChoice.find_by_student(student)
         sl.number_choices = len(choices)
