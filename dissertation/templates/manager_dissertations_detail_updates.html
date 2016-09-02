@@ -32,7 +32,7 @@
 <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
 <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'dissertations' %}</a></li>
 <li><a href="{% url 'manager_dissertations_list' %}" id="lnk_propositions">{% trans 'dissertations' %}</a></li>
-<li class="active">{{ dissertation.title }}</li>
+<li class="active">{{ dissertation.title|truncatechars:24 }}</li>
 {% endblock %}
 {% block content %}
 <div class="page-header">
@@ -53,19 +53,21 @@
             <tr>
               <th>{% trans 'change'%}</th>
               <th>{% trans 'person'%}</th>
-              <th>{% trans 'date'%}</th>
+              <th>{% trans 'update_date'%}</th>
               <th>{% trans 'justification'%}</th>
             </tr>
         {% for dissertation_update in dissertation_updates %}
             <tr>
                 <td>
+                    {% if dissertation_update.status_from != dissertation_update.status_to %}
                     <span class="label label-default">{{ dissertation_update.status_from }}</span><br>
                     &nbsp; &nbsp;<span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span><br>
                     <span class="label label-default">{{ dissertation_update.status_to }}</span>
+                    {% endif %}
                 </td>
                 <td>{{ dissertation_update.person }}</td>
                 <td>{{ dissertation_update.created|localtime }}</td>
-                <td style="text-align: justify;">{{ dissertation_update.justification }}</td>
+                <td style="text-align: justify;">{{ dissertation_update.justification|linebreaks }}</td>
             </tr>
         {% endfor %}
         </table>

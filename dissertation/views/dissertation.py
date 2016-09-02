@@ -36,11 +36,11 @@ from dissertation.models.dissertation_role import DissertationRole
 from dissertation.models import dissertation_role
 from dissertation.models import dissertation_update
 from dissertation.models import faculty_adviser
-from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models import offer_proposition
 from dissertation.models import proposition_dissertation
 from dissertation.models import proposition_role
-from dissertation.forms import ManagerDissertationForm, ManagerDissertationEditForm, ManagerDissertationRoleForm
+from dissertation.forms import ManagerDissertationForm, ManagerDissertationEditForm, ManagerDissertationRoleForm, \
+    ManagerDissertationUpdateForm
 from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl import Workbook
 from django.http import HttpResponse
@@ -99,21 +99,70 @@ def manager_dissertations_detail(request, pk):
     count_dissertation_role = dissertation_role.count_by_dissertation(dissert)
     count_proposition_role = proposition_role.count_by_dissertation(dissert)
     proposition_roles = proposition_role.search_by_dissertation(dissert)
+    offer_prop = offer_proposition.get_by_dissertation(dissert)
 
     if count_proposition_role == 0:
         if count_dissertation_role == 0:
+            justification = "%s %s %s" % ("auto_add_jury", 'PROMOTEUR', str(dissert.proposition_dissertation.author))
+            dissertation_update.add(request, dissert, dissert.status, justification=justification)
             dissertation_role.add('PROMOTEUR', dissert.proposition_dissertation.author, dissert)
     else:
         if count_dissertation_role == 0:
             for role in proposition_roles:
+                justification = "%s %s %s" % ("auto_add_jury", role.status, str(role.adviser))
+                dissertation_update.add(request, dissert, dissert.status, justification=justification)
                 dissertation_role.add(role.status, role.adviser, dissert)
+
+    if dissert.status == "DRAFT":
+        jury_manager_visibility = True
+        jury_manager_can_edit = False
+        jury_manager_message = 'manager_jury_draft'
+
+        jury_teacher_visibility = False
+        jury_teacher_can_edit = False
+        jury_teacher_message = 'teacher_jury_draft'
+
+        jury_student_visibility = True
+        jury_student_can_edit = offer_prop.student_can_manage_readers
+        if jury_student_can_edit:
+            jury_student_message = 'student_jury_draft_can_edit_param'
+        else:
+            jury_student_message = 'student_jury_draft_no_edit_param'
+    else:
+
+        jury_manager_visibility = True
+        jury_manager_can_edit = True
+        jury_manager_message = 'manager_jury_editable'
+
+        jury_teacher_visibility = True
+        jury_teacher_can_edit = offer_prop.adviser_can_suggest_reader
+        if jury_teacher_can_edit:
+            jury_teacher_message = 'teacher_jury_visible_editable_parameter'
+        else:
+            jury_teacher_message = 'teacher_jury_visible_not_editable_parameter'
+
+        jury_student_visibility = offer_prop.in_periode_jury_visibility
+        jury_student_can_edit = False
+        if jury_student_visibility:
+            jury_student_message = 'student_jury_visible_dates'
+        else:
+            jury_student_message = 'student_jury_invisible_dates'
 
     dissertation_roles = dissertation_role.search_by_dissertation(dissert)
     return layout.render(request, 'manager_dissertations_detail.html',
                          {'dissertation': dissert,
                           'adviser': adv,
                           'dissertation_roles': dissertation_roles,
-                          'count_dissertation_role': count_dissertation_role})
+                          'count_dissertation_role': count_dissertation_role,
+                          'jury_manager_visibility': jury_manager_visibility,
+                          'jury_manager_can_edit': jury_manager_can_edit,
+                          'jury_manager_message': jury_manager_message,
+                          'jury_teacher_visibility': jury_teacher_visibility,
+                          'jury_teacher_can_edit': jury_teacher_can_edit,
+                          'jury_teacher_message': jury_teacher_message,
+                          'jury_student_visibility': jury_student_visibility,
+                          'jury_student_can_edit': jury_student_can_edit,
+                          'jury_student_message': jury_student_message})
 
 
 @login_required
@@ -136,25 +185,30 @@ def manager_dissertations_edit(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-    offer = faculty_adviser.search_by_adviser(adv).offer
+    offers = faculty_adviser.search_by_adviser(adv)
 
     if request.method == "POST":
         form = ManagerDissertationEditForm(request.POST, instance=dissert)
         if form.is_valid():
             dissert = form.save()
+            justification = "manager_edit_dissertation"
+            dissertation_update.add(request, dissert, dissert.status, justification=justification)
             return redirect('manager_dissertations_detail', pk=dissert.pk)
         else:
-            form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offer(offer)
-            form.fields["author"].queryset = mdl.student.find_by_offer(offer)
-            form.fields["offer_year_start"].queryset = mdl.offer_year.find_by_offer(offer)
+            form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offer(offers)
+            form.fields["author"].queryset = mdl.student.find_by_offer(offers)
+            form.fields["offer_year_start"].queryset = mdl.offer_year.find_by_offer(offers)
     else:
         form = ManagerDissertationEditForm(instance=dissert)
-        form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offer(offer)
-        form.fields["author"].queryset = mdl.student.find_by_offer(offer)
-        form.fields["offer_year_start"].queryset = mdl.offer_year.find_by_offer(offer)
+        form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offer(offers)
+        form.fields["author"].queryset = mdl.student.find_by_offer(offers)
+        form.fields["offer_year_start"].queryset = mdl.offer_year.find_by_offer(offers)
 
     return layout.render(request, 'manager_dissertations_edit.html',
-                         {'form': form, 'defend_periode_choices': Dissertation.DEFEND_PERIODE_CHOICES})
+                         {'form': form,
+                          'defend_periode_choices': Dissertation.DEFEND_PERIODE_CHOICES,
+                          'dissert': dissert
+                          })
 
 
 @login_required
@@ -176,15 +230,22 @@ def manager_dissertations_jury_edit(request, pk):
 def manager_dissertations_jury_new(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     count_dissertation_role = dissertation_role.count_by_dissertation(dissert)
-    if count_dissertation_role < 5:
+    if count_dissertation_role < 5 and dissert.status != 'DRAFT':
         if request.method == "POST":
             form = ManagerDissertationRoleForm(request.POST)
             if form.is_valid():
-                form.save()
+                data = form.cleaned_data
+                status = data['status']
+                adv = data['adviser']
+                diss = data['dissertation']
+                justification = "%s %s %s" % ("manager_add_jury", str(status), str(adv))
+                dissertation_update.add(request, dissert, dissert.status, justification=justification)
+                dissertation_role.add(status, adv, diss)
                 return redirect('manager_dissertations_detail', pk=dissert.pk)
         else:
             form = ManagerDissertationRoleForm(initial={'dissertation': dissert})
-            return layout.render(request, 'manager_dissertations_jury_edit.html', {'form': form})
+            return layout.render(request, 'manager_dissertations_jury_edit.html', {'form': form,
+                                                                                   'dissert': dissert})
     else:
         return redirect('manager_dissertations_detail', pk=dissert.pk)
 
@@ -194,11 +255,15 @@ def manager_dissertations_jury_new(request, pk):
 def manager_dissertations_list(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-    offer = faculty_adviser.search_by_adviser(adv).offer
-    disserts = dissertation.search_by_offer(offer)
-    offer_prop = offer_proposition.get_by_offer(offer)
-    return layout.render(request, 'manager_dissertations_list.html', {'dissertations': disserts,
-                                                                      'offer_proposition': offer_prop})
+    offers = faculty_adviser.search_by_adviser(adv)
+    disserts = dissertation.search_by_offer(offers)
+    offer_props = offer_proposition.search_by_offer(offers)
+    show_validation_commission = offer_proposition.show_validation_commission(offer_props)
+    show_evaluation_first_year = offer_proposition.show_evaluation_first_year(offer_props)
+    return layout.render(request, 'manager_dissertations_list.html',
+                         {'dissertations': disserts,
+                          'show_validation_commission': show_validation_commission,
+                          'show_evaluation_first_year': show_evaluation_first_year})
 
 
 @login_required
@@ -206,22 +271,24 @@ def manager_dissertations_list(request):
 def manager_dissertations_new(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-    offer = faculty_adviser.search_by_adviser(adv).offer
+    offers = faculty_adviser.search_by_adviser(adv)
     if request.method == "POST":
         form = ManagerDissertationForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('manager_dissertations_list')
+            dissert = form.save()
+            justification = "manager_creation_dissertation"
+            dissertation_update.add(request, dissert, dissert.status, justification=justification)
+            return redirect('manager_dissertations_detail', pk=dissert.pk)
         else:
-            form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offer(offer)
-            form.fields["author"].queryset = mdl.student.find_by_offer(offer)
-            form.fields["offer_year_start"].queryset = mdl.offer_year.find_by_offer(offer)
+            form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offer(offers)
+            form.fields["author"].queryset = mdl.student.find_by_offer(offers)
+            form.fields["offer_year_start"].queryset = mdl.offer_year.find_by_offer(offers)
 
     else:
         form = ManagerDissertationForm(initial={'active': True})
-        form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offer(offer)
-        form.fields["author"].queryset = mdl.student.find_by_offer(offer)
-        form.fields["offer_year_start"].queryset = mdl.offer_year.find_by_offer(offer)
+        form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offer(offers)
+        form.fields["author"].queryset = mdl.student.find_by_offer(offers)
+        form.fields["offer_year_start"].queryset = mdl.offer_year.find_by_offer(offers)
     return layout.render(request, 'manager_dissertations_new.html', {'form': form})
 
 
@@ -231,8 +298,10 @@ def manager_dissertations_search(request):
     disserts = dissertation.search(terms=request.GET['search'], active=True)
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-    offer = faculty_adviser.search_by_adviser(adv).offer
-    offer_prop = offer_proposition.get_by_offer(offer)
+    offers = faculty_adviser.search_by_adviser(adv)
+    offer_props = offer_proposition.search_by_offer(offers)
+    show_validation_commission = offer_proposition.show_validation_commission(offer_props)
+    show_evaluation_first_year = offer_proposition.show_evaluation_first_year(offer_props)
     xlsx = False
 
     if 'bt_xlsx' in request.GET:
@@ -244,7 +313,7 @@ def manager_dissertations_search(request):
                            'Status', 'Offer_year_start', 'offer_year_start_short', 'promoteur', 'copromoteur',
                            'lecteur1', 'lecteur2'])
         for dissert in disserts:
-            pro_name = dissertation_role.get_promoteur_by_dissertation(dissert)
+            pro_name = dissertation_role.get_promoteur_by_dissertation_str(dissert)
             copro_name = dissertation_role.get_copromoteur_by_dissertation(dissert)
             reader = dissertation_role.search_by_dissertation_and_role(dissert, 'READER')
 
@@ -272,7 +341,8 @@ def manager_dissertations_search(request):
     else:
         return layout.render(request, "manager_dissertations_list.html",
                                       {'dissertations': disserts,
-                                       'offer_proposition': offer_prop,
+                                       'show_validation_commission': show_validation_commission,
+                                       'show_evaluation_first_year': show_evaluation_first_year,
                                        'xlsx': xlsx})
 
 
@@ -292,9 +362,10 @@ def manager_dissertations_delete(request, pk):
 def manager_dissertations_role_delete(request, pk):
     dissert_role = get_object_or_404(DissertationRole, pk=pk)
     dissert = dissert_role.dissertation
-    justification = "%s %s" % ("manager_delete_jury", str(dissert_role))
-    dissertation_update.add(request, dissert, dissert.status, justification=justification)
-    dissert_role.delete()
+    if dissert.status != 'DRAFT':
+        justification = "%s %s" % ("manager_delete_jury", str(dissert_role))
+        dissertation_update.add(request, dissert, dissert.status, justification=justification)
+        dissert_role.delete()
     return redirect('manager_dissertations_detail', pk=dissert.pk)
 
 
@@ -303,10 +374,22 @@ def manager_dissertations_role_delete(request, pk):
 def manager_dissertations_to_dir_submit(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     old_status = dissert.status
-    dissert.go_forward()
-    dissertation_update.add(request, dissert, old_status)
+    new_status = dissertation.get_next_status(dissert, "go_forward")
 
-    return redirect('manager_dissertations_detail', pk=pk)
+    if request.method == "POST":
+        form = ManagerDissertationUpdateForm(request.POST)
+        if form.is_valid():
+            dissert.go_forward()
+            data = form.cleaned_data
+            justification = data['justification']
+            dissertation_update.add(request, dissert, old_status, justification=justification)
+            return redirect('manager_dissertations_detail', pk=pk)
+
+    else:
+        form = ManagerDissertationUpdateForm()
+
+    return layout.render(request, 'manager_dissertations_add_justification.html',
+                         {'form': form, 'dissert': dissert, "old_status": old_status, "new_status": new_status})
 
 
 @login_required
@@ -325,10 +408,22 @@ def manager_dissertations_to_dir_submit_list(request, pk):
 def manager_dissertations_to_dir_ok(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     old_status = dissert.status
-    dissert.accept()
-    dissertation_update.add(request, dissert, old_status)
+    new_status = dissertation.get_next_status(dissert, "accept")
 
-    return redirect('manager_dissertations_detail', pk=pk)
+    if request.method == "POST":
+        form = ManagerDissertationUpdateForm(request.POST)
+        if form.is_valid():
+            dissert.accept()
+            data = form.cleaned_data
+            justification = data['justification']
+            dissertation_update.add(request, dissert, old_status, justification=justification)
+            return redirect('manager_dissertations_detail', pk=pk)
+
+    else:
+        form = ManagerDissertationUpdateForm()
+
+    return layout.render(request, 'manager_dissertations_add_justification.html',
+                         {'form': form, 'dissert': dissert, "old_status": old_status, "new_status": new_status})
 
 
 @login_required
@@ -358,10 +453,22 @@ def manager_dissertations_accept_eval_list(request, pk):
 def manager_dissertations_to_dir_ko(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     old_status = dissert.status
-    dissert.refuse()
-    dissertation_update.add(request, dissert, old_status)
+    new_status = dissertation.get_next_status(dissert, "refuse")
 
-    return redirect('manager_dissertations_detail', pk=pk)
+    if request.method == "POST":
+        form = ManagerDissertationUpdateForm(request.POST)
+        if form.is_valid():
+            dissert.refuse()
+            data = form.cleaned_data
+            justification = data['justification']
+            dissertation_update.add(request, dissert, old_status, justification=justification)
+            return redirect('manager_dissertations_detail', pk=pk)
+
+    else:
+        form = ManagerDissertationUpdateForm()
+
+    return layout.render(request, 'manager_dissertations_add_justification.html',
+                         {'form': form, 'dissert': dissert, "old_status": old_status, "new_status": new_status})
 
 
 @login_required
@@ -369,13 +476,16 @@ def manager_dissertations_to_dir_ko(request, pk):
 def manager_dissertations_wait_list(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-    offer = faculty_adviser.search_by_adviser(adv).offer
-    offer_prop = offer_proposition.get_by_offer(offer)
-    disserts = dissertation.search_by_offer_and_status(offer, "DIR_SUBMIT")
+    offers = faculty_adviser.search_by_adviser(adv)
+    offer_props = offer_proposition.search_by_offer(offers)
+    show_validation_commission = offer_proposition.show_validation_commission(offer_props)
+    show_evaluation_first_year = offer_proposition.show_evaluation_first_year(offer_props)
+    disserts = dissertation.search_by_offer_and_status(offers, "DIR_SUBMIT")
 
     return layout.render(request, 'manager_dissertations_wait_list.html',
                          {'dissertations': disserts,
-                          'offer_proposition': offer_prop})
+                          'show_validation_commission': show_validation_commission,
+                          'show_evaluation_first_year': show_evaluation_first_year})
 
 
 @login_required
@@ -383,13 +493,16 @@ def manager_dissertations_wait_list(request):
 def manager_dissertations_wait_comm_list(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-    offer = faculty_adviser.search_by_adviser(adv).offer
-    offer_prop = offer_proposition.get_by_offer(offer)
-    disserts = dissertation.search_by_offer_and_status(offer, "COM_SUBMIT")
+    offers = faculty_adviser.search_by_adviser(adv)
+    offer_props = offer_proposition.search_by_offer(offers)
+    show_validation_commission = offer_proposition.show_validation_commission(offer_props)
+    show_evaluation_first_year = offer_proposition.show_evaluation_first_year(offer_props)
+    disserts = dissertation.search_by_offer_and_status(offers, "COM_SUBMIT")
 
     return layout.render(request, 'manager_dissertations_wait_commission_list.html',
                          {'dissertations': disserts,
-                          'offer_proposition': offer_prop})
+                          'show_validation_commission': show_validation_commission,
+                          'show_evaluation_first_year': show_evaluation_first_year})
 
 
 @login_required
@@ -397,13 +510,16 @@ def manager_dissertations_wait_comm_list(request):
 def manager_dissertations_wait_eval_list(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-    offer = faculty_adviser.search_by_adviser(adv).offer
-    offer_prop = offer_proposition.get_by_offer(offer)
-    disserts = dissertation.search_by_offer_and_status(offer, "EVA_SUBMIT")
+    offers = faculty_adviser.search_by_adviser(adv)
+    offer_props = offer_proposition.search_by_offer(offers)
+    show_validation_commission = offer_proposition.show_validation_commission(offer_props)
+    show_evaluation_first_year = offer_proposition.show_evaluation_first_year(offer_props)
+    disserts = dissertation.search_by_offer_and_status(offers, "EVA_SUBMIT")
 
     return layout.render(request, 'manager_dissertations_wait_eval_list.html',
                          {'dissertations': disserts,
-                          'offer_proposition': offer_prop})
+                          'show_validation_commission': show_validation_commission,
+                          'show_evaluation_first_year': show_evaluation_first_year})
 
 
 @login_required
@@ -411,13 +527,16 @@ def manager_dissertations_wait_eval_list(request):
 def manager_dissertations_wait_recep_list(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-    offer = faculty_adviser.search_by_adviser(adv).offer
-    offer_prop = offer_proposition.get_by_offer(offer)
-    disserts = dissertation.search_by_offer_and_status(offer, "TO_RECEIVE")
+    offers = faculty_adviser.search_by_adviser(adv)
+    offer_props = offer_proposition.search_by_offer(offers)
+    show_validation_commission = offer_proposition.show_validation_commission(offer_props)
+    show_evaluation_first_year = offer_proposition.show_evaluation_first_year(offer_props)
+    disserts = dissertation.search_by_offer_and_status(offers, "TO_RECEIVE")
 
     return layout.render(request, 'manager_dissertations_wait_recep_list.html',
                          {'dissertations': disserts,
-                          'offer_proposition': offer_prop})
+                          'show_validation_commission': show_validation_commission,
+                          'show_evaluation_first_year': show_evaluation_first_year})
 
 
 ###########################
@@ -461,14 +580,18 @@ def dissertations_detail(request, pk):
     count_dissertation_role = dissertation_role.count_by_dissertation(dissert)
     count_proposition_role = proposition_role.count_by_dissertation(dissert)
     proposition_roles = proposition_role.search_by_dissertation(dissert)
-
+    offer_prop = offer_proposition.get_by_dissertation(dissert)
     if count_proposition_role == 0:
         if count_dissertation_role == 0:
+            justification = "%s %s %s" % ("auto_add_jury", 'PROMOTEUR', str(dissert.proposition_dissertation.author))
+            dissertation_update.add(request, dissert, dissert.status, justification=justification)
             dissertation_role.add('PROMOTEUR', dissert.proposition_dissertation.author, dissert)
 
     else:
         if count_dissertation_role == 0:
             for role in proposition_roles:
+                justification = "%s %s %s" % ("auto_add_jury", role.status, str(role.adviser))
+                dissertation_update.add(request, dissert, dissert.status, justification=justification)
                 dissertation_role.add(role.status, role.adviser, dissert)
 
     dissertation_roles = dissertation_role.search_by_dissertation(dissert)
@@ -476,7 +599,8 @@ def dissertations_detail(request, pk):
                          {'dissertation': dissert,
                           'adviser': adv,
                           'dissertation_roles': dissertation_roles,
-                          'count_dissertation_role': count_dissertation_role})
+                          'count_dissertation_role': count_dissertation_role,
+                          'offer_prop': offer_prop})
 
 
 @login_required
@@ -497,19 +621,8 @@ def dissertations_detail_updates(request, pk):
 def dissertations_delete(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     dissert.deactivate()
-    dissertation_update.add(request, dissert, dissert.status, justification="manager_set_active_false ")
+    dissertation_update.add(request, dissert, dissert.status, justification="teacher_set_active_false ")
     return redirect('dissertations_list')
-
-
-@login_required
-@user_passes_test(is_teacher)
-def dissertations_to_dir_submit(request, pk):
-    dissert = get_object_or_404(Dissertation, pk=pk)
-    old_status = dissert.status
-    dissert.go_forward()
-    dissertation_update.add(request, dissert, old_status)
-
-    return redirect('dissertations_detail', pk=pk)
 
 
 @login_required
@@ -517,10 +630,22 @@ def dissertations_to_dir_submit(request, pk):
 def dissertations_to_dir_ok(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     old_status = dissert.status
-    dissert.accept()
-    dissertation_update.add(request, dissert, old_status)
+    new_status = dissertation.get_next_status(dissert, "accept")
 
-    return redirect('dissertations_detail', pk=pk)
+    if request.method == "POST":
+        form = ManagerDissertationUpdateForm(request.POST)
+        if form.is_valid():
+            dissert.accept()
+            data = form.cleaned_data
+            justification = data['justification']
+            dissertation_update.add(request, dissert, old_status, justification=justification)
+            return redirect('dissertations_detail', pk=pk)
+
+    else:
+        form = ManagerDissertationUpdateForm()
+
+    return layout.render(request, 'dissertations_add_justification.html',
+                         {'form': form, 'dissert': dissert, "old_status": old_status, "new_status": new_status})
 
 
 @login_required
@@ -528,10 +653,22 @@ def dissertations_to_dir_ok(request, pk):
 def dissertations_to_dir_ko(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     old_status = dissert.status
-    dissert.refuse()
-    dissertation_update.add(request, dissert, old_status)
+    new_status = dissertation.get_next_status(dissert, "refuse")
 
-    return redirect('dissertations_detail', pk=pk)
+    if request.method == "POST":
+        form = ManagerDissertationUpdateForm(request.POST)
+        if form.is_valid():
+            dissert.refuse()
+            data = form.cleaned_data
+            justification = data['justification']
+            dissertation_update.add(request, dissert, old_status, justification=justification)
+            return redirect('dissertations_detail', pk=pk)
+
+    else:
+        form = ManagerDissertationUpdateForm()
+
+    return layout.render(request, 'dissertations_add_justification.html',
+                         {'form': form, 'dissert': dissert, "old_status": old_status, "new_status": new_status})
 
 
 @login_required
@@ -543,3 +680,42 @@ def dissertations_wait_list(request):
 
     return layout.render(request, 'dissertations_wait_list.html',
                          {'roles_list_dissertations': roles_list_dissertations})
+
+
+@login_required
+@user_passes_test(is_teacher)
+def dissertations_role_delete(request, pk):
+    dissert_role = get_object_or_404(DissertationRole, pk=pk)
+    dissert = dissert_role.dissertation
+    offer_prop = offer_proposition.get_by_dissertation(dissert)
+    if offer_prop.adviser_can_suggest_reader:
+        justification = "%s %s" % ("teacher_delete_jury", str(dissert_role))
+        dissertation_update.add(request, dissert, dissert.status, justification=justification)
+        dissert_role.delete()
+    return redirect('dissertations_detail', pk=dissert.pk)
+
+
+@login_required
+@user_passes_test(is_teacher)
+def dissertations_jury_new(request, pk):
+    dissert = get_object_or_404(Dissertation, pk=pk)
+    count_dissertation_role = dissertation_role.count_by_dissertation(dissert)
+    offer_prop = offer_proposition.get_by_dissertation(dissert)
+    if count_dissertation_role < 5 and offer_prop.adviser_can_suggest_reader:
+        if request.method == "POST":
+            form = ManagerDissertationRoleForm(request.POST)
+            if form.is_valid():
+                data = form.cleaned_data
+                status = data['status']
+                adv = data['adviser']
+                diss = data['dissertation']
+                justification = "%s %s %s" % ("teacher_add_jury", str(status), str(adv))
+                dissertation_update.add(request, dissert, dissert.status, justification=justification)
+                dissertation_role.add(status, adv, diss)
+                return redirect('dissertations_detail', pk=dissert.pk)
+        else:
+            form = ManagerDissertationRoleForm(initial={'dissertation': dissert})
+            return layout.render(request, 'dissertations_jury_edit.html', {'form': form, 'dissert': dissert})
+    else:
+        return redirect('dissertations_detail', pk=dissert.pk)
+

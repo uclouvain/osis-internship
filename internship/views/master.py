@@ -42,13 +42,12 @@ def interships_masters(request):
     # If both exist / if just speciality exist / if just organization exist / if none exist
     if speciality_sort_value and speciality_sort_value != "0":
         if organization_sort_value and organization_sort_value != "0":
-            query = InternshipMaster.find_masters_by_speciality_and_organization(speciality_sort_value,
-                                                                                 organization_sort_value)
+            query = InternshipMaster.search(speciality = speciality_sort_value, organization__name = organization_sort_value)
         else:
-            query = InternshipMaster.find_masters_by_speciality(speciality_sort_value)
+            query = InternshipMaster.search(speciality = speciality_sort_value)
     else:
         if organization_sort_value and organization_sort_value != "0":
-            query = InternshipMaster.find_masters_by_organization(organization_sort_value)
+            query = InternshipMaster.search(organization__name = organization_sort_value)
         else:
             query = InternshipMaster.find_masters()
 
@@ -85,5 +84,5 @@ def delete_interships_masters(request):
     first_name = request.POST.get("first_name").replace(" ", "")
     name = request.POST.get("name").replace(" ", "")
 
-    InternshipMaster.find_master_by_firstname_name(first_name, name).delete()
+    InternshipMaster.search(first_name = first_name, last_name = name).delete()
     return HttpResponseRedirect(reverse('interships_masters'))

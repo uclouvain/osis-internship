@@ -26,17 +26,35 @@
 from django.shortcuts import render
 from django.http.response import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from assistant.models import *
-from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 from assistant.forms import *
 from base.models import person_address, person
+from assistant.models.academic_assistant import find_by_id
+from assistant.models.assistant_mandate import find_mandate_by_id, find_mandate_by_academic_assistant
+from base.models.person import find_by_user
+from base.models import person_address, person
+from django.core.exceptions import ObjectDoesNotExist
 
 
-@login_required
+def user_is_assistant_and_procedure_is_open(user):
+    """Use with a ``user_passes_test`` decorator to restrict access to
+    authenticated users who are assistant.
+    The procedure must be open"""
+
+    try:
+        if user.is_authenticated() and settings.access_to_procedure_is_open():
+            return academic_assistant.find_by_person(user.person)
+        else:
+            return False
+    except ObjectDoesNotExist:
+        return False
+
+
+@user_passes_test(user_is_assistant_and_procedure_is_open, login_url='access_denied')
 def form_part1_edit(request, mandate_id):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     assistant = mandate.assistant
@@ -59,7 +77,7 @@ def form_part1_edit(request, mandate_id):
                                                          'form2': form2}) 
 
 
-@login_required    
+@user_passes_test(user_is_assistant_and_procedure_is_open, login_url='access_denied')
 def form_part1_save(request, mandate_id):
     """Use to save an assistant form part1."""
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
@@ -132,6 +150,7 @@ def tutoring_learning_unit_delete(request, tutoring_learning_unit_id):
     return HttpResponseRedirect(reverse('mandate_learning_units', kwargs={'mandate_id':mandate_id}))
 
 
+@user_passes_test(user_is_assistant_and_procedure_is_open, login_url='access_denied')
 def form_part6_edit(request, mandate_id):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     person = request.user.person
@@ -149,6 +168,7 @@ def form_part6_edit(request, mandate_id):
                                                          'form': form})
 
 
+@user_passes_test(user_is_assistant_and_procedure_is_open, login_url='access_denied')
 def form_part6_save(request, mandate_id):
     """Use to save an assistant form part6."""
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
@@ -162,6 +182,8 @@ def form_part6_save(request, mandate_id):
             if 'validate_and_submit' in request.POST:
                 if assistant.supervisor:
                     mandate.state='PHD_SUPERVISOR'
+                elif mandate.assistant_type == "TEACHING_ASSISTANT":
+                    mandate.state='SUPERVISION'
                 else:
                     mandate.state='RESEARCH'
                 form.save()
@@ -175,6 +197,7 @@ def form_part6_save(request, mandate_id):
                                                              'form': form})
 
 
+@user_passes_test(user_is_assistant_and_procedure_is_open, login_url='access_denied')
 def form_part5_edit(request, mandate_id):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     person = request.user.person
@@ -199,6 +222,7 @@ def form_part5_edit(request, mandate_id):
                                                          'form': form}) 
 
 
+@user_passes_test(user_is_assistant_and_procedure_is_open, login_url='access_denied')
 def form_part5_save(request, mandate_id):
     """Use to save an assistant form part5."""
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)

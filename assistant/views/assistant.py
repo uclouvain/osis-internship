@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.urlresolvers import reverse
 from django.forms import forms
@@ -33,6 +34,7 @@ from django.views.generic.list import ListView
 from django.views.generic.edit import FormMixin
 from django.http.response import HttpResponseRedirect
 from assistant.models import tutoring_learning_unit_year
+from assistant.models import settings
 
 
 class AssistantMandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMixin):
@@ -42,7 +44,10 @@ class AssistantMandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListVie
 
     def test_func(self):
         try:
-            return academic_assistant.AcademicAssistant.objects.get(person=self.request.user.person)
+            if settings.access_to_procedure_is_open():
+                return academic_assistant.AcademicAssistant.objects.get(person=self.request.user.person)
+            else:
+                return False
         except ObjectDoesNotExist:
             return False
 
@@ -62,13 +67,28 @@ class AssistantMandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListVie
             person.find_by_user(self.request.user))
         return context
 
+
+def user_is_assistant_and_procedure_is_open(user):
+    """Use with a ``user_passes_test`` decorator to restrict access to
+    authenticated users who are assistant.
+    The procedure must be open"""
+
+    try:
+        if user.is_authenticated() and settings.access_to_procedure_is_open():
+            return academic_assistant.find_by_person(user.person)
+        else:
+            return False
+    except ObjectDoesNotExist:
+        return False
+
+
+@user_passes_test(user_is_assistant_and_procedure_is_open, login_url='access_denied')
 def mandate_change_state(request, mandate_id):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     if 'bt_mandate_accept' in request.POST:
         mandate.state = 'TRTS'
     elif 'bt_mandate_decline' in request.POST:
         mandate.state = 'DECLINED'
-    #elif 'bt_mandate_edit' in request.POST:
     mandate.save()
     return HttpResponseRedirect(reverse('assistant_mandates'))
 

@@ -23,9 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.contrib import admin
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.db.models import Q
+
+
+class DissertationRoleAdmin(admin.ModelAdmin):
+    list_display = ('adviser', 'status', 'dissertation', 'get_dissertation_author', 'get_dissertation_status')
 
 
 class DissertationRole(models.Model):
@@ -42,6 +47,12 @@ class DissertationRole(models.Model):
     def __str__(self):
         return u"%s %s" % (self.status if self.status else "",
                            self.adviser if self.adviser else "")
+
+    def get_dissertation_author(self):
+        return self.dissertation.author
+
+    def get_dissertation_status(self):
+        return self.dissertation.status
 
 
 def count_by_adviser(adviser, role=None, dissertation_status=None):
@@ -64,6 +75,16 @@ def count_by_dissertation(dissertation):
                                    .count()
 
 
+def count_by_status_adviser_dissertation(status, adviser, dissertation):
+    return DissertationRole.objects.filter(
+                                        adviser=adviser
+                                    ).filter(
+                                        status=status
+                                    ).filter(
+                                        dissertation=dissertation
+                                    ).count()
+
+
 def search_by_adviser_and_role_stats(adviser, role):
     return DissertationRole.objects.filter(adviser=adviser)\
                                    .filter(status=role)\
@@ -75,19 +96,24 @@ def search_by_adviser_and_role_stats(adviser, role):
                                            )
 
 
+def search_by_adviser_and_role_and_waiting(adviser, offers):
+    return list_teachers_action_needed(offers).filter(adviser=adviser)
+
+
 def count_by_adviser_and_role_stats(adviser, role):
     return search_by_adviser_and_role_stats(adviser, role).count()
 
 
 def add(status, adviser, dissertation):
-    role = DissertationRole(status=status,
-                            adviser=adviser,
-                            dissertation=dissertation)
-    role.save()
+    if count_by_status_adviser_dissertation(status, adviser, dissertation) == 0:
+        role = DissertationRole(status=status,
+                                adviser=adviser,
+                                dissertation=dissertation)
+        role.save()
 
 
 def search_by_dissertation(dissertation):
-    return DissertationRole.objects.filter(dissertation=dissertation)
+    return DissertationRole.objects.filter(dissertation=dissertation).order_by('pk')
 
 
 def search_by_dissertation_and_role(dissertation, role):
@@ -106,8 +132,8 @@ def search_by_adviser_and_role(adviser, role):
                                             )
 
 
-def search_by_adviser_and_role_and_offer(adviser, role, offer):
-    return search_by_adviser_and_role(adviser, role).filter(dissertation__offer_year_start__offer=offer)
+def search_by_adviser_and_role_and_offers(adviser, role, offers):
+    return search_by_adviser_and_role(adviser, role).filter(dissertation__offer_year_start__offer__in=offers)
 
 
 def search_by_adviser_and_role_and_status(adviser, role, status):
@@ -121,21 +147,27 @@ def search_by_adviser_and_role_and_status(adviser, role, status):
                                             )
 
 
-def list_teachers_action_needed(offer):
+def list_teachers_action_needed(offers):
     return DissertationRole.objects.filter(status='PROMOTEUR')\
                                    .filter(dissertation__status='DIR_SUBMIT')\
-                                   .filter(dissertation__offer_year_start__offer=offer)\
+                                   .filter(dissertation__offer_year_start__offer__in=offers)\
                                    .filter(dissertation__active=True)\
                                    .distinct('adviser')
 
 
-def get_promoteur_by_dissertation(dissert):
+def get_promoteur_by_dissertation_str(dissert):
     promoteur = search_by_dissertation_and_role(dissert, 'PROMOTEUR')
     if promoteur:
         return str(promoteur[0].adviser)
     else:
         return 'none'
 
+def get_promoteur_by_dissertation(dissert):
+    promoteur = search_by_dissertation_and_role(dissert, 'PROMOTEUR')
+    if promoteur:
+        return promoteur[0].adviser
+    else:
+        return 'none'
 
 def get_copromoteur_by_dissertation(dissert):
     copromoteur = search_by_dissertation_and_role(dissert, 'CO_PROMOTEUR')

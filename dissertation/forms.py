@@ -25,12 +25,14 @@
 ##############################################################################
 from django import forms
 from django.forms import ModelForm
+from base import models as mdl
 from dissertation.models.adviser import Adviser
 from dissertation.models.dissertation import Dissertation
 from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models.proposition_dissertation import PropositionDissertation
 from dissertation.models.proposition_role import PropositionRole
 from dissertation.models.dissertation_role import DissertationRole
+from dissertation.models.dissertation_update import DissertationUpdate
 
 
 class AdviserForm(ModelForm):
@@ -58,6 +60,12 @@ class PropositionRoleForm(ModelForm):
         model = PropositionRole
         fields = ('proposition_dissertation', 'status', 'adviser')
         widgets = {'proposition_dissertation': forms.HiddenInput()}
+
+
+class ManagerAddAdviserPreForm(ModelForm):
+    class Meta:
+        model = mdl.person.Person
+        fields = ('email', )
 
 
 class ManagerAddAdviserForm(ModelForm):
@@ -96,22 +104,10 @@ class ManagerOfferPropositionForm(ModelForm):
     class Meta:
         model = OfferProposition
         fields = ('offer', 'acronym', 'adviser_can_suggest_reader', 'validation_commission_exists',
-                  'student_can_manage_readers', 'evaluation_first_year', 'readers_visibility_date_for_students',
-                  'start_visibility_proposition', 'end_visibility_proposition', 'start_visibility_dissertation',
-                  'end_visibility_dissertation')
+                  'student_can_manage_readers', 'evaluation_first_year', 'start_visibility_proposition',
+                  'end_visibility_proposition', 'start_visibility_dissertation', 'end_visibility_dissertation',
+                  'start_jury_visibility', 'end_jury_visibility', 'start_edit_title', 'end_edit_title')
         widgets = {'offer': forms.HiddenInput(), 'acronym': forms.HiddenInput()}
-        start_visibility_proposition = forms.DateField(widget=forms.DateInput(format='%d/%m/%Y'),
-                                                       input_formats=('%d/%m/%Y', ),
-                                                       required=True)
-        end_visibility_proposition = forms.DateField(widget=forms.DateInput(format='%d/%m/%Y'),
-                                                     input_formats=('%d/%m/%Y', ),
-                                                     required=True)
-        start_visibility_dissertation = forms.DateField(widget=forms.DateInput(format='%d/%m/%Y'),
-                                                        input_formats=('%d/%m/%Y', ),
-                                                        required=True)
-        end_visibility_dissertation = forms.DateField(widget=forms.DateInput(format='%d/%m/%Y'),
-                                                      input_formats=('%d/%m/%Y', ),
-                                                      required=True)
 
 
 class ManagerPropositionDissertationForm(ModelForm):
@@ -123,8 +119,23 @@ class ManagerPropositionDissertationForm(ModelForm):
         widgets = {'offer_proposition': forms.CheckboxSelectMultiple()}
 
 
+class ManagerPropositionDissertationEditForm(ModelForm):
+    class Meta:
+        model = PropositionDissertation
+        fields = (
+            'visibility', 'title', 'description', 'type', 'level', 'collaboration', 'max_number_student',
+            'offer_proposition')
+        widgets = {'offer_proposition': forms.CheckboxSelectMultiple()}
+
+
 class ManagerPropositionRoleForm(ModelForm):
     class Meta:
         model = PropositionRole
         fields = ('proposition_dissertation', 'status', 'adviser')
         widgets = {'proposition_dissertation': forms.HiddenInput()}
+
+
+class ManagerDissertationUpdateForm(ModelForm):
+    class Meta:
+        model = DissertationUpdate
+        fields = ('justification',)

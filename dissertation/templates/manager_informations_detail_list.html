@@ -38,7 +38,8 @@
   </div>
   <ul class="nav nav-tabs">
     <li><a href="{% url 'manager_informations_detail' pk=adviser.pk %}">{% trans 'adviser_profile' %}</a></li>
-    <li class="active"><a href="#">{% trans 'adviser_dissertations' %}</a></li>
+    <li class="active"><a href="{% url 'manager_informations_detail' pk=adviser.pk %}">{% trans 'adviser_dissertations' %}</a></li>
+    <li><a href="{% url 'manager_informations_detail_list_wait' pk=adviser.pk %}">{% trans 'adviser_dissertations_wait' %}</a></li>
     <li><a href="{% url 'manager_informations_detail_stats' pk=adviser.pk %}">{% trans 'adviser_stats' %}</a></li>
   </ul>
   <div class="panel panel-default">

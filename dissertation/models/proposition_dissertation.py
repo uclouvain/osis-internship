@@ -31,7 +31,7 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class PropositionDissertationAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'visibility', 'active')
+    list_display = ('title', 'author', 'visibility', 'active', 'get_offer_propositions')
 
 
 class PropositionDissertation(models.Model):
@@ -54,6 +54,7 @@ class PropositionDissertation(models.Model):
         )
 
     author = models.ForeignKey('Adviser')
+    creator = models.ForeignKey('base.Person', blank=True, null=True)
     collaboration = models.CharField(max_length=12, choices=COLLABORATION_CHOICES, default='FORBIDDEN')
     description = models.TextField(blank=True, null=True)
     level = models.CharField(max_length=12, choices=LEVELS_CHOICES, default='DOMAIN')
@@ -80,6 +81,13 @@ class PropositionDissertation(models.Model):
 
     def deactivate(self):
         self.active = False
+        self.save()
+
+    def get_offer_propositions(self):
+        return " - ".join([str(s) for s in self.offer_proposition.all()])
+
+    def set_creator(self, person):
+        self.creator = person
         self.save()
 
     class Meta:
@@ -113,9 +121,10 @@ def search(terms, active=None, visibility=None, connected_adviser=None):
     return queryset
 
 
-def search_by_offer(offer):
-    return PropositionDissertation.objects.filter(active=True,
-                                                  offer_proposition__offer=offer)
+def search_by_offer(offers):
+    return PropositionDissertation.objects.filter(active=True)\
+                                          .filter(offer_proposition__offer__in=offers)\
+                                          .distinct()
 
 
 def get_all_for_teacher(adviser):
@@ -127,4 +136,5 @@ def get_all_for_teacher(adviser):
 
 def get_mine_for_teacher(adviser):
     return PropositionDissertation.objects.filter(author=adviser)\
-                                          .filter(active=True)
+                                          .filter(active=True)\
+                                          .distinct()
