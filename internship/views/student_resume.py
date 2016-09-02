@@ -28,7 +28,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
-from internship.models import InternshipChoice, InternshipStudentInformation, InternshipSpeciality
+from internship.models import InternshipChoice, InternshipStudentInformation, InternshipSpeciality, InternshipOffer
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -133,11 +133,23 @@ def internships_student_read(request, registration_id):
     internship_choice = InternshipChoice.find_by_student(student)
     all_speciality = InternshipSpeciality.find_all()
 
+    internships = InternshipOffer.find_internships()
+    #Check if there is a internship offers in data base. If not, the internships
+    #can be block, but there is no effect
+    if len(internships) > 0:
+        if internships[0].selectable:
+            blockable = True
+        else:
+            blockable = False
+    else:
+        blockable = True
+
     return render(request, "student_resume.html",
                            {'student':             student,
                             'information':         information[0],
                             'internship_choice':   internship_choice,
                             'specialities':        all_speciality,
+                            'blockable':           blockable,
                             })
 
 @login_required
