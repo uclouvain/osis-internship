@@ -596,7 +596,7 @@ msgid "possible"
 msgstr "Possible"
 
 msgid "professor"
-msgstr "Professeur"
+msgstr "Teacher"
 
 msgid "promotor"
 msgstr "Promoteur"
@@ -683,7 +683,7 @@ msgid "submitted_to_director"
 msgstr "Soumis au promoteur"
 
 msgid "submitted_to_first_year_evaluation"
-msgstr "Soumis à l'évaluation de fin de première année"
+msgstr "Soumis à l'évaluation de fin de 1è année"
 
 msgid "taken_places"
 msgstr "Places occupées"

@@ -290,304 +290,304 @@ msgid "ended_los"
 msgstr "Reported"
 
 msgid "error"
-msgstr "Erreur"
+msgstr "Error"
 
 msgid "evaluation_first_year"
-msgstr "Évaluation de fin de première année"
+msgstr "First year evaluation"
 
 msgid "export_search_as_xls"
-msgstr "Exporter la recherche en XLS"
+msgstr "Export search as XLS"
 
 msgid "for_managers"
-msgstr "Pour les gesionnaires"
+msgstr "For managers"
 
 msgid "for_students"
-msgstr "Pour les étudiants"
+msgstr "For students"
 
 msgid "for_teachers"
-msgstr "Pour les enseignants"
+msgstr "For teachers"
 
 msgid "forbidden"
-msgstr "Interdit"
+msgstr "Forbidden"
 
 msgid "how_many_dissertation_copro"
-msgstr "Nombre de mémoires en tant que co-promoteur"
+msgstr "Dissertations quantity as copromotor"
 
 msgid "how_many_dissertation_need_answer"
-msgstr "Nombre de mémoires attendant réponse"
+msgstr "Dissertations quantity needing answer"
 
 msgid "how_many_dissertation_pro"
-msgstr "Nombre de mémoires en tant que promoteur"
+msgstr "Dissertations quantity as promotor"
 
 msgid "how_many_dissertation_reader"
-msgstr "Nombre de mémoires en tant que lecteur"
+msgstr "Dissertations quantity as reader"
 
 msgid "in_edit_title"
-msgstr "Titre modifiable actuellement"
+msgstr "Title currently editable"
 
 msgid "informations"
 msgstr "Informations"
 
 msgid "in_jury_visibility"
-msgstr "Jury visible actuellement"
+msgstr "Jury currently visible"
 
 msgid "in_this_offer"
-msgstr "Dans ce programme"
+msgstr "In this program"
 
 msgid "in_visibility_dissertation"
-msgstr "Possible de créer un mémoire actuellement"
+msgstr "Currently possible to create dissertations"
 
 msgid "in_visibility_proposition"
-msgstr "Sujets visibles actuellement"
+msgstr "Subjects currently visible"
 
 msgid "invalid_data"
-msgstr "Données invalides"
+msgstr "Invalid data"
 
 msgid "invisible"
 msgstr "Invisible"
 
 msgid "january"
-msgstr "Janvier"
+msgstr "January"
 
 msgid "june"
-msgstr "Juin"
+msgstr "June"
 
 msgid "jury_status"
-msgstr "État du jury"
+msgstr "Jury status"
 
 msgid "justification"
 msgstr "Justification"
 
 msgid "justification_confirmation_message"
-msgstr "Vous allez enregistrer le changement de statut et sa justification. Voulez-vous continuer ?"
+msgstr "You are ready to save this change and your justification. Are you sure you want to continue ?"
 
 msgid "justification_instructions"
-msgstr "La mise-à-jour de l'état du mémoire est sur le point d'être effectuée. Le changement d'état qui sera appliqué est renseigné ci-dessous. Veuillez indiquer un message d'explication."
+msgstr "The status update is nearly done. This update is detailed just after. Please add your explanation for this update."
 
 msgid "level"
-msgstr "Niveau de développement"
+msgstr "Developement level"
 
 msgid "level_domain"
-msgstr "Domaine de recherche"
+msgstr "Search domain"
 
 msgid "level_work"
-msgstr "Travail de recherche"
+msgstr "Search work"
 
 msgid "level_question"
-msgstr "Question de recherche"
+msgstr "Search question"
 
 msgid "level_theme"
-msgstr "Thème de recherche"
+msgstr "Search theme"
 
 msgid "litterature_review"
-msgstr "Revue de littérature"
+msgstr "Litterature review"
 
 msgid "main"
-msgstr "Principal"
+msgstr "Main"
 
 msgid "manager"
-msgstr "Gestionnaire"
+msgstr "Manager"
 
 msgid "manager_commission_accept"
-msgstr "Acceptation de la commission"
+msgstr "Commission accepts"
 
 msgid "manager_commission_refuse"
-msgstr "Refus de la commission"
+msgstr "Commission refuses"
 
 msgid "manager_dissertations_accept_comm_list"
-msgstr "Acceptation de la commission"
+msgstr "Commission accepts"
 
 msgid "manager_dissertations_accept_eval_list"
-msgstr "Réussite de l'évaluation de première année"
+msgstr "First year evaluation success"
 
 msgid "manager_dissertations_defended"
-msgstr "Mémoire défendu"
+msgstr "Dissertation defended"
 
 msgid "manager_dissertations_receive"
-msgstr "Mémoire réceptionné"
+msgstr "Dissertation received"
 
 msgid "manager_dissertations_reported"
-msgstr "Mémoire reporté"
+msgstr "Dissertation delayed"
 
 msgid "manager_dissertations_success"
-msgstr "Mémoire réussi"
+msgstr "Dissertation succeeded"
 
 msgid "manager_dissertations_to_dir_ko"
-msgstr "Refus par le promoteur"
+msgstr "Promotor refuses"
 
 msgid "manager_dissertations_to_dir_ok"
-msgstr "Acceptation par le promoteur"
+msgstr "Promotor accepts"
 
 msgid "manager_dissertations_to_dir_submit"
-msgstr "Soumettre au promoteur"
+msgstr "Submit to promotor"
 
 msgid "manager_evaluation_accept"
-msgstr "Évaluation de première année réussie"
+msgstr "First year evaluation success"
 
 msgid "manager_evaluation_refuse"
-msgstr "Évaluation de première année échouée"
+msgstr "First year evaluation failed"
 
 msgid "manager_informations_add"
-msgstr "Ajouter un enseignant"
+msgstr "Add teacher"
 
 msgid "manager_informations_list_request"
-msgstr "Enseignants devant répondre à une demande"
+msgstr "Teachers having to answer request"
 
 msgid "manager_promotor_accept"
-msgstr "Acceptation par le promoteur"
+msgstr "Promotor accepts"
 
 msgid "manager_promotor_refuse"
-msgstr "Refus par le promoteur"
+msgstr "Promotor refuses"
 
 msgid "manager_reception_accept"
-msgstr "Réception du mémoire"
+msgstr "Dissertation reception"
 
 msgid "max_students"
-msgstr "Nombre maximum d'étudiants"
+msgstr "Max number of students"
 
 msgid "max_students_number"
-msgstr "Nombre maximum d'étudiants"
+msgstr "Max number of students"
 
 msgid "mgr_com_accept_confirmation_message"
-msgstr "Vous allez indiquer l'acceptation de ce mémoire par la commission.  Are you sure you want to continue ?"
+msgstr "You are ready to set this dissertation as accepted by the commission.  Are you sure you want to continue ?"
 
 msgid "mgr_com_refuse_confirmation_message"
-msgstr "Vous allez indiquer le refus de ce mémoire par la commission.  Are you sure you want to continue ?"
+msgstr "You are ready to set this dissertation as refused by the commission.  Are you sure you want to continue ?"
 
 msgid "mgr_dissertations_to_dir_submit"
-msgstr "Soumette au promoteur"
+msgstr "Submit to promotor"
 
 msgid "mgr_defended_confirmation_message"
-msgstr "Vous allez indiquer que ce mémoire a été défendu.  Are you sure you want to continue ?"
+msgstr "You are ready to set this dissertation as defended.  Are you sure you want to continue ?"
 
 msgid "mgr_eva_accept_confirmation_message"
-msgstr "Vous allez indiquer la réussite de l'évaluation de fin de première année.  Are you sure you want to continue ?"
+msgstr "You are ready to set the first year evaluation succeeded for this dissertation.  Are you sure you want to continue ?"
 
 msgid "mgr_eva_refuse_confirmation_message"
-msgstr "Vous allez indiquer la non-réussite de l'évaluation de fin de première année.  Are you sure you want to continue ?"
+msgstr "You are ready to set the first year evaluation failed for this dissertation.  Are you sure you want to continue ?"
 
 msgid "mgr_lose_confirmation_message"
-msgstr "Vous allez indiquer la non-réussite de ce mémoire.  Are you sure you want to continue ?"
+msgstr "You are ready to set this dissertation as failed.  Are you sure you want to continue ?"
 
 msgid "mgr_promotor_accept_confirmation_message"
-msgstr "Vous allez indiquer l'acceptation de ce mémoire par le promoteur.  Are you sure you want to continue ?"
+msgstr "You are ready to set this dissertation as accepted by the promotor.  Are you sure you want to continue ?"
 
 msgid "mgr_promotor_refuse_confirmation_message"
-msgstr "Vous allez indiquer le refus de ce mémoire par le promoteur.  Are you sure you want to continue ?"
+msgstr "You are ready to set this dissertation as refused by the promotor.  Are you sure you want to continue ?"
 
 msgid "mgr_receive_confirmation_message"
-msgstr "Vous allez indiquer que ce mémoire a été réceptionné.  Are you sure you want to continue ?"
+msgstr "You are ready to set this dissertation as received.  Are you sure you want to continue ?"
 
 msgid "mgr_to_dir_submit_confirmation_message"
-msgstr "Vous allez soumettre ce mémoire au promoteur.  Are you sure you want to continue ?"
+msgstr "You are ready to submit this dissertation to the promotor.  Are you sure you want to continue ?"
 
 msgid "mgr_win_confirmation_message"
-msgstr "Vous allez indiquer la réussite de ce mémoire.  Are you sure you want to continue ?"
+msgstr "You are ready to set this dissertation as succeeded.  Are you sure you want to continue ?"
 
 msgid "mobile_phone"
-msgstr "Téléphone mobile"
+msgstr "Mobile phone"
 
 msgid "my_informations"
-msgstr "Mes informations"
+msgstr "My informations"
 
 msgid "my_profile"
-msgstr "Mon profil"
+msgstr "My profile"
 
 msgid "my_proposition_dissertations"
-msgstr "Mes sujets de mémoire"
+msgstr "Mu dissertation subjects"
 
 msgid "my_stats"
-msgstr "Mes statistiques"
+msgstr "My stats"
 
 msgid "name"
-msgstr "Nom"
+msgstr "Name"
 
 msgid "new_adviser"
-msgstr "Ajouter un enseignant"
+msgstr "Add teacher"
 
 msgid "new_dissertation"
-msgstr "Ajouter un mémoire"
+msgstr "Add dissertation"
 
 msgid "new_jury_dissertation"
-msgstr "Ajouter un membre du jury"
+msgstr "Add jury member"
 
 msgid "new_or_edit_dissertation"
-msgstr "Ajout/Modification d'un mémoire"
+msgstr "Add/Edit dissertation"
 
 msgid "new_or_edit_jury_proposition_dissertation"
-msgstr "Ajout/Modification d'un membre du jury pour le sujet de mémoire"
+msgstr "Add/Edit jury member for the dissertation subject"
 
 msgid "new_or_edit_subject"
-msgstr "Ajout/Modification d'un sujet de mémoire"
+msgstr "Add/Edit dissertation subject"
 
 msgid "new_search"
-msgstr "Nouvelle recherche"
+msgstr "New search"
 
 msgid "next_status"
-msgstr "État suivant"
+msgstr "Next status"
 
 msgid "no"
-msgstr "non"
+msgstr "no"
 
 msgid "no_data"
-msgstr "Aucune donnée"
+msgstr "No data"
 
 msgid "non_editable"
-msgstr "Non modifiable"
+msgstr "Non-editable"
 
 msgid "no_result"
-msgstr "Aucun résultat"
+msgstr "No result"
 
 msgid "number_of_dissertation_active_total"
-msgstr "Nombre de mémoires actifs (tous programmes)"
+msgstr "How many active dissertations (all programs)"
 
 msgid "number_of_dissertation_copro"
-msgstr "Nombre de mémoires en tant que copromoteur"
+msgstr "How many dissertations as copromotor"
 
 msgid "number_of_dissertation_need_request"
-msgstr "Nombre de mémoires en attente de réponse"
+msgstr "How many dissertations need answer"
 
 msgid "number_of_dissertation_pro"
-msgstr "Nombre de mémoires en tant que promoteur"
+msgstr "How many dissertations as promotor"
 
 msgid "number_of_dissertation_reader"
-msgstr "Nombre de mémoires en tant que lecteur"
+msgstr "How many dissertations as reader"
 
 msgid "of"
-msgstr "sur"
+msgstr "of"
 
 msgid "offer"
-msgstr "Programme"
+msgstr "Program"
 
 msgid "offer_proposition"
-msgstr "Programme"
+msgstr "Program"
 
 msgid "offer_propositions"
-msgstr "Programmes"
+msgstr "Programs"
 
 msgid "offer_year_start"
-msgstr "Programme/Année de début"
+msgstr "Start Program/Year"
 
 msgid "parameters"
-msgstr "Paramètres"
+msgstr "Settings"
 
 msgid "person"
-msgstr "Personne"
+msgstr "Person"
 
 msgid "person_already_adviser"
-msgstr "Cette personne existe déjà en tant qu'enseignant"
+msgstr "This person already exists as teacher"
 
 msgid "person_to_add"
-msgstr "Personne à ajouter"
+msgstr "Person to add"
 
 msgid "person_not_found_by_mail "
-msgstr "Aucune personne ne correspond à cet adresse e-mail"
+msgstr "No person matches this e-mail address"
 
 msgid "phone"
-msgstr "Téléphone"
+msgstr "Phone"
 
 msgid "phone_mobile"
-msgstr "Téléphone mobile"
+msgstr "Mobile phone"
 
 msgid "photo"
 msgstr "Photo"
@@ -596,169 +596,169 @@ msgid "possible"
 msgstr "Possible"
 
 msgid "professor"
-msgstr "Professeur"
+msgstr "Teacher"
 
 msgid "promotor"
-msgstr "Promoteur"
+msgstr "Promotor"
 
 msgid "proposition_dissertation"
-msgstr "Sujet de mémoire"
+msgstr "Dissertation subject"
 
 msgid "proposition_dissertation_confirmation_message"
-msgstr "Vous allez indiquer enregistrer les modifications de ce sujet de mémoire.  Are you sure you want to continue ?"
+msgstr "You are ready to save this dissertation subject details.  Are you sure you want to continue ?"
 
 msgid "proposition_dissertation_informations"
-msgstr "Informations du sujet de mémoire"
+msgstr "Informations about the dissertation subject"
 
 msgid "proposition_dissertations"
-msgstr "Sujets de mémoire"
+msgstr "Dissertation subjects"
 
 msgid "reader"
-msgstr "Lecteur"
+msgstr "Reader"
 
 msgid "refused_by_commission"
-msgstr "Refusé par la commission"
+msgstr "Refused by commission"
 
 msgid "refused_by_director"
-msgstr "Refusé par le promoteur"
+msgstr "Refused by promotor"
 
 msgid "refused_by_first_year_evaluation"
-msgstr "Évaluation de fin de première année échouée"
+msgstr "1st year evaluation failed"
 
 msgid "required"
-msgstr "Requis"
+msgstr "Required"
 
 msgid "save"
-msgstr "Sauvegarder"
+msgstr "Save"
 
 msgid "search"
-msgstr "Rechercher"
+msgstr "Search"
 
 msgid "search_person_explanation"
-msgstr "Cet écran permet de rajouter dans l'application Mémoires, en tant qu'enseignant, un membre du personnel qui ne s'est pas encore connecté à l'application Mémoires. Veuillez rechercher la personne via son e-mail."
+msgstr "This screen allows you to add, in the dissertation application, as a teacher, a person who did not logged into the application. Please search the person with her/his e-mail address"
 
 msgid "search_proposition_dissertation"
-msgstr "Rechercher un sujet de mémoire"
+msgstr "Search dissertation subject"
 
 msgid "search_teacher"
-msgstr "Rechercher un enseignant"
+msgstr "Search teacher"
 
 msgid "see_my_waiting_dissertations"
-msgstr "Voir les mémoires en attente"
+msgstr "See my waiting dissertations"
 
 msgid "september"
-msgstr "Septembre"
+msgstr "September"
 
 msgid "start_edit_title"
-msgstr "Début de la période de modification du titre"
+msgstr "Start of period to edit title"
 
 msgid "start_jury_visibility"
-msgstr "Début de la période de visibilité du jury"
+msgstr "Start of period of visibility for the jury"
 
 msgid "start_visibility_dissertation"
-msgstr ""
+msgstr "Start of period of creation for the dissertations"
 
 msgid "start_visibility_proposition"
-msgstr ""
+msgstr "Start of period of visibility for the subjects"
 
 msgid "stats"
-msgstr "Statistiques"
+msgstr "Stats"
 
 msgid "status"
-msgstr "État"
+msgstr "Status"
 
 msgid "student_can_manage_readers"
-msgstr "Les étudiants peuvent gérer les lecteurs"
+msgstr "Students can manage readers"
 
 msgid "student_path"
-msgstr "Parcours de l'étudiant"
+msgstr "Students' path"
 
 msgid "subjects"
-msgstr "Sujets de mémoires"
+msgstr "Dissertation subjects"
 
 msgid "submitted_to_commission"
-msgstr "Soumis à la commission"
+msgstr "Submitted to commission"
 
 msgid "submitted_to_director"
-msgstr "Soumis au promoteur"
+msgstr "Submitted to promotor"
 
 msgid "submitted_to_first_year_evaluation"
-msgstr "Soumis à l'évaluation de fin de première année"
+msgstr "Submitted to 1st year evaluation"
 
 msgid "taken_places"
-msgstr "Places occupées"
+msgstr "Taken places"
 
 msgid "teachers"
-msgstr "Enseignants"
+msgstr "Teachers"
 
 msgid "teachers_not_responding_to_request"
-msgstr "Enseignants devant répondre à une ou plusieurs demandes"
+msgstr "Teachers not responding to requests"
 
 msgid "title"
-msgstr "Titre"
+msgstr "Title"
 
 msgid "title_chart_copro"
-msgstr "Mémoires en tant que copromoteur"
+msgstr "Dissertations as copromotor"
 
 msgid "title_chart_pro"
-msgstr "Mémoires en tant que promoteur"
+msgstr "Dissertations as promotor"
 
 msgid "title_chart_read"
-msgstr "Mémoires en tant que lecteur"
+msgstr "Dissertations as reader"
 
 msgid "to_be_defended"
-msgstr "À défendre"
+msgstr "To be defended"
 
 msgid "to_be_received"
-msgstr "À recevoir"
+msgstr "To be received"
 
 msgid "to_dir_ko_confirmation_message"
-msgstr "Vous allez refuser ce projet de mémoire, qui sera renvoyé vers l'étudiant.  Are you sure you want to continue ?"
+msgstr "You are ready to refuse this dissertation project, which will be resend to the student.  Are you sure you want to continue ?"
 
 msgid "to_dir_ok_confirmation_message"
-msgstr "Vous allez indiquer accepter ce projet de mémoire.  Are you sure you want to continue ?"
+msgstr "You are ready to accept this dissertation project.  Are you sure you want to continue ?"
 
 msgid "type"
-msgstr "Type de sujet"
+msgstr "Subject type"
 
 msgid "undefined"
-msgstr "Indéfini"
+msgstr "Undefined"
 
 msgid "update_date"
-msgstr "Date de mise-à-jour"
+msgstr "Update date"
 
 msgid "updates"
-msgstr "Mises-à-jour"
+msgstr "Updates"
 
 msgid "validation_commission_exists"
-msgstr "Présence d'une commission Mémoires"
+msgstr "Validation commission exists"
 
 msgid "visibility"
-msgstr "Visibilité"
+msgstr "Visibility"
 
 msgid "visible"
 msgstr "Visible"
 
 msgid "waiting_commission"
-msgstr "En attente de la commission"
+msgstr "Waiting commission"
 
 msgid "waiting_dissertations"
-msgstr "En attente du promoteur"
+msgstr "Waiting promotor"
 
 msgid "waiting_evaluation"
-msgstr "En attente d'éval 1è année"
+msgstr "Waiting 1st year evaluation"
 
 msgid "waiting_reception"
-msgstr "En attente de réception"
+msgstr "Waiting reception"
 
 msgid "wating_dissertations_message"
-msgstr "mémoires en attente de validation"
+msgstr "Dissertations waiting validation"
 
 msgid "yes"
-msgstr "oui"
+msgstr "yes"
 
 msgid "yes,no"
-msgstr "oui,non"
+msgstr "yes,no"
 
 msgid "you_have"
-msgstr "Vous avez"
+msgstr "You have"
