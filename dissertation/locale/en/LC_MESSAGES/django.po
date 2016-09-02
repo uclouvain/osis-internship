@@ -118,6 +118,9 @@ msgstr "Collaboration"
 msgid "comment"
 msgstr "Comment"
 
+msgid "continue"
+msgstr "Continue"
+
 msgid "copromotor"
 msgstr "Co-Promotor"
 
@@ -309,6 +312,9 @@ msgstr "For teachers"
 
 msgid "forbidden"
 msgstr "Forbidden"
+
+msgid "go_away"
+msgstr "Go away"
 
 msgid "how_many_dissertation_copro"
 msgstr "Dissertations quantity as copromotor"
@@ -753,6 +759,15 @@ msgstr "Waiting reception"
 
 msgid "wating_dissertations_message"
 msgstr "Dissertations waiting validation"
+
+msgid "welcome"
+msgstr "Welcome"
+
+msgid "welcome_message_dissertation"
+msgstr "This application is dedicated to student's dissertations management, for the Faculties which choosed to use it."
+
+msgid "welcome_warning_dissertation"
+msgstr "If you continue, you will be registered as teacher in the application, and you will be able to create dissertation subjects for the students."
 
 msgid "yes"
 msgstr "yes"
