@@ -38,6 +38,7 @@
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
+      {% if organization %}
         {% for speciality in specialities %}
             <label>{{speciality.name}}</label>
             {% for offer in offers %}
@@ -61,7 +62,8 @@
               </div>
               <br/>
           {% endfor %}
-      <label> Stage au choix</label><br/>
+        <label> Stage au choix</label><br/>
+      {% endif %}
 	</div>
 </div>
 
