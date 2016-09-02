@@ -48,7 +48,7 @@ from django.http import HttpResponse
 def is_manager(user):
     person = mdl.person.find_by_user(user)
     this_adviser = adviser.search_by_person(person)
-    return this_adviser.type == 'MGR'
+    return this_adviser.type == 'MGR' if this_adviser else False
 
 ###########################
 #      MANAGER VIEWS      #

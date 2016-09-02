@@ -25,7 +25,6 @@
 ##############################################################################
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.db import IntegrityError
 from base import models as mdl
 from base.views import layout
 from dissertation.models.adviser import Adviser
@@ -51,14 +50,14 @@ import time
 def is_manager(user):
     person = mdl.person.find_by_user(user)
     this_adviser = adviser.search_by_person(person)
-    return this_adviser.type == 'MGR'
+    return this_adviser.type == 'MGR' if this_adviser else False
 
 
 # Used by decorator @user_passes_test(is_manager) to secure manager views
 def is_teacher(user):
     person = mdl.person.find_by_user(user)
     this_adviser = adviser.search_by_person(person)
-    return this_adviser.type == 'PRF'
+    return this_adviser.type == 'PRF' if this_adviser else False
 
 
 #########################
@@ -69,7 +68,11 @@ def is_teacher(user):
 @login_required
 def dissertations(request):
     person = mdl.person.find_by_user(request.user)
-    if adviser.find_by_person(person):
+
+    if mdl.student.find_by_person(person) and not mdl.tutor.find_by_person(person):
+        return redirect('home')
+
+    elif adviser.find_by_person(person):
         adv = adviser.search_by_person(person)
         count_advisers_pro_request = dissertation_role.count_by_adviser(adv, 'PROMOTEUR', 'DIR_SUBMIT')
 
