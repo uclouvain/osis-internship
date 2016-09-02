@@ -195,6 +195,10 @@ def organization_create(request):
 def student_choice(request, reference):
     organization_choice = InternshipChoice.search(organization__reference=reference)
     organization = Organization.search(reference=reference)
+    if organization:
+        organization = organization[0]
+    else:
+        organization = None
     all_offers = InternshipOffer.search(organization = organization)
     all_speciality = InternshipSpeciality.find_all()
     set_tabs_name(all_speciality)
@@ -204,7 +208,7 @@ def student_choice(request, reference):
                                                            choice=1))
         al.number_first_choice = number_first_choice
 
-    return render(request, "place_detail.html", {'organization':        organization[0],
+    return render(request, "place_detail.html", {'organization':        organization,
                                                  'organization_choice': organization_choice,
                                                  'offers':              all_offers,
                                                  'specialities':        all_speciality
