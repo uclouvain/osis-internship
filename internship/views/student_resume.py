@@ -138,18 +138,18 @@ def internships_student_read(request, registration_id):
     #can be block, but there is no effect
     if len(internships) > 0:
         if internships[0].selectable:
-            blockable = True
+            selectable = True
         else:
-            blockable = False
+            selectable = False
     else:
-        blockable = True
+        selectable = True
 
     return render(request, "student_resume.html",
                            {'student':             student,
                             'information':         information[0],
                             'internship_choice':   internship_choice,
                             'specialities':        all_speciality,
-                            'blockable':           blockable,
+                            'selectable':           selectable,
                             })
 
 @login_required
