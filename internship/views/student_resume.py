@@ -28,7 +28,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
-from internship.models import InternshipChoice, InternshipStudentInformation, InternshipSpeciality, InternshipOffer
+from internship.models import InternshipChoice, InternshipStudentInformation, InternshipSpeciality, InternshipOffer, InternshipStudentAffectationStat
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -128,10 +128,12 @@ def internships_student_search(request):
 @permission_required('internship.can_access_internship', raise_exception=True)
 def internships_student_read(request, registration_id):
     student = mdl.student.find_by(registration_id=registration_id)
-    information = InternshipStudentInformation.search(person = student[0].person)
     student = student[0]
+    information = InternshipStudentInformation.search(person = student.person)
     internship_choice = InternshipChoice.find_by_student(student)
     all_speciality = InternshipSpeciality.find_all()
+
+    affectations = InternshipStudentAffectationStat.search(student = student).order_by("period")
 
     internships = InternshipOffer.find_internships()
     #Check if there is a internship offers in data base. If not, the internships
@@ -149,7 +151,8 @@ def internships_student_read(request, registration_id):
                             'information':         information[0],
                             'internship_choice':   internship_choice,
                             'specialities':        all_speciality,
-                            'selectable':           selectable,
+                            'selectable':          selectable,
+                            'affectations':        affectations,
                             })
 
 @login_required
