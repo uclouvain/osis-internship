@@ -23,19 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.db import models
+from django.contrib import admin
 
-BACHELOR = "BACHELOR"
-MASTER = "MASTER"
-DOCTORATE = "DOCTORATE"
-# TRAINING_CERTIFICATE = "TRAINING_CERTIFICATE"
-CERTIFICATE = "CERTIFICATE"
-OTHER = "OTHER"
 
-GRADE_CHOICES = (
-    (BACHELOR, BACHELOR),
-    (MASTER, MASTER),
-    (DOCTORATE, DOCTORATE),
-    # (TRAINING_CERTIFICATE, _('teacher_training_certificate')),
-    (CERTIFICATE, CERTIFICATE),
-    (OTHER, OTHER))
+class InstitutionalGradeTypeAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    fieldsets = ((None, {'fields': ('name',)}),)
 
+
+# Customized parent's list of institutional GradeType (used & displayed in Admission - offer choice).
+class InstitutionalGradeType(models.Model):
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name

@@ -34,3 +34,5 @@ from reference.models import education_type
 from reference.models import external_offer
 from reference.models import grade_type
 from reference.models import language
+from reference.models import institutional_grade_type
+

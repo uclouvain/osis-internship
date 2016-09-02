@@ -40,7 +40,7 @@ class ExternalOffer(models.Model):
     name = models.CharField(max_length=150, unique=True)
     adhoc = models.BooleanField(default=True)  # If False == Official/validated, if True == Not Official/not validated
     domain = models.ForeignKey('Domain', on_delete=models.CASCADE)
-    grade_type = models.ForeignKey('GradeType', on_delete=models.CASCADE)
+    grade_type = models.ForeignKey('GradeType', blank=True, null=True, on_delete=models.CASCADE)
     offer_year = models.ForeignKey('base.OfferYear', blank=True, null=True, on_delete=models.CASCADE) # Institution equivalence ("intern" offer)
     national = models.BooleanField(default=False) # True if is Belgian else False
 

@@ -41,6 +41,11 @@ class Decree(models.Model):
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
 
+    # def save(self, *args, **kwargs):
+    #     # WARNING
+    #     # In case a new decree is created, we MUST migrate data from domain and ExternalOffer to the last domain.
+    #     super(models.Model, self).save(*args, **kwargs)
+
     def __str__(self):
         return self.name
 
