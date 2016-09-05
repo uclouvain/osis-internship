@@ -180,6 +180,9 @@ msgstr	 "Aucun résultat"
 msgid	 "noma"
 msgstr	 "Noma"
 
+msgid "internship_choice"
+msgstr "Stage au choix"
+
 msgid	 "not_4_choice_spec"
 msgstr	 "Vous n'avez pas encore soumis vos 4 choix pour cette spécialité."
 
@@ -243,3 +246,17 @@ msgstr	 "3ème choix"
 msgid	 "type"
 msgstr	 "Type"
 
+msgid "already_internship_preference_speciality"
+msgstr "Vous avez déjà un stage avec cette préférence dans cette spécialité."
+
+msgid "selection_currently_active"
+msgstr "La sélection des stages est actuellement active"
+
+msgid "selection_currently_block"
+msgstr "La sélection des stages est actuellement bloquée"
+
+msgid "selected_internships"
+msgstr "Stages sélectionnés"
+
+msgid "select_speciality_change_internships"
+msgstr "Sélectionnez une spécialité pour ajouter/modifier vos choix pour ce stage au choix"
