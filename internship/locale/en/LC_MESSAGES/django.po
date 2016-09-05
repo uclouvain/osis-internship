@@ -243,9 +243,6 @@ msgstr	 "Third Choice"
 msgid	 "type"
 msgstr	 "Type"
 
-msgid "already_internship_preference_speciality"
-msgstr "You already have an internship with this preference for this speciality."
-
 msgid "selection_currently_active"
 msgstr "The internships' selection is currently active"
 
