@@ -25,7 +25,7 @@
 ##############################################################################
 from django.conf.urls import url
 from assistant.views import mandate, home, assistant_form, assistant
-from assistant.views import manager_settings
+from assistant.views import manager_settings, reviewers_management
 from assistant.views import mandates_list, reviewer_mandates_list, reviewer_review, reviewer_delegation
 
 urlpatterns = [
@@ -36,6 +36,10 @@ urlpatterns = [
     url(r'^manager/mandates/(?P<mandate_id>\d+)/save/$', mandate.mandate_save, name='mandate_save'),
     url(r'^manager/mandates/load/$', mandate.load_mandates, name='load_mandates'),
     url(r'^manager/mandates/$', mandates_list.MandatesListView.as_view(), name='mandates_list'),
+    url(r'^manager/reviewers/add/$', reviewers_management.reviewer_add, name='reviewer_add'),
+    url(r'^manager/reviewers/(?P<reviewer_id>\d+)/delete/$', reviewers_management.reviewer_delete,
+        name='reviewer_delete'),
+    url(r'^manager/reviewers/$', reviewers_management.ReviewersListView.as_view(), name='reviewers_list'),
     url(r'^manager/settings/edit/$', manager_settings.settings_edit, name='settings_edit'),
     url(r'^manager/settings/save/$', manager_settings.settings_save, name='settings_save'),
     url(r'^pst/access_denied$', home.access_denied, name='access_denied'),
