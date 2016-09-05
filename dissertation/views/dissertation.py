@@ -69,8 +69,9 @@ def is_teacher(user):
 def dissertations(request):
     person = mdl.person.find_by_user(request.user)
 
-    if mdl.student.find_by_person(person) and not mdl.tutor.find_by_person(person):
-        return redirect('home')
+    if mdl.student.find_by_person(person):
+        if not mdl.tutor.find_by_person(person):
+            return redirect('home')
 
     elif adviser.find_by_person(person):
         adv = adviser.search_by_person(person)
