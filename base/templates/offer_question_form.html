@@ -107,7 +107,7 @@
                 <a id="remove_row" class="btn btn-default pull-right" role="button"> <span class="glyphicon glyphicon-minus" aria-hidden="true"></span></a>
                 <a id="add_row" class="btn btn-default pull-right" role="button"> <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
                 <div id="dynamic_quest">
-                        {% if question.type == 'DROPDOWN_LIST' %}
+                        {% if question.type == 'DROPDOWN_LIST' or question.type == 'CHECKBOX' or question.type == 'RADIO_BUTTON' %}
                         <h3>{% trans 'options' %}</h3>
                         <div class="row">
                         <div class="col-md-12">

@@ -83,6 +83,16 @@
             <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span> {% trans 'back'%}
         </a>
     </form>
+    <form method="get" action="{% url 'offer_read' offer_year.id %}">
+        <input type="hidden" name="displaytab" value="tab_dynamic_form">
+        <div class="col-md-4">
+            <button type="submit" id="bt_submit_offer_year_search" class="btn btn-default" role="button"
+                    title="{%trans 'back'%}">
+                <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span> {% trans 'back'%}
+            </button>
+        </div>
+    </form>
+
   </div>
 </div>
 
