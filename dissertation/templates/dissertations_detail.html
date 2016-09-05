@@ -107,7 +107,7 @@
                         {% else %}
                         <span class="label label-default">
                         {% endif %}
-                            {{ dissertation.status }}
+                            {{ dissertation.get_status_display }}
                         </span>
                     </div>
                 </div>
