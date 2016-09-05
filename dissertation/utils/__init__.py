@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -23,29 +23,5 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib import admin
-from django.db import models
-from base.models import offer
-from . import adviser
+from dissertation.utils import emails_dissert
 
-
-class FacultyAdviserAdmin(admin.ModelAdmin):
-    list_display = ('offer', 'adviser', 'get_adviser_type')
-    raw_id_fields = ('offer',)
-
-
-class FacultyAdviser(models.Model):
-    adviser = models.ForeignKey(adviser.Adviser)
-    offer = models.ForeignKey(offer.Offer)
-
-    def __str__(self):
-        return self.offer.title
-
-    def get_adviser_type(self):
-        return self.adviser.type
-
-
-def search_by_adviser(a_adviser):
-    objects = FacultyAdviser.objects.filter(adviser=a_adviser)
-    offers = [obj.offer for obj in list(objects)]
-    return offers

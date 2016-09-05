@@ -29,6 +29,7 @@ from base import models as mdl
 from dissertation.models import adviser
 from dissertation.models import dissertation
 from dissertation.models import faculty_adviser
+from dissertation.models import offer_proposition
 from dissertation.models.proposition_dissertation import PropositionDissertation
 from dissertation.models import proposition_dissertation
 from dissertation.models.proposition_role import PropositionRole
@@ -41,6 +42,7 @@ from django.contrib.auth.decorators import user_passes_test
 from base.views import layout
 import time
 from django.http import HttpResponse
+
 
 # Used by decorator @user_passes_test(is_manager) to secure manager views
 def is_manager(user):
@@ -58,8 +60,8 @@ def is_manager(user):
 def manager_proposition_dissertations(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-    offer = faculty_adviser.search_by_adviser(adv).offer
-    prop_disserts = proposition_dissertation.search_by_offer(offer)
+    offers = faculty_adviser.search_by_adviser(adv)
+    prop_disserts = proposition_dissertation.search_by_offer(offers)
     return layout.render(request, 'manager_proposition_dissertations_list.html',
                          {'proposition_dissertations': prop_disserts})
 
@@ -141,13 +143,29 @@ def manager_proposition_dissertations_role_delete(request, pk):
 @user_passes_test(is_manager)
 def manager_proposition_dissertation_new(request):
     if request.method == "POST":
+        person = mdl.person.find_by_user(request.user)
         form = ManagerPropositionDissertationForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('manager_proposition_dissertations')
+            prop_dissert = form.save()
+            prop_dissert.set_creator(person)
+            return redirect('manager_proposition_dissertation_detail', pk=prop_dissert.pk)
+        else:
+            form = ManagerPropositionDissertationForm(initial={'active': True})
+            adv = adviser.search_by_person(person)
+            offers = faculty_adviser.search_by_adviser(adv)
+            form.fields["offer_proposition"].queryset = offer_proposition.search_by_offer(offers)
+            return layout.render(request, 'manager_proposition_dissertation_new.html',
+                                 {'form': form,
+                                  'types_choices': PropositionDissertation.TYPES_CHOICES,
+                                  'levels_choices': PropositionDissertation.LEVELS_CHOICES,
+                                  'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES})
     else:
         form = ManagerPropositionDissertationForm(initial={'active': True})
-    return layout.render(request, 'manager_proposition_dissertation_new.html',
+        person = mdl.person.find_by_user(request.user)
+        adv = adviser.search_by_person(person)
+        offers = faculty_adviser.search_by_adviser(adv)
+        form.fields["offer_proposition"].queryset = offer_proposition.search_by_offer(offers)
+        return layout.render(request, 'manager_proposition_dissertation_new.html',
                          {'form': form,
                           'types_choices': PropositionDissertation.TYPES_CHOICES,
                           'levels_choices': PropositionDissertation.LEVELS_CHOICES,
@@ -264,13 +282,14 @@ def my_dissertation_propositions(request):
 
 @login_required
 def proposition_dissertation_new(request):
+    person = mdl.person.find_by_user(request.user)
     if request.method == "POST":
         form = PropositionDissertationForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('my_dissertation_propositions')
+            prop_dissert = form.save()
+            prop_dissert.set_creator(person)
+            return redirect('proposition_dissertation_detail', pk=prop_dissert.pk)
     else:
-        person = mdl.person.find_by_user(request.user)
         adv = adviser.search_by_person(person)
         form = PropositionDissertationForm(initial={'author': adv, 'active': True})
     return layout.render(request, 'proposition_dissertation_new.html',

@@ -29,33 +29,35 @@
 {% block breadcrumb %}
   <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
   <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'dissertations' %}</a></li>
-  <li class="active">{% trans 'teachers' %}</li>
+  <li><a href="{% url 'dissertations_list' %}" id="lnk_dissertations_list">{% trans 'dissertations' %}</a></li>
+  <li><a href="{% url 'dissertations_detail' pk=dissert.pk %}" id="lnk_dissertations_detail">
+      {{ dissert.title|truncatechars:24 }}
+  </a></li>
+  <li class="active">{% trans 'new_jury_dissertation' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'teachers_not_responding_to_request' %}</h2>
+    <h2>{% trans 'new_jury_dissertation' %}</h2>
   </div>
-  <ul class="nav nav-tabs">
-    <li><a href={% url 'manager_informations' %}>{% trans 'all_advisers' %}</a></li>
-    <li class="active"><a href="{% url 'manager_informations_list_request' %}">{% trans 'manager_informations_list_request' %}</a></li>
-  </ul>
   <div class="panel panel-default">
     <div class="panel-body">
-      <table class="table table-hover">
-        <tr>
-          <th>{% trans 'adviser_name' %}</th>
-        </tr>
-        {% for adviser_need_request in advisers_need_request %}
-          <tr>
-            <td>
-                <a href="{% url 'manager_informations_detail_list_wait' pk=adviser_need_request.adviser.pk %}">
-                    {{ adviser_need_request.adviser }}
-                </a>
-            </td>
-
-          </tr>
+      <form method="POST" class="post-form">
+        {% csrf_token %}
+        {% for field in form %}
+          <div class="row {% if field.errors %}error{% endif %}">
+            <div class="col-md-4" style="text-align: right">
+              {% if not field.is_hidden %}
+                <label>{{ field.label }}</label>
+              {% endif %}
+            </div>
+            <div class="col-md-5">
+              {{ field }}
+            </div>
+          </div>
+          <br>
         {% endfor %}
-      </table>
-      </div>
+        <button type="submit" class="save btn btn-default">Save</button>
+      </form>
     </div>
+  </div>
 {% endblock %}

@@ -35,8 +35,8 @@ class DissertationRoleAdmin(admin.ModelAdmin):
 
 class DissertationRole(models.Model):
     STATUS_CHOICES = (
-        ('PROMOTEUR', _('pro')),
-        ('CO_PROMOTEUR', _('copro')),
+        ('PROMOTEUR', _('promotor')),
+        ('CO_PROMOTEUR', _('copromotor')),
         ('READER', _('reader')),
     )
 
@@ -96,8 +96,8 @@ def search_by_adviser_and_role_stats(adviser, role):
                                            )
 
 
-def search_by_adviser_and_role_and_waiting(adviser, offer):
-    return list_teachers_action_needed(offer).filter(adviser=adviser)
+def search_by_adviser_and_role_and_waiting(adviser, offers):
+    return list_teachers_action_needed(offers).filter(adviser=adviser)
 
 
 def count_by_adviser_and_role_stats(adviser, role):
@@ -132,8 +132,8 @@ def search_by_adviser_and_role(adviser, role):
                                             )
 
 
-def search_by_adviser_and_role_and_offer(adviser, role, offer):
-    return search_by_adviser_and_role(adviser, role).filter(dissertation__offer_year_start__offer=offer)
+def search_by_adviser_and_role_and_offers(adviser, role, offers):
+    return search_by_adviser_and_role(adviser, role).filter(dissertation__offer_year_start__offer__in=offers)
 
 
 def search_by_adviser_and_role_and_status(adviser, role, status):
@@ -147,21 +147,27 @@ def search_by_adviser_and_role_and_status(adviser, role, status):
                                             )
 
 
-def list_teachers_action_needed(offer):
+def list_teachers_action_needed(offers):
     return DissertationRole.objects.filter(status='PROMOTEUR')\
                                    .filter(dissertation__status='DIR_SUBMIT')\
-                                   .filter(dissertation__offer_year_start__offer=offer)\
+                                   .filter(dissertation__offer_year_start__offer__in=offers)\
                                    .filter(dissertation__active=True)\
                                    .distinct('adviser')
 
 
-def get_promoteur_by_dissertation(dissert):
+def get_promoteur_by_dissertation_str(dissert):
     promoteur = search_by_dissertation_and_role(dissert, 'PROMOTEUR')
     if promoteur:
         return str(promoteur[0].adviser)
     else:
         return 'none'
 
+def get_promoteur_by_dissertation(dissert):
+    promoteur = search_by_dissertation_and_role(dissert, 'PROMOTEUR')
+    if promoteur:
+        return promoteur[0].adviser
+    else:
+        return 'none'
 
 def get_copromoteur_by_dissertation(dissert):
     copromoteur = search_by_dissertation_and_role(dissert, 'CO_PROMOTEUR')
