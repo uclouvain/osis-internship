@@ -49,11 +49,14 @@ def speciality_create(request):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def speciality_save(request, speciality_id):
-    check_speciality = InternshipSpeciality.find_by_id(speciality_id)
-    if check_speciality :
-        speciality = check_speciality
+    if speciality_id:
+        check_speciality = InternshipSpeciality.find_by_id(speciality_id)
+        if check_speciality :
+            speciality = check_speciality
+        else :
+            speciality = InternshipSpeciality()
     else :
-        speciality = InternshipSpeciality()
+        speciality = InternshipSpeciality()        
 
     mandatory = False
     if request.POST.get('mandatory') :
