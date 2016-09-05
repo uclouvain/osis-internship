@@ -401,7 +401,7 @@ def student_choice(request, id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_block(request):
-    internships = InternshipOffer.find_internships()
+    internships = InternshipOffer.search()
     # For each internship in the DB invert the selectable flag
     for internship in internships:
         edit_internship = InternshipOffer.find_intership_by_id(internship.id)

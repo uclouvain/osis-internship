@@ -55,210 +55,212 @@
     <h2>{% trans 'internships' %}</h2>
   </div>
   <br/>
-  {% trans 'choose_spec_see_record_choice' %}<br/>
-  <span class="glyphicon glyphicon-ok" style="color:green"></span> :
-  {% trans 'all_ready_4_choice_spec' %}<br/>
-  <span class="glyphicon glyphicon-remove" style="color:red"></span> :
-  {% trans 'not_4_choice_spec' %}<br/>
-  {% if selectable == False %}<h3><b><u>{% trans 'internship_block_moment' %}</u></b></h3>{%endif%}
-  <div class="panel panel-default">
-    <div class="panel-body">
-        <ul class="nav nav-tabs">
-          {% for luy in all_speciality %}
-            <li {% if forloop.first %}class="active"{% endif %}><a data-toggle="tab" href="#tab_{{luy.tab}}">{{luy.name}}
-              {%if luy.size = 4 %}
-                <span class="glyphicon glyphicon-ok" style="color:green"></span>
-              {%else%}
-                <span class="glyphicon glyphicon-remove" style="color:red"></span>
-              {%endif%}</a></li>
-          {% endfor %}
-          {% for i in all_non_mandatory_internships %}
-            {% if not forloop.first %}
-              <li><a data-toggle="tab" href="#tab_CHOIX{{ forloop.counter0 }}">{% trans 'internship_choice'%} {{ forloop.counter0 }}</a></li>
-            {% endif %}
-          {%endfor%}
-        </ul>
-        <form  method="post" action="{% url 'internships_save' %}" >
-        <input type="hidden" name="organization_sort" value="{{ organization.name }}"/>
-        {% csrf_token %}
-        <div class="tab-content">
-          {% for luy in all_speciality %}
-          <div id="tab_{{luy.tab}}" class="tab-pane fade {% if forloop.first %}in active{% endif %}">
-            <h3>{{luy.name}}</h3>
+  {% if selectable == False %}<h3><b><u>{% trans 'internship_block_moment' %}</u></b></h3>
+  {% else %}
+    {% trans 'choose_spec_see_record_choice' %}<br/>
+    <span class="glyphicon glyphicon-ok" style="color:green"></span> :
+    {% trans 'all_ready_4_choice_spec' %}<br/>
+    <span class="glyphicon glyphicon-remove" style="color:red"></span> :
+    {% trans 'not_4_choice_spec' %}<br/>
+    <div class="panel panel-default">
+      <div class="panel-body">
+          <ul class="nav nav-tabs">
+            {% for luy in all_speciality %}
+              <li {% if forloop.first %}class="active"{% endif %}><a data-toggle="tab" href="#tab_{{luy.tab}}">{{luy.name}}
+                {%if luy.size = 4 %}
+                  <span class="glyphicon glyphicon-ok" style="color:green"></span>
+                {%else%}
+                  <span class="glyphicon glyphicon-remove" style="color:red"></span>
+                {%endif%}</a></li>
+            {% endfor %}
+            {% for i in all_non_mandatory_internships %}
+              {% if not forloop.first %}
+                <li><a data-toggle="tab" href="#tab_CHOIX{{ forloop.counter0 }}">{% trans 'internship_choice'%} {{ forloop.counter0 }}</a></li>
+              {% endif %}
+            {%endfor%}
+          </ul>
+          <form  method="post" action="{% url 'internships_save' %}" >
+          <input type="hidden" name="organization_sort" value="{{ organization.name }}"/>
+          {% csrf_token %}
+          <div class="tab-content">
+            {% for luy in all_speciality %}
+            <div id="tab_{{luy.tab}}" class="tab-pane fade {% if forloop.first %}in active{% endif %}">
+              <h3>{{luy.name}}</h3>
+                <div class="panel panel-default">
+                  <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane fade in active" id="profile">
+                      <table class="table table-hover">
+                        <thead>
+                          <tr>
+                            <th>{% trans 'organization' %}</th>
+                            <th>{% trans 'student_max' %}</th>
+                            <th>{% trans 'Nombre de premier choix' %}</th>
+                            <th>{% trans 'preference' %}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for internship in all_internships %}
+                          {% if internship.speciality == luy %}
+                            <tr>
+                              <td>
+                                <input type="hidden" name="organization"
+                                value="{{ internship.organization.reference }}"/>
+                                <input type="hidden" name="is_choice"
+                                value="-1"/>
+                                  {{ internship.organization.reference }} - {{ internship.organization }}
+                              </td>
+                              <td align="center">
+                                <input type="hidden" name="speciality"
+                                value="{{ internship.speciality.name }}"/>
+                                {{ internship.maximum_enrollments }}
+                              </td>
+                              <td align="center">
+                                {{ internship.number_first_choice }}
+                              </td>
+                              <td>
+                                <select name="preference{{luy.tab}}" onchange="check(this)">
+                                 <option value=0 {% if internship.selectable == False %} disabled {%endif%}>0</option>
+                                 <option value=1 {% if internship.choice == 1 %} selected{%endif%}
+                                                  {% if internship.selectable == False %} disabled {%endif%}>
+                                   {% trans 'first_choice' %}
+                                 </option>
+                                 <option value=2 {% if internship.choice == 2 %} selected{%endif%}
+                                                  {% if internship.selectable == False %} disabled {%endif%}>
+                                   {% trans 'second_choice' %}
+                                 </option>
+                                 <option value=3 {% if internship.choice == 3 %} selected{%endif%}
+                                                  {% if internship.selectable == False %} disabled {%endif%}>
+                                   {% trans 'third_choice' %}
+                                 </option>
+                                 <option value=4 {% if internship.choice == 4 %} selected{%endif%}
+                                                  {% if internship.selectable == False %} disabled {%endif%}>
+                                   {% trans 'fourth_choice' %}
+                                 </option>
+                                </select>
+                              </td>
+                            </tr>
+                          {% endif %}
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {%endfor%}
+            {% for internships in all_non_mandatory_internships %}
+            <div id="tab_CHOIX{{ forloop.counter0 }}" class="tab-pane fade">
               <div class="panel panel-default">
                 <div class="tab-content">
                   <div role="tabpanel" class="tab-pane fade in active" id="profile">
                     <table class="table table-hover">
-                      <thead>
-                        <tr>
-                          <th>{% trans 'organization' %}</th>
-                          <th>{% trans 'student_max' %}</th>
-                          <th>{% trans 'Nombre de premier choix' %}</th>
-                          <th>{% trans 'preference' %}</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {% for internship in all_internships %}
-                        {% if internship.speciality == luy %}
-                          <tr>
-                            <td>
-                              <input type="hidden" name="organization"
-                              value="{{ internship.organization.reference }}"/>
-                              <input type="hidden" name="is_choice"
-                              value="-1"/>
-                                {{ internship.organization.reference }} - {{ internship.organization }}
-                            </td>
-                            <td align="center">
-                              <input type="hidden" name="speciality"
-                              value="{{ internship.speciality.name }}"/>
-                              {{ internship.maximum_enrollments }}
-                            </td>
-                            <td align="center">
-                              {{ internship.number_first_choice }}
-                            </td>
-                            <td>
-                              <select name="preference{{luy.tab}}" onchange="check(this)">
-                               <option value=0 {% if internship.selectable == False %} disabled {%endif%}>0</option>
-                               <option value=1 {% if internship.choice == 1 %} selected{%endif%}
-                                                {% if internship.selectable == False %} disabled {%endif%}>
-                                 {% trans 'first_choice' %}
-                               </option>
-                               <option value=2 {% if internship.choice == 2 %} selected{%endif%}
-                                                {% if internship.selectable == False %} disabled {%endif%}>
-                                 {% trans 'second_choice' %}
-                               </option>
-                               <option value=3 {% if internship.choice == 3 %} selected{%endif%}
-                                                {% if internship.selectable == False %} disabled {%endif%}>
-                                 {% trans 'third_choice' %}
-                               </option>
-                               <option value=4 {% if internship.choice == 4 %} selected{%endif%}
-                                                {% if internship.selectable == False %} disabled {%endif%}>
-                                 {% trans 'fourth_choice' %}
-                               </option>
-                              </select>
-                            </td>
-                          </tr>
-                        {% endif %}
+                        {% for internships in all_non_mandatory_selected_internships %}
+                          {% if forloop.counter == forloop.parentloop.counter0 %}
+                            <ul>
+                              {% for i in internships %}
+                                {% if forloop.first %}
+                                  <b>{% trans 'selected_internships' %}</b> : {{i.speciality}} <br>
+                                {% endif %}
+                                <li>{{i.organization}} - {{i.choice}}</li>
+                              {% endfor %}
+                            </ul>
+                          {%endif%}
                         {% endfor %}
-                      </tbody>
+                      {% trans 'select_speciality_change_internships' %}:<br/>
+                      <form action="{%url 'internships_stud' %}" method="get">
+                        <select name="speciality_sort{{ forloop.counter0 }}" onChange="javascript: this.form.submit();">
+                           <option value="0">--</option>
+                             {% for spec in non_mandatory_speciality %}
+                               <option value="{{ spec.name }}"
+                                {% for spec_sort in speciality_sort_value %}
+                                  {% if forloop.counter == forloop.parentloop.parentloop.counter %}
+                                    {% if spec.name == spec_sort %}
+                                      selected
+                                    {%endif%}
+                                  {%endif%}
+                                {% endfor %}>
+                                {{ spec.name }}
+                               </option>
+                             {% endfor %}
+                        </select>
+                        {% for spec_sort in speciality_sort_value %}
+                          {% if spec_sort != None %}
+                            {% if forloop.counter0 != forloop.parentloop.counter0 %}
+                              <input type="hidden" name="speciality_sort{{forloop.counter0}}" value="{{spec_sort}}"/>
+                            {%endif%}
+                          {% endif %}
+                        {% endfor %}
+                      </form>
+                      <thead>
+                          <tr>
+                            {% if not speciality_sort_value %}
+                              <th align="center">{% trans 'speciality' %}</th>
+                            {% endif %}
+                            <th>{% trans 'organization' %}</th>
+                            <th>{% trans 'student_max' %}</th>
+                            <th>{% trans 'Nombre de premier choix' %}</th>
+                            <th>{% trans 'preference' %}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            {% for internship in internships %}
+                            <tr>
+                              {% if not speciality_sort_value %}
+                                <td>{{ internship.speciality.name }}</td>
+                              {% endif %}
+                              <td>
+                                <input type="hidden" name="organization"
+                                value="{{ internship.organization.reference }}"/>
+                                <input type="hidden" name="is_choice"
+                                value="{{forloop.parentloop.counter0}}"/>
+                                  {{ internship.organization.reference }} - {{ internship.organization }}
+                              </td>
+                              <td align="center">
+                                <input type="hidden" name="speciality"
+                                value="{{ internship.speciality.name }}"/>
+                                {{ internship.maximum_enrollments }}
+                              </td>
+                              <td align="center">
+                                {{ internship.number_first_choice }}
+                              </td>
+                              <td>
+                                <select name="preference{{internship.tab}}">
+                                 <option value=0 {% if internship.selectable == False %} disabled {%endif%}>0</option>
+                                 <option value=1 {% if internship.choice == 1 %} selected{%endif%}
+                                                  {% if internship.selectable == False %} disabled {%endif%}>
+                                   {% trans 'first_choice' %}
+                                 </option>
+                                 <option value=2 {% if internship.choice == 2 %} selected{%endif%}
+                                                  {% if internship.selectable == False %} disabled {%endif%}>
+                                   {% trans 'second_choice' %}
+                                 </option>
+                                 <option value=3 {% if internship.choice == 3 %} selected{%endif%}
+                                                  {% if internship.selectable == False %} disabled {%endif%}>
+                                   {% trans 'third_choice' %}
+                                 </option>
+                                 <option value=4 {% if internship.choice == 4 %} selected{%endif%}
+                                                  {% if internship.selectable == False %} disabled {%endif%}>
+                                   {% trans 'fourth_choice' %}
+                                 </option>
+                                </select>
+                              </td>
+                            </tr>
+                          {% endfor %}
+                        </tbody>
                     </table>
                   </div>
                 </div>
               </div>
             </div>
-          {%endfor%}
-          {% for internships in all_non_mandatory_internships %}
-          <div id="tab_CHOIX{{ forloop.counter0 }}" class="tab-pane fade">
-            <div class="panel panel-default">
-              <div class="tab-content">
-                <div role="tabpanel" class="tab-pane fade in active" id="profile">
-                  <table class="table table-hover">
-                      {% for internships in all_non_mandatory_selected_internships %}
-                        {% if forloop.counter == forloop.parentloop.counter0 %}
-                          <ul>
-                            {% for i in internships %}
-                              {% if forloop.first %}
-                                <b>{% trans 'selected_internships' %}</b> : {{i.speciality}} <br>
-                              {% endif %}
-                              <li>{{i.organization}} - {{i.choice}}</li>
-                            {% endfor %}
-                          </ul>
-                        {%endif%}
-                      {% endfor %}
-                    {% trans 'select_speciality_change_internships' %}:<br/>
-                    <form action="{%url 'internships_stud' %}" method="get">
-                      <select name="speciality_sort{{ forloop.counter0 }}" onChange="javascript: this.form.submit();">
-                         <option value="0">--</option>
-                           {% for spec in non_mandatory_speciality %}
-                             <option value="{{ spec.name }}"
-                              {% for spec_sort in speciality_sort_value %}
-                                {% if forloop.counter == forloop.parentloop.parentloop.counter %}
-                                  {% if spec.name == spec_sort %}
-                                    selected
-                                  {%endif%}
-                                {%endif%}
-                              {% endfor %}>
-                              {{ spec.name }}
-                             </option>
-                           {% endfor %}
-                      </select>
-                      {% for spec_sort in speciality_sort_value %}
-                        {% if spec_sort != None %}
-                          {% if forloop.counter0 != forloop.parentloop.counter0 %}
-                            <input type="hidden" name="speciality_sort{{forloop.counter0}}" value="{{spec_sort}}"/>
-                          {%endif%}
-                        {% endif %}
-                      {% endfor %}
-                    </form>
-                    <thead>
-                        <tr>
-                          {% if not speciality_sort_value %}
-                            <th align="center">{% trans 'speciality' %}</th>
-                          {% endif %}
-                          <th>{% trans 'organization' %}</th>
-                          <th>{% trans 'student_max' %}</th>
-                          <th>{% trans 'Nombre de premier choix' %}</th>
-                          <th>{% trans 'preference' %}</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                          {% for internship in internships %}
-                          <tr>
-                            {% if not speciality_sort_value %}
-                              <td>{{ internship.speciality.name }}</td>
-                            {% endif %}
-                            <td>
-                              <input type="hidden" name="organization"
-                              value="{{ internship.organization.reference }}"/>
-                              <input type="hidden" name="is_choice"
-                              value="{{forloop.parentloop.counter0}}"/>
-                                {{ internship.organization.reference }} - {{ internship.organization }}
-                            </td>
-                            <td align="center">
-                              <input type="hidden" name="speciality"
-                              value="{{ internship.speciality.name }}"/>
-                              {{ internship.maximum_enrollments }}
-                            </td>
-                            <td align="center">
-                              {{ internship.number_first_choice }}
-                            </td>
-                            <td>
-                              <select name="preference{{internship.tab}}">
-                               <option value=0 {% if internship.selectable == False %} disabled {%endif%}>0</option>
-                               <option value=1 {% if internship.choice == 1 %} selected{%endif%}
-                                                {% if internship.selectable == False %} disabled {%endif%}>
-                                 {% trans 'first_choice' %}
-                               </option>
-                               <option value=2 {% if internship.choice == 2 %} selected{%endif%}
-                                                {% if internship.selectable == False %} disabled {%endif%}>
-                                 {% trans 'second_choice' %}
-                               </option>
-                               <option value=3 {% if internship.choice == 3 %} selected{%endif%}
-                                                {% if internship.selectable == False %} disabled {%endif%}>
-                                 {% trans 'third_choice' %}
-                               </option>
-                               <option value=4 {% if internship.choice == 4 %} selected{%endif%}
-                                                {% if internship.selectable == False %} disabled {%endif%}>
-                                 {% trans 'fourth_choice' %}
-                               </option>
-                              </select>
-                            </td>
-                          </tr>
-                        {% endfor %}
-                      </tbody>
-                  </table>
-                </div>
-              </div>
+            {% endfor %}
             </div>
+            {% if selectable == True %}
+              <button type="submit" class="btn btn-primary" title="{% trans 'submission' %}" id="bt_interships_save">
+                  <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'submission' %}
+              </button>
+            {%endif%}
           </div>
-          {% endfor %}
-          </div>
-          {% if selectable == True %}
-            <button type="submit" class="btn btn-primary" title="{% trans 'submission' %}" id="bt_interships_save">
-                <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'submission' %}
-            </button>
-          {%endif%}
-        </div>
-        </form>
-  </div>
+          </form>
+    </div>
+  {%endif%}
 {% endblock %}
