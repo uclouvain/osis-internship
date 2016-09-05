@@ -71,7 +71,7 @@ def get_field_qs(field, **kwargs):
             Q(type='FACULTY')).order_by('acronym'))
     return field.formfield(**kwargs)
 
-StructureInLineFormSet = inlineformset_factory(mdl.assistant_mandate.AssistantMandate,
+structure_inline_formset = inlineformset_factory(mdl.assistant_mandate.AssistantMandate,
                                                mdl.mandate_structure.MandateStructure,
                                                formfield_callback=get_field_qs,
                                                fields=('structure',
