@@ -23,42 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.db import models
 from django.contrib import admin
 
-from reference.models import *
 
-admin.site.register(assimilation_criteria.AssimilationCriteria,
-                    assimilation_criteria.AssimilationCriteriaAdmin)
+class InstitutionalGradeTypeAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    fieldsets = ((None, {'fields': ('name',)}),)
 
-admin.site.register(continent.Continent,
-                    continent.ContinentAdmin)
 
-admin.site.register(currency.Currency,
-                    currency.CurrencyAdmin)
+# Customized parent's list of institutional GradeType (used & displayed in Admission - offer choice).
+class InstitutionalGradeType(models.Model):
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    name = models.CharField(max_length=255)
 
-admin.site.register(country.Country,
-                    country.CountryAdmin)
-
-admin.site.register(decree.Decree,
-                    decree.DecreeAdmin)
-
-admin.site.register(domain.Domain,
-                    domain.DomainAdmin)
-
-admin.site.register(education_institution.EducationInstitution,
-                    education_institution.EducationInstitutionAdmin)
-
-admin.site.register(education_type.EducationType,
-                    education_type.EducationTypeAdmin)
-
-admin.site.register(external_offer.ExternalOffer,
-                    external_offer.ExternalOfferAdmin)
-
-admin.site.register(grade_type.GradeType,
-                    grade_type.GradeTypeAdmin)
-
-admin.site.register(language.Language,
-                    language.LanguageAdmin)
-
-admin.site.register(institutional_grade_type.InstitutionalGradeType,
-                    institutional_grade_type.InstitutionalGradeTypeAdmin)
+    def __str__(self):
+        return self.name
