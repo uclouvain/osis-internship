@@ -25,7 +25,6 @@
 ##############################################################################
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.db import IntegrityError
 from base import models as mdl
 from base.views import layout
 from dissertation.models.adviser import Adviser
@@ -40,7 +39,7 @@ from dissertation.models import offer_proposition
 from dissertation.models import proposition_dissertation
 from dissertation.models import proposition_role
 from dissertation.forms import ManagerDissertationForm, ManagerDissertationEditForm, ManagerDissertationRoleForm, \
-    ManagerDissertationUpdateForm
+    ManagerDissertationUpdateForm, AdviserForm
 from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl import Workbook
 from django.http import HttpResponse
@@ -51,14 +50,14 @@ import time
 def is_manager(user):
     person = mdl.person.find_by_user(user)
     this_adviser = adviser.search_by_person(person)
-    return this_adviser.type == 'MGR'
+    return this_adviser.type == 'MGR' if this_adviser else False
 
 
 # Used by decorator @user_passes_test(is_manager) to secure manager views
 def is_teacher(user):
     person = mdl.person.find_by_user(user)
     this_adviser = adviser.search_by_person(person)
-    return this_adviser.type == 'PRF'
+    return this_adviser.type == 'PRF' if this_adviser else False
 
 
 #########################
@@ -68,22 +67,39 @@ def is_teacher(user):
 
 @login_required
 def dissertations(request):
-    # if logged user is not an adviser, create linked adviser
     person = mdl.person.find_by_user(request.user)
-    try:
-        adv = Adviser(person=person, available_by_email=False, available_by_phone=False, available_at_office=False)
-        adv.save()
-        adv = adviser.search_by_person(person)
-    except IntegrityError:
-        adv = adviser.search_by_person(person)
 
-    count_advisers_pro_request = dissertation_role.count_by_adviser(adv, 'PROMOTEUR', 'DIR_SUBMIT')
+    if mdl.student.find_by_person(person):
+        if not mdl.tutor.find_by_person(person):
+            return redirect('home')
 
-    return layout.render(request, "dissertations.html",
-                         {'section': 'dissertations',
-                          'person': person,
-                          'adviser': adv,
-                          'count_advisers_pro_request': count_advisers_pro_request})
+    elif adviser.find_by_person(person):
+        adv = adviser.search_by_person(person)
+        count_advisers_pro_request = dissertation_role.count_by_adviser(adv, 'PROMOTEUR', 'DIR_SUBMIT')
+
+        return layout.render(request, "dissertations.html",
+                             {'section': 'dissertations',
+                              'person': person,
+                              'adviser': adv,
+                              'count_advisers_pro_request': count_advisers_pro_request})
+    else:
+        if request.method == "POST":
+            form = AdviserForm(request.POST)
+            if form.is_valid():
+                adv = Adviser(person=person, available_by_email=False, available_by_phone=False,
+                              available_at_office=False)
+                adv.save()
+                adv = adviser.search_by_person(person)
+                count_advisers_pro_request = dissertation_role.count_by_adviser(adv, 'PROMOTEUR', 'DIR_SUBMIT')
+
+                return layout.render(request, "dissertations.html",
+                                     {'section': 'dissertations',
+                                      'person': person,
+                                      'adviser': adv,
+                                      'count_advisers_pro_request': count_advisers_pro_request})
+        else:
+            form = AdviserForm()
+            return layout.render(request, 'dissertations_welcome.html', {'form': form})
 
 
 ###########################
