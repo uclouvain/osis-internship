@@ -3,10 +3,6 @@ $(document).ready(function(){
     check_browser();
 });
 
-$("#bt_remove").click(function(event) {
-    return confirm("Oui?");
-});
-
 $.ajaxSetup({
      beforeSend: function(xhr, settings) {
          function getCookie(name) {
@@ -77,26 +73,23 @@ function originalValueChanged(values, id, score, justification) {
 
 function check_browser(){
     var browser = get_browser();
-    var checked = false;
-    var accepted_version = browser_supported_versions[browser.name]
+    var accepted = false;
     if (browser.name in browser_supported_versions){
-        var accepted_version = browser_supported_versions[browser.name]
-        for (index = 0; index < accepted_version.length; ++index) {
-            if (browser.version === accepted_version[index]){
-                checked = true;
-                break;
-            }
+        var accepted_version = browser_supported_versions[browser.name];
+        console.log(accepted_version);
+        console.log(browser.version);
+        if (browser.version >= accepted_version) {
+            accepted = true;
         }
     }
-    if(!checked){
-        $("#alert_wrong_version").show();
-    }
-    else{
+    if(accepted) {
         $("#alert_wrong_version").hide();
+    } else {
+        $("#alert_wrong_version").show();
     }
 }
 
-function get_browser(){
+function get_browser() {
     var ua=navigator.userAgent,tem,M=ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
     if(/trident/i.test(M[1])){
         tem=/\brv[ :]+(\d+)/g.exec(ua) || [];
@@ -115,15 +108,10 @@ function get_browser(){
 }
 
 var browser_supported_versions = {
-    firefox: ["47","46"],
-    chrome: ["51","50"],
-    opera: ["37"],
-    ie: ["10","11"],
-    safari: ["9","8"],
-    edge: ["25","24"]
+    firefox: 46,
+    chrome: 50,
+    opera: 37,
+    ie: 10,
+    safari: 8,
+    edge: 24
 }
-
-
-
-
-
