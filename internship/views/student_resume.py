@@ -131,7 +131,7 @@ def internships_student_read(request, registration_id):
     information = InternshipStudentInformation.search(person = student[0].person)
     student = student[0]
     internship_choice = InternshipChoice.find_by_student(student)
-    all_speciality = InternshipSpeciality.find_all()
+    all_speciality = InternshipSpeciality.search(mandatory=True)
 
     return render(request, "student_resume.html",
                            {'student':             student,
