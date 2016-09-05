@@ -25,6 +25,7 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
+import uuid
 
 
 class OfferYearDomainAdmin(admin.ModelAdmin):
@@ -35,6 +36,7 @@ class OfferYearDomainAdmin(admin.ModelAdmin):
 
 
 class OfferYearDomain(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     domain = models.ForeignKey('reference.Domain', blank=True, null=True)

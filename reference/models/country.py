@@ -26,10 +26,11 @@
 from django.db import models
 from django.contrib import admin
 from django.core import serializers
+import uuid
 
 
 class CountryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'iso_code', 'nationality', 'european_union', 'dialing_code', 'cref_code', 'currency',
+    list_display = ('uuid', 'name', 'iso_code', 'nationality', 'european_union', 'dialing_code', 'cref_code', 'currency',
                     'continent')
     fieldsets = ((None, {'fields': ('iso_code', 'name', 'nationality', 'european_union', 'dialing_code', 'cref_code',
                                     'currency', 'continent')}),)
@@ -38,6 +39,7 @@ class CountryAdmin(admin.ModelAdmin):
 
 
 class Country(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
     external_id = models.CharField(max_length=100, blank=True, null=True)
     iso_code = models.CharField(max_length=2, unique=True)
     name = models.CharField(max_length=80, unique=True)

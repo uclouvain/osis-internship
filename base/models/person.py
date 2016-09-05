@@ -30,6 +30,7 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from django.core import serializers
+import uuid
 
 
 class PersonAdmin(admin.ModelAdmin):
@@ -55,6 +56,7 @@ class Person(models.Model):
         ('M', _('male')),
         ('U', _('unknown')))
 
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)

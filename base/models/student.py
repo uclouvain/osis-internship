@@ -28,6 +28,7 @@ from django.contrib import admin
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 from base.models import person
+import uuid
 
 
 class StudentAdmin(admin.ModelAdmin):
@@ -46,6 +47,7 @@ class Student(models.Model):
 
     objects = StudentManager()
 
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     registration_id = models.CharField(max_length=10, unique=True)

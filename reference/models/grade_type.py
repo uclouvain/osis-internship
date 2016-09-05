@@ -26,6 +26,7 @@
 from django.db import models
 from django.contrib import admin
 from reference.enums import grade_type_coverage
+import uuid
 
 
 class GradeTypeAdmin(admin.ModelAdmin):
@@ -34,6 +35,7 @@ class GradeTypeAdmin(admin.ModelAdmin):
 
 
 class GradeType(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
     external_id = models.CharField(max_length=100, blank=True, null=True)
     name = models.CharField(max_length=255)
     coverage = models.CharField(max_length=30, choices=grade_type_coverage.COVERAGE_CHOICES, default=grade_type_coverage.UNKNOWN)

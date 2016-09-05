@@ -27,6 +27,7 @@ from django.db import models
 from django.contrib import admin
 from reference.enums import education_institution_type, education_institution_national_comunity as nat_community
 from django.core import serializers
+import uuid
 
 
 class EducationInstitutionAdmin(admin.ModelAdmin):
@@ -36,7 +37,7 @@ class EducationInstitutionAdmin(admin.ModelAdmin):
 
 
 class EducationInstitution(models.Model):
-
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
     external_id = models.CharField(max_length=100, blank=True, null=True)
     name = models.CharField(max_length=100)
     institution_type = models.CharField(max_length=25, choices=education_institution_type.INSTITUTION_TYPE)

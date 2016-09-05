@@ -25,6 +25,7 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
+import uuid
 
 
 class EducationTypeAdmin(admin.ModelAdmin):
@@ -36,6 +37,7 @@ class EducationType(models.Model):
             ('QUALIFICATION','Qualification'),
             ('ANOTHER','Autre'))
 
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
     external_id = models.CharField(max_length=100, blank=True, null=True)
     type = models.CharField(max_length=20, choices=EDUCATION_TYPE)
     name = models.CharField(max_length=100)

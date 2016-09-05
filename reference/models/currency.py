@@ -26,6 +26,7 @@
 from django.db import models
 from django.contrib import admin
 from django.core import serializers
+import uuid
 
 
 class CurrencyAdmin(admin.ModelAdmin):
@@ -36,6 +37,7 @@ class CurrencyAdmin(admin.ModelAdmin):
 
 
 class Currency(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
     name = models.CharField(max_length=80, unique=True)
     code = models.CharField(max_length=4, blank=True, null=True)
     symbol = models.CharField(max_length=6, blank=True, null=True)
