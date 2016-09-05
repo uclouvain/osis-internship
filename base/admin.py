@@ -80,6 +80,9 @@ admin.site.register(offer_year.OfferYear,
 admin.site.register(offer_year_calendar.OfferYearCalendar,
                     offer_year_calendar.OfferYearCalendarAdmin)
 
+admin.site.register(offer_year_domain.OfferYearDomain,
+                    offer_year_domain.OfferYearDomainAdmin)
+
 admin.site.register(organization.Organization,
                     organization.OrganizationAdmin)
 
