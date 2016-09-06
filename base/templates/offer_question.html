@@ -100,7 +100,7 @@
                 <td>{{ option.value }}</td>
                 <td>{{ option.order }}</td>
                 {% if question.type != 'DROPDOWN_LIST' %}
-                <td>{{ option.description }}</td>
+                <td>{{ option.description | default_if_none:'' }}</td>
                 {%endif%}
             </tr>
             {% endfor%}

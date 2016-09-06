@@ -77,24 +77,23 @@
       <button type="submit" class="btn btn-primary" title="{% trans 'save'%}" id="bt_offer_form_save">
         <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}
       </button>
-        <a href="{% url 'offer_read' offer_year.id %}"
-           id="lnk_offer_read_{{offer_year.id}}" title="{%trans 'back'%}"
-           class="btn btn-default" role="button">
-            <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span> {% trans 'back'%}
+        <a href="#"
+           id="lnk_form_read_{{offer_year.id }}" title="{%trans 'back'%}"
+           class="btn btn-default" role="button"
+           onclick="buttonA_clickHandler(event);">
+           <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span> {% trans 'back'%}
         </a>
     </form>
-    <form method="get" action="{% url 'offer_read' offer_year.id %}">
+    <form method="get" action="{% url 'offer_read' offer_year.id %}" id="backForm">
         <input type="hidden" name="displaytab" value="tab_dynamic_form">
-        <div class="col-md-4">
-            <button type="submit" id="bt_submit_offer_year_search" class="btn btn-default" role="button"
-                    title="{%trans 'back'%}">
-                <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span> {% trans 'back'%}
-            </button>
-        </div>
     </form>
-
   </div>
 </div>
-
 {% endblock %}
-
+{% block script %}
+<script>
+    function buttonA_clickHandler(event) {
+      $('#backForm').submit();
+    }
+</script>
+{% endblock %}
