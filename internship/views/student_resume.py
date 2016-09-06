@@ -215,7 +215,7 @@ def internship_student_affectation_modification(request, student_registration_id
 
     specialities = InternshipSpeciality.find_all()
     periods = Period.search().order_by("date_start")
-    return render(request, "student_affectation_modificationV2.html",
+    return render(request, "student_affectation_modification.html",
                            {'information':         informations[0],
                            'informations':         informations,
                             'organizations':        organizations,

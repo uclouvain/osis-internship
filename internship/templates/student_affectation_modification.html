@@ -42,39 +42,55 @@
 
         <form method="post" >
           {% csrf_token %}
-          {% for information in informations %}
+          <div align="right">
+            <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_interships_new">
+                <span class="glyphicon glyphicon-save" aria-hidden="true"/> {% trans 'save'%}
+            </button>
+          </div>
+          {% for period in periods %}
             <div class="row">
-                <div class="col-md-2">
-                    <label>{% trans 'period' %}</label><br>
-                    <input type="text" size="5" name="student_email" value="{{ information.period | default_if_none:'-' }}" disabled>
-                </div>
-                <div class="col-md-5">
-                    <label>{% trans 'organization' %}</label><br>
-                    <select name="organization">
-                      {% for organization in organizations %}
-                        <option value="{{organization.reference}}" {% if organization.reference == information.organization.reference %} selected{% endif %}>
-                          {{organization.reference}} {{organization.name}}
-                        </option>
-                      {% endfor %}
-                    </select>
-                </div>
-                <div class="col-md-3">
-                  <label>{% trans 'speciality' %}</label><br>
-                  <select name="speciality">
-                    {% for speciality in specialities %}
-                      <option value="{{speciality.name}}" {% if speciality.name == information.speciality.name %} selected{% endif %}>
-                        {{speciality.name}}
+              <div class="col-md-2">
+                  <label>{% trans 'period' %}</label><br>
+                  <input type="text" size="5" name="student_email" value="{{ period | default_if_none:'-' }}" disabled>
+              </div>
+              <div class="col-md-5">
+                  <label>{% trans 'organization' %}</label><br>
+                  <select name="organization">
+                    <option value=0>--</option>
+                    {% for organization in organizations %}
+                      <option value="{{organization.reference}}"
+                      {% for information in informations %}
+                        {% if information.period == period %}
+                          {% if organization.reference == information.organization.reference %}
+                            selected
+                          {% endif %}
+                        {% endif %}
+                      {%endfor%}>
+                        {{organization.reference}} {{organization.name}}
                       </option>
                     {% endfor %}
                   </select>
-                </div>
-            </div>
-            <br>
+              </div>
+              <div class="col-md-3">
+                <label>{% trans 'speciality' %}</label><br>
+                <select name="speciality">
+                  <option value=0>--</option>
+                  {% for speciality in specialities %}
+                    <option value="{{speciality.name}}" {% for information in informations %}
+                      {% if information.period == period %}
+                        {% if speciality.name == information.speciality.name %}
+                          selected
+                        {% endif %}
+                      {% endif %}
+                    {%endfor%}>
+                      {{speciality.name}}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+          </div>
+          <br/>
           {% endfor %}
-
-          <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_interships_new">
-              <span class="glyphicon glyphicon-save" aria-hidden="true"/> {% trans 'save'%}
-          </button>
         </form>
       </div>
   </div>
