@@ -243,3 +243,5 @@ msgstr	 "3ème choix"
 msgid	 "type"
 msgstr	 "Type"
 
+msgid	 "choice"
+msgstr	 "Choix"
