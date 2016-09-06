@@ -162,27 +162,29 @@
               <div id="tab_rep" class="tab-pane fade">
                 <div class="panel panel-default">
                 	<div class="tab-content">
-                	  <div role="tabpanel" class="tab-pane fade in active" id="profile">
-                      {% for affectation in affectations %}
-                        <label>{{affectation.period.name}}</label>
-                        ({{affectation.period.date_start}} - {{affectation.period.date_end}})<br/>
-                        <p>{{affectation.speciality.name}} |
-                        {{affectation.organization.reference}} {{affectation.organization.name}}&nbsp;&nbsp;
-                        <a class="btn btn-warning btn-xs" target="_blank" id="lnk_students_affectation{{affectation.id}}"
-                          href="{% url 'internship_student_affectation_modification' affectation.id %}">
-                          <span class="glyphicon glyphicon-pencil" aria-hidden="true">
-                          </span><br/>
-                        </a>
-                      </p>
-                      {% endfor %}
-                	  </div>
                     <div align="right">
                       <a class="btn btn-warning btn-sm" target="_blank" id="lnk_students_affectation{{student.id}}"
-                        href="{% url 'internship_student_affectation_modificationV2' student.registration_id %}">
+                        href="{% url 'internship_student_affectation_modification' student.registration_id %}">
                         <span class="glyphicon glyphicon-pencil" aria-hidden="true">
                         </span><br/>
                       </a>
                     </div>
+                	  <div role="tabpanel" class="tab-pane fade in active" id="profile">
+                      {% for period in periods %}
+                        <label>{{period.name}}</label>
+                        ({{period.date_start}} - {{period.date_end}})<br/>
+                        {% for affectation in affectations %}
+                          {% if affectation.period == period %}
+                            <p>{{affectation.speciality.name}} |
+                              {{affectation.organization.reference}} {{affectation.organization.name}}<br/>
+                              {% trans 'address' %} : 
+                              {{affectation.organization.address.location}} {{affectation.organization.address.postal_code}}
+                              {{affectation.organization.address.city}}
+                            </p><br>
+                          {%endif%}
+                        {% endfor %}
+                      {%endfor%}
+                	  </div>
                 	</div>
                 </div>
               </div>

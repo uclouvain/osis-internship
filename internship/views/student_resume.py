@@ -31,7 +31,7 @@ from base import models as mdl
 from internship.models import InternshipChoice, InternshipStudentInformation, \
                                 InternshipSpeciality, InternshipOffer, InternshipStudentAffectationStat, \
                                 Organization, InternshipSpeciality, Period
-from internship.views.place import sort_organizations
+from internship.views.place import sort_organizations, set_organization_address
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -137,6 +137,17 @@ def internships_student_read(request, registration_id):
     all_speciality = InternshipSpeciality.find_all()
 
     affectations = InternshipStudentAffectationStat.search(student = student).order_by("period")
+    periods = Period.search().order_by("date_start")
+    organizations = Organization.search()
+    set_organization_address(organizations)
+
+    # Set the adress of the affactation
+    for affectation in affectations:
+        for organization in organizations:
+            if affectation.organization == organization:
+                affectation.organization.address = ""
+                for o in organization.address:
+                    affectation.organization.address = o
 
     internships = InternshipOffer.find_internships()
     #Check if there is a internship offers in data base. If not, the internships
@@ -156,6 +167,8 @@ def internships_student_read(request, registration_id):
                             'specialities':        all_speciality,
                             'selectable':          selectable,
                             'affectations':        affectations,
+                            'periods':              periods,
+
                             })
 
 @login_required
@@ -193,27 +206,13 @@ def student_save_information_modification(request, registration_id):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def internship_student_affectation_modification(request, affectation_id):
-    information = InternshipStudentAffectationStat.search(pk = affectation_id)
-    organizations = Organization.search()
-    organizations = sort_organizations(organizations)
-    specialities = InternshipSpeciality.find_all()
-    periods = Period.search().order_by("date_start")
-    return render(request, "student_affectation_modification.html",
-                           {'information':         information[0],
-                            'organizations':        organizations,
-                            'specialities':         specialities,
-                            'periods':              periods,
-                                                      })
-
-@login_required
-@permission_required('internship.is_internship_manager', raise_exception=True)
-def internship_student_affectation_modificationV2(request, student_registration_id):
+def internship_student_affectation_modification(request, student_registration_id):
     informations = InternshipStudentAffectationStat.search(student__registration_id = student_registration_id)
     for i in informations:
         print (i.speciality)
     organizations = Organization.search()
     organizations = sort_organizations(organizations)
+
     specialities = InternshipSpeciality.find_all()
     periods = Period.search().order_by("date_start")
     return render(request, "student_affectation_modificationV2.html",
