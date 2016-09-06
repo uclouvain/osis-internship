@@ -66,16 +66,14 @@
         </div>
         <br>
         <div class="row" style="margin:10px;">
-            <div class="col-md-5" style="text-align: center; background-color: #EEF; padding: 0.5em;">
-                {% trans 'current_status' %} :
-                <br>{{ dissert.get_status_display }}
+            <div class="col-md-5 well">
+                {% trans 'current_status' %} : {{ dissert.get_status_display }}
             </div>
             <div class="col-md-2" style="text-align: center; padding: 1em;">
                 <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
             </div>
-            <div class="col-md-5" style="text-align: center; background-color: #EEF; padding: 0.5em;">
-                {% trans 'next_status' %} :
-                <br>{{ new_status_display }}
+            <div class="col-md-5 well">
+                {% trans 'next_status' %} : {{ new_status_display }}
             </div>
         </div>
         <br>
@@ -85,8 +83,7 @@
                     <label>{% trans 'justification' %}</label>
                     <textarea class="form-control" id="txt_justification"  name="justification" style=""></textarea>
                 </div>
-                <button type="submit" class="save btn btn-default"
-                        onclick="return confirm('{% trans 'justification_confirmation_message' %}')">
+                <button type="submit" class="save btn btn-primary">
                     {% trans 'save' %}
                 </button>
             </div>
