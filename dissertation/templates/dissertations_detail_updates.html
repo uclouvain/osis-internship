@@ -46,9 +46,10 @@
     <div class="panel-body">
         <h3>{% trans 'current_status' %}</h3>
         <p>
-            {{ dissertation.status }}
+            {{ dissertation.get_status_display }}
         </p>
         <h3>{% trans 'updates' %}</h3>
+    </div>
         <table class="table table-hover">
             <tr>
               <th>{% trans 'change'%}</th>
@@ -71,6 +72,6 @@
             </tr>
         {% endfor %}
         </table>
-    </div>
+
 </div>
 {% endblock %}
