@@ -391,6 +391,8 @@ def manager_dissertations_to_dir_submit(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     old_status = dissert.status
     new_status = dissertation.get_next_status(dissert, "go_forward")
+    status_dict = dict(dissertation.STATUS_CHOICES)
+    new_status_display = status_dict[new_status]
 
     if request.method == "POST":
         form = ManagerDissertationUpdateForm(request.POST)
@@ -405,7 +407,7 @@ def manager_dissertations_to_dir_submit(request, pk):
         form = ManagerDissertationUpdateForm()
 
     return layout.render(request, 'manager_dissertations_add_justification.html',
-                         {'form': form, 'dissert': dissert, "old_status": old_status, "new_status": new_status})
+                         {'form': form, 'dissert': dissert, 'new_status_display': new_status_display})
 
 
 @login_required
@@ -425,6 +427,8 @@ def manager_dissertations_to_dir_ok(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     old_status = dissert.status
     new_status = dissertation.get_next_status(dissert, "accept")
+    status_dict = dict(dissertation.STATUS_CHOICES)
+    new_status_display = status_dict[new_status]
 
     if request.method == "POST":
         form = ManagerDissertationUpdateForm(request.POST)
@@ -439,7 +443,7 @@ def manager_dissertations_to_dir_ok(request, pk):
         form = ManagerDissertationUpdateForm()
 
     return layout.render(request, 'manager_dissertations_add_justification.html',
-                         {'form': form, 'dissert': dissert, "old_status": old_status, "new_status": new_status})
+                         {'form': form, 'dissert': dissert, 'new_status_display': new_status_display})
 
 
 @login_required
@@ -470,6 +474,8 @@ def manager_dissertations_to_dir_ko(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     old_status = dissert.status
     new_status = dissertation.get_next_status(dissert, "refuse")
+    status_dict = dict(dissertation.STATUS_CHOICES)
+    new_status_display = status_dict[new_status]
 
     if request.method == "POST":
         form = ManagerDissertationUpdateForm(request.POST)
@@ -484,7 +490,7 @@ def manager_dissertations_to_dir_ko(request, pk):
         form = ManagerDissertationUpdateForm()
 
     return layout.render(request, 'manager_dissertations_add_justification.html',
-                         {'form': form, 'dissert': dissert, "old_status": old_status, "new_status": new_status})
+                         {'form': form, 'dissert': dissert, 'new_status_display': new_status_display})
 
 
 @login_required
@@ -647,6 +653,8 @@ def dissertations_to_dir_ok(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     old_status = dissert.status
     new_status = dissertation.get_next_status(dissert, "accept")
+    status_dict = dict(dissertation.STATUS_CHOICES)
+    new_status_display = status_dict[new_status]
 
     if request.method == "POST":
         form = ManagerDissertationUpdateForm(request.POST)
@@ -661,7 +669,7 @@ def dissertations_to_dir_ok(request, pk):
         form = ManagerDissertationUpdateForm()
 
     return layout.render(request, 'dissertations_add_justification.html',
-                         {'form': form, 'dissert': dissert, "old_status": old_status, "new_status": new_status})
+                         {'form': form, 'dissert': dissert, 'new_status_display': new_status_display})
 
 
 @login_required
@@ -670,6 +678,8 @@ def dissertations_to_dir_ko(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     old_status = dissert.status
     new_status = dissertation.get_next_status(dissert, "refuse")
+    status_dict = dict(dissertation.STATUS_CHOICES)
+    new_status_display = status_dict[new_status]
 
     if request.method == "POST":
         form = ManagerDissertationUpdateForm(request.POST)
@@ -684,7 +694,7 @@ def dissertations_to_dir_ko(request, pk):
         form = ManagerDissertationUpdateForm()
 
     return layout.render(request, 'dissertations_add_justification.html',
-                         {'form': form, 'dissert': dissert, "old_status": old_status, "new_status": new_status})
+                         {'form': form, 'dissert': dissert, 'new_status_display': new_status_display})
 
 
 @login_required
