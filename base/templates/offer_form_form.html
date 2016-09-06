@@ -80,7 +80,7 @@
         <a href="#"
            id="lnk_form_read_{{offer_year.id }}" title="{%trans 'back'%}"
            class="btn btn-default" role="button"
-           onclick="buttonA_clickHandler(event);">
+           onclick="buttonBack_clickHandler(event);">
            <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span> {% trans 'back'%}
         </a>
     </form>
@@ -92,7 +92,7 @@
 {% endblock %}
 {% block script %}
 <script>
-    function buttonA_clickHandler(event) {
+    function buttonBack_clickHandler(event) {
       $('#backForm').submit();
     }
 </script>
