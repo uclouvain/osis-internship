@@ -205,3 +205,21 @@ def internship_student_affectation_modification(request, affectation_id):
                             'specialities':         specialities,
                             'periods':              periods,
                                                       })
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def internship_student_affectation_modificationV2(request, student_registration_id):
+    informations = InternshipStudentAffectationStat.search(student__registration_id = student_registration_id)
+    for i in informations:
+        print (i.speciality)
+    organizations = Organization.search()
+    organizations = sort_organizations(organizations)
+    specialities = InternshipSpeciality.find_all()
+    periods = Period.search().order_by("date_start")
+    return render(request, "student_affectation_modificationV2.html",
+                           {'information':         informations[0],
+                           'informations':         informations,
+                            'organizations':        organizations,
+                            'specialities':         specialities,
+                            'periods':              periods,
+                                                      })
