@@ -25,6 +25,7 @@
 ##############################################################################
 from django.core import serializers
 from django.db import models
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
@@ -142,8 +143,11 @@ class Adviser(models.Model):
 
 
 def search_by_person(a_person):
-    adviser = Adviser.objects.get(person=a_person)
-    return adviser
+    try:
+        adviser = Adviser.objects.get(person=a_person)
+        return adviser
+    except ObjectDoesNotExist:
+        return None
 
 
 def find_by_person(a_person):
