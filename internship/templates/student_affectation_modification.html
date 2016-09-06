@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+ * OSIS stands for Open Student Information System. It's an application
+ * designed to manage the core business of higher education institutions,
+ * such as universities, faculties, institutes and professional schools.
+ * The core business involves the administration of students, teachers,
+ * courses, programs and so on.
+ *
+ * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * A copy of this license - GNU General Public License - is available
+ * at the root of the source code of this program.  If not,
+ * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block breadcrumb %}
+  <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
+  <li><a href="{% url 'internships_home' %}">{% trans 'internships_managment' %}</a></li>
+  <li><a href="{% url 'internships_student_resume' %}">{% trans 'student_sumup' %}</a></li>
+  <li class="active"><a href="{% url 'internships_student_read' information.student.id %}">
+    {{ information.student.person.last_name }} {{ information.student.person.first_name }}
+    </a>
+  </li>
+{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h2>{{ information.student.person.last_name }} {{ information.student.person.first_name }}</h2>
+</div>
+
+        <form method="post" >
+          {% csrf_token %}
+          <div class="row">
+              <div class="col-md-2">
+                  <label>{% trans 'period' %}</label><br>
+                  <select name="period">
+                    {% for period in periods %}
+                      <option value="{{period.name}}" {% if period.name == information.period.name %} selected{% endif %}>
+                        {{period.name}}
+                      </option>
+                    {% endfor %}
+                  </select>
+              </div>
+              <div class="col-md-5">
+                  <label>{% trans 'organization' %}</label><br>
+                  <select name="organization">
+                    {% for organization in organizations %}
+                      <option value="{{organization.reference}}" {% if organization.reference == information.organization.reference %} selected{% endif %}>
+                        {{organization.reference}} {{organization.name}}
+                      </option>
+                    {% endfor %}
+                  </select>
+              </div>
+              <div class="col-md-3">
+                <label>{% trans 'speciality' %}</label><br>
+                <select name="speciality">
+                  {% for speciality in specialities %}
+                    <option value="{{speciality.name}}" {% if speciality.name == information.speciality.name %} selected{% endif %}>
+                      {{speciality.name}}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+          </div>
+          <br><br>
+
+          <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_interships_new">
+              <span class="glyphicon glyphicon-save" aria-hidden="true"/> {% trans 'save'%}
+          </button>
+        </form>
+      </div>
+  </div>
+  {% endblock %}

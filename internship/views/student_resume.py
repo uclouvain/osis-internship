@@ -28,7 +28,10 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
-from internship.models import InternshipChoice, InternshipStudentInformation, InternshipSpeciality, InternshipOffer, InternshipStudentAffectationStat
+from internship.models import InternshipChoice, InternshipStudentInformation, \
+                                InternshipSpeciality, InternshipOffer, InternshipStudentAffectationStat, \
+                                Organization, InternshipSpeciality, Period
+from internship.views.place import sort_organizations
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -187,3 +190,18 @@ def student_save_information_modification(request, registration_id):
 
     redirect_url = reverse('internships_student_read', args=[registration_id])
     return HttpResponseRedirect(redirect_url)
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def internship_student_affectation_modification(request, affectation_id):
+    information = InternshipStudentAffectationStat.search(pk = affectation_id)
+    organizations = Organization.search()
+    organizations = sort_organizations(organizations)
+    specialities = InternshipSpeciality.find_all()
+    periods = Period.search().order_by("date_start")
+    return render(request, "student_affectation_modification.html",
+                           {'information':         information[0],
+                            'organizations':        organizations,
+                            'specialities':         specialities,
+                            'periods':              periods,
+                                                      })

@@ -29,6 +29,7 @@
 {% block breadcrumb %}
   <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
   <li><a href="{% url 'internships_home' %}">{% trans 'internships_managment' %}</a></li>
+  <li><a href="{% url 'internships_student_resume' %}">{% trans 'student_sumup' %}</a></li>
   <li class="active">{{ student.person.last_name }} {{ student.person.first_name }}</li>
 {% endblock %}
 {% block content %}
@@ -125,7 +126,7 @@
                             {% if choice.speciality.name == speciality.name %}
                               <li> {% trans 'organization' %} :
                                       {{ choice.organization.reference }} - {{ choice.organization.name }} |
-                                      Choix : {{ choice.choice }}
+                                      {% trans 'choice' %} : {{ choice.choice }}
                             {% endif %}
                           {% endfor %}
                         </ul>
@@ -147,7 +148,7 @@
                                 {% if choice.speciality.name == speciality.name %}
                                   <li> {% trans 'organization' %} :
                                           {{ choice.organization.reference }} - {{ choice.organization.name }} |
-                                          Choix : {{ choice.choice }}
+                                          {% trans 'choice' %} : {{ choice.choice }}
                                 {% endif %}
                               {% endfor %}
                             </ul>
@@ -166,7 +167,13 @@
                         <label>{{affectation.period.name}}</label>
                         ({{affectation.period.date_start}} - {{affectation.period.date_end}})<br/>
                         <p>{{affectation.speciality.name}} |
-                        {{affectation.organization.reference}} {{affectation.organization.name}}<br/></p>
+                        {{affectation.organization.reference}} {{affectation.organization.name}}&nbsp;&nbsp;
+                        <a class="btn btn-warning btn-xs" target="_blank" id="lnk_students_affectation{{affectation.id}}"
+                          href="{% url 'internship_student_affectation_modification' affectation.id %}">
+                          <span class="glyphicon glyphicon-pencil" aria-hidden="true">
+                          </span><br/>
+                        </a>
+                      </p>
                       {% endfor %}
                 	  </div>
                 	</div>
