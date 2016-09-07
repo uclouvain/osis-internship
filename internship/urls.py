@@ -73,7 +73,7 @@ urlpatterns = [
     url(r'^students/resume/$', student_resume.internships_student_resume, name='internships_student_resume'),
     url(r'^students/search$', student_resume.internships_student_search, name='internships_student_search'),
 
-	url(r'^affectation_result/$', affectation_statistics.internship_affectation_statistics, name='internship_affectation_statistics'),
-    url(r'^affectation_result/generate/$', affectation_statistics.internship_affectation_statistics_generate, name='internship_affectation_statistics_generate'),
+	url(r'^affectation_result/(?P<sort_organization>\w+)/(?P<sort_students>\w+)/$', affectation_statistics.internship_affectation_statistics, name='internship_affectation_statistics'),
+    url(r'^affectation_result/(?P<sort_organization>\w+)/(?P<sort_students>\w+)/generate/$', affectation_statistics.internship_affectation_statistics_generate, name='internship_affectation_statistics_generate'),
 
 ]

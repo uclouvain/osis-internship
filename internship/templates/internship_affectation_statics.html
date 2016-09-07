@@ -53,10 +53,9 @@
         </div>
     </div>
 </div>
-
 <div class="panel panel-default">
   <div class="panel-body">
-    <form  method="post" action="{% url 'internship_affectation_statistics_generate' %}" >
+    <form  method="post" action="{% url 'internship_affectation_statistics_generate' sort_organization=sort_organization sort_students=sort_students %}" >
       <button type="submit" class="btn btn-primary" title="{% trans 'Send'%}" id="bt_interships_save" onclick="$('#PleaseWaitModal').modal('show');">
           <span class="glyphicon glyphicon-random" aria-hidden="true"></span> Generate solution
       </button>
@@ -75,8 +74,8 @@
             <div role="tabpanel" class="tab-pane fade in active" id="profile">
               <table class="table">
                 <tr>
-                  <th>Hôpital</th>
-                  <th>Spécialité</th>
+                  <th><a href="{% url 'internship_affectation_statistics' sort_organization='ref' sort_students=sort_students %}" >Hôpital</a></th>
+                  <th><a href="{% url 'internship_affectation_statistics' sort_organization='speciality' sort_students=sort_students %}" >Spécialité</a></th>
                   <th>P1</th>
                   <th>P2</th>
                   <th>P3</th>
@@ -90,37 +89,35 @@
                   <th>P11</th>
                   <th>P12</th>
                 </tr>
-                {% for hospital, specialities in organizations.items %}
-                  {% for speciality, periods in specialities.items %}
+                {% for item in organizations %}
                   <tr>
                     <td>
-                      {{hospital.reference}}
+                      {{ item.0 }}
                     </td>
                     <td>
-                      {{speciality.id}}
+                      {{ item.1 }}
                     </td>
-                    {% for period, places in periods.items %}
-                    {% if places.before == places.after and places.before != 0 %}
-                      <td style="background-color:green;"/>
-                    {% elif places.pc > 66 %}
-                      <td style="background-color:#33cc33;"/>
-                    {% elif places.pc > 33 %}
-                      <td style="background-color:#ffdc33;"/>
-                    {% elif places.pc > 0 %}
-                      <td style="background-color:#ff6600;"/>
-                    {% elif places.pc == 0 %}
-                      <td style="background-color:#cc0000;"/>
-                    {% elif places.before == 0 %}
-                      <td/>
-                    {% else %}
-                      <td style="background-color:#33cc33;"/>
-                    {% endif %}
-                    {{ places.after }}/{{ places.before }}
-                  </td>
-                  {% endfor %}
-                </tr>
+                    {% for period, places in item.2.items %}
+                      {% if places.before == places.after and places.before != 0 %}
+                        <td style="background-color:green;"/>
+                      {% elif places.pc > 66 %}
+                        <td style="background-color:#33cc33;"/>
+                      {% elif places.pc > 33 %}
+                        <td style="background-color:#ffdc33;"/>
+                      {% elif places.pc > 0 %}
+                        <td style="background-color:#ff6600;"/>
+                      {% elif places.pc == 0 %}
+                        <td style="background-color:#cc0000;"/>
+                      {% elif places.before == 0 %}
+                        <td/>
+                      {% else %}
+                        <td style="background-color:#33cc33;"/>
+                      {% endif %}
+                        {{ places.after }}/{{ places.before }}
+                        </td>
+                    {% endfor %}
+                  </tr>
                 {% endfor %}
-              {% endfor %}
             </table>
           </div>
         </div>
@@ -132,7 +129,7 @@
           <div role="tabpanel" class="tab-pane fade in active" id="profile">
             <table class="table">
               <tr>
-                <th>Student</th>
+                <th><a href="{% url 'internship_affectation_statistics' sort_organization=sort_organization sort_students='name' %}" >Student</a></th>
                 <th>P1</th>
                 <th>P2</th>
                 <th>P3</th>
@@ -145,7 +142,7 @@
                 <th>P10</th>
                 <th>P11</th>
                 <th>P12</th>
-                <th>Score</th>
+                <th><a href="{% url 'internship_affectation_statistics' sort_organization=sort_organization sort_students='score' %}" >Score</a></th>
               </tr>
               {% for student, periods in recap_sol.items %}
               <tr id="student_{{student.id}}">
@@ -153,13 +150,25 @@
                   {{student}}
                 </td>
                   {% for period, enrollment in periods.items %}
-                <td class="internship-{{enrollment.type_of_internship}} period-{{period}}"/>
-                  {% if period <= 8 %}
-                  {{ enrollment.speciality.id }} <br>  {{ enrollment.organization.reference }}<br> {{ enrollment.cost }}({{ enrollment.choice }})<br>
-                  {% elif period > 8 and period <= 12 %}
+
+                {% if enrollment.choice == 'I' %}
+                  <td class="internship-{{enrollment.type_of_internship}} period-{{period}} {{enrollment.speciality.acronym}}" style="background-color: #00ff95"/>
+                {% elif enrollment.choice == 'X' %}
+                  <td class="internship-{{enrollment.type_of_internship}} period-{{period}} {{enrollment.speciality.acronym}}" style="background-color: #ffa8a8"/>
+                {% else %}
+                  <td class="internship-{{enrollment.type_of_internship}} period-{{period}} {{enrollment.speciality.acronym}}"/>
+                {% endif %}
+                  {% if forloop.counter <= 8 %}
+                  {{ enrollment.speciality.acronym }} <br>
+                  {{ enrollment.organization.reference }}<br>
+                  {{ enrollment.cost }}({{ enrollment.choice.lower }})<br>
+                  {% elif forloop.counter > 8 and forloop.counter <= 12 %}
                   X
                   {% else %}
                   {{ periods.score }}
+                  <script>
+                  console.log({{ periods.score }})
+                  </script>
                   {% endif %}
                 </td>
               {% endfor %}
@@ -274,7 +283,7 @@
             </tr>
             <tr>
               <td>Imposed chocies</td>
-              <td>{{ stats.others }} ({{ stats.others_pc }}%) | Students : {{ stats.others_students}} | Mean distance : {{ stats.distance_mean}}km</td>
+              <td>{{ stats.others }} ({{ stats.others_n_pc }}%) | Students : {{ stats.others_students}} | Mean distance : {{ stats.distance_mean}}km</td>
             </tr>
             {% for speciality, value in stats.others_specialities.items %}
             <tr>
@@ -322,11 +331,11 @@
       </tr>
     {% for internship in errors %}
     <tr>
-      <td>{{internship.student}}<td>
-      <td>{{internship.speciality}}<td>
-      <td>{{internship.period}}<td>
-      <td>{{internship.organization}}<td>
-      <td>{{internship.type_of_internship}}<td>
+      <td>{{internship.student}}</td>
+      <td>{{internship.speciality}}</td>
+      <td>{{internship.period}}</td>
+      <td>{{internship.organization}}</td>
+      <td>{{internship.type_of_internship}}</td>
     </tr>
     {% endfor %}
     </table>
