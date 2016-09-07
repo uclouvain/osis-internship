@@ -22,6 +22,16 @@ class Migration(migrations.Migration):
             name='offer_year',
         ),
         migrations.AddField(
+            model_name='academicyear',
+            name='uuid',
+            field=models.UUIDField(db_index=True, default=uuid.uuid4, null=True),
+        ),
+        migrations.AddField(
+            model_name='campus',
+            name='uuid',
+            field=models.UUIDField(db_index=True, default=uuid.uuid4, null=True),
+        ),
+        migrations.AddField(
             model_name='offer',
             name='uuid',
             field=models.UUIDField(db_index=True, default=uuid.uuid4, null=True),
