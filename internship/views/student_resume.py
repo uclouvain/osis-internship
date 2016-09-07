@@ -206,19 +206,73 @@ def student_save_information_modification(request, registration_id):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def internship_student_affectation_modification(request, student_registration_id):
-    informations = InternshipStudentAffectationStat.search(student__registration_id = student_registration_id)
-    for i in informations:
-        print (i.speciality)
+def internship_student_affectation_modification(request, student_id):
+    informations = InternshipStudentAffectationStat.search(student__pk = student_id)
+    information = InternshipChoice.search(student__pk = student_id)
     organizations = Organization.search()
     organizations = sort_organizations(organizations)
 
     specialities = InternshipSpeciality.find_all()
     periods = Period.search().order_by("date_start")
     return render(request, "student_affectation_modification.html",
-                           {'information':         informations[0],
+                           {'information':         information[0],
                            'informations':         informations,
                             'organizations':        organizations,
                             'specialities':         specialities,
                             'periods':              periods,
                                                       })
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def student_save_affectation_modification(request, registration_id):
+    student = mdl.student.find_by(registration_id=registration_id)[0]
+    if request.POST.get('period'):
+        period_list = request.POST.getlist('period')
+    if request.POST.get('organization'):
+        organization_list = request.POST.getlist('organization')
+    if request.POST.get('speciality'):
+        speciality_list = request.POST.getlist('speciality')
+
+    InternshipStudentAffectationStat.search(student=student).delete()
+    index = len(period_list)
+    for x in range(0,index):
+        if organization_list[x] == "0":
+            InternshipStudentAffectationStat.search(student = student, period__name=period_list[x], speciality__name=speciality_list[x]
+                                                    ).delete()
+        else:
+            organization = Organization.search(reference=organization_list[x])[0]
+            #print(organization)
+            speciality = InternshipSpeciality.search(name=speciality_list[x])[0]
+            #print(speciality)
+            period = Period.search(name=period_list[x])[0]
+            #print(period)
+            student_choices = InternshipChoice.search(student=student, speciality=speciality)
+            affectation_modif = InternshipStudentAffectationStat()
+            #print(affectation_modif)
+
+            affectation_modif.student = student
+            affectation_modif.organization = organization
+            affectation_modif.speciality = speciality
+            affectation_modif.period = period
+            check_choice = False
+            for student_choice in student_choices:
+                if student_choice.organization == organization:
+                    affectation_modif.choice = student_choice.choice
+                    check_choice = True
+                    if student_choice.choice == 1 :
+                        affectation_modif.cost = 0
+                    elif student_choice.choice == 2 :
+                        affectation_modif.cost = 1
+                    elif student_choice.choice == 3 :
+                        affectation_modif.cost = 2
+                    elif student_choice.choice == 4 :
+                        affectation_modif.cost = 3
+            if not check_choice:
+                affectation_modif.choice="i"
+                affectation_modif.cost = 10
+
+            affectation_modif.save()
+
+
+    redirect_url = reverse('internships_student_read', args=[student.id])
+    return HttpResponseRedirect(redirect_url)

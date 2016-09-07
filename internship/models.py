@@ -374,3 +374,7 @@ class InternshipStudentAffectationStat(models.Model):
         kwargs = {k: v for k, v in kwargs.items() if v}
         queryset = InternshipStudentAffectationStat.objects.filter(**kwargs)
         return queryset
+
+    @staticmethod
+    def find_by_id(affectation_id):
+        return InternshipStudentAffectationStat.objects.get(pk=affectation_id)

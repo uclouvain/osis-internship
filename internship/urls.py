@@ -67,10 +67,11 @@ urlpatterns = [
     url(r'^specialities/new/$', speciality.speciality_new, name='speciality_new'),
     url(r'^specialities/save/([0-9]+)/$', speciality.speciality_save, name='speciality_save'),
 
+    url(r'^students/([0-9]+)/affectation/modification/$', student_resume.internship_student_affectation_modification, name='internship_student_affectation_modification'),
     url(r'^students/([0-9]+)/information/modification/$', student_resume.internship_student_information_modification, name='internship_student_information_modification'),
     url(r'^students/([0-9]+)/resume/$', student_resume.internships_student_read, name='internships_student_read'),
     url(r'^students/([0-9]+)/save/information/modification/$', student_resume.student_save_information_modification, name='student_save_information_modification'),
-    url(r'^students/affectation/([0-9]+)/modification/$', student_resume.internship_student_affectation_modification, name='internship_student_affectation_modification'),
+    url(r'^students/([0-9]+)/save/affectation/modification/$', student_resume.student_save_affectation_modification, name='student_save_affectation_modification'),
     url(r'^students/resume/$', student_resume.internships_student_resume, name='internships_student_resume'),
     url(r'^students/search$', student_resume.internships_student_search, name='internships_student_search'),
 
