@@ -243,6 +243,9 @@ msgstr	 "Third Choice"
 msgid	 "type"
 msgstr	 "Type"
 
+msgid	 "choice"
+msgstr	 "Choice"
+
 msgid "selection_currently_active"
 msgstr "The internships' selection is currently active"
 
