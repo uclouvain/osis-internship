@@ -27,6 +27,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from internship.models import Organization, InternshipSpeciality
 
 import os
 import sys
@@ -38,6 +39,7 @@ from random import randint, choice
 from internship.models import *
 from statistics import mean, stdev
 from internship.views.internship import calc_dist
+from internship.views.place import sort_organizations
 
 ################################################# Global vars #################################################
 errors = []
@@ -863,8 +865,14 @@ def internship_affectation_statistics(request):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_affectation_sumup(request):
+    all_speciality = InternshipSpeciality.search(mandatory=True).order_by("acronym", "name")
+    periods = Period.search().order_by("date_start")
+    places = Organization.search()
+    places = sort_organizations(places)
 
     return render(request, "internship_affectation_sumup.html",
-                            {'section': 'internship',
-
-                            })
+                                                {'section': 'internship',
+                                                 'specialities':        all_speciality,
+                                                 'periods':             periods,
+                                                 'places':              places,
+                                                })
