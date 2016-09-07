@@ -209,3 +209,15 @@ def student_choice(request, reference):
                                                  'offers':              all_offers,
                                                  'specialities':        all_speciality
                                                   })
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def student_affectation(request, reference):
+    organization_affectation = InternshipStudentAffectationStat.search(organization__reference=reference)
+    organization = Organization.search(reference=reference)[0]
+    all_speciality = InternshipSpeciality.find_all()
+    set_tabs_name(all_speciality)
+
+    return render(request, "place_detail_affectation.html", {'organization':        organization,
+                                                 'organization_affectation': organization_affectation,
+                                                 'specialities':        all_speciality
+                                                  })

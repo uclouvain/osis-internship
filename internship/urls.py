@@ -52,6 +52,7 @@ urlpatterns = [
     url(r'^periods/save/([0-9]+)/$', period.period_save, name='period_save'),
 
     url(r'^places/$', place.internships_places, name='internships_places'),
+    url(r'^places/([0-9]+)/students/affectation/$', place.student_affectation, name='place_detail_student_affectation'),
     url(r'^places/([0-9]+)/students/choice/$', place.student_choice, name='place_detail_student_choice'),
     url(r'^places/create/$', place.organization_create, name='place_create'),
     url(r'^places/edit/([0-9]+)/$', place.organization_edit, name='place_edit'),

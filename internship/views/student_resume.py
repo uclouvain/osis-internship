@@ -238,14 +238,10 @@ def student_save_affectation_modification(request, registration_id):
     for x in range(0,index):
         if organization_list[x] != "0":
             organization = Organization.search(reference=organization_list[x])[0]
-            #print(organization)
             speciality = InternshipSpeciality.search(name=speciality_list[x])[0]
-            #print(speciality)
             period = Period.search(name=period_list[x])[0]
-            #print(period)
             student_choices = InternshipChoice.search(student=student, speciality=speciality)
             affectation_modif = InternshipStudentAffectationStat()
-            #print(affectation_modif)
 
             affectation_modif.student = student
             affectation_modif.organization = organization
