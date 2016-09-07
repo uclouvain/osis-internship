@@ -24,7 +24,7 @@
 #
 ##############################################################################
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
@@ -859,3 +859,12 @@ def internship_affectation_statistics(request):
     return render(request, "internship_affectation_statics.html",
                   {'section': 'internship', 'recap_sol': sol, 'stats': stats, 'organizations': table, 'errors': errors,
                    'has_data': False})
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def internship_affectation_sumup(request):
+
+    return render(request, "internship_affectation_sumup.html",
+                            {'section': 'internship',
+
+                            })
