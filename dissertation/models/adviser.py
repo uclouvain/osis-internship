@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from django.db import models
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
@@ -36,8 +37,8 @@ class AdviserAdmin(admin.ModelAdmin):
 
 class Adviser(models.Model):
     TYPES_CHOICES = (
-        ('PRF', _('Professor')),
-        ('MGR', _('Manager')),
+        ('PRF', _('professor')),
+        ('MGR', _('manager')),
     )
 
     person = models.OneToOneField('base.Person', on_delete=models.CASCADE)
@@ -141,8 +142,11 @@ class Adviser(models.Model):
 
 
 def search_by_person(a_person):
-    adviser = Adviser.objects.get(person=a_person)
-    return adviser
+    try:
+        adviser = Adviser.objects.get(person=a_person)
+        return adviser
+    except ObjectDoesNotExist:
+        return None
 
 
 def find_by_person(a_person):

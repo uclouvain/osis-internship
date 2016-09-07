@@ -48,7 +48,7 @@ urlpatterns = [
     url(r'^periods/create/$', period.period_create, name='periods_create'),
     url(r'^periods/delete/([0-9]+)/$', period.period_delete, name='period_delete'),
     url(r'^periods/modification/([0-9]+)/$', period.period_modification, name='period_modification'),
-    url(r'^periods/new/$', period.period_new, name='periods_new'),
+    url(r'^periods/new/$', period.period_new, name='period_new'),
     url(r'^periods/save/([0-9]+)/$', period.period_save, name='period_save'),
 
     url(r'^places/$', place.internships_places, name='internships_places'),

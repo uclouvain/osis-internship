@@ -26,18 +26,24 @@
 from django.db import models
 from django.contrib import admin
 from django.core import serializers
+from reference.enums import domain_type
 
 
 class DomainAdmin(admin.ModelAdmin):
-    list_display = ('name', 'parent', 'decree')
-    fieldsets = ((None, {'fields': ('name', 'parent', 'decree')}),)
+    list_display = ('name', 'parent', 'decree', 'type')
+    fieldsets = ((None, {'fields': ('name', 'parent', 'decree', 'type')}),)
+    search_fields = ['name']
 
 
 class Domain(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     name = models.CharField(max_length=255)
     parent = models.ForeignKey('self', null=True, blank=True)
-    decree = models.ForeignKey('Decree')
+    decree = models.ForeignKey('Decree', null=True, blank=True)
+    type = models.CharField(max_length=50, choices=domain_type.TYPES, default=domain_type.UNKNOWN)
+    adhoc = models.BooleanField(default=True) # If False == Official/validated, if True == Not Official/not validated
+    national = models.BooleanField(default=False) # True if is Belgian else False
+    reference = models.CharField(max_length=10, blank=True, null=True)
 
     def __str__(self):
         return self.name

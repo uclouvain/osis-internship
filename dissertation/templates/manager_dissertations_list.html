@@ -122,7 +122,7 @@
                     {% elif dissertation.status == 'ENDED_LOS' %}
                     <span class="label label-danger">
                     {% endif %}
-                        {{ dissertation.status }}
+                        {{ dissertation.get_status_display }}
                     </span>
                 </td>
                 <td>

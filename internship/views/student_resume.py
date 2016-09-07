@@ -134,7 +134,7 @@ def internships_student_read(request, registration_id):
     student = student[0]
     information = InternshipStudentInformation.search(person = student.person)
     internship_choice = InternshipChoice.find_by_student(student)
-    all_speciality = InternshipSpeciality.find_all()
+    all_speciality = InternshipSpeciality.search(mandatory=True)
 
     affectations = InternshipStudentAffectationStat.search(student = student).order_by("period__date_start")
     periods = Period.search().order_by("date_start")
