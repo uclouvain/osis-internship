@@ -136,7 +136,7 @@ def internships_student_read(request, registration_id):
     internship_choice = InternshipChoice.find_by_student(student)
     all_speciality = InternshipSpeciality.find_all()
 
-    affectations = InternshipStudentAffectationStat.search(student = student).order_by("period")
+    affectations = InternshipStudentAffectationStat.search(student = student).order_by("period__date_start")
     periods = Period.search().order_by("date_start")
     organizations = Organization.search()
     set_organization_address(organizations)

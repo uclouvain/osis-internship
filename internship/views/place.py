@@ -25,8 +25,11 @@
 ##############################################################################
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
-from internship.models import Organization, OrganizationAddress, InternshipChoice, InternshipOffer, InternshipSpeciality
+from internship.models import Organization, OrganizationAddress, InternshipChoice, \
+                            InternshipOffer, InternshipSpeciality, InternshipStudentAffectationStat, \
+                            Period
 from internship.forms import OrganizationForm, OrganizationAddressForm
+from internship.views.internship import get_all_specialities
 
 def sort_organizations(datas):
     tab = []
@@ -212,12 +215,18 @@ def student_choice(request, reference):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def student_affectation(request, reference):
-    organization_affectation = InternshipStudentAffectationStat.search(organization__reference=reference)
     organization = Organization.search(reference=reference)[0]
-    all_speciality = InternshipSpeciality.find_all()
-    set_tabs_name(all_speciality)
+    organization_affectations = InternshipStudentAffectationStat.search(organization=organization)
+    print(organization_affectations)
+    for oa in organization_affectations:
+        print(oa.period.name)
+    periods = Period.search().order_by("date_start")
+
+    internships = InternshipOffer.search(organization = organization).order_by("speciality__name")
+    all_speciality = get_all_specialities(internships)
 
     return render(request, "place_detail_affectation.html", {'organization':        organization,
-                                                 'organization_affectation': organization_affectation,
-                                                 'specialities':        all_speciality
+                                                 'organization_affectations': organization_affectations,
+                                                 'specialities':        all_speciality,
+                                                 'periods':             periods,
                                                   })
