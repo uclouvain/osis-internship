@@ -216,10 +216,8 @@ def student_choice(request, reference):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def student_affectation(request, reference):
     organization = Organization.search(reference=reference)[0]
-    organization_affectations = InternshipStudentAffectationStat.search(organization=organization)
-    print(organization_affectations)
-    for oa in organization_affectations:
-        print(oa.period.name)
+    organization_affectations = InternshipStudentAffectationStat.search(organization=organization).order_by("student__person__last_name","student__person__first_name")
+
     periods = Period.search().order_by("date_start")
 
     internships = InternshipOffer.search(organization = organization).order_by("speciality__name")

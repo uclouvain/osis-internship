@@ -39,39 +39,37 @@
 <div class="panel panel-default">
     <div class="panel-body">
       <ul class="nav nav-tabs">
-          <li class="active"><a data-toggle="tab" href="#tab_periods">by period</a></li>
-          <li><a data-toggle="tab" href="#tab_speciality">by speciality</a></li>
+        {% for speciality in specialities %}
+          <li {% if forloop.first %}class="active"{% endif %}><a data-toggle="tab" href="#tab_{{speciality.acronym}}">{{speciality.name}}</a></li>
+        {% endfor %}
       </ul>
       <div class="tab-content">
-        <div id="tab_periods" class="tab-pane fade in active">
-          <ul class="nav nav-tabs">
-            {% for period in periods %}
-              <li {% if forloop.first %}class="active"{% endif %}><a data-toggle="tab" href="#tab_{{period.name}}">{{period.name}}</a></li>
-            {% endfor %}
-          </ul>
-          <div class="tab-content">
-            {% for period in periods %}
-              <div id="tab_{{period.name}}" class="tab-pane fade {% if forloop.first %}in active{% endif %}">
-                {% for speciality in specialities %}
-                  <label>{{speciality.name}}</label><br/>
-                  <ul>
-                    {% for affectation in organization_affectations %}
-                      {% if affectation.period.name == period.name and affectation.speciality.name == speciality.name %}
-                        <li>{{affectation.student}}</li>
-                      {% endif %}
+        {% for speciality in specialities %}
+          <div id="tab_{{speciality.acronym}}" class="tab-pane fade {% if forloop.first %}in active{% endif %}">
+            <div class="panel panel-default">
+              <div class="tab-content">
+                <div role="tabpanel" class="tab-pane fade in active" id="profile">
+                  <table class="table table-hover">
+                    {% for period in periods %}
+                      <tr>
+                        <th style="background-color: #dddddd;" colspan="3">{{period.name}} : {{period.date_start}} - {{period.date_end}}</th>
+                      </tr>
+                      {% for affectation in organization_affectations %}
+                        {% if affectation.period.name == period.name and affectation.speciality.name == speciality.name %}
+                          <tr>
+                            <td>{{affectation.student}}</td>
+                          </tr>
+                        {%endif%}
+                      {% endfor %}
                     {% endfor %}
-                  </ul>
-                {% endfor %}
+                  </table>
+                </div>
               </div>
-            {% endfor %}
+            </div>
           </div>
-        </div>
-        <div id="tab_speciality" class="tab-pane fade">
-          <h3>Menu 1</h3>
-          <p>Some content in menu 1.</p>
-        </div>
-
+        {%endfor%}
       </div>
+    </div>
 	</div>
 </div>
 
