@@ -47,8 +47,6 @@
     <li><a href="{% url 'manager_dissertations_wait_recep_list' %}">{% trans 'waiting_reception' %}</a></li>
   </ul>
   <div class="panel panel-default">
-    <div class="panel-body">
-      <div>
         {% if dissertations|length == 0 %}
           <br>
           <label class="alert alert-info" style="margin-left:10%;width:80%;text-align:center;">{% trans 'no_result' %}</label>
@@ -114,7 +112,5 @@
             {% endfor %}
           </table>
         {% endif %}
-      </div>
-    </div>
   </div>
 {% endblock %}
