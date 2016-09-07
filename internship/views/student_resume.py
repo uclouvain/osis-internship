@@ -236,10 +236,7 @@ def student_save_affectation_modification(request, registration_id):
     InternshipStudentAffectationStat.search(student=student).delete()
     index = len(period_list)
     for x in range(0,index):
-        if organization_list[x] == "0":
-            InternshipStudentAffectationStat.search(student = student, period__name=period_list[x], speciality__name=speciality_list[x]
-                                                    ).delete()
-        else:
+        if organization_list[x] != "0":
             organization = Organization.search(reference=organization_list[x])[0]
             #print(organization)
             speciality = InternshipSpeciality.search(name=speciality_list[x])[0]
