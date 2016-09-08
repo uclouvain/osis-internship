@@ -59,9 +59,17 @@
                           <tr>
                             <td>{{organization.reference}}</td>
                             {% for period in periods %}
-                              <td>
-                              aaa
-                              <td>
+                              <td style="text-align: center;">
+                              {% for affectation in affectations %}
+                                {% if affectation.period.name == period.name %}
+                                  {% if affectation.organization.reference == organization.reference  %}
+                                    {% if affectation.speciality.name == speciality.name  %}
+                                      {{affectation.student.person.last_name}}<br/>
+                                    {% endif %}
+                                  {% endif %}
+                                {% endif %}
+                              {% endfor %}
+                              </td>
                             {% endfor %}
                           </tr>
                       {% endfor %}
