@@ -439,6 +439,12 @@ msgstr "Add teacher"
 msgid "manager_informations_list_request"
 msgstr "Teachers having to answer request"
 
+msgid "manager_jury_draft"
+msgstr "Dissertation status is draft, managers can't edit jury."
+
+msgid "manager_jury_editable"
+msgstr "Managers can see and edit jury."
+
 msgid "manager_promotor_accept"
 msgstr "Promotor accepts"
 
@@ -676,6 +682,18 @@ msgstr "Status"
 msgid "student_can_manage_readers"
 msgstr "Students can manage readers"
 
+msgid "student_jury_draft_can_edit_param"
+msgstr "Dissertation status is draft, student can manage readers"
+
+msgid "student_jury_draft_no_edit_param"
+msgstr "Dissertation status is draft, student can't manage readers"
+
+msgid "student_jury_invisible_dates"
+msgstr "Jury is currently invisible for the student"
+
+msgid "student_jury_visible_dates"
+msgstr "Jury is currently visible for the student"
+
 msgid "student_path"
 msgstr "Students' path"
 
@@ -693,6 +711,15 @@ msgstr "Submitted to 1st year evaluation"
 
 msgid "taken_places"
 msgstr "Taken places"
+
+msgid "teacher_jury_draft"
+msgstr "Dissertation status is draft, teachers can't edit jury."
+
+msgid "teacher_jury_visible_editable_parameter"
+msgstr "Teachers can see and edit jury."
+
+msgid "teacher_jury_visible_not_editable_parameter"
+msgstr "Teachers can see jury but not edit it."
 
 msgid "teachers"
 msgstr "Teachers"
