@@ -57,7 +57,7 @@ class AssistantMandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListVie
         assistant = academic_assistant.find_by_person(
             person.find_by_user(self.request.user))
         this_academic_year = academic_year.current_academic_year()
-        return assistant_mandate.find_mandate_by_assistant_for_academic_year(assistant, this_academic_year)
+        return assistant_mandate.find_mandate_by_academic_assistant(assistant)
 
     def get_context_data(self, **kwargs):
         context = super(AssistantMandatesListView,
