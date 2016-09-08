@@ -424,6 +424,9 @@ def is_same(student_solution, organization, period):
     else:
         return True
 
+def is_empty_internship(organization, speciality, period):
+    return internship_table[organization][speciality][period] == internship_table_original[organization][speciality][period]
+
 def get_solution_cost(data):
     """
     Compute the cost of the student's solution.
@@ -440,6 +443,9 @@ def get_solution_cost(data):
                 score = score + costs['I']
             if data[period].choice == 'X':  # Hospital error
                 score = score + costs['X']
+            if is_empty_internship(data[period].organization, data[period].speciality, period):
+                score = score - 10
+
     return score
 
 def update_scores(student):
@@ -552,11 +558,11 @@ def find_nearest_hopital(student, speciality, exclude):
                 # Compute the distance between 2 addresses and store it in the dict
                 if addr_organization.latitude is not None and addr_student.latitude is not None:
                     distance = compute_distance(addr_student, addr_organization)
-                    # for period, places in internship_table[internship.organization][speciality].items():
-                    #     if places != internship_table_original[internship.organization][speciality][period]:
-                    #         distance += 3000
-                    #     # else:
-                    #     #     print("Found - Hospital : " + str(internship.organization.reference) + " Speciality : " + str(speciality) + " Period : " + str(period))
+                    for period, places in internship_table[internship.organization][speciality].items():
+                        if places != internship_table_original[internship.organization][speciality][period]:
+                            distance += 3000
+                        # else:
+                        #     print("Found - Hospital : " + str(internship.organization.reference) + " Speciality : " + str(speciality) + " Period : " + str(period))
 
                     data[internship.organization] = distance
 
@@ -588,7 +594,6 @@ def iterate_choices(choices, priority):
     for choice in choices:
         # Get all available periods for given organization / speciality
         available_periods_of_internship = get_available_periods_of_internship(choice.organization, choice.speciality)
-
         # Iterate over all available periods of the student
         for available_period in available_periods_of_student:
             # Check if the internship have an available_period
