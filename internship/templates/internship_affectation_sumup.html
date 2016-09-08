@@ -50,14 +50,19 @@
                 <div role="tabpanel" class="tab-pane fade in active" id="profile">
                   <table class="table table-hover">
                       <tr>
-                        <th width="1%">1</th>
+                        <th></th>
                         {% for period in periods %}
                           <th style="background-color: #dddddd; text-align: center;">{{period.name}}</th>
                         {% endfor %}
                       </tr>
-                      {% for place in places %}
+                      {% for organization in organizations %}
                           <tr>
-                            <td>{{place.reference}}</td>
+                            <td>{{organization.reference}}</td>
+                            {% for period in periods %}
+                              <td>
+                              aaa
+                              <td>
+                            {% endfor %}
                           </tr>
                       {% endfor %}
                   </table>
