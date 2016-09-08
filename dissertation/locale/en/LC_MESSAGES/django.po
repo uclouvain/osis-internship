@@ -328,6 +328,9 @@ msgstr "Dissertations quantity as promotor"
 msgid "how_many_dissertation_reader"
 msgstr "Dissertations quantity as reader"
 
+msgid "if_unavailable_adviser"
+msgstr "If the concerned teacher is not in the list, you can"
+
 msgid "in_edit_title"
 msgstr "Title currently editable"
 

@@ -328,6 +328,9 @@ msgstr "Nombre de mémoires en tant que promoteur"
 msgid "how_many_dissertation_reader"
 msgstr "Nombre de mémoires en tant que lecteur"
 
+msgid "if_unavailable_adviser"
+msgstr "Si l'enseignant concerné n'est pas dans la liste, vous pouvez"
+
 msgid "in_edit_title"
 msgstr "Titre modifiable actuellement"
 
