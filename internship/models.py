@@ -274,6 +274,12 @@ class OrganizationAddress(models.Model):
         return OrganizationAddress.objects.get(pk=organization_address_id)
 
     def save(self, *args, **kwargs):
+        has_organization = False
+        try:
+            has_organization = (self.organization is not None)
+        except Exception:
+            self.organization = Organization.objects.latest('id')
+
         self.label = "Addr"+self.organization.name[:14]
         super(OrganizationAddress, self).save(*args, **kwargs)
 
