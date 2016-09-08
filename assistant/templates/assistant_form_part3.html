@@ -33,7 +33,15 @@
 <li class="active">{% trans 'renewal_form' %}</li>
 {% endblock %}
 {% block content %}
-
+<ul class="nav nav-tabs ">
+<li><a href="{% url 'assistant_mandates' %}">{% trans 'my_mandates' %}</a></li>
+<li><a href="{% url 'form_part1_edit' mandate.id %}">{% trans 'assistant_form_part1' %}</a></li>
+<li><a href="#">{% trans 'assistant_form_part2' %}</a></li>
+<li class="active"><a href="#">{% trans 'assistant_form_part3' %}</a></li>
+<li><a href="#">{% trans 'assistant_form_part4' %}</a></li>
+<li><a href="{% url 'form_part5_edit' mandate.id %}">{% trans 'assistant_form_part5' %}</a></li>
+<li><a href="{% url 'form_part6_edit' mandate.id %}">{% trans 'assistant_form_part6' %}</a></li>
+</ul>
 <div class="panel panel-default">
 	<div class="panel-body">
  		<form method="POST" enctype="multipart/form-data" action="{% url 'form_part3_save' mandate.id %}">
@@ -83,32 +91,7 @@
         		</div>
       		</div><p>
       	</div>
-    	<hr>
-    	<div class="panel-warning">
-  			<div class="panel-heading">
-  				<font size="4">{% trans 'supervisory_panel_reports_files' %}</font>
-    		</div>
-    	</div><p>
-    	{{ formset.management_form }}
-    	<div class="col-md-12" align="left">
-    		<button type="submit" class="btn btn-default btn-sm" name="add_file" title="{% trans 'add_file'%}" id="bt_pst_add_file">
-    		<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> {% trans 'add_file'%}</button>
-    	</div><p>
-    	<div class="col-md-12" align="left"><ul class="list-group">
-    		{% for form in formset %}<li class="list-group-item">
-        		{% for field in form %}
-        			{% if field.name != "doc_type" and  field.name != 'assistant' %}
-        				{% if field.name == "DELETE" %}
-							<div class="controls">{{ field }} {% trans 'delete' %}<font class="error">{{ field.errors }}</font></div>
-						{% else %}
-							<div class="controls">{{ field }}<font class="error">{{ field.errors }}</font></div>
-						{% endif %}
-        			{% else %}
-        				{{ field.as_hidden }}
-        			{% endif %}
-        		{% endfor %}</li>
-        	{% endfor %}</ul>
-		</div>
+
 		<div class="form-group"> 
     		<div class="col-md-12 align="left">
      			<button type="submit" class="btn btn-primary btn-block" title="{% trans 'save'%}" id="bt_pstform_part3_save">

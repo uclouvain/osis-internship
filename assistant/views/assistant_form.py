@@ -112,14 +112,9 @@ def form_part3_edit(request, mandate_id):
                                        'remark': assistant.remark,
                                        }, prefix='mand')
 
-    formset = FilesInLineFormSet(instance=mandate, queryset=
-    assistant_document.AssistantDocument.objects.filter(doc_type='PHD'), prefix='files',
-                                 initial=[{'assistant': assistant, 'doc_type': 'PHD'}])
-
     return render(request, "assistant_form_part3.html", {'assistant': assistant,
                                                          'mandate': mandate,
-                                                         'form': form,
-                                                         'formset': formset})
+                                                         'form': form})
 
 
 @user_passes_test(user_is_assistant_and_procedure_is_open, login_url='access_denied')
@@ -131,26 +126,14 @@ def form_part3_save(request, mandate_id):
     if person != assistant.person:
         return HttpResponseRedirect(reverse('assistant_mandates'))
     elif request.method == 'POST':
-        if 'add_file' in request.POST:
-            form = AssistantDocumentForm(initial={'mandate': mandate,
-                                                  'assistant': assistant,
-                                                  'doc_type': 'PHD'
-                                                  }, prefix='file')
-            return render(request, "add_file.html", {'assistant': assistant,
-                                                     'mandate': mandate,
-                                                     'form': form})
+        form = AssistantFormPart3(data=request.POST, instance=assistant, prefix='mand')
+        if form.is_valid():
+            form.save()
+            return form_part3_edit(request, mandate.id)
         else:
-            form = AssistantFormPart3(data=request.POST, instance=assistant, prefix='mand')
-            formset = FilesInLineFormSet(request.POST, request.FILES, instance=mandate, prefix='files')
-            if form.is_valid() and formset.is_valid():
-                form.save()
-                formset.save()
-                return form_part3_edit(request, mandate.id)
-            else:
-                return render(request, "assistant_form_part3.html", {'assistant': assistant,
+            return render(request, "assistant_form_part3.html", {'assistant': assistant,
                                                                      'mandate': mandate,
-                                                                     'form': form,
-                                                                     'formset': formset})
+                                                                     'form': form})
 
 @user_passes_test(user_is_assistant_and_procedure_is_open, login_url='access_denied')
 def form_part6_edit(request, mandate_id):
