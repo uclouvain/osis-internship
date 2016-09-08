@@ -99,6 +99,43 @@ def form_part1_save(request, mandate_id):
 
 
 @user_passes_test(user_is_assistant_and_procedure_is_open, login_url='access_denied')
+def form_part4_edit(request, mandate_id):
+    mandate = assistant_mandate.find_mandate_by_id(mandate_id)
+    person = request.user.person
+    assistant = mandate.assistant
+    if person != assistant.person or mandate.state != 'TRTS':
+        return HttpResponseRedirect(reverse('assistant_mandates'))
+    form = AssistantFormPart4(initial={'internships': mandate.internships,
+                                       'conferences': mandate.conferences,
+                                       'publications': mandate.publications,
+                                       'awards': mandate.awards,
+                                       'framing': mandate.framing,
+                                       'remark': mandate.remark,
+                                       }, prefix='mand')
+    return render(request, "assistant_form_part4.html", {'assistant': assistant,
+                                                         'mandate': mandate,
+                                                         'form': form})
+
+
+def form_part4_save(request, mandate_id):
+    """Use to save an assistant form part4."""
+    mandate = assistant_mandate.find_mandate_by_id(mandate_id)
+    assistant = mandate.assistant
+    person = request.user.person
+    if person != assistant.person or mandate.state != 'TRTS':
+        return HttpResponseRedirect(reverse('assistant_mandates'))
+    elif request.method == 'POST':
+        form = AssistantFormPart4(data=request.POST, instance=mandate, prefix='mand')
+        if form.is_valid():
+            form.save()
+            return form_part4_edit(request, mandate.id)
+        else:
+            return render(request, "assistant_form_part4.html", {'assistant': assistant,
+                                                                 'mandate': mandate,
+                                                                 'form': form})
+
+
+@user_passes_test(user_is_assistant_and_procedure_is_open, login_url='access_denied')
 def form_part6_edit(request, mandate_id):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     person = request.user.person

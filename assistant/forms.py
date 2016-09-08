@@ -145,6 +145,26 @@ class MandatesArchivesForm(ModelForm):
         fields = ('academic_year',)
 
 
+class AssistantFormPart4(ModelForm):
+    internships = forms.CharField(
+        required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '2'}))
+    conferences = forms.CharField(
+        required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '2'}))
+    publications = forms.CharField(
+        required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '2'}))
+    awards = forms.CharField(
+        required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '2'}))
+    framing = forms.CharField(
+        required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '2'}))
+    remark = forms.CharField(
+        required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '4'}))
+
+    class Meta:
+        model = mdl.assistant_mandate.AssistantMandate
+        fields = ('internships', 'conferences', 'publications',
+                  'awards','framing','remark')
+
+
 class AssistantFormPart5(ModelForm):
     degrees = forms.CharField(
         required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '4'}))
