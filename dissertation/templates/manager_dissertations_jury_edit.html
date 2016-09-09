@@ -44,8 +44,8 @@
       <form method="POST" class="post-form">
         {% csrf_token %}
         {% for field in form %}
-          <div class="row {% if field.errors %}error{% endif %}">
-            <div class="col-md-2" style="text-align: right">
+          <div class="row">
+            <div class="col-md-2" style="text-align: right;">
               {% if not field.is_hidden %}
                 <label>{{ field.label }}</label>
               {% endif %}

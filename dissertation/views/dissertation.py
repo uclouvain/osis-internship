@@ -246,7 +246,7 @@ def manager_dissertations_jury_edit(request, pk):
 def manager_dissertations_jury_new(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     count_dissertation_role = dissertation_role.count_by_dissertation(dissert)
-    if count_dissertation_role < 5 and dissert.status != 'DRAFT':
+    if count_dissertation_role < 4 and dissert.status != 'DRAFT':
         if request.method == "POST":
             form = ManagerDissertationRoleForm(request.POST)
             if form.is_valid():
@@ -258,6 +258,10 @@ def manager_dissertations_jury_new(request, pk):
                 dissertation_update.add(request, dissert, dissert.status, justification=justification)
                 dissertation_role.add(status, adv, diss)
                 return redirect('manager_dissertations_detail', pk=dissert.pk)
+            else:
+                form = ManagerDissertationRoleForm(initial={'dissertation': dissert})
+                return layout.render(request, 'manager_dissertations_jury_edit.html', {'form': form,
+                                                                                       'dissert': dissert})
         else:
             form = ManagerDissertationRoleForm(initial={'dissertation': dissert})
             return layout.render(request, 'manager_dissertations_jury_edit.html', {'form': form,
