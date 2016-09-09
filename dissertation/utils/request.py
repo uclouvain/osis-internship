@@ -31,6 +31,7 @@ from base.models.student import find_by_offer_year
 from base.models.offer_year import OfferYear
 from django.contrib.auth.decorators import user_passes_test
 from dissertation.views.information import is_manager
+from django.http import JsonResponse
 import json
 
 @login_required
@@ -38,12 +39,16 @@ import json
 def get_students_list_in_offer_year(request, offer_year_start_id):
     offer_year_start = get_object_or_404(OfferYear, pk=offer_year_start_id)
     students_list = find_by_offer_year(offer_year_start)
+    data=[]
     if students_list:
         for student in students_list:
-            data = json.dumps({'global_id': student.person.global_id,
-                           'first_name': student.person.first_name,
-                           'last_name': student.person.last_name})
+            data.append({'person_id': student.person.id,
+                        'first_name': student.person.first_name,
+                        'last_name': student.person.last_name,
+                        'number_in_list':students_list.count()})
+
 
     else:
         data = False
-    return HttpResponse(data, content_type='application/json')
+
+    return JsonResponse({'res': data})

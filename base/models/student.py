@@ -139,5 +139,4 @@ def find_by_offer(offers):
     return Student.objects.filter(offerenrollment__offer_year__offer__in=offers)
 
 def find_by_offer_year(offer_y):
-
     return Student.objects.filter(offerenrollment__offer_year=offer_y)
