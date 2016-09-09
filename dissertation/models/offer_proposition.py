@@ -27,6 +27,7 @@ from django.contrib import admin
 from django.db import models
 from django.utils import timezone
 from base.models import offer
+from datetime import datetime
 
 
 class OfferPropositionAdmin(admin.ModelAdmin):
@@ -38,7 +39,6 @@ class OfferProposition(models.Model):
     acronym = models.CharField(max_length=200)
     offer = models.ForeignKey(offer.Offer)
     student_can_manage_readers = models.BooleanField(default=True)
-    readers_visibility_date_for_students = models.BooleanField(default=False)
     adviser_can_suggest_reader = models.BooleanField(default=False)
     evaluation_first_year = models.BooleanField(default=False)
     validation_commission_exists = models.BooleanField(default=False)
@@ -46,28 +46,42 @@ class OfferProposition(models.Model):
     end_visibility_proposition = models.DateField(default=timezone.now)
     start_visibility_dissertation = models.DateField(default=timezone.now)
     end_visibility_dissertation = models.DateField(default=timezone.now)
+    start_jury_visibility = models.DateField(default=timezone.now)
+    end_jury_visibility = models.DateField(default=timezone.now)
+    start_edit_title = models.DateField(default=timezone.now)
+    end_edit_title = models.DateField(default=timezone.now)
 
     @property
     def in_periode_visibility_proposition(self):
-        c = timezone.now()
-        a = self.start_visibility_proposition
-        b = self.end_visibility_proposition
+        now = datetime.date(datetime.now())
+        start = self.start_visibility_proposition
+        end = self.end_visibility_proposition
 
-        if a <= b and a <= c <= b:
-            return True
-        else:
-            return False
+        return start <= now <= end
 
     @property
     def in_periode_visibility_dissertation(self):
-        c = timezone.now()
-        a = self.start_visibility_dissertation
-        b = self.end_visibility_dissertation
+        now = datetime.date(datetime.now())
+        start = self.start_visibility_dissertation
+        end = self.end_visibility_dissertation
 
-        if a <= b and a <= c <= b:
-            return True
-        else:
-            return False
+        return start <= now <= end
+
+    @property
+    def in_periode_jury_visibility(self):
+        now = datetime.date(datetime.now())
+        start = self.start_jury_visibility
+        end = self.end_jury_visibility
+
+        return start <= now <= end
+
+    @property
+    def in_periode_edit_title(self):
+        now = datetime.date(datetime.now())
+        start = self.start_edit_title
+        end = self.end_edit_title
+
+        return start <= now <= end
 
     def __str__(self):
         return self.acronym
@@ -77,7 +91,23 @@ def get_by_offer(an_offer):
     return OfferProposition.objects.get(offer=an_offer)
 
 
-def search_by_offer(an_offer):
-    return OfferProposition.objects.filter(offer=an_offer)\
+def search_by_offer(offers):
+    return OfferProposition.objects.filter(offer__in=offers)\
                                    .distinct()\
-                                   .order_by('offer')
+                                   .order_by('acronym')
+
+
+def show_validation_commission(offer_props):
+    # True si validation_commission_exists est True pour au moins une offer_prop dans offer_props
+    # False sinon
+    return any([offer_prop.validation_commission_exists for offer_prop in offer_props])
+
+
+def show_evaluation_first_year(offer_props):
+    # True si evaluation_first_year est True pour au moins une offer_prop dans offer_props
+    # False sinon
+    return any([offer_prop.evaluation_first_year for offer_prop in offer_props])
+
+
+def get_by_dissertation(dissert):
+    return get_by_offer(dissert.offer_year_start.offer)

@@ -38,10 +38,10 @@
   <ul class="nav nav-tabs">
     <li><a href="{% url 'manager_dissertations_list' %}">{% trans 'all_dissertations' %}</a></li>
     <li><a href="manager_dissertations_wait_list">{% trans 'waiting_dissertations' %}</a></li>
-    {% if offer_proposition.validation_commission_exists == True %}
+    {% if show_validation_commission %}
       <li><a href="{% url 'manager_dissertations_wait_comm_list' %}">{% trans 'waiting_commission' %}</a></li>
     {% endif %}
-    {% if offer_proposition.evaluation_first_year == True %}
+    {% if show_evaluation_first_year %}
       <li class="active"><a href="{% url 'manager_dissertations_wait_eval_list' %}">{% trans 'waiting_evaluation' %}</a></li>
     {% endif %}
     <li><a href="{% url 'manager_dissertations_wait_recep_list' %}">{% trans 'waiting_reception' %}</a></li>
@@ -100,7 +100,7 @@
                     {% elif dissertation.status == 'ENDED_LOS' %}
                     <span class="label label-default">
                     {% endif %}
-                        {{ dissertation.status }}
+                        {{ dissertation.get_status_display }}
                     </span>
                 </td>
                 <td>{{ dissertation.offer_year_start }}</td>

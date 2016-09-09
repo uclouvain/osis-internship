@@ -26,7 +26,7 @@
 from django.contrib.auth.decorators import user_passes_test
 from django.db import IntegrityError
 import csv, codecs
-from assistant.forms import MandateForm, StructureInLineFormSet
+from assistant.forms import MandateForm, structure_inline_formset
 from base.views import layout
 from assistant.models import assistant_mandate, academic_assistant, mandate_structure, manager
 from base import models as mdl
@@ -55,7 +55,7 @@ def mandate_edit(request, mandate_id):
                                 'contract_duration': mandate.contract_duration,
                                 'contract_duration_fte': mandate.contract_duration_fte
                                 }, prefix="mand",instance=mandate)
-    formset = StructureInLineFormSet(instance=mandate, prefix="struct")
+    formset = structure_inline_formset(instance=mandate, prefix="struct")
     
     return layout.render(request, 'mandate_form.html', {'mandate': mandate,
                                                 'form': form,
@@ -66,7 +66,7 @@ def mandate_save(request, mandate_id):
     """Use to save an assistant mandate."""
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     form = MandateForm(data=request.POST, instance=mandate, prefix='mand')
-    formset = StructureInLineFormSet(request.POST, request.FILES, instance=mandate, prefix='struct')
+    formset = structure_inline_formset(request.POST, request.FILES, instance=mandate, prefix='struct')
     if form.is_valid():
         form.save()
         if formset.is_valid():

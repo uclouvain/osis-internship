@@ -41,7 +41,7 @@
     <div class="panel-body">
         <ul class="nav nav-tabs">
           {% for luy in all_speciality %}
-            <li><a data-toggle="tab" href="#tab_{{luy.tab}}">{{luy.name}}</a></li>
+            <li {% if forloop.first %}class="active"{% endif %}><a data-toggle="tab" href="#tab_{{luy.tab}}">{{luy.name}}</a></li>
           {% endfor %}
             <li><a data-toggle="tab" href="#tab_CHOIX1">{% trans 'Stage au choix 1'%}</a></li>
             <li><a data-toggle="tab" href="#tab_CHOIX2">{% trans 'Stage au choix 2'%}</a></li>
@@ -56,7 +56,7 @@
         {% csrf_token %}
         <div class="tab-content">
           {% for luy in all_speciality %}
-          <div id="tab_{{luy.tab}}" class="tab-pane fade in active">
+          <div id="tab_{{luy.tab}}" class="tab-pane fade {% if forloop.first %}in active{% endif %}">
             <h3>{{luy.name}}</h3>
               <div class="panel panel-default">
                 <div class="tab-content">

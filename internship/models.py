@@ -44,12 +44,18 @@ class InternshipOffer(models.Model):
 
     @staticmethod
     def find_internships():
-        return InternshipOffer.objects.all().order_by('speciality__name', 'organization__reference')
+        return InternshipOffer.objects.filter(speciality__mandatory=1).order_by('speciality__name', 'organization__reference')
+
+    @staticmethod
+    def find_non_mandatory_internships(**kwargs):
+        kwargs = {k: v for k, v in kwargs.items() if v}
+        queryset = InternshipOffer.objects.filter(**kwargs).filter(speciality__mandatory=0).order_by('speciality__name', 'organization__reference')
+        return queryset
 
     @staticmethod
     def search(**kwargs):
         kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = InternshipOffer.objects.filter(**kwargs)
+        queryset = InternshipOffer.objects.filter(**kwargs).order_by('speciality__name', 'organization__reference')
         return queryset
 
     @staticmethod
@@ -127,6 +133,7 @@ class InternshipChoice(models.Model):
     organization        = models.ForeignKey('internship.Organization')
     speciality          = models.ForeignKey('internship.InternshipSpeciality',null=True)
     choice              = models.IntegerField()
+    internship_choice   = models.IntegerField(default=0)
     priority            = models.BooleanField()
 
     @staticmethod
@@ -173,7 +180,7 @@ class Period(models.Model):
     @staticmethod
     def search(**kwargs):
         kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = Period.objects.filter(**kwargs)
+        queryset = Period.objects.filter(**kwargs).order_by('date_start')
         return queryset
 
     @staticmethod
@@ -217,6 +224,10 @@ class InternshipSpeciality(models.Model):
     @staticmethod
     def find_by_id(speciality_id):
         return InternshipSpeciality.objects.get(pk=speciality_id)
+
+    @staticmethod
+    def find_non_mandatory():
+        return InternshipSpeciality.objects.filter(mandatory=False).order_by('name')
 
 class Organization(models.Model):
     name = models.CharField(max_length=255)
@@ -269,8 +280,12 @@ class OrganizationAddress(models.Model):
     def geocode(addr):
         lat_long = [None]*2
         # Transform the address for a good url and delete all accents
+        addr = addr.replace('\n','')
         addr = addr.replace(" ", "+")
         addr = addr.replace("'", "\'")
+        addr = addr.replace("n°", "")
+        addr = addr.replace("n °", "")
+        addr = addr.replace("Œ", "Oe")
         addr = addr.encode('utf8','replace').decode('utf8')
         addr = OrganizationAddress.strip_accents(addr)
         # get the complete url
@@ -284,12 +299,14 @@ class OrganizationAddress(models.Model):
 
         # Parse the xml to have the latitude and longitude of the address
         xmldoc = minidom.parseString(data)
-        lat = xmldoc.getElementsByTagName('location')
-        for l in lat:
-            c = l.getElementsByTagName('lat')[0].firstChild.data
-            d = l.getElementsByTagName('lng')[0].firstChild.data
-            lat_long[0] = c
-            lat_long[1] = d
+        status = xmldoc.getElementsByTagName('status')[0].firstChild.data
+        if status == "OK":
+            lat = xmldoc.getElementsByTagName('location')
+            for l in lat:
+                c = l.getElementsByTagName('lat')[0].firstChild.data
+                d = l.getElementsByTagName('lng')[0].firstChild.data
+                lat_long[0] = c
+                lat_long[1] = d
         # return the value
         return lat_long
 
@@ -304,7 +321,6 @@ class OrganizationAddress(models.Model):
                 #if it exist, compile the address with the location / postal / city / country
                 address = data.location + " " + data.postal_code + " " \
                                 + data.city + " " + data.country
-                address = address.replace('\n','')
                 #Compute the geolocalisation
                 address_lat_long = OrganizationAddress.geocode(address)
                 #if the geolac is fing put the data, if not put fake data
@@ -312,8 +328,17 @@ class OrganizationAddress(models.Model):
                     data.latitude = address_lat_long[0]
                     data.longitude = address_lat_long[1]
                 else :
-                    data.latitude = 999
-                    data.longitude = 999
+                    address = data.location + " " + data.postal_code + " " \
+                                    + data.country
+                    #Compute the geolocalisation
+                    address_lat_long = OrganizationAddress.geocode(address)
+                    #if the geolac is fing put the data, if not put fake data
+                    if address_lat_long[0]:
+                        data.latitude = address_lat_long[0]
+                        data.longitude = address_lat_long[1]
+                    else :
+                        data.latitude = 999
+                        data.longitude = 999
                 #save the data
                 data.save()
 
