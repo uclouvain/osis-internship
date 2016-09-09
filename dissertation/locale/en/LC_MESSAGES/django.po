@@ -538,6 +538,9 @@ msgstr "Add/Edit dissertation subject"
 msgid "new_search"
 msgstr "New search"
 
+msgid "new_subject"
+msgstr "New dissertation subject"
+
 msgid "next_status"
 msgstr "Next status"
 

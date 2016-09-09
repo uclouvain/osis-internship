@@ -538,6 +538,9 @@ msgstr "Ajout/Modification d'un sujet de mémoire"
 msgid "new_search"
 msgstr "Nouvelle recherche"
 
+msgid "new_subject"
+msgstr "Nouveau sujet de mémoire"
+
 msgid "next_status"
 msgstr "État suivant"
 
