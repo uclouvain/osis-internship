@@ -39,8 +39,8 @@
       <div class="panel-body">
           <form method="POST" class="post-form">
               {% csrf_token %}
-              <div class="row {% if field.errors %}error{% endif %}">
-                    <div class="col-md-3" style="text-align: right;">
+                <div class="row {% if field.errors %}error{% endif %}">
+                    <div class="col-md-1" style="text-align: right;">
                         <input id="txt_available_by_email"  name="available_by_email"
                              type="checkbox" {% if form.available_by_email.value %} checked {% endif %} >
                     </div>
@@ -49,7 +49,7 @@
                     </div>
                 </div>
                 <div class="row {% if field.errors %}error{% endif %}">
-                    <div class="col-md-3" style="text-align: right">
+                    <div class="col-md-1" style="text-align: right;">
                       <input id="txt_available_by_phone"  name="available_by_phone"
                             type="checkbox" {% if form.available_by_phone.value %} checked {% endif %} >
                     </div>
@@ -61,7 +61,7 @@
                     </div>
                 </div>
                 <div class="row {% if field.errors %}error{% endif %}">
-                    <div class="col-md-3" style="text-align: right">
+                    <div class="col-md-1" style="text-align: right;">
                       <input id="txt_available_at_office"  name="available_at_office"
                             type="checkbox" {% if form.available_at_office.value %} checked {% endif %} >
                     </div>
@@ -71,14 +71,17 @@
                 </div>
                 <br>
                 <div class="row {% if field.errors %}error{% endif %}">
-                    <div class="col-md-3" style="text-align: right">
+                    <div class="col-md-9 col-lg-offset-1 form-group">
                         <label for="txt_comment">{% trans 'comment' %}</label>
-                    </div>
-                    <div class="col-md-9">
                         <textarea class="form-control" id="txt_comment"  name="comment" rows="10">{{ form.comment.value }}</textarea>
                     </div>
                 </div>
-                <button type="submit" class="save btn btn-primary">{% trans 'save' %}</button>
+                <br>
+                <div class="row">
+                    <div class="col-md-12" style="text-align: right;">
+                        <button type="submit" class="save btn btn-primary">{% trans 'save' %}</button>
+                    </div>
+                </div>
           </form>
       </div>
   </div>
