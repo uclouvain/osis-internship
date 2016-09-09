@@ -37,6 +37,7 @@ class DissertationConfig(AppConfig):
     name = 'dissertation'
     queue_name = 'dissertation_osis'
 
+
     def ready(self):
         from dissertation.models.models_signal import on_post_save_dissertation
         queue.listen_queue(self.queue_name, insert)
@@ -96,6 +97,6 @@ def map_string_to_model_class(class_str):
     # Import must be inside the method because django isn't loaded at the launch of the application
     from dissertation import models as mdl_dis
     map_classes = {
-
+        'dissertation.adviser.Adviser': mdl_dis.adviser.Adviser
     }
     return map_classes.get(class_str)

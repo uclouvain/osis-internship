@@ -61,6 +61,7 @@ def get_model_class_str(model_class):
     :return: un String qui représente le model_class passé en paramètre.
     """
     map_classes = {
+
         mdl_ref.continent.Continent: 'reference.continent.Continent',
         mdl_ref.country.Country: 'reference.country.Country',
         mdl_ref.currency.Currency: 'reference.currency.Currency',

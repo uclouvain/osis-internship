@@ -29,6 +29,7 @@ from dissertation.models import adviser
 import backoffice.portal_migration as portal_migration
 import sys
 
+
 queue_name = 'dissertation_portal'
 
 
