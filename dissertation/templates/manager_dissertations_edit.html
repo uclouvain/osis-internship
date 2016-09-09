@@ -33,7 +33,7 @@
   <li><a href="{% url 'manager_dissertations_detail' pk=dissert.pk %}" id="lnk_dissertations_detail">
       {{ dissert.title|truncatechars:24 }}
   </a></li>
-  <li class="active">{% trans 'edit' %}</li>
+  <li class="active">{% trans 'edit_dissertation' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
@@ -45,21 +45,21 @@
         {% csrf_token %}
         <div class="row">
             <div class="col-md-3 col-lg-offset-1" style="text-align:right">
-                <label for="txt_title" {% if form.title.errors %} style="color:red;" {% endif %}>{% trans 'title' %}</label>
-            </div>
-            <div class="col-md-4">
-                <input class="form-control" id="txt_title"  name="title" style="margin:-6px;" value="{{ form.title.value | default_if_none:'' }}">
-            </div>
-        </div>
-        <br>
-        <div class="row">
-            <div class="col-md-3 col-lg-offset-1" style="text-align:right">
                 <label for="txt_author" {% if form.author.errors %} style="color:red;" {% endif %}>{% trans 'author' %}</label>
             </div>
             <div class="col-md-4">
                 <select class="form-control" id="txt_author"  name="author" style="margin:-6px;">
                     <option value={{ form.author }}
                 </select>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-3 col-lg-offset-1" style="text-align:right">
+                <label for="txt_title" {% if form.title.errors %} style="color:red;" {% endif %}>{% trans 'title' %}</label>
+            </div>
+            <div class="col-md-4">
+                <input class="form-control" id="txt_title"  name="title" style="margin:-6px;" value="{{ form.title.value | default_if_none:'' }}">
             </div>
         </div>
         <br>
@@ -117,7 +117,14 @@
                 </select>
             </div>
         </div>
-        <button type="submit" class="save btn btn-default" onclick="return confirm('{% trans 'dissertation_confirmation_message' %}')">Save</button>
+        <div class="row">
+            <div class="col-md-12" style="text-align:right">
+                <button type="submit" class="save btn btn-primary" onclick="return confirm('{% trans 'dissertation_confirmation_message' %}')">
+                    {% trans 'save' %}
+                </button>
+            </div>
+        </div>
+
       </form>
     </div>
   </div>
