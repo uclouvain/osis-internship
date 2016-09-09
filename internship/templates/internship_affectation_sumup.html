@@ -52,14 +52,16 @@
                       <tr>
                         <th></th>
                         {% for period in periods %}
-                          <th style="background-color: #dddddd; text-align: center;">{{period.name}}</th>
+                          <th style="background-color: #dddddd; text-align: center; border: 1px solid black;">{{period.name}}</th>
                         {% endfor %}
                       </tr>
                       {% for organization in organizations %}
                           <tr>
-                            <td>{{organization.reference}}</td>
+                            <td style="text-align: center; border-right: 1px solid black;">
+                              {{organization.reference}}
+                            </td>
                             {% for period in periods %}
-                              <td style="text-align: center;">
+                              <td style="text-align: center; border-right: 1px solid black;">
                               {% for affectation in affectations %}
                                 {% if affectation.period.name == period.name %}
                                   {% if affectation.organization.reference == organization.reference  %}
