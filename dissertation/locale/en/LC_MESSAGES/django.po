@@ -374,7 +374,7 @@ msgid "justification_instructions"
 msgstr "The status update is nearly done. This update is detailed just after. Please add your explanation for this update."
 
 msgid "level"
-msgstr "Developement level"
+msgstr "Subject developement level"
 
 msgid "level_domain"
 msgstr "Search domain"
@@ -461,7 +461,7 @@ msgid "max_students"
 msgstr "Max number of students"
 
 msgid "max_students_number"
-msgstr "Max number of students"
+msgstr "Indicative number of places for this subject"
 
 msgid "mgr_com_accept_confirmation_message"
 msgstr "You are ready to set this dissertation as accepted by the commission.  Are you sure you want to continue ?"
@@ -699,6 +699,9 @@ msgstr "Jury is currently visible for the student"
 
 msgid "student_path"
 msgstr "Students' path"
+
+msgid "subject_type"
+msgstr "Subject type"
 
 msgid "subjects"
 msgstr "Dissertation subjects"

@@ -110,7 +110,8 @@ def manage_proposition_dissertation_edit(request, pk):
     else:
         form = ManagerPropositionDissertationEditForm(instance=prop_dissert)
     return layout.render(request, 'manager_proposition_dissertation_edit.html',
-                         {'form': form,
+                         {'prop_dissert': prop_dissert,
+                          'form': form,
                           'author': prop_dissert.author,
                           'types_choices': PropositionDissertation.TYPES_CHOICES,
                           'levels_choices': PropositionDissertation.LEVELS_CHOICES,
@@ -262,7 +263,8 @@ def proposition_dissertation_edit(request, pk):
         else:
             form = PropositionDissertationForm(instance=prop_dissert)
         return layout.render(request, 'proposition_dissertation_edit.html',
-                             {'form': form,
+                             {'prop_dissert': prop_dissert,
+                              'form': form,
                               'types_choices': PropositionDissertation.TYPES_CHOICES,
                               'levels_choices': PropositionDissertation.LEVELS_CHOICES,
                               'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES})

@@ -374,7 +374,7 @@ msgid "justification_instructions"
 msgstr "La mise-à-jour de l'état du mémoire est sur le point d'être effectuée. Le changement d'état qui sera appliqué est renseigné ci-dessous. Veuillez indiquer un message d'explication."
 
 msgid "level"
-msgstr "Niveau de développement"
+msgstr "Niveau de développement du sujet"
 
 msgid "level_domain"
 msgstr "Domaine de recherche"
@@ -461,7 +461,7 @@ msgid "max_students"
 msgstr "Nombre maximum d'étudiants"
 
 msgid "max_students_number"
-msgstr "Nombre maximum d'étudiants"
+msgstr "Nombre indicatif de places pour ce sujet"
 
 msgid "mgr_com_accept_confirmation_message"
 msgstr "Vous allez indiquer l'acceptation de ce mémoire par la commission. Êtes-vous certain de vouloir continuer ?"
@@ -699,6 +699,9 @@ msgstr "Le jury est actuellement visible par l'étudiant."
 
 msgid "student_path"
 msgstr "Parcours de l'étudiant"
+
+msgid "subject_type"
+msgstr "Type de sujet"
 
 msgid "subjects"
 msgstr "Sujets de mémoires"
