@@ -29,11 +29,13 @@
 {% block breadcrumb %}
   <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
   <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'dissertations' %}</a></li>
-  <li class="active">{% trans 'informations' %}</li>
+  <li><a href="{% url 'manager_informations' %}" id="lnk_teachers">{% trans 'teachers' %}</a></li>
+  <li><a href="{% url 'manager_informations_detail' pk=adviser.pk %}">{{ adviser.person.last_name }}, {{ adviser.person.first_name }}</a></li>
+  <li class="active">{% trans 'edit' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-      <h2>{% trans 'informations' %}</h2>
+      <h2>{{ adviser.person.last_name }}, {{ adviser.person.first_name }}</h2>
   </div>
   <div class="panel panel-default">
       <div class="panel-body">
