@@ -54,10 +54,14 @@
                       <tr>
                         <th style="background-color: #dddddd;" colspan="3">{{period.name}} : {{period.date_start}} - {{period.date_end}}</th>
                       </tr>
-                      {% for affectation in organization_affectations %}
+                      {% for affectation in affectations %}
                         {% if affectation.period.name == period.name and affectation.speciality.name == speciality.name %}
                           <tr>
-                            <td>{{affectation.student}}</td>
+                            <td>{{affectation.student.person.last_name}} {{affectation.student.person.first_name}}</td>
+                            <td>{{affectation.student.registration_id}}</td>
+                            <td>{{affectation.email}}</td>
+                            <td>{{affectation.adress}}</td>
+                            <td>{{affectation.phone_mobile}}</td>
                           </tr>
                         {%endif%}
                       {% endfor %}
