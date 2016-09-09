@@ -26,7 +26,7 @@
 from django.db import models
 from django.contrib import admin
 from django.core import serializers
-import uuid
+from base.models.serializable_model import SerializableModel
 
 
 class ContinentAdmin(admin.ModelAdmin):
@@ -34,8 +34,7 @@ class ContinentAdmin(admin.ModelAdmin):
     ordering = ('name',)
 
 
-class Continent(models.Model):
-    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
+class Continent(SerializableModel):
     code = models.CharField(max_length=2, unique=True)
     name = models.CharField(max_length=30)
 

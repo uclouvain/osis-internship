@@ -25,7 +25,7 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-import uuid
+from base.models.serializable_model import SerializableModel
 
 
 class ExternalOfferAdmin(admin.ModelAdmin):
@@ -35,8 +35,7 @@ class ExternalOfferAdmin(admin.ModelAdmin):
     search_fields = ['name']
 
 
-class ExternalOffer(models.Model):
-    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
+class ExternalOffer(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     name = models.CharField(max_length=150, unique=True)

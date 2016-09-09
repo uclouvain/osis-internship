@@ -27,7 +27,7 @@ from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 from base.models import offer, program_manager, academic_year
-import uuid
+from base.models.serializable_model import SerializableModel
 
 
 class OfferYearAdmin(admin.ModelAdmin):
@@ -45,8 +45,7 @@ GRADE_TYPES = (
     ('DOCTORATE', _('ph_d')))
 
 
-class OfferYear(models.Model):
-    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
+class OfferYear(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     offer = models.ForeignKey('Offer')

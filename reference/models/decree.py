@@ -26,7 +26,7 @@
 from django.db import models
 from django.contrib import admin
 from django.core import serializers
-import uuid
+from base.models.serializable_model import SerializableModel
 
 
 class DecreeAdmin(admin.ModelAdmin):
@@ -36,8 +36,7 @@ class DecreeAdmin(admin.ModelAdmin):
     search_fields = ['name']
 
 
-class Decree(models.Model):
-    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
+class Decree(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     name = models.CharField(max_length=80, unique=True)
     start_date = models.DateField(blank=True, null=True)

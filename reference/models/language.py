@@ -26,7 +26,7 @@
 from django.db import models
 from django.contrib import admin
 from django.core import serializers
-import uuid
+from base.models.serializable_model import SerializableModel
 
 
 class LanguageAdmin(admin.ModelAdmin):
@@ -36,8 +36,7 @@ class LanguageAdmin(admin.ModelAdmin):
     fieldsets = ((None, {'fields': ('code', 'name')}),)
 
 
-class Language(models.Model):
-    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
+class Language(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     code = models.CharField(max_length=4, unique=True)
     name = models.CharField(max_length=80, unique=True)

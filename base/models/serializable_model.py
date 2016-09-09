@@ -23,38 +23,25 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
-import pika
-from backoffice.settings import QUEUE_URL, QUEUE_USER, QUEUE_PASSWORD, QUEUE_PORT, QUEUE_CONTEXT_ROOT
-
-
-def send_message(queue_name, message):
-    """
-    Send the message in the queue passed in parameter.
-
-    :param queue_name: the name of the queue in which we have to send the JSON message.
-    :param message: Must be a dictionnary !
-    """
-    credentials = pika.PlainCredentials(QUEUE_USER, QUEUE_PASSWORD)
-    connection = pika.BlockingConnection(
-        pika.ConnectionParameters(QUEUE_URL, QUEUE_PORT, QUEUE_CONTEXT_ROOT, credentials))
-    channel = connection.channel()
-    channel.queue_declare(queue=queue_name)
-    channel.basic_publish(exchange='',
-                          routing_key=queue_name,
-                          body=message,
-                          properties=pika.BasicProperties(content_type='application/json'))
-    connection.close()
+from django.db import models
+import uuid
 
 
-def paper_sheet_queue():
-    QUEUE_NAME = 'paper_sheet_queue'
+class SerializableModelManager(models.Manager):
+    def get_by_natural_key(self, uuid):
+        return self.get(uuid=uuid)
 
-    credentials = pika.PlainCredentials(QUEUE_USER, QUEUE_PASSWORD)
-    connection = pika.BlockingConnection(
-        pika.ConnectionParameters(QUEUE_URL, QUEUE_PORT, QUEUE_CONTEXT_ROOT, credentials))
 
-    channel = connection.channel()
+class SerializableModel(models.Model):
+    objects = SerializableModelManager()
 
-    channel.queue_declare(queue=QUEUE_NAME)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
 
+    def natural_key(self):
+        return [self.uuid]
+
+    def __str__(self):
+        return self.uuid
+
+    class Meta:
+        abstract = True

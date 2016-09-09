@@ -27,7 +27,7 @@ from django.db import models
 from django.contrib import admin
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
-import uuid
+from base.models.serializable_model import SerializableModel
 
 
 class AcademicYearAdmin(admin.ModelAdmin):
@@ -35,8 +35,7 @@ class AcademicYearAdmin(admin.ModelAdmin):
     fieldsets = ((None, {'fields': ('year', 'start_date', 'end_date')}),)
 
 
-class AcademicYear(models.Model):
-    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
+class AcademicYear(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     year = models.IntegerField(unique=True)

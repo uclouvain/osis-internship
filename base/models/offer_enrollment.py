@@ -25,7 +25,7 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-import uuid
+from base.models.serializable_model import SerializableModel
 
 
 class OfferEnrollmentAdmin(admin.ModelAdmin):
@@ -35,8 +35,7 @@ class OfferEnrollmentAdmin(admin.ModelAdmin):
     search_fields = ['offer_year__acronym', 'student__person__first_name', 'student__person__last_name']
 
 
-class OfferEnrollment(models.Model):
-    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
+class OfferEnrollment(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     date_enrollment = models.DateField()
