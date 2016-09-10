@@ -38,6 +38,7 @@ from . import offer_proposition
 
 class DissertationAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'status', 'active', 'proposition_dissertation', 'modification_date')
+    raw_id_fields = ('author','offer_year_start')
 
 
 STATUS_CHOICES = (
