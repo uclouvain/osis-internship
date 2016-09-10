@@ -129,7 +129,26 @@ def manager_proposition_dissertations_jury_edit(request, pk):
 @login_required
 @user_passes_test(is_manager)
 def manager_proposition_dissertations_jury_new(request, pk):
-    return redirect('manager_proposition_dissertation_detail', pk=pk)
+    prop_dissert = get_object_or_404(PropositionDissertation, pk=pk)
+    count_proposition_role = PropositionRole.objects.filter(proposition_dissertation=prop_dissert).count()
+    if count_proposition_role < 4:
+        if request.method == "POST":
+            form = ManagerPropositionRoleForm(request.POST)
+            if form.is_valid():
+                data = form.cleaned_data
+                status = data['status']
+                adv = data['adviser']
+                prop = data['proposition_dissertation']
+                if status == "PROMOTEUR":
+                    prop_dissert.set_author(adv)
+                    proposition_role.delete(status, prop)
+                proposition_role.add(status, adv, prop)
+                return redirect('manager_proposition_dissertation_detail', pk=prop_dissert.pk)
+        else:
+            form = ManagerPropositionRoleForm(initial={'proposition_dissertation': prop_dissert})
+            return layout.render(request, 'manager_proposition_dissertations_jury_edit.html', {'form': form})
+    else:
+        return redirect('manager_proposition_dissertation_detail', pk=prop_dissert.pk)
 
 
 @login_required
@@ -137,6 +156,7 @@ def manager_proposition_dissertations_jury_new(request, pk):
 def manager_proposition_dissertations_role_delete(request, pk):
     prop_role = get_object_or_404(PropositionRole, pk=pk)
     prop_dissert = prop_role.proposition_dissertation
+    prop_role.delete()
     return redirect('manager_proposition_dissertation_detail', pk=prop_dissert.pk)
 
 
@@ -321,6 +341,7 @@ def proposition_dissertations_jury_edit(request, pk):
 @login_required
 def proposition_dissertations_jury_new(request, pk):
     return redirect('proposition_dissertation_detail', pk=pk)
+
 
 @login_required
 def proposition_dissertations_role_delete(request, pk):

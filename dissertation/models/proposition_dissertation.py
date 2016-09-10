@@ -91,6 +91,10 @@ class PropositionDissertation(models.Model):
         self.creator = person
         self.save()
 
+    def set_author(self, adviser):
+        self.author = adviser
+        self.save()
+
     class Meta:
         ordering = ["author__person__last_name", "author__person__middle_name", "author__person__first_name", "title"]
 

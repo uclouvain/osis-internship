@@ -628,6 +628,12 @@ msgstr "You are ready to save this dissertation subject details.  Are you sure y
 msgid "proposition_dissertation_informations"
 msgstr "Informations about the dissertation subject"
 
+msgid "proposition_dissertation_jury"
+msgstr "Dissertation subject jury"
+
+msgid "proposition_dissertation_jury_info"
+msgstr "You can define a jury for the dissertation subject. This jury will automatically be defined for all dissertations created from this subject. There can be only one promotor, if you add one, this promotor will replace the existing one."
+
 msgid "proposition_dissertations"
 msgstr "Dissertation subjects"
 
