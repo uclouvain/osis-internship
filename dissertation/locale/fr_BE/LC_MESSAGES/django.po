@@ -632,7 +632,7 @@ msgid "proposition_dissertation_jury"
 msgstr "Jury du sujet de mémoire"
 
 msgid "proposition_dissertation_jury_info"
-msgstr "Vous pouvez définir un jury pour ce sujet de mémoire. Ce jury sera automatiquement rajouté aux mémoires créés pour ce sujet. Il ne peut y avoir qu'un seul promoteur, si vous en rajoutez un nouveau, il rempalacera le promoteur existant."
+msgstr "Vous pouvez définir un jury pour ce sujet de mémoire. Ce jury sera automatiquement ajouté aux mémoires créés pour ce sujet. Il ne peut y avoir qu'un seul promoteur, si vous en ajoutez un nouveau, il remplacera le promoteur existant."
 
 msgid "proposition_dissertations"
 msgstr "Sujets de mémoire"
