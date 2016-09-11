@@ -856,6 +856,29 @@ def fill_normal_choices(priority):
                 if choice.choice == 'X':
                     errors.append((choice.student, choice.speciality, choice.period, choices, priority))
 
+def swap_empty_inernships():
+    empty_internships = []
+    # Find all empty internships
+    for organization, specialitites in internship_table.items():
+        if int(organization.reference) < 500:
+            for speciality, periods in specialitites.items():
+                for period, places in periods.items():
+                    if places > 0 and places == internship_table_original[organization][speciality][period] and speciality.acronym.strip() != "MI":
+                        print("-H:"+str(organization.reference)+" | SP:"+str(speciality.acronym)+ " | P:"+str(period)+ " | " + str(places) + "/" + str(internship_table_original[organization][speciality][period]))
+                        empty_internships.append((organization, speciality, period, places))
+                        choices = InternshipChoice.search(organization = organization, speciality = speciality)
+                        for choice in choices:
+                            student_sol = solution[choice.student][period]
+                            if choice.priority == False and student_sol.speciality == speciality:
+                                print("--" + str(student_sol) + str(choice.student) + " " + str(internship_table[student_sol.organization][student_sol.speciality][period]) + "/" + str(internship_table_original[student_sol.organization][student_sol.speciality][period]))
+                                if int(internship_table[student_sol.organization][student_sol.speciality][period]) + 1 < internship_table_original[student_sol.organization][student_sol.speciality][period]:
+                                    increase_available_places(student_sol.organization, speciality, period)
+                                    solution[choice.student][period] = SolutionsLine(choice.student, organization, speciality, period, choice.choice, "N")
+                                    # Decrase new internship
+                                    decrease_available_places(organization, speciality, period)
+                                    break
+    print("Empty internships : " + str(len(empty_internships)))
+
 def swap_errors():
     global errors, solution, internship_table
     for student, speciality, period, choices, priority in errors:
@@ -868,8 +891,6 @@ def swap_errors():
                     for p, places in specialities[speciality].items():
                         if is_internship_available(organization, speciality, p):
                             available_periods.add(p)
-                            # available_periods.add((p, solution[student][p].speciality))
-
 
         specialitites_to_swap = []
         for available_period in available_periods:
@@ -892,15 +913,12 @@ def swap_errors():
                 type_of_internship = "N"
 
             # Increase original internship (hospital error)
-            # print("Increase hospital error , " + str(speciality) + " at period " + str(period))
             increase_available_places(organizations[hospital_error], speciality, period)
             # Replace internship with error by new internship (other speciality)
             solution[student][period] = SolutionsLine(student, organization, sp, period, "I", type_of_internship)
             # Decrase new internship
-            # print("Decrase hospital " + str(organization.reference) +", " + str(sp) + " at period " + str(period) + " (original score : ) " + str(internship_table[organization][sp][period]))
             decrease_available_places(organization, sp, period)
             # Increase the places of old internship (internship with the speciality who replaces internship with error)
-            # print(">Increase old internshiphospital " + str(solution[student][p].organization.reference) + ", "  + str(sp) + " at period " + str(p) + " (original score : ) " + str(internship_table[solution[student][p].organization][sp][p]))
             increase_available_places(solution[student][p].organization, sp, p)
             # Remove old internship
             del solution[student][p]
@@ -961,7 +979,12 @@ def generate_and_save():
     t0 = time.clock()
     swap_errors()
     print("Swap errors : " + str(round((time.clock() - t0), 3)) + " seconds process time")
-    print("+++++ Total tile : " + str(round((time.clock() - total), 3)) + " seconds process time +++++")
+
+    t0 = time.clock()
+    swap_empty_inernships()
+    print("Swap empty inernships : " + str(round((time.clock() - t0), 3)) + " seconds process time")
+
+    print("+++++ Total time : " + str(round((time.clock() - total), 3)) + " seconds process time +++++")
 
 
     InternshipStudentAffectationStat.objects.all().delete()
