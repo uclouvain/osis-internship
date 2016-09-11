@@ -59,6 +59,7 @@
       <button type="submit" class="btn btn-primary" title="{% trans 'Send'%}" id="bt_interships_save" onclick="$('#PleaseWaitModal').modal('show');">
           <span class="glyphicon glyphicon-random" aria-hidden="true"></span> Generate solution
       </button>
+      <input type="number" name="executions" value=1 min=1>
       {% csrf_token %}
     </form>
     <ul class="nav nav-tabs">
