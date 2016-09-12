@@ -42,7 +42,7 @@ def get_students_list_in_offer_year(request, offer_year_start_id):
     data=[]
     if students_list:
         for student in students_list:
-            data.append({'person_id': student.person.id,
+            data.append({'person_id': student.id,
                         'first_name': student.person.first_name,
                         'last_name': student.person.last_name,
                         'number_in_list':students_list.count()})
