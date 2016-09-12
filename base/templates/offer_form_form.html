@@ -51,10 +51,10 @@
     {% if offer_form.id %}
     <form method="post" action="{% url 'offer_form_save' offer_form.id %}">
         <input type="hidden" name="id" id="hdn_offer_form" value="{{ offer_form.id }}">
-        <input type="hidden" name="offer_year" id="hdn_offer_form" value="{{ offer_year.id }}">
+        <input type="hidden" name="offer_year" id="hdn_offer_year" value="{{ offer_year.id }}">
     {%else%}
     <form method="post" action="{% url 'offer_form_save_new'  %}">
-        <input type="hidden" name="offer_year" id="hdn_offer_form" value="{{ offer_year.id }}">
+        <input type="hidden" name="offer_year" id="hdn_offer_year_new" value="{{ offer_year.id }}">
     {%endif%}
       {% csrf_token %}
       <br>
@@ -77,23 +77,12 @@
       <button type="submit" class="btn btn-primary" title="{% trans 'save'%}" id="bt_offer_form_save">
         <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}
       </button>
-        <a href="#"
-           id="lnk_form_read_{{offer_year.id }}" title="{%trans 'back'%}"
-           class="btn btn-default" role="button"
-           onclick="buttonBack_clickHandler(event);">
-           <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span> {% trans 'back'%}
-        </a>
-    </form>
-    <form method="get" action="{% url 'offer_read' offer_year.id %}" id="backForm">
-        <input type="hidden" name="displaytab" value="tab_dynamic_form">
+      <a href="{% url 'offer_read' offer_year.id %}#tab_dynamic_form"
+         id="lnk_form_read_{{offer_year.id }}" title="{%trans 'back'%}"
+         class="btn btn-default" role="button">
+        <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span> {% trans 'back'%}
+      </a>
     </form>
   </div>
 </div>
-{% endblock %}
-{% block script %}
-<script>
-    function buttonBack_clickHandler(event) {
-      $('#backForm').submit();
-    }
-</script>
 {% endblock %}
