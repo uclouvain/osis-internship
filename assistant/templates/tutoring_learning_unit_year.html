@@ -25,14 +25,12 @@
 * at the root of the source code of this program.  If not,
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
-
 {% block breadcrumb %}
 <li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'institution' %}</a></li>
 <li><a href="{% url 'mandates' %}" id="lnk_mandates">{% trans 'mandates' %}</a></li>
-<li><a href="{% url 'assistant_mandates' %}" id="lnk_mandates">{% trans 'my_mandates' %}</a></li>
+<li><a href="{% url 'assistant_mandates' %}" id="lnk_assistant_mandates">{% trans 'my_mandates' %}</a></li>
 <li class="active">{% trans 'renewal_form' %}</li>
 {% endblock %}
-
 {% block content %}
 <ul class="nav nav-tabs ">
 <li><a href="{% url 'assistant_mandates' %}">{% trans 'my_mandates' %}</a></li>
@@ -53,11 +51,11 @@
             <div class="panel-heading">
                 <font size="4">{% trans 'tutoring_learning_unit' %}</font>
             </div>
-        </div><p>
+        </div>
         <div class="form-group">
             <div class="row">
                 <div class="col-md-3">
-                    <label for="txt_academic_year">{% trans 'academic_year' %}</label>
+                    <label for="txt_academic_year" id="txt_academic_year">{% trans 'academic_year' %}</label>
                 </div>
                 <div class="col-md-3">
                     <div class="controls">{{ form.academic_year }}</div>
@@ -68,7 +66,8 @@
         <div class="form-group">
             <div class="row">
                 <div class="col-md-3">
-                    <label for="txt_learning_unit_acronym">{% trans 'learning_unit_acronym' %}</label>
+                    <label for="txt_learning_unit_acronym" id="txt_learning_unit_acronym">
+                        {% trans 'learning_unit_acronym' %}</label>
                 </div>
                 <div class="col-md-3">
                     <div class="controls">{{ form.learning_unit_year }}</div>
@@ -80,7 +79,7 @@
         <div class="form-group">
             <div class="row">
                 <div class="col-md-3">
-                    <label for="txt_sessions_number">{% trans 'sessions_number' %}</label>
+                    <label for="txt_sessions_number" id="txt_sessions_number">{% trans 'sessions_number' %}</label>
                 </div>
                 <div class="col-md-3">
                     <div class="controls">{{ form.sessions_number }}</div>
@@ -91,7 +90,8 @@
         <div class="form-group">
             <div class="row">
                 <div class="col-md-3">
-                    <label for="txt_sessions_duration">{% trans 'sessions_duration' %}</label>
+                    <label for="txt_sessions_duration" id="txt_sessions_duration">
+                        {% trans 'sessions_duration' %}</label>
                 </div>
                 <div class="col-md-3">
                     <div class="controls">{{ form.sessions_duration }}</div>
@@ -102,7 +102,7 @@
         <div class="form-group">
             <div class="row">
                 <div class="col-md-3">
-                    <label for="txt_series_number">{% trans 'series_number' %}</label>
+                    <label for="txt_series_number" id="txt_series_number">{% trans 'series_number' %}</label>
                 </div>
                 <div class="col-md-3">
                     <div class="controls">{{ form.series_number }}</div>
@@ -114,7 +114,8 @@
         <div class="form-group">
             <div class="row">
                 <div class="col-md-3">
-                    <label for="txt_sector_face_to_face_duration">{% trans 'face_to_face_duration' %}</label>
+                    <label for="txt_sector_face_to_face_duration" id="txt_sector_face_to_face_duration">
+                        {% trans 'face_to_face_duration' %}</label>
                 </div>
                 <div class="col-md-3">
                     <div class="controls">{{ form.face_to_face_duration }}</div>
@@ -125,7 +126,7 @@
         <div class="form-group">
             <div class="row">
                 <div class="col-md-3">
-                    <label for="txt_sector_attendees">{% trans 'attendees' %}</label>
+                    <label for="txt_sector_attendees" id="txt_sector_attendees">{% trans 'attendees' %}</label>
                 </div>
                 <div class="col-md-3">
                     <div class="controls">{{ form.attendees }}</div>
@@ -136,7 +137,8 @@
         <div class="form-group">
             <div class="row">
                 <div class="col-md-3">
-                    <label for="txt_sector_exams_supervision_duration">{% trans 'exams_supervision_duration' %}</label>
+                    <label for="txt_sector_exams_supervision_duration" id="txt_sector_exams_supervision_duration">
+                        {% trans 'exams_supervision_duration' %}</label>
                 </div>
                 <div class="col-md-3">
                     <div class="controls">{{ form.exams_supervision_duration }}</div>
@@ -147,7 +149,8 @@
         <div class="form-group">
             <div class="row">
                 <div class="col-md-3">
-                    <label for="txt_sector_others_delivery">{% trans 'others_delivery' %}</label>
+                    <label for="txt_sector_others_delivery" id="txt_sector_others_delivery">
+                        {% trans 'others_delivery' %}</label>
                 </div>
                 <div class="col-md-3">
                     <div class="controls">{{ form.others_delivery }}</div>
@@ -161,36 +164,33 @@
         <span class="glyphicon glyphicon-cancel" aria-hidden="true"></span> {% trans 'cancel'%}</a>
     </form>
     </div>
-      </div>
+</div>
 {% endblock %}
-
 {% block style %}
-  <style>
+<style>
     input[type=number]{
-      width: 50px;
+        width: 50px;
     }
     textarea{
-      display:inline-block;
-      vertical-align:middle;
+        display:inline-block;
+        vertical-align:middle;
     }
-  </style>
+</style>
 {% endblock %}
-
 {% block script %}
-  <script type="text/javascript">
-  window.onload = function () {
-    var session_number = document.getElementById('id_sessions_number');
-    var session_duration = document.getElementById('id_sessions_duration');
-    var series_number = document.getElementById('id_series_number');
-    var face_to_face_duration = document.getElementById('id_face_to_face_duration');
-
-var trigFunc = function()
-{
-    face_to_face_duration.value = session_number.value * session_duration.value * series_number.value
-};
-session_number.onchange = trigFunc;
-session_duration.onchange = trigFunc;
-series_number.onchange = trigFunc;
-};
-  </script>
+    <script type="text/javascript">
+    window.onload = function () {
+        var session_number = document.getElementById('id_sessions_number');
+        var session_duration = document.getElementById('id_sessions_duration');
+        var series_number = document.getElementById('id_series_number');
+        var face_to_face_duration = document.getElementById('id_face_to_face_duration');
+        var trigFunc = function()
+            {
+            face_to_face_duration.value = session_number.value * session_duration.value * series_number.value
+            };
+        session_number.onchange = trigFunc;
+        session_duration.onchange = trigFunc;
+        series_number.onchange = trigFunc;
+    };
+    </script>
 {% endblock %}

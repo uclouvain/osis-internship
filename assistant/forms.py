@@ -161,14 +161,15 @@ class TutoringLearningUnitForm(forms.Form):
 
     class Meta:
         model = mdl.tutoring_learning_unit_year.TutoringLearningUnitYear
-        fields = ('academic_years','sessions_number','sessions_duration','series_numbers','face_to_face_duration',
-                  'attendees','exams_supervision_duration','mandate','learning_unit_year')
+        fields = ('academic_years', 'sessions_number', 'sessions_duration', 'series_numbers', 'face_to_face_duration',
+                  'attendees', 'exams_supervision_duration', 'mandate', 'learning_unit_year')
 
     def clean(self):
         super(TutoringLearningUnitForm, self).clean()
         academic_year_id = self.cleaned_data.get("academic_year")
         learning_unit_acronym = self.cleaned_data.get('learning_unit_year')
-        learning_units_year = learning_unit_year.search(academic_year_id=academic_year_id, acronym=learning_unit_acronym)
+        learning_units_year = learning_unit_year.search(academic_year_id=academic_year_id,
+                                                        acronym=learning_unit_acronym)
         if not learning_units_year:
             msg = _("learning_unit_year_error_msg")
             self.add_error('learning_unit_year', msg)
@@ -178,7 +179,6 @@ class TutoringLearningUnitForm(forms.Form):
             for this_learning_unit_year in learning_units_year:
                 msg_acronym = this_learning_unit_year.acronym
                 self.add_error('learning_unit_year', msg_acronym)
-
 
     def save(self):
         data = self.cleaned_data
@@ -209,16 +209,11 @@ class TutoringLearningUnitForm(forms.Form):
             tutoring_learning_unit_year.learning_unit_year = this_learning_unit_year
         else:
             tutoring_learning_unit_year = mdl.tutoring_learning_unit_year.TutoringLearningUnitYear.objects.create(
-            learning_unit_year = this_learning_unit_year,
-            sessions_number = sessions_number,
-            sessions_duration = sessions_duration,
-            series_number = series_number,
-            face_to_face_duration = face_to_face_duration,
-            attendees = attendees,
-            exams_supervision_duration = exams_supervision_duration,
-            others_delivery = others_delivery,
-            mandate = mandate,
-        )
+                learning_unit_year=this_learning_unit_year, sessions_number=sessions_number,
+                sessions_duration=sessions_duration, series_number=series_number,
+                face_to_face_duration=face_to_face_duration, attendees=attendees,
+                exams_supervision_duration=exams_supervision_duration, others_delivery=others_delivery,
+                mandate=mandate)
         tutoring_learning_unit_year.save()
 
 
@@ -301,7 +296,7 @@ class ReviewerDelegationForm(ModelForm):
         super(ReviewerDelegationForm, self).clean()
         selected_person = self.cleaned_data.get('person')
         try:
-            mdl.reviewer.Reviewer.objects.get(person=selected_person)
+            mdl.reviewer.find_by_person(selected_person)
             msg = _("person_already_reviewer_msg")
             self.add_error('person', msg)
         except:
