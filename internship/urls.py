@@ -26,7 +26,7 @@
 from django.conf.urls import url
 
 from internship.views import home, internship, master, period, place, speciality, student, student_resume, affectation_statistics
-from internship import upload_xls
+from internship.utils import upload_xls
 
 urlpatterns = [
     # S'il vous plaît, organiser les urls par ordre alphabétique.
