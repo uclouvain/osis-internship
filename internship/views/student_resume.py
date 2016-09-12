@@ -28,7 +28,10 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
-from internship.models import InternshipChoice, InternshipStudentInformation, InternshipSpeciality
+from internship.models import InternshipChoice, InternshipStudentInformation, \
+                                InternshipSpeciality, InternshipOffer, InternshipStudentAffectationStat, \
+                                Organization, InternshipSpeciality, Period
+from internship.views.place import sort_organizations, set_organization_address
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -128,16 +131,44 @@ def internships_student_search(request):
 @permission_required('internship.can_access_internship', raise_exception=True)
 def internships_student_read(request, registration_id):
     student = mdl.student.find_by(registration_id=registration_id)
-    information = InternshipStudentInformation.search(person = student[0].person)
     student = student[0]
+    information = InternshipStudentInformation.search(person = student.person)
     internship_choice = InternshipChoice.find_by_student(student)
     all_speciality = InternshipSpeciality.search(mandatory=True)
+
+    affectations = InternshipStudentAffectationStat.search(student = student).order_by("period__date_start")
+    periods = Period.search().order_by("date_start")
+    organizations = Organization.search()
+    set_organization_address(organizations)
+
+    # Set the adress of the affactation
+    for affectation in affectations:
+        for organization in organizations:
+            if affectation.organization == organization:
+                affectation.organization.address = ""
+                for o in organization.address:
+                    affectation.organization.address = o
+
+    internships = InternshipOffer.find_internships()
+    #Check if there is a internship offers in data base. If not, the internships
+    #can be block, but there is no effect
+    if len(internships) > 0:
+        if internships[0].selectable:
+            selectable = True
+        else:
+            selectable = False
+    else:
+        selectable = True
 
     return render(request, "student_resume.html",
                            {'student':             student,
                             'information':         information[0],
                             'internship_choice':   internship_choice,
                             'specialities':        all_speciality,
+                            'selectable':          selectable,
+                            'affectations':        affectations,
+                            'periods':              periods,
+
                             })
 
 @login_required
@@ -171,4 +202,70 @@ def student_save_information_modification(request, registration_id):
     information.save()
 
     redirect_url = reverse('internships_student_read', args=[registration_id])
+    return HttpResponseRedirect(redirect_url)
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def internship_student_affectation_modification(request, student_id):
+    informations = InternshipStudentAffectationStat.search(student__pk = student_id)
+    information = InternshipChoice.search(student__pk = student_id)
+    organizations = Organization.search()
+    organizations = sort_organizations(organizations)
+
+    specialities = InternshipSpeciality.find_all()
+    periods = Period.search().order_by("date_start")
+    return render(request, "student_affectation_modification.html",
+                           {'information':         information[0],
+                           'informations':         informations,
+                            'organizations':        organizations,
+                            'specialities':         specialities,
+                            'periods':              periods,
+                                                      })
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def student_save_affectation_modification(request, registration_id):
+    student = mdl.student.find_by(registration_id=registration_id)[0]
+    if request.POST.get('period'):
+        period_list = request.POST.getlist('period')
+    if request.POST.get('organization'):
+        organization_list = request.POST.getlist('organization')
+    if request.POST.get('speciality'):
+        speciality_list = request.POST.getlist('speciality')
+
+    InternshipStudentAffectationStat.search(student=student).delete()
+    index = len(period_list)
+    for x in range(0,index):
+        if organization_list[x] != "0":
+            organization = Organization.search(reference=organization_list[x])[0]
+            speciality = InternshipSpeciality.search(name=speciality_list[x])[0]
+            period = Period.search(name=period_list[x])[0]
+            student_choices = InternshipChoice.search(student=student, speciality=speciality)
+            affectation_modif = InternshipStudentAffectationStat()
+
+            affectation_modif.student = student
+            affectation_modif.organization = organization
+            affectation_modif.speciality = speciality
+            affectation_modif.period = period
+            check_choice = False
+            for student_choice in student_choices:
+                if student_choice.organization == organization:
+                    affectation_modif.choice = student_choice.choice
+                    check_choice = True
+                    if student_choice.choice == 1 :
+                        affectation_modif.cost = 0
+                    elif student_choice.choice == 2 :
+                        affectation_modif.cost = 1
+                    elif student_choice.choice == 3 :
+                        affectation_modif.cost = 2
+                    elif student_choice.choice == 4 :
+                        affectation_modif.cost = 3
+            if not check_choice:
+                affectation_modif.choice="i"
+                affectation_modif.cost = 10
+
+            affectation_modif.save()
+
+
+    redirect_url = reverse('internships_student_read', args=[student.id])
     return HttpResponseRedirect(redirect_url)

@@ -24,9 +24,10 @@
 #
 ##############################################################################
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from internship.models import Organization, InternshipSpeciality
 
 import os
 import sys
@@ -38,6 +39,7 @@ from random import randint, choice
 from internship.models import *
 from statistics import mean, stdev
 from internship.views.internship import calc_dist
+from internship.views.place import sort_organizations
 
 ################################################# Global vars #################################################
 errors = []
@@ -859,3 +861,22 @@ def internship_affectation_statistics(request):
     return render(request, "internship_affectation_statics.html",
                   {'section': 'internship', 'recap_sol': sol, 'stats': stats, 'organizations': table, 'errors': errors,
                    'has_data': False})
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def internship_affectation_sumup(request):
+    all_speciality = InternshipSpeciality.search(mandatory=True).order_by("acronym", "name")
+    periods = Period.search().order_by("date_start")
+    organizations = Organization.search()
+    organizations = sort_organizations(organizations)
+    affectations = InternshipStudentAffectationStat.search().order_by("student__person__last_name", "student__person__first_name", "period__date_start")
+    for a in affectations:
+        print(a.period.name)
+
+    return render(request, "internship_affectation_sumup.html",
+                                                {'section': 'internship',
+                                                 'specialities':        all_speciality,
+                                                 'periods':             periods,
+                                                 'organizations':       organizations,
+                                                 'affectations':        affectations,
+                                                })

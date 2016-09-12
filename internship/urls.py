@@ -52,6 +52,7 @@ urlpatterns = [
     url(r'^periods/save/([0-9]+)/$', period.period_save, name='period_save'),
 
     url(r'^places/$', place.internships_places, name='internships_places'),
+    url(r'^places/([0-9]+)/students/affectation/$', place.student_affectation, name='place_detail_student_affectation'),
     url(r'^places/([0-9]+)/students/choice/$', place.student_choice, name='place_detail_student_choice'),
     url(r'^places/create/$', place.organization_create, name='place_create'),
     url(r'^places/edit/([0-9]+)/$', place.organization_edit, name='place_edit'),
@@ -67,13 +68,16 @@ urlpatterns = [
     url(r'^specialities/new/$', speciality.speciality_new, name='speciality_new'),
     url(r'^specialities/save/([0-9]+)/$', speciality.speciality_save, name='speciality_save'),
 
+    url(r'^students/([0-9]+)/affectation/modification/$', student_resume.internship_student_affectation_modification, name='internship_student_affectation_modification'),
     url(r'^students/([0-9]+)/information/modification/$', student_resume.internship_student_information_modification, name='internship_student_information_modification'),
     url(r'^students/([0-9]+)/resume/$', student_resume.internships_student_read, name='internships_student_read'),
     url(r'^students/([0-9]+)/save/information/modification/$', student_resume.student_save_information_modification, name='student_save_information_modification'),
+    url(r'^students/([0-9]+)/save/affectation/modification/$', student_resume.student_save_affectation_modification, name='student_save_affectation_modification'),
     url(r'^students/resume/$', student_resume.internships_student_resume, name='internships_student_resume'),
     url(r'^students/search$', student_resume.internships_student_search, name='internships_student_search'),
 
 	url(r'^affectation_result/$', affectation_statistics.internship_affectation_statistics, name='internship_affectation_statistics'),
     url(r'^affectation_result/generate/$', affectation_statistics.internship_affectation_statistics_generate, name='internship_affectation_statistics_generate'),
+    url(r'^affectation_result/sumup/$', affectation_statistics.internship_affectation_sumup, name='internship_affectation_sumup'),
 
 ]
