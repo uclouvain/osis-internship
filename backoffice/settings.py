@@ -53,6 +53,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_jenkins',
+    'osis_common',
     'ckeditor',
     'reference',
     'base',
