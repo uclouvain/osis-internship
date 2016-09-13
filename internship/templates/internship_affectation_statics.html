@@ -3,335 +3,335 @@
 {% load i18n %}
 
 {% comment "License" %}
-* OSIS stands for Open Student Information System. It's an application
-* designed to manage the core business of higher education institutions,
-* such as universities, faculties, institutes and professional schools.
-* The core business involves the administration of students, teachers,
-* courses, programs and so on.
-*
-* Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* A copy of this license - GNU General Public License - is available
-* at the root of the source code of this program.  If not,
-* see http://www.gnu.org/licenses/.
+    * OSIS stands for Open Student Information System. It's an application
+    * designed to manage the core business of higher education institutions,
+    * such as universities, faculties, institutes and professional schools.
+    * The core business involves the administration of students, teachers,
+    * courses, programs and so on.
+    *
+    * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+    *
+    * This program is free software: you can redistribute it and/or modify
+    * it under the terms of the GNU General Public License as published by
+    * the Free Software Foundation, either version 3 of the License, or
+    * (at your option) any later version.
+    *
+    * This program is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    * GNU General Public License for more details.
+    *
+    * A copy of this license - GNU General Public License - is available
+    * at the root of the source code of this program.  If not,
+    * see http://www.gnu.org/licenses/.
 {% endcomment %}
 {% block breadcrumb %}
-<li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
-<li><a href="{% url 'internships_home' %}">{% trans 'internships' %}</a></li>
-<li class="active">{% trans 'affectation_result' %}</li>
+    <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+    <li><a href="{% url 'internships_home' %}">{% trans 'internships' %}</a></li>
+    <li class="active">{% trans 'affectation_result' %}</li>
 {% endblock %}
 {% block content %}
-<div class="modal fade bs-example-modal-sm" id="PleaseWaitModal" tabindex="-1"
-    role="dialog" aria-hidden="true" data-backdrop="static">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">
+    <div class="modal fade bs-example-modal-sm" id="PleaseWaitModal" tabindex="-1"
+         role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">
                     <span class="glyphicon glyphicon-time">
                     </span> Please Wait
-                 </h4>
-            </div>
-            <div class="modal-body">
-                <div class="progress">
-                    <div class="progress-bar progress-bar-info
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-info
                     progress-bar-striped active"
-                    style="width: 100%">
+                             style="width: 100%">
+                        </div>
+                    </div>
+                    This may take several minutes
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <form  method="post" action="{% url 'internship_affectation_statistics_generate' %}" >
+                <button type="submit" class="btn btn-primary" title="{% trans 'Send'%}" id="bt_interships_save" onclick="$('#PleaseWaitModal').modal('show');">
+                    <span class="glyphicon glyphicon-random" aria-hidden="true"></span> Generate solution
+                </button>
+                {% csrf_token %}
+            </form>
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#tab_hospitals">Récap hopitaux</a></li>
+                <li><a data-toggle="tab" href="#tab_students">Récap étudiants</a></li>
+                <li><a data-toggle="tab" href="#tab_stats">Statistiques</a></li>
+                <li><a data-toggle="tab" href="#tab_errors">Erreurs</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="tab_hospitals" class="tab-pane fade in active">
+                    <div class="panel panel-default">
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane fade in active" id="profile">
+                                <table class="table">
+                                    <tr>
+                                        <th>Hôpital</th>
+                                        <th>Spécialité</th>
+                                        <th>P1</th>
+                                        <th>P2</th>
+                                        <th>P3</th>
+                                        <th>P4</th>
+                                        <th>P5</th>
+                                        <th>P6</th>
+                                        <th>P7</th>
+                                        <th>P8</th>
+                                        <th>P9</th>
+                                        <th>P10</th>
+                                        <th>P11</th>
+                                        <th>P12</th>
+                                    </tr>
+                                    {% for hospital, specialities in organizations.items %}
+                                        {% for speciality, periods in specialities.items %}
+                                            <tr>
+                                                <td>
+                                                    {{hospital.reference}}
+                                                </td>
+                                                <td>
+                                                    {{speciality.id}}
+                                                </td>
+                                                {% for period, places in periods.items %}
+                                                    {% if places.before == places.after and places.before != 0 %}
+                                                        <td style="background-color:green;"/>
+                                                    {% elif places.pc > 66 %}
+                                                        <td style="background-color:#33cc33;"/>
+                                                    {% elif places.pc > 33 %}
+                                                        <td style="background-color:#ffdc33;"/>
+                                                    {% elif places.pc > 0 %}
+                                                        <td style="background-color:#ff6600;"/>
+                                                    {% elif places.pc == 0 %}
+                                                        <td style="background-color:#cc0000;"/>
+                                                    {% elif places.before == 0 %}
+                                                        <td/>
+                                                    {% else %}
+                                                        <td style="background-color:#33cc33;"/>
+                                                    {% endif %}
+                                                    {{ places.after }}/{{ places.before }}
+                                                    </td>
+                                                {% endfor %}
+                                            </tr>
+                                        {% endfor %}
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                This may take several minutes
+                <div id="tab_students" class="tab-pane fade in">
+                    <div class="panel panel-default">
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane fade in active" id="profile">
+                                <table class="table">
+                                    <tr>
+                                        <th>Student</th>
+                                        <th>P1</th>
+                                        <th>P2</th>
+                                        <th>P3</th>
+                                        <th>P4</th>
+                                        <th>P5</th>
+                                        <th>P6</th>
+                                        <th>P7</th>
+                                        <th>P8</th>
+                                        <th>P9</th>
+                                        <th>P10</th>
+                                        <th>P11</th>
+                                        <th>P12</th>
+                                        <th>Score</th>
+                                    </tr>
+                                    {% for student, periods in recap_sol.items %}
+                                        <tr id="student_{{student.id}}">
+                                            <td>
+                                                {{student}}
+                                            </td>
+                                            {% for period, enrollment in periods.items %}
+                                                <td class="internship-{{enrollment.type_of_internship}} period-{{period}}"/>
+                                                {% if period <= 8 %}
+                                                    {{ enrollment.speciality.id }} <br>  {{ enrollment.organization.reference }}<br> {{ enrollment.cost }}({{ enrollment.choice }})<br>
+                                                {% elif period > 8 and period <= 12 %}
+                                                    X
+                                                {% else %}
+                                                    {{ periods.score }}
+                                                {% endif %}
+                                                </td>
+                                            {% endfor %}
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="tab_stats" class="tab-pane fade in">
+                    <h3>Stats</h3>
+                    <div class="panel panel-default">
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane fade in active" id="profile">
+                                <table class="table">
+                                    <tr>
+                                        <td>Number of students</td>
+                                        <td>{{ stats.tot_stud }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>-&gt; Erasmus</td>
+                                        <td>{{ stats.erasmus_students }} ({{ stats.erasmus_students_pc }}%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>-&gt; Sociaux</td>
+                                        <td>{{ stats.socio_students }} ({{ stats.socio_students_pc }}%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr class="active">
+                                        <td>Total internships</td>
+                                        <td>{{ stats.total_internships }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>-&gt; Erasmus</td>
+                                        <td>{{ stats.erasmus }} ({{ stats.erasmus_pc }}%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>-&gt; Sociaux</td>
+                                        <td>{{ stats.socio }} ({{ stats.socio_pc }}%)</td>
+                                    </tr>
+                                    <tr class="active">
+                                        <td>All students</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>1st choices</td>
+                                        <td>{{ stats.first }} ({{ stats.first_pc }}%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2nd choices</td>
+                                        <td>{{ stats.second }} ({{ stats.second_pc }}%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3rd choices</td>
+                                        <td>{{ stats.third }} ({{ stats.third_pc }}%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4th choices</td>
+                                        <td>{{ stats.fourth }} ({{ stats.fourth_pc }}%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Others choices</td>
+                                        <td>{{ stats.others }} ({{ stats.others_pc }}%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Erasmus students</td>
+                                        <td>{{ stats.erasmus }} ({{ stats.erasmus_pc }}%)</td>
+                                    </tr>
+                                    <tr class="active">
+                                        <td>Social students</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>1st choices</td>
+                                        <td>{{ stats.first_s }} ({{ stats.first_s_pc }}%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2nd choices</td>
+                                        <td>{{ stats.second_s }} ({{ stats.second_s_pc }}%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3rd choices</td>
+                                        <td>{{ stats.third_s }} ({{ stats.third_s_pc }}%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4th choices</td>
+                                        <td>{{ stats.fourth_s }} ({{ stats.fourth_s_pc }}%)</td>
+                                    </tr>
+                                    <tr class="active">
+                                        <td>Normal students</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>1st choices</td>
+                                        <td>{{ stats.first_n }} ({{ stats.first_n_pc }}%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2nd choices</td>
+                                        <td>{{ stats.second_n }} ({{ stats.second_n_pc }}%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3rd choices</td>
+                                        <td>{{ stats.third_n }} ({{ stats.third_n_pc }}%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4th choices</td>
+                                        <td>{{ stats.fourth_n }} ({{ stats.fourth_n_pc }}%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Imposed chocies</td>
+                                        <td>{{ stats.others }} ({{ stats.others_pc }}%) | Students : {{ stats.others_students}} | Mean distance : {{ stats.distance_mean}}km</td>
+                                    </tr>
+                                    {% for speciality, value in stats.others_specialities.items %}
+                                        <tr>
+                                            <td>>>> {{ speciality }}</td>
+                                            <td>{{ value }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Hospital error</td>
+                                        <td>{{ stats.hospital_error }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Mean cost of student</td>
+                                        <td>{{ stats.mean_stud }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Standard deviation </td>
+                                        <td>{{ stats.std_dev_stud }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Mean nonconsecutive month</td>
+                                        <td>{{ stats.mean_noncons }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Total cost of the solution</td>
+                                        <td>{{ stats.sol_cost }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="tab_errors" class="tab-pane fade in">
+                    <table class="table">
+                        <tr>
+                            <th>Student</th>
+                            <th>Speciality</th>
+                            <th>Period</th>
+                            <th>Organization</th>
+                            <th>Type of internship</th>
+                        </tr>
+                        {% for internship in errors %}
+                            <tr>
+                                <td>{{internship.student}}<td>
+                                <td>{{internship.speciality}}<td>
+                                <td>{{internship.period}}<td>
+                                <td>{{internship.organization}}<td>
+                                <td>{{internship.type_of_internship}}<td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-<div class="panel panel-default">
-  <div class="panel-body">
-    <form  method="post" action="{% url 'internship_affectation_statistics_generate' %}" >
-      <button type="submit" class="btn btn-primary" title="{% trans 'Send'%}" id="bt_interships_save" onclick="$('#PleaseWaitModal').modal('show');">
-          <span class="glyphicon glyphicon-random" aria-hidden="true"></span> Generate solution
-      </button>
-      {% csrf_token %}
-    </form>
-    <ul class="nav nav-tabs">
-      <li class="active"><a data-toggle="tab" href="#tab_hospitals">Récap hopitaux</a></li>
-      <li><a data-toggle="tab" href="#tab_students">Récap étudiants</a></li>
-      <li><a data-toggle="tab" href="#tab_stats">Statistiques</a></li>
-      <li><a data-toggle="tab" href="#tab_errors">Erreurs</a></li>
-    </ul>
-    <div class="tab-content">
-      <div id="tab_hospitals" class="tab-pane fade in active">
-        <div class="panel panel-default">
-          <div class="tab-content">
-            <div role="tabpanel" class="tab-pane fade in active" id="profile">
-              <table class="table">
-                <tr>
-                  <th>Hôpital</th>
-                  <th>Spécialité</th>
-                  <th>P1</th>
-                  <th>P2</th>
-                  <th>P3</th>
-                  <th>P4</th>
-                  <th>P5</th>
-                  <th>P6</th>
-                  <th>P7</th>
-                  <th>P8</th>
-                  <th>P9</th>
-                  <th>P10</th>
-                  <th>P11</th>
-                  <th>P12</th>
-                </tr>
-                {% for hospital, specialities in organizations.items %}
-                  {% for speciality, periods in specialities.items %}
-                  <tr>
-                    <td>
-                      {{hospital.reference}}
-                    </td>
-                    <td>
-                      {{speciality.id}}
-                    </td>
-                    {% for period, places in periods.items %}
-                    {% if places.before == places.after and places.before != 0 %}
-                      <td style="background-color:green;"/>
-                    {% elif places.pc > 66 %}
-                      <td style="background-color:#33cc33;"/>
-                    {% elif places.pc > 33 %}
-                      <td style="background-color:#ffdc33;"/>
-                    {% elif places.pc > 0 %}
-                      <td style="background-color:#ff6600;"/>
-                    {% elif places.pc == 0 %}
-                      <td style="background-color:#cc0000;"/>
-                    {% elif places.before == 0 %}
-                      <td/>
-                    {% else %}
-                      <td style="background-color:#33cc33;"/>
-                    {% endif %}
-                    {{ places.after }}/{{ places.before }}
-                  </td>
-                  {% endfor %}
-                </tr>
-                {% endfor %}
-              {% endfor %}
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div id="tab_students" class="tab-pane fade in">
-      <div class="panel panel-default">
-        <div class="tab-content">
-          <div role="tabpanel" class="tab-pane fade in active" id="profile">
-            <table class="table">
-              <tr>
-                <th>Student</th>
-                <th>P1</th>
-                <th>P2</th>
-                <th>P3</th>
-                <th>P4</th>
-                <th>P5</th>
-                <th>P6</th>
-                <th>P7</th>
-                <th>P8</th>
-                <th>P9</th>
-                <th>P10</th>
-                <th>P11</th>
-                <th>P12</th>
-                <th>Score</th>
-              </tr>
-              {% for student, periods in recap_sol.items %}
-              <tr id="student_{{student.id}}">
-                <td>
-                  {{student}}
-                </td>
-                  {% for period, enrollment in periods.items %}
-                <td class="internship-{{enrollment.type_of_internship}} period-{{period}}"/>
-                  {% if period <= 8 %}
-                  {{ enrollment.speciality.id }} <br>  {{ enrollment.organization.reference }}<br> {{ enrollment.cost }}({{ enrollment.choice }})<br>
-                  {% elif period > 8 and period <= 12 %}
-                  X
-                  {% else %}
-                  {{ periods.score }}
-                  {% endif %}
-                </td>
-              {% endfor %}
-            </tr>
-            {% endfor %}
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div id="tab_stats" class="tab-pane fade in">
-    <h3>Stats</h3>
-    <div class="panel panel-default">
-      <div class="tab-content">
-        <div role="tabpanel" class="tab-pane fade in active" id="profile">
-          <table class="table">
-            <tr>
-              <td>Number of students</td>
-              <td>{{ stats.tot_stud }}</td>
-            </tr>
-            <tr>
-              <td>-&gt; Erasmus</td>
-              <td>{{ stats.erasmus_students }} ({{ stats.erasmus_students_pc }}%)</td>
-            </tr>
-            <tr>
-              <td>-&gt; Sociaux</td>
-              <td>{{ stats.socio_students }} ({{ stats.socio_students_pc }}%)</td>
-            </tr>
-            <tr>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr class="active">
-              <td>Total internships</td>
-              <td>{{ stats.total_internships }}</td>
-            </tr>
-            <tr>
-              <td>-&gt; Erasmus</td>
-              <td>{{ stats.erasmus }} ({{ stats.erasmus_pc }}%)</td>
-            </tr>
-            <tr>
-              <td>-&gt; Sociaux</td>
-              <td>{{ stats.socio }} ({{ stats.socio_pc }}%)</td>
-            </tr>
-            <tr class="active">
-              <td>All students</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>1st choices</td>
-              <td>{{ stats.first }} ({{ stats.first_pc }}%)</td>
-            </tr>
-            <tr>
-              <td>2nd choices</td>
-              <td>{{ stats.second }} ({{ stats.second_pc }}%)</td>
-            </tr>
-            <tr>
-              <td>3rd choices</td>
-              <td>{{ stats.third }} ({{ stats.third_pc }}%)</td>
-            </tr>
-            <tr>
-              <td>4th choices</td>
-              <td>{{ stats.fourth }} ({{ stats.fourth_pc }}%)</td>
-            </tr>
-            <tr>
-              <td>Others choices</td>
-              <td>{{ stats.others }} ({{ stats.others_pc }}%)</td>
-            </tr>
-            <tr>
-              <td>Erasmus students</td>
-              <td>{{ stats.erasmus }} ({{ stats.erasmus_pc }}%)</td>
-            </tr>
-            <tr class="active">
-              <td>Social students</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>1st choices</td>
-              <td>{{ stats.first_s }} ({{ stats.first_s_pc }}%)</td>
-            </tr>
-            <tr>
-              <td>2nd choices</td>
-              <td>{{ stats.second_s }} ({{ stats.second_s_pc }}%)</td>
-            </tr>
-            <tr>
-              <td>3rd choices</td>
-              <td>{{ stats.third_s }} ({{ stats.third_s_pc }}%)</td>
-            </tr>
-            <tr>
-              <td>4th choices</td>
-              <td>{{ stats.fourth_s }} ({{ stats.fourth_s_pc }}%)</td>
-            </tr>
-            <tr class="active">
-              <td>Normal students</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>1st choices</td>
-              <td>{{ stats.first_n }} ({{ stats.first_n_pc }}%)</td>
-            </tr>
-            <tr>
-              <td>2nd choices</td>
-              <td>{{ stats.second_n }} ({{ stats.second_n_pc }}%)</td>
-            </tr>
-            <tr>
-              <td>3rd choices</td>
-              <td>{{ stats.third_n }} ({{ stats.third_n_pc }}%)</td>
-            </tr>
-            <tr>
-              <td>4th choices</td>
-              <td>{{ stats.fourth_n }} ({{ stats.fourth_n_pc }}%)</td>
-            </tr>
-            <tr>
-              <td>Imposed chocies</td>
-              <td>{{ stats.others }} ({{ stats.others_pc }}%) | Students : {{ stats.others_students}} | Mean distance : {{ stats.distance_mean}}km</td>
-            </tr>
-            {% for speciality, value in stats.others_specialities.items %}
-            <tr>
-              <td>>>> {{ speciality }}</td>
-              <td>{{ value }}</td>
-            </tr>
-            {% endfor %}
-            <tr>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>Hospital error</td>
-              <td>{{ stats.hospital_error }}</td>
-            </tr>
-            <tr>
-              <td>Mean cost of student</td>
-              <td>{{ stats.mean_stud }}</td>
-            </tr>
-            <tr>
-              <td>Standard deviation </td>
-              <td>{{ stats.std_dev_stud }}</td>
-            </tr>
-            <tr>
-              <td>Mean nonconsecutive month</td>
-              <td>{{ stats.mean_noncons }}</td>
-            </tr>
-            <tr>
-              <td>Total cost of the solution</td>
-              <td>{{ stats.sol_cost }}</td>
-            </tr>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div id="tab_errors" class="tab-pane fade in">
-    <table class="table">
-      <tr>
-        <th>Student</th>
-        <th>Speciality</th>
-        <th>Period</th>
-        <th>Organization</th>
-        <th>Type of internship</th>
-      </tr>
-    {% for internship in errors %}
-    <tr>
-      <td>{{internship.student}}<td>
-      <td>{{internship.speciality}}<td>
-      <td>{{internship.period}}<td>
-      <td>{{internship.organization}}<td>
-      <td>{{internship.type_of_internship}}<td>
-    </tr>
-    {% endfor %}
-    </table>
-  </div>
-</div>
-</div>
-</div>
 {% endblock %}

@@ -48,5 +48,5 @@ class PeriodForm(ModelForm):
         model = Period
         fields = ['name', 'date_start', 'date_end']
         widgets = {'date_start': forms.DateInput(format='%d/%m/%Y'),
-                'date_end': forms.DateInput(format='%d/%m/%Y'),
-        }
+                   'date_end': forms.DateInput(format='%d/%m/%Y'),
+                   }

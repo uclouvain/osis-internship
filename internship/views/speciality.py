@@ -36,7 +36,8 @@ from django.core.urlresolvers import reverse
 def specialities(request):
     specialities = InternshipSpeciality.find_all()
     return render(request, "specialities.html", {'section': 'internship',
-                                            'specialities' : specialities})
+                                                 'specialities': specialities
+                                                 })
 
 
 @login_required
@@ -44,8 +45,8 @@ def specialities(request):
 def speciality_create(request):
     learning_unit = mdl.learning_unit.search(acronym='WMDS2333')
     return render(request, "speciality_create.html", {'section': 'internship',
-                                                    'learning_unit' : learning_unit[0],
-                                                    })
+                                                      'learning_unit': learning_unit[0],
+                                                      })
 
 
 @login_required
@@ -87,9 +88,9 @@ def speciality_modification(request, speciality_id):
     speciality = InternshipSpeciality.find_by_id(speciality_id)
     learning_unit = mdl.learning_unit.search(acronym='WMDS2333')
     return render(request, "speciality_create.html", {'section': 'internship',
-                                                    'learning_unit' : learning_unit[0],
-                                                    'speciality' : speciality
-                                                    })
+                                                      'learning_unit': learning_unit[0],
+                                                      'speciality': speciality
+                                                      })
 
 
 @login_required

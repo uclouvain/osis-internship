@@ -36,7 +36,7 @@ from internship.forms import PeriodForm
 def internships_periods(request):
     periods = Period.search()
     return render(request, "periods.html", {'section': 'internship',
-                                            'periods' : periods})
+                                            'periods': periods})
 
 
 @login_required
@@ -44,8 +44,8 @@ def internships_periods(request):
 def period_create(request):
     period_form = PeriodForm(data=request.POST)
     return render(request, "period_create.html", {'section': 'internship',
-                                                'form' : period_form,
-                                                })
+                                                  'form': period_form,
+                                                  })
 
 
 @login_required
@@ -83,5 +83,5 @@ def period_modification(request, period_id):
     period.date_end = period.date_end.strftime("%Y-%m-%d")
 
     return render(request, "period_create.html", {'section': 'internship',
-                                                    'period' : period
-                                                    })
+                                                  'period': period
+                                                  })

@@ -29,10 +29,9 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
 from internship.models import InternshipChoice, InternshipStudentInformation, \
-                                InternshipOffer, InternshipStudentAffectationStat, \
-                                Organization, InternshipSpeciality, Period
+    InternshipOffer, InternshipStudentAffectationStat, \
+    Organization, InternshipSpeciality, Period
 from internship.views.place import sort_organizations, set_organization_address
-
 
 
 @login_required
@@ -53,7 +52,7 @@ def internships_student_resume(request):
     # Get the required number selection (4 for each speciality)
     # Get the number of student who have al least 4 corrects choice of internship
     # Get the number of student who can choose their internships
-    number_selection = 4 * len (specialities)
+    number_selection = 4 * len(specialities)
     student_with_internships = len(students_list)
     students_can_have_internships = len(InternshipStudentInformation.find_all())
 
@@ -112,18 +111,18 @@ def internships_student_search(request):
 
         for student_check in students_list_check :
             for student_creation in students_list_creation:
-                    if student_check.person == student_creation.person:
-                        students_list.append(student_creation)
+                if student_check.person == student_creation.person:
+                    students_list.append(student_creation)
     else:
         students_list = InternshipChoice.find_by_all_student()
 
 
     return render(request, "student_search.html",
-                           {'s_name':       s_name,
-                            's_firstname':  s_firstname,
-                            'students':     students_list,
-                            'init':         "0",
-                            'message':      message})
+                  {'s_name':       s_name,
+                   's_firstname':  s_firstname,
+                   'students':     students_list,
+                   'init':         "0",
+                   'message':      message})
 
 
 @login_required
@@ -160,15 +159,15 @@ def internships_student_read(request, registration_id):
         selectable = True
 
     return render(request, "student_resume.html",
-                           {'student':             student,
-                            'information':         information[0],
-                            'internship_choice':   internship_choice,
-                            'specialities':        all_speciality,
-                            'selectable':          selectable,
-                            'affectations':        affectations,
-                            'periods':              periods,
+                  {'student':             student,
+                   'information':         information[0],
+                   'internship_choice':   internship_choice,
+                   'specialities':        all_speciality,
+                   'selectable':          selectable,
+                   'affectations':        affectations,
+                   'periods':              periods,
 
-                            })
+                   })
 
 
 @login_required
@@ -178,8 +177,8 @@ def internship_student_information_modification(request, registration_id):
     information = InternshipStudentInformation.search(person = student[0].person)
     student = student[0]
     return render(request, "student_information_modification.html",
-                           {'student':             student,
-                            'information':         information[0], })
+                  {'student':             student,
+                   'information':         information[0], })
 
 
 @login_required
@@ -217,12 +216,12 @@ def internship_student_affectation_modification(request, student_id):
     specialities = InternshipSpeciality.find_all()
     periods = Period.search()
     return render(request, "student_affectation_modification.html",
-                           {'information':         information[0],
-                           'informations':         informations,
-                            'organizations':        organizations,
-                            'specialities':         specialities,
-                            'periods':              periods,
-                                                      })
+                  {'information':         information[0],
+                   'informations':         informations,
+                   'organizations':        organizations,
+                   'specialities':         specialities,
+                   'periods':              periods,
+                   })
 
 
 @login_required

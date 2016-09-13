@@ -25,8 +25,8 @@
 ##############################################################################
 from django.contrib import admin
 from .models import InternshipOffer, InternshipEnrollment, InternshipMaster, InternshipChoice, \
-                    Period, PeriodInternshipPlaces, InternshipSpeciality, Organization, \
-                    OrganizationAddress, InternshipStudentInformation, InternshipStudentAffectationStat
+    Period, PeriodInternshipPlaces, InternshipSpeciality, Organization, \
+    OrganizationAddress, InternshipStudentInformation, InternshipStudentAffectationStat
 
 
 class InternshipOfferAdmin(admin.ModelAdmin):

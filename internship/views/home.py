@@ -59,4 +59,4 @@ def internships_home(request):
     return render(request, "internships_home.html", {'section':   'internship',
                                                      'noma':      noma,
                                                      'blockable': blockable
-                                                    })
+                                                     })

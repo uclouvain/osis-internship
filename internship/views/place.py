@@ -27,8 +27,8 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 
 from internship.models import Organization, OrganizationAddress, InternshipChoice, \
-                            InternshipOffer, InternshipSpeciality, InternshipStudentAffectationStat, \
-                            Period, InternshipStudentInformation
+    InternshipOffer, InternshipSpeciality, InternshipStudentAffectationStat, \
+    Period, InternshipStudentInformation
 from internship.forms import OrganizationForm, OrganizationAddressForm
 from internship.views.internship import get_all_specialities
 from internship.utils import export_utils
@@ -148,9 +148,9 @@ def internships_places_stud(request):
     organization_addresses = get_cities(organizations)
 
     return render(request, "places_stud.html", {'section': 'internship',
-                                           'all_organizations': l_organizations,
-                                           'all_addresses': organization_addresses,
-                                           'city_sort_get': city_sort_get})
+                                                'all_organizations': l_organizations,
+                                                'all_addresses': organization_addresses,
+                                                'city_sort_get': city_sort_get})
 
 
 @login_required
@@ -190,7 +190,7 @@ def organization_new(request):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def organization_edit(request, organization_id):
     organization = Organization.find_by_id(organization_id)
-    organization_address = OrganizationAddress.search(organization = organization)
+    organization_address = OrganizationAddress.search(organization=organization)
     return render(request, "place_form.html", {'organization':          organization,
                                                'organization_address':  organization_address[0], })
 
@@ -212,15 +212,15 @@ def student_choice(request, reference):
     set_tabs_name(all_speciality)
     for al in all_offers:
         number_first_choice = len(InternshipChoice.search(organization=al.organization,
-                                                           speciality=al.speciality,
-                                                           choice=1))
+                                                          speciality=al.speciality,
+                                                          choice=1))
         al.number_first_choice = number_first_choice
 
     return render(request, "place_detail.html", {'organization':        organization[0],
                                                  'organization_choice': organization_choice,
                                                  'offers':              all_offers,
                                                  'specialities':        all_speciality
-                                                  })
+                                                 })
 
 
 @login_required
@@ -243,10 +243,10 @@ def student_affectation(request, reference):
     all_speciality = get_all_specialities(internships)
 
     return render(request, "place_detail_affectation.html", {'organization':        organization,
-                                                 'affectations': affectations,
-                                                 'specialities':        all_speciality,
-                                                 'periods':             periods,
-                                                  })
+                                                             'affectations': affectations,
+                                                             'specialities':        all_speciality,
+                                                             'periods':             periods,
+                                                             })
 
 
 @login_required

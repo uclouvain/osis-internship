@@ -28,8 +28,8 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from internship.models import InternshipEnrollment, InternshipOffer, InternshipChoice, \
-                                Organization, OrganizationAddress, Period, \
-                                InternshipSpeciality, InternshipStudentInformation
+    Organization, OrganizationAddress, Period, \
+    InternshipSpeciality, InternshipStudentInformation
 from base import models as mdl
 from collections import OrderedDict
 from math import sin, cos, radians, degrees, acos
@@ -66,7 +66,7 @@ def work_dist(student, organizations):
         # If the latitude is not a fake number, compute the distance between the student and the organization
         if organization_informations[0].latitude != 999 :
             distance = calc_dist(student_informations[0].latitude, student_informations[0].longitude,
-                                organization_informations[0].latitude, organization_informations[0].longitude)
+                                 organization_informations[0].latitude, organization_informations[0].longitude)
             distance_student_organization[int(organization.reference)] = distance
 
     # Sort the distance
@@ -77,10 +77,10 @@ def work_dist(student, organizations):
 def get_number_choices(datas):
     for internship in datas:
         number_first_choice = len(InternshipChoice.search(organization = internship.organization,
-                                                            speciality = internship.speciality,
-                                                           choice=1))
+                                                          speciality = internship.speciality,
+                                                          choice=1))
         number_other_choice = len(InternshipChoice.search_other_choices(organization = internship.organization,
-                                                            speciality = internship.speciality))
+                                                                        speciality = internship.speciality))
         internship.number_first_choice = number_first_choice
         internship.number_other_choice = number_other_choice
 
@@ -166,10 +166,10 @@ def set_student_choices_list(query,student_choice):
     for choice in student_choice:
         for internship in query:
             if internship.organization == choice.organization and \
-               internship.speciality == choice.speciality:
-                    choice.maximum_enrollments = internship.maximum_enrollments
-                    choice.selectable = internship.selectable
-                    query[index] = 0
+                            internship.speciality == choice.speciality:
+                choice.maximum_enrollments = internship.maximum_enrollments
+                choice.selectable = internship.selectable
+                query[index] = 0
             index += 1
         query = [x for x in query if x != 0]
         index = 0
@@ -279,14 +279,14 @@ def internships_stud(request):
         all_non_mandatory_selected_internships[x]=InternshipChoice.search(internship_choice=x+1)
 
     return render(request, "internships_stud.html", {'section': 'internship',
-                                                'all_internships' : query,
-                                                'non_mandatory_speciality' : all_non_mandatory_speciality,
-                                                'all_non_mandatory_internships': all_non_mandatory_internships,
-                                                'all_non_mandatory_selected_internships': all_non_mandatory_selected_internships,
-                                                'speciality_sort_value': speciality_sort_value,
-                                                'all_speciality' : all_speciality,
-                                                'selectable' : selectable,
-                                                 })
+                                                     'all_internships' : query,
+                                                     'non_mandatory_speciality' : all_non_mandatory_speciality,
+                                                     'all_non_mandatory_internships': all_non_mandatory_internships,
+                                                     'all_non_mandatory_selected_internships': all_non_mandatory_selected_internships,
+                                                     'speciality_sort_value': speciality_sort_value,
+                                                     'all_speciality' : all_speciality,
+                                                     'selectable' : selectable,
+                                                     })
 
 
 @login_required
@@ -312,7 +312,7 @@ def internships_save(request):
             internship_choice_tab = request.POST.getlist('is_choice')
             internship_choice_tab_del = list(set(internship_choice_tab))
             for choice_tab in internship_choice_tab_del:
-                    InternshipChoice.objects.filter(student=student, internship_choice=choice_tab).delete()
+                InternshipChoice.objects.filter(student=student, internship_choice=choice_tab).delete()
 
         all_specialities = get_all_specialities(all_internships)
         set_tabs_name(all_specialities)
@@ -400,7 +400,7 @@ def student_choice(request, id):
     internship = InternshipOffer.find_intership_by_id(id)
     # Get the students who have choosen this internship
     students = InternshipChoice.search(organization=internship.organization,
-                                        speciality=internship.speciality)
+                                       speciality=internship.speciality)
     number_choices = [None]*5
 
     # Get the choices' number for this internship
@@ -431,7 +431,7 @@ def internships_block(request):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_modification_student(request, registration_id):
-	# Get the student base on the user
+    # Get the student base on the user
     student = mdl.student.find_by(registration_id=registration_id, full_registration = True)
     # Get in descending order the student's choices in first lines
     student_choice = InternshipChoice.find_by_student_desc(student)
@@ -448,10 +448,10 @@ def internships_modification_student(request, registration_id):
     for choice in student_choice:
         for internship in query:
             if internship.organization == choice.organization and \
-               internship.speciality == choice.speciality:
-                    choice.maximum_enrollments = internship.maximum_enrollments
-                    choice.selectable = internship.selectable
-                    query[index] = 0
+                            internship.speciality == choice.speciality:
+                choice.maximum_enrollments = internship.maximum_enrollments
+                choice.selectable = internship.selectable
+                query[index] = 0
             index += 1
         query = [x for x in query if x != 0]
         index = 0
@@ -471,13 +471,13 @@ def internships_modification_student(request, registration_id):
     periods = Period.search()
 
     return render(request, "internship_modification_student.html", {'section': 'internship',
-                                                'all_internships' : query,
-                                                'all_speciality' : all_speciality,
-                                                'periods' : periods,
-                                                'registration_id':registration_id,
-                                                'student' : student[0],
-                                                'student_enrollment' : student_enrollment,
-                                                 })
+                                                                    'all_internships' : query,
+                                                                    'all_speciality' : all_speciality,
+                                                                    'periods' : periods,
+                                                                    'registration_id':registration_id,
+                                                                    'student' : student[0],
+                                                                    'student_enrollment' : student_enrollment,
+                                                                    })
 
 
 @login_required

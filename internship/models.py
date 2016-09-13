@@ -99,11 +99,11 @@ class InternshipMaster(models.Model):
     TYPE_CHOICE = (('SPECIALIST',_('Specialist')),
                    ('GENERALIST',_('Generalist')))
     SPECIALITY_CHOICE = (('INTERNAL_MEDICINE',_('Internal Medicine')),
-                        ('SURGERY',_('Surgery')),
-                        ('GYNEC_OBSTETRICS',_('Gynec-Obstetrics')),
-                        ('PEDIATRICS',_('Pediatrics')),
-                        ('EMERGENCY',_('Emergency')),
-                        ('GERIATRICS',_('Geriatrics')))
+                         ('SURGERY',_('Surgery')),
+                         ('GYNEC_OBSTETRICS',_('Gynec-Obstetrics')),
+                         ('PEDIATRICS',_('Pediatrics')),
+                         ('EMERGENCY',_('Emergency')),
+                         ('GERIATRICS',_('Geriatrics')))
 
     organization     = models.ForeignKey('internship.Organization', null=True)
     #internship_offer = models.ForeignKey(InternshipOffer)
@@ -325,7 +325,7 @@ class OrganizationAddress(models.Model):
             if data.latitude is None :
                 #if it exist, compile the address with the location / postal / city / country
                 address = data.location + " " + data.postal_code + " " \
-                                + data.city + " " + data.country
+                          + data.city + " " + data.country
                 #Compute the geolocalisation
                 address_lat_long = OrganizationAddress.geocode(address)
                 #if the geolac is fing put the data, if not put fake data
@@ -334,7 +334,7 @@ class OrganizationAddress(models.Model):
                     data.longitude = address_lat_long[1]
                 else :
                     address = data.location + " " + data.postal_code + " " \
-                                    + data.country
+                              + data.country
                     #Compute the geolocalisation
                     address_lat_long = OrganizationAddress.geocode(address)
                     #if the geolac is fing put the data, if not put fake data
@@ -390,8 +390,8 @@ class InternshipStudentAffectationStat(models.Model):
     @staticmethod
     def search(**kwargs):
         kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = InternshipStudentAffectationStat.objects.filter(**kwargs)\
-                    .order_by("student__person__last_name","student__person__first_name", "period__date_start")
+        queryset = InternshipStudentAffectationStat.objects.filter(**kwargs) \
+            .order_by("student__person__last_name","student__person__first_name", "period__date_start")
         return queryset
 
     @staticmethod

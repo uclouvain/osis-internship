@@ -798,8 +798,8 @@ def generate_and_save():
         for period, internship in internships.items():
             internship.period = periods[internship.period - 1]
             sol_line = create_solution_line(internship.student, internship.organization, internship.speciality,
-                                     internship.period, internship.choice, internship.type_of_internship,
-                                     internship.cost, internship.consecutive_month)
+                                            internship.period, internship.choice, internship.type_of_internship,
+                                            internship.cost, internship.consecutive_month)
             sol_line.save()
 
 def load_solution(data):
@@ -874,9 +874,9 @@ def internship_affectation_sumup(request):
         print(a.period.name)
 
     return render(request, "internship_affectation_sumup.html",
-                                                {'section': 'internship',
-                                                 'specialities':        all_speciality,
-                                                 'periods':             periods,
-                                                 'organizations':       organizations,
-                                                 'affectations':        affectations,
-                                                })
+                  {'section': 'internship',
+                   'specialities':        all_speciality,
+                   'periods':             periods,
+                   'organizations':       organizations,
+                   'affectations':        affectations,
+                   })
