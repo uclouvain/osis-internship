@@ -53,7 +53,11 @@ def noscript(request):
 
 
 def environnement_request_processor(request):
-    return {'environment': settings.ENVIRONMENT}
+    try:
+        env = settings.ENVIRONMENT
+    except AttributeError:
+        env = 'DEV'
+    return {'environment': env}
 
 
 def login(request):
