@@ -163,7 +163,7 @@ def place_save(request, organization_id, organization_address_id):
         form_address.save()
 
     return render(request, "place_form.html", { 'organization': organization,
-                                                'organization_address':organization_address,
+                                                'organization_address': organization_address,
                                                 'form': form,
                                                 })
 
@@ -179,8 +179,8 @@ def organization_new(request):
 def organization_edit(request, organization_id):
     organization = Organization.find_by_id(organization_id)
     organization_address = OrganizationAddress.search(organization = organization)
-    return render(request, "place_form.html", {'organization':          organization,
-                                               'organization_address':  organization_address[0], })
+    return render(request, "place_form.html", {'organization': organization,
+                                               'organization_address': organization_address[0], })
 
 
 @login_required
@@ -207,8 +207,8 @@ def student_choice(request, reference):
         al.number_first_choice = number_first_choice
         al.number_all_choice = number_all_choice
 
-    return render(request, "place_detail.html", {'organization':        organization[0],
+    return render(request, "place_detail.html", {'organization': organization[0],
                                                  'organization_choice': organization_choice,
-                                                 'offers':              all_offers,
-                                                 'specialities':        all_speciality
+                                                 'offers': all_offers,
+                                                 'specialities': all_speciality
                                                   })
