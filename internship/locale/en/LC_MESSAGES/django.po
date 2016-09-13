@@ -260,3 +260,6 @@ msgstr "Select a speciality to add or modify your choices for this internship in
 
 msgid "assignations_sumup"
 msgid "Assignations' Sum up"
+
+msgid "download_xls_file"
+msgstr "Download Excel File"

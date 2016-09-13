@@ -29,6 +29,7 @@ from django.db import IntegrityError, DataError
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
+
 # To be removed once all students are imported.
 def load_internship_students():
     with open('internship/views/internship_students.csv') as csvfile:

@@ -32,6 +32,8 @@ from internship.models import Organization, OrganizationAddress, InternshipChoic
                             Period, InternshipStudentInformation
 from internship.forms import OrganizationForm, OrganizationAddressForm
 from internship.views.internship import get_all_specialities
+from internship.utils import export_utils
+
 
 def sort_organizations(datas):
     tab = []
@@ -45,6 +47,7 @@ def sort_organizations(datas):
         tab.append(organization[0])
     return tab
 
+
 def set_organization_address(organizations):
     if organizations:
         for organization in organizations:
@@ -54,6 +57,7 @@ def set_organization_address(organizations):
             if address:
                 organization.address = address
             organization.student_choice = len(InternshipChoice.search(organization=organization))
+
 
 def sorted_organization(datas, sort_city):
     tab=[]
@@ -70,6 +74,7 @@ def sorted_organization(datas, sort_city):
         index += 1
     return tab
 
+
 def get_cities(datas):
     tab = []
     for data in datas:
@@ -79,6 +84,7 @@ def get_cities(datas):
     tab.sort()
     return tab
 
+
 def set_tabs_name(datas, student=None):
     for data in datas:
         if student :
@@ -86,6 +92,7 @@ def set_tabs_name(datas, student=None):
             data.size = size
         tab = data.name.replace(" ", "")
         data.tab = tab
+
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
@@ -115,6 +122,7 @@ def internships_places(request):
                                            'all_organizations': l_organizations,
                                            'all_addresses': organization_addresses,
                                            'city_sort_get': city_sort_get})
+
 
 @login_required
 @permission_required('internship.can_access_internship', raise_exception=True)
@@ -214,11 +222,13 @@ def student_choice(request, reference):
                                                  'offers':              all_offers,
                                                  'specialities':        all_speciality
                                                   })
+
+
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def student_affectation(request, reference):
     organization = Organization.search(reference=reference)[0]
-    affectations = InternshipStudentAffectationStat.search(organization=organization).order_by("student__person__last_name","student__person__first_name")
+    affectations = InternshipStudentAffectationStat.search(organization=organization)
 
     for a in affectations:
         a.email = ""
@@ -228,9 +238,9 @@ def student_affectation(request, reference):
         a.email = informations.email
         a.adress = informations.location + " " + informations.postal_code + " " + informations.city
         a.phone_mobile = informations.phone_mobile
-    periods = Period.search().order_by("date_start")
+    periods = Period.search()
 
-    internships = InternshipOffer.search(organization = organization).order_by("speciality__name")
+    internships = InternshipOffer.search(organization = organization)
     all_speciality = get_all_specialities(internships)
 
     return render(request, "place_detail_affectation.html", {'organization':        organization,
@@ -238,3 +248,22 @@ def student_affectation(request, reference):
                                                  'specialities':        all_speciality,
                                                  'periods':             periods,
                                                   })
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def export_xls(request, organization_id, speciality_id):
+    organization = Organization.find_by_id(organization_id)
+    speciality = InternshipSpeciality.find_by_id(speciality_id)
+    affectations = InternshipStudentAffectationStat.search(organization=organization, speciality=speciality)
+
+    for a in affectations:
+        a.email = ""
+        a.adress = ""
+        a.phone_mobile = ""
+        informations = InternshipStudentInformation.search(person=a.student.person)[0]
+        a.email = informations.email
+        a.adress = informations.location + " " + informations.postal_code + " " + informations.city
+        a.phone_mobile = informations.phone_mobile
+
+    return export_utils.export_xls(organization_id, affectations)

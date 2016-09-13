@@ -30,6 +30,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from internship.models import InternshipMaster, Organization
 from operator import itemgetter
 
+
 @login_required
 @permission_required('internship.can_access_internship', raise_exception=True)
 def interships_masters(request):
@@ -77,6 +78,7 @@ def interships_masters(request):
                                                        'all_organizations':         master_organizations,
                                                        'speciality_sort_value':     speciality_sort_value,
                                                        'organization_sort_value':   organization_sort_value})
+
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)

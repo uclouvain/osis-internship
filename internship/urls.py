@@ -60,6 +60,7 @@ urlpatterns = [
     url(r'^places/save/$', place.organization_new, name='place_save_new'),
     url(r'^places/std/$', place.internships_places_stud, name='internships_places_stud'),
     url(r'^places/upload/$', upload_xls.upload_places_file,name='upload_places'),
+    url(r'^places/xlsdownload/([0-9]+)/([0-9]+)/$', place.export_xls, name='affectation_download'),
 
     url(r'^specialities/$', speciality.specialities, name='internships_specialities'),
     url(r'^specialities/create/$', speciality.speciality_create, name='speciality_create'),

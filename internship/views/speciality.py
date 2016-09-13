@@ -30,6 +30,7 @@ from internship.models import InternshipSpeciality
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
+
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def specialities(request):
@@ -46,6 +47,7 @@ def speciality_create(request):
                                                     'learning_unit' : learning_unit[0],
                                                     })
 
+
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def speciality_save(request, speciality_id):
@@ -56,7 +58,7 @@ def speciality_save(request, speciality_id):
         else :
             speciality = InternshipSpeciality()
     else :
-        speciality = InternshipSpeciality()        
+        speciality = InternshipSpeciality()
 
     mandatory = False
     if request.POST.get('mandatory') :
@@ -71,10 +73,12 @@ def speciality_save(request, speciality_id):
     speciality.save()
     return HttpResponseRedirect(reverse('internships_specialities'))
 
+
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def speciality_new(request):
     return speciality_save(request, None)
+
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
@@ -86,6 +90,7 @@ def speciality_modification(request, speciality_id):
                                                     'learning_unit' : learning_unit[0],
                                                     'speciality' : speciality
                                                     })
+
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)

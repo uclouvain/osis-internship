@@ -53,6 +53,7 @@ def calc_dist(lat_a, long_a, lat_b, long_b):
         # For distance in kilometers use this
         return (degrees(acos(distance)) * 69.09)/0.621371
 
+
 def work_dist(student, organizations):
     # Find the student's informations
     student_informations = InternshipStudentInformation.search(person__last_name=student.person.last_name, person__first_name=student.person.first_name)
@@ -71,6 +72,7 @@ def work_dist(student, organizations):
     distance_student_organization = sorted(distance_student_organization.items(), key=itemgetter(1))
     return distance_student_organization
 
+
 def get_number_choices(datas):
     for internship in datas:
         number_first_choice = len(InternshipChoice.search(organization = internship.organization,
@@ -80,6 +82,7 @@ def get_number_choices(datas):
                                                             speciality = internship.speciality))
         internship.number_first_choice = number_first_choice
         internship.number_other_choice = number_other_choice
+
 
 def set_tabs_name(datas, student=None):
     for data in datas:
@@ -92,11 +95,13 @@ def set_tabs_name(datas, student=None):
             tab = data.title.replace(" ", "")
         data.tab = tab
 
+
 def get_selectable(datas):
     if len(datas) > 0:
         return datas[0].selectable
     else:
         return True
+
 
 def get_all_specialities(datas):
     # Create the list of the specialities, delete dpulicated and order alphabetical
@@ -111,6 +116,7 @@ def get_all_specialities(datas):
     tab = list(OrderedDict.fromkeys(tab))
     return tab
 
+
 def get_all_organizations(datas):
     # Create the options for the organizations selection list, delete duplicated
     tab = []
@@ -118,6 +124,7 @@ def get_all_organizations(datas):
         tab.append(data.organization)
     tab = list(set(tab))
     return tab
+
 
 def rebuild_the_lists(preference_list, speciality_list, organization_list, internship_choice_tab):
     # Look over each value of the preference list
@@ -131,10 +138,12 @@ def rebuild_the_lists(preference_list, speciality_list, organization_list, inter
             internship_choice_tab[index] = 0
         index += 1
 
+
 def delete_dublons_keep_order(seq):
     seen = set()
     seen_add = seen.add
     return [x for x in seq if not (x in seen or seen_add(x))]
+
 
 def sort_internships(datas):
     tab = []
@@ -150,6 +159,7 @@ def sort_internships(datas):
             tab.append(internship)
     return tab
 
+
 def set_student_choices_list(query,student_choice):
     index = 0
     for choice in student_choice:
@@ -164,6 +174,7 @@ def set_student_choices_list(query,student_choice):
         index = 0
     query = [x for x in query if x != 0]
     return query
+
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
@@ -415,6 +426,7 @@ def internships_block(request):
 
     return HttpResponseRedirect(reverse('internships_home'))
 
+
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_modification_student(request, registration_id):
@@ -465,6 +477,7 @@ def internships_modification_student(request, registration_id):
                                                 'student' : student[0],
                                                 'student_enrollment' : student_enrollment,
                                                  })
+
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)

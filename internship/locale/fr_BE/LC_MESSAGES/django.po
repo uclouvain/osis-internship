@@ -260,3 +260,6 @@ msgstr "Sélectionnez une spécialité pour ajouter/modifier vos choix pour ce s
 
 msgid "assignations_sumup"
 msgstr "Bilan des assignations"
+
+msgid "download_xls_file"
+msgstr "Télécharger le fichier Excel"

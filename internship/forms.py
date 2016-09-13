@@ -36,10 +36,12 @@ class OrganizationForm(ModelForm):
         model = Organization
         fields = ['name', 'website', 'reference']
 
+
 class OrganizationAddressForm(ModelForm):
     class Meta:
         model = OrganizationAddress
         fields = ['location', 'postal_code', 'city', 'country', 'latitude', 'longitude']
+
 
 class PeriodForm(ModelForm):
     class Meta:

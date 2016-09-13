@@ -54,17 +54,20 @@ class InternshipChoiceAdmin(admin.ModelAdmin):
 
 admin.site.register(InternshipChoice, InternshipChoiceAdmin)
 
+
 class PeriodAdmin(admin.ModelAdmin):
     list_display = ('name', 'date_start', 'date_end')
     fieldsets = ((None, {'fields': ('name', 'date_start', 'date_end')}),)
 
 admin.site.register(Period, PeriodAdmin)
 
+
 class PeriodInternshipPlacesAdmin(admin.ModelAdmin):
     list_display = ('period', 'internship', 'number_places')
     fieldsets = ((None, {'fields': ('period', 'internship', 'number_places')}),)
 
 admin.site.register(PeriodInternshipPlaces, PeriodInternshipPlacesAdmin)
+
 
 class InternshipSpecialityAdmin(admin.ModelAdmin):
     list_display = ('learning_unit', 'name', 'acronym', 'mandatory')
@@ -81,11 +84,13 @@ class OrganizationAdmin(admin.ModelAdmin):
 
 admin.site.register(Organization, OrganizationAdmin)
 
+
 class OrganizationAddressAdmin(admin.ModelAdmin):
     list_display = ('organization', 'label', 'location', 'postal_code', 'city', 'country','latitude', 'longitude')
     fieldsets = ((None, {'fields': ('organization', 'label', 'location', 'postal_code', 'city', 'country', 'latitude', 'longitude')}),)
 
 admin.site.register(OrganizationAddress, OrganizationAddressAdmin)
+
 
 class InternshipStudentInformationAdmin(admin.ModelAdmin):
     list_display = ('person', 'location', 'postal_code', 'city', 'country', 'latitude', 'longitude', 'email', 'phone_mobile')
@@ -94,6 +99,7 @@ class InternshipStudentInformationAdmin(admin.ModelAdmin):
     search_fields = ['person__user__username', 'person__last_name', 'person__first_name']
 
 admin.site.register(InternshipStudentInformation, InternshipStudentInformationAdmin)
+
 
 class InternshipStudentAffectationStatAdmin(admin.ModelAdmin):
     list_display = ('student', 'organization', 'speciality', 'period', 'choice', 'cost', 'consecutive_month', 'type_of_internship')

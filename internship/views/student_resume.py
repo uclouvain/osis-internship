@@ -136,8 +136,8 @@ def internships_student_read(request, registration_id):
     internship_choice = InternshipChoice.find_by_student(student)
     all_speciality = InternshipSpeciality.search(mandatory=True)
 
-    affectations = InternshipStudentAffectationStat.search(student = student).order_by("period__date_start")
-    periods = Period.search().order_by("date_start")
+    affectations = InternshipStudentAffectationStat.search(student = student)
+    periods = Period.search()
     organizations = Organization.search()
     set_organization_address(organizations)
 
@@ -171,6 +171,7 @@ def internships_student_read(request, registration_id):
 
                             })
 
+
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_student_information_modification(request, registration_id):
@@ -180,6 +181,7 @@ def internship_student_information_modification(request, registration_id):
     return render(request, "student_information_modification.html",
                            {'student':             student,
                             'information':         information[0], })
+
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
@@ -204,6 +206,7 @@ def student_save_information_modification(request, registration_id):
     redirect_url = reverse('internships_student_read', args=[registration_id])
     return HttpResponseRedirect(redirect_url)
 
+
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_student_affectation_modification(request, student_id):
@@ -213,7 +216,7 @@ def internship_student_affectation_modification(request, student_id):
     organizations = sort_organizations(organizations)
 
     specialities = InternshipSpeciality.find_all()
-    periods = Period.search().order_by("date_start")
+    periods = Period.search()
     return render(request, "student_affectation_modification.html",
                            {'information':         information[0],
                            'informations':         informations,
@@ -221,6 +224,7 @@ def internship_student_affectation_modification(request, student_id):
                             'specialities':         specialities,
                             'periods':              periods,
                                                       })
+
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)

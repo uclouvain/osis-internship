@@ -46,6 +46,8 @@ def period_create(request):
     return render(request, "period_create.html", {'section': 'internship',
                                                 'form' : period_form,
                                                 })
+
+
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def period_save(request, period_id):
@@ -58,10 +60,12 @@ def period_save(request, period_id):
 
     return HttpResponseRedirect(reverse('internships_periods'))
 
+
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def period_new(request):
     return period_save(request, None)
+
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
@@ -69,6 +73,7 @@ def period_delete(request, period_id):
     period = Period.find_by_id(period_id)
     period.delete()
     return HttpResponseRedirect(reverse('internships_periods'))
+
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
