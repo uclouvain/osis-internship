@@ -28,7 +28,6 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from internship.models import InternshipMaster, Organization
-from operator import itemgetter
 
 
 @login_required

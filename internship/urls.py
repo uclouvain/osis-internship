@@ -25,7 +25,7 @@
 ##############################################################################
 from django.conf.urls import url
 
-from internship.views import home, internship, master, period, place, speciality, student, student_resume, affectation_statistics
+from internship.views import home, internship, master, period, place, speciality, student_resume, affectation_statistics
 from internship.utils import upload_xls
 
 urlpatterns = [

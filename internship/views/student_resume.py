@@ -29,11 +29,10 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
 from internship.models import InternshipChoice, InternshipStudentInformation, \
-                                InternshipSpeciality, InternshipOffer, InternshipStudentAffectationStat, \
+                                InternshipOffer, InternshipStudentAffectationStat, \
                                 Organization, InternshipSpeciality, Period
 from internship.views.place import sort_organizations, set_organization_address
 
-from django.utils.translation import ugettext_lazy as _
 
 
 @login_required

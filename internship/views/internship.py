@@ -27,12 +27,13 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
-from internship.models import InternshipEnrollment, InternshipOffer, InternshipChoice, Organization, Period, InternshipSpeciality
+from internship.models import InternshipEnrollment, InternshipOffer, InternshipChoice, \
+                                Organization, OrganizationAddress, Period, \
+                                InternshipSpeciality, InternshipStudentInformation
 from base import models as mdl
-from django.utils.translation import ugettext_lazy as _
 from collections import OrderedDict
-
 from math import sin, cos, radians, degrees, acos
+from operator import itemgetter
 
 
 def calc_dist(lat_a, long_a, lat_b, long_b):
@@ -525,7 +526,6 @@ def internship_save_modification_student(request) :
     # If the fix checkbox is checked, the list receive '0', '1' as data
     # Delete the '0' value (the value before the '1', wich is required)
     index = 0
-    fixthis_final_list = []
     for value in fixthis_list:
         if value == '1'and fixthis_list[index-1]=='0':
             del fixthis_list[index-1]
