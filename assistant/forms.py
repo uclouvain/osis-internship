@@ -146,7 +146,6 @@ class MandatesArchivesForm(ModelForm):
 
 
 class TutoringLearningUnitForm(forms.Form):
-    academic_year = forms.ChoiceField(choices=[(obj.id, obj) for obj in academic_year.find_academic_years()])
     sessions_number = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'input session_number'}))
     sessions_duration = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'input session_duration'}))
     series_number = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'input series_numbers'}))
@@ -158,6 +157,11 @@ class TutoringLearningUnitForm(forms.Form):
     mandate_id = forms.CharField(widget=forms.HiddenInput(), required=True)
     learning_unit_year = forms.CharField(required=True)
     tutoring_learning_unit_year_id = forms.CharField(widget=forms.HiddenInput(), required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(TutoringLearningUnitForm, self).__init__(*args, **kwargs)
+        self.fields['academic_year'] = \
+            forms.ChoiceField(choices=[(obj.id, obj) for obj in academic_year.find_academic_years()])
 
     class Meta:
         model = mdl.tutoring_learning_unit_year.TutoringLearningUnitYear
