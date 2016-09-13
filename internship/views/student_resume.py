@@ -32,6 +32,7 @@ from internship.models import InternshipChoice, InternshipStudentInformation, In
 
 from django.utils.translation import ugettext_lazy as _
 
+
 def set_number_choices(student_informations):
     for si in student_informations:
         student = mdl.student.find_by_person(si.person)
@@ -39,6 +40,7 @@ def set_number_choices(student_informations):
         si.number_choices = len(choices)
         if student:
             si.registration_id = student.registration_id
+
 
 def get_number_ok_student(students_list, number_selection):
     students_list = list(students_list)
@@ -55,6 +57,7 @@ def get_number_ok_student(students_list, number_selection):
         else :
             nbr_student[1] += 1
     return nbr_student
+
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
@@ -159,6 +162,7 @@ def internships_student_read(request, registration_id):
                             'specialities':        all_speciality,
                             })
 
+
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_student_information_modification(request, registration_id):
@@ -168,6 +172,7 @@ def internship_student_information_modification(request, registration_id):
     return render(request, "student_information_modification.html",
                            {'student':             student,
                             'information':         information[0], })
+
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
