@@ -70,15 +70,15 @@ def internships_student_resume(request):
         else :
             students_not_ok += 1
     student_without_internship = students_can_have_internships - student_with_internships
-    return render(request, "student_search.html", {'s_noma':    None,
-                                                   's_name':    None,
-                                                   'students':  student_informations,
-                                                   'number_selection' : number_selection,
-                                                   'students_ok' : students_ok,
-                                                   'students_not_ok' : students_not_ok,
-                                                   'student_with_internships' : student_with_internships,
-                                                   'students_can_have_internships' : students_can_have_internships,
-                                                   'student_without_internship' : student_without_internship,
+    return render(request, "student_search.html", {'s_noma': None,
+                                                   's_name': None,
+                                                   'students': student_informations,
+                                                   'number_selection': number_selection,
+                                                   'students_ok': students_ok,
+                                                   'students_not_ok': students_not_ok,
+                                                   'student_with_internships': student_with_internships,
+                                                   'students_can_have_internships': students_can_have_internships,
+                                                   'student_without_internship': student_without_internship,
                                                    })
 
 
@@ -118,11 +118,11 @@ def internships_student_search(request):
 
 
     return render(request, "student_search.html",
-                  {'s_name':       s_name,
-                   's_firstname':  s_firstname,
-                   'students':     students_list,
-                   'init':         "0",
-                   'message':      message})
+                  {'s_name': s_name,
+                   's_firstname': s_firstname,
+                   'students': students_list,
+                   'init': "0",
+                   'message': message})
 
 
 @login_required

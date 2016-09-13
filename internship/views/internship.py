@@ -210,13 +210,13 @@ def internships(request):
         all_non_mandatory_internships = InternshipOffer.find_non_mandatory_internships(speciality__mandatory=0)
     get_number_choices(all_non_mandatory_internships)
 
-    return render(request, "internships.html", {'section':                  'internship',
-                                                'all_internships':          query,
+    return render(request, "internships.html", {'section': 'internship',
+                                                'all_internships': query,
                                                 'all_non_mandatory_internships': all_non_mandatory_internships,
-                                                'all_organizations':        all_organizations,
-                                                'all_speciality':           all_specialities,
-                                                'organization_sort_value':  organization_sort_value,
-                                                'speciality_sort_value':    speciality_sort_value,
+                                                'all_organizations': all_organizations,
+                                                'all_speciality': all_specialities,
+                                                'organization_sort_value': organization_sort_value,
+                                                'speciality_sort_value': speciality_sort_value,
                                                 'non_mandatory_speciality': all_non_mandatory_speciality,
                                                 })
 
@@ -279,13 +279,13 @@ def internships_stud(request):
         all_non_mandatory_selected_internships[x]=InternshipChoice.search(internship_choice=x+1)
 
     return render(request, "internships_stud.html", {'section': 'internship',
-                                                     'all_internships' : query,
-                                                     'non_mandatory_speciality' : all_non_mandatory_speciality,
+                                                     'all_internships': query,
+                                                     'non_mandatory_speciality': all_non_mandatory_speciality,
                                                      'all_non_mandatory_internships': all_non_mandatory_internships,
                                                      'all_non_mandatory_selected_internships': all_non_mandatory_selected_internships,
                                                      'speciality_sort_value': speciality_sort_value,
-                                                     'all_speciality' : all_speciality,
-                                                     'selectable' : selectable,
+                                                     'all_speciality': all_speciality,
+                                                     'selectable': selectable,
                                                      })
 
 
@@ -409,9 +409,9 @@ def student_choice(request, id):
                                                             speciality=internship.speciality,
                                                             choice=index))
 
-    return render(request, "internship_detail.html", {'section':        'internship',
-                                                      'internship':     internship,
-                                                      'students':       students,
+    return render(request, "internship_detail.html", {'section': 'internship',
+                                                      'internship': internship,
+                                                      'students': students,
                                                       'number_choices': number_choices, })
 
 
@@ -471,12 +471,12 @@ def internships_modification_student(request, registration_id):
     periods = Period.search()
 
     return render(request, "internship_modification_student.html", {'section': 'internship',
-                                                                    'all_internships' : query,
-                                                                    'all_speciality' : all_speciality,
-                                                                    'periods' : periods,
-                                                                    'registration_id':registration_id,
-                                                                    'student' : student[0],
-                                                                    'student_enrollment' : student_enrollment,
+                                                                    'all_internships': query,
+                                                                    'all_speciality': all_speciality,
+                                                                    'periods': periods,
+                                                                    'registration_id': registration_id,
+                                                                    'student': student[0],
+                                                                    'student_enrollment': student_enrollment,
                                                                     })
 
 

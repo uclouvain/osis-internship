@@ -56,7 +56,7 @@ def internships_home(request):
     OrganizationAddress.find_latitude_longitude(student_informations)
     OrganizationAddress.find_latitude_longitude(organization_informations)
 
-    return render(request, "internships_home.html", {'section':   'internship',
-                                                     'noma':      noma,
+    return render(request, "internships_home.html", {'section': 'internship',
+                                                     'noma': noma,
                                                      'blockable': blockable
                                                      })
