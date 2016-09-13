@@ -1063,7 +1063,7 @@ def load_solution(data):
 
 
 @login_required
-def internship_affectation_statistics_generate(request, sort_organization, sort_students):
+def internship_affectation_statistics_generate(request):
     """ Generate new solution, save it in the database, redirect back to the page 'internship_affectation_statistics'"""
     if request.method == 'POST':
         if request.POST['executions'] != "":
@@ -1080,13 +1080,11 @@ def internship_affectation_statistics_generate(request, sort_organization, sort_
                     cost = new_cost
 
             print("+++++ Total Execution time : " + str(round((time.clock() - t0), 3)) + " seconds process time +++++")
-        return HttpResponseRedirect(reverse('internship_affectation_statistics',
-                                            kwargs={'sort_organization': sort_organization,
-                                                    'sort_students': sort_students}))
+        return HttpResponseRedirect(reverse('internship_affectation_statistics'))
 
 
 @login_required
-def internship_affectation_statistics(request, sort_organization='ref', sort_students='name'):
+def internship_affectation_statistics(request):
     t0 = time.clock()
     init_organizations()
     init_specialities()
@@ -1098,16 +1096,10 @@ def internship_affectation_statistics(request, sort_organization='ref', sort_stu
         stats = compute_stats(sol)
 
         # Mange sort of the students
-        if sort_students == 'score':
-            sol = OrderedDict(sorted(sol.items(), key=lambda t: t[1]['score'], reverse=True))
-        else:
-            sol = OrderedDict(sorted(sol.items(), key=lambda t: t[0].person.last_name))
+        sol = OrderedDict(sorted(sol.items(), key=lambda t: t[0].person.last_name))
 
         # Mange sort of the organizations
-        if sort_organization == 'speciality':
-            table.sort(key=itemgetter(1))
-        else:
-            table.sort(key=itemgetter(0))
+        table.sort(key=itemgetter(0))
 
         internship_errors = InternshipStudentAffectationStat.objects.filter(organization=organizations[hospital_error])
     print("Solution loaded in " + str(round((time.clock() - t0), 3)) + " seconds process time")
@@ -1117,10 +1109,7 @@ def internship_affectation_statistics(request, sort_organization='ref', sort_stu
                    'recap_sol': sol,
                    'stats': stats,
                    'organizations': table,
-                   'errors': internship_errors,
-                   'has_data': False,
-                   'sort_organization': sort_organization,
-                   'sort_students': sort_students})
+                   'errors': internship_errors})
 
 
 @login_required

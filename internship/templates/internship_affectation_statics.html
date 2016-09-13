@@ -30,7 +30,17 @@
 <li><a href="{% url 'internships_home' %}">{% trans 'internships' %}</a></li>
 <li class="active">{% trans 'affectation_result' %}</li>
 {% endblock %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/dataTables.bootstrap.min.css' %}">
+{% endblock %}
 {% block content %}
+<style>
+  .dataTables_filter {
+    width: 50%;
+    float: right;
+    text-align: right;
+  }
+</style>
 <div class="modal fade bs-example-modal-sm" id="PleaseWaitModal" tabindex="-1"
     role="dialog" aria-hidden="true" data-backdrop="static">
     <div class="modal-dialog modal-sm">
@@ -55,11 +65,12 @@
 </div>
 <div class="panel panel-default">
   <div class="panel-body">
-    <form  method="post" action="{% url 'internship_affectation_statistics_generate' sort_organization=sort_organization sort_students=sort_students %}" >
+    <form  method="post" action="{% url 'internship_affectation_statistics_generate' %}" >
       <button type="submit" class="btn btn-primary" title="{% trans 'Send'%}" id="bt_interships_save" onclick="$('#PleaseWaitModal').modal('show');">
           <span class="glyphicon glyphicon-random" aria-hidden="true"></span> Generate solution
       </button>
-      <input type="number" name="executions" value=1 min=1>
+        <input type="number" name="executions" value=1 min=1>
+        <label for="executions">Executions</label>
       {% csrf_token %}
     </form>
     <ul class="nav nav-tabs">
@@ -73,23 +84,26 @@
         <div class="panel panel-default">
           <div class="tab-content">
             <div role="tabpanel" class="tab-pane fade in active" id="profile">
-              <table class="table">
+              <table class="table" id="organizations" cellspacing="0" width="100%">
+                <thead>
                 <tr>
-                  <th><a href="{% url 'internship_affectation_statistics' sort_organization='ref' sort_students=sort_students %}" >Hôpital</a></th>
-                  <th><a href="{% url 'internship_affectation_statistics' sort_organization='speciality' sort_students=sort_students %}" >Spécialité</a></th>
-                  <th>P1</th>
-                  <th>P2</th>
-                  <th>P3</th>
-                  <th>P4</th>
-                  <th>P5</th>
-                  <th>P6</th>
-                  <th>P7</th>
-                  <th>P8</th>
-                  <th>P9</th>
-                  <th>P10</th>
-                  <th>P11</th>
-                  <th>P12</th>
+                  <th>Hôpital</th>
+                  <th>Spécialité</th>
+                  <th class="no-sort">P1</th>
+                  <th class="no-sort">P2</th>
+                  <th class="no-sort">P3</th>
+                  <th class="no-sort">P4</th>
+                  <th class="no-sort">P5</th>
+                  <th class="no-sort">P6</th>
+                  <th class="no-sort">P7</th>
+                  <th class="no-sort">P8</th>
+                  <th class="no-sort">P9</th>
+                  <th class="no-sort">P10</th>
+                  <th class="no-sort">P11</th>
+                  <th class="no-sort">P12</th>
                 </tr>
+              </thead>
+
                 {% for item in organizations %}
                   <tr>
                     <td>
@@ -128,23 +142,25 @@
       <div class="panel panel-default">
         <div class="tab-content">
           <div role="tabpanel" class="tab-pane fade in active" id="profile">
-            <table class="table">
-              <tr>
-                <th><a href="{% url 'internship_affectation_statistics' sort_organization=sort_organization sort_students='name' %}" >Student</a></th>
-                <th>P1</th>
-                <th>P2</th>
-                <th>P3</th>
-                <th>P4</th>
-                <th>P5</th>
-                <th>P6</th>
-                <th>P7</th>
-                <th>P8</th>
-                <th>P9</th>
-                <th>P10</th>
-                <th>P11</th>
-                <th>P12</th>
-                <th><a href="{% url 'internship_affectation_statistics' sort_organization=sort_organization sort_students='score' %}" >Score</a></th>
-              </tr>
+            <table class="table" id="students" cellspacing="0" width="100%">
+              <thead>
+                <tr>
+                  <th>Student</th>
+                  <th class="no-sort">P1</th>
+                  <th class="no-sort">P2</th>
+                  <th class="no-sort">P3</th>
+                  <th class="no-sort">P4</th>
+                  <th class="no-sort">P5</th>
+                  <th class="no-sort">P6</th>
+                  <th class="no-sort">P7</th>
+                  <th class="no-sort">P8</th>
+                  <th class="no-sort">P9</th>
+                  <th class="no-sort">P10</th>
+                  <th class="no-sort">P11</th>
+                  <th class="no-sort">P12</th>
+                  <th>Score</th>
+                </tr>
+            </thead>
               {% for student, periods in recap_sol.items %}
               <tr id="student_{{student.id}}">
                 <td>
@@ -167,9 +183,6 @@
                   X
                   {% else %}
                   {{ periods.score }}
-                  <script>
-                  console.log({{ periods.score }})
-                  </script>
                   {% endif %}
                 </td>
               {% endfor %}
@@ -344,4 +357,29 @@
 </div>
 </div>
 </div>
+{% endblock %}
+{% block script %}
+<script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/dataTables.bootstrap.min.js' %}"></script>
+ <script>
+ $(document).ready(function() {
+    $('#organizations').DataTable({
+      paging: false,
+      "columnDefs": [ {
+        "targets": 'no-sort',
+        "orderable": false,
+      } ],
+      bInfo: false
+    });
+
+    $('#students').DataTable({
+      paging: false,
+      "columnDefs": [ {
+        "targets": 'no-sort',
+        "orderable": false,
+      } ],
+      bInfo: false
+    });
+} );
+</script>
 {% endblock %}
