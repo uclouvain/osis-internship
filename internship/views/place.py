@@ -265,3 +265,17 @@ def export_xls(request, organization_id, speciality_id):
         a.phone_mobile = informations.phone_mobile
 
     return export_utils.export_xls(organization_id, affectations)
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def export_pdf(request, learning_unit_year_id=None, tutor_id=None, offer_id=None):
+    academic_year = mdl.academic_year.current_academic_year()
+    is_program_manager = mdl.program_manager.is_program_manager(request.user)
+    exam_enrollments = _get_exam_enrollments(request.user,
+                                             learning_unit_year_id=learning_unit_year_id,
+                                             academic_year=academic_year,
+                                             tutor_id=tutor_id,
+                                             offer_year_id=offer_id,
+                                             is_program_manager=is_program_manager)
+    tutor = mdl.tutor.find_by_user(request.user) if not is_program_manager else None
+    return pdf_utils.print_notes(exam_enrollments, tutor=tutor)

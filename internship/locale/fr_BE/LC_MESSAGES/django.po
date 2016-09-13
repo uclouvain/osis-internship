@@ -263,3 +263,6 @@ msgstr "Bilan des assignations"
 
 msgid "download_xls_file"
 msgstr "Télécharger le fichier Excel"
+
+msgid "download_pdf_file"
+msgstr "Télécharger le fichier PDF"

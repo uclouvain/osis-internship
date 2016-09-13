@@ -263,3 +263,6 @@ msgid "Assignations' Sum up"
 
 msgid "download_xls_file"
 msgstr "Download Excel File"
+
+msgid "download_pdf_file"
+msgstr "Download PDF File"
