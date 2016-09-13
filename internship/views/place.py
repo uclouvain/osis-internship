@@ -228,7 +228,6 @@ def student_choice(request, reference):
 def student_affectation(request, reference):
     organization = Organization.search(reference=reference)[0]
     affectations = InternshipStudentAffectationStat.search(organization=organization)
-
     for a in affectations:
         a.email = ""
         a.adress = ""

@@ -24,88 +24,70 @@
 #
 ##############################################################################
 import datetime
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.core.urlresolvers import reverse
+
 from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl.styles import Color, Style, PatternFill
 from django.utils.translation import ugettext_lazy as _
 
-from internship.models import Organization
+from internship.models import Organization, Period
 
-HEADER = [str(_('academic_year')),
-          str(_('sessionn')),
-          str(_('learning_unit')),
-          str(_('program')),
-          str(_('registration_number')),
-          str(_('lastname')),
+HEADER = [str(_('lastname')),
           str(_('firstname')),
-          str(_('numbered_score')),
-          str(_('justification')),
-          str(_('end_date')),
-          str(_('ID'))]
+          str(_('noma')),
+          str(_('email')),
+          str(_('addresses')),
+          str(_('birth_date')),
+          str(_('mobile_phone'))]
 
 
 def export_xls(organization_id, affectations):
     organization = Organization.find_by_id(organization_id)
+    if affectations :
+        periods = Period.search()
 
-    workbook = Workbook()
-    worksheet = workbook.active
+        workbook = Workbook()
+        worksheet = workbook.active
 
-    worksheet.append([str(affectations[0].organization.name)])
-    worksheet.append([str(affectations[0].speciality.name)])
-    worksheet.append([str('')])
-    printing_date = datetime.datetime.now()
-    printing_date = printing_date.strftime("%d/%m/%Y")
-    worksheet.append([str('%s: %s' % (_('file_production_date'), printing_date))])
-    worksheet.append([str('')])
-    worksheet.append([str('')])
+        worksheet.append([str(affectations[0].organization.name)])
+        worksheet.append([str(affectations[0].speciality.name)])
+        worksheet.append([str('')])
+        printing_date = datetime.datetime.now()
+        printing_date = printing_date.strftime("%d/%m/%Y")
+        worksheet.append([str('%s: %s' % (_('file_production_date'), printing_date))])
+        worksheet.append([str('')])
+        worksheet.append([str('')])
 
-    __columns_resizing(worksheet)
-    worksheet.append(HEADER)
+        __columns_resizing(worksheet)
 
-    row_number = 7
-    for affectation in affectations:
-        student = exam_enroll.learning_unit_enrollment.student
-        offer = exam_enroll.learning_unit_enrollment.offer
-        person = mdl.person.find_by_id(student.person.id)
+        row_number = 7
+        for period in periods:
+            worksheet.append([str(period.name), period.date_start.strftime("%d-%m-%Y"), period.date_end.strftime("%d-%m-%Y")])
+            __coloring_non_editable(worksheet, row_number)
+            row_number += 1
+            for affectation in affectations:
+                if affectation.period.name == period.name:
+                    student = affectation.student
+                    worksheet.append([str(student.person.last_name),
+                                      str(student.person.first_name),
+                                      student.registration_id,
+                                      affectation.email,
+                                      affectation.adress,
+                                      "birth_date inc",
+                                      affectation.phone_mobile])
+                    row_number += 1
 
-        if exam_enroll.session_exam.deadline is None:
-            end_date = "-"
-        else:
-            end_date = exam_enroll.session_exam.deadline.strftime('%d/%m/%Y')
-        score = None
-        if exam_enroll.score_final is not None:
-            if exam_enroll.session_exam.learning_unit_year.decimal_scores:
-                score = "{0:.2f}".format(exam_enroll.score_final)
-            else:
-                score = "{0:.0f}".format(exam_enroll.score_final)
-        justification = ""
-        if exam_enroll.justification_final:
-            justification = _(exam_enroll.justification_final)
-        worksheet.append([str(academic_year),
-                          str(exam_enroll.session_exam.number_session),
-                          exam_enroll.session_exam.learning_unit_year.acronym,
-                          offer.acronym,
-                          student.registration_id,
-                          person.last_name,
-                          person.first_name,
-                          score,
-                          str(justification),
-                          end_date,
-                          exam_enroll.id])
 
-        row_number += 1
-        __coloring_non_editable(worksheet, row_number, score, exam_enroll.justification_final)
-
-    number_session = list(exam_enrollments)[0].session_exam.number_session
-    learn_unit_acronym = list(exam_enrollments)[0].session_exam.learning_unit_year.acronym
-
-    filename = "session_%s_%s_%s.xlsx" % (str(academic_year.year),
-                                          str(number_session),
-                                          learn_unit_acronym)
-    response = HttpResponse(save_virtual_workbook(workbook), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=%s' % filename
-    return response
+        filename = "affectation_%s_%s.xlsx" % (str(organization.reference),
+                                              str(affectations[0].speciality.acronym))
+        response = HttpResponse(save_virtual_workbook(workbook), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+        return response
+    else:
+        redirect_url = reverse('place_detail_student_affectation', args=[organization.reference])
+        return HttpResponseRedirect(redirect_url)
 
 
 def __columns_resizing(ws):
@@ -114,35 +96,26 @@ def __columns_resizing(ws):
     """
     col_academic_year = ws.column_dimensions['A']
     col_academic_year.width = 18
+    col_academic_year = ws.column_dimensions['B']
+    col_academic_year.width = 18
     col_academic_year = ws.column_dimensions['C']
     col_academic_year.width = 18
+    col_academic_year = ws.column_dimensions['D']
+    col_academic_year.width = 40
     col_academic_year = ws.column_dimensions['E']
-    col_academic_year.width = 18
+    col_academic_year.width = 40
     col_last_name = ws.column_dimensions['F']
-    col_last_name.width = 30
+    col_last_name.width = 19
     col_first_name = ws.column_dimensions['G']
-    col_first_name.width = 30
-    col_note = ws.column_dimensions['H']
-    col_note.width = 20
-    col_note = ws.column_dimensions['I']
-    col_note.width = 20
-    col_id_exam_enrollment = ws.column_dimensions['K']
-    # Hide the exam_enrollment_id column
-    col_id_exam_enrollment.hidden = True
+    col_first_name.width = 20
 
-
-def __coloring_non_editable(ws, row_number, score, justification):
+def __coloring_non_editable(ws, row_number):
     """
     Coloring of the non-editable columns
     """
     style_no_modification = Style(fill=PatternFill(patternType='solid', fgColor=Color('C1C1C1')))
     column_number = 1
-    while column_number < 12:
-        if column_number < 8 or column_number > 9:
-            ws.cell(row=row_number, column=column_number).style = style_no_modification
-        else:
-            if not(score is None and justification is None):
-                ws.cell(row=row_number, column=8).style = style_no_modification
-                ws.cell(row=row_number, column=9).style = style_no_modification
+    while column_number < 8:
+        ws.cell(row=row_number, column=column_number).style = style_no_modification
 
         column_number += 1

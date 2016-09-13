@@ -44,18 +44,21 @@ class InternshipOffer(models.Model):
 
     @staticmethod
     def find_internships():
-        return InternshipOffer.objects.filter(speciality__mandatory=1).order_by('speciality__name', 'organization__reference')
+        return InternshipOffer.objects.filter(speciality__mandatory=1).\
+            order_by('speciality__acronym', 'speciality__name', 'organization__reference')
 
     @staticmethod
     def find_non_mandatory_internships(**kwargs):
         kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = InternshipOffer.objects.filter(**kwargs).filter(speciality__mandatory=0).order_by('speciality__name', 'organization__reference')
+        queryset = InternshipOffer.objects.filter(**kwargs).filter(speciality__mandatory=0).\
+            order_by('speciality__acronym', 'speciality__name', 'organization__reference')
         return queryset
 
     @staticmethod
     def search(**kwargs):
         kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = InternshipOffer.objects.filter(**kwargs).order_by('speciality__name', 'organization__reference')
+        queryset = InternshipOffer.objects.filter(**kwargs).\
+            order_by('speciality__acronym', 'speciality__name', 'organization__reference')
         return queryset
 
     @staticmethod
