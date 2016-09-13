@@ -41,15 +41,15 @@
           <div class="col-md-3">
               <label for="name" >{% trans 'name'%}</label>
               <input class="form-control" id="txt_name" placeholder="{% trans 'Name' %}"
-                                                        name="s_name"
-                                                        value="{{ s_name | default_if_none:'' }}"
+                                                        name="search_name"
+                                                        value="{{ search_name | default_if_none:'' }}"
                                                         style="text-transform:uppercase">
           </div>
           <div class="col-md-3">
               <label for="name" >{% trans 'firstname'%}</label>
               <input class="form-control" id="txt_firstname" placeholder="{% trans 'Firstname' %}"
-                                                        name="s_firstname"
-                                                        value="{{ s_firstname | default_if_none:'' }}"
+                                                        name="search_firstname"
+                                                        value="{{ search_firstname | default_if_none:'' }}"
                                                         style="text-transform:uppercase">
           </div>
           <div class="col-md-1">

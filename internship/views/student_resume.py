@@ -79,8 +79,8 @@ def internships_student_resume(request):
     students_ok = get_number_ok_student(students_list, number_selection)
 
     student_without_internship = students_can_have_internships - student_with_internships
-    return render(request, "student_search.html", {'s_name': None,
-                                                    's_firstname': None,
+    return render(request, "student_search.html", {'search_name': None,
+                                                    'search_firstname': None,
                                                    'students': student_informations,
                                                    'number_selection': number_selection,
                                                    'students_ok': students_ok[0],
@@ -94,26 +94,26 @@ def internships_student_resume(request):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_search(request):
-    s_name = request.GET['s_name']
-    s_firstname = request.GET['s_firstname']
+    search_name = request.GET['search_name']
+    search_firstname = request.GET['search_firstname']
     criteria_present = False
 
-    s_name = s_name.strip()
-    s_name = s_name.title()
-    if len(s_name) <= 0:
-        s_name = None
+    search_name = search_name.strip()
+    search_name = search_name.title()
+    if len(search_name) <= 0:
+        search_name = None
     else:
         criteria_present=True
 
-    s_firstname = s_firstname.strip()
-    s_firstname = s_firstname.title()
-    if len(s_firstname) <= 0:
-        s_firstname = None
+    search_firstname = search_firstname.strip()
+    search_firstname = search_firstname.title()
+    if len(search_firstname) <= 0:
+        search_firstname = None
     else:
         criteria_present=True
 
     if criteria_present:
-        student_informations = InternshipStudentInformation.search(person__last_name=s_name, person__first_name = s_firstname)
+        student_informations = InternshipStudentInformation.search(person__last_name=search_name, person__first_name = search_firstname)
     else:
         student_informations = InternshipStudentInformation.find_all()
 
@@ -134,8 +134,8 @@ def internships_student_search(request):
     student_without_internship = students_can_have_internships - student_with_internships
 
     return render(request, "student_search.html",
-                           {'s_name': s_name,
-                            's_firstname': s_firstname,
+                           {'search_name': search_name,
+                            'search_firstname': search_firstname,
                             'students': student_informations,
                             'number_selection': number_selection,
                             'students_ok': students_ok[0],
