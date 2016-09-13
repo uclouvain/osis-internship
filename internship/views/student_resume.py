@@ -134,15 +134,15 @@ def internships_student_search(request):
     student_without_internship = students_can_have_internships - student_with_internships
 
     return render(request, "student_search.html",
-                           {'s_name':       s_name,
-                            's_firstname':  s_firstname,
-                            'students':  student_informations,
-                            'number_selection' : number_selection,
-                            'students_ok' : students_ok[0],
-                            'students_not_ok' : students_ok[1],
-                            'student_with_internships' : student_with_internships,
-                            'students_can_have_internships' : students_can_have_internships,
-                            'student_without_internship' : student_without_internship,
+                           {'s_name': s_name,
+                            's_firstname': s_firstname,
+                            'students': student_informations,
+                            'number_selection': number_selection,
+                            'students_ok': students_ok[0],
+                            'students_not_ok': students_ok[1],
+                            'student_with_internships': student_with_internships,
+                            'students_can_have_internships': students_can_have_internships,
+                            'student_without_internship': student_without_internship,
                             })
 
 
@@ -156,10 +156,10 @@ def internships_student_read(request, registration_id):
     all_speciality = InternshipSpeciality.find_all()
 
     return render(request, "student_resume.html",
-                           {'student':             student,
-                            'information':         information[0],
-                            'internship_choice':   internship_choice,
-                            'specialities':        all_speciality,
+                           {'student': student,
+                            'information': information[0],
+                            'internship_choice': internship_choice,
+                            'specialities': all_speciality,
                             })
 
 
@@ -170,8 +170,8 @@ def internship_student_information_modification(request, registration_id):
     information = InternshipStudentInformation.search(person = student[0].person)
     student = student[0]
     return render(request, "student_information_modification.html",
-                           {'student':             student,
-                            'information':         information[0], })
+                           {'student': student,
+                            'information': information[0], })
 
 
 @login_required
