@@ -865,18 +865,22 @@ def internship_affectation_statistics(request):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_affectation_sumup(request):
-    all_speciality = InternshipSpeciality.search(mandatory=True).order_by("acronym", "name")
-    periods = Period.search().order_by("date_start")
+    all_speciality = InternshipSpeciality.search(mandatory=True)
+    periods = Period.search()
     organizations = Organization.search()
     organizations = sort_organizations(organizations)
+    offers = InternshipOffer.search()
+    informations = []
+    for organization in organizations:
+        for offer in offers:
+            if offer.organization.reference == organization.reference:
+                informations.append(offer)
     affectations = InternshipStudentAffectationStat.search().order_by("student__person__last_name", "student__person__first_name", "period__date_start")
-    for a in affectations:
-        print(a.period.name)
 
     return render(request, "internship_affectation_sumup.html",
                                                 {'section': 'internship',
                                                  'specialities':        all_speciality,
                                                  'periods':             periods,
-                                                 'organizations':       organizations,
+                                                 'organizations':       informations,
                                                  'affectations':        affectations,
                                                 })

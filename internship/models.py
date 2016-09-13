@@ -44,7 +44,7 @@ class InternshipOffer(models.Model):
 
     @staticmethod
     def find_internships():
-        return InternshipOffer.objects.filter(speciality__mandatory=1).order_by('speciality__name', 'organization__reference')
+        return InternshipOffer.objects.filter(speciality__mandatory=1).order_by('speciality__acronym', 'speciality__name', 'organization__reference')
 
     @staticmethod
     def find_non_mandatory_internships(**kwargs):
@@ -214,12 +214,12 @@ class InternshipSpeciality(models.Model):
     @staticmethod
     def search(**kwargs):
         kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = InternshipSpeciality.objects.filter(**kwargs)
+        queryset = InternshipSpeciality.objects.filter(**kwargs).order_by('acronym', 'name')
         return queryset
 
     @staticmethod
     def find_all():
-        return InternshipSpeciality.objects.all().order_by('name')
+        return InternshipSpeciality.objects.all().order_by('acronym', 'name')
 
     @staticmethod
     def find_by_id(speciality_id):
@@ -227,7 +227,7 @@ class InternshipSpeciality(models.Model):
 
     @staticmethod
     def find_non_mandatory():
-        return InternshipSpeciality.objects.filter(mandatory=False).order_by('name')
+        return InternshipSpeciality.objects.filter(mandatory=False).order_by('acronym', 'name')
 
 class Organization(models.Model):
     name = models.CharField(max_length=255)

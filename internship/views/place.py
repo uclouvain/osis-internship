@@ -39,6 +39,7 @@ def sort_organizations(datas):
     for data in datas:
         if data is not None:
             number_ref.append(data.reference)
+    number_ref=set(number_ref)
     number_ref=sorted(number_ref, key=int)
     for i in number_ref:
         organization = Organization.search(reference=i)

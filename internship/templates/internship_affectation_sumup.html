@@ -56,24 +56,26 @@
                         {% endfor %}
                       </tr>
                       {% for organization in organizations %}
+                        {% if organization.speciality.name == speciality.name %}
                           <tr>
                             <td style="text-align: center; border-right: 1px solid black;">
-                              {{organization.reference}}
+                                {{organization.organization.reference}}
                             </td>
                             {% for period in periods %}
                               <td style="text-align: center; border-right: 1px solid black;">
                               {% for affectation in affectations %}
-                                {% if affectation.period.name == period.name %}
-                                  {% if affectation.organization.reference == organization.reference  %}
-                                    {% if affectation.speciality.name == speciality.name  %}
-                                      {{affectation.student.person.last_name}}<br/>
-                                    {% endif %}
-                                  {% endif %}
-                                {% endif %}
+                            	{% if affectation.period.name == period.name %}
+                            	  {% if affectation.organization.reference == organization.organization.reference  %}
+                            		{% if affectation.speciality.name == speciality.name  %}
+                            		  {{affectation.student.person.last_name}}<br/>
+                            		{% endif %}
+                            	  {% endif %}
+                            	{% endif %}
                               {% endfor %}
                               </td>
                             {% endfor %}
                           </tr>
+                        {% endif %}
                       {% endfor %}
                   </table>
                 </div>
