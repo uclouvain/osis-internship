@@ -79,6 +79,8 @@ def export_xls(organization_id, affectations):
                                       affectation.phone_mobile])
                     row_number += 1
 
+            worksheet.append([str('')])
+            row_number += 1
 
         filename = "affectation_%s_%s.xlsx" % (str(organization.reference),
                                               str(affectations[0].speciality.acronym))
