@@ -56,7 +56,7 @@
         }
     </style>
 </head>
-<body class="activewindowgreen">
+<body class="devmode">
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
@@ -75,9 +75,6 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 {% if request.user.is_authenticated %}
                     <ul class="nav navbar-nav">
-                        <li>
-                            <div class="boxgreen">DEV</div>
-                        </li>
                         {% if perms.base.can_access_catalog %}
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
@@ -170,6 +167,7 @@
             </div>
         </div>
     </nav>
+    <div class="devgreen">DEV</div>
     <div id="alert_wrong_version" class="container">
         <div class="alert alert-warning">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>

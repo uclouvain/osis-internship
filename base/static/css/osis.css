@@ -26,40 +26,48 @@
 
 /* Indication Status QA - DEV */
 
-.boxorange {
-    background: #ff8400;
-    width: 40px;
-    height: 100%;
-    line-height: 45px;
-    text-align: center;
-    color: #fff;
-    font-size: 12px;
-    font-style: italic;
-    margin-right: 20px;
+.devmode
+{
+    background-image:url("../img/devmode.png");
+    background-repeat: repeat;
+    background-position:center;
 }
 
-.activewindoworange {
-    border-style: solid;
-    border-width: 2px 10px 4px 10px;
-    border-bottom: none;
-    border-color: #ff8400;
-}
-
-.boxgreen {
+.devgreen {
     background: #9eb94f;
-    width: 40px;
+    width: 50px;
     height: 100%;
-    line-height: 45px;
+    line-height: 25px;
     text-align: center;
     color: #fff;
     font-size: 12px;
     font-style: italic;
     margin-right: 20px;
+    margin-top: -10px;
+    marbin-bottom: 10px;
+    -webkit-clip-path: polygon(75% 0%, 100% 50%, 75% 100%, 0% 100%, 0 50%, 0% 0%);
+    clip-path: polygon(75% 0%, 100% 50%, 75% 100%, 0% 100%, 0 50%, 0% 0%);
 }
 
-.activewindowgreen {
-    border-style: solid;
-    border-width: 2px 10px 4px 10px;
-    border-bottom: none;
-    border-color: #9eb94f;
+.qamode
+{
+    background-image:url("../img/qamode.png");
+    background-repeat: repeat;
+    background-position:center;
+}
+
+.qaorange {
+    background: #ff8400;
+    width: 50px;
+    height: 100%;
+    line-height: 25px;
+    text-align: center;
+    color: #fff;
+    font-size: 12px;
+    font-style: italic;
+    margin-right: 20px;
+    margin-top: -10px;
+    marbin-bottom: 10px;
+    -webkit-clip-path: polygon(75% 0%, 100% 50%, 75% 100%, 0% 100%, 0 50%, 0% 0%);
+    clip-path: polygon(75% 0%, 100% 50%, 75% 100%, 0% 100%, 0 50%, 0% 0%);
 }
