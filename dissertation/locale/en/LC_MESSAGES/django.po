@@ -49,6 +49,12 @@ msgstr "Add a jury member"
 msgid "add_justification"
 msgstr "Add justification"
 
+msgid "add_person"
+msgstr "Add person"
+
+msgid "add_person_warning"
+msgstr "This form is used to add a person to OSIS. Complete carefully the form, you will not be able to edit this person after adding."
+
 msgid "add_proposition"
 msgstr "Add subject"
 
@@ -301,6 +307,9 @@ msgstr "First year evaluation"
 msgid "export_search_as_xls"
 msgstr "Export search as XLS"
 
+msgid "first_name"
+msgstr "First name"
+
 msgid "for_managers"
 msgstr "For managers"
 
@@ -378,6 +387,9 @@ msgstr "You are ready to save this change and your justification. Are you sure y
 
 msgid "justification_instructions"
 msgstr "The status update is nearly done. This update is detailed just after. Please add your explanation for this update."
+
+msgid "last_name"
+msgstr "Last name"
 
 msgid "level"
 msgstr "Subject developement level"
@@ -811,8 +823,11 @@ msgstr "Waiting 1st year evaluation"
 msgid "waiting_reception"
 msgstr "Waiting reception"
 
-msgid "wating_dissertations_message"
+msgid "waiting_dissertations_message"
 msgstr "Dissertations waiting validation"
+
+msgid "warning"
+msgstr "Warning"
 
 msgid "welcome"
 msgstr "Welcome"

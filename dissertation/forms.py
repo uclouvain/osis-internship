@@ -68,6 +68,12 @@ class ManagerAddAdviserPreForm(ModelForm):
         fields = ('email', )
 
 
+class ManagerAddAdviserPerson(ModelForm):
+    class Meta:
+        model = mdl.person.Person
+        fields = ('email', 'last_name', 'first_name', 'phone', 'phone_mobile')
+
+
 class ManagerAddAdviserForm(ModelForm):
     class Meta:
         model = Adviser

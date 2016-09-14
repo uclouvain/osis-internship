@@ -145,3 +145,4 @@ def count_by_email(email):
 def add(**kwargs):
     person = Person(**kwargs)
     person.save()
+    return person
