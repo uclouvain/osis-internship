@@ -865,7 +865,7 @@ def fill_emergency_choices(priority):
             try:
                 choice = get_best_choice(choices, priority)
             except Exception as error:
-                print('caught this error: ' + repr(error))
+                # print('caught this error: ' + repr(error))
                 continue
             if choice is not None:
                 choice0 = choice[0]
@@ -899,8 +899,7 @@ def fill_normal_choices(priority):
             try:
                 choice = get_best_choice(choices, priority)
             except Exception as error:
-                print('caught this error: ' + repr(error))
-                print(str(choices[0]))
+                # print('caught this error: ' + repr(error))
                 continue
             if choice is not None:
                 # Add choice to the solution
@@ -1038,52 +1037,17 @@ def generate_solution():
     organization_addresses_dic = {}
     internship_table_original = {}
 
-    total = time.clock()
-    t0 = time.clock()
     init_solution()
-    print("Init sol : " + str(round((time.clock() - t0), 3)) + " seconds process time")
-
-    t0 = time.clock()
     internship_table = init_internship_table()
-    print("Init table : " + str(round((time.clock() - t0), 3)) + " seconds process time")
-
-    t0 = time.clock()
     init_organizations()
-    print("Init orga : " + str(round((time.clock() - t0), 3)) + " seconds process time")
-
-    t0 = time.clock()
     init_specialities()
-    print("Init specialities : " + str(round((time.clock() - t0), 3)) + " seconds process time")
-
-    t0 = time.clock()
     fill_erasmus_choices()
-    print("Fill erasmus : " + str(round((time.clock() - t0), 3)) + " seconds process time")
-
-    t0 = time.clock()
     fill_emergency_choices(True)
-    print("Fill emer - True : " + str(round((time.clock() - t0), 3)) + " seconds process time")
-
-    t0 = time.clock()
     fill_emergency_choices(False)
-    print("Fill emer - False : " + str(round((time.clock() - t0), 3)) + " seconds process time")
-
-    t0 = time.clock()
     fill_normal_choices(True)
-    print("Fill normal - True : " + str(round((time.clock() - t0), 3)) + " seconds process time")
-
-    t0 = time.clock()
     fill_normal_choices(False)
-    print("Fill normal - False : " + str(round((time.clock() - t0), 3)) + " seconds process time")
-
-    t0 = time.clock()
     swap_errors()
-    print("Swap errors : " + str(round((time.clock() - t0), 3)) + " seconds process time")
-
-    t0 = time.clock()
     swap_empty_internships()
-    print("Swap empty internships : " + str(round((time.clock() - t0), 3)) + " seconds process time")
-
-    print("+++++ Total time : " + str(round((time.clock() - total), 3)) + " seconds process time +++++")
 
 
 def save_solution():
@@ -1114,7 +1078,6 @@ def load_solution(data):
     """ Create the solution and internship_table from db data """
     # Initialise the table of internships.
     period_internship_places = PeriodInternshipPlaces.objects.order_by("period_id")
-
     # This object store the number of available places for given organization, speciality, period
     temp_internship_table = {}
     for pid in period_internship_places:
@@ -1168,16 +1131,11 @@ def internship_affectation_statistics_generate(request):
             t0 = time.clock()
             cost = sys.maxsize
             for i in range(0, int(request.POST['executions'])):
-                print(str(i))
                 generate_solution()
                 new_cost = get_solution_cost()
-                print("New cost : " + str(new_cost) + " Best cost : " + str(cost))
                 if new_cost < cost:
-                    print("Replace solution")
                     save_solution()
                     cost = new_cost
-
-            print("+++++ Total Execution time : " + str(round((time.clock() - t0), 3)) + " seconds process time +++++")
         return HttpResponseRedirect(reverse('internship_affectation_statistics'))
 
 
@@ -1191,16 +1149,11 @@ def internship_affectation_statistics(request):
     if len(data) > 0:
         sol, table = load_solution(data)
         stats = compute_stats(sol)
-
         # Mange sort of the students
         sol = OrderedDict(sorted(sol.items(), key=lambda t: t[0].person.last_name))
-
         # Mange sort of the organizations
         table.sort(key=itemgetter(0))
-
         internship_errors = InternshipStudentAffectationStat.objects.filter(organization=organizations[hospital_error])
-    print("Solution loaded in " + str(round((time.clock() - t0), 3)) + " seconds process time")
-
     return render(request, "internship_affectation_statics.html",
                   {'section': 'internship',
                    'recap_sol': sol,
