@@ -205,7 +205,8 @@ def manager_informations_edit(request, pk):
     else:
         form = ManagerAdviserForm(instance=adv)
     return layout.render(request, "manager_informations_edit.html",
-                         {'form': form,
+                         {'adviser': adv,
+                          'form': form,
                           'first_name': adv.person.first_name.title(),
                           'last_name': adv.person.last_name.title(),
                           'email': adv.person.email,

@@ -50,27 +50,25 @@
     <div class="panel-body">
       <form method="get" action="{% url 'manager_dissertations_search'%}">
         <div class="row">
-          <div class="col-md-6">
-            <a href="{% url 'manager_dissertations_new' %}" id="lnk_manager_dissertations_new" class="btn btn-default"
-            role="button" title="{% trans 'create_dissertation'%}"><span class="glyphicon glyphicon-plus"
-            aria-hidden="true"></span> {% trans 'add_dissertation'%}</a>
-          </div>
-          <div class="col-md-4">
+          <div class="col-md-10">
             <input class="form-control" id="txt_search" placeholder="{% trans 'search' %}" name="search"
             value="{{ request.GET.search }}">
           </div>
           <div class="col-md-2">
             <button type="submit" id="bt_submit_manager_information_search" class="btn btn-primary" role="button"
-            title="{% trans 'search_teacher' %}"><span class="glyphicon glyphicon-search"
+            title="{% trans 'search' %}"><span class="glyphicon glyphicon-search"
             aria-hidden="true"></span></button>
-            <button type="submit" id="bt_submit_manager_information_xlsx" class="btn btn-primary" role="button"
+            <button type="submit" id="bt_submit_manager_information_xlsx" class="btn btn-default" role="button"
             title="{% trans 'export_search_as_xls' %}" name="bt_xlsx" value="bt_xlsx"><span class="glyphicon glyphicon-download-alt"
             aria-hidden="true" ></span></button>
+
+            <a href="{% url 'manager_dissertations_new' %}" id="lnk_manager_dissertations_new" class="btn btn-default"
+            role="button" title="{% trans 'create_dissertation'%}" style="margin-left:1em;"><span class="glyphicon glyphicon-plus"
+            aria-hidden="true"></span></a>
           </div>
         </div>
       </form>
-      <br>
-      <div>
+    </div>
         {% if dissertations|length == 0 %}
           <br>
           <label class="alert alert-info" style="margin-left:10%;width:80%;text-align:center;">{% trans 'no_result' %}</label>
@@ -104,7 +102,7 @@
                     {% elif dissertation.status == 'COM_KO' %}
                     <span class="label label-danger">
                     {% elif dissertation.status == 'EVA_SUBMIT' %}
-                    <span class="label label-default">
+                    <span class="label label-primary">
                     {% elif dissertation.status == 'EVA_OK' %}
                     <span class="label label-default">
                     {% elif dissertation.status == 'EVA_KO' %}
@@ -138,7 +136,5 @@
             {% endfor %}
           </table>
         {% endif %}
-      </div>
-    </div>
   </div>
 {% endblock %}

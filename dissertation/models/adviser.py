@@ -34,6 +34,7 @@ from .dissertation_role import DissertationRole
 
 class AdviserAdmin(admin.ModelAdmin):
     list_display = ('person', 'type')
+    raw_id_fields = ('person', )
 
 
 class Adviser(models.Model):
