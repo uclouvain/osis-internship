@@ -41,29 +41,36 @@ from internship.views.internship import calc_dist
 from internship.views.place import sort_organizations
 
 ################################################# Global vars #################################################
-errors = []                     # List of all internship added to hospital error, as tuple (student, speciality, period)
-solution = {}                   # Dict with the solution
-internship_table = {}           # List of all available internship. Organization, speciality, period
-internship_table_mi = {}        # List of available internship for "MI"
-organizations = {}              # Dict of all organizations
-specialities_dict = {}          # Dict of all specialities
-distance_students = {}          # Dict of distances between students and hospitals
-internship_offer_dic = {}       #
-organization_addresses_dic = {} #
-internship_table_original = {}  #
+errors = []  # List of all internship added to hospital error, as tuple (student, speciality, period)
+solution = {}  # Dict with the solution => solution[student][peiod] = SolutionLine
+internship_table = {}  # List of all available internship. Organization, speciality, period
+internship_table_mi = {}  # List of available internship for "MI"
+organizations = {}  # Dict of all organizations
+specialities_dict = {}  # Dict of all specialities
+distance_students = {}  # Dict of distances between students and hospitals
+internship_offer_dic = {}  # Dict of all internship offers
+organization_addresses_dic = {}  # Dict of all organizatiion adresses
+internship_table_original = {}  # Copy of internship_table, is used to know if an internship is empty
 ################################################# Constants #################################################
 
-emergency =         15
-hospital_error =    999
-hospital_to_edit =  888
-periods_dict =      {'P1': True, 'P2': True, 'P3': True, 'P4': True, 'P5': True, 'P6': True, 'P7': True, 'P8': True, 'P9': False, 'P10': False, 'P11': False, 'P12': False}
-costs =             {1: 0, 2: 1, 3: 2, 4: 3, 'I': 10, 'C': 5, 'X': 1000}
+emergency = 15  # Id of the speciality "Urgences"
+hospital_error = 999  # Reference of the hospital "erreur"
+hospital_to_edit = 888  # Reference of the hospital "a_modifier"
+# List of the periods => (name, priority)
+periods_dict = {'P1': True, 'P2': True, 'P3': True, 'P4': True, 'P5': True, 'P6': True, 'P7': True, 'P8': True,
+                'P9': False, 'P10': False, 'P11': False, 'P12': False}
+# The costs used to compute the score of the solution
+# First choice = cost 0, second choice = cost 1, etc
+# I = impose internship, C = non-consecutive internship and X = hospital error
+costs = {1: 0, 2: 1, 3: 2, 4: 3, 'I': 10, 'C': 5, 'X': 1000}
+
 
 ################################################# Classes #################################################
 
 
 class SolutionsLine:
-    def __init__(self, student, organization, speciality, period, choice, type_of_internship='N', cost=0, consecutive_month=0):
+    def __init__(self, student, organization, speciality, period, choice, type_of_internship='N', cost=0,
+                 consecutive_month=0):
         self.student = student
         self.organization = organization
         self.speciality = speciality
@@ -95,13 +102,23 @@ def compute_stats(sol):
     Compute the statistics of the solution
     """
     stats = {}
-    total_cost, first, second, third, fourth, consecutive_month, imposed_choices, erasmus, hospital_error_count = 0, 0, 0, 0, 0, 0, 0, 0, 0
+    total_cost = 0
+    first = 0
+    second = 0
+    third = 0
+    fourth = 0
+    consecutive_month = 0
+    imposed_choices = 0
+    erasmus = 0
+    hospital_error_count = 0
     mean_array = []
     distance_mean = []
     others_students = set()
     others_specialities = {}
     others_specialities_students = {}
+
     specialities = InternshipSpeciality.objects.all()
+
     for speciality in specialities:
         others_specialities[speciality] = 0
         others_specialities_students[speciality] = set()
@@ -266,28 +283,32 @@ def init_internship_table():
     temp_internship_table = {}
     # Put each period_internship_places in the right position
     for pid in period_internship_places:
-        # If the organization does not exists in temp_internship_table we initalise it
-        if pid.internship.organization not in temp_internship_table:
-            temp_internship_table[pid.internship.organization]      = {}
-            internship_table_mi[pid.internship.organization]        = {}
-            internship_table_original[pid.internship.organization]  = {}
-        # If the speciality does not exists in temp_internship_table[organization] we initalise it
-        if pid.internship.speciality not in temp_internship_table[pid.internship.organization]:
-            temp_internship_table[pid.internship.organization][pid.internship.speciality]       = {}
-            internship_table_original[pid.internship.organization][pid.internship.speciality]   = {}
-        # Perform strip because the database contains an empty space befor the acronym
-        if pid.internship.speciality.acronym.strip() == 'MI':
+        organization = pid.internship.organization
+        speciality = pid.internship.speciality
+        name = pid.period.name
+        # If the organization does not exists in temp_internship_table we initialize it
+        if organization not in temp_internship_table:
+            temp_internship_table[organization] = {}
+            internship_table_mi[organization] = {}
+            internship_table_original[organization] = {}
+        # If the speciality does not exists in temp_internship_table[organization] we initialize it
+        if speciality not in temp_internship_table[organization]:
+            temp_internship_table[organization][speciality] = {}
+            internship_table_original[organization][speciality] = {}
+        # Perform strip because the database contains an empty space before the acronym
+        if speciality.acronym.strip() == 'MI':
             # The places of the MI are stored in a different map, because we have to divide this number by 3
-            internship_table_mi[pid.internship.organization][pid.period.name] = pid.number_places
-        temp_internship_table[pid.internship.organization][pid.internship.speciality][pid.period.name] = pid.number_places
+            internship_table_mi[organization][name] = pid.number_places
+        temp_internship_table[organization][speciality][name] = pid.number_places
         # Keep the original number of places for each organization/speciality/period
-        internship_table_original[pid.internship.organization][pid.internship.speciality][pid.period.name] = pid.number_places
+        internship_table_original[organization][speciality][name] = pid.number_places
+    # TODO : Copy original?
     return temp_internship_table
 
 
 def init_solution():
     """
-    Initialize the empty solution, the soslution is represented by a dictionary of students.
+    Initialize the empty solution, the solution is represented by a dictionary of students.
     Each student will have a dict with 12 periods and each period will have an 'InternshipEnrollment'
     """
     global solution
