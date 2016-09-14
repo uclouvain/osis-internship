@@ -266,3 +266,6 @@ msgstr "Selected internships"
 
 msgid "select_speciality_change_internships"
 msgstr "Select a speciality to add or modify your choices for this internship in choice"
+
+msgid "choice"
+msgstr "Choice"

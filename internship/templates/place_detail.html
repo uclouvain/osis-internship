@@ -54,7 +54,7 @@
                               <ul>
                                   {% for choice in organization_choice %}
                                       {% if choice.speciality.name == speciality.name %}
-                                          <li> {{ choice.student }} | Choix : {{ choice.choice }}
+                                          <li> {{ choice.student }} | {% trans 'choice' %} : {{ choice.choice }}
                                       {% endif %}
                                   {% endfor %}
                               </ul>
