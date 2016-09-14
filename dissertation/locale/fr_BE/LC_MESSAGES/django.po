@@ -58,6 +58,9 @@ msgstr "Ce formulaire permet d'ajouter une personne dans OSIS. Complétez attent
 msgid "add_proposition"
 msgstr "Ajouter un sujet"
 
+msgid "add_proposition_dissertation_jury_member"
+msgstr "Ajouter un membre au jury"
+
 msgid "adviser"
 msgstr "Enseignant"
 

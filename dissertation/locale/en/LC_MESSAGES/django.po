@@ -58,6 +58,9 @@ msgstr "This form is used to add a person to OSIS. Complete carefully the form, 
 msgid "add_proposition"
 msgstr "Add subject"
 
+msgid "add_proposition_dissertation_jury_member"
+msgstr "Add jury member"
+
 msgid "adviser"
 msgstr "Teacher"
 

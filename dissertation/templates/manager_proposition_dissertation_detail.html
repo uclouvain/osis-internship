@@ -176,12 +176,14 @@
                    <div class="col-md-4">
                        {{ proposition_role.adviser }}
                    </div>
+                   {% if proposition_role.status != 'PROMOTEUR' %}
                    <div class="col-md-5">
                        <a class="btn btn-danger btn-sm" style="width:auto;padding:0;margin:0"
                           href="{% url 'manager_proposition_dissertations_role_delete' pk=proposition_role.pk %}"
                           onclick="return confirm('{% trans 'delete_adviser_role_confirmation_message' %}')">
                            <span class="glyphicon glyphicon-remove span2"></span> {% trans 'delete'%} {{ proposition_role.adviser }}</a>
                    </div>
+                   {% endif %}
                  </div>
                  {% endfor %}
                  <br>
