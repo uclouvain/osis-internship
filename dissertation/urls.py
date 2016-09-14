@@ -25,6 +25,7 @@
 ##############################################################################
 from django.conf.urls import url
 from dissertation.views import dissertation, proposition_dissertation, information, offer_proposition
+from dissertation.utils import request
 
 urlpatterns = [
     url(r'^$', dissertation.dissertations, name='dissertations'),
@@ -100,6 +101,8 @@ urlpatterns = [
 
     url(r'^manager_informations/$', information.manager_informations, name='manager_informations'),
     url(r'^manager_informations_add/$', information.manager_informations_add, name='manager_informations_add'),
+    url(r'^manager_informations_add_person/$', information.manager_informations_add_person,
+        name='manager_informations_add_person'),
     url(r'^manager_informations_detail/(?P<pk>[0-9]+)/$', information.manager_informations_detail,
         name='manager_informations_detail'),
     url(r'^manager_informations_detail_list_wait/(?P<pk>[0-9]+)/$', information.manager_informations_detail_list_wait,
@@ -167,4 +170,5 @@ urlpatterns = [
     url(r'^proposition_dissertations_role_delete/(?P<pk>[0-9]+)$',
         proposition_dissertation.proposition_dissertations_role_delete,
         name='proposition_dissertations_role_delete'),
+    url(r'^students_list_in_offer_year/([0-9]+)/$',request.get_students_list_in_offer_year, name='students_list'),
 ]

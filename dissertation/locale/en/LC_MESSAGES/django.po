@@ -49,6 +49,12 @@ msgstr "Add a jury member"
 msgid "add_justification"
 msgstr "Add justification"
 
+msgid "add_person"
+msgstr "Add person"
+
+msgid "add_person_warning"
+msgstr "This form is used to add a person to OSIS. Complete carefully the form, you will not be able to edit this person after adding."
+
 msgid "add_proposition"
 msgstr "Add subject"
 
@@ -301,6 +307,9 @@ msgstr "First year evaluation"
 msgid "export_search_as_xls"
 msgstr "Export search as XLS"
 
+msgid "first_name"
+msgstr "First name"
+
 msgid "for_managers"
 msgstr "For managers"
 
@@ -327,6 +336,15 @@ msgstr "Dissertations quantity as promotor"
 
 msgid "how_many_dissertation_reader"
 msgstr "Dissertations quantity as reader"
+
+msgid "if_extern_you_can"
+msgstr "If this person is not a member of the University, you can"
+
+msgid "if_intern_use_good_email"
+msgstr "If this person is a member of the University, you need to use the correct e-mail address."
+
+msgid "if_unavailable_adviser"
+msgstr "If the concerned teacher is not in the list, you can"
 
 msgid "in_edit_title"
 msgstr "Title currently editable"
@@ -370,8 +388,11 @@ msgstr "You are ready to save this change and your justification. Are you sure y
 msgid "justification_instructions"
 msgstr "The status update is nearly done. This update is detailed just after. Please add your explanation for this update."
 
+msgid "last_name"
+msgstr "Last name"
+
 msgid "level"
-msgstr "Developement level"
+msgstr "Subject developement level"
 
 msgid "level_domain"
 msgstr "Search domain"
@@ -436,8 +457,17 @@ msgstr "First year evaluation failed"
 msgid "manager_informations_add"
 msgstr "Add teacher"
 
+msgid "manager_informations_add_person"
+msgstr "add this person"
+
 msgid "manager_informations_list_request"
 msgstr "Teachers having to answer request"
+
+msgid "manager_jury_draft"
+msgstr "Dissertation status is draft, managers can't edit jury."
+
+msgid "manager_jury_editable"
+msgstr "Managers can see and edit jury."
 
 msgid "manager_promotor_accept"
 msgstr "Promotor accepts"
@@ -452,7 +482,7 @@ msgid "max_students"
 msgstr "Max number of students"
 
 msgid "max_students_number"
-msgstr "Max number of students"
+msgstr "Indicative number of places for this subject"
 
 msgid "mgr_com_accept_confirmation_message"
 msgstr "You are ready to set this dissertation as accepted by the commission.  Are you sure you want to continue ?"
@@ -529,6 +559,9 @@ msgstr "Add/Edit dissertation subject"
 msgid "new_search"
 msgstr "New search"
 
+msgid "new_subject"
+msgstr "New dissertation subject"
+
 msgid "next_status"
 msgstr "Next status"
 
@@ -586,7 +619,7 @@ msgstr "This person already exists as teacher"
 msgid "person_to_add"
 msgstr "Person to add"
 
-msgid "person_not_found_by_mail "
+msgid "person_not_found_by_mail"
 msgstr "No person matches this e-mail address"
 
 msgid "phone"
@@ -615,6 +648,12 @@ msgstr "You are ready to save this dissertation subject details.  Are you sure y
 
 msgid "proposition_dissertation_informations"
 msgstr "Informations about the dissertation subject"
+
+msgid "proposition_dissertation_jury"
+msgstr "Dissertation subject jury"
+
+msgid "proposition_dissertation_jury_info"
+msgstr "You can define a jury for the dissertation subject. This jury will automatically be defined for all dissertations created from this subject. There can be only one promotor, if you add one, this promotor will replace the existing one."
 
 msgid "proposition_dissertations"
 msgstr "Dissertation subjects"
@@ -652,6 +691,9 @@ msgstr "Search teacher"
 msgid "see_my_waiting_dissertations"
 msgstr "See my waiting dissertations"
 
+msgid "select_program_first"
+msgstr "Please select Start Program/Year first"
+
 msgid "september"
 msgstr "September"
 
@@ -676,8 +718,23 @@ msgstr "Status"
 msgid "student_can_manage_readers"
 msgstr "Students can manage readers"
 
+msgid "student_jury_draft_can_edit_param"
+msgstr "Dissertation status is draft, student can manage readers"
+
+msgid "student_jury_draft_no_edit_param"
+msgstr "Dissertation status is draft, student can't manage readers"
+
+msgid "student_jury_invisible_dates"
+msgstr "Jury is currently invisible for the student"
+
+msgid "student_jury_visible_dates"
+msgstr "Jury is currently visible for the student"
+
 msgid "student_path"
 msgstr "Students' path"
+
+msgid "subject_type"
+msgstr "Subject type"
 
 msgid "subjects"
 msgstr "Dissertation subjects"
@@ -693,6 +750,15 @@ msgstr "Submitted to 1st year evaluation"
 
 msgid "taken_places"
 msgstr "Taken places"
+
+msgid "teacher_jury_draft"
+msgstr "Dissertation status is draft, teachers can't edit jury."
+
+msgid "teacher_jury_visible_editable_parameter"
+msgstr "Teachers can see and edit jury."
+
+msgid "teacher_jury_visible_not_editable_parameter"
+msgstr "Teachers can see jury but not edit it."
 
 msgid "teachers"
 msgstr "Teachers"
@@ -757,8 +823,11 @@ msgstr "Waiting 1st year evaluation"
 msgid "waiting_reception"
 msgstr "Waiting reception"
 
-msgid "wating_dissertations_message"
+msgid "waiting_dissertations_message"
 msgstr "Dissertations waiting validation"
+
+msgid "warning"
+msgstr "Warning"
 
 msgid "welcome"
 msgstr "Welcome"

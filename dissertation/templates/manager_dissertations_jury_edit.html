@@ -44,8 +44,8 @@
       <form method="POST" class="post-form">
         {% csrf_token %}
         {% for field in form %}
-          <div class="row {% if field.errors %}error{% endif %}">
-            <div class="col-md-4" style="text-align: right">
+          <div class="row">
+            <div class="col-md-2" style="text-align: right;">
               {% if not field.is_hidden %}
                 <label>{{ field.label }}</label>
               {% endif %}
@@ -56,7 +56,19 @@
           </div>
           <br>
         {% endfor %}
-        <button type="submit" class="save btn btn-default">Save</button>
+          <div class="row">
+            <div class="col-md-10 col-md-offset-2">
+              {% trans 'if_unavailable_adviser' %}
+                <a href="{% url 'manager_informations_add' %}" id="lnk_manager_informations_add" class=""
+                    role="button" title="{% trans 'manager_informations_add'%}">{% trans 'add_advisers' %}</a>
+            </div>
+          </div>
+          <br><br>
+          <div class="row">
+            <div class="col-md-10 col-md-offset-2">
+                <button type="submit" class="save btn btn-primary">{% trans 'save' %}</button>
+            </div>
+          </div>
       </form>
     </div>
   </div>

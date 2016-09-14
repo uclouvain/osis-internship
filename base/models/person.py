@@ -34,7 +34,7 @@ from django.core import serializers
 
 class PersonAdmin(admin.ModelAdmin):
     list_display = ('first_name' , 'middle_name', 'last_name', 'username', 'email', 'gender', 'global_id',
-                    'national_id', 'changed')
+                    'national_id', 'changed', 'source')
     search_fields = ['first_name', 'middle_name', 'last_name', 'user__username', 'email']
     fieldsets = ((None, {'fields': ('user', 'global_id', 'national_id', 'gender', 'first_name',
                                     'middle_name', 'last_name', 'email', 'phone', 'phone_mobile', 'language')}),)
@@ -68,6 +68,7 @@ class Person(models.Model):
     phone = models.CharField(max_length=30, blank=True, null=True)
     phone_mobile = models.CharField(max_length=30, blank=True, null=True)
     language = models.CharField(max_length=30, null=True, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE)
+    source = models.CharField(max_length=25, blank=True, null=True)
 
     def username(self):
         if self.user is None:
@@ -139,3 +140,9 @@ def search_by_email(email):
 
 def count_by_email(email):
     return search_by_email(email).count()
+
+
+def add(**kwargs):
+    person = Person(**kwargs)
+    person.save()
+    return person

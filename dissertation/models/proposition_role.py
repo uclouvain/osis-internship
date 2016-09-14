@@ -72,11 +72,16 @@ def add(status, adviser, proposition_dissertation):
         role.save()
 
 
+def delete(status, proposition_dissertation):
+    roles = PropositionRole.objects.filter(proposition_dissertation=proposition_dissertation)\
+                                   .filter(status=status)
+
+    for role in roles:
+        role.delete()
+
+
 def count_by_status_adviser_proposition(status, adviser, proposition_dissertation):
-    return PropositionRole.objects.filter(
-                                        proposition_dissertation=proposition_dissertation
-                                    ).filter(
-                                        status=status
-                                    ).filter(
-                                        adviser=adviser
-                                    ).count()
+    return PropositionRole.objects.filter(proposition_dissertation=proposition_dissertation)\
+                                  .filter(status=status)\
+                                  .filter(adviser=adviser)\
+                                  .count()
