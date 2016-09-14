@@ -295,16 +295,14 @@ def online_encoding_submission(request, learning_unit_year_id):
                                              learning_unit_year_id=learning_unit_year_id,
                                              is_program_manager=is_program_manager)
     submitted_enrollments = []
-    # contains all SessionExams where the encoding is not terminated (progression < 100%)
-    sessions_exam_still_open = set()
-    # contains all sessions exams in exam_enrollments list
-
     draft_scores_not_sumitted_yet = [exam_enrol for exam_enrol in exam_enrollments
                                     if exam_enrol.is_draft and not exam_enrol.is_final]
+    not_submitted_enrollments = set([ex for ex in exam_enrollments if not ex.is_final])
     for exam_enroll in draft_scores_not_sumitted_yet:
         if (exam_enroll.score_draft is not None and exam_enroll.score_final is None) \
                 or (exam_enroll.justification_draft and not exam_enroll.justification_final):
             submitted_enrollments.append(exam_enroll)
+            not_submitted_enrollments.remove(exam_enroll)
         if exam_enroll.is_draft:
             if exam_enroll.score_draft is not None:
                 exam_enroll.score_final = exam_enroll.score_draft
@@ -316,7 +314,7 @@ def online_encoding_submission(request, learning_unit_year_id):
                                                                 exam_enroll.justification_final)
 
     # Send mail to all the teachers of the submitted learning unit on any submission
-    all_encoded = len(sessions_exam_still_open) == 0
+    all_encoded = len(not_submitted_enrollments) == 0
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
     attributions = mdl.attribution.Attribution.objects.filter(learning_unit=learning_unit_year.learning_unit)
     persons = list(set([attribution.tutor.person for attribution in attributions]))

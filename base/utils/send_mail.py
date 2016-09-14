@@ -332,4 +332,4 @@ def send_again(message_history_id):
         receiver = message_config.create_receiver(person.id, person.email, person.language)
         return message_service.send_again(receiver, message_history_id)
     else:
-        return None
+        return _('no_receiver_error')
