@@ -310,10 +310,10 @@ def init_solution():
     """
     global solution
     # Retrieve all students
-    students = InternshipChoice.find_by_all_student()
+    internshipChoices = InternshipChoice.find_by_all_student()
     # For each student create an empty dict
-    for student in students:
-        solution[student] = {}
+    for internshipChoice in internshipChoices:
+        solution[internshipChoice.student] = {}
 
 
 def init_organizations():
@@ -1187,7 +1187,6 @@ def internship_affectation_statistics(request):
     init_organizations()
     init_specialities()
     sol, table, stats, internship_errors = None, None, None, None
-
     data = InternshipStudentAffectationStat.search()
     if len(data) > 0:
         sol, table = load_solution(data)
