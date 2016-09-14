@@ -23,42 +23,27 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.db import models
 from django.contrib import admin
 
-from reference.models import *
 
-admin.site.register(assimilation_criteria.AssimilationCriteria,
-                    assimilation_criteria.AssimilationCriteriaAdmin)
+class ExternalOfferAdmin(admin.ModelAdmin):
+    list_display = ('name', 'adhoc', 'domain', 'grade_type', 'offer_year', 'changed')
+    fieldsets = ((None, {'fields': ('name', 'adhoc', 'domain', 'grade_type', 'offer_year')}),)
+    ordering = ('name',)
+    search_fields = ['name']
 
-admin.site.register(continent.Continent,
-                    continent.ContinentAdmin)
 
-admin.site.register(currency.Currency,
-                    currency.CurrencyAdmin)
+class ExternalOffer(models.Model):
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    changed = models.DateTimeField(null=True)
+    name = models.CharField(max_length=150, unique=True)
+    adhoc = models.BooleanField(default=True)  # If False == Official/validated, if True == Not Official/not validated
+    domain = models.ForeignKey('Domain', on_delete=models.CASCADE)
+    grade_type = models.ForeignKey('GradeType', blank=True, null=True, on_delete=models.CASCADE)
+    offer_year = models.ForeignKey('base.OfferYear', blank=True, null=True, on_delete=models.CASCADE) # Institution equivalence ("intern" offer)
+    national = models.BooleanField(default=False) # True if is Belgian else False
 
-admin.site.register(country.Country,
-                    country.CountryAdmin)
+    def __str__(self):
+        return self.name
 
-admin.site.register(decree.Decree,
-                    decree.DecreeAdmin)
-
-admin.site.register(domain.Domain,
-                    domain.DomainAdmin)
-
-admin.site.register(education_institution.EducationInstitution,
-                    education_institution.EducationInstitutionAdmin)
-
-admin.site.register(education_type.EducationType,
-                    education_type.EducationTypeAdmin)
-
-admin.site.register(external_offer.ExternalOffer,
-                    external_offer.ExternalOfferAdmin)
-
-admin.site.register(grade_type.GradeType,
-                    grade_type.GradeTypeAdmin)
-
-admin.site.register(language.Language,
-                    language.LanguageAdmin)
-
-admin.site.register(institutional_grade_type.InstitutionalGradeType,
-                    institutional_grade_type.InstitutionalGradeTypeAdmin)

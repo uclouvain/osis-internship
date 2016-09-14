@@ -246,6 +246,15 @@ msgstr	 "Type"
 msgid	 "no_hospital"
 msgstr	 "Hospital not found"
 
+msgid	 "capacity"
+msgstr	 "capacity"
+
+msgid	 "number_first_choice"
+msgstr	 "Number of first choice"
+
+msgid	 "number_total_student"
+msgstr	 "Number of student who choose this organization"
+
 msgid "selection_currently_active"
 msgstr "The internships' selection is currently active"
 

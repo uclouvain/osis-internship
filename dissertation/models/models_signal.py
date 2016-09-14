@@ -23,42 +23,34 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib import admin
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from dissertation.models import adviser
+import backoffice.portal_migration as portal_migration
+import sys
 
-from reference.models import *
 
-admin.site.register(assimilation_criteria.AssimilationCriteria,
-                    assimilation_criteria.AssimilationCriteriaAdmin)
+queue_name = 'dissertation_portal'
 
-admin.site.register(continent.Continent,
-                    continent.ContinentAdmin)
 
-admin.site.register(currency.Currency,
-                    currency.CurrencyAdmin)
+@receiver(post_save, sender=adviser.Adviser)
+def on_post_save_dissertation(sender, **kwargs):
+    try:
+        instance = kwargs["instance"]
+        send_instance_to_osis_portal(sender, instance)
+    except KeyError:
+        pass
 
-admin.site.register(country.Country,
-                    country.CountryAdmin)
 
-admin.site.register(decree.Decree,
-                    decree.DecreeAdmin)
-
-admin.site.register(domain.Domain,
-                    domain.DomainAdmin)
-
-admin.site.register(education_institution.EducationInstitution,
-                    education_institution.EducationInstitutionAdmin)
-
-admin.site.register(education_type.EducationType,
-                    education_type.EducationTypeAdmin)
-
-admin.site.register(external_offer.ExternalOffer,
-                    external_offer.ExternalOfferAdmin)
-
-admin.site.register(grade_type.GradeType,
-                    grade_type.GradeTypeAdmin)
-
-admin.site.register(language.Language,
-                    language.LanguageAdmin)
-
-admin.site.register(institutional_grade_type.InstitutionalGradeType,
-                    institutional_grade_type.InstitutionalGradeTypeAdmin)
+def send_instance_to_osis_portal(model_class, instance):
+    """
+    Send the instance to osis-portal.
+    :param model_class: model class of the instance
+    :param instance: a model object
+    :return:
+    """
+    # Records contains the serialized instance.
+    mod = sys.modules[model_class.__module__]
+    # Need to put instance in a list.
+    records = mod.serialize_list([instance])
+    portal_migration.migrate_records(records=records, model_class=model_class, queue_name=queue_name)

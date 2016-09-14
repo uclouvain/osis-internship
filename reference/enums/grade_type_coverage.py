@@ -23,42 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib import admin
 
-from reference.models import *
+HIGH_EDUC_NOT_UNIVERSITY = "HIGH_EDUC_NOT_UNIVERSITY"
+UNIVERSITY = "UNIVERSITY"
+UNKNOWN = "UNKNOWN"
 
-admin.site.register(assimilation_criteria.AssimilationCriteria,
-                    assimilation_criteria.AssimilationCriteriaAdmin)
+COVERAGE_CHOICES = (
+    (HIGH_EDUC_NOT_UNIVERSITY, HIGH_EDUC_NOT_UNIVERSITY),
+    (UNIVERSITY, UNIVERSITY),
+    (UNKNOWN, UNKNOWN))
 
-admin.site.register(continent.Continent,
-                    continent.ContinentAdmin)
-
-admin.site.register(currency.Currency,
-                    currency.CurrencyAdmin)
-
-admin.site.register(country.Country,
-                    country.CountryAdmin)
-
-admin.site.register(decree.Decree,
-                    decree.DecreeAdmin)
-
-admin.site.register(domain.Domain,
-                    domain.DomainAdmin)
-
-admin.site.register(education_institution.EducationInstitution,
-                    education_institution.EducationInstitutionAdmin)
-
-admin.site.register(education_type.EducationType,
-                    education_type.EducationTypeAdmin)
-
-admin.site.register(external_offer.ExternalOffer,
-                    external_offer.ExternalOfferAdmin)
-
-admin.site.register(grade_type.GradeType,
-                    grade_type.GradeTypeAdmin)
-
-admin.site.register(language.Language,
-                    language.LanguageAdmin)
-
-admin.site.register(institutional_grade_type.InstitutionalGradeType,
-                    institutional_grade_type.InstitutionalGradeTypeAdmin)

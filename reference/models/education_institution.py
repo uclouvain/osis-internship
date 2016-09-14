@@ -25,33 +25,26 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-from reference.models import country
+from reference.enums import education_institution_type, education_institution_national_comunity as nat_community
 from django.core import serializers
 
 
 class EducationInstitutionAdmin(admin.ModelAdmin):
     list_display = ('name', 'institution_type', 'country', 'adhoc')
+    search_fields = ['name']
+    list_filter = ('institution_type',)
 
 
 class EducationInstitution(models.Model):
-    INSTITUTION_TYPE = (('SECONDARY', 'Secondaire'),
-                        ('UNIVERSITY', 'University'),
-                        ('HIGHER_NON_UNIVERSITY', 'Higher non-university'))
-
-    NATIONAL_COMMUNITY_TYPES = (
-        ('FRENCH', 'Communauté française de Belgique'),
-        ('GERMAN', 'Communauté germanophone'),
-        ('DUTCH', 'Communauté flamande'),
-        )
 
     external_id = models.CharField(max_length=100, blank=True, null=True)
     name = models.CharField(max_length=100)
-    institution_type = models.CharField(max_length=25, choices=INSTITUTION_TYPE)
+    institution_type = models.CharField(max_length=25, choices=education_institution_type.INSTITUTION_TYPE)
     postal_code = models.CharField(max_length=20)
     city = models.CharField(max_length=255)
     country = models.ForeignKey('reference.Country', blank=True, null=True)
-    national_community = models.CharField(max_length=20, choices=NATIONAL_COMMUNITY_TYPES, blank=True, null=True)
-    adhoc = models.BooleanField(default=False)
+    national_community = models.CharField(max_length=20, choices=nat_community.NATIONAL_COMMUNITY_TYPES, blank=True, null=True)
+    adhoc = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name

@@ -27,15 +27,18 @@
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
 {% block breadcrumb %}
-<li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'institution' %}</a></li>
-<li><a href="{% url 'mandates' %}" id="lnk_mandates">{% trans 'mandates' %}</a></li>
-<li class="active">{% trans 'form_part1_edit' %}</li>
+	<li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'institution' %}</a></li>
+	<li><a href="{% url 'mandates' %}" id="lnk_mandates">{% trans 'mandates' %}</a></li>
+	<li><a href="{% url 'assistant_mandates' %}" id="lnk_assistant_mandates">{% trans 'my_mandates' %}</a></li>
+	<li class="active">{% trans 'renewal_form' %}</li>
 {% endblock %}
 {% block content %}
 <ul class="nav nav-tabs ">
-<li><a href="{% url 'assistant_mandates' %}">{% trans 'my_mandates' %}</a></li>
-<li class="active"><a href="#">{% trans 'assistant_form_part1' %}</a></li>
-<li><a href="#">{% trans 'assistant_form_part2' %}</a></li>
+	<li><a href="{% url 'assistant_mandates' %}">{% trans 'my_mandates' %}</a></li>
+	<li class="active"><a href="#">{% trans 'assistant_form_part1' %}</a></li>
+	<li><a href="{% url 'mandate_learning_units' mandate.id %}">{% trans 'assistant_form_part2' %}</a></li>
+	<li><a href="{% url 'form_part5_edit' mandate.id %}">{% trans 'assistant_form_part5' %}</a></li>
+	<li><a href="{% url 'form_part6_edit' mandate.id %}">{% trans 'assistant_form_part6' %}</a></li>
 </ul>
 <div class="panel panel-default">
 	<div class="panel-body">
@@ -50,7 +53,7 @@
  		<div class="form-group">
     		<div class="row">
       			<div class="col-md-3">
-      				<label for="txt_name">{% trans 'name' %}</label>
+      				<label for="txt_name" id="txt_name">{% trans 'name' %}</label>
       			</div>
       			<div class="col-md-3">
     				<div class="controls">{{assistant.person}}</div>
@@ -58,7 +61,7 @@
     		</div>
     		<div class="row">
       			<div class="col-md-3">
-      				<label for="txt_address">{% trans 'address' %}</label>
+      				<label for="txt_address" id="txt_address">{% trans 'address' %}</label>
       			</div>
       			<div class="col-md-3">
     				<div class="controls">{% for address in addresses  %}
@@ -78,7 +81,7 @@
   		<div class="form-group">
       		<div class="row">
       			<div class="col-md-3">
-      			<label for="txt_renewal_type">{% trans 'renewal_type' %}</label>
+      			<label for="txt_renewal_type" id="txt_renewal_type">{% trans 'renewal_type' %}</label>
       			</div>
       			<div class="controls">
       				{% if mandate.renewal_type == 'EXCEPTIONAL' %}
@@ -91,7 +94,7 @@
     		{% for structure in mandate.mandatestructure_set.all|dictsort:"structure.type" %}
       			<div class="row">
       				<div class="col-md-3">
-      				<label for="txt_structure">{% trans structure.structure.type|lower %}</label>
+      				<label for="txt_structure" id="txt_structure">{% trans structure.structure.type|lower %}</label>
       				</div>
       				<div class="controls">
       					{{structure.structure.acronym}}
@@ -100,7 +103,8 @@
       		{% endfor %}
     		<div class="row">
       			<div class="col-md-3">
-      			<label for="txt_full_time_equivalent">{% trans 'full_time_equivalent' %}</label>
+      			<label for="txt_full_time_equivalent" id="txt_full_time_equivalent">
+                    {% trans 'full_time_equivalent' %}</label>
       			</div>
       			<div class="controls">
       				{{mandate.fulltime_equivalent}}
@@ -108,7 +112,8 @@
       		</div>
       		<div class="row">
       			<div class="col-md-3">
-      				<label for="txt_date_of_first_nomination">{% trans 'date_of_first_nomination' %}</label>
+      				<label for="txt_date_of_first_nomination" id="txt_date_of_first_nomination">
+                        {% trans 'date_of_first_nomination' %}</label>
       			</div>
       			<div class="controls">
       				{{mandate.entry_date}}
@@ -116,7 +121,7 @@
       		</div>
       		<div class="row">
       			<div class="col-md-3">
-      				<label for="txt_field">{% trans 'field' %}</label>
+      				<label for="txt_field" id="txt_field">{% trans 'field' %}</label>
       			</div>
       			<div class="controls">
       				{% if mandate.assistant_type == 'ASSISTANT' %}
@@ -132,18 +137,19 @@
   			<div class="panel-heading">
   				<font size="4">{% trans 'doctorate' %}</font>
     		</div>
-    	</div><p>
+    	</div>
     	<div class="form-group">
       		<div class="row">
       			<div class="col-md-3">
-      				<label for="txt_registered_phd">{% trans 'registered_phd' %}</label>
+      				<label for="txt_registered_phd" id="txt_registered_phd">{% trans 'registered_phd' %}</label>
       			</div>
       			<div class="col-md-3">
     				<div class="controls">{{ form.inscription }}
     				<font class="error">{{ form.inscription.errors }}</font></div>
     			</div>
       			<div class="col-md-3" align="right">
-          		<label for="txt_expected_phd_date">{% trans 'expected_registering_date' %}</label>
+          		<label for="txt_expected_phd_date" id="txt_expected_phd_date">
+                    {% trans 'expected_registering_date' %}</label>
         		</div>
         		<div class="col-md-3" align="left">
           			<div class="controls">{{ form.expected_phd_date }}
@@ -153,12 +159,11 @@
       		</div><p>
 			<div class="row"> 
         		<div class="col-md-3">
-        			<label for="txt_supervisor">{% trans 'supervisor' %}</label>
+        			<label for="txt_supervisor" id="txt_supervisor">{% trans 'supervisor' %}</label>
         		</div>
         		<div class="col-md-3">
      				<div class="controls" onChange="disablefield();">{{ form.supervisor }}</div>
      					<font class="error">{{ form.supervisor.errors }}</font>
-     					
         			</div>
         			<div class="col-md-3">
           				<label class="checkbox-inline">
@@ -167,38 +172,40 @@
           				</label>
         			</div>  
         			<div class="col-md-3">
-          				<div id="email_supervisor"></div> 
-            			
+          				<div id="email_supervisor"></div>
         			</div>        
-      			</div></p><p>
+      			</div>
       		
       		<div class="row">  
         		<div class="col-md-3">
-          			<label for="txt_phd_inscription_date">{% trans 'phd_inscription_date' %}</label>
+          			<label for="txt_phd_inscription_date" id="txt_phd_inscription_date">
+                        {% trans 'phd_inscription_date' %}</label>
         		</div>
         		<div class="col-md-3">
           			<div class="controls">{{ form.phd_inscription_date }}</div>
           			<font class="error">{{ form.phd_inscription_date.errors }}</font>
         		</div>  
-      		</div></p><p>
+      		</div>
       		<div class="row">  
         		<div class="col-md-3">
-          			<label for="txt_confirmatory_test_date">{% trans 'confirmatory_test_date' %}<br>
+          			<label for="txt_confirmatory_test_date" id="txt_confirmatory_test_date">
+                        {% trans 'confirmatory_test_date' %}<br>
           			<font size="1">{% trans '2nd_renewal' %}</font></label>      
         		</div>     
         		<div class="col-md-3">     
           			<div class="controls">{{ form.confirmation_test_date }}</div>
           			<font class="error">{{ form.confirmation_test_date.errors }}</font>
         		</div>
-          	</div></p><p>
+          	</div>
       		<div class="row">      
         		<div class="col-md-3">
-          			<label for="txt_thesis_defence_date">{% trans 'thesis_defence_date' %}</label>    
+          			<label for="txt_thesis_defence_date" id="txt_thesis_defence_date">
+                        {% trans 'thesis_defence_date' %}</label>
         		</div>
         		<div class="col-md-3">
           			<div class="controls">{{ form.thesis_date }}</div>
           			<font class="error">{{ form.thesis_date.errors }}</font>
-        		</div></p>
+        		</div>
       		</div>  
     	</div>
     	<hr>
@@ -206,30 +213,32 @@
   			<div class="panel-heading">
   				<font size="4">{% trans 'various' %}</font>
     		</div>
-    	</div><p>
+    	</div>
     	<div class="form-group">
     		<div class="row">      
         		<div class="col-md-5">
-   					<label for="txt_function_outside_university"><font size="2">{% trans 'function_outside_university' %}</font></label> 
+   					<label for="txt_function_outside_university" id="txt_function_outside_university">
+                        <font size="2">{% trans 'function_outside_university' %}</font></label>
    				</div>
    				<div class="col-md-7">
     				<div class="controls">{{ form2.external_functions }}</div>
     				<font class="error">{{ form.errors.external_functions }}</font>
     			</div>
-    		</div><p>
+    		</div>
     		<div class="row">  
     			<div class="col-md-5">
-    				<label for="txt_external_post"><font size="2">{% trans 'external_post' %}</font></label>
+    				<label for="txt_external_post" id="txt_external_post">
+                        <font size="2">{% trans 'external_post' %}</font></label>
   				</div>  
   				<div class="col-md-7">
     				<div class="controls">{{ form2.external_contract }}</div>
     				<font class="error">{{ form.errors.external_contract }}</font>
     			</div>
-    		</div></p><p>
+    		</div>
     		{% if mandate.renewal_type == 'EXCEPTIONAL' %}
     		<div class="row"> 
     			<div class="col-md-5">
-      				<label for="txt_exceptional_justification">
+      				<label for="txt_exceptional_justification" id="txt_exceptional_justification">
       				<font size="1">{% trans 'exceptional_justification' %}</font></label>
     			</div>
     			<div class="col-md-7">
@@ -238,11 +247,11 @@
     			</div>  
    			</div>
    			{% endif %}
-   			</p>
      		<div class="col-md-12" align="left">
      			<button type="submit" class="btn btn-primary" title="{% trans 'save'%}" id="bt_pstform_part1_save">
      			<span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}</button>
     		</div>
+		</div>
     	</form>
 	</div>
 </div>

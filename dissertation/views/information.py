@@ -40,14 +40,14 @@ from base.views import layout
 def is_manager(user):
     person = mdl.person.find_by_user(user)
     this_adviser = adviser.search_by_person(person)
-    return this_adviser.type == 'MGR'
+    return this_adviser.type == 'MGR' if this_adviser else False
 
 
 # Used by decorator @user_passes_test(is_manager) to secure manager views
 def is_teacher(user):
     person = mdl.person.find_by_user(user)
     this_adviser = adviser.search_by_person(person)
-    return this_adviser.type == 'PRF'
+    return this_adviser.type == 'PRF' if this_adviser else False
 
 ###########################
 #      TEACHER VIEWS      #
@@ -58,13 +58,7 @@ def is_teacher(user):
 @user_passes_test(is_teacher)
 def informations(request):
     person = mdl.person.find_by_user(request.user)
-    try:
-        adv = Adviser(person=person, available_by_email=False, available_by_phone=False, available_at_office=False)
-        adv.save()
-        adv = adviser.search_by_person(person)
-    except IntegrityError:
-        adv = adviser.search_by_person(person)
-
+    adv = adviser.search_by_person(person)
     return layout.render(request, "informations.html", {'adviser': adv,
                                                         'first_name': adv.person.first_name.title(),
                                                         'last_name': adv.person.last_name.title()
@@ -75,12 +69,7 @@ def informations(request):
 @user_passes_test(is_teacher)
 def informations_detail_stats(request):
     person = mdl.person.find_by_user(request.user)
-    try:
-        adv = Adviser(person=person, available_by_email=False, available_by_phone=False, available_at_office=False)
-        adv.save()
-        adv = adviser.search_by_person(person)
-    except IntegrityError:
-        adv = adviser.search_by_person(person)
+    adv = adviser.search_by_person(person)
 
     advisers_pro = dissertation_role.search_by_adviser_and_role_stats(adv, 'PROMOTEUR')
     count_advisers_pro = dissertation_role.count_by_adviser_and_role_stats(adv, 'PROMOTEUR')
