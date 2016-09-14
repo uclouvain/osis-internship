@@ -127,7 +127,7 @@ def profile_lang(request):
 
 
 @login_required
-@user_passes_test(lambda u: u.is_staff and u.has_perm('base.change_messagetemplate'))
+@user_passes_test(lambda u: u.is_staff and u.has_perm('osis_common.change_messagetemplate'))
 def messages_templates_index(request):
     return HttpResponseRedirect(reverse('admin:base_messagetemplate_changelist'))
 
