@@ -47,7 +47,7 @@ def my_osis_index(request):
 @login_required
 def my_messages_index(request):
     person = mdl.person.find_by_user(request.user)
-    my_messages = message_history_mdl.find_my_messages(person)
+    my_messages = message_history_mdl.find_my_messages(person.id)
     my_messages_formset = None
     if not my_messages:
         messages.add_message(request, messages.INFO, _('no_messages'))
@@ -84,7 +84,10 @@ def my_messages_action(request):
 
 @login_required
 def delete_from_my_messages(request, message_id):
-    message_history_mdl.delete_my_messages([message_id, ])
+    message = message_history_mdl.find_by_id(message_id)
+    person_user = mdl.person.find_by_user(request.user)
+    if message and (message.receiver_id == person_user.id):
+        message_history_mdl.delete_my_messages([message_id, ])
     return HttpResponseRedirect(reverse('my_messages'))
 
 
