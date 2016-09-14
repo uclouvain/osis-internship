@@ -28,12 +28,12 @@ from django.contrib.auth.decorators import login_required, permission_required
 from internship.models import Organization, OrganizationAddress, InternshipChoice, InternshipOffer, InternshipSpeciality
 from internship.forms import OrganizationForm, OrganizationAddressForm
 
-def sort_organizations(datas):
+def sort_organizations(sort_organizations):
     tab = []
     number_ref = []
-    for data in datas:
-        if data is not None:
-            number_ref.append(data.reference)
+    for sort_organization in sort_organizations:
+        if sort_organization is not None:
+            number_ref.append(sort_organization.reference)
     number_ref=sorted(number_ref, key=int)
     for i in number_ref:
         organization = Organization.search(reference=i)
@@ -50,37 +50,37 @@ def set_organization_address(organizations):
                 organization.address = address
             organization.student_choice = len(InternshipChoice.search(organization=organization))
 
-def sorted_organization(datas, sort_city):
+def sorted_organization(sort_organizations, sort_city):
     tab=[]
     index = 0
-    for data in datas:
+    for sort_organization in sort_organizations:
         flag_del = 1
-        if data.address:
-            for a in data.address:
+        if sort_organization.address:
+            for a in sort_organization.address:
                 if a.city == sort_city:
                     flag_del = 0
                     break
         if flag_del == 0:
-            tab.append(data)
+            tab.append(sort_organization)
         index += 1
     return tab
 
-def get_cities(datas):
+def get_cities(organizations):
     tab = []
-    for data in datas:
-        for a in data.address:
+    for organization in organizations:
+        for a in organization.address:
             tab.append(a.city)
     tab = list(set(tab))
     tab.sort()
     return tab
 
-def set_tabs_name(datas, student=None):
-    for data in datas:
+def set_tabs_name(specialities, student=None):
+    for speciality in specialities:
         if student :
-            size = len(InternshipChoice.search(speciality=data, student=student))
-            data.size = size
-        tab = data.name.replace(" ", "")
-        data.tab = tab
+            size = len(InternshipChoice.search(speciality=speciality, student=student))
+            speciality.size = size
+        tab = speciality.name.replace(" ", "")
+        speciality.tab = tab
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
