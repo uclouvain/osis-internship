@@ -74,10 +74,10 @@ def work_dist(student, organizations):
 def get_number_choices(internships):
     for internship in internships:
         number_first_choice = len(InternshipChoice.search(organization = internship.organization,
-                                                            speciality = internship.speciality,
+                                                            speciality__acronym = internship.speciality.acronym,
                                                            choice=1))
         number_other_choice = len(InternshipChoice.search_other_choices(organization = internship.organization,
-                                                            speciality = internship.speciality))
+                                                            speciality__acronym = internship.speciality.acronym))
         internship.number_first_choice = number_first_choice
         internship.number_other_choice = number_other_choice
 
