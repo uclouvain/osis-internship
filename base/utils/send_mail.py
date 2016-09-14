@@ -64,79 +64,11 @@ def send_mail_after_scores_submission(persons, learning_unit_name, submitted_enr
             enrollment.score_final,
             _(enrollment.justification_final) if enrollment.justification_final else None,
         ) for enrollment in submitted_enrollments]
-    table = message_config.create_table('submitted_enrollments',header_txt, submitted_enrollments_data)
+    table = message_config.create_table('submitted_enrollments', header_txt, submitted_enrollments_data)
 
-    message_content = message_config.create_message_content(html_template_ref, txt_template_ref, [table], receivers, template_base_data, suject_data)
+    message_content = message_config.create_message_content(html_template_ref, txt_template_ref, [table], receivers,
+                                                            template_base_data, suject_data)
     return message_service.send_messages(message_content)
-
-    # sent_error_message = None
-    # txt_message_templates = {template.language: template for template in
-    #                          list(message_template_mdl.find_by_reference('assessments_scores_submission_txt'))}
-    # html_message_templates = {template.language: template for template in
-    #                           list(message_template_mdl.find_by_reference('assessments_scores_submission_html'))}
-    #
-    # if not html_message_templates:
-    #     sent_error_message = _('template_error').format('assessments_scores_submission_html')
-    # else:
-    #     submitted_enrollments_data = [
-    #         (
-    #             enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym,
-    #             enrollment.session_exam.number_session,
-    #             enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id,
-    #             enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name,
-    #             enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name,
-    #             enrollment.score_final,
-    #             _(enrollment.justification_final) if enrollment.justification_final else None,
-    #         ) for enrollment in submitted_enrollments]
-    #
-    #     data = {
-    #         'learning_unit_name': learning_unit_name,
-    #         'signature': render_to_string('email/html_email_signature.html', {
-    #             'logo_mail_signature_url': LOGO_EMAIL_SIGNATURE_URL,
-    #             'logo_osis_url': LOGO_OSIS_URL})
-    #     }
-    #
-    #     dest_by_lang = map_persons_by_languages(persons)
-    #     for lang_code, person in dest_by_lang.items():
-    #             if lang_code in html_message_templates:
-    #                 html_message_template = html_message_templates.get(lang_code)
-    #             else:
-    #                 html_message_template = html_message_templates.get(settings.LANGUAGE_CODE)
-    #             if lang_code in txt_message_templates:
-    #                 txt_message_template = txt_message_templates.get(lang_code)
-    #             else:
-    #                 txt_message_template = txt_message_templates.get(settings.LANGUAGE_CODE)
-    #             with translation.override(lang_code):
-    #                 submitted_enrollment_header = (
-    #                     _('acronym'),
-    #                     _('sessionn'),
-    #                     _('registration_number'),
-    #                     _('lastname'),
-    #                     _('firstname'),
-    #                     _('score'),
-    #                     _('documentation')
-    #                 )
-    #                 submitted_enrollments_table_html = render_table_template_as_string(
-    #                     submitted_enrollment_header,
-    #                     submitted_enrollments_data,
-    #                     True
-    #                 )
-    #                 data['encoding_status'] = _('encoding_status_ended') if all_encoded else _('encoding_status_notended')
-    #                 data['submitted_enrollments'] = submitted_enrollments_table_html
-    #                 html_message = Template(html_message_template.template).render(Context(data))
-    #                 subject = html_message_template.subject.format(learning_unit_name=learning_unit_name)
-    #                 submitted_enrollments_table_txt = render_table_template_as_string(
-    #                     submitted_enrollment_header,
-    #                     submitted_enrollments_data,
-    #                     False
-    #                 )
-    #                 data['submitted_enrollments'] = submitted_enrollments_table_txt
-    #                 txt_message = Template(txt_message_template.template).render(Context(data))
-    #                 send_and_save(persons=person,
-    #                               subject=unescape(strip_tags(subject)),
-    #                               message=unescape(strip_tags(txt_message)),
-    #                               html_message=html_message, from_email=DEFAULT_FROM_EMAIL)
-    # return sent_error_message
 
 
 def send_mail_after_academic_calendar_changes(academic_calendar, offer_year_calendar, programm_managers):
@@ -151,7 +83,8 @@ def send_mail_after_academic_calendar_changes(academic_calendar, offer_year_cale
 
     html_template_ref = 'academic_calendar_changes_html'
     txt_template_ref = 'academic_calendar_changes_txt'
-    receivers = [message_config.create_receiver(manager.person.id, manager.person.email, manager.person.language) for manager in programm_managers]
+    receivers = [message_config.create_receiver(manager.person.id, manager.person.email, manager.person.language)
+                 for manager in programm_managers]
     suject_data = {'offer_year':            str(offer_year_calendar.offer_year.acronym),
                    'academic_calendar':     str(academic_calendar)}
     template_base_data = {
@@ -163,53 +96,16 @@ def send_mail_after_academic_calendar_changes(academic_calendar, offer_year_cale
                                                             None, receivers, template_base_data, suject_data)
 
     return message_service.send_messages(message_content)
-    # sent_error_message = None
-    # txt_message_templates = {template.language: template for template in
-    #                          list(message_template_mdl.find_by_reference('academic_calendar_changes_txt'))}
-    # html_message_templates = {template.language: template for template in
-    #                           list(message_template_mdl.find_by_reference('academic_calendar_changes_html'))}
-    # if not html_message_templates:
-    #     sent_error_message = _('template_error').format('academic_calendar_changes_html')
-    # else:
-    #     data = {
-    #         'offer_year_title': offer_year_calendar.offer_year.title,
-    #         'offer_year_acronym': offer_year_calendar.offer_year.acronym,
-    #         'academic_calendar': str(academic_calendar),
-    #         'signature': render_to_string('email/html_email_signature.html', {
-    #             'logo_mail_signature_url': LOGO_EMAIL_SIGNATURE_URL,
-    #             'logo_osis_url': LOGO_OSIS_URL})}
-    #
-    #     dest_by_lang = map_persons_by_languages([manager.person for manager in programm_managers
-    #                                              if manager.person])
-    #     for lang_code, persons in dest_by_lang.items():
-    #         if lang_code in html_message_templates:
-    #             html_message_template = html_message_templates.get(lang_code)
-    #         else:
-    #             html_message_template = html_message_templates.get(settings.LANGUAGE_CODE)
-    #         if lang_code in txt_message_templates:
-    #             txt_message_template = txt_message_templates.get(lang_code)
-    #         else:
-    #             txt_message_template = txt_message_templates.get(settings.LANGUAGE_CODE)
-    #         with translation.override(lang_code):
-    #             html_message = Template(html_message_template.template).render(Context(data))
-    #             message = Template(txt_message_template.template).render(Context(data))
-    #             subject = str(html_message_template.subject).format(offer_year=str(offer_year_calendar.offer_year.acronym),
-    #                                                                 academic_calendar=str(academic_calendar))
-    #             send_and_save(persons=persons,
-    #                           subject=unescape(strip_tags(subject)),
-    #                           message=unescape(strip_tags(message)),
-    #                           html_message=html_message,
-    #                           from_email=DEFAULT_FROM_EMAIL)
-    # return sent_error_message
 
 
 def send_message_after_all_encoded_by_manager(persons, enrollments, learning_unit_acronym, offer_acronym):
     """
-
-    :param persons:
-    :param enrollments:
-    :param acronym:
-    :return:
+    Send a message to all tutor from a learning unit when all scores are submitted by program manager
+    :param persons: The list of the tutor (person) of the learning unit
+    :param enrollments: The enrollments that are encoded and submitted
+    :param learning_unit_acronym The learning unit encoded
+    :param offer_acronym: The offer which is managed
+    :return: A message if an error occured, None if it's ok
     """
 
     html_template_ref = 'assessments_all_scores_by_pgm_manager_html'
@@ -246,75 +142,6 @@ def send_message_after_all_encoded_by_manager(persons, enrollments, learning_uni
     message_content = message_config.create_message_content(html_template_ref, txt_template_ref,
                                                             [table], receivers, template_base_data, suject_data)
     return message_service.send_messages(message_content)
-
-    # txt_message_templates = {template.language: template for template in
-    #                          list(message_template_mdl.find_by_reference('assessments_all_scores_by_pgm_manager_txt'))}
-    # html_message_templates = {template.language: template for template in
-    #                           list(message_template_mdl.find_by_reference('assessments_all_scores_by_pgm_manager_html'))}
-    #
-    # enrollments_data = [
-    #     (
-    #         enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym,
-    #         enrollment.session_exam.number_session,
-    #         enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id,
-    #         enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name,
-    #         enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name,
-    #         enrollment.score_final,
-    #         _(enrollment.justification_final) if enrollment.justification_final else None,
-    #     ) for enrollment in enrollments]
-    #
-    # data = {
-    #     'learning_unit_acronym': learning_unit_acronym,
-    #     'offer_acronym': offer_acronym,
-    #     'signature': render_to_string('email/html_email_signature.html', {
-    #         'logo_mail_signature_url': LOGO_EMAIL_SIGNATURE_URL,
-    #         'logo_osis_url': LOGO_OSIS_URL})
-    # }
-    # dest_by_lang = map_persons_by_languages(persons)
-    # for lang_code, person in dest_by_lang.items():
-    #     if lang_code in html_message_templates:
-    #         html_message_template = html_message_templates.get(lang_code)
-    #     else:
-    #         html_message_template = html_message_templates.get(settings.LANGUAGE_CODE)
-    #     if not html_message_template:
-    #         sent_error_message = _('template_error').format('assessments_all_scores_by_pgm_manager_html')
-    #         return sent_error_message
-    #
-    #     if lang_code in txt_message_templates:
-    #         txt_message_template = txt_message_templates.get(lang_code)
-    #     else:
-    #         txt_message_template = txt_message_templates.get(settings.LANGUAGE_CODE)
-    #     with translation.override(lang_code):
-    #         enrollments_header = (
-    #             _('acronym'),
-    #             _('sessionn'),
-    #             _('registration_number'),
-    #             _('lastname'),
-    #             _('firstname'),
-    #             _('score'),
-    #             _('documentation')
-    #         )
-    #         enrollments_table_html = render_table_template_as_string(
-    #             enrollments_header,
-    #             enrollments_data,
-    #             True
-    #         )
-    #         data['enrollments'] = enrollments_table_html
-    #         html_message = Template(html_message_template.template).render(Context(data))
-    #         subject = html_message_template.subject.format(learning_unit_acronym=learning_unit_acronym,
-    #                                                        offer_acronym=offer_acronym)
-    #         enrollments_table_txt = render_table_template_as_string(
-    #             enrollments_header,
-    #             enrollments_data,
-    #             False
-    #         )
-    #         data['enrollments'] = enrollments_table_txt
-    #         txt_message = Template(txt_message_template.template).render(Context(data))
-    #         send_and_save(persons=person,
-    #                       subject=unescape(strip_tags(subject)),
-    #                       message=unescape(strip_tags(txt_message)),
-    #                       html_message=html_message, from_email=DEFAULT_FROM_EMAIL)
-    # return None
 
 
 def send_again(message_history_id):
