@@ -118,6 +118,9 @@ msgstr "Collaboration"
 msgid "comment"
 msgstr "Commentaire"
 
+msgid "continue"
+msgstr "Continuer"
+
 msgid "copromotor"
 msgstr "Co-Promoteur"
 
@@ -309,6 +312,9 @@ msgstr "Pour les enseignants"
 
 msgid "forbidden"
 msgstr "Interdit"
+
+msgid "go_away"
+msgstr "Quitter"
 
 msgid "how_many_dissertation_copro"
 msgstr "Nombre de mémoires en tant que co-promoteur"
@@ -753,6 +759,15 @@ msgstr "En attente de réception"
 
 msgid "wating_dissertations_message"
 msgstr "mémoires en attente de validation"
+
+msgid "welcome"
+msgstr "Bienvenue"
+
+msgid "welcome_message_dissertation"
+msgstr "Cette application permet la gestion des mémoires des étudiants au sein des Facultés qui ont choisi de l'utiliser."
+
+msgid "welcome_warning_dissertation"
+msgstr "En continuant, vous allez être enregistré comme Enseignant dans l'application, et obtenir la possibilité de créer des sujets de mémoires pour les étudiants."
 
 msgid "yes"
 msgstr "oui"

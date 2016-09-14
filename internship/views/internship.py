@@ -36,17 +36,22 @@ from math import sin, cos, radians, degrees, acos
 
 
 def calc_dist(lat_a, long_a, lat_b, long_b):
-    lat_a = radians(float(lat_a))
-    lat_b = radians(float(lat_b))
-    long_a = float(long_a)
-    long_b = float(long_b)
-    long_diff = radians(long_a - long_b)
-    distance = (sin(lat_a) * sin(lat_b) +
-                cos(lat_a) * cos(lat_b) * cos(long_diff))
-    # For distance in miles use this
-    # return (degrees(acos(distance)) * 69.09)
-    # For distance in kilometers use this
-    return (degrees(acos(distance)) * 69.09)/0.621371
+    if lat_a == lat_b and long_a == long_b:
+        # If there is the same adress, there is a chance to have a bug/crash
+        # So it return 100 meters of distance
+        return 0.1
+    else:
+        lat_a = radians(float(lat_a))
+        lat_b = radians(float(lat_b))
+        long_a = float(long_a)
+        long_b = float(long_b)
+        long_diff = radians(long_a - long_b)
+        distance = (sin(lat_a) * sin(lat_b) +
+                    cos(lat_a) * cos(lat_b) * cos(long_diff))
+        # For distance in miles use this
+        # return (degrees(acos(distance)) * 69.09)
+        # For distance in kilometers use this
+        return (degrees(acos(distance)) * 69.09)/0.621371
 
 def work_dist(student, organizations):
     # Find the student's informations
@@ -394,7 +399,7 @@ def student_choice(request, id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_block(request):
-    internships = InternshipOffer.find_internships()
+    internships = InternshipOffer.search()
     # For each internship in the DB invert the selectable flag
     for internship in internships:
         edit_internship = InternshipOffer.find_intership_by_id(internship.id)
