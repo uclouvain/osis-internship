@@ -670,6 +670,9 @@ msgstr "Search teacher"
 msgid "see_my_waiting_dissertations"
 msgstr "See my waiting dissertations"
 
+msgid "select_program_first"
+msgstr "Please select Start Program/Year first"
+
 msgid "september"
 msgstr "September"
 

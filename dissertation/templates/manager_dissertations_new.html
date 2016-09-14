@@ -61,7 +61,7 @@
             <div class="col-md-9 form-group">
                 <label for="id_author" {% if form.author.errors %} style="color:red;" {% endif %}>{% trans 'author' %}</label>
                <select  class="form-control" id="id_author" name="author" style="margin:-6px;">
-                    <option value="">---------</option>
+                    <option value="">{% trans 'select_program_first' %}</option>
                     </select>
 
             </div>
