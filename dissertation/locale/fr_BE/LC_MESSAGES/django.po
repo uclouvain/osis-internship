@@ -52,6 +52,9 @@ msgstr "Ajouter une justification"
 msgid "add_person"
 msgstr "Ajouter une personne"
 
+msgid "add_person_confirmation"
+msgstr "Cette personne va être ajoutée dans OSIS, et il ne sera plus possible de la modifier. Voulez-vous continuer ?"
+
 msgid "add_person_warning"
 msgstr "Ce formulaire permet d'ajouter une personne dans OSIS. Complétez attentivement le formulaire, il ne sera plus possible de modifier cette personne ensuite."
 
