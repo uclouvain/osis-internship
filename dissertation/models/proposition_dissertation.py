@@ -143,3 +143,9 @@ def get_mine_for_teacher(adviser):
     return PropositionDissertation.objects.filter(author=adviser)\
                                           .filter(active=True)\
                                           .distinct()
+
+
+def get_created_for_teacher(adviser):
+    return PropositionDissertation.objects.filter(creator=adviser.person)\
+                                          .filter(active=True)\
+                                          .distinct()

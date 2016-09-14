@@ -151,6 +151,8 @@ urlpatterns = [
         name='my_dissertation_propositions'),
     url(r'^proposition_dissertations/$', proposition_dissertation.proposition_dissertations,
         name='proposition_dissertations'),
+    url(r'^proposition_dissertations_created/$', proposition_dissertation.proposition_dissertations_created,
+        name='proposition_dissertations_created'),
     url(r'^proposition_dissertation/(?P<pk>[0-9]+)/delete/$', proposition_dissertation.proposition_dissertation_delete,
         name='proposition_dissertation_delete'),
     url(r'^proposition_dissertation_detail/(?P<pk>[0-9]+)/$', proposition_dissertation.proposition_dissertation_detail,

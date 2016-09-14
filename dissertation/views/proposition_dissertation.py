@@ -303,6 +303,15 @@ def my_dissertation_propositions(request):
 
 
 @login_required
+def proposition_dissertations_created(request):
+    person = mdl.person.find_by_user(request.user)
+    adv = adviser.search_by_person(person)
+    prop_disserts = proposition_dissertation.get_created_for_teacher(adv)
+    return layout.render(request, 'proposition_dissertations_list_created.html',
+                         {'proposition_dissertations': prop_disserts})
+
+
+@login_required
 def proposition_dissertation_new(request):
     person = mdl.person.find_by_user(request.user)
     if request.method == "POST":
