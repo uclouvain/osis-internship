@@ -42,7 +42,7 @@ from internship.models import Organization, Period
 
 PAGE_SIZE = A4
 MARGIN_SIZE = 15 * mm
-COLS_WIDTH = [40*mm, 29.4*mm, 29.4*mm, 29.4*mm, 29.4*mm, 29.4*mm, 29.4*mm]
+COLS_WIDTH = [40*mm, 29.4*mm, 29.4*mm, 29.4*mm, 29.4*mm, 29.4*mm]
 STUDENTS_PER_PAGE = 24
 
 def add_header_footer(canvas, doc):
@@ -115,7 +115,6 @@ def build_pdf(document):
                     affectation.student.registration_id,
                     Paragraph(affectation.email, styles['Normal']),
                     Paragraph(affectation.adress, styles['Normal']),
-                    "birth date inc",
                     affectation.phone_mobile
                     ]
                      )
@@ -210,7 +209,6 @@ def headers_table():
              '''%s''' % _('noma'),
              '''%s''' % _('email'),
              '''%s''' % _('address'),
-             '''%s''' % _('birth_date'),
              '''%s''' % _('phone_mobile')]]
     return data
 
