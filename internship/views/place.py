@@ -28,12 +28,12 @@ from django.contrib.auth.decorators import login_required, permission_required
 from internship.models import Organization, OrganizationAddress, InternshipChoice, InternshipOffer, InternshipSpeciality
 from internship.forms import OrganizationForm, OrganizationAddressForm
 
-def sort_organizations(s_organizations):
+def sort_organizations(sort_organizations):
     tab = []
     number_ref = []
-    for s_organization in s_organizations:
-        if s_organization is not None:
-            number_ref.append(s_organization.reference)
+    for sort_organization in sort_organizations:
+        if sort_organization is not None:
+            number_ref.append(sort_organization.reference)
     number_ref=sorted(number_ref, key=int)
     for i in number_ref:
         organization = Organization.search(reference=i)
@@ -50,18 +50,18 @@ def set_organization_address(organizations):
                 organization.address = address
             organization.student_choice = len(InternshipChoice.search(organization=organization))
 
-def sorted_organization(s_organizations, sort_city):
+def sorted_organization(sort_organizations, sort_city):
     tab=[]
     index = 0
-    for s_organization in s_organizations:
+    for sort_organization in sort_organizations:
         flag_del = 1
-        if s_organization.address:
-            for a in s_organization.address:
+        if sort_organization.address:
+            for a in sort_organization.address:
                 if a.city == sort_city:
                     flag_del = 0
                     break
         if flag_del == 0:
-            tab.append(s_organization)
+            tab.append(sort_organization)
         index += 1
     return tab
 

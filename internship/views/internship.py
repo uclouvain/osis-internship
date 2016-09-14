@@ -124,12 +124,12 @@ def delete_dublons_keep_order(seq):
     seen_add = seen.add
     return [x for x in seq if not (x in seen or seen_add(x))]
 
-def sort_internships(s_internships):
+def sort_internships(sort_internships):
     tab = []
     number_ref = []
-    for s_internship in s_internships:
-        if s_internship is not None:
-            number_ref.append(s_internship.organization.reference)
+    for sort_internship in sort_internships:
+        if sort_internship is not None:
+            number_ref.append(sort_internship.organization.reference)
     number_ref=sorted(number_ref, key=int)
     number_ref=delete_dublons_keep_order(number_ref)
     for i in number_ref:
