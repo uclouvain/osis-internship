@@ -159,9 +159,11 @@ def manager_informations_add(request):
                     form = ManagerAddAdviserPreForm()
                     email = data['email']
                     message = "person_not_found_by_mail"
+                    message_add = "add_new_person_explanation"
                     return layout.render(request, 'manager_informations_add_search.html', {'form': form,
                                                                                            'message': message,
-                                                                                           'email': email})
+                                                                                           'email': email,
+                                                                                           'message_add': message_add})
             else:  # invalid form (invalid format for email)
                 form = ManagerAddAdviserPreForm()
                 message = "invalid_data"

@@ -328,6 +328,12 @@ msgstr "Nombre de mémoires en tant que promoteur"
 msgid "how_many_dissertation_reader"
 msgstr "Nombre de mémoires en tant que lecteur"
 
+msgid "if_extern_you_can"
+msgstr "Si la personne est externe à l'Université, vous pouvez"
+
+msgid "if_intern_use_good_email"
+msgstr "Si la personne appartient à l'Université, il faut utiliser son adresse e-mail correcte."
+
 msgid "if_unavailable_adviser"
 msgstr "Si l'enseignant concerné n'est pas dans la liste, vous pouvez"
 
@@ -438,6 +444,9 @@ msgstr "Évaluation de première année échouée"
 
 msgid "manager_informations_add"
 msgstr "Ajouter un enseignant"
+
+msgid "manager_informations_add_person"
+msgstr "ajouter cette personne"
 
 msgid "manager_informations_list_request"
 msgstr "Enseignants devant répondre à une demande"
@@ -598,7 +607,7 @@ msgstr "Cette personne existe déjà en tant qu'enseignant"
 msgid "person_to_add"
 msgstr "Personne à ajouter"
 
-msgid "person_not_found_by_mail "
+msgid "person_not_found_by_mail"
 msgstr "Aucune personne ne correspond à cet adresse e-mail"
 
 msgid "phone"

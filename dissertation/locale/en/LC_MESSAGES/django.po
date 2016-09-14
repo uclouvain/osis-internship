@@ -328,6 +328,12 @@ msgstr "Dissertations quantity as promotor"
 msgid "how_many_dissertation_reader"
 msgstr "Dissertations quantity as reader"
 
+msgid "if_extern_you_can"
+msgstr "If this person is not a member of the University, you can"
+
+msgid "if_intern_use_good_email"
+msgstr "If this person is a member of the University, you need to use the correct e-mail address."
+
 msgid "if_unavailable_adviser"
 msgstr "If the concerned teacher is not in the list, you can"
 
@@ -438,6 +444,9 @@ msgstr "First year evaluation failed"
 
 msgid "manager_informations_add"
 msgstr "Add teacher"
+
+msgid "manager_informations_add_person"
+msgstr "add this person"
 
 msgid "manager_informations_list_request"
 msgstr "Teachers having to answer request"
@@ -598,7 +607,7 @@ msgstr "This person already exists as teacher"
 msgid "person_to_add"
 msgstr "Person to add"
 
-msgid "person_not_found_by_mail "
+msgid "person_not_found_by_mail"
 msgstr "No person matches this e-mail address"
 
 msgid "phone"
