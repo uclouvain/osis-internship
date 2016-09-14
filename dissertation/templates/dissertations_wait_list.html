@@ -47,7 +47,6 @@
                 <div class="panel-heading">
                     <h3 class="panel-title">{% trans 'dissertation_adviser_promoteur' %}</h3>
                 </div>
-                <div class="panel-body">
                   <table class="table table-hover">
                     <tr>
                       <th>{% trans 'dissertation_title'%}</th>
@@ -79,7 +78,7 @@
                             {% elif dissertation.dissertation.status == 'COM_KO' %}
                             <span class="label label-default">{{ dissertation.dissertation.get_status_display }}</span>
                             {% elif dissertation.dissertation.status == 'EVA_SUBMIT' %}
-                            <span class="label label-default">{{ dissertation.dissertation.get_status_display }}</span>
+                            <span class="label label-primary">{{ dissertation.dissertation.get_status_display }}</span>
                             {% elif dissertation.dissertation.status == 'EVA_OK' %}
                             <span class="label label-default">{{ dissertation.dissertation.get_status_display }}</span>
                             {% elif dissertation.dissertation.status == 'EVA_KO' %}
@@ -98,7 +97,6 @@
                       </tr>
                     {% endfor %}
                   </table>
-                </div>
               </div>
           </div>
       </div>

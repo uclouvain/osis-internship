@@ -29,72 +29,61 @@
 {% block breadcrumb %}
   <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
   <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'dissertations' %}</a></li>
-  <li class="active">{% trans 'informations' %}</li>
+  <li><a href="{% url 'manager_informations' %}" id="lnk_teachers">{% trans 'teachers' %}</a></li>
+  <li><a href="{% url 'manager_informations_detail' pk=adviser.pk %}">{{ adviser.person.last_name }}, {{ adviser.person.first_name }}</a></li>
+  <li class="active">{% trans 'edit' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
-      <h2>{% trans 'informations' %}</h2>
+      <h2>{{ adviser.person.last_name }}, {{ adviser.person.first_name }}</h2>
   </div>
   <div class="panel panel-default">
       <div class="panel-body">
           <form method="POST" class="post-form">
               {% csrf_token %}
-              <div class="row">
-                  <div class="col-md-3 col-lg-offset-3">
-                    <label>{% trans 'name' %}</label><br>
-                    {{  first_name }} {{ last_name }}
-                  </div>
-                  <div class="col-md-3">
-                    <label>{% trans 'email' %}</label><br>
-                    {{  email }}
-                  </div>
-              </div>
-              <br>
-              <div class="row">
-                  <div class="col-md-3 col-lg-offset-3">
-                    <label>{% trans 'phone' %}</label><br>
-                    {{  phone }}
-                  </div>
-                  <div class="col-md-3">
-                    <label>{% trans 'mobile_phone' %}</label><br>
-                    {{  phone_mobile }}
-                  </div>
-              </div>
-              <br>
-              <div class="row {% if field.errors %}error{% endif %}">
-                  <div class="col-md-2 col-lg-offset-1">
-                      <label for="txt_comment">{% trans 'comment' %}</label>
-                  </div>
-                  <div class="col-md-10 col-lg-offset-1">
-                      <textarea class="form-control" id="txt_comment"  name="comment" rows="10">{{ form.comment.value }}</textarea>
-                  </div>
-              </div>
-              <br>
-              <div class="row {% if field.errors %}error{% endif %}">
-                  <div class="col-md-2 col-lg-offset-1">
-                      <label for="txt_available_by_email">{% trans 'available_by_email' %}</label>
-                  </div>
-                  <div class="col-md-1">
-                      <input class="form-control" id="txt_available_by_email"  name="available_by_email"
-                          style="margin:-6px;" type="checkbox" {% if form.available_by_email.value %} checked {% endif %} >
-                  </div>
-                  <div class="col-md-2">
-                      <label for="txt_available_by_phone">{% trans 'available_by_phone' %}</label>
-                  </div>
-                  <div class="col-md-1">
-                      <input class="form-control" id="txt_available_by_phone"  name="available_by_phone"
-                          style="margin:-6px;" type="checkbox" {% if form.available_by_phone.value %} checked {% endif %} >
-                  </div>
-                  <div class="col-md-2">
-                      <label for="txt_available_at_office">{% trans 'available_at_office' %}</label>
-                  </div>
-                  <div class="col-md-1">
-                      <input class="form-control" id="txt_available_at_office"  name="available_at_office"
-                          style="margin:-6px;" type="checkbox" {% if form.available_at_office.value %} checked {% endif %} >
-                  </div>
-              </div>
-              <br>
-              <button type="submit" class="save btn btn-default">Save</button>
+                <div class="row {% if field.errors %}error{% endif %}">
+                    <div class="col-md-1" style="text-align: right;">
+                        <input id="txt_available_by_email"  name="available_by_email"
+                             type="checkbox" {% if form.available_by_email.value %} checked {% endif %} >
+                    </div>
+                    <div class="col-md-9" style="padding-top: 4px;">
+                        <label for="txt_available_by_email">{% trans 'available_by_email' %} ({{  email }})</label>
+                    </div>
+                </div>
+                <div class="row {% if field.errors %}error{% endif %}">
+                    <div class="col-md-1" style="text-align: right;">
+                      <input id="txt_available_by_phone"  name="available_by_phone"
+                            type="checkbox" {% if form.available_by_phone.value %} checked {% endif %} >
+                    </div>
+                    <div class="col-md-9" style="padding-top: 4px;">
+                       <label for="txt_available_by_phone">
+                           {% trans 'available_by_phone' %} ({{  phone }}
+                           {% if phone_mobile %}- {{  phone_mobile }}{% endif %})
+                       </label>
+                    </div>
+                </div>
+                <div class="row {% if field.errors %}error{% endif %}">
+                    <div class="col-md-1" style="text-align: right;">
+                      <input id="txt_available_at_office"  name="available_at_office"
+                            type="checkbox" {% if form.available_at_office.value %} checked {% endif %} >
+                    </div>
+                    <div class="col-md-9" style="padding-top: 4px;">
+                       <label for="txt_available_at_office">{% trans 'available_at_office' %}</label>
+                    </div>
+                </div>
+                <br>
+                <div class="row {% if field.errors %}error{% endif %}">
+                    <div class="col-md-9 col-lg-offset-1 form-group">
+                        <label for="txt_comment">{% trans 'comment' %}</label>
+                        <textarea class="form-control" id="txt_comment"  name="comment" rows="10">{{ form.comment.value }}</textarea>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-12" style="text-align: right;">
+                        <button type="submit" class="save btn btn-primary">{% trans 'save' %}</button>
+                    </div>
+                </div>
           </form>
       </div>
   </div>

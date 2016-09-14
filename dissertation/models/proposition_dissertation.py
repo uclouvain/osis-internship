@@ -31,7 +31,8 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class PropositionDissertationAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'visibility', 'active', 'get_offer_propositions')
+    list_display = ('title', 'author', 'visibility', 'active', 'get_offer_propositions', 'creator')
+    raw_id_fields = ('creator', )
 
 
 class PropositionDissertation(models.Model):
@@ -88,6 +89,10 @@ class PropositionDissertation(models.Model):
 
     def set_creator(self, person):
         self.creator = person
+        self.save()
+
+    def set_author(self, adviser):
+        self.author = adviser
         self.save()
 
     class Meta:

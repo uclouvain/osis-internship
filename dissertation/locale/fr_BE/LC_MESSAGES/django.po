@@ -137,7 +137,7 @@ msgid "creator"
 msgstr "Créé par"
 
 msgid "current_status"
-msgstr "Statut actuel"
+msgstr "État actuel"
 
 msgid "date_end_visibility_dissertation"
 msgstr "Date de fin de la période de création des mémoires"
@@ -328,6 +328,9 @@ msgstr "Nombre de mémoires en tant que promoteur"
 msgid "how_many_dissertation_reader"
 msgstr "Nombre de mémoires en tant que lecteur"
 
+msgid "if_unavailable_adviser"
+msgstr "Si l'enseignant concerné n'est pas dans la liste, vous pouvez"
+
 msgid "in_edit_title"
 msgstr "Titre modifiable actuellement"
 
@@ -371,7 +374,7 @@ msgid "justification_instructions"
 msgstr "La mise-à-jour de l'état du mémoire est sur le point d'être effectuée. Le changement d'état qui sera appliqué est renseigné ci-dessous. Veuillez indiquer un message d'explication."
 
 msgid "level"
-msgstr "Niveau de développement"
+msgstr "Niveau de développement du sujet"
 
 msgid "level_domain"
 msgstr "Domaine de recherche"
@@ -439,6 +442,12 @@ msgstr "Ajouter un enseignant"
 msgid "manager_informations_list_request"
 msgstr "Enseignants devant répondre à une demande"
 
+msgid "manager_jury_draft"
+msgstr "Le mémoire est en brouillon, les managers ne peuvent pas modifier le jury."
+
+msgid "manager_jury_editable"
+msgstr "Les managers peuvent voir et modifier le jury."
+
 msgid "manager_promotor_accept"
 msgstr "Acceptation par le promoteur"
 
@@ -452,7 +461,7 @@ msgid "max_students"
 msgstr "Nombre maximum d'étudiants"
 
 msgid "max_students_number"
-msgstr "Nombre maximum d'étudiants"
+msgstr "Nombre indicatif de places pour ce sujet"
 
 msgid "mgr_com_accept_confirmation_message"
 msgstr "Vous allez indiquer l'acceptation de ce mémoire par la commission. Êtes-vous certain de vouloir continuer ?"
@@ -528,6 +537,9 @@ msgstr "Ajout/Modification d'un sujet de mémoire"
 
 msgid "new_search"
 msgstr "Nouvelle recherche"
+
+msgid "new_subject"
+msgstr "Nouveau sujet de mémoire"
 
 msgid "next_status"
 msgstr "État suivant"
@@ -616,6 +628,12 @@ msgstr "Vous allez indiquer enregistrer les modifications de ce sujet de mémoir
 msgid "proposition_dissertation_informations"
 msgstr "Informations du sujet de mémoire"
 
+msgid "proposition_dissertation_jury"
+msgstr "Jury du sujet de mémoire"
+
+msgid "proposition_dissertation_jury_info"
+msgstr "Vous pouvez définir un jury pour ce sujet de mémoire. Ce jury sera automatiquement ajouté aux mémoires créés pour ce sujet. Il ne peut y avoir qu'un seul promoteur, si vous en ajoutez un nouveau, il remplacera le promoteur existant."
+
 msgid "proposition_dissertations"
 msgstr "Sujets de mémoire"
 
@@ -652,6 +670,9 @@ msgstr "Rechercher un enseignant"
 msgid "see_my_waiting_dissertations"
 msgstr "Voir les mémoires en attente"
 
+msgid "select_program_first"
+msgstr "Choisissez d'abord le Programme/Année de début"
+
 msgid "september"
 msgstr "Septembre"
 
@@ -676,8 +697,23 @@ msgstr "État"
 msgid "student_can_manage_readers"
 msgstr "Les étudiants peuvent gérer les lecteurs"
 
+msgid "student_jury_draft_can_edit_param"
+msgstr "Le mémoire est en brouillon, l'étudiant peut gérer les lecteurs."
+
+msgid "student_jury_draft_no_edit_param"
+msgstr "Le mémoire est en brouillon, l'étudiant ne peut pas gérer les lecteurs."
+
+msgid "student_jury_invisible_dates"
+msgstr "Le jury n'est pas actuellement visible par l'étudiant."
+
+msgid "student_jury_visible_dates"
+msgstr "Le jury est actuellement visible par l'étudiant."
+
 msgid "student_path"
 msgstr "Parcours de l'étudiant"
+
+msgid "subject_type"
+msgstr "Type de sujet"
 
 msgid "subjects"
 msgstr "Sujets de mémoires"
@@ -693,6 +729,15 @@ msgstr "Soumis à l'évaluation de fin de 1è année"
 
 msgid "taken_places"
 msgstr "Places occupées"
+
+msgid "teacher_jury_draft"
+msgstr "Le mémoire est en brouillon, les enseignants ne peuvent pas modifier le jury."
+
+msgid "teacher_jury_visible_editable_parameter"
+msgstr "Les enseignants peuvent voir et modifier le jury."
+
+msgid "teacher_jury_visible_not_editable_parameter"
+msgstr "Les enseignants peuvent voir le jury mais pas le modifier."
 
 msgid "teachers"
 msgstr "Enseignants"
