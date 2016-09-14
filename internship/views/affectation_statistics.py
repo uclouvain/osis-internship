@@ -40,19 +40,19 @@ from internship.models import *
 from internship.views.internship import calc_dist
 from internship.views.place import sort_organizations
 
-################################################# Global vars #################################################
+# ****************** Global vars ******************
 errors = []  # List of all internship added to hospital error, as tuple (student, speciality, period)
-solution = {}  # Dict with the solution => solution[student][peiod] = SolutionLine
+solution = {}  # Dict with the solution => solution[student][period] = SolutionLine
 internship_table = {}  # List of all available internship. Organization, speciality, period
 internship_table_mi = {}  # List of available internship for "MI"
 organizations = {}  # Dict of all organizations
 specialities_dict = {}  # Dict of all specialities
 distance_students = {}  # Dict of distances between students and hospitals
 internship_offer_dic = {}  # Dict of all internship offers
-organization_addresses_dic = {}  # Dict of all organizatiion adresses
+organization_addresses_dic = {}  # Dict of all organization addresses
 internship_table_original = {}  # Copy of internship_table, is used to know if an internship is empty
-################################################# Constants #################################################
 
+# ****************** Constants ******************
 emergency = 15  # Id of the speciality "Urgences"
 hospital_error = 999  # Reference of the hospital "erreur"
 hospital_to_edit = 888  # Reference of the hospital "a_modifier"
@@ -65,9 +65,7 @@ periods_dict = {'P1': True, 'P2': True, 'P3': True, 'P4': True, 'P5': True, 'P6'
 costs = {1: 0, 2: 1, 3: 2, 4: 3, 'I': 10, 'C': 5, 'X': 1000}
 
 
-################################################# Classes #################################################
-
-
+# ******************  Classes ******************
 class SolutionsLine:
     def __init__(self, student, organization, speciality, period, choice, type_of_internship='N', cost=0,
                  consecutive_month=0):
@@ -95,8 +93,7 @@ class StudentChoice:
         self.priority = priority
 
 
-################################################# Utils #################################################
-
+# ****************** Utils ******************
 def compute_stats(sol):
     """
     Compute the statistics of the solution
@@ -321,8 +318,9 @@ def init_solution():
 
 def init_organizations():
     """
-    Retrieve adresses of all organisation.
+    Retrieve addresses of all organisation and init the hospital "error".
     """
+    # Save data directly in global variables
     global organizations, organization_addresses_dic
     organizations[hospital_error] = Organization.objects.filter(reference=hospital_error)[0]
     organizations[hospital_to_edit] = Organization.objects.filter(reference=hospital_to_edit)[0]
@@ -332,10 +330,13 @@ def init_organizations():
 
 
 def init_specialities():
+    """
+    Retrieve all internship offers and the id of the speciality "emergency"
+    """
+    # Save data directly in global variables
     global specialities_dict, emergency, internship_offer_dic
     for speciality in InternshipSpeciality.find_all():
         internship_offer_dic[speciality] = InternshipOffer.search(speciality=speciality)
-
         specialities_dict[speciality.name] = speciality.id
         if speciality.acronym.strip() == 'UR':
             emergency = speciality.id
@@ -351,6 +352,7 @@ def is_internship_available(organization, speciality, period):
     :return: True if the internship is available False otherwise
     """
     global internship_table, internship_table_mi
+    # We use another structure to check the available places of MI.
     if speciality.acronym.strip() == 'MI':
         return internship_table_mi[organization][period] > 0
     return internship_table[organization][speciality][period] > 0
@@ -364,6 +366,7 @@ def decrease_available_places(organization, speciality, period):
     :param period: id of the period
     """
     global internship_table, internship_table_mi
+    # We use another structure for "MI"
     if speciality.acronym.strip() == 'MI':
         internship_table_mi[organization][period] -= 1
     internship_table[organization][speciality][period] -= 1
@@ -377,6 +380,7 @@ def increase_available_places(organization, speciality, period):
     :param period: id of the period
     """
     global internship_table, internship_table_mi
+    # We use another structure for "MI"
     if speciality.acronym.strip() == 'MI':
         internship_table_mi[organization][period] += 1
     internship_table[organization][speciality][period] += 1
@@ -391,9 +395,9 @@ def get_available_periods_of_student(student_solution, mandatory):
     :return: the set of available periods of the student
     """
     available_periods = set()
-    for period, type in periods_dict.items():
+    for period, is_mandatory in periods_dict.items():
         # Check if the student have already an internship assigned for period 'period' and if the period is mandatory
-        if period not in student_solution and type == mandatory:
+        if period not in student_solution and is_mandatory == mandatory:
             available_periods.add(period)
         pass
     return available_periods
@@ -437,8 +441,8 @@ def get_double_available_periods_of_student(student_solution, mandatory):
     :return: the set of available double periods of the student
     """
     available_periods = set()
-    for period, type in periods_dict.items():
-        if mandatory == type:
+    for period, is_mandatory in periods_dict.items():
+        if mandatory == is_mandatory:
             # Check if period is not present in the solution
             if period not in student_solution:
                 next_period = get_next_period(period)
@@ -467,13 +471,22 @@ def is_same(student_solution, organization, period):
 
 
 def is_empty_internship(organization, speciality, period):
+    """
+    Check if the internship in the "organization" / "speciality" / "period" is empty.
+    Empty = non student has this internship.
+    :param organization: organization to check
+    :param speciality: speciality to check
+    :param period: id of the period to check
+    :return: True if the internship is empty, false otherwise
+    """
     return internship_table[organization][speciality][period] == internship_table_original[organization][speciality][
         period]
 
 
 def get_solution_cost():
     """
-    Compute the total cost of the solution.
+    Compute the total cost of the solution. (Sum of the cost of all students)
+    :return: Cost of the solution
     """
     total_cost = 0
     for student, periods in solution.items():
@@ -484,20 +497,26 @@ def get_solution_cost():
 def get_student_solution_cost(data):
     """
     Compute the cost of the student's solution.
+    This function is mainly used to compare different solutions in "iterate_choices".
+    Student solution = 12 periods of internships
     """
     score = 0
     for period, internship in data.items():
         if internship is not None:
+            # Check if "internship.choice" is an int.
             if isinstance(internship.choice, int):
                 score = score + costs[internship.choice]
-            # Nonconsecutive organization
+            # Nonconsecutive organization, check if the previous or next organization is same
             if not is_same(data, data[period].organization, get_previous_period(period)):
                 if not is_same(data, data[period].organization, get_next_period(period)):
                     score = score + costs['C']
-            if data[period].choice == 'I':  # Imposed organization
+            # Imposed organization
+            if data[period].choice == 'I':
                 score = score + costs['I']
-            if data[period].choice == 'X':  # Hospital error
+            # Hospital error
+            if data[period].choice == 'X':
                 score = score + costs['X']
+            # Empty internships
             if is_empty_internship(data[period].organization, data[period].speciality, period):
                 score -= 10
     return score
@@ -511,16 +530,19 @@ def update_scores(student):
     for period, internship in data.items():
         score = 0
         solution[student][period].consecutive_month = 0
+        # Check if "internship.choice" is an int.
         if isinstance(internship.choice, int):
             score = score + costs[internship.choice]
-        # Nonconsecutive organization
+        # Nonconsecutive organization, check if the previous or next organization is same
         if not is_same(data, data[period].organization, get_previous_period(period)):
             if not is_same(data, data[period].organization, get_next_period(period)):
                 score = score + costs['C']
                 solution[student][period].consecutive_month = 1
-        if data[period].choice == 'I':  # Imposed organization
+        # Imposed organization
+        if data[period].choice == 'I':
             score = score + costs['I']
-        if data[period].choice == 'X':  # Hospital error
+        # Hospital error
+        if data[period].choice == 'X':
             score = score + costs['X']
         solution[student][period].cost = score
 
@@ -540,11 +562,13 @@ def compute_distance(address_1, address_2):
 def get_student_mandatory_choices(priority):
     """
     Return all student's choices of given type.
-    :param priority: True if we have to return the choices of priority student, false if we have to return the choices of normal students
+    :param priority: True if we have to return the choices of priority student,
+    false if we have to return the choices of normal students
     :return: A dict of dict : <speciality, <student, [choices]>>.
     """
     specialities = {}
     choices = InternshipChoice.objects.filter(priority=priority)
+
     # Build dict with specialities[speciality][student] <- InternshipChoice
     for choice in choices:
         # Init the speciality if does not exists in 'specialities'
@@ -570,7 +594,10 @@ def get_student_mandatory_choices(priority):
     for speciality, students in specialities.items():
         specialities[speciality] = [v for v in students.values()]
 
-    # Sort he dict of student (this optimse the final result)
+    # Remove empty keys
+    data = OrderedDict((k, v) for k, v in specialities.items() if v)
+
+    # Sort he dict of student (this optimize the final result)
     global specialities_dict
     orders = ("Stage aux Urgences",
               "Stage en Gynécologie-Obstétrique",
@@ -580,9 +607,6 @@ def get_student_mandatory_choices(priority):
               "Stage en Médecine interne 3",
               "Stage en Chirurgie"
               )
-
-    # Remove empty keys
-    data = OrderedDict((k, v) for k, v in specialities.items() if v)
 
     for key in orders:
         v = data[specialities_dict[key]]
@@ -594,12 +618,14 @@ def get_student_mandatory_choices(priority):
 
 def find_nearest_hospital(student, speciality, exclude):
     """
-    Find the nearest available hospital. The start point is the address of the student and the end point the address of the hospital.
+    Find the nearest available hospital.
+    The start point is the address of the student and the end point the address of the hospital.
     :param student: Student object
     :param speciality: Speciality of the internship
     :param exclude: Set of all hospital that we already tried for this student
     :return: the nearest available hospital
     """
+    # TODO : ???
     # Check if the student has already computed the distances.
     if student not in distance_students:
         internships = internship_offer_dic[speciality]
@@ -610,13 +636,13 @@ def find_nearest_hospital(student, speciality, exclude):
             if int(internship.organization.reference) < 500:
                 if student not in distance_students:
                     distance_students[student] = {}
-                # addr_organization = OrganizationAddress.search(organization=internship.organization)[0]
                 addr_organization = organization_addresses_dic[internship.organization]
                 # Compute the distance between 2 addresses and store it in the dict
                 if addr_organization.latitude is not None and addr_student.latitude is not None:
                     distance = compute_distance(addr_student, addr_organization)
                     for period, places in internship_table[internship.organization][speciality].items():
-                        # TODO Why?
+                        # Add the false distance to the hospital with non empty internships.
+                        # So firstly we will use the empty internships
                         if places != internship_table_original[internship.organization][speciality][period]:
                             distance += 3000
 
@@ -635,6 +661,7 @@ def find_nearest_hospital(student, speciality, exclude):
 def iterate_choices(choices, priority, is_emergency):
     """
     For each choice we generate a solution and compute the score of this solution
+    :param is_emergency: True if we iterate emergency choices, False otherwise
     :param choices: List of the choices
     :param priority: True if the student is a social student false otherwise
     :return: List of bests solutions (will contain multiples choices if the score is the same)
@@ -667,12 +694,18 @@ def iterate_choices(choices, priority, is_emergency):
                         # Copy the original solution of the student
                         temp_solution = copy.copy(solution[student])
                         # And create the new solution with the 2 new internships
-                        temp_solution[available_period[0]] = SolutionsLine(student, choice.organization,
-                                                                           choice.speciality, available_period[0],
-                                                                           choice.choice, type_of_internship)
-                        temp_solution[available_period[1]] = SolutionsLine(student, choice.organization,
-                                                                           choice.speciality, available_period[1],
-                                                                           choice.choice, type_of_internship)
+                        temp_solution[available_period[0]] = SolutionsLine(student,
+                                                                           choice.organization,
+                                                                           choice.speciality,
+                                                                           available_period[0],
+                                                                           choice.choice,
+                                                                           type_of_internship)
+                        temp_solution[available_period[1]] = SolutionsLine(student,
+                                                                           choice.organization,
+                                                                           choice.speciality,
+                                                                           available_period[1],
+                                                                           choice.choice,
+                                                                           type_of_internship)
                         # Compute the score of the new solution
                         temp_score = get_student_solution_cost(temp_solution)
                         # In order to optimise the solution, we prefer to start with an odd period,
@@ -698,8 +731,12 @@ def iterate_choices(choices, priority, is_emergency):
                     # Copy the original solution of the student
                     temp_solution = copy.copy(solution[student])
                     # And create the new solution with the new internship
-                    temp_solution[available_period] = SolutionsLine(student, choice.organization, choice.speciality,
-                                                                    available_period, choice.choice, type_of_internship)
+                    temp_solution[available_period] = SolutionsLine(student,
+                                                                    choice.organization,
+                                                                    choice.speciality,
+                                                                    available_period,
+                                                                    choice.choice,
+                                                                    type_of_internship)
                     # Compute the score of the new solution
                     temp_score = get_student_solution_cost(temp_solution)
                     temp_solution[available_period].cost = temp_score
@@ -715,7 +752,8 @@ def iterate_choices(choices, priority, is_emergency):
 
 def get_best_choice(choices, priority):
     """
-    This method iterate over the choices of the student, if no choice is available a new organization is imposed to the student.
+    This method iterate over the choices of the student,
+    if no choice is available a new organization is imposed to the student.
     If many choices have the same score we will chose the choice witch have more available places.
     :param choices: List of the choices of the student
     :param priority: True if the student is a social student, false otherwise
@@ -733,9 +771,11 @@ def get_best_choice(choices, priority):
         # If the student's internship is marked as a social internship
         if priority:
             # Add directly the hospital error
-            imposed_choice = [
-                StudentChoice(choices[0].student, organizations[hospital_error], choices[0].speciality, 'X',
-                              choices[0].priority)]
+            imposed_choice = [StudentChoice(choices[0].student,
+                                            organizations[hospital_error],
+                                            choices[0].speciality,
+                                            'X',
+                                            choices[0].priority)]
             best_solutions = iterate_choices(imposed_choice, priority, is_emergency)
         else:
             # If the student is a normal student, we will try to find the nearest available hospital
@@ -746,10 +786,16 @@ def get_best_choice(choices, priority):
                 # If we tried all hospital and none is available, we impose the hospital "error"
                 if organization is None:
                     organization = organizations[hospital_error]
-                    imposed_choice = [StudentChoice(choices[0].student, organization, choices[0].speciality, 'X',
+                    imposed_choice = [StudentChoice(choices[0].student,
+                                                    organization,
+                                                    choices[0].speciality,
+                                                    'X',
                                                     choices[0].priority)]
                 else:
-                    imposed_choice = [StudentChoice(choices[0].student, organization, choices[0].speciality, 'I',
+                    imposed_choice = [StudentChoice(choices[0].student,
+                                                    organization,
+                                                    choices[0].speciality,
+                                                    'I',
                                                     choices[0].priority)]
 
                 best_solutions = iterate_choices(imposed_choice, priority, is_emergency)
@@ -774,7 +820,8 @@ def get_best_choice(choices, priority):
                 available_places = internship_table[sol.organization][sol.speciality][sol.period]
             if available_places > max_places:
                 max_places = available_places
-                del best_solutions_filtered[:]  # Clean the list
+                # Clean the list
+                del best_solutions_filtered[:]
                 best_solutions_filtered.append(sol)
             elif available_places == max_places:
                 best_solutions_filtered.append(sol)
@@ -789,11 +836,14 @@ def fill_erasmus_choices():
     # Retrieve all students
     erasmus_enrollments = InternshipEnrollment.objects.all()
     for enrol in erasmus_enrollments:
+        # Check if the internship is available
         if is_internship_available(enrol.place, enrol.internship_offer.speciality, enrol.period.name):
             solution[enrol.student][enrol.period.name] = SolutionsLine(enrol.student,
                                                                        enrol.internship_offer.organization,
                                                                        enrol.internship_offer.speciality,
-                                                                       enrol.period.name, "E", "E")
+                                                                       enrol.period.name,
+                                                                       "E",
+                                                                       "E")
             # Decrease the number of available places
             decrease_available_places(enrol.place, enrol.internship_offer.speciality, enrol.period.name)
 
@@ -804,13 +854,12 @@ def fill_emergency_choices(priority):
     :param priority: True if the student is a social student, false otherwise
     """
     data = get_student_mandatory_choices(priority)
-    # TODO remove emergency
     if emergency in data:
         # Start with "Emergency"
-        # TODO Ici Aussi
         emergency_students = data.pop(emergency)
         # Shift the students
         shifted_students = shift_array(emergency_students)
+        # Iterate over each choice
         for choices in shifted_students:
             # Get the best choice
             try:
@@ -839,7 +888,6 @@ def fill_normal_choices(priority):
     global errors
     data = get_student_mandatory_choices(priority)
     # Remove emergency from the dict
-    # TODO Emergency , Need this?
     if emergency in data:
         data.pop(emergency)
     # Then do others specialities
@@ -861,40 +909,60 @@ def fill_normal_choices(priority):
                 decrease_available_places(choice.organization, choice.speciality, choice.period)
                 # Update the score of the solution
                 update_scores(choice.student)
-                # Add hopital error to list "errors"
+                # Add hospital error to list "errors"
                 if choice.choice == 'X':
                     errors.append((choice.student, choice.speciality, choice.period, choices, priority))
 
 
 def swap_empty_internships():
+    """
+    Try to eliminate the empty internships by finding the internship that can be swapped.
+    """
     empty_internships = []
     # Find all empty internships
     for organization, specialities in internship_table.items():
+        # Do this only for standard organizations
         if int(organization.reference) < 500:
             for speciality, periods in specialities.items():
                 for period, places in periods.items():
+                    # Check if the internship is empty
                     if places > 0 and places == internship_table_original[organization][speciality][period]:
+                        # Ignore the "MI" speciality
                         if speciality.acronym.strip() != "MI":
+                            # Add the internship to list of empty internships
                             empty_internships.append((organization, speciality, period, places))
+                            # Find all choices of student in the "Organization" and "speciality"
                             choices = InternshipChoice.search(organization=organization, speciality=speciality)
+                            # Iterate over all choices of students
                             for choice in choices:
                                 student_sol = solution[choice.student][period]
+                                # We can swap only non priority students
                                 if choice.priority is False and student_sol.speciality == speciality:
+                                    # Check if we can increase the number of the available students
                                     if int(internship_table[student_sol.organization][student_sol.speciality][
                                                period]) + 1 < \
                                             internship_table_original[student_sol.organization][student_sol.speciality][
                                                 period]:
+                                        # Increase the number of places of old internship
                                         increase_available_places(student_sol.organization, speciality, period)
-                                        solution[choice.student][period] = SolutionsLine(choice.student, organization,
-                                                                                         speciality, period,
-                                                                                         choice.choice, "N")
+                                        # Replace the internship
+                                        solution[choice.student][period] = SolutionsLine(choice.student,
+                                                                                         organization,
+                                                                                         speciality,
+                                                                                         period,
+                                                                                         choice.choice,
+                                                                                         "N")
                                         # Decrease new internship
                                         decrease_available_places(organization, speciality, period)
                                         break
 
 
 def swap_errors():
+    """
+    Try to swap eliminate the errors by swapping 2 internships in the student solution
+    """
     global errors, solution, internship_table
+    # Iterate all errors
     for student, speciality, period, choices, priority in errors:
         # Get available periods of the speciality
         available_periods = set()
@@ -903,7 +971,9 @@ def swap_errors():
                 # Check if the organization has the speciality
                 if speciality in specialities:
                     for p, places in specialities[speciality].items():
+                        # Check if the period is available
                         if is_internship_available(organization, speciality, p):
+                            # Add period the available periods list
                             available_periods.add(p)
 
         specialities_to_swap = []
@@ -952,17 +1022,18 @@ def swap_errors():
 def generate_solution():
     """
     Generate the new solution and save it in the database
-    :return:
     """
-    global errors, solution, internship_table, internship_table_mi, organizations, specialities_dict, distance_students, internship_offer_dic, organization_addresses_dic, internship_table_original
+    global errors, solution, internship_table, internship_table_mi, organizations, specialities_dict, \
+        distance_students, internship_offer_dic, organization_addresses_dic, internship_table_original
 
-    errors = []  # List of all internship added to hospital error, as tuple (student, speciality, period)
-    solution = {}  # Dict with the solution
-    internship_table = {}  # List of all available internship. Organization, speciality, period
-    internship_table_mi = {}  # List of available intenship for "MI"
-    organizations = {}  # Dict of all organizations
-    specialities_dict = {}  # Dict of all specialities
-    distance_students = {}  # Dict of distances between students and hospitals
+    # Clean all variables on at begging of each iteration
+    errors = []
+    solution = {}
+    internship_table = {}
+    internship_table_mi = {}
+    organizations = {}
+    specialities_dict = {}
+    distance_students = {}
     internship_offer_dic = {}  #
     organization_addresses_dic = {}
     internship_table_original = {}
@@ -1010,13 +1081,18 @@ def generate_solution():
 
     t0 = time.clock()
     swap_empty_internships()
-    print("Swap empty inernships : " + str(round((time.clock() - t0), 3)) + " seconds process time")
+    print("Swap empty internships : " + str(round((time.clock() - t0), 3)) + " seconds process time")
 
     print("+++++ Total time : " + str(round((time.clock() - total), 3)) + " seconds process time +++++")
 
 
 def save_solution():
+    """
+    Save the solution in the database
+    :return:
+    """
     global solution, internship_table
+    # Remove old result from the database
     InternshipStudentAffectationStat.objects.all().delete()
     periods = Period.search().order_by('id')
 
@@ -1035,22 +1111,23 @@ def save_solution():
 
 
 def load_solution(data):
-    """ Create the solution and internship table from db data """
+    """ Create the solution and internship_table from db data """
     # Initialise the table of internships.
     period_internship_places = PeriodInternshipPlaces.objects.order_by("period_id")
 
     # This object store the number of available places for given organization, speciality, period
     temp_internship_table = {}
     for pid in period_internship_places:
-        if pid.internship.organization not in temp_internship_table:
-            temp_internship_table[pid.internship.organization] = {}
-        if pid.internship.speciality.acronym not in temp_internship_table[pid.internship.organization]:
-            temp_internship_table[pid.internship.organization][pid.internship.speciality.acronym] = OrderedDict()
-        temp_internship_table[pid.internship.organization][pid.internship.speciality.acronym][pid.period.name] = {}
-        temp_internship_table[pid.internship.organization][pid.internship.speciality.acronym][pid.period.name][
-            'before'] = pid.number_places
-        temp_internship_table[pid.internship.organization][pid.internship.speciality.acronym][pid.period.name][
-            'after'] = pid.number_places
+        organization = pid.internship.organization
+        acronym = pid.internship.speciality.acronym
+        period_name = pid.period.name
+        if organization not in temp_internship_table:
+            temp_internship_table[organization] = {}
+        if acronym not in temp_internship_table[organization]:
+            temp_internship_table[organization][acronym] = OrderedDict()
+        temp_internship_table[organization][acronym][period_name] = {}
+        temp_internship_table[organization][acronym][period_name]['before'] = pid.number_places
+        temp_internship_table[organization][acronym][period_name]['after'] = pid.number_places
 
     sol = {}
     keys = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8', 'P9', 'P10', 'P11', 'P12']
@@ -1064,7 +1141,7 @@ def load_solution(data):
             sol[item.student]['score'] = 0
         # Put the internship in the solution
         sol[item.student][item.period.name] = item
-        # store the cose of each student
+        # store the cost of each student
         sol[item.student]['score'] += item.cost
         # Update the number of available places for given organization, speciality, period
         temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['after'] -= 1
@@ -1074,13 +1151,13 @@ def load_solution(data):
             temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['before'] * 100
     # Sort all student by the score (descending order)
 
-    data2 = []
-    for key, val in temp_internship_table.items():
-        for key2, val2 in val.items():
-            data2.append((int(key.reference), key2, val2))
-    data2.sort(key=itemgetter(0))
+    sorted_internship_table = []
+    for organization, specialities in temp_internship_table.items():
+        for speciality, periods in specialities.items():
+            sorted_internship_table.append((int(organization.reference), speciality, periods))
+    sorted_internship_table.sort(key=itemgetter(0))
 
-    return sol, data2
+    return sol, sorted_internship_table
 
 
 @login_required
@@ -1094,7 +1171,7 @@ def internship_affectation_statistics_generate(request):
                 print(str(i))
                 generate_solution()
                 new_cost = get_solution_cost()
-                print("New cost : " + str(new_cost))
+                print("New cost : " + str(new_cost) + " Best cost : " + str(cost))
                 if new_cost < cost:
                     print("Replace solution")
                     save_solution()
@@ -1136,20 +1213,24 @@ def internship_affectation_statistics(request):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_affectation_sumup(request):
-    all_speciality = InternshipSpeciality.search(mandatory=True).order_by("acronym", "name")
-    periods = Period.search().order_by("date_start")
+    all_speciality = InternshipSpeciality.search(mandatory=True)
+    periods = Period.search()
     organizations = Organization.search()
     organizations = sort_organizations(organizations)
+    offers = InternshipOffer.search()
+    information = []
+    for organization in organizations:
+        for offer in offers:
+            if offer.organization.reference == organization.reference:
+                information.append(offer)
     affectations = InternshipStudentAffectationStat.search().order_by("student__person__last_name",
                                                                       "student__person__first_name",
                                                                       "period__date_start")
-    for a in affectations:
-        print(a.period.name)
 
     return render(request, "internship_affectation_sumup.html",
                   {'section': 'internship',
                    'specialities': all_speciality,
                    'periods': periods,
-                   'organizations': organizations,
+                   'organizations': information,
                    'affectations': affectations,
                    })
