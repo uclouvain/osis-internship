@@ -36,7 +36,7 @@
     <div class="page-header">
         <h2>{{ proposition_dissertation.title }}</h2>
     </div>
-    {% if proposition_dissertation.author == adviser %}
+    {% if proposition_dissertation.author == adviser or proposition_dissertation.creator == adviser.person %}
     <div class="row" style="text-align:right; margin-bottom: 5px;">
         <div class="col-md-12">
             <a class="btn btn-default btn-primary"
@@ -53,7 +53,7 @@
         <div class="panel-heading">
             <h3 class="panel-title">{% trans 'proposition_dissertation_informations' %}</h3>
         </div>
- <div class="panel-body">
+        <div class="panel-body">
             <div class="row">
                 <div class="col-md-4" style="text-align: right">
                     <label>{% trans 'promotor' %}</label>
@@ -160,4 +160,46 @@
             {% endif %}
         </div>
     </div>
+    {% if proposition_dissertation.author == adviser or proposition_dissertation.creator == adviser.person %}
+    <div class="panel panel-default">
+             <div class="panel-heading">
+                 <h3 class="panel-title">{% trans 'proposition_dissertation_jury' %}</h3>
+             </div>
+             <div class="panel-body">
+                 <div class="row">
+                   <div class="col-md-12 well well-sm">
+                       {% trans 'proposition_dissertation_jury_info' %}
+                   </div>
+                 </div>
+                 {% for proposition_role in proposition_roles %}
+                 <div class="row" style="margin: 10px;">
+                   <div class="col-md-3" style="text-align: right">
+                       <label>{{ proposition_role.status }}</label>
+                   </div>
+                   <div class="col-md-2">
+                       {{ proposition_role.adviser }}
+                   </div>
+                   {% if proposition_role.status != 'PROMOTEUR' %}
+                   <div class="col-md-1">
+                       <a class="btn btn-warning"
+                          href="{% url 'proposition_dissertations_role_delete' pk=proposition_role.pk %}"
+                          onclick="return confirm('{% trans 'delete_adviser_role_confirmation_message' %}')">
+                           <span class="glyphicon glyphicon-remove span2"></span></a>
+                   </div>
+                   {% endif %}
+                 </div>
+                 {% endfor %}
+                 <br>
+                 <div class="row">
+                     <div class="col-md-5 pull-right">
+                         <a href="{% url 'proposition_dissertations_jury_new' pk=proposition_dissertation.pk %}"
+                              id="lnk_proposition_add_dissertation_jury_member" class="btn btn-default btn-sm"
+                              role="button" title="{% trans 'add_proposition_dissertation_jury_member'%}"><span
+                                   class="glyphicon glyphicon-plus"
+                                   aria-hidden="true"></span> {% trans 'add_proposition_dissertation_jury_member'%}</a>
+                     </div>
+                 </div>
+             </div>
+    </div>
+    {% endif %}
 {% endblock %}
