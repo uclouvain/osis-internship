@@ -70,9 +70,8 @@
                   <th>{% trans 'title'%}</th>
                   <th>{% trans 'promotor'%}</th>
                   <th>{% trans 'creator'%}</th>
-                  <th>{% trans 'visible'%}</th>
-                  <th>{% trans 'offer'%}</th>
-                  <th>{% trans 'max_students'%}</th>
+                  <th>{% trans 'visibility'%}</th>
+                  <th>{% trans 'offer_propositions'%}</th>
                 </tr>
                 {% for proposition_dissertation in proposition_dissertations %}
                   <tr>
@@ -87,7 +86,6 @@
                       {% endif %}
                     </td>
                     <td>{% for offer_proposition in proposition_dissertation.offer_proposition.all %}<span class="label label-default">{{ offer_proposition }}</span> {% endfor %}</td>
-                    <td>{{ proposition_dissertation.max_number_student }}</td>
                   </tr>
                 {% endfor %}
               </table>
