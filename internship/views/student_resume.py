@@ -36,14 +36,7 @@ from internship.views.place import sort_organizations, set_organization_address
 from django.utils.translation import ugettext_lazy as _
 
 
-@login_required
-@permission_required('internship.is_internship_manager', raise_exception=True)
-def internships_student_resume(request):
-    # Get all stundents and the mandatory specialities
-    students_list = InternshipChoice.find_by_all_student()
-    specialities = InternshipSpeciality.search(mandatory=True)
-    student_informations = InternshipStudentInformation.find_all()
-
+def set_number_choices(student_informations):
     for si in student_informations:
         student = mdl.student.find_by_person(si.person)
         choices = InternshipChoice.find_by_student(student)
@@ -51,15 +44,10 @@ def internships_student_resume(request):
         if student:
             si.registration_id = student.registration_id
 
-    # Get the required number selection (4 for each speciality)
-    # Get the number of student who have al least 4 corrects choice of internship
-    # Get the number of student who can choose their internships
-    number_selection = 4 * len (specialities)
-    student_with_internships = len(students_list)
-    students_can_have_internships = len(InternshipStudentInformation.find_all())
 
-    students_ok = 0
-    students_not_ok = 0
+def get_number_ok_student(students_list, number_selection):
+    students_list = list(students_list)
+    nbr_student = [0]*2
     # Set the number of the student who have their all selection of internships
     # who have a partial selection
     # who have no selection
@@ -68,63 +56,97 @@ def internships_student_resume(request):
         choices = InternshipChoice.find_by_student(student)
         sl.number_choices = len(choices)
         if len(choices) == number_selection:
-            students_ok += 1
+            nbr_student[0] += 1
         else :
-            students_not_ok += 1
+            nbr_student[1] += 1
+    return nbr_student
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def internships_student_resume(request):
+    # Get all stundents and the mandatory specialities
+    students_list = InternshipChoice.find_by_all_student()
+    specialities = InternshipSpeciality.search(mandatory=True)
+    student_informations = InternshipStudentInformation.find_all()
+
+    set_number_choices(student_informations)
+
+    # Get the required number selection (4 for each speciality)
+    # Get the number of student who have al least 4 corrects choice of internship
+    # Get the number of student who can choose their internships
+    number_selection = 4 * len (specialities)
+    student_with_internships = len(students_list)
+    students_can_have_internships = len(InternshipStudentInformation.find_all())
+
+    students_ok = get_number_ok_student(students_list, number_selection)
+
     student_without_internship = students_can_have_internships - student_with_internships
-    return render(request, "student_search.html", {'s_noma':    None,
-                                                   's_name':    None,
-                                                   'students':  student_informations,
-                                                   'number_selection' : number_selection,
-                                                   'students_ok' : students_ok,
-                                                   'students_not_ok' : students_not_ok,
-                                                   'student_with_internships' : student_with_internships,
-                                                   'students_can_have_internships' : students_can_have_internships,
-                                                   'student_without_internship' : student_without_internship,
+    return render(request, "student_search.html", {'search_name': None,
+                                                    'search_firstname': None,
+                                                   'students': student_informations,
+                                                   'number_selection': number_selection,
+                                                   'students_ok': students_ok[0],
+                                                   'students_not_ok': students_ok[1],
+                                                   'student_with_internships': student_with_internships,
+                                                   'students_can_have_internships': students_can_have_internships,
+                                                   'student_without_internship': student_without_internship,
                                                    })
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_search(request):
-    s_name = request.GET['s_name']
-    s_firstname = request.GET['s_firstname']
-    students_list = []
-    students_list_creation = []
+    search_name = request.GET['search_name']
+    search_firstname = request.GET['search_firstname']
     criteria_present = False
 
-    s_name = s_name.strip()
-    if len(s_name) <= 0:
-        s_name = None
+    search_name = search_name.strip()
+    search_name = search_name.title()
+    if len(search_name) <= 0:
+        search_name = None
     else:
         criteria_present=True
 
-    s_firstname = s_firstname.strip()
-    if len(s_firstname) <= 0:
-        s_firstname = None
+    search_firstname = search_firstname.strip()
+    search_firstname = search_firstname.title()
+    if len(search_firstname) <= 0:
+        search_firstname = None
     else:
         criteria_present=True
 
-    message = None
     if criteria_present:
-        students_list_check = InternshipStudentInformation.search(person__last_name=s_name, person__first_name = s_firstname)
-
-        students_list_creation = InternshipChoice.find_by_all_student()
-
-        for student_check in students_list_check :
-            for student_creation in students_list_creation:
-                    if student_check.person == student_creation.person:
-                        students_list.append(student_creation)
+        student_informations = InternshipStudentInformation.search(person__last_name=search_name, person__first_name = search_firstname)
     else:
-        students_list = InternshipChoice.find_by_all_student()
+        student_informations = InternshipStudentInformation.find_all()
 
+    # Get all stundents and the mandatory specialities
+    students_list = InternshipChoice.find_by_all_student()
+    specialities = InternshipSpeciality.search(mandatory=True)
+
+    set_number_choices(student_informations)
+
+    # Get the required number selection (4 for each speciality)
+    # Get the number of student who have al least 4 corrects choice of internship
+    # Get the number of student who can choose their internships
+    number_selection = 4 * len (specialities)
+    student_with_internships = len(students_list)
+    students_can_have_internships = len(InternshipStudentInformation.find_all())
+
+    students_ok = get_number_ok_student(students_list, number_selection)
+    student_without_internship = students_can_have_internships - student_with_internships
 
     return render(request, "student_search.html",
-                           {'s_name':       s_name,
-                            's_firstname':  s_firstname,
-                            'students':     students_list,
-                            'init':         "0",
-                            'message':      message})
+                           {'search_name': search_name,
+                            'search_firstname': search_firstname,
+                            'students': student_informations,
+                            'number_selection': number_selection,
+                            'students_ok': students_ok[0],
+                            'students_not_ok': students_ok[1],
+                            'student_with_internships': student_with_internships,
+                            'students_can_have_internships': students_can_have_internships,
+                            'student_without_internship': student_without_internship,
+                            })
 
 
 @login_required
@@ -168,8 +190,8 @@ def internships_student_read(request, registration_id):
                             'selectable':          selectable,
                             'affectations':        affectations,
                             'periods':              periods,
-
                             })
+
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
@@ -178,8 +200,9 @@ def internship_student_information_modification(request, registration_id):
     information = InternshipStudentInformation.search(person = student[0].person)
     student = student[0]
     return render(request, "student_information_modification.html",
-                           {'student':             student,
-                            'information':         information[0], })
+                           {'student': student,
+                            'information': information[0], })
+
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
