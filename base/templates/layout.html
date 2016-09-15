@@ -56,7 +56,7 @@
         }
     </style>
 </head>
-<body {% if environment == 'DEV' %} class="devmode" {% elif environment == 'QA' %} class="qamode" {% endif %}>
+<body {% if environment == 'DEV' %} class="devmode" {% elif environment == 'LOCAL' %} class="localmode" {% elif environment == 'QA' %} class="qamode" {% endif %}>
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
@@ -168,9 +168,11 @@
         </div>
     </nav>
     {% if environment == 'DEV' %}
-        <div class="devgreen">DEV</div>
+        <div class="devorange">DEV</div>
+    {% elif environment == 'LOCAL'%}
+        <div class="localred">LOCAL</div>
     {% elif environment == 'QA'%}
-        <div class="qaorange">QA</div>
+        <div class="qagreen">QA</div>
     {% endif %}
     <div id="alert_wrong_version" class="container">
         <div class="alert alert-warning">

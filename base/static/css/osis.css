@@ -26,14 +26,14 @@
 
 /* Indication Status QA - DEV */
 
-.devmode
+.qamode
 {
-    background-image:url("../img/devmode.png");
+    background-image:url("../img/qamode.png");
     background-repeat: repeat;
     background-position:center;
 }
 
-.devgreen {
+.qagreen {
     background: #9eb94f;
     width: 50px;
     height: 100%;
@@ -49,19 +49,43 @@
     clip-path: polygon(75% 0%, 100% 50%, 75% 100%, 0% 100%, 0 50%, 0% 0%);
 }
 
-.qamode
+.devmode
 {
-    background-image:url("../img/qamode.png");
+    background-image:url("../img/devmode.png");
     background-repeat: repeat;
     background-position:center;
 }
 
-.qaorange {
+.devorange {
     background: #ff8400;
     width: 50px;
     height: 100%;
     line-height: 25px;
     text-align: center;
+    color: #fff;
+    font-size: 12px;
+    font-style: italic;
+    margin-right: 20px;
+    margin-top: -10px;
+    marbin-bottom: 10px;
+    -webkit-clip-path: polygon(75% 0%, 100% 50%, 75% 100%, 0% 100%, 0 50%, 0% 0%);
+    clip-path: polygon(75% 0%, 100% 50%, 75% 100%, 0% 100%, 0 50%, 0% 0%);
+}
+
+.localmode
+{
+    background-image:url("../img/localmode.png");
+    background-repeat: repeat;
+    background-position:center;
+}
+
+.localred {
+    background: #db0000;
+    width: 50px;
+    height: 100%;
+    line-height: 25px;
+    text-align: left;
+    padding-left: 3px;
     color: #fff;
     font-size: 12px;
     font-style: italic;
