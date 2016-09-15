@@ -135,5 +135,5 @@ def serialize_list_students(list_students):
                                  use_natural_primary_keys=True)
 
 
-def find_by_offer(offer):
-    return Student.objects.filter(offerenrollment__offer_year__offer=offer)
+def find_by_offer(offers):
+    return Student.objects.filter(offerenrollment__offer_year__offer__in=offers)

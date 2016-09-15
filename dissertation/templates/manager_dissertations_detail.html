@@ -85,13 +85,13 @@
                         {% elif dissertation.status == 'COM_OK' %}
                         <span class="label label-default">
                         {% elif dissertation.status == 'COM_KO' %}
-                        <span class="label label-default">
+                        <span class="label label-danger">
                         {% elif dissertation.status == 'EVA_SUBMIT' %}
                         <span class="label label-default">
                         {% elif dissertation.status == 'EVA_OK' %}
                         <span class="label label-default">
                         {% elif dissertation.status == 'EVA_KO' %}
-                        <span class="label label-default">
+                        <span class="label label-danger">
                         {% elif dissertation.status == 'TO_RECEIVE' %}
                         <span class="label label-default">
                         {% elif dissertation.status == 'TO_DEFEND' %}
@@ -103,11 +103,11 @@
                         {% elif dissertation.status == 'ENDED_WIN' %}
                         <span class="label label-default">
                         {% elif dissertation.status == 'ENDED_LOS' %}
-                        <span class="label label-default">
+                        <span class="label label-danger">
                         {% else %}
                         <span class="label label-default">
                         {% endif %}
-                            {{ dissertation.status }}
+                            {{ dissertation.get_status_display }}
                         </span>
                     </div>
                 </div>
@@ -150,15 +150,17 @@
                   <div class="col-md-4">
                       {{ dissertation_role.adviser }}
                   </div>
+                  {% if dissertation.status != 'DRAFT' %}
                   <div class="col-md-5">
                       <a class="btn btn-danger btn-sm" style="width:auto;padding:0;margin:0"
                          href="{% url 'manager_dissertations_role_delete' pk=dissertation_role.pk %}"
                          onclick="return confirm('{% trans 'delete_adviser_role_confirmation_message' %}')">
                           <span class="glyphicon glyphicon-remove span2"></span> {% trans 'delete'%} {{ dissertation_role.adviser }}</a>
                   </div>
+                  {% endif %}
                 </div>
                 {% endfor %}
-                {% if count_dissertation_role < 4 %}
+                {% if count_dissertation_role < 4 and dissertation.status != 'DRAFT' %}
                 <br>
                 <div class="row">
                     <div class="col-md-5 pull-right">
@@ -170,6 +172,73 @@
                     </div>
                 </div>
                 {% endif %}
+                <br>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="well well-sm">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>{% trans 'jury_status' %}</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3" style="text-align: right">
+                                    <label>{% trans 'for_managers' %}</label>
+                                </div>
+                                <div class="col-md-9">
+                                    {% if jury_manager_visibility %}
+                                        <span class="label label-success">{% trans 'visible' %}</span>
+                                    {% else %}
+                                        <span class="label label-danger">{% trans 'invisible' %}</span>
+                                    {% endif %}
+                                    {% if jury_manager_can_edit %}
+                                        <span class="label label-success">{% trans 'editable' %}</span>
+                                    {% else %}
+                                        <span class="label label-danger">{% trans 'non_editable' %}</span>
+                                    {% endif %}
+                                    <br>{% trans jury_manager_message %}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3" style="text-align: right">
+                                    <label>{% trans 'for_teachers' %}</label>
+                                </div>
+                                <div class="col-md-9">
+                                    {% if jury_teacher_visibility %}
+                                        <span class="label label-success">{% trans 'visible' %}</span>
+                                    {% else %}
+                                        <span class="label label-danger">{% trans 'invisible' %}</span>
+                                    {% endif %}
+                                    {% if jury_teacher_can_edit %}
+                                        <span class="label label-success">{% trans 'editable' %}</span>
+                                    {% else %}
+                                        <span class="label label-danger">{% trans 'non_editable' %}</span>
+                                    {% endif %}
+                                    <br>{% trans jury_teacher_message %}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3" style="text-align: right">
+                                    <label>{% trans 'for_students' %}</label>
+                                </div>
+                                <div class="col-md-9">
+                                    {% if jury_student_visibility %}
+                                        <span class="label label-success">{% trans 'visible' %}</span>
+                                    {% else %}
+                                        <span class="label label-danger">{% trans 'invisible' %}</span>
+                                    {% endif %}
+                                    {% if jury_student_can_edit %}
+                                        <span class="label label-success">{% trans 'editable' %}</span>
+                                    {% else %}
+                                        <span class="label label-danger">{% trans 'non_editable' %}</span>
+                                    {% endif %}
+                                    <br>{% trans jury_student_message %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
         <div class="panel panel-default">
@@ -179,7 +248,7 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-3" style="text-align: right">
-                        <label>{% trans 'author' %}</label>
+                        <label>{% trans 'promotor' %}</label>
                     </div>
                     <div class="col-md-9">
                         {{ dissertation.proposition_dissertation.author }}
@@ -213,30 +282,74 @@
                         {% if dissertation.status == 'DRAFT' or dissertation.status == 'DIR_KO' %}
                           <a href="{% url 'manager_dissertations_to_dir_submit' pk=dissertation.pk %}"
                              id="lnk_manager_dissertations_to_dir_submit" class="btn btn-default"
-                             role="button" title="{% trans 'manager_dissertations_to_dir_submit'%}"
-                             onclick="return confirm('{% trans 'to_dir_submit_confirmation_message' %}')"><span
+                             role="button" title="{% trans 'mgr_dissertations_to_dir_submit'%}"
+                             onclick="return confirm('{% trans 'mgr_to_dir_submit_confirmation_message' %}')"><span
                                   class="glyphicon glyphicon-circle-arrow-right"
                                   aria-hidden="true"></span> {% trans 'manager_dissertations_to_dir_submit'%}</a>
                         {% endif %}
-                        {% if dissertation.status == 'DIR_SUBMIT' or dissertation.status == 'COM_SUBMIT' or dissertation.status == 'EVA_SUBMIT'%}
+                        {% if dissertation.status == 'DIR_SUBMIT' %}
                           <a href="{% url 'manager_dissertations_to_dir_ok' pk=dissertation.pk %}"
-                             id="lnk_manager_dissertations_accept" class="btn btn-default"
-                             role="button" title="{% trans 'manager_dissertations_to_dir_ok'%}"
-                             onclick="return confirm('{% trans 'confirmation_message' %}')"><span
+                             id="lnk_manager_promotor_accept" class="btn btn-default"
+                             role="button" title="{% trans 'manager_promotor_accept'%}"
+                             onclick="return confirm('{% trans 'mgr_promotor_accept_confirmation_message' %}')"><span
                                   class="glyphicon glyphicon-ok-circle"
-                                  aria-hidden="true"></span> {% trans 'manager_dissertations_accept'%}</a>
+                                  aria-hidden="true"></span> {% trans 'manager_promotor_accept'%}</a>
                           <a href="{% url 'manager_dissertations_to_dir_ko' pk=dissertation.pk %}"
-                             id="lnk_manager_dissertations_refuse" class="btn btn-default"
-                             role="button" title="{% trans 'manager_dissertations_to_dir_ko'%}"
-                             onclick="return confirm('{% trans 'confirmation_message' %}')"><span
+                             id="lnk_manager_promotor_refuse" class="btn btn-default"
+                             role="button" title="{% trans 'manager_promotor_refuse'%}"
+                             onclick="return confirm('{% trans 'mgr_promotor_refuse_confirmation_message' %}')"><span
                                   class="glyphicon glyphicon-remove-circle"
-                                  aria-hidden="true"></span> {% trans 'manager_dissertations_refuse'%}</a>
+                                  aria-hidden="true"></span> {% trans 'manager_promotor_refuse'%}</a>
+                        {% endif %}
+                        {% if dissertation.status == 'COM_SUBMIT' %}
+                          <a href="{% url 'manager_dissertations_to_dir_ok' pk=dissertation.pk %}"
+                             id="lnk_manager_commission_accept" class="btn btn-default"
+                             role="button" title="{% trans 'manager_commission_accept'%}"
+                             onclick="return confirm('{% trans 'mgr_com_accept_confirmation_message' %}')"><span
+                                  class="glyphicon glyphicon-ok-circle"
+                                  aria-hidden="true"></span> {% trans 'manager_commission_accept'%}</a>
+                          <a href="{% url 'manager_dissertations_to_dir_ko' pk=dissertation.pk %}"
+                             id="lnk_manager_commission_refuse" class="btn btn-default"
+                             role="button" title="{% trans 'manager_commission_refuse'%}"
+                             onclick="return confirm('{% trans 'mgr_com_refuse_confirmation_message' %}')"><span
+                                  class="glyphicon glyphicon-remove-circle"
+                                  aria-hidden="true"></span> {% trans 'manager_commission_refuse'%}</a>
+                        {% endif %}
+                        {% if dissertation.status == 'COM_KO' %}
+                          <a href="{% url 'manager_dissertations_to_dir_ok' pk=dissertation.pk %}"
+                             id="lnk_manager_commission_reaccept" class="btn btn-default"
+                             role="button" title="{% trans 'manager_commission_accept'%}"
+                             onclick="return confirm('{% trans 'mgr_com_accept_confirmation_message' %}')"><span
+                                  class="glyphicon glyphicon-ok-circle"
+                                  aria-hidden="true"></span> {% trans 'manager_commission_accept'%}</a>
+                        {% endif %}
+                        {% if dissertation.status == 'EVA_SUBMIT' %}
+                          <a href="{% url 'manager_dissertations_to_dir_ok' pk=dissertation.pk %}"
+                             id="lnk_manager_evaluation_accept" class="btn btn-default"
+                             role="button" title="{% trans 'manager_evaluation_accept'%}"
+                             onclick="return confirm('{% trans 'mgr_eva_accept_confirmation_message' %}')"><span
+                                  class="glyphicon glyphicon-ok-circle"
+                                  aria-hidden="true"></span> {% trans 'manager_evaluation_accept'%}</a>
+                          <a href="{% url 'manager_dissertations_to_dir_ko' pk=dissertation.pk %}"
+                             id="lnk_manager_evaluation_refuse" class="btn btn-default"
+                             role="button" title="{% trans 'manager_evaluation_refuse'%}"
+                             onclick="return confirm('{% trans 'mgr_eva_refuse_confirmation_message' %}')"><span
+                                  class="glyphicon glyphicon-remove-circle"
+                                  aria-hidden="true"></span> {% trans 'manager_evaluation_refuse'%}</a>
+                        {% endif %}
+                        {% if dissertation.status == 'EVA_KO' %}
+                          <a href="{% url 'manager_dissertations_to_dir_ok' pk=dissertation.pk %}"
+                             id="lnk_manager_evaluation_reaccept" class="btn btn-default"
+                             role="button" title="{% trans 'manager_evaluation_accept'%}"
+                             onclick="return confirm('{% trans 'mgr_eva_accept_confirmation_message' %}')"><span
+                                  class="glyphicon glyphicon-ok-circle"
+                                  aria-hidden="true"></span> {% trans 'manager_evaluation_accept'%}</a>
                         {% endif %}
                         {% if dissertation.status == 'TO_RECEIVE' %}
                         <a href="{% url 'manager_dissertations_to_dir_submit' pk=dissertation.pk %}"
                            id="lnk_manager_dissertations_receive" class="btn btn-default"
                            role="button" title="{% trans 'manager_dissertations_to_dir_submit'%}"
-                           onclick="return confirm('{% trans 'confirmation_message' %}')"><span
+                           onclick="return confirm('{% trans 'mgr_receive_confirmation_message' %}')"><span
                                 class="glyphicon glyphicon-circle-arrow-right"
                                 aria-hidden="true"></span> {% trans 'manager_dissertations_receive'%}</a>
                         {% endif %}
@@ -244,7 +357,7 @@
                         <a href="{% url 'manager_dissertations_to_dir_submit' pk=dissertation.pk %}"
                            id="lnk_manager_dissertations_defended" class="btn btn-default"
                            role="button" title="{% trans 'manager_dissertations_to_dir_submit'%}"
-                           onclick="return confirm('{% trans 'confirmation_message' %}')"><span
+                           onclick="return confirm('{% trans 'mgr_defended_confirmation_message' %}')"><span
                                 class="glyphicon glyphicon-circle-arrow-right"
                                 aria-hidden="true"></span> {% trans 'manager_dissertations_defended'%}</a>
                         {% endif %}
@@ -252,13 +365,13 @@
                           <a href="{% url 'manager_dissertations_to_dir_ok' pk=dissertation.pk %}"
                              id="lnk_manager_dissertations_success" class="btn btn-default"
                              role="button" title="{% trans 'manager_dissertations_to_dir_ok'%}"
-                             onclick="return confirm('{% trans 'win_confirmation_message' %}')"><span
+                             onclick="return confirm('{% trans 'mgr_win_confirmation_message' %}')"><span
                                   class="glyphicon glyphicon-ok-circle"
                                   aria-hidden="true"></span> {% trans 'manager_dissertations_success'%}</a>
                           <a href="{% url 'manager_dissertations_to_dir_ko' pk=dissertation.pk %}"
                              id="lnk_manager_dissertations_reported" class="btn btn-default"
                              role="button" title="{% trans 'manager_dissertations_to_dir_ko'%}"
-                             onclick="return confirm('{% trans 'lose_confirmation_message' %}')"><span
+                             onclick="return confirm('{% trans 'mgr_lose_confirmation_message' %}')"><span
                                   class="glyphicon glyphicon-remove-circle"
                                   aria-hidden="true"></span> {% trans 'manager_dissertations_reported'%}</a>
                         {% endif %}

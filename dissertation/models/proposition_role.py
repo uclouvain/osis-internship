@@ -34,8 +34,8 @@ class PropositionRoleAdmin(admin.ModelAdmin):
 
 class PropositionRole(models.Model):
     STATUS_CHOICES = (
-        ('PROMOTEUR', _('pro')),
-        ('CO_PROMOTEUR', _('copro')),
+        ('PROMOTEUR', _('promotor')),
+        ('CO_PROMOTEUR', _('copromotor')),
         ('READER', _('reader')),
     )
 
