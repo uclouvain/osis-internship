@@ -30,8 +30,8 @@ from .models import InternshipOffer, InternshipEnrollment, InternshipMaster, Int
 
 
 class InternshipOfferAdmin(admin.ModelAdmin):
-    list_display = ('organization','speciality', 'title', 'maximum_enrollments', 'selectable')
-    fieldsets = ((None, {'fields': ('organization','speciality', 'title', 'maximum_enrollments', 'selectable')}),)
+    list_display = ('organization','speciality', 'title', 'maximum_enrollments', 'master', 'selectable')
+    fieldsets = ((None, {'fields': ('organization','speciality', 'title', 'maximum_enrollments', 'master', 'selectable')}),)
 
 admin.site.register(InternshipOffer, InternshipOfferAdmin)
 

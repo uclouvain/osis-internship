@@ -37,6 +37,7 @@ class InternshipOffer(models.Model):
     speciality          = models.ForeignKey('internship.InternshipSpeciality',null=True)
     title = models.CharField(max_length=255)
     maximum_enrollments = models.IntegerField()
+    master              = models.CharField(max_length=100, blank=True, null=True)
     selectable          = models.BooleanField(default=True)
 
     def __str__(self):

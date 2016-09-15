@@ -31,7 +31,7 @@ from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl.styles import Color, Style, PatternFill
 from django.utils.translation import ugettext_lazy as _
 
-from internship.models import Organization, Period
+from internship.models import Organization, Period, InternshipMaster
 
 HEADER = [str(_('lastname')),
           str(_('firstname')),
@@ -44,6 +44,7 @@ HEADER = [str(_('lastname')),
 
 def export_xls(organization_id, affectations):
     organization = Organization.find_by_id(organization_id)
+    
     if affectations :
         periods = Period.search()
 

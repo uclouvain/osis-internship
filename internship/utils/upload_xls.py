@@ -166,6 +166,7 @@ def __save_xls_internships(request, file_name, user):
     worksheet = workbook.active
     col_reference = 0
     col_spec = 1
+    col_master = 2
     # Iterates over the lines of the spreadsheet.
     for count, row in enumerate(worksheet.rows):
         if row[col_reference].value is None \
@@ -190,6 +191,8 @@ def __save_xls_internships(request, file_name, user):
                 spec_value = spec_value.replace(" ","")
                 spec_value = spec_value.replace("*","")
 
+                master_value = row[col_master].value
+
                 speciality = InternshipSpeciality.search(acronym=spec_value)
 
                 number_place = 0
@@ -210,6 +213,7 @@ def __save_xls_internships(request, file_name, user):
                     internship.speciality = speciality[x]
                     internship.title = speciality[x].name
                     internship.maximum_enrollments = number_place
+                    internship.master = master_value
                     internship.selectable = True
                     internship.save()
 
