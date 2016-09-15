@@ -290,6 +290,7 @@ def internships_stud(request):
 
 
 @login_required
+@permission_required('internship.can_access_internship', raise_exception=True)
 def internships_save(request):
     # Check if the internships are selectable, if yes students can save their choices
     all_internships = InternshipOffer.search()
