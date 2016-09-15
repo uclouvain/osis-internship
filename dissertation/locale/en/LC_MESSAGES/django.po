@@ -536,7 +536,7 @@ msgid "my_profile"
 msgstr "My profile"
 
 msgid "my_proposition_dissertations"
-msgstr "Mu dissertation subjects"
+msgstr "My subjects"
 
 msgid "my_stats"
 msgstr "My stats"
@@ -650,7 +650,13 @@ msgid "proposition_dissertation"
 msgstr "Dissertation subject"
 
 msgid "proposition_dissertation_confirmation_message"
-msgstr "You are ready to save this dissertation subject details.  Are you sure you want to continue ?"
+msgstr "You are ready to save this dissertation subject details. Are you sure you want to continue ?"
+
+msgid "proposition_dissertations_created"
+msgstr "Subjects created"
+
+msgid "proposition_dissertations_created_info"
+msgstr "Subjects you created for others (you are not the promotor)."
 
 msgid "proposition_dissertation_informations"
 msgstr "Informations about the dissertation subject"

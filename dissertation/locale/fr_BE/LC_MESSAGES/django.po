@@ -536,7 +536,7 @@ msgid "my_profile"
 msgstr "Mon profil"
 
 msgid "my_proposition_dissertations"
-msgstr "Mes sujets de mémoire"
+msgstr "Mes sujets"
 
 msgid "my_stats"
 msgstr "Mes statistiques"
@@ -651,6 +651,12 @@ msgstr "Sujet de mémoire"
 
 msgid "proposition_dissertation_confirmation_message"
 msgstr "Vous allez indiquer enregistrer les modifications de ce sujet de mémoire. Êtes-vous certain de vouloir continuer ?"
+
+msgid "proposition_dissertations_created"
+msgstr "Sujets créés"
+
+msgid "proposition_dissertations_created_info"
+msgstr "Sujets de mémoire que vous avez créés mais dont vous n'êtes pas le promoteur."
 
 msgid "proposition_dissertation_informations"
 msgstr "Informations du sujet de mémoire"

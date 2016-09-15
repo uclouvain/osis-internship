@@ -65,7 +65,8 @@
               <table class="table table-hover">
                 <tr>
                   <th>{% trans 'title'%}</th>
-                  <th>{% trans 'author'%}</th>
+                  <th>{% trans 'promotor'%}</th>
+                  <th>{% trans 'creator'%}</th>
                   <th>{% trans 'visible'%}</th>
                   <th>{% trans 'offer'%}</th>
                   <th>{% trans 'max_students'%}</th>
@@ -74,6 +75,7 @@
                   <tr>
                     <td><a href="{% url 'proposition_dissertation_detail' pk=proposition_dissertation.pk %}">{{ proposition_dissertation.title }}</a></td>
                     <td>{{ proposition_dissertation.author }}</td>
+                    <td>{{ proposition_dissertation.creator|default_if_none:"" }}</td>
                     <td>
                       {% if proposition_dissertation.visibility == True %}
                       <span class="label label-success">{% trans 'visible' %}</span>
