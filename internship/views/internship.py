@@ -36,17 +36,22 @@ from math import sin, cos, radians, degrees, acos
 
 
 def calc_dist(lat_a, long_a, lat_b, long_b):
-    lat_a = radians(float(lat_a))
-    lat_b = radians(float(lat_b))
-    long_a = float(long_a)
-    long_b = float(long_b)
-    long_diff = radians(long_a - long_b)
-    distance = (sin(lat_a) * sin(lat_b) +
-                cos(lat_a) * cos(lat_b) * cos(long_diff))
-    # For distance in miles use this
-    # return (degrees(acos(distance)) * 69.09)
-    # For distance in kilometers use this
-    return (degrees(acos(distance)) * 69.09)/0.621371
+    if lat_a == lat_b and long_a == long_b:
+        # If there is the same adress, there is a chance to have a bug/crash
+        # So it return 100 meters of distance
+        return 0.1
+    else:
+        lat_a = radians(float(lat_a))
+        lat_b = radians(float(lat_b))
+        long_a = float(long_a)
+        long_b = float(long_b)
+        long_diff = radians(long_a - long_b)
+        distance = (sin(lat_a) * sin(lat_b) +
+                    cos(lat_a) * cos(lat_b) * cos(long_diff))
+        # For distance in miles use this
+        # return (degrees(acos(distance)) * 69.09)
+        # For distance in kilometers use this
+        return (degrees(acos(distance)) * 69.09)/0.621371
 
 def work_dist(student, organizations):
     # Find the student's informations
@@ -66,51 +71,44 @@ def work_dist(student, organizations):
     distance_student_organization = sorted(distance_student_organization.items(), key=itemgetter(1))
     return distance_student_organization
 
-def get_number_choices(datas):
-    for internship in datas:
+def get_number_choices(internships):
+    for internship in internships:
         number_first_choice = len(InternshipChoice.search(organization = internship.organization,
-                                                            speciality = internship.speciality,
+                                                            speciality__acronym = internship.speciality.acronym,
                                                            choice=1))
         number_other_choice = len(InternshipChoice.search_other_choices(organization = internship.organization,
-                                                            speciality = internship.speciality))
+                                                            speciality__acronym = internship.speciality.acronym))
         internship.number_first_choice = number_first_choice
         internship.number_other_choice = number_other_choice
 
-def set_tabs_name(datas, student=None):
-    for data in datas:
+def set_tabs_name(specialities, student=None):
+    for speciality in specialities:
         if student :
-            size = len(InternshipChoice.search(speciality=data, student=student))
-            data.size = size
-        if hasattr(data, 'name'):
-            tab = data.name.replace(" ", "")
-        elif hasattr(data, 'title'):
-            tab = data.title.replace(" ", "")
-        data.tab = tab
+            size = len(InternshipChoice.search(speciality=speciality, student=student))
+            speciality.size = size
+        tab = speciality.name.replace(" ", "")
+        speciality.tab = tab
 
-def get_selectable(datas):
-    if len(datas) > 0:
-        return datas[0].selectable
+def get_selectable(internships):
+    if len(internships) > 0:
+        return internships[0].selectable
     else:
         return True
 
-def get_all_specialities(datas):
+def get_all_specialities(internships):
     # Create the list of the specialities, delete dpulicated and order alphabetical
     tab = []
-    for data in datas:
-        if data.speciality.mandatory:
-            tab.append(data.speciality)
-    for data in datas:
-        if not data.speciality.mandatory:
-            tab.append(data.speciality)
+    for internship in internships:
+        tab.append(internship.speciality)
 
     tab = list(OrderedDict.fromkeys(tab))
     return tab
 
-def get_all_organizations(datas):
+def get_all_organizations(internships):
     # Create the options for the organizations selection list, delete duplicated
     tab = []
-    for data in datas:
-        tab.append(data.organization)
+    for internship in internships:
+        tab.append(internship.organization)
     tab = list(set(tab))
     return tab
 
@@ -132,12 +130,12 @@ def delete_dublons_keep_order(seq):
     seen_add = seen.add
     return [x for x in seq if not (x in seen or seen_add(x))]
 
-def sort_internships(datas):
+def sort_internships(sort_internships):
     tab = []
     number_ref = []
-    for data in datas:
-        if data is not None:
-            number_ref.append(data.organization.reference)
+    for sort_internship in sort_internships:
+        if sort_internship is not None:
+            number_ref.append(sort_internship.organization.reference)
     number_ref=sorted(number_ref, key=int)
     number_ref=delete_dublons_keep_order(number_ref)
     for i in number_ref:
