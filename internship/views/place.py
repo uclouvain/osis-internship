@@ -34,12 +34,13 @@ from internship.views.internship import get_all_specialities
 from internship.utils import export_utils, export_utils_pdf
 
 
-def sort_organizations(datas):
+
+def sort_organizations(sort_organizations):
     tab = []
     number_ref = []
-    for data in datas:
-        if data is not None:
-            number_ref.append(data.reference)
+    for sort_organization in sort_organizations:
+        if sort_organization is not None:
+            number_ref.append(sort_organization.reference)
     number_ref=sorted(number_ref, key=int)
     for i in number_ref:
         organization = Organization.search(reference=i)
@@ -58,39 +59,40 @@ def set_organization_address(organizations):
             organization.student_choice = len(InternshipChoice.search(organization=organization))
 
 
-def sorted_organization(datas, sort_city):
+def sorted_organization(sort_organizations, sort_city):
     tab=[]
     index = 0
-    for data in datas:
+    for sort_organization in sort_organizations:
         flag_del = 1
-        if data.address:
-            for a in data.address:
+        if sort_organization.address:
+            for a in sort_organization.address:
                 if a.city == sort_city:
                     flag_del = 0
                     break
         if flag_del == 0:
-            tab.append(data)
+            tab.append(sort_organization)
         index += 1
     return tab
 
 
-def get_cities(datas):
+def get_cities(organizations):
     tab = []
-    for data in datas:
-        for a in data.address:
+    for organization in organizations:
+        for a in organization.address:
             tab.append(a.city)
     tab = list(set(tab))
     tab.sort()
     return tab
 
 
-def set_tabs_name(datas, student=None):
-    for data in datas:
+def set_tabs_name(specialities, student=None):
+    for speciality in specialities:
         if student :
-            size = len(InternshipChoice.search(speciality=data, student=student))
-            data.size = size
-        tab = data.name.replace(" ", "")
-        data.tab = tab
+            size = len(InternshipChoice.search(speciality=speciality, student=student))
+            speciality.size = size
+        tab = speciality.name.replace(" ", "")
+        speciality.tab = tab
+
 
 
 @login_required
@@ -190,7 +192,7 @@ def organization_new(request):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def organization_edit(request, organization_id):
     organization = Organization.find_by_id(organization_id)
-    organization_address = OrganizationAddress.search(organization=organization)
+    organization_address = OrganizationAddress.search(organization = organization)
     return render(request, "place_form.html", {'organization': organization,
                                                'organization_address': organization_address[0], })
 
@@ -206,17 +208,25 @@ def organization_create(request):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def student_choice(request, reference):
     organization_choice = InternshipChoice.search(organization__reference=reference)
-    organization = Organization.search(reference=reference)
-    all_offers = InternshipOffer.search(organization = organization)
+    organizations = Organization.search(reference=reference)
+    organization = None
+    if organizations:
+        organization = organizations[0]
+    else:
+        organization = None
+    all_offers = InternshipOffer.search(organization=organization)
     all_speciality = InternshipSpeciality.find_all()
     set_tabs_name(all_speciality)
     for al in all_offers:
         number_first_choice = len(InternshipChoice.search(organization=al.organization,
                                                           speciality=al.speciality,
                                                           choice=1))
+        number_all_choice = len(InternshipChoice.search(organization=al.organization,
+                                                           speciality=al.speciality))
         al.number_first_choice = number_first_choice
+        al.number_all_choice = number_all_choice
 
-    return render(request, "place_detail.html", {'organization': organization[0],
+    return render(request, "place_detail.html", {'organization': organization,
                                                  'organization_choice': organization_choice,
                                                  'offers': all_offers,
                                                  'specialities': all_speciality,

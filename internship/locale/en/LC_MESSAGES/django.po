@@ -243,8 +243,17 @@ msgstr	 "Third Choice"
 msgid	 "type"
 msgstr	 "Type"
 
-msgid	 "choice"
-msgstr	 "Choice"
+msgid	 "no_hospital"
+msgstr	 "Hospital not found"
+
+msgid	 "capacity"
+msgstr	 "capacity"
+
+msgid	 "number_first_choice"
+msgstr	 "Number of first choice"
+
+msgid	 "number_total_student"
+msgstr	 "Number of student who choose this organization"
 
 msgid "selection_currently_active"
 msgstr "The internships' selection is currently active"
@@ -266,3 +275,6 @@ msgstr "Download Excel File"
 
 msgid "download_pdf_file"
 msgstr "Download PDF File"
+
+msgid "choice"
+msgstr "Choice"

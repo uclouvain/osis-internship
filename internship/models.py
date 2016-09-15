@@ -163,13 +163,13 @@ class InternshipChoice(models.Model):
     @staticmethod
     def search(**kwargs):
         kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = InternshipChoice.objects.filter(**kwargs)
+        queryset = InternshipChoice.objects.filter(**kwargs).order_by('choice')
         return queryset
 
     @staticmethod
     def search_other_choices(**kwargs):
         kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = InternshipChoice.objects.filter(**kwargs)
+        queryset = InternshipChoice.objects.filter(**kwargs).order_by('choice')
         queryset = queryset.exclude(choice=1)
         return queryset
 

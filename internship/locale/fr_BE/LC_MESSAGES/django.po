@@ -243,8 +243,17 @@ msgstr	 "3ème choix"
 msgid	 "type"
 msgstr	 "Type"
 
-msgid	 "choice"
-msgstr	 "Choix"
+msgid	 "no_hospital"
+msgstr	 "Hôpital inexistant"
+
+msgid	 "capacity"
+msgstr	 "capacité maximale"
+
+msgid	 "number_first_choice"
+msgstr	 "Nombre de 1er choix"
+
+msgid	 "number_total_student"
+msgstr	 "Nombre total d'étudiant ayant choisi cet hôpital"
 
 msgid "selection_currently_active"
 msgstr "La sélection des stages est actuellement active"
@@ -266,3 +275,6 @@ msgstr "Télécharger le fichier Excel"
 
 msgid "download_pdf_file"
 msgstr "Télécharger le fichier PDF"
+
+msgid "choice"
+msgstr "Choix"
