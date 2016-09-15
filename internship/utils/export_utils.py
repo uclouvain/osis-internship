@@ -44,7 +44,7 @@ HEADER = [str(_('lastname')),
 
 def export_xls(organization_id, affectations):
     organization = Organization.find_by_id(organization_id)
-    
+
     if affectations :
         periods = Period.search()
 
@@ -58,11 +58,13 @@ def export_xls(organization_id, affectations):
         printing_date = printing_date.strftime("%d/%m/%Y")
         worksheet.append([str('%s: %s' % (_('file_production_date'), printing_date))])
         worksheet.append([str('')])
+        worksheet.append([str(affectations[0].master)])
+        worksheet.append([str('')])
         worksheet.append([str('')])
 
         __columns_resizing(worksheet)
 
-        row_number = 7
+        row_number = 9
         for period in periods:
             worksheet.append([str(period.name), period.date_start.strftime("%d-%m-%Y"), period.date_end.strftime("%d-%m-%Y")])
             __coloring_non_editable(worksheet, row_number)

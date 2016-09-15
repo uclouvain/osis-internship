@@ -259,10 +259,13 @@ def export_xls(request, organization_id, speciality_id):
         a.email = ""
         a.adress = ""
         a.phone_mobile = ""
+        a.master = ""
         informations = InternshipStudentInformation.search(person=a.student.person)[0]
+        offer = InternshipOffer.search(organization=a.organization, speciality = a.speciality)[0]
         a.email = informations.email
         a.adress = informations.location + " " + informations.postal_code + " " + informations.city
         a.phone_mobile = informations.phone_mobile
+        a.master = offer.master
 
     return export_utils.export_xls(organization_id, affectations)
 
