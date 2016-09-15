@@ -25,6 +25,7 @@
 ##############################################################################
 from datetime import datetime
 import subprocess
+from django.conf import settings
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from django.contrib.auth.views import login as django_login
 from django.contrib.auth import authenticate, logout
@@ -49,6 +50,14 @@ def server_error(request):
 
 def noscript(request):
     return layout.render(request, 'noscript.html', {})
+
+
+def environnement_request_processor(request):
+    try:
+        env = settings.ENVIRONMENT
+    except AttributeError:
+        env = 'DEV'
+    return {'environment': env}
 
 
 def login(request):
