@@ -1,0 +1,103 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+{% endcomment %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/custom.css' %}">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.11/css/dataTables.bootstrap.min.css">
+{% endblock %}
+{% block breadcrumb %}
+<li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'institution' %}</a></li>
+<li><a href="{% url 'mandates' %}" id="lnk_mandates">{% trans 'mandates' %}</a></li>
+<li><a href="{% url 'assistant_mandates' %}" id="lnk_mandates">{% trans 'my_mandates' %}</a></li>
+<li class="active">{% trans 'renewal_form' %}</li>
+{% endblock %}
+{% block content %}
+<ul class="nav nav-tabs ">
+<li><a href="{% url 'assistant_mandates' %}">{% trans 'my_mandates' %}</a></li>
+<li><a href="{% url 'form_part1_edit' mandate_id %}">{% trans 'assistant_form_part1' %}</a></li>
+<li class="active"><a href="{% url 'mandate_learning_units' mandate_id %}">{% trans 'assistant_form_part2' %}</a></li>
+<li><a href="{% url 'form_part5_edit' mandate_id %}">{% trans 'assistant_form_part5' %}</a></li>
+<li><a href="{% url 'form_part6_edit' mandate_id %}">{% trans 'assistant_form_part6' %}</a></li>
+</ul>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="panel-info">
+            <div class="panel-heading">
+                <font size="4">{% trans 'tutoring_learning_units' %}</font>
+            </div>
+        </div><p>
+        <div class="table-responsive">
+            <table id="myTable" class="table table-hover table-condensed table-bordered" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+            <th>{% trans 'academic_year' %}</th>
+            <th>{% trans 'acronym' %}</th>
+            <th>{% trans 'title' %}</th>
+            <th>{% trans 'edit' %}</th>
+            <th>{% trans 'delete' %}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            {% for learning_unit in object_list %}
+                <td>{{ learning_unit.learning_unit_year.academic_year }}</td>
+                <td>{{ learning_unit.learning_unit_year.acronym }}</td>
+                <td>{{ learning_unit.learning_unit_year.title }}</td>
+                <td><a href="{% url 'tutoring_learning_unit_edit' learning_unit.id %}">
+                    <button type="button" class="btn btn-link btn-lg" title="{% trans 'edit'%}"
+                            id="bt_learning_unit_edit">
+                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                    </button>{% trans 'edit'%}</a></td>
+                <td><a href="{% url 'tutoring_learning_unit_delete' learning_unit.id %}"
+                       onclick="return confirm('{% trans 'confirm_removal' %}')">
+                    <button type="button" class="btn btn-link btn-lg" title="{% trans 'delete'%}"
+                            id="bt_learning_unit_delete">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </button>{% trans 'delete'%}</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+            </table>
+        </div>
+        <a href="{% url 'tutoring_learning_unit_add' mandate_id %}">
+            <button type="button" class="btn btn-link btn-lg" title="{% trans 'add'%}" id="bt_reviewer_add">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            </button>{% trans 'add_tutoring_learning_unit' %}</a>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.11/js/dataTables.bootstrap.min.js"></script>
+ <script>
+ $(document).ready(function() {
+    $('#myTable').DataTable( {
+        stateSave: true
+    } );
+} );
+</script>   
+{% endblock %}

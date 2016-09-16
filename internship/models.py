@@ -159,13 +159,13 @@ class InternshipChoice(models.Model):
     @staticmethod
     def search(**kwargs):
         kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = InternshipChoice.objects.filter(**kwargs)
+        queryset = InternshipChoice.objects.filter(**kwargs).order_by('choice')
         return queryset
 
     @staticmethod
     def search_other_choices(**kwargs):
         kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = InternshipChoice.objects.filter(**kwargs)
+        queryset = InternshipChoice.objects.filter(**kwargs).order_by('choice')
         queryset = queryset.exclude(choice=1)
         return queryset
 
@@ -274,6 +274,12 @@ class OrganizationAddress(models.Model):
         return OrganizationAddress.objects.get(pk=organization_address_id)
 
     def save(self, *args, **kwargs):
+        has_organization = False
+        try:
+            has_organization = (self.organization is not None)
+        except Exception:
+            self.organization = Organization.objects.latest('id')
+
         self.label = "Addr"+self.organization.name[:14]
         super(OrganizationAddress, self).save(*args, **kwargs)
 
