@@ -25,6 +25,9 @@ msgstr "Accepted by promotor"
 msgid "accepted_by_first_year_evaluation"
 msgstr "Accepted by 1st year evaluation"
 
+msgid "accompanist"
+msgstr "Accompanist"
+
 msgid "action_needed"
 msgstr "Action needed"
 
@@ -357,6 +360,9 @@ msgstr "If the concerned teacher is not in the list, you can"
 
 msgid "in_edit_title"
 msgstr "Title currently editable"
+
+msgid "internship_master"
+msgstr "Internship Master"
 
 msgid "informations"
 msgstr "Informations"

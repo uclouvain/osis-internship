@@ -170,7 +170,7 @@
                  {% for proposition_role in proposition_roles %}
                  <div class="row" style="margin: 10px;">
                    <div class="col-md-3" style="text-align: right">
-                       <label>{{ proposition_role.status }}</label>
+                       <label>{{ proposition_role.get_status_display }}</label>
                    </div>
                    <div class="col-md-2">
                        {{ proposition_role.adviser }}

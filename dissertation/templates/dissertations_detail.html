@@ -145,7 +145,7 @@
                 {% for dissertation_role in dissertation_roles %}
                 <div class="row" style="margin: 10px;">
                   <div class="col-md-3" style="text-align: right">
-                      <label>{{ dissertation_role.status }}</label>
+                      <label>{{ dissertation_role.get_status_display }}</label>
                   </div>
                   <div class="col-md-2">
                       {{ dissertation_role.adviser }}

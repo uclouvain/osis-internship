@@ -25,6 +25,9 @@ msgstr "Accepté par le promoteur"
 msgid "accepted_by_first_year_evaluation"
 msgstr "Évaluation de première année réussie"
 
+msgid "accompanist"
+msgstr "Accompagnateur"
+
 msgid "action_needed"
 msgstr "Action requise"
 
@@ -357,6 +360,9 @@ msgstr "Si l'enseignant concerné n'est pas dans la liste, vous pouvez"
 
 msgid "in_edit_title"
 msgstr "Titre modifiable actuellement"
+
+msgid "internship_master"
+msgstr "Maître de stage"
 
 msgid "informations"
 msgstr "Informations"
