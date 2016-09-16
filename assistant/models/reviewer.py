@@ -63,11 +63,18 @@ class Reviewer(models.Model):
     def __str__(self):
         return u"%s - %s : %s" % (self.person, self.structure, self.role)
 
+
+def find_reviewers():
+    return Reviewer.objects.all().order_by('person')
+
+
 def find_by_id(reviewer_id):
     return Reviewer.objects.get(id=reviewer_id)
 
+
 def find_by_person(person):
     return Reviewer.objects.get(person=person)
+
 
 def canEditReview(reviewer_id, mandate_id):
     if assistant_mandate.find_mandate_by_id(mandate_id).state not in find_by_id(reviewer_id).role:
@@ -82,6 +89,7 @@ def canEditReview(reviewer_id, mandate_id):
     else:
         return find_by_id(reviewer_id)
 
+
 def can_delegate_to_structure(reviewer, structure):
     """
     Détermine si le reviewer passé en argmument peut déléguer son rôle pour la structure.
@@ -95,9 +103,10 @@ def can_delegate_to_structure(reviewer, structure):
     if structure == reviewer.structure:
         return True
     if structure.part_of == reviewer.structure:
-        return  True
+        return True
     else:
         return False
+
 
 def can_delegate(reviewer):
     if reviewer.role != "SUPERVISION" and reviewer.role != "RESEARCH":

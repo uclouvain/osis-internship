@@ -41,7 +41,6 @@
         <tr>
           <th style="text-align:center">{% trans 'offer_proposition'%}</th>
           <th style="text-align:center">{% trans 'student_can_manage_readers'%}</th>
-          <th style="text-align:center">{% trans 'readers_visibility_date_for_students'%}</th>
           <th style="text-align:center">{% trans 'adviser_can_suggest_reader'%}</th>
           <th style="text-align:center">{% trans 'evaluation_first_year'%}</th>
           <th style="text-align:center">{% trans 'validation_commission_exists'%}</th>
@@ -49,11 +48,10 @@
         {% for offer_proposition in offer_propositions %}
           <tr>
             <td style="text-align:center"><a href="{% url 'manager_offer_parameters_detail' pk=offer_proposition.pk %}">{{ offer_proposition.acronym }}</a></td>
-            <td style="text-align:center">{{ offer_proposition.student_can_manage_readers|yesno:"Yes,No" }}</td>
-            <td style="text-align:center">{{ offer_proposition.readers_visibility_date_for_students|yesno:"Yes,No" }}</td>
-            <td style="text-align:center">{{ offer_proposition.adviser_can_suggest_reader|yesno:"Yes,No" }}</td>
-            <td style="text-align:center">{{ offer_proposition.evaluation_first_year|yesno:"Yes,No" }}</td>
-            <td style="text-align:center">{{ offer_proposition.validation_commission_exists|yesno:"Yes,No" }}</td>
+            <td style="text-align:center">{{ offer_proposition.student_can_manage_readers|yesno:_("yes,no") }}</td>
+            <td style="text-align:center">{{ offer_proposition.adviser_can_suggest_reader|yesno:_("yes,no") }}</td>
+            <td style="text-align:center">{{ offer_proposition.evaluation_first_year|yesno:_("yes,no") }}</td>
+            <td style="text-align:center">{{ offer_proposition.validation_commission_exists|yesno:_("yes,no") }}</td>
           </tr>
         {% endfor %}
       </table>

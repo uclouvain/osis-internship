@@ -28,7 +28,7 @@ from django.utils.translation import ugettext as _
 from django.db.models import Q
 from django.forms import ModelForm, Textarea
 from assistant import models as mdl
-from base.models import structure, academic_year, person
+from base.models import structure, academic_year, person, learning_unit_year
 from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
 from django.forms import widgets
@@ -71,15 +71,11 @@ def get_field_qs(field, **kwargs):
             Q(type='FACULTY')).order_by('acronym'))
     return field.formfield(**kwargs)
 
-StructureInLineFormSet = inlineformset_factory(mdl.assistant_mandate.AssistantMandate,
-                                               mdl.mandate_structure.MandateStructure,
-                                               formfield_callback=get_field_qs,
-                                               fields=('structure',
-                                                       'assistant_mandate'),
-                                               extra=2,
-                                               can_delete=True,
-                                               min_num=1,
-                                               max_num=4)
+structure_inline_formset = inlineformset_factory(mdl.assistant_mandate.AssistantMandate,
+                                                 mdl.mandate_structure.MandateStructure,
+                                                 formfield_callback=get_field_qs,
+                                                 fields=('structure','assistant_mandate'),
+                                                 extra=2, can_delete=True, min_num=1, max_num=4)
 
 
 class HorizontalRadioRenderer(forms.RadioSelect.renderer):
@@ -164,6 +160,82 @@ class AssistantFormPart3(ModelForm):
         fields = ('phd_inscription_date', 'thesis_title', 'confirmation_test_date','remark')
 
 
+class TutoringLearningUnitForm(forms.Form):
+    sessions_number = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'input session_number'}))
+    sessions_duration = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'input session_duration'}))
+    series_number = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'input series_numbers'}))
+    face_to_face_duration = forms.IntegerField(widget=forms.NumberInput(attrs={'readonly': 'enabled'}))
+    attendees = forms.IntegerField(widget=forms.NumberInput(attrs={'min': '1', 'max': '999', 'step': '1'}))
+    exams_supervision_duration = forms.IntegerField(
+        widget=forms.NumberInput(attrs={'min': '1', 'max': '999', 'step': '1'}))
+    others_delivery = forms.CharField(required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '4'}))
+    mandate_id = forms.CharField(widget=forms.HiddenInput(), required=True)
+    learning_unit_year = forms.CharField(required=True)
+    tutoring_learning_unit_year_id = forms.CharField(widget=forms.HiddenInput(), required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(TutoringLearningUnitForm, self).__init__(*args, **kwargs)
+        self.fields['academic_year'] = \
+            forms.ChoiceField(choices=[(obj.id, obj) for obj in academic_year.find_academic_years()])
+
+    class Meta:
+        model = mdl.tutoring_learning_unit_year.TutoringLearningUnitYear
+        fields = ('academic_years', 'sessions_number', 'sessions_duration', 'series_numbers', 'face_to_face_duration',
+                  'attendees', 'exams_supervision_duration', 'mandate', 'learning_unit_year')
+
+    def clean(self):
+        super(TutoringLearningUnitForm, self).clean()
+        academic_year_id = self.cleaned_data.get("academic_year")
+        learning_unit_acronym = self.cleaned_data.get('learning_unit_year')
+        learning_units_year = learning_unit_year.search(academic_year_id=academic_year_id,
+                                                        acronym=learning_unit_acronym)
+        if not learning_units_year:
+            msg = _("learning_unit_year_error_msg")
+            self.add_error('learning_unit_year', msg)
+        elif learning_units_year.count() > 1:
+            msg = _("learning_unit_year_multiple_msg")
+            self.add_error('learning_unit_year', msg)
+            for this_learning_unit_year in learning_units_year:
+                msg_acronym = this_learning_unit_year.acronym
+                self.add_error('learning_unit_year', msg_acronym)
+
+    def save(self):
+        data = self.cleaned_data
+        academic_year_id = data.get("academic_year")
+        learning_unit_acronym = data.get("learning_unit_year")
+        this_learning_unit_year = learning_unit_year.search(academic_year_id=academic_year_id,
+                                                            acronym=learning_unit_acronym)[:1].get()
+        mandate_id = data.get("mandate_id")
+        sessions_number = data.get("sessions_number")
+        sessions_duration = data.get("sessions_duration")
+        series_number = data.get("series_number")
+        face_to_face_duration = data.get("face_to_face_duration")
+        attendees = data.get("attendees")
+        exams_supervision_duration = data.get("exams_supervision_duration")
+        others_delivery = data.get("others_delivery")
+        tutoring_learning_unit_year_id = data.get("tutoring_learning_unit_year_id")
+        mandate = mdl.assistant_mandate.find_mandate_by_id(mandate_id)
+        if tutoring_learning_unit_year_id:
+            tutoring_learning_unit_year = mdl.tutoring_learning_unit_year.find_by_id(tutoring_learning_unit_year_id)
+            tutoring_learning_unit_year.sessions_number = sessions_number
+            tutoring_learning_unit_year.sessions_duration = sessions_duration
+            tutoring_learning_unit_year.series_number = series_number
+            tutoring_learning_unit_year.face_to_face_duration = face_to_face_duration
+            tutoring_learning_unit_year.attendees = attendees
+            tutoring_learning_unit_year.exams_supervision_duration = exams_supervision_duration
+            tutoring_learning_unit_year.others_delivery = others_delivery
+            tutoring_learning_unit_year.mandate = mandate
+            tutoring_learning_unit_year.learning_unit_year = this_learning_unit_year
+        else:
+            tutoring_learning_unit_year = mdl.tutoring_learning_unit_year.TutoringLearningUnitYear.objects.create(
+                learning_unit_year=this_learning_unit_year, sessions_number=sessions_number,
+                sessions_duration=sessions_duration, series_number=series_number,
+                face_to_face_duration=face_to_face_duration, attendees=attendees,
+                exams_supervision_duration=exams_supervision_duration, others_delivery=others_delivery,
+                mandate=mandate)
+        tutoring_learning_unit_year.save()
+
+
 class AssistantFormPart5(ModelForm):
     degrees = forms.CharField(
         required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '4'}))
@@ -181,8 +253,7 @@ class AssistantFormPart5(ModelForm):
 class ReviewForm(ModelForm):
     justification = forms.CharField(help_text=_("justification_required_if_conditional"),
                                     required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '5'}))
-    remark = forms.CharField(
-        required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '5'}))
+    remark = forms.CharField(required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '5'}))
     confidential = forms.CharField(help_text=_("information_not_provided_to_assistant"),
                                    required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '5'}))
     advice = forms.ChoiceField(required=True, widget=forms.RadioSelect(renderer=HorizontalRadioRenderer, attrs={
@@ -241,6 +312,29 @@ class ReviewerDelegationForm(ModelForm):
 
     def clean(self):
         super(ReviewerDelegationForm, self).clean()
+        selected_person = self.cleaned_data.get('person')
+        try:
+            mdl.reviewer.find_by_person(selected_person)
+            msg = _("person_already_reviewer_msg")
+            self.add_error('person', msg)
+        except:
+            pass
+
+
+class ReviewerForm(ModelForm):
+    person = forms.ModelChoiceField(required=True, queryset=person.Person.objects.all().order_by('last_name'),
+                                    to_field_name="email")
+    role = forms.ChoiceField(required=True, choices=mdl.reviewer.ROLE_CHOICES)
+    structure = forms.ModelChoiceField(required=True, queryset=(
+        structure.find_by_type('INSTITUTE') | structure.find_by_type('FACULTY') |
+        structure.find_by_type('SECTOR')).order_by('type', 'acronym'))
+
+    class Meta:
+        model = mdl.reviewer.Reviewer
+        fields = ('person', 'structure', 'role')
+
+    def clean(self):
+        super(ReviewerForm, self).clean()
         selected_person = self.cleaned_data.get('person')
         try:
             mdl.reviewer.Reviewer.objects.get(person=selected_person)
