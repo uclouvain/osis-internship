@@ -55,6 +55,10 @@ class Person(models.Model):
         ('M', _('male')),
         ('U', _('unknown')))
 
+    SOURCE_CHOICES = (
+        ('BASE', 'BASE'),
+        ('DISSERTATION', 'DISSERTATION'))
+
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
@@ -68,7 +72,7 @@ class Person(models.Model):
     phone = models.CharField(max_length=30, blank=True, null=True)
     phone_mobile = models.CharField(max_length=30, blank=True, null=True)
     language = models.CharField(max_length=30, null=True, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE)
-    source = models.CharField(max_length=25, blank=True, null=True)
+    source = models.CharField(max_length=25, blank=True, null=True, choices=SOURCE_CHOICES)
 
     def username(self):
         if self.user is None:
@@ -142,7 +146,6 @@ def count_by_email(email):
     return search_by_email(email).count()
 
 
-def add(**kwargs):
-    person = Person(**kwargs)
+def add(person):
     person.save()
     return person

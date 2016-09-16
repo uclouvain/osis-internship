@@ -42,33 +42,33 @@
        <form method="POST" class="post-form">
         {% csrf_token %}
         <div class="row">
-            <div class="col-md-8 col-lg-offset-2">
+            <div class="col-md-10 col-md-offset-1">
                 <label for="txt_type">{% trans 'author' %}</label>
                 <p>{{ author }}</p>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-8 col-lg-offset-2 form-group">
+            <div class="col-md-10 col-md-offset-1 form-group">
                 <label for="txt_title" {% if form.title.errors %} style="color:red;" {% endif %}>{% trans 'title' %}</label>
                 <input class="form-control" id="txt_title"  name="title"
                     style="margin:-6px;" value="{{ form.title.value }}">
             </div>
         </div>
         <div class="row">
-            <div class="col-md-8 col-lg-offset-2 form-group">
+            <div class="col-md-10 col-md-offset-1 form-group">
                 <label for="txt_visibility">{% trans 'visibility' %}</label>
                 <br><input id="txt_visibility"  name="visibility"
                      type="checkbox" {% if form.visibility.value %} checked {% endif %}>
             </div>
         </div>
         <div class="row {% if field.errors %}error{% endif %}">
-           <div class="col-md-8 col-lg-offset-2 form-group">
+           <div class="col-md-10 col-md-offset-1 form-group">
                 <label for="txt_description">{% trans 'description' %}</label>
                 <textarea class="form-control" id="txt_description"  name="description" rows="10" style="margin:-6px;">{{ form.description.value }}</textarea>
            </div>
         </div>
         <div class="row {% if field.errors %}error{% endif %}">
-            <div class="col-md-8 col-lg-offset-2 form-group">
+            <div class="col-md-10 col-md-offset-1 form-group">
                 <label for="txt_type">{% trans 'subject_type' %}</label>
                 <select class="form-control" id="txt_type"  name="type" style="margin:-6px;">
                     {% for type in types_choices %}
@@ -78,7 +78,7 @@
             </div>
         </div>
         <div class="row {% if field.errors %}error{% endif %}">
-            <div class="col-md-8 col-lg-offset-2 form-group">
+            <div class="col-md-10 col-md-offset-1 form-group">
                 <label for="txt_level">{% trans 'level' %}</label>
                 <select class="form-control" id="txt_level"  name="level" style="margin:-6px;">
                     {% for level in levels_choices %}
@@ -88,7 +88,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-8 col-lg-offset-2 form-group">
+            <div class="col-md-10 col-md-offset-1 form-group">
                 <label for="txt_collaboration">{% trans 'collaboration' %}</label>
                 <select class="form-control" id="txt_collaboration"  name="collaboration" style="margin:-6px;">
                     {% for collaboration in collaborations_choices %}
@@ -98,14 +98,14 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-8 col-lg-offset-2 form-group">
+            <div class="col-md-10 col-md-offset-1 form-group">
                 <label for="txt_max_number_student" {% if form.max_number_student.errors %} style="color:red;" {% endif %}>{% trans 'max_students_number' %}</label>
                 <input class="form-control" id="txt_max_number_student"  name="max_number_student"
                     style="margin:-6px;" value="{{ form.max_number_student.value }}">
             </div>
         </div>
         <div class="row">
-            <div class="col-md-8 col-lg-offset-2 form-group">
+            <div class="col-md-10 col-md-offset-1 form-group">
                 <label for="txt_level">{% trans 'offer_propositions' %}</label>
                 <ul style="list-style-type: none;">
                 {% for checkbox in form.offer_proposition|dictsort:"choice_label" %}
@@ -117,12 +117,10 @@
                 </ul>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-12" style="text-align: right;">
-                <button type="submit" class="save btn btn-primary" onclick="return confirm('{% trans 'proposition_dissertation_confirmation_message' %}')">
-                    {% trans 'save' %}
-                </button>
-            </div>
+        <div style="text-align: right;">
+            <button type="submit" class="save btn btn-primary" onclick="return confirm('{% trans 'proposition_dissertation_confirmation_message' %}')">
+                {% trans 'save' %}
+            </button>
         </div>
 
       </form>

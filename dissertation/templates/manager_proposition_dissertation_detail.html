@@ -36,8 +36,7 @@
     <div class="page-header">
     <h2>{{ proposition_dissertation.title }}</h2>
     </div>
-    <div class="row" style="text-align:right; margin-bottom: 5px;">
-        <div class="col-md-12">
+    <div style="text-align:right; margin-bottom: 5px;">
             <a class="btn btn-default btn-primary"
                href="{% url 'manager_proposition_dissertation_edit' pk=proposition_dissertation.pk %}">
             <span class="glyphicon glyphicon-edit"></span></a>
@@ -45,7 +44,6 @@
             href="{% url 'manager_proposition_dissertation_delete' pk=proposition_dissertation.pk %}"
             onclick="return confirm('{% trans 'delete_proposition_dissertation_confirmation_message' %}')">
             <span class="glyphicon glyphicon-remove"></span></a>
-        </div>
     </div>
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -163,10 +161,8 @@
                  <h3 class="panel-title">{% trans 'proposition_dissertation_jury' %}</h3>
              </div>
              <div class="panel-body">
-                 <div class="row">
-                   <div class="col-md-12 well well-sm">
+                 <div class="well well-sm">
                        {% trans 'proposition_dissertation_jury_info' %}
-                   </div>
                  </div>
                  {% for proposition_role in proposition_roles %}
                  <div class="row" style="margin: 10px;">
