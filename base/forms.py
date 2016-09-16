@@ -80,14 +80,6 @@ class OfferYearCalendarForm(ModelForm):
         fields = ['offer_year', 'start_date', 'end_date', 'customized']
 
 
-class MessageTemplateForm(ModelForm):
-    template = forms.CharField(widget=CKEditorWidget)
-
-    class Meta:
-        model = mdl.message_template.MessageTemplate
-        fields = ['reference', 'subject', 'template', 'format', 'language']
-
-
 class MyMessageForm(forms.Form):
     selected = forms.BooleanField(initial=False, required=False)
     subject = forms.CharField(required=False)
