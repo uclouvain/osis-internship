@@ -40,7 +40,6 @@
     <li class="active"><a href="{% url 'manager_informations_list_request' %}">{% trans 'manager_informations_list_request' %}</a></li>
   </ul>
   <div class="panel panel-default">
-    <div class="panel-body">
       <table class="table table-hover">
         <tr>
           <th>{% trans 'adviser_name' %}</th>
@@ -52,10 +51,8 @@
                     {{ adviser_need_request.adviser }}
                 </a>
             </td>
-
           </tr>
         {% endfor %}
       </table>
-      </div>
     </div>
 {% endblock %}

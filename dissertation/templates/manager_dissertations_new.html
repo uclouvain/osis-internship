@@ -41,19 +41,8 @@
       <form method="POST" class="post-form">
         {% csrf_token %}
         <div class="row">
-            <div class="col-md-3 col-lg-offset-1" style="text-align:right">
-                <label for="txt_title" {% if form.title.errors %} style="color:red;" {% endif %}>{% trans 'title' %}</label>
-            </div>
-            <div class="col-md-4">
-                <input class="form-control" id="txt_title"  name="title" style="margin:-6px;" value="{{ form.title.value | default_if_none:'' }}">
-            </div>
-        </div>
-        <br>
-        <div class="row">
-            <div class="col-md-3 col-lg-offset-1" style="text-align:right">
+            <div class="col-md-10 col-md-offset-1 form-group">
                 <label for="txt_author" {% if form.author.errors %} style="color:red;" {% endif %}>{% trans 'author' %}</label>
-            </div>
-            <div class="col-md-4">
                 <select class="form-control" id="txt_author"  name="author" style="margin:-6px;">
                     <option value={{ form.author }}
                 </select>
@@ -61,10 +50,15 @@
         </div>
         <br>
         <div class="row">
-            <div class="col-md-3 col-lg-offset-1" style="text-align:right">
-                <label for="txt_offer_year_start" {% if form.offer_year_start.errors %} style="color:red;" {% endif %}>{% trans 'offer_year_start' %}</label>
+            <div class="col-md-10 col-md-offset-1 form-group">
+                <label for="txt_title" {% if form.title.errors %} style="color:red;" {% endif %}>{% trans 'title' %}</label>
+                <input class="form-control" id="txt_title"  name="title" style="margin:-6px;" value="{{ form.title.value | default_if_none:'' }}">
             </div>
-            <div class="col-md-4">
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1 form-group">
+                <label for="txt_offer_year_start" {% if form.offer_year_start.errors %} style="color:red;" {% endif %}>{% trans 'offer_year_start' %}</label>
                 <select class="form-control" id="txt_offer_year_start"  name="offer_year_start" style="margin:-6px;">
                     <option value={{ form.offer_year_start }}
                 </select>
@@ -72,10 +66,8 @@
         </div>
         <br>
         <div class="row">
-            <div class="col-md-3 col-lg-offset-1" style="text-align:right">
+            <div class="col-md-10 col-md-offset-1 form-group">
                 <label for="txt_proposition_dissertation" {% if form.proposition_dissertation.errors %} style="color:red;" {% endif %}>{% trans 'proposition_dissertation' %}</label>
-            </div>
-            <div class="col-md-4">
                 <select class="form-control" id="txt_proposition_dissertation"  name="proposition_dissertation" style="margin:-6px;">
                     <option value={{ form.proposition_dissertation }}
                 </select>
@@ -83,15 +75,17 @@
         </div>
         <br>
         <div class="row {% if field.errors %}error{% endif %}">
-            <div class="col-md-3 col-lg-offset-1" style="text-align:right">
+            <div class="col-md-10 col-md-offset-1 form-group">
                 <label for="txt_description">{% trans 'description' %}</label>
-            </div>
-            <div class="col-md-8">
-                <textarea class="form-control" id="txt_description"  name="description" rows="10" style="margin:-6px;">{{ form.description.value | default_if_none:''}}</textarea>
+                <textarea class="form-control" id="txt_description"  name="description" rows="10" style="margin:-6px;">{{ form.description.value | default_if_none:'' }}</textarea>
             </div>
         </div>
         <br>
-        <button type="submit" class="save btn btn-default" onclick="return confirm('{% trans 'dissertation_confirmation_message' %}')">Save</button>
+        <div style="text-align:right">
+            <button type="submit" class="save btn btn-primary" onclick="return confirm('{% trans 'dissertation_confirmation_message' %}')">
+                {% trans 'save' %}
+            </button>
+        </div>
       </form>
     </div>
   </div>
