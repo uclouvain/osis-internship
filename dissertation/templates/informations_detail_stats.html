@@ -92,13 +92,28 @@
                     </div>
                     <div class="row">
                         <div class="col-md-4">
-                          <div id="chart_div"></div>
+                            <h4 class="panel-title">{% trans 'chart_pie_adviser_promoteur'  %}</h4>
+                          {% if count_advisers_pro > 0 %}
+                              <canvas id="pie_chart_pro" width="100" height="100"></canvas>
+                          {% else %}
+                              <label>{% trans 'no_data' %}</label>
+                          {% endif %}
                         </div>
                         <div class="col-md-4">
-                          <div id="chart_div2"></div>
+                          <h4 class="panel-title">{% trans 'chart_pie_adviser_copro'  %}</h4>
+                          {% if count_advisers_copro > 0 %}
+                          <canvas id="pie_chart_copro" width="100" height="100"></canvas>
+                          {% else %}
+                              <label>{% trans 'no_data' %}</label>
+                          {% endif %}
                         </div>
                         <div class="col-md-4">
-                          <div id="chart_div3"></div>
+                            <h4 class="panel-title">{% trans 'chart_pie_adviser_reading'  %}</h4>
+                          {% if count_advisers_reader > 0 %}
+                          <canvas id="pie_chart_read" width="100" height="100"></canvas>
+                          {% else %}
+                              <label>{% trans 'no_data' %}</label>
+                          {% endif %}
                         </div>
                     </div>
                   </div>
@@ -108,70 +123,142 @@
     </div>
   </div>
 
+{% endblock %}
 
-  <!--Load the AJAX API-->
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script type="text/javascript">
+{% block script %}
+    <script src="/static/js/chart.min.js"></script>
+    <script>
+    $(function(){
+        var ctx_pie_chart_pro = document.getElementById("pie_chart_pro");
+        var ctx_pie_chart_copro = document.getElementById("pie_chart_copro");
+        var ctx_pie_chart_read = document.getElementById("pie_chart_read");
 
-      // Load the Visualization API and the corechart package.
-      google.charts.load('current', {'packages':['corechart']});
 
-      // Set a callback to run when the Google Visualization API is loaded.
-      google.charts.setOnLoadCallback(drawChart);
+        var pie_chart_pro = new Chart(ctx_pie_chart_pro, {
+            type: 'pie',
+            data:
+            {
+                labels: [
+                  {% for key,value in tab_offer_count_pro.items%}
+                  "{{key}}",
+                  {% endfor %}
+                ],
 
-      function drawChart() {
+                datasets: [{
+                    label: '#',
+                    data: [ {% for key,value in tab_offer_count_pro.items%}
+                            {{value}},
+                            {% endfor %}],
+                    backgroundColor: [
+                        'rgba(5, 99, 132, 30)',
+                        'rgba(54, 162, 235, 30)',
+                        'rgba(255, 206, 86, 30)',
+                        'rgba(75, 192, 192, 30)',
+                        'rgba(153, 102, 255, 30)',
+                        'rgba(255, 159, 64, 30)',
+                        'rgba(255, 119, 74, 30)',
+                        'rgba(175, 192, 192, 30)',
+                        'rgba(203, 102, 255, 30)',
+                        'rgba(195, 199, 164, 30)',
+                        'rgba(255, 229, 174, 30)'
+                    ],
+                    borderColor: [
 
-      // Create the data table.
-      var data = new google.visualization.DataTable();
-      data.addColumn('string', 'Topping');
-      data.addColumn('number', 'Slices');
-      data.addRows([
-        {% for key,value in tab_offer_count_pro.items%}
-        ['{{key}}',{{value}}],
-        {% endfor %}
-      ]);
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    options: '{% trans 'chart_pie_adviser_promoteur'  %}'
+                        }
+                      }
+        });
+        var pie_chart_copro = new Chart(ctx_pie_chart_copro, {
+            type: 'pie',
+            data: {
+                labels: [
+                  {% for key,value in tab_offer_count_copro.items%}
+                  "{{key}}",
+                  {% endfor %}
+                ],
 
-      // Create the data table.
-      var data2 = new google.visualization.DataTable();
-      data2.addColumn('string', 'Topping');
-      data2.addColumn('number', 'Slices');
-      data2.addRows([
-        {% for key,value in tab_offer_count_copro.items%}
-        ['{{key}}',{{value}}],
-        {% endfor %}
-      ]);
+                datasets: [{
+                    label: '# ',
+                    data: [ {% for key,value in tab_offer_count_copro.items%}
+                            {{value}},
+                            {% endfor %}],
+                    backgroundColor: [
+                        'rgba(5, 99, 132, 30)',
+                        'rgba(54, 162, 235, 30)',
+                        'rgba(255, 206, 86, 30)',
+                        'rgba(75, 192, 192, 30)',
+                        'rgba(153, 102, 255, 30)',
+                        'rgba(255, 159, 64, 30)',
+                        'rgba(255, 119, 74, 30)',
+                        'rgba(175, 192, 192, 30)',
+                        'rgba(203, 102, 255, 30)',
+                        'rgba(195, 199, 164, 30)',
+                        'rgba(255, 229, 174, 30)'
+                    ],
+                    borderColor: [
 
-      var data3 = new google.visualization.DataTable();
-      data3.addColumn('string', 'Topping');
-      data3.addColumn('number', 'Slices');
-      data3.addRows([
-        {% for key,value in tab_offer_count_read.items%}
-        ['{{key}}',{{value}}],
-        {% endfor %}
-      ]);
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    options: '{% trans 'chart_pie_adviser_copromoteur'  %}'
+                        }
+                      }
 
-      // Set chart options
-      var options = {'title':'{% trans 'title_chart_pro' %}: {{ count_advisers_pro }}',
-                     'width':300,
-                     'height':250};
-      // Set chart options
-      var options2 = {'title':'{% trans 'title_chart_copro' %}: {{ count_advisers_copro }}',
-                     'width':300,
-                     'height':250};
-      // Set chart options
-      var options3 = {'title':'{% trans 'title_chart_read' %}: {{ count_advisers_reader }}',
-                     'width':300,
-                     'height':250};
+        });
+        var pie_chart_read = new Chart(ctx_pie_chart_read, {
+            type: 'pie',
+            data:
+            {
+                labels: [
+                  {% for key,value in tab_offer_count_read.items%}
+                  "{{key}}",
+                  {% endfor %}
+                ],
 
-      // Instantiate and draw our chart, passing in some options.
-      var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
-      chart.draw(data, options);
-      var chart2 = new google.visualization.PieChart(document.getElementById('chart_div2'));
-      chart2.draw(data2, options2);
-      var chart3 = new google.visualization.PieChart(document.getElementById('chart_div3'));
-      chart3.draw(data3, options3);
+                datasets: [{
+                    label: '#',
+                    data: [ {% for key,value in tab_offer_count_read.items%}
+                            {{value}},
+                            {% endfor %}],
+                    backgroundColor: [
+                        'rgba(5, 99, 132, 30)',
+                        'rgba(54, 162, 235, 30)',
+                        'rgba(255, 206, 86, 30)',
+                        'rgba(75, 192, 192, 30)',
+                        'rgba(153, 102, 255, 30)',
+                        'rgba(255, 159, 64, 30)',
+                        'rgba(255, 119, 74, 30)',
+                        'rgba(175, 192, 192, 30)',
+                        'rgba(203, 102, 255, 30)',
+                        'rgba(195, 199, 164, 30)',
+                        'rgba(255, 229, 174, 30)'
+                    ],
+                    borderColor: [
 
-    }
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    options: '{% trans 'chart_pie_adviser_read'  %}'
+                        }
+                      }
+        });
+    });
 
-    </script>
+</script>
+
 {% endblock %}

@@ -237,8 +237,7 @@ def find_for_score_encodings(session_exam_number,
                              justification=None):
     """
     :param session_exam_number: Integer represents the number_session of the Session_exam (1,2,3,4 or 5). It's
-                                a mandatory field to not confuse exam scores from different sessions. With this
-                                parameter, it's not necessary to check the start_date/end_date in OfferYearCalendar.
+                                a mandatory field to not confuse exam scores from different sessions.
     :param learning_unit_year_id: Filter OfferEnrollments by learning_unit_year.
     :param learning_unit_year_ids: Filter OfferEnrollments by a list of learning_unit_year.
     :param tutor: Filter OfferEnrollments by Tutor.
@@ -251,6 +250,8 @@ def find_for_score_encodings(session_exam_number,
     :return: All filtered examEnrollments.
     """
     queryset = ExamEnrollment.objects.filter(session_exam__number_session=session_exam_number)
+    queryset = queryset.filter(session_exam__offer_year_calendar__start_date__lte=timezone.now())\
+                       .filter(session_exam__offer_year_calendar__end_date__gte=timezone.now())
 
     if learning_unit_year_id:
         queryset = queryset.filter(learning_unit_enrollment__learning_unit_year_id=learning_unit_year_id)

@@ -31,7 +31,6 @@ from assistant.models import *
 from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
-from django.template.context_processors import request
 from assistant.forms import *
 from base.models import person_address, person
 from assistant.models.academic_assistant import find_by_id
@@ -76,7 +75,7 @@ def form_part1_edit(request, mandate_id):
                                                          'addresses': addresses,
                                                          'form': form,
                                                          'form2': form2}) 
-    
+
 
 @user_passes_test(user_is_assistant_and_procedure_is_open, login_url='access_denied')
 def form_part1_save(request, mandate_id):
@@ -96,6 +95,59 @@ def form_part1_save(request, mandate_id):
                                                      'addresses': addresses,
                                                      'form': form,
                                                      'form2': form2})
+
+
+@login_required
+def tutoring_learning_unit_add(request, mandate_id):
+    form = TutoringLearningUnitForm(initial={'mandate_id': mandate_id,
+                                             'tutoring_learning_unit_year_id': None
+                                             })
+    return render(request, "tutoring_learning_unit_year.html", {'form': form,
+                                                                'mandate_id': mandate_id
+                                                                })
+
+
+@login_required
+def tutoring_learning_unit_edit(request, tutoring_learning_unit_id=None):
+    edited_learning_unit_year = mdl.tutoring_learning_unit_year.find_by_id(tutoring_learning_unit_id)
+    academic_year = edited_learning_unit_year.learning_unit_year.academic_year
+    mandate_id = edited_learning_unit_year.mandate_id
+    form = TutoringLearningUnitForm(initial={'mandate_id': edited_learning_unit_year.mandate_id,
+                                    'tutoring_learning_unit_year_id': edited_learning_unit_year.id,
+                                    'learning_unit_year': edited_learning_unit_year.learning_unit_year.acronym,
+                                    'sessions_duration': edited_learning_unit_year.sessions_duration,
+                                    'sessions_number': edited_learning_unit_year.sessions_number,
+                                    'series_number': edited_learning_unit_year.series_number,
+                                    'face_to_face_duration': edited_learning_unit_year.face_to_face_duration,
+                                    'attendees': edited_learning_unit_year.attendees,
+                                    'preparation_duration': edited_learning_unit_year.preparation_duration,
+                                    'exams_supervision_duration': edited_learning_unit_year.exams_supervision_duration,
+                                    'others_delivery': edited_learning_unit_year.others_delivery,
+                                    'academic_year': academic_year.id
+                                             })
+    return render(request, "tutoring_learning_unit_year.html", {'form': form,
+                                                                'mandate_id': mandate_id
+                                                                    })
+
+
+@login_required
+def tutoring_learning_unit_save(request, mandate_id):
+
+    form = TutoringLearningUnitForm(data=request.POST)
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect(reverse('mandate_learning_units', kwargs={'mandate_id':mandate_id}))
+    else:
+        return render(request, "tutoring_learning_unit_year.html", {'form': form,
+                                                                    'mandate_id': mandate_id})
+
+
+@login_required
+def tutoring_learning_unit_delete(request, tutoring_learning_unit_id):
+    learning_unit_year = mdl.tutoring_learning_unit_year.find_by_id(tutoring_learning_unit_id)
+    mandate_id = learning_unit_year.mandate_id
+    mdl.tutoring_learning_unit_year.find_by_id(tutoring_learning_unit_id).delete()
+    return HttpResponseRedirect(reverse('mandate_learning_units', kwargs={'mandate_id':mandate_id}))
 
 
 @user_passes_test(user_is_assistant_and_procedure_is_open, login_url='access_denied')

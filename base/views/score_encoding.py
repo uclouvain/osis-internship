@@ -625,6 +625,9 @@ def refresh_list(request):
         return get_data(request, offer_year_id=request.GET.get('offer_year_id', None))
 
 
+@login_required
+@user_passes_test(_is_inside_scores_encodings_period, login_url=reverse_lazy('outside_scores_encodings_period'))
+@permission_required('base.can_access_scoreencoding', raise_exception=True)
 def get_data_specific_criteria(request):
     registration_id = request.POST.get('registration_id', None)
     last_name = request.POST.get('last_name', None)
