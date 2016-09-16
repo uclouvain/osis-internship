@@ -30,7 +30,6 @@ from base.models import academic_year
 from base.models import application_notice
 from base.models import attribution
 from base.models import campus
-from base.models import domain_offer
 from base.models import exam_enrollment
 from base.models import learning_unit
 from base.models import learning_unit_enrollment
@@ -47,6 +46,7 @@ from base.models import person
 from base.models import person_address
 from base.models import program_manager
 from base.models import scores_encoding
+from base.models import serializable_model
 from base.models import session_exam
 from base.models import structure
 from base.models import structure_address

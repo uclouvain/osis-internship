@@ -41,8 +41,6 @@ admin.site.register(attribution.Attribution,
 admin.site.register(campus.Campus,
                     campus.CampusAdmin)
 
-admin.site.register(domain_offer.DomainOffer,
-                    domain_offer.DomainOfferAdmin)
 
 admin.site.register(exam_enrollment.ExamEnrollment,
                     exam_enrollment.ExamEnrollmentAdmin)
