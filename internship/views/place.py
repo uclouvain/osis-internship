@@ -25,8 +25,13 @@
 ##############################################################################
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
-from internship.models import Organization, OrganizationAddress, InternshipChoice, InternshipOffer, InternshipSpeciality
+from django.contrib.auth.models import User
+
+from internship.models import Organization, OrganizationAddress, InternshipChoice, \
+                            InternshipOffer, InternshipSpeciality, InternshipStudentAffectationStat, \
+                            Period, InternshipStudentInformation
 from internship.forms import OrganizationForm, OrganizationAddressForm
+from internship.views.internship import get_all_specialities
 
 
 def sort_organizations(sort_organizations):
@@ -201,14 +206,10 @@ def organization_create(request):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def student_choice(request, reference):
-    organization_choice = InternshipChoice.search(organization__reference=reference)
-    organizations = Organization.search(reference=reference)
-    organization = None
-    if organizations:
-        organization = organizations[0]
-    else:
-        organization = None
+def student_choice(request, organization_id):
+    organization = Organization.find_by_id(organization_id)
+    organization_choice = InternshipChoice.search(organization__reference=organization.reference)
+
     all_offers = InternshipOffer.search(organization=organization)
     all_speciality = InternshipSpeciality.find_all()
     set_tabs_name(all_speciality)
@@ -227,3 +228,28 @@ def student_choice(request, reference):
                                                  'specialities': all_speciality
                                                   })
 
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def student_affectation(request, organization_id):
+    organization = Organization.find_by_id(organization_id)
+    affectations = InternshipStudentAffectationStat.search(organization=organization).order_by("student__person__last_name","student__person__first_name")
+
+    for a in affectations:
+        a.email = ""
+        a.adress = ""
+        a.phone_mobile = ""
+        informations = InternshipStudentInformation.search(person=a.student.person)[0]
+        a.email = informations.email
+        a.adress = informations.location + " " + informations.postal_code + " " + informations.city
+        a.phone_mobile = informations.phone_mobile
+    periods = Period.search().order_by("date_start")
+
+    internships = InternshipOffer.search(organization = organization).order_by("speciality__name")
+    all_speciality = get_all_specialities(internships)
+
+    return render(request, "place_detail_affectation.html", {'organization':        organization,
+                                                 'affectations': affectations,
+                                                 'specialities':        all_speciality,
+                                                 'periods':             periods,
+                                                  })
