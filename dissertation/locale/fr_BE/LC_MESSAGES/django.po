@@ -241,6 +241,9 @@ msgstr "Informations sur le mémoire"
 msgid "dissertation_jury"
 msgstr "Jury du mémoire"
 
+msgid "dissertation_location"
+msgstr "Site de rattachement"
+
 msgid "dissertations"
 msgstr "Mémoires"
 

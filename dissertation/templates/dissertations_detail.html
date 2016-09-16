@@ -124,7 +124,7 @@
                       <label>{% trans 'defend_periode' %}</label>
                   </div>
                   <div class="col-md-9">
-                      {{ dissertation.defend_periode }}
+                      {{ dissertation.defend_periode|default_if_none:_("undefined") }}
                   </div>
                 </div>
                 <div class="row">
@@ -132,7 +132,15 @@
                       <label>{% trans 'defend_year' %}</label>
                   </div>
                   <div class="col-md-9">
-                      {{ dissertation.defend_year }}
+                      {{ dissertation.defend_year|default_if_none:_("undefined") }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3" style="text-align: right">
+                      <label>{% trans 'dissertation_location' %}</label>
+                  </div>
+                  <div class="col-md-9">
+                      {{ dissertation.location|default_if_none:_("undefined") }}
                   </div>
                 </div>
             </div>

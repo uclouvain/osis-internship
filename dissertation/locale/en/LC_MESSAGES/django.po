@@ -241,6 +241,9 @@ msgstr "Informations about the dissertation"
 msgid "dissertation_jury"
 msgstr "Dissertation jury"
 
+msgid "dissertation_location"
+msgstr "Dissertation location"
+
 msgid "dissertations"
 msgstr "Dissertations"
 

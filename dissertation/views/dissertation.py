@@ -222,7 +222,6 @@ def manager_dissertations_edit(request, pk):
 
     return layout.render(request, 'manager_dissertations_edit.html',
                          {'form': form,
-                          'defend_periode_choices': Dissertation.DEFEND_PERIODE_CHOICES,
                           'dissert': dissert
                           })
 
