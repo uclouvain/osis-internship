@@ -29,44 +29,30 @@
 {% block breadcrumb %}
   <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
   <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'dissertations' %}</a></li>
-  <li><a href="{% url 'proposition_dissertations' %}" id="lnk_proposition_dissertations">{% trans 'proposition_dissertations' %}</a></li>
-  <li class="active">{% trans 'new_or_edit_jury_proposition_dissertation' %}</li>
+  <li><a href="{% url 'informations' %}" id="lnk_informations">{% trans 'teachers' %}</a></li>
+  <li class="active">{% trans 'new_adviser' %}</li>
 {% endblock %}
 {% block content %}
-  <div class="page-header">
-    <h2>{% trans 'new_or_edit_dissertation' %}</h2>
-  </div>
-  <div class="panel panel-default">
+<div class="page-header">
+    <h2>{% trans 'new_adviser' %}</h2>
+</div>
+<div class="panel panel-default">
     <div class="panel-body">
-      <form method="POST" class="post-form">
-        {% csrf_token %}
-        {% for field in form %}
-          <div class="row {% if field.errors %}error{% endif %}">
-            <div class="col-md-2" style="text-align: right">
-              {% if not field.is_hidden %}
-                <label>{{ field.label }}</label>
-              {% endif %}
+        <form method="POST" class="post-form">
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-md-9 col-md-offset-1">
+                  <label for="person">{% trans 'person_to_add' %} : </label>
+                <input type="hidden" name="person" id="person" value={{ pers.id }}>
+                {{ pers }}
+              </div>
             </div>
-            <div class="col-md-5">
-              {{ field }}
+            <div class="row">
+              <div class="col-md-9 col-md-offset-1">
+                  <button type="submit" class="save btn btn-primary">{% trans 'save' %}</button>
+              </div>
             </div>
-          </div>
-          <br>
-        {% endfor %}
-        <div class="row">
-            <div class="col-md-10 col-md-offset-2">
-              {% trans 'if_unavailable_adviser' %}
-                <a href="{% url 'informations_add' %}" id="lnk_informations_add" class=""
-                    title="{% trans 'informations_add'%}">{% trans 'add_advisers' %}</a>
-            </div>
-        </div>
-        <br><br>
-        <div class="row">
-          <div class="col-md-10 col-md-offset-2">
-            <button type="submit" class="save btn btn-primary">{% trans 'save' %}</button>
-          </div>
-        </div>
-      </form>
+        </form>
     </div>
-  </div>
+</div>
 {% endblock %}

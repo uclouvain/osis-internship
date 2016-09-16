@@ -41,6 +41,12 @@ class AdviserForm(ModelForm):
         fields = ('available_by_email', 'available_by_phone', 'available_at_office', 'comment')
 
 
+class AddAdviserForm(ModelForm):
+    class Meta:
+        model = Adviser
+        fields = ('person',)
+
+
 class DissertationForm(ModelForm):
     class Meta:
         model = Dissertation

@@ -346,6 +346,9 @@ msgstr "Nombre de mémoires en tant que lecteur"
 msgid "if_extern_you_can"
 msgstr "Si la personne est externe à l'Université, vous pouvez"
 
+msgid "if_extern_you_can_ask_manager"
+msgstr "Si la personne est externe à l'Université, elle doit être ajoutée par la/le gestionnaire des mémoires."
+
 msgid "if_intern_use_good_email"
 msgstr "Si la personne appartient à l'Université, il faut utiliser son adresse e-mail correcte."
 

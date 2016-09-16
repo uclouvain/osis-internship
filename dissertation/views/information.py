@@ -31,7 +31,7 @@ from dissertation.models import dissertation_role
 from dissertation.models import faculty_adviser
 from base import models as mdl
 from dissertation.forms import AdviserForm, ManagerAdviserForm, ManagerAddAdviserForm, ManagerAddAdviserPreForm, \
-    ManagerAddAdviserPerson
+    ManagerAddAdviserPerson, AddAdviserForm
 from django.contrib.auth.decorators import user_passes_test
 from base.views import layout
 
@@ -114,6 +114,63 @@ def informations_edit(request):
                                                              'email': person.email,
                                                              'phone': person.phone,
                                                              'phone_mobile': person.phone_mobile})
+
+
+@login_required
+@user_passes_test(is_teacher)
+def informations_add(request):
+    if request.method == "POST":
+        if 'search_form' in request.POST:  # step 2 : second form to select person in list
+            form = ManagerAddAdviserPreForm(request.POST)
+            if form.is_valid():  # mail format is valid
+                data = form.cleaned_data
+                person = mdl.person.search_by_email(data['email'])
+
+                if not data['email']:  # empty search -> step 1
+                    form = ManagerAddAdviserPreForm()
+                    message = "empty_data"
+                    return layout.render(request, 'informations_add_search.html', {'form': form,
+                                                                                   'message': message})
+
+                elif person and adviser.find_by_person(person):  # person already adviser -> step 1
+                    form = ManagerAddAdviserPreForm()
+                    email = "%s (%s)" % (list(person)[0], data['email'])
+                    message = "person_already_adviser"
+                    return layout.render(request, 'informations_add_search.html', {'form': form,
+                                                                                   'message': message,
+                                                                                   'email': email})
+                elif mdl.person.count_by_email(data['email']) > 0:  # person found and not adviser -> go forward
+                    pers = list(person)[0]
+                    select_form = AddAdviserForm()
+                    return layout.render(request, 'informations_add.html', {'form': select_form, 'pers': pers})
+
+                else:  # person not found by email -> step 1
+                    form = ManagerAddAdviserPreForm()
+                    email = data['email']
+                    message = "person_not_found_by_mail"
+                    message_add = "add_new_person_explanation"
+                    return layout.render(request, 'informations_add_search.html', {'form': form,
+                                                                                   'message': message,
+                                                                                   'email': email,
+                                                                                   'message_add': message_add})
+            else:  # invalid form (invalid format for email)
+                form = ManagerAddAdviserPreForm()
+                message = "invalid_data"
+                return layout.render(request, 'informations_add_search.html', {'form': form,
+                                                                               'message': message})
+
+        else:  # step 3 : everything ok, register the person as adviser
+            form = AddAdviserForm(request.POST)
+            if form.is_valid():
+                adv = form.save(commit=False)
+                adv.save()
+                return redirect('informations_detail', pk=adv.pk)
+            else:
+                return redirect('informations')
+
+    else:  # step 1 : initial form to search person by email
+        form = ManagerAddAdviserPreForm()
+        return layout.render(request, 'manager_informations_add_search.html', {'form': form})
 
 ###########################
 #      MANAGER VIEWS      #

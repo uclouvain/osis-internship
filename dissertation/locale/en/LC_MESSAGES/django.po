@@ -346,6 +346,9 @@ msgstr "Dissertations quantity as reader"
 msgid "if_extern_you_can"
 msgstr "If this person is not a member of the University, you can"
 
+msgid "if_extern_you_can_ask_manager"
+msgstr "If this person is not a member of the University, a dissertation manager must add this person to the system."
+
 msgid "if_intern_use_good_email"
 msgstr "If this person is a member of the University, you need to use the correct e-mail address."
 

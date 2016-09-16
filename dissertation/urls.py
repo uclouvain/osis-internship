@@ -52,6 +52,7 @@ urlpatterns = [
         name='dissertations_wait_list'),
 
     url(r'^informations/$', information.informations, name='informations'),
+    url(r'^informations_add/$', information.informations_add, name='informations_add'),
     url(r'^informations_detail_stats/$', information.informations_detail_stats, name='informations_detail_stats'),
     url(r'^informations_edit/$', information.informations_edit, name='informations_edit'),
 
