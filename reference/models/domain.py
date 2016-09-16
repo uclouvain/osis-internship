@@ -27,6 +27,7 @@ from django.db import models
 from django.contrib import admin
 from django.core import serializers
 from reference.enums import domain_type
+from base.models.serializable_model import SerializableModel
 
 
 class DomainAdmin(admin.ModelAdmin):
@@ -35,7 +36,7 @@ class DomainAdmin(admin.ModelAdmin):
     search_fields = ['name']
 
 
-class Domain(models.Model):
+class Domain(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     name = models.CharField(max_length=255)
     parent = models.ForeignKey('self', null=True, blank=True)

@@ -27,42 +27,45 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-<li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-<li><a href="{% url 'internships_home' %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
+    <li><a href="{% url 'internships_home' %}">{% trans 'internships_managment' %}</a></li>
     <li><a href="{% url 'internships_places' %}">{% trans 'places' %}</a></li>
     <li class="active">{{ organization.name }}</li>
 {% endblock %}
 {% block content %}
-<div class="page-header">
-    <h2>{{ organization.name }}</h2>
-</div>
-<div class="panel panel-default">
-    <div class="panel-body">
-        {% for speciality in specialities %}
-            <label>{{speciality.name}}</label>
-            {% for offer in offers %}
-                {% if offer.title == speciality.name %}
-                  capacité maximale : {{offer.maximum_enrollments}} | Nombre de 1er choix : {{offer.number_first_choice}}
-                {%endif%}
-            {%endfor%}<br/>
-            Liste des étudiants : <a role="button" data-toggle="collapse" data-target="#{{speciality.tab}}"
-                aria-expanded="false"
-                aria-controls="{{speciality.tab}}">
-                    <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-                </a>
-              <div class="collapse" id="{{speciality.tab}}">
-                <ul>
-                  {% for choice in organization_choice %}
-                    {% if choice.speciality.name == "Stage en Chirurgie" %}
-                      <li> {{ choice.student }} | Choix : {{ choice.choice }}
-                    {% endif %}
-                  {% endfor %}
-                </ul>
-              </div>
-              <br/>
-          {% endfor %}
-      <label> Stage au choix</label><br/>
-	</div>
-</div>
-
-  {% endblock %}
+  <div class="page-header">
+      <h2>{{ organization.name }}</h2>
+  </div>
+  <div class="panel panel-default">
+      <div class="panel-body">
+          {% if organization %}
+              {% for speciality in specialities %}
+                  {% for offer in offers %}
+                      {% if offer.title == speciality.name %}
+                          <label>{{speciality.name}}</label>
+                          {% trans 'capacity' %} : {{offer.maximum_enrollments}} | {% trans 'number_first_choice' %} : {{offer.number_first_choice}}
+                          | {% trans 'number_total_student' %} : {{offer.number_all_choice}}
+                          <br/>
+                          {% trans 'student_list' %} : <a role="button" data-toggle="collapse" data-target="#{{speciality.tab}}"
+                            aria-expanded="false"
+                            aria-controls="{{speciality.tab}}">
+                          <span class="glyphicon glyphicon-list" aria-hidden="true"></span></a>
+                          <div class="collapse" id="{{speciality.tab}}">
+                              <ul>
+                                  {% for choice in organization_choice %}
+                                      {% if choice.speciality.name == speciality.name %}
+                                          <li> {{ choice.student }} | {% trans 'choice' %} : {{ choice.choice }}
+                                      {% endif %}
+                                  {% endfor %}
+                              </ul>
+                          </div>
+                          <br/>
+                      {%endif%}
+                  {%endfor%}
+              {% endfor %}
+          {% else %}
+              <h2>{% trans 'no_hospital' %}</h2>
+          {% endif %}
+      </div>
+  </div>
+{% endblock %}
