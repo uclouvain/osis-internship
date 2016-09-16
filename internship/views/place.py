@@ -154,6 +154,8 @@ def place_save(request, organization_id, organization_address_id):
     if organization_id:
         organization = Organization.find_by_id(organization_id)
     else :
+        Organization.objects.filter(reference=request.POST.get('reference')).delete()
+        OrganizationAddress.objects.filter(organization__reference=request.POST.get('reference')).delete()
         organization = Organization()
 
     form = OrganizationForm(data=request.POST, instance=organization)
