@@ -116,7 +116,7 @@ def internships_student_search(request):
         criteria_present=True
 
     if criteria_present:
-        student_informations = InternshipStudentInformation.search(person__last_name=search_name, person__first_name = search_firstname)
+        student_informations = InternshipStudentInformation.search(person__last_name__icontains=search_name, person__first_name__icontains=search_firstname)
     else:
         student_informations = InternshipStudentInformation.find_all()
 
