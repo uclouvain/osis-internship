@@ -41,11 +41,6 @@ admin.site.register(attribution.Attribution,
 admin.site.register(campus.Campus,
                     campus.CampusAdmin)
 
-admin.site.register(document_file.DocumentFile,
-                    document_file.DocumentFileAdmin)
-
-admin.site.register(domain_offer.DomainOffer,
-                    domain_offer.DomainOfferAdmin)
 
 admin.site.register(exam_enrollment.ExamEnrollment,
                     exam_enrollment.ExamEnrollmentAdmin)
@@ -61,9 +56,6 @@ admin.site.register(learning_unit_enrollment.LearningUnitEnrollment,
 
 admin.site.register(learning_unit_year.LearningUnitYear,
                     learning_unit_year.LearningUnitYearAdmin)
-
-admin.site.register(message_template.MessageTemplate,
-                    message_template.MessageTemplateAdmin)
 
 admin.site.register(scores_encoding.ScoresEncoding,
                     scores_encoding.ScoresEncodingAdmin)
@@ -112,5 +104,3 @@ admin.site.register(student.Student,
 
 admin.site.register(tutor.Tutor,
                     tutor.TutorAdmin)
-
-admin.site.register(message_history.MessageHistory,message_history.MessageHistoryAdmin)

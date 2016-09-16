@@ -25,6 +25,7 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
+from base.models.serializable_model import SerializableModel
 
 
 class InstitutionalGradeTypeAdmin(admin.ModelAdmin):
@@ -33,7 +34,7 @@ class InstitutionalGradeTypeAdmin(admin.ModelAdmin):
 
 
 # Customized parent's list of institutional GradeType (used & displayed in Admission - offer choice).
-class InstitutionalGradeType(models.Model):
+class InstitutionalGradeType(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     name = models.CharField(max_length=255)
 
