@@ -26,6 +26,7 @@
 from django.db import models
 from django.contrib import admin
 from django.core import serializers
+from base.models.serializable_model import SerializableModel
 
 
 class CurrencyAdmin(admin.ModelAdmin):
@@ -35,7 +36,7 @@ class CurrencyAdmin(admin.ModelAdmin):
     fieldsets = ((None, {'fields': ('name', 'code', 'symbol')}),)
 
 
-class Currency(models.Model):
+class Currency(SerializableModel):
     name = models.CharField(max_length=80, unique=True)
     code = models.CharField(max_length=4, blank=True, null=True)
     symbol = models.CharField(max_length=6, blank=True, null=True)
