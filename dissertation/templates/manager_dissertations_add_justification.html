@@ -42,10 +42,8 @@
     <div class="panel-body">
       <form method="POST" class="post-form">
         {% csrf_token %}
-        <div class="row">
-            <div class="col-md-12">
-                <p>{% trans 'justification_instructions' %}</p>
-            </div>
+        <div>
+            {% trans 'justification_instructions' %}
         </div>
         <br>
         <div class="row">
@@ -77,16 +75,14 @@
             </div>
         </div>
         <br>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="form-group">
-                    <label>{% trans 'justification' %}</label>
-                    <textarea class="form-control" id="txt_justification"  name="justification" style=""></textarea>
-                </div>
-                <button type="submit" class="save btn btn-primary">
-                    {% trans 'save' %}
-                </button>
+        <div>
+            <div class="form-group">
+                <label>{% trans 'justification' %}</label>
+                <textarea class="form-control" id="txt_justification"  name="justification" style=""></textarea>
             </div>
+            <button type="submit" class="save btn btn-primary">
+                {% trans 'save' %}
+            </button>
         </div>
       </form>
     </div>

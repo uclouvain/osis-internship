@@ -275,8 +275,7 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-12" style="text-align: right;">
+        <div style="text-align: right;">
                 {% if dissertation.status == 'DRAFT' or dissertation.status == 'DIR_KO' %}
                   <a href="{% url 'manager_dissertations_to_dir_submit' pk=dissertation.pk %}"
                      id="lnk_manager_dissertations_to_dir_submit" class="btn btn-default pull-right"
@@ -373,7 +372,6 @@
                           class="glyphicon glyphicon-remove-circle"
                           aria-hidden="true"></span> {% trans 'manager_dissertations_reported'%}</a>
                 {% endif %}
-            </div>
         </div>
     </div>
 </div>
