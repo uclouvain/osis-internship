@@ -1,6 +1,5 @@
 coverage==4.0.3
 Django==1.9
-django-ckeditor==5.0.3
 django-jenkins==0.18.1
 et-xmlfile==1.0.1
 jdcal==1.2
