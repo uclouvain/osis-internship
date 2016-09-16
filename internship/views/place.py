@@ -161,6 +161,8 @@ def place_save(request, organization_id, organization_address_id):
     if organization_id:
         organization = Organization.find_by_id(organization_id)
     else :
+        Organization.objects.filter(reference=request.POST.get('reference')).delete()
+        OrganizationAddress.objects.filter(organization__reference=request.POST.get('reference')).delete()
         organization = Organization()
 
     form = OrganizationForm(data=request.POST, instance=organization)
@@ -206,14 +208,10 @@ def organization_create(request):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def student_choice(request, reference):
-    organization_choice = InternshipChoice.search(organization__reference=reference)
-    organizations = Organization.search(reference=reference)
-    organization = None
-    if organizations:
-        organization = organizations[0]
-    else:
-        organization = None
+def student_choice(request, organization_id):
+    organization = Organization.find_by_id(organization_id)
+    organization_choice = InternshipChoice.search(organization__reference=organization.reference)
+
     all_offers = InternshipOffer.search(organization=organization)
     all_speciality = InternshipSpeciality.find_all()
     set_tabs_name(all_speciality)
@@ -235,9 +233,10 @@ def student_choice(request, reference):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def student_affectation(request, reference):
-    organization = Organization.search(reference=reference)[0]
-    affectations = InternshipStudentAffectationStat.search(organization=organization)
+def student_affectation(request, organization_id):
+    organization = Organization.find_by_id(organization_id)
+    affectations = InternshipStudentAffectationStat.search(organization=organization).order_by("student__person__last_name","student__person__first_name")
+
     for a in affectations:
         a.email = ""
         a.adress = ""
@@ -295,3 +294,10 @@ def export_pdf(request, organization_id, speciality_id):
         a.adress = informations.location + " " + informations.postal_code + " " + informations.city
         a.phone_mobile = informations.phone_mobile
     return export_utils_pdf.print_affectations(organization_id, affectations)
+=======
+    return render(request, "place_detail_affectation.html", {'organization':        organization,
+                                                 'affectations': affectations,
+                                                 'specialities':        all_speciality,
+                                                 'periods':             periods,
+                                                  })
+>>>>>>> dev

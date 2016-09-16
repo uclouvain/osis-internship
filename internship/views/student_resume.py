@@ -113,7 +113,7 @@ def internships_student_search(request):
         criteria_present=True
 
     if criteria_present:
-        student_informations = InternshipStudentInformation.search(person__last_name=search_name, person__first_name = search_firstname)
+        student_informations = InternshipStudentInformation.search(person__last_name__icontains=search_name, person__first_name__icontains=search_firstname)
     else:
         student_informations = InternshipStudentInformation.find_all()
 
@@ -149,17 +149,44 @@ def internships_student_search(request):
 @login_required
 @permission_required('internship.can_access_internship', raise_exception=True)
 def internships_student_read(request, registration_id):
-    student = mdl.student.find_by(registration_id=registration_id)
-    information = InternshipStudentInformation.search(person = student[0].person)
+       student = mdl.student.find_by(registration_id=registration_id)
     student = student[0]
+    information = InternshipStudentInformation.search(person = student.person)
     internship_choice = InternshipChoice.find_by_student(student)
     all_speciality = InternshipSpeciality.search(mandatory=True)
+
+    affectations = InternshipStudentAffectationStat.search(student = student).order_by("period__date_start")
+    periods = Period.search().order_by("date_start")
+    organizations = Organization.search()
+    set_organization_address(organizations)
+
+    # Set the adress of the affactation
+    for affectation in affectations:
+        for organization in organizations:
+            if affectation.organization == organization:
+                affectation.organization.address = ""
+                for o in organization.address:
+                    affectation.organization.address = o
+
+    internships = InternshipOffer.find_internships()
+    #Check if there is a internship offers in data base. If not, the internships
+    #can be block, but there is no effect
+    if len(internships) > 0:
+        if internships[0].selectable:
+            selectable = True
+        else:
+            selectable = False
+    else:
+        selectable = True
 
     return render(request, "student_resume.html",
                            {'student': student,
                             'information': information[0],
                             'internship_choice': internship_choice,
                             'specialities': all_speciality,
+                            'selectable': selectable,
+                            'affectations': affectations,
+                            'periods': periods,
                             })
 
 
@@ -217,6 +244,7 @@ def internship_student_affectation_modification(request, student_id):
                    })
 
 
+
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def student_save_affectation_modification(request, registration_id):
@@ -260,7 +288,5 @@ def student_save_affectation_modification(request, registration_id):
                 affectation_modif.cost = 10
 
             affectation_modif.save()
-
-
     redirect_url = reverse('internships_student_read', args=[student.id])
     return HttpResponseRedirect(redirect_url)

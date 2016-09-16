@@ -243,6 +243,9 @@ msgstr	 "3ème choix"
 msgid	 "type"
 msgstr	 "Type"
 
+msgid	 "choice"
+msgstr	 "Choix"
+
 msgid	 "no_hospital"
 msgstr	 "Hôpital inexistant"
 
@@ -275,6 +278,3 @@ msgstr "Télécharger le fichier Excel"
 
 msgid "download_pdf_file"
 msgstr "Télécharger le fichier PDF"
-
-msgid "choice"
-msgstr "Choix"

@@ -117,7 +117,7 @@ def get_all_organizations(internships):
     return tab
 
 
-def rebuild_the_lists(preference_list, speciality_list, organization_list, internship_choice_tab):
+def rebuild_the_lists(preference_list, speciality_list, organization_list, internship_choice_tab=None):
     # Look over each value of the preference list
     # If the value is 0, the student doesn't choice this organization or speciality
     # So their value is 0
@@ -126,7 +126,8 @@ def rebuild_the_lists(preference_list, speciality_list, organization_list, inter
         if r == "0":
             speciality_list[index] = 0
             organization_list[index] = 0
-            internship_choice_tab[index] = 0
+            if internship_choice_tab:
+                internship_choice_tab[index] = 0
         index += 1
 
 

@@ -243,6 +243,9 @@ msgstr	 "Third Choice"
 msgid	 "type"
 msgstr	 "Type"
 
+msgid	 "choice"
+msgstr	 "Choice"
+
 msgid	 "no_hospital"
 msgstr	 "Hospital not found"
 
