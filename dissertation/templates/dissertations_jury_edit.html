@@ -56,6 +56,13 @@
           </div>
           <br>
         {% endfor %}
+        <div class="row">
+            <div class="col-md-10 col-md-offset-2">
+              {% trans 'if_unavailable_adviser' %}
+                <a href="{% url 'informations_add' %}" id="lnk_informations_add" class=""
+                    title="{% trans 'informations_add'%}">{% trans 'add_advisers' %}</a>
+            </div>
+        </div>
       </form>
       <div style="text-align: right;">
           <button type="submit" class="save btn btn-primary">{% trans 'save' %}</button>
