@@ -220,6 +220,9 @@ msgstr "Dissertation subjects submitted by myself and others teachers"
 msgid "description"
 msgstr "Description"
 
+msgid "development_dissertation"
+msgstr "Development dissertation"
+
 msgid "dissertation"
 msgstr "Dissertation"
 
@@ -285,6 +288,9 @@ msgstr "Edit"
 
 msgid "email"
 msgstr "E-mail"
+
+msgid "empirical_research"
+msgstr "Empirical research"
 
 msgid "empty_data"
 msgstr "No data submitted"
@@ -405,6 +411,9 @@ msgstr "You are ready to save this change and your justification. Are you sure y
 
 msgid "justification_instructions"
 msgstr "The status update is nearly done. This update is detailed just after. Please add your explanation for this update."
+
+msgid "large_theme"
+msgstr "Large theme"
 
 msgid "last_name"
 msgstr "Last name"
@@ -625,6 +634,9 @@ msgstr "Programs"
 msgid "offer_year_start"
 msgstr "Start Program/Year"
 
+msgid "other"
+msgstr "Other"
+
 msgid "parameters"
 msgstr "Settings"
 
@@ -654,6 +666,9 @@ msgstr "Possible"
 
 msgid "professor"
 msgstr "Teacher"
+
+msgid "project_dissertation"
+msgstr "Project dissertation"
 
 msgid "promotor"
 msgstr "Promotor"
@@ -720,6 +735,9 @@ msgstr "Please select Start Program/Year first"
 
 msgid "september"
 msgstr "September"
+
+msgid "specific_subject"
+msgstr "Specific subject"
 
 msgid "start_edit_title"
 msgstr "Start of period to edit title"
@@ -789,6 +807,9 @@ msgstr "Teachers"
 
 msgid "teachers_not_responding_to_request"
 msgstr "Teachers not responding to requests"
+
+msgid "theoretical_analysis"
+msgstr "Theoretical analysis"
 
 msgid "title"
 msgstr "Title"

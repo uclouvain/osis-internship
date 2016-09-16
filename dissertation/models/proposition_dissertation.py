@@ -38,14 +38,16 @@ class PropositionDissertationAdmin(admin.ModelAdmin):
 class PropositionDissertation(models.Model):
     TYPES_CHOICES = (
         ('RDL', _('litterature_review')),
-        ('EDC', _('case_study')),
+        ('EMP', _('empirical_research')),
+        ('THE', _('theoretical_analysis')),
+        ('PRO', _('project_dissertation')),
+        ('DEV', _('development_dissertation')),
+        ('OTH', _('other')),
         )
 
     LEVELS_CHOICES = (
-        ('DOMAIN', _('level_domain')),
-        ('WORK', _('level_work')),
-        ('QUESTION', _('level_question')),
-        ('THEME', _('level_theme')),
+        ('SPECIFIC', _('specific_subject')),
+        ('THEME', _('large_theme')),
         )
 
     COLLABORATION_CHOICES = (
@@ -61,7 +63,7 @@ class PropositionDissertation(models.Model):
     level = models.CharField(max_length=12, choices=LEVELS_CHOICES, default='DOMAIN')
     max_number_student = models.IntegerField()
     title = models.CharField(max_length=200)
-    type = models.CharField(max_length=12, choices=TYPES_CHOICES, default='RDL')
+    type = models.CharField(max_length=12, choices=TYPES_CHOICES, default='OTH')
     visibility = models.BooleanField(default=True)
     active = models.BooleanField(default=True)
     offer_proposition = models.ManyToManyField('OfferProposition')
