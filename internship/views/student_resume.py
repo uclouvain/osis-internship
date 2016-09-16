@@ -245,6 +245,7 @@ def internship_student_affectation_modification(request, student_id):
                             'periods':              periods,
                                                       })
 
+
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def student_save_affectation_modification(request, registration_id):
@@ -288,7 +289,5 @@ def student_save_affectation_modification(request, registration_id):
                 affectation_modif.cost = 10
 
             affectation_modif.save()
-
-
     redirect_url = reverse('internships_student_read', args=[student.id])
     return HttpResponseRedirect(redirect_url)
