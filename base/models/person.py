@@ -30,6 +30,7 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from django.core import serializers
+from base.models.serializable_model import SerializableModel
 
 
 class PersonAdmin(admin.ModelAdmin):
@@ -41,14 +42,7 @@ class PersonAdmin(admin.ModelAdmin):
     raw_id_fields = ('user',)
 
 
-class PersonManager(models.Manager):
-    def get_by_natural_key(self, global_id):
-        return self.get(global_id=global_id)
-
-
-class Person(models.Model):
-
-    objects = PersonManager()
+class Person(SerializableModel):
 
     GENDER_CHOICES = (
         ('F', _('female')),
@@ -86,9 +80,6 @@ class Person(models.Model):
             last_name = self.last_name + ","
 
         return u"%s %s %s" % (last_name.upper(), first_name, middle_name)
-
-    def natural_key(self):
-        return (self.global_id, )
 
     class Meta:
         permissions = (

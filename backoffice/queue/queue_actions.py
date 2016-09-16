@@ -26,8 +26,10 @@
 
 import pika
 from backoffice.settings import QUEUE_URL, QUEUE_USER, QUEUE_PASSWORD, QUEUE_PORT, QUEUE_CONTEXT_ROOT
-import json
+import logging
+from django.conf import  settings
 
+LOGGER = logging.getLogger('default')
 
 def send_message(queue_name, message):
     """
@@ -36,16 +38,23 @@ def send_message(queue_name, message):
     :param queue_name: the name of the queue in which we have to send the JSON message.
     :param message: Must be a dictionnary !
     """
-    credentials = pika.PlainCredentials(QUEUE_USER, QUEUE_PASSWORD)
-    connection = pika.BlockingConnection(
-        pika.ConnectionParameters(QUEUE_URL, QUEUE_PORT, QUEUE_CONTEXT_ROOT, credentials))
-    channel = connection.channel()
-    channel.queue_declare(queue=queue_name)
-    channel.basic_publish(exchange='',
-                          routing_key=queue_name,
-                          body=json.dumps(message),
-                          properties=pika.BasicProperties(content_type='application/json'))
-    connection.close()
+    connection = None
+    try:
+        credentials = pika.PlainCredentials(QUEUE_USER, QUEUE_PASSWORD)
+        connection = pika.BlockingConnection(
+            pika.ConnectionParameters(QUEUE_URL, QUEUE_PORT, QUEUE_CONTEXT_ROOT, credentials))
+        channel = connection.channel()
+        channel.queue_declare(queue=queue_name)
+        channel.basic_publish(exchange='',
+                              routing_key=queue_name,
+                              body=message,
+                              properties=pika.BasicProperties(content_type='application/json'))
+    except Exception as e:
+        LOGGER.info(''.join(["Exception in queue : ", str(e)]))
+    finally:
+        if connection is not None:
+            connection.close()
+    
 
 
 def paper_sheet_queue():
