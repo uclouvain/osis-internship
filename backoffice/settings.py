@@ -182,7 +182,7 @@ QUEUE_PASSWORD = 'guest'
 QUEUE_PORT = 5672
 QUEUE_CONTEXT_ROOT = '/'
 
-ENVIRONMENT = 'DEV'
+ENVIRONMENT = 'LOCAL'
 
 # This has to be replaced by the actual url where you institution logo can be found.
 # The best choici is to set an external url.
