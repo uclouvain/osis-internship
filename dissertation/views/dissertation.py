@@ -731,7 +731,7 @@ def dissertations_jury_new(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     count_dissertation_role = dissertation_role.count_by_dissertation(dissert)
     offer_prop = offer_proposition.get_by_dissertation(dissert)
-    if count_dissertation_role < 5 and offer_prop.adviser_can_suggest_reader:
+    if count_dissertation_role < 4 and offer_prop.adviser_can_suggest_reader:
         if request.method == "POST":
             form = ManagerDissertationRoleForm(request.POST)
             if form.is_valid():
