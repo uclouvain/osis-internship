@@ -68,6 +68,7 @@ class Person(models.Model):
     phone = models.CharField(max_length=30, blank=True, null=True)
     phone_mobile = models.CharField(max_length=30, blank=True, null=True)
     language = models.CharField(max_length=30, null=True, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE)
+    birth_date = models.DateField(blank=True, null=True)
 
     def username(self):
         if self.user is None:
