@@ -331,12 +331,17 @@ def manager_informations_detail_list(request, pk):
     adv_list_disserts_pro = dissertation_role.search_by_adviser_and_role_and_offers(adv, 'PROMOTEUR', offers)
     adv_list_disserts_copro = dissertation_role.search_by_adviser_and_role_and_offers(adv, 'CO_PROMOTEUR', offers)
     adv_list_disserts_reader = dissertation_role.search_by_adviser_and_role_and_offers(adv, 'READER', offers)
+    adv_list_disserts_accompanist = dissertation_role.search_by_adviser_and_role_and_offers(adv, 'ACCOMPANIST', offers)
+    adv_list_disserts_internship = dissertation_role.search_by_adviser_and_role_and_offers(adv, 'INTERNSHIP', offers)
 
     return layout.render(request, "manager_informations_detail_list.html",
                          {'adviser': adv,
                           'adviser_list_dissertations': adv_list_disserts_pro,
                           'adviser_list_dissertations_copro': adv_list_disserts_copro,
-                          'adviser_list_dissertations_reader': adv_list_disserts_reader})
+                          'adviser_list_dissertations_reader': adv_list_disserts_reader,
+                          'adviser_list_dissertations_accompanist': adv_list_disserts_accompanist,
+                          'adviser_list_dissertations_internship': adv_list_disserts_internship
+                          })
 
 @login_required
 @user_passes_test(is_manager)

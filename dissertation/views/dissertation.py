@@ -577,12 +577,17 @@ def dissertations_list(request):
     adviser_list_dissertations = dissertation_role.search_by_adviser_and_role(adv, 'PROMOTEUR')
     adviser_list_dissertations_copro = dissertation_role.search_by_adviser_and_role(adv, 'CO_PROMOTEUR')
     adviser_list_dissertations_reader = dissertation_role.search_by_adviser_and_role(adv, 'READER')
+    adviser_list_dissertations_accompanist = dissertation_role.search_by_adviser_and_role(adv, 'ACCOMPANIST')
+    adviser_list_dissertations_internship = dissertation_role.search_by_adviser_and_role(adv, 'INTERNSHIP')
 
     return layout.render(request, "dissertations_list.html",
                          {'adviser': adv,
                           'adviser_list_dissertations': adviser_list_dissertations,
                           'adviser_list_dissertations_copro': adviser_list_dissertations_copro,
-                          'adviser_list_dissertations_reader': adviser_list_dissertations_reader})
+                          'adviser_list_dissertations_reader': adviser_list_dissertations_reader,
+                          'adviser_list_dissertations_accompanist': adviser_list_dissertations_accompanist,
+                          'adviser_list_dissertations_internship': adviser_list_dissertations_internship
+                          })
 
 
 @login_required

@@ -82,6 +82,12 @@ msgstr "Linked dissertations"
 msgid "adviser_dissertations_wait"
 msgstr "Waiting dissertations"
 
+msgid "adviser_list_dissertations_accompanist"
+msgstr "Dissertations as accompanist"
+
+msgid "adviser_list_dissertations_internship"
+msgstr "Dissertations as internship master"
+
 msgid "adviser_profile"
 msgstr "Teacher profile"
 

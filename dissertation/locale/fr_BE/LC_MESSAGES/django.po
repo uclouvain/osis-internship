@@ -82,6 +82,12 @@ msgstr "Mémoires reliés"
 msgid "adviser_dissertations_wait"
 msgstr "Mémoires en attente"
 
+msgid "adviser_list_dissertations_accompanist"
+msgstr "Mémoires encadrés en tant qu'accompagnateur"
+
+msgid "adviser_list_dissertations_internship"
+msgstr "Mémoires encadrés en tant que maître de stage"
+
 msgid "adviser_profile"
 msgstr "Profil enseignant"
 
