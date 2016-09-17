@@ -90,6 +90,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'base.views.common.environnement_request_processor',
             ],
         },
     },
@@ -219,6 +220,8 @@ QUEUE_USER = 'guest'
 QUEUE_PASSWORD = 'guest'
 QUEUE_PORT = 5672
 QUEUE_CONTEXT_ROOT = '/'
+
+ENVIRONMENT = 'LOCAL'
 
 # This has to be replaced by the actual url where you institution logo can be found.
 # The best choici is to set an external url.
