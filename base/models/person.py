@@ -98,7 +98,7 @@ class Person(models.Model):
     # return False if no valid data: global_id or no picture
     # for template use like this <img src="data:image/jpeg;base64,{{person.get_photo}}" class="avatar img-responsive"/>
 
-        if self.global_id :
+        if self.global_id:
             glob_id_str=str(self.global_id)
             photo_path=PERSON_PHOTO_PATH + 'image' + glob_id_str[-4:-2] +"/"+ glob_id_str + '.jpg'
 
