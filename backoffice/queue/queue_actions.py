@@ -29,7 +29,7 @@ from backoffice.settings import QUEUE_URL, QUEUE_USER, QUEUE_PASSWORD, QUEUE_POR
 import logging
 from django.conf import  settings
 
-LOGGER = logging.getLogger('default')
+logger = logging.getLogger(settings.DEFAULT_LOGGER)
 
 
 def get_connection():
@@ -37,13 +37,20 @@ def get_connection():
     return pika.BlockingConnection(pika.ConnectionParameters(QUEUE_URL, QUEUE_PORT, QUEUE_CONTEXT_ROOT, credentials))
 
 
-def send_message(queue_name, message, connection=get_connection()):
+def send_message(queue_name, message, connection=None):
     """
     Send the message in the queue passed in parameter.
+    If the connection doesn't exist, the funbction will create it, send the message, then close the connection.
+    WARNING : If a connection is given, the function doesn't close it. Do not forget to close it after you sent all your
+              messages in the queue.
 
     :param queue_name: the name of the queue in which we have to send the JSON message.
     :param message: Must be a dictionnary !
     """
+    close_connection = False
+    if not connection:
+        connection = get_connection()
+        close_connection = True
     try:
         channel = connection.channel()
         channel.queue_declare(queue=queue_name)
@@ -52,9 +59,9 @@ def send_message(queue_name, message, connection=get_connection()):
                               body=message,
                               properties=pika.BasicProperties(content_type='application/json'))
     except Exception as e:
-        LOGGER.info(''.join(["Exception in queue : ", str(e)]))
+        logger.info(''.join(["Exception in queue : ", str(e)]))
     finally:
-        if connection is not None:
+        if connection is not None and close_connection:
             connection.close()
 
 
