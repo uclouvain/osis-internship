@@ -35,8 +35,9 @@ from base.models.serializable_model import SerializableModel
 import base64
 import urllib
 
+
 class PersonAdmin(admin.ModelAdmin):
-    list_display = ('first_name' , 'middle_name', 'last_name', 'username', 'email', 'gender', 'global_id',
+    list_display = ('first_name', 'middle_name', 'last_name', 'username', 'email', 'gender', 'global_id',
                     'national_id', 'changed', 'source')
     search_fields = ['first_name', 'middle_name', 'last_name', 'user__username', 'email']
     fieldsets = ((None, {'fields': ('user', 'global_id', 'national_id', 'gender', 'first_name',
@@ -45,7 +46,6 @@ class PersonAdmin(admin.ModelAdmin):
 
 
 class Person(SerializableModel):
-
     GENDER_CHOICES = (
         ('F', _('female')),
         ('M', _('male')),
@@ -90,13 +90,13 @@ class Person(SerializableModel):
 
     @property
     def get_photo(self):
-    # Return JPG in Base64 format
-    # return False if no valid data: global_id or no picture
-    # for template use like this <img src="data:image/jpeg;base64,{{person.get_photo}}" class="avatar img-responsive"/>
+        # Return JPG in Base64 format
+        # return False if no valid data: global_id or no picture
+        # for template use <img src="data:image/jpeg;base64,{{person.get_photo}}" class="avatar img-responsive"/>
 
         if self.global_id:
-            glob_id_str=str(self.global_id)
-            photo_path=PERSON_PHOTO_PATH + 'image' + glob_id_str[-4:-2] +"/"+ glob_id_str + '.jpg'
+            glob_id_str = str(self.global_id)
+            photo_path = PERSON_PHOTO_PATH + 'image' + glob_id_str[-4:-2] + "/" + glob_id_str + '.jpg'
 
             try:
                 photo = urllib.request.urlopen(photo_path)
