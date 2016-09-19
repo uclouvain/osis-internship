@@ -26,7 +26,7 @@
     * see http://www.gnu.org/licenses/.
 {% endcomment %}
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+    <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
     <li><a href="{% url 'internships_home' %}">{% trans 'internships' %}</a></li>
     <li class="active">{% trans 'affectation_result' %}</li>
 {% endblock %}
@@ -38,7 +38,7 @@
                 <div class="modal-header">
                     <h4 class="modal-title">
                     <span class="glyphicon glyphicon-time">
-                    </span> Please Wait
+                    </span> {% trans 'please_wait' %}
                     </h4>
                 </div>
                 <div class="modal-body">
@@ -48,7 +48,7 @@
                              style="width: 100%">
                         </div>
                     </div>
-                    This may take several minutes
+                    {% trans 'take_several_minutes' %}
                 </div>
             </div>
         </div>
@@ -57,16 +57,16 @@
     <div class="panel panel-default">
         <div class="panel-body">
             <form  method="post" action="{% url 'internship_affectation_statistics_generate' %}" >
-                <button type="submit" class="btn btn-primary" title="{% trans 'Send'%}" id="bt_interships_save" onclick="$('#PleaseWaitModal').modal('show');">
-                    <span class="glyphicon glyphicon-random" aria-hidden="true"></span> Generate solution
+                <button type="submit" class="btn btn-primary" title="{% trans 'send'%}" id="bt_interships_save" onclick="$('#PleaseWaitModal').modal('show');">
+                    <span class="glyphicon glyphicon-random" aria-hidden="true"></span> {% trans 'generate_solution' %}
                 </button>
                 {% csrf_token %}
             </form>
             <ul class="nav nav-tabs">
-                <li class="active"><a data-toggle="tab" href="#tab_hospitals">Récap hopitaux</a></li>
-                <li><a data-toggle="tab" href="#tab_students">Récap étudiants</a></li>
-                <li><a data-toggle="tab" href="#tab_stats">Statistiques</a></li>
-                <li><a data-toggle="tab" href="#tab_errors">Erreurs</a></li>
+                <li class="active"><a data-toggle="tab" href="#tab_hospitals">{% trans 'organizations' %}</a></li>
+                <li><a data-toggle="tab" href="#tab_students">{% trans 'students' %}</a></li>
+                <li><a data-toggle="tab" href="#tab_stats">{% trans 'statistics' %}</a></li>
+                <li><a data-toggle="tab" href="#tab_errors">{% trans 'errors' %}</a></li>
             </ul>
             <div class="tab-content">
                 <div id="tab_hospitals" class="tab-pane fade in active">
@@ -75,8 +75,8 @@
                             <div role="tabpanel" class="tab-pane fade in active" id="profile">
                                 <table class="table">
                                     <tr>
-                                        <th>Hôpital</th>
-                                        <th>Spécialité</th>
+                                        <th>{% trans 'organization' %}</th>
+                                        <th>{% trans 'speciality' %}</th>
                                         <th>P1</th>
                                         <th>P2</th>
                                         <th>P3</th>
@@ -132,7 +132,7 @@
                             <div role="tabpanel" class="tab-pane fade in active" id="profile">
                                 <table class="table">
                                     <tr>
-                                        <th>Student</th>
+                                        <th>{% trans 'student' %}</th>
                                         <th>P1</th>
                                         <th>P2</th>
                                         <th>P3</th>
@@ -171,21 +171,21 @@
                     </div>
                 </div>
                 <div id="tab_stats" class="tab-pane fade in">
-                    <h3>Stats</h3>
+                    <h3>{% trans 'statistics' %}</h3>
                     <div class="panel panel-default">
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane fade in active" id="profile">
                                 <table class="table">
                                     <tr>
-                                        <td>Number of students</td>
+                                        <td>{% trans 'number_of_student' %}</td>
                                         <td>{{ stats.tot_stud }}</td>
                                     </tr>
                                     <tr>
-                                        <td>-&gt; Erasmus</td>
+                                        <td>-&gt; {% trans 'erasmus' %}</td>
                                         <td>{{ stats.erasmus_students }} ({{ stats.erasmus_students_pc }}%)</td>
                                     </tr>
                                     <tr>
-                                        <td>-&gt; Sociaux</td>
+                                        <td>-&gt; {% trans 'socials' %}</td>
                                         <td>{{ stats.socio_students }} ({{ stats.socio_students_pc }}%)</td>
                                     </tr>
                                     <tr>
@@ -193,87 +193,87 @@
                                         <td></td>
                                     </tr>
                                     <tr class="active">
-                                        <td>Total internships</td>
+                                        <td>{% trans 'total_internships' %}</td>
                                         <td>{{ stats.total_internships }}</td>
                                     </tr>
                                     <tr>
-                                        <td>-&gt; Erasmus</td>
+                                        <td>-&gt; {% trans 'erasmus' %}</td>
                                         <td>{{ stats.erasmus }} ({{ stats.erasmus_pc }}%)</td>
                                     </tr>
                                     <tr>
-                                        <td>-&gt; Sociaux</td>
+                                        <td>-&gt; {% trans 'socials' %}</td>
                                         <td>{{ stats.socio }} ({{ stats.socio_pc }}%)</td>
                                     </tr>
                                     <tr class="active">
-                                        <td>All students</td>
+                                        <td>{% trans 'all_student' %}</td>
                                         <td></td>
                                     </tr>
                                     <tr>
-                                        <td>1st choices</td>
+                                        <td>{% trans 'first_choice' %}</td>
                                         <td>{{ stats.first }} ({{ stats.first_pc }}%)</td>
                                     </tr>
                                     <tr>
-                                        <td>2nd choices</td>
+                                        <td>{% trans 'second_choice' %}</td>
                                         <td>{{ stats.second }} ({{ stats.second_pc }}%)</td>
                                     </tr>
                                     <tr>
-                                        <td>3rd choices</td>
+                                        <td>{% trans 'third_choice' %}</td>
                                         <td>{{ stats.third }} ({{ stats.third_pc }}%)</td>
                                     </tr>
                                     <tr>
-                                        <td>4th choices</td>
+                                        <td>{% trans 'fourth_choice' %}</td>
                                         <td>{{ stats.fourth }} ({{ stats.fourth_pc }}%)</td>
                                     </tr>
                                     <tr>
-                                        <td>Others choices</td>
+                                        <td>{% trans 'other_choice' %}</td>
                                         <td>{{ stats.others }} ({{ stats.others_pc }}%)</td>
                                     </tr>
                                     <tr>
-                                        <td>Erasmus students</td>
+                                        <td>{% trans 'erasmus_students' %}</td>
                                         <td>{{ stats.erasmus }} ({{ stats.erasmus_pc }}%)</td>
                                     </tr>
                                     <tr class="active">
-                                        <td>Social students</td>
+                                        <td>{% trans 'social_students' %}</td>
                                         <td></td>
                                     </tr>
                                     <tr>
-                                        <td>1st choices</td>
+                                        <td>{% trans 'first_choice' %}</td>
                                         <td>{{ stats.first_s }} ({{ stats.first_s_pc }}%)</td>
                                     </tr>
                                     <tr>
-                                        <td>2nd choices</td>
+                                        <td>{% trans 'second_choice' %}</td>
                                         <td>{{ stats.second_s }} ({{ stats.second_s_pc }}%)</td>
                                     </tr>
                                     <tr>
-                                        <td>3rd choices</td>
+                                        <td>{% trans 'third_choice' %}</td>
                                         <td>{{ stats.third_s }} ({{ stats.third_s_pc }}%)</td>
                                     </tr>
                                     <tr>
-                                        <td>4th choices</td>
+                                        <td>{% trans 'fourth_choice' %}</td>
                                         <td>{{ stats.fourth_s }} ({{ stats.fourth_s_pc }}%)</td>
                                     </tr>
                                     <tr class="active">
-                                        <td>Normal students</td>
+                                        <td>{% trans 'normal_students' %}</td>
                                         <td></td>
                                     </tr>
                                     <tr>
-                                        <td>1st choices</td>
+                                        <td>{% trans 'first_choice' %}</td>
                                         <td>{{ stats.first_n }} ({{ stats.first_n_pc }}%)</td>
                                     </tr>
                                     <tr>
-                                        <td>2nd choices</td>
+                                        <td>{% trans 'second_choice' %}</td>
                                         <td>{{ stats.second_n }} ({{ stats.second_n_pc }}%)</td>
                                     </tr>
                                     <tr>
-                                        <td>3rd choices</td>
+                                        <td>{% trans 'third_choice' %}</td>
                                         <td>{{ stats.third_n }} ({{ stats.third_n_pc }}%)</td>
                                     </tr>
                                     <tr>
-                                        <td>4th choices</td>
+                                        <td>{% trans 'fourth_choice' %}</td>
                                         <td>{{ stats.fourth_n }} ({{ stats.fourth_n_pc }}%)</td>
                                     </tr>
                                     <tr>
-                                        <td>Imposed chocies</td>
+                                        <td>{% trans 'imposed_choices' %}</td>
                                         <td>{{ stats.others }} ({{ stats.others_pc }}%) | Students : {{ stats.others_students}} | Mean distance : {{ stats.distance_mean}}km</td>
                                     </tr>
                                     {% for speciality, value in stats.others_specialities.items %}
@@ -287,23 +287,23 @@
                                         <td></td>
                                     </tr>
                                     <tr>
-                                        <td>Hospital error</td>
+                                        <td>{% trans 'organization_error' %}</td>
                                         <td>{{ stats.hospital_error }}</td>
                                     </tr>
                                     <tr>
-                                        <td>Mean cost of student</td>
+                                        <td>{% trans 'mean_cost_student' %}</td>
                                         <td>{{ stats.mean_stud }}</td>
                                     </tr>
                                     <tr>
-                                        <td>Standard deviation </td>
+                                        <td>{% trans 'standard_deviation' %}</td>
                                         <td>{{ stats.std_dev_stud }}</td>
                                     </tr>
                                     <tr>
-                                        <td>Mean nonconsecutive month</td>
+                                        <td>{% trans 'mean_nonconsecutive_month' %}</td>
                                         <td>{{ stats.mean_noncons }}</td>
                                     </tr>
                                     <tr>
-                                        <td>Total cost of the solution</td>
+                                        <td>{% trans 'total_cost_solution' %}</td>
                                         <td>{{ stats.sol_cost }}</td>
                                     </tr>
                                 </table>
@@ -314,11 +314,11 @@
                 <div id="tab_errors" class="tab-pane fade in">
                     <table class="table">
                         <tr>
-                            <th>Student</th>
-                            <th>Speciality</th>
-                            <th>Period</th>
-                            <th>Organization</th>
-                            <th>Type of internship</th>
+                            <th>{% trans 'student' %}</th>
+                            <th>{% trans 'speciality' %}</th>
+                            <th>{% trans 'period' %}</th>
+                            <th>{% trans 'organization' %}</th>
+                            <th>{% trans 'type_internship' %}</th>
                         </tr>
                         {% for internship in errors %}
                             <tr>
