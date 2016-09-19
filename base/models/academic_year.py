@@ -73,10 +73,7 @@ def current_academic_years():
 
 def current_academic_year():
     academic_yr = current_academic_years().first()
-    if academic_yr:
-        return academic_yr
-    else:
-        return None
+    return academic_yr
 
 
 def starting_academic_year():

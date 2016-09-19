@@ -27,19 +27,18 @@ import datetime
 from django.test import TestCase
 from base.models import academic_year
 
+now = datetime.datetime.now()
+
 
 class MultipleAcademicYearTest(TestCase):
-
-    now = datetime.datetime.now()
-
     def setUp(self):
-        academic_yr = academic_year.AcademicYear(year=(self.now.year - 1),
-                                                 start_date=datetime.datetime(self.now.year - 1, self.now.month, 15),
-                                                 end_date=datetime.datetime(self.now.year, self.now.month, 28))
+        academic_yr = academic_year.AcademicYear(year=(now.year - 1),
+                                                 start_date=datetime.datetime(now.year - 1, now.month, 15),
+                                                 end_date=datetime.datetime(now.year, now.month, 28))
         academic_yr.save()
-        academic_yr = academic_year.AcademicYear(year=self.now.year,
-                                                 start_date=datetime.datetime(self.now.year, self.now.month, 15),
-                                                 end_date=datetime.datetime(self.now.year + 1, self.now.month, 28))
+        academic_yr = academic_year.AcademicYear(year=now.year,
+                                                 start_date=datetime.datetime(now.year, now.month, 15),
+                                                 end_date=datetime.datetime(now.year + 1, now.month, 28))
         academic_yr.save()
 
     def test_current_academic_years(self):
@@ -48,22 +47,27 @@ class MultipleAcademicYearTest(TestCase):
 
     def test_current_academic_year(self):
         academic_yr = academic_year.current_academic_year()
-        self.assertEqual(academic_yr.year, self.now.year - 1)
+        self.assertEqual(academic_yr.year, now.year - 1)
 
     def test_starting_academic_year(self):
         academic_yr = academic_year.starting_academic_year()
-        self.assertEqual(academic_yr.year, self.now.year)
+        self.assertEqual(academic_yr.year, now.year)
 
 
 class SingleAcademicYearTest(TestCase):
-    now = datetime.datetime.now()
-
     def setUp(self):
-        academic_yr = academic_year.AcademicYear(year=self.now.year,
-                                                 start_date=datetime.datetime(self.now.year, self.now.month, 15),
-                                                 end_date=datetime.datetime(self.now.year + 1, self.now.month, 28))
+        academic_yr = academic_year.AcademicYear(year=now.year,
+                                                 start_date=datetime.datetime(now.year, now.month, 15),
+                                                 end_date=datetime.datetime(now.year + 1, now.month, 28))
         academic_yr.save()
 
     def test_starting_equalto_current(self):
         academic_yr = academic_year.starting_academic_year()
-        self.assertEqual(academic_yr.year, self.now.year)
+        self.assertEqual(academic_yr.year, now.year)
+
+
+class InexistingAcademicYearTest(TestCase):
+
+    def test_inexisting_academic_year(self):
+        self.assertEqual(academic_year.current_academic_year(), None)
+        self.assertEqual(academic_year.starting_academic_year(), None)
