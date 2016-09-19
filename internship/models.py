@@ -44,7 +44,7 @@ class InternshipOffer(models.Model):
 
     @staticmethod
     def find_internships():
-        return InternshipOffer.objects.filter(speciality__mandatory=1).order_by('speciality__name', 'organization__reference')
+        return InternshipOffer.objects.filter(speciality__mandatory=1).order_by('speciality__acronym', 'speciality__name', 'organization__reference')
 
     @staticmethod
     def find_non_mandatory_internships(**kwargs):
@@ -159,13 +159,13 @@ class InternshipChoice(models.Model):
     @staticmethod
     def search(**kwargs):
         kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = InternshipChoice.objects.filter(**kwargs)
+        queryset = InternshipChoice.objects.filter(**kwargs).order_by('choice')
         return queryset
 
     @staticmethod
     def search_other_choices(**kwargs):
         kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = InternshipChoice.objects.filter(**kwargs)
+        queryset = InternshipChoice.objects.filter(**kwargs).order_by('choice')
         queryset = queryset.exclude(choice=1)
         return queryset
 
@@ -214,12 +214,12 @@ class InternshipSpeciality(models.Model):
     @staticmethod
     def search(**kwargs):
         kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = InternshipSpeciality.objects.filter(**kwargs)
+        queryset = InternshipSpeciality.objects.filter(**kwargs).order_by('acronym', 'name')
         return queryset
 
     @staticmethod
     def find_all():
-        return InternshipSpeciality.objects.all().order_by('name')
+        return InternshipSpeciality.objects.all().order_by('acronym', 'name')
 
     @staticmethod
     def find_by_id(speciality_id):
@@ -227,7 +227,7 @@ class InternshipSpeciality(models.Model):
 
     @staticmethod
     def find_non_mandatory():
-        return InternshipSpeciality.objects.filter(mandatory=False).order_by('name')
+        return InternshipSpeciality.objects.filter(mandatory=False).order_by('acronym', 'name')
 
 class Organization(models.Model):
     name = models.CharField(max_length=255)
@@ -274,6 +274,12 @@ class OrganizationAddress(models.Model):
         return OrganizationAddress.objects.get(pk=organization_address_id)
 
     def save(self, *args, **kwargs):
+        has_organization = False
+        try:
+            has_organization = (self.organization is not None)
+        except Exception:
+            self.organization = Organization.objects.latest('id')
+
         self.label = "Addr"+self.organization.name[:14]
         super(OrganizationAddress, self).save(*args, **kwargs)
 
@@ -385,3 +391,7 @@ class InternshipStudentAffectationStat(models.Model):
         kwargs = {k: v for k, v in kwargs.items() if v}
         queryset = InternshipStudentAffectationStat.objects.filter(**kwargs)
         return queryset
+
+    @staticmethod
+    def find_by_id(affectation_id):
+        return InternshipStudentAffectationStat.objects.get(pk=affectation_id)

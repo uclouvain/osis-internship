@@ -101,15 +101,19 @@
                     {{ organization.name }}
                   </td>
                   <td align="center">
-                    <a class="btn btn-primary" target="_blank" id="lnk_students_choice{{organization.reference}}"
-                        href="{% url 'place_detail_student_choice' organization.reference %}">
+                    <a class="btn btn-primary" target="_blank" id="lnk_students_choice{{organization.id}}"
+                        href="{% url 'place_detail_student_choice' organization.id %}">
                       <span class="glyphicon glyphicon-search" aria-hidden="true">
                         {{ organization.student_choice }}
                       </span>
                     </a>
                   </td>
                   <td align="center">
-                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    <a class="btn btn-primary" target="_blank" id="lnk_students_affectation{{organization.id}}"
+                        href="{% url 'place_detail_student_affectation' organization.id %}">
+                      <span class="glyphicon glyphicon-search" aria-hidden="true">
+                      </span>
+                    </a>
                   </td>
                   <td>
                     {% for address in organization.address %}

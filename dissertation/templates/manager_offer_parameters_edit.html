@@ -49,106 +49,118 @@
             </div>
             <br>
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6 form-group">
                     <label for="txt_start_visibility_proposition" {% if form.start_visibility_proposition.errors %} style="color:red;" {% endif %}>{% trans 'start_visibility_proposition'%}</label>
-                    <input type="date" class="form-control"
+                    <input type="text" class="form-control"
                            value="{{ form.start_visibility_proposition.value|date:'d/m/Y' }}"
                            name="start_visibility_proposition" id="txt_start_visibility_proposition">
                 </div>
-                <div class="col-md-6">
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-6 form-group">
                     <label for="txt_end_visibility_proposition" {% if form.end_visibility_proposition.errors %} style="color:red;" {% endif %}>{% trans 'end_visibility_proposition' %}</label>
-                    <input type="date" class="form-control"
+                    <input type="text" class="form-control"
                            value="{{ form.end_visibility_proposition.value|date:'d/m/Y' }}"
                            name="end_visibility_proposition" id="txt_end_visibility_proposition">
                 </div>
             </div>
             <br>
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6 form-group">
                     <label for="txt_start_visibility_dissertation" {% if form.start_visibility_dissertation.errors %} style="color:red;" {% endif %}>{% trans 'start_visibility_dissertation'%}</label>
-                    <input type="date" class="form-control"
+                    <input type="text" class="form-control"
                            value="{{ form.start_visibility_dissertation.value|date:'d/m/Y' }}"
                            name="start_visibility_dissertation" id="txt_start_visibility_dissertation">
                 </div>
-                <div class="col-md-6">
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-6 form-group">
                     <label for="txt_end_visibility_dissertation" {% if form.end_visibility_dissertation.errors %} style="color:red;" {% endif %}>{% trans 'end_visibility_dissertation' %}</label>
-                    <input type="date" class="form-control"
+                    <input type="text" class="form-control"
                            value="{{ form.end_visibility_dissertation.value|date:'d/m/Y' }}"
                            name="end_visibility_dissertation" id="txt_end_visibility_dissertation">
                 </div>
             </div>
             <br>
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6 form-group">
                     <label for="txt_start_jury_visibility" {% if form.start_jury_visibility.errors %} style="color:red;" {% endif %}>{% trans 'start_jury_visibility'%}</label>
-                    <input type="date" class="form-control"
+                    <input type="text" class="form-control"
                            value="{{ form.start_jury_visibility.value|date:'d/m/Y' }}"
                            name="start_jury_visibility" id="txt_start_jury_visibility">
                 </div>
-                <div class="col-md-6">
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-6 form-group">
                     <label for="txt_end_jury_visibility" {% if form.end_jury_visibility.errors %} style="color:red;" {% endif %}>{% trans 'end_jury_visibility' %}</label>
-                    <input type="date" class="form-control"
+                    <input type="text" class="form-control"
                            value="{{ form.end_jury_visibility.value|date:'d/m/Y' }}"
                            name="end_jury_visibility" id="txt_end_jury_visibility">
                 </div>
             </div>
             <br>
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6 form-group">
                     <label for="txt_start_edit_title" {% if form.start_edit_title.errors %} style="color:red;" {% endif %}>{% trans 'start_edit_title'%}</label>
-                    <input type="date" class="form-control"
+                    <input type="text" class="form-control"
                            value="{{ form.start_edit_title.value|date:'d/m/Y' }}"
                            name="start_edit_title" id="txt_start_edit_title">
                 </div>
-                <div class="col-md-6">
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-6 form-group">
                     <label for="txt_end_edit_title" {% if form.end_edit_title.errors %} style="color:red;" {% endif %}>{% trans 'end_edit_title' %}</label>
-                    <input type="date" class="form-control"
+                    <input type="text" class="form-control"
                            value="{{ form.end_edit_title.value|date:'d/m/Y' }}"
                            name="end_edit_title" id="txt_end_edit_title">
                 </div>
             </div>
             <br>
             <div class="row">
-                <div class="col-md-5">
-                    <label for="txt_student_can_manage_readers">{% trans 'student_can_manage_readers' %}</label>
-                </div>
                 <div class="col-md-1">
                     <input class="form-control" id="txt_student_can_manage_readers"  name="student_can_manage_readers"
                            style="margin:-6px;" type="checkbox" {% if form.student_can_manage_readers.value %} checked {% endif %}>
                 </div>
+                <div class="col-md-5">
+                    <label for="txt_student_can_manage_readers">{% trans 'student_can_manage_readers' %}</label>
+                </div>
             </div>
             <br>
             <div class="row">
-                <div class="col-md-5">
-                    <label for="txt_adviser_can_suggest_reader">{% trans 'adviser_can_suggest_reader' %}</label>
-                </div>
                 <div class="col-md-1">
                     <input class="form-control" id="txt_adviser_can_suggest_reader"  name="adviser_can_suggest_reader"
                            style="margin:-6px;" type="checkbox" {% if form.adviser_can_suggest_reader.value %} checked {% endif %}>
                 </div>
+                <div class="col-md-5">
+                    <label for="txt_adviser_can_suggest_reader">{% trans 'adviser_can_suggest_reader' %}</label>
+                </div>
             </div>
             <br>
             <div class="row">
-                <div class="col-md-5">
-                    <label for="txt_evaluation_first_year">{% trans 'evaluation_first_year' %}</label>
-                </div>
                 <div class="col-md-1">
                     <input class="form-control" id="txt_evaluation_first_year"  name="evaluation_first_year"
                            style="margin:-6px;" type="checkbox" {% if form.evaluation_first_year.value %} checked {% endif %}>
                 </div>
+                <div class="col-md-5">
+                    <label for="txt_evaluation_first_year">{% trans 'evaluation_first_year' %}</label>
+                </div>
             </div>
             <br>
             <div class="row">
-                <div class="col-md-5">
-                    <label for="txt_validation_commission_exists">{% trans 'validation_commission_exists' %}</label>
-                </div>
                 <div class="col-md-1">
                     <input class="form-control" id="txt_validation_commission_exists"  name="validation_commission_exists"
                            style="margin:-6px;" type="checkbox" {% if form.validation_commission_exists.value %} checked {% endif %}>
                 </div>
+                <div class="col-md-5">
+                    <label for="txt_validation_commission_exists">{% trans 'validation_commission_exists' %}</label>
+                </div>
             </div>
             <br>
-            <button type="submit" class="save btn btn-default">Save</button>
+            <button type="submit" class="save btn btn-primary">{% trans 'save' %}</button>
         </form>
     </div>
   </div>

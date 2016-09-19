@@ -29,7 +29,7 @@
 {% block breadcrumb %}
   <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
   <li><a href="{% url 'internships_home' %}">{% trans 'internships_managment' %}</a></li>
-  <li class="active">{% trans 'students' %}</li>
+  <li class="active">{% trans 'student_sumup' %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
@@ -41,15 +41,15 @@
           <div class="col-md-3">
               <label for="name" >{% trans 'name'%}</label>
               <input class="form-control" id="txt_name" placeholder="{% trans 'Name' %}"
-                                                        name="s_name"
-                                                        value="{{ s_name | default_if_none:'' }}"
+                                                        name="search_name"
+                                                        value="{{ search_name | default_if_none:'' }}"
                                                         style="text-transform:uppercase">
           </div>
           <div class="col-md-3">
               <label for="name" >{% trans 'firstname'%}</label>
               <input class="form-control" id="txt_firstname" placeholder="{% trans 'Firstname' %}"
-                                                        name="s_firstname"
-                                                        value="{{ s_firstname | default_if_none:'' }}"
+                                                        name="search_firstname"
+                                                        value="{{ search_firstname | default_if_none:'' }}"
                                                         style="text-transform:uppercase">
           </div>
           <div class="col-md-1">
@@ -85,11 +85,6 @@
           <span class="glyphicon glyphicon-ban-circle" aria-hidden="true"> : {{student_without_internship}}</span>
         </button>
       </div>
-      {% if message %}
-      <div>
-          <label class="alert alert-warning" style="margin:5px">{{message}}</label>
-      </div>
-      {% else%}
       <div>
           {% if students|length == 0 %}
               <label class="alert alert-info" style="margin:5px">{% trans 'no_result' %}</label>
@@ -148,7 +143,6 @@
               </table>
           {% endif %}
       </div>
-      {% endif %}
     </div>
   </div>
 {% endblock %}

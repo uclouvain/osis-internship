@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 ##############################################################################
 #
 #    OSIS stands for Open Student Information System. It's an application
@@ -24,44 +23,32 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from functools import reduce
-import os
 
-# Add your fixtures at the end of the list so that model dependencies are respected.
-DATA_FIXTURES = [
-    'user.json',
-    'person.json',
-    'tutor.json',
-    'student.json',
-    'academic_year.json',
-    'academic_calendar.json',
-    'learning_unit.json',
-    'learning_unit_year.json',
-    'messages_templates.json',
-    'offer.json',
-    'organization.json',
-    'structure.json',
-    'attribution.json',
-    'continent.json',
-    'currency.json',
-    'country.json',
-    'decree.json',
-    'domain.json',
-    'education_institution.json',
-    'language.json',
-    'continent.json',
-    'person_address.json',
-    'organization_address.json',
-    'offer_year.json',
-    'offer_year_calendar.json',
-    'session_exam.json',
-    'program_manager.json',
-    'offer_enrollment.json',
-    'learning_unit_enrollment.json',
-    'exam_enrollment.json'
-    ]
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
+from base.models.student import find_by_offer_year
+from base.models.offer_year import OfferYear
+from django.contrib.auth.decorators import user_passes_test
+from dissertation.views.information import is_manager
+from django.http import JsonResponse
+import json
 
-ARGS = reduce(lambda s1,s2 : s1 + ' ' + s2,DATA_FIXTURES)
-COMMAND = 'python manage.py loaddata '+ARGS
-print(COMMAND)
-os.system(COMMAND)
+@login_required
+@user_passes_test(is_manager)
+def get_students_list_in_offer_year(request, offer_year_start_id):
+    offer_year_start = get_object_or_404(OfferYear, pk=offer_year_start_id)
+    students_list = find_by_offer_year(offer_year_start)
+    data=[]
+    if students_list:
+        for student in students_list:
+            data.append({'person_id': student.id,
+                        'first_name': student.person.first_name,
+                        'last_name': student.person.last_name,
+                        'registration_id':student.registration_id})
+
+
+    else:
+        data = False
+
+    return JsonResponse({'res': data})

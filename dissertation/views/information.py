@@ -30,9 +30,9 @@ from dissertation.models import adviser
 from dissertation.models import dissertation_role
 from dissertation.models import faculty_adviser
 from base import models as mdl
-from dissertation.forms import AdviserForm, ManagerAdviserForm, ManagerAddAdviserForm, ManagerAddAdviserPreForm
+from dissertation.forms import AdviserForm, ManagerAdviserForm, ManagerAddAdviserForm, ManagerAddAdviserPreForm, \
+    ManagerAddAdviserPerson, AddAdviserForm
 from django.contrib.auth.decorators import user_passes_test
-from django.db import IntegrityError
 from base.views import layout
 
 
@@ -115,6 +115,63 @@ def informations_edit(request):
                                                              'phone': person.phone,
                                                              'phone_mobile': person.phone_mobile})
 
+
+@login_required
+@user_passes_test(is_teacher)
+def informations_add(request):
+    if request.method == "POST":
+        if 'search_form' in request.POST:  # step 2 : second form to select person in list
+            form = ManagerAddAdviserPreForm(request.POST)
+            if form.is_valid():  # mail format is valid
+                data = form.cleaned_data
+                person = mdl.person.search_by_email(data['email'])
+
+                if not data['email']:  # empty search -> step 1
+                    form = ManagerAddAdviserPreForm()
+                    message = "empty_data"
+                    return layout.render(request, 'informations_add_search.html', {'form': form,
+                                                                                   'message': message})
+
+                elif person and adviser.find_by_person(person):  # person already adviser -> step 1
+                    form = ManagerAddAdviserPreForm()
+                    email = "%s (%s)" % (list(person)[0], data['email'])
+                    message = "person_already_adviser"
+                    return layout.render(request, 'informations_add_search.html', {'form': form,
+                                                                                   'message': message,
+                                                                                   'email': email})
+                elif mdl.person.count_by_email(data['email']) > 0:  # person found and not adviser -> go forward
+                    pers = list(person)[0]
+                    select_form = AddAdviserForm()
+                    return layout.render(request, 'informations_add.html', {'form': select_form, 'pers': pers})
+
+                else:  # person not found by email -> step 1
+                    form = ManagerAddAdviserPreForm()
+                    email = data['email']
+                    message = "person_not_found_by_mail"
+                    message_add = "add_new_person_explanation"
+                    return layout.render(request, 'informations_add_search.html', {'form': form,
+                                                                                   'message': message,
+                                                                                   'email': email,
+                                                                                   'message_add': message_add})
+            else:  # invalid form (invalid format for email)
+                form = ManagerAddAdviserPreForm()
+                message = "invalid_data"
+                return layout.render(request, 'informations_add_search.html', {'form': form,
+                                                                               'message': message})
+
+        else:  # step 3 : everything ok, register the person as adviser
+            form = AddAdviserForm(request.POST)
+            if form.is_valid():
+                adv = form.save(commit=False)
+                adv.save()
+                return redirect('informations_detail', pk=adv.pk)
+            else:
+                return redirect('informations')
+
+    else:  # step 1 : initial form to search person by email
+        form = ManagerAddAdviserPreForm()
+        return layout.render(request, 'manager_informations_add_search.html', {'form': form})
+
 ###########################
 #      MANAGER VIEWS      #
 ###########################
@@ -159,9 +216,11 @@ def manager_informations_add(request):
                     form = ManagerAddAdviserPreForm()
                     email = data['email']
                     message = "person_not_found_by_mail"
+                    message_add = "add_new_person_explanation"
                     return layout.render(request, 'manager_informations_add_search.html', {'form': form,
                                                                                            'message': message,
-                                                                                           'email': email})
+                                                                                           'email': email,
+                                                                                           'message_add': message_add})
             else:  # invalid form (invalid format for email)
                 form = ManagerAddAdviserPreForm()
                 message = "invalid_data"
@@ -180,6 +239,34 @@ def manager_informations_add(request):
     else:  # step 1 : initial form to search person by email
         form = ManagerAddAdviserPreForm()
         return layout.render(request, 'manager_informations_add_search.html', {'form': form})
+
+
+@login_required
+@user_passes_test(is_manager)
+def manager_informations_add_person(request):
+    if request.method == "POST":
+        form = ManagerAddAdviserPerson(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            if data['email'] and data['last_name'] and data['first_name']:
+                person = mdl.person.Person(email=data['email'],
+                                           last_name=data['last_name'],
+                                           first_name=data['first_name'],
+                                           phone=data['phone'],
+                                           phone_mobile=data['phone_mobile'],
+                                           source="DISSERTATION")
+                person = mdl.person.add(person)
+                adv = adviser.add(person, 'PRF', False, False, False, '')
+                return redirect('manager_informations_detail', pk=adv.pk)
+            else:
+                form = ManagerAddAdviserPerson()
+                return layout.render(request, 'manager_information_add_person.html', {'form': form})
+        else:
+            form = ManagerAddAdviserPerson()
+            return layout.render(request, 'manager_information_add_person.html', {'form': form})
+    else:
+        form = ManagerAddAdviserPerson()
+        return layout.render(request, 'manager_information_add_person.html', {'form': form})
 
 
 @login_required
@@ -205,7 +292,8 @@ def manager_informations_edit(request, pk):
     else:
         form = ManagerAdviserForm(instance=adv)
     return layout.render(request, "manager_informations_edit.html",
-                         {'form': form,
+                         {'adviser': adv,
+                          'form': form,
                           'first_name': adv.person.first_name.title(),
                           'last_name': adv.person.last_name.title(),
                           'email': adv.person.email,
@@ -243,12 +331,17 @@ def manager_informations_detail_list(request, pk):
     adv_list_disserts_pro = dissertation_role.search_by_adviser_and_role_and_offers(adv, 'PROMOTEUR', offers)
     adv_list_disserts_copro = dissertation_role.search_by_adviser_and_role_and_offers(adv, 'CO_PROMOTEUR', offers)
     adv_list_disserts_reader = dissertation_role.search_by_adviser_and_role_and_offers(adv, 'READER', offers)
+    adv_list_disserts_accompanist = dissertation_role.search_by_adviser_and_role_and_offers(adv, 'ACCOMPANIST', offers)
+    adv_list_disserts_internship = dissertation_role.search_by_adviser_and_role_and_offers(adv, 'INTERNSHIP', offers)
 
     return layout.render(request, "manager_informations_detail_list.html",
                          {'adviser': adv,
                           'adviser_list_dissertations': adv_list_disserts_pro,
                           'adviser_list_dissertations_copro': adv_list_disserts_copro,
-                          'adviser_list_dissertations_reader': adv_list_disserts_reader})
+                          'adviser_list_dissertations_reader': adv_list_disserts_reader,
+                          'adviser_list_dissertations_accompanist': adv_list_disserts_accompanist,
+                          'adviser_list_dissertations_internship': adv_list_disserts_internship
+                          })
 
 @login_required
 @user_passes_test(is_manager)

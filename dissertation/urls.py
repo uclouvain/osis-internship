@@ -25,6 +25,7 @@
 ##############################################################################
 from django.conf.urls import url
 from dissertation.views import dissertation, proposition_dissertation, information, offer_proposition
+from dissertation.utils import request
 
 urlpatterns = [
     url(r'^$', dissertation.dissertations, name='dissertations'),
@@ -51,6 +52,7 @@ urlpatterns = [
         name='dissertations_wait_list'),
 
     url(r'^informations/$', information.informations, name='informations'),
+    url(r'^informations_add/$', information.informations_add, name='informations_add'),
     url(r'^informations_detail_stats/$', information.informations_detail_stats, name='informations_detail_stats'),
     url(r'^informations_edit/$', information.informations_edit, name='informations_edit'),
 
@@ -100,6 +102,8 @@ urlpatterns = [
 
     url(r'^manager_informations/$', information.manager_informations, name='manager_informations'),
     url(r'^manager_informations_add/$', information.manager_informations_add, name='manager_informations_add'),
+    url(r'^manager_informations_add_person/$', information.manager_informations_add_person,
+        name='manager_informations_add_person'),
     url(r'^manager_informations_detail/(?P<pk>[0-9]+)/$', information.manager_informations_detail,
         name='manager_informations_detail'),
     url(r'^manager_informations_detail_list_wait/(?P<pk>[0-9]+)/$', information.manager_informations_detail_list_wait,
@@ -148,6 +152,8 @@ urlpatterns = [
         name='my_dissertation_propositions'),
     url(r'^proposition_dissertations/$', proposition_dissertation.proposition_dissertations,
         name='proposition_dissertations'),
+    url(r'^proposition_dissertations_created/$', proposition_dissertation.proposition_dissertations_created,
+        name='proposition_dissertations_created'),
     url(r'^proposition_dissertation/(?P<pk>[0-9]+)/delete/$', proposition_dissertation.proposition_dissertation_delete,
         name='proposition_dissertation_delete'),
     url(r'^proposition_dissertation_detail/(?P<pk>[0-9]+)/$', proposition_dissertation.proposition_dissertation_detail,
@@ -167,4 +173,5 @@ urlpatterns = [
     url(r'^proposition_dissertations_role_delete/(?P<pk>[0-9]+)$',
         proposition_dissertation.proposition_dissertations_role_delete,
         name='proposition_dissertations_role_delete'),
+    url(r'^students_list_in_offer_year/([0-9]+)/$',request.get_students_list_in_offer_year, name='students_list'),
 ]
