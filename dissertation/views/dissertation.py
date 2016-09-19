@@ -222,7 +222,6 @@ def manager_dissertations_edit(request, pk):
 
     return layout.render(request, 'manager_dissertations_edit.html',
                          {'form': form,
-                          'defend_periode_choices': Dissertation.DEFEND_PERIODE_CHOICES,
                           'dissert': dissert
                           })
 
@@ -246,7 +245,7 @@ def manager_dissertations_jury_edit(request, pk):
 def manager_dissertations_jury_new(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     count_dissertation_role = dissertation_role.count_by_dissertation(dissert)
-    if count_dissertation_role < 5 and dissert.status != 'DRAFT':
+    if count_dissertation_role < 4 and dissert.status != 'DRAFT':
         if request.method == "POST":
             form = ManagerDissertationRoleForm(request.POST)
             if form.is_valid():
@@ -258,6 +257,10 @@ def manager_dissertations_jury_new(request, pk):
                 dissertation_update.add(request, dissert, dissert.status, justification=justification)
                 dissertation_role.add(status, adv, diss)
                 return redirect('manager_dissertations_detail', pk=dissert.pk)
+            else:
+                form = ManagerDissertationRoleForm(initial={'dissertation': dissert})
+                return layout.render(request, 'manager_dissertations_jury_edit.html', {'form': form,
+                                                                                       'dissert': dissert})
         else:
             form = ManagerDissertationRoleForm(initial={'dissertation': dissert})
             return layout.render(request, 'manager_dissertations_jury_edit.html', {'form': form,
@@ -391,6 +394,8 @@ def manager_dissertations_to_dir_submit(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     old_status = dissert.status
     new_status = dissertation.get_next_status(dissert, "go_forward")
+    status_dict = dict(dissertation.STATUS_CHOICES)
+    new_status_display = status_dict[new_status]
 
     if request.method == "POST":
         form = ManagerDissertationUpdateForm(request.POST)
@@ -405,7 +410,7 @@ def manager_dissertations_to_dir_submit(request, pk):
         form = ManagerDissertationUpdateForm()
 
     return layout.render(request, 'manager_dissertations_add_justification.html',
-                         {'form': form, 'dissert': dissert, "old_status": old_status, "new_status": new_status})
+                         {'form': form, 'dissert': dissert, 'new_status_display': new_status_display})
 
 
 @login_required
@@ -425,6 +430,8 @@ def manager_dissertations_to_dir_ok(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     old_status = dissert.status
     new_status = dissertation.get_next_status(dissert, "accept")
+    status_dict = dict(dissertation.STATUS_CHOICES)
+    new_status_display = status_dict[new_status]
 
     if request.method == "POST":
         form = ManagerDissertationUpdateForm(request.POST)
@@ -439,7 +446,7 @@ def manager_dissertations_to_dir_ok(request, pk):
         form = ManagerDissertationUpdateForm()
 
     return layout.render(request, 'manager_dissertations_add_justification.html',
-                         {'form': form, 'dissert': dissert, "old_status": old_status, "new_status": new_status})
+                         {'form': form, 'dissert': dissert, 'new_status_display': new_status_display})
 
 
 @login_required
@@ -470,6 +477,8 @@ def manager_dissertations_to_dir_ko(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     old_status = dissert.status
     new_status = dissertation.get_next_status(dissert, "refuse")
+    status_dict = dict(dissertation.STATUS_CHOICES)
+    new_status_display = status_dict[new_status]
 
     if request.method == "POST":
         form = ManagerDissertationUpdateForm(request.POST)
@@ -484,7 +493,7 @@ def manager_dissertations_to_dir_ko(request, pk):
         form = ManagerDissertationUpdateForm()
 
     return layout.render(request, 'manager_dissertations_add_justification.html',
-                         {'form': form, 'dissert': dissert, "old_status": old_status, "new_status": new_status})
+                         {'form': form, 'dissert': dissert, 'new_status_display': new_status_display})
 
 
 @login_required
@@ -568,12 +577,17 @@ def dissertations_list(request):
     adviser_list_dissertations = dissertation_role.search_by_adviser_and_role(adv, 'PROMOTEUR')
     adviser_list_dissertations_copro = dissertation_role.search_by_adviser_and_role(adv, 'CO_PROMOTEUR')
     adviser_list_dissertations_reader = dissertation_role.search_by_adviser_and_role(adv, 'READER')
+    adviser_list_dissertations_accompanist = dissertation_role.search_by_adviser_and_role(adv, 'ACCOMPANIST')
+    adviser_list_dissertations_internship = dissertation_role.search_by_adviser_and_role(adv, 'INTERNSHIP')
 
     return layout.render(request, "dissertations_list.html",
                          {'adviser': adv,
                           'adviser_list_dissertations': adviser_list_dissertations,
                           'adviser_list_dissertations_copro': adviser_list_dissertations_copro,
-                          'adviser_list_dissertations_reader': adviser_list_dissertations_reader})
+                          'adviser_list_dissertations_reader': adviser_list_dissertations_reader,
+                          'adviser_list_dissertations_accompanist': adviser_list_dissertations_accompanist,
+                          'adviser_list_dissertations_internship': adviser_list_dissertations_internship
+                          })
 
 
 @login_required
@@ -647,6 +661,8 @@ def dissertations_to_dir_ok(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     old_status = dissert.status
     new_status = dissertation.get_next_status(dissert, "accept")
+    status_dict = dict(dissertation.STATUS_CHOICES)
+    new_status_display = status_dict[new_status]
 
     if request.method == "POST":
         form = ManagerDissertationUpdateForm(request.POST)
@@ -661,7 +677,7 @@ def dissertations_to_dir_ok(request, pk):
         form = ManagerDissertationUpdateForm()
 
     return layout.render(request, 'dissertations_add_justification.html',
-                         {'form': form, 'dissert': dissert, "old_status": old_status, "new_status": new_status})
+                         {'form': form, 'dissert': dissert, 'new_status_display': new_status_display})
 
 
 @login_required
@@ -670,6 +686,8 @@ def dissertations_to_dir_ko(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     old_status = dissert.status
     new_status = dissertation.get_next_status(dissert, "refuse")
+    status_dict = dict(dissertation.STATUS_CHOICES)
+    new_status_display = status_dict[new_status]
 
     if request.method == "POST":
         form = ManagerDissertationUpdateForm(request.POST)
@@ -684,7 +702,7 @@ def dissertations_to_dir_ko(request, pk):
         form = ManagerDissertationUpdateForm()
 
     return layout.render(request, 'dissertations_add_justification.html',
-                         {'form': form, 'dissert': dissert, "old_status": old_status, "new_status": new_status})
+                         {'form': form, 'dissert': dissert, 'new_status_display': new_status_display})
 
 
 @login_required
@@ -717,7 +735,7 @@ def dissertations_jury_new(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     count_dissertation_role = dissertation_role.count_by_dissertation(dissert)
     offer_prop = offer_proposition.get_by_dissertation(dissert)
-    if count_dissertation_role < 5 and offer_prop.adviser_can_suggest_reader:
+    if count_dissertation_role < 4 and offer_prop.adviser_can_suggest_reader:
         if request.method == "POST":
             form = ManagerDissertationRoleForm(request.POST)
             if form.is_valid():

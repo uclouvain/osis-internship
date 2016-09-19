@@ -243,6 +243,9 @@ msgstr	 "3ème choix"
 msgid	 "type"
 msgstr	 "Type"
 
+msgid	 "choice"
+msgstr	 "Choix"
+
 msgid	 "no_hospital"
 msgstr	 "Hôpital inexistant"
 
@@ -267,5 +270,5 @@ msgstr "Stages sélectionnés"
 msgid "select_speciality_change_internships"
 msgstr "Sélectionnez une spécialité pour ajouter/modifier vos choix pour ce stage au choix"
 
-msgid "choice"
-msgstr "Choix"
+msgid "assignations_sumup"
+msgstr "Bilan des assignations"

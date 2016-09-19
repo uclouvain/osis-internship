@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -24,23 +24,10 @@
 #
 ##############################################################################
 from django.db import models
-from django.contrib import admin
-from django.utils.translation import ugettext_lazy as _
-from base.models import offer, program_manager, academic_year
 
 
-class DomainOfferAdmin(admin.ModelAdmin):
-    list_display = ('domain', 'offer_year', 'priority')
-    fieldsets = ((None, {'fields': ('domain', 'offer_year', 'priority',)}),)
-    raw_id_fields = ('offer_year',)
-    search_fields = ['acronym']
-
-
-class DomainOffer(models.Model):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    domain = models.ForeignKey('reference.Domain')
-    offer_year = models.ForeignKey('OfferYear')
-    priority = models.CharField(max_length=20)
+class DissertationLocation(models.Model):
+    name = models.CharField(max_length=200)
 
     def __str__(self):
-        return u"%s - %s" % (self.domain, self.offer_year)
+        return self.name

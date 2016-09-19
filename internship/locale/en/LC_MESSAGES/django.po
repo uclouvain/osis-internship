@@ -243,6 +243,9 @@ msgstr	 "Third Choice"
 msgid	 "type"
 msgstr	 "Type"
 
+msgid	 "choice"
+msgstr	 "Choice"
+
 msgid	 "no_hospital"
 msgstr	 "Hospital not found"
 
@@ -267,5 +270,5 @@ msgstr "Selected internships"
 msgid "select_speciality_change_internships"
 msgstr "Select a speciality to add or modify your choices for this internship in choice"
 
-msgid "choice"
-msgstr "Choice"
+msgid "assignations_sumup"
+msgstr "Assignations' Sum up"

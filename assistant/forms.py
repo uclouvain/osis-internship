@@ -141,6 +141,25 @@ class MandatesArchivesForm(ModelForm):
         fields = ('academic_year',)
 
 
+class AssistantFormPart3(ModelForm):
+    phd_inscription_date = forms.DateField(required=False, widget=forms.DateInput(format='%d/%m/%Y',
+                                                                                  attrs={'placeholder': 'dd/mm/yyyy'}),
+                                           input_formats=['%d/%m/%Y'])
+    confirmation_test_date = forms.DateField(required=False, widget=forms.DateInput(format='%d/%m/%Y',
+                                                                                    attrs={
+                                                                                        'placeholder': 'dd/mm/yyyy'}),
+                                             input_formats=['%d/%m/%Y'])
+
+    thesis_title = forms.CharField(
+        required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '2'}))
+    remark = forms.CharField(
+        required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '4'}))
+
+    class Meta:
+        model = mdl.academic_assistant.AcademicAssistant
+        fields = ('phd_inscription_date', 'thesis_title', 'confirmation_test_date','remark')
+
+
 class AssistantFormPart4(ModelForm):
     internships = forms.CharField(
         required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '2'}))

@@ -1,3 +1,3 @@
-[submodule "osis-common"]
-	path = osis-common
-	url = https://github.com/uclouvain/osis-common.git
+[submodule "osis_common"]
+	path = osis_common
+	url = git@github.com:uclouvain/osis-common.git
