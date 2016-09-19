@@ -64,6 +64,8 @@
                     <label>{% trans 'email' %}</label><br>
                     {{ information.email | default_if_none:'-' }}
                 </div>
+                <div class="col-md-4">
+                </div>
             </div>
             <br>
 
@@ -90,15 +92,17 @@
                 <div class="col-md-9">
                     <label>{% trans 'internships' %}</label>
                 </div>
-                {% if perms.internship.is_internship_manager %}
-                    <div class="col-md-1">
+                <div class="col-md-1">
+                    {% if perms.internship.is_internship_manager %}
                         <a class="btn btn-warning" target="_blank" id="lnk_student_information_modification"
                            href="{% url 'internship_student_information_modification' student.registration_id %}">
-                  <span class="glyphicon glyphicon-pencil" aria-hidden="true"> {% trans 'edit' %}
-                  </span>
+                              <span class="glyphicon glyphicon-pencil" aria-hidden="true"> {% trans 'edit' %}
+                              </span>
                         </a>
-                    </div>
-                {% endif %}
+                    {% endif %}
+                </div>
+                <div class="col-md-2">
+                </div>
             </div>
             <br>
             <div class="panel panel-default">
