@@ -163,7 +163,6 @@
                             <h3 class="panel-title">{% trans 'student_photo' %}</h3>
                           </div>
                           <div class="panel-body" style="text-align: center">
-                              <a href="#">
                                  {% with author_photo=dissertation.author.person.get_photo %}
                                      {% if author_photo != False %}
                                       <img src="data:image/jpeg;base64,{{author_photo}}" class="avatar img-responsive"
@@ -387,7 +386,6 @@
                                          {% endif %}
                                       {% endif %}
                                   {% endwith %}
-                              </a>
                     </div>
                 </div>
                 </div>

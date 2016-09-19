@@ -161,7 +161,6 @@
                 <h3 class="panel-title">{% trans 'photo' %}</h3>
               </div>
               <div class="panel-body" style="text-align: center">
-                  <a href="#">
                      {% with Adv_photo=adviser.person.get_photo %}
                          {% if Adv_photo != False %}
                           <img height="50%" width="50%" src="data:image/jpeg;base64,{{Adv_photo}}" class="avatar img-responsive"/>
@@ -181,7 +180,6 @@
                              {% endif %}
                           {% endif %}
                       {% endwith %}
-                  </a>
               </div>
           </div>
         </div>
