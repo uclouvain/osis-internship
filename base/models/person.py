@@ -32,7 +32,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from django.core import serializers
 import base64
-from django.http import HttpResponse
 import urllib
 
 class PersonAdmin(admin.ModelAdmin):
@@ -93,14 +92,16 @@ class Person(models.Model):
     def natural_key(self):
         return (self.global_id, )
 
-
+    @property
     def get_photo(self):
     # Return JPG in Base64 format
     # return False if no valid data: global_id or no picture
-    # In template use like this <img src="data:image/jpeg;base64,{{person.get_photo}}" class="avatar img-responsive"/>
+    # for template use like this <img src="data:image/jpeg;base64,{{person.get_photo}}" class="avatar img-responsive"/>
+
         if self.global_id :
             glob_id_str=str(self.global_id)
             photo_path=PERSON_PHOTO_PATH + 'image' + glob_id_str[-4:-2] +"/"+ glob_id_str + '.jpg'
+
             try:
                 photo = urllib.request.urlopen(photo_path)
                 photo_base64 = base64.b64encode(photo.read())
