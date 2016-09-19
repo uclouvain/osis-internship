@@ -24,7 +24,6 @@
 #
 ##############################################################################
 from django.db import models
-from . import dissertation
 
 
 class DissertationLocation(models.Model):
