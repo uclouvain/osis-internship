@@ -24,6 +24,7 @@
 #
 ##############################################################################
 
+from backoffice.settings import PERSON_PHOTO_PATH
 from django.db import models
 from django.contrib import admin
 from django.contrib.auth.models import User
@@ -31,7 +32,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from django.core import serializers
 from base.models.serializable_model import SerializableModel
-
+import base64
+import urllib
 
 class PersonAdmin(admin.ModelAdmin):
     list_display = ('first_name' , 'middle_name', 'last_name', 'username', 'email', 'gender', 'global_id',
@@ -85,6 +87,25 @@ class Person(SerializableModel):
             last_name = self.last_name + ","
 
         return u"%s %s %s" % (last_name.upper(), first_name, middle_name)
+
+    @property
+    def get_photo(self):
+    # Return JPG in Base64 format
+    # return False if no valid data: global_id or no picture
+    # for template use like this <img src="data:image/jpeg;base64,{{person.get_photo}}" class="avatar img-responsive"/>
+
+        if self.global_id:
+            glob_id_str=str(self.global_id)
+            photo_path=PERSON_PHOTO_PATH + 'image' + glob_id_str[-4:-2] +"/"+ glob_id_str + '.jpg'
+
+            try:
+                photo = urllib.request.urlopen(photo_path)
+                photo_base64 = base64.b64encode(photo.read())
+                return photo_base64
+            except IOError:
+                return False
+        else:
+            return False
 
     class Meta:
         permissions = (
