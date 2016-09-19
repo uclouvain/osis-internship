@@ -294,10 +294,3 @@ def export_pdf(request, organization_id, speciality_id):
         a.adress = informations.location + " " + informations.postal_code + " " + informations.city
         a.phone_mobile = informations.phone_mobile
     return export_utils_pdf.print_affectations(organization_id, affectations)
-=======
-    return render(request, "place_detail_affectation.html", {'organization':        organization,
-                                                 'affectations': affectations,
-                                                 'specialities':        all_speciality,
-                                                 'periods':             periods,
-                                                  })
->>>>>>> dev
