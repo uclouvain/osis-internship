@@ -165,19 +165,21 @@
                        {% trans 'proposition_dissertation_jury_info' %}
                  </div>
                  {% for proposition_role in proposition_roles %}
-                 <div class="row">
+                 <div class="row" style="margin: 10px;">
                    <div class="col-md-3" style="text-align: right">
-                       <label>{{ proposition_role.status }}</label>
+                       <label>{{ proposition_role.get_status_display }}</label>
                    </div>
-                   <div class="col-md-4">
+                   <div class="col-md-2">
                        {{ proposition_role.adviser }}
                    </div>
-                   <div class="col-md-5">
-                       <a class="btn btn-danger btn-sm" style="width:auto;padding:0;margin:0"
+                   {% if proposition_role.status != 'PROMOTEUR' %}
+                   <div class="col-md-1">
+                       <a class="btn btn-warning"
                           href="{% url 'manager_proposition_dissertations_role_delete' pk=proposition_role.pk %}"
                           onclick="return confirm('{% trans 'delete_adviser_role_confirmation_message' %}')">
-                           <span class="glyphicon glyphicon-remove span2"></span> {% trans 'delete'%} {{ proposition_role.adviser }}</a>
+                           <span class="glyphicon glyphicon-remove span2"></span></a>
                    </div>
+                   {% endif %}
                  </div>
                  {% endfor %}
                  <br>

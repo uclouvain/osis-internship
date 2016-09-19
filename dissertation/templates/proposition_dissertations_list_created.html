@@ -36,14 +36,17 @@
     <h2>{% trans 'subjects' %}</h2>
   </div>
   <ul class="nav nav-tabs">
-    <li class="active"><a href="#">{% trans 'my_proposition_dissertations' %}</a></li>
-    <li><a href="{% url 'proposition_dissertations_created'%}">{% trans 'proposition_dissertations_created' %}</a></li>
+    <li><a href="{% url 'my_dissertation_propositions' %}">{% trans 'my_proposition_dissertations' %}</a></li>
+    <li class="active"><a href="#">{% trans 'proposition_dissertations_created' %}</a></li>
     <li><a href="{% url 'proposition_dissertations'%}">{% trans 'all_proposition_dissertations' %}</a></li>
   </ul>
   <div class="panel panel-default">
     <div class="panel-body">
       <form method="get" action="{% url 'proposition_dissertations_search'%}">
         <div class="row">
+          <div class="col-md-10">
+            {% trans 'proposition_dissertations_created_info' %}
+          </div>
           <div class="col-md-1 pull-right">
             <a href="{% url 'proposition_dissertation_new' %}" id="lnk_proposition_dissertation_new" class="btn btn-default"
             role="button" title="{% trans 'create_proposition_dissertation'%}"><span class="glyphicon glyphicon-plus"
