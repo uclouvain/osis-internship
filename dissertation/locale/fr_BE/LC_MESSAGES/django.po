@@ -49,6 +49,12 @@ msgstr "Ajouter un membre au jury"
 msgid "add_justification"
 msgstr "Ajouter une justification"
 
+msgid "add_person"
+msgstr "Ajouter une personne"
+
+msgid "add_person_warning"
+msgstr "Ce formulaire permet d'ajouter une personne dans OSIS. Complétez attentivement le formulaire, il ne sera plus possible de modifier cette personne ensuite."
+
 msgid "add_proposition"
 msgstr "Ajouter un sujet"
 
@@ -301,6 +307,9 @@ msgstr "Évaluation de fin de première année"
 msgid "export_search_as_xls"
 msgstr "Exporter la recherche en XLS"
 
+msgid "first_name"
+msgstr "Prénom"
+
 msgid "for_managers"
 msgstr "Pour les gesionnaires"
 
@@ -327,6 +336,12 @@ msgstr "Nombre de mémoires en tant que promoteur"
 
 msgid "how_many_dissertation_reader"
 msgstr "Nombre de mémoires en tant que lecteur"
+
+msgid "if_extern_you_can"
+msgstr "Si la personne est externe à l'Université, vous pouvez"
+
+msgid "if_intern_use_good_email"
+msgstr "Si la personne appartient à l'Université, il faut utiliser son adresse e-mail correcte."
 
 msgid "if_unavailable_adviser"
 msgstr "Si l'enseignant concerné n'est pas dans la liste, vous pouvez"
@@ -372,6 +387,9 @@ msgstr "Vous allez enregistrer le changement de statut et sa justification. Voul
 
 msgid "justification_instructions"
 msgstr "La mise-à-jour de l'état du mémoire est sur le point d'être effectuée. Le changement d'état qui sera appliqué est renseigné ci-dessous. Veuillez indiquer un message d'explication."
+
+msgid "last_name"
+msgstr "Nom de famille"
 
 msgid "level"
 msgstr "Niveau de développement du sujet"
@@ -438,6 +456,9 @@ msgstr "Évaluation de première année échouée"
 
 msgid "manager_informations_add"
 msgstr "Ajouter un enseignant"
+
+msgid "manager_informations_add_person"
+msgstr "ajouter cette personne"
 
 msgid "manager_informations_list_request"
 msgstr "Enseignants devant répondre à une demande"
@@ -598,7 +619,7 @@ msgstr "Cette personne existe déjà en tant qu'enseignant"
 msgid "person_to_add"
 msgstr "Personne à ajouter"
 
-msgid "person_not_found_by_mail "
+msgid "person_not_found_by_mail"
 msgstr "Aucune personne ne correspond à cet adresse e-mail"
 
 msgid "phone"
@@ -802,8 +823,11 @@ msgstr "En attente d'éval 1è année"
 msgid "waiting_reception"
 msgstr "En attente de réception"
 
-msgid "wating_dissertations_message"
+msgid "waiting_dissertations_message"
 msgstr "mémoires en attente de validation"
+
+msgid "warning"
+msgstr "Attention"
 
 msgid "welcome"
 msgstr "Bienvenue"

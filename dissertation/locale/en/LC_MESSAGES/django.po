@@ -49,6 +49,12 @@ msgstr "Add a jury member"
 msgid "add_justification"
 msgstr "Add justification"
 
+msgid "add_person"
+msgstr "Add person"
+
+msgid "add_person_warning"
+msgstr "This form is used to add a person to OSIS. Complete carefully the form, you will not be able to edit this person after adding."
+
 msgid "add_proposition"
 msgstr "Add subject"
 
@@ -301,6 +307,9 @@ msgstr "First year evaluation"
 msgid "export_search_as_xls"
 msgstr "Export search as XLS"
 
+msgid "first_name"
+msgstr "First name"
+
 msgid "for_managers"
 msgstr "For managers"
 
@@ -327,6 +336,12 @@ msgstr "Dissertations quantity as promotor"
 
 msgid "how_many_dissertation_reader"
 msgstr "Dissertations quantity as reader"
+
+msgid "if_extern_you_can"
+msgstr "If this person is not a member of the University, you can"
+
+msgid "if_intern_use_good_email"
+msgstr "If this person is a member of the University, you need to use the correct e-mail address."
 
 msgid "if_unavailable_adviser"
 msgstr "If the concerned teacher is not in the list, you can"
@@ -372,6 +387,9 @@ msgstr "You are ready to save this change and your justification. Are you sure y
 
 msgid "justification_instructions"
 msgstr "The status update is nearly done. This update is detailed just after. Please add your explanation for this update."
+
+msgid "last_name"
+msgstr "Last name"
 
 msgid "level"
 msgstr "Subject developement level"
@@ -438,6 +456,9 @@ msgstr "First year evaluation failed"
 
 msgid "manager_informations_add"
 msgstr "Add teacher"
+
+msgid "manager_informations_add_person"
+msgstr "add this person"
 
 msgid "manager_informations_list_request"
 msgstr "Teachers having to answer request"
@@ -598,7 +619,7 @@ msgstr "This person already exists as teacher"
 msgid "person_to_add"
 msgstr "Person to add"
 
-msgid "person_not_found_by_mail "
+msgid "person_not_found_by_mail"
 msgstr "No person matches this e-mail address"
 
 msgid "phone"
@@ -802,8 +823,11 @@ msgstr "Waiting 1st year evaluation"
 msgid "waiting_reception"
 msgstr "Waiting reception"
 
-msgid "wating_dissertations_message"
+msgid "waiting_dissertations_message"
 msgstr "Dissertations waiting validation"
+
+msgid "warning"
+msgstr "Warning"
 
 msgid "welcome"
 msgstr "Welcome"
