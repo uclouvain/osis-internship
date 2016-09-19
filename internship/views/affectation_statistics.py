@@ -547,15 +547,15 @@ def update_scores(student):
         solution[student][period].cost = score
 
 
-def compute_distance(address_1, address_2):
+def compute_distance(address_student, address_organization):
     """
     Compute the distance between 2 addresses
-    :param address_1:  Student address
-    :param address_2:  Organization Address
+    :param address_student:  Student address
+    :param address_organization:  Organization Address
     :return: Distance in km between the organization and the student address
     """
 
-    distance = calc_dist(address_1.latitude, address_1.longitude, address_2.latitude, address_2.longitude)
+    distance = calc_dist(address_student.latitude, address_student.longitude, address_organization.latitude, address_organization.longitude)
     return distance
 
 
