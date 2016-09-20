@@ -222,7 +222,6 @@ def manager_dissertations_edit(request, pk):
 
     return layout.render(request, 'manager_dissertations_edit.html',
                          {'form': form,
-                          'defend_periode_choices': Dissertation.DEFEND_PERIODE_CHOICES,
                           'dissert': dissert
                           })
 
@@ -578,12 +577,17 @@ def dissertations_list(request):
     adviser_list_dissertations = dissertation_role.search_by_adviser_and_role(adv, 'PROMOTEUR')
     adviser_list_dissertations_copro = dissertation_role.search_by_adviser_and_role(adv, 'CO_PROMOTEUR')
     adviser_list_dissertations_reader = dissertation_role.search_by_adviser_and_role(adv, 'READER')
+    adviser_list_dissertations_accompanist = dissertation_role.search_by_adviser_and_role(adv, 'ACCOMPANIST')
+    adviser_list_dissertations_internship = dissertation_role.search_by_adviser_and_role(adv, 'INTERNSHIP')
 
     return layout.render(request, "dissertations_list.html",
                          {'adviser': adv,
                           'adviser_list_dissertations': adviser_list_dissertations,
                           'adviser_list_dissertations_copro': adviser_list_dissertations_copro,
-                          'adviser_list_dissertations_reader': adviser_list_dissertations_reader})
+                          'adviser_list_dissertations_reader': adviser_list_dissertations_reader,
+                          'adviser_list_dissertations_accompanist': adviser_list_dissertations_accompanist,
+                          'adviser_list_dissertations_internship': adviser_list_dissertations_internship
+                          })
 
 
 @login_required
@@ -731,7 +735,7 @@ def dissertations_jury_new(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     count_dissertation_role = dissertation_role.count_by_dissertation(dissert)
     offer_prop = offer_proposition.get_by_dissertation(dissert)
-    if count_dissertation_role < 5 and offer_prop.adviser_can_suggest_reader:
+    if count_dissertation_role < 4 and offer_prop.adviser_can_suggest_reader:
         if request.method == "POST":
             form = ManagerDissertationRoleForm(request.POST)
             if form.is_valid():
