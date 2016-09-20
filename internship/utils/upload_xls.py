@@ -26,19 +26,15 @@
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from django.utils.translation import ungettext
 from openpyxl import load_workbook
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 
 from internship.models import Organization, OrganizationAddress, InternshipOffer, InternshipMaster, Period, PeriodInternshipPlaces, InternshipSpeciality
-from internship.forms import OrganizationForm
-from base import models as mdl
 
 @login_required
 def upload_places_file(request):
     if request.method == 'POST':
-        form = OrganizationForm(request.POST, request.FILES)
         file_name = request.FILES['file']
         if file_name is not None:
             if ".xls" not in str(file_name):
@@ -52,7 +48,6 @@ def upload_places_file(request):
 def __save_xls_place(request, file_name, user):
     workbook = load_workbook(file_name, read_only=True)
     worksheet = workbook.active
-    form = OrganizationForm(request)
     col_reference = 0
     col_name = 1
     col_address = 2
@@ -63,7 +58,6 @@ def __save_xls_place(request, file_name, user):
 
     # Iterates over the lines of the spreadsheet.
     for count, row in enumerate(worksheet.rows):
-        new_score = False
         if row[col_reference].value is None \
                 or row[col_reference].value == 0 \
                 or not _is_registration_id(row[col_reference].value):
@@ -172,20 +166,16 @@ def __save_xls_internships(request, file_name, user):
     worksheet = workbook.active
     col_reference = 0
     col_spec = 1
-    index = 1
+    col_master = 2
     # Iterates over the lines of the spreadsheet.
     for count, row in enumerate(worksheet.rows):
-
-        new_score = False
         if row[col_reference].value is None \
                 or row[col_reference].value == 0 \
                 or not _is_registration_id(row[col_reference].value):
             continue
 
         if row[col_spec].value is not None:
-            success = 0
             check_internship = 0
-
             if row[col_reference].value:
                 reference = ""
                 if int(row[col_reference].value) < 10 :
@@ -200,6 +190,8 @@ def __save_xls_internships(request, file_name, user):
                 spec_value = row[col_spec].value
                 spec_value = spec_value.replace(" ","")
                 spec_value = spec_value.replace("*","")
+
+                master_value = row[col_master].value
 
                 speciality = InternshipSpeciality.search(acronym=spec_value)
 
@@ -221,6 +213,7 @@ def __save_xls_internships(request, file_name, user):
                     internship.speciality = speciality[x]
                     internship.title = speciality[x].name
                     internship.maximum_enrollments = number_place
+                    internship.master = master_value
                     internship.selectable = True
                     internship.save()
 
@@ -272,8 +265,6 @@ def __save_xls_masters(request, file_name, user):
 
     # Iterates over the lines of the spreadsheet.
     for count, row in enumerate(worksheet.rows):
-
-        new_score = False
         check_reference = str(row[col_reference].value).strip(' ')
         if check_reference == "":
             check_reference = "000"

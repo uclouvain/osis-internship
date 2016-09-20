@@ -30,7 +30,9 @@ class Migration(migrations.Migration):
                 ('reference', models.CharField(blank=True, max_length=30, null=True)),
                 ('civility', models.CharField(blank=True, choices=[('PROFESSOR', 'Professor'), ('DOCTOR', 'Doctor')], max_length=20, null=True)),
                 ('type_mastery', models.CharField(blank=True, choices=[('SPECIALIST', 'Specialist'), ('GENERALIST', 'Generalist')], max_length=20, null=True)),
-                ('speciality', models.CharField(blank=True, choices=[('INTERNAL_MEDICINE', 'Internal Medicine'), ('SURGERY', 'Surgery'), ('GYNEC_OBSTETRICS', 'Gynec-Obstetrics'), ('PEDIATRICS', 'Pediatrics'), ('EMERGENCY', 'Emergency'), ('GERIATRICS', 'Geriatrics')], max_length=20, null=True)),
+                ('speciality', models.CharField(blank=True, choices=[('INTERNAL_MEDICINE', 'Internal Medicine'), ('SURGERY', 'Surgery'), \
+                ('GYNEC_OBSTETRICS', 'Gynec-Obstetrics'), ('PEDIATRICS', 'Pediatrics'), ('EMERGENCY', 'Emergency'), ('GERIATRICS', 'Geriatrics')], \
+                max_length=20, null=True)),
             ],
         ),
         migrations.CreateModel(

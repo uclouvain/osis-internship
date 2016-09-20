@@ -3,71 +3,71 @@
 {% load i18n %}
 
 {% comment "License" %}
- * OSIS stands for Open Student Information System. It's an application
- * designed to manage the core business of higher education institutions,
- * such as universities, faculties, institutes and professional schools.
- * The core business involves the administration of students, teachers,
- * courses, programs and so on.
- *
- * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * A copy of this license - GNU General Public License - is available
- * at the root of the source code of this program.  If not,
- * see http://www.gnu.org/licenses/.
+    * OSIS stands for Open Student Information System. It's an application
+    * designed to manage the core business of higher education institutions,
+    * such as universities, faculties, institutes and professional schools.
+    * The core business involves the administration of students, teachers,
+    * courses, programs and so on.
+    *
+    * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+    *
+    * This program is free software: you can redistribute it and/or modify
+    * it under the terms of the GNU General Public License as published by
+    * the Free Software Foundation, either version 3 of the License, or
+    * (at your option) any later version.
+    *
+    * This program is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    * GNU General Public License for more details.
+    *
+    * A copy of this license - GNU General Public License - is available
+    * at the root of the source code of this program.  If not,
+    * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
 {% block breadcrumb %}
-<li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-<li><a href="{% url 'internships_home' %}">{% trans 'internships_managment' %}</a></li>
-  <li><a href="{% url 'internships' %}">{% trans 'all_internships' %}</a></li>
-  <li class="active">{% trans 'detail_choice' %}</li>
+    <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
+    <li><a href="{% url 'internships_home' %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'internships' %}">{% trans 'all_internships' %}</a></li>
+    <li class="active">{% trans 'detail_choice' %}</li>
 {% endblock %}
 {% block content %}
-<div class="page-header">
-    <h2>{{ internship.organization.name }} - {{ internship.speciality.name }}</h2>
-</div>
-<div class="panel panel-default">
-  {% for i in number_choices %}
-    <div class="panel-body">
-      {% if forloop.counter0 != 0 %}
-        {% if forloop.counter0 == 1 %}
-          <label> {% trans 'first_choice' %} </label> : {{i}}<br/>
-        {% elif forloop.counter0 == 2 %}
-          <label> {% trans 'second_choice' %} </label> : {{i}}<br/>
-        {% elif forloop.counter0 == 3 %}
-          <label> {% trans 'third_choice' %} </label> : {{i}}<br/>
-        {% elif forloop.counter0 == 4 %}
-          <label> {% trans 'fourth_choice' %} </label> : {{i}}<br/>
-        {% endif %}
-        {% trans 'student_list' %} : <a role="button" data-toggle="collapse" data-target="#choice{{ forloop.counter0 }}"
-           aria-expanded="false"
-           aria-controls="choice{{ forloop.counter0 }}"
-           title="{% trans 'display_students_first_choice' %}">
-            <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-        </a>
-        <div class="collapse" id="choice{{ forloop.counter0 }}">
-          <ul>
-            {% for student in students %}
-              {% if student.choice == forloop.parentloop.counter0 %}
-                <li> {{ student.student }}
-              {% endif %}
-            {% endfor %}
-          </ul>
-        </div>
-        <br/>
-      {% endif %}
+    <div class="page-header">
+        <h2>{{ internship.organization.name }} - {{ internship.speciality.name }}</h2>
     </div>
-  {% endfor %}
-</div>
+    <div class="panel panel-default">
+        {% for i in number_choices %}
+            <div class="panel-body">
+                {% if forloop.counter0 != 0 %}
+                    {% if forloop.counter0 == 1 %}
+                        <label> {% trans 'first_choice' %} </label> : {{i}}<br/>
+                        {% elif forloop.counter0 == 2 %}
+                        <label> {% trans 'second_choice' %} </label> : {{i}}<br/>
+                        {% elif forloop.counter0 == 3 %}
+                        <label> {% trans 'third_choice' %} </label> : {{i}}<br/>
+                        {% elif forloop.counter0 == 4 %}
+                        <label> {% trans 'fourth_choice' %} </label> : {{i}}<br/>
+                    {% endif %}
+                    {% trans 'student_list' %} : <a role="button" data-toggle="collapse" data-target="#choice{{ forloop.counter0 }}"
+                                                    aria-expanded="false"
+                                                    aria-controls="choice{{ forloop.counter0 }}"
+                                                    title="{% trans 'display_students_first_choice' %}">
+                    <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+                </a>
+                    <div class="collapse" id="choice{{ forloop.counter0 }}">
+                        <ul>
+                            {% for student in students %}
+                                {% if student.choice == forloop.parentloop.counter0 %}
+                                    <li> {{ student.student }}
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <br/>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
 
-  {% endblock %}
+{% endblock %}
