@@ -600,8 +600,12 @@ def get_student_mandatory_choices(priority):
     # Sort he dict of student (this optimize the final result)
     specialities = InternshipSpeciality.search(mandatory=True)
     global specialities_dict
+    orders = []
     for speciality in specialities:
-        v = data[specialities_dict[speciality.name]]
+        orders.append(speciality.name)
+
+    for key in orders:
+        v = data[specialities_dict[key]]
         del data[specialities_dict[key]]
         data[specialities_dict[key]] = v
 
