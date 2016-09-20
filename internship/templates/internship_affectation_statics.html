@@ -30,13 +30,23 @@
     <li><a href="{% url 'internships_home' %}">{% trans 'internships' %}</a></li>
     <li class="active">{% trans 'affectation_result' %}</li>
 {% endblock %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/dataTables.bootstrap.min.css' %}">
+{% endblock %}
 {% block content %}
-    <div class="modal fade bs-example-modal-sm" id="PleaseWaitModal" tabindex="-1"
-         role="dialog" aria-hidden="true" data-backdrop="static">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">
+<style>
+  .dataTables_filter {
+    width: 50%;
+    float: right;
+    text-align: right;
+  }
+</style>
+<div class="modal fade bs-example-modal-sm" id="PleaseWaitModal" tabindex="-1"
+    role="dialog" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
                     <span class="glyphicon glyphicon-time">
                     </span> {% trans 'please_wait' %}
                     </h4>
@@ -53,7 +63,6 @@
             </div>
         </div>
     </div>
-
     <div class="panel panel-default">
         <div class="panel-body">
             <form  method="post" action="{% url 'internship_affectation_statistics_generate' %}" >
@@ -334,4 +343,29 @@
             </div>
         </div>
     </div>
+{% endblock %}
+{% block script %}
+<script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/dataTables.bootstrap.min.js' %}"></script>
+ <script>
+ $(document).ready(function() {
+    $('#organizations').DataTable({
+      paging: false,
+      "columnDefs": [ {
+        "targets": 'no-sort',
+        "orderable": false,
+      } ],
+      bInfo: false
+    });
+
+    $('#students').DataTable({
+      paging: false,
+      "columnDefs": [ {
+        "targets": 'no-sort',
+        "orderable": false,
+      } ],
+      bInfo: false
+    });
+} );
+</script>
 {% endblock %}

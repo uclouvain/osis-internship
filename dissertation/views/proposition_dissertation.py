@@ -50,6 +50,13 @@ def is_manager(user):
     this_adviser = adviser.search_by_person(person)
     return this_adviser.type == 'MGR' if this_adviser else False
 
+
+# Used by decorator @user_passes_test(is_manager) to secure manager views
+def is_teacher(user):
+    person = mdl.person.find_by_user(user)
+    this_adviser = adviser.search_by_person(person)
+    return this_adviser.type == 'PRF' if this_adviser else False
+
 ###########################
 #      MANAGER VIEWS      #
 ###########################
@@ -110,7 +117,8 @@ def manage_proposition_dissertation_edit(request, pk):
     else:
         form = ManagerPropositionDissertationEditForm(instance=prop_dissert)
     return layout.render(request, 'manager_proposition_dissertation_edit.html',
-                         {'form': form,
+                         {'prop_dissert': prop_dissert,
+                          'form': form,
                           'author': prop_dissert.author,
                           'types_choices': PropositionDissertation.TYPES_CHOICES,
                           'levels_choices': PropositionDissertation.LEVELS_CHOICES,
@@ -128,7 +136,25 @@ def manager_proposition_dissertations_jury_edit(request, pk):
 @login_required
 @user_passes_test(is_manager)
 def manager_proposition_dissertations_jury_new(request, pk):
-    return redirect('manager_proposition_dissertation_detail', pk=pk)
+    prop_dissert = get_object_or_404(PropositionDissertation, pk=pk)
+    count_proposition_role = PropositionRole.objects.filter(proposition_dissertation=prop_dissert).count()
+    if request.method == "POST":
+        form = ManagerPropositionRoleForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            status = data['status']
+            adv = data['adviser']
+            prop = data['proposition_dissertation']
+            if status == "PROMOTEUR":
+                prop_dissert.set_author(adv)
+                proposition_role.delete(status, prop)
+                proposition_role.add(status, adv, prop)
+            elif count_proposition_role < 4:
+                proposition_role.add(status, adv, prop)
+            return redirect('manager_proposition_dissertation_detail', pk=prop_dissert.pk)
+    else:
+        form = ManagerPropositionRoleForm(initial={'proposition_dissertation': prop_dissert})
+        return layout.render(request, 'manager_proposition_dissertations_jury_edit.html', {'form': form})
 
 
 @login_required
@@ -136,6 +162,7 @@ def manager_proposition_dissertations_jury_new(request, pk):
 def manager_proposition_dissertations_role_delete(request, pk):
     prop_role = get_object_or_404(PropositionRole, pk=pk)
     prop_dissert = prop_role.proposition_dissertation
+    prop_role.delete()
     return redirect('manager_proposition_dissertation_detail', pk=prop_dissert.pk)
 
 
@@ -210,6 +237,7 @@ def manager_proposition_dissertations_search(request):
 
 
 @login_required
+@user_passes_test(is_teacher)
 def proposition_dissertations(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -219,6 +247,7 @@ def proposition_dissertations(request):
 
 
 @login_required
+@user_passes_test(is_teacher)
 def proposition_dissertation_delete(request, pk):
     prop_dissert = get_object_or_404(PropositionDissertation, pk=pk)
     prop_dissert.deactivate()
@@ -226,6 +255,7 @@ def proposition_dissertation_delete(request, pk):
 
 
 @login_required
+@user_passes_test(is_teacher)
 def proposition_dissertation_detail(request, pk):
     prop_dissert = get_object_or_404(PropositionDissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
@@ -249,11 +279,12 @@ def proposition_dissertation_detail(request, pk):
 
 
 @login_required
+@user_passes_test(is_teacher)
 def proposition_dissertation_edit(request, pk):
     prop_dissert = get_object_or_404(PropositionDissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-    if prop_dissert.author == adv:
+    if prop_dissert.author == adv or prop_dissert.creator == adv.person:
         if request.method == "POST":
             form = PropositionDissertationForm(request.POST, instance=prop_dissert)
             if form.is_valid():
@@ -262,16 +293,17 @@ def proposition_dissertation_edit(request, pk):
         else:
             form = PropositionDissertationForm(instance=prop_dissert)
         return layout.render(request, 'proposition_dissertation_edit.html',
-                             {'form': form,
+                             {'prop_dissert': prop_dissert,
+                              'form': form,
                               'types_choices': PropositionDissertation.TYPES_CHOICES,
                               'levels_choices': PropositionDissertation.LEVELS_CHOICES,
                               'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES})
     else:
-        return layout.render(request, 'proposition_dissertations_list.html',
-                             {'proposition_dissertations': proposition_dissertations})
+        return redirect('proposition_dissertation_detail', pk=prop_dissert.pk)
 
 
 @login_required
+@user_passes_test(is_teacher)
 def my_dissertation_propositions(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -281,6 +313,17 @@ def my_dissertation_propositions(request):
 
 
 @login_required
+@user_passes_test(is_teacher)
+def proposition_dissertations_created(request):
+    person = mdl.person.find_by_user(request.user)
+    adv = adviser.search_by_person(person)
+    prop_disserts = proposition_dissertation.get_created_for_teacher(adv)
+    return layout.render(request, 'proposition_dissertations_list_created.html',
+                         {'proposition_dissertations': prop_disserts})
+
+
+@login_required
+@user_passes_test(is_teacher)
 def proposition_dissertation_new(request):
     person = mdl.person.find_by_user(request.user)
     if request.method == "POST":
@@ -300,6 +343,7 @@ def proposition_dissertation_new(request):
 
 
 @login_required
+@user_passes_test(is_teacher)
 def proposition_dissertations_search(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -310,6 +354,7 @@ def proposition_dissertations_search(request):
 
 
 @login_required
+@user_passes_test(is_teacher)
 def proposition_dissertations_jury_edit(request, pk):
     prop_role = get_object_or_404(PropositionRole, pk=pk)
     prop_dissert = prop_role.proposition_dissertation
@@ -317,11 +362,43 @@ def proposition_dissertations_jury_edit(request, pk):
 
 
 @login_required
+@user_passes_test(is_teacher)
 def proposition_dissertations_jury_new(request, pk):
-    return redirect('proposition_dissertation_detail', pk=pk)
+    prop_dissert = get_object_or_404(PropositionDissertation, pk=pk)
+    count_proposition_role = PropositionRole.objects.filter(proposition_dissertation=prop_dissert).count()
+    person = mdl.person.find_by_user(request.user)
+    adv = adviser.search_by_person(person)
+    if prop_dissert.author == adv or prop_dissert.creator == adv.person:
+        if request.method == "POST":
+            form = ManagerPropositionRoleForm(request.POST)
+            if form.is_valid():
+                data = form.cleaned_data
+                status = data['status']
+                adv = data['adviser']
+                prop = data['proposition_dissertation']
+                if status == "PROMOTEUR":
+                    prop_dissert.set_author(adv)
+                    proposition_role.delete(status, prop)
+                    proposition_role.add(status, adv, prop)
+                elif count_proposition_role < 4:
+                    proposition_role.add(status, adv, prop)
+                return redirect('proposition_dissertation_detail', pk=prop_dissert.pk)
+        else:
+            form = ManagerPropositionRoleForm(initial={'proposition_dissertation': prop_dissert})
+            return layout.render(request, 'proposition_dissertations_jury_edit.html', {'form': form})
+    else:
+        return redirect('proposition_dissertation_detail', pk=prop_dissert.pk)
+
 
 @login_required
+@user_passes_test(is_teacher)
 def proposition_dissertations_role_delete(request, pk):
     prop_role = get_object_or_404(PropositionRole, pk=pk)
     prop_dissert = prop_role.proposition_dissertation
+    person = mdl.person.find_by_user(request.user)
+    adv = adviser.search_by_person(person)
+
+    if prop_role.status != 'PROMOTEUR' and (prop_dissert.author == adv or prop_dissert.creator == adv.person):
+        prop_role.delete()
+
     return redirect('proposition_dissertation_detail', pk=prop_dissert.pk)
