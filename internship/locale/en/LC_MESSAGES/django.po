@@ -271,16 +271,13 @@ msgid "select_speciality_change_internships"
 msgstr "Select a speciality to add or modify your choices for this internship in choice"
 
 msgid "assignations_sumup"
-msgid "Assignations' Sum up"
+msgstr "Assignations' Sum up"
 
 msgid "download_xls_file"
 msgstr "Download Excel File"
 
 msgid "download_pdf_file"
 msgstr "Download PDF File"
-
-msgid "choice"
-msgstr "Choice"
 
 msgid "number_of_student"
 msgstr "Number of student"
