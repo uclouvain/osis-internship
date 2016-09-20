@@ -118,6 +118,9 @@ msgstr "Available by e-mail"
 msgid "available_by_phone"
 msgstr "Available by phone"
 
+msgid "back"
+msgstr "Back"
+
 msgid "case_study"
 msgstr "Case study"
 
@@ -648,6 +651,9 @@ msgstr "Settings"
 
 msgid "person"
 msgstr "Person"
+
+msgid "person_added"
+msgstr "Person added"
 
 msgid "person_already_adviser"
 msgstr "This person already exists as teacher"
