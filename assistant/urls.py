@@ -45,6 +45,8 @@ urlpatterns = [
     url(r'^pst/access_denied$', home.access_denied, name='access_denied'),
     url(r'^pst/form_part1/edit/(?P<mandate_id>\d+)/$', assistant_form.form_part1_edit, name='form_part1_edit'),
     url(r'^pst/form_part1/save/(?P<mandate_id>\d+)/$', assistant_form.form_part1_save, name='form_part1_save'),
+    url(r'^pst/form_part3/edit/(?P<mandate_id>\d+)/$', assistant_form.form_part3_edit, name='form_part3_edit'),
+    url(r'^pst/form_part3/save/(?P<mandate_id>\d+)/$', assistant_form.form_part3_save, name='form_part3_save'),
     url(r'^pst/mandate/tutoring_learning_unit/add/(?P<mandate_id>\d+)$', assistant_form.tutoring_learning_unit_add,
         name='tutoring_learning_unit_add'),
     url(r'^pst/mandate/tutoring_learning_unit/delete/(?P<tutoring_learning_unit_id>\d+)/$',

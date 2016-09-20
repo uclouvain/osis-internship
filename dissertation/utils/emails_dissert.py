@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from osis_common.messaging import message_config, send_message as message_service
+from base.utils.send_mail import *
 
 
 def send_mail_to_teacher_new_dissert(adviser):

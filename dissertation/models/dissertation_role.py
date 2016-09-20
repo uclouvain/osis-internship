@@ -38,6 +38,8 @@ class DissertationRole(models.Model):
         ('PROMOTEUR', _('promotor')),
         ('CO_PROMOTEUR', _('copromotor')),
         ('READER', _('reader')),
+        ('ACCOMPANIST', _('accompanist')),
+        ('INTERNSHIP', _('internship_master')),
     )
 
     status = models.CharField(max_length=12, choices=STATUS_CHOICES)

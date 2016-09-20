@@ -34,6 +34,7 @@ from .dissertation_role import DissertationRole
 
 class AdviserAdmin(admin.ModelAdmin):
     list_display = ('person', 'type')
+    raw_id_fields = ('person', )
 
 
 class Adviser(models.Model):
@@ -181,3 +182,14 @@ def serialize_list(list_advisers):
     """
     fields = ('id', 'person', 'type', 'available_by_email', 'available_by_phone', 'available_at_office', 'comment')
     return serializers.serialize("json", list_advisers, fields=fields)
+
+
+def add(person, type_arg, available_by_email, available_by_phone, available_at_office, comment):
+    adv = Adviser(person=person,
+                  type=type_arg,
+                  available_by_email=available_by_email,
+                  available_by_phone=available_by_phone,
+                  available_at_office=available_at_office,
+                  comment=comment)
+    adv.save()
+    return adv

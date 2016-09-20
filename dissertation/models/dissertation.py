@@ -34,10 +34,12 @@ from django.utils.translation import ugettext_lazy as _
 from base.models import offer_year, student, academic_year
 from . import proposition_dissertation
 from . import offer_proposition
+from . import dissertation_location
 
 
 class DissertationAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'status', 'active', 'proposition_dissertation', 'modification_date')
+    raw_id_fields = ('author', 'offer_year_start')
 
 
 STATUS_CHOICES = (
@@ -59,26 +61,39 @@ STATUS_CHOICES = (
     ('ENDED_LOS', _('ended_los')),
 )
 
+DEFEND_PERIODE_CHOICES = (
+    ('JANUARY', _('january')),
+    ('JUNE', _('june')),
+    ('SEPTEMBER', _('september')),
+)
+
+DEFEND_YEAR_CHOICES = (
+    ('2016', '2016-2017'),
+    ('2017', '2017-2018'),
+    ('2018', '2018-2019'),
+    ('2019', '2019-2020'),
+    ('2020', '2020-2021'),
+    ('2021', '2021-2022'),
+    ('2022', '2022-2023'),
+    ('2023', '2023-2024'),
+    ('2024', '2024-2025'),
+    ('2025', '2025-2026'),
+)
+
 
 class Dissertation(models.Model):
-    DEFEND_PERIODE_CHOICES = (
-        ('UNDEFINED', _('undefined')),
-        ('JANUARY', _('january')),
-        ('JUNE', _('june')),
-        ('SEPTEMBER', _('september')),
-    )
-
     title = models.CharField(max_length=200)
     author = models.ForeignKey(student.Student)
     status = models.CharField(max_length=12, choices=STATUS_CHOICES, default='DRAFT')
-    defend_periode = models.CharField(max_length=12, choices=DEFEND_PERIODE_CHOICES, default='UNDEFINED')
-    defend_year = models.ForeignKey(academic_year.AcademicYear, blank=True, null=True)
+    defend_periode = models.CharField(max_length=12, choices=DEFEND_PERIODE_CHOICES, blank=True, null=True)
+    defend_year = models.CharField(max_length=4, choices=DEFEND_YEAR_CHOICES, blank=True, null=True)
     offer_year_start = models.ForeignKey(offer_year.OfferYear)
     proposition_dissertation = models.ForeignKey(proposition_dissertation.PropositionDissertation)
     description = models.TextField(blank=True, null=True)
     active = models.BooleanField(default=True)
     creation_date = models.DateTimeField(auto_now_add=True, editable=False)
     modification_date = models.DateTimeField(auto_now=True)
+    location = models.ForeignKey(dissertation_location.DissertationLocation, blank=True, null=True)
 
     def __str__(self):
         return self.title

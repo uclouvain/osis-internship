@@ -72,14 +72,10 @@ def get_field_qs(field, **kwargs):
     return field.formfield(**kwargs)
 
 structure_inline_formset = inlineformset_factory(mdl.assistant_mandate.AssistantMandate,
-                                               mdl.mandate_structure.MandateStructure,
-                                               formfield_callback=get_field_qs,
-                                               fields=('structure',
-                                                       'assistant_mandate'),
-                                               extra=2,
-                                               can_delete=True,
-                                               min_num=1,
-                                               max_num=4)
+                                                 mdl.mandate_structure.MandateStructure,
+                                                 formfield_callback=get_field_qs,
+                                                 fields=('structure','assistant_mandate'),
+                                                 extra=2, can_delete=True, min_num=1, max_num=4)
 
 
 class HorizontalRadioRenderer(forms.RadioSelect.renderer):
@@ -143,6 +139,25 @@ class MandatesArchivesForm(ModelForm):
     class Meta:
         model = mdl.assistant_mandate.AssistantMandate
         fields = ('academic_year',)
+
+
+class AssistantFormPart3(ModelForm):
+    phd_inscription_date = forms.DateField(required=False, widget=forms.DateInput(format='%d/%m/%Y',
+                                                                                  attrs={'placeholder': 'dd/mm/yyyy'}),
+                                           input_formats=['%d/%m/%Y'])
+    confirmation_test_date = forms.DateField(required=False, widget=forms.DateInput(format='%d/%m/%Y',
+                                                                                    attrs={
+                                                                                        'placeholder': 'dd/mm/yyyy'}),
+                                             input_formats=['%d/%m/%Y'])
+
+    thesis_title = forms.CharField(
+        required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '2'}))
+    remark = forms.CharField(
+        required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '4'}))
+
+    class Meta:
+        model = mdl.academic_assistant.AcademicAssistant
+        fields = ('phd_inscription_date', 'thesis_title', 'confirmation_test_date','remark')
 
 
 class TutoringLearningUnitForm(forms.Form):
