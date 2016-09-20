@@ -149,7 +149,7 @@ def internships_student_search(request):
 @login_required
 @permission_required('internship.can_access_internship', raise_exception=True)
 def internships_student_read(request, registration_id):
-       student = mdl.student.find_by(registration_id=registration_id)
+    student = mdl.student.find_by(registration_id=registration_id)
     student = student[0]
     information = InternshipStudentInformation.search(person = student.person)
     internship_choice = InternshipChoice.find_by_student(student)
