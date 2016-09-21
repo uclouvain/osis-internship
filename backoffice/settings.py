@@ -242,3 +242,7 @@ try:
         pass
 except ImportError:
     pass
+
+# This has to be replaced by the actual url where you institution photos can be found.
+# Used by method get_photo in model Person in app Base.
+PERSON_PHOTO_PATH = ''
