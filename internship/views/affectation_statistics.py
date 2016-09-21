@@ -213,7 +213,12 @@ def compute_stats(sol):
     stats['others_specialities_students'] = others_specialities_students
 
     stats['mean_stud'] = round(mean(mean_array), 2)
-    stats['std_dev_stud'] = round(stdev(mean_array), 2)
+
+    if len(mean_array) > 1:
+        std_dev_stud = round(stdev(mean_array), 2)
+    else:
+        std_dev_stud = 0
+    stats['std_dev_stud'] = std_dev_stud
     stats['mean_noncons'] = round(consecutive_month / number_of_students, 2)
     stats['sol_cost'] = total_cost
     stats['total_internships'] = total_internships
@@ -569,6 +574,9 @@ def get_student_mandatory_choices(priority):
     specialities = {}
     choices = InternshipChoice.objects.filter(priority=priority)
 
+    if len(choices) == 0:
+        return {}
+
     # Build dict with specialities[speciality][student] <- InternshipChoice
     for choice in choices:
         # Init the speciality if does not exists in 'specialities'
@@ -606,11 +614,11 @@ def get_student_mandatory_choices(priority):
     for speciality in all_specialities:
         orders.append(speciality.name)
 
-
     for key in orders:
-        v = data[specialities_dict[key]]
-        del data[specialities_dict[key]]
-        data[specialities_dict[key]] = v
+        if specialities_dict[key] in data:
+            v = data[specialities_dict[key]]
+            del data[specialities_dict[key]]
+            data[specialities_dict[key]] = v
 
     return data
 
