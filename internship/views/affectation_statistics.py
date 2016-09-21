@@ -598,11 +598,15 @@ def get_student_mandatory_choices(priority):
     data = OrderedDict((k, v) for k, v in specialities.items() if v)
 
     # Sort he dict of student (this optimize the final result)
-    specialities = InternshipSpeciality.search(mandatory=True)
     global specialities_dict
-    orders = []
-    for speciality in specialities:
-        orders.append(speciality.name)
+    orders = ("Stage aux Urgences",
+              "Stage en Gynécologie-Obstétrique",
+              "Stage en Pédiatrie",
+              "Stage en Médecine interne 1",
+              "Stage en Médecine interne 2",
+              "Stage en Médecine interne 3",
+              "Stage en Chirurgie"
+              )
 
     for key in orders:
         v = data[specialities_dict[key]]
@@ -1058,10 +1062,15 @@ def save_solution():
 
     for student, internships in solution.items():
         for period, internship in internships.items():
-            internship.period = periods[internship.period - 1]
-            sol_line = create_solution_line(internship.student, internship.organization, internship.speciality,
-                                            internship.period, internship.choice, internship.type_of_internship,
-                                            internship.cost, internship.consecutive_month)
+            internship.period = periods[get_number_of_period(internship.period) - 1]
+            sol_line = create_solution_line(internship.student,
+                                            internship.organization,
+                                            internship.speciality,
+                                            internship.period,
+                                            internship.choice,
+                                            internship.type_of_internship,
+                                            internship.cost,
+                                            internship.consecutive_month)
             sol_line.save()
 
 
@@ -1172,8 +1181,8 @@ def internship_affectation_sumup(request):
 
     return render(request, "internship_affectation_sumup.html",
                   {'section': 'internship',
-                   'specialities':        all_speciality,
-                   'periods':             periods,
-                   'organizations':       organizations,
-                   'affectations':        affectations,
+                   'specialities': all_speciality,
+                   'periods': periods,
+                   'organizations': information,
+                   'affectations': affectations,
                    })
