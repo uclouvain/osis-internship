@@ -164,9 +164,9 @@ def informations_add(request):
             if form.is_valid():
                 adv = form.save(commit=False)
                 adv.save()
-                return redirect('informations_detail', pk=adv.pk)
+                return layout.render(request, 'informations_add.html', {'adv': adv})
             else:
-                return redirect('informations')
+                return redirect('dissertations')
 
     else:  # step 1 : initial form to search person by email
         form = ManagerAddAdviserPreForm()
