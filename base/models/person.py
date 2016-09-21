@@ -38,7 +38,8 @@ class PersonAdmin(admin.ModelAdmin):
                     'national_id', 'changed', 'source')
     search_fields = ['first_name', 'middle_name', 'last_name', 'user__username', 'email']
     fieldsets = ((None, {'fields': ('user', 'global_id', 'national_id', 'gender', 'first_name',
-                                    'middle_name', 'last_name', 'email', 'phone', 'phone_mobile', 'language')}),)
+                                    'middle_name', 'last_name', 'birth_date', 'email', 'phone',
+                                    'phone_mobile', 'language')}),)
     raw_id_fields = ('user',)
 
 
@@ -74,7 +75,7 @@ class Person(SerializableModel):
         if hasattr(settings, 'INTERNAL_EMAIL_SUFIX'):
             # It limits the creation of person to external emails.
             if self.source != 'BASE' and settings.INTERNAL_EMAIL_SUFIX in str(self.email):
-                raise Exception('Invalid email for external person.')
+                raise AttributeError('Invalid email for external person.')
         super(Person, self).save()
 
     def username(self):
