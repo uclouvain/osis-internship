@@ -131,7 +131,7 @@
                                 <td><input name="valueQuest{{ forloop.counter }}" class="form-control" value="{{ option.value }}" type="number" min="0" value="0"/></td>
                                 <td><input name="orderQuest{{ forloop.counter }}" class="form-control" value="{{ option.order }}" type="number" min="0" value="0"/></td>
                                 {% if question.type != 'DROPDOWN_LIST' %}
-                                <td><input name="descQuest' + 1 + '" class="form-control" value="{{ option.description | default_if_none:'' }}"  type="text"/></td>
+                                <td><input name="descQuest{{ forloop.counter }}" class="form-control" value="{{ option.description | default_if_none:'' }}"  type="text"/></td>
                                 {% endif %}
                                 </tr>
                             {% endfor %}
