@@ -28,6 +28,7 @@ import pika
 from backoffice.settings import QUEUE_URL, QUEUE_USER, QUEUE_PASSWORD, QUEUE_PORT, QUEUE_CONTEXT_ROOT
 import logging
 from django.conf import  settings
+import traceback
 
 logger = logging.getLogger(settings.DEFAULT_LOGGER)
 
@@ -37,32 +38,50 @@ def get_connection():
     return pika.BlockingConnection(pika.ConnectionParameters(QUEUE_URL, QUEUE_PORT, QUEUE_CONTEXT_ROOT, credentials))
 
 
-def send_message(queue_name, message, connection=None):
+def get_channel(connection, queue_name):
+    channel = connection.channel()
+    channel.queue_declare(queue=queue_name)
+    return channel
+
+
+def send_message(queue_name, message, connection=None, channel=None):
     """
     Send the message in the queue passed in parameter.
-    If the connection doesn't exist, the funbction will create it, send the message, then close the connection.
-    WARNING : If a connection is given, the function doesn't close it. Do not forget to close it after you sent all your
-              messages in the queue.
+    If the connection doesn't exist, the function will create it, send the message, then close the connection.
+    That's the same for the channel ; if any channel is given, the function will create it, send the message,
+    then close the channel.
+
+    WARNING : If a connection or a channel is given, the function doesn't close it. Do not forget to close
+              the channel and the connection after you sent all your messages in the queue.
 
     :param queue_name: the name of the queue in which we have to send the JSON message.
     :param message: Must be a dictionnary !
+    :param connection: A connection to a Queue.
+    :param channel: An opened channel from the connection given in parameter.
     """
+    if channel and not connection:
+        raise Exception('Please give the connection from which you opened the channel given by parameter')
     close_connection = False
-    if not connection:
+    close_channel = False
+    if not connection or connection.is_closed:
         connection = get_connection()
         close_connection = True
+    if not channel or channel.is_closed:
+        channel = get_channel(connection, queue_name)
+        close_channel = True
     try:
-        channel = connection.channel()
-        channel.queue_declare(queue=queue_name)
         channel.basic_publish(exchange='',
                               routing_key=queue_name,
                               body=message,
                               properties=pika.BasicProperties(content_type='application/json'))
     except Exception as e:
-        logger.info(''.join(["Exception in queue : ", str(e)]))
+        logger.error("Exception in queue : {0} ".format(e))
+        traceback.print_exc()
     finally:
         if connection is not None and close_connection:
             connection.close()
+        if channel and close_channel:
+            channel.close()
 
 
 def paper_sheet_queue():
