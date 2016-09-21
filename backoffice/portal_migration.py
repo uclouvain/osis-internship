@@ -31,12 +31,16 @@
 # > import backoffice.portal_migration as portal
 # > portal.migrate_base_student() # migration of all students
 ###########################################################################
+import logging
+from django.conf import settings
+from pika.exceptions import ChannelClosed, ConnectionClosed
 
 from reference import models as mdl_ref
 from base import models as mdl_base
 from backoffice.queue import queue_actions
 from dissertation.models.adviser import Adviser
 
+logger = logging.getLogger(settings.DEFAULT_LOGGER)
 
 def get_all_data(model_class, fields=None, order_by=None):
     """
@@ -89,7 +93,11 @@ def migrate(model_class, records, queue_name):
         'model_class_str': get_model_class_str(model_class),
         'records': records,
     }
-    queue_actions.send_message(queue_name, data)
+    try:
+        queue_actions.send_message(queue_name, data)
+    except (ChannelClosed,ConnectionClosed) as c:
+        logger.warning('RabbitServer is not installed or launched : {}'.format(str(c)))
+
 
 
 def migrate_reference_country():

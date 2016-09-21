@@ -78,10 +78,10 @@ def send_message(queue_name, message, connection=None, channel=None):
         logger.error("Exception in queue : {0} ".format(e))
         traceback.print_exc()
     finally:
-        if connection is not None and close_connection:
-            connection.close()
         if channel and close_channel:
             channel.close()
+        if connection is not None and close_connection:
+            connection.close()
 
 
 def paper_sheet_queue():
