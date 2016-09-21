@@ -69,6 +69,16 @@ class Person(models.Model):
     phone_mobile = models.CharField(max_length=30, blank=True, null=True)
     language = models.CharField(max_length=30, null=True, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE)
     birth_date = models.DateField(blank=True, null=True)
+    source = models.CharField(max_length=25, blank=True, null=True, choices=SOURCE_CHOICES, default='BASE')
+
+    def save(self):
+        # When person is created by another application this rule can be applied.
+        if hasattr(settings, 'INTERNAL_EMAIL_SUFIX'):
+            # It limits the creation of person to external emails.
+            if self.source != 'BASE' and settings.INTERNAL_EMAIL_SUFIX in str(self.email):
+                raise Exception('Invalid email for external person.')
+
+        super(Person, self).save()
 
     def username(self):
         if self.user is None:

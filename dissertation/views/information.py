@@ -32,7 +32,6 @@ from dissertation.models import faculty_adviser
 from base import models as mdl
 from dissertation.forms import AdviserForm, ManagerAdviserForm, ManagerAddAdviserForm, ManagerAddAdviserPreForm
 from django.contrib.auth.decorators import user_passes_test
-from django.db import IntegrityError
 from base.views import layout
 
 
@@ -180,6 +179,34 @@ def manager_informations_add(request):
     else:  # step 1 : initial form to search person by email
         form = ManagerAddAdviserPreForm()
         return layout.render(request, 'manager_informations_add_search.html', {'form': form})
+
+
+@login_required
+@user_passes_test(is_manager)
+def manager_informations_add_person(request):
+    if request.method == "POST":
+        form = ManagerAddAdviserPerson(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            if data['email'] and data['last_name'] and data['first_name']:
+                person = mdl.person.Person(email=data['email'],
+                                           last_name=data['last_name'],
+                                           first_name=data['first_name'],
+                                           phone=data['phone'],
+                                           phone_mobile=data['phone_mobile'],
+                                           source='DISSERTATION')
+                person.save()
+                adv = adviser.add(person, 'PRF', False, False, False, '')
+                return redirect('manager_informations_detail', pk=adv.pk)
+            else:
+                form = ManagerAddAdviserPerson()
+                return layout.render(request, 'manager_information_add_person.html', {'form': form})
+        else:
+            form = ManagerAddAdviserPerson()
+            return layout.render(request, 'manager_information_add_person.html', {'form': form})
+    else:
+        form = ManagerAddAdviserPerson()
+        return layout.render(request, 'manager_information_add_person.html', {'form': form})
 
 
 @login_required
