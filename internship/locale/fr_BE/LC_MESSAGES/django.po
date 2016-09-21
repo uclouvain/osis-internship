@@ -350,3 +350,6 @@ msgstr  "Type de stage"
 
 msgid   "executions"
 msgstr  "Executions"
+
+msgid   "order_postion"
+msgstr  "Position de tri"
