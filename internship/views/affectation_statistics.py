@@ -599,14 +599,13 @@ def get_student_mandatory_choices(priority):
 
     # Sort he dict of student (this optimize the final result)
     global specialities_dict
-    orders = ("Stage aux Urgences",
-              "Stage en Gynécologie-Obstétrique",
-              "Stage en Pédiatrie",
-              "Stage en Médecine interne 1",
-              "Stage en Médecine interne 2",
-              "Stage en Médecine interne 3",
-              "Stage en Chirurgie"
-              )
+
+    all_specialities = InternshipSpeciality.search_order_by_position(mandatory=True)
+    orders = []
+
+    for speciality in all_specialities:
+        orders.append(speciality.name)
+
 
     for key in orders:
         v = data[specialities_dict[key]]

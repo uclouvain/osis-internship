@@ -60,7 +60,7 @@
               <input type="text" name="acronym" required value="{{ speciality.acronym | default_if_none:'' }}">
             </td>
             <td style="text-align:center;">
-              <input type="text" name="oder_position" required value="{{ speciality.order_postion | default_if_none:'' }}">
+              <input type="text" name="order_postion" required value="{{ speciality.order_postion | default_if_none:'' }}">
             </td>
             <td style="text-align:center;">
               <input type="checkbox" name="mandatory" {%if speciality.mandatory %}checked{%endif%}>
