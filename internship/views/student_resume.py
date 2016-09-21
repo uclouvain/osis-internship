@@ -28,10 +28,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
-from internship.models import InternshipChoice, InternshipStudentInformation, \
-                                InternshipSpeciality, InternshipOffer, InternshipStudentAffectationStat, \
-                                Organization, InternshipSpeciality, Period
-from internship.views.place import sort_organizations, set_organization_address
+from internship.models import InternshipChoice, InternshipStudentInformation, InternshipSpeciality
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -183,13 +180,13 @@ def internships_student_read(request, registration_id):
         selectable = True
 
     return render(request, "student_resume.html",
-                           {'student':             student,
-                            'information':         information[0],
-                            'internship_choice':   internship_choice,
-                            'specialities':        all_speciality,
-                            'selectable':          selectable,
-                            'affectations':        affectations,
-                            'periods':              periods,
+                           {'student': student,
+                            'information': information[0],
+                            'internship_choice': internship_choice,
+                            'specialities': all_speciality,
+                            'selectable': selectable,
+                            'affectations': affectations,
+                            'periods': periods,
                             })
 
 
@@ -227,6 +224,7 @@ def student_save_information_modification(request, registration_id):
     redirect_url = reverse('internships_student_read', args=[registration_id])
     return HttpResponseRedirect(redirect_url)
 
+
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_student_affectation_modification(request, student_id):
@@ -236,14 +234,15 @@ def internship_student_affectation_modification(request, student_id):
     organizations = sort_organizations(organizations)
 
     specialities = InternshipSpeciality.find_all()
-    periods = Period.search().order_by("date_start")
+    periods = Period.search()
     return render(request, "student_affectation_modification.html",
-                           {'information':         information[0],
-                           'informations':         informations,
-                            'organizations':        organizations,
-                            'specialities':         specialities,
-                            'periods':              periods,
-                                                      })
+                  {'information':         information[0],
+                   'informations':         informations,
+                   'organizations':        organizations,
+                   'specialities':         specialities,
+                   'periods':              periods,
+                   })
+
 
 
 @login_required

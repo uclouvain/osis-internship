@@ -3,78 +3,83 @@
 {% load i18n %}
 
 {% comment "License" %}
- * OSIS stands for Open Student Information System. It's an application
- * designed to manage the core business of higher education institutions,
- * such as universities, faculties, institutes and professional schools.
- * The core business involves the administration of students, teachers,
- * courses, programs and so on.
- *
- * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * A copy of this license - GNU General Public License - is available
- * at the root of the source code of this program.  If not,
- * see http://www.gnu.org/licenses/.
+    * OSIS stands for Open Student Information System. It's an application
+    * designed to manage the core business of higher education institutions,
+    * such as universities, faculties, institutes and professional schools.
+    * The core business involves the administration of students, teachers,
+    * courses, programs and so on.
+    *
+    * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+    *
+    * This program is free software: you can redistribute it and/or modify
+    * it under the terms of the GNU General Public License as published by
+    * the Free Software Foundation, either version 3 of the License, or
+    * (at your option) any later version.
+    *
+    * This program is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    * GNU General Public License for more details.
+    *
+    * A copy of this license - GNU General Public License - is available
+    * at the root of the source code of this program.  If not,
+    * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
 {% block breadcrumb %}
-<li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-<li><a href="{% url 'internships_home' %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
+    <li><a href="{% url 'internships_home' %}">{% trans 'internships_managment' %}</a></li>
     <li><a href="{% url 'internships_places' %}">{% trans 'places' %}</a></li>
     <li class="active">{{ organization.name }}</li>
 {% endblock %}
 {% block content %}
-<div class="page-header">
-    <h2>{{ organization.name }}</h2>
-</div>
-<div class="panel panel-default">
-    <div class="panel-body">
-      <ul class="nav nav-tabs">
-        {% for speciality in specialities %}
-          <li {% if forloop.first %}class="active"{% endif %}><a data-toggle="tab" href="#tab_{{speciality.acronym}}">{{speciality.name}}</a></li>
-        {% endfor %}
-      </ul>
-      <div class="tab-content">
-        {% for speciality in specialities %}
-          <div id="tab_{{speciality.acronym}}" class="tab-pane fade {% if forloop.first %}in active{% endif %}">
-            <div class="panel panel-default">
-              <div class="tab-content">
-                <div role="tabpanel" class="tab-pane fade in active" id="profile">
-                  <table class="table table-hover">
-                    {% for period in periods %}
-                      <tr>
-                        <th style="background-color: #dddddd;" colspan="3">{{period.name}} : {{period.date_start}} - {{period.date_end}}</th>
-                      </tr>
-                      {% for affectation in affectations %}
-                        {% if affectation.period.name == period.name and affectation.speciality.name == speciality.name %}
-                          <tr>
-                            <td>{{affectation.student.person.last_name}} {{affectation.student.person.first_name}}</td>
-                            <td>{{affectation.student.registration_id}}</td>
-                            <td>{{affectation.email}}</td>
-                            <td>{{affectation.adress}}</td>
-                            <td>{{affectation.phone_mobile}}</td>
-                          </tr>
-                        {%endif%}
-                      {% endfor %}
-                    {% endfor %}
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-        {%endfor%}
-      </div>
+    <div class="page-header">
+        <h2>{{ organization.name }}</h2>
     </div>
-	</div>
-</div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <ul class="nav nav-tabs">
+                {% for speciality in specialities %}
+                    <li {% if forloop.first %}class="active"{% endif %}><a data-toggle="tab" href="#tab_{{speciality.acronym}}">{{speciality.name}}</a></li>
+                {% endfor %}
+            </ul>
+            <div class="tab-content">
+                {% for speciality in specialities %}
+                    <div id="tab_{{speciality.acronym}}" class="tab-pane fade {% if forloop.first %}in active{% endif %}">
+                        <div class="panel panel-default">
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane fade in active" id="profile">
+                                    <a href="{% url 'affectation_download' organization.id speciality.id %}">
+                                        <button type="button" class="btn btn-default" style="float: right;">
+                                            <span class="glyphicon glyphicon-download" aria-hidden="true"></span> {% trans 'download_xls_file' %}
+                                        </button>
+                                    </a>
+                                    <table class="table table-hover">
+                                        {% for period in periods %}
+                                            <tr>
+                                                <th style="background-color: #dddddd;" colspan="5">{{period.name}} : {{period.date_start}} - {{period.date_end}}</th>
+                                            </tr>
+                                            {% for affectation in affectations %}
+                                                {% if affectation.period.name == period.name and affectation.speciality.name == speciality.name %}
+                                                    <tr>
+                                                        <td>{{affectation.student.person.last_name}} {{affectation.student.person.first_name}}</td>
+                                                        <td>{{affectation.student.registration_id}}</td>
+                                                        <td>{{affectation.email}}</td>
+                                                        <td>{{affectation.adress}}</td>
+                                                        <td>{{affectation.phone_mobile}}</td>
+                                                    </tr>
+                                                {%endif%}
+                                            {% endfor %}
+                                        {% endfor %}
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {%endfor%}
+            </div>
+        </div>
+    </div>
+    </div>
 
-  {% endblock %}
+{% endblock %}
