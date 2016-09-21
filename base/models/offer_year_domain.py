@@ -25,6 +25,7 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
+from base.models.serializable_model import SerializableModel
 
 
 class OfferYearDomainAdmin(admin.ModelAdmin):
@@ -34,7 +35,7 @@ class OfferYearDomainAdmin(admin.ModelAdmin):
     search_fields = ['domain__name', 'offer_year__acronym']
 
 
-class OfferYearDomain(models.Model):
+class OfferYearDomain(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     domain = models.ForeignKey('reference.Domain', blank=True, null=True)

@@ -26,312 +26,378 @@
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
 {% block breadcrumb %}
-<li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
-<li><a href="{% url 'internships_home' %}">{% trans 'internships' %}</a></li>
-<li class="active">{% trans 'affectation_result' %}</li>
+    <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+    <li><a href="{% url 'internships_home' %}">{% trans 'internships' %}</a></li>
+    <li class="active">{% trans 'affectation_result' %}</li>
+{% endblock %}
+{% block style %}
+    <link rel="stylesheet" href="{% static 'css/dataTables.bootstrap.min.css' %}">
 {% endblock %}
 {% block content %}
-<div class="modal fade bs-example-modal-sm" id="PleaseWaitModal" tabindex="-1"
-    role="dialog" aria-hidden="true" data-backdrop="static">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">
+    <style>
+        .dataTables_filter {
+            width: 50%;
+            float: right;
+            text-align: right;
+        }
+    </style>
+
+    <div class="modal fade bs-example-modal-sm" id="PleaseWaitModal" tabindex="-1"
+         role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">
                     <span class="glyphicon glyphicon-time">
-                    </span> Please Wait
-                 </h4>
-            </div>
-            <div class="modal-body">
-                <div class="progress">
-                    <div class="progress-bar progress-bar-info
+                    </span> {% trans 'please_wait' %}
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-info
                     progress-bar-striped active"
-                    style="width: 100%">
+                             style="width: 100%">
+                        </div>
+                    </div>
+                    {% trans 'take_several_minutes' %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="generate">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">{% trans 'generate_solution' %}</h4>
+                </div>
+                <div class="modal-body">
+                    <form  method="post" action="{% url 'internship_affectation_statistics_generate' %}" id="generate_solution">
+                        <label for="executions">{% trans 'executions' %}</label>
+                        <input type="number" name="executions" value=1 min=1>
+                        {% csrf_token %}
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'cancel' %}</button>
+                    <button type="button" class="btn btn-primary" onclick="$('#generate').modal('hide');$('#PleaseWaitModal').modal('show');$('#generate_solution').submit()">{% trans 'generate_solution' %}</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <button type="submit" class="btn btn-primary" title="{% trans 'Send'%}" id="bt_interships_save" onclick="$('#generate').modal('show');">
+                <span class="glyphicon glyphicon-random" aria-hidden="true"></span>{% trans 'generate_solution' %}
+            </button>
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#tab_hospitals">{% trans 'organizations' %}</a></li>
+                <li><a data-toggle="tab" href="#tab_students">{% trans 'students' %}</a></li>
+                <li><a data-toggle="tab" href="#tab_stats">{% trans 'statistics' %}</a></li>
+                <li><a data-toggle="tab" href="#tab_errors">{% trans 'errors' %}</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="tab_hospitals" class="tab-pane fade in active">
+                    <div class="panel panel-default">
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane fade in active" id="profile">
+                                <table class="table" id="organizations" cellspacing="0" width="100%">
+                                    <thead>
+                                    <tr>
+                                        <th>{% trans 'organization' %}</th>
+                                        <th>{% trans 'speciality' %}</th>
+                                        <th class="no-sort">P1</th>
+                                        <th class="no-sort">P2</th>
+                                        <th class="no-sort">P3</th>
+                                        <th class="no-sort">P4</th>
+                                        <th class="no-sort">P5</th>
+                                        <th class="no-sort">P6</th>
+                                        <th class="no-sort">P7</th>
+                                        <th class="no-sort">P8</th>
+                                        <th class="no-sort">P9</th>
+                                        <th class="no-sort">P10</th>
+                                        <th class="no-sort">P11</th>
+                                        <th class="no-sort">P12</th>
+                                    </tr>
+                                    </thead>
+
+                                    {% for item in organizations %}
+                                        <tr>
+                                            <td>
+                                                {{ item.0 }}
+                                            </td>
+                                            <td>
+                                                {{ item.1 }}
+                                            </td>
+                                            {% for period, places in item.2.items %}
+                                                {% if places.before == places.after and places.before != 0 %}
+                                                    <td style="background-color:green;"/>
+                                                {% elif places.pc > 66 %}
+                                                    <td style="background-color:#33cc33;"/>
+                                                {% elif places.pc > 33 %}
+                                                    <td style="background-color:#ffdc33;"/>
+                                                {% elif places.pc > 0 %}
+                                                    <td style="background-color:#ff6600;"/>
+                                                {% elif places.pc == 0 %}
+                                                    <td style="background-color:#cc0000;"/>
+                                                {% elif places.before == 0 %}
+                                                    <td/>
+                                                {% else %}
+                                                    <td style="background-color:#33cc33;"/>
+                                                {% endif %}
+                                                {{ places.after }}/{{ places.before }}
+                                                </td>
+                                            {% endfor %}
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                This may take several minutes
+                <div id="tab_students" class="tab-pane fade in">
+                    <div class="panel panel-default">
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane fade in active" id="profile">
+                                <table class="table" id="students" cellspacing="0" width="100%">
+                                    <thead>
+                                    <tr>
+                                        <th>{% trans 'student' %}</th>
+                                        <th class="no-sort">P1</th>
+                                        <th class="no-sort">P2</th>
+                                        <th class="no-sort">P3</th>
+                                        <th class="no-sort">P4</th>
+                                        <th class="no-sort">P5</th>
+                                        <th class="no-sort">P6</th>
+                                        <th class="no-sort">P7</th>
+                                        <th class="no-sort">P8</th>
+                                        <th class="no-sort">P9</th>
+                                        <th class="no-sort">P10</th>
+                                        <th class="no-sort">P11</th>
+                                        <th class="no-sort">P12</th>
+                                        <th>Score</th>
+                                    </tr>
+                                    </thead>
+                                    {% for student, periods in recap_sol.items %}
+                                        <tr id="student_{{student.id}}">
+                                            <td>
+                                                {{student}}
+                                            </td>
+                                            {% for period, enrollment in periods.items %}
+
+                                                {% if enrollment.choice == 'I' %}
+                                                    <td class="internship-{{enrollment.type_of_internship}} period-{{period}} {{enrollment.speciality.acronym}}" style="background-color: #00ff95"/>
+                                                {% elif enrollment.choice == 'X' %}
+                                                    <td class="internship-{{enrollment.type_of_internship}} period-{{period}} {{enrollment.speciality.acronym}}" style="background-color: #ffa8a8"/>
+                                                {% else %}
+                                                    <td class="internship-{{enrollment.type_of_internship}} period-{{period}} {{enrollment.speciality.acronym}}"/>
+                                                {% endif %}
+                                                {% if forloop.counter <= 8 %}
+                                                    {{ enrollment.speciality.acronym }} <br>
+                                                    {{ enrollment.organization.reference }}<br>
+                                                    {{ enrollment.cost }}({{ enrollment.choice.lower }})<br>
+                                                {% elif forloop.counter > 8 and forloop.counter <= 12 %}
+                                                    X
+                                                {% else %}
+                                                    {{ periods.score }}
+                                                {% endif %}
+                                                </td>
+                                            {% endfor %}
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="tab_stats" class="tab-pane fade in">
+                    <h3>{% trans 'statistics' %}</h3>
+                    <div class="panel panel-default">
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane fade in active" id="profile">
+                                <table class="table">
+                                    <tr>
+                                        <td>{% trans 'number_of_student' %}</td>
+                                        <td>{{ stats.tot_stud }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>-&gt; {% trans 'erasmus' %}</td>
+                                        <td>{{ stats.erasmus_students }} ({{ stats.erasmus_students_pc }}%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>-&gt; {% trans 'socials' %}</td>
+                                        <td>{{ stats.socio_students }} ({{ stats.socio_students_pc }}%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr class="active">
+                                        <td>{% trans 'total_internships' %}</td>
+                                        <td>{{ stats.total_internships }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>-&gt; {% trans 'erasmus' %}</td>
+                                        <td>{{ stats.erasmus }} ({{ stats.erasmus_pc }}%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>-&gt; {% trans 'socials' %}</td>
+                                        <td>{{ stats.socio }} ({{ stats.socio_pc }}%)</td>
+                                    </tr>
+                                    <tr class="active">
+                                        <td>{% trans 'all_student' %}</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>{% trans 'first_choice' %}</td>
+                                        <td>{{ stats.first }} ({{ stats.first_pc }}%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{% trans 'second_choice' %}</td>
+                                        <td>{{ stats.second }} ({{ stats.second_pc }}%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{% trans 'third_choice' %}</td>
+                                        <td>{{ stats.third }} ({{ stats.third_pc }}%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{% trans 'fourth_choice' %}</td>
+                                        <td>{{ stats.fourth }} ({{ stats.fourth_pc }}%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{% trans 'other_choice' %}</td>
+                                        <td>{{ stats.others }} ({{ stats.others_pc }}%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{% trans 'erasmus_students' %}</td>
+                                        <td>{{ stats.erasmus }} ({{ stats.erasmus_pc }}%)</td>
+                                    </tr>
+                                    <tr class="active">
+                                        <td>{% trans 'social_students' %}</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>{% trans 'first_choice' %}</td>
+                                        <td>{{ stats.first_s }} ({{ stats.first_s_pc }}%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{% trans 'second_choice' %}</td>
+                                        <td>{{ stats.second_s }} ({{ stats.second_s_pc }}%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{% trans 'third_choice' %}</td>
+                                        <td>{{ stats.third_s }} ({{ stats.third_s_pc }}%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{% trans 'fourth_choice' %}</td>
+                                        <td>{{ stats.fourth_s }} ({{ stats.fourth_s_pc }}%)</td>
+                                    </tr>
+                                    <tr class="active">
+                                        <td>{% trans 'normal_students' %}</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>{% trans 'first_choice' %}</td>
+                                        <td>{{ stats.first_n }} ({{ stats.first_n_pc }}%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{% trans 'second_choice' %}</td>
+                                        <td>{{ stats.second_n }} ({{ stats.second_n_pc }}%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{% trans 'third_choice' %}</td>
+                                        <td>{{ stats.third_n }} ({{ stats.third_n_pc }}%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{% trans 'fourth_choice' %}</td>
+                                        <td>{{ stats.fourth_n }} ({{ stats.fourth_n_pc }}%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{% trans 'imposed_choices' %}</td>
+                                        <td>{{ stats.others }} ({{ stats.others_n_pc }}%) | Students : {{ stats.others_students}} | Mean distance : {{ stats.distance_mean}}km</td>
+                                    </tr>
+                                    {% for speciality, value in stats.others_specialities.items %}
+                                        <tr>
+                                            <td>>>> {{ speciality }}</td>
+                                            <td>{{ value }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>{% trans 'organization_error' %}</td>
+                                        <td>{{ stats.hospital_error }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{% trans 'mean_cost_student' %}</td>
+                                        <td>{{ stats.mean_stud }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{% trans 'standard_deviation' %}</td>
+                                        <td>{{ stats.std_dev_stud }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{% trans 'mean_nonconsecutive_month' %}</td>
+                                        <td>{{ stats.mean_noncons }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{% trans 'total_cost_solution' %}</td>
+                                        <td>{{ stats.sol_cost }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="tab_errors" class="tab-pane fade in">
+                    <table class="table">
+                        <tr>
+                            <th>{% trans 'student' %}</th>
+                            <th>{% trans 'speciality' %}</th>
+                            <th>{% trans 'period' %}</th>
+                            <th>{% trans 'organization' %}</th>
+                            <th>{% trans 'type_internship' %}</th>
+                        </tr>
+                        {% for internship in errors %}
+                            <tr>
+                                <td>{{internship.student}}</td>
+                                <td>{{internship.speciality}}</td>
+                                <td>{{internship.period}}</td>
+                                <td>{{internship.organization}}</td>
+                                <td>{{internship.type_of_internship}}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
+{% endblock %}
+{% block script %}
+    <script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/dataTables.bootstrap.min.js' %}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#organizations').DataTable({
+                paging: false,
+                "columnDefs": [ {
+                    "targets": 'no-sort',
+                    "orderable": false,
+                } ],
+                bInfo: false
+            });
 
-<div class="panel panel-default">
-  <div class="panel-body">
-    <form  method="post" action="{% url 'internship_affectation_statistics_generate' %}" >
-      <button type="submit" class="btn btn-primary" title="{% trans 'Send'%}" id="bt_interships_save" onclick="$('#PleaseWaitModal').modal('show');">
-          <span class="glyphicon glyphicon-random" aria-hidden="true"></span> Generate solution
-      </button>
-      {% csrf_token %}
-    </form>
-    <ul class="nav nav-tabs">
-      <li class="active"><a data-toggle="tab" href="#tab_hospitals">Récap hopitaux</a></li>
-      <li><a data-toggle="tab" href="#tab_students">Récap étudiants</a></li>
-      <li><a data-toggle="tab" href="#tab_stats">Statistiques</a></li>
-      <li><a data-toggle="tab" href="#tab_errors">Erreurs</a></li>
-    </ul>
-    <div class="tab-content">
-      <div id="tab_hospitals" class="tab-pane fade in active">
-        <div class="panel panel-default">
-          <div class="tab-content">
-            <div role="tabpanel" class="tab-pane fade in active" id="profile">
-              <table class="table">
-                <tr>
-                  <th>Hôpital</th>
-                  <th>Spécialité</th>
-                  <th>P1</th>
-                  <th>P2</th>
-                  <th>P3</th>
-                  <th>P4</th>
-                  <th>P5</th>
-                  <th>P6</th>
-                  <th>P7</th>
-                  <th>P8</th>
-                  <th>P9</th>
-                  <th>P10</th>
-                  <th>P11</th>
-                  <th>P12</th>
-                </tr>
-                {% for hospital, specialities in organizations.items %}
-                  {% for speciality, periods in specialities.items %}
-                  <tr>
-                    <td>
-                      {{hospital.reference}}
-                    </td>
-                    <td>
-                      {{speciality.id}}
-                    </td>
-                    {% for period, places in periods.items %}
-                    {% if places.before == places.after and places.before != 0 %}
-                      <td style="background-color:green;"/>
-                    {% elif places.pc > 66 %}
-                      <td style="background-color:#33cc33;"/>
-                    {% elif places.pc > 33 %}
-                      <td style="background-color:#ffdc33;"/>
-                    {% elif places.pc > 0 %}
-                      <td style="background-color:#ff6600;"/>
-                    {% elif places.pc == 0 %}
-                      <td style="background-color:#cc0000;"/>
-                    {% elif places.before == 0 %}
-                      <td/>
-                    {% else %}
-                      <td style="background-color:#33cc33;"/>
-                    {% endif %}
-                    {{ places.after }}/{{ places.before }}
-                  </td>
-                  {% endfor %}
-                </tr>
-                {% endfor %}
-              {% endfor %}
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div id="tab_students" class="tab-pane fade in">
-      <div class="panel panel-default">
-        <div class="tab-content">
-          <div role="tabpanel" class="tab-pane fade in active" id="profile">
-            <table class="table">
-              <tr>
-                <th>Student</th>
-                <th>P1</th>
-                <th>P2</th>
-                <th>P3</th>
-                <th>P4</th>
-                <th>P5</th>
-                <th>P6</th>
-                <th>P7</th>
-                <th>P8</th>
-                <th>P9</th>
-                <th>P10</th>
-                <th>P11</th>
-                <th>P12</th>
-                <th>Score</th>
-              </tr>
-              {% for student, periods in recap_sol.items %}
-              <tr id="student_{{student.id}}">
-                <td>
-                  {{student}}
-                </td>
-                  {% for period, enrollment in periods.items %}
-                <td class="internship-{{enrollment.type_of_internship}} period-{{period}}"/>
-                  {% if period <= 8 %}
-                  {{ enrollment.speciality.id }} <br>  {{ enrollment.organization.reference }}<br> {{ enrollment.cost }}({{ enrollment.choice }})<br>
-                  {% elif period > 8 and period <= 12 %}
-                  X
-                  {% else %}
-                  {{ periods.score }}
-                  {% endif %}
-                </td>
-              {% endfor %}
-            </tr>
-            {% endfor %}
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div id="tab_stats" class="tab-pane fade in">
-    <h3>Stats</h3>
-    <div class="panel panel-default">
-      <div class="tab-content">
-        <div role="tabpanel" class="tab-pane fade in active" id="profile">
-          <table class="table">
-            <tr>
-              <td>Number of students</td>
-              <td>{{ stats.tot_stud }}</td>
-            </tr>
-            <tr>
-              <td>-&gt; Erasmus</td>
-              <td>{{ stats.erasmus_students }} ({{ stats.erasmus_students_pc }}%)</td>
-            </tr>
-            <tr>
-              <td>-&gt; Sociaux</td>
-              <td>{{ stats.socio_students }} ({{ stats.socio_students_pc }}%)</td>
-            </tr>
-            <tr>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr class="active">
-              <td>Total internships</td>
-              <td>{{ stats.total_internships }}</td>
-            </tr>
-            <tr>
-              <td>-&gt; Erasmus</td>
-              <td>{{ stats.erasmus }} ({{ stats.erasmus_pc }}%)</td>
-            </tr>
-            <tr>
-              <td>-&gt; Sociaux</td>
-              <td>{{ stats.socio }} ({{ stats.socio_pc }}%)</td>
-            </tr>
-            <tr class="active">
-              <td>All students</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>1st choices</td>
-              <td>{{ stats.first }} ({{ stats.first_pc }}%)</td>
-            </tr>
-            <tr>
-              <td>2nd choices</td>
-              <td>{{ stats.second }} ({{ stats.second_pc }}%)</td>
-            </tr>
-            <tr>
-              <td>3rd choices</td>
-              <td>{{ stats.third }} ({{ stats.third_pc }}%)</td>
-            </tr>
-            <tr>
-              <td>4th choices</td>
-              <td>{{ stats.fourth }} ({{ stats.fourth_pc }}%)</td>
-            </tr>
-            <tr>
-              <td>Others choices</td>
-              <td>{{ stats.others }} ({{ stats.others_pc }}%)</td>
-            </tr>
-            <tr>
-              <td>Erasmus students</td>
-              <td>{{ stats.erasmus }} ({{ stats.erasmus_pc }}%)</td>
-            </tr>
-            <tr class="active">
-              <td>Social students</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>1st choices</td>
-              <td>{{ stats.first_s }} ({{ stats.first_s_pc }}%)</td>
-            </tr>
-            <tr>
-              <td>2nd choices</td>
-              <td>{{ stats.second_s }} ({{ stats.second_s_pc }}%)</td>
-            </tr>
-            <tr>
-              <td>3rd choices</td>
-              <td>{{ stats.third_s }} ({{ stats.third_s_pc }}%)</td>
-            </tr>
-            <tr>
-              <td>4th choices</td>
-              <td>{{ stats.fourth_s }} ({{ stats.fourth_s_pc }}%)</td>
-            </tr>
-            <tr class="active">
-              <td>Normal students</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>1st choices</td>
-              <td>{{ stats.first_n }} ({{ stats.first_n_pc }}%)</td>
-            </tr>
-            <tr>
-              <td>2nd choices</td>
-              <td>{{ stats.second_n }} ({{ stats.second_n_pc }}%)</td>
-            </tr>
-            <tr>
-              <td>3rd choices</td>
-              <td>{{ stats.third_n }} ({{ stats.third_n_pc }}%)</td>
-            </tr>
-            <tr>
-              <td>4th choices</td>
-              <td>{{ stats.fourth_n }} ({{ stats.fourth_n_pc }}%)</td>
-            </tr>
-            <tr>
-              <td>Imposed chocies</td>
-              <td>{{ stats.others }} ({{ stats.others_pc }}%) | Students : {{ stats.others_students}} | Mean distance : {{ stats.distance_mean}}km</td>
-            </tr>
-            {% for speciality, value in stats.others_specialities.items %}
-            <tr>
-              <td>>>> {{ speciality }}</td>
-              <td>{{ value }}</td>
-            </tr>
-            {% endfor %}
-            <tr>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>Hospital error</td>
-              <td>{{ stats.hospital_error }}</td>
-            </tr>
-            <tr>
-              <td>Mean cost of student</td>
-              <td>{{ stats.mean_stud }}</td>
-            </tr>
-            <tr>
-              <td>Standard deviation </td>
-              <td>{{ stats.std_dev_stud }}</td>
-            </tr>
-            <tr>
-              <td>Mean nonconsecutive month</td>
-              <td>{{ stats.mean_noncons }}</td>
-            </tr>
-            <tr>
-              <td>Total cost of the solution</td>
-              <td>{{ stats.sol_cost }}</td>
-            </tr>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div id="tab_errors" class="tab-pane fade in">
-    <table class="table">
-      <tr>
-        <th>Student</th>
-        <th>Speciality</th>
-        <th>Period</th>
-        <th>Organization</th>
-        <th>Type of internship</th>
-      </tr>
-    {% for internship in errors %}
-    <tr>
-      <td>{{internship.student}}<td>
-      <td>{{internship.speciality}}<td>
-      <td>{{internship.period}}<td>
-      <td>{{internship.organization}}<td>
-      <td>{{internship.type_of_internship}}<td>
-    </tr>
-    {% endfor %}
-    </table>
-  </div>
-</div>
-</div>
-</div>
+            $('#students').DataTable({
+                paging: false,
+                "columnDefs": [ {
+                    "targets": 'no-sort',
+                    "orderable": false,
+                } ],
+                bInfo: false
+            });
+        } );
+    </script>
 {% endblock %}

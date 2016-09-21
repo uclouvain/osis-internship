@@ -53,6 +53,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_jenkins',
+    'osis_common',
     'ckeditor',
     'reference',
     'base',
@@ -79,7 +80,8 @@ ROOT_URLCONF = 'backoffice.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': []
+        ,
         'APP_DIRS': True,
         'OPTIONS': {
             'debug': DEBUG,
@@ -88,6 +90,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'base.views.common.environnement_request_processor',
             ],
         },
     },
@@ -106,6 +109,40 @@ DATABASES = {
         'PASSWORD': 'osis',
         'HOST': '127.0.0.1',
         'PORT': '5432',
+    },
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(asctime)s %(levelname)s %(module)s %(process)d %(thread)d %(message)s',
+            'datefmt': '%d-%m-%Y %H:%M:%S'
+        },
+        'simple': {
+            'format': '%(asctime)s %(levelname)s %(message)s',
+            'datefmt': '%d-%m-%Y %H:%M:%S'
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+            'level':'DEBUG',
+        },
+    },
+    'loggers': {
+        'default': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        }
     },
 }
 
@@ -155,6 +192,9 @@ SCREEN_SHOT_FOLDER = os.path.join(BASE_DIR, "base/tests/selenium/screenshots")
 FIREFOX_PROFILE_PATH = os.path.join(BASE_DIR, "base/tests/selenium/firefox_profile")
 JENKINS_TASKS = []
 
+EMAIL_PRODUCTION_SENDING = False
+COMMON_EMAIL_RECEIVER = 'osis@localhost.org'
+
 CKEDITOR_CONFIGS = {
     'default': {
         'toolbar': 'Custom',
@@ -181,6 +221,8 @@ QUEUE_USER = 'guest'
 QUEUE_PASSWORD = 'guest'
 QUEUE_PORT = 5672
 QUEUE_CONTEXT_ROOT = '/'
+
+ENVIRONMENT = 'LOCAL'
 
 # This has to be replaced by the actual url where you institution logo can be found.
 # The best choici is to set an external url.

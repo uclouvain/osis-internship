@@ -28,6 +28,7 @@ from django.contrib import admin
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 from base.models import person
+from base.models.serializable_model import SerializableModel
 
 
 class StudentAdmin(admin.ModelAdmin):
@@ -37,15 +38,7 @@ class StudentAdmin(admin.ModelAdmin):
     search_fields = ['person__first_name', 'person__last_name']
 
 
-class StudentManager(models.Manager):
-    def get_by_natural_key(self, global_id, registration_id):
-        return self.get(registration_id=registration_id, person__global_id=global_id)
-
-
-class Student(models.Model):
-
-    objects = StudentManager()
-
+class Student(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     registration_id = models.CharField(max_length=10, unique=True)
@@ -53,11 +46,6 @@ class Student(models.Model):
 
     def __str__(self):
         return u"%s (%s)" % (self.person, self.registration_id)
-
-    def natural_key(self):
-        return (self.registration_id, self.person.global_id)
-
-    natural_key.dependencies = ['base.person']
 
 
 def find_by(registration_id=None, person_name=None, person_username=None, person_first_name=None, full_registration = None):
@@ -137,3 +125,6 @@ def serialize_list_students(list_students):
 
 def find_by_offer(offers):
     return Student.objects.filter(offerenrollment__offer_year__offer__in=offers)
+
+def find_by_offer_year(offer_y):
+    return Student.objects.filter(offerenrollment__offer_year=offer_y)
