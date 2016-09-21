@@ -69,6 +69,8 @@ def speciality_save(request, speciality_id):
     speciality.learning_unit = learning_unit[0]
     speciality.name = request.POST.get('name')
     speciality.acronym = request.POST.get('acronym')
+    print(request.POST.get('order_postion'))
+    speciality.order_postion = request.POST.get('order_postion')
     speciality.mandatory = mandatory
 
     speciality.save()

@@ -213,7 +213,12 @@ def compute_stats(sol):
     stats['others_specialities_students'] = others_specialities_students
 
     stats['mean_stud'] = round(mean(mean_array), 2)
-    stats['std_dev_stud'] = round(stdev(mean_array), 2)
+
+    if len(mean_array) > 1:
+        std_dev_stud = round(stdev(mean_array), 2)
+    else:
+        std_dev_stud = 0
+    stats['std_dev_stud'] = std_dev_stud
     stats['mean_noncons'] = round(consecutive_month / number_of_students, 2)
     stats['sol_cost'] = total_cost
     stats['total_internships'] = total_internships
@@ -569,6 +574,9 @@ def get_student_mandatory_choices(priority):
     specialities = {}
     choices = InternshipChoice.objects.filter(priority=priority)
 
+    if len(choices) == 0:
+        return {}
+
     # Build dict with specialities[speciality][student] <- InternshipChoice
     for choice in choices:
         # Init the speciality if does not exists in 'specialities'
@@ -598,16 +606,19 @@ def get_student_mandatory_choices(priority):
     data = OrderedDict((k, v) for k, v in specialities.items() if v)
 
     # Sort he dict of student (this optimize the final result)
-    specialities = InternshipSpeciality.search(mandatory=True)
     global specialities_dict
+
+    all_specialities = InternshipSpeciality.search_order_by_position(mandatory=True)
     orders = []
-    for speciality in specialities:
+
+    for speciality in all_specialities:
         orders.append(speciality.name)
 
     for key in orders:
-        v = data[specialities_dict[key]]
-        del data[specialities_dict[key]]
-        data[specialities_dict[key]] = v
+        if specialities_dict[key] in data:
+            v = data[specialities_dict[key]]
+            del data[specialities_dict[key]]
+            data[specialities_dict[key]] = v
 
     return data
 
@@ -1058,10 +1069,15 @@ def save_solution():
 
     for student, internships in solution.items():
         for period, internship in internships.items():
-            internship.period = periods[internship.period - 1]
-            sol_line = create_solution_line(internship.student, internship.organization, internship.speciality,
-                                            internship.period, internship.choice, internship.type_of_internship,
-                                            internship.cost, internship.consecutive_month)
+            internship.period = periods[get_number_of_period(internship.period) - 1]
+            sol_line = create_solution_line(internship.student,
+                                            internship.organization,
+                                            internship.speciality,
+                                            internship.period,
+                                            internship.choice,
+                                            internship.type_of_internship,
+                                            internship.cost,
+                                            internship.consecutive_month)
             sol_line.save()
 
 
@@ -1172,8 +1188,8 @@ def internship_affectation_sumup(request):
 
     return render(request, "internship_affectation_sumup.html",
                   {'section': 'internship',
-                   'specialities':        all_speciality,
-                   'periods':             periods,
-                   'organizations':       organizations,
-                   'affectations':        affectations,
+                   'specialities': all_speciality,
+                   'periods': periods,
+                   'organizations': information,
+                   'affectations': affectations,
                    })

@@ -84,8 +84,10 @@ def export_xls(organization_id, affectations):
             worksheet.append([str('')])
             row_number += 1
 
+        filename_speciality = str(affectations[0].speciality.acronym).strip()
         filename = "affectation_%s_%s.xlsx" % (str(organization.reference),
-                                              str(affectations[0].speciality.acronym))
+                                              filename_speciality)
+        print(filename)
         response = HttpResponse(save_virtual_workbook(workbook), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
         return response

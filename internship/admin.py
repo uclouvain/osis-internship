@@ -72,8 +72,8 @@ admin.site.register(PeriodInternshipPlaces, PeriodInternshipPlacesAdmin)
 
 
 class InternshipSpecialityAdmin(admin.ModelAdmin):
-    list_display = ('learning_unit', 'name', 'acronym', 'mandatory')
-    fieldsets = ((None, {'fields': ('learning_unit', 'name', 'acronym', 'mandatory')}),)
+    list_display = ('learning_unit', 'name', 'acronym', 'mandatory', 'order_postion')
+    fieldsets = ((None, {'fields': ('learning_unit', 'name', 'acronym', 'mandatory', 'order_postion')}),)
     raw_id_fields = ('learning_unit',)
 
 admin.site.register(InternshipSpeciality, InternshipSpecialityAdmin)

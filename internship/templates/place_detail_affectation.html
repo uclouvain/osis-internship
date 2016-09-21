@@ -40,12 +40,12 @@
         <div class="panel-body">
             <ul class="nav nav-tabs">
                 {% for speciality in specialities %}
-                    <li {% if forloop.first %}class="active"{% endif %}><a data-toggle="tab" href="#tab_{{speciality.acronym}}">{{speciality.name}}</a></li>
+                    <li {% if forloop.first %}class="active"{% endif %}><a data-toggle="tab" href="#tab_{{speciality.acronym.strip}}">{{speciality.name}}</a></li>
                 {% endfor %}
             </ul>
             <div class="tab-content">
                 {% for speciality in specialities %}
-                    <div id="tab_{{speciality.acronym}}" class="tab-pane fade {% if forloop.first %}in active{% endif %}">
+                    <div id="tab_{{speciality.acronym.strip}}" class="tab-pane fade {% if forloop.first %}in active{% endif %}">
                         <div class="panel panel-default">
                             <div class="tab-content">
                                 <div role="tabpanel" class="tab-pane fade in active" id="profile">

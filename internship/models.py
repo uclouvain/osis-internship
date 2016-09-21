@@ -145,6 +145,15 @@ class InternshipChoice(models.Model):
         all = InternshipChoice.objects.all().distinct('student')
         return all
 
+    def find_by_all_student_person():
+        all = InternshipChoice.objects.all().order_by('student__person__last_name')
+        students_list=[]
+        for a in all:
+            students_list.append(a.student)
+        unique = []
+        [unique.append(item) for item in students_list if item not in unique]
+        return unique
+
     @staticmethod
     def find_by_student(s_student):
         internships = InternshipChoice.objects.filter(student = s_student).order_by('choice')
@@ -209,6 +218,7 @@ class InternshipSpeciality(models.Model):
     name = models.CharField(max_length=125, blank=False, null=False)
     acronym = models.CharField(max_length=125, blank=False, null=False)
     mandatory = models.BooleanField(default=False)
+    order_postion = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
@@ -217,6 +227,12 @@ class InternshipSpeciality(models.Model):
     def search(**kwargs):
         kwargs = {k: v for k, v in kwargs.items() if v}
         queryset = InternshipSpeciality.objects.filter(**kwargs).order_by('acronym', 'name')
+        return queryset
+
+    @staticmethod
+    def search_order_by_position(**kwargs):
+        kwargs = {k: v for k, v in kwargs.items() if v}
+        queryset = InternshipSpeciality.objects.filter(**kwargs).order_by('order_postion')
         return queryset
 
     @staticmethod
