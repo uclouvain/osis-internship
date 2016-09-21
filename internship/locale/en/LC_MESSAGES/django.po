@@ -347,3 +347,6 @@ msgstr  "Total cost of the solution"
 
 msgid   "type_internship"
 msgstr  "Type of internship"
+
+msgid   "executions"
+msgstr  "Executions"

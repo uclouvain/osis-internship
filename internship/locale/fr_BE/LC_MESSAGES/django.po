@@ -347,3 +347,6 @@ msgstr  "Coût total de la solution"
 
 msgid   "type_internship"
 msgstr  "Type de stage"
+
+msgid   "executions"
+msgstr  "Executions"
