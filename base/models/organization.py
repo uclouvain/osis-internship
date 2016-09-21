@@ -25,6 +25,7 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
+from base.models.serializable_model import SerializableModel
 
 
 class OrganizationAdmin(admin.ModelAdmin):
@@ -41,7 +42,7 @@ ORGANIZATION_TYPE = (('MAIN', 'Main'),
                      ('PUBLIC_PARTNER', 'Public partner'))
 
 
-class Organization(models.Model):
+class Organization(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     name = models.CharField(max_length=255)

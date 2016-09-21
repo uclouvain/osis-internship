@@ -36,29 +36,36 @@ from internship.forms import PeriodForm
 def internships_periods(request):
     periods = Period.search()
     return render(request, "periods.html", {'section': 'internship',
-                                            'periods' : periods})
+                                            'periods': periods})
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def period_create(request):
-    f = PeriodForm(data=request.POST)
+    period_form = PeriodForm(data=request.POST)
     return render(request, "period_create.html", {'section': 'internship',
-                                                    'form' : f
-                                                    })
+                                                  'form': period_form,
+                                                  })
+
+
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def period_save(request, period_id):
-    period = Period.find_by_id(period_id)
+    if period_id:
+        period = Period.find_by_id(period_id)
+    else:
+        period = Period()
     form = PeriodForm(data=request.POST, instance=period)
     form.save()
 
     return HttpResponseRedirect(reverse('internships_periods'))
 
+
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def period_new(request):
     return period_save(request, None)
+
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
@@ -66,6 +73,7 @@ def period_delete(request, period_id):
     period = Period.find_by_id(period_id)
     period.delete()
     return HttpResponseRedirect(reverse('internships_periods'))
+
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
@@ -75,5 +83,5 @@ def period_modification(request, period_id):
     period.date_end = period.date_end.strftime("%Y-%m-%d")
 
     return render(request, "period_create.html", {'section': 'internship',
-                                                    'period' : period
-                                                    })
+                                                  'period': period
+                                                  })

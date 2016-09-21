@@ -36,7 +36,7 @@ from base import models as mdl
 from base.forms import MyMessageActionForm, MyMessageForm
 from base.utils import send_mail
 from base.views import layout
-import base.models.message_history as message_history_mdl
+from osis_common.models import message_history as message_history_mdl
 
 
 @login_required
@@ -47,7 +47,7 @@ def my_osis_index(request):
 @login_required
 def my_messages_index(request):
     person = mdl.person.find_by_user(request.user)
-    my_messages = mdl.message_history.find_my_messages(person)
+    my_messages = message_history_mdl.find_my_messages(person.id)
     my_messages_formset = None
     if not my_messages:
         messages.add_message(request, messages.INFO, _('no_messages'))
@@ -76,21 +76,24 @@ def my_messages_action(request):
                                      for mess_form in my_messages_formset
                                      if mess_form.cleaned_data.get('selected')]
         if 'MARK_AS_READ' in my_message_action_form.cleaned_data.get('action'):
-            mdl.message_history.mark_as_read(my_messages_ids_to_action)
+            message_history_mdl.mark_as_read(my_messages_ids_to_action)
         elif 'DELETE' in my_message_action_form.cleaned_data.get('action'):
-            mdl.message_history.delete_my_messages(my_messages_ids_to_action)
+            message_history_mdl.delete_my_messages(my_messages_ids_to_action)
     return HttpResponseRedirect(reverse('my_messages'))
 
 
 @login_required
 def delete_from_my_messages(request, message_id):
-    mdl.message_history.delete_my_messages([message_id, ])
+    message = message_history_mdl.find_by_id(message_id)
+    person_user = mdl.person.find_by_user(request.user)
+    if message and (message.receiver_id == person_user.id):
+        message_history_mdl.delete_my_messages([message_id, ])
     return HttpResponseRedirect(reverse('my_messages'))
 
 
 @login_required
 def read_message(request, message_id):
-    message = mdl.message_history.read_my_message(message_id)
+    message = message_history_mdl.read_my_message(message_id)
     return layout.render(request, "my_osis/my_message.html", {'my_message': message, })
 
 
@@ -124,7 +127,7 @@ def profile_lang(request):
 
 
 @login_required
-@user_passes_test(lambda u: u.is_staff and u.has_perm('base.change_messagetemplate'))
+@user_passes_test(lambda u: u.is_staff and u.has_perm('osis_common.change_messagetemplate'))
 def messages_templates_index(request):
     return HttpResponseRedirect(reverse('admin:base_messagetemplate_changelist'))
 

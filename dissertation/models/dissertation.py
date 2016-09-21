@@ -23,6 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from dissertation.models.dissertation_role import get_promoteur_by_dissertation
+from dissertation.utils.emails_dissert import send_mail_dissert_accepted_by_teacher, \
+    send_mail_dissert_acknowledgement, send_mail_dissert_accepted_by_com, send_mail_dissert_refused_by_teacher, \
+    send_mail_dissert_refused_by_com, send_mail_to_teacher_new_dissert
 from django.contrib import admin
 from django.db import models
 from django.db.models import Q
@@ -30,10 +34,12 @@ from django.utils.translation import ugettext_lazy as _
 from base.models import offer_year, student, academic_year
 from . import proposition_dissertation
 from . import offer_proposition
+from . import dissertation_location
 
 
 class DissertationAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'status', 'active', 'proposition_dissertation', 'modification_date')
+    raw_id_fields = ('author', 'offer_year_start')
 
 
 STATUS_CHOICES = (
@@ -55,27 +61,39 @@ STATUS_CHOICES = (
     ('ENDED_LOS', _('ended_los')),
 )
 
+DEFEND_PERIODE_CHOICES = (
+    ('JANUARY', _('january')),
+    ('JUNE', _('june')),
+    ('SEPTEMBER', _('september')),
+)
+
+DEFEND_YEAR_CHOICES = (
+    ('2016', '2016-2017'),
+    ('2017', '2017-2018'),
+    ('2018', '2018-2019'),
+    ('2019', '2019-2020'),
+    ('2020', '2020-2021'),
+    ('2021', '2021-2022'),
+    ('2022', '2022-2023'),
+    ('2023', '2023-2024'),
+    ('2024', '2024-2025'),
+    ('2025', '2025-2026'),
+)
+
 
 class Dissertation(models.Model):
-
-    DEFEND_PERIODE_CHOICES = (
-        ('UNDEFINED', _('undefined')),
-        ('JANUARY', _('january')),
-        ('JUNE', _('june')),
-        ('SEPTEMBER', _('september')),
-    )
-
     title = models.CharField(max_length=200)
     author = models.ForeignKey(student.Student)
     status = models.CharField(max_length=12, choices=STATUS_CHOICES, default='DRAFT')
-    defend_periode = models.CharField(max_length=12, choices=DEFEND_PERIODE_CHOICES, default='UNDEFINED')
-    defend_year = models.ForeignKey(academic_year.AcademicYear, blank=True, null=True)
+    defend_periode = models.CharField(max_length=12, choices=DEFEND_PERIODE_CHOICES, blank=True, null=True)
+    defend_year = models.CharField(max_length=4, choices=DEFEND_YEAR_CHOICES, blank=True, null=True)
     offer_year_start = models.ForeignKey(offer_year.OfferYear)
     proposition_dissertation = models.ForeignKey(proposition_dissertation.PropositionDissertation)
     description = models.TextField(blank=True, null=True)
     active = models.BooleanField(default=True)
     creation_date = models.DateTimeField(auto_now_add=True, editable=False)
     modification_date = models.DateTimeField(auto_now=True)
+    location = models.ForeignKey(dissertation_location.DissertationLocation, blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -89,15 +107,28 @@ class Dissertation(models.Model):
         self.save()
 
     def go_forward(self):
+
         next_status = get_next_status(self, "go_forward")
+        if self.status == 'TO_RECEIVE' and next_status == 'TO_DEFEND':
+            send_mail_dissert_acknowledgement(self.author.person)
+        if self.status == 'DRAFT' and next_status == 'DIR_SUBMIT':
+            send_mail_to_teacher_new_dissert(get_promoteur_by_dissertation(self))
         self.set_status(next_status)
 
     def accept(self):
         next_status = get_next_status(self, "accept")
+        if self.status == 'DIR_SUBMIT':
+            send_mail_dissert_accepted_by_teacher(self.author.person)
+        if self.status == 'COM_SUBMIT':
+            send_mail_dissert_accepted_by_com(self.author.person)
         self.set_status(next_status)
 
     def refuse(self):
         next_status = get_next_status(self, "refuse")
+        if self.status == 'DIR_SUBMIT':
+            send_mail_dissert_refused_by_teacher(self.author.person)
+        if self.status == 'COM_SUBMIT':
+            send_mail_dissert_refused_by_com(self.author.person, get_promoteur_by_dissertation(self).person)
         self.set_status(next_status)
 
     class Meta:
@@ -126,19 +157,19 @@ def search_by_proposition_author(terms=None, active=True, proposition_author=Non
     return search(terms=terms, active=active).filter(proposition_dissertation__author=proposition_author)
 
 
-def search_by_offer(offer):
-    return Dissertation.objects.filter(offer_year_start__offer=offer)
+def search_by_offer(offers):
+    return Dissertation.objects.filter(offer_year_start__offer__in=offers)
 
 
-def search_by_offer_and_status(offer, status):
-    return search_by_offer(offer).filter(status=status)
+def search_by_offer_and_status(offers, status):
+    return search_by_offer(offers).filter(status=status)
 
 
 def count_by_proposition(prop_dissert):
-    return Dissertation.objects.filter(active=True)\
-                               .filter(proposition_dissertation=prop_dissert)\
-                               .exclude(status='DRAFT')\
-                               .count()
+    return Dissertation.objects.filter(active=True) \
+        .filter(proposition_dissertation=prop_dissert) \
+        .exclude(status='DRAFT') \
+        .count()
 
 
 def get_next_status(dissert, operation):
@@ -155,14 +186,19 @@ def get_next_status(dissert, operation):
             return dissert.status
 
     elif operation == "accept":
+
         offer_prop = offer_proposition.get_by_offer(dissert.offer_year_start.offer)
+
         if offer_prop.validation_commission_exists and dissert.status == 'DIR_SUBMIT':
+
             return 'COM_SUBMIT'
 
-        elif offer_prop.evaluation_first_year and (dissert.status == 'DIR_SUBMIT' or dissert.status == 'COM_SUBMIT'):
+        elif offer_prop.evaluation_first_year and (dissert.status == 'DIR_SUBMIT' or
+                                                   dissert.status == 'COM_SUBMIT' or
+                                                   dissert.status == 'COM_KO'):
             return 'EVA_SUBMIT'
 
-        elif dissert.status == 'EVA_SUBMIT':
+        elif dissert.status == 'EVA_SUBMIT' or dissert.status == 'EVA_KO':
             return 'TO_RECEIVE'
 
         elif dissert.status == 'DEFENDED':

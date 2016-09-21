@@ -26,9 +26,12 @@
 import csv
 from django.contrib.auth.models import Group
 from django.db import IntegrityError, DataError
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
+from base import models as mdl
+from internship import models
 
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
 # To be removed once all students are imported.
 def load_internship_students():
     with open('internship/views/internship_students.csv') as csvfile:
