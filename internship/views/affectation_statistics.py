@@ -1054,7 +1054,7 @@ def generate_solution():
     fill_normal_choices(True)
     fill_normal_choices(False)
     swap_errors()
-    swap_empty_internships()
+    #swap_empty_internships()
 
 
 def save_solution():
