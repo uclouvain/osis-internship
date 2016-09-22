@@ -193,7 +193,7 @@ def __save_xls_internships(request, file_name, user):
 
                 master_value = row[col_master].value
 
-                speciality = InternshipSpeciality.search(acronym=spec_value)
+                speciality = InternshipSpeciality.search(acronym__icontains=spec_value)
 
                 number_place = 0
                 for x in range (3,15):

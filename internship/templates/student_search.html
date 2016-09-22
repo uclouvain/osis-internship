@@ -31,36 +31,22 @@
   <li><a href="{% url 'internships_home' %}">{% trans 'internships_managment' %}</a></li>
   <li class="active">{% trans 'students' %}</li>
 {% endblock %}
+{% block style %}
+    <link rel="stylesheet" href="{% static 'css/dataTables.bootstrap.min.css' %}">
+{% endblock %}
 {% block content %}
+  <style>
+      .dataTables_filter {
+          width: 50%;
+          float: center;
+          text-align: center;
+      }
+  </style>
   <div class="page-header">
     <h2>{% trans 'student_sumup' %}</h2>
   </div>
   <div class="panel panel-default">
-    <form  method="get" action="{% url 'internships_student_search'%}" >
-      <div class="row">
-          <div class="col-md-3">
-              <label for="name" >{% trans 'name'%}</label>
-              <input class="form-control" id="txt_name" placeholder="{% trans 'Name' %}"
-                                                        name="search_name"
-                                                        value="{{ search_name | default_if_none:'' }}"
-                                                        style="text-transform:uppercase">
-          </div>
-          <div class="col-md-3">
-              <label for="name" >{% trans 'firstname'%}</label>
-              <input class="form-control" id="txt_firstname" placeholder="{% trans 'Firstname' %}"
-                                                        name="search_firstname"
-                                                        value="{{ search_firstname | default_if_none:'' }}"
-                                                        style="text-transform:uppercase">
-          </div>
-          <div class="col-md-1">
-            <br>
-            <button type="submit" id="bt_submit_student_search" class="btn btn-primary"
-                                  role="button" title="{% trans 'Search for a student ' %}">
-              <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-            </button>&nbsp;&nbsp;
-          </div>
-        </div>
-      </form>
+    <div class="row">
       <div class="col-md-3">
         <br>
         <button class="btn btn-info" title="{% trans 'number_of_enrollments' %}">
@@ -85,17 +71,21 @@
           <span class="glyphicon glyphicon-ban-circle" aria-hidden="true"> : {{student_without_internship}}</span>
         </button>
       </div>
+      <div class="col-md-3">
+      </div>
+    </div>
+      <br/>
       <div>
           {% if students|length == 0 %}
               <label class="alert alert-info" style="margin:5px">{% trans 'no_result' %}</label>
           {% else %}
-              <table class="table table-striped table-hover">
+              <table class="table table-striped table-hover" id="order_student">
                   <thead>
                   <th>{% trans 'noma'%}</th>
                   <th>{% trans 'name'%}</th>
                   <th>{% trans 'firstname'%}</th>
-                  <th>{% trans 'details'%}</th>
-                  <th>{% trans 'choice_modification'%}</th>
+                  <th class="no-sort">{% trans 'details'%}</th>
+                  <th class="no-sort">{% trans 'choice_modification'%}</th>
                   <th>{% trans 'statut'%}</th>
                   </thead>
                   {% for student in students %}
@@ -125,15 +115,18 @@
                         {% if student.number_choices == 0 %}
                           <button type="button">
                             <span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>
+                            <span style="color: red; display: none;" id="notok">0</span>
                           </button>
                         {% else %}
                           {% if student.number_choices == number_selection %}
                             <button type="button" class="btn btn-success">
                               <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                              <span style="color: red; display: none;" id="notok">1</span>
                             </button>
                           {% else %}
                             <button type="button" class="btn btn-danger">
                               <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                              <span style="color: red; display: none;" id="notok">2</span>
                             </button>
                           {% endif %}
                         {% endif %}
@@ -145,4 +138,21 @@
       </div>
     </div>
   </div>
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/dataTables.bootstrap.min.js' %}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#order_student').DataTable( {
+                paging: false,
+                "columnDefs": [ {
+                            "targets": 'no-sort',
+                            "orderable": false,
+                        } ],
+                "order": [[ 1, "asc" ]]
+            } );
+        } );
+    </script>
 {% endblock %}
