@@ -28,10 +28,13 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
-from internship.models import InternshipChoice, InternshipStudentInformation, InternshipSpeciality
+from internship.models import InternshipChoice, InternshipStudentInformation, \
+		InternshipOffer, InternshipStudentAffectationStat, \
+		Organization, InternshipSpeciality, Period
 
 from django.utils.translation import ugettext_lazy as _
 
+from internship.views.place import set_organization_address, sort_organizations
 
 def set_number_choices(student_informations):
     for si in student_informations:
@@ -284,9 +287,9 @@ def student_save_affectation_modification(request, registration_id):
                     elif student_choice.choice == 4 :
                         affectation_modif.cost = 3
             if not check_choice:
-                affectation_modif.choice="i"
+                affectation_modif.choice="I"
                 affectation_modif.cost = 10
 
             affectation_modif.save()
-    redirect_url = reverse('internships_student_read', args=[student.id])
+    redirect_url = reverse('internships_student_read', args=[student.registration_id])
     return HttpResponseRedirect(redirect_url)
