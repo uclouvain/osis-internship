@@ -145,15 +145,6 @@ class InternshipChoice(models.Model):
         all = InternshipChoice.objects.all().distinct('student')
         return all
 
-    def find_by_all_student_person():
-        all = InternshipChoice.objects.all().order_by('student__person__last_name')
-        students_list=[]
-        for a in all:
-            students_list.append(a.student)
-        unique = []
-        [unique.append(item) for item in students_list if item not in unique]
-        return unique
-
     @staticmethod
     def find_by_student(s_student):
         internships = InternshipChoice.objects.filter(student = s_student).order_by('choice')

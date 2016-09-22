@@ -1131,6 +1131,7 @@ def load_solution(data):
 
 
 @login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_affectation_statistics_generate(request):
     """ Generate new solution, save it in the database, redirect back to the page 'internship_affectation_statistics'"""
     if request.method == 'POST':
@@ -1147,6 +1148,7 @@ def internship_affectation_statistics_generate(request):
 
 
 @login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_affectation_statistics(request):
     t0 = time.clock()
     init_organizations()

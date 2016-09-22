@@ -28,10 +28,13 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
-from internship.models import InternshipChoice, InternshipStudentInformation, InternshipSpeciality
+from internship.models import InternshipChoice, InternshipStudentInformation, \
+		InternshipOffer, InternshipStudentAffectationStat, \
+		Organization, InternshipSpeciality, Period
 
 from django.utils.translation import ugettext_lazy as _
 
+from internship.views.place import set_organization_address, sort_organizations
 
 def set_number_choices(student_informations):
     for si in student_informations:
@@ -49,7 +52,7 @@ def get_number_ok_student(students_list, number_selection):
     # who have a partial selection
     # who have no selection
     for sl in students_list:
-        student = mdl.student.find_by_person(sl.person)
+        student = mdl.student.find_by_person(sl.student.person)
         choices = InternshipChoice.find_by_student(student)
         sl.number_choices = len(choices)
         if len(choices) == number_selection:
@@ -63,7 +66,7 @@ def get_number_ok_student(students_list, number_selection):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_resume(request):
     # Get all stundents and the mandatory specialities
-    students_list = InternshipChoice.find_by_all_student_person()
+    students_list = InternshipChoice.find_by_all_student()
     specialities = InternshipSpeciality.search(mandatory=True)
     student_informations = InternshipStudentInformation.find_all()
 
@@ -118,7 +121,7 @@ def internships_student_search(request):
         student_informations = InternshipStudentInformation.find_all()
 
     # Get all stundents and the mandatory specialities
-    students_list = InternshipChoice.find_by_all_student_person()
+    students_list = InternshipChoice.find_by_all_student()
     specialities = InternshipSpeciality.search(mandatory=True)
 
     set_number_choices(student_informations)
@@ -284,9 +287,9 @@ def student_save_affectation_modification(request, registration_id):
                     elif student_choice.choice == 4 :
                         affectation_modif.cost = 3
             if not check_choice:
-                affectation_modif.choice="i"
+                affectation_modif.choice="I"
                 affectation_modif.cost = 10
 
             affectation_modif.save()
-    redirect_url = reverse('internships_student_read', args=[student.id])
+    redirect_url = reverse('internships_student_read', args=[student.registration_id])
     return HttpResponseRedirect(redirect_url)
