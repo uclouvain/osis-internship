@@ -31,6 +31,9 @@
   <li><a href="{% url 'internships_home' %}">{% trans 'internships_managment' %}</a></li>
   <li class="active">{% trans 'students' %}</li>
 {% endblock %}
+{% block style %}
+    <link rel="stylesheet" href="{% static 'css/dataTables.bootstrap.min.css' %}">
+{% endblock %}
 {% block content %}
   <style>
       .dataTables_filter {
@@ -81,8 +84,8 @@
                   <th>{% trans 'noma'%}</th>
                   <th>{% trans 'name'%}</th>
                   <th>{% trans 'firstname'%}</th>
-                  <th>{% trans 'details'%}</th>
-                  <th>{% trans 'choice_modification'%}</th>
+                  <th class="no-sort">{% trans 'details'%}</th>
+                  <th class="no-sort">{% trans 'choice_modification'%}</th>
                   <th>{% trans 'statut'%}</th>
                   </thead>
                   {% for student in students %}
@@ -144,6 +147,10 @@
         $(document).ready(function() {
             $('#order_student').DataTable( {
                 paging: false,
+                "columnDefs": [ {
+                            "targets": 'no-sort',
+                            "orderable": false,
+                        } ],
                 "order": [[ 1, "asc" ]]
             } );
         } );
