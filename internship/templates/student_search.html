@@ -32,6 +32,13 @@
   <li class="active">{% trans 'students' %}</li>
 {% endblock %}
 {% block content %}
+  <style>
+      .dataTables_filter {
+          width: 50%;
+          float: center;
+          text-align: center;
+      }
+  </style>
   <div class="page-header">
     <h2>{% trans 'student_sumup' %}</h2>
   </div>
@@ -135,14 +142,10 @@
     <script type="text/javascript" src="{% static 'js/dataTables.bootstrap.min.js' %}"></script>
     <script>
         $(document).ready(function() {
-            $('#order_student').DataTable({
+            $('#order_student').DataTable( {
                 paging: false,
-                "columnDefs": [ {
-                    "targets": 'no-sort',
-                    "orderable": false,
-                } ],
-                bInfo: false
-            });
+                "order": [[ 1, "asc" ]]
+            } );
         } );
     </script>
 {% endblock %}

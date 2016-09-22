@@ -52,7 +52,7 @@ def get_number_ok_student(students_list, number_selection):
     # who have a partial selection
     # who have no selection
     for sl in students_list:
-        student = mdl.student.find_by_person(sl.person)
+        student = mdl.student.find_by_person(sl.student.person)
         choices = InternshipChoice.find_by_student(student)
         sl.number_choices = len(choices)
         if len(choices) == number_selection:
@@ -66,7 +66,7 @@ def get_number_ok_student(students_list, number_selection):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_resume(request):
     # Get all stundents and the mandatory specialities
-    students_list = InternshipChoice.find_by_all_student_person()
+    students_list = InternshipChoice.find_by_all_student()
     specialities = InternshipSpeciality.search(mandatory=True)
     student_informations = InternshipStudentInformation.find_all()
 
@@ -121,7 +121,7 @@ def internships_student_search(request):
         student_informations = InternshipStudentInformation.find_all()
 
     # Get all stundents and the mandatory specialities
-    students_list = InternshipChoice.find_by_all_student_person()
+    students_list = InternshipChoice.find_by_all_student()
     specialities = InternshipSpeciality.search(mandatory=True)
 
     set_number_choices(student_informations)
