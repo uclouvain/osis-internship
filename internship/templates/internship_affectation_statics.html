@@ -363,7 +363,7 @@
                         </tr>
                         {% for internship in errors %}
                             <tr>
-                                <td>{{internship.student}}</td>
+                                <td><a href="{% url 'internships_student_read' internship.student.registration_id %}" target="_blank">{{internship.student}}</a></td>
                                 <td>{{internship.speciality}}</td>
                                 <td>{{internship.period}}</td>
                                 <td>{{internship.organization}}</td>
