@@ -63,17 +63,26 @@ def find_academic_years():
     return AcademicYear.objects.all().order_by('year')
 
 
+def current_academic_years():
+    now = timezone.now()
+    academic_yrs = AcademicYear.objects.filter(start_date__lte=now) \
+                                       .filter(end_date__gte=now) \
+                                       .order_by('year')
+    return academic_yrs
+
+
 def current_academic_year():
-    academic_yr = AcademicYear.objects.filter(start_date__lte=timezone.now()) \
-                                      .filter(end_date__gte=timezone.now()).first()
-    if academic_yr:
-        return academic_yr
-    else:
-        return None
+    academic_yr = current_academic_years().first()
+    return academic_yr
+
+
+def starting_academic_year():
+    academic_yr = current_academic_years().last()
+    return academic_yr
 
 
 def find_academic_year_by_year(year):
-    try :
+    try:
         return AcademicYear.objects.get(year=year)
     except ObjectDoesNotExist:
         return None
