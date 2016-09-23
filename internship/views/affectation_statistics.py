@@ -25,11 +25,11 @@
 ##############################################################################
 import copy
 import sys
-import time
 from collections import OrderedDict
 from operator import itemgetter
 from random import randint, choice
 from statistics import mean, stdev
+from collections import defaultdict
 
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.urlresolvers import reverse
@@ -114,7 +114,7 @@ def compute_stats(sol):
     others_specialities = {}
     others_specialities_students = {}
 
-    specialities = InternshipSpeciality.objects.all()
+    specialities = InternshipSpeciality.objects.all().select_related()
 
     for speciality in specialities:
         others_specialities[speciality] = 0
@@ -281,7 +281,7 @@ def init_internship_table():
     """
     global internship_table_mi, internship_table_original
     # Retrieve all PeriodInternshipPlaces
-    period_internship_places = PeriodInternshipPlaces.objects.all()
+    period_internship_places = PeriodInternshipPlaces.objects.all().select_related()
     temp_internship_table = {}
     # Put each period_internship_places in the right position
     for pid in period_internship_places:
@@ -572,7 +572,7 @@ def get_student_mandatory_choices(priority):
     :return: A dict of dict : <speciality, <student, [choices]>>.
     """
     specialities = {}
-    choices = InternshipChoice.objects.filter(priority=priority)
+    choices = InternshipChoice.objects.filter(priority=priority).select_related("speciality","student")
 
     if len(choices) == 0:
         return {}
@@ -594,7 +594,7 @@ def get_student_mandatory_choices(priority):
                 if enrollment.student in specialities[enrollment.internship_offer.speciality.id]:
                     del specialities[enrollment.internship_offer.speciality.id][enrollment.student]
     else:
-        for choice in InternshipChoice.objects.filter(priority=True):
+        for choice in InternshipChoice.objects.filter(priority=True).select_related("speciality","student"):
             if choice.student in specialities[choice.speciality.id]:
                 del specialities[choice.speciality.id][choice.student]
 
@@ -841,7 +841,7 @@ def fill_erasmus_choices():
     :return:
     """
     # Retrieve all students
-    erasmus_enrollments = InternshipEnrollment.objects.all()
+    erasmus_enrollments = InternshipEnrollment.objects.all().select_related("student","period","internship_offer")
     for enrol in erasmus_enrollments:
         # Check if the internship is available
         if is_internship_available(enrol.place, enrol.internship_offer.speciality, enrol.period.name):
@@ -1084,15 +1084,13 @@ def save_solution():
 def load_solution(data):
     """ Create the solution and internship_table from db data """
     # Initialise the table of internships.
-    period_internship_places = PeriodInternshipPlaces.objects.order_by("period_id")
+    period_internship_places = PeriodInternshipPlaces.objects.order_by("period_id").select_related()
     # This object store the number of available places for given organization, speciality, period
-    temp_internship_table = {}
+    temp_internship_table = defaultdict(dict)
     for pid in period_internship_places:
         organization = pid.internship.organization
         acronym = pid.internship.speciality.acronym
         period_name = pid.period.name
-        if organization not in temp_internship_table:
-            temp_internship_table[organization] = {}
         if acronym not in temp_internship_table[organization]:
             temp_internship_table[organization][acronym] = OrderedDict()
         temp_internship_table[organization][acronym][period_name] = {}
@@ -1120,7 +1118,6 @@ def load_solution(data):
             temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['after'] / \
             temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['before'] * 100
     # Sort all student by the score (descending order)
-
     sorted_internship_table = []
     for organization, specialities in temp_internship_table.items():
         for speciality, periods in specialities.items():
@@ -1135,7 +1132,6 @@ def internship_affectation_statistics_generate(request):
     """ Generate new solution, save it in the database, redirect back to the page 'internship_affectation_statistics'"""
     if request.method == 'POST':
         if request.POST['executions'] != "":
-            t0 = time.clock()
             cost = sys.maxsize
             for i in range(0, int(request.POST['executions'])):
                 generate_solution()
@@ -1148,11 +1144,10 @@ def internship_affectation_statistics_generate(request):
 
 @login_required
 def internship_affectation_statistics(request):
-    t0 = time.clock()
     init_organizations()
     init_specialities()
     sol, table, stats, internship_errors = None, None, None, None
-    data = InternshipStudentAffectationStat.search()
+    data = InternshipStudentAffectationStat.objects.all().select_related("student","organization","speciality","period")
     if len(data) > 0:
         sol, table = load_solution(data)
         stats = compute_stats(sol)
