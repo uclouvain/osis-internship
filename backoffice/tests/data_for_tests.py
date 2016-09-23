@@ -24,7 +24,7 @@
 #
 ##############################################################################
 
-# This class tests the portal_migration functions.
+# This class permit to populate the database in order to do tests.
 
 
 from base.models import student, tutor, person
