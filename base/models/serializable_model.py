@@ -23,12 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import logging
+from django.conf import settings
 from django.db import models
 from django.core import serializers
 import uuid
+from pika.exceptions import ChannelClosed, ConnectionClosed
 from backoffice.queue import queue_actions
 
 QUEUE_NAME = "osis_portal"
+LOGGER = logging.getLogger(settings.DEFAULT_LOGGER)
 
 
 class SerializableModelManager(models.Manager):
@@ -43,7 +47,10 @@ class SerializableModel(models.Model):
 
     def save(self, *args, **kwargs):
         super(SerializableModel, self).save(*args, **kwargs)
-        queue_actions.send_message(QUEUE_NAME, serialize_objects([self]))
+        try:
+            queue_actions.send_message(QUEUE_NAME, serialize_objects([self]))
+        except (ChannelClosed, ConnectionClosed) :
+            LOGGER.warning('QueueServer is not installed or not launched')
 
     def natural_key(self):
         return [self.uuid]

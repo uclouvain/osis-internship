@@ -43,10 +43,6 @@ class Tutor(serializable_model.SerializableModel):
     changed = models.DateTimeField(null=True)
     person = models.OneToOneField('Person')
 
-    def save(self, *args, **kwargs):
-        tutor = super(Tutor, self).save(*args, **kwargs)
-        queue_actions.send_message(serializable_model.QUEUE_NAME, serializable_model.serialize_objects([tutor]))
-
     def __str__(self):
         return u"%s" % self.person
 
