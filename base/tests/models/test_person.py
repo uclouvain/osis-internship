@@ -45,3 +45,13 @@ class PersonTest(TestCase):
             p.save()
         except AttributeError:
             self.fail("Exception not expected")
+
+    def test_person_without_source(self):
+        p = person.Person(email='matheus@uclouvain.be',
+                          last_name='Nashtergeith',
+                          first_name='Matheus',
+                          source=None)
+        try:
+            p.save()
+        except AttributeError:
+            self.fail("Exception not expected")
