@@ -31,6 +31,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from django.core import serializers
 from base.models.serializable_model import SerializableModel
+from base.enums import person_source_type
 
 
 class PersonAdmin(admin.ModelAdmin):
@@ -50,10 +51,6 @@ class Person(SerializableModel):
         ('M', _('male')),
         ('U', _('unknown')))
 
-    SOURCE_CHOICES = (
-        ('BASE', 'BASE'),
-        ('DISSERTATION', 'DISSERTATION'))
-
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
@@ -68,13 +65,14 @@ class Person(SerializableModel):
     phone_mobile = models.CharField(max_length=30, blank=True, null=True)
     language = models.CharField(max_length=30, null=True, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE)
     birth_date = models.DateField(blank=True, null=True)
-    source = models.CharField(max_length=25, blank=True, null=True, choices=SOURCE_CHOICES, default='BASE')
+    source = models.CharField(max_length=25, blank=True, null=True, choices=person_source_type.CHOICES,
+                              default=person_source_type.BASE)
 
     def save(self, **kwargs):
         # When person is created by another application this rule can be applied.
         if hasattr(settings, 'INTERNAL_EMAIL_SUFIX'):
             # It limits the creation of person to external emails.
-            if self.source != 'BASE' and settings.INTERNAL_EMAIL_SUFIX in str(self.email):
+            if self.source != person_source_type.BASE and settings.INTERNAL_EMAIL_SUFIX in str(self.email).lower():
                 raise AttributeError('Invalid email for external person.')
         super(Person, self).save()
 
