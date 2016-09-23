@@ -126,7 +126,7 @@ def set_tabs_name(specialities, student=None):
 
 def get_selectable(internships):
     """
-        Funtion to check if the internships are selectable.
+        Function to check if the internships are selectable.
         Return the status of the first internship.
         If there is no internship, return True
     """
@@ -136,7 +136,11 @@ def get_selectable(internships):
         return True
 
 def get_all_specialities(internships):
-    # Create the list of the specialities, delete dpulicated and order alphabetical
+    """
+        Function to create the list of the specialities, delete dpulicated and order alphabetical.
+        Param:
+            internships : the interships we want to get the speciality
+    """
     tab = []
     for internship in internships:
         tab.append(internship.speciality)
@@ -146,7 +150,11 @@ def get_all_specialities(internships):
 
 
 def get_all_organizations(internships):
-    # Create the options for the organizations selection list, delete duplicated
+    """
+        Function to create the options for the organizations selection list, delete duplicated
+        Param:
+            internships : the interships we want to get the organization
+    """
     tab = []
     for internship in internships:
         tab.append(internship.organization)
@@ -155,9 +163,14 @@ def get_all_organizations(internships):
 
 
 def rebuild_the_lists(preference_list, speciality_list, organization_list, internship_choice_tab=None):
-    # Look over each value of the preference list
-    # If the value is 0, the student doesn't choice this organization or speciality
-    # So their value is 0
+    """
+        Look over each value of the preference list
+        If the value is 0, the student doesn't choice this organization or speciality
+        So their value is 0
+        Params :
+            preference_list, speciality_list, organization_list, internship_choice_tab :
+            The list to check the choices
+    """
     index = 0
     for r in preference_list:
         if r == "0":
@@ -169,12 +182,24 @@ def rebuild_the_lists(preference_list, speciality_list, organization_list, inter
 
 
 def delete_dublons_keep_order(seq):
+    """
+        Function to delete the dublons of any list and keep the order of the list.
+        Param:
+            seq : the list where there is dublons
+    """
     seen = set()
     seen_add = seen.add
     return [x for x in seq if not (x in seen or seen_add(x))]
 
 
 def sort_internships(sort_internships):
+    """
+        Function to sort internships by the organization's reference.
+        Params :
+            sort_internships : the list of internships to be sorted
+        Extract the ref of the organization, sort based in integer (the ref are in string),
+        delete the dublons recreat the list of internship base of the organization reference
+    """
     tab = []
     number_ref = []
     for sort_internship in sort_internships:
@@ -190,6 +215,16 @@ def sort_internships(sort_internships):
 
 
 def set_student_choices_list(query,student_choice):
+    """
+        Function to set the list of the student's choices
+        Params :
+            query : the list of all internships
+            student_choice : the list of the internships choose by the student
+        Check if the internships and the choice are the same,
+        if yes put the param of the max enrollments and if there are selectable.
+        Then delete the internships in the list of the list of all internships
+        (because it's all ready in the choices list wich it display first)
+    """
     index = 0
     for choice in student_choice:
         for internship in query:
