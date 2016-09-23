@@ -182,7 +182,7 @@
                                     {% for student, periods in recap_sol.items %}
                                         <tr id="student_{{student.id}}">
                                             <td>
-                                                {{student}}
+                                                <a href="{% url 'internships_student_read' student.registration_id %}" target="_blank">{{student}}</a>
                                             </td>
                                             {% for period, enrollment in periods.items %}
 
