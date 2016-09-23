@@ -27,6 +27,7 @@ from django.contrib.auth.models import User, Group
 from django.test import TestCase
 from base.models.academic_year import AcademicYear
 from base.models.offer import Offer
+from base.models.offer_year import OfferYear
 from base.models.person import Person
 from base.models.program_manager import ProgramManager
 from base.models.student import Student
@@ -47,53 +48,42 @@ def create_test_tutor(person):
 
 def create_test_pgm_manager(person):
     title = 'Test1BA'
+    acronym = 'Test1BA'
     offer = Offer.objects.create(title=title)
     academic_year = AcademicYear.objects.create(year='2999')
-    acronym = 'Test1BA'
-    return ProgramManager.objects.create(offer=offer, academic_year=academic_year, acronym=acronym, title=title)
+    offer_year = OfferYear.objects.create(offer=offer, academic_year=academic_year, title=title, acronym=acronym)
+    return ProgramManager.objects.create(offer_year=offer_year, person=person)
 
 
 class AddToGroupsSignalsTest(TestCase):
-
-    @classmethod
-    def setUpTestData(cls):
-        Group.objects.create(name='students')
-        Group.objects.create(name='tutors')
-        Group.objects.create(name='program_managers')
 
     def setUp(self):
         self.user_foo = User.objects.create_user('user_foo')
         self.person_foo = Person.objects.create(user=self.user_foo)
 
     def test_add_to_students_group(self):
-        print('test1')
         create_test_student(self.person_foo)
         self.assertTrue(is_member(self.user_foo, 'students'), 'user_foo should be in students group')
 
     def test_remove_from_students_group(self):
-        print('test2')
         student_foo = create_test_student(self.person_foo)
         student_foo.delete()
         self.assertFalse(is_member(self.user_foo, 'students'), 'user_foo should not be in students group anymore')
 
     def test_add_to_tutors_group(self):
-        print('test3')
         create_test_tutor(self.person_foo)
         self.assertTrue(is_member(self.user_foo, 'tutors'), 'user_foo should be in tutors group')
 
-    def remove_from_tutors_group(self):
-        print('test4')
+    def test_remove_from_tutors_group(self):
         tutor_foo = create_test_tutor(self.person_foo)
         tutor_foo.delete()
         self.assertFalse(is_member(self.user_foo, 'tutors'), 'user_foo should not be in tutors group anymore')
 
-    def add_to_pgm_manager_group(self):
-        print('test5')
+    def test_add_to_pgm_manager_group(self):
         create_test_pgm_manager(self.person_foo)
         self.assertTrue(is_member(self.user_foo, 'program_managers'), 'user_foo should be in program_managers group')
 
-    def remove_from_manager_group(self):
-        print('test6')
+    def test_remove_from_manager_group(self):
         pgm_manager_foo = create_test_pgm_manager(self.person_foo)
         pgm_manager_foo.delete()
         self.assertFalse(is_member(self.user_foo, 'program_managers'),
