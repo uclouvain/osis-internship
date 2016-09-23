@@ -37,6 +37,18 @@ from operator import itemgetter
 
 
 def calc_dist(lat_a, long_a, lat_b, long_b):
+    """
+        Function to compute the distance between two points.
+        Params:
+            lat_a : the latitude of the first adress
+            long_a : the longitude of the first adress
+            lat_b : the latitude of the second adress
+            long_b : the longitude of the second adress
+        Transform the params in radians then compute the sin and cos
+        then transform it in miles or kilometers.
+        Based on :
+            https://gmigdos.wordpress.com/2010/03/31/python-calculate-the-distance-between-2-points-given-their-coordinates/
+    """
     if lat_a == lat_b and long_a == long_b:
         # If there is the same adress, there is a chance to have a bug/crash
         # So it return 100 meters of distance
@@ -56,6 +68,12 @@ def calc_dist(lat_a, long_a, lat_b, long_b):
 
 
 def work_dist(student, organizations):
+    """
+        Function to get the distances between the student and all organization in the DB, sorted asc
+        Params:
+            student : the student we want to get the latitude and longitude of
+            organizations : the organizations in the DB, to compute their latitude/longitude with the student's
+    """
     # Find the student's informations
     student_informations = InternshipStudentInformation.search(person__last_name=student.person.last_name, person__first_name=student.person.first_name)
 
@@ -75,6 +93,11 @@ def work_dist(student, organizations):
 
 
 def get_number_choices(internships):
+    """
+        Set new variables for the param, the number of the first and other choice for one internship
+        Params :
+            internships : the internships we want to compute the number of choices
+    """
     for internship in internships:
         number_first_choice = len(InternshipChoice.search(organization = internship.organization,
                                                             speciality__acronym = internship.speciality.acronym,
@@ -85,6 +108,15 @@ def get_number_choices(internships):
         internship.number_other_choice = number_other_choice
 
 def set_tabs_name(specialities, student=None):
+    """
+        Set tab name for the html page base on the speciality
+        and eventually the size of the choice of a student for a speciality
+        (check if the student have done the correct the number of choice for this speciality)
+        Params :
+            specialities : the specialities we want to create the tab name
+            student : default there is no student, if yes, used to get the number of choice
+                        for a speciality for this student
+    """
     for speciality in specialities:
         if student :
             size = len(InternshipChoice.search(speciality=speciality, student=student))
@@ -93,6 +125,11 @@ def set_tabs_name(specialities, student=None):
         speciality.tab = tab
 
 def get_selectable(internships):
+    """
+        Funtion to check if the internships are selectable.
+        Return the status of the first internship.
+        If there is no internship, return True
+    """
     if len(internships) > 0:
         return internships[0].selectable
     else:
