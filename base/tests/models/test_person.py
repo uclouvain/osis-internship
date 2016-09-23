@@ -25,6 +25,7 @@
 ##############################################################################
 from django.test import TestCase
 from base.models import person
+from base.enums import person_source_type
 
 
 class PersonTest(TestCase):
@@ -33,7 +34,7 @@ class PersonTest(TestCase):
         p = person.Person(email='matheus@uclouvain.be',
                           last_name='Nashtergeith',
                           first_name='Matheus',
-                          source='DISSERTATION')
+                          source=person_source_type.DISSERTATION)
         self.assertRaises(AttributeError, p.save)
 
     def test_person_from_internal_source(self):
