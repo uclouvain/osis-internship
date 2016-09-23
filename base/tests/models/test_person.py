@@ -26,19 +26,21 @@
 from django.test import TestCase
 from base.models import person
 from base.enums import person_source_type
-
+from django.conf import settings
 
 class PersonTest(TestCase):
 
+    settings.INTERNAL_EMAIL_SUFIX = 'osis.org'
+
     def test_person_from_external_source(self):
-        p = person.Person(email='matheus@uclouvain.be',
+        p = person.Person(email='matheus@osis.org',
                           last_name='Nashtergeith',
                           first_name='Matheus',
                           source=person_source_type.DISSERTATION)
         self.assertRaises(AttributeError, p.save)
 
     def test_person_from_internal_source(self):
-        p = person.Person(email='matheus@uclouvain.be',
+        p = person.Person(email='matheus@osis.org',
                           last_name='Nashtergeith',
                           first_name='Matheus')
         try:
@@ -47,7 +49,7 @@ class PersonTest(TestCase):
             self.fail("Exception not expected")
 
     def test_person_without_source(self):
-        p = person.Person(email='matheus@uclouvain.be',
+        p = person.Person(email='matheus@osis.org',
                           last_name='Nashtergeith',
                           first_name='Matheus',
                           source=None)

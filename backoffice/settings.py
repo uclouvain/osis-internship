@@ -183,7 +183,6 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.fallback.FallbackStorage'
 
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, "base/tests/sent_mails")
-INTERNAL_EMAIL_SUFIX = 'uclouvain.be'
 
 DEFAULT_FROM_EMAIL = 'osis@localhost.be'
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
