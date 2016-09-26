@@ -34,6 +34,7 @@ from dissertation.forms import AdviserForm, ManagerAdviserForm, ManagerAddAdvise
     ManagerAddAdviserPerson, AddAdviserForm
 from django.contrib.auth.decorators import user_passes_test
 from base.views import layout
+from base.enums import person_source_type
 
 
 # Used by decorator @user_passes_test(is_manager) to secure manager views
@@ -254,8 +255,8 @@ def manager_informations_add_person(request):
                                            first_name=data['first_name'],
                                            phone=data['phone'],
                                            phone_mobile=data['phone_mobile'],
-                                           source="DISSERTATION")
-                person = mdl.person.add(person)
+                                           source=person_source_type.DISSERTATION)
+                person.save()
                 adv = adviser.add(person, 'PRF', False, False, False, '')
                 return redirect('manager_informations_detail', pk=adv.pk)
             else:
