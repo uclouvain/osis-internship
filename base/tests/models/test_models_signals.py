@@ -50,7 +50,7 @@ def create_test_pgm_manager(person):
     title = 'Test1BA'
     acronym = 'Test1BA'
     offer = Offer.objects.create(title=title)
-    academic_year = AcademicYear.objects.create(year='2999')
+    academic_year = AcademicYear.objects.create(year=2999)
     offer_year = OfferYear.objects.create(offer=offer, academic_year=academic_year, title=title, acronym=acronym)
     return ProgramManager.objects.create(offer_year=offer_year, person=person)
 
