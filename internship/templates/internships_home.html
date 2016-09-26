@@ -74,11 +74,12 @@
                 </div>
                 <br>
                 <div class="row">
+                {% if false %}
                     <div class="col-md-1"><i class="fa fa-ticket " style="font-size: 400%; color: #6699FF;"></i></div>
                     <div class="col-md-5">
                         <h4 class="media-heading"><a href="{% url 'internship_affectation_statistics' %}">{% trans 'internship_assignation' %}</a></h4>
                     </div>
-
+                {% endif %}
                     {% if blockable %}
                         <div class="col-md-1"><i class="fa fa-check-circle-o" style="font-size: 400%; color: #6699FF;"></i></div>
                         <div class="col-md-5">
@@ -102,6 +103,7 @@
                     {%endif%}
                 </div>
                 <br>
+            {% if false %}
                 <div class="row">
                     <div class="col-md-1"><i class="fa fa-calendar-check-o" style="font-size: 400%; color: #6699FF;"></i></div>
                     <div class="col-md-5">
@@ -110,6 +112,7 @@
 
                 </div>
                 <br>
+            {% endif %}
             </div>
         </div>
     {% else %}
