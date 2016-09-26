@@ -77,7 +77,7 @@ def export_xls(organization_id, affectations):
                                       student.registration_id,
                                       affectation.email,
                                       affectation.adress,
-                                      "birth_date inc",
+                                      student.person.birth_date,
                                       affectation.phone_mobile])
                     row_number += 1
 
