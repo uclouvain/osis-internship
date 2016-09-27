@@ -8,7 +8,7 @@ from dissertation.models.adviser import Adviser
 
 
 def populate_adviser_uuid(apps, schema_editor):
-    advisers = list(Adviser.objects.all())
+    advisers = Adviser.objects.all()
     for adviser in advisers:
         adviser.update(uuid=uuid.uuid4())
 
