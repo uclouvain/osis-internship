@@ -8,9 +8,9 @@ from dissertation.models.adviser import Adviser
 
 
 def populate_adviser_uuid(apps, schema_editor):
-    advisers = Adviser.objects.all()
-    for adviser in advisers:
-        adviser.update(uuid=uuid.uuid4())
+    adviser_ids = Adviser.objects.values_list('id',flat=True)
+    for id in adviser_ids:
+        Adviser.objects.filter(pk=id).update(uuid=uuid.uuid4())
 
 
 class Migration(migrations.Migration):
