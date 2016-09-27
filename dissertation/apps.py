@@ -39,7 +39,6 @@ class DissertationConfig(AppConfig):
 
 
     def ready(self):
-        from dissertation.models.models_signal import on_post_save_dissertation
         queue.listen_queue(self.queue_name, insert)
 
 
