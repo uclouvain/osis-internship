@@ -1212,7 +1212,7 @@ def internship_affectation_sumup(request):
         for offer in offers:
             if offer.organization.reference == organization.reference:
                 informations.append(offer)
-    
+
     all_affectations = list(InternshipStudentAffectationStat.search())
     affectations = {}
 
