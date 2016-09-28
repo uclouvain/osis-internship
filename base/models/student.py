@@ -85,46 +85,9 @@ def find_by_person(a_person):
         return None
 
 
-def find_all_for_sync():
-    """
-    :return: All records in the 'Student' model (table). Used to synchronize date from Osis to Osis-portal.
-    """
-    datas = serialize_all_students()
-    return datas
-
-
-def serialize_all_students():
-    """
-    Serialize all the students in json format
-    :return: a json object
-    """
-    # Fetch all related persons objects
-    students = Student.objects.select_related('person').all()
-    list_students = []
-    list_persons = []
-    datas = []
-    for stud in students:
-        datas.append({
-            'students': serialize_list_students([stud]),
-            'persons': person.serialize_list_persons([stud.person])
-        })
-    return datas
-
-def serialize_list_students(list_students):
-    """
-    Serialize a list of student objects using the json format.
-    Use to send data to osis-portal.
-    :param list_students: a list of student objects
-    :return: a string
-    """
-    # Restrict fields for osis-portal
-    fields = ('id', 'registration_id', 'person')
-    return serializers.serialize("json", list_students, fields=fields,use_natural_foreign_keys=True,
-                                 use_natural_primary_keys=True)
-
-
 def find_by_offer(offers):
     return Student.objects.filter(offerenrollment__offer_year__offer__in=offers)
+
 
 def find_by_offer_year(offer_y):
     return Student.objects.filter(offerenrollment__offer_year=offer_y)

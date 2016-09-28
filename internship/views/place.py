@@ -30,12 +30,19 @@ from internship.models import Organization, OrganizationAddress, InternshipChoic
     InternshipOffer, InternshipSpeciality, InternshipStudentAffectationStat, \
     Period, InternshipStudentInformation
 from internship.forms import OrganizationForm, OrganizationAddressForm
-from internship.views.internship import get_all_specialities
+from internship.views.internship import get_all_specialities, set_tabs_name
 from internship.utils import export_utils, export_utils_pdf
 
 
 
 def sort_organizations(sort_organizations):
+    """
+        Function to sort the organization by the reference
+        Param:
+            sort_organizations : list of organizations to sort
+        Get the reference of the organization, transform and sort by the int key
+        Recreate the list with the reference research
+    """
     tab = []
     number_ref = []
     for sort_organization in sort_organizations:
@@ -49,6 +56,13 @@ def sort_organizations(sort_organizations):
 
 
 def set_organization_address(organizations):
+    """
+        Function to set the organization address to the organization
+        Param:
+            organizations : list of organizations to get the address
+        Get the address in the OrganizationAddress table and put it
+        Get also the number of student of choose this organization for their internship
+    """
     if organizations:
         for organization in organizations:
             organization.address = ""
@@ -60,6 +74,14 @@ def set_organization_address(organizations):
 
 
 def sorted_organization(sort_organizations, sort_city):
+    """
+        Function to sort the organization by the city sent by the POST form
+        Param:
+            sort_organizations : list of organizations to sort
+            sort_city : city send
+        Check in the list of organization if the city have the same that the sort_city
+        if yes, keep it in a list and return this list
+    """
     tab=[]
     index = 0
     for sort_organization in sort_organizations:
@@ -76,6 +98,13 @@ def sorted_organization(sort_organizations, sort_city):
 
 
 def get_cities(organizations):
+    """
+        Function to get the cities of organizations
+        Param:
+            organizations : list of organizations to extract the city
+        Put in an array the city of the organizations.
+        Sort and delete dublons in this array and return it
+    """
     tab = []
     for organization in organizations:
         for a in organization.address:
@@ -83,16 +112,6 @@ def get_cities(organizations):
     tab = list(set(tab))
     tab.sort()
     return tab
-
-
-def set_tabs_name(specialities, student=None):
-    for speciality in specialities:
-        if student :
-            size = len(InternshipChoice.search(speciality=speciality, student=student))
-            speciality.size = size
-        tab = speciality.name.replace(" ", "")
-        speciality.tab = tab
-
 
 
 @login_required
