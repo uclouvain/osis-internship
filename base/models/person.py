@@ -99,7 +99,7 @@ class Person(SerializableModel):
             try:
                 glob_id_str = str(self.global_id)
                 photo_path = PERSON_PHOTO_PATH + 'image' + glob_id_str[-4:-2] + "/" + glob_id_str + '.jpg'
-                photo = urllib.request.urlopen(photo_path)
+                photo = urllib.request.urlopen(photo_path,None,1.0)
                 photo_base64 = base64.b64encode(photo.read())
                 return photo_base64
             except IOError:
