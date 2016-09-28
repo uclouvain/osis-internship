@@ -46,20 +46,20 @@ class InternshipOffer(models.Model):
     @staticmethod
     def find_internships():
         return InternshipOffer.objects.filter(speciality__mandatory=1).\
-            order_by('speciality__acronym', 'speciality__name', 'organization__reference')
+            order_by('speciality__acronym', 'speciality__name', 'organization__reference').select_related("organization","speciality")
 
     @staticmethod
     def find_non_mandatory_internships(**kwargs):
         kwargs = {k: v for k, v in kwargs.items() if v}
         queryset = InternshipOffer.objects.filter(**kwargs).filter(speciality__mandatory=0).\
-            order_by('speciality__acronym', 'speciality__name', 'organization__reference')
+            order_by('speciality__acronym', 'speciality__name', 'organization__reference').select_related("organization","speciality")
         return queryset
 
     @staticmethod
     def search(**kwargs):
         kwargs = {k: v for k, v in kwargs.items() if v}
         queryset = InternshipOffer.objects.filter(**kwargs).\
-            order_by('speciality__acronym', 'speciality__name', 'organization__reference')
+            order_by('speciality__acronym', 'speciality__name', 'organization__reference').select_related("organization","speciality")
         return queryset
 
     @staticmethod
@@ -93,7 +93,7 @@ class InternshipEnrollment(models.Model):
     @staticmethod
     def search(**kwargs):
         kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = InternshipEnrollment.objects.filter(**kwargs)
+        queryset = InternshipEnrollment.objects.filter(**kwargs).select_related("student","internship_offer", "place", "period")
         return queryset
 
 
@@ -120,7 +120,7 @@ class InternshipMaster(models.Model):
 
     @staticmethod
     def find_masters():
-        return InternshipMaster.objects.all()
+        return InternshipMaster.objects.all().select_related("organization")
 
     def __str__(self):
         return u"%s" % (self.reference)
@@ -128,7 +128,7 @@ class InternshipMaster(models.Model):
     @staticmethod
     def search(**kwargs):
         kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = InternshipMaster.objects.filter(**kwargs)
+        queryset = InternshipMaster.objects.filter(**kwargs).select_related("organization")
         return queryset
 
 
@@ -142,29 +142,29 @@ class InternshipChoice(models.Model):
 
     @staticmethod
     def find_by_all_student():
-        all = InternshipChoice.objects.all().distinct('student')
+        all = InternshipChoice.objects.all().distinct('student').select_related("student","organization","speciality")
         return all
 
     @staticmethod
     def find_by_student(s_student):
-        internships = InternshipChoice.objects.filter(student = s_student).order_by('choice')
+        internships = InternshipChoice.objects.filter(student = s_student).order_by('choice').select_related("student","organization","speciality")
         return internships
 
     @staticmethod
     def find_by_student_desc(s_student):
-        internships = InternshipChoice.objects.filter(student = s_student).order_by('-choice')
+        internships = InternshipChoice.objects.filter(student = s_student).order_by('-choice').select_related("student","organization","speciality")
         return internships
 
     @staticmethod
     def search(**kwargs):
         kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = InternshipChoice.objects.filter(**kwargs).order_by('choice')
+        queryset = InternshipChoice.objects.filter(**kwargs).order_by('choice').select_related("student","organization","speciality")
         return queryset
 
     @staticmethod
     def search_other_choices(**kwargs):
         kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = InternshipChoice.objects.filter(**kwargs).order_by('choice')
+        queryset = InternshipChoice.objects.filter(**kwargs).order_by('choice').select_related("student","organization","speciality")
         queryset = queryset.exclude(choice=1)
         return queryset
 
@@ -180,7 +180,7 @@ class Period(models.Model):
     @staticmethod
     def search(**kwargs):
         kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = Period.objects.filter(**kwargs).order_by("date_start")
+        queryset = Period.objects.filter(**kwargs).order_by("date_start").select_related()
         return queryset
 
     @staticmethod
@@ -196,7 +196,7 @@ class PeriodInternshipPlaces(models.Model):
     @staticmethod
     def search(**kwargs):
         kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = PeriodInternshipPlaces.objects.filter(**kwargs)
+        queryset = PeriodInternshipPlaces.objects.filter(**kwargs).select_related("period", "internship")
         return queryset
 
     @staticmethod
@@ -217,18 +217,18 @@ class InternshipSpeciality(models.Model):
     @staticmethod
     def search(**kwargs):
         kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = InternshipSpeciality.objects.filter(**kwargs).order_by('acronym', 'name')
+        queryset = InternshipSpeciality.objects.filter(**kwargs).order_by('acronym', 'name').select_related("learning_unit")
         return queryset
 
     @staticmethod
     def search_order_by_position(**kwargs):
         kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = InternshipSpeciality.objects.filter(**kwargs).order_by('order_postion')
+        queryset = InternshipSpeciality.objects.filter(**kwargs).order_by('order_postion').select_related("learning_unit")
         return queryset
 
     @staticmethod
     def find_all():
-        return InternshipSpeciality.objects.all().order_by('acronym', 'name')
+        return InternshipSpeciality.objects.all().order_by('acronym', 'name').select_related("learning_unit")
 
     @staticmethod
     def find_by_id(speciality_id):
@@ -236,7 +236,7 @@ class InternshipSpeciality(models.Model):
 
     @staticmethod
     def find_non_mandatory():
-        return InternshipSpeciality.objects.filter(mandatory=False).order_by('acronym', 'name')
+        return InternshipSpeciality.objects.filter(mandatory=False).order_by('acronym', 'name').select_related("learning_unit")
 
 
 class Organization(models.Model):
@@ -252,7 +252,7 @@ class Organization(models.Model):
     @staticmethod
     def search(**kwargs):
         kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = Organization.objects.filter(**kwargs)
+        queryset = Organization.objects.filter(**kwargs).select_related()
         return queryset
 
     @staticmethod
@@ -277,7 +277,7 @@ class OrganizationAddress(models.Model):
     @staticmethod
     def search(**kwargs):
         kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = OrganizationAddress.objects.filter(**kwargs)
+        queryset = OrganizationAddress.objects.filter(**kwargs).select_related("organization")
         return queryset
 
     @staticmethod
@@ -374,17 +374,17 @@ class InternshipStudentInformation(models.Model):
     @staticmethod
     def search(**kwargs):
         kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = InternshipStudentInformation.objects.filter(**kwargs)
+        queryset = InternshipStudentInformation.objects.filter(**kwargs).select_related("person")
         return queryset
 
     @staticmethod
     def find_all():
-        return InternshipStudentInformation.objects.all().order_by('person__last_name', 'person__first_name')
+        return InternshipStudentInformation.objects.all().order_by('person__last_name', 'person__first_name').select_related("person")
 
     @staticmethod
     def find_by_person(person):
         try:
-            return InternshipStudentInformation.objects.get(person=person)
+            return InternshipStudentInformation.objects.get(person=person).select_related("person")
         except ObjectDoesNotExist:
             return None
 
@@ -402,8 +402,9 @@ class InternshipStudentAffectationStat(models.Model):
     @staticmethod
     def search(**kwargs):
         kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = InternshipStudentAffectationStat.objects.filter(**kwargs) \
-            .order_by("student__person__last_name","student__person__first_name", "period__date_start")
+        queryset = InternshipStudentAffectationStat.objects.filter(**kwargs)\
+            .order_by("student__person__last_name","student__person__first_name", "period__date_start")\
+            .select_related("student", "organization", "speciality", "period")
         return queryset
 
     @staticmethod
