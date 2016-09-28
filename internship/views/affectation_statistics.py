@@ -37,7 +37,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 from internship.models import *
-from internship.views.internship import calc_dist
+from internship.views.internship import calc_dist, set_tabs_name
 from internship.views.place import sort_organizations
 
 # ****************** Global vars ******************
@@ -1175,23 +1175,33 @@ def internship_affectation_statistics(request):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_affectation_sumup(request):
     all_speciality = InternshipSpeciality.search(mandatory=True)
+    set_tabs_name(all_speciality)
     periods = Period.search()
     organizations = Organization.search()
     organizations = sort_organizations(organizations)
     offers = InternshipOffer.search()
-    information = []
+    informations = []
     for organization in organizations:
         for offer in offers:
             if offer.organization.reference == organization.reference:
-                information.append(offer)
-    affectations = InternshipStudentAffectationStat.search().order_by("student__person__last_name",
+                informations.append(offer)
+    all_affectations = InternshipStudentAffectationStat.search().order_by("speciality__name",
+                                                                      "student__person__last_name",
                                                                       "student__person__first_name",
                                                                       "period__date_start")
+    affectations = {}
+    temp_affectations = []
+
+    for speciality in all_speciality:
+        for aff in all_affectations:
+            if aff.speciality == speciality:
+                temp_affectations.append(aff)
+        affectations[speciality.name] = temp_affectations
 
     return render(request, "internship_affectation_sumup.html",
                   {'section': 'internship',
                    'specialities': all_speciality,
                    'periods': periods,
-                   'organizations': information,
+                   'organizations': informations,
                    'affectations': affectations,
                    })
