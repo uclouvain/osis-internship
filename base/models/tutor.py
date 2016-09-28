@@ -26,8 +26,9 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.contrib import admin
+from backoffice.queue import queue_actions
 from base.models import person, attribution
-from django.core import serializers
+from base.models import serializable_model
 
 
 class TutorAdmin(admin.ModelAdmin):
@@ -37,25 +38,13 @@ class TutorAdmin(admin.ModelAdmin):
     search_fields = ['person__first_name', 'person__last_name']
 
 
-class TutorManager(models.Manager):
-    def get_by_natural_key(self, global_id):
-        return self.get(person__global_id=global_id)
-
-
-class Tutor(models.Model):
-    objects = TutorManager()
-
+class Tutor(serializable_model.SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     person = models.OneToOneField('Person')
 
     def __str__(self):
         return u"%s" % self.person
-
-    def natural_key(self):
-        return (self.person.global_id, )
-
-    natural_key.dependencies = ['base.person']
 
 
 def find_by_user(user):
@@ -95,43 +84,3 @@ def is_tutor(user):
     :return: True if the user is a tutor. False if the user is not a tutor.
     """
     return Tutor.objects.filter(person__user=user).count() > 0
-
-
-def find_all_for_sync():
-    """
-    :return: All records in the 'Student' model (table). Used to synchronize date from Osis to Osis-portal.
-    """
-    datas = serialize_all_tutors()
-    return datas
-
-
-def serialize_all_tutors():
-    """
-    Serialize all the tutors in json format
-    :return: a json object
-    """
-    # Fetch all related persons objects
-    tutors = Tutor.objects.select_related('person').all()
-    datas = []
-    for tut in tutors:
-        datas.append(({
-            'tutors': serialize_list_tutors([tut]),
-            'persons': person.serialize_list_persons([tut.person])
-
-        }))
-    return datas
-
-
-def serialize_list_tutors(list_tutors):
-    """
-    Serialize a list of tutors objects using the json format.
-    Use to send data to osis-portal.
-    :param list_tutors: a list of tutor objects
-    :return: a string
-    """
-    # Restrict fields for osis-portal
-    fields = ('id', 'external_id', 'changed', 'person')
-    return serializers.serialize("json", list_tutors, fields=fields,
-                                 use_natural_foreign_keys=True,
-                                 use_natural_primary_keys=True)
-

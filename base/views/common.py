@@ -25,14 +25,17 @@
 ##############################################################################
 from datetime import datetime
 import subprocess
+from django.conf import settings
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from django.contrib.auth.views import login as django_login
 from django.contrib.auth import authenticate, logout
 from django.shortcuts import redirect
 from django.utils import translation
-from base import models as mdl
 from . import layout
 from django.utils.translation import ugettext_lazy as _
+from osis_common.models import document_file as doc_file_mdl
+from base.models import person as person_mdl, academic_year as academic_year_mdl, \
+    academic_calendar as academic_calendar_mdl, native as native_mdl
 
 
 def page_not_found(request):
@@ -51,12 +54,20 @@ def noscript(request):
     return layout.render(request, 'noscript.html', {})
 
 
+def environnement_request_processor(request):
+    try:
+        env = settings.ENVIRONMENT
+    except AttributeError:
+        env = 'DEV'
+    return {'environment': env}
+
+
 def login(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(username=username, password=password)
-        person = mdl.person.find_by_user(user)
+        person = person_mdl.find_by_user(user)
         # ./manage.py createsuperuser (in local) doesn't create automatically a Person associated to User
         if person:
             if person.language:
@@ -67,12 +78,12 @@ def login(request):
 
 @login_required
 def home(request):
-    academic_yr = mdl.academic_year.current_academic_year()
+    academic_yr = academic_year_mdl.current_academic_year()
     calendar_events = None
     if academic_yr:
-        calendar_events = mdl.academic_calendar.find_academic_calendar_by_academic_year_with_dates(academic_yr.id)
+        calendar_events = academic_calendar_mdl.find_academic_calendar_by_academic_year_with_dates(academic_yr.id)
     return layout.render(request, "home.html", {'academic_calendar': calendar_events,
-                                                'highlights': mdl.academic_calendar.find_highlight_academic_calendars()})
+                                                'highlights': academic_calendar_mdl.find_highlight_academic_calendars()})
 
 
 def log_out(request):
@@ -112,7 +123,7 @@ def data(request):
 @user_passes_test(lambda u: u.is_staff and u.has_perm('base.is_administrator'))
 def data_maintenance(request):
     sql_command = request.POST.get('sql_command')
-    results = mdl.native.execute(sql_command)
+    results = native_mdl.execute(sql_command)
     return layout.render(request, "admin/data_maintenance.html", {'section': 'data_maintenance',
                                                                   'sql_command': sql_command,
                                                                   'results': results})
@@ -167,7 +178,7 @@ def files_search(request):
     if registration_date or username :
         if registration_date :
             registration_date = datetime.strptime(request.GET['registration_date'], '%Y-%m-%d')
-        files = mdl.document_file.search(username=username, creation_date=registration_date)
+        files = doc_file_mdl.search(username=username, creation_date=registration_date)
     else :
         message = "%s" % _('minimum_one_criteria')
 
@@ -178,5 +189,5 @@ def files_search(request):
 @login_required
 @permission_required('base.is_administrator', raise_exception=True)
 def document_file_read(request, document_file_id):
-    document_file = mdl.document_file.find_by_id(document_file_id)
+    document_file = doc_file_mdl.find_by_id(document_file_id)
     return layout.render(request, "admin/file.html", {'file': document_file})

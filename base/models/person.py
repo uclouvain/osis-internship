@@ -30,25 +30,21 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from django.core import serializers
+from base.models.serializable_model import SerializableModel
+from base.enums import person_source_type
 
 
 class PersonAdmin(admin.ModelAdmin):
-    list_display = ('first_name' , 'middle_name', 'last_name', 'username', 'email', 'gender', 'global_id',
-                    'national_id', 'changed')
+    list_display = ('first_name', 'middle_name', 'last_name', 'username', 'email', 'gender', 'global_id',
+                    'national_id', 'changed', 'source')
     search_fields = ['first_name', 'middle_name', 'last_name', 'user__username', 'email']
     fieldsets = ((None, {'fields': ('user', 'global_id', 'national_id', 'gender', 'first_name',
-                                    'middle_name', 'last_name', 'email', 'phone', 'phone_mobile', 'language')}),)
+                                    'middle_name', 'last_name', 'birth_date', 'email', 'phone',
+                                    'phone_mobile', 'language')}),)
     raw_id_fields = ('user',)
 
 
-class PersonManager(models.Manager):
-    def get_by_natural_key(self, global_id):
-        return self.get(global_id=global_id)
-
-
-class Person(models.Model):
-
-    objects = PersonManager()
+class Person(SerializableModel):
 
     GENDER_CHOICES = (
         ('F', _('female')),
@@ -68,6 +64,20 @@ class Person(models.Model):
     phone = models.CharField(max_length=30, blank=True, null=True)
     phone_mobile = models.CharField(max_length=30, blank=True, null=True)
     language = models.CharField(max_length=30, null=True, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE)
+    birth_date = models.DateField(blank=True, null=True)
+    source = models.CharField(max_length=25, blank=True, null=True, choices=person_source_type.CHOICES,
+                              default=person_source_type.BASE)
+
+    def save(self, **kwargs):
+        # When person is created by another application this rule can be applied.
+        if hasattr(settings, 'INTERNAL_EMAIL_SUFIX'):
+            if settings.INTERNAL_EMAIL_SUFIX.strip():
+                # It limits the creation of person to external emails. The domain name is case insensitive.
+                if self.source and self.source != person_source_type.BASE \
+                               and settings.INTERNAL_EMAIL_SUFIX in str(self.email).lower():
+                    raise AttributeError('Invalid email for external person.')
+
+        super(Person, self).save()
 
     def username(self):
         if self.user is None:
@@ -86,9 +96,6 @@ class Person(models.Model):
             last_name = self.last_name + ","
 
         return u"%s %s %s" % (last_name.upper(), first_name, middle_name)
-
-    def natural_key(self):
-        return (self.global_id, )
 
     class Meta:
         permissions = (
@@ -115,22 +122,6 @@ def change_language(user, new_language):
 
 def find_by_global_id(global_id):
     return Person.objects.filter(global_id=global_id).first() if global_id else None
-
-
-def serialize_list_persons(list_persons):
-    """
-    Serialize a list of person objects using the json format.
-    Use to send data to osis-portal.
-    :param list_persons: a list of person objects
-    :return: a string
-    """
-    # Restrict fields for osis-portal
-    fields = ('id', 'external_id', 'changed', 'global_id', 'gender',
-              'national_id', 'first_name', 'middle_name', 'last_name',
-              'email', 'phone', 'phone_mobile', 'language')
-    return serializers.serialize("json", list_persons, fields=fields,
-                                 use_natural_foreign_keys=True,
-                                 use_natural_primary_keys=True)
 
 
 def search_by_email(email):
