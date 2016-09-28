@@ -48,8 +48,15 @@ class SerializableModel(models.Model):
     def save(self, *args, **kwargs):
         super(SerializableModel, self).save(*args, **kwargs)
         try:
-            queue_actions.send_message(QUEUE_NAME, serialize_objects([self]))
-        except (ChannelClosed, ConnectionClosed) :
+            queue_actions.send_message(QUEUE_NAME, structure_data_for_migration([self]))
+        except (ChannelClosed, ConnectionClosed):
+            LOGGER.warning('QueueServer is not installed or not launched')
+
+    def delete(self, **kwargs):
+        super(SerializableModel, self).delete()
+        try:
+            queue_actions.send_message(QUEUE_NAME, structure_data_for_migration([self], to_delete=True))
+        except (ChannelClosed, ConnectionClosed):
             LOGGER.warning('QueueServer is not installed or not launched')
 
     def natural_key(self):
@@ -60,6 +67,17 @@ class SerializableModel(models.Model):
 
     class Meta:
         abstract = True
+
+
+def structure_data_for_migration(objects, to_delete=False):
+    """
+
+    :param objects: A list of model instances.
+    :param to_delete: True if these records are to be deleted on the Osis-portal side.
+                      False if these records are to insert or update on the OPsis-portal side.
+    :return: A structured dictionary containing the necessary data to migrate from Osis to Osis-portal.
+    """
+    return {'serialized_objects': serialize_objects(objects), 'to_delete': to_delete}
 
 
 def serialize_objects(objects, format='json'):

@@ -86,5 +86,5 @@ def delete_interships_masters(request):
     name = request.POST.get("name").replace(" ", "")
     # Get the first and last name of the master send by the button of deletion
     # Get the master in the DB and delete it
-    InternshipMaster.search(first_name = first_name, last_name = name).delete()
+    InternshipMaster.search(first_name=first_name, last_name=name).delete()
     return HttpResponseRedirect(reverse('interships_masters'))
