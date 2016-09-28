@@ -403,8 +403,8 @@ class InternshipStudentAffectationStat(models.Model):
     def search(**kwargs):
         kwargs = {k: v for k, v in kwargs.items() if v}
         queryset = InternshipStudentAffectationStat.objects.filter(**kwargs)\
-            .order_by("student__person__last_name","student__person__first_name", "period__date_start")\
-            .select_related("student", "organization", "speciality", "period")
+            .select_related("student__person", "organization", "speciality", "period")\
+            .order_by("student__person__last_name","student__person__first_name", "period__date_start")
         return queryset
 
     @staticmethod

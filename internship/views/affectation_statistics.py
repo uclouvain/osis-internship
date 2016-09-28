@@ -39,7 +39,8 @@ from django.shortcuts import render
 from internship.models import *
 from internship.views.internship import calc_dist, set_tabs_name
 from internship.views.place import sort_organizations
-
+import time
+import datetime
 # ****************** Global vars ******************
 errors = []  # List of all internship added to hospital error, as tuple (student, speciality, period)
 solution = {}  # Dict with the solution => solution[student][period] = SolutionLine
@@ -1211,17 +1212,18 @@ def internship_affectation_sumup(request):
         for offer in offers:
             if offer.organization.reference == organization.reference:
                 informations.append(offer)
-    all_affectations = InternshipStudentAffectationStat.search().order_by("speciality__name",
-                                                                      "student__person__last_name",
-                                                                      "student__person__first_name",
-                                                                      "period__date_start")
+    
+    all_affectations = list(InternshipStudentAffectationStat.search())
     affectations = {}
-    temp_affectations = []
 
     for speciality in all_speciality:
-        for aff in all_affectations:
-            if aff.speciality == speciality:
-                temp_affectations.append(aff)
+        temp_affectations = {}
+        for period in periods:
+            temp_temp_affectations = []
+            for aff in all_affectations:
+                if aff.speciality==speciality and aff.period==period:
+                    temp_temp_affectations.append(aff)
+            temp_affectations[period.name] = temp_temp_affectations
         affectations[speciality.name] = temp_affectations
 
     return render(request, "internship_affectation_sumup.html",

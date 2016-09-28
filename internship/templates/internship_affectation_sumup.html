@@ -63,11 +63,17 @@
                                                    </td>
                                                    {% for period in periods %}
                                                     	<td style="text-align: center; border-right: 1px solid black;">
-                                                    		{% for affectation in affectations %}
-                                                                {% if affectation == speciality.name %}
-                                                                    {% for aff in affectation %}
-
-                                                                    {% endfor %}
+                                                    		{% for key,aff_period in affectations.items %}
+                                                                {% if key == speciality.name %}
+                                                                    {% for key,affectations in aff_period.items %}
+                                                                        {% if key == period.name %}
+                                                                            {% for affectation in affectations %}
+                                                                                {% if affectation.organization.reference == organization.organization.reference %}
+                                                                                    {{affectation.student.person.last_name.strip}}<br/>
+                                                                                {% endif %}
+                                                                            {% endfor %}
+                                                                        {% endif %}
+                                                                    {%endfor%}
                                                                 {% endif %}
                                                     		{% endfor %}
                                                     	</td>
