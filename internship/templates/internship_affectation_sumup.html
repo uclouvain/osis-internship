@@ -39,12 +39,12 @@
         <div class="panel-body">
             <ul class="nav nav-tabs">
                 {% for speciality in specialities %}
-                    <li {% if forloop.first %}class="active"{% endif %}><a data-toggle="tab" href="#tab_{{speciality.acronym}}">{{speciality.name}}</a></li>
+                    <li {% if forloop.first %}class="active"{% endif %}><a data-toggle="tab" href="#tab_{{speciality.tab}}">{{speciality.name}}</a></li>
                 {% endfor %}
             </ul>
             <div class="tab-content">
                 {% for speciality in specialities %}
-                    <div id="tab_{{speciality.acronym}}" class="tab-pane fade {% if forloop.first %}in active{% endif %}">
+                    <div id="tab_{{speciality.tab}}" class="tab-pane fade {% if forloop.first %}in active{% endif %}">
                         <div class="panel panel-default">
                             <div class="tab-content">
                                 <div role="tabpanel" class="tab-pane fade in active" id="profile">
@@ -59,21 +59,25 @@
                                             {% if organization.speciality.name == speciality.name %}
                                               <tr>
                                                    <td style="text-align: center; border-right: 1px solid black;">
-                                                                   {{organization.organization.reference}}
+                                                       {{organization.organization.reference}}
                                                    </td>
                                                    {% for period in periods %}
-                                                     <td style="text-align: center; border-right: 1px solid black;">
-                                                     {% for affectation in affectations %}
-                                                           {% if affectation.period.name == period.name %}
-                                                                 {% if affectation.organization.reference == organization.organization.reference  %}
-                                                                       {% if affectation.speciality.name == speciality.name  %}
-                                                                         {{affectation.student.person.last_name}}<br/>
-                                                                       {% endif %}
-                                                                 {% endif %}
-                                                           {% endif %}
-                                                     {% endfor %}
-                                                     </td>
-                                                   {% endfor %}
+                                                    	<td style="text-align: center; border-right: 1px solid black;">
+                                                    		{% for key,aff_period in affectations.items %}
+                                                                {% if key == speciality.name %}
+                                                                    {% for key,affectations in aff_period.items %}
+                                                                        {% if key == period.name %}
+                                                                            {% for affectation in affectations %}
+                                                                                {% if affectation.organization.reference == organization.organization.reference %}
+                                                                                    {{affectation.student.person.last_name.strip}}<br/>
+                                                                                {% endif %}
+                                                                            {% endfor %}
+                                                                        {% endif %}
+                                                                    {%endfor%}
+                                                                {% endif %}
+                                                    		{% endfor %}
+                                                    	</td>
+                                                    {% endfor %}
                                                 </tr>
                                             {% endif %}
                                         {% endfor %}

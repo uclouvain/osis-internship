@@ -268,7 +268,7 @@ def student_affectation(request, organization_id):
 
     internships = InternshipOffer.search(organization = organization)
     all_speciality = get_all_specialities(internships)
-
+    set_tabs_name(all_speciality)
     return render(request, "place_detail_affectation.html", {'organization': organization,
                                                              'affectations': affectations,
                                                              'specialities': all_speciality,
