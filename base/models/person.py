@@ -91,10 +91,11 @@ class Person(SerializableModel):
     @property
     def get_photo(self):
         # Return JPG in Base64 format
-        # return False if no valid data: global_id or no picture
+        # return None if no valid data: global_id or no picture
         # for template use <img src="data:image/jpeg;base64,{{person.get_photo}}" class="avatar img-responsive"/>
 
-        if self.global_id and PERSON_PHOTO_PATH !='':
+        if self.global_id and PERSON_PHOTO_PATH != '':
+
             try:
                 glob_id_str = str(self.global_id)
                 photo_path = PERSON_PHOTO_PATH + 'image' + glob_id_str[-4:-2] + "/" + glob_id_str + '.jpg'
@@ -102,9 +103,9 @@ class Person(SerializableModel):
                 photo_base64 = base64.b64encode(photo.read())
                 return photo_base64
             except IOError:
-                return False
+                return None
         else:
-            return False
+            return None
 
     class Meta:
         permissions = (
@@ -112,6 +113,12 @@ class Person(SerializableModel):
             ("is_institution_administrator", "Is institution administrator "),
         )
 
+
+    class Meta:
+        permissions = (
+            ("is_administrator", "Is administrator"),
+            ("is_institution_administrator", "Is institution administrator "),
+        )
 
 def find_by_id(person_id):
     return Person.objects.get(id=person_id)
