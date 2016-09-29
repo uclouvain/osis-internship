@@ -36,14 +36,7 @@ logger = logging.getLogger(settings.DEFAULT_LOGGER)
 
 def get_connection():
     credentials = pika.PlainCredentials(QUEUE_USER, QUEUE_PASSWORD)
-    connection = None
-    try:
-        connection = pika.BlockingConnection(pika.ConnectionParameters(QUEUE_URL, QUEUE_PORT, QUEUE_CONTEXT_ROOT, credentials))
-    except Exception:
-        traceback.print_exc()
-    print('testtttttt')
-    print(QUEUE_PASSWORD + " - " + QUEUE_USER)
-    return connection
+    return pika.BlockingConnection(pika.ConnectionParameters(QUEUE_URL, QUEUE_PORT, QUEUE_CONTEXT_ROOT, credentials))
 
 
 def get_channel(connection, queue_name):
