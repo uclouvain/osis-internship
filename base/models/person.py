@@ -89,19 +89,36 @@ class Person(SerializableModel):
         return u"%s %s %s" % (last_name.upper(), first_name, middle_name)
 
     @property
-    def get_photo(self):
+    def get_photo_base64(self):
         # Return JPG in Base64 format
         # return None if no valid data: global_id or no picture
         # for template use <img src="data:image/jpeg;base64,{{person.get_photo}}" class="avatar img-responsive"/>
+        # timeout 1 sec with URLLIB request
+
+        if self.get_photo_path:
+
+            try:
+                photo = urllib.request.urlopen(self.get_photo_path,None,1.0)
+                photo_base64 = base64.b64encode(photo.read())
+                return photo_base64
+            except IOError:
+                return None
+        else:
+            return None
+
+    @property
+    def get_photo_path(self):
+        # Return path of photo
+        # return None if no valid data: global_id
+        # for template use <img src="{{person.get_photo_path}}" class="avatar img-responsive"/>
 
         if self.global_id and PERSON_PHOTO_PATH != '':
 
             try:
                 glob_id_str = str(self.global_id)
                 photo_path = PERSON_PHOTO_PATH + 'image' + glob_id_str[-4:-2] + "/" + glob_id_str + '.jpg'
-                photo = urllib.request.urlopen(photo_path,None,1.0)
-                photo_base64 = base64.b64encode(photo.read())
-                return photo_base64
+
+                return photo_path
             except IOError:
                 return None
         else:

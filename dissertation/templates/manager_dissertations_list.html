@@ -86,7 +86,7 @@
             {% for dissertation in dissertations %}
               <tr>
                 <td rowspan="1" width="150px">
-                 {% with author_photo=dissertation.author.person.get_photo %}
+                 {% with author_photo=dissertation.author.person.get_photo_base64 %}
                      {% if author_photo %}
                       <img src="data:image/jpeg;base64,{{author_photo}}" class="avatar img-responsive"
                            height="50%" width="50%"/>
