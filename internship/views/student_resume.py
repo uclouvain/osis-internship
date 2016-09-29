@@ -193,13 +193,17 @@ def student_save_information_modification(request, registration_id):
 def internship_student_affectation_modification(request, student_id):
     informations = InternshipStudentAffectationStat.search(student__pk = student_id)
     information = InternshipChoice.search(student__pk = student_id)
+    if not information:
+        information.student=mdl.student.find_by_id(student_id)
+    else:
+        information = information[0]
     organizations = Organization.search()
     organizations = sort_organizations(organizations)
 
     specialities = InternshipSpeciality.find_all()
     periods = Period.search()
     return render(request, "student_affectation_modification.html",
-                  {'information':         information[0],
+                  {'information':         information,
                    'informations':         informations,
                    'organizations':        organizations,
                    'specialities':         specialities,
