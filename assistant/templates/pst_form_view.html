@@ -1,0 +1,492 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+{% endcomment %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/custom.css' %}">
+{% endblock %}
+{% block breadcrumb %}
+<li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'institution' %}</a></li>
+<li><a href="{% url 'mandates' %}" id="lnk_mandates">{% trans 'mandates' %}</a></li>
+{% if role != "PHD_SUPERVISOR" %}
+    <li><a href="{% url 'reviewer_mandates_list' %}" id="lnk_reviewer_mandates_list">
+        {% trans 'reviewer_mandates_list' %}</a></li>
+{% endif %}
+<li class="active">{% trans 'mandate_edit' %}</li>
+{% endblock %}
+{% block content %}
+<ul class="nav nav-tabs">
+    {% if reviewer_id %}
+	    <li class="active"><a href="{% url 'pst_form_view' reviewer_id=reviewer_id mandate_id=mandate_id %}">
+		{% trans 'assistant_form' %}</a></li>
+    {% else %}
+        <li class="active"><a href="{% url 'pst_form_view' mandate_id=mandate_id %}">
+		{% trans 'assistant_form' %}</a></li>
+    {% endif %}
+    {% if role == 'PHD_SUPERVISOR' %}
+        <li><a href="#">{% trans 'phd_supervisor_review' %}</a></li>
+	    <li class="disabled"><a href="#">{% trans 'research_review' %}</a></li>
+	    <li class="disabled"><a href="#">{% trans 'supervision_review' %}</a></li>
+	    <li class="disabled"><a href="#">{% trans 'sector_vice-rector_review' %}</a></li>
+    {% else %}
+        {% if links.0.0 %}
+            <li><a href="{% url 'review_view' mandate_id=mandate_id %}">
+                {% trans 'phd_supervisor_review' %}</a></li>
+        {% endif %}
+        {% if 'RESEARCH' in role %}
+            {% if mandate_state == 'RESEARCH' %}
+                <li><a href="{% url 'review_edit' mandate_id=mandate_id %}">
+                    <strong>{% trans 'research_review' %}</strong></a></li>
+            {% else %}
+                <li><a href="{% url 'review_view' reviewer_id=links.1.0 mandate_id=mandate_id %}">
+                    <strong>{% trans 'research_review' %}</strong></a></li>
+            {% endif %}
+	        <li class="disabled"><a href="#">{% trans 'supervision_review' %}</a></li>
+	        <li class="disabled"><a href="#">{% trans 'sector_vice-rector_review' %}</a></li>
+        {% else %}
+            {% if links.1.0 %}
+                <li><a href="{% url 'review_view' reviewer_id=links.1.0 mandate_id=mandate_id %}">
+                    {% trans 'research_review' %}</a></li>
+            {% endif %}
+            {% if 'SUPERVISION' in role %}
+                {% if mandate_state == 'SUPERVISION' %}
+                    <li><a href="{% url 'review_edit' mandate_id=mandate_id %}">
+                            <strong>{% trans 'supervision_review' %}</strong></a></li>
+                {% else %}
+                    <li><a href="{% url 'review_view' reviewer_id=links.2.0 mandate_id=mandate_id %}">
+                        <strong>{% trans 'supervision_review' %}</strong></a></li>
+                {% endif %}
+                <li class="disabled"><a href="#">{% trans 'sector_vice-rector_review' %}</a></li>
+            {% else %}
+                {% if links.2.0 %}
+                    <li><a href="{% url 'review_view' reviewer_id=links.2.0 mandate_id=mandate_id %}">
+                        {% trans 'supervision_review' %}</a></li>
+                {% endif %}
+                {% if 'VICE_RECTOR' in role %}
+                    {% if mandate_state == 'VICE_RECTOR' %}
+                        <li><a href="{% url 'review_edit' mandate_id=mandate.id %}">
+                            <strong>{% trans 'sector_vice-rector_review' %}</strong></a></li>
+                    {% else %}
+                        <li><a href="{% url 'review_view' reviewer_id=links.3.0 mandate_id=mandate.id %}">
+                            <strong>{% trans 'sector_vice-rector_review' %}</strong></a></li>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        {% endif %}
+    {% endif %}
+</ul>
+<div class="page-header">
+    <h2>{% trans 'assistants_mandates_renewal' %} ({{ year }})</h2>
+    <h4>{{ assistant.person }}</h4>
+</div>
+<div class="panel panel-default">
+    <div class="panel-body">
+  		<div class="panel-info">
+  			<div class="panel-heading">
+  				<font size="4">{% trans 'contract' %}</font>
+  			</div>
+  		</div>
+  		<div class="form-group">
+      		<div class="row">
+      			<div class="col-md-3">
+      			<label for="txt_renewal_type">{% trans 'renewal_type' %}</label>
+      			</div>
+      			<div class="controls" id="txt_renewal_type">
+      				{% if mandate.renewal_type == 'EXCEPTIONAL' %}
+      					{% trans 'exceptional' %}
+      				{% else %}
+      					{% trans 'normal' %}
+      				{% endif %}
+      			</div>
+      		</div>
+    		{% for structure in mandate.mandatestructure_set.all|dictsort:"structure.type" %}
+      			<div class="row">
+      				<div class="col-md-3">
+      				<label for="txt_structure">{% trans structure.structure.type|lower %}</label>
+      				</div>
+      				<div class="controls" id="txt_structure">
+      					{{structure.structure.acronym}}
+      				</div>
+      			</div>
+      		{% endfor %}
+    		<div class="row">
+      			<div class="col-md-3">
+      			<label for="txt_full_time_equivalent">{% trans 'full_time_equivalent' %}</label>
+      			</div>
+      			<div class="controls" id="txt_full_time_equivalent">
+      				{{mandate.fulltime_equivalent}}
+      			</div>
+      		</div>
+      		<div class="row">
+      			<div class="col-md-3">
+      				<label for="txt_date_of_first_nomination">{% trans 'date_of_first_nomination' %}</label>
+      			</div>
+      			<div class="controls" id="txt_date_of_first_nomination">
+      				{{mandate.entry_date}}
+      			</div>
+      		</div>
+      		<div class="row">
+      			<div class="col-md-3">
+      				<label for="txt_field">{% trans 'field' %}</label>
+      			</div>
+      			<div class="controls" id="txt_field">
+      				{% if mandate.assistant_type == 'ASSISTANT' %}
+      					{% trans 'assistant' %}
+      				{% else %}
+      					{% trans 'teaching_assistant' %}
+      				{% endif %}
+      			</div>
+      		</div>
+      	</div>
+  		<hr>
+  		<div class="panel-info">
+  			<div class="panel-heading">
+  				<font size="4">{% trans 'doctorate' %}</font>
+    		</div>
+    	</div>
+    	<div class="panel-info">
+      		<div class="row">
+      			<div class="col-md-3">
+      				<label for="txt_registered_phd">{% trans 'registered_phd' %}</label>
+      			</div>
+      			<div class="col-md-3">
+    				<div class="controls" id="txt_registered_phd">{{ assistant.inscription }}</div>
+    			</div>
+      			<div class="col-md-3" align="right">
+          		<label for="txt_expected_phd_date">{% trans 'expected_registering_date' %}</label>
+        		</div>
+        		<div class="col-md-3" align="left">
+          			<div class="controls" id="txt_expected_phd_date">{{ assistant.expected_phd_date }}
+          			</div>
+        		</div>
+      		</div>
+			<div class="row">
+        		<div class="col-md-3">
+        			<label for="txt_supervisor">{% trans 'supervisor' %}</label>
+        		</div>
+        		<div class="col-md-3">
+     				<div class="controls" id="txt_supervisor">{{ assistant.supervisor }}</div>
+				</div>
+			</div>
+      		<div class="row">
+        		<div class="col-md-3">
+          			<label for="txt_phd_inscription_date">{% trans 'phd_inscription_date' %}</label>
+        		</div>
+        		<div class="col-md-3">
+          			<div class="controls" id="txt_phd_inscription_date">{{ assistant.phd_inscription_date }}</div>
+        		</div>
+      		</div>
+      		<div class="row">
+        		<div class="col-md-3">
+          			<label for="txt_confirmatory_test_date">{% trans 'confirmatory_test_date' %}<br>
+          			<font size="1">{% trans '2nd_renewal' %}</font></label>
+        		</div>
+        		<div class="col-md-3">
+          			<div class="controls" id="txt_confirmatory_test_date">{{ assistant.confirmation_test_date }}</div>
+        		</div>
+          	</div>
+      		<div class="row">
+        		<div class="col-md-3">
+          			<label for="txt_thesis_defence_date">{% trans 'thesis_defence_date' %}</label>
+        		</div>
+        		<div class="col-md-3">
+          			<div class="controls" id="txt_thesis_defence_date">{{ assistant.thesis_date }}</div>
+        		</div>
+      		</div>
+    	</div>
+    	<hr>
+    	<div class="panel-info">
+  			<div class="panel-heading">
+  				<font size="4">{% trans 'various' %}</font>
+    		</div>
+    	</div>
+    	<div class="form-group">
+    		<div class="row">
+        		<div class="col-md-5">
+   					<label for="txt_function_outside_university"><font size="2">
+                        {% trans 'function_outside_university' %}</font></label>
+   				</div>
+   				<div class="col-md-7">
+    				<div class="controls" id="txt_function_outside_university">{{ mandate.external_functions }}</div>
+    			</div>
+    		</div><p>
+    		<div class="row">
+    			<div class="col-md-5">
+    				<label for="txt_external_post"><font size="2">{% trans 'external_post' %}</font></label>
+  				</div>
+  				<div class="col-md-7">
+    				<div class="controls" id="txt_external_post">{{ mandate.external_contract }}</div>
+    			</div>
+    		</div>
+    		{% if mandate.renewal_type == 'EXCEPTIONAL' %}
+    		<div class="row">
+    			<div class="col-md-5">
+      				<label for="txt_exceptional_justification">
+      				<font size="1">{% trans 'exceptional_justification' %}</font></label>
+    			</div>
+    			<div class="col-md-7">
+    				<div class="controls" id="txt_exceptional_justification">{{ mandate.justification }}</div>
+    			</div>
+   			</div>
+            {% endif %}
+		</div>
+        <div class="panel-info">
+            <div class="panel-heading">
+                <font size="4">{% trans 'tutoring_learning_units' %}</font>
+            </div>
+        </div><p>
+        <div class="table-responsive">
+            <table id="myTable" class="table table-striped table-condensed table-bordered" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+            <th>{% trans 'academic_year' %}</th>
+            <th>{% trans 'acronym' %}</th>
+            <th>{% trans 'title' %}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            {% for learning_unit in learning_units %}
+                <td>{{ learning_unit.learning_unit_year.academic_year }}</td>
+                <td>{{ learning_unit.learning_unit_year.acronym }}</td>
+                <td>{{ learning_unit.learning_unit_year.title }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+            </table>
+        </div>
+        <div class="panel-info">
+            <div class="panel-heading">
+                <font size="4">{% trans 'representation_activities' %}</font>
+                <font size="2"> ({% trans 'hours per year' %})</font>
+            </div>
+        </div>
+       <div class="form-group">
+            <div class="row">
+                <div class="col-md-8">
+                    <label for="txt_faculty_representation">{% trans 'faculty_representation' %}</label>
+                </div>
+                <div class="col-md-4">
+                    <div class="controls" id="txt_faculty_representation">{{ mandate.faculty_representation }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-8">
+                    <label for="txt_institute_representation">{% trans 'institute_representation' %}</label>
+                </div>
+                <div class="col-md-4">
+                    <div class="controls" id="txt_institute_representation">{{ mandate.institute_representation }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-8">
+                    <label for="txt_sector_representation">{% trans 'sector_representation' %}</label>
+                </div>
+                <div class="col-md-4">
+                    <div class="controls" id="txt_sector_representation">{{ mandate.sector_representation }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-8">
+                    <label for="txt_governing_body_representation">{% trans 'governing_body_representation' %}</label>
+                </div>
+                <div class="col-md-4">
+                    <div class="controls" id="txt_governing_body_representation">
+                        {{ mandate.governing_body_representation }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-8">
+                    <label for="txt_corsci_representation">{% trans 'corsci_representation' %}</label>
+                </div>
+                <div class="col-md-4">
+                    <div class="controls" id="txt_corsci_representation">{{ mandate.corsci_representation }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-info">
+            <div class="panel-heading">
+                <font size="4">{% trans 'service_activities' %}</font>
+                <font size="2"> ({% trans 'hours per year' %})</font>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-8">
+                    <label for="txt_students_service">{% trans 'students_service' %}</label>
+                </div>
+                <div class="col-md-4">
+                    <div class="controls" id="txt_students_service">{{ mandate.students_service }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-8">
+                    <label for="txt_infrastructure_mgmt_service">{% trans 'infrastructure_mgmt_service' %}</label>
+                </div>
+                <div class="col-md-4">
+                    <div class="controls" id="txt_infrastructure_mgmt_service">
+                        {{ mandate.infrastructure_mgmt_service }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-8">
+                    <label for="txt_events_organisation_service">{% trans 'events_organisation_service' %}</label>
+                </div>
+                <div class="col-md-4">
+                    <div class="controls" id="txt_events_organisation_service">
+                        {{ mandate.events_organisation_service }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-8">
+                    <label for="txt_publishing_field_service">{% trans 'publishing_field_service' %}</label>
+                </div>
+                <div class="col-md-4">
+                    <div class="controls" id="txt_publishing_field_service">{{ mandate.publishing_field_service }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-8">
+                    <label for="txt_scientific_jury_service">{% trans 'scientific_jury_service' %}</label>
+                </div>
+                <div class="col-md-4">
+                    <div class="controls" id="txt_scientific_jury_service">{{ mandate.scientific_jury_service }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-info">
+            <div class="panel-heading">
+                <font size="4">{% trans 'formation_activities' %}</font>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="txt_degrees">{% trans 'degrees' %}</label>
+                </div>
+                <div class="col-md-7">
+                    <div class="controls" id="txt_degrees">{{ mandate.degrees }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="txt_formations">{% trans 'formations' %}</label>
+                </div>
+                <div class="col-md-7">
+                    <div class="controls" id="txt_formations">{{ mandate.formations }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-info">
+            <div class="panel-heading">
+                <font size="4">{% trans 'summary' %}</font>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="txt_tutoring_percent">{% trans 'tutoring_percent' %}</label>
+                </div>
+                <div class="col-md-7">
+                    <div class="controls" id="txt_tutoring_percent">{{ mandate.tutoring_percent }} %</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="txt_research_percent">{% trans 'research_percent' %}</label>
+                </div>
+                <div class="col-md-7">
+                    <div class="controls" id="txt_research_percent">{{ mandate.research_percent }} %</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="txt_service_activities_percent">{% trans 'service_activities_percent' %}</label>
+                </div>
+                <div class="col-md-7">
+                    <div class="controls" id="txt_service_activities_percent">
+                        {{ mandate.service_activities_percent }} %</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="txt_formation_activities_percent">{% trans 'formation_activities_percent' %}</label>
+                </div>
+                <div class="col-md-7">
+                    <div class="controls" id="txt_formation_activities_percent">
+                        {{ mandate.formation_activities_percent }} %</div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <font class="error">{{ form.non_field_errors }}</font>
+            </div>
+        </div>
+        <div class="panel-info">
+            <div class="panel-heading">
+                <font size="4">{% trans 'general_comment' %}</font>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="txt_activities_report_remark">{% trans 'activities_report_remark' %}</label>
+                </div>
+                <div class="col-md-8">
+                    <div class="controls" id="txt_activities_report_remark">{{ mandate.activities_report_remark }}</div>
+                </div>
+            </div>
+        </div>
+	</div>
+</div>
+{% endblock %}
+{% block script %}
+{% endblock %}

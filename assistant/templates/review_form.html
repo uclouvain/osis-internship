@@ -41,7 +41,7 @@
 {% endblock %}
 {% block content %}
 <ul class="nav nav-tabs ">
-	<li><a href="#">{% trans 'assistant_form' %}</a></li>
+	<li><a href="{% url 'pst_form_view' mandate_id=mandate_id %}">{% trans 'assistant_form' %}</a></li>
     {% if 'PHD_SUPERVISOR' in role %}
         <li class="active"><a href="#">{% trans 'phd_supervisor_review' %}</a></li>
 	    <li class="disabled"><a href="#">{% trans 'research_review' %}</a></li>
@@ -124,7 +124,7 @@
                     <label for="txt_advice">{% trans 'advice' %}</label>
                 </div>
                 <div class="col-md-3">
-                    <div class="controls">{{ form.advice }}</div>
+                    <div class="controls" id="txt_advice">{{ form.advice }}</div>
                     <font class="error">{{ form.advice.errors }}</font>
                 </div>
             </div><p>
@@ -132,18 +132,17 @@
         <div class="form-group">
             <div class="row">
                 <div class="col-md-2">
-                    <label id="justification_label" for="txt_justification">{% trans 'justification' %}</label>
+                    <label for="txt_justification">{% trans 'justification' %}</label>
                 </div>
                 <div class="col-md-5">
-                    <div class="controls">{{ form.justification }}</div>
+                    <div class="controls" id="txt_justification">{{ form.justification }}</div>
                     <font class="error">{{ form.justification.errors }}</font>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-2"></div>
                 <div class="col-md-5" align="left">
-                <label id="justification_label_help_text" for="txt_justification_help_text">
-                    <font size="1">{{ form.justification.help_text }}</font></label>
+                    <label><font size="1">{{ form.justification.help_text }}</font></label>
                 </div>
             </div>
         </div><p>
@@ -153,7 +152,7 @@
                     <label for="txt_comment">{% trans 'remark' %}</label>
                 </div>
                 <div class="col-md-3">
-                    <div class="controls">{{ form.remark }}</div>
+                    <div class="controls" id="txt_comment">{{ form.remark }}</div>
                     <font class="error">{{ form.remark.errors }}</font>
                 </div>
             </div>
@@ -171,20 +170,18 @@
             <div class="row">
                 <div class="col-md-2"></div>
                 <div class="col-md-5" align="left">
-                <label id="confidential_label_help_text" for="txt_confidential_help_text">
-                    <font size="1">{{ form.confidential.help_text }}</font></label>
+                    <label><font size="1">{{ form.confidential.help_text }}</font></label>
                 </div>
             </div>
-            <p>
         </div>
         <div class="form-group">
             <div class="row">
-                <div class="col-md-2 align="left">
+                <div class="col-md-2" align="left">
 		            <button type="submit" class="btn btn-primary btn-block" title="{% trans 'save'%}"
                     id="bt_mandate_save" name="save"><span class="glyphicon glyphicon-save" aria-hidden="true">
                     </span> {% trans 'save'%}</button>
                 </div>
-                <div class="col-md-2 align="left">
+                <div class="col-md-2" align="left">
 		            <a class="btn btn-default btn-block" id="lnk_mandate_cancel"
                        href="{% url 'reviewer_mandates_list' %}">
 		            <span class="glyphicon glyphicon-cancel" aria-hidden="true"></span> {% trans 'cancel'%}</a>
@@ -195,7 +192,7 @@
         {% if "SUPERVISION_ASSISTANT" not in role %}
         <div class="form-group">
             <div class="row">
-                <div class="col-md-4 align="left">
+                <div class="col-md-4" align="left">
                     <button type="submit" class="btn btn-success btn-block" title="{% trans 'validate_and_submit'%}"
                     id="bt_pstform_validate_and_submit" name="validate_and_submit"
                     onclick="return confirm('{% trans 'confirm_validation' %}')">
