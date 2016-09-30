@@ -57,7 +57,7 @@ def find_by_document(document_file):
     return PropositionDocumentFile.objects.filter(document_file=document_file)
 
 
-def find_by_dissertation(proposition):
+def find_by_proposition(proposition):
     return PropositionDocumentFile.objects.get(proposition=proposition)
 
 
