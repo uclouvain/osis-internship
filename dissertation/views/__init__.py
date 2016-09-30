@@ -27,3 +27,4 @@ from dissertation.views import dissertation
 from dissertation.views import proposition_dissertation
 from dissertation.views import information
 from dissertation.views import offer_proposition
+from dissertation.views import upload_file
