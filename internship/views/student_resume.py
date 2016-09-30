@@ -111,6 +111,7 @@ def internships_student_resume(request):
 
 @login_required
 @permission_required('internship.can_access_internship', raise_exception=True)
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_read(request, registration_id):
     student = mdl.student.find_by(registration_id=registration_id)
     student = student[0]
