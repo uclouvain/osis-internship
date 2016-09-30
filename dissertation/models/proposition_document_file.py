@@ -23,18 +23,47 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from dissertation.models import *
-from django.contrib import admin
 
-admin.site.register(adviser.Adviser, adviser.AdviserAdmin)
-admin.site.register(dissertation.Dissertation, dissertation.DissertationAdmin)
-admin.site.register(dissertation_group.DissertationGroup)
-admin.site.register(dissertation_location.DissertationLocation)
-admin.site.register(dissertation_role.DissertationRole, dissertation_role.DissertationRoleAdmin)
-admin.site.register(dissertation_update.DissertationUpdate, dissertation_update.DissertationUpdateAdmin)
-admin.site.register(faculty_adviser.FacultyAdviser, faculty_adviser.FacultyAdviserAdmin)
-admin.site.register(offer_proposition.OfferProposition, offer_proposition.OfferPropositionAdmin)
-admin.site.register(proposition_dissertation.PropositionDissertation,
-                    proposition_dissertation.PropositionDissertationAdmin)
-admin.site.register(proposition_document_file.PropositionDocumentFile)
-admin.site.register(proposition_role.PropositionRole, proposition_role.PropositionRoleAdmin)
+from django.db import models
+from django.contrib import admin
+from django.contrib.auth.models import User
+
+
+class PropositionDocumentFile(models.Model):
+    proposition = models.ForeignKey('PropositionDissertation')
+    document_file = models.ForeignKey('osis_common.documentFile')
+
+
+def search(proposition=None, description=None):
+    out = None
+    queryset = PropositionDocumentFile.objects.order_by('document_file__creation_date')
+    if proposition:
+        queryset = queryset.filter(proposition=proposition)
+    if description:
+        queryset = queryset.filter(document_file__description=description)
+    if proposition or description:
+        out = queryset
+    return out
+
+
+def find_first(proposition=None, description=None):
+    results = search(proposition, description)
+    if results.exists():
+        return results[0]
+    return None
+
+
+def find_by_document(document_file):
+    return PropositionDocumentFile.objects.filter(document_file=document_file)
+
+
+def find_by_dissertation(proposition):
+    return PropositionDocumentFile.objects.get(proposition=proposition)
+
+
+def find_by_id(proposition_id):
+    return PropositionDocumentFile.objects.get(proposition__id=proposition_id)
+
+
+
+
