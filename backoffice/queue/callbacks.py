@@ -23,16 +23,18 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.apps import AppConfig
+import json
+from django.core import serializers
 
 
-class BaseConfig(AppConfig):
-    name = 'base'
-
-    def ready(self):
-        from base.models.models_signals import add_to_tutors_group, remove_from_tutor_group, \
-            add_to_pgm_managers_group, remove_from_pgm_managers_group, \
-            add_to_students_group, remove_from_student_group
-        from base.views.score_encoding import get_json_data_scores_sheets
-        # if django.core.exceptions.AppRegistryNotReady: Apps aren't loaded yet.
-        # ===> This exception says that there is an error in the implementation of method ready(self) !!
+def insert_or_update(json_data):
+    from base.models.serializable_model import SerializableModel
+    json_data = json.loads(json_data.decode("utf-8"))
+    serialized_objects = json_data['serialized_objects']
+    deserialized_objects = serializers.deserialize('json', serialized_objects, ignorenonexistent=True)
+    if json_data['to_delete']:
+        for deser_object in deserialized_objects:
+            super(SerializableModel, deser_object.object).delete()
+    else:
+        for deser_object in deserialized_objects:
+            super(SerializableModel, deser_object.object).save()

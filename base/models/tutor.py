@@ -26,7 +26,6 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.contrib import admin
-from backoffice.queue import queue_actions
 from base.models import person, attribution
 from base.models import serializable_model
 

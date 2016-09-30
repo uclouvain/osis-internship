@@ -23,11 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import json
 
 import pika
 from backoffice.settings import QUEUE_URL, QUEUE_USER, QUEUE_PASSWORD, QUEUE_PORT, QUEUE_CONTEXT_ROOT
 import logging
-from django.conf import  settings
+from django.conf import settings
 import traceback
 
 logger = logging.getLogger(settings.DEFAULT_LOGGER)
@@ -55,7 +56,7 @@ def send_message(queue_name, message, connection=None, channel=None):
               the channel and the connection after you sent all your messages in the queue.
 
     :param queue_name: the name of the queue in which we have to send the JSON message.
-    :param message: Must be a dictionnary !
+    :param message: JSON data sent into the queue.
     :param connection: A connection to a Queue.
     :param channel: An opened channel from the connection given in parameter.
     """
@@ -72,7 +73,7 @@ def send_message(queue_name, message, connection=None, channel=None):
     try:
         channel.basic_publish(exchange='',
                               routing_key=queue_name,
-                              body=message,
+                              body=json.dumps(message),
                               properties=pika.BasicProperties(content_type='application/json'))
     except Exception as e:
         logger.error("Exception in queue : {0} ".format(e))
