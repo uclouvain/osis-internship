@@ -198,6 +198,10 @@ def internship_student_affectation_modification(request, student_id):
     organizations = sort_organizations(organizations)
 
     specialities = InternshipSpeciality.find_all()
+    for speciality in specialities :
+        number=[int(s) for s in speciality.name.split() if s.isdigit()]
+        if number:
+            speciality.acronym =speciality.acronym + " " +str(number[0])
     periods = Period.search()
     return render(request, "student_affectation_modification.html",
                   {'information':         information[0],
