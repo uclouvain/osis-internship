@@ -225,15 +225,25 @@ def student_save_affectation_modification(request, registration_id):
     if request.POST.get('speciality'):
         speciality_list = request.POST.getlist('speciality')
 
-    InternshipStudentAffectationStat.search(student=student).delete()
-    index = len(period_list)
     check_error_present = False
-    for x in range(0,index):
+    index = len(period_list)
+    for x in range(0, index):
         if organization_list[x] != "0":
             organization = Organization.search(reference=organization_list[x])[0]
             speciality = InternshipSpeciality.search(name=speciality_list[x])[0]
+            period = Period.search(name=period_list[x])[0]
             check_internship_present = InternshipOffer.search(organization=organization, speciality=speciality)
-            if len(check_internship_present) > 0:
+            if len(check_internship_present) == 0:
+                check_error_present = True
+                messages.add_message(request, messages.ERROR, _('%s : %s-%s (%s)=> error') % (speciality.name, organization.reference, organization.name, period.name))
+
+    if not check_error_present:
+        InternshipStudentAffectationStat.search(student=student).delete()
+        index = len(period_list)
+        for x in range(0, index):
+            if organization_list[x] != "0":
+                organization = Organization.search(reference=organization_list[x])[0]
+                speciality = InternshipSpeciality.search(name=speciality_list[x])[0]
                 period = Period.search(name=period_list[x])[0]
                 student_choices = InternshipChoice.search(student=student, speciality=speciality)
                 affectation_modif = InternshipStudentAffectationStat()
@@ -247,24 +257,20 @@ def student_save_affectation_modification(request, registration_id):
                     if student_choice.organization == organization:
                         affectation_modif.choice = student_choice.choice
                         check_choice = True
-                        if student_choice.choice == 1 :
+                        if student_choice.choice == 1:
                             affectation_modif.cost = 0
-                        elif student_choice.choice == 2 :
+                        elif student_choice.choice == 2:
                             affectation_modif.cost = 1
-                        elif student_choice.choice == 3 :
+                        elif student_choice.choice == 3:
                             affectation_modif.cost = 2
-                        elif student_choice.choice == 4 :
+                        elif student_choice.choice == 4:
                             affectation_modif.cost = 3
                 if not check_choice:
-                    affectation_modif.choice="I"
+                    affectation_modif.choice = "I"
                     affectation_modif.cost = 10
-                affectation_modif.visible = True
+
                 affectation_modif.save()
-            else:
-                check_error_present = True
-                messages.add_message(request, messages.ERROR, _('test raté'))
-    if check_error_present:
-        redirect_url = reverse('student_affectation_modification', args=[student.id])
-    else:
         redirect_url = reverse('internships_student_read', args=[student.registration_id])
+    else:
+        redirect_url = reverse('internship_student_affectation_modification', args=[student.id])
     return HttpResponseRedirect(redirect_url)
