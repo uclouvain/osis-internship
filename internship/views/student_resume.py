@@ -26,6 +26,7 @@
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
 from internship.models import InternshipChoice, InternshipStudentInformation, \
@@ -198,6 +199,10 @@ def internship_student_affectation_modification(request, student_id):
     organizations = sort_organizations(organizations)
 
     specialities = InternshipSpeciality.find_all()
+    for speciality in specialities :
+        number=[int(s) for s in speciality.name.split() if s.isdigit()]
+        if number:
+            speciality.acronym =speciality.acronym + " " +str(number[0])
     periods = Period.search()
     return render(request, "student_affectation_modification.html",
                   {'information':         information[0],
@@ -220,37 +225,52 @@ def student_save_affectation_modification(request, registration_id):
     if request.POST.get('speciality'):
         speciality_list = request.POST.getlist('speciality')
 
-    InternshipStudentAffectationStat.search(student=student).delete()
+    check_error_present = False
     index = len(period_list)
-    for x in range(0,index):
+    for x in range(0, index):
         if organization_list[x] != "0":
             organization = Organization.search(reference=organization_list[x])[0]
             speciality = InternshipSpeciality.search(name=speciality_list[x])[0]
             period = Period.search(name=period_list[x])[0]
-            student_choices = InternshipChoice.search(student=student, speciality=speciality)
-            affectation_modif = InternshipStudentAffectationStat()
+            check_internship_present = InternshipOffer.search(organization=organization, speciality=speciality)
+            if len(check_internship_present) == 0:
+                check_error_present = True
+                messages.add_message(request, messages.ERROR, _('%s : %s-%s (%s)=> error') % (speciality.name, organization.reference, organization.name, period.name))
 
-            affectation_modif.student = student
-            affectation_modif.organization = organization
-            affectation_modif.speciality = speciality
-            affectation_modif.period = period
-            check_choice = False
-            for student_choice in student_choices:
-                if student_choice.organization == organization:
-                    affectation_modif.choice = student_choice.choice
-                    check_choice = True
-                    if student_choice.choice == 1 :
-                        affectation_modif.cost = 0
-                    elif student_choice.choice == 2 :
-                        affectation_modif.cost = 1
-                    elif student_choice.choice == 3 :
-                        affectation_modif.cost = 2
-                    elif student_choice.choice == 4 :
-                        affectation_modif.cost = 3
-            if not check_choice:
-                affectation_modif.choice="I"
-                affectation_modif.cost = 10
+    if not check_error_present:
+        InternshipStudentAffectationStat.search(student=student).delete()
+        index = len(period_list)
+        for x in range(0, index):
+            if organization_list[x] != "0":
+                organization = Organization.search(reference=organization_list[x])[0]
+                speciality = InternshipSpeciality.search(name=speciality_list[x])[0]
+                period = Period.search(name=period_list[x])[0]
+                student_choices = InternshipChoice.search(student=student, speciality=speciality)
+                affectation_modif = InternshipStudentAffectationStat()
 
-            affectation_modif.save()
-    redirect_url = reverse('internships_student_read', args=[student.registration_id])
+                affectation_modif.student = student
+                affectation_modif.organization = organization
+                affectation_modif.speciality = speciality
+                affectation_modif.period = period
+                check_choice = False
+                for student_choice in student_choices:
+                    if student_choice.organization == organization:
+                        affectation_modif.choice = student_choice.choice
+                        check_choice = True
+                        if student_choice.choice == 1:
+                            affectation_modif.cost = 0
+                        elif student_choice.choice == 2:
+                            affectation_modif.cost = 1
+                        elif student_choice.choice == 3:
+                            affectation_modif.cost = 2
+                        elif student_choice.choice == 4:
+                            affectation_modif.cost = 3
+                if not check_choice:
+                    affectation_modif.choice = "I"
+                    affectation_modif.cost = 10
+
+                affectation_modif.save()
+        redirect_url = reverse('internships_student_read', args=[student.registration_id])
+    else:
+        redirect_url = reverse('internship_student_affectation_modification', args=[student.id])
     return HttpResponseRedirect(redirect_url)
