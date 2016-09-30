@@ -29,7 +29,7 @@ from django.db import models
 from django.core import serializers
 import uuid
 from pika.exceptions import ChannelClosed, ConnectionClosed
-from backoffice.queue import queue_actions
+from backoffice.queue import queue_sender
 
 QUEUE_NAME = "osis_portal"
 LOGGER = logging.getLogger(settings.DEFAULT_LOGGER)
@@ -59,14 +59,14 @@ class SerializableModel(models.Model):
     def save(self, *args, **kwargs):
         super(SerializableModel, self).save(*args, **kwargs)
         try:
-            queue_actions.send_message(QUEUE_NAME, format_data_for_migration([self]))
+            queue_sender.send_message(QUEUE_NAME, format_data_for_migration([self]))
         except (ChannelClosed, ConnectionClosed):
             LOGGER.warning('QueueServer is not installed or not launched')
 
     def delete(self, *args, **kwargs):
         super(SerializableModel, self).delete(*args, **kwargs)
         try:
-            queue_actions.send_message(QUEUE_NAME, format_data_for_migration([self], to_delete=True))
+            queue_sender.send_message(QUEUE_NAME, format_data_for_migration([self], to_delete=True))
         except (ChannelClosed, ConnectionClosed):
             LOGGER.warning('QueueServer is not installed or not launched')
 
