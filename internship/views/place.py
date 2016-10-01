@@ -25,12 +25,12 @@
 ##############################################################################
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
-
+from collections import OrderedDict
 from internship.models import Organization, OrganizationAddress, InternshipChoice, \
     InternshipOffer, InternshipSpeciality, InternshipStudentAffectationStat, \
     Period, InternshipStudentInformation
 from internship.forms import OrganizationForm, OrganizationAddressForm
-from internship.views.internship import get_all_specialities, set_tabs_name
+from internship.views.internship import set_tabs_name
 from internship.utils import export_utils, export_utils_pdf
 
 
@@ -113,6 +113,36 @@ def get_cities(organizations):
     tab.sort()
     return tab
 
+def get_all_specialities_unique(internships):
+    """
+        Function to create the list of the specialities, delete dpulicated and order alphabetical.
+        Param:
+            internships : the interships we want to get the speciality
+    """
+    tab = []
+    for internship in internships:
+        tab.append(internship.speciality)
+
+    tab = list(OrderedDict.fromkeys(tab))
+    tab_size = len(tab)
+    for element in tab:
+        name = element.name.split()
+        size = len(name)
+        if name[size-1].isdigit():
+            temp_name=""
+            for x in range(0,size-1):
+                temp_name+=name[x] + " "
+            element.name = temp_name
+
+    item_deleted = 0
+    for x in range(1, tab_size):
+        if tab[x-1-item_deleted]!=0 :
+            if tab[x].name == tab[x-1-item_deleted].name:
+                tab[x]=0
+                item_deleted += 1
+
+    tab = [x for x in tab if x != 0]
+    return tab
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
@@ -267,7 +297,7 @@ def student_affectation(request, organization_id):
     periods = Period.search()
 
     internships = InternshipOffer.search(organization = organization)
-    all_speciality = get_all_specialities(internships)
+    all_speciality = get_all_specialities_unique(internships)
     set_tabs_name(all_speciality)
     return render(request, "place_detail_affectation.html", {'organization': organization,
                                                              'affectations': affectations,
