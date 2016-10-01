@@ -124,25 +124,29 @@ def get_all_specialities_unique(internships):
         tab.append(internship.speciality)
 
     tab = list(OrderedDict.fromkeys(tab))
-    tab_size = len(tab)
-    for element in tab:
+    tab = set_speciality_unique(tab)
+    return tab
+
+def set_speciality_unique(specialities):
+    specialities_size = len(specialities)
+    for element in specialities:
         name = element.name.split()
         size = len(name)
-        if name[size-1].isdigit():
-            temp_name=""
-            for x in range(0,size-1):
-                temp_name+=name[x] + " "
+        if name[size - 1].isdigit():
+            temp_name = ""
+            for x in range(0, size - 1):
+                temp_name += name[x] + " "
             element.name = temp_name
 
     item_deleted = 0
-    for x in range(1, tab_size):
-        if tab[x-1-item_deleted]!=0 :
-            if tab[x].name == tab[x-1-item_deleted].name:
-                tab[x]=0
+    for x in range(1, specialities_size):
+        if specialities[x - 1 - item_deleted] != 0:
+            if specialities[x].name == specialities[x - 1 - item_deleted].name:
+                specialities[x] = 0
                 item_deleted += 1
 
-    tab = [x for x in tab if x != 0]
-    return tab
+    specialities = [x for x in specialities if x != 0]
+    return specialities
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
