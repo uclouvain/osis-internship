@@ -25,7 +25,6 @@
 ##############################################################################
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
-from collections import OrderedDict
 from internship.models import Organization, OrganizationAddress, InternshipChoice, \
     InternshipOffer, InternshipSpeciality, InternshipStudentAffectationStat, \
     Period, InternshipStudentInformation
