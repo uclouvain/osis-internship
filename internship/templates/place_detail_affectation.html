@@ -60,7 +60,7 @@
                                                 <th style="background-color: #dddddd;" colspan="5">{{period.name}} : {{period.date_start}} - {{period.date_end}}</th>
                                             </tr>
                                             {% for affectation in affectations %}
-                                                {% if affectation.period.name == period.name and affectation.speciality.name == speciality.name %}
+                                                {% if affectation.period.name == period.name and affectation.speciality.acronym == speciality.acronym %}
                                                     <tr>
                                                         <td>{{affectation.student.person.last_name}} {{affectation.student.person.first_name}}</td>
                                                         <td>{{affectation.student.registration_id}}</td>

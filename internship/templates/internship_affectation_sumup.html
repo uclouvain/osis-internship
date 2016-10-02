@@ -56,7 +56,7 @@
                                             {% endfor %}
                                         </tr>
                                         {% for organization in organizations %}
-                                            {% if organization.speciality.name == speciality.name %}
+                                            {% if organization.speciality.acronym == speciality.acronym %}
                                               <tr>
                                                    <td style="text-align: center; border-right: 1px solid black;">
                                                        {{organization.organization.reference}}

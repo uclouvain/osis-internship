@@ -38,7 +38,7 @@ from django.shortcuts import render
 
 from internship.models import *
 from internship.views.internship import calc_dist, set_tabs_name
-from internship.views.place import sort_organizations
+from internship.views.place import sort_organizations, set_speciality_unique
 import time
 import datetime
 # ****************** Global vars ******************
@@ -1201,7 +1201,8 @@ def internship_affectation_statistics(request):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_affectation_sumup(request):
-    all_speciality = InternshipSpeciality.search(mandatory=True)
+    all_speciality = list(InternshipSpeciality.search(mandatory=True))
+    all_speciality=set_speciality_unique(all_speciality)
     set_tabs_name(all_speciality)
     periods = Period.search()
     organizations = Organization.search()
@@ -1213,15 +1214,22 @@ def internship_affectation_sumup(request):
             if offer.organization.reference == organization.reference:
                 informations.append(offer)
 
+    for x in range (0,len(informations)):
+        if informations[x] != 0:
+            if informations[x].speciality.acronym == "MI":
+                informations[x+1] = 0
+                informations[x+2] = 0
+
+    informations = [x for x in informations if x != 0]
+
     all_affectations = list(InternshipStudentAffectationStat.search())
     affectations = {}
-
     for speciality in all_speciality:
         temp_affectations = {}
         for period in periods:
             temp_temp_affectations = []
             for aff in all_affectations:
-                if aff.speciality==speciality and aff.period==period:
+                if aff.speciality.acronym==speciality.acronym and aff.period==period:
                     temp_temp_affectations.append(aff)
             temp_affectations[period.name] = temp_temp_affectations
         affectations[speciality.name] = temp_affectations
