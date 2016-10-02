@@ -30,7 +30,7 @@ from internship.models import Organization, OrganizationAddress, InternshipChoic
     InternshipOffer, InternshipSpeciality, InternshipStudentAffectationStat, \
     Period, InternshipStudentInformation
 from internship.forms import OrganizationForm, OrganizationAddressForm
-from internship.views.internship import set_tabs_name
+from internship.views.internship import set_tabs_name, get_all_specialities
 from internship.utils import export_utils, export_utils_pdf
 
 
@@ -113,19 +113,6 @@ def get_cities(organizations):
     tab.sort()
     return tab
 
-def get_all_specialities_unique(internships):
-    """
-        Function to create the list of the specialities, delete dpulicated and order alphabetical.
-        Param:
-            internships : the interships we want to get the speciality
-    """
-    tab = []
-    for internship in internships:
-        tab.append(internship.speciality)
-
-    tab = list(OrderedDict.fromkeys(tab))
-    tab = set_speciality_unique(tab)
-    return tab
 
 def set_speciality_unique(specialities):
     specialities_size = len(specialities)
@@ -301,7 +288,8 @@ def student_affectation(request, organization_id):
     periods = Period.search()
 
     internships = InternshipOffer.search(organization = organization)
-    all_speciality = get_all_specialities_unique(internships)
+    all_speciality = get_all_specialities(internships)
+    all_speciality = set_speciality_unique(all_speciality)
     set_tabs_name(all_speciality)
     return render(request, "place_detail_affectation.html", {'organization': organization,
                                                              'affectations': affectations,
