@@ -24,7 +24,8 @@
 #
 ##############################################################################
 from django.conf.urls import url
-from dissertation.views import dissertation, proposition_dissertation, information, offer_proposition, upload_file
+from dissertation.views import dissertation, proposition_dissertation, information, offer_proposition,\
+    upload_proposition_file
 from dissertation.utils import request
 
 urlpatterns = [
@@ -175,6 +176,6 @@ urlpatterns = [
         name='proposition_dissertations_role_delete'),
     url(r'^students_list_in_offer_year/([0-9]+)/$', request.get_students_list_in_offer_year, name='students_list'),
 
-    url(r'^upload/download/(?P<pk>[0-9]+)$', upload_file.download, name='download'),
-    url(r'^upload/save/$', upload_file.save_uploaded_file, name="save_uploaded_file"),
+    url(r'^upload/download/(?P<pk>[0-9]+)$', upload_proposition_file.download, name='download'),
+    url(r'^upload/save/$', upload_proposition_file.save_uploaded_file, name="save_uploaded_file"),
 ]
