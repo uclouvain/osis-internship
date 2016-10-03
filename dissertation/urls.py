@@ -173,11 +173,8 @@ urlpatterns = [
     url(r'^proposition_dissertations_role_delete/(?P<pk>[0-9]+)$',
         proposition_dissertation.proposition_dissertations_role_delete,
         name='proposition_dissertations_role_delete'),
-    url(r'^students_list_in_offer_year/([0-9]+)/$',request.get_students_list_in_offer_year, name='students_list'),
+    url(r'^students_list_in_offer_year/([0-9]+)/$', request.get_students_list_in_offer_year, name='students_list'),
 
     url(r'^upload/download/(?P<pk>[0-9]+)$', upload_file.download, name='download'),
-    url(r'^upload/description/$', upload_file.upload_file_description, name="upload_file_description"),
-    url(r'^upload/$', upload_file.upload_document, name='upload_document'),
-    url(r'^upload/delete/$', upload_file.delete_document_file, name='delete_document_file'),
     url(r'^upload/save/$', upload_file.save_uploaded_file, name="save_uploaded_file"),
 ]
