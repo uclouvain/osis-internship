@@ -31,35 +31,39 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class PropositionDissertationAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'visibility', 'active', 'get_offer_propositions')
+    list_display = ('title', 'author', 'visibility', 'active', 'get_offer_propositions', 'creator')
+    raw_id_fields = ('creator', )
 
 
 class PropositionDissertation(models.Model):
     TYPES_CHOICES = (
-        ('RDL', _('Litterature review')),
-        ('EDC', _('Case study')),
+        ('RDL', _('litterature_review')),
+        ('EMP', _('empirical_research')),
+        ('THE', _('theoretical_analysis')),
+        ('PRO', _('project_dissertation')),
+        ('DEV', _('development_dissertation')),
+        ('OTH', _('other')),
         )
 
     LEVELS_CHOICES = (
-        ('DOMAIN', _('Domain')),
-        ('WORK', _('Work')),
-        ('QUESTION', _('Question')),
-        ('THEME', _('Theme')),
+        ('SPECIFIC', _('specific_subject')),
+        ('THEME', _('large_theme')),
         )
 
     COLLABORATION_CHOICES = (
-        ('POSSIBLE', _('Possible')),
-        ('REQUIRED', _('Required')),
-        ('FORBIDDEN', _('Forbidden')),
+        ('POSSIBLE', _('possible')),
+        ('REQUIRED', _('required')),
+        ('FORBIDDEN', _('forbidden')),
         )
 
     author = models.ForeignKey('Adviser')
+    creator = models.ForeignKey('base.Person', blank=True, null=True)
     collaboration = models.CharField(max_length=12, choices=COLLABORATION_CHOICES, default='FORBIDDEN')
     description = models.TextField(blank=True, null=True)
     level = models.CharField(max_length=12, choices=LEVELS_CHOICES, default='DOMAIN')
     max_number_student = models.IntegerField()
     title = models.CharField(max_length=200)
-    type = models.CharField(max_length=12, choices=TYPES_CHOICES, default='RDL')
+    type = models.CharField(max_length=12, choices=TYPES_CHOICES, default='OTH')
     visibility = models.BooleanField(default=True)
     active = models.BooleanField(default=True)
     offer_proposition = models.ManyToManyField('OfferProposition')
@@ -84,6 +88,14 @@ class PropositionDissertation(models.Model):
 
     def get_offer_propositions(self):
         return " - ".join([str(s) for s in self.offer_proposition.all()])
+
+    def set_creator(self, person):
+        self.creator = person
+        self.save()
+
+    def set_author(self, adviser):
+        self.author = adviser
+        self.save()
 
     class Meta:
         ordering = ["author__person__last_name", "author__person__middle_name", "author__person__first_name", "title"]
@@ -116,9 +128,10 @@ def search(terms, active=None, visibility=None, connected_adviser=None):
     return queryset
 
 
-def search_by_offer(offer):
-    return PropositionDissertation.objects.filter(active=True,
-                                                  offer_proposition__offer=offer)
+def search_by_offer(offers):
+    return PropositionDissertation.objects.filter(active=True)\
+                                          .filter(offer_proposition__offer__in=offers)\
+                                          .distinct()
 
 
 def get_all_for_teacher(adviser):
@@ -130,4 +143,12 @@ def get_all_for_teacher(adviser):
 
 def get_mine_for_teacher(adviser):
     return PropositionDissertation.objects.filter(author=adviser)\
-                                          .filter(active=True)
+                                          .filter(active=True)\
+                                          .distinct()
+
+
+def get_created_for_teacher(adviser):
+    return PropositionDissertation.objects.filter(creator=adviser.person)\
+                                          .filter(active=True)\
+                                          .exclude(author=adviser)\
+                                          .distinct()

@@ -59,7 +59,7 @@ def find_closest_past_date(dates):
     """
     now = datetime.datetime.now().date()
     past_dates = [date for date in dates if date and date < now]
-    smallest_delta = None # delta = Number of days between a past date and now
+    smallest_delta = None  # delta = Number of days between a past date and now
     closest_date = None
     for date in past_dates:
         delta = now - date
@@ -70,7 +70,7 @@ def find_closest_past_date(dates):
 
 @login_required
 @permission_required('base.can_access_scoreencoding', raise_exception=True)
-def outside_scores_encodings_period(request):
+def outside_period(request):
     academic_calendars = list(mdl.academic_calendar.get_scores_encoding_calendars())
     closest_date = None
     if academic_calendars:
@@ -80,7 +80,6 @@ def outside_scores_encodings_period(request):
     text = trans('outside_scores_encodings_period') % str_date
     messages.add_message(request, messages.WARNING, "%s" % text)
     return layout.render(request, "assessments/outside_scores_encodings_period.html", {})
-
 
 
 def _truncate_decimals(new_score, new_justification, decimal_scores_authorized):
@@ -95,6 +94,7 @@ def _truncate_decimals(new_score, new_justification, decimal_scores_authorized):
     except:
         new_score = None
     return new_score, None if not new_justification else new_justification
+
 
 @login_required
 @user_passes_test(_is_inside_scores_encodings_period, login_url=reverse_lazy('outside_scores_encodings_period'))
@@ -285,7 +285,6 @@ def online_double_encoding_validation(request, learning_unit_year_id=None, tutor
         return HttpResponseRedirect(reverse('online_encoding', args=(learning_unit_year_id,)))
 
 
-
 @login_required
 @user_passes_test(_is_inside_scores_encodings_period, login_url=reverse_lazy('outside_scores_encodings_period'))
 @permission_required('base.can_access_scoreencoding', raise_exception=True)
@@ -295,16 +294,14 @@ def online_encoding_submission(request, learning_unit_year_id):
                                              learning_unit_year_id=learning_unit_year_id,
                                              is_program_manager=is_program_manager)
     submitted_enrollments = []
-    # contains all SessionExams where the encoding is not terminated (progression < 100%)
-    sessions_exam_still_open = set()
-    # contains all sessions exams in exam_enrollments list
-
     draft_scores_not_sumitted_yet = [exam_enrol for exam_enrol in exam_enrollments
-                                    if exam_enrol.is_draft and not exam_enrol.is_final]
+                                     if exam_enrol.is_draft and not exam_enrol.is_final]
+    not_submitted_enrollments = set([ex for ex in exam_enrollments if not ex.is_final])
     for exam_enroll in draft_scores_not_sumitted_yet:
         if (exam_enroll.score_draft is not None and exam_enroll.score_final is None) \
                 or (exam_enroll.justification_draft and not exam_enroll.justification_final):
             submitted_enrollments.append(exam_enroll)
+            not_submitted_enrollments.remove(exam_enroll)
         if exam_enroll.is_draft:
             if exam_enroll.score_draft is not None:
                 exam_enroll.score_final = exam_enroll.score_draft
@@ -316,7 +313,7 @@ def online_encoding_submission(request, learning_unit_year_id):
                                                                 exam_enroll.justification_final)
 
     # Send mail to all the teachers of the submitted learning unit on any submission
-    all_encoded = len(sessions_exam_still_open) == 0
+    all_encoded = len(not_submitted_enrollments) == 0
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
     attributions = mdl.attribution.Attribution.objects.filter(learning_unit_year=learning_unit_year)
     persons = list(set([attribution.tutor.person for attribution in attributions]))
@@ -357,14 +354,14 @@ def notes_printing_all(request, tutor_id=None, offer_id=None):
 @login_required
 @user_passes_test(_is_inside_scores_encodings_period, login_url=reverse_lazy('outside_scores_encodings_period'))
 @permission_required('base.can_access_scoreencoding', raise_exception=True)
-def export_xls(request, learning_unit_year_id, academic_year_id):
+def export_xls(request, learning_unit_year_id):
     academic_year = mdl.academic_year.current_academic_year()
     is_program_manager = mdl.program_manager.is_program_manager(request.user)
     exam_enrollments = _get_exam_enrollments(request.user,
                                              learning_unit_year_id=learning_unit_year_id,
                                              academic_year=academic_year,
                                              is_program_manager=is_program_manager)
-    return export_utils.export_xls(academic_year_id, is_program_manager, exam_enrollments)
+    return export_utils.export_xls(exam_enrollments)
 
 
 def get_score_encoded(enrollments):
@@ -510,8 +507,8 @@ def get_data_pgmer(request,
     academic_yr = mdl.academic_year.current_academic_year()
     learning_unit_year_ids = None
     if learning_unit_year_acronym:
-        learning_unit_year_ids = mdl.learning_unit_year.search(acronym=learning_unit_year_acronym).values_list('id',
-                                                                                                               flat=True)
+        learning_unit_year_ids = mdl.learning_unit_year.search(acronym=learning_unit_year_acronym)\
+            .values_list('id', flat=True)
 
     if not offer_year_id:
         scores_encodings = list(mdl.scores_encoding.search(request.user, learning_unit_year_ids=learning_unit_year_ids))
@@ -560,21 +557,19 @@ def get_data_pgmer(request,
                                           if attrib.function == 'COORDINATOR'}
         for score_encoding in scores_encodings:
             progress = (score_encoding.exam_enrollments_encoded / score_encoding.total_exam_enrollments) * 100
-            line = {}
-            line['learning_unit_year'] = score_encoding.learning_unit_year
-            line['exam_enrollments_encoded'] = score_encoding.exam_enrollments_encoded
-            line['total_exam_enrollments'] = score_encoding.total_exam_enrollments
-            line['tutor'] = coord_grouped_by_learning_unit.get(score_encoding.learning_unit_year.id,
-                                                               None)
-            line['progress'] = "{0:.0f}".format(progress)
-            line['progress_int'] = progress
+            line = {'learning_unit_year': score_encoding.learning_unit_year,
+                    'exam_enrollments_encoded': score_encoding.exam_enrollments_encoded,
+                    'total_exam_enrollments': score_encoding.total_exam_enrollments,
+                    'tutor': coord_grouped_by_learning_unit.get(score_encoding.learning_unit_year.id, None),
+                    'progress': "{0:.0f}".format(progress),
+                    'progress_int': progress}
             data.append(line)
 
     if incomplete_encodings_only:
         # Filter by completed encodings (100% complete)
         data = [line for line in data if line['exam_enrollments_encoded'] != line['total_exam_enrollments']]
 
-    if tutor_id == NOBODY: # LearningUnit without attribution
+    if tutor_id == NOBODY:  # LearningUnit without attribution
         data = [line for line in data if line['tutor'] is None]
 
     # Creating list of all tutors
@@ -585,7 +580,7 @@ def get_data_pgmer(request,
         if tutor and tutor not in all_tutors:
             all_tutors.append(tutor)
     all_tutors = sorted(all_tutors, key=lambda k: k.person.last_name.upper() if k.person.last_name else ''
-                                                + k.person.first_name.upper() if k.person.first_name else '')
+                                                  + k.person.first_name.upper() if k.person.first_name else '')
 
     # Creating list of offer Years for the filter (offers year with minimum 1 record)
     all_offers = mdl.offer_year.find_by_user(request.user, academic_yr=academic_yr)
@@ -625,6 +620,9 @@ def refresh_list(request):
         return get_data(request, offer_year_id=request.GET.get('offer_year_id', None))
 
 
+@login_required
+@user_passes_test(_is_inside_scores_encodings_period, login_url=reverse_lazy('outside_scores_encodings_period'))
+@permission_required('base.can_access_scoreencoding', raise_exception=True)
 def get_data_specific_criteria(request):
     registration_id = request.POST.get('registration_id', None)
     last_name = request.POST.get('last_name', None)

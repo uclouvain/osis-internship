@@ -47,6 +47,18 @@
               </div>
               <div class="col-md-10">
                 {% trans message %} {% if email %}: {{ email }}{% endif %}
+                {% if message_add %}
+                  <ul>
+                      <li>
+                          {% trans 'if_intern_use_good_email' %}
+                      </li>
+                      <li>
+                          {% trans 'if_extern_you_can' %}
+                          <a href="{% url 'manager_informations_add_person' %}" id="lnk_manager_informations_add_person">
+                            {% trans 'manager_informations_add_person' %}</a>.
+                      </li>
+                  </ul>
+                {% endif %}
               </div>
             </div>
             <br>

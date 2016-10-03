@@ -23,21 +23,25 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.core import serializers
 from django.db import models
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
+from base.models.serializable_model import SerializableModel
 from .dissertation_role import DissertationRole
 
 
 class AdviserAdmin(admin.ModelAdmin):
     list_display = ('person', 'type')
+    raw_id_fields = ('person', )
 
 
-class Adviser(models.Model):
+class Adviser(SerializableModel):
     TYPES_CHOICES = (
-        ('PRF', _('Professor')),
-        ('MGR', _('Manager')),
+        ('PRF', _('professor')),
+        ('MGR', _('manager')),
     )
 
     person = models.OneToOneField('base.Person', on_delete=models.CASCADE)
@@ -141,8 +145,11 @@ class Adviser(models.Model):
 
 
 def search_by_person(a_person):
-    adviser = Adviser.objects.get(person=a_person)
-    return adviser
+    try:
+        adviser = Adviser.objects.get(person=a_person)
+        return adviser
+    except ObjectDoesNotExist:
+        return None
 
 
 def find_by_person(a_person):
@@ -165,3 +172,14 @@ def search_adviser(terms):
 def list_teachers():
     return Adviser.objects.filter(type='PRF')\
                           .order_by('person__last_name', 'person__first_name')
+
+
+def add(person, type_arg, available_by_email, available_by_phone, available_at_office, comment):
+    adv = Adviser(person=person,
+                  type=type_arg,
+                  available_by_email=available_by_email,
+                  available_by_phone=available_by_phone,
+                  available_at_office=available_at_office,
+                  comment=comment)
+    adv.save()
+    return adv

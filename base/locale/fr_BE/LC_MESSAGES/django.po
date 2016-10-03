@@ -741,6 +741,9 @@ msgstr "Pas de messages"
 msgid "no_result"
 msgstr "Aucun résultat!"
 
+msgid "no_receiver_error"
+msgstr "Pas de destinataire pour ce message"
+
 msgid "no_score_encoded_double_encoding_impossible"
 msgstr ""
  "Aucune nouvelle note encodée. "

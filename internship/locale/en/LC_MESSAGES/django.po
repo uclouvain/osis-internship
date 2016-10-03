@@ -244,3 +244,113 @@ msgstr	 "Third Choice"
 msgid	 "type"
 msgstr	 "Type"
 
+msgid	 "choice"
+msgstr	 "Choice"
+
+msgid	 "no_hospital"
+msgstr	 "Hospital not found"
+
+msgid	 "capacity"
+msgstr	 "capacity"
+
+msgid	 "number_first_choice"
+msgstr	 "Number of first choice"
+
+msgid	 "number_total_student"
+msgstr	 "Number of student who choose this organization"
+
+msgid "selection_currently_active"
+msgstr "The internships' selection is currently active"
+
+msgid "selection_currently_block"
+msgstr "The internships' selection is currently blocked"
+
+msgid "selected_internships"
+msgstr "Selected internships"
+
+msgid "select_speciality_change_internships"
+msgstr "Select a speciality to add or modify your choices for this internship in choice"
+
+msgid "assignations_sumup"
+msgstr "Assignations' Sum up"
+
+msgid "download_xls_file"
+msgstr "Download Excel File"
+
+msgid "download_pdf_file"
+msgstr "Download PDF File"
+
+msgid "number_of_student"
+msgstr "Number of student"
+
+msgid "internship_assignation"
+msgstr "Internships assignation"
+
+msgid "please_wait"
+msgstr "Please Wait"
+
+msgid "take_several_minutes"
+msgstr "This may take several minutes"
+
+msgid "generate_solution"
+msgstr "Generate solution"
+
+msgid	 "organizations"
+msgstr	 "Hospitals"
+
+msgid	 "statistics"
+msgstr	 "Statistics"
+
+msgid	 "errors"
+msgstr	 "Errors"
+
+msgid   "erasmus"
+msgstr  "Erasmus"
+
+msgid   "socials"
+msgstr  "Socials"
+
+msgid   "total_internships"
+msgstr  "Total Internships"
+
+msgid   "all_student"
+msgstr  "All student"
+
+msgid   "other_choice"
+msgstr  "Other choice"
+
+msgid   "erasmus_students"
+msgstr   "Erasmus students"
+
+msgid   "social_students"
+msgstr   "Social students"
+
+msgid   "normal_students"
+msgstr   "Normal students"
+
+msgid   "imposed_choices"
+msgstr  "Imposed choices"
+
+msgid   "organization_error"
+msgstr  "Hospital error"
+
+msgid   "mean_cost_student"
+msgstr  "Mean cost of student"
+
+msgid   "standard_deviation"
+msgstr  "Standard deviation"
+
+msgid   "mean_nonconsecutive_month"
+msgstr  "Mean nonconsecutive month"
+
+msgid   "total_cost_solution"
+msgstr  "Total cost of the solution"
+
+msgid   "type_internship"
+msgstr  "Type of internship"
+
+msgid   "executions"
+msgstr  "Executions"
+
+msgid   "order_postion"
+msgstr  "Sorting position"

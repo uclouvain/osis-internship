@@ -25,6 +25,13 @@
 ##############################################################################
 import os,sys
 from django.core.wsgi import get_wsgi_application
+from backoffice.queue import queue_listener, callbacks
+from base.views.score_encoding import get_json_data_scores_sheets
+import logging
+from django.conf import settings
+from pika.exceptions import ConnectionClosed, AMQPConnectionError, ChannelClosed
+
+LOGGER = logging.getLogger(settings.DEFAULT_LOGGER)
 
 #The two following lines are mandatory for working with mod_wsgi on the servers
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/..' )
@@ -33,3 +40,19 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../backoffice')
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backoffice.settings")
 application = get_wsgi_application()
+
+# Queue in which are sent scores sheets json data
+paper_sheet_queue = 'PAPER_SHEET_QUEUE'
+try:
+    queue_listener.listen_queue(paper_sheet_queue, get_json_data_scores_sheets)
+except (ConnectionClosed, ChannelClosed, AMQPConnectionError, ConnectionError) as e:
+    LOGGER.exception("Couldn't connect to the QueueServer")
+
+# Thread in which is running the listening of the queue used to migrate data (from Osis-portal to Osis)
+queue_for_migration = 'osis' # Data from Osis-portal to insert/update in Osis
+try:
+    queue_listener.SynchronousConsumerThread(queue_for_migration, callbacks.insert_or_update).start()
+except (ConnectionClosed, ChannelClosed, AMQPConnectionError, ConnectionError) as e:
+    LOGGER.exception("Couldn't connect to the QueueServer")
+
+
