@@ -29,15 +29,26 @@ from django.db import models
 from django.core import serializers
 import uuid
 from pika.exceptions import ChannelClosed, ConnectionClosed
-from backoffice.queue import queue_actions
+from backoffice.queue import queue_sender
 
 QUEUE_NAME = "osis_portal"
 LOGGER = logging.getLogger(settings.DEFAULT_LOGGER)
 
 
+class SerializableQuerySet(models.QuerySet):
+    # Called in case of bulk delete
+    # Override this function is important to force to call the delete() function of a model's instance
+    def delete(self, *args, **kwargs):
+        for obj in self:
+            obj.delete()
+
+
 class SerializableModelManager(models.Manager):
     def get_by_natural_key(self, uuid):
         return self.get(uuid=uuid)
+
+    def get_queryset(self):
+        return SerializableQuerySet(self.model, using=self._db)
 
 
 class SerializableModel(models.Model):
@@ -48,8 +59,15 @@ class SerializableModel(models.Model):
     def save(self, *args, **kwargs):
         super(SerializableModel, self).save(*args, **kwargs)
         try:
-            queue_actions.send_message(QUEUE_NAME, serialize_objects([self]))
-        except (ChannelClosed, ConnectionClosed) :
+            queue_sender.send_message(QUEUE_NAME, format_data_for_migration([self]))
+        except (ChannelClosed, ConnectionClosed):
+            LOGGER.warning('QueueServer is not installed or not launched')
+
+    def delete(self, *args, **kwargs):
+        super(SerializableModel, self).delete(*args, **kwargs)
+        try:
+            queue_sender.send_message(QUEUE_NAME, format_data_for_migration([self], to_delete=True))
+        except (ChannelClosed, ConnectionClosed):
             LOGGER.warning('QueueServer is not installed or not launched')
 
     def natural_key(self):
@@ -60,6 +78,17 @@ class SerializableModel(models.Model):
 
     class Meta:
         abstract = True
+
+
+def format_data_for_migration(objects, to_delete=False):
+    """
+    Format data to fit to a specific structure.
+    :param objects: A list of model instances.
+    :param to_delete: True if these records are to be deleted on the Osis-portal side.
+                      False if these records are to insert or update on the OPsis-portal side.
+    :return: A structured dictionary containing the necessary data to migrate from Osis to Osis-portal.
+    """
+    return {'serialized_objects': serialize_objects(objects), 'to_delete': to_delete}
 
 
 def serialize_objects(objects, format='json'):

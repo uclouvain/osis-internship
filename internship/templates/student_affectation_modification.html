@@ -40,6 +40,8 @@
         <h2>{{ information.student.person.last_name }} {{ information.student.person.first_name }}</h2>
     </div>
 
+    {% include "template_messages.html" %}
+
     <form method="post" action="{% url 'student_save_affectation_modification' information.student.registration_id %}">
         {% csrf_token %}
         <div align="right">
@@ -53,6 +55,23 @@
                     <label>{% trans 'period' %}</label><br>
                     <input type="text" size="5" name="period" value="{{ period | default_if_none:'-' }}" disabled>
                     <input class="hidden" name="period" value={{ period }}>
+                </div>
+                <div class="col-md-3">
+                    <label>{% trans 'speciality' %}</label><br>
+                    <select name="speciality">
+                        <option value=0>--</option>
+                        {% for speciality in specialities %}
+                            <option value="{{speciality.name}}" {% for information in informations %}
+                                {% if information.period == period %}
+                                    {% if speciality.name == information.speciality.name %}
+                                    selected
+                                    {% endif %}
+                                {% endif %}
+                            {%endfor%}>
+                                {{speciality.acronym}}
+                            </option>
+                        {% endfor %}
+                    </select>
                 </div>
                 <div class="col-md-5">
                     <label>{% trans 'organization' %}</label><br>
@@ -68,23 +87,6 @@
                                         {% endif %}
                                     {%endfor%}>
                                 {{organization.reference}} {{organization.name}}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label>{% trans 'speciality' %}</label><br>
-                    <select name="speciality">
-                        <option value=0>--</option>
-                        {% for speciality in specialities %}
-                            <option value="{{speciality.name}}" {% for information in informations %}
-                                {% if information.period == period %}
-                                    {% if speciality.name == information.speciality.name %}
-                                    selected
-                                    {% endif %}
-                                {% endif %}
-                            {%endfor%}>
-                                {{speciality.name}}
                             </option>
                         {% endfor %}
                     </select>

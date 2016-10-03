@@ -24,5 +24,6 @@
 #
 ##############################################################################
 
-from backoffice.queue import queue_actions
-from backoffice.queue import queue
+from backoffice.queue import callbacks
+from backoffice.queue import queue_listener
+from backoffice.queue import queue_sender

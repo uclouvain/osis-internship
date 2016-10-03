@@ -56,7 +56,7 @@
                                             {% endfor %}
                                         </tr>
                                         {% for organization in organizations %}
-                                            {% if organization.speciality.name == speciality.name %}
+                                            {% if organization.speciality.acronym == speciality.acronym %}
                                               <tr>
                                                    <td style="text-align: center; border-right: 1px solid black;">
                                                        {{organization.organization.reference}}
@@ -69,7 +69,7 @@
                                                                         {% if key == period.name %}
                                                                             {% for affectation in affectations %}
                                                                                 {% if affectation.organization.reference == organization.organization.reference %}
-                                                                                    {{affectation.student.person.last_name.strip}}<br/>
+                                                                                    {{affectation.student.person.last_name.strip}} ({{affectation.choice.lower}})<br/>
                                                                                 {% endif %}
                                                                             {% endfor %}
                                                                         {% endif %}
