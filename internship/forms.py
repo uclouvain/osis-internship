@@ -36,15 +36,17 @@ class OrganizationForm(ModelForm):
         model = Organization
         fields = ['name', 'website', 'reference']
 
+
 class OrganizationAddressForm(ModelForm):
     class Meta:
         model = OrganizationAddress
         fields = ['location', 'postal_code', 'city', 'country', 'latitude', 'longitude']
+
 
 class PeriodForm(ModelForm):
     class Meta:
         model = Period
         fields = ['name', 'date_start', 'date_end']
         widgets = {'date_start': forms.DateInput(format='%d/%m/%Y'),
-                'date_start': forms.DateInput(format='%d/%m/%Y'),
-        }
+                   'date_end': forms.DateInput(format='%d/%m/%Y'),
+                   }

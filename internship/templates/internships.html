@@ -3,196 +3,231 @@
 {% load i18n %}
 
 {% comment "License" %}
- * OSIS stands for Open Student Information System. It's an application
- * designed to manage the core business of higher education institutions,
- * such as universities, faculties, institutes and professional schools.
- * The core business involves the administration of students, teachers,
- * courses, programs and so on.
- *
- * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * A copy of this license - GNU General Public License - is available
- * at the root of the source code of this program.  If not,
- * see http://www.gnu.org/licenses/.
+    * OSIS stands for Open Student Information System. It's an application
+    * designed to manage the core business of higher education institutions,
+    * such as universities, faculties, institutes and professional schools.
+    * The core business involves the administration of students, teachers,
+    * courses, programs and so on.
+    *
+    * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+    *
+    * This program is free software: you can redistribute it and/or modify
+    * it under the terms of the GNU General Public License as published by
+    * the Free Software Foundation, either version 3 of the License, or
+    * (at your option) any later version.
+    *
+    * This program is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    * GNU General Public License for more details.
+    *
+    * A copy of this license - GNU General Public License - is available
+    * at the root of the source code of this program.  If not,
+    * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
 {% block breadcrumb %}
-<li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-<li><a href="{% url 'internships_home' %}">{% trans 'internships_managment' %}</a></li>
-  <li class="active">{% trans 'all_internships' %}</li>
+    <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
+    <li><a href="{% url 'internships_home' %}">{% trans 'internships_managment' %}</a></li>
+    <li class="active">{% trans 'all_internships' %}</li>
 {% endblock %}
 {% block content %}
-  <div class="page-header">
-    <h2>{% trans 'internships' %}</h2>
-  </div>
-  <table style="height:100%; width:100%;">
-      <thead>
+    <div class="page-header">
+        <h2>{% trans 'internships' %}</h2>
+    </div>
+    <table style="height:100%; width:100%;">
+        <thead>
         <tr>
             <th style="text-align:center; width:50%;">{% trans 'organization' %}</th>
         </tr>
-      </thead>
-      <tbody>
+        </thead>
+        <tbody>
         <form action="{%url 'internships' %}" method="get">
-          <tr>
-            <td style="text-align:center; width:50%;">
-              <select name="organization_sort" onChange="javascript: this.form.submit();">
-               <option value="0">{% trans 'choose_a_hospital' %}</option>
-               {% for organization in all_organizations %}
-                  <option value="{{ organization.name }}"
-                  {% if organization.name == organization_sort_value %}selected{% endif %}>
-                      {{ organization.reference }} - {{ organization.name }}
-                  </option>
-               {% endfor %}
-              </select>
-            </td>
-          </tr>
+            <tr>
+                <td style="text-align:center; width:50%;">
+                    <select name="organization_sort" onChange="javascript: this.form.submit();">
+                        <option value="0">{% trans 'choose_a_hospital' %}</option>
+                        {% for organization in all_organizations %}
+                            <option value="{{ organization.name }}"
+                                    {% if organization.name == organization_sort_value %}selected{% endif %}>
+                                {{ organization.reference }} - {{ organization.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <input type="hidden" name="speciality_sort" value="{{speciality_sort_value}}"/>
+                </td>
+            </tr>
         </form>
-      </tbody>
-  </table>
-  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#pnl_upload_internship"
-          id="bt_upload_score_modal">
-    <span class="glyphicon glyphicon-upload" aria-hidden="true"></span> {% trans 'import_internships' %}
-  </button>
-  <div class="panel panel-default">
-    <div class="panel-body">
-        <ul class="nav nav-tabs">
-          {% for luy in all_speciality %}
-            <li><a data-toggle="tab" href="#tab_{{luy.tab}}">{{luy.name}}</a></li>
-          {% endfor %}
-            <li><a data-toggle="tab" href="#tab_choice">{% trans 'internship_choice' %}</a></li>
-        </ul>
-        {% csrf_token %}
-        <div class="tab-content">
-          {% for luy in all_speciality %}
-            <div id="tab_{{luy.tab}}" class="tab-pane fade in active">
-              <h3>{{luy.name}}</h3>
-              <div class="panel panel-default">
-                <div class="tab-content">
-                  <div role="tabpanel" class="tab-pane fade in active" id="profile">
-                    <table class="table table-hover">
-                        <thead>
-                          <tr>
-                            <th align="center">{% trans 'organization' %}</th>
-                            <th align="center">{% trans 'student_max' %}</th>
-                            <th align="center">{% trans 'Nombre de 1er choix' %}</th>
-                            <th align="center">{% trans 'Nombre d\'autres choix faits' %}</th>
-                            <th align="center">{% trans 'Détails' %}</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {% for internship in all_internships %}
-                          {% if internship.speciality == luy %}
-                            <tr>
-                              <td>
-                                {{ internship.organization.reference }} - {{ internship.organization }}
-                              </td>
-                              <td align="center">
-                                {{ internship.maximum_enrollments }}
-                              </td>
-                              <td align="center">
-                                {{ internship.number_first_choice }}
-                              </td>
-                              <td align="center">
-                                {{ internship.number_other_choice }}
-                              </td>
-                              <td align="center">
-                                <a class="btn btn-info" target="_blank" id="lnk_students_choice{{internship.id}}"
-                                  href="{% url 'internship_detail_student_choice' internship.id %}">
+        </tbody>
+    </table>
+    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#pnl_upload_internship"
+            id="bt_upload_score_modal">
+        <span class="glyphicon glyphicon-upload" aria-hidden="true"></span> {% trans 'import_internships' %}
+    </button>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <ul class="nav nav-tabs">
+                {% for luy in all_speciality %}
+                    <li
+                            {% if not speciality_sort_value %}
+                                {% if forloop.first %}
+                                    class="active"
+                                {% endif %}
+                            {%endif%}
+                    ><a data-toggle="tab" href="#tab_{{luy.tab}}">{{luy.name}}</a></li>
+                {% endfor %}
+                <li
+                        {%if speciality_sort_value%}
+                            class="active"
+                        {%endif%}
+                ><a data-toggle="tab" href="#tab_choice">{% trans 'internship_choice' %}</a></li>
+            </ul>
+            {% csrf_token %}
+            <div class="tab-content">
+                {% for luy in all_speciality %}
+                    <div id="tab_{{luy.tab}}" class="tab-pane fade
+                                              {% if not speciality_sort_value %}
+                                                {% if forloop.first %}
+                                                  in active
+                                                {% endif %}
+                                              {%endif%}">
+                        <h3>{{luy.name}}</h3>
+                        <div class="panel panel-default">
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane fade in active" id="profile">
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th align="center">{% trans 'organization' %}</th>
+                                            <th align="center">{% trans 'student_max' %}</th>
+                                            <th align="center">{% trans 'Nombre de 1er choix' %}</th>
+                                            <th align="center">{% trans 'Nombre d\'autres choix faits' %}</th>
+                                            <th align="center">{% trans 'Détails' %}</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for internship in all_internships %}
+                                            {% if internship.speciality == luy %}
+                                                <tr>
+                                                    <td>
+                                                        {{ internship.organization.reference }} - {{ internship.organization }}
+                                                    </td>
+                                                    <td align="center">
+                                                        {{ internship.maximum_enrollments }}
+                                                    </td>
+                                                    <td align="center">
+                                                        {{ internship.number_first_choice }}
+                                                    </td>
+                                                    <td align="center">
+                                                        {{ internship.number_other_choice }}
+                                                    </td>
+                                                    <td align="center">
+                                                        <a class="btn btn-info" target="_blank" id="lnk_students_choice{{internship.id}}"
+                                                           href="{% url 'internship_detail_student_choice' internship.id %}">
                                   <span class="glyphicon glyphicon-search" aria-hidden="true">
                                   </span>
-                                </a>
-                              </td>
-                            </tr>
-                          {% endif %}
-                          {% endfor %}
-                        </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          {%endfor%}
-          <div id="tab_choice" class="tab-pane fade in active">
-            <div class="panel panel-default">
-              <div class="tab-content">
-                <div role="tabpanel" class="tab-pane fade in active" id="profile">
-                  <table class="table table-hover">
-                      <thead>
-                        <tr>
-                          <th align="center">{% trans 'organization' %}</th>
-                          <th align="center">{% trans 'student_max' %}</th>
-                          <th align="center">{% trans 'Nombre de 1er choix' %}</th>
-                          <th align="center">{% trans 'Nombre d\'autres choix faits' %}</th>
-                          <th align="center">{% trans 'Détails' %}</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {% for internship in all_internships %}
-                        {% if internship.speciality == luy %}
-                          <tr>
-                            <td>
-                              {{ internship.organization.reference }} - {{ internship.organization }}
-                            </td>
-                            <td align="center">
-                              {{ internship.maximum_enrollments }}
-                            </td>
-                            <td align="center">
-                              {{ internship.number_first_choice }}
-                            </td>
-                            <td align="center">
-                              {{ internship.number_other_choice }}
-                            </td>
-                            <td align="center">
-                              <a class="btn btn-info" target="_blank" id="lnk_students_choice{{internship.id}}"
-                                href="{% url 'internship_detail_student_choice' internship.id %}">
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {%endfor%}
+                <div id="tab_choice" class="tab-pane fade
+            {% if speciality_sort_value %}
+              in active
+            {%endif%}">
+                    <div class="panel panel-default">
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane fade in active" id="profile">
+                                <table class="table table-hover">
+                                    <form action="{%url 'internships' %}" method="get">
+                                        <select name="speciality_sort" onChange="javascript: this.form.submit();">
+                                            <option value="0">--</option>
+                                            {% for spec in non_mandatory_speciality %}
+                                                <option value="{{ spec.name }}"
+                                                        {% if spec.name == speciality_sort_value %}selected{% endif %}>
+                                                    {{ spec.name }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                        <input type="hidden" name="organization_sort" value="{{organization_sort_value}}"/>
+                                    </form>
+                                    <thead>
+                                    <tr>
+                                        {% if not speciality_sort_value %}
+                                            <th align="center">{% trans 'speciality' %}</th>
+                                        {% endif %}
+                                        <th align="center">{% trans 'organization' %}</th>
+                                        <th align="center">{% trans 'student_max' %}</th>
+                                        <th align="center">{% trans 'Nombre de 1er choix' %}</th>
+                                        <th align="center">{% trans 'Nombre d\'autres choix faits' %}</th>
+                                        <th align="center">{% trans 'Détails' %}</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for internship in all_non_mandatory_internships %}
+                                        <tr>
+                                            {% if not speciality_sort_value %}
+                                                <td>{{ internship.speciality.name }}</td>
+                                            {% endif %}
+                                            <td>
+                                                {{ internship.organization.reference }} - {{ internship.organization }}
+                                            </td>
+                                            <td align="center">
+                                                {{ internship.maximum_enrollments }}
+                                            </td>
+                                            <td align="center">
+                                                {{ internship.number_first_choice }}
+                                            </td>
+                                            <td align="center">
+                                                {{ internship.number_other_choice }}
+                                            </td>
+                                            <td align="center">
+                                                <a class="btn btn-info" target="_blank" id="lnk_students_choice{{internship.id}}"
+                                                   href="{% url 'internship_detail_student_choice' internship.id %}">
                                 <span class="glyphicon glyphicon-search" aria-hidden="true">
                                 </span>
-                              </a>
-                            </td>
-                          </tr>
-                        {% endif %}
-                        {% endfor %}
-                      </tbody>
-                  </table>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
         </div>
-      </div>
 
-   <div class="modal fade" id="pnl_upload_internship" tabindex="-1" role="dialog" aria-labelledby="uploadScoresLabel">
-       <div class="modal-dialog" role="document">
-           <div class="modal-content">
-               <form method="post" enctype="multipart/form-data" action="{% url 'upload_internship' %}">
-                   {% csrf_token %}
-                   <div class="modal-header">
-                       <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="bt_close_upload_score_modal"><span aria-hidden="true">&times;</span></button>
-                       <h4 class="modal-title" id="uploadScroresLabel">{% trans 'internships_injection' %}</h4>
-                   </div>
-                   <div class="modal-body">
-                       <label for="fle_scores_input_file" class="btn btn-default" >{% trans 'choose_file' %}</label>
-                       <input type="file" id="fle_scores_input_file" name="file" style="display:none" />
-                       <div id="pnl_selectedFiles"></div>
-                       <p class="help-block">{% trans 'help_pnl_selectedfiles_internships' %}</p>
-                   </div>
-                   <div class="modal-footer">
-                       <button type="button" class="btn btn-default" data-dismiss="modal" id="bt_cancel_upload_score_modal">{% trans 'cancel' %}</button>
-                       <input type="submit" class="btn btn-primary" value="{% trans 'inject'%}" onclick="document.getElementById('files').style.visibility='visible'" id="bt_submit_upload_score_modal"/>
-                   </div>
-               </form>
-           </div>
-       </div>
-   </div>
-     </div>
+        <div class="modal fade" id="pnl_upload_internship" tabindex="-1" role="dialog" aria-labelledby="uploadScoresLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form method="post" enctype="multipart/form-data" action="{% url 'upload_internship' %}">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="bt_close_upload_score_modal"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="uploadScroresLabel">{% trans 'internships_injection' %}</h4>
+                        </div>
+                        <div class="modal-body">
+                            <label for="fle_scores_input_file" class="btn btn-default" >{% trans 'choose_file' %}</label>
+                            <input type="file" id="fle_scores_input_file" name="file" style="display:none" />
+                            <div id="pnl_selectedFiles"></div>
+                            <p class="help-block">{% trans 'help_pnl_selectedfiles_internships' %}</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal" id="bt_cancel_upload_score_modal">{% trans 'cancel' %}</button>
+                            <input type="submit" class="btn btn-primary" value="{% trans 'inject'%}" onclick="document.getElementById('files').style.visibility='visible'" id="bt_submit_upload_score_modal"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

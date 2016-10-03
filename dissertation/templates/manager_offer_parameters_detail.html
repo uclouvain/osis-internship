@@ -30,7 +30,7 @@
   <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
   <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'dissertations' %}</a></li>
   <li><a href="{% url 'manager_offer_parameters' %}" id="lnk_parameters">{% trans 'parameters' %}</a></li>
-  <li class="active">{% trans 'parameters' %} {{ offer_proposition.title }}</li>
+  <li class="active">{{ offer_proposition.acronym }}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
@@ -47,93 +47,126 @@
       </div>
       <div class="panel-body">
         <div class="row">
-          <div class="col-md-4">
-            <label>{% trans 'date_start_visibility_proposition'%}</label> :
-          </div>
-          <div class="col-md-2">
-            {{ offer_proposition.start_visibility_proposition }}
+          <div class="col-md-8">
+            <label>{% trans 'date_start_visibility_proposition'%} :</label>
+          <br>
+            {{ offer_proposition.start_visibility_proposition|date:"d/m/Y" }}
           </div>
         </div>
         <div class="row">
-          <div class="col-md-4">
+          <div class="col-md-8">
             <label>{% trans 'date_end_visibility_proposition'%}</label> :
+          <br>
+            {{ offer_proposition.end_visibility_proposition|date:"d/m/Y" }}
           </div>
-          <div class="col-md-2">
-            {{ offer_proposition.end_visibility_proposition }}
-          </div>
-          <div class="col-md-4">
+        </div>
+        <div class="row">
+          <div class="col-md-8">
             <label>{% trans 'in_visibility_proposition' %}</label> :
-          </div>
-          <div class="col-md-1">
-             {{ offer_proposition.in_periode_visibility_proposition|yesno:"Yes,No" }}
+          <br>
+            {{ offer_proposition.in_periode_visibility_proposition|yesno:_("yes,no") }}
           </div>
         </div>
       </div>
       <div class="panel-body">
         <div class="row">
-          <div class="col-md-4">
+          <div class="col-md-8">
             <label>{% trans 'date_start_visibility_dissertation'%}</label> :
-          </div>
-          <div class="col-md-2">
-              <label>{{ offer_proposition.start_visibility_dissertation }}</label>
+          <br>
+           {{ offer_proposition.start_visibility_dissertation|date:"d/m/Y" }}
           </div>
         </div>
         <div class="row">
-          <div class="col-md-4">
+          <div class="col-md-8">
             <label>{% trans 'date_end_visibility_dissertation'%}</label> :
+          <br>
+            {{ offer_proposition.end_visibility_dissertation|date:"d/m/Y" }}
           </div>
-          <div class="col-md-2">
-            {{ offer_proposition.end_visibility_dissertation }}
-          </div>
-          <div class="col-md-4">
+        </div>
+        <div class="row">
+          <div class="col-md-8">
             <label>{% trans 'in_visibility_dissertation' %}</label> :
+          <br>
+            {{ offer_proposition.in_periode_visibility_dissertation|yesno:_("yes,no") }}
           </div>
-          <div class="col-md-1">
-             {{ offer_proposition.in_periode_visibility_dissertation|yesno:"Yes,No" }}
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-8">
+            <label>{% trans 'start_jury_visibility'%}</label> :
+          <br>
+           {{ offer_proposition.start_jury_visibility|date:"d/m/Y" }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <label>{% trans 'end_jury_visibility'%}</label> :
+          <br>
+            {{ offer_proposition.end_jury_visibility|date:"d/m/Y" }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <label>{% trans 'in_jury_visibility' %}</label> :
+          <br>
+            {{ offer_proposition.in_periode_jury_visibility|yesno:_("yes,no") }}
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-4">
-          <label>{% trans 'student_can_manage_readers' %}</label> :
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-8">
+            <label>{% trans 'start_edit_title'%}</label> :
+          <br>
+           {{ offer_proposition.start_edit_title|date:"d/m/Y" }}
+          </div>
         </div>
-        <div class="col-md-2">
-          {{ offer_proposition.student_can_manage_readers|yesno:"Yes,No" }}
+        <div class="row">
+          <div class="col-md-8">
+            <label>{% trans 'end_edit_title'%}</label> :
+          <br>
+            {{ offer_proposition.end_edit_title|date:"d/m/Y" }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <label>{% trans 'in_edit_title' %}</label> :
+          <br>
+            {{ offer_proposition.in_periode_edit_title|yesno:_("yes,no") }}
+          </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-4">
-          <label>{% trans 'readers_visibility_date_for_students' %}</label> :
-        </div>
-        <div class="col-md-2">
-          {{ offer_proposition.readers_visibility_date_for_students|yesno:"Yes,No" }}
-        </div>
-      </div>
-       <div class="row">
-        <div class="col-md-4">
-          <label>{% trans 'adviser_can_suggest_reader' %}</label> :
-        </div>
-        <div class="col-md-2">
-          {{ offer_proposition.adviser_can_suggest_reader|yesno:"Yes,No" }}
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-4">
-          <label>{% trans 'evaluation_first_year' %}</label> :
-        </div>
-        <div class="col-md-2">
-           {{ offer_proposition.evaluation_first_year|yesno:"Yes,No" }}
-        </div>
+      <div class="panel-body">
+          <div class="row">
+            <div class="col-md-8">
+              <label>{% trans 'student_can_manage_readers' %}</label> :
+            <br>
+              {{ offer_proposition.student_can_manage_readers|yesno:_("yes,no") }}
+            </div>
+          </div>
+           <div class="row">
+            <div class="col-md-8">
+              <label>{% trans 'adviser_can_suggest_reader' %}</label> :
+            <br>
+              {{ offer_proposition.adviser_can_suggest_reader|yesno:_("yes,no") }}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <label>{% trans 'evaluation_first_year' %}</label> :
+            <br>
+               {{ offer_proposition.evaluation_first_year|yesno:_("yes,no") }}
+            </div>
 
-      </div>
-      <div class="row">
-        <div class="col-md-4">
-          <label>{% trans 'validation_commission_exists' %}</label> :
-        </div>
-        <div class="col-md-2">
-           {{ offer_proposition.validation_commission_exists|yesno:"Yes,No" }}
-        </div>
-      </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <label>{% trans 'validation_commission_exists' %}</label> :
+            <br>
+               {{ offer_proposition.validation_commission_exists|yesno:_("yes,no") }}
+            </div>
+          </div>
     </div>
   </div>
 {% endblock %}

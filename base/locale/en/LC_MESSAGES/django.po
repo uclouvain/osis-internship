@@ -734,6 +734,9 @@ msgstr "No Messages"
 msgid "no_result"
 msgstr "No result!"
 
+msgid "no_receiver_error"
+msgstr "No receiver for this message"
+
 msgid "no_score_encoded_double_encoding_impossible"
 msgstr "No new scores encoded. The double encoding needs new scores."
 

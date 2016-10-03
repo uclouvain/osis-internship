@@ -1,0 +1,89 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+{% endcomment %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/custom.css' %}">
+<link rel="stylesheet" href="{% static 'css/dataTables.bootstrap.min.css' %}">
+{% endblock %}
+{% block breadcrumb %}
+<li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'institution' %}</a></li>
+<li><a href="{% url 'mandates' %}" id="lnk_mandates">{% trans 'mandates' %}</a></li>
+<li><a href="{% url 'mandates_list' %}" id="lnk_mandates_list">{% trans 'mandates_list' %}</a></li>
+<li class="active">{% trans 'reviewers_list' %}</li>
+{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h3>{% trans 'assistantship_mandate_renewal' %} {{ year|add:1 }}</h3>
+</div>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="table-responsive">
+        <table id="myTable" class="table table-hover table-condensed table-bordered" cellspacing="0" width="100%">
+        <thead>
+        <tr>
+        <th>{% trans 'name' %}</th>
+        <th>{% trans 'structure' %}</th>
+        <th>{% trans 'type' %}</th>
+        <th>{% trans 'role' %}</th>
+        <th>{% trans 'delete' %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for reviewer in object_list %}
+            <tr>
+            <td>{{ reviewer.person }}</td>
+            <td>{{ reviewer.structure }}</td>
+            <td>{{ reviewer.structure.type }}</td>
+            <td>{{ reviewer.role }}</td>
+            <td><a href="{% url 'reviewer_delete' reviewer.id %}"
+                   onclick="return confirm('{% trans 'delete_confirmation' %}')">
+                <button type="button" class="btn btn-link" title="{% trans 'delete'%}" id="bt_reviewer_delete">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                </button>{% trans 'delete' %}</a>
+            </td>
+        {% endfor %}
+        </tbody>
+        </table>
+        </div>
+        <a href="{% url 'reviewer_add' %}">
+            <button type="button" class="btn btn-link btn-lg" title="{% trans 'add'%}" id="bt_reviewer_add">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            </button>{% trans 'add_reviewer' %}</a>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/dataTables.bootstrap.min.js' %}"></script>
+<script>
+$(document).ready(function() {
+    $('#myTable').DataTable( {
+        stateSave: true
+        } );
+    } );
+</script>
+{% endblock %}
