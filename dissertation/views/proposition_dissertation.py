@@ -92,9 +92,7 @@ def manager_proposition_dissertation_detail(request, pk):
         filename = file.document_file.file_name
     if count_proposition_role < 1:
         proposition_role.add('PROMOTEUR', proposition.author, proposition)
-
     proposition_roles = proposition_role.search_by_proposition(proposition)
-
     return layout.render(request, 'manager_proposition_dissertation_detail.html',
                          {'proposition_dissertation': proposition,
                           'adviser': adv,
