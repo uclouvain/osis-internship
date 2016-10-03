@@ -70,7 +70,7 @@ def find_closest_past_date(dates):
 
 @login_required
 @permission_required('base.can_access_scoreencoding', raise_exception=True)
-def outside_scores_encodings_period(request):
+def outside_period(request):
     academic_calendars = list(mdl.academic_calendar.get_scores_encoding_calendars())
     closest_date = None
     if academic_calendars:
@@ -354,14 +354,14 @@ def notes_printing_all(request, tutor_id=None, offer_id=None):
 @login_required
 @user_passes_test(_is_inside_scores_encodings_period, login_url=reverse_lazy('outside_scores_encodings_period'))
 @permission_required('base.can_access_scoreencoding', raise_exception=True)
-def export_xls(request, learning_unit_year_id, academic_year_id):
+def export_xls(request, learning_unit_year_id):
     academic_year = mdl.academic_year.current_academic_year()
     is_program_manager = mdl.program_manager.is_program_manager(request.user)
     exam_enrollments = _get_exam_enrollments(request.user,
                                              learning_unit_year_id=learning_unit_year_id,
                                              academic_year=academic_year,
                                              is_program_manager=is_program_manager)
-    return export_utils.export_xls(academic_year_id, is_program_manager, exam_enrollments)
+    return export_utils.export_xls(exam_enrollments)
 
 
 def get_score_encoded(enrollments):
