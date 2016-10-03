@@ -266,12 +266,9 @@ def proposition_dissertation_detail(request, pk):
     count_use = dissertation.count_by_proposition(proposition)
     percent = count_use * 100 / proposition.max_number_student
     count_proposition_role = proposition_role.count_by_proposition(proposition)
-    try:
-        file = proposition_document_file.find_by_proposition(proposition)
+    files = proposition_document_file.find_by_proposition(proposition)
+    for file in files:
         filename = file.document_file.file_name
-    except:
-        filename = ""
-        file = ""
     if count_proposition_role < 1:
         proposition_role.add('PROMOTEUR', proposition.author, proposition)
     proposition_roles = proposition_role.search_by_proposition(proposition)
@@ -282,7 +279,6 @@ def proposition_dissertation_detail(request, pk):
                           'percent': round(percent, 2),
                           'proposition_roles': proposition_roles,
                           'count_proposition_role': count_proposition_role,
-                          'document': file,
                           'filename': filename})
 
 
