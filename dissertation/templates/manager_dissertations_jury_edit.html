@@ -37,39 +37,43 @@
 {% endblock %}
 {% block content %}
   <div class="page-header">
-    <h2>{% trans 'new_jury_dissertation' %}</h2>
+      <h2>{% trans 'new_jury_dissertation' %}</h2>
   </div>
   <div class="panel panel-default">
-    <div class="panel-body">
-      <form method="POST" class="post-form">
-        {% csrf_token %}
-        {% for field in form %}
-          <div class="row">
-            <div class="col-md-2" style="text-align: right;">
-              {% if not field.is_hidden %}
-                <label>{{ field.label }}</label>
-              {% endif %}
-            </div>
-            <div class="col-md-5">
-              {{ field }}
-            </div>
-          </div>
-          <br>
-        {% endfor %}
-          <div class="row">
-            <div class="col-md-10 col-md-offset-2">
-              {% trans 'if_unavailable_adviser' %}
-                <a href="{% url 'manager_informations_add' %}" id="lnk_manager_informations_add" class=""
-                    role="button" title="{% trans 'manager_informations_add'%}">{% trans 'add_advisers' %}</a>
-            </div>
-          </div>
-          <br><br>
-          <div class="row">
-            <div class="col-md-10 col-md-offset-2">
-                <button type="submit" class="save btn btn-primary">{% trans 'save' %}</button>
-            </div>
-          </div>
-      </form>
-    </div>
+      <div class="panel-body">
+          <form method="POST" class="post-form">
+              {% csrf_token %}
+              {{  form.dissertation }}
+              <div class="row">
+                  <div class="col-md-10 col-md-offset-1 form-group">
+                      <label for="txt_status" {% if form.status.errors %} style="color:red;" {% endif %}>{% trans 'status' %}</label>
+                      <select class="form-control" id="txt_status"  name="status" style="margin:-6px;" required>
+                          <option value={{ form.status }}
+                      </select>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-md-10 col-md-offset-1 form-group">
+                      <label for="txt_adviser" {% if form.adviser.errors %} style="color:red;" {% endif %}>{% trans 'adviser' %}</label>
+                      <select class="form-control" id="txt_adviser"  name="adviser" style="margin:-6px;" required>
+                          <option value={{ form.adviser }}
+                      </select>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-md-8 col-md-offset-1">
+                      {% trans 'if_unavailable_adviser' %}
+                      <a href="{% url 'informations_add' %}" id="lnk_informations_add" class=""
+                         title="{% trans 'informations_add'%}">{% trans 'add_advisers' %}</a>
+                  </div>
+              </div>
+              <br>
+              <div class="row">
+                  <div class="col-md-2 pull-right">
+                      <button type="submit" class="save btn btn-primary">{% trans 'save' %}</button>
+                  </div>
+              </div>
+          </form>
+      </div>
   </div>
 {% endblock %}
