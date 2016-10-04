@@ -91,3 +91,6 @@ def find_by_offer(offers):
 
 def find_by_offer_year(offer_y):
     return Student.objects.filter(offerenrollment__offer_year=offer_y)
+
+def find_by_id(student_id):
+    return Student.objects.get(pk=student_id)
