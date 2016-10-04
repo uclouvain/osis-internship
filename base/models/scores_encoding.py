@@ -37,6 +37,7 @@ class ScoresEncodingAdmin(admin.ModelAdmin):
     search_fields = ['pgm_manager_person__last_name', 'pgm_manager_person__first_name']
 
 
+# Mapping of a view.
 class ScoresEncoding(models.Model):
     id = models.BigIntegerField(primary_key=True)
     program_manager = models.ForeignKey('ProgramManager', on_delete=models.DO_NOTHING)
