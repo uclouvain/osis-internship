@@ -746,6 +746,9 @@ def dissertations_jury_new(request, pk):
                 dissertation_update.add(request, dissert, dissert.status, justification=justification)
                 dissertation_role.add(status, adv, diss)
                 return redirect('dissertations_detail', pk=dissert.pk)
+            else:
+                form = ManagerDissertationRoleForm(initial={'dissertation': dissert})
+                return layout.render(request, 'dissertations_jury_edit.html', {'form': form, 'dissert': dissert})
         else:
             form = ManagerDissertationRoleForm(initial={'dissertation': dissert})
             return layout.render(request, 'dissertations_jury_edit.html', {'form': form, 'dissert': dissert})
