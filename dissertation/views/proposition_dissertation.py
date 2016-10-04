@@ -152,9 +152,11 @@ def manager_proposition_dissertations_jury_new(request, pk):
             elif count_proposition_role < 4:
                 proposition_role.add(status, adv, prop)
             return redirect('manager_proposition_dissertation_detail', pk=prop_dissert.pk)
+        else:
+            form = ManagerPropositionRoleForm(initial={'proposition_dissertation': prop_dissert})
     else:
         form = ManagerPropositionRoleForm(initial={'proposition_dissertation': prop_dissert})
-        return layout.render(request, 'manager_proposition_dissertations_jury_edit.html', {'form': form})
+    return layout.render(request, 'manager_proposition_dissertations_jury_edit.html', {'form': form})
 
 
 @login_required
@@ -383,9 +385,11 @@ def proposition_dissertations_jury_new(request, pk):
                 elif count_proposition_role < 4:
                     proposition_role.add(status, adv, prop)
                 return redirect('proposition_dissertation_detail', pk=prop_dissert.pk)
+            else:
+                form = ManagerPropositionRoleForm(initial={'proposition_dissertation': prop_dissert})
         else:
             form = ManagerPropositionRoleForm(initial={'proposition_dissertation': prop_dissert})
-            return layout.render(request, 'proposition_dissertations_jury_edit.html', {'form': form})
+        return layout.render(request, 'proposition_dissertations_jury_edit.html', {'form': form})
     else:
         return redirect('proposition_dissertation_detail', pk=prop_dissert.pk)
 
