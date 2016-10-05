@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from base.models.serializable_model import SerializableModel
 from django.contrib import admin
 from django.db import models
 from django.db.models import Q
@@ -35,7 +36,7 @@ class PropositionDissertationAdmin(admin.ModelAdmin):
     raw_id_fields = ('creator', )
 
 
-class PropositionDissertation(models.Model):
+class PropositionDissertation(SerializableModel):
     TYPES_CHOICES = (
         ('RDL', _('litterature_review')),
         ('EMP', _('empirical_research')),
