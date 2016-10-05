@@ -153,3 +153,7 @@ def get_created_for_teacher(adviser):
                                           .filter(active=True)\
                                           .exclude(author=adviser)\
                                           .distinct()
+
+
+def find_by_id(proposition_id):
+    return PropositionDissertation.objects.get(pk=proposition_id)

@@ -23,15 +23,47 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from dissertation.models import adviser
-from dissertation.models import dissertation
-from dissertation.models import dissertation_document_file
-from dissertation.models import dissertation_group
-from dissertation.models import dissertation_location
-from dissertation.models import dissertation_role
-from dissertation.models import dissertation_update
-from dissertation.models import faculty_adviser
-from dissertation.models import offer_proposition
-from dissertation.models import proposition_dissertation
-from dissertation.models import proposition_document_file
-from dissertation.models import proposition_role
+
+from django.db import models
+from django.contrib import admin
+from django.contrib.auth.models import User
+
+
+class DissertationDocumentFile(models.Model):
+    dissertation = models.ForeignKey('Dissertation')
+    document_file = models.ForeignKey('osis_common.documentFile')
+
+
+def search(dissertation=None, description=None):
+    out = None
+    queryset = DissertationDocumentFile.objects.order_by('document_file__creation_date')
+    if dissertation:
+        queryset = queryset.filter(dissertation=dissertation)
+    if description:
+        queryset = queryset.filter(document_file__description=description)
+    if dissertation or description:
+        out = queryset
+    return out
+
+
+def find_first(dissertation=None, description=None):
+    results = search(dissertation, description)
+    if results.exists():
+        return results[0]
+    return None
+
+
+def find_by_document(document_file):
+    return DissertationDocumentFile.objects.filter(document_file=document_file)
+
+
+def find_by_dissertation(dissertation):
+    return DissertationDocumentFile.objects.filter(dissertation=dissertation)
+
+
+def find_by_id(dissertation_id):
+    return DissertationDocumentFile.objects.get(dissertation__id=dissertation_id)
+
+
+
+

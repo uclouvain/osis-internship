@@ -25,7 +25,7 @@ def set_uuid_field(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dissertation', '0019_set_adviser_uuid_not_nullable'),
+        ('dissertation', '0021_dissertationdocumentfile'),
     ]
 
     operations = [

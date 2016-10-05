@@ -225,3 +225,7 @@ def get_next_status(dissert, operation):
 
     else:
         return dissert.status
+
+
+def find_by_id(dissertation_id):
+    return Dissertation.objects.get(pk=dissertation_id)

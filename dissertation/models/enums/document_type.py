@@ -23,15 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from dissertation.models import adviser
-from dissertation.models import dissertation
-from dissertation.models import dissertation_document_file
-from dissertation.models import dissertation_group
-from dissertation.models import dissertation_location
-from dissertation.models import dissertation_role
-from dissertation.models import dissertation_update
-from dissertation.models import faculty_adviser
-from dissertation.models import offer_proposition
-from dissertation.models import proposition_dissertation
-from dissertation.models import proposition_document_file
-from dissertation.models import proposition_role
+
+PROPOSITION_DOCUMENT = 'PROPOSITION_DOCUMENT'
+DISSERTATION_DOCUMENT = 'DISSERTATION_DOCUMENT'
+
+DOCUMENT_TYPE_CHOICES = ((PROPOSITION_DOCUMENT, 'proposition_document', '', ''),
+                         (DISSERTATION_DOCUMENT, 'dissertation_document', '', ''))
+
+
+def find(document_type):
+    for l in DOCUMENT_TYPE_CHOICES:
+        if document_type in l:
+            return l
