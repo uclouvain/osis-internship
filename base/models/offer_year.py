@@ -27,6 +27,7 @@ from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 from base.models import offer, program_manager, academic_year
+from base.models.serializable_model import SerializableModel
 
 
 class OfferYearAdmin(admin.ModelAdmin):
@@ -44,7 +45,7 @@ GRADE_TYPES = (
     ('DOCTORATE', _('ph_d')))
 
 
-class OfferYear(models.Model):
+class OfferYear(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     offer = models.ForeignKey('Offer')
@@ -68,6 +69,7 @@ class OfferYear(models.Model):
     phone = models.CharField(max_length=30, blank=True, null=True)
     fax = models.CharField(max_length=30, blank=True, null=True)
     campus = models.ForeignKey('Campus', blank=True, null=True)
+    grade_type = models.ForeignKey('reference.GradeType', blank=True, null=True)
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.acronym)
@@ -175,5 +177,5 @@ def find_by_user(user, academic_yr):
     return OfferYear.objects.filter(pk__in=offer_year_ids).order_by('acronym')
 
 
-def find_by_offer(off):
-    return OfferYear.objects.filter(offer=off)
+def find_by_offer(offers):
+    return OfferYear.objects.filter(offer__in=offers)

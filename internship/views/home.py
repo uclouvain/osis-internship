@@ -31,6 +31,12 @@ from internship.models import InternshipOffer, InternshipStudentInformation, Org
 @login_required
 @permission_required('internship.can_access_internship', raise_exception=True)
 def internships_home(request):
+    """
+        The function of the home page :
+        check if the user is a student and if internships are selectables.
+        Also check if the students and organizations have their latitude/longitude,
+        if not, compute it (function present in the OrganizationAddress' model)
+    """
     student = mdl.student.find_by(person_username=request.user)
     #Check if the user is a student, if not the noma is not requiered so it's 0
     if len(student) > 0:
@@ -56,7 +62,7 @@ def internships_home(request):
     OrganizationAddress.find_latitude_longitude(student_informations)
     OrganizationAddress.find_latitude_longitude(organization_informations)
 
-    return render(request, "internships_home.html", {'section':   'internship',
-                                                     'noma':      noma,
+    return render(request, "internships_home.html", {'section': 'internship',
+                                                     'noma': noma,
                                                      'blockable': blockable
-                                                    })
+                                                     })

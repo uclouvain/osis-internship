@@ -1,7 +1,7 @@
 ### Lisibilité du code :
 - Séparation des classes: deux lignes vides
-- Séparation des fonctions: une ligne vide
-- print() interdit. Retirez-les avant le pull request
+- Séparation des methodes de class: une ligne vide
+- Séparation des fonctions: deux lignes vides
 
 ### Documentation du code :
 - Documenter les fonctions (paramètres, fonctionnement, ce qu'elle renvoie)

@@ -26,11 +26,56 @@
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
-from internship.models import InternshipChoice, InternshipStudentInformation, InternshipSpeciality
+from internship.models import InternshipChoice, InternshipStudentInformation, \
+		InternshipOffer, InternshipStudentAffectationStat, \
+		Organization, InternshipSpeciality, Period
 
 from django.utils.translation import ugettext_lazy as _
+
+from internship.views.place import set_organization_address, sort_organizations
+
+def set_number_choices(student_informations):
+    """
+        Function to set the variable number_choices for the student in the list
+        to check if he has the right number of choice.
+        Param :
+            student_informations : the list of students present in InternshipStudentInformation
+    """
+    for si in student_informations:
+        student = mdl.student.find_by_person(si.person)
+        choices = InternshipChoice.find_by_student(student)
+        si.number_choices = len(choices)
+        if student:
+            si.registration_id = student.registration_id
+
+
+def get_number_ok_student(students_list, number_selection):
+    """
+        Function to get the number of student who have the right number of choice and who haven't
+        Params:
+            students_list : the list of student present in InternshipChoice
+            number_selection : the correct number of choices
+        Return of array with two elements :
+            the first is the number of the student with the right number of choices
+            the second is the number of the student with the wrong number of choices
+    """
+    students_list = list(students_list)
+    nbr_student = [0]*2
+    # Set the number of the student who have their all selection of internships
+    # who have a partial selection
+    # who have no selection
+    for sl in students_list:
+        student = mdl.student.find_by_person(sl.student.person)
+        choices = InternshipChoice.find_by_student(student)
+        sl.number_choices = len(choices)
+        if len(choices) == number_selection:
+            nbr_student[0] += 1
+        else :
+            nbr_student[1] += 1
+    return nbr_student
 
 
 @login_required
@@ -41,12 +86,7 @@ def internships_student_resume(request):
     specialities = InternshipSpeciality.search(mandatory=True)
     student_informations = InternshipStudentInformation.find_all()
 
-    for si in student_informations:
-        student = mdl.student.find_by_person(si.person)
-        choices = InternshipChoice.find_by_student(student)
-        si.number_choices = len(choices)
-        if student:
-            si.registration_id = student.registration_id
+    set_number_choices(student_informations)
 
     # Get the required number selection (4 for each speciality)
     # Get the number of student who have al least 4 corrects choice of internship
@@ -55,90 +95,65 @@ def internships_student_resume(request):
     student_with_internships = len(students_list)
     students_can_have_internships = len(InternshipStudentInformation.find_all())
 
-    students_ok = 0
-    students_not_ok = 0
-    # Set the number of the student who have their all selection of internships
-    # who have a partial selection
-    # who have no selection
-    for sl in students_list:
-        student = mdl.student.find_by_person(sl.person)
-        choices = InternshipChoice.find_by_student(student)
-        sl.number_choices = len(choices)
-        if len(choices) == number_selection:
-            students_ok += 1
-        else :
-            students_not_ok += 1
+    students_ok = get_number_ok_student(students_list, number_selection)
+
     student_without_internship = students_can_have_internships - student_with_internships
-    return render(request, "student_search.html", {'s_noma':    None,
-                                                   's_name':    None,
-                                                   'students':  student_informations,
-                                                   'number_selection' : number_selection,
-                                                   'students_ok' : students_ok,
-                                                   'students_not_ok' : students_not_ok,
-                                                   'student_with_internships' : student_with_internships,
-                                                   'students_can_have_internships' : students_can_have_internships,
-                                                   'student_without_internship' : student_without_internship,
+    return render(request, "student_search.html", {'search_name': None,
+                                                    'search_firstname': None,
+                                                   'students': student_informations,
+                                                   'number_selection': number_selection,
+                                                   'students_ok': students_ok[0],
+                                                   'students_not_ok': students_ok[1],
+                                                   'student_with_internships': student_with_internships,
+                                                   'students_can_have_internships': students_can_have_internships,
+                                                   'student_without_internship': student_without_internship,
                                                    })
 
 
 @login_required
-@permission_required('internship.is_internship_manager', raise_exception=True)
-def internships_student_search(request):
-    s_name = request.GET['s_name']
-    s_firstname = request.GET['s_firstname']
-    students_list = []
-    students_list_creation = []
-    criteria_present = False
-
-    s_name = s_name.strip()
-    if len(s_name) <= 0:
-        s_name = None
-    else:
-        criteria_present=True
-
-    s_firstname = s_firstname.strip()
-    if len(s_firstname) <= 0:
-        s_firstname = None
-    else:
-        criteria_present=True
-
-    message = None
-    if criteria_present:
-        students_list_check = InternshipStudentInformation.search(person__last_name=s_name, person__first_name = s_firstname)
-
-        students_list_creation = InternshipChoice.find_by_all_student()
-
-        for student_check in students_list_check :
-            for student_creation in students_list_creation:
-                    if student_check.person == student_creation.person:
-                        students_list.append(student_creation)
-    else:
-        students_list = InternshipChoice.find_by_all_student()
-
-
-    return render(request, "student_search.html",
-                           {'s_name':       s_name,
-                            's_firstname':  s_firstname,
-                            'students':     students_list,
-                            'init':         "0",
-                            'message':      message})
-
-
-@login_required
 @permission_required('internship.can_access_internship', raise_exception=True)
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_read(request, registration_id):
     student = mdl.student.find_by(registration_id=registration_id)
-    information = InternshipStudentInformation.search(person = student[0].person)
     student = student[0]
+    information = InternshipStudentInformation.search(person = student.person)
     internship_choice = InternshipChoice.find_by_student(student)
-    all_speciality = InternshipSpeciality.find_all()
+    all_speciality = InternshipSpeciality.search(mandatory=True)
+
+    affectations = InternshipStudentAffectationStat.search(student = student).order_by("period__date_start")
+    periods = Period.search().order_by("date_start")
+    organizations = Organization.search()
+    set_organization_address(organizations)
+
+    # Set the adress of the affactation
+    for affectation in affectations:
+        for organization in organizations:
+            if affectation.organization == organization:
+                affectation.organization.address = ""
+                for o in organization.address:
+                    affectation.organization.address = o
+
+    internships = InternshipOffer.find_internships()
+    #Check if there is a internship offers in data base. If not, the internships
+    #can be block, but there is no effect
+    if len(internships) > 0:
+        if internships[0].selectable:
+            selectable = True
+        else:
+            selectable = False
+    else:
+        selectable = True
 
     return render(request, "student_resume.html",
-                           {'student':             student,
-                            'information':         information[0],
-                            'internship_choice':   internship_choice,
-                            'specialities':        all_speciality,
+                           {'student': student,
+                            'information': information[0],
+                            'internship_choice': internship_choice,
+                            'specialities': all_speciality,
+                            'selectable': selectable,
+                            'affectations': affectations,
+                            'periods': periods,
                             })
+
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
@@ -147,8 +162,9 @@ def internship_student_information_modification(request, registration_id):
     information = InternshipStudentInformation.search(person = student[0].person)
     student = student[0]
     return render(request, "student_information_modification.html",
-                           {'student':             student,
-                            'information':         information[0], })
+                           {'student': student,
+                            'information': information[0], })
+
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
@@ -171,4 +187,94 @@ def student_save_information_modification(request, registration_id):
     information.save()
 
     redirect_url = reverse('internships_student_read', args=[registration_id])
+    return HttpResponseRedirect(redirect_url)
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def internship_student_affectation_modification(request, student_id):
+    informations = InternshipStudentAffectationStat.search(student__pk = student_id)
+    information = InternshipChoice.search(student__pk = student_id)
+    if not information:
+        information.student=mdl.student.find_by_id(student_id)
+    else:
+        information = information[0]
+    organizations = Organization.search()
+    organizations = sort_organizations(organizations)
+
+    specialities = InternshipSpeciality.find_all()
+    for speciality in specialities :
+        number=[int(s) for s in speciality.name.split() if s.isdigit()]
+        if number:
+            speciality.acronym =speciality.acronym + " " +str(number[0])
+    periods = Period.search()
+    return render(request, "student_affectation_modification.html",
+                  {'information':         information,
+                   'informations':         informations,
+                   'organizations':        organizations,
+                   'specialities':         specialities,
+                   'periods':              periods,
+                   })
+
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def student_save_affectation_modification(request, registration_id):
+    student = mdl.student.find_by(registration_id=registration_id)[0]
+    if request.POST.get('period'):
+        period_list = request.POST.getlist('period')
+    if request.POST.get('organization'):
+        organization_list = request.POST.getlist('organization')
+    if request.POST.get('speciality'):
+        speciality_list = request.POST.getlist('speciality')
+
+    check_error_present = False
+    index = len(period_list)
+    for x in range(0, index):
+        if organization_list[x] != "0":
+            organization = Organization.search(reference=organization_list[x])[0]
+            speciality = InternshipSpeciality.search(name=speciality_list[x])[0]
+            period = Period.search(name=period_list[x])[0]
+            check_internship_present = InternshipOffer.search(organization=organization, speciality=speciality)
+            if len(check_internship_present) == 0:
+                check_error_present = True
+                messages.add_message(request, messages.ERROR, _('%s : %s-%s (%s)=> error') % (speciality.name, organization.reference, organization.name, period.name))
+
+    if not check_error_present:
+        InternshipStudentAffectationStat.search(student=student).delete()
+        index = len(period_list)
+        for x in range(0, index):
+            if organization_list[x] != "0":
+                organization = Organization.search(reference=organization_list[x])[0]
+                speciality = InternshipSpeciality.search(name=speciality_list[x])[0]
+                period = Period.search(name=period_list[x])[0]
+                student_choices = InternshipChoice.search(student=student, speciality=speciality)
+                affectation_modif = InternshipStudentAffectationStat()
+
+                affectation_modif.student = student
+                affectation_modif.organization = organization
+                affectation_modif.speciality = speciality
+                affectation_modif.period = period
+                check_choice = False
+                for student_choice in student_choices:
+                    if student_choice.organization == organization:
+                        affectation_modif.choice = student_choice.choice
+                        check_choice = True
+                        if student_choice.choice == 1:
+                            affectation_modif.cost = 0
+                        elif student_choice.choice == 2:
+                            affectation_modif.cost = 1
+                        elif student_choice.choice == 3:
+                            affectation_modif.cost = 2
+                        elif student_choice.choice == 4:
+                            affectation_modif.cost = 3
+                if not check_choice:
+                    affectation_modif.choice = "I"
+                    affectation_modif.cost = 10
+
+                affectation_modif.save()
+        redirect_url = reverse('internships_student_read', args=[student.registration_id])
+    else:
+        redirect_url = reverse('internship_student_affectation_modification', args=[student.id])
     return HttpResponseRedirect(redirect_url)

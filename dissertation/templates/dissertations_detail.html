@@ -85,13 +85,13 @@
                         {% elif dissertation.status == 'COM_OK' %}
                         <span class="label label-default">
                         {% elif dissertation.status == 'COM_KO' %}
-                        <span class="label label-default">
+                        <span class="label label-danger">
                         {% elif dissertation.status == 'EVA_SUBMIT' %}
-                        <span class="label label-default">
+                        <span class="label label-primary">
                         {% elif dissertation.status == 'EVA_OK' %}
                         <span class="label label-default">
                         {% elif dissertation.status == 'EVA_KO' %}
-                        <span class="label label-default">
+                        <span class="label label-danger">
                         {% elif dissertation.status == 'TO_RECEIVE' %}
                         <span class="label label-default">
                         {% elif dissertation.status == 'TO_DEFEND' %}
@@ -103,11 +103,11 @@
                         {% elif dissertation.status == 'ENDED_WIN' %}
                         <span class="label label-default">
                         {% elif dissertation.status == 'ENDED_LOS' %}
-                        <span class="label label-default">
+                        <span class="label label-danger">
                         {% else %}
                         <span class="label label-default">
                         {% endif %}
-                            {{ dissertation.status }}
+                            {{ dissertation.get_status_display }}
                         </span>
                     </div>
                 </div>
@@ -116,7 +116,7 @@
                         <label>{% trans 'description' %}</label>
                     </div>
                     <div class="col-md-9" style="text-align: justify">
-                        {{ dissertation.description }}
+                        {{ dissertation.description|linebreaks }}
                     </div>
                 </div>
                 <div class="row">
@@ -124,7 +124,7 @@
                       <label>{% trans 'defend_periode' %}</label>
                   </div>
                   <div class="col-md-9">
-                      {{ dissertation.defend_periode }}
+                      {{ dissertation.defend_periode|default_if_none:_("undefined") }}
                   </div>
                 </div>
                 <div class="row">
@@ -132,7 +132,15 @@
                       <label>{% trans 'defend_year' %}</label>
                   </div>
                   <div class="col-md-9">
-                      {{ dissertation.defend_year }}
+                      {{ dissertation.defend_year|default_if_none:_("undefined") }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3" style="text-align: right">
+                      <label>{% trans 'dissertation_location' %}</label>
+                  </div>
+                  <div class="col-md-9">
+                      {{ dissertation.location|default_if_none:_("undefined") }}
                   </div>
                 </div>
             </div>
@@ -143,15 +151,35 @@
             </div>
             <div class="panel-body">
                 {% for dissertation_role in dissertation_roles %}
-                <div class="row">
+                <div class="row" style="margin: 10px;">
                   <div class="col-md-3" style="text-align: right">
-                      <label>{{ dissertation_role.status }}</label>
+                      <label>{{ dissertation_role.get_status_display }}</label>
                   </div>
-                  <div class="col-md-9">
+                  <div class="col-md-2">
                       {{ dissertation_role.adviser }}
                   </div>
+                  {% if offer_prop.adviser_can_suggest_reader %}
+                    <div class="col-md-1">
+                      <a class="btn btn-warning"
+                         href="{% url 'dissertations_role_delete' pk=dissertation_role.pk %}"
+                         onclick="return confirm('{% trans 'delete_adviser_role_confirmation_message' %}')">
+                          <span class="glyphicon glyphicon-remove span2"></span></a>
+                    </div>
+                   {% endif %}
                 </div>
                 {% endfor %}
+                {% if count_dissertation_role < 4 and offer_prop.adviser_can_suggest_reader %}
+                <br>
+                <div class="row">
+                    <div class="col-md-3 pull-right" style="text-align: right">
+                        <a href="{% url 'dissertations_jury_new' pk=dissertation.pk %}"
+                             id="lnk_add_dissertation_jury_member" class="btn btn-default btn-sm"
+                             role="button" title="{% trans 'add_dissertation_jury_member'%}"><span
+                                  class="glyphicon glyphicon-plus"
+                                  aria-hidden="true"></span> {% trans 'add_dissertation_jury_member'%}</a>
+                    </div>
+                </div>
+                {% endif %}
             </div>
         </div>
         <div class="panel panel-default">
@@ -161,7 +189,7 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-3" style="text-align: right">
-                        <label>{% trans 'author' %}</label>
+                        <label>{% trans 'promotor' %}</label>
                     </div>
                     <div class="col-md-9">
                         {{ dissertation.proposition_dissertation.author }}
@@ -177,36 +205,20 @@
                 </div>
             </div>
         </div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">{% trans 'actions' %}</h3>
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <a class="btn btn-default btn-danger"
-                        href="{% url 'dissertations_delete' pk=dissertation.pk %}"
-                        onclick="return confirm('{% trans 'delete_dissertation_confirmation_message' %}')">
-                        <span class="glyphicon glyphicon-remove"></span> {% trans 'delete_dissertation' %}</a>
+        <div style="text-align: right;">
+                {% if dissertation.status == 'DIR_SUBMIT' %}
+                <a href="{% url 'dissertations_to_dir_ok' pk=dissertation.pk %}"
+                   id="lnk_dissertations_to_dir_ok" class="btn btn-success"
+                   role="button" title="{% trans 'dissertations_to_dir_ok'%}"><span
+                        class="glyphicon glyphicon-ok-circle"
+                        aria-hidden="true"></span> {% trans 'dissertations_to_dir_ok'%}</a>
 
-                        {% if dissertation.status == 'DIR_SUBMIT' %}
-                        <a href="{% url 'dissertations_to_dir_ok' pk=dissertation.pk %}"
-                           id="lnk_dissertations_to_dir_ok" class="btn btn-default"
-                           role="button" title="{% trans 'dissertations_to_dir_ok'%}"
-                           onclick="return confirm('{% trans 'to_dir_ok_confirmation_message' %}')"><span
-                                class="glyphicon glyphicon-ok-circle"
-                                aria-hidden="true"></span> {% trans 'dissertations_to_dir_ok'%}</a>
-
-                        <a href="{% url 'dissertations_to_dir_ko' pk=dissertation.pk %}"
-                           id="lnk_dissertations_to_dir_ko" class="btn btn-default"
-                           role="button" title="{% trans 'dissertations_to_dir_ko'%}"
-                           onclick="return confirm('{% trans 'to_dir_ko_confirmation_message' %}')"><span
-                                class="glyphicon glyphicon-remove-circle"
-                                aria-hidden="true"></span> {% trans 'dissertations_to_dir_ko'%}</a>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
+                <a href="{% url 'dissertations_to_dir_ko' pk=dissertation.pk %}"
+                   id="lnk_dissertations_to_dir_ko" class="btn btn-warning"
+                   role="button" title="{% trans 'dissertations_to_dir_ko'%}"><span
+                        class="glyphicon glyphicon-remove-circle"
+                        aria-hidden="true"></span> {% trans 'dissertations_to_dir_ko'%}</a>
+                {% endif %}
         </div>
     </div>
 </div>

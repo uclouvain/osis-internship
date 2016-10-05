@@ -41,6 +41,12 @@ class AdviserForm(ModelForm):
         fields = ('available_by_email', 'available_by_phone', 'available_at_office', 'comment')
 
 
+class AddAdviserForm(ModelForm):
+    class Meta:
+        model = Adviser
+        fields = ('person',)
+
+
 class DissertationForm(ModelForm):
     class Meta:
         model = Dissertation
@@ -68,6 +74,12 @@ class ManagerAddAdviserPreForm(ModelForm):
         fields = ('email', )
 
 
+class ManagerAddAdviserPerson(ModelForm):
+    class Meta:
+        model = mdl.person.Person
+        fields = ('email', 'last_name', 'first_name', 'phone', 'phone_mobile')
+
+
 class ManagerAddAdviserForm(ModelForm):
     class Meta:
         model = Adviser
@@ -90,7 +102,7 @@ class ManagerDissertationEditForm(ModelForm):
     class Meta:
         model = Dissertation
         fields = ('title', 'author', 'offer_year_start', 'proposition_dissertation', 'description', 'defend_year',
-                  'defend_periode')
+                  'defend_periode', 'location')
 
 
 class ManagerDissertationRoleForm(ModelForm):
@@ -104,22 +116,10 @@ class ManagerOfferPropositionForm(ModelForm):
     class Meta:
         model = OfferProposition
         fields = ('offer', 'acronym', 'adviser_can_suggest_reader', 'validation_commission_exists',
-                  'student_can_manage_readers', 'evaluation_first_year', 'readers_visibility_date_for_students',
-                  'start_visibility_proposition', 'end_visibility_proposition', 'start_visibility_dissertation',
-                  'end_visibility_dissertation')
+                  'student_can_manage_readers', 'evaluation_first_year', 'start_visibility_proposition',
+                  'end_visibility_proposition', 'start_visibility_dissertation', 'end_visibility_dissertation',
+                  'start_jury_visibility', 'end_jury_visibility', 'start_edit_title', 'end_edit_title')
         widgets = {'offer': forms.HiddenInput(), 'acronym': forms.HiddenInput()}
-        start_visibility_proposition = forms.DateField(widget=forms.DateInput(format='%d/%m/%Y'),
-                                                       input_formats=('%d/%m/%Y', ),
-                                                       required=True)
-        end_visibility_proposition = forms.DateField(widget=forms.DateInput(format='%d/%m/%Y'),
-                                                     input_formats=('%d/%m/%Y', ),
-                                                     required=True)
-        start_visibility_dissertation = forms.DateField(widget=forms.DateInput(format='%d/%m/%Y'),
-                                                        input_formats=('%d/%m/%Y', ),
-                                                        required=True)
-        end_visibility_dissertation = forms.DateField(widget=forms.DateInput(format='%d/%m/%Y'),
-                                                      input_formats=('%d/%m/%Y', ),
-                                                      required=True)
 
 
 class ManagerPropositionDissertationForm(ModelForm):

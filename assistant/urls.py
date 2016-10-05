@@ -25,7 +25,7 @@
 ##############################################################################
 from django.conf.urls import url
 from assistant.views import mandate, home, assistant_form, assistant
-from assistant.views import manager_settings
+from assistant.views import manager_settings, reviewers_management
 from assistant.views import mandates_list, reviewer_mandates_list, reviewer_review, reviewer_delegation
 
 urlpatterns = [
@@ -36,17 +36,33 @@ urlpatterns = [
     url(r'^manager/mandates/(?P<mandate_id>\d+)/save/$', mandate.mandate_save, name='mandate_save'),
     url(r'^manager/mandates/load/$', mandate.load_mandates, name='load_mandates'),
     url(r'^manager/mandates/$', mandates_list.MandatesListView.as_view(), name='mandates_list'),
+    url(r'^manager/reviewers/add/$', reviewers_management.reviewer_add, name='reviewer_add'),
+    url(r'^manager/reviewers/(?P<reviewer_id>\d+)/delete/$', reviewers_management.reviewer_delete,
+        name='reviewer_delete'),
+    url(r'^manager/reviewers/$', reviewers_management.ReviewersListView.as_view(), name='reviewers_list'),
     url(r'^manager/settings/edit/$', manager_settings.settings_edit, name='settings_edit'),
     url(r'^manager/settings/save/$', manager_settings.settings_save, name='settings_save'),
     url(r'^pst/access_denied$', home.access_denied, name='access_denied'),
     url(r'^pst/form_part1/edit/(?P<mandate_id>\d+)/$', assistant_form.form_part1_edit, name='form_part1_edit'),
     url(r'^pst/form_part1/save/(?P<mandate_id>\d+)/$', assistant_form.form_part1_save, name='form_part1_save'),
+    url(r'^pst/form_part3/edit/(?P<mandate_id>\d+)/$', assistant_form.form_part3_edit, name='form_part3_edit'),
+    url(r'^pst/form_part3/save/(?P<mandate_id>\d+)/$', assistant_form.form_part3_save, name='form_part3_save'),
+    url(r'^pst/mandate/tutoring_learning_unit/add/(?P<mandate_id>\d+)$', assistant_form.tutoring_learning_unit_add,
+        name='tutoring_learning_unit_add'),
+    url(r'^pst/mandate/tutoring_learning_unit/delete/(?P<tutoring_learning_unit_id>\d+)/$',
+        assistant_form.tutoring_learning_unit_delete, name='tutoring_learning_unit_delete'),
+    url(r'^pst/mandate/tutoring_learning_unit/edit/(?P<tutoring_learning_unit_id>\d+)/$',
+        assistant_form.tutoring_learning_unit_edit,name='tutoring_learning_unit_edit'),
+    url(r'^pst/mandate/tutoring_learning_unit/save/(?P<mandate_id>\d+)/$',
+        assistant_form.tutoring_learning_unit_save,name='tutoring_learning_unit_save'),
     url(r'^pst/form_part5/edit/(?P<mandate_id>\d+)/$', assistant_form.form_part5_edit, name='form_part5_edit'),
     url(r'^pst/form_part5/save/(?P<mandate_id>\d+)/$', assistant_form.form_part5_save, name='form_part5_save'),
     url(r'^pst/form_part6/edit/(?P<mandate_id>\d+)/$', assistant_form.form_part6_edit, name='form_part6_edit'),
     url(r'^pst/form_part6/save/(?P<mandate_id>\d+)/$', assistant_form.form_part6_save, name='form_part6_save'),
     url(r'^pst/mandate/(?P<mandate_id>\d+)/state/$', assistant.mandate_change_state, name='mandate_change_state'),
     url(r'^pst/mandates/$', assistant.AssistantMandatesListView.as_view(), name='assistant_mandates'),
+    url(r'^pst/mandate/tutoring_learning_units/(?P<mandate_id>\d+)/$',
+        assistant.AssistantLearningUnitsListView.as_view(), name='mandate_learning_units'),
     url(r'^reviewer/delegation/$', reviewer_delegation.StructuresListView.as_view(), name='reviewer_delegation'),
     url(r'^reviewer/structure/(?P<structure_id>\d+)/add_reviewer$',
         reviewer_delegation.addReviewerForStructure, name='reviewer_delegation_add'),

@@ -52,7 +52,7 @@
                             <div class="col-md-3" style="text-align: right">
                                 <label>{% trans 'name' %}</label>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-9">
                                 <span>{{  first_name }} {{ last_name }}</span>
                             </div>
                         </div>
@@ -67,7 +67,7 @@
                                     <span style="color:#C0C0C0">({{ adviser.person.email }})</span>
                                 {% endif %}
                             </div>
-                            <div class="col-md-1">
+                            <div class="col-md-5">
                                 {% if adviser.available_by_email %}
                                     <span class="glyphicon glyphicon-ok" style="color:green"></span>
                                 {% else %}
@@ -86,14 +86,15 @@
                                     <span style="color:#C0C0C0">({{ adviser.person.phone }})</span>
                                 {% endif %}
                             </div>
-                            <div class="col-md-1">
-                                {% if adviser.available_at_office %}
+                            <div class="col-md-5">
+                                {% if adviser.available_by_phone %}
                                     <span class="glyphicon glyphicon-ok" style="color:green"></span>
                                 {% else %}
                                     <span class="glyphicon glyphicon-remove" style="color:red"></span>
                                 {% endif %}
                             </div>
                         </div>
+                        {% if adviser.person.phone_mobile %}
                         <div class="row">
                             <div class="col-md-3" style="text-align: right">
                                 <label>{% trans 'phone_mobile' %}</label>
@@ -105,8 +106,28 @@
                                     <span style="color:#C0C0C0">({{ adviser.person.phone_mobile }})</span>
                                 {% endif %}
                             </div>
-                            <div class="col-md-1">
+                            <div class="col-md-5">
                                 {% if adviser.available_by_phone %}
+                                    <span class="glyphicon glyphicon-ok" style="color:green"></span>
+                                {% else %}
+                                    <span class="glyphicon glyphicon-remove" style="color:red"></span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+                        <div class="row">
+                            <div class="col-md-3" style="text-align: right">
+                                <label>{% trans 'available_at_office' %}</label>
+                            </div>
+                            <div class="col-md-4">
+                                {% if adviser.available_at_office %}
+                                    <span style="color:green">{% trans 'yes' %}</span>
+                                {% else %}
+                                    <span style="color:red">{% trans 'no' %}</span>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-5">
+                                {% if adviser.available_at_office %}
                                     <span class="glyphicon glyphicon-ok" style="color:green"></span>
                                 {% else %}
                                     <span class="glyphicon glyphicon-remove" style="color:red"></span>
@@ -117,9 +138,7 @@
                             <div class="col-md-3" style="text-align: right">
                                 <label>{% trans 'comment' %}</label>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-10 col-lg-offset-1">
+                            <div class="col-md-9" style="text-align: justify">
                                 {{ adviser.comment|linebreaks }}
                             </div>
                         </div>
@@ -136,16 +155,12 @@
           </div>
         </div>
       </div>
-      <div class="row">
-            <div class="col-md-12">
-                <div class="panel-body">
-                    <a href="{% url 'informations_edit' %}" id="lnk_informations_edit"
-                       class="btn btn-default btn-primary" role="button" title="{% trans 'edit_adviser'%}">
-                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                        {% trans 'edit_adviser' %}
-                    </a>
-                </div>
-            </div>
+      <div>
+        <a href="{% url 'informations_edit' %}" id="lnk_informations_edit"
+           class="btn btn-default btn-primary" role="button" title="{% trans 'edit_adviser'%}">
+            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+            {% trans 'edit' %}
+        </a>
       </div>
     </div>
   </div>

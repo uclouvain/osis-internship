@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 from django.core.management.sql import emit_post_migrate_signal
 
 from django.db import migrations
-from base.models.student import Student
 
 
 def add_internship_access_to_student_group(apps, schema_editor):

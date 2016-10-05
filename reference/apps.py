@@ -28,6 +28,3 @@ from django.apps import AppConfig
 
 class ReferenceConfig(AppConfig):
     name = 'reference'
-
-    def ready(self):
-        from reference.models.models_signal import on_post_save_continent
