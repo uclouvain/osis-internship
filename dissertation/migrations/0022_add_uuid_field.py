@@ -69,6 +69,16 @@ class Migration(migrations.Migration):
             name='uuid',
             field=models.UUIDField(db_index=True, null=True),
         ),
+        migrations.AddField(
+            model_name='propositiondocumentfile',
+            name='uuid',
+            field=models.UUIDField(db_index=True, null=True),
+        ),
+        migrations.AddField(
+            model_name='dissertationdocumentfile',
+            name='uuid',
+            field=models.UUIDField(db_index=True, null=True),
+        ),
         migrations.RunPython(set_uuid_field),
         migrations.AlterField(
             model_name='dissertation',
@@ -107,6 +117,16 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterField(
             model_name='propositionrole',
+            name='uuid',
+            field=models.UUIDField(db_index=True, default=uuid.uuid4, editable=False, unique=True),
+        ),
+        migrations.AlterField(
+            model_name='propositiondocumentfile',
+            name='uuid',
+            field=models.UUIDField(db_index=True, default=uuid.uuid4, editable=False, unique=True),
+        ),
+        migrations.AlterField(
+            model_name='dissertationdocumentfile',
             name='uuid',
             field=models.UUIDField(db_index=True, default=uuid.uuid4, editable=False, unique=True),
         ),
