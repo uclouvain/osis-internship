@@ -37,6 +37,7 @@ class ScoresEncodingAdmin(admin.ModelAdmin):
     search_fields = ['pgm_manager_person__last_name', 'pgm_manager_person__first_name']
 
 
+# Mapping of a view.
 class ScoresEncoding(models.Model):
     id = models.BigIntegerField(primary_key=True)
     program_manager = models.ForeignKey('ProgramManager', on_delete=models.DO_NOTHING)
@@ -45,6 +46,9 @@ class ScoresEncoding(models.Model):
     learning_unit_year = models.ForeignKey('LearningUnitYear', on_delete=models.DO_NOTHING)
     total_exam_enrollments = models.IntegerField()
     exam_enrollments_encoded = models.IntegerField()
+    enrollment_state = models.CharField(max_length=20,
+                                        default=exam_enrollment_state.ENROLLED,
+                                        choices=exam_enrollment_state.STATES)
 
     class Meta:
         managed = False
