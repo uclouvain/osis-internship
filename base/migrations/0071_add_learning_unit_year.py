@@ -18,7 +18,7 @@ def copy_learning_unit_to_learning_unit_year(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('base', '0069_auto_20160831_1551'),
+        ('base', '0070_scoresencoding'),
     ]
 
     operations = [
