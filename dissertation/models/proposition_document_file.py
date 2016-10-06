@@ -61,7 +61,3 @@ def find_by_proposition(proposition):
 
 def find_by_id(proposition_id):
     return PropositionDocumentFile.objects.get(proposition__id=proposition_id)
-
-
-
-

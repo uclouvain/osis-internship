@@ -61,7 +61,3 @@ def find_by_dissertation(dissertation):
 
 def find_by_id(dissertation_id):
     return DissertationDocumentFile.objects.get(dissertation__id=dissertation_id)
-
-
-
-
