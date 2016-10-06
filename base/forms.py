@@ -26,6 +26,7 @@
 from ckeditor.widgets import CKEditorWidget
 from django import forms
 from django.forms import ModelForm
+from admission import models as admission
 from django.utils.translation import ugettext_lazy as _
 
 from base import models as mdl
@@ -80,6 +81,18 @@ class OfferYearCalendarForm(ModelForm):
         fields = ['offer_year', 'start_date', 'end_date', 'customized']
 
 
+class OfferFormForm(ModelForm):
+    class Meta:
+        model = admission.form.Form
+        fields = ['offer_year', 'title', 'description']
+
+
+class OfferQuestionForm(ModelForm):
+    class Meta:
+        model = admission.question.Question
+        fields = ['id', 'label', 'description', 'type', 'order', 'required', 'form']
+
+
 class MyMessageForm(forms.Form):
     selected = forms.BooleanField(initial=False, required=False)
     subject = forms.CharField(required=False)
@@ -91,5 +104,3 @@ class MyMessageForm(forms.Form):
 class MyMessageActionForm(forms.Form):
     ACTIONS = (('MARK_AS_READ', _('mark_selected_as_read')), ('DELETE', _('delete_selected')))
     action = forms.ChoiceField(required=False, choices=ACTIONS, initial=None)
-
-

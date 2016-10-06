@@ -26,6 +26,7 @@
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class QuestionAdmin(admin.ModelAdmin):
@@ -33,20 +34,19 @@ class QuestionAdmin(admin.ModelAdmin):
     fieldsets = ((None, {'fields': ('label', 'description', 'type', 'order', 'required', 'form')}),)
 
 
+QUESTION_TYPES = (
+    ('SHORT_INPUT_TEXT', _('short_input_text')),
+    ('LONG_INPUT_TEXT', _('long_input_text')),
+    ('RADIO_BUTTON', _('radio_button')),
+    ('CHECKBOX', _('checkbox')),
+    ('DROPDOWN_LIST', _('dropdown_list')),
+    ('UPLOAD_BUTTON', _('upload_button')),
+    ('DOWNLOAD_LINK', _('download_link')),
+    ('HTTP_LINK', _('http_link'))
+)
+
+
 class Question(models.Model):
-
-    QUESTION_TYPES = (
-        ('LABEL', _('Label')),
-        ('SHORT_INPUT_TEXT', _('Short input text')),
-        ('LONG_INPUT_TEXT', _('Long input text')),
-        ('RADIO_BUTTTON', _('Radio button')),
-        ('CHECKBOX', _('Checkbox')),
-        ('DROPDOWN_LIST', _('Dropdown list')),
-        ('UPLOAD_BUTTON', _('Upload button')),
-        ('DOWNLOAD_LINK', _('Download link')),
-        ('HTTP_LINK', _('HTTP link'))
-    )
-
     form = models.ForeignKey('Form')
     label = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
@@ -56,3 +56,16 @@ class Question(models.Model):
 
     def __str__(self):
         return u"%s" % self.label
+
+
+def find_by_offer_form(offer_form):
+    return Question.objects.filter(form=offer_form) \
+                           .order_by('label', 'description')
+
+
+def find_by_id(question_id):
+    try:
+        question = Question.objects.get(pk=question_id)
+        return question
+    except ObjectDoesNotExist:
+        return None
