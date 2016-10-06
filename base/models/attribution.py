@@ -46,7 +46,8 @@ class Attribution(models.Model):
     end_date = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
     function = models.CharField(max_length=15, blank=True, null=True, choices=FUNCTION_CHOICES, db_index=True)
     learning_unit_year = models.ForeignKey('LearningUnitYear', blank=True, null=True, default=None)
-    tutor = models.ForeignKey('Tutor')
+    learning_unit = models.ForeignKey('LearningUnit', blank=True, null=True, default=None)  # To remove, not present in
+    tutor = models.ForeignKey('Tutor')                                                      # db
 
     def __str__(self):
         return u"%s - %s" % (self.tutor.person, self.function)

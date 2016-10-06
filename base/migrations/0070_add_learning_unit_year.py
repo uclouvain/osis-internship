@@ -29,4 +29,8 @@ class Migration(migrations.Migration):
                                     to='base.LearningUnitYear'),
         ),
         migrations.RunPython(copy_learning_unit_to_learning_unit_year),
+        migrations.RemoveField(
+            model_name='attribution',
+            name='learning_unit',
+        ),
     ]
