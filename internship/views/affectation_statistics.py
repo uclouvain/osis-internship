@@ -1147,9 +1147,12 @@ def load_solution(data):
         # Update the number of available places for given organization, speciality, period
         temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['after'] -= 1
         # Update the % of takes places
-        temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['pc'] = \
-            temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['after'] / \
-            temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['before'] * 100
+        if temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['before'] > 0:
+            temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['pc'] = \
+                temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['after'] / \
+                temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['before'] * 100
+        else:
+            temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['pc'] = 0
     # Sort all student by the score (descending order)
     sorted_internship_table = []
     for organization, specialities in temp_internship_table.items():
