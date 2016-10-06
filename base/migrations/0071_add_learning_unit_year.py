@@ -11,7 +11,7 @@ def copy_learning_unit_to_learning_unit_year(apps, schema_editor):
 
     for attrib in attributions:
         attrib.learning_unit_year = learning_unit_year.search(learning_unit=attrib.learning_unit)\
-            .order_by("academic_year")[0]
+            .order_by("academic_year").last()
         attrib.save()
 
 
