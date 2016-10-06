@@ -25,8 +25,6 @@
 ##############################################################################
 
 from django.db import models
-from django.contrib import admin
-from django.contrib.auth.models import User
 
 
 class DissertationDocumentFile(models.Model):
@@ -63,7 +61,3 @@ def find_by_dissertation(dissertation):
 
 def find_by_id(dissertation_id):
     return DissertationDocumentFile.objects.get(dissertation__id=dissertation_id)
-
-
-
-
