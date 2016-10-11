@@ -1180,6 +1180,7 @@ def internship_affectation_statistics_generate(request):
             affectation_generatioon_time = AffectationGenerationTime()
             affectation_generatioon_time.start_date_time = start_date_time
             affectation_generatioon_time.end_date_time = end_date_time
+            affectation_generatioon_time.generated_by = request.user.username
             affectation_generatioon_time.save()
         return HttpResponseRedirect(reverse('internship_affectation_statistics'))
 

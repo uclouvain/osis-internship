@@ -415,6 +415,7 @@ class InternshipStudentAffectationStat(models.Model):
 class AffectationGenerationTime(models.Model):
     start_date_time = models.DateTimeField()
     end_date_time = models.DateTimeField()
+    generated_by = models.CharField(max_length=255, default='None')
 
     @staticmethod
     def get_latest():
