@@ -97,10 +97,10 @@
                 <div class="col-md-8">
                     <div class="row">
                         <div class="col-md-6">
-                            {% trans 'latest_generation_start' %} : {{ latest_generation.start_date_time| default_if_none:''|date:"SHORT_DATE_FORMAT" }}
+                            {% trans 'latest_generation_start' %} : {{ latest_generation.start_date_time| default_if_none:''|date:"SHORT_DATE_FORMAT" }} {{ latest_generation.start_date_time| default_if_none:''|time:"TIME_FORMAT" }}
                         </div>
                         <div class="col-md-6">
-                            {% trans 'latest_generation_end' %} : {{ latest_generation.end_date_time| default_if_none:''|date:"SHORT_DATE_FORMAT" }}
+                            {% trans 'latest_generation_end' %} : {{ latest_generation.end_date_time| default_if_none:''|date:"SHORT_DATE_FORMAT" }} {{ latest_generation.end_date_time| default_if_none:''|time:"TIME_FORMAT" }}
                         </div>
                     </div>
                 </div>

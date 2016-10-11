@@ -111,7 +111,7 @@ admin.site.register(InternshipStudentAffectationStat, InternshipStudentAffectati
 
 
 class AffectationGenerationTimeAdmin(admin.ModelAdmin):
-    list_display = ('start_date_time', 'end_date_time')
-    fieldsets = ((None, {'fields': ('start_date_time', 'end_date_time')}),)
+    list_display = ('start_date_time', 'end_date_time', 'generated_by')
+    fieldsets = ((None, {'fields': ('start_date_time', 'end_date_time', 'generated_by')}),)
 
 admin.site.register(AffectationGenerationTime, AffectationGenerationTimeAdmin)
