@@ -410,3 +410,15 @@ class InternshipStudentAffectationStat(models.Model):
     @staticmethod
     def find_by_id(affectation_id):
         return InternshipStudentAffectationStat.objects.get(pk=affectation_id)
+
+
+class AffectationGenerationTime(models.Model):
+    start_date_time = models.DateTimeField()
+    end_date_time = models.DateTimeField()
+
+    @staticmethod
+    def get_latest():
+        try:
+            return AffectationGenerationTime.objects.latest('start_date_time')
+        except ObjectDoesNotExist:
+            return None
