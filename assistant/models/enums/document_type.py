@@ -23,16 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.utils.translation import ugettext_lazy as _
+
+PHD_DOCUMENT = 'PHD_DOCUMENT'
+TUTORING_DOCUMENT = 'TUTORING_DOCUMENT'
+RESEARCH_DOCUMENT = 'RESEARCH_DOCUMENT'
+
+DOCUMENT_TYPE_CHOICES = ((PHD_DOCUMENT, 'phd_document', '', ''),
+                         (TUTORING_DOCUMENT, 'tutoring_document', '', ''),
+                         (RESEARCH_DOCUMENT, 'research_document', '', ''))
 
 
-class AssistantDocument(models.Model):
-    DOC_TYPE_CHOICES = (
-        ('PHD', _('PhD')),
-        ('TUTORING', _('Tutoring')),
-        ('RESEARCH', _('Research')))
-
-    assistant = models.ForeignKey('AcademicAssistant')
-    mandate = models.ForeignKey('AssistantMandate')
-    doc_type = models.CharField(max_length=20, choices=DOC_TYPE_CHOICES)
+def find(desired_document_type):
+    for document_type in DOCUMENT_TYPE_CHOICES:
+        if desired_document_type in document_type:
+            return document_type
