@@ -90,7 +90,9 @@
         <div class="panel-header">
             <div class="row">
                 <div class="col-md-4">
-
+                    <button type="submit" class="btn btn-primary" title="{% trans 'Send'%}" id="bt_interships_save" onclick="$('#generate').modal('show');">
+                        <span class="glyphicon glyphicon-random" aria-hidden="true"></span>{% trans 'generate_solution' %}
+                    </button>
                 </div>
                 <div class="col-md-8">
                     <div class="row">
@@ -103,9 +105,6 @@
                     </div>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary" title="{% trans 'Send'%}" id="bt_interships_save" onclick="$('#generate').modal('show');">
-                <span class="glyphicon glyphicon-random" aria-hidden="true"></span>{% trans 'generate_solution' %}
-            </button>
         </div>
         <div class="panel-body">
             <ul class="nav nav-tabs">
