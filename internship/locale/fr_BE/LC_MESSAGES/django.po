@@ -353,3 +353,9 @@ msgstr  "Executions"
 
 msgid   "order_postion"
 msgstr  "Position de tri"
+
+msgid "latest_generation_start"
+msgstr "Début de la dernière génération"
+
+msgid "latest_generation_end"
+msgstr "Fin de la dernière génération"
