@@ -974,24 +974,25 @@ def swap_empty_internships():
                                     student_sol = solution[choice.student][period]
                                     # We can swap only non priority students
                                     if choice.priority is False and student_sol.speciality == speciality:
-                                        # Check if we can increase the number of the available students
-                                        if int(internship_table[student_sol.organization][student_sol.speciality][
-                                                   period]) + 1 < \
-                                                internship_table_original[student_sol.organization][
-                                                    student_sol.speciality][
-                                                    period]:
-                                            # Increase the number of places of old internship
-                                            increase_available_places(student_sol.organization, speciality, period)
-                                            # Replace the internship
-                                            solution[choice.student][period] = SolutionsLine(choice.student,
-                                                                                             organization,
-                                                                                             speciality,
-                                                                                             period,
-                                                                                             choice.choice,
-                                                                                             "N")
-                                            # Decrease new internship
-                                            decrease_available_places(organization, speciality, period)
-                                            break
+                                        if student_sol.type_of_internship == "N":
+                                            # Check if we can increase the number of the available students
+                                            if int(internship_table[student_sol.organization][student_sol.speciality][
+                                                       period]) + 1 < \
+                                                    internship_table_original[student_sol.organization][
+                                                        student_sol.speciality][
+                                                        period]:
+                                                # Increase the number of places of old internship
+                                                increase_available_places(student_sol.organization, speciality, period)
+                                                # Replace the internship
+                                                solution[choice.student][period] = SolutionsLine(choice.student,
+                                                                                                 organization,
+                                                                                                 speciality,
+                                                                                                 period,
+                                                                                                 choice.choice,
+                                                                                                 "N")
+                                                # Decrease new internship
+                                                decrease_available_places(organization, speciality, period)
+                                                break
 
 
 def swap_errors():
@@ -1015,7 +1016,8 @@ def swap_errors():
 
         specialities_to_swap = []
         for available_period in available_periods:
-            specialities_to_swap.append((solution[student][available_period].speciality, available_period))
+            if(solution[student][available_period].type_of_internship == "N"):
+                specialities_to_swap.append((solution[student][available_period].speciality, available_period))
 
         # Find if the specialities that take the available periods of the speciality
         internships_to_swap = []
@@ -1145,9 +1147,12 @@ def load_solution(data):
         # Update the number of available places for given organization, speciality, period
         temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['after'] -= 1
         # Update the % of takes places
-        temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['pc'] = \
-            temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['after'] / \
-            temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['before'] * 100
+        if temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['before'] > 0:
+            temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['pc'] = \
+                temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['after'] / \
+                temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['before'] * 100
+        else:
+            temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['pc'] = 0
     # Sort all student by the score (descending order)
     sorted_internship_table = []
     for organization, specialities in temp_internship_table.items():

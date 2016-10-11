@@ -89,6 +89,31 @@ urlpatterns = [
     url(r'^organization/save/$', organization.organization_new, name='organization_save_new'),
     url(r'^organization/create/$', organization.organization_create, name='organization_create'),
 
+    url(r'^academic_year/$', common.academic_year, name='academic_year'),
+    url(r'^academic_calendars/$', academic_calendar.academic_calendars, name='academic_calendars'),
+    url(r'^academic_calendars/search$', academic_calendar.academic_calendars_search, name='academic_calendars_search'),
+    url(r'^academic_calendars/([0-9]+)/$', academic_calendar.academic_calendar_read, name='academic_calendar_read'),
+    url(r'^academic_calendars/edit/([0-9]+)/$', academic_calendar.academic_calendar_edit, name='academic_calendar_edit'),
+    url(r'^academic_calendars/save/([0-9]+)/$', academic_calendar.academic_calendar_save, name='academic_calendar_save'),
+    url(r'^academic_calendars/save/$', academic_calendar.academic_calendar_new, name='academic_calendar_save_new'),
+    url(r'^academic_calendars/create/$', academic_calendar.academic_calendar_create, name='academic_calendar_create'),
+
+    url(r'^offer_year_calendars/([0-9]+)/$', offer.offer_year_calendar_read, name='offer_year_calendar_read'),
+    url(r'^offer_year_calendars/edit/([0-9]+)/$', offer.offer_year_calendar_edit, name='offer_year_calendar_edit'),
+    url(r'^offer_year_calendars/save/([0-9]+)/$', offer.offer_year_calendar_save, name='offer_year_calendar_save'),
+
+    url(r'^offer_form/([0-9]+)/$', offer.offer_form_read, name='offer_form_read'),
+    url(r'^offer_form/(?P<offer_year_id>[0-9]+)/create/$', offer.offer_form_create, name='offer_form_create'),
+    url(r'^offer_form/edit/([0-9]+)/$', offer.offer_form_edit, name='offer_form_edit'),
+    url(r'^offer_form/save/([0-9]+)/$', offer.offer_form_save, name='offer_form_save'),
+    url(r'^offer_form/save/$', offer.offer_form_new, name='offer_form_save_new'),
+
+    url(r'^offer_question/([0-9]+)/$', offer.offer_question_read, name='offer_question_read'),
+    url(r'^offer_question/(?P<form_id>[0-9]+)/create/$', offer.offer_question_create, name='offer_question_create'),
+    url(r'^offer_question/edit/([0-9]+)/$', offer.offer_question_edit, name='offer_question_edit'),
+    url(r'^offer_question/save/(?:/([0-9]+))?/$', offer.offer_question_save, name='offer_question_save'),
+    url(r'^offer_question/save/$', offer.offer_question_new, name='offer_question_save_new'),
+
     url(r'^organization_address/read/([0-9]+)/$', organization.organization_address_read,
         name='organization_address_read'),
     url(r'^organization_address/edit/([0-9]+)/$', organization.organization_address_edit,
