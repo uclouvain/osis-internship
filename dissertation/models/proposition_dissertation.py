@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from base.models.serializable_model import SerializableModel
+from dissertation.models import proposition_offer
 from django.contrib import admin
 from django.db import models
 from django.db.models import Q
@@ -153,3 +154,8 @@ def get_created_for_teacher(adviser):
 
 def find_by_id(proposition_id):
     return PropositionDissertation.objects.get(pk=proposition_id)
+
+
+def search_by_offers(offers):
+    proposition_ids = proposition_offer.search_by_offers(offers).values('proposition_dissertation_id')
+    return PropositionDissertation.objects.filter(pk__in=proposition_ids, active=True, visibility=True)

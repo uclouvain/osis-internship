@@ -66,7 +66,7 @@ def manager_proposition_dissertations(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     offers = faculty_adviser.search_by_adviser(adv)
-    proposition_offers = proposition_offer.search_by_offer(offers)
+    proposition_offers = proposition_offer.search_by_offers(offers)
     return layout.render(request, 'manager_proposition_dissertations_list.html',
                          {'proposition_offers': proposition_offers})
 

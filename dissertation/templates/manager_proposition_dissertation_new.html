@@ -59,11 +59,11 @@
                     style="margin:-6px;" value="{{ form.title.value|default_if_none:'' }}">
             </div>
         </div>
-        <div class="row">
+        <div class="row {% if field.errors %}error{% endif %}">
             <div class="col-md-12 form-group">
                 <label for="txt_visibility">{% trans 'visibility' %}</label>
-                <br><input id="txt_visibility"  name="visibility"
-                    style="margin:-6px;" type="checkbox" {% if form.visibility.value %} checked {% endif %}>
+                <input id="txt_visibility"  name="visibility"
+                       style="margin-left:6px;" type="checkbox" {% if form.visibility.value %} checked {% endif %}>
             </div>
         </div>
         <div class="row {% if field.errors %}error{% endif %}">
