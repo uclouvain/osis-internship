@@ -26,7 +26,7 @@
 from django.contrib import admin
 from .models import InternshipOffer, InternshipEnrollment, InternshipMaster, InternshipChoice, \
     Period, PeriodInternshipPlaces, InternshipSpeciality, Organization, \
-    OrganizationAddress, InternshipStudentInformation, InternshipStudentAffectationStat
+    OrganizationAddress, InternshipStudentInformation, InternshipStudentAffectationStat, AffectationGenerationTime
 
 
 class InternshipOfferAdmin(admin.ModelAdmin):
@@ -108,3 +108,10 @@ class InternshipStudentAffectationStatAdmin(admin.ModelAdmin):
     fieldsets = ((None, {'fields': ('student', 'organization', 'speciality', 'period', 'choice', 'cost', 'consecutive_month', 'type_of_internship')}),)
 
 admin.site.register(InternshipStudentAffectationStat, InternshipStudentAffectationStatAdmin)
+
+
+class AffectationGenerationTimeAdmin(admin.ModelAdmin):
+    list_display = ('start_date_time', 'end_date_time', 'generated_by')
+    fieldsets = ((None, {'fields': ('start_date_time', 'end_date_time', 'generated_by')}),)
+
+admin.site.register(AffectationGenerationTime, AffectationGenerationTimeAdmin)
