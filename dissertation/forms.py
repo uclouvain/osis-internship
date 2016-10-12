@@ -57,8 +57,8 @@ class PropositionDissertationForm(ModelForm):
     class Meta:
         model = PropositionDissertation
         fields = ('author', 'visibility', 'title', 'description', 'type', 'level', 'collaboration',
-                  'max_number_student', 'offer_proposition')
-        widgets = {'author': forms.HiddenInput(), 'offer_proposition': forms.CheckboxSelectMultiple()}
+                  'max_number_student')
+        widgets = {'author': forms.HiddenInput()}
 
 
 class PropositionRoleForm(ModelForm):
@@ -125,19 +125,15 @@ class ManagerOfferPropositionForm(ModelForm):
 class ManagerPropositionDissertationForm(ModelForm):
     class Meta:
         model = PropositionDissertation
-        fields = (
-            'author', 'visibility', 'title', 'description', 'type', 'level', 'collaboration', 'max_number_student',
-            'offer_proposition')
-        widgets = {'offer_proposition': forms.CheckboxSelectMultiple()}
+        fields = ('author', 'visibility', 'title', 'description', 'type', 'level', 'collaboration',
+                  'max_number_student')
 
 
 class ManagerPropositionDissertationEditForm(ModelForm):
     class Meta:
         model = PropositionDissertation
         fields = (
-            'visibility', 'title', 'description', 'type', 'level', 'collaboration', 'max_number_student',
-            'offer_proposition')
-        widgets = {'offer_proposition': forms.CheckboxSelectMultiple()}
+            'visibility', 'title', 'description', 'type', 'level', 'collaboration', 'max_number_student')
 
 
 class ManagerPropositionRoleForm(ModelForm):

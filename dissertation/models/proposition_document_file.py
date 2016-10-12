@@ -31,6 +31,9 @@ class PropositionDocumentFile(SerializableModel):
     proposition = models.ForeignKey('PropositionDissertation')
     document_file = models.ForeignKey('osis_common.documentFile')
 
+    def __str__(self):
+        return str(self.proposition)
+
 
 def search(proposition=None, description=None):
     out = None

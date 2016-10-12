@@ -112,3 +112,7 @@ def show_evaluation_first_year(offer_props):
 
 def get_by_dissertation(dissert):
     return get_by_offer(dissert.offer_year_start.offer)
+
+
+def find_by_id(offer_proposition_id):
+    return OfferProposition.objects.get(pk=offer_proposition_id)

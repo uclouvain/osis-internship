@@ -31,6 +31,9 @@ class DissertationDocumentFile(SerializableModel):
     dissertation = models.ForeignKey('Dissertation')
     document_file = models.ForeignKey('osis_common.documentFile')
 
+    def __str__(self):
+        return str(self.dissertation)
+
 
 def search(dissertation=None, description=None):
     out = None

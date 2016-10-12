@@ -32,7 +32,7 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class PropositionDissertationAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'visibility', 'active', 'get_offer_propositions', 'creator')
+    list_display = ('title', 'author', 'visibility', 'active', 'creator')
     raw_id_fields = ('creator', )
 
 
@@ -67,7 +67,6 @@ class PropositionDissertation(SerializableModel):
     type = models.CharField(max_length=12, choices=TYPES_CHOICES, default='OTH')
     visibility = models.BooleanField(default=True)
     active = models.BooleanField(default=True)
-    offer_proposition = models.ManyToManyField('OfferProposition')
     created_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
@@ -86,9 +85,6 @@ class PropositionDissertation(SerializableModel):
     def deactivate(self):
         self.active = False
         self.save()
-
-    def get_offer_propositions(self):
-        return " - ".join([str(s) for s in self.offer_proposition.all()])
 
     def set_creator(self, person):
         self.creator = person
