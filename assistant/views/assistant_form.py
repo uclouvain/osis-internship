@@ -165,6 +165,7 @@ def form_part3_save(request, mandate_id):
     """Use to save an assistant form part3."""
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     assistant = mandate.assistant
+    files = assistant_document_file.find_by_assistant_mandate(mandate)
     if request.user.person != assistant.person:
         return HttpResponseRedirect(reverse('assistant_mandates'))
     elif request.method == 'POST':
@@ -174,7 +175,7 @@ def form_part3_save(request, mandate_id):
             return form_part3_edit(request, mandate.id)
         else:
             return render(request, "assistant_form_part3.html", {'assistant': assistant, 'mandate': mandate,
-                                                                 'form': form})
+                                                                 'files': files,'form': form})
 
 @user_passes_test(user_is_assistant_and_procedure_is_open, login_url='access_denied')
 def form_part6_edit(request, mandate_id):
