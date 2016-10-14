@@ -1,6 +1,8 @@
 <!doctype html>
 {% load staticfiles %}
 {% load i18n %}
+{% load analytical %}
+
 
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -27,6 +29,7 @@
 {% endcomment %}
 <html lang="en">
 <head>
+    {% analytical_head_top %}
     <meta charset="utf-8">
     <title>OSIS</title>
 
@@ -55,8 +58,10 @@
             font-family: 'Armata', sans-serif;
         }
     </style>
+    {% analytical_head_bottom %}
 </head>
 <body {% if environment == 'DEV' %} class="devmode" {% elif environment == 'LOCAL' %} class="localmode" {% elif environment == 'QA' %} class="qamode" {% endif %}>
+    {% analytical_body_top %}
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
@@ -230,5 +235,6 @@
     <script src="{% static 'js/osis.js' %}?version={{ js }}"></script>
     {% block script %}
     {% endblock %}
+    {% analytical_body_bottom %}
 </body>
 </html>
