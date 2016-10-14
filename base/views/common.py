@@ -55,12 +55,11 @@ def noscript(request):
 
 
 def environnement_request_processor(request):
-    installed_apps = settings.INSTALLED_APPS
     try:
         env = settings.ENVIRONMENT
     except AttributeError:
         env = 'DEV'
-    return {'environment': env, 'installed_apps': installed_apps}
+    return {'environment': env}
 
 
 def login(request):
