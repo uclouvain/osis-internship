@@ -359,3 +359,6 @@ msgstr "Début de la dernière génération"
 
 msgid "latest_generation_end"
 msgstr "Fin de la dernière génération"
+
+msgid "student_not_exists"
+msgstr "L'étudiant n'existe pas"
