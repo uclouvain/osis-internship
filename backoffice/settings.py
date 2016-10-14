@@ -233,6 +233,7 @@ LOGO_INSTITUTION_URL = os.path.join(BASE_DIR, "base/static/img/logo_institution.
 LOGO_EMAIL_SIGNATURE_URL = ''
 LOGO_OSIS_URL = ''
 
+
 try:
     from backoffice.server_settings import *
 

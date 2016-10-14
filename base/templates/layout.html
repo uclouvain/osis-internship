@@ -1,6 +1,9 @@
 <!doctype html>
 {% load staticfiles %}
 {% load i18n %}
+{% if 'analytical' in installed_apps%}
+    {% load analytical %}
+{% endif %}
 
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -27,6 +30,9 @@
 {% endcomment %}
 <html lang="en">
 <head>
+    {% if 'analytical' in installed_apps%}
+        {% analytical_head_top %}
+    {% endif %}
     <meta charset="utf-8">
     <title>OSIS</title>
 
@@ -55,8 +61,14 @@
             font-family: 'Armata', sans-serif;
         }
     </style>
+    {% if 'analytical' in installed_apps%}
+        {% analytical_head_bottom %}
+    {% endif %}
 </head>
 <body {% if environment == 'DEV' %} class="devmode" {% elif environment == 'LOCAL' %} class="localmode" {% elif environment == 'QA' %} class="qamode" {% endif %}>
+    {% if 'analytical' in installed_apps%}
+        {% analytical_body_top %}
+    {% endif %}
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
@@ -230,5 +242,8 @@
     <script src="{% static 'js/osis.js' %}?version={{ js }}"></script>
     {% block script %}
     {% endblock %}
+    {% if 'analytical' in installed_apps%}
+        {% analytical_body_bottom %}
+    {% endif %}
 </body>
 </html>
