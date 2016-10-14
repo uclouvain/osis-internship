@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from django.http import HttpResponseRedirect
+from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.contrib import messages
@@ -112,15 +113,20 @@ def internships_student_resume(request):
 
 @login_required
 @permission_required('internship.can_access_internship', raise_exception=True)
-@permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_read(request, registration_id):
-    student = mdl.student.find_by(registration_id=registration_id)
-    student = student[0]
-    information = InternshipStudentInformation.search(person = student.person)
-    internship_choice = InternshipChoice.find_by_student(student)
+    student_to_read = mdl.student.find_by_registration_id(registration_id)
+    if not request.user.has_perm('internship.is_internship_manager'):
+        person_who_read = mdl.person.find_by_user(request.user)
+        student_who_read = mdl.student.find_by_person(person_who_read)
+        if not student_who_read or not student_to_read or student_who_read.pk != student_to_read.pk:
+            raise PermissionDenied(request)
+    if not student_to_read:
+        return render(request, "student_resume.html", {'errors': ['student_not_exists']})
+    information = InternshipStudentInformation.search(person = student_to_read.person)
+    internship_choice = InternshipChoice.find_by_student(student_to_read)
     all_speciality = InternshipSpeciality.search(mandatory=True)
 
-    affectations = InternshipStudentAffectationStat.search(student = student).order_by("period__date_start")
+    affectations = InternshipStudentAffectationStat.search(student=student_to_read).order_by("period__date_start")
     periods = Period.search().order_by("date_start")
     organizations = Organization.search()
     set_organization_address(organizations)
@@ -145,7 +151,7 @@ def internships_student_read(request, registration_id):
         selectable = True
 
     return render(request, "student_resume.html",
-                           {'student': student,
+                           {'student': student_to_read,
                             'information': information[0],
                             'internship_choice': internship_choice,
                             'specialities': all_speciality,
