@@ -24,8 +24,8 @@
 #
 ##############################################################################
 from django.http import HttpResponseRedirect
+from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseForbidden
 from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
@@ -119,7 +119,7 @@ def internships_student_read(request, registration_id):
         person_who_read = mdl.person.find_by_user(request.user)
         student_who_read = mdl.student.find_by_person(person_who_read)
         if not student_who_read or not student_to_read or student_who_read.pk != student_to_read.pk:
-            return render(request, 'access_denied.html')
+            raise PermissionDenied(request)
     if not student_to_read:
         return render(request, "student_resume.html", {'errors': ['student_not_exists']})
     information = InternshipStudentInformation.search(person = student_to_read.person)
