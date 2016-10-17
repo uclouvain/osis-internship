@@ -26,34 +26,66 @@ QUEUE_NAME = "osis_portal"
 LOGGER = logging.getLogger(settings.DEFAULT_LOGGER)
 
 
-def create_initial_data_dissertation(apps, schema_editor):
+def migrate_initial_data_adviser(apps, schema_editor):
     advisers = list(Adviser.objects.all())
-    dissertations = list(Dissertation.objects.all())
-    dissertation_document_files = list(DissertationDocumentFile.objects.all())
-    dissertation_groups = list(DissertationGroup.objects.all())
-    dissertation_roles = list(DissertationRole.objects.all())
-    dissertation_updates = list(DissertationUpdate.objects.all())
-    dissertation_locations = list(DissertationLocation.objects.all())
-    offer_propositions = list(OfferProposition.objects.all())
-    propositions = list(PropositionDissertation.objects.all())
-    proposition_offers = list(PropositionOffer.objects.all())
-    proposition_roles = list(PropositionRole.objects.all())
-    proposition_document_files = list(PropositionDocumentFile.objects.all())
-    document_files = list(DocumentFile.objects.all())
     try:
         queue_sender.send_message(QUEUE_NAME, format_data_for_migration(advisers))
+    except (ChannelClosed, ConnectionClosed):
+        LOGGER.warning('QueueServer is not installed or not launched')
+
+
+def migrate_initial_data_offer_proposition(apps, schema_editor):
+    offer_propositions = list(OfferProposition.objects.all())
+    try:
         queue_sender.send_message(QUEUE_NAME, format_data_for_migration(offer_propositions))
+    except (ChannelClosed, ConnectionClosed):
+        LOGGER.warning('QueueServer is not installed or not launched')
+
+
+def migrate_initial_data_proposition(apps, schema_editor):
+    propositions = list(PropositionDissertation.objects.all())
+    try:
         queue_sender.send_message(QUEUE_NAME, format_data_for_migration(propositions))
+    except (ChannelClosed, ConnectionClosed):
+        LOGGER.warning('QueueServer is not installed or not launched')
+
+
+def migrate_initial_data_proposition_offer(apps, schema_editor):
+    proposition_offers = list(PropositionOffer.objects.all())
+    try:
         queue_sender.send_message(QUEUE_NAME, format_data_for_migration(proposition_offers))
+    except (ChannelClosed, ConnectionClosed):
+        LOGGER.warning('QueueServer is not installed or not launched')
+
+
+def migrate_initial_data_proposition_role(apps, schema_editor):
+    proposition_roles = list(PropositionRole.objects.all())
+    try:
         queue_sender.send_message(QUEUE_NAME, format_data_for_migration(proposition_roles))
+    except (ChannelClosed, ConnectionClosed):
+        LOGGER.warning('QueueServer is not installed or not launched')
+
+
+def migrate_initial_data_document_file(apps, schema_editor):
+    document_files = list(DocumentFile.objects.all())
+    try:
         queue_sender.send_message(QUEUE_NAME, format_data_for_migration(document_files))
+    except (ChannelClosed, ConnectionClosed):
+        LOGGER.warning('QueueServer is not installed or not launched')
+
+
+def migrate_initial_data_proposition_document_files(apps, schema_editor):
+    proposition_document_files = list(PropositionDocumentFile.objects.all())
+    try:
         queue_sender.send_message(QUEUE_NAME, format_data_for_migration(proposition_document_files))
-        queue_sender.send_message(QUEUE_NAME, format_data_for_migration(dissertations))
-        queue_sender.send_message(QUEUE_NAME, format_data_for_migration(dissertation_groups))
-        queue_sender.send_message(QUEUE_NAME, format_data_for_migration(dissertation_roles))
-        queue_sender.send_message(QUEUE_NAME, format_data_for_migration(dissertation_updates))
+    except (ChannelClosed, ConnectionClosed):
+        LOGGER.warning('QueueServer is not installed or not launched')
+
+
+def migrate_initial_data_dissertation_location(apps, schema_editor):
+    dissertation_locations = list(DissertationLocation.objects.all())
+    try:
         queue_sender.send_message(QUEUE_NAME, format_data_for_migration(dissertation_locations))
-        queue_sender.send_message(QUEUE_NAME, format_data_for_migration(dissertation_document_files))
     except (ChannelClosed, ConnectionClosed):
         LOGGER.warning('QueueServer is not installed or not launched')
 
@@ -61,9 +93,16 @@ def create_initial_data_dissertation(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dissertation', '0027_initial_data migration'),
+        ('dissertation', '0026_remove_propositiondissertation_offer_proposition'),
     ]
 
     operations = [
-        migrations.RunPython(create_initial_data_dissertation)
+        migrations.RunPython(migrate_initial_data_adviser),
+        migrations.RunPython(migrate_initial_data_offer_proposition),
+        migrations.RunPython(migrate_initial_data_proposition),
+        migrations.RunPython(migrate_initial_data_proposition_offer),
+        migrations.RunPython(migrate_initial_data_proposition_role),
+        migrations.RunPython(migrate_initial_data_dissertation_location),
+        migrations.RunPython(migrate_initial_data_document_file),
+        migrations.RunPython(migrate_initial_data_proposition_document_files),
     ]
