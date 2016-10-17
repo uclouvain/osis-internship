@@ -77,6 +77,13 @@ def find_by(registration_id=None, person_name=None, person_username=None, person
     return out
 
 
+def find_by_registration_id(registration_id):
+    try:
+        return Student.objects.get(registration_id=registration_id)
+    except ObjectDoesNotExist:
+        return None
+
+
 def find_by_person(a_person):
     try:
         student = Student.objects.get(person=a_person)
