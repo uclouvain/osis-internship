@@ -87,13 +87,13 @@ def find_responsible(a_learning_unit_year):
     return None
 
 
-def is_coordinator(user, learning_unit_year_id):
+def is_coordinator(user, learning_unit_year):
     """
     :param user:
-    :param learning_unit_year_id:
+    :param learning_unit_year:
     :return: True is the user is coordinator for the learningUnit passed in parameter.
     """
-    attributions = Attribution.objects.filter(learning_unit_year_id=learning_unit_year_id)\
+    attributions = Attribution.objects.filter(learning_unit_year=learning_unit_year)\
                                       .filter(function='COORDINATOR')\
                                       .filter(tutor__person__user=user)\
                                       .count()

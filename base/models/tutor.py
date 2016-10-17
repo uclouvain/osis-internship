@@ -71,7 +71,7 @@ def find_by_id(tutor_id):
 # To refactor because it is not in the right place.
 def find_by_learning_unit(learning_unit_year):
     """
-    :param learning_unit_year_id:
+    :param learning_unit_year:
     :return: All tutors of the learningUnit passed in parameter.
     """
     tutor_ids = attribution.search(learning_unit_year=learning_unit_year).values_list('tutor').distinct('tutor')

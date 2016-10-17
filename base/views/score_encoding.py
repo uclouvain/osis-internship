@@ -134,7 +134,7 @@ def __send_message_if_all_encoded_in_pgm(enrollments, learning_unit_year):
     sent_error_message = None
     if progress == 100:
         persons = list(set([tutor.person for tutor
-                            in mdl.tutor.find_by_learning_unit(learning_unit_year.id)]))
+                            in mdl.tutor.find_by_learning_unit(learning_unit_year)]))
         sent_error_message = send_mail.send_message_after_all_encoded_by_manager(persons, enrollments,
                                                                                  learning_unit_year.acronym,
                                                                                  offer_acronym)
@@ -451,10 +451,10 @@ def get_data_online(learning_unit_year_id, request):
             'learning_unit_year': learning_unit_year,
             'coordinator': coordinator,
             'is_program_manager': is_program_manager,
-            'is_coordinator': mdl.attribution.is_coordinator(request.user, learning_unit_year.id),
+            'is_coordinator': mdl.attribution.is_coordinator(request.user, learning_unit_year),
             'draft_scores_not_submitted': draft_scores_not_submitted,
             'number_session': exam_enrollments[0].session_exam.number_session if len(exam_enrollments) > 0 else _('none'),
-            'tutors': mdl.tutor.find_by_learning_unit(learning_unit_year.id),
+            'tutors': mdl.tutor.find_by_learning_unit(learning_unit_year),
             'exam_enrollments_encoded': get_score_encoded(exam_enrollments),
             'total_exam_enrollments': len(exam_enrollments)}
 
@@ -495,7 +495,7 @@ def get_data_online_double(learning_unit_year_id, request):
             'count_total_enrollments': len(total_exam_enrollments),
             'number_session': encoded_exam_enrollments[0].session_exam.number_session
                               if len(encoded_exam_enrollments) > 0 else _('none'),
-            'tutors': mdl.tutor.find_by_learning_unit(learning_unit_year.id)}
+            'tutors': mdl.tutor.find_by_learning_unit(learning_unit_year)}
 
 
 def get_data_pgmer(request,
