@@ -53,20 +53,20 @@ class Attribution(models.Model):
         return u"%s - %s" % (self.tutor.person, self.function)
 
 
-def search(tutor=None, learning_unit_year_id=None, function=None, learning_unit_year_ids=None):
+def search(tutor=None, learning_unit_year=None, function=None, list_learning_unit_year=None):
     queryset = Attribution.objects
 
     if tutor:
         queryset = queryset.filter(tutor=tutor)
 
-    if learning_unit_year_id:
-        queryset = queryset.filter(learning_unit_year__id=learning_unit_year_id)
+    if learning_unit_year:
+        queryset = queryset.filter(learning_unit_year=learning_unit_year)
 
     if function:
         queryset = queryset.filter(function=function)
 
-    if learning_unit_year_ids:
-        queryset = queryset.filter(learning_unit_year__id__in=learning_unit_year_ids)
+    if list_learning_unit_year:
+        queryset = queryset.filter(learning_unit_yearin=list_learning_unit_year)
 
     return queryset.select_related('tutor', 'learning_unit_year')
 

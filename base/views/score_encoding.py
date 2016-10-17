@@ -551,8 +551,8 @@ def get_data_pgmer(request,
     all_attributions = []
     if scores_encodings:  # Empty in case there isn't any score to encode (not inside the period of scores' encoding)
         # Adding coordinator for each learningUnit
-        learning_unit_ids = [score_encoding.learning_unit_year.id for score_encoding in scores_encodings]
-        all_attributions = list(mdl.attribution.search(learning_unit_year_ids=learning_unit_ids))
+        learning_units = [score_encoding.learning_unit_year for score_encoding in scores_encodings]
+        all_attributions = list(mdl.attribution.search(list_learning_unit_year=learning_units))
         coord_grouped_by_learning_unit = {attrib.learning_unit_year.id: attrib.tutor for attrib in all_attributions
                                           if attrib.function == 'COORDINATOR'}
         for score_encoding in scores_encodings:
