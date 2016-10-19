@@ -362,3 +362,6 @@ msgstr "Latest generation end"
 
 msgid "student_not_exists"
 msgstr "Student does not exists"
+
+msgid "export_organisation_affectation_xls"
+msgstr "Export Excel file for the organisation"
