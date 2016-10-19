@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from django.contrib import admin
+from internship.models import InternshipSpecialityGroup, InternshipSpecialityGroupMember
 from .models import InternshipOffer, InternshipEnrollment, InternshipMaster, InternshipChoice, \
     Period, PeriodInternshipPlaces, InternshipSpeciality, Organization, \
     OrganizationAddress, InternshipStudentInformation, InternshipStudentAffectationStat, AffectationGenerationTime
@@ -115,3 +116,18 @@ class AffectationGenerationTimeAdmin(admin.ModelAdmin):
     fieldsets = ((None, {'fields': ('start_date_time', 'end_date_time', 'generated_by')}),)
 
 admin.site.register(AffectationGenerationTime, AffectationGenerationTimeAdmin)
+
+
+class InternshipSpecialityGroupAdmin(admin.ModelAdmin):
+    list_display = ('name', )
+    fieldsets = ((None, {'fields': ('name',)}),)
+
+admin.site.register(InternshipSpecialityGroup, InternshipSpecialityGroupAdmin)
+
+
+class InternshipSpecialityGroupMemberAdmin(admin.ModelAdmin):
+    list_display = ('group', 'speciality')
+    fieldsets = ((None, {'fields' : ('group', 'speciality')}),)
+    raw_id_fields = ('group', 'speciality')
+
+admin.site.register(InternshipSpecialityGroupMember, InternshipSpecialityGroupMemberAdmin)

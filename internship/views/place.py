@@ -342,7 +342,7 @@ def export_organisation_affectation_as_xls(request, organization_id):
     organization = Organization.find_by_id(organization_id)
     internships = InternshipOffer.search(organization = organization)
     specialities = list({offer.speciality for offer in internships})
-    specialities = sorted(specialities, key=lambda speciality: speciality.acronym)
+    specialities = sorted(specialities, key=lambda speciality: speciality.order_postion)
     affection_by_specialities = [(internship_speciality,
                                   list(InternshipStudentAffectationStat.search(organization=organization,
                                                                           speciality=internship_speciality)))
