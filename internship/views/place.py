@@ -305,16 +305,17 @@ def export_xls(request, organization_id, speciality_id):
     organization = Organization.find_by_id(organization_id)
     speciality = InternshipSpeciality.find_by_id(speciality_id)
     if speciality:
-        specialities = [group_member.speciality
-                        for group_member in InternshipSpecialityGroupMember.find_by_speciality(speciality)]
-    if specialities:
+        speciality_groups = [group_member.group for group_member
+                             in InternshipSpecialityGroupMember.find_by_speciality(speciality)]
+        specialities = [group_member.speciality for group_member in
+                        InternshipSpecialityGroupMember.find_distinct_specialities_by_groups(speciality_groups)]
+        specialities = sorted(specialities, key=lambda spec: spec.order_postion)
         affection_by_specialities = [(internship_speciality,
                                       InternshipStudentAffectationStat.search(organization=organization,
                                                                               speciality=internship_speciality))
                                      for internship_speciality in specialities]
     else:
-        affection_by_specialities = [(speciality, list(InternshipStudentAffectationStat.search(organization=organization,
-                                                                                         speciality=speciality)))]
+        affection_by_specialities = []
 
     for speciality, affectations in affection_by_specialities:
         for affectation in affectations:
@@ -323,7 +324,7 @@ def export_xls(request, organization_id, speciality_id):
             affectation.phone_mobile = ""
             affectation.master = ""
             internship_student_information = InternshipStudentInformation.search(person=affectation.student.person)
-            internship_offer = InternshipOffer.search(organization=affectation.organization, speciality = affectation.speciality)
+            internship_offer = InternshipOffer.search(organization=affectation.organization, speciality=affectation.speciality)
             if internship_student_information:
                 informations = internship_student_information.first()
                 affectation.email = informations.email
@@ -342,7 +343,7 @@ def export_organisation_affectation_as_xls(request, organization_id):
     organization = Organization.find_by_id(organization_id)
     internships = InternshipOffer.search(organization = organization)
     specialities = list({offer.speciality for offer in internships})
-    specialities = sorted(specialities, key=lambda speciality: speciality.order_postion)
+    specialities = sorted(specialities, key=lambda spec: spec.order_postion)
     affection_by_specialities = [(internship_speciality,
                                   list(InternshipStudentAffectationStat.search(organization=organization,
                                                                           speciality=internship_speciality)))

@@ -33,6 +33,7 @@ from .models import InternshipOffer, InternshipEnrollment, InternshipMaster, Int
 class InternshipOfferAdmin(admin.ModelAdmin):
     list_display = ('organization','speciality', 'title', 'maximum_enrollments', 'master', 'selectable')
     fieldsets = ((None, {'fields': ('organization','speciality', 'title', 'maximum_enrollments', 'master', 'selectable')}),)
+    raw_id_fields = ('organization','speciality')
 
 admin.site.register(InternshipOffer, InternshipOfferAdmin)
 
@@ -40,6 +41,7 @@ admin.site.register(InternshipOffer, InternshipOfferAdmin)
 class InternshipEnrollmentAdmin(admin.ModelAdmin):
     list_display = ('student', 'internship_offer', 'place', 'period')
     fieldsets = ((None, {'fields': ('student', 'internship_offer', 'place', 'period')}),)
+    raw_id_fields = ('student', 'internship_offer','place', 'period')
 
 admin.site.register(InternshipEnrollment, InternshipEnrollmentAdmin)
 
@@ -47,6 +49,7 @@ admin.site.register(InternshipEnrollment, InternshipEnrollmentAdmin)
 class InternshipMasterAdmin(admin.ModelAdmin):
     list_display = ('reference', 'organization', 'first_name', 'last_name', 'civility', 'type_mastery', 'speciality')
     fieldsets = ((None, {'fields': ('reference', 'organization', 'first_name', 'last_name', 'civility', 'type_mastery', 'speciality')}),)
+    raw_id_fields = ('organization',)
 
 admin.site.register(InternshipMaster, InternshipMasterAdmin)
 
@@ -54,6 +57,7 @@ admin.site.register(InternshipMaster, InternshipMasterAdmin)
 class InternshipChoiceAdmin(admin.ModelAdmin):
     list_display = ('student', 'organization', 'speciality', 'choice', 'internship_choice', 'priority')
     fieldsets = ((None, {'fields': ('student', 'organization', 'speciality', 'choice', 'internship_choice', 'priority')}),)
+    raw_id_fields = ('student', 'organization', 'speciality')
 
 admin.site.register(InternshipChoice, InternshipChoiceAdmin)
 
@@ -68,6 +72,7 @@ admin.site.register(Period, PeriodAdmin)
 class PeriodInternshipPlacesAdmin(admin.ModelAdmin):
     list_display = ('period', 'internship', 'number_places')
     fieldsets = ((None, {'fields': ('period', 'internship', 'number_places')}),)
+    raw_id_fields = ('period', 'internship')
 
 admin.site.register(PeriodInternshipPlaces, PeriodInternshipPlacesAdmin)
 
@@ -91,6 +96,7 @@ admin.site.register(Organization, OrganizationAdmin)
 class OrganizationAddressAdmin(admin.ModelAdmin):
     list_display = ('organization', 'label', 'location', 'postal_code', 'city', 'country','latitude', 'longitude')
     fieldsets = ((None, {'fields': ('organization', 'label', 'location', 'postal_code', 'city', 'country', 'latitude', 'longitude')}),)
+    raw_id_fields = ('organization',)
 
 admin.site.register(OrganizationAddress, OrganizationAddressAdmin)
 
@@ -107,6 +113,7 @@ admin.site.register(InternshipStudentInformation, InternshipStudentInformationAd
 class InternshipStudentAffectationStatAdmin(admin.ModelAdmin):
     list_display = ('student', 'organization', 'speciality', 'period', 'choice', 'cost', 'consecutive_month', 'type_of_internship')
     fieldsets = ((None, {'fields': ('student', 'organization', 'speciality', 'period', 'choice', 'cost', 'consecutive_month', 'type_of_internship')}),)
+    raw_id_fields = ('student', 'organization', 'speciality', 'period')
 
 admin.site.register(InternshipStudentAffectationStat, InternshipStudentAffectationStatAdmin)
 
