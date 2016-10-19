@@ -423,3 +423,27 @@ class AffectationGenerationTime(models.Model):
             return AffectationGenerationTime.objects.latest('start_date_time')
         except ObjectDoesNotExist:
             return None
+
+
+class InternshipSpecialityGroup(models.Model):
+    name = models.CharField(unique=True, max_length=255)
+
+    @staticmethod
+    def find_by_name(name):
+        try:
+            return InternshipSpecialityGroup.objects.get(name=name)
+        except ObjectDoesNotExist:
+            return None
+
+
+class InternshipSpecialityGroupMember(models.Model):
+    speciality = models.ForeignKey('internship.InternshipSpeciality')
+    group = models.ForeignKey('internship.InternshipSpecialityGroup')
+
+    @staticmethod
+    def search_by_group_name(group_name):
+        return InternshipSpecialityGroupMember.objects.filter(group__name=group_name)
+
+    @staticmethod
+    def find_by_speciality(speciality):
+        return InternshipSpecialityGroupMember.objects.filter(speciality=speciality)
