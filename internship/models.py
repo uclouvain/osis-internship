@@ -88,7 +88,7 @@ class InternshipEnrollment(models.Model):
     period = models.ForeignKey('internship.Period')
 
     def __str__(self):
-        return u"%s" % self.learning_unit_enrollment.student
+        return u"%s - %s" % (self.student, self.internship_offer.title)
 
     @staticmethod
     def search(**kwargs):
@@ -454,3 +454,7 @@ class InternshipSpecialityGroupMember(models.Model):
     def find_by_speciality(speciality):
         return InternshipSpecialityGroupMember.objects.filter(speciality=speciality)\
             .order_by('speciality__order_postion')
+
+    @staticmethod
+    def find_distinct_specialities_by_groups(groups):
+        return InternshipSpecialityGroupMember.objects.filter(group__in=groups).distinct('speciality')
