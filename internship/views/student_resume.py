@@ -200,11 +200,13 @@ def student_save_information_modification(request, registration_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_student_affectation_modification(request, student_id):
     informations = InternshipStudentAffectationStat.search(student__pk = student_id)
-    information = InternshipChoice.search(student__pk = student_id)
-    if not information:
-        information.student=mdl.student.find_by_id(student_id)
+    internship_choice = InternshipChoice.search(student__pk = student_id)
+    if not internship_choice:
+        student = mdl.student.find_by_id(student_id)
+        information = InternshipChoice()
+        information.student = student
     else:
-        information = information[0]
+        information = internship_choice.first()
     organizations = Organization.search()
     organizations = sort_organizations(organizations)
 
