@@ -27,7 +27,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from internship.models import Organization, OrganizationAddress, InternshipChoice, \
     InternshipOffer, InternshipSpeciality, InternshipStudentAffectationStat, \
-    Period, InternshipStudentInformation
+    Period, InternshipStudentInformation, InternshipSpecialityGroupMember
 from internship.forms import OrganizationForm, OrganizationAddressForm
 from internship.views.internship import set_tabs_name, get_all_specialities
 from internship.utils import export_utils, export_utils_pdf
@@ -280,10 +280,12 @@ def student_affectation(request, organization_id):
         a.email = ""
         a.adress = ""
         a.phone_mobile = ""
-        informations = InternshipStudentInformation.search(person=a.student.person)[0]
-        a.email = informations.email
-        a.adress = informations.location + " " + informations.postal_code + " " + informations.city
-        a.phone_mobile = informations.phone_mobile
+        internship_student_information= InternshipStudentInformation.search(person=a.student.person)
+        if internship_student_information:
+            informations = internship_student_information.first()
+            a.email = informations.email
+            a.adress = informations.location + " " + informations.postal_code + " " + informations.city
+            a.phone_mobile = informations.phone_mobile
     periods = Period.search()
 
     internships = InternshipOffer.search(organization = organization)
@@ -302,21 +304,69 @@ def student_affectation(request, organization_id):
 def export_xls(request, organization_id, speciality_id):
     organization = Organization.find_by_id(organization_id)
     speciality = InternshipSpeciality.find_by_id(speciality_id)
-    affectations = InternshipStudentAffectationStat.search(organization=organization, speciality=speciality)
+    if speciality:
+        speciality_groups = [group_member.group for group_member
+                             in InternshipSpecialityGroupMember.find_by_speciality(speciality)]
+        specialities = [group_member.speciality for group_member in
+                        InternshipSpecialityGroupMember.find_distinct_specialities_by_groups(speciality_groups)]
+        specialities = sorted(specialities, key=lambda spec: spec.order_postion)
+        affection_by_specialities = [(internship_speciality,
+                                      InternshipStudentAffectationStat.search(organization=organization,
+                                                                              speciality=internship_speciality))
+                                     for internship_speciality in specialities]
+    else:
+        affection_by_specialities = []
 
-    for a in affectations:
-        a.email = ""
-        a.adress = ""
-        a.phone_mobile = ""
-        a.master = ""
-        informations = InternshipStudentInformation.search(person=a.student.person)[0]
-        offer = InternshipOffer.search(organization=a.organization, speciality = a.speciality)[0]
-        a.email = informations.email
-        a.adress = informations.location + " " + informations.postal_code + " " + informations.city
-        a.phone_mobile = informations.phone_mobile
-        a.master = offer.master
+    for speciality, affectations in affection_by_specialities:
+        for affectation in affectations:
+            affectation.email = ""
+            affectation.adress = ""
+            affectation.phone_mobile = ""
+            affectation.master = ""
+            internship_student_information = InternshipStudentInformation.search(person=affectation.student.person)
+            internship_offer = InternshipOffer.search(organization=affectation.organization, speciality=affectation.speciality)
+            if internship_student_information:
+                informations = internship_student_information.first()
+                affectation.email = informations.email
+                affectation.adress = informations.location + " " + informations.postal_code + " " + informations.city
+                affectation.phone_mobile = informations.phone_mobile
+            if internship_offer:
+                offer = internship_offer.first()
+                affectation.master = offer.master
+    file_name = speciality.acronym.strip().replace(' ', '_')
+    return export_utils.export_xls(organization_id, affection_by_specialities, file_name)
 
-    return export_utils.export_xls(organization_id, affectations)
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def export_organisation_affectation_as_xls(request, organization_id):
+    organization = Organization.find_by_id(organization_id)
+    internships = InternshipOffer.search(organization = organization)
+    specialities = list({offer.speciality for offer in internships})
+    specialities = sorted(specialities, key=lambda spec: spec.order_postion)
+    affection_by_specialities = [(internship_speciality,
+                                  list(InternshipStudentAffectationStat.search(organization=organization,
+                                                                          speciality=internship_speciality)))
+                                 for internship_speciality in specialities]
+    for speciality, affectations in affection_by_specialities:
+        for affectation in affectations:
+            affectation.email = ""
+            affectation.adress = ""
+            affectation.phone_mobile = ""
+            affectation.master = ""
+            internship_student_information = InternshipStudentInformation.search(person=affectation.student.person)
+            internship_offer = InternshipOffer.search(organization=affectation.organization, speciality = affectation.speciality)
+            if internship_student_information:
+                informations = internship_student_information.first()
+                affectation.email = informations.email
+                affectation.adress = informations.location + " " + informations.postal_code + " " + informations.city
+                affectation.phone_mobile = informations.phone_mobile
+            if internship_offer:
+                offer = internship_offer.first()
+                affectation.master = offer.master
+    file_name = organization.name.strip().replace(' ', '_')
+    return export_utils.export_xls(organization_id, affection_by_specialities, file_name)
+
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
@@ -324,13 +374,14 @@ def export_pdf(request, organization_id, speciality_id):
     organization = Organization.find_by_id(organization_id)
     speciality = InternshipSpeciality.find_by_id(speciality_id)
     affectations = InternshipStudentAffectationStat.search(organization=organization, speciality=speciality)
-
     for a in affectations:
         a.email = ""
         a.adress = ""
         a.phone_mobile = ""
-        informations = InternshipStudentInformation.search(person=a.student.person)[0]
-        a.email = informations.email
-        a.adress = informations.location + " " + informations.postal_code + " " + informations.city
-        a.phone_mobile = informations.phone_mobile
+        internship_student_information = InternshipStudentInformation.search(person=a.student.person)
+        if internship_student_information:
+            informations = internship_student_information.first()
+            a.email = informations.email
+            a.adress = informations.location + " " + informations.postal_code + " " + informations.city
+            a.phone_mobile = informations.phone_mobile
     return export_utils_pdf.print_affectations(organization_id, affectations)
