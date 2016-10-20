@@ -25,10 +25,20 @@
 ##############################################################################
 import json
 from django.core import serializers
+from django.db.utils import IntegrityError
 
 
 def insert_or_update(json_data):
     from base.models.serializable_model import SerializableModel
+
+    def save_serializable_models(deserialized_objects):
+        try:
+            for deser_object in deserialized_objects:
+                super(SerializableModel, deser_object.object).save()
+        except IntegrityError as ie:
+            print("Tried to save serializable objects but a foreign key was not found.")
+            print(ie)
+
     json_data = json.loads(json_data.decode("utf-8"))
     serialized_objects = json_data['serialized_objects']
     deserialized_objects = serializers.deserialize('json', serialized_objects, ignorenonexistent=True)
@@ -36,5 +46,4 @@ def insert_or_update(json_data):
         for deser_object in deserialized_objects:
             super(SerializableModel, deser_object.object).delete()
     else:
-        for deser_object in deserialized_objects:
-            super(SerializableModel, deser_object.object).save()
+        save_serializable_models(deserialized_objects)

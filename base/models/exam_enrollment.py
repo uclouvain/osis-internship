@@ -170,10 +170,10 @@ def get_progress(session_exm_list, learning_unt):
     return str(tot_progress)+"/"+str(tot_enrollments)
 
 
-def find_exam_enrollments_by_session_learningunit(session_exm, learning_unt):
+def find_exam_enrollments_by_session_learningunit(session_exm, a_learning_unit_year):
     enrollments = ExamEnrollment.objects.filter(session_exam=session_exm) \
                                         .filter(enrollment_state=enrollment_states.ENROLLED) \
-                                        .filter(learning_unit_enrollment__learning_unit_year__learning_unit=learning_unt)
+                                        .filter(learning_unit_enrollment__learning_unit_year=a_learning_unit_year)
     return enrollments
 
 
@@ -283,7 +283,7 @@ def scores_sheet_data(exam_enrollments, tutor=None):
         # We can take the first element of the list 'exam_enrollments' to get the learning_unit_yr
         # because all exam_enrollments have the same learningUnitYear
         learning_unit_yr = exam_enrollments[0].session_exam.learning_unit_year
-        coordinator = attribution.find_responsible(learning_unit_yr.learning_unit.id)
+        coordinator = attribution.find_responsible(learning_unit_yr.id)
         coordinator_address = None
         if coordinator:
             coordinator_address = person_address.find_by_person_label(coordinator.person, 'PROFESSIONAL')

@@ -42,6 +42,7 @@ class Tutor(serializable_model.SerializableModel):
     changed = models.DateTimeField(null=True)
     person = models.OneToOneField('Person')
 
+
     def __str__(self):
         return u"%s" % self.person
 
@@ -68,12 +69,12 @@ def find_by_id(tutor_id):
 
 
 # To refactor because it is not in the right place.
-def find_by_learning_unit(learning_unit_id):
+def find_by_learning_unit(learning_unit_year):
     """
-    :param learning_unit_id:
+    :param learning_unit_year:
     :return: All tutors of the learningUnit passed in parameter.
     """
-    tutor_ids = attribution.search(learning_unit_id=learning_unit_id).values_list('tutor').distinct('tutor')
+    tutor_ids = attribution.search(learning_unit_year=learning_unit_year).values_list('tutor').distinct('tutor')
     return Tutor.objects.filter(pk__in=tutor_ids).order_by('person__last_name', 'person__first_name')
 
 

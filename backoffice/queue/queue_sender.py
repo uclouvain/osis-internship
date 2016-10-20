@@ -86,11 +86,6 @@ def send_message(queue_name, message, connection=None, channel=None):
 
 
 def paper_sheet_queue():
-    QUEUE_NAME = 'paper_sheet_queue'
-
     connection = get_connection()
-
     channel = connection.channel()
-
-    channel.queue_declare(queue=QUEUE_NAME)
-
+    channel.queue_declare(queue='paper_sheet_queue')

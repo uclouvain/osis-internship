@@ -74,7 +74,7 @@ def learning_units_search(request):
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_unit_read(request, learning_unit_year_id):
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
-    attributions = mdl.attribution.search(learning_unit_id=learning_unit_year.learning_unit.id)
+    attributions = mdl.attribution.search(learning_unit_year=learning_unit_year)
     enrollments = mdl.learning_unit_enrollment.find_by_learningunit_enrollment(learning_unit_year)
     is_program_manager = mdl.program_manager.is_program_manager(request.user)
 
