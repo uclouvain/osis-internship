@@ -363,3 +363,6 @@ msgstr "Fin de la dernière génération"
 
 msgid "student_not_exists"
 msgstr "L'étudiant n'existe pas"
+
+msgid "export_organisation_affectation_xls"
+msgstr "Fichier Excel de toutes les spécialités"
