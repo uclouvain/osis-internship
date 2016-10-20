@@ -38,6 +38,7 @@
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
+        {% if form %}
         <form method="POST" class="post-form">
             {% csrf_token %}
             <div class="row">
@@ -53,6 +54,23 @@
               </div>
             </div>
         </form>
+        {% else %}
+            <div class="row">
+                <div class="col-md-9 col-md-offset-1">
+                    <label for="person">{% trans 'person_added' %} : </label>
+                    {{ adv }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-9 col-md-offset-1">
+                    <a href="{% url 'dissertations' %}" id="lnk_dissertations_button"
+                    class="btn btn-default btn-primary" role="button" title="{% trans 'edit_adviser'%}">
+                        {% trans 'back' %}
+                    </a>
+                </div>
+            </div>
+
+        {% endif %}
     </div>
 </div>
 {% endblock %}

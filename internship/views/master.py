@@ -28,7 +28,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from internship.models import InternshipMaster, Organization
-from operator import itemgetter
+
 
 @login_required
 @permission_required('internship.can_access_internship', raise_exception=True)
@@ -71,18 +71,20 @@ def interships_masters(request):
         organization = Organization.search(reference=i)
         master_organizations.append(organization[0])
 
-    return render(request, "interships_masters.html", {'section':                   'internship',
-                                                       'all_masters':               query,
-                                                       'all_spec':                  master_specs,
-                                                       'all_organizations':         master_organizations,
-                                                       'speciality_sort_value':     speciality_sort_value,
-                                                       'organization_sort_value':   organization_sort_value})
+    return render(request, "interships_masters.html", {'section': 'internship',
+                                                       'all_masters': query,
+                                                       'all_spec': master_specs,
+                                                       'all_organizations': master_organizations,
+                                                       'speciality_sort_value': speciality_sort_value,
+                                                       'organization_sort_value': organization_sort_value})
+
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def delete_interships_masters(request):
     first_name = request.POST.get("first_name").replace(" ", "")
     name = request.POST.get("name").replace(" ", "")
-
-    InternshipMaster.search(first_name = first_name, last_name = name).delete()
+    # Get the first and last name of the master send by the button of deletion
+    # Get the master in the DB and delete it
+    InternshipMaster.search(first_name=first_name, last_name=name).delete()
     return HttpResponseRedirect(reverse('interships_masters'))

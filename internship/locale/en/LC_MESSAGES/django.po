@@ -15,6 +15,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
 msgid	 "academic_year"
 msgstr	 "Academic year"
 
@@ -272,3 +273,96 @@ msgstr "Select a speciality to add or modify your choices for this internship in
 
 msgid "assignations_sumup"
 msgstr "Assignations' Sum up"
+
+msgid "download_xls_file"
+msgstr "Download Excel File"
+
+msgid "download_pdf_file"
+msgstr "Download PDF File"
+
+msgid "number_of_student"
+msgstr "Number of student"
+
+msgid "internship_assignation"
+msgstr "Internships assignation"
+
+msgid "please_wait"
+msgstr "Please Wait"
+
+msgid "take_several_minutes"
+msgstr "This may take several minutes"
+
+msgid "generate_solution"
+msgstr "Generate solution"
+
+msgid	 "organizations"
+msgstr	 "Hospitals"
+
+msgid	 "statistics"
+msgstr	 "Statistics"
+
+msgid	 "errors"
+msgstr	 "Errors"
+
+msgid   "erasmus"
+msgstr  "Erasmus"
+
+msgid   "socials"
+msgstr  "Socials"
+
+msgid   "total_internships"
+msgstr  "Total Internships"
+
+msgid   "all_student"
+msgstr  "All student"
+
+msgid   "other_choice"
+msgstr  "Other choice"
+
+msgid   "erasmus_students"
+msgstr   "Erasmus students"
+
+msgid   "social_students"
+msgstr   "Social students"
+
+msgid   "normal_students"
+msgstr   "Normal students"
+
+msgid   "imposed_choices"
+msgstr  "Imposed choices"
+
+msgid   "organization_error"
+msgstr  "Hospital error"
+
+msgid   "mean_cost_student"
+msgstr  "Mean cost of student"
+
+msgid   "standard_deviation"
+msgstr  "Standard deviation"
+
+msgid   "mean_nonconsecutive_month"
+msgstr  "Mean nonconsecutive month"
+
+msgid   "total_cost_solution"
+msgstr  "Total cost of the solution"
+
+msgid   "type_internship"
+msgstr  "Type of internship"
+
+msgid   "executions"
+msgstr  "Executions"
+
+msgid   "order_postion"
+msgstr  "Sorting position"
+
+msgid "latest_generation_start"
+msgstr "Latest generation start"
+
+msgid "latest_generation_end"
+msgstr "Latest generation end"
+
+msgid "student_not_exists"
+msgstr "Student does not exists"
+
+msgid "export_organisation_affectation_xls"
+msgstr "Export Excel file for the organisation"

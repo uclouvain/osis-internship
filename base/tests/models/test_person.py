@@ -23,26 +23,38 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
-
 from django.test import TestCase
-from base.models import student
-import base.tests.ressources.data_test_model as data_for_test
-import backoffice.tests.data_for_tests as data_model
+from base.models import person
+from base.enums import person_source_type
+from django.conf import settings
 
 
-class PortalMigrationTest(TestCase):
-    def setUp(self):
-        self.list_students = data_model.create_students()
+class PersonTest(TestCase):
 
-    def testFindAllForSync(self):
-        actual = student.find_all_for_sync()
-        expected = data_for_test.expected_for_students
+    settings.INTERNAL_EMAIL_SUFIX = 'osis.org'
 
-        error_msg = "find all ofr sync for students doesn't return correct json format."
-        self.assertJSONEqual(actual['students'], expected['students'], error_msg)
-        self.assertJSONEqual(actual['persons'], expected['persons'], error_msg)
+    def test_person_from_external_source(self):
+        p = person.Person(email='matheus@osis.org',
+                          last_name='Nashtergeith',
+                          first_name='Matheus',
+                          source=person_source_type.DISSERTATION)
+        self.assertRaises(AttributeError, p.save)
 
+    def test_person_from_internal_source(self):
+        p = person.Person(email='matheus@osis.org',
+                          last_name='Nashtergeith',
+                          first_name='Matheus')
+        try:
+            p.save()
+        except AttributeError:
+            self.fail("Exception not expected")
 
-
-
+    def test_person_without_source(self):
+        p = person.Person(email='matheus@osis.org',
+                          last_name='Nashtergeith',
+                          first_name='Matheus',
+                          source=None)
+        try:
+            p.save()
+        except AttributeError:
+            self.fail("Exception not expected")
