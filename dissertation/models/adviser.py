@@ -29,7 +29,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
-from base.models.serializable_model import SerializableModel
+from osis_common.models.serializable_model import SerializableModel
 from .dissertation_role import DissertationRole
 
 
