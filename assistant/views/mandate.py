@@ -24,14 +24,27 @@
 #
 ##############################################################################
 from django.contrib.auth.decorators import user_passes_test
-from django.db import IntegrityError
-import csv, codecs
-from assistant.forms import MandateForm, structure_inline_formset
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
+from openpyxl import load_workbook
+from assistant.forms import MandateForm, structure_inline_formset, MandateFileForm
+from assistant import models as assistant_mdl
 from base.views import layout
-from assistant.models import assistant_mandate, academic_assistant, mandate_structure, manager
 from base import models as mdl
-from assistant.models.mandate_structure import MandateStructure
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib import messages
+from django.utils.translation import ugettext as _
+
+COLS_NUMBER = 23
+ASSISTANTS_IMPORTED = 0
+MANDATES_IMPORTED = 0
+ASSISTANTS_UPDATED = 0
+MANDATES_UPDATED = 0
+PERSONS_NOT_FOUND = 0
+COLS_TITLES = ['SECTOR','FACULTY','PROGRAM_COMMISSION','INSTITUTE','POLE','SAP_ID','GLOBAL_ID','LAST_NAME','FIRST_NAME',
+               'FULLTIME_EQUIVALENT','ENTRY_DATE','END_DATE','ASSISTANT_TYPE_CODE','GRADE','SCALE','CONTRACT_DURATION',
+               'CONTRACT_DURATION_FTE','RENEWAL_TYPE','ABSENCES','COMMENT','OTHER_STATUS','EMAIL','FGS']
+
 
 def user_is_manager(user):
     """Use with a ``user_passes_test`` decorator to restrict access to 
@@ -39,32 +52,29 @@ def user_is_manager(user):
     
     try:
         if user.is_authenticated():
-            return manager.Manager.objects.get(person=user.person)
+            return assistant_mdl.manager.Manager.objects.get(person=user.person)
     except ObjectDoesNotExist:
         return False
     
 
 @user_passes_test(user_is_manager, login_url='assistants_home')
 def mandate_edit(request, mandate_id):
-    """Use to edit an assistant mandate."""
-    mandate = assistant_mandate.find_mandate_by_id(mandate_id)
-    form = MandateForm(initial={'comment': mandate.comment, 
+    mandate = assistant_mdl.assistant_mandate.find_mandate_by_id(mandate_id)
+    form = MandateForm(initial={'comment': mandate.comment,
                                 'renewal_type': mandate.renewal_type,
                                 'absences': mandate.absences,
                                 'other_status': mandate.other_status,
                                 'contract_duration': mandate.contract_duration,
                                 'contract_duration_fte': mandate.contract_duration_fte
-                                }, prefix="mand",instance=mandate)
+                                }, prefix="mand", instance=mandate)
     formset = structure_inline_formset(instance=mandate, prefix="struct")
     
-    return layout.render(request, 'mandate_form.html', {'mandate': mandate,
-                                                'form': form,
-                                                'formset': formset})
+    return layout.render(request, 'mandate_form.html', {'mandate': mandate, 'form': form, 'formset': formset})
+
 
 @user_passes_test(user_is_manager, login_url='assistants_home')
 def mandate_save(request, mandate_id):
-    """Use to save an assistant mandate."""
-    mandate = assistant_mandate.find_mandate_by_id(mandate_id)
+    mandate = assistant_mdl.assistant_mandate.find_mandate_by_id(mandate_id)
     form = MandateForm(data=request.POST, instance=mandate, prefix='mand')
     formset = structure_inline_formset(request.POST, request.FILES, instance=mandate, prefix='struct')
     if form.is_valid():
@@ -73,152 +83,187 @@ def mandate_save(request, mandate_id):
             formset.save()
             return mandate_edit(request, mandate.id)
         else:
-            return layout.render(request, "mandate_form.html", {'mandate': mandate,
-                                                                 'form': form,
-                                                                 'formset': formset})    
+            return layout.render(request, "mandate_form.html", {'mandate': mandate, 'form': form, 'formset': formset})
     else:
-        return layout.render(request, "mandate_form.html", {'mandate': mandate,
-                                                                 'form': form,
-                                                                 'formset': formset})    
+        return layout.render(request, "mandate_form.html", {'mandate': mandate, 'form': form, 'formset': formset})
 
 
 @user_passes_test(user_is_manager, login_url='assistants_home')
 def load_mandates(request):
-    """Importe un fichier CSV osis/assistant/views/data_assistant.csv contenant la liste des mandats.
-    Si un mandat avec un assistant, sap_id, position_id et academic_year existe déjà,
-    il est mis à jour plutôt qu'ajouté.
-    Si l'assistant lié au mandat existe déjà, il n'est ni modifié ni ajouté"""
-    
-    imported_assistants_counter = 0
-    imported_mandates_counter = 0
-    updated_mandates_counter = 0
-    error_counter = 0
-    if(request.POST):
-        with codecs.open('osis/assistant/views/data_assistant.csv', encoding='utf-8') as csvfile:
-            row = csv.reader(csvfile, delimiter=';')
-            for columns in row:
-                if len(columns) > 0:
-                    person = mdl.person.find_by_global_id(columns[5].strip())
-                    if person:
-                        assistant = academic_assistant.AcademicAssistant()
-                        assistant.person = person
-                        fte = columns[8].strip().replace(",", ".");
-                        this_academic_year = mdl.academic_year.current_academic_year()
-                        position_id = columns[3].strip()
-                        faculty = columns[1].strip()
-                        institute = columns[2].strip()
-                        sap_id = columns[4].strip()  
-                        entry_date = columns[10].strip()
-                        end_date = columns[10].strip()
-                        contract_duration = columns[14].strip()
-                        contract_duration_fte = columns[15].strip()
-                        renewal_type = columns[16].strip()
-                        assistant_type = columns[11].strip()
-                        grade = columns[12].strip()
-                        scale = columns[13].strip()
-                        renewal_type = columns[16].strip()
-                        absences =columns[17].strip()
-                        comment =columns[18].strip()
-                        other_status = columns[19].strip()
-                        mandate = assistant_mandate.AssistantMandate()
-                        mandate.fulltime_equivalent = fte
-                        mandate.position_id = position_id
-                        mandate.sap_id = sap_id 
-                        mandate.entry_date = entry_date
-                        mandate.end_date = end_date
-                        mandate.assistant_type = assistant_type
-                        mandate.grade = grade
-                        mandate.scale = scale
-                        mandate.contract_duration = contract_duration
-                        mandate.contract_duration_fte = contract_duration_fte
-                        mandate.renewal_type = renewal_type
-                        mandate.absences = absences
-                        mandate.comment = comment
-                        mandate.other_status = other_status
-                        mandate.state='TO_DO'
-                        mandate.research_percent=0
-                        mandate.tutoring_percent=0
-                        mandate.service_activities_percent=0
-                        mandate.formation_activities_percent=0
-                        mandate.faculty_representation=0
-                        mandate.institute_representation=0
-                        mandate.sector_representation=0
-                        mandate.governing_body_representation=0
-                        mandate.corsci_representation=0
-                        mandate.students_service=0
-                        mandate.infrastructure_mgmt_service=0
-                        mandate.events_organisation_service=0
-                        mandate.publishing_field_service=0
-                        mandate.scientific_jury_service=0
-                        mandate.academic_year=this_academic_year
-                        mandate.appeal='NONE'
-                        mandate.special=False
-                        try:
-                            assistant.save()
-                            imported_assistants_counter += 1
-                        except IntegrityError:
-                            print('Duplicated : %s - %s' % (assistant, person))
-                        try:
-                            mandate.assistant=academic_assistant.find_by_person(person)
-                            existing_mandate = assistant_mandate.AssistantMandate.objects.filter(academic_year = this_academic_year,
-                                                                                                 assistant = mandate.assistant,
-                                                                                                 sap_id = sap_id,
-                                                                                                 position_id = position_id)
-                            if existing_mandate.count() >0:
-                                MandateStructure.objects.filter(assistant_mandate=existing_mandate).delete()
-                                existing_mandate.update(fulltime_equivalent=fte,
-                                               entry_date = entry_date,
-                                               end_date = end_date,
-                                               contract_duration = contract_duration,
-                                               contract_duration_fte = contract_duration_fte,
-                                               renewal_type = renewal_type,
-                                               assistant_type = assistant_type,
-                                               grade = grade,
-                                               scale = scale,
-                                               absences = absences,
-                                               comment = comment,
-                                               other_status = other_status)
-                                if institute:
-                                    existing_institute = mdl.structure.Structure.objects.get(acronym=institute,
-                                                                                         type='INSTITUTE')
-                                    if existing_institute:
-                                        mandate_struc_institute = mandate_structure.MandateStructure()
-                                        mandate_struc_institute.assistant_mandate = existing_mandate[0]
-                                        mandate_struc_institute.structure = existing_institute
-                                        mandate_struc_institute.save()
-                                if faculty:
-                                    existing_faculty = mdl.structure.Structure.objects.get(acronym=faculty,
-                                                                                       type='FACULTY')
-                                    if existing_faculty:
-                                        mandate_struc_faculty = mandate_structure.MandateStructure()
-                                        mandate_struc_faculty.assistant_mandate = existing_mandate[0]
-                                        mandate_struc_faculty.structure = existing_faculty
-                                        mandate_struc_faculty.save()
-                                updated_mandates_counter += 1
-                            else:
-                                mandate.save()
-                                if institute:
-                                    existing_institute = mdl.structure.Structure.objects.get(acronym=institute,
-                                                                                         type='INSTITUTE')
-                                    if existing_institute:
-                                        mandate_struc_institute = mandate_structure.MandateStructure()
-                                        mandate_struc_institute.assistant_mandate = mandate
-                                        mandate_struc_institute.structure = existing_institute
-                                        mandate_struc_institute.save()
-                                if faculty:
-                                    existing_faculty = mdl.structure.Structure.objects.get(acronym=faculty,
-                                                                                       type='FACULTY')
-                                    if existing_faculty:
-                                        mandate_struc_faculty = mandate_structure.MandateStructure()
-                                        mandate_struc_faculty.assistant_mandate = mandate
-                                        mandate_struc_faculty.structure = existing_faculty
-                                        mandate_struc_faculty.save()
-                                imported_mandates_counter += 1
-                        except IntegrityError:
-                            print('Duplicated : %s' % (assistant))
-                    else:
-                        error_counter += 1
-    return layout.render(request, "load_mandates.html", {'imported_assistants': imported_assistants_counter,
-                                                         'imported_mandates': imported_mandates_counter,
-                                                         'updated_mandates': updated_mandates_counter,
-                                                         'error_counter': error_counter})             
+    return layout.render(request, "load_mandates.html", {})
+
+
+@user_passes_test(user_is_manager, login_url='assistants_home')
+def upload_mandates_file(request):
+    global ASSISTANTS_IMPORTED, ASSISTANTS_UPDATED, MANDATES_IMPORTED, MANDATES_UPDATED, PERSONS_NOT_FOUND
+    ASSISTANTS_UPDATED = 0
+    ASSISTANTS_IMPORTED = 0
+    MANDATES_IMPORTED = 0
+    MANDATES_UPDATED = 0
+    PERSONS_NOT_FOUND = 0
+    if request.method == 'POST':
+        form = MandateFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            file_name = request.FILES['file']
+            if file_name is not None:
+                try:
+                    read_xls_mandates(request, file_name)
+                except IndexError:
+                    messages.add_message(request, messages.ERROR,
+                                         'xls_columns_structure_error'.format('via_excel', 'get_excel_file'))
+        else:
+            for error_msg in [error_msg for error_msgs in form.errors.values() for error_msg in error_msgs]:
+                messages.add_message(request, messages.ERROR, "{}".format(error_msg))
+        return layout.render(request, "load_mandates.html", {'imported_assistants': ASSISTANTS_IMPORTED,
+                                                             'imported_mandates': MANDATES_IMPORTED,
+                                                             'updated_mandates': MANDATES_UPDATED,
+                                                             'updated_assistants': ASSISTANTS_UPDATED,
+                                                             'persons_not_found': PERSONS_NOT_FOUND})
+
+
+@user_passes_test(user_is_manager, login_url='assistants_home')
+def read_xls_mandates(request, file_name):
+    try:
+        workbook = load_workbook(file_name, read_only=True, data_only=True)
+    except KeyError:
+        messages.add_message(request, messages.ERROR, 'file_must_be_xlsx')
+        return False
+    first_sheet = workbook.get_sheet_names()[0]
+    worksheet = workbook.get_sheet_by_name(first_sheet)
+    titles_row = []
+    current_row = 1
+    for row in worksheet.iter_rows():
+        if current_row == 1:
+            titles_row = save_xls_rows_titles(row)
+            if check_file_format(request, titles_row) == False:
+                return False
+        else:
+            current_record = xls_row_to_dict(row, titles_row)
+            assistant = create_academic_assistant_if_not_exists(current_record)
+            if assistant:
+                mandate = create_assistant_mandate_if_not_exists(current_record, assistant)
+                institute = search_structure_by_acronym_and_type(current_record.get('INSTITUTE'), 'INSTITUTE')
+                if institute:
+                    link_mandate_to_structure(mandate, institute)
+                faculty = search_structure_by_acronym_and_type(current_record.get('FACULTY'), 'FACULTY')
+                if faculty:
+                    link_mandate_to_structure(mandate, faculty)
+                pole = search_structure_by_acronym_and_type(current_record.get('POLE'), 'POLE')
+                if pole:
+                    link_mandate_to_structure(mandate, pole)
+                program_commission = search_structure_by_acronym_and_type(current_record.get('PROGRAM_COMMISSION'),
+                                                                          'PROGRAM_COMMISSION')
+                if program_commission:
+                    link_mandate_to_structure(mandate, program_commission)
+        current_row += 1
+
+
+def search_structure_by_acronym_and_type(acronym, type):
+    if not acronym:
+        return None
+    results = mdl.structure.search(acronym=acronym, type=type)
+    if len(results) > 0:
+        return  results[0]
+    else:
+        return None
+
+
+def save_xls_rows_titles(current_row):
+    titles = []
+    for cell in current_row:
+        titles.append(cell.value)
+    return titles
+
+
+def xls_row_to_dict(row, titles):
+    record_to_import = {}
+    current_col = 0
+    for cell in row:
+        record_to_import[titles[current_col]] = cell.value
+        current_col += 1
+    return record_to_import
+
+
+def create_academic_assistant_if_not_exists(record):
+    global ASSISTANTS_UPDATED, ASSISTANTS_IMPORTED, PERSONS_NOT_FOUND
+    person = mdl.person.find_by_global_id(record.get('FGS'))
+    if person:
+        try:
+            assistant = assistant_mdl.academic_assistant.find_by_person(mdl.person.find_by_global_id(record.get('FGS')))
+            ASSISTANTS_UPDATED += 1
+        except ObjectDoesNotExist:
+            assistant = assistant_mdl.academic_assistant.AcademicAssistant()
+            ASSISTANTS_IMPORTED += 1
+            assistant.person = person
+            assistant.save()
+        return assistant
+    else:
+        PERSONS_NOT_FOUND += 1
+        return None
+
+
+def create_assistant_mandate_if_not_exists(record, assistant):
+    global MANDATES_IMPORTED, MANDATES_UPDATED
+    current_academic_year = mdl.academic_year.current_academic_year()
+    mandates = assistant_mdl.assistant_mandate.find_mandate(assistant, current_academic_year, record.get('SAP_ID'))
+    if len(mandates) == 0:
+        mandate = assistant_mdl.assistant_mandate.AssistantMandate()
+        MANDATES_IMPORTED += 1
+    else:
+        mandate = mandates[0]
+        MANDATES_UPDATED += 1
+    mandate.assistant = assistant
+    mandate.academic_year = current_academic_year
+    mandate.end_date = record.get('END_DATE')
+    mandate.entry_date = record.get('ENTRY_DATE')
+    mandate.fulltime_equivalent = record.get('FULLTIME_EQUIVALENT')
+    mandate.sap_id = record.get('SAP_ID')
+    mandate.contract_duration = record.get('CONTRACT_DURATION')
+    mandate.contract_duration_fte = record.get('CONTRACT_DURATION_FTE')
+    mandate.renewal_type = record.get('RENEWAL_TYPE')
+    mandate.absences = record.get('ABSENCES')
+    mandate.comment = record.get('COMMENT')
+    mandate.other_status = record.get('OTHER_STATUS')
+    mandate.assistant_type = record.get('ASSISTANT_TYPE_CODE')
+    mandate.grade = record.get('GRADE')
+    mandate.scale = record.get('SCALE')
+    mandate.state = 'TO_DO'
+    mandate.save()
+    return mandate
+
+
+def link_mandate_to_structure(mandate, structure=None):
+    if structure != 'None':
+        mandate_structures = assistant_mdl.mandate_structure.find_by_mandate_and_structure(mandate, structure)
+        if len(mandate_structures) == 0:
+            mandate_structure = assistant_mdl.mandate_structure.MandateStructure()
+        else:
+            mandate_structure = mandate_structures[0]
+        mandate_structure.assistant_mandate = mandate
+        mandate_structure.structure = structure
+        mandate_structure.save()
+        return mandate_structure
+    else:
+        return None
+
+
+def show_import_result(request):
+    global ASSISTANTS_IMPORTED, ASSISTANTS_UPDATED, MANDATES_IMPORTED, MANDATES_UPDATED, PERSONS_NOT_FOUND
+    return layout.render(request, "load_mandates.html", {'imported_assistants': ASSISTANTS_IMPORTED,
+                                                         'imported_mandates': MANDATES_IMPORTED,
+                                                         'updated_mandates': MANDATES_UPDATED,
+                                                         'updated_assistants': ASSISTANTS_UPDATED,
+                                                         'persons_not_found': PERSONS_NOT_FOUND})
+
+
+def check_file_format(request, titles_rows):
+    if len(titles_rows) != COLS_NUMBER:
+        messages.add_message(request, messages.ERROR, _('columns_number_error'))
+        return False
+    if titles_rows != COLS_TITLES:
+        messages.add_message(request, messages.ERROR, _('columns_title_error'))
+        messages.add_message(request, messages.ERROR, COLS_TITLES)
+        return False
+
+
+
