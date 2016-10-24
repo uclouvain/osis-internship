@@ -23,15 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from datetime import datetime
-
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-from django.shortcuts import get_object_or_404
 from base.forms import AcademicCalendarForm
 from base import models as mdl
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ugettext as trans
 from . import layout
 
 
@@ -83,103 +77,31 @@ def academic_calendar_new(request):
 
 @login_required
 @permission_required('base.can_access_academic_calendar', raise_exception=True)
-def academic_calendar_save(request, id):
-    form = AcademicCalendarForm(data=request.POST)
-
-    if id:
-        academic_calendar = mdl.academic_calendar.find_academic_calendar_by_id(id)
-    else:
-        academic_calendar = mdl.academic_calendar.AcademicCalendar()
-    academic_year = None
-    academic_year_id = request.POST['academic_year']
-
-    # get the screen modifications
-    if academic_year_id:
-        academic_year = get_object_or_404(mdl.academic_year.AcademicYear, pk=academic_year_id)
-        academic_calendar.academic_year = academic_year
-    else:
-        academic_calendar.academic_year = None
-
-    academic_calendars = mdl.academic_calendar.find_academic_calendar_by_academic_year(academic_year)
-
-    if request.POST['title']:
-        academic_calendar.title = request.POST['title']
-    else:
-        academic_calendar.title = None
-
-    if request.POST['description']:
-        academic_calendar.description = request.POST['description']
-    else:
-        academic_calendar.description = None
-
-    if request.POST['highlight_description']:
-        academic_calendar.highlight_description = request.POST['highlight_description']
-    else:
-        academic_calendar.highlight_description = None
-
-    if request.POST['highlight_title']:
-        academic_calendar.highlight_title = request.POST['highlight_title']
-    else:
-        academic_calendar.highlight_title = None
-
-    if request.POST['highlight_shortcut']:
-        academic_calendar.highlight_shortcut = request.POST['highlight_shortcut']
-    else:
-        academic_calendar.highlight_shortcut = None
+def academic_calendar_save(request, academic_calendar_id):
+    academic_calendar = None
+    if academic_calendar_id:
+        academic_calendar = mdl.academic_calendar.find_academic_calendar_by_id(academic_calendar_id)
+    form = AcademicCalendarForm(request.POST, instance=academic_calendar)
 
     academic_years = mdl.academic_year.find_academic_years()
     if form.is_valid():
-        if request.POST['start_date']:
-            academic_calendar.start_date = datetime.strptime(request.POST['start_date'], '%d/%m/%Y')
-        else:
-            academic_calendar.start_date = None
-
-        if request.POST['end_date']:
-            academic_calendar.end_date = datetime.strptime(request.POST['end_date'], '%d/%m/%Y')
-        else:
-            academic_calendar.end_date = None
-
-        if academic_calendar.start_date and academic_calendar.end_date:
-            if academic_calendar.start_date > academic_calendar.end_date:
-                form.errors['start_date'] = _('begin_date_lt_end_date')
-
-        new_academic_calendar = False
-        if academic_calendar.id is None:
-            new_academic_calendar = True
-        off_year_calendar_max = mdl.offer_year_calendar.get_max_end_date(academic_calendar.id)
-        if off_year_calendar_max and academic_calendar.end_date.date() < off_year_calendar_max.end_date:
-            messages.add_message(request, messages.ERROR,
-                                 "%s." % (trans('academic_calendar_offer_year_calendar_end_date_error')
-                                          % (off_year_calendar_max.end_date.strftime('%d/%m/%Y'),
-                                             off_year_calendar_max.offer_year.acronym)))
-            return layout.render(request, "academic_calendar_form.html", {'academic_calendar': academic_calendar,
-                                                                          'academic_years': academic_years,
-                                                                          'form': form})
-        else:
-            academic_calendar.save()
-            if new_academic_calendar:
-                mdl.offer_year_calendar.save(academic_calendar)
-            else:
-                mdl.offer_year_calendar.update(academic_calendar)
-                sent_error_message = mdl.offer_year_calendar.update(academic_calendar)
-                if sent_error_message:
-                    messages.add_message(request, messages.ERROR, "%s" % sent_error_message)
-
-        return layout.render(request, "academic_calendars.html", {'academic_year': academic_year,
+        form.save()
+        return layout.render(request, "academic_calendars.html", {'academic_year': form.academic_year,
                                                                   'academic_years': academic_years,
-                                                                  'academic_calendars': academic_calendars})
+                                                                  'form': form})
     else:
-        return layout.render(request, "academic_calendar_form.html", {'academic_calendar': academic_calendar,
-                                                                      'academic_years': academic_years,
+        return layout.render(request, "academic_calendar_form.html", {'academic_years': academic_years,
                                                                       'form': form})
+
 
 @login_required
 @permission_required('base.can_access_academic_calendar', raise_exception=True)
 def academic_calendar_edit(request, id):
     academic_calendar = mdl.academic_calendar.find_academic_calendar_by_id(id)
+    form = AcademicCalendarForm(instance=academic_calendar)
     academic_years = mdl.academic_year.find_academic_years()
-    return layout.render(request, "academic_calendar_form.html", {'academic_calendar': academic_calendar,
-                                                                  'academic_years': academic_years})
+    return layout.render(request, "academic_calendar_form.html", {'form': form, 'academic_years': academic_years})
+
 
 @login_required
 @permission_required('base.can_access_academic_calendar', raise_exception=True)

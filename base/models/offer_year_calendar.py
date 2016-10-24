@@ -32,7 +32,7 @@ import datetime
 
 
 class OfferYearCalendarAdmin(admin.ModelAdmin):
-    list_display = ('academic_calendar', 'offer_year', 'start_date', 'end_date', 'changed')
+    list_display = ('external_id', 'academic_calendar', 'offer_year', 'start_date', 'end_date', 'changed')
     fieldsets = ((None, {'fields': ('offer_year', 'academic_calendar', 'start_date', 'end_date')}),)
     raw_id_fields = ('offer_year',)
     search_fields = ['offer_year__acronym']
@@ -48,44 +48,85 @@ class OfferYearCalendar(models.Model):
     end_date = models.DateField(blank=True, null=True, db_index=True)
     customized = models.BooleanField(default=False)
 
+    def update_dates(self, start_date, end_date):
+        if self.customized: # case offerYearCalendar is already customized
+            # We update the new start date
+            # WARNING : this is TEMPORARY ; a solution for the sync from EPC to OSIS
+            #           because the start_date for scores_encodings doesn't exist in EPC
+            self.start_date = start_date
+        else:
+            self.start_date = start_date
+            self.end_date = end_date
+        self.save()
+
     def __str__(self):
         return u"%s - %s" % (self.academic_calendar, self.offer_year)
 
 
-def save(academic_cal):
-    """
-    It creates an event in the academic calendar of each annual offer when an
-    event is created in the academic calendar.
-    """
-    academic_yr = academic_cal.academic_year
-    offer_year_list = offer_year.find_by_academic_year(academic_yr.id)
-    for offer_yr in offer_year_list:
-        offer_yr_calendar = OfferYearCalendar()
-        offer_yr_calendar.academic_calendar = academic_cal
-        offer_yr_calendar.offer_year = offer_yr
-        offer_yr_calendar.start_date = academic_cal.start_date
-        offer_yr_calendar.end_date = academic_cal.end_date
-        offer_yr_calendar.save()
+def _create_offer_year_calendar(academic_calendar, offer_year):
+    offer_yr_calendar = OfferYearCalendar(academic_calendar=academic_calendar,
+                                          offer_year=offer_year,
+                                          start_date=academic_calendar.start_date,
+                                          end_date=academic_calendar.end_date)
+    offer_yr_calendar.save()
 
 
-def update(academic_cal):
-    sent_message_error = None
-    offer_year_calendar_list = find_by_academic_calendar(academic_cal)
-    if offer_year_calendar_list:
-        for offer_year_calendar in offer_year_calendar_list:
-            if offer_year_calendar.customized: # case offerYearCalendar is already customized
-                # We update the new start date
-                # WARNING : this is TEMPORARY ; a solution for the sync from EPC to OSIS
-                #           because the start_date for scores_encodings doesn't exist in EPC
-                offer_year_calendar.start_date = academic_cal.start_date
-                offer_year_calendar.save()
-            else:
-                offer_year_calendar.start_date = academic_cal.start_date
-                offer_year_calendar.end_date = academic_cal.end_date
-                offer_year_calendar.save()
+def _create_offer_year_calendars(academic_calendar):
+    academic_yr = academic_calendar.academic_year
+    offer_years = offer_year.find_by_academic_year(academic_yr.id)
+    for offer_yr in offer_years:
+        _create_offer_year_calendar(academic_calendar, offer_yr)
+
+#
+# def update_offer_year_calendars(academic_calendar):
+#     offer_year_calendars = find_by_academic_calendar(academic_calendar)
+#     for offer_year_calendar in offer_year_calendars:
+#         offer_year_calendar.update_dates(academic_calendar.start_date, academic_calendar.end_date)
+
+
+def save_offer_year_calendars(academic_calendar):
+    offer_year_calendars = find_by_academic_calendar(academic_calendar)
+    if offer_year_calendars:
+        for offer_year_calendar in offer_year_calendars:
+            offer_year_calendar.update_dates(academic_calendar.start_date, academic_calendar.end_date)
     else:
-        save(academic_cal)
-    return sent_message_error
+        _create_offer_year_calendars(academic_calendar)
+
+
+# def save(academic_cal):
+#     """
+#     It creates an event in the academic calendar of each annual offer when an
+#     event is created in the academic calendar.
+#     """
+#     academic_yr = academic_cal.academic_year
+#     offer_year_list = offer_year.find_by_academic_year(academic_yr.id)
+#     for offer_yr in offer_year_list:
+#         offer_yr_calendar = OfferYearCalendar()
+#         offer_yr_calendar.academic_calendar = academic_cal
+#         offer_yr_calendar.offer_year = offer_yr
+#         offer_yr_calendar.start_date = academic_cal.start_date
+#         offer_yr_calendar.end_date = academic_cal.end_date
+#         offer_yr_calendar.save()
+#
+#
+# def update(academic_cal):
+#     sent_message_error = None
+#     offer_year_calendar_list = find_by_academic_calendar(academic_cal)
+#     if offer_year_calendar_list:
+#         for offer_year_calendar in offer_year_calendar_list:
+#             if offer_year_calendar.customized: # case offerYearCalendar is already customized
+#                 # We update the new start date
+#                 # WARNING : this is TEMPORARY ; a solution for the sync from EPC to OSIS
+#                 #           because the start_date for scores_encodings doesn't exist in EPC
+#                 offer_year_calendar.start_date = academic_cal.start_date
+#                 offer_year_calendar.save()
+#             else:
+#                 offer_year_calendar.start_date = academic_cal.start_date
+#                 offer_year_calendar.end_date = academic_cal.end_date
+#                 offer_year_calendar.save()
+#     else:
+#         save(academic_cal)
+#     return sent_message_error
 
 
 def offer_year_calendar_by_current_session_exam():

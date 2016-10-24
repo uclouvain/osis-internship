@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from ckeditor.widgets import CKEditorWidget
+from django.utils.translation import ugettext as trans
 from django import forms
 from django.forms import ModelForm
 from admission import models as admission
@@ -56,16 +56,22 @@ class OrganizationForm(ModelForm):
 
 
 class AcademicCalendarForm(ModelForm):
-    start_date = forms.DateField(widget=forms.DateInput(format='%d/%m/%Y'),
-                                 input_formats=('%d/%m/%Y',),
-                                 required=True)
-    end_date = forms.DateField(widget=forms.DateInput(format='%d/%m/%Y'),
-                               input_formats=('%d/%m/%Y', ),
-                               required=True)
-
     class Meta:
         model = mdl.academic_calendar.AcademicCalendar
-        fields = ['start_date', 'end_date', 'title', 'highlight_title', 'highlight_description', 'highlight_shortcut']
+        exclude = ['external_id', 'changed']
+
+    def is_valid(self):
+        valid = super(AcademicCalendarForm, self).is_valid()
+        if not valid:
+            return valid
+        off_year_calendar_max = mdl.offer_year_calendar.get_max_end_date(self.instance.id)
+        if off_year_calendar_max and self.cleaned_data['end_date'] < off_year_calendar_max.end_date:
+            error_msg = "%s." % (trans('academic_calendar_offer_year_calendar_end_date_error')
+                                 % (off_year_calendar_max.end_date.strftime('%d/%m/%Y'),
+                                    off_year_calendar_max.offer_year.acronym))
+            self._errors['end_date'] = error_msg
+            return False
+        return True
 
 
 class OfferYearCalendarForm(ModelForm):

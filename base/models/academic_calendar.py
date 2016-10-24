@@ -23,11 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import datetime
 from django.db import models
 from django.utils import timezone
 from django.contrib import admin
 from base.models import session_exam
+from base.models import offer_year_calendar
 
 
 class AcademicCalendarAdmin(admin.ModelAdmin):
@@ -46,6 +46,10 @@ class AcademicCalendar(models.Model):
     highlight_title = models.CharField(max_length=255, blank=True, null=True)
     highlight_description = models.CharField(max_length=255, blank=True, null=True)
     highlight_shortcut = models.CharField(max_length=255, blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        offer_year_calendar.save_offer_year_calendars(self)
+        super(AcademicCalendar, self).save(*args, **kwargs)
 
     def __str__(self):
         return u"%s %s" % (self.academic_year, self.title)
