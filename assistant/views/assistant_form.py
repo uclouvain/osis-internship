@@ -202,6 +202,7 @@ def form_part4_edit(request, mandate_id):
                                                          'form': form})
 
 
+@user_passes_test(user_is_assistant_and_procedure_is_open, login_url='access_denied')
 def form_part4_save(request, mandate_id):
     """Use to save an assistant form part4."""
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
