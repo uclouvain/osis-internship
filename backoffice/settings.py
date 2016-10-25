@@ -226,19 +226,19 @@ CKEDITOR_CONFIGS = {
 # Queues Definition
 # Uncomment the configuration if you want to use the queue system
 # The queue system uses RabbitMq queues to communicate with other application (ex : osis)
-QUEUES = {
-    'QUEUE_URL': 'localhost',
-    'QUEUE_USER': 'guest',
-    'QUEUE_PASSWORD': 'guest',
-    'QUEUE_PORT': 5672,
-    'QUEUE_CONTEXT_ROOT': '/',
-    'QUEUES_NAME': {
-        'MIGRATIONS_TO_PRODUCE': 'osis_portal',
-        'MIGRATIONS_TO_CONSUME': 'osis',
-        'PAPER_SHEET': 'paper_sheet',
-        'PERFORMANCE': 'performance'
-    }
-}
+# QUEUES = {
+#     'QUEUE_URL': 'localhost',
+#     'QUEUE_USER': 'guest',
+#     'QUEUE_PASSWORD': 'guest',
+#     'QUEUE_PORT': 5672,
+#     'QUEUE_CONTEXT_ROOT': '/',
+#     'QUEUES_NAME': {
+#         'MIGRATIONS_TO_PRODUCE': 'osis_portal',
+#         'MIGRATIONS_TO_CONSUME': 'osis',
+#         'PAPER_SHEET': 'paper_sheet',
+#         'PERFORMANCE': 'performance'
+#     }
+# }
 
 ENVIRONMENT = 'LOCAL'
 
