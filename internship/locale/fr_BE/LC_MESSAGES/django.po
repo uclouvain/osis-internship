@@ -15,6 +15,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
 msgid	 "academic_year"
 msgstr	 "Année académique"
 
@@ -272,3 +273,96 @@ msgstr "Sélectionnez une spécialité pour ajouter/modifier vos choix pour ce s
 
 msgid "assignations_sumup"
 msgstr "Bilan des assignations"
+
+msgid "download_xls_file"
+msgstr "Télécharger le fichier Excel"
+
+msgid "download_pdf_file"
+msgstr "Télécharger le fichier PDF"
+
+msgid "number_of_student"
+msgstr "Nombre d'étudiant"
+
+msgid "internship_assignation"
+msgstr "Assignation des stages"
+
+msgid "please_wait"
+msgstr "Merci de patienter"
+
+msgid "take_several_minutes"
+msgstr "Cela peut prendre quelques minutes"
+
+msgid "generate_solution"
+msgstr "Générer la solution"
+
+msgid	 "organizations"
+msgstr	 "Hôpitaux"
+
+msgid	 "statistics"
+msgstr	 "Statistiques"
+
+msgid	 "errors"
+msgstr	 "Erreurs"
+
+msgid   "erasmus"
+msgstr  "Erasmus"
+
+msgid   "socials"
+msgstr  "Sociaux"
+
+msgid   "total_internships"
+msgstr  "Total de stages"
+
+msgid   "all_student"
+msgstr  "Tous les étudiants"
+
+msgid   "other_choice"
+msgstr  "Autre choix"
+
+msgid   "erasmus_students"
+msgstr   "Etudiants Erasmus"
+
+msgid   "social_students"
+msgstr   "Etudiants Sociaux"
+
+msgid   "normal_students"
+msgstr   "Etudiants Normaux"
+
+msgid   "imposed_choices"
+msgstr  "Choix Imposés"
+
+msgid   "organization_error"
+msgstr  "Hôpital erreur"
+
+msgid   "mean_cost_student"
+msgstr  "Coût moyen par étudiant"
+
+msgid   "standard_deviation"
+msgstr  "Déviation standard"
+
+msgid   "mean_nonconsecutive_month"
+msgstr  "Moyenne de mois non consécutifs"
+
+msgid   "total_cost_solution"
+msgstr  "Coût total de la solution"
+
+msgid   "type_internship"
+msgstr  "Type de stage"
+
+msgid   "executions"
+msgstr  "Executions"
+
+msgid   "order_postion"
+msgstr  "Position de tri"
+
+msgid "latest_generation_start"
+msgstr "Début de la dernière génération"
+
+msgid "latest_generation_end"
+msgstr "Fin de la dernière génération"
+
+msgid "student_not_exists"
+msgstr "L'étudiant n'existe pas"
+
+msgid "export_organisation_affectation_xls"
+msgstr "Fichier Excel de toutes les spécialités"

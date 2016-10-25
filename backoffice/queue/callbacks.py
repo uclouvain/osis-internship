@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,26 +23,27 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import json
+from django.core import serializers
+from django.db.utils import IntegrityError
 
 
-from django.test import TestCase
-from base.models import tutor
-import base.tests.ressources.data_test_model as data_for_test
-import backoffice.tests.data_for_tests as data_model
+def insert_or_update(json_data):
+    from base.models.serializable_model import SerializableModel
 
+    def save_serializable_models(deserialized_objects):
+        try:
+            for deser_object in deserialized_objects:
+                super(SerializableModel, deser_object.object).save()
+        except IntegrityError as ie:
+            print("Tried to save serializable objects but a foreign key was not found.")
+            print(ie)
 
-class PortalMigrationTest(TestCase):
-    def setUp(self):
-        self.list_tutors = data_model.create_tutors()
-
-    def testFindAllForSync(self):
-        actual = tutor.find_all_for_sync()
-        expected = data_for_test.expected_for_tutors
-
-        error_msg = "find all for sync for tutors doesn't return correct json format."
-        self.assertJSONEqual(actual['tutors'], expected['tutors'], error_msg)
-        self.assertJSONEqual(actual['persons'], expected['persons'], error_msg)
-
-
-
-
+    json_data = json.loads(json_data.decode("utf-8"))
+    serialized_objects = json_data['serialized_objects']
+    deserialized_objects = serializers.deserialize('json', serialized_objects, ignorenonexistent=True)
+    if json_data['to_delete']:
+        for deser_object in deserialized_objects:
+            super(SerializableModel, deser_object.object).delete()
+    else:
+        save_serializable_models(deserialized_objects)

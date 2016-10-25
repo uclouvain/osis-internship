@@ -23,42 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from reference.models import country, domain, education_institution, language
-import backoffice.portal_migration as portal_migration
-import sys
+BASE = 'BASE'
+DISSERTATION = 'DISSERTATION'
 
-queue_name = 'reference'
-
-
-@receiver(post_save, sender=country.Country)
-@receiver(post_save, sender=domain.Domain)
-@receiver(post_save, sender=education_institution.EducationInstitution)
-@receiver(post_save, sender=language.Language)
-def on_post_save_continent(sender, **kwargs):
-    try:
-        instance = kwargs["instance"]
-        send_instance_to_osis_portal(sender, instance)
-    except KeyError:
-        pass
-
-
-def send_instance_to_osis_portal(model_class, instance):
-    """
-    Send the instance to osis-portal.
-    :param model_class: model class of the instance
-    :param instance: a model object
-    :return:
-    """
-    # Records contains the serialized instance.
-    mod = sys.modules[model_class.__module__]
-    records = mod.serialize_list([instance]) # Need to put instance in a list.
-    portal_migration.migrate_records(records=records, model_class=model_class,
-                                     queue_name=queue_name)
-
-
-
-
-
-
+CHOICES = ((BASE, BASE),
+           (DISSERTATION, DISSERTATION))

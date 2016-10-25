@@ -53,6 +53,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_jenkins',
+    'analytical',
     'osis_common',
     'ckeditor',
     'reference',
@@ -232,6 +233,7 @@ LOGO_INSTITUTION_URL = os.path.join(BASE_DIR, "base/static/img/logo_institution.
 # Those urls have to be provided to be used for the emails signature templating.
 LOGO_EMAIL_SIGNATURE_URL = ''
 LOGO_OSIS_URL = ''
+
 
 try:
     from backoffice.server_settings import *

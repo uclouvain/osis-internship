@@ -23,34 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from dissertation.models import adviser
-import backoffice.portal_migration as portal_migration
-import sys
+
+from django.utils.translation import ugettext_lazy as _
 
 
-queue_name = 'dissertation_portal'
+ENROLLED = "ENROLLED"
+NOT_ENROLLED = "NOT_ENROLLED"
 
-
-@receiver(post_save, sender=adviser.Adviser)
-def on_post_save_dissertation(sender, **kwargs):
-    try:
-        instance = kwargs["instance"]
-        send_instance_to_osis_portal(sender, instance)
-    except KeyError:
-        pass
-
-
-def send_instance_to_osis_portal(model_class, instance):
-    """
-    Send the instance to osis-portal.
-    :param model_class: model class of the instance
-    :param instance: a model object
-    :return:
-    """
-    # Records contains the serialized instance.
-    mod = sys.modules[model_class.__module__]
-    # Need to put instance in a list.
-    records = mod.serialize_list([instance])
-    portal_migration.migrate_records(records=records, model_class=model_class, queue_name=queue_name)
+STATES = (
+    (ENROLLED, _('ENROLLED')),
+    (NOT_ENROLLED, _('NOT_ENROLLED')))
