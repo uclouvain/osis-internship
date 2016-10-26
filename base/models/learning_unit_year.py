@@ -25,12 +25,12 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-
+from base.enums.learning_unit_year_type import YEAR_TYPES
 from base.models import attribution
 
 
 class LearningUnitYearAdmin(admin.ModelAdmin):
-    list_display = ('acronym', 'title', 'academic_year', 'credits', 'changed')
+    list_display = ('acronym', 'title', 'academic_year', 'credits', 'changed', 'type')
     fieldsets = ((None, {'fields': ('academic_year', 'acronym', 'title', 'credits', 'decimal_scores')}),)
     search_fields = ['acronym']
 
@@ -43,7 +43,12 @@ class LearningUnitYear(models.Model):
     credits = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     decimal_scores = models.BooleanField(default=False)
     academic_year = models.ForeignKey('AcademicYear')
+    learning_container = models.ForeignKey('LearningContainer')
     learning_unit = models.ForeignKey('LearningUnit')
+    type = models.CharField(max_length=3, blank=True, null=True, choices=YEAR_TYPES)
+    specifications = models.TextField(blank=True, null=True)
+    summary = models.TextField(blank=True, null=True)
+
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year,self.title)
