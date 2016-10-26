@@ -48,7 +48,7 @@ class AcademicCalendar(models.Model):
     highlight_shortcut = models.CharField(max_length=255, blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        offer_year_calendar.save_offer_year_calendars(self)
+        offer_year_calendar.save_from_academic_calendar(self)
         super(AcademicCalendar, self).save(*args, **kwargs)
 
     def __str__(self):

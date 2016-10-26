@@ -51,7 +51,7 @@ class SessionExam(models.Model):
 
 
 def current_session_exam():
-    offer_calendar = offer_year_calendar.offer_year_calendar_by_current_session_exam()
+    offer_calendar = offer_year_calendar.find_by_current_session_exam()
     session_exam = SessionExam.objects.filter(offer_year_calendar=offer_calendar).first()
     return session_exam
 

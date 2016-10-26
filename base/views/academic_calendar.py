@@ -24,7 +24,7 @@
 #
 ##############################################################################
 from django.contrib.auth.decorators import login_required, permission_required
-from base.forms import AcademicCalendarForm
+from base.forms.academic_calendar import AcademicCalendarForm
 from base import models as mdl
 from . import layout
 
