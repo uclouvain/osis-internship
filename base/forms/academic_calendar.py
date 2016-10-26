@@ -33,7 +33,7 @@ class AcademicCalendarForm(ModelForm):
         model = academic_calendar.AcademicCalendar
         exclude = ['external_id', 'changed']
 
-    def end_date_gt_last_offer_year_end_date(self):
+    def end_date_gt_last_offer_year_calendar_end_date(self):
         off_year_calendar_max = offer_year_calendar.find_latest_end_date_by_academic_calendar(self.instance.id)
         if off_year_calendar_max and self.cleaned_data['end_date'] < off_year_calendar_max.end_date:
             error_msg = "%s." % (trans('academic_calendar_offer_year_calendar_end_date_error')
@@ -45,6 +45,6 @@ class AcademicCalendarForm(ModelForm):
 
     def is_valid(self):
         valid = super(AcademicCalendarForm, self).is_valid()
-        if not self.end_date_gt_last_offer_year_end_date():
+        if not self.end_date_gt_last_offer_year_calendar_end_date():
             valid = False
         return valid

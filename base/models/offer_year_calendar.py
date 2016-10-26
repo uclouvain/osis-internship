@@ -32,8 +32,8 @@ import datetime
 
 
 class OfferYearCalendarAdmin(admin.ModelAdmin):
-    list_display = ('external_id', 'academic_calendar', 'offer_year', 'start_date', 'end_date', 'changed')
-    fieldsets = ((None, {'fields': ('offer_year', 'academic_calendar', 'start_date', 'end_date')}),)
+    list_display = ('academic_calendar', 'offer_year', 'start_date', 'end_date', 'changed')
+    fieldsets = ((None, {'fields': ('offer_year', 'academic_calendar', 'start_date', 'end_date', 'customized')}),)
     raw_id_fields = ('offer_year',)
     search_fields = ['offer_year__acronym']
     list_filter = ('academic_calendar__title',)
@@ -63,22 +63,8 @@ class OfferYearCalendar(models.Model):
         return u"%s - %s" % (self.academic_calendar, self.offer_year)
 
 
-def _create(academic_calendar, offer_year):
-    offer_yr_calendar = OfferYearCalendar(academic_calendar=academic_calendar,
-                                          offer_year=offer_year,
-                                          start_date=academic_calendar.start_date,
-                                          end_date=academic_calendar.end_date)
-    offer_yr_calendar.save()
-
-
-def _create_from_academic_calendar(academic_calendar):
-    academic_yr = academic_calendar.academic_year
-    offer_years = offer_year.find_by_academic_year(academic_yr.id)
-    for offer_yr in offer_years:
-        _create(academic_calendar, offer_yr)
-
-
 def save_from_academic_calendar(academic_calendar):
+    _raise_if_parameter_not_conform(academic_calendar)
     offer_year_calendars = find_by_academic_calendar(academic_calendar)
     if offer_year_calendars:
         for offer_year_calendar in offer_year_calendars:
@@ -87,13 +73,32 @@ def save_from_academic_calendar(academic_calendar):
         _create_from_academic_calendar(academic_calendar)
 
 
+def _raise_if_parameter_not_conform(academic_calendar):
+    if not academic_calendar:
+        raise AttributeError('The parameter "academic_calendar" must be set (not none)')
+    elif not academic_calendar.id:
+        raise ValueError('Please make the academic calendar passed by parameter persitent (save it) '
+                         'before calling this function')
+
+
+def _create_from_academic_calendar(academic_calendar):
+    academic_yr = academic_calendar.academic_year
+    offer_years = offer_year.find_by_academic_year(academic_yr)
+    for offer_yr in offer_years:
+        offer_yr_calendar = OfferYearCalendar(academic_calendar=academic_calendar,
+                                              offer_year=offer_yr,
+                                              start_date=academic_calendar.start_date,
+                                              end_date=academic_calendar.end_date)
+        offer_yr_calendar.save()
+
+
 def find_by_current_session_exam():
     return OfferYearCalendar.objects.filter(start_date__lte=timezone.now()) \
                                     .filter(end_date__gte=timezone.now()).first()
 
 
 def find_by_academic_calendar(academic_cal):
-    return OfferYearCalendar.objects.filter(academic_calendar=int(academic_cal.id))
+    return OfferYearCalendar.objects.filter(academic_calendar=academic_cal.id)
 
 
 def find_by_offer_year(offer_yr):

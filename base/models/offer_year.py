@@ -123,7 +123,7 @@ class OfferYear(SerializableModel):
 
 
 def find_by_academic_year(academic_yr):
-    return OfferYear.objects.filter(academic_year=int(academic_yr))
+    return OfferYear.objects.filter(academic_year=academic_yr)
 
 
 def find_by_structure(struct):

@@ -33,6 +33,8 @@ from base.models import offer_year_calendar
 class AcademicCalendarAdmin(admin.ModelAdmin):
     list_display = ('title', 'academic_year', 'start_date', 'end_date', 'changed')
     fieldsets = ((None, {'fields': ('academic_year', 'title', 'description', 'start_date', 'end_date')}),)
+    search_fields = ['title']
+    list_filter = ('academic_year',)
 
 
 class AcademicCalendar(models.Model):
@@ -48,8 +50,8 @@ class AcademicCalendar(models.Model):
     highlight_shortcut = models.CharField(max_length=255, blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        offer_year_calendar.save_from_academic_calendar(self)
         super(AcademicCalendar, self).save(*args, **kwargs)
+        offer_year_calendar.save_from_academic_calendar(self)
 
     def __str__(self):
         return u"%s %s" % (self.academic_year, self.title)
