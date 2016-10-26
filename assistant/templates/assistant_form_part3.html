@@ -49,80 +49,65 @@
  		{{ form.non_field_errors }}
  		<div class="panel-default">
   			<div class="panel-heading">
-  				<font size="4">{% trans 'doctorate' %}</font>
+  				<h4>{% trans 'doctorate' %}</h4>
     		</div>
     	</div>
     	<div class="form-group">
-      		<div class="row" style="padding-top: 5px;">
-        		<div class="col-md-4" style="text-align: left">
-          			<label for="phd_inscription_date">{% trans 'phd_inscription_date' %}</label>
-                    <div class="controls" id="phd_inscription_date">{{ form.phd_inscription_date }}</div>
-          			<font class="error">{{ form.phd_inscription_date.errors }}</font>
-        		</div>
+      		<div class="row" style="padding-top: 5px; padding-left: 15px;">
+				<label for="phd_inscription_date">{% trans 'phd_inscription_date' %}</label>
+				<div class="controls" id="phd_inscription_date">{{ form.phd_inscription_date }}</div>
+				<font class="error">{{ form.phd_inscription_date.errors }}</font>
       		</div>
-            <br>
-      		<div class="row" style="padding-top: 4px;">
-        		<div class="col-md-4" style="text-align: left">
-          			<label for="thesis_title">{% trans 'thesis_title' %}</label>
-                    <div class="controls" id="thesis_title">{{ form.thesis_title }}</div>
-          			<font class="error">{{ form.thesis_title.errors }}</font>
-        		</div>
+      		<div class="row" style="padding-top: 15px; padding-left: 15px;">
+				<label for="thesis_title">{% trans 'thesis_title' %}</label>
+				<div class="controls" id="thesis_title">{{ form.thesis_title }}</div>
+				<font class="error">{{ form.thesis_title.errors }}</font>
       		</div>
-            <br>
-      		<div class="row" style="padding-top: 4px;">
-        		<div class="col-md-4" style="text-align: left">
-          			<label for="confirmatory_test_date">{% trans 'confirmatory_test_date' %}<br>
-          			<font size="1">{% trans '2nd_renewal' %}</font></label>
-                    <div class="controls" id="confirmatory_test_date">{{ form.confirmation_test_date }}</div>
-          			<font class="error">{{ form.confirmation_test_date.errors }}</font>
-        		</div>     
+      		<div class="row" style="padding-top: 15px; padding-left: 15px;">
+				<label for="confirmatory_test_date">{% trans 'confirmatory_test_date' %}
+					{% trans '2nd_renewal' %}</label>
+				<div class="controls" id="confirmatory_test_date">{{ form.confirmation_test_date }}</div>
+				<font class="error">{{ form.confirmation_test_date.errors }}</font>
           	</div>
-            <br>
-          	<div class="row" style="padding-top: 4px;">
-        		<div class="col-md-4" style="text-align: left">
-          			<label for="remark">{% trans 'doctorate_remark' %}</label>
-                    <div class="controls" id="remark">{{ form.remark }}</div>
-          			<font class="error">{{ form.remark.errors }}</font>
-        		</div>
+          	<div class="row" style="padding-top: 15px; padding-left: 15px;">
+                <label for="remark">{% trans 'doctorate_remark' %}</label>
+                 <div class="controls" id="remark">{{ form.remark }}</div>
+                <font class="error">{{ form.remark.errors }}</font>
       		</div>
         </div>
-        <br>
         <div class="panel-default">
   			<div class="panel-heading">
-  				<font size="4">{% trans 'support_committee_reports' %}</font>
+  				<h4>{% trans 'support_committee_reports' %}</h4>
     		</div>
     	</div>
 
         {% for file in files %}
-            <div class="row" style="padding-top: 4px;">
-                <div class="col-md-8" id="hdn_filename">
-                   <a href="{% url 'assistant_file_download' document_file_id=file.id %}">{{ file.document_file }}</a>
-                </div>
+            <div class="row" style="padding-top: 15px;">
                 <div class="col-md-2" style="text-align: left">
-                    <a class="btn btn-default btn-danger pull-right" id="btn_delete_file" style="margin-right: 5px;"
+                    <a class="btn btn-default btn-danger btn-sm" id="btn_delete_file" style="margin-right: 5px;"
                        title="{% trans 'delete_file'%}"
                        onclick="location.href='{% url 'assistant_file_delete' mandate.id file.id %}';">
                     <span class="glyphicon glyphicon-remove" aria-hidden="true" id="spn_delete_file"></span>
                         {% trans 'delete_file' %}</a>
                 </div>
+                <div class="col-md-10" id="hdn_filename" style="text-align: left">
+                   <a href="{% url 'assistant_file_download' document_file_id=file.id %}">{{ file.document_file }}</a>
+                </div>
             </div>
         {% endfor %}
-        <div class="row" style="padding-top: 4px;">
-            <div class="col-md-4" style="text-align: left">
-	            <a class="btn btn-default" data-toggle="modal" data-target="#pnl_upload_documents"
-                id="btn_add_file" style="margin-right: 5px;" title="{% trans 'add_file'%}">
+        <div class="row" style="padding-top: 15px; padding-left: 15px;">
+            <a class="btn btn-default" data-toggle="modal" data-target="#pnl_upload_documents"
+               id="btn_add_file" style="margin-right: 5px;" title="{% trans 'add_file'%}">
                 <span class="glyphicon glyphicon-upload" aria-hidden="true" id="spn_add_file"></span>
-                    {% trans 'upload_pdf_file' %}</a>
-            </div>
+                {% trans 'upload_pdf_file' %}</a>
         </div>
-
-        <br><hr>
+        <hr>
 	    <input type="hidden" value="{{mandate.id | default_if_none:''}}" id="hdn_current_mandate_id"
 		   name="mandate_id" title="mandate_id" >
         <input type="hidden" value="{{ document_type }}" id="hdn_description" name="description"
                title="description">
 		<div class="form-group"> 
-    		<div class="col-md-12" style="text-align: left">
+    		<div class="row" style="padding-left: 15px; padding-right: 15px;">
      			<button type="submit" class="btn btn-primary btn-block" title="{% trans 'save'%}"
                         id="bt_pstform_part3_save">
      			<span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}</button>
