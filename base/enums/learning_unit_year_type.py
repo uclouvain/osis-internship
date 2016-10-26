@@ -27,9 +27,11 @@
 from django.utils.translation import ugettext_lazy as _
 
 
-ENROLLED = "ENROLLED"
-NOT_ENROLLED = "NOT_ENROLLED"
+COURS = "COURS"
+MEMOIRE = "MEMOIRE"
+STAGE_EXTERIEUR = "STAGE_EXTERIEUR"
 
 YEAR_TYPES = (
-    (ENROLLED, _('ENROLLED')),
-    (NOT_ENROLLED, _('NOT_ENROLLED')))
+    (COURS, _('COURS')),
+    (MEMOIRE, _('MEMOIRE')),
+    (STAGE_EXTERIEUR, _('STAGE_EXTERIEUR')))
