@@ -31,6 +31,7 @@ from django.db.models import Q
 
 class DissertationRoleAdmin(admin.ModelAdmin):
     list_display = ('adviser', 'status', 'dissertation', 'get_dissertation_author', 'get_dissertation_status')
+    raw_id_fields = ('adviser', 'dissertation')
 
 
 class DissertationRole(models.Model):
