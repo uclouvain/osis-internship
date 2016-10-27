@@ -34,11 +34,16 @@ class LearningContainerYearAdmin(admin.ModelAdmin):
 
 
 class LearningContainerYear(models.Model):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
     title = models.CharField(max_length=255)
     acronym = models.CharField(max_length=10)
     academic_year = models.ForeignKey('AcademicYear')
     learning_container = models.ForeignKey('LearningContainer')
+
+    def save(self, *args, **kwargs):
+        if self.title != self.learning_container.title:
+            raise AttributeError("The title of the learning container year is different from the learning container.")
+
+        super(LearningContainerYear, self).save()
 
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)
@@ -55,17 +60,3 @@ def find_by_academic_year(academic_year):
 
 def find_by_id(learning_container_year_id):
     return LearningContainerYear.objects.get(pk=learning_container_year_id)
-
-
-def find_by_ids(learning_container_year_ids):
-    return LearningContainerYear.objects.filter(pk__in=learning_container_year_ids)
-
-
-def search(acronym=None):
-    queryset = LearningContainerYear.objects
-
-    if acronym:
-        queryset = queryset.filter(acronym=acronym)
-
-    return queryset
-

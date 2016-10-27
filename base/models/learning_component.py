@@ -34,23 +34,9 @@ class LearningComponentAdmin(admin.ModelAdmin):
 
 
 class LearningComponent(models.Model):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
+    title = models.CharField(max_length=255)
     learning_container = models.ForeignKey('LearningContainer')
 
 
 def find_by_id(learning_component_id):
     return LearningComponent.objects.get(pk=learning_component_id)
-
-
-def find_by_ids(learning_component_ids):
-    return LearningComponent.objects.filter(pk__in=learning_component_ids)
-
-
-def search(acronym=None):
-    queryset = LearningComponent.objects
-
-    if acronym:
-        queryset = queryset.filter(acronym=acronym)
-
-    return queryset
-

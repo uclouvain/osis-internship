@@ -36,13 +36,18 @@ class LearningComponentYearAdmin(admin.ModelAdmin):
 
 
 class LearningComponentYear(models.Model):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
     learning_container_year = models.ForeignKey('LearningContainerYear')
     learning_component = models.ForeignKey('LearningComponent')
     title = models.CharField(max_length=255)
     acronym = models.CharField(max_length=3)
-    type = models.CharField(max_length=20, blank=True, null=True, choices=YEAR_TYPE)
+    type = models.CharField(max_length=30, blank=True, null=True, choices=YEAR_TYPE)
     comment = models.TextField(blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        if self.learning_container_year.learning_container != self.learning_component.learning_container:
+            raise AttributeError("Learning container year and learning component have different learning containers.")
+
+        super(LearningComponentYear, self).save()
 
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)
@@ -53,23 +58,5 @@ class LearningComponentYear(models.Model):
         )
 
 
-def find_by_academic_year(learning_container_year):
-    return LearningComponentYear.objects.get(pk=learning_container_year)
-
-
 def find_by_id(learning_component_year_id):
     return LearningComponentYear.objects.get(pk=learning_component_year_id)
-
-
-def find_by_ids(learning_component_year_ids):
-    return LearningComponentYear.objects.filter(pk__in=learning_component_year_ids)
-
-
-def search(acronym=None):
-    queryset = LearningComponentYear.objects
-
-    if acronym:
-        queryset = queryset.filter(acronym=acronym)
-
-    return queryset
-

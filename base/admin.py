@@ -41,17 +41,17 @@ admin.site.register(attribution.Attribution,
 admin.site.register(campus.Campus,
                     campus.CampusAdmin)
 
-admin.site.register(learning_class.LearningClass,
-                    learning_class.LearningClassAdmin)
-
-admin.site.register(learning_class_year.LearningClassYear,
-                    learning_class_year.LearningClassYearAdmin)
-
-admin.site.register(learning_component.LearningComponent,
-                    learning_component.LearningComponentAdmin)
-
-admin.site.register(learning_component_year.LearningComponentYear,
-                    learning_component_year.LearningComponentYearAdmin)
+# admin.site.register(learning_class.LearningClass,
+#                     learning_class.LearningClassAdmin)
+#
+# admin.site.register(learning_class_year.LearningClassYear,
+#                     learning_class_year.LearningClassYearAdmin)
+#
+# admin.site.register(learning_component.LearningComponent,
+#                     learning_component.LearningComponentAdmin)
+#
+# admin.site.register(learning_component_year.LearningComponentYear,
+#                     learning_component_year.LearningComponentYearAdmin)
 
 admin.site.register(learning_container_year.LearningContainerYear,
                     learning_container_year.LearningContainerYearAdmin)
@@ -68,11 +68,11 @@ admin.site.register(external_offer.ExternalOffer,
 admin.site.register(learning_unit.LearningUnit,
                     learning_unit.LearningUnitAdmin)
 
-admin.site.register(learning_unit_component.LearningUnitComponent,
-                    learning_unit_component.LearningUnitComponentAdmin)
-
-admin.site.register(learning_unit_component_class.LearningUnitComponentClass,
-                    learning_unit_component_class.LearningUnitComponentClassAdmin)
+# admin.site.register(learning_unit_component.LearningUnitComponent,
+#                     learning_unit_component.LearningUnitComponentAdmin)
+#
+# admin.site.register(learning_unit_component_class.LearningUnitComponentClass,
+#                     learning_unit_component_class.LearningUnitComponentClassAdmin)
 
 admin.site.register(learning_unit_enrollment.LearningUnitEnrollment,
                     learning_unit_enrollment.LearningUnitEnrollmentAdmin)

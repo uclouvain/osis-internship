@@ -34,7 +34,6 @@ class LearningUnitComponentAdmin(admin.ModelAdmin):
 
 
 class LearningUnitComponent(models.Model):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
     Learning_component_year = models.ForeignKey('LearningComponentYear')
     learning_unit_year = models.ForeignKey('LearningUnitYear')
 
@@ -50,17 +49,3 @@ def find_by_learning_unit_year(learning_unit_year):
 
 def find_by_id(learning_unit_component_id):
     return LearningUnitComponent.objects.get(pk=learning_unit_component_id)
-
-
-def find_by_ids(learning_unit_component_ids):
-    return LearningUnitComponent.objects.filter(pk__in=learning_unit_component_ids)
-
-
-def search(acronym=None):
-    queryset = LearningUnitComponent.objects
-
-    if acronym:
-        queryset = queryset.filter(acronym=acronym)
-
-    return queryset
-
