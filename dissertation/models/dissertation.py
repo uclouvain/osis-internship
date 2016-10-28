@@ -111,7 +111,7 @@ class Dissertation(models.Model):
         next_status = get_next_status(self, "go_forward")
         if self.status == 'TO_RECEIVE' and next_status == 'TO_DEFEND':
             send_mail_dissert_acknowledgement(self.author.person)
-        if self.status == 'DRAFT' and next_status == 'DIR_SUBMIT':
+        if (self.status == 'DRAFT' or self.status == 'DIR_KO')and next_status == 'DIR_SUBMIT':
             send_mail_to_teacher_new_dissert(get_promoteur_by_dissertation(self))
         self.set_status(next_status)
 
