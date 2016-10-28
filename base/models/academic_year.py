@@ -39,14 +39,14 @@ class AcademicYear(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     year = models.IntegerField(unique=True)
-    start_date = models.DateField(blank=True, null=True)
-    end_date = models.DateField(blank=True, null=True)
+    start_date = models.DateField(default=timezone.now, blank=True, null=True)
+    end_date = models.DateField(default=timezone.now, blank=True, null=True)
 
     @property
     def name(self):
         return self.__str__()
 
-    def save(self):
+    def save(self, *args, **kwargs):
         now = timezone.now()
         if self.year > now.year:
             raise AttributeError("An academic year cannot be created in the future.")
@@ -54,7 +54,7 @@ class AcademicYear(SerializableModel):
             raise AttributeError("The start date should be in the same year of the academic year.")
         if self.start_date >= self.end_date:
             raise AttributeError("Start date should be before the end date.")
-        super(AcademicYear, self).save()
+        super(AcademicYear, self).save(*args, **kwargs)
 
     def __str__(self):
         return u"%s-%s" % (self.year, self.year + 1)
