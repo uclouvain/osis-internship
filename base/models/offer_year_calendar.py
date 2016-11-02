@@ -36,7 +36,7 @@ class OfferYearCalendarAdmin(admin.ModelAdmin):
     fieldsets = ((None, {'fields': ('offer_year', 'academic_calendar', 'start_date', 'end_date', 'customized')}),)
     raw_id_fields = ('offer_year',)
     search_fields = ['offer_year__acronym']
-    list_filter = ('academic_calendar__title',)
+    list_filter = ('academic_calendar__academic_year__year', 'academic_calendar__title')
 
 
 class OfferYearCalendar(models.Model):
