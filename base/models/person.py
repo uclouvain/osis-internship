@@ -30,8 +30,8 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
-from django.core import serializers
-from base.models.serializable_model import SerializableModel
+from osis_common.models.serializable_model import SerializableModel
+from base.enums import person_source_type
 import base64
 import urllib
 
@@ -41,7 +41,8 @@ class PersonAdmin(admin.ModelAdmin):
                     'national_id', 'changed', 'source')
     search_fields = ['first_name', 'middle_name', 'last_name', 'user__username', 'email']
     fieldsets = ((None, {'fields': ('user', 'global_id', 'national_id', 'gender', 'first_name',
-                                    'middle_name', 'last_name', 'email', 'phone', 'phone_mobile', 'language')}),)
+                                    'middle_name', 'last_name', 'birth_date', 'email', 'phone',
+                                    'phone_mobile', 'language')}),)
     raw_id_fields = ('user',)
 
 
@@ -50,10 +51,6 @@ class Person(SerializableModel):
         ('F', _('female')),
         ('M', _('male')),
         ('U', _('unknown')))
-
-    SOURCE_CHOICES = (
-        ('BASE', 'BASE'),
-        ('DISSERTATION', 'DISSERTATION'))
 
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
@@ -68,7 +65,20 @@ class Person(SerializableModel):
     phone = models.CharField(max_length=30, blank=True, null=True)
     phone_mobile = models.CharField(max_length=30, blank=True, null=True)
     language = models.CharField(max_length=30, null=True, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE)
-    source = models.CharField(max_length=25, blank=True, null=True, choices=SOURCE_CHOICES)
+    birth_date = models.DateField(blank=True, null=True)
+    source = models.CharField(max_length=25, blank=True, null=True, choices=person_source_type.CHOICES,
+                              default=person_source_type.BASE)
+
+    def save(self, **kwargs):
+        # When person is created by another application this rule can be applied.
+        if hasattr(settings, 'INTERNAL_EMAIL_SUFIX'):
+            if settings.INTERNAL_EMAIL_SUFIX.strip():
+                # It limits the creation of person to external emails. The domain name is case insensitive.
+                if self.source and self.source != person_source_type.BASE \
+                               and settings.INTERNAL_EMAIL_SUFIX in str(self.email).lower():
+                    raise AttributeError('Invalid email for external person.')
+
+        super(Person, self).save()
 
     def username(self):
         if self.user is None:
@@ -89,16 +99,16 @@ class Person(SerializableModel):
         return u"%s %s %s" % (last_name.upper(), first_name, middle_name)
 
     @property
-    def get_photo_base64(self):
+    def photo(self):
         # Return JPG in Base64 format
         # return None if no valid data: global_id or no picture
         # for template use <img src="data:image/jpeg;base64,{{person.get_photo}}" class="avatar img-responsive"/>
         # timeout 1 sec with URLLIB request
 
-        if self.get_photo_path:
+        if self.photo_path:
 
             try:
-                photo = urllib.request.urlopen(self.get_photo_path,None,1.0)
+                photo = urllib.request.urlopen(self.photo_path, None, 1.0)
                 photo_base64 = base64.b64encode(photo.read())
                 return photo_base64
             except IOError:
@@ -107,17 +117,11 @@ class Person(SerializableModel):
             return None
 
     @property
-    def get_photo_path(self):
-        # Return path of photo
-        # return None if no valid data: global_id
-        # for template use <img src="{{person.get_photo_path}}" class="avatar img-responsive"/>
-
+    def photo_path(self):
         if self.global_id and PERSON_PHOTO_PATH != '':
-
             try:
                 glob_id_str = str(self.global_id)
                 photo_path = PERSON_PHOTO_PATH + 'image' + glob_id_str[-4:-2] + "/" + glob_id_str + '.jpg'
-
                 return photo_path
             except IOError:
                 return None
@@ -130,12 +134,6 @@ class Person(SerializableModel):
             ("is_institution_administrator", "Is institution administrator "),
         )
 
-
-    class Meta:
-        permissions = (
-            ("is_administrator", "Is administrator"),
-            ("is_institution_administrator", "Is institution administrator "),
-        )
 
 def find_by_id(person_id):
     return Person.objects.get(id=person_id)
@@ -157,30 +155,9 @@ def find_by_global_id(global_id):
     return Person.objects.filter(global_id=global_id).first() if global_id else None
 
 
-def serialize_list_persons(list_persons):
-    """
-    Serialize a list of person objects using the json format.
-    Use to send data to osis-portal.
-    :param list_persons: a list of person objects
-    :return: a string
-    """
-    # Restrict fields for osis-portal
-    fields = ('id', 'external_id', 'changed', 'global_id', 'gender',
-              'national_id', 'first_name', 'middle_name', 'last_name',
-              'email', 'phone', 'phone_mobile', 'language')
-    return serializers.serialize("json", list_persons, fields=fields,
-                                 use_natural_foreign_keys=True,
-                                 use_natural_primary_keys=True)
-
-
 def search_by_email(email):
     return Person.objects.filter(email=email)
 
 
 def count_by_email(email):
     return search_by_email(email).count()
-
-
-def add(person):
-    person.save()
-    return person

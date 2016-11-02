@@ -23,42 +23,28 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from reference.models import country, domain, education_institution, language
-import backoffice.portal_migration as portal_migration
-import sys
-
-queue_name = 'reference'
+from django.db import models
+from django.contrib import admin
+from osis_common.models.serializable_model import SerializableModel
 
 
-@receiver(post_save, sender=country.Country)
-@receiver(post_save, sender=domain.Domain)
-@receiver(post_save, sender=education_institution.EducationInstitution)
-@receiver(post_save, sender=language.Language)
-def on_post_save_continent(sender, **kwargs):
-    try:
-        instance = kwargs["instance"]
-        send_instance_to_osis_portal(sender, instance)
-    except KeyError:
-        pass
+class ExternalOfferAdmin(admin.ModelAdmin):
+    list_display = ('name', 'adhoc', 'domain', 'grade_type', 'offer_year', 'changed')
+    fieldsets = ((None, {'fields': ('name', 'adhoc', 'domain', 'grade_type', 'offer_year')}),)
+    ordering = ('name',)
+    search_fields = ['name']
 
 
-def send_instance_to_osis_portal(model_class, instance):
-    """
-    Send the instance to osis-portal.
-    :param model_class: model class of the instance
-    :param instance: a model object
-    :return:
-    """
-    # Records contains the serialized instance.
-    mod = sys.modules[model_class.__module__]
-    records = mod.serialize_list([instance]) # Need to put instance in a list.
-    portal_migration.migrate_records(records=records, model_class=model_class,
-                                     queue_name=queue_name)
+class ExternalOffer(SerializableModel):
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    changed = models.DateTimeField(null=True)
+    name = models.CharField(max_length=150, unique=True)
+    adhoc = models.BooleanField(default=True)  # If False == Official/validated, if True == Not Official/not validated
+    domain = models.ForeignKey('reference.Domain', on_delete=models.CASCADE)
+    grade_type = models.ForeignKey('reference.GradeType', blank=True, null=True, on_delete=models.CASCADE)
+    offer_year = models.ForeignKey('base.OfferYear', blank=True, null=True, on_delete=models.CASCADE) # Institution equivalence ("intern" offer)
+    national = models.BooleanField(default=False) # True if is Belgian else False
 
-
-
-
-
+    def __str__(self):
+        return self.name
 

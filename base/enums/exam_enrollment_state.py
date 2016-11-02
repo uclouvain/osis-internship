@@ -23,28 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
-from base.models.serializable_model import SerializableModel
+
+from django.utils.translation import ugettext_lazy as _
 
 
-class ExternalOfferAdmin(admin.ModelAdmin):
-    list_display = ('name', 'adhoc', 'domain', 'grade_type', 'offer_year', 'changed')
-    fieldsets = ((None, {'fields': ('name', 'adhoc', 'domain', 'grade_type', 'offer_year')}),)
-    ordering = ('name',)
-    search_fields = ['name']
+ENROLLED = "ENROLLED"
+NOT_ENROLLED = "NOT_ENROLLED"
 
-
-class ExternalOffer(SerializableModel):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed = models.DateTimeField(null=True)
-    name = models.CharField(max_length=150, unique=True)
-    adhoc = models.BooleanField(default=True)  # If False == Official/validated, if True == Not Official/not validated
-    domain = models.ForeignKey('Domain', on_delete=models.CASCADE)
-    grade_type = models.ForeignKey('GradeType', blank=True, null=True, on_delete=models.CASCADE)
-    offer_year = models.ForeignKey('base.OfferYear', blank=True, null=True, on_delete=models.CASCADE) # Institution equivalence ("intern" offer)
-    national = models.BooleanField(default=False) # True if is Belgian else False
-
-    def __str__(self):
-        return self.name
-
+STATES = (
+    (ENROLLED, _('ENROLLED')),
+    (NOT_ENROLLED, _('NOT_ENROLLED')))

@@ -29,6 +29,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
+from osis_common.models.serializable_model import SerializableModel
 from .dissertation_role import DissertationRole
 
 
@@ -37,7 +38,7 @@ class AdviserAdmin(admin.ModelAdmin):
     raw_id_fields = ('person', )
 
 
-class Adviser(models.Model):
+class Adviser(SerializableModel):
     TYPES_CHOICES = (
         ('PRF', _('professor')),
         ('MGR', _('manager')),
@@ -171,17 +172,6 @@ def search_adviser(terms):
 def list_teachers():
     return Adviser.objects.filter(type='PRF')\
                           .order_by('person__last_name', 'person__first_name')
-
-
-def serialize_list(list_advisers):
-    """
-    Serialize a list of "Adviser" objects using the json format.
-    Use to send data to osis-portal.
-    :param list_advisers: a list of "Adviser" objects
-    :return: the serialized list (a json)
-    """
-    fields = ('id', 'person', 'type', 'available_by_email', 'available_by_phone', 'available_at_office', 'comment')
-    return serializers.serialize("json", list_advisers, fields=fields)
 
 
 def add(person, type_arg, available_by_email, available_by_phone, available_at_office, comment):

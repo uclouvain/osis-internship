@@ -702,32 +702,6 @@ msgstr "Aucune données pour cette année académique"
 
 msgid "no_dubble_score_encoded_comparison_impossible"
 msgstr "Aucune note n'a été double encodée ; aucune comparaison à effectuer."
-#~ msgid "title_btn_upload_score"
-#~ msgstr ""
-#~ "Sélectionnez votre fichier excel à partir duquel il faut injecter les "
-#~ "notes"
-#~ msgid "submit"
-#~ msgstr "Envoyer"
-#~ msgid "download_xls_file"
-#~ msgstr "Télécharger le fichier Excel"
-#~ msgid "not_in_choices_list"
-#~ msgstr "Le choix entré ne se trouve pas dans la liste proposée"
-#~ msgid "invalid_entry"
-#~ msgstr "Entrée invalide"
-#~ msgid "please_choose_in_the_list"
-#~ msgstr "Veuillez sélectionner un élément de la liste"
-#~ msgid "choices_list"
-#~ msgstr "Liste des choix"
-#~ msgid "changes_on_offer_year_and_academic_calendar"
-#~ msgstr ""
-#~ "Attention - Des changements ont été effectués sur %s, calendrier "
-#~ "académique %s"
-#~ msgid "score_injected"
-#~ msgstr "Note injectée"
-#~ msgid "scores_injected"
-#~ msgstr "Notes injectées"
-#~ msgid "add_address"
-#~ msgstr "Ajouter une adresse"
 
 msgid "no_exam_session_opened_for_the_moment"
 msgstr "Aucune session d'encodage de notes ouverte pour le moment. "
@@ -1262,5 +1236,49 @@ msgid "xls_columns_structure_error"
 msgstr "Votre fichier excel n'est pas bien structuré. Veuillez respecter l'ordre des colonnes fournie lors du "
        "téléchargement de votre fichier (bouton '{}')."
 
+msgid "admission_form"
+msgstr "Formulaire d'admission"
+
+msgid "order"
+msgstr "Ordonner"
+
+msgid "options"
+msgstr "Options"
+
+msgid "required"
+msgstr "Obligatoire"
+
+msgid "question"
+msgstr "Question"
+
+msgid "questions"
+msgstr "Questions"
+
+msgid "value"
+msgstr "Valeur"
+
+msgid "short_input_text"
+msgstr "Short input text"
+
+msgid "long_input_text"
+msgstr "Long input text"
+
+msgid "radio_button"
+msgstr "Radio button"
+
+msgid "checkbox"
+msgstr "Checkbox"
+
+msgid "upload_button"
+msgstr "Upload button"
+
+msgid "download_link"
+msgstr "Download link"
+
+msgid "dropdown_list"
+msgstr "Dropdown list"
+
+msgid "http_link"
+msgstr "HTTP link"
 msgid "you_manage"
 msgstr "Vous gérez"

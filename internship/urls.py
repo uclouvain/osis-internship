@@ -25,11 +25,17 @@
 ##############################################################################
 from django.conf.urls import url
 
-from internship.views import home, internship, master, period, place, speciality, student, student_resume, affectation_statistics
-from internship import upload_xls
+from internship.views import home, internship, master, period, \
+                            place, speciality, student_resume, affectation_statistics
+from internship.utils import upload_xls
 
 urlpatterns = [
     # S'il vous plaît, organiser les urls par ordre alphabétique.
+
+	url(r'^affectation_result/$', affectation_statistics.internship_affectation_statistics, name='internship_affectation_statistics'),
+    url(r'^affectation_result/generate/$', affectation_statistics.internship_affectation_statistics_generate, name='internship_affectation_statistics_generate'),
+    url(r'^affectation_result/sumup/$', affectation_statistics.internship_affectation_sumup, name='internship_affectation_sumup'),
+
     url(r'^$', home.internships_home, name='internships_home'),
     url(r'^internships/$', internship.internships, name='internships'),
     url(r'^internships/([0-9]+)/students/choice/$', internship.student_choice, name='internship_detail_student_choice'),
@@ -56,6 +62,9 @@ urlpatterns = [
     url(r'^places/([0-9]+)/students/choice/$', place.student_choice, name='place_detail_student_choice'),
     url(r'^places/create/$', place.organization_create, name='place_create'),
     url(r'^places/edit/([0-9]+)/$', place.organization_edit, name='place_edit'),
+    #url(r'^places/exportpdf/([0-9]+)/([0-9]+)/$', place.export_pdf, name='affectation_download_pdf'),
+    url(r'^places/exportxls/([0-9]+)/([0-9]+)/$', place.export_xls, name='affectation_download'),
+    url(r'^places/exportxls/([0-9]+)/$',place.export_organisation_affectation_as_xls,name='organisation_affectation_download'),
     url(r'^places/save/([0-9]+)/([0-9]+)/$', place.place_save, name='place_save'),
     url(r'^places/save/$', place.organization_new, name='place_save_new'),
     url(r'^places/std/$', place.internships_places_stud, name='internships_places_stud'),
@@ -74,10 +83,4 @@ urlpatterns = [
     url(r'^students/([0-9]+)/save/information/modification/$', student_resume.student_save_information_modification, name='student_save_information_modification'),
     url(r'^students/([0-9]+)/save/affectation/modification/$', student_resume.student_save_affectation_modification, name='student_save_affectation_modification'),
     url(r'^students/resume/$', student_resume.internships_student_resume, name='internships_student_resume'),
-    url(r'^students/search$', student_resume.internships_student_search, name='internships_student_search'),
-
-	url(r'^affectation_result/$', affectation_statistics.internship_affectation_statistics, name='internship_affectation_statistics'),
-    url(r'^affectation_result/generate/$', affectation_statistics.internship_affectation_statistics_generate, name='internship_affectation_statistics_generate'),
-    url(r'^affectation_result/sumup/$', affectation_statistics.internship_affectation_sumup, name='internship_affectation_sumup'),
-
 ]

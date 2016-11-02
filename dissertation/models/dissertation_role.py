@@ -31,6 +31,7 @@ from django.db.models import Q
 
 class DissertationRoleAdmin(admin.ModelAdmin):
     list_display = ('adviser', 'status', 'dissertation', 'author', 'dissertation_status')
+    raw_id_fields = ('adviser', 'dissertation')
 
 
 class DissertationRole(models.Model):
@@ -166,12 +167,14 @@ def get_promoteur_by_dissertation_str(dissert):
     else:
         return 'none'
 
+
 def get_promoteur_by_dissertation(dissert):
     promoteur = search_by_dissertation_and_role(dissert, 'PROMOTEUR')
     if promoteur:
         return promoteur[0].adviser
     else:
         return 'none'
+
 
 def get_copromoteur_by_dissertation(dissert):
     copromoteur = search_by_dissertation_and_role(dissert, 'CO_PROMOTEUR')

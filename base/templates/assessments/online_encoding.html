@@ -129,7 +129,7 @@
         &nbsp;
         <div class="btn-group" role="group" aria-label="Excel">
             <a id="lnk_scores_excel" class="btn btn-default"
-               href="{% url 'scores_encoding_download' learning_unit_year.id academic_year.id%}"
+               href="{% url 'scores_encoding_download' learning_unit_year.id %}"
                role="button"
                data-toggle="tooltip" data-placement="bottom"
                title="{% trans 'tooltip_dowload_excel_file' %}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span> {% trans 'get_excel_file'%}</a>
