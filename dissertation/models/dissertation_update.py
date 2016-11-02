@@ -33,12 +33,11 @@ JUSTIFICATION_LINK = "_set_to_"
 
 
 class DissertationUpdateAdmin(admin.ModelAdmin):
-    list_display = ('dissertation', 'get_dissertation_author', 'status_from', 'status_to', 'person', 'created')
+    list_display = ('dissertation', 'author', 'status_from', 'status_to', 'person', 'created')
     raw_id_fields = ('person',)
 
 
 class DissertationUpdate(models.Model):
-
     status_from = models.CharField(max_length=12, choices=dissertation.STATUS_CHOICES, default='DRAFT')
     status_to = models.CharField(max_length=12, choices=dissertation.STATUS_CHOICES, default='DRAFT')
     created = models.DateTimeField(auto_now_add=True)
@@ -50,7 +49,8 @@ class DissertationUpdate(models.Model):
         desc = "%s / %s >> %s / %s" % (self.dissertation.title, self.status_from, self.status_to, str(self.created))
         return desc
 
-    def get_dissertation_author(self):
+    @property
+    def author(self):
         return self.dissertation.author
 
 

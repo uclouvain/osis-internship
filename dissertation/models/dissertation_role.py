@@ -30,7 +30,7 @@ from django.db.models import Q
 
 
 class DissertationRoleAdmin(admin.ModelAdmin):
-    list_display = ('adviser', 'status', 'dissertation', 'get_dissertation_author', 'get_dissertation_status')
+    list_display = ('adviser', 'status', 'dissertation', 'author', 'dissertation_status')
 
 
 class DissertationRole(models.Model):
@@ -50,10 +50,12 @@ class DissertationRole(models.Model):
         return u"%s %s" % (self.status if self.status else "",
                            self.adviser if self.adviser else "")
 
-    def get_dissertation_author(self):
+    @property
+    def author(self):
         return self.dissertation.author
 
-    def get_dissertation_status(self):
+    @property
+    def dissertation_status(self):
         return self.dissertation.status
 
 
