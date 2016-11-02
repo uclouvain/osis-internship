@@ -1,0 +1,103 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+{% load l10n %}
+
+{% comment "License" %}
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+{% endcomment %}
+{% block breadcrumb %}
+<li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'institution' %}</a></li>
+<li><a href="{% url 'mandates' %}" id="lnk_mandates">{% trans 'mandates' %}</a></li>
+<li><a href="{% url 'assistant_mandates' %}" id="lnk_my_mandates">{% trans 'my_mandates' %}</a></li>
+<li class="active">{% trans 'renewal_form' %}</li>
+{% endblock %}
+{% block content %}
+<ul class="nav nav-tabs ">
+<li><a href="{% url 'assistant_mandates' %}">{% trans 'my_mandates' %}</a></li>
+<li><a href="{% url 'form_part1_edit' mandate.id %}">{% trans 'assistant_form_part1' %}</a></li>
+<li><a href="#">{% trans 'assistant_form_part2' %}</a></li>
+<li><a href="#">{% trans 'assistant_form_part3' %}</a></li>
+<li class="active"><a href="#">{% trans 'assistant_form_part4' %}</a></li>
+<li><a href="{% url 'form_part5_edit' mandate.id %}">{% trans 'assistant_form_part5' %}</a></li>
+<li><a href="{% url 'form_part6_edit' mandate.id %}">{% trans 'assistant_form_part6' %}</a></li>
+</ul>
+<div class="panel panel-default">
+	<div class="panel-body">
+ 		<form method="POST" enctype="multipart/form-data" action="{% url 'form_part4_save' mandate.id %}">
+ 		{% csrf_token %}
+ 		{{ form.non_field_errors }}
+ 		<div class="panel-default">
+  			<div class="panel-heading">
+  				<h4>{% trans 'research' %}</h4>
+    		</div>
+    	</div>
+    	<div class="form-group" style="padding-top: 5px;">
+      		<label for="internships">{% trans 'scientific_internships' %}</label>
+            <div class="controls" id="internships">{{ form.internships }}</div>
+            <font class="error">{{ form.internships.errors }}</font>
+      	</div>
+      	<div class="form-group" style="padding-top: 5px;">
+            <label for="conferences">{% trans 'conferences_contributor' %}</label>
+            <div class="controls" id="conferences">{{ form.conferences }}</div>
+            <font class="error">{{ form.conferences.errors }}</font>
+      	</div>
+      	<div class="form-group" style="padding-top: 5px;">
+            <label for="publications">{% trans 'publications_in_progress' %}</label>
+            <div class="controls" id="publications">{{ form.publications }}</div>
+            <font class="error">{{ form.publications.errors }}</font>
+      	</div>
+      	<div class="form-group" style="padding-top: 5px;">
+            <label for="awards">{% trans 'awards' %}</label>
+            <div class="controls" id="awards">{{ form.awards }}</div>
+            <font class="error">{{ form.awards.errors }}</font>
+      	</div>
+      	<div class="form-group" style="padding-top: 5px;">
+            <label for="framing">{% trans 'framing_participation' %}</label>
+            <div class="controls" id="framing">{{ form.framing }}</div>
+            <font class="error">{{ form.framing.errors }}</font>
+      	</div>
+      	<div class="form-group" style="padding-top: 5px;">
+            <label for="remark">{% trans 'research_remark' %}</label>
+            <div class="controls" id="remark">{{ form.remark }}</div>
+            <font class="error">{{ form.remark.errors }}</font>
+      	</div>
+    	<div class="panel-default">
+  			<div class="panel-heading">
+  				<h4>{% trans 'dial_publications' %}</h4>
+    		</div>
+    	</div>
+        <br>
+        <div class="form-group">
+    		<div style="text-align: center">
+     			<button type="submit" class="btn btn-primary btn-block" title="{% trans 'save'%}"
+                        id="bt_pstform_part4_save">
+     			<span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}</button>
+    		</div>
+		</div>
+    	</form>
+	</div>
+</div>
+{% endblock %}
+{% block script %}
+{% endblock %}
