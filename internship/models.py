@@ -384,7 +384,7 @@ class InternshipStudentInformation(models.Model):
     @staticmethod
     def find_by_person(person):
         try:
-            return InternshipStudentInformation.objects.get(person=person).select_related("person")
+            return InternshipStudentInformation.objects.get(person=person)
         except ObjectDoesNotExist:
             return None
 
