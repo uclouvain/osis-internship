@@ -43,8 +43,14 @@ class AcademicCalendarForm(ModelForm):
             return False
         return True
 
+    def end_date_gt_start_date(self):
+
+        if self.cleaned_data['end_date'] <= self.cleaned_data['start_date']:
+            self._errors['start_date'] = trans('start_date_must_be_lower_than_end_date')
+            return False
+        return True
+
     def is_valid(self):
-        valid = super(AcademicCalendarForm, self).is_valid()
-        if not self.end_date_gt_last_offer_year_calendar_end_date():
-            valid = False
-        return valid
+        return super(AcademicCalendarForm, self).is_valid() \
+            and self.end_date_gt_last_offer_year_calendar_end_date() \
+            and self.end_date_gt_start_date()

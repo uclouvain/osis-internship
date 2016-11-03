@@ -71,43 +71,19 @@ def academic_calendar_read(request, id):
 
 @login_required
 @permission_required('base.can_access_academic_calendar', raise_exception=True)
-def academic_calendar_new(request):
-    return academic_calendar_save(request, None)
-
-
-@login_required
-@permission_required('base.can_access_academic_calendar', raise_exception=True)
-def academic_calendar_save(request, academic_calendar_id):
-    academic_calendar = None
-    if academic_calendar_id:
-        academic_calendar = mdl.academic_calendar.find_academic_calendar_by_id(academic_calendar_id)
-    form = AcademicCalendarForm(request.POST, instance=academic_calendar)
-
+def academic_calendar_form(request, academic_calendar_id):
     academic_years = mdl.academic_year.find_academic_years()
-    if form.is_valid():
-        form.save()
-        return layout.render(request, "academic_calendars.html", {'academic_year': form.academic_year,
-                                                                  'academic_years': academic_years,
-                                                                  'form': form})
+    if request.method == 'GET':
+        if academic_calendar_id:
+            academic_calendar = mdl.academic_calendar.find_academic_calendar_by_id(academic_calendar_id)
+            academic_cal_form = AcademicCalendarForm(instance=academic_calendar)
+        else:
+            academic_cal_form = AcademicCalendarForm()
     else:
-        return layout.render(request, "academic_calendar_form.html", {'academic_years': academic_years,
-                                                                      'form': form})
+        academic_cal_form = AcademicCalendarForm(request.POST)
+        if academic_cal_form.is_valid():
+            academic_cal_form.save()
+            return academic_calendar_read(request, academic_cal_form.instance.id)
+    return layout.render(request, "academic_calendar_form.html", {'academic_years': academic_years,
+                                                                  'form': academic_cal_form})
 
-
-@login_required
-@permission_required('base.can_access_academic_calendar', raise_exception=True)
-def academic_calendar_edit(request, id):
-    academic_calendar = mdl.academic_calendar.find_academic_calendar_by_id(id)
-    form = AcademicCalendarForm(instance=academic_calendar)
-    academic_years = mdl.academic_year.find_academic_years()
-    return layout.render(request, "academic_calendar_form.html", {'form': form, 'academic_years': academic_years})
-
-
-@login_required
-@permission_required('base.can_access_academic_calendar', raise_exception=True)
-def academic_calendar_create(request):
-    academic_calendar = mdl.academic_calendar.AcademicCalendar()
-    academic_years = mdl.academic_year.find_academic_years()
-    return layout.render(request, "academic_calendar_form.html", {'academic_calendar': academic_calendar,
-                                                                  'academic_year': None,
-                                                                  'academic_years': academic_years})
