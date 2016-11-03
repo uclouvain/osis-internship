@@ -22,7 +22,7 @@ def update_external_id_field(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('base', '0072_attribution_learning_unit'),
+        ('base', '0073_auto_20161028_0922'),
     ]
 
     operations = [
