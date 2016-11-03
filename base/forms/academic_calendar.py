@@ -26,12 +26,19 @@
 from django.forms import ModelForm
 from base.models import academic_calendar, offer_year_calendar
 from django.utils.translation import ugettext as trans
+from base.models.offer_year_calendar import save_from_academic_calendar
 
 
 class AcademicCalendarForm(ModelForm):
     class Meta:
         model = academic_calendar.AcademicCalendar
         exclude = ['external_id', 'changed']
+
+    def save(self, commit=True):
+        instance = super(AcademicCalendarForm, self).save(commit=False)
+        if commit:
+            instance.save(functions=[save_from_academic_calendar])
+        return instance
 
     def end_date_gt_last_offer_year_calendar_end_date(self):
         off_year_calendar_max = offer_year_calendar.find_latest_end_date_by_academic_calendar(self.instance.id)
