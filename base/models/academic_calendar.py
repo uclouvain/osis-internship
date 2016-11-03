@@ -25,17 +25,9 @@
 ##############################################################################
 from django.db import models
 from django.utils import timezone
-from django.contrib import admin
 from base.models import session_exam
-from base.models import offer_year_calendar
 
-
-class AcademicCalendarAdmin(admin.ModelAdmin):
-    list_display = ('title', 'academic_year', 'start_date', 'end_date', 'changed')
-    fieldsets = ((None, {'fields': ('academic_year', 'title', 'description', 'start_date', 'end_date')}),)
-    search_fields = ['title']
-    list_filter = ('academic_year',)
-
+FUNCTIONS = 'functions'
 
 class AcademicCalendar(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
@@ -50,8 +42,12 @@ class AcademicCalendar(models.Model):
     highlight_shortcut = models.CharField(max_length=255, blank=True, null=True)
 
     def save(self, *args, **kwargs):
+        if FUNCTIONS not in kwargs.keys():
+            raise ValueError('The kwarg "{0}" must be set.'.format(FUNCTIONS))
+        functions = kwargs.pop(FUNCTIONS)
         super(AcademicCalendar, self).save(*args, **kwargs)
-        offer_year_calendar.save_from_academic_calendar(self)
+        for function in functions:
+            function(self)
 
     def __str__(self):
         return u"%s %s" % (self.academic_year, self.title)

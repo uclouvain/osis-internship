@@ -25,19 +25,25 @@
 ##############################################################################
 import datetime
 from django.test import TestCase
-from base.tests.models.test_offer_year_calendar import OfferYearCalendarTest
-from base.models import offer_year_calendar, academic_calendar
+from base.models import academic_year
+from base.models.academic_calendar import AcademicCalendar
 
-now = datetime.datetime.now()
+start_date = datetime.datetime.now()
+end_date = start_date.replace(year=start_date.year + 1)
 
 
 class AcademicCalendarTest(TestCase):
-    fixtures = ['unit_test.json']
 
-    @classmethod
-    def setUpClass(cls):
-        super(AcademicCalendarTest, cls).setUpClass()
+    academic_year = None
 
-    def test_academic_calendar_save(self):
-        off_year_cal_test = OfferYearCalendarTest()
-        # off_year_cal_test.run()
+    def setUp(self):
+        academic_yr = academic_year.AcademicYear(year=2016, start_date=start_date, end_date=end_date)
+        academic_yr.save()
+        self.academic_year = academic_yr
+
+    def test_save_without_functions_args(self):
+        ac_cal = AcademicCalendar(academic_year=self.academic_year,
+                                  title="A calendar event",
+                                  start_date=start_date,
+                                  end_date=end_date)
+        self.assertRaises(ValueError, ac_cal.save)
