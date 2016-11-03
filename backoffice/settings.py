@@ -170,6 +170,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "uploads")
+MEDIA_URL = '/media/'
+
+CONTENT_TYPES = ['application/csv', 'application/doc', 'application/pdf', 'application/xls', 'application/xml',
+                 'application/zip', 'image/jpeg', 'image/gif', 'image/png', 'text/html', 'text/plain']
+MAX_UPLOAD_SIZE = 5242880
 
 # Authentication settings
 
@@ -216,11 +222,23 @@ CKEDITOR_CONFIGS = {
     },
 }
 
-QUEUE_URL = 'localhost'
-QUEUE_USER = 'guest'
-QUEUE_PASSWORD = 'guest'
-QUEUE_PORT = 5672
-QUEUE_CONTEXT_ROOT = '/'
+
+# Queues Definition
+# Uncomment the configuration if you want to use the queue system
+# The queue system uses RabbitMq queues to communicate with other application (ex : osis)
+# QUEUES = {
+#     'QUEUE_URL': 'localhost',
+#     'QUEUE_USER': 'guest',
+#     'QUEUE_PASSWORD': 'guest',
+#     'QUEUE_PORT': 5672,
+#     'QUEUE_CONTEXT_ROOT': '/',
+#     'QUEUES_NAME': {
+#         'MIGRATIONS_TO_PRODUCE': 'osis_portal',
+#         'MIGRATIONS_TO_CONSUME': 'osis',
+#         'PAPER_SHEET': 'paper_sheet',
+#         'PERFORMANCE': 'performance'
+#     }
+# }
 
 ENVIRONMENT = 'LOCAL'
 
