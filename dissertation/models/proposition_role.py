@@ -30,6 +30,7 @@ from django.utils.translation import ugettext_lazy as _
 
 class PropositionRoleAdmin(admin.ModelAdmin):
     list_display = ('adviser', 'status', 'proposition_dissertation')
+    raw_id_fields = ('adviser', 'proposition_dissertation')
 
 
 class PropositionRole(models.Model):

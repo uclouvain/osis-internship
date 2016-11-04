@@ -15,6 +15,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
 msgid	 "academic_year"
 msgstr	 "Année académique"
 
@@ -353,3 +354,15 @@ msgstr  "Executions"
 
 msgid   "order_postion"
 msgstr  "Position de tri"
+
+msgid "latest_generation_start"
+msgstr "Début de la dernière génération"
+
+msgid "latest_generation_end"
+msgstr "Fin de la dernière génération"
+
+msgid "student_not_exists"
+msgstr "L'étudiant n'existe pas"
+
+msgid "export_organisation_affectation_xls"
+msgstr "Fichier Excel de toutes les spécialités"

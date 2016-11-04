@@ -32,7 +32,7 @@ from django.utils.translation import ugettext_lazy as _
 
 class PropositionDissertationAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'visibility', 'active', 'get_offer_propositions', 'creator')
-    raw_id_fields = ('creator', )
+    raw_id_fields = ('creator', 'author')
 
 
 class PropositionDissertation(models.Model):

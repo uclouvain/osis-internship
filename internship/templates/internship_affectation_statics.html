@@ -87,10 +87,26 @@
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
     <div class="panel panel-default">
+        <div class="panel-header">
+            <div class="row">
+                <div class="col-md-4" style="display: none">
+                    <button type="submit" class="btn btn-primary" title="{% trans 'Send'%}" id="bt_interships_save" onclick="$('#generate').modal('show');">
+                        <span class="glyphicon glyphicon-random" aria-hidden="true"></span>{% trans 'generate_solution' %}
+                    </button>
+                </div>
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-md-6">
+                            {% trans 'latest_generation_start' %} : {{ latest_generation.start_date_time| default_if_none:''|date:"SHORT_DATE_FORMAT" }} {{ latest_generation.start_date_time| default_if_none:''|time:"TIME_FORMAT" }}
+                        </div>
+                        <div class="col-md-6">
+                            {% trans 'latest_generation_end' %} : {{ latest_generation.end_date_time| default_if_none:''|date:"SHORT_DATE_FORMAT" }} {{ latest_generation.end_date_time| default_if_none:''|time:"TIME_FORMAT" }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="panel-body">
-            <button type="submit" class="btn btn-primary" title="{% trans 'Send'%}" id="bt_interships_save" onclick="$('#generate').modal('show');">
-                <span class="glyphicon glyphicon-random" aria-hidden="true"></span>{% trans 'generate_solution' %}
-            </button>
             <ul class="nav nav-tabs">
                 <li class="active"><a data-toggle="tab" href="#tab_hospitals">{% trans 'organizations' %}</a></li>
                 <li><a data-toggle="tab" href="#tab_students">{% trans 'students' %}</a></li>
@@ -139,7 +155,7 @@
                                                     <td style="background-color:#ffdc33;"/>
                                                 {% elif places.pc > 0 %}
                                                     <td style="background-color:#ff6600;"/>
-                                                {% elif places.pc < 0 %}
+                                                {% elif places.after < 0 %}
                                                     <td style="background-color:black;color:white"/>
                                                 {% elif places.pc == 0 %}
                                                     <td style="background-color:#cc0000;"/>

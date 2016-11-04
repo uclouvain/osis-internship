@@ -30,6 +30,7 @@ from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl.styles import Color, Style, PatternFill
 from django.utils.translation import ugettext_lazy as _
+import re
 
 from internship.models import Organization, Period, InternshipMaster
 
@@ -42,52 +43,55 @@ HEADER = [str(_('lastname')),
           str(_('mobile_phone'))]
 
 
-def export_xls(organization_id, affectations):
+def export_xls(organization_id, affections_by_specialities, file_name):
     organization = Organization.find_by_id(organization_id)
 
-    if affectations :
+    if affections_by_specialities :
         periods = Period.search()
 
         workbook = Workbook()
-        worksheet = workbook.active
-
-        worksheet.append([str(affectations[0].organization.name)])
-        worksheet.append([str(affectations[0].speciality.name)])
-        worksheet.append([str('')])
-        printing_date = datetime.datetime.now()
-        printing_date = printing_date.strftime("%d/%m/%Y")
-        worksheet.append([str('%s: %s' % (_('file_production_date'), printing_date))])
-        worksheet.append([str('')])
-        worksheet.append([str(affectations[0].master)])
-        worksheet.append([str('')])
-        worksheet.append([str('')])
-
-        __columns_resizing(worksheet)
-
-        row_number = 9
-        for period in periods:
-            worksheet.append([str(period.name), period.date_start.strftime("%d-%m-%Y"), period.date_end.strftime("%d-%m-%Y")])
-            __coloring_non_editable(worksheet, row_number)
-            row_number += 1
-            for affectation in affectations:
-                if affectation.period.name == period.name:
-                    student = affectation.student
-                    worksheet.append([str(student.person.last_name),
-                                      str(student.person.first_name),
-                                      student.registration_id,
-                                      affectation.email,
-                                      affectation.adress,
-                                      student.person.birth_date,
-                                      affectation.phone_mobile])
-                    row_number += 1
-
+        if workbook.worksheets:
+            workbook.remove_sheet(workbook.worksheets[0])
+        for speciality, affectations in affections_by_specialities:
+            pattern = re.compile('Stage en|Intenship in', re.IGNORECASE)
+            sheet_title = pattern.sub('', speciality.name.strip())
+            worksheet = workbook.create_sheet(title=sheet_title)
+            worksheet.append([str(organization.name) if organization else ''])
+            worksheet.append([str(speciality.name)])
             worksheet.append([str('')])
-            row_number += 1
+            printing_date = datetime.datetime.now()
+            printing_date = printing_date.strftime("%d/%m/%Y")
+            worksheet.append([str('%s: %s' % (_('file_production_date'), printing_date))])
+            worksheet.append([str('')])
+            worksheet.append([str(affectations[0].master) if affectations else ''])
+            worksheet.append([str('')])
+            worksheet.append([str('')])
 
-        filename_speciality = str(affectations[0].speciality.acronym).strip()
+            __columns_resizing(worksheet)
+
+            row_number = 9
+            for period in periods:
+                worksheet.append([str(period.name), period.date_start.strftime("%d-%m-%Y"), period.date_end.strftime("%d-%m-%Y")])
+                __coloring_non_editable(worksheet, row_number)
+                row_number += 1
+                for affectation in affectations:
+                    if affectation.period.name == period.name:
+                        student = affectation.student
+                        worksheet.append([str(student.person.last_name),
+                                          str(student.person.first_name),
+                                          student.registration_id,
+                                          affectation.email,
+                                          affectation.adress,
+                                          student.person.birth_date,
+                                          affectation.phone_mobile])
+                        row_number += 1
+
+                worksheet.append([str('')])
+                row_number += 1
+
+        #filename_speciality = str(affectations[0].speciality.acronym).strip()
         filename = "affectation_%s_%s.xlsx" % (str(organization.reference),
-                                              filename_speciality)
-        print(filename)
+                                               file_name)
         response = HttpResponse(save_virtual_workbook(workbook), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
         return response

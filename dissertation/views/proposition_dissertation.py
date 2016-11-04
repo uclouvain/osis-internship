@@ -152,9 +152,11 @@ def manager_proposition_dissertations_jury_new(request, pk):
             elif count_proposition_role < 4:
                 proposition_role.add(status, adv, prop)
             return redirect('manager_proposition_dissertation_detail', pk=prop_dissert.pk)
+        else:
+            form = ManagerPropositionRoleForm(initial={'proposition_dissertation': prop_dissert})
     else:
         form = ManagerPropositionRoleForm(initial={'proposition_dissertation': prop_dissert})
-        return layout.render(request, 'manager_proposition_dissertations_jury_edit.html', {'form': form})
+    return layout.render(request, 'manager_proposition_dissertations_jury_edit.html', {'form': form})
 
 
 @login_required
@@ -210,18 +212,23 @@ def manager_proposition_dissertations_search(request):
         worksheet1.title = "proposition_dissertation"
         worksheet1.append(['Date_de_création', 'Teacher', 'Title',
                            'Type', 'Level', 'Collaboration', 'Max_number_student', 'Visibility',
-                           'Active', 'Programme(s)'])
+                           'Active', 'Programme(s)', 'Description'])
+        types_choices = dict(PropositionDissertation.TYPES_CHOICES)
+        levels_choices = dict(PropositionDissertation.LEVELS_CHOICES)
+        collaboration_choices = dict(PropositionDissertation.COLLABORATION_CHOICES)
         for prop_dissert in prop_disserts:
             worksheet1.append([prop_dissert.created_date,
                                str(prop_dissert.author),
                                prop_dissert.title,
-                               prop_dissert.type,
-                               prop_dissert.level,
-                               prop_dissert.collaboration,
+                               str(types_choices[prop_dissert.type]),
+                               str(levels_choices[prop_dissert.level]),
+                               str(collaboration_choices[prop_dissert.collaboration]),
                                prop_dissert.max_number_student,
                                prop_dissert.visibility,
                                prop_dissert.active,
-                               ', '.join((str(conv.acronym) for conv  in prop_dissert.offer_proposition.all()))])
+                               ', '.join((str(conv.acronym) for conv in prop_dissert.offer_proposition.all())),
+                               prop_dissert.description
+                               ])
 
         response = HttpResponse(save_virtual_workbook(workbook), content_type='application/vnd.ms-excel')
         response['Content-Disposition'] = "%s%s" % ("attachment; filename=", filename)
@@ -383,9 +390,11 @@ def proposition_dissertations_jury_new(request, pk):
                 elif count_proposition_role < 4:
                     proposition_role.add(status, adv, prop)
                 return redirect('proposition_dissertation_detail', pk=prop_dissert.pk)
+            else:
+                form = ManagerPropositionRoleForm(initial={'proposition_dissertation': prop_dissert})
         else:
             form = ManagerPropositionRoleForm(initial={'proposition_dissertation': prop_dissert})
-            return layout.render(request, 'proposition_dissertations_jury_edit.html', {'form': form})
+        return layout.render(request, 'proposition_dissertations_jury_edit.html', {'form': form})
     else:
         return redirect('proposition_dissertation_detail', pk=prop_dissert.pk)
 
