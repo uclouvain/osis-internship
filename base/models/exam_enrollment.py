@@ -60,7 +60,8 @@ class ExamEnrollment(models.Model):
     learning_unit_enrollment = models.ForeignKey('LearningUnitEnrollment')
     enrollment_state = models.CharField(max_length=20,
                                         default=enrollment_states.ENROLLED,
-                                        choices=enrollment_states.STATES)
+                                        choices=enrollment_states.STATES,
+                                        db_index=True)
 
     def student(self):
         return self.learning_unit_enrollment.student
