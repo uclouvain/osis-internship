@@ -56,6 +56,3 @@ admin.site.register(grade_type.GradeType,
 
 admin.site.register(language.Language,
                     language.LanguageAdmin)
-
-admin.site.register(institutional_grade_type.InstitutionalGradeType,
-                    institutional_grade_type.InstitutionalGradeTypeAdmin)
