@@ -105,8 +105,8 @@ def send_mail_dissert_acknowledgement(dissert):
 
 def send_mail_dissert_refused_by_com_to_student(dissert):
 
-    html_template_ref = 'dissertation_refused_by_com_to_sudent_html'
-    txt_template_ref = 'dissertation_refused_by_com_to_sudent_txt'
+    html_template_ref = 'dissertation_refused_by_com_to_student_html'
+    txt_template_ref = 'dissertation_refused_by_com_to_student_txt'
     student_receiver = message_config.create_receiver(dissert.author.person.id,
                                                 dissert.author.person.email,
                                                 dissert.author.person.language)
