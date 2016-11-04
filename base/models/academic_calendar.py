@@ -26,6 +26,7 @@
 from django.db import models
 from django.utils import timezone
 from base.models import session_exam
+from base.models.exception import FunctionAgrumentMissing, StartDateHigherThanEndDate
 
 FUNCTIONS = 'functions'
 
@@ -43,8 +44,10 @@ class AcademicCalendar(models.Model):
 
     def save(self, *args, **kwargs):
         if FUNCTIONS not in kwargs.keys():
-            raise ValueError('The kwarg "{0}" must be set.'.format(FUNCTIONS))
+            raise FunctionAgrumentMissing('The kwarg "{0}" must be set.'.format(FUNCTIONS))
         functions = kwargs.pop(FUNCTIONS)
+        if self.start_date and self.end_date and self.start_date >= self.end_date:
+            raise StartDateHigherThanEndDate('Start date must be lower than end date')
         super(AcademicCalendar, self).save(*args, **kwargs)
         for function in functions:
             function(self)

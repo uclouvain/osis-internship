@@ -27,23 +27,50 @@ import datetime
 from django.test import TestCase
 from base.models import academic_year
 from base.models.academic_calendar import AcademicCalendar
+from base.models.exception import FunctionAgrumentMissing, StartDateHigherThanEndDate
 
 start_date = datetime.datetime.now()
 end_date = start_date.replace(year=start_date.year + 1)
 
 
-class AcademicCalendarTest(TestCase):
+def create_academic_year():
+    academic_yr = academic_year.AcademicYear(year=2016, start_date=start_date, end_date=end_date)
+    academic_yr.save()
+    return academic_yr
 
-    academic_year = None
+
+class AcademicCalendarFunctionArgs(TestCase):
 
     def setUp(self):
-        academic_yr = academic_year.AcademicYear(year=2016, start_date=start_date, end_date=end_date)
-        academic_yr.save()
-        self.academic_year = academic_yr
+        self.academic_year = create_academic_year()
 
     def test_save_without_functions_args(self):
         ac_cal = AcademicCalendar(academic_year=self.academic_year,
                                   title="A calendar event",
                                   start_date=start_date,
                                   end_date=end_date)
-        self.assertRaises(ValueError, ac_cal.save)
+        self.assertRaises(FunctionAgrumentMissing, ac_cal.save)
+
+
+class AcademicCalendarStartEndDates(TestCase):
+
+    def setUp(self):
+        self.academic_year = create_academic_year()
+
+    def test_start_date_higher_than_end_date(self):
+        wrong_end_date = datetime.datetime.now()
+        wrong_start_date = wrong_end_date.replace(year=start_date.year + 1)
+        academic_cal = AcademicCalendar(academic_year=self.academic_year,
+                                        title="A calendar event",
+                                        start_date=wrong_start_date,
+                                        end_date=wrong_end_date)
+        self.assertRaises(StartDateHigherThanEndDate, academic_cal.save, functions=[])
+
+    def test_start_date_equal_to_end_date(self):
+        wrong_end_date = datetime.datetime.now()
+        wrong_start_date = wrong_end_date
+        academic_cal = AcademicCalendar(academic_year=self.academic_year,
+                                        title="A calendar event",
+                                        start_date=wrong_start_date,
+                                        end_date=wrong_end_date)
+        self.assertRaises(StartDateHigherThanEndDate, academic_cal.save, functions=[])

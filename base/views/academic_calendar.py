@@ -62,6 +62,7 @@ def academic_calendars_search(request):
         'academic_years': academic_years,
         'academic_calendars': query})
 
+
 @login_required
 @permission_required('base.can_access_academic_calendar', raise_exception=True)
 def academic_calendar_read(request, id):

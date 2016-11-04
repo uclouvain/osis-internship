@@ -2,6 +2,7 @@
 {% load staticfiles %}
 {% load i18n %}
 {% load dictionnary %}
+{% load format %}
 
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -67,14 +68,16 @@
                 <div class="col-md-2">
                     <label for="txt_start_date">{% trans 'start_date'%}</label>
                     <input type="date" class="form-control"
-                           value="{{ form.start_date.value| default_if_none:''|date:'d/m/Y' }}"
-                    name="start_date" id="txt_start_date"><font class="error">{{ form.start_date.errors }}</font>
+                           value="{{ form.start_date.value| default_if_none:''| date_in_form_format:"d/m/Y" }}"
+                    name="start_date" id="txt_start_date"/>
+                    <span class="error">{{ form.start_date.errors }}</span>
                 </div>
                 <div class="col-md-2">
                     <label for="txt_end_date">{% trans 'end_date' %}</label>
                     <input type="date" class="form-control"
-                           value="{{ form.end_date.value| default_if_none:''|date:'d/m/Y' }}"
-                           name="end_date" id="txt_end_date"><font class="error">{{ form.end_date.errors }}</font>
+                           value="{{ form.end_date.value| default_if_none:''| date_in_form_format:"d/m/Y" }}"
+                           name="end_date" id="txt_end_date"/>
+                    <span class="error">{{ form.end_date.errors }}</span>
                 </div>
             </div>
             <br>

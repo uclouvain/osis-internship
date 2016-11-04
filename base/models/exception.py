@@ -23,27 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django import template
-from django.template.defaultfilters import date
 
-register = template.Library()
-
-
-@register.filter
-def format(value, arg):
-    return value % arg
+class StartDateHigherThanEndDate(ValueError):
+    def __init__(self, message=None, errors=None):
+        super(ValueError, self).__init__(message)
+        self.errors = errors
 
 
-@register.filter
-def str_format(value, args):
-    if args is None:
-        return value
-    args_list = args.split('|')
-    return value.format(*args_list)
-
-@register.filter
-def date_in_form_format(value, pattern):
-    if type(value).__name__ == 'str':
-        return value
-    else:
-        return date(value, pattern)
+class FunctionAgrumentMissing(ValueError):
+    def __init__(self, message=None, errors=None):
+        super(ValueError, self).__init__(message)
+        self.errors = errors
