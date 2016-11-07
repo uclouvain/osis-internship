@@ -24,49 +24,18 @@
 #
 ##############################################################################
 from django.db import models
-from base.enums.learning_unit_periodicity import PERIODICITY_TYPES
 from django.contrib import admin
 
 
-class LearningUnitAdmin(admin.ModelAdmin):
-    list_display = ('acronym', 'title', 'changed')
-    fieldsets = ((None, {'fields': ('acronym', 'title', 'description')}),)
+class LearningContainerAdmin(admin.ModelAdmin):
+    list_display = ()
+    fieldsets = ((None, {'fields': ()}),)
     search_fields = ['acronym']
 
 
-class LearningUnit(models.Model):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed = models.DateTimeField(null=True)
-    acronym = models.CharField(max_length=15)
+class LearningContainer(models.Model):
     title = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
-    #periodicity = models.CharField(max_length=10, blank=True, null=True, choices=PERIODICITY_TYPES)
-    #start_year = models.IntegerField()
-    #end_year = models.IntegerField(blank=True, null=True)
-    #progress = None
-
-    def __str__(self):
-        return u"%s - %s" % (self.acronym, self.title)
-
-    class Meta:
-        permissions = (
-            ("can_access_learningunit", "Can access learning unit"),
-        )
 
 
-def find_by_id(learning_unit_id):
-    return LearningUnit.objects.get(pk=learning_unit_id)
-
-
-def find_by_ids(learning_unit_ids):
-    return LearningUnit.objects.filter(pk__in=learning_unit_ids)
-
-
-def search(acronym=None):
-    queryset = LearningUnit.objects
-
-    if acronym:
-        queryset = queryset.filter(acronym=acronym)
-
-    return queryset
-
+def find_by_id(learning_container_id):
+    return LearningContainer.objects.get(pk=learning_container_id)

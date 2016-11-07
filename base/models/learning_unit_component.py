@@ -24,49 +24,28 @@
 #
 ##############################################################################
 from django.db import models
-from base.enums.learning_unit_periodicity import PERIODICITY_TYPES
 from django.contrib import admin
 
 
-class LearningUnitAdmin(admin.ModelAdmin):
-    list_display = ('acronym', 'title', 'changed')
-    fieldsets = ((None, {'fields': ('acronym', 'title', 'description')}),)
+class LearningUnitComponentAdmin(admin.ModelAdmin):
+    list_display = ()
+    fieldsets = ((None, {'fields': ('learning_component_year', 'learning_unit_year')}),)
     search_fields = ['acronym']
 
 
-class LearningUnit(models.Model):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed = models.DateTimeField(null=True)
-    acronym = models.CharField(max_length=15)
-    title = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
-    #periodicity = models.CharField(max_length=10, blank=True, null=True, choices=PERIODICITY_TYPES)
-    #start_year = models.IntegerField()
-    #end_year = models.IntegerField(blank=True, null=True)
-    #progress = None
-
-    def __str__(self):
-        return u"%s - %s" % (self.acronym, self.title)
+class LearningUnitComponent(models.Model):
+    Learning_component_year = models.ForeignKey('LearningComponentYear')
+    learning_unit_year = models.ForeignKey('LearningUnitYear')
 
     class Meta:
         permissions = (
-            ("can_access_learningunit", "Can access learning unit"),
+            ("can_access_learningunitcomponent", "Can access learning unit component"),
         )
 
 
-def find_by_id(learning_unit_id):
-    return LearningUnit.objects.get(pk=learning_unit_id)
+def find_by_learning_unit_year(learning_unit_year):
+    return LearningUnitComponent.objects.get(pk=learning_unit_year)
 
 
-def find_by_ids(learning_unit_ids):
-    return LearningUnit.objects.filter(pk__in=learning_unit_ids)
-
-
-def search(acronym=None):
-    queryset = LearningUnit.objects
-
-    if acronym:
-        queryset = queryset.filter(acronym=acronym)
-
-    return queryset
-
+def find_by_id(learning_unit_component_id):
+    return LearningUnitComponent.objects.get(pk=learning_unit_component_id)

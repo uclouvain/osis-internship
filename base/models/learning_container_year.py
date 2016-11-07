@@ -24,49 +24,39 @@
 #
 ##############################################################################
 from django.db import models
-from base.enums.learning_unit_periodicity import PERIODICITY_TYPES
 from django.contrib import admin
 
 
-class LearningUnitAdmin(admin.ModelAdmin):
-    list_display = ('acronym', 'title', 'changed')
-    fieldsets = ((None, {'fields': ('acronym', 'title', 'description')}),)
+class LearningContainerYearAdmin(admin.ModelAdmin):
+    list_display = ('title', 'acronym', 'academic_year', 'learning_container')
+    fieldsets = ((None, {'fields': ('title', 'acronym', 'academic_year')}),)
     search_fields = ['acronym']
 
 
-class LearningUnit(models.Model):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed = models.DateTimeField(null=True)
-    acronym = models.CharField(max_length=15)
+class LearningContainerYear(models.Model):
     title = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
-    #periodicity = models.CharField(max_length=10, blank=True, null=True, choices=PERIODICITY_TYPES)
-    #start_year = models.IntegerField()
-    #end_year = models.IntegerField(blank=True, null=True)
-    #progress = None
+    acronym = models.CharField(max_length=10)
+    academic_year = models.ForeignKey('AcademicYear')
+    learning_container = models.ForeignKey('LearningContainer')
+
+    def save(self, *args, **kwargs):
+        if self.title != self.learning_container.title:
+            raise AttributeError("The title of the learning container year is different from the learning container.")
+
+        super(LearningContainerYear, self).save()
 
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)
 
     class Meta:
         permissions = (
-            ("can_access_learningunit", "Can access learning unit"),
+            ("can_access_learningcontaineryear", "Can access learning container year"),
         )
 
 
-def find_by_id(learning_unit_id):
-    return LearningUnit.objects.get(pk=learning_unit_id)
+def find_by_academic_year(academic_year):
+    return LearningContainerYear.objects.get(pk=academic_year)
 
 
-def find_by_ids(learning_unit_ids):
-    return LearningUnit.objects.filter(pk__in=learning_unit_ids)
-
-
-def search(acronym=None):
-    queryset = LearningUnit.objects
-
-    if acronym:
-        queryset = queryset.filter(acronym=acronym)
-
-    return queryset
-
+def find_by_id(learning_container_year_id):
+    return LearningContainerYear.objects.get(pk=learning_container_year_id)

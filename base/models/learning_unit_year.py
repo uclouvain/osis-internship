@@ -25,7 +25,7 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-
+from base.enums.learning_unit_year_type import YEAR_TYPES
 from base.models import attribution
 
 
@@ -44,6 +44,10 @@ class LearningUnitYear(models.Model):
     decimal_scores = models.BooleanField(default=False)
     academic_year = models.ForeignKey('AcademicYear')
     learning_unit = models.ForeignKey('LearningUnit')
+    learning_container_year = models.ForeignKey('LearningContainerYear', blank=True, null=True)
+    #type = models.CharField(max_length=3, blank=True, null=True, choices=YEAR_TYPES)
+    #specifications = models.TextField(blank=True, null=True)
+    #summary = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year,self.title)
