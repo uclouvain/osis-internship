@@ -40,17 +40,17 @@
 {% block content %}
 <ul class="nav nav-tabs">
     {% if reviewer_id %}
-	    <li class="active"><a href="{% url 'pst_form_view' reviewer_id=reviewer_id mandate_id=mandate_id %}">
-		{% trans 'assistant_form' %}</a></li>
+        <li class="active"><a href="{% url 'pst_form_view' reviewer_id=reviewer_id mandate_id=mandate_id %}">
+    	{% trans 'assistant_form' %}</a></li>
     {% else %}
         <li class="active"><a href="{% url 'pst_form_view' mandate_id=mandate_id %}">
-		{% trans 'assistant_form' %}</a></li>
+    	{% trans 'assistant_form' %}</a></li>
     {% endif %}
     {% if role == 'PHD_SUPERVISOR' %}
         <li><a href="#">{% trans 'phd_supervisor_review' %}</a></li>
-	    <li class="disabled"><a href="#">{% trans 'research_review' %}</a></li>
-	    <li class="disabled"><a href="#">{% trans 'supervision_review' %}</a></li>
-	    <li class="disabled"><a href="#">{% trans 'sector_vice-rector_review' %}</a></li>
+        <li class="disabled"><a href="#">{% trans 'research_review' %}</a></li>
+        <li class="disabled"><a href="#">{% trans 'supervision_review' %}</a></li>
+        <li class="disabled"><a href="#">{% trans 'sector_vice-rector_review' %}</a></li>
     {% else %}
         {% if links.0.0 %}
             <li><a href="{% url 'review_view' mandate_id=mandate_id %}">
@@ -64,8 +64,8 @@
                 <li><a href="{% url 'review_view' reviewer_id=links.1.0 mandate_id=mandate_id %}">
                     <strong>{% trans 'research_review' %}</strong></a></li>
             {% endif %}
-	        <li class="disabled"><a href="#">{% trans 'supervision_review' %}</a></li>
-	        <li class="disabled"><a href="#">{% trans 'sector_vice-rector_review' %}</a></li>
+            <li class="disabled"><a href="#">{% trans 'supervision_review' %}</a></li>
+            <li class="disabled"><a href="#">{% trans 'sector_vice-rector_review' %}</a></li>
         {% else %}
             {% if links.1.0 %}
                 <li><a href="{% url 'review_view' reviewer_id=links.1.0 mandate_id=mandate_id %}">
