@@ -23,7 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.core import serializers
 from django.db import models
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q

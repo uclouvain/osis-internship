@@ -211,17 +211,22 @@ def manager_proposition_dissertations_search(request):
         worksheet1.append(['Date_de_création', 'Teacher', 'Title',
                            'Type', 'Level', 'Collaboration', 'Max_number_student', 'Visibility',
                            'Active', 'Programme(s)', 'Description'])
+        types_choices = dict(PropositionDissertation.TYPES_CHOICES)
+        levels_choices = dict(PropositionDissertation.LEVELS_CHOICES)
+        collaboration_choices = dict(PropositionDissertation.COLLABORATION_CHOICES)
         for proposition in propositions:
             worksheet1.append([proposition.created_date,
                                str(proposition.author),
                                proposition.title,
-                               proposition.type,
-                               proposition.level,
-                               proposition.collaboration,
+                               str(types_choices[proposition.type]),
+                               str(levels_choices[proposition.level]),
+                               str(collaboration_choices[proposition.collaboration]),
                                proposition.max_number_student,
                                proposition.visibility,
                                proposition.active,
-                               ', '.join((str(conv.acronym) for conv in proposition.offer_proposition.all()))])
+                               ', '.join((str(conv.acronym) for conv in proposition.offer_proposition.all())),
+                               proposition.description
+                               ])
         response = HttpResponse(save_virtual_workbook(workbook), content_type='application/vnd.ms-excel')
         response['Content-Disposition'] = "%s%s" % ("attachment; filename=", filename)
         return response

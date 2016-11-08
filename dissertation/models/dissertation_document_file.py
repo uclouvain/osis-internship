@@ -23,11 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
+from osis_common.models.serializable_model import SerializableModel
 from django.db import models
 
 
-class DissertationDocumentFile(models.Model):
+class DissertationDocumentFile(SerializableModel):
     dissertation = models.ForeignKey('Dissertation')
     document_file = models.ForeignKey('osis_common.DocumentFile')
 
