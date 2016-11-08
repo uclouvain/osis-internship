@@ -40,6 +40,7 @@ def download(request, proposition_pk):
     return response
 
 
+@login_required
 def save_uploaded_file(request):
     data = request.POST
     if request.method == 'POST':
