@@ -81,8 +81,6 @@ class AcademicCalendarWithoutOfferYearCalendar(TestCase):
         self.academic_cal = academic_cal
 
     def test_save_from_academic_calendar(self):
-        # academic_cal = academic_calendar.AcademicCalendar.objects.filter(title=self.academic_calendar_title)\
-        #                                                          .first()
         self.assertEqual(len(offer_year_calendar.find_by_academic_calendar(self.academic_cal)), 0)
         offer_year_calendar.save_from_academic_calendar(self.academic_cal)
         self.assertEqual(len(offer_year_calendar.find_by_academic_calendar(self.academic_cal)),
