@@ -304,11 +304,6 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='osis_common.DocumentFile'),
         ),
         migrations.AddField(
-            model_name='applicantassimilationcriteria',
-            name='applicant',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='admission.Applicant'),
-        ),
-        migrations.AddField(
             model_name='applicant',
             name='birth_country',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='reference.Country'),
