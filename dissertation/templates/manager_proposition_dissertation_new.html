@@ -97,7 +97,7 @@
             <label for="txt_level">{% trans 'offer_propositions' %}</label>
             <br>
             {% for offer_proposition in offer_propositions %}
-                <div class="col-md-2" style="text-align:right; margin-left: -15px;">
+                <div style="text-align:right; margin-left: -15px;">
                     <label for="txt_checkbox_{{ offer_proposition.id }}">{{ offer_proposition.acronym }}</label>
                     <input id="txt_checkbox_{{ offer_proposition.id }}"  name="txt_checkbox_{{ offer_proposition.id }}"
                            style="margin-left:6px;" type="checkbox">
