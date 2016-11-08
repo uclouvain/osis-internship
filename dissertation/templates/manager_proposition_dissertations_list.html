@@ -61,7 +61,7 @@
         </div>
       </form>
       </div>
-          {% if proposition_dissertations|length == 0 %}
+          {% if proposition_offers|length == 0 %}
             <br>
             <label class="alert alert-info" style="margin-left:10%;width:80%;text-align:center;">{% trans 'no_result' %}</label>
           {% else %}
@@ -73,16 +73,16 @@
                 <th>{% trans 'max_students_number'%}</th>
                 <th>{% trans 'visibility'%}</th>
               </tr>
-              {% for proposition_dissertation in proposition_dissertations %}
+              {% for proposition_offer in proposition_offers %}
                 <tr>
-                  <td><a href="{% url 'manager_proposition_dissertation_detail' pk=proposition_dissertation.pk %}">{{ proposition_dissertation.title }}</a></td>
-                  <td>{{ proposition_dissertation.author }}</td>
-                  <td>{% for offer_proposition in proposition_dissertation.offer_proposition.all %}<span class="label label-default">{{ offer_proposition }}</span> {% endfor %}</td>
-                  <td>{{ proposition_dissertation.max_number_student }}</td>
+                  <td><a href="{% url 'manager_proposition_dissertation_detail' pk=proposition_offer.proposition_dissertation.pk %}">{{ proposition_offer.proposition_dissertation.title }}</a></td>
+                  <td>{{ proposition_offer.proposition_dissertation.author }}</td>
+                  <td><span class="label label-default">{{ proposition_offer }}</span></td>
+                  <td>{{ proposition_offer.proposition_dissertation.max_number_student }}</td>
                   <td>
-                      {% if proposition_dissertation.visibility == True %}
+                      {% if proposition_offer.proposition_dissertation.visibility == True %}
                       <span class="label label-success">{% trans 'visible' %}</span>
-                      {% elif proposition_dissertation.visibility == False %}
+                      {% elif proposition_offer.proposition_dissertation.visibility == False %}
                       <span class="label label-warning">{% trans 'invisible' %}</span>
                       {% endif %}
                   </td>
