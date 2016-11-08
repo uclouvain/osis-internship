@@ -201,19 +201,19 @@ def manager_dissertations_edit(request, pk):
             dissertation_update.add(request, dissert, dissert.status, justification=justification)
             return redirect('manager_dissertations_detail', pk=dissert.pk)
         else:
-            form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offer(offers)
+            form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offers(offers)
             form.fields["author"].queryset = mdl.student.find_by_offer(offers)
             form.fields["offer_year_start"].queryset = mdl.offer_year.find_by_offer(offers)
     else:
         form = ManagerDissertationEditForm(instance=dissert)
-        form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offer(offers)
+        form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offers(offers)
         form.fields["author"].queryset = mdl.student.find_by_offer(offers)
         form.fields["offer_year_start"].queryset = mdl.offer_year.find_by_offer(offers)
 
     return layout.render(request, 'manager_dissertations_edit.html',
                          {'form': form,
-                          'dissert': dissert
-                          })
+                          'dissert': dissert,
+                          'defend_periode_choices': dissertation.DEFEND_PERIODE_CHOICES})
 
 
 @login_required
@@ -286,16 +286,18 @@ def manager_dissertations_new(request):
             dissertation_update.add(request, dissert, dissert.status, justification=justification)
             return redirect('manager_dissertations_detail', pk=dissert.pk)
         else:
-            form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offer(offers)
+            form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offers(offers)
             form.fields["author"].queryset = mdl.student.find_by_offer(offers)
             form.fields["offer_year_start"].queryset = mdl.offer_year.find_by_offer(offers)
 
     else:
         form = ManagerDissertationForm(initial={'active': True})
-        form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offer(offers)
+        form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offers(offers)
         form.fields["author"].queryset = mdl.student.find_by_offer(offers)
         form.fields["offer_year_start"].queryset = mdl.offer_year.find_by_offer(offers)
-    return layout.render(request, 'manager_dissertations_new.html', {'form': form})
+    return layout.render(request, 'manager_dissertations_new.html',
+                         {'form': form,
+                          'defend_periode_choices': dissertation.DEFEND_PERIODE_CHOICES})
 
 
 @login_required

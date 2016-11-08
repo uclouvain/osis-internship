@@ -27,8 +27,10 @@ from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from base import models as mdl
 from dissertation.models import adviser, dissertation, faculty_adviser, offer_proposition, proposition_dissertation,\
-    proposition_document_file, proposition_role
+    proposition_document_file, proposition_offer, proposition_role
+from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models.proposition_dissertation import PropositionDissertation
+from dissertation.models.proposition_offer import PropositionOffer
 from dissertation.models.proposition_role import PropositionRole
 from dissertation.forms import PropositionDissertationForm, ManagerPropositionDissertationForm,\
     ManagerPropositionRoleForm, ManagerPropositionDissertationEditForm
@@ -64,9 +66,9 @@ def manager_proposition_dissertations(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     offers = faculty_adviser.search_by_adviser(adv)
-    propositions = proposition_dissertation.search_by_offer(offers)
+    proposition_offers = proposition_offer.search_by_offers(offers)
     return layout.render(request, 'manager_proposition_dissertations_list.html',
-                         {'proposition_dissertations': propositions})
+                         {'proposition_offers': proposition_offers})
 
 
 @login_required
@@ -81,6 +83,7 @@ def manager_proposition_dissertation_delete(request, pk):
 @user_passes_test(is_manager)
 def manager_proposition_dissertation_detail(request, pk):
     proposition = get_object_or_404(PropositionDissertation, pk=pk)
+    offer_propositions = proposition_offer.search_by_proposition_dissertation(proposition)
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     count_use = dissertation.count_by_proposition(proposition)
@@ -95,6 +98,7 @@ def manager_proposition_dissertation_detail(request, pk):
     proposition_roles = proposition_role.search_by_proposition(proposition)
     return layout.render(request, 'manager_proposition_dissertation_detail.html',
                          {'proposition_dissertation': proposition,
+                          'offer_propositions': offer_propositions,
                           'adviser': adv,
                           'count_use': count_use,
                           'percent': round(percent, 2),
@@ -107,10 +111,24 @@ def manager_proposition_dissertation_detail(request, pk):
 @user_passes_test(is_manager)
 def manage_proposition_dissertation_edit(request, pk):
     proposition = get_object_or_404(PropositionDissertation, pk=pk)
+    offer_propositions = OfferProposition.objects.all()
+    proposition_offers = proposition_offer.search_by_proposition_dissertation(proposition)
     if request.method == "POST":
         form = ManagerPropositionDissertationEditForm(request.POST, instance=proposition)
         if form.is_valid():
             proposition = form.save()
+            proposition_offers = proposition_offer.search_by_proposition_dissertation(proposition)
+            for old in proposition_offers:
+                old.delete()
+            for key, value in request.POST.items():
+                if "txt_checkbox_" in key:
+                    if "on" == value:
+                        offer = PropositionOffer()
+                        offer.proposition_dissertation = proposition
+                        offer_proposition_id = key.replace("txt_checkbox_", "")
+                        offer.offer_proposition = offer_proposition.find_by_id(
+                            int(offer_proposition_id))
+                        offer.save()
             return redirect('manager_proposition_dissertation_detail', pk=proposition.pk)
     else:
         form = ManagerPropositionDissertationEditForm(instance=proposition)
@@ -120,7 +138,9 @@ def manage_proposition_dissertation_edit(request, pk):
                           'author': proposition.author,
                           'types_choices': PropositionDissertation.TYPES_CHOICES,
                           'levels_choices': PropositionDissertation.LEVELS_CHOICES,
-                          'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES})
+                          'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES,
+                          'offer_propositions': offer_propositions,
+                          'proposition_offers': proposition_offers})
 
 
 @login_required
@@ -169,12 +189,24 @@ def manager_proposition_dissertations_role_delete(request, pk):
 @login_required
 @user_passes_test(is_manager)
 def manager_proposition_dissertation_new(request):
+    offer_propositions = OfferProposition.objects.all()
     if request.method == "POST":
         person = mdl.person.find_by_user(request.user)
         form = ManagerPropositionDissertationForm(request.POST)
         if form.is_valid():
             proposition = form.save()
             proposition.set_creator(person)
+            proposition_offers = proposition_offer.search_by_proposition_dissertation(proposition)
+            for old in proposition_offers:
+                old.delete()
+            for key, value in request.POST.items():
+                if "txt_checkbox_" in key:
+                    if "on" == value:
+                        offer = PropositionOffer()
+                        offer.proposition_dissertation = proposition
+                        offer_proposition_id = key.replace("txt_checkbox_", "")
+                        offer.offer_proposition = offer_proposition.find_by_id(int(offer_proposition_id))
+                        offer.save()
             return redirect('manager_proposition_dissertation_detail', pk=proposition.pk)
         else:
             form = ManagerPropositionDissertationForm(initial={'active': True})
@@ -185,24 +217,23 @@ def manager_proposition_dissertation_new(request):
                                  {'form': form,
                                   'types_choices': PropositionDissertation.TYPES_CHOICES,
                                   'levels_choices': PropositionDissertation.LEVELS_CHOICES,
-                                  'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES})
+                                  'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES,
+                                  'offer_propositions': offer_propositions})
+
     else:
         form = ManagerPropositionDissertationForm(initial={'active': True})
-        person = mdl.person.find_by_user(request.user)
-        adv = adviser.search_by_person(person)
-        offers = faculty_adviser.search_by_adviser(adv)
-        form.fields["offer_proposition"].queryset = offer_proposition.search_by_offer(offers)
         return layout.render(request, 'manager_proposition_dissertation_new.html',
                              {'form': form,
                               'types_choices': PropositionDissertation.TYPES_CHOICES,
                               'levels_choices': PropositionDissertation.LEVELS_CHOICES,
-                              'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES})
+                              'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES,
+                              'offer_propositions': offer_propositions})
 
 
 @login_required
 @user_passes_test(is_manager)
 def manager_proposition_dissertations_search(request):
-    propositions = proposition_dissertation.search(terms=request.GET['search'], active=True)
+    proposition_offers = proposition_offer.search(terms=request.GET['search'], active=True)
     if 'bt_xlsx' in request.GET:
         filename = "%s%s%s" % ('EXPORT_dissertation_', time.strftime("%Y-%m-%d %H:%M"), '.xlsx')
         workbook = Workbook(encoding='utf-8')
@@ -211,24 +242,25 @@ def manager_proposition_dissertations_search(request):
         worksheet1.append(['Date_de_création', 'Teacher', 'Title',
                            'Type', 'Level', 'Collaboration', 'Max_number_student', 'Visibility',
                            'Active', 'Programme(s)', 'Description'])
-        for proposition in propositions:
-            worksheet1.append([proposition.created_date,
-                               str(proposition.author),
-                               proposition.title,
-                               proposition.type,
-                               proposition.level,
-                               proposition.collaboration,
-                               proposition.max_number_student,
-                               proposition.visibility,
-                               proposition.active,
-                               ', '.join((str(conv.acronym) for conv in proposition.offer_proposition.all()))])
+        for proposition in proposition_offers:
+            worksheet1.append([proposition.proposition_dissertation.created_date,
+                               str(proposition.proposition_dissertation.author),
+                               proposition.proposition_dissertation.title,
+                               proposition.proposition_dissertation.type,
+                               proposition.proposition_dissertation.level,
+                               proposition.proposition_dissertation.collaboration,
+                               proposition.proposition_dissertation.max_number_student,
+                               proposition.proposition_dissertation.visibility,
+                               proposition.proposition_dissertation.active,
+                               proposition.offer_proposition.acronym,
+                               proposition.proposition_dissertation.description])
         response = HttpResponse(save_virtual_workbook(workbook), content_type='application/vnd.ms-excel')
         response['Content-Disposition'] = "%s%s" % ("attachment; filename=", filename)
         return response
 
     else:
         return layout.render(request, "manager_proposition_dissertations_list.html",
-                             {'proposition_dissertations': propositions})
+                             {'proposition_offers': proposition_offers})
 
 ###########################
 #      TEACHER VIEWS      #
@@ -241,8 +273,9 @@ def proposition_dissertations(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     propositions = proposition_dissertation.get_all_for_teacher(adv)
+    proposition_offers = proposition_offer.search_by_proposition_dissertations(propositions)
     return layout.render(request, 'proposition_dissertations_list.html',
-                         {'proposition_dissertations': propositions})
+                         {'proposition_offers': proposition_offers})
 
 
 @login_required
@@ -257,6 +290,7 @@ def proposition_dissertation_delete(request, pk):
 @user_passes_test(is_teacher)
 def proposition_dissertation_detail(request, pk):
     proposition = get_object_or_404(PropositionDissertation, pk=pk)
+    offer_propositions = proposition_offer.search_by_proposition_dissertation(proposition)
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     count_use = dissertation.count_by_proposition(proposition)
@@ -271,6 +305,7 @@ def proposition_dissertation_detail(request, pk):
     proposition_roles = proposition_role.search_by_proposition(proposition)
     return layout.render(request, 'proposition_dissertation_detail.html',
                          {'proposition_dissertation': proposition,
+                          'offer_propositions': offer_propositions,
                           'adviser': adv,
                           'count_use': count_use,
                           'percent': round(percent, 2),
@@ -285,11 +320,25 @@ def proposition_dissertation_edit(request, pk):
     proposition = get_object_or_404(PropositionDissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
+    offer_propositions = OfferProposition.objects.all()
+    proposition_offers = proposition_offer.search_by_proposition_dissertation(proposition)
     if proposition.author == adv or proposition.creator == adv.person:
         if request.method == "POST":
             form = PropositionDissertationForm(request.POST, instance=proposition)
             if form.is_valid():
                 proposition = form.save()
+                proposition_offers = proposition_offer.search_by_proposition_dissertation(proposition)
+                for old in proposition_offers:
+                    old.delete()
+                for key, value in request.POST.items():
+                    if "txt_checkbox_" in key:
+                        if "on" == value:
+                            offer = PropositionOffer()
+                            offer.proposition_dissertation = proposition
+                            offer_proposition_id = key.replace("txt_checkbox_", "")
+                            offer.offer_proposition = offer_proposition.find_by_id(
+                                int(offer_proposition_id))
+                            offer.save()
                 return redirect('proposition_dissertation_detail', pk=proposition.pk)
         else:
             form = PropositionDissertationForm(instance=proposition)
@@ -298,7 +347,9 @@ def proposition_dissertation_edit(request, pk):
                               'form': form,
                               'types_choices': PropositionDissertation.TYPES_CHOICES,
                               'levels_choices': PropositionDissertation.LEVELS_CHOICES,
-                              'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES})
+                              'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES,
+                              'offer_propositions': offer_propositions,
+                              'proposition_offers': proposition_offers})
     else:
         return redirect('proposition_dissertation_detail', pk=proposition.pk)
 
@@ -309,8 +360,9 @@ def my_dissertation_propositions(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     propositions = proposition_dissertation.get_mine_for_teacher(adv)
+    proposition_offers = proposition_offer.search_by_proposition_dissertations(propositions)
     return layout.render(request, 'proposition_dissertations_list_my.html',
-                         {'proposition_dissertations': propositions})
+                         {'proposition_offers': proposition_offers})
 
 
 @login_required
@@ -319,19 +371,32 @@ def proposition_dissertations_created(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     propositions = proposition_dissertation.get_created_for_teacher(adv)
+    proposition_offers = proposition_offer.search_by_proposition_dissertations(propositions)
     return layout.render(request, 'proposition_dissertations_list_created.html',
-                         {'proposition_dissertations': propositions})
+                         {'proposition_offers': proposition_offers})
 
 
 @login_required
 @user_passes_test(is_teacher)
 def proposition_dissertation_new(request):
     person = mdl.person.find_by_user(request.user)
+    offer_propositions = OfferProposition.objects.all()
     if request.method == "POST":
         form = PropositionDissertationForm(request.POST)
         if form.is_valid():
             proposition = form.save()
             proposition.set_creator(person)
+            proposition_offers = proposition_offer.search_by_proposition_dissertation(proposition)
+            for old in proposition_offers:
+                old.delete()
+            for key, value in request.POST.items():
+                if "txt_checkbox_" in key:
+                    if "on" == value:
+                        offer = PropositionOffer()
+                        offer.proposition_dissertation = proposition
+                        offer_proposition_id = key.replace("txt_checkbox_", "")
+                        offer.offer_proposition = offer_proposition.find_by_id(int(offer_proposition_id))
+                        offer.save()
             return redirect('proposition_dissertation_detail', pk=proposition.pk)
     else:
         adv = adviser.search_by_person(person)
@@ -340,7 +405,8 @@ def proposition_dissertation_new(request):
                          {'form': form,
                           'types_choices': PropositionDissertation.TYPES_CHOICES,
                           'levels_choices': PropositionDissertation.LEVELS_CHOICES,
-                          'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES})
+                          'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES,
+                          'offer_propositions': offer_propositions})
 
 
 @login_required
@@ -348,10 +414,10 @@ def proposition_dissertation_new(request):
 def proposition_dissertations_search(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-    propositions = proposition_dissertation.search(terms=request.GET['search'],
-                                                   active=True, visibility=True, connected_adviser=adv)
+    proposition_offers = proposition_offer.search(terms=request.GET['search'], active=True,
+                                                  visibility=True, connected_adviser=adv)
     return layout.render(request, "proposition_dissertations_list.html",
-                         {'proposition_dissertations': propositions})
+                         {'proposition_offers': proposition_offers})
 
 
 @login_required

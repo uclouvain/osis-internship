@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from base.models.serializable_model import SerializableModel
 from django.contrib import admin
 from django.db import models
 from base import models as mdl
@@ -37,7 +38,7 @@ class DissertationUpdateAdmin(admin.ModelAdmin):
     raw_id_fields = ('person', 'dissertation')
 
 
-class DissertationUpdate(models.Model):
+class DissertationUpdate(SerializableModel):
 
     status_from = models.CharField(max_length=12, choices=dissertation.STATUS_CHOICES, default='DRAFT')
     status_to = models.CharField(max_length=12, choices=dissertation.STATUS_CHOICES, default='DRAFT')

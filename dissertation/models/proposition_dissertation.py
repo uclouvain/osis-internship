@@ -23,6 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from base.models.serializable_model import SerializableModel
+from dissertation.models import proposition_offer
 from django.contrib import admin
 from django.db import models
 from django.db.models import Q
@@ -31,11 +33,11 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class PropositionDissertationAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'visibility', 'active', 'get_offer_propositions', 'creator')
+    list_display = ('title', 'author', 'visibility', 'active', 'creator')
     raw_id_fields = ('creator', 'author')
 
 
-class PropositionDissertation(models.Model):
+class PropositionDissertation(SerializableModel):
     TYPES_CHOICES = (
         ('RDL', _('litterature_review')),
         ('EMP', _('empirical_research')),
@@ -66,7 +68,6 @@ class PropositionDissertation(models.Model):
     type = models.CharField(max_length=12, choices=TYPES_CHOICES, default='OTH')
     visibility = models.BooleanField(default=True)
     active = models.BooleanField(default=True)
-    offer_proposition = models.ManyToManyField('OfferProposition')
     created_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
@@ -85,9 +86,6 @@ class PropositionDissertation(models.Model):
     def deactivate(self):
         self.active = False
         self.save()
-
-    def get_offer_propositions(self):
-        return " - ".join([str(s) for s in self.offer_proposition.all()])
 
     def set_creator(self, person):
         self.creator = person
@@ -156,3 +154,8 @@ def get_created_for_teacher(adviser):
 
 def find_by_id(proposition_id):
     return PropositionDissertation.objects.get(pk=proposition_id)
+
+
+def search_by_offers(offers):
+    proposition_ids = proposition_offer.search_by_offers(offers).values('proposition_dissertation_id')
+    return PropositionDissertation.objects.filter(pk__in=proposition_ids, active=True, visibility=True)
