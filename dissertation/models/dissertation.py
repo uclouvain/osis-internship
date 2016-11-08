@@ -31,7 +31,7 @@ from django.contrib import admin
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
-from base.models import offer_year, student, academic_year
+from base.models import offer_year, student
 from . import proposition_dissertation
 from . import offer_proposition
 from . import dissertation_location
@@ -224,3 +224,7 @@ def get_next_status(dissert, operation):
 
     else:
         return dissert.status
+
+
+def find_by_id(dissertation_id):
+    return Dissertation.objects.get(pk=dissertation_id)

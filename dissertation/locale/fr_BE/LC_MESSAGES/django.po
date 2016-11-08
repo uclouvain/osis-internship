@@ -442,6 +442,9 @@ msgstr "Question de recherche"
 msgid "level_theme"
 msgstr "Thème de recherche"
 
+msgid "link"
+msgstr "Lien"
+
 msgid "litterature_review"
 msgstr "Revue de littérature"
 
