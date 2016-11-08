@@ -24,20 +24,22 @@
 #
 ##############################################################################
 
-from django.db import models
-from django.contrib import admin
-from osis_common.models.serializable_model import SerializableModel
+from django.utils.translation import ugettext_lazy as _
 
+CRITERIA_1 = "CRITERIA_1"
+CRITERIA_2 = "CRITERIA_2"
+CRITERIA_3 = "CRITERIA_3"
+CRITERIA_4 = "CRITERIA_4"
+CRITERIA_5 = "CRITERIA_5"
+CRITERIA_6 = "CRITERIA_6"
+CRITERIA_7 = "CRITERIA_7"
 
-class AssimilationCriteriaAdmin(admin.ModelAdmin):
-    list_display = ('criteria', 'order')
-    fieldsets = ((None, {'fields': ('criteria', 'order')}),)
-
-
-class AssimilationCriteria(SerializableModel):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    criteria = models.CharField(max_length=255, unique=True)
-    order = models.IntegerField(blank=True, null=True)
-
-    def __str__(self):
-        return self.criteria
+ASSIMILATION_CRITERIA_CHOICES = (
+    (CRITERIA_1, _(CRITERIA_1)),
+    (CRITERIA_2, _(CRITERIA_2)),
+    (CRITERIA_3, _(CRITERIA_3)),
+    (CRITERIA_4, _(CRITERIA_4)),
+    (CRITERIA_5, _(CRITERIA_5)),
+    (CRITERIA_6, _(CRITERIA_6)),
+    (CRITERIA_7, _(CRITERIA_7)),
+)

@@ -61,7 +61,8 @@ class ExamEnrollment(models.Model):
     learning_unit_enrollment = models.ForeignKey('LearningUnitEnrollment')
     enrollment_state = models.CharField(max_length=20,
                                         default=enrollment_states.ENROLLED,
-                                        choices=enrollment_states.STATES)
+                                        choices=enrollment_states.STATES,
+                                        db_index=True)
 
     def student(self):
         return self.learning_unit_enrollment.student
@@ -218,7 +219,7 @@ def find_for_score_encodings(session_exam_number,
         # Filter by Tutor is like filter by a list of learningUnits
         # It's not necessary to add a filter if learningUnitYear or learningUnitYearIds are already defined
         if not learning_unit_year_id and not learning_unit_year_ids:
-            learning_unit_year_ids = learning_unit_year.find_by_tutor(tutor).values_list('id')
+            learning_unit_year_ids = learning_unit_year.find_by_tutor(tutor)
             queryset = queryset.filter(learning_unit_enrollment__learning_unit_year_id__in=learning_unit_year_ids)
 
     if offer_year_id:
