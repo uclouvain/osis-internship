@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
             name='AdmissionExamType',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('uuid', models.UUIDField(db_index=True, null=True)),
+                ('uuid', models.UUIDField(db_index=True, default=uuid.uuid4, null=True)),
                 ('name', models.CharField(max_length=100)),
                 ('adhoc', models.BooleanField(default=False)),
             ],
@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
             name='Answer',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('uuid', models.UUIDField(db_index=True, null=True)),
+                ('uuid', models.UUIDField(db_index=True, default=uuid.uuid4, null=True)),
                 ('value', models.TextField()),
             ],
             options={
@@ -45,7 +45,7 @@ class Migration(migrations.Migration):
             name='Applicant',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('uuid', models.UUIDField(db_index=True, null=True)),
+                ('uuid', models.UUIDField(db_index=True, default=uuid.uuid4, null=True)),
                 ('activation_code', models.UUIDField(blank=True, default=uuid.uuid4, editable=False, null=True)),
                 ('middle_name', models.CharField(blank=True, max_length=50, null=True)),
                 ('birth_date', models.DateField(blank=True, null=True)),
@@ -75,14 +75,14 @@ class Migration(migrations.Migration):
             name='ApplicantDocumentFile',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('uuid', models.UUIDField(db_index=True, null=True)),
+                ('uuid', models.UUIDField(db_index=True, default=uuid.uuid4, null=True)),
             ],
         ),
         migrations.CreateModel(
             name='Application',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('uuid', models.UUIDField(db_index=True, null=True)),
+                ('uuid', models.UUIDField(db_index=True, default=uuid.uuid4, null=True)),
                 ('creation_date', models.DateTimeField(auto_now=True)),
                 ('application_type', models.CharField(choices=[('ADMISSION', 'ADMISSION'), ('INSCRIPTION', 'INSCRIPTION')], max_length=20)),
                 ('national_degree', models.NullBooleanField(default=None)),
@@ -112,7 +112,7 @@ class Migration(migrations.Migration):
             name='ApplicationAssimilationCriteria',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('uuid', models.UUIDField(db_index=True, null=True)),
+                ('uuid', models.UUIDField(db_index=True, default=uuid.uuid4, null=True)),
                 ('criteria', models.CharField(choices=[('CRITERIA_1', 'CRITERIA_1'), ('CRITERIA_2', 'CRITERIA_2'), ('CRITERIA_3', 'CRITERIA_3'), ('CRITERIA_4', 'CRITERIA_4'), ('CRITERIA_5', 'CRITERIA_5'), ('CRITERIA_6', 'CRITERIA_6'), ('CRITERIA_7', 'CRITERIA_7')], max_length=50)),
                 ('additional_criteria', models.CharField(blank=True, choices=[('CRITERIA_1', 'CRITERIA_1'), ('CRITERIA_2', 'CRITERIA_2'), ('CRITERIA_3', 'CRITERIA_3'), ('CRITERIA_4', 'CRITERIA_4'), ('CRITERIA_5', 'CRITERIA_5'), ('CRITERIA_6', 'CRITERIA_6'), ('CRITERIA_7', 'CRITERIA_7')], max_length=50, null=True)),
                 ('selected', models.NullBooleanField()),
@@ -126,7 +126,7 @@ class Migration(migrations.Migration):
             name='ApplicationDocumentFile',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('uuid', models.UUIDField(db_index=True, null=True)),
+                ('uuid', models.UUIDField(db_index=True, default=uuid.uuid4, null=True)),
                 ('application', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='admission.Application')),
                 ('document_file', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='osis_common.DocumentFile')),
             ],
@@ -138,7 +138,7 @@ class Migration(migrations.Migration):
             name='Curriculum',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('uuid', models.UUIDField(db_index=True, null=True)),
+                ('uuid', models.UUIDField(db_index=True, default=uuid.uuid4, null=True)),
                 ('academic_year', models.IntegerField(blank=True, null=True)),
                 ('path_type', models.CharField(blank=True, choices=[('LOCAL_UNIVERSITY', 'national_university'), ('FOREIGN_UNIVERSITY', 'foreign_university'), ('LOCAL_HIGH_EDUCATION', 'high_national_non_university'), ('FOREIGN_HIGH_EDUCATION', 'high_foreign_non_university'), ('ANOTHER_ACTIVITY', 'other')], max_length=25, null=True)),
                 ('national_education', models.CharField(blank=True, choices=[('FRENCH', 'FRENCH'), ('GERMAN', 'GERMAN'), ('DUTCH', 'DUTCH')], max_length=20, null=True)),
@@ -165,7 +165,7 @@ class Migration(migrations.Migration):
             name='PersonAddress',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('uuid', models.UUIDField(db_index=True, null=True)),
+                ('uuid', models.UUIDField(db_index=True, default=uuid.uuid4, null=True)),
                 ('type', models.CharField(choices=[('LEGAL', 'Legal'), ('CONTACT', 'Contact')], max_length=20)),
                 ('street', models.CharField(max_length=255)),
                 ('number', models.CharField(max_length=6)),
@@ -182,7 +182,7 @@ class Migration(migrations.Migration):
             name='Profession',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('uuid', models.UUIDField(db_index=True, null=True)),
+                ('uuid', models.UUIDField(db_index=True, default=uuid.uuid4, null=True)),
                 ('name', models.CharField(max_length=255)),
                 ('adhoc', models.BooleanField(default=False)),
             ],
@@ -194,7 +194,7 @@ class Migration(migrations.Migration):
             name='SecondaryEducation',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('uuid', models.UUIDField(db_index=True, null=True)),
+                ('uuid', models.UUIDField(db_index=True, default=uuid.uuid4, null=True)),
                 ('diploma', models.BooleanField(default=False)),
                 ('academic_year', models.IntegerField(blank=True, null=True)),
                 ('national', models.NullBooleanField(default=True)),
@@ -218,7 +218,7 @@ class Migration(migrations.Migration):
             name='SecondaryEducationExam',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('uuid', models.UUIDField(db_index=True, null=True)),
+                ('uuid', models.UUIDField(db_index=True, default=uuid.uuid4, null=True)),
                 ('type', models.CharField(choices=[('ADMISSION', 'admission'), ('LANGUAGE', 'language'), ('PROFESSIONAL', 'professional')], max_length=20)),
                 ('exam_date', models.DateField(blank=True, null=True)),
                 ('institution', models.CharField(blank=True, max_length=100, null=True)),
@@ -233,17 +233,17 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='option',
             name='uuid',
-            field=models.UUIDField(db_index=True, null=True),
+            field=models.UUIDField(db_index=True, default=uuid.uuid4,  null=True),
         ),
         migrations.AddField(
             model_name='question',
             name='uuid',
-            field=models.UUIDField(db_index=True, null=True),
+            field=models.UUIDField(db_index=True, default=uuid.uuid4, null=True),
         ),
         migrations.CreateModel(
             name='SociologicalSurvey',
             fields=[
-                ('uuid', models.UUIDField(db_index=True, null=True)),
+                ('uuid', models.UUIDField(db_index=True, default=uuid.uuid4, null=True)),
                 ('applicant', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, primary_key=True, serialize=False, to='admission.Applicant')),
                 ('number_brothers_sisters', models.IntegerField(default=0)),
                 ('father_is_deceased', models.BooleanField(default=False)),
