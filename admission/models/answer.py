@@ -23,20 +23,20 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from admission.models import admission_exam_type
-from admission.models import answer
-from admission.models import applicant
-from admission.models import applicant_assimilation_criteria
-from admission.models import applicant_document_file
-from admission.models import application
-from admission.models import application_assimilation_criteria
-from admission.models import application_document_file
-from admission.models import curriculum
-from admission.models import form
-from admission.models import option
-from admission.models import person_address
-from admission.models import profession
-from admission.models import question
-from admission.models import secondary_education
-from admission.models import secondary_education_exam
-from admission.models import sociological_survey
+from django.db import models
+from django.contrib import admin
+
+
+class AnswerAdmin(admin.ModelAdmin):
+    list_display = ['value']
+    fieldsets = ((None, {'fields': ('value', 'option', 'application')}),)
+    list_filter = ('application', 'option',)
+
+
+class Answer(models.Model):
+    value = models.TextField()
+    option = models.ForeignKey('Option')
+    application = models.ForeignKey('Application')
+
+    def __str__(self):
+        return u"%s" % self.value

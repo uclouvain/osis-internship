@@ -62,6 +62,7 @@ INSTALLED_APPS = (
     'dissertation',
     'internship',
     'admission',
+    'localflavor',
 )
 
 MIDDLEWARE_CLASSES = (

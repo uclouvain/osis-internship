@@ -23,20 +23,33 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from admission.models import admission_exam_type
-from admission.models import answer
-from admission.models import applicant
-from admission.models import applicant_assimilation_criteria
-from admission.models import applicant_document_file
-from admission.models import application
-from admission.models import application_assimilation_criteria
-from admission.models import application_document_file
-from admission.models import curriculum
-from admission.models import form
-from admission.models import option
-from admission.models import person_address
-from admission.models import profession
-from admission.models import question
-from admission.models import secondary_education
-from admission.models import secondary_education_exam
-from admission.models import sociological_survey
+from django.db import models
+from django.contrib import admin
+from django.utils.translation import ugettext_lazy as _
+
+
+class SecondaryEducationExamAdmin(admin.ModelAdmin):
+    list_display = ('type', 'result', 'exam_date', 'institution')
+
+
+class SecondaryEducationExam(models.Model):
+    RESULT_TYPE = (('LOW', 'Moins de 65%'),
+                   ('MIDDLE', 'entre 65% et 75%'),
+                   ('HIGH', 'plus de 75%'))
+
+    LOCAL_LANGUAGE_EXAM_RESULT_TYPE = (('SUCCEED', _('succeeded')),
+                                       ('FAILED', _('failed')),
+                                       ('ENROLLMENT_IN_PROGRESS', _('demanded_result')))
+
+    EXAM_TYPES = (('ADMISSION', _('admission')),
+                  ('LANGUAGE', _('language')),
+                  ('PROFESSIONAL', _('professional')))
+
+    secondary_education = models.ForeignKey('SecondaryEducation')
+    admission_exam_type = models.ForeignKey('AdmissionExamType', blank=True, null=True)
+    type = models.CharField(max_length=20, choices=EXAM_TYPES)
+    exam_date = models.DateField(blank=True, null=True)
+    institution = models.CharField(max_length=100, blank=True, null=True)
+    result = models.CharField(max_length=30, choices=RESULT_TYPE+LOCAL_LANGUAGE_EXAM_RESULT_TYPE, blank=True, null=True)
+
+
