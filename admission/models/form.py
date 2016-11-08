@@ -26,6 +26,7 @@
 from django.db import models
 from django.contrib import admin
 from django.core.exceptions import ObjectDoesNotExist
+from osis_common.models.serializable_model import SerializableModel
 
 
 class FormAdmin(admin.ModelAdmin):
@@ -33,7 +34,7 @@ class FormAdmin(admin.ModelAdmin):
     fieldsets = ((None, {'fields': ('title', 'description', 'offer_year')}),)
 
 
-class Form(models.Model):
+class Form(SerializableModel):
     offer_year = models.ForeignKey('base.OfferYear')
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)

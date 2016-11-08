@@ -327,4 +327,9 @@ class Migration(migrations.Migration):
             name='applicantdocumentfile',
             unique_together=set([('applicant', 'document_file')]),
         ),
+        migrations.AddField(
+            model_name='form',
+            name='uuid',
+            field=models.UUIDField(db_index=True, default=uuid.uuid4, unique=True),
+        ),
     ]
