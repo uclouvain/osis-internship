@@ -27,11 +27,21 @@ from django.db import models
 from django.contrib import admin
 from admission.models.applicant import Applicant
 from osis_common.models.document_file import DocumentFile
+from osis_common.models.serializable_model import SerializableModel
 
 
-class ApplicantDocumentFile(models.Model):
+class ApplicantDocumentFile(SerializableModel):
     applicant = models.ForeignKey(Applicant, db_index=True)
     document_file = models.ForeignKey(DocumentFile)
+
+    def applicant_name(self):
+        return '{} {}'.format(self.applicant.first_name, self.applicant.last_name)
+
+    def document_filename(self):
+        return '{}'.format(self.document_file.file_name)
+
+    class Meta:
+        unique_together = (('applicant', 'document_file'),)
 
 
 class ApplicantDocumentFileAdmin(admin.ModelAdmin):

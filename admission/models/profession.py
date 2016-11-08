@@ -24,9 +24,10 @@
 #
 ##############################################################################
 from django.db import models
+from osis_common.models.serializable_model import SerializableModel
 
 
-class Profession(models.Model):
+class Profession(SerializableModel):
     name = models.CharField(max_length=255)
     adhoc = models.BooleanField(default=False)
 

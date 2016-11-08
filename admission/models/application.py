@@ -28,6 +28,7 @@ from django.contrib import admin
 from localflavor.generic.models import IBANField, BICField
 from localflavor.generic.countries.sepa import IBAN_SEPA_COUNTRIES
 from admission.models.enums import application_type
+from osis_common.models.serializable_model import SerializableModel
 
 
 class ApplicationAdmin(admin.ModelAdmin):
@@ -36,7 +37,7 @@ class ApplicationAdmin(admin.ModelAdmin):
                                     'national_degree', 'valuation_possible')}),)
 
 
-class Application(models.Model):
+class Application(SerializableModel):
 
     applicant = models.ForeignKey('Applicant')
     offer_year = models.ForeignKey('base.OfferYear')

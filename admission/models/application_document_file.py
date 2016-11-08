@@ -23,15 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
 from django.contrib import admin
 from django.db import models
+from osis_common.models.serializable_model import SerializableModel
 
 
 class ApplicationDocumentFileAdmin(admin.ModelAdmin):
     list_display = ('application', 'document_file')
 
 
-class ApplicationDocumentFile(models.Model):
+class ApplicationDocumentFile(SerializableModel):
     application = models.ForeignKey('Application')
     document_file = models.ForeignKey('osis_common.documentFile')

@@ -29,14 +29,16 @@ from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
+from osis_common.models.serializable_model import SerializableModel
 
 
 class ApplicantAdmin(admin.ModelAdmin):
-    list_display = ('user', 'birth_date', 'gender', 'activation_code')
-    fieldsets = ((None, {'fields': ('user', 'birth_date', 'gender', 'language', 'nationality', 'registration_id')}),)
+    list_display = ('last_name', 'first_name', 'birth_date', 'gender', 'activation_code')
+    fieldsets = ((None, {'fields': ('last_name', 'first_name', 'birth_date', 'gender', 'language', 'nationality',
+                                    'registration_id')}),)
 
 
-class Applicant(models.Model):
+class Applicant(SerializableModel):
     GENDER_CHOICES = (
         ('FEMALE', _('female')),
         ('MALE', _('male')))
@@ -75,5 +77,5 @@ class Applicant(models.Model):
     email = models.EmailField(max_length=255, blank=True, null=True)
 
     def __str__(self):
-        return u"%s" % self.user
+        return u"%s %s" % format(self.first_name, self.last_name)
 
