@@ -24,13 +24,14 @@
 #
 ##############################################################################
 
-class StartDateHigherThanEndDate(ValueError):
+
+class StartDateHigherThanEndDateException(Exception):
     def __init__(self, message=None, errors=None):
-        super(ValueError, self).__init__(message)
+        super(StartDateHigherThanEndDateException, self).__init__(message)
         self.errors = errors
 
 
-class FunctionAgrumentMissing(ValueError):
+class FunctionAgrumentMissingException(Exception):
     def __init__(self, message=None, errors=None):
-        super(ValueError, self).__init__(message)
+        super(FunctionAgrumentMissingException, self).__init__(message)
         self.errors = errors
