@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from base.models.serializable_model import SerializableModel
+from osis_common.models.serializable_model import SerializableModel
 from dissertation.models.dissertation_role import get_promoteur_by_dissertation
 from dissertation.utils.emails_dissert import send_mail_dissert_accepted_by_teacher, \
     send_mail_dissert_acknowledgement, send_mail_dissert_accepted_by_com, send_mail_dissert_refused_by_teacher, \
