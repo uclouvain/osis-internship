@@ -84,7 +84,7 @@ def manager_proposition_dissertation_detail(request, pk):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     count_use = dissertation.count_by_proposition(proposition)
-    percent = count_use * 100 / proposition.max_number_student
+    percent = count_use * 100 / proposition.max_number_student if proposition.max_number_student else 0
     count_proposition_role = proposition_role.count_by_proposition(proposition)
     files = proposition_document_file.find_by_proposition(proposition)
     filename = ""
@@ -260,7 +260,7 @@ def proposition_dissertation_detail(request, pk):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     count_use = dissertation.count_by_proposition(proposition)
-    percent = count_use * 100 / proposition.max_number_student
+    percent = count_use * 100 / proposition.max_number_student if proposition.max_number_student else 0
     count_proposition_role = proposition_role.count_by_proposition(proposition)
     files = proposition_document_file.find_by_proposition(proposition)
     filename = ""
