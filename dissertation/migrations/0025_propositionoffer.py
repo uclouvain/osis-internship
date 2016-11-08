@@ -10,7 +10,7 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dissertation', '0023_auto_20161010_1049'),
+        ('dissertation', '0024_auto_20161010_1049'),
     ]
 
     operations = [
