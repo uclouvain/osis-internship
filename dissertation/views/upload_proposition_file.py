@@ -30,8 +30,9 @@ from osis_common import models as mdl_osis_common
 
 
 @login_required
-def download(request, pk):
-    proposition_document = mdl.proposition_document_file.find_by_id(pk)
+def download(request, proposition_pk):
+    proposition = mdl.dissertation.find_by_id(proposition_pk)
+    proposition_document = mdl.proposition_document_file.find_by_proposition(proposition)
     document = mdl_osis_common.document_file.find_by_id(proposition_document.document_file.id)
     filename = document.file_name
     response = HttpResponse(document.file, content_type=document.content_type)
@@ -39,6 +40,7 @@ def download(request, pk):
     return response
 
 
+@login_required
 def save_uploaded_file(request):
     data = request.POST
     if request.method == 'POST':

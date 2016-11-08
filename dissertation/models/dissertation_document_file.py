@@ -29,7 +29,7 @@ from django.db import models
 
 class DissertationDocumentFile(SerializableModel):
     dissertation = models.ForeignKey('Dissertation')
-    document_file = models.ForeignKey('osis_common.documentFile')
+    document_file = models.ForeignKey('osis_common.DocumentFile')
 
 
 def search(dissertation=None, description=None):
@@ -58,6 +58,3 @@ def find_by_document(document_file):
 def find_by_dissertation(dissertation):
     return DissertationDocumentFile.objects.filter(dissertation=dissertation)
 
-
-def find_by_id(dissertation_id):
-    return DissertationDocumentFile.objects.get(dissertation__id=dissertation_id)
