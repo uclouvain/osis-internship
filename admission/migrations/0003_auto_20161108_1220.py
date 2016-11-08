@@ -72,19 +72,6 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='ApplicantAssimilationCriteria',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('uuid', models.UUIDField(db_index=True, null=True)),
-                ('criteria', models.CharField(choices=[('CRITERIA_1', 'CRITERIA_1'), ('CRITERIA_2', 'CRITERIA_2'), ('CRITERIA_3', 'CRITERIA_3'), ('CRITERIA_4', 'CRITERIA_4'), ('CRITERIA_5', 'CRITERIA_5'), ('CRITERIA_6', 'CRITERIA_6'), ('CRITERIA_7', 'CRITERIA_7')], max_length=50)),
-                ('additional_criteria', models.CharField(blank=True, choices=[('CRITERIA_1', 'CRITERIA_1'), ('CRITERIA_2', 'CRITERIA_2'), ('CRITERIA_3', 'CRITERIA_3'), ('CRITERIA_4', 'CRITERIA_4'), ('CRITERIA_5', 'CRITERIA_5'), ('CRITERIA_6', 'CRITERIA_6'), ('CRITERIA_7', 'CRITERIA_7')], max_length=50, null=True)),
-                ('selected', models.NullBooleanField()),
-            ],
-            options={
-                'abstract': False,
-            },
-        ),
-        migrations.CreateModel(
             name='ApplicantDocumentFile',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),

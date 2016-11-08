@@ -26,7 +26,6 @@
 from admission.models import admission_exam_type
 from admission.models import answer
 from admission.models import applicant
-from admission.models import applicant_assimilation_criteria
 from admission.models import applicant_document_file
 from admission.models import application
 from admission.models import application_assimilation_criteria

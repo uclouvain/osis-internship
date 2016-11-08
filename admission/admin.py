@@ -42,9 +42,6 @@ admin.site.register(answer.Answer,
 admin.site.register(applicant.Applicant,
                     applicant.ApplicantAdmin)
 
-admin.site.register(applicant_assimilation_criteria.ApplicantAssimilationCriteria,
-                    applicant_assimilation_criteria.ApplicantAssimilationCriteriaAdmin)
-
 admin.site.register(application.Application,
                     application.ApplicationAdmin)
 
