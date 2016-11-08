@@ -44,7 +44,7 @@
       <form method="POST" class="post-form">
         {% csrf_token %}
         <div class="row">
-            <div class="col-md-12 form-group">
+            <div class="form-group">
                 <label for="txt_author" {% if form.author.errors %} style="color:red;" {% endif %}>{% trans 'author' %}</label>
                 <select class="form-control" id="txt_author"  name="author" style="margin:-6px;">
                     <option value={{ form.author }}
@@ -52,7 +52,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12">
+            <div class="form-group">
                 <div class="panel-group" {% if form.title.errors %} style="color:red;" {% endif %}>
                     <label for="txt_title" style="margin-left:-6px;">{% trans 'title' %}</label>
                     <input class="form-control" id="txt_title"  name="title" style="margin:-6px;" value="{{ form.title.value | default_if_none:'' }}">
@@ -96,7 +96,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12 form-group">
+            <div class="form-group">
                 <label for="txt_location" {% if form.location.errors %} style="color:red;" {% endif %}>{% trans 'dissertation_location' %}</label>
                 <select class="form-control" id="txt_location"  name="location" style="margin:-6px;">
                     <option value={{ form.location }}
@@ -104,7 +104,7 @@
             </div>
         </div>
         <div class="row {% if field.errors %}error{% endif %}">
-            <div class="col-md-12">
+            <div class="form-group">
                 <div class="panel-group">
                     <label for="txt_description" style="margin-left:-6px;">{% trans 'description' %}</label>
                     <textarea class="form-control" id="txt_description"  name="description" rows="10" style="margin:-6px;">{{ form.description.value | default_if_none:''}}</textarea>
