@@ -32,16 +32,17 @@ start_date = datetime.datetime.now()
 end_date = start_date.replace(year=start_date.year + 1)
 
 
-def _create_academic_year_2016():
-    academic_yr = academic_year.AcademicYear(year=2016, start_date=start_date, end_date=end_date)
+def _create_current_academic_year():
+    academic_yr = academic_year.AcademicYear(year=start_date.year, start_date=start_date, end_date=end_date)
     academic_yr.save()
     return academic_yr
 
 
 def _create_academic_calendar_with_offer_year_calendars():
-    academic_yr = _create_academic_year_2016()
+    academic_yr = _create_current_academic_year()
     academic_cal = academic_calendar.AcademicCalendar(academic_year=academic_yr,
-                                                      title="a Title",
+                                                      title="Academic year {0} - {1}".format(start_date.year,
+                                                                                             start_date.year + 1),
                                                       description="My offerYearCalendars are not customized (default value)",
                                                       start_date=start_date,
                                                       end_date=end_date)
@@ -52,7 +53,7 @@ def _create_academic_calendar_with_offer_year_calendars():
 class SaveFromAcademicCalendarTest(TestCase):
 
     def setUp(self):
-        _create_academic_year_2016()
+        _create_current_academic_year()
 
     def test_case_none_parameter(self):
         self.assertRaises(AttributeError, offer_year_calendar.save_from_academic_calendar, *[None])
@@ -60,8 +61,7 @@ class SaveFromAcademicCalendarTest(TestCase):
     def test_case_not_yet_persistent_parameter(self):
         academic_yr = academic_year.AcademicYear.objects.all().first()
         academic_cal = academic_calendar.AcademicCalendar(academic_year=academic_yr,
-                                                          title='A title',
-                                                          description='A description',
+                                                          title='Scores encodings session 1',
                                                           start_date=start_date,
                                                           end_date=end_date)
         self.assertRaises(ValueError, offer_year_calendar.save_from_academic_calendar, *[academic_cal])
@@ -69,21 +69,24 @@ class SaveFromAcademicCalendarTest(TestCase):
 
 class AcademicCalendarWithoutOfferYearCalendar(TestCase):
 
+    academic_cal = None
+
     def setUp(self):
-        academic_yr = _create_academic_year_2016()
+        academic_yr = _create_current_academic_year()
         academic_cal = academic_calendar.AcademicCalendar(academic_year=academic_yr,
-                                                          title="I don't have any offerYearCal",
+                                                          title="Deliberations session 3",
                                                           start_date=start_date,
                                                           end_date=end_date)
         academic_cal.save(functions=[])
+        self.academic_cal = academic_cal
 
     def test_save_from_academic_calendar(self):
-        academic_cal = academic_calendar.AcademicCalendar.objects.filter(title="I don't have any offerYearCal")\
-                                                                 .first()
-        self.assertEqual(len(offer_year_calendar.find_by_academic_calendar(academic_cal)), 0)
-        offer_year_calendar.save_from_academic_calendar(academic_cal)
-        self.assertEqual(len(offer_year_calendar.find_by_academic_calendar(academic_cal)),
-                         len(offer_year.find_by_academic_year(academic_cal.academic_year)))
+        # academic_cal = academic_calendar.AcademicCalendar.objects.filter(title=self.academic_calendar_title)\
+        #                                                          .first()
+        self.assertEqual(len(offer_year_calendar.find_by_academic_calendar(self.academic_cal)), 0)
+        offer_year_calendar.save_from_academic_calendar(self.academic_cal)
+        self.assertEqual(len(offer_year_calendar.find_by_academic_calendar(self.academic_cal)),
+                         len(offer_year.find_by_academic_year(self.academic_cal.academic_year)))
 
 
 class AcademicCalendarWithOfferYearCalendarsCustomized(TestCase):
@@ -95,13 +98,13 @@ class AcademicCalendarWithOfferYearCalendarsCustomized(TestCase):
         self.set_offer_year_calendars_customized()
 
     def set_offer_year_calendars_customized(self):
-        random_start_date = datetime.datetime(2010, 4, 1, 16, 8, 18)
-        random_end_date = random_start_date.replace(year=random_start_date.year + 1)
+        fixed_start_date = datetime.datetime(2010, 4, 1, 16, 8, 18)
+        fixed_end_date = fixed_start_date.replace(year=fixed_start_date.year + 1)
         offer_year_calendars = offer_year_calendar.OfferYearCalendar.objects.filter(academic_calendar=self.academic_calendar)
         for off_cal in offer_year_calendars:
             off_cal.customized = True
-            off_cal.start_date = random_start_date
-            off_cal.end_date = random_end_date
+            off_cal.start_date = fixed_start_date
+            off_cal.end_date = fixed_end_date
             off_cal.save()
 
     def test_save_from_academic_calendar(self):
