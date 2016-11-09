@@ -160,34 +160,3 @@ def storage(request):
             row.append('')
 
     return layout.render(request, "admin/storage.html", {'table': table})
-
-
-@login_required
-@permission_required('base.is_administrator', raise_exception=True)
-def files(request):
-    return layout.render(request, "admin/files.html", {})
-
-
-@login_required
-@permission_required('base.is_administrator', raise_exception=True)
-def files_search(request):
-    registration_date = request.GET['registration_date']
-    username = request.GET['user']
-    message = None
-    files = None
-    if registration_date or username :
-        if registration_date :
-            registration_date = datetime.strptime(request.GET['registration_date'], '%Y-%m-%d')
-        files = doc_file_mdl.search(username=username, creation_date=registration_date)
-    else :
-        message = "%s" % _('minimum_one_criteria')
-
-    return layout.render(request, "admin/files.html", {'files': files,
-                                                       'message': message})
-
-
-@login_required
-@permission_required('base.is_administrator', raise_exception=True)
-def document_file_read(request, document_file_id):
-    document_file = doc_file_mdl.find_by_id(document_file_id)
-    return layout.render(request, "admin/file.html", {'file': document_file})
