@@ -1317,3 +1317,6 @@ msgstr "Doctorate"
 
 msgid "CAPAES"
 msgstr "CAPAES"
+
+msgid "start_date_must_be_lower_than_end_date"
+msgstr "Start date must be lower than end date"

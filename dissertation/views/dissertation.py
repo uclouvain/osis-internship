@@ -28,16 +28,10 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from base import models as mdl
 from base.views import layout
 from dissertation.models.adviser import Adviser
-from dissertation.models import adviser
 from dissertation.models.dissertation import Dissertation
-from dissertation.models import dissertation
 from dissertation.models.dissertation_role import DissertationRole
-from dissertation.models import dissertation_role
-from dissertation.models import dissertation_update
-from dissertation.models import faculty_adviser
-from dissertation.models import offer_proposition
-from dissertation.models import proposition_dissertation
-from dissertation.models import proposition_role
+from dissertation.models import adviser, dissertation, dissertation_document_file, dissertation_role,\
+    dissertation_update, faculty_adviser, offer_proposition, proposition_dissertation, proposition_role
 from dissertation.forms import ManagerDissertationForm, ManagerDissertationEditForm, ManagerDissertationRoleForm, \
     ManagerDissertationUpdateForm, AdviserForm
 from openpyxl.writer.excel import save_virtual_workbook
@@ -115,7 +109,10 @@ def manager_dissertations_detail(request, pk):
     count_proposition_role = proposition_role.count_by_dissertation(dissert)
     proposition_roles = proposition_role.search_by_dissertation(dissert)
     offer_prop = offer_proposition.get_by_dissertation(dissert)
-
+    files = dissertation_document_file.find_by_dissertation(dissert)
+    filename = ""
+    for file in files:
+        filename = file.document_file.file_name
     if count_proposition_role == 0:
         if count_dissertation_role == 0:
             justification = "%s %s %s" % ("auto_add_jury", 'PROMOTEUR', str(dissert.proposition_dissertation.author))
@@ -127,16 +124,13 @@ def manager_dissertations_detail(request, pk):
                 justification = "%s %s %s" % ("auto_add_jury", role.status, str(role.adviser))
                 dissertation_update.add(request, dissert, dissert.status, justification=justification)
                 dissertation_role.add(role.status, role.adviser, dissert)
-
     if dissert.status == "DRAFT":
         jury_manager_visibility = True
         jury_manager_can_edit = False
         jury_manager_message = 'manager_jury_draft'
-
         jury_teacher_visibility = False
         jury_teacher_can_edit = False
         jury_teacher_message = 'teacher_jury_draft'
-
         jury_student_visibility = True
         jury_student_can_edit = offer_prop.student_can_manage_readers
         if jury_student_can_edit:
@@ -144,25 +138,21 @@ def manager_dissertations_detail(request, pk):
         else:
             jury_student_message = 'student_jury_draft_no_edit_param'
     else:
-
         jury_manager_visibility = True
         jury_manager_can_edit = True
         jury_manager_message = 'manager_jury_editable'
-
         jury_teacher_visibility = True
         jury_teacher_can_edit = offer_prop.adviser_can_suggest_reader
         if jury_teacher_can_edit:
             jury_teacher_message = 'teacher_jury_visible_editable_parameter'
         else:
             jury_teacher_message = 'teacher_jury_visible_not_editable_parameter'
-
         jury_student_visibility = offer_prop.in_periode_jury_visibility
         jury_student_can_edit = False
         if jury_student_visibility:
             jury_student_message = 'student_jury_visible_dates'
         else:
             jury_student_message = 'student_jury_invisible_dates'
-
     dissertation_roles = dissertation_role.search_by_dissertation(dissert)
     return layout.render(request, 'manager_dissertations_detail.html',
                          {'dissertation': dissert,
@@ -177,7 +167,8 @@ def manager_dissertations_detail(request, pk):
                           'jury_teacher_message': jury_teacher_message,
                           'jury_student_visibility': jury_student_visibility,
                           'jury_student_can_edit': jury_student_can_edit,
-                          'jury_student_message': jury_student_message})
+                          'jury_student_message': jury_student_message,
+                          'filename': filename})
 
 
 @login_required
@@ -210,19 +201,19 @@ def manager_dissertations_edit(request, pk):
             dissertation_update.add(request, dissert, dissert.status, justification=justification)
             return redirect('manager_dissertations_detail', pk=dissert.pk)
         else:
-            form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offer(offers)
+            form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offers(offers)
             form.fields["author"].queryset = mdl.student.find_by_offer(offers)
             form.fields["offer_year_start"].queryset = mdl.offer_year.find_by_offer(offers)
     else:
         form = ManagerDissertationEditForm(instance=dissert)
-        form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offer(offers)
+        form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offers(offers)
         form.fields["author"].queryset = mdl.student.find_by_offer(offers)
         form.fields["offer_year_start"].queryset = mdl.offer_year.find_by_offer(offers)
 
     return layout.render(request, 'manager_dissertations_edit.html',
                          {'form': form,
-                          'dissert': dissert
-                          })
+                          'dissert': dissert,
+                          'defend_periode_choices': dissertation.DEFEND_PERIODE_CHOICES})
 
 
 @login_required
@@ -295,16 +286,18 @@ def manager_dissertations_new(request):
             dissertation_update.add(request, dissert, dissert.status, justification=justification)
             return redirect('manager_dissertations_detail', pk=dissert.pk)
         else:
-            form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offer(offers)
+            form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offers(offers)
             form.fields["author"].queryset = mdl.student.find_by_offer(offers)
             form.fields["offer_year_start"].queryset = mdl.offer_year.find_by_offer(offers)
 
     else:
         form = ManagerDissertationForm(initial={'active': True})
-        form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offer(offers)
+        form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offers(offers)
         form.fields["author"].queryset = mdl.student.find_by_offer(offers)
         form.fields["offer_year_start"].queryset = mdl.offer_year.find_by_offer(offers)
-    return layout.render(request, 'manager_dissertations_new.html', {'form': form})
+    return layout.render(request, 'manager_dissertations_new.html',
+                         {'form': form,
+                          'defend_periode_choices': dissertation.DEFEND_PERIODE_CHOICES})
 
 
 @login_required
@@ -607,6 +600,10 @@ def dissertations_detail(request, pk):
     count_proposition_role = proposition_role.count_by_dissertation(dissert)
     proposition_roles = proposition_role.search_by_dissertation(dissert)
     offer_prop = offer_proposition.get_by_dissertation(dissert)
+    files = dissertation_document_file.find_by_dissertation(dissert)
+    filename = ""
+    for file in files:
+        filename = file.document_file.file_name
     if count_proposition_role == 0:
         if count_dissertation_role == 0:
             justification = "%s %s %s" % ("auto_add_jury", 'PROMOTEUR', str(dissert.proposition_dissertation.author))
@@ -626,7 +623,8 @@ def dissertations_detail(request, pk):
                           'adviser': adv,
                           'dissertation_roles': dissertation_roles,
                           'count_dissertation_role': count_dissertation_role,
-                          'offer_prop': offer_prop})
+                          'offer_prop': offer_prop,
+                          'filename': filename})
 
 
 @login_required
