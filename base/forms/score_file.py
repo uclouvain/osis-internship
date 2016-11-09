@@ -23,27 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django import template
-from django.template.defaultfilters import date
-
-register = template.Library()
+from django import forms
+from django.utils.translation import ugettext_lazy as _
 
 
-@register.filter
-def format(value, arg):
-    return value % arg
+class ScoreFileForm(forms.Form):
+    file = forms.FileField(error_messages={'required': _('no_file_submitted')})
 
-
-@register.filter
-def str_format(value, args):
-    if args is None:
-        return value
-    args_list = args.split('|')
-    return value.format(*args_list)
-
-@register.filter
-def date_in_form_format(value, pattern):
-    if type(value).__name__ == 'str':
-        return value
-    else:
-        return date(value, pattern)
+    def clean_file(self):
+        file = self.cleaned_data['file']
+        content_type = file.content_type.split('/')[1]
+        valid_content_type = 'vnd.openxmlformats-officedocument.spreadsheetml.sheet' in content_type
+        if ".xlsx" not in file.name or not valid_content_type:
+            self.add_error('file', forms.ValidationError(_('file_must_be_xlsx'), code='invalid'))
+        return file

@@ -1290,3 +1290,6 @@ msgstr "Dropdown list"
 
 msgid "http_link"
 msgstr "HTTP link"
+
+msgid "start_date_must_be_lower_than_end_date"
+msgstr "Start date must be lower than end date"

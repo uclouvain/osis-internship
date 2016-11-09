@@ -23,27 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django import template
-from django.template.defaultfilters import date
-
-register = template.Library()
+from django.forms import ModelForm
+from admission.models import form
 
 
-@register.filter
-def format(value, arg):
-    return value % arg
-
-
-@register.filter
-def str_format(value, args):
-    if args is None:
-        return value
-    args_list = args.split('|')
-    return value.format(*args_list)
-
-@register.filter
-def date_in_form_format(value, pattern):
-    if type(value).__name__ == 'str':
-        return value
-    else:
-        return date(value, pattern)
+class OfferFormForm(ModelForm):
+    class Meta:
+        model = form.Form
+        fields = ['offer_year', 'title', 'description']

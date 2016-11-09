@@ -23,27 +23,18 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django import template
-from django.template.defaultfilters import date
-
-register = template.Library()
+from django import forms
+from django.utils.translation import ugettext_lazy as _
 
 
-@register.filter
-def format(value, arg):
-    return value % arg
+class MyMessageForm(forms.Form):
+    selected = forms.BooleanField(initial=False, required=False)
+    subject = forms.CharField(required=False)
+    created = forms.DateTimeField(required=False)
+    read = forms.BooleanField(initial=False, required=False)
+    id = forms.IntegerField()
 
 
-@register.filter
-def str_format(value, args):
-    if args is None:
-        return value
-    args_list = args.split('|')
-    return value.format(*args_list)
-
-@register.filter
-def date_in_form_format(value, pattern):
-    if type(value).__name__ == 'str':
-        return value
-    else:
-        return date(value, pattern)
+class MyMessageActionForm(forms.Form):
+    ACTIONS = (('MARK_AS_READ', _('mark_selected_as_read')), ('DELETE', _('delete_selected')))
+    action = forms.ChoiceField(required=False, choices=ACTIONS, initial=None)
