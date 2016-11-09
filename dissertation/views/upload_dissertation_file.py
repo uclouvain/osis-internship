@@ -65,7 +65,7 @@ def save_uploaded_file(request):
                                                                   application_name='dissertation',
                                                                   content_type=content_type,
                                                                   size=size,
-                                                                  user=request.user)
+                                                                  username=request.user)
         new_document.save()
         dissertation_file = mdl.dissertation_document_file.DissertationDocumentFile()
         dissertation_file.dissertation = dissertation
