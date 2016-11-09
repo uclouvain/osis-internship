@@ -23,27 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django import template
-from django.template.defaultfilters import date
-
-register = template.Library()
-
-
-@register.filter
-def format(value, arg):
-    return value % arg
+from django import forms
+from django.forms import ModelForm
+from base.models import offer_year_calendar
 
 
-@register.filter
-def str_format(value, args):
-    if args is None:
-        return value
-    args_list = args.split('|')
-    return value.format(*args_list)
+class OfferYearCalendarForm(ModelForm):
+    start_date = forms.DateField(widget=forms.DateInput(format='%d/%m/%Y'),
+                                 input_formats=('%d/%m/%Y', ),
+                                 required=True)
+    end_date = forms.DateField(widget=forms.DateInput(format='%d/%m/%Y'),
+                               input_formats=('%d/%m/%Y', ),
+                               required=True)
 
-@register.filter
-def date_in_form_format(value, pattern):
-    if type(value).__name__ == 'str':
-        return value
-    else:
-        return date(value, pattern)
+    class Meta:
+        model = offer_year_calendar.OfferYearCalendar
+        fields = ['offer_year', 'start_date', 'end_date', 'customized']
