@@ -45,19 +45,41 @@ class LearningComponentYearTest(TestCase):
                                      end_date=datetime.datetime(now.year + 1, now.month, 28))
         self.current_academic_year.save()
 
+    #def test_creation_learning_component_year(self):
+    #   learning_container = LearningContainer(title="Biology")
+    #  learning_container_different = LearningContainer(title="Chimie")
+    # learning_component = LearningComponent(learning_container=learning_container,
+        #                                       title="Cours magistral")
+        #learning_container_year = LearningContainerYear(title="Biology 1",
+        #                                               acronym="LBIO1212",
+        #                                              academic_year=self.current_academic_year,
+        #                                             learning_container=learning_container_different)
+        #
+        #learning_component_year = LearningComponentYear(learning_container_year=learning_container_year,
+            #                                                     title="Cours magistral",
+            #                                                    acronym="/C",
+            #                                                   type=learning_component_year_type.COURS_MAGISTRAL)
+            #self.assertRaises(AttributeError, learning_component_year.save)
+
     def test_creation_learning_component_year(self):
-        learning_container = LearningContainer(title="Biology")
-        learning_container_different = LearningContainer(title="Chimie")
-        learning_component = LearningComponent(learning_container=learning_container,
-                                               title="Cours magistral")
-        learning_container_year = LearningContainerYear(title="Biology 1",
+        learning_container = LearningContainer()
+        learning_container_different = LearningContainer()
+
+        #Composant associé à son conteneur
+        learning_component = LearningComponent(learning_container=learning_container)
+
+        #Conteneur annualisé est associé à un contenur différent du composant
+        learning_container_year = LearningContainerYear(title="Biology",
                                                         acronym="LBIO1212",
                                                         academic_year=self.current_academic_year,
                                                         learning_container=learning_container_different)
 
+        #Composant annualisé est associé à son composant
         learning_component_year = LearningComponentYear(learning_container_year=learning_container_year,
                                                         learning_component=learning_component,
                                                         title="Cours magistral",
                                                         acronym="/C",
                                                         type=learning_component_year_type.COURS_MAGISTRAL)
+
+
         self.assertRaises(AttributeError, learning_component_year.save)
