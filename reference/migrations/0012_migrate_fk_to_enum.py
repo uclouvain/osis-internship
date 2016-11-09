@@ -37,7 +37,7 @@ def move_fk_to_enum(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('reference', '0010_add_field_gtype_to_enum'),
+        ('reference', '0011_add_field_gtype_to_enum'),
     ]
 
     operations = [

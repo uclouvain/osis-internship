@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('reference', '0009_auto_20160921_1139'),
+        ('reference', '0010_delete_assimilationcriteria'),
     ]
 
     operations = [
