@@ -33,8 +33,7 @@ from osis_common import models as mdl_osis_common
 def download(request, proposition_pk):
     proposition = mdl.proposition_dissertation.find_by_id(proposition_pk)
     proposition_documents = mdl.proposition_document_file.find_by_proposition(proposition)
-    for proposition_document in proposition_documents:
-        document = mdl_osis_common.document_file.find_by_id(proposition_document.document_file.id)
+    document = mdl_osis_common.document_file.find_by_id(proposition_documents[0].document_file.id)
     filename = document.file_name
     response = HttpResponse(document.file, content_type=document.content_type)
     response['Content-Disposition'] = 'attachment; filename=%s' % filename
