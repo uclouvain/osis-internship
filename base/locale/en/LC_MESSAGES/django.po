@@ -339,7 +339,7 @@ msgid "done_at"
 msgstr "Done at"
 
 msgid "double_encoding"
-msgstr "Dubble encoding"
+msgstr "Double encoding"
 
 msgid "double_encoding_test"
 msgstr "Scores double encoding"

@@ -189,8 +189,9 @@ def online_encoding_form(request, learning_unit_year_id=None):
                                                                         enrollment.score_final,
                                                                         enrollment.justification_final)
                 enrollment.save()
-                offer_year = enrollment.learning_unit_enrollment.offer_enrollment.offer_year
-                modified_offer_year_enrollments[offer_year.pk] = offer_year
+                if score_changed == 'true':
+                    offer_year = enrollment.learning_unit_enrollment.offer_enrollment.offer_year
+                    modified_offer_year_enrollments[offer_year.pk] = offer_year
 
         data = get_data_online(learning_unit_year_id, request)
         if data['is_program_manager']:
@@ -293,11 +294,11 @@ def online_double_encoding_validation(request, learning_unit_year_id=None, tutor
                                                                             exam_enrol.score_final,
                                                                             exam_enrol.justification_final)
                     exam_enrol.save()
-                    pk_offer_year = exam_enrol.learning_unit_enrollment.offer_enrollment.offer_year.pk
-                    modified_offer_year_enrollments[pk_offer_year] = True
+                    offer_year = exam_enrol.learning_unit_enrollment.offer_enrollment.offer_year
+                    modified_offer_year_enrollments[offer_year.pk] = offer_year
         if is_program_manager:
             sent_error_message = __send_message_if_all_encoded_in_pgm(exam_enrollments, learning_unit_year,
-                                                                      list(modified_offer_year_enrollments.keys()))
+                                                                      list(modified_offer_year_enrollments.values()))
             if sent_error_message:
                 messages.add_message(request, messages.ERROR, "%s" % sent_error_message)
         return HttpResponseRedirect(reverse('online_encoding', args=(learning_unit_year_id,)))
