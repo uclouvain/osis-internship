@@ -25,6 +25,8 @@
 ##############################################################################
 from django.contrib.auth.decorators import login_required
 from django.http import *
+from django.shortcuts import redirect
+
 from dissertation import models as mdl
 from osis_common import models as mdl_osis_common
 
@@ -32,12 +34,14 @@ from osis_common import models as mdl_osis_common
 @login_required
 def download(request, proposition_pk):
     proposition = mdl.proposition_dissertation.find_by_id(proposition_pk)
-    proposition_documents = mdl.proposition_document_file.find_by_proposition(proposition)
-    document = mdl_osis_common.document_file.find_by_id(proposition_documents[0].document_file.id)
-    filename = document.file_name
-    response = HttpResponse(document.file, content_type=document.content_type)
-    response['Content-Disposition'] = 'attachment; filename=%s' % filename
-    return response
+    proposition_document = mdl.proposition_document_file.find_by_proposition(proposition).first()
+    if proposition_document:
+        filename = proposition_document.document_file.file_name
+        response = HttpResponse(proposition_document.document_file.file,
+                                content_type=proposition_document.document_file.content_type)
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+        return response
+    return redirect('manager_proposition_dissertation_detail', pk=proposition.pk)
 
 
 @login_required
