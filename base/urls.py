@@ -42,9 +42,6 @@ urlpatterns = [
     url(r'^admin/data/$', common.data, name='data'),
     url(r'^admin/data/maintenance$', common.data_maintenance, name='data_maintenance'),
     url(r'^admin/storage/$', common.storage, name='storage'),
-    url(r'^admin/storage/files$', common.files, name='files'),
-    url(r'^admin/storage/files/search$', common.files_search, name='files_search'),
-    url(r'^admin/storage/files/([0-9]+)/$', common.document_file_read, name='document_file_read'),
 
     url(r'^catalog/$', common.catalog, name='catalog'),
 
