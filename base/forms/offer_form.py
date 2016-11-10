@@ -23,7 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.forms import ModelForm
+from admission.models import form
 
-from backoffice.queue import callbacks
-from backoffice.queue import queue_listener
-from backoffice.queue import queue_sender
+
+class OfferFormForm(ModelForm):
+    class Meta:
+        model = form.Form
+        fields = ['offer_year', 'title', 'description']

@@ -23,18 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import json
-from django.core import serializers
 
 
-def insert_or_update(json_data):
-    from base.models.serializable_model import SerializableModel
-    json_data = json.loads(json_data.decode("utf-8"))
-    serialized_objects = json_data['serialized_objects']
-    deserialized_objects = serializers.deserialize('json', serialized_objects, ignorenonexistent=True)
-    if json_data['to_delete']:
-        for deser_object in deserialized_objects:
-            super(SerializableModel, deser_object.object).delete()
-    else:
-        for deser_object in deserialized_objects:
-            super(SerializableModel, deser_object.object).save()
+class StartDateHigherThanEndDateException(Exception):
+    def __init__(self, message=None, errors=None):
+        super(StartDateHigherThanEndDateException, self).__init__(message)
+        self.errors = errors
+
+
+class FunctionAgrumentMissingException(Exception):
+    def __init__(self, message=None, errors=None):
+        super(FunctionAgrumentMissingException, self).__init__(message)
+        self.errors = errors

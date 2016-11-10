@@ -23,20 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
-from base.models.serializable_model import SerializableModel
+from django import forms
+from django.forms import ModelForm
+from base.models import offer_year_calendar
 
 
-class InstitutionalGradeTypeAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-    fieldsets = ((None, {'fields': ('name',)}),)
+class OfferYearCalendarForm(ModelForm):
+    start_date = forms.DateField(widget=forms.DateInput(format='%d/%m/%Y'),
+                                 input_formats=('%d/%m/%Y', ),
+                                 required=True)
+    end_date = forms.DateField(widget=forms.DateInput(format='%d/%m/%Y'),
+                               input_formats=('%d/%m/%Y', ),
+                               required=True)
 
-
-# Customized parent's list of institutional GradeType (used & displayed in Admission - offer choice).
-class InstitutionalGradeType(SerializableModel):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    name = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.name
+    class Meta:
+        model = offer_year_calendar.OfferYearCalendar
+        fields = ['offer_year', 'start_date', 'end_date', 'customized']

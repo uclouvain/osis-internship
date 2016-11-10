@@ -47,7 +47,6 @@ from base.models import person
 from base.models import person_address
 from base.models import program_manager
 from base.models import scores_encoding
-from base.models import serializable_model
 from base.models import session_exam
 from base.models import structure
 from base.models import structure_address

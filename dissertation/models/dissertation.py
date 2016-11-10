@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from osis_common.models.serializable_model import SerializableModel
 from dissertation.models.dissertation_role import get_promoteur_by_dissertation
 from dissertation.utils.emails_dissert import send_mail_dissert_accepted_by_teacher, \
     send_mail_dissert_acknowledgement, send_mail_dissert_accepted_by_com, send_mail_dissert_refused_by_teacher, \
@@ -31,7 +32,7 @@ from django.contrib import admin
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
-from base.models import offer_year, student, academic_year
+from base.models import offer_year, student
 from . import proposition_dissertation
 from . import offer_proposition
 from . import dissertation_location
@@ -39,7 +40,7 @@ from . import dissertation_location
 
 class DissertationAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'status', 'active', 'proposition_dissertation', 'modification_date')
-    raw_id_fields = ('author', 'offer_year_start')
+    raw_id_fields = ('author', 'offer_year_start', 'proposition_dissertation', 'location')
 
 
 STATUS_CHOICES = (
@@ -62,31 +63,19 @@ STATUS_CHOICES = (
 )
 
 DEFEND_PERIODE_CHOICES = (
+    ('UNDEFINED', _('undefined')),
     ('JANUARY', _('january')),
     ('JUNE', _('june')),
     ('SEPTEMBER', _('september')),
 )
 
-DEFEND_YEAR_CHOICES = (
-    ('2016', '2016-2017'),
-    ('2017', '2017-2018'),
-    ('2018', '2018-2019'),
-    ('2019', '2019-2020'),
-    ('2020', '2020-2021'),
-    ('2021', '2021-2022'),
-    ('2022', '2022-2023'),
-    ('2023', '2023-2024'),
-    ('2024', '2024-2025'),
-    ('2025', '2025-2026'),
-)
 
-
-class Dissertation(models.Model):
+class Dissertation(SerializableModel):
     title = models.CharField(max_length=200)
     author = models.ForeignKey(student.Student)
     status = models.CharField(max_length=12, choices=STATUS_CHOICES, default='DRAFT')
     defend_periode = models.CharField(max_length=12, choices=DEFEND_PERIODE_CHOICES, blank=True, null=True)
-    defend_year = models.CharField(max_length=4, choices=DEFEND_YEAR_CHOICES, blank=True, null=True)
+    defend_year = models.IntegerField(blank=True, null=True)
     offer_year_start = models.ForeignKey(offer_year.OfferYear)
     proposition_dissertation = models.ForeignKey(proposition_dissertation.PropositionDissertation)
     description = models.TextField(blank=True, null=True)
@@ -111,7 +100,7 @@ class Dissertation(models.Model):
         next_status = get_next_status(self, "go_forward")
         if self.status == 'TO_RECEIVE' and next_status == 'TO_DEFEND':
             send_mail_dissert_acknowledgement(self.author.person)
-        if self.status == 'DRAFT' and next_status == 'DIR_SUBMIT':
+        if (self.status == 'DRAFT' or self.status == 'DIR_KO')and next_status == 'DIR_SUBMIT':
             send_mail_to_teacher_new_dissert(get_promoteur_by_dissertation(self))
         self.set_status(next_status)
 
@@ -224,3 +213,7 @@ def get_next_status(dissert, operation):
 
     else:
         return dissert.status
+
+
+def find_by_id(dissertation_id):
+    return Dissertation.objects.get(pk=dissertation_id)
