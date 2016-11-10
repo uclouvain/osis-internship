@@ -212,9 +212,9 @@
                     {% endif %}
                     <span id="status_save"></span>
                 </div>
-                    <div id="tab_dynamic_form" class="tab-pane fade  {% if displaytab == 'tab_dynamic_form' %} in active {%endif%}">
+                <div id="tab_dynamic_form" class="tab-pane fade  {% if displaytab == 'tab_dynamic_form' %} in active {%endif%}">
                     <br>
-                    {% if perms.admission.can_add_form %}
+                    {% if perms.admission.add_form %}
                         <a href="{% url 'offer_form_create' offer_year.id %}" id="lnk_form_create_{{offer_year.id}}" class="btn btn-default pull-right" role="button">
                             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                         </a>
@@ -236,7 +236,6 @@
                         </tbody>
                     </table>
                 </div>
-
             </div>
             <input type="hidden" id="hdn_tab" value="{{ tab }}"/>
         </form>
