@@ -27,6 +27,7 @@ import os
 
 from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
+import sys
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -63,6 +64,15 @@ INSTALLED_APPS = (
     'internship',
     'admission',
 )
+
+# check if we are testing right now
+TESTING = 'test' in sys.argv
+
+if TESTING:
+    # add test packages that have specific models for tests
+    INSTALLED_APPS = INSTALLED_APPS + (
+        'osis_common.tests',
+    )
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
