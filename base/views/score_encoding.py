@@ -559,6 +559,7 @@ def get_data_pgmer(request,
             progress = (score_encoding.exam_enrollments_encoded / score_encoding.total_exam_enrollments) * 100
             line = {'learning_unit_year': score_encoding.learning_unit_year,
                     'exam_enrollments_encoded': score_encoding.exam_enrollments_encoded,
+                    'scores_not_yet_submitted': score_encoding.exam_enrollments_encoded_draft - score_encoding.exam_enrollments_encoded,
                     'total_exam_enrollments': score_encoding.total_exam_enrollments,
                     'tutor': coord_grouped_by_learning_unit.get(score_encoding.learning_unit_year.id, None),
                     'progress': "{0:.0f}".format(progress),

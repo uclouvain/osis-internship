@@ -326,6 +326,9 @@ msgstr "The configuration of you user profile"
 msgid "description"
 msgstr "Description"
 
+msgid "display_scores_for_one_learning_unit"
+msgstr "Visualiser/charger les notes pour le cours"
+
 msgid "display_tutors"
 msgstr "Display all tutors for this learning unit"
 
@@ -1159,6 +1162,10 @@ msgstr "Show message"
 
 msgid "tooltip_print_scores"
 msgstr "Print the scores"
+
+msgid "tooltip_scores_encodings_progress_bar"
+msgstr "Represents the quantity of scores submitted to the administration. The number surrounded by parenthesis is the "
+       "number of scores encoded by the tutor that aren't submitted yet ('draft' state)"
 
 msgid "tooltip_select_action"
 msgstr "Select action to execute"
