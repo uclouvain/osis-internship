@@ -327,7 +327,7 @@ msgid "description"
 msgstr "Description"
 
 msgid "display_scores_for_one_learning_unit"
-msgstr "Visualiser/charger les notes pour le cours"
+msgstr "Display scores for this learning unit"
 
 msgid "display_tutors"
 msgstr "Display all tutors for this learning unit"
