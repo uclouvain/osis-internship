@@ -1154,7 +1154,7 @@ msgid "tooltip_print_scores"
 msgstr "Imprimer les notes"
 
 msgid "tooltip_scores_encodings_progress_bar"
-msgstr "Représente la quantité de note soumises à la faculté par le professeur. Le nombre entre parenthèses correspond "
+msgstr "Représente la quantité de notes soumises à la faculté par le professeur. Le nombre entre parenthèses correspond "
        "au nombre de notes encodées qui n'ont pas encore été soumises (en état 'brouillon')."
 
 msgid "tooltip_select_action"
