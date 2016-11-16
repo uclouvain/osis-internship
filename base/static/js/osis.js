@@ -41,10 +41,14 @@ function invalidScoreMsg(input,decimal_allowed,message_decimal,message_max_score
 
 function disable_enter(e) {
     var keyCode = e.keyCode || e.which;
-    if (keyCode === 13) {
+    if (keycode_is_enter(keyCode)) {
         e.preventDefault();
     }
     return false;
+}
+
+function keycode_is_enter(keyCode){
+    return keyCode === 13;
 }
 
 function originalValueChanged(values, id, score, justification) {
