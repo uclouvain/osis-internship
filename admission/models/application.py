@@ -27,7 +27,7 @@ from django.db import models
 from django.contrib import admin
 from localflavor.generic.models import IBANField, BICField
 from localflavor.generic.countries.sepa import IBAN_SEPA_COUNTRIES
-from admission.models.enums import application_type
+from admission.models.enums import application_type, coverage_access_degree, application_state
 from osis_common.models.serializable_model import SerializableModel
 
 
@@ -43,7 +43,8 @@ class Application(SerializableModel):
     offer_year = models.ForeignKey('base.OfferYear')
     creation_date = models.DateTimeField(auto_now=True)
     application_type = models.CharField(max_length=20, choices=application_type.APPLICATION_TYPE_CHOICES)
-    national_degree = models.NullBooleanField(default=None)
+    coverage_access_degree = models.CharField(max_length=30, blank=True, null=True,
+                                              choices=coverage_access_degree.COVERAGE_ACCESS_DEGREE_CHOICES)
     valuation_possible = models.NullBooleanField(default=None)
     started_similar_studies = models.NullBooleanField(default=None)
     credits_to_value = models.NullBooleanField(default=None)
@@ -61,6 +62,7 @@ class Application(SerializableModel):
     bank_account_iban = IBANField(include_countries=IBAN_SEPA_COUNTRIES, blank=True, null=True)
     bank_account_bic = BICField(blank=True, null=True)
     bank_account_name = models.CharField(max_length=255, blank=True, null=True)
+    state = models.CharField(max_length=35, choices=application_state.APPLICATION_STATE_CHOICES, blank=True, null=True)
 
     def __str__(self):
         return u"%s %s" % (self.applicant, self.offer_year)
