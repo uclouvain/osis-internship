@@ -1,0 +1,181 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-05-03 08:56+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "INSCRIPTION"
+msgstr "Inscription"
+
+msgid "ADMISSION"
+msgstr "Admission"
+
+msgid "UNKNOWN"
+msgstr "Unknown"
+
+msgid "PRIMARY"
+msgstr "Primaire"
+
+msgid "SECONDARY_INFERIOR"
+msgstr "Secondaire inférieur"
+
+msgid "SECONDARY_SUPERIOR"
+msgstr "Secondaire supérieur"
+
+msgid "SUPERIOR_NON_UNIVERSITY"
+msgstr "Supérieur non-universitaire"
+
+msgid "UNIVERSITY"
+msgstr "Université"
+
+msgid "NO_PROFESSION"
+msgstr "Aucune profession"
+
+msgid "PART_TIME"
+msgstr "Oui, à temps partiel"
+
+msgid "FULL_TIME"
+msgstr "Oui, à temps plein"
+
+msgid "female"
+msgstr "Féminin"
+
+msgid "male"
+msgstr "Masculin"
+
+msgid "married"
+msgstr "Marié"
+
+msgid "single"
+msgstr "Célibataire"
+
+msgid "widowed"
+msgstr "Veuf(ve)"
+
+msgid "divorced"
+msgstr "Divorcé"
+
+msgid "separated"
+msgstr "Séparé(s)"
+
+msgid "cohabitant"
+msgstr "Cohabitant"
+
+msgid "unknown"
+msgstr "Inconnu"
+
+msgid "national_university"
+msgstr "Université belge"
+
+msgid "foreign_university"
+msgstr "Université étrangère"
+
+msgid "high_national_non_university"
+msgstr "Supérieur Non Universitaire belge"
+
+msgid "high_foreign_non_university"
+msgstr "Supérieur Non Universitaire étranger"
+
+msgid "other"
+msgstr "Autre"
+
+msgid "succeeded"
+msgstr "Réussite"
+
+msgid "failed"
+msgstr "Echec"
+
+msgid "no_result"
+msgstr "Pas de résultat"
+
+msgid "job"
+msgstr "Travail"
+
+msgid "internship"
+msgstr "Stage"
+
+msgid "volunteering"
+msgstr "Bénévolat"
+
+msgid "unemployment"
+msgstr "Chômage"
+
+msgid "illness"
+msgstr "Maladie"
+
+msgid "higher_non_university"
+msgstr "Etudes supérieures non universitaire"
+
+msgid "bachelor"
+msgstr "Bachelier"
+
+msgid "master"
+msgstr "Master"
+
+msgid "social_advancement"
+msgstr "Promotion sociale"
+
+
+msgid "full_exercise"
+msgstr "Plein exercice"
+
+msgid "legal"
+msgstr "Légal"
+
+msgid "contact"
+msgstr "Contact"
+
+msgid "low_result"
+msgstr "Moins de 65%"
+
+msgid "middle_result"
+msgstr "Entre 65 et 75%"
+
+msgid "high_result"
+msgstr "Plus de 75%"
+
+msgid "baccalaureat_european"
+msgstr "Baccalauréat européen (Schola Europaea)"
+
+msgid "baccalaureat_international"
+msgstr "Baccalauréat international(IBO)"
+
+msgid "baccalaureat_national"
+msgstr "Baccalauréat national (ou diplôme d'état, ...)"
+
+msgid "yes"
+msgstr "Oui"
+
+msgid "no"
+msgstr "Non"
+
+msgid "Yes"
+msgstr "Oui"
+
+msgid "No"
+msgstr "Non"
+
+msgid "demanded"
+msgstr "En cours de demande"
+
+msgid "demanded_result"
+msgstr "En cours d'inscription à la session mentionnée "
+
+msgid "language"
+msgstr "Langue"
+
+msgid "professional"
+msgstr "Professionel"

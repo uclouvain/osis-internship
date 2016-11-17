@@ -27,6 +27,7 @@ from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
+from osis_common.models.serializable_model import SerializableModel
 
 
 class QuestionAdmin(admin.ModelAdmin):
@@ -46,7 +47,7 @@ QUESTION_TYPES = (
 )
 
 
-class Question(models.Model):
+class Question(SerializableModel):
     form = models.ForeignKey('Form')
     label = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)

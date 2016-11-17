@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -25,32 +25,32 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-from django.core.exceptions import ObjectDoesNotExist
+from django.utils.translation import ugettext_lazy as _
 from osis_common.models.serializable_model import SerializableModel
 
 
-class FormAdmin(admin.ModelAdmin):
-    list_display = ('title', 'description', 'offer_year')
-    fieldsets = ((None, {'fields': ('title', 'description', 'offer_year')}),)
+class SecondaryEducationExamAdmin(admin.ModelAdmin):
+    list_display = ('type', 'result', 'exam_date', 'institution')
 
 
-class Form(SerializableModel):
-    offer_year = models.ForeignKey('base.OfferYear')
-    title = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
+class SecondaryEducationExam(SerializableModel):
+    RESULT_TYPE = (('LOW', 'Moins de 65%'),
+                   ('MIDDLE', 'entre 65% et 75%'),
+                   ('HIGH', 'plus de 75%'))
 
-    def __str__(self):
-        return u"%s" % self.title
+    LOCAL_LANGUAGE_EXAM_RESULT_TYPE = (('SUCCEED', _('succeeded')),
+                                       ('FAILED', _('failed')),
+                                       ('ENROLLMENT_IN_PROGRESS', _('demanded_result')))
+
+    EXAM_TYPES = (('ADMISSION', _('admission')),
+                  ('LANGUAGE', _('language')),
+                  ('PROFESSIONAL', _('professional')))
+
+    secondary_education = models.ForeignKey('SecondaryEducation')
+    admission_exam_type = models.ForeignKey('AdmissionExamType', blank=True, null=True)
+    type = models.CharField(max_length=20, choices=EXAM_TYPES)
+    exam_date = models.DateField(blank=True, null=True)
+    institution = models.CharField(max_length=100, blank=True, null=True)
+    result = models.CharField(max_length=30, choices=RESULT_TYPE+LOCAL_LANGUAGE_EXAM_RESULT_TYPE, blank=True, null=True)
 
 
-def find_by_offer_year(offer_year):
-    return Form.objects.filter(offer_year=offer_year) \
-                       .order_by('title', 'description')
-
-
-def find_by_id(form_id):
-    try:
-        form = Form.objects.get(pk=form_id)
-        return form
-    except ObjectDoesNotExist:
-        return None
