@@ -47,7 +47,11 @@
 
 <div class="panel panel-default">
     <div class="panel-body">
-        <form method="post" action="{% url 'academic_calendar_form' %}">
+        <form method="post" action="{% if form.instance.id %}
+                                        {% url 'academic_calendar_form' academic_calendar_id=form.instance.id %}
+                                    {% else %}
+                                        {% url 'academic_calendar_form' %}
+                                    {% endif %}">
             {% csrf_token %}
             <div class="row">
                 <div class="col-md-3">

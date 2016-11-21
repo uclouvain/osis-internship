@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils import timezone
 from base.models import session_exam
@@ -82,8 +83,11 @@ def find_academic_calendar_by_academic_year_with_dates(academic_year_id):
                                    .order_by('start_date')
 
 
-def find_academic_calendar_by_id(academic_calendar_id):
-    return AcademicCalendar.objects.get(pk=academic_calendar_id)
+def find_by_id(academic_calendar_id):
+    try:
+        return AcademicCalendar.objects.get(pk=academic_calendar_id)
+    except ObjectDoesNotExist:
+        return None
 
 
 def get_scores_encoding_calendars():
