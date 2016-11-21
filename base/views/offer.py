@@ -288,7 +288,7 @@ def offer_year_calendar_save(request, id):
     # validate
     validation = True
     if form.is_valid():
-        academic_calendar = mdl.academic_calendar.find_academic_calendar_by_id(request.POST['academic_calendar'])
+        academic_calendar = mdl.academic_calendar.find_by_id(request.POST['academic_calendar'])
         offer_year_calendar.academic_calendar = academic_calendar
         if request.POST['start_date']:
             offer_year_calendar.start_date = datetime.strptime(request.POST['start_date'], '%d/%m/%Y')
