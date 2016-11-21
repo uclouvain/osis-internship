@@ -26,7 +26,9 @@ class Migration(migrations.Migration):
 
                 count(base_examenrollment.id) as total_exam_enrollments,
                 sum(case when base_examenrollment.score_final is not null or base_examenrollment.justification_final is not null then 1 else 0 end) exam_enrollments_encoded,
-                sum(case when base_examenrollment.score_draft is not null or base_examenrollment.justification_draft is not null then 1 else 0 end) exam_enrollments_encoded_draft
+                sum(case when (base_examenrollment.score_draft is not null and base_examenrollment.score_final is null)
+                              or (base_examenrollment.justification_draft is not null and base_examenrollment.justification_final is null)
+                         then 1 else 0 end) scores_not_yet_submitted
 
 
             from base_examenrollment

@@ -47,15 +47,10 @@ class ScoresEncoding(models.Model):
     learning_unit_year = models.ForeignKey('LearningUnitYear', on_delete=models.DO_NOTHING)
     total_exam_enrollments = models.IntegerField()
     exam_enrollments_encoded = models.IntegerField()
-    exam_enrollments_encoded_draft = models.IntegerField()
+    scores_not_yet_submitted = models.IntegerField()
     enrollment_state = models.CharField(max_length=20,
                                         default=exam_enrollment_state.ENROLLED,
                                         choices=exam_enrollment_state.STATES)
-
-    def number_of_scores_not_yet_submitted(self):
-        drafts_number = self.exam_enrollments_encoded_draft
-        submitted_drafts = self.exam_enrollments_encoded
-        return drafts_number - submitted_drafts if drafts_number > submitted_drafts else 0
 
     class Meta:
         managed = False
