@@ -679,6 +679,9 @@ msgstr "Photo"
 msgid "possible"
 msgstr "Possible"
 
+msgid "president"
+msgstr "Président"
+
 msgid "professor"
 msgstr "Teacher"
 

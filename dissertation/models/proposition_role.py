@@ -41,6 +41,7 @@ class PropositionRole(SerializableModel):
         ('READER', _('reader')),
         ('ACCOMPANIST', _('accompanist')),
         ('INTERNSHIP', _('internship_master')),
+        ('PRESIDENT', _('president')),
     )
 
     status = models.CharField(max_length=12, choices=STATUS_CHOICES, default="PROMOTEUR")
