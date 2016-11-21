@@ -23,12 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import datetime
 from django.test import TestCase
 from base.models.scores_encoding import ScoresEncoding
-
-start_date = datetime.datetime.now()
-end_date = start_date.replace(year=start_date.year + 1)
 
 
 class NumberOfScoresNotYetSubmittedTest(TestCase):
