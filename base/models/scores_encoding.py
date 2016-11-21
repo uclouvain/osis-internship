@@ -52,6 +52,11 @@ class ScoresEncoding(models.Model):
                                         default=exam_enrollment_state.ENROLLED,
                                         choices=exam_enrollment_state.STATES)
 
+    def number_of_scores_not_yet_submitted(self):
+        drafts_number = self.exam_enrollments_encoded_draft
+        submitted_drafts = self.exam_enrollments_encoded
+        return drafts_number - submitted_drafts if drafts_number > submitted_drafts else 0
+
     class Meta:
         managed = False
         db_table = 'app_scores_encoding'
