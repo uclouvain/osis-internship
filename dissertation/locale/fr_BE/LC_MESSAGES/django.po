@@ -25,6 +25,9 @@ msgstr "Accepté par le promoteur"
 msgid "accepted_by_first_year_evaluation"
 msgstr "Évaluation de première année réussie"
 
+msgid "ACCOMPANIST"
+msgstr "Accompagnateur"
+
 msgid "accompanist"
 msgstr "Accompagnateur"
 
@@ -144,6 +147,9 @@ msgstr "Commentaire"
 
 msgid "continue"
 msgstr "Continuer"
+
+msgid "CO_PROMOTEUR"
+msgstr "Co-Promoteur"
 
 msgid "copromotor"
 msgstr "Co-Promoteur"
@@ -378,6 +384,9 @@ msgstr "Si l'enseignant concerné n'est pas dans la liste, vous pouvez"
 
 msgid "in_edit_title"
 msgstr "Titre modifiable actuellement"
+
+msgid "INTERNSHIP"
+msgstr "Maître de stage"
 
 msgid "internship_master"
 msgstr "Maître de stage"
@@ -679,6 +688,9 @@ msgstr "Photo"
 msgid "possible"
 msgstr "Possible"
 
+msgid "PRESIDENT"
+msgstr "Président"
+
 msgid "president"
 msgstr "Président"
 
@@ -687,6 +699,9 @@ msgstr "Teacher"
 
 msgid "project_dissertation"
 msgstr "Mémoire-projet"
+
+msgid "PROMOTEUR"
+msgstr "Promoteur"
 
 msgid "promotor"
 msgstr "Promoteur"
@@ -714,6 +729,9 @@ msgstr "Vous pouvez définir un jury pour ce sujet de mémoire. Ce jury sera aut
 
 msgid "proposition_dissertations"
 msgstr "Sujets de mémoire"
+
+msgid "READER"
+msgstr "Lecteur"
 
 msgid "reader"
 msgstr "Lecteur"

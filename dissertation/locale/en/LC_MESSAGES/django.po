@@ -25,6 +25,9 @@ msgstr "Accepted by promotor"
 msgid "accepted_by_first_year_evaluation"
 msgstr "Accepted by 1st year evaluation"
 
+msgid "ACCOMPANIST"
+msgstr "Accompanist"
+
 msgid "accompanist"
 msgstr "Accompanist"
 
@@ -144,6 +147,9 @@ msgstr "Comment"
 
 msgid "continue"
 msgstr "Continue"
+
+msgid "CO_PROMOTEUR"
+msgstr "Co-Promotor"
 
 msgid "copromotor"
 msgstr "Co-Promotor"
@@ -378,6 +384,9 @@ msgstr "If the concerned teacher is not in the list, you can"
 
 msgid "in_edit_title"
 msgstr "Title currently editable"
+
+msgid "INTERNSHIP"
+msgstr "Internship Master"
 
 msgid "internship_master"
 msgstr "Internship Master"
@@ -679,6 +688,9 @@ msgstr "Photo"
 msgid "possible"
 msgstr "Possible"
 
+msgid "PRESIDENT"
+msgstr "President"
+
 msgid "president"
 msgstr "President"
 
@@ -687,6 +699,9 @@ msgstr "Teacher"
 
 msgid "project_dissertation"
 msgstr "Project dissertation"
+
+msgid "PROMOTEUR"
+msgstr "Promotor"
 
 msgid "promotor"
 msgstr "Promotor"
@@ -714,6 +729,9 @@ msgstr "You can define a jury for the dissertation subject. This jury will autom
 
 msgid "proposition_dissertations"
 msgstr "Dissertation subjects"
+
+msgid "READER"
+msgstr "Reader"
 
 msgid "reader"
 msgstr "Reader"
