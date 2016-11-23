@@ -695,7 +695,7 @@ msgid "president"
 msgstr "Président"
 
 msgid "professor"
-msgstr "Teacher"
+msgstr "Professeur"
 
 msgid "project_dissertation"
 msgstr "Mémoire-projet"
