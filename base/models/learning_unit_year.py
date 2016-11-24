@@ -31,8 +31,8 @@ from base.models import attribution
 
 class LearningUnitYearAdmin(admin.ModelAdmin):
     list_display = ('acronym', 'title', 'academic_year', 'credits', 'changed')
-    fieldsets = ((None, {'fields': ('learning_unit', 'academic_year', 'acronym', 'title', 'credits', 'decimal_scores')}),)
-    raw_id_fields = ('learning_unit',)
+    fieldsets = ((None, {'fields': ('academic_year', 'acronym', 'title', 'credits', 'decimal_scores')}),)
+    list_filter = ('academic_year__year',)
     search_fields = ['acronym']
 
 
@@ -47,7 +47,7 @@ class LearningUnitYear(models.Model):
     learning_unit = models.ForeignKey('LearningUnit')
 
     def __str__(self):
-        return u"%s - %s" % (self.academic_year,self.learning_unit)
+        return u"%s - %s" % (self.academic_year, self.acronym)
 
 
 def find_by_id(learning_unit_year_id):
@@ -72,9 +72,8 @@ def search(academic_year_id=None, acronym=None, learning_unit=None, title=None):
     return queryset
 
 
-def find_by_tutor(tutor_id):
-    if tutor_id:
-        learning_unit_ids = attribution.Attribution.objects.filter(tutor_id=tutor_id).values('learning_unit_id')
-        return LearningUnitYear.objects.filter(learning_unit_id__in=learning_unit_ids)
+def find_by_tutor(tutor):
+    if tutor:
+        return attribution.Attribution.objects.filter(tutor=tutor).values('learning_unit_year')
     else:
         return None

@@ -30,8 +30,6 @@ from base.models.program_manager import ProgramManager
 from base.models.student import Student
 from base.models.tutor import Tutor
 
-queue_name = 'osis_base'
-
 
 @receiver(post_save, sender=Tutor)
 def add_to_tutors_group(sender, instance, **kwargs):

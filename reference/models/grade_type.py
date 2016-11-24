@@ -23,14 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.contrib import admin
-from reference.enums import grade_type_coverage
-from base.models.serializable_model import SerializableModel
+from reference.enums import grade_type_coverage, institutional_grade_type as enum_institutional_grade_type
+from osis_common.models.serializable_model import SerializableModel
 
 
 class GradeTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'institutional_grade_type', 'coverage', 'adhoc', 'institutional')
+    list_display = ('name', 'readable_institutional_grade_type', 'coverage', 'adhoc', 'institutional')
     fieldsets = ((None, {'fields': ('name', 'institutional_grade_type', 'coverage', 'adhoc', 'institutional')}),)
 
 
@@ -40,7 +41,20 @@ class GradeType(SerializableModel):
     coverage = models.CharField(max_length=30, choices=grade_type_coverage.COVERAGE_CHOICES, default=grade_type_coverage.UNKNOWN)
     adhoc = models.BooleanField(default=True)  # If False == Official/validated, if True == Not Official/not validated
     institutional = models.BooleanField(default=False)  # True if the domain is in UCL else False
-    institutional_grade_type = models.ForeignKey('reference.InstitutionalGradeType', blank=True, null=True, on_delete=models.CASCADE)
+    institutional_grade_type = models.CharField(max_length=25,
+                                                choices=enum_institutional_grade_type.INSTITUTIONAL_GRADE_CHOICES,
+                                                blank=True,
+                                                null=True,)
 
     def __str__(self):
         return self.name
+
+    def readable_institutional_grade_type(self):
+        return enum_institutional_grade_type.translate_by_key(self.institutional_grade_type)
+
+
+def find_by_id(gt_id):
+    try:
+        return GradeType.objects.get(id=gt_id)
+    except ObjectDoesNotExist:
+        return None

@@ -28,6 +28,7 @@ from django.contrib import admin
 
 admin.site.register(adviser.Adviser, adviser.AdviserAdmin)
 admin.site.register(dissertation.Dissertation, dissertation.DissertationAdmin)
+admin.site.register(dissertation_document_file.DissertationDocumentFile)
 admin.site.register(dissertation_group.DissertationGroup)
 admin.site.register(dissertation_location.DissertationLocation)
 admin.site.register(dissertation_role.DissertationRole, dissertation_role.DissertationRoleAdmin)
@@ -36,4 +37,6 @@ admin.site.register(faculty_adviser.FacultyAdviser, faculty_adviser.FacultyAdvis
 admin.site.register(offer_proposition.OfferProposition, offer_proposition.OfferPropositionAdmin)
 admin.site.register(proposition_dissertation.PropositionDissertation,
                     proposition_dissertation.PropositionDissertationAdmin)
+admin.site.register(proposition_document_file.PropositionDocumentFile)
+admin.site.register(proposition_offer.PropositionOffer)
 admin.site.register(proposition_role.PropositionRole, proposition_role.PropositionRoleAdmin)

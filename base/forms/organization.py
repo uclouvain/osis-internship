@@ -23,20 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
-from base.models.serializable_model import SerializableModel
+from django.forms import ModelForm
+from base.models import organization
 
 
-class InstitutionalGradeTypeAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-    fieldsets = ((None, {'fields': ('name',)}),)
-
-
-# Customized parent's list of institutional GradeType (used & displayed in Admission - offer choice).
-class InstitutionalGradeType(SerializableModel):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    name = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.name
+class OrganizationForm(ModelForm):
+    class Meta:
+        model = organization.Organization
+        fields = ['acronym', 'name', 'website', 'reference']

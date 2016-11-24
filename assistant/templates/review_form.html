@@ -41,7 +41,7 @@
 {% endblock %}
 {% block content %}
 <ul class="nav nav-tabs ">
-	<li><a href="#">{% trans 'assistant_form' %}</a></li>
+	<li><a href="{% url 'pst_form_view' mandate_id=mandate_id %}">{% trans 'assistant_form' %}</a></li>
     {% if 'PHD_SUPERVISOR' in role %}
         <li class="active"><a href="#">{% trans 'phd_supervisor_review' %}</a></li>
 	    <li class="disabled"><a href="#">{% trans 'research_review' %}</a></li>
@@ -118,73 +118,36 @@
                 </table>
             </div>
         </div>
-        <div class="form-group">
-            <div class="row">
-                <div class="col-md-2">
-                    <label for="txt_advice">{% trans 'advice' %}</label>
-                </div>
-                <div class="col-md-3">
-                    <div class="controls">{{ form.advice }}</div>
-                    <font class="error">{{ form.advice.errors }}</font>
-                </div>
-            </div><p>
+        <div class="form-group" style="padding-top: 5px;">
+            {{ form.advice.label_tag }}
+            <div class="controls">{{ form.advice }}</div>
+            <font class="error">{{ form.advice.errors }}</font>
         </div>
-        <div class="form-group">
-            <div class="row">
-                <div class="col-md-2">
-                    <label id="justification_label" for="txt_justification">{% trans 'justification' %}</label>
-                </div>
-                <div class="col-md-5">
-                    <div class="controls">{{ form.justification }}</div>
-                    <font class="error">{{ form.justification.errors }}</font>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-2"></div>
-                <div class="col-md-5" align="left">
-                <label id="justification_label_help_text" for="txt_justification_help_text">
-                    <font size="1">{{ form.justification.help_text }}</font></label>
-                </div>
-            </div>
-        </div><p>
-        <div class="form-group">
-            <div class="row">
-                <div class="col-md-2">
-                    <label for="txt_comment">{% trans 'remark' %}</label>
-                </div>
-                <div class="col-md-3">
-                    <div class="controls">{{ form.remark }}</div>
-                    <font class="error">{{ form.remark.errors }}</font>
-                </div>
-            </div>
+        <div class="form-group" style="padding-top: 5px;">
+            {{ form.justification.label_tag }}
+            <div class="controls">{{ form.justification }}</div>
+            <font class="error">{{ form.justification.errors }}</font>
+            <label  style="font-size:10px" id="justification_help_label">{{ form.justification.help_text }}</label>
         </div>
-        <div class="form-group">
-            <div class="row">
-                <div class="col-md-2">
-                    <label for="txt_comment">{% trans 'confidential' %}</label>
-                </div>
-                <div class="col-md-3">
-                    <div class="controls">{{ form.confidential }}</div>
-                    <font class="error">{{ form.confidential.errors }}</font>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-2"></div>
-                <div class="col-md-5" align="left">
-                <label id="confidential_label_help_text" for="txt_confidential_help_text">
-                    <font size="1">{{ form.confidential.help_text }}</font></label>
-                </div>
-            </div>
-            <p>
+        <div class="form-group" style="padding-top: 5px;">
+            {{ form.remark.label_tag }}
+            <div class="controls">{{ form.remark }}</div>
+            <font class="error">{{ form.remark.errors }}</font>
         </div>
-        <div class="form-group">
+        <div class="form-group" style="padding-top: 5px;">
+            {{ form.confidential.label_tag }}
+            <div class="controls">{{ form.confidential }}</div>
+            <font class="error">{{ form.confidential.errors }}</font>
+            <label style="font-size:10px">{{ form.confidential.help_text }}</label>
+        </div>
+        <div class="form-group" style="padding-top: 15px;">
             <div class="row">
-                <div class="col-md-2 align="left">
+                <div class="col-md-6" align="left">
 		            <button type="submit" class="btn btn-primary btn-block" title="{% trans 'save'%}"
                     id="bt_mandate_save" name="save"><span class="glyphicon glyphicon-save" aria-hidden="true">
                     </span> {% trans 'save'%}</button>
                 </div>
-                <div class="col-md-2 align="left">
+                <div class="col-md-6" align="left">
 		            <a class="btn btn-default btn-block" id="lnk_mandate_cancel"
                        href="{% url 'reviewer_mandates_list' %}">
 		            <span class="glyphicon glyphicon-cancel" aria-hidden="true"></span> {% trans 'cancel'%}</a>
@@ -193,20 +156,17 @@
         </div>
         {# un assistant de supervision ne peut valider la review #}
         {% if "SUPERVISION_ASSISTANT" not in role %}
-        <div class="form-group">
-            <div class="row">
-                <div class="col-md-4 align="left">
+        <div class="form-group" style="padding-top: 10px;">
+                <div style="text-align: center">
                     <button type="submit" class="btn btn-success btn-block" title="{% trans 'validate_and_submit'%}"
                     id="bt_pstform_validate_and_submit" name="validate_and_submit"
                     onclick="return confirm('{% trans 'confirm_validation' %}')">
                     <span class="glyphicon glyphicon-saved" aria-hidden="true">
                     </span> {% trans 'validate_and_submit'%}</button>
                 </div>
-            </div>
         </div>
         {% endif %}
-		</form>
-
+	    </form>
 	</div>
 </div>
 {% endblock %}
@@ -216,14 +176,11 @@ function Hide() {
     if(document.getElementById('id_rev-advice_1').checked == true)
      {
          document.getElementById('id_rev-justification').style.display = '';
-         document.getElementById('justification_label').style.display = '';
-         document.getElementById('justification_label_help_text').style.display = '';
+
     } else
      {
         document.getElementById('id_rev-justification').style.display = 'none';
-         document.getElementById('justification_label').style.display = 'none';
-         document.getElementById('justification_label_help_text').style.display = 'none';
-         document.getElementById('id_rev-justification').value='';
+        document.getElementById('id_rev-justification').value='';
     }
 }
 window.onload = function() {

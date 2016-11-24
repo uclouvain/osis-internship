@@ -24,13 +24,10 @@
 #
 ##############################################################################
 from django.apps import AppConfig
-from backoffice.queue import queue
-from pika.exceptions import AMQPConnectionError
 
 
 class BaseConfig(AppConfig):
     name = 'base'
-    paper_sheet_queue = 'PAPER_SHEET_QUEUE'
 
     def ready(self):
         from base.models.models_signals import add_to_tutors_group, remove_from_tutor_group, \
@@ -39,4 +36,3 @@ class BaseConfig(AppConfig):
         from base.views.score_encoding import get_json_data_scores_sheets
         # if django.core.exceptions.AppRegistryNotReady: Apps aren't loaded yet.
         # ===> This exception says that there is an error in the implementation of method ready(self) !!
-        queue.listen_queue(self.paper_sheet_queue, get_json_data_scores_sheets)
