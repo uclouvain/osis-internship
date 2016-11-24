@@ -39,7 +39,7 @@
 {% endblock %}
 {% block content %}
 <ul class="nav nav-tabs">
-	<li><a href="#">{% trans 'assistant_form' %}</a></li>
+	<li><a href="{% url 'pst_form_view' mandate_id=mandate_id %}">{% trans 'assistant_form' %}</a></li>
     {% if role == 'PHD_SUPERVISOR' %}
         <li class="active"><a href="#">{% trans 'phd_supervisor_review' %}</a></li>
 	    <li class="disabled"><a href="#">{% trans 'research_review' %}</a></li>

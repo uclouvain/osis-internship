@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from osis_common.models.serializable_model import SerializableModel
 from django.contrib import admin
 from django.db import models
 from django.utils import timezone
@@ -35,7 +36,7 @@ class OfferPropositionAdmin(admin.ModelAdmin):
     raw_id_fields = ('offer',)
 
 
-class OfferProposition(models.Model):
+class OfferProposition(SerializableModel):
     acronym = models.CharField(max_length=200)
     offer = models.ForeignKey(offer.Offer)
     student_can_manage_readers = models.BooleanField(default=True)
@@ -111,3 +112,7 @@ def show_evaluation_first_year(offer_props):
 
 def get_by_dissertation(dissert):
     return get_by_offer(dissert.offer_year_start.offer)
+
+
+def find_by_id(offer_proposition_id):
+    return OfferProposition.objects.get(pk=offer_proposition_id)
