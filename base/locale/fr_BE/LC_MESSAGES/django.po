@@ -1282,3 +1282,33 @@ msgid "http_link"
 msgstr "HTTP link"
 msgid "you_manage"
 msgstr "Vous gérez"
+
+msgid "BACHELOR"
+msgstr "Bachelier"
+
+msgid "MASTER_60"
+msgstr "Master 60"
+
+msgid "MASTER_120"
+msgstr "Master 120"
+
+msgid "MASTER_180_OR_240"
+msgstr "Master 180 ou 240"
+
+msgid "ADVANCED_MASTER"
+msgstr "Master de spécialisation"
+
+msgid "TRAINING_CERTIFICATE"
+msgstr "Agrégation"
+
+msgid "CERTIFICATE"
+msgstr "Certificat"
+
+msgid "DOCTORATE"
+msgstr "Doctorat"
+
+msgid "CAPAES"
+msgstr "CAPAES"
+
+msgid "start_date_must_be_lower_than_end_date"
+msgstr "La date de début doit être inférieure à la date de fin"

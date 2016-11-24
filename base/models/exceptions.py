@@ -23,20 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
-from osis_common.models.serializable_model import SerializableModel
 
 
-class InstitutionalGradeTypeAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-    fieldsets = ((None, {'fields': ('name',)}),)
+class StartDateHigherThanEndDateException(Exception):
+    def __init__(self, message=None, errors=None):
+        super(StartDateHigherThanEndDateException, self).__init__(message)
+        self.errors = errors
 
 
-# Customized parent's list of institutional GradeType (used & displayed in Admission - offer choice).
-class InstitutionalGradeType(SerializableModel):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    name = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.name
+class FunctionAgrumentMissingException(Exception):
+    def __init__(self, message=None, errors=None):
+        super(FunctionAgrumentMissingException, self).__init__(message)
+        self.errors = errors
