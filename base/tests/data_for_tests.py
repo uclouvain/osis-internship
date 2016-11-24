@@ -25,6 +25,12 @@
 ##############################################################################
 from base import models as mdl_base
 import datetime
+from django.contrib.auth.models import User
+
+
+def create_user(username="foo", password="test"):
+    user = User.objects.create_user(username=username, password=password)
+    return user
 
 
 def create_person(first_name, last_name):
@@ -38,6 +44,19 @@ def create_student(first_name, last_name, registration_id):
     student = mdl_base.student.Student(person=person, registration_id=registration_id)
     student.save()
     return student
+
+
+def create_tutor(first_name="Tutor", last_name="tutor"):
+    person = create_person(first_name, last_name)
+    tutor = mdl_base.tutor.Tutor(person=person)
+    tutor.save()
+    return tutor
+
+
+def create_attribution(tutor, learning_unit_year):
+    attribution = mdl_base.attribution.Attribution(tutor=tutor, learning_unit_year=learning_unit_year)
+    attribution.save()
+    return attribution
 
 
 def create_academic_year(year=2016):
@@ -97,15 +116,23 @@ def create_learning_unit_enrollment(learning_unit_year, offer_enrollment):
 
 
 def create_academic_calendar(academic_year):
-    academic_calendar = mdl_base.academic_calendar.AcademicCalendar(academic_year=academic_year)
-    academic_calendar.save()
+    start_date = datetime.date(2000, 1, 1)
+    end_date = datetime.date(2099, 1, 1)
+    academic_calendar = mdl_base.academic_calendar.AcademicCalendar(academic_year=academic_year, start_date=start_date,
+                                                                    end_date=end_date)
+    academic_calendar.save(functions=[])
     return academic_calendar
 
 
 def create_offer_year_calendar(offer_year, academic_year):
+    start_date = datetime.date(2000, 1, 1)
+    end_date = datetime.date(2099, 1, 1)
     offer_year_calendar = \
         mdl_base.offer_year_calendar.OfferYearCalendar(offer_year=offer_year,
-                                                       academic_calendar=create_academic_calendar(academic_year))
+                                                       academic_calendar=create_academic_calendar(academic_year),
+                                                       start_date=start_date,
+                                                       end_date=end_date
+                                                       )
     offer_year_calendar.save()
     return offer_year_calendar
 

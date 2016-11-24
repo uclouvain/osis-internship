@@ -119,28 +119,34 @@ def online_encoding(request, learning_unit_year_id=None):
     return layout.render(request, "assessments/online_encoding.html", data_dict)
 
 
-def __send_message_if_all_encoded_in_pgm(all_enrollments, learning_unit_year, offer_years):
+def __send_messages_for_all_offer_years(all_enrollments, learning_unit_year, offer_years):
     """
-    Send a message to all the tutors of a learning unit inside a program
+    Send a message for each offer year to all the tutors of a learning unit inside a program
     managed by the program manager if all the scores
     of this learning unit, inside this program, are encoded.
     Th encoder is a program manager, so all the encoded scores are final.
     :param enrollments: The enrollments to the learning unit year , inside the managed program.
     :param learning_unit_year: The learning unit year of the enrollments.
+    :param offer_years: offer_years for which a message must be sent
     :return: An error messaged if the message cannot be sent.
     """
     sent_error_message = None
     for offer_year in offer_years:
-        enrollments = filter_enrollments_by_offer_year(all_enrollments, offer_year)
-        progress = mdl.exam_enrollment.calculate_exam_enrollment_progress(enrollments)
-        offer_acronym = enrollments[0].learning_unit_enrollment.offer_enrollment.offer_year.acronym
-        sent_error_message = None
-        if progress == 100:
-            persons = list(set([tutor.person for tutor
-                                in mdl.tutor.find_by_learning_unit(learning_unit_year)]))
-            sent_error_message = send_mail.send_message_after_all_encoded_by_manager(persons, enrollments,
-                                                                                     learning_unit_year.acronym,
-                                                                                     offer_acronym)
+        sent_error_message = __send_message_for_specific_offer_year(all_enrollments, learning_unit_year,
+                                                                    offer_year)
+    return sent_error_message
+
+
+def __send_message_for_specific_offer_year(all_enrollments, learning_unit_year, offer_year):
+    enrollments = filter_enrollments_by_offer_year(all_enrollments, offer_year)
+    progress = mdl.exam_enrollment.calculate_exam_enrollment_progress(enrollments)
+    offer_acronym = offer_year.acronym
+    sent_error_message = None
+    if progress == 100:
+        persons = list(set([tutor.person for tutor in mdl.tutor.find_by_learning_unit(learning_unit_year)]))
+        sent_error_message = send_mail.send_message_after_all_encoded_by_manager(persons, enrollments,
+                                                                                 learning_unit_year.acronym,
+                                                                                 offer_acronym)
     return sent_error_message
 
 
@@ -157,7 +163,6 @@ def filter_enrollments_by_offer_year(enrollments, offer_year):
 @permission_required('base.can_access_scoreencoding', raise_exception=True)
 def online_encoding_form(request, learning_unit_year_id=None):
     data = get_data_online(learning_unit_year_id, request)
-
     if request.method == 'GET':
         return layout.render(request, "assessments/online_encoding_form.html", data)
 
@@ -195,9 +200,9 @@ def online_encoding_form(request, learning_unit_year_id=None):
 
         data = get_data_online(learning_unit_year_id, request)
         if data['is_program_manager']:
-            sent_error_message = __send_message_if_all_encoded_in_pgm(data.get('enrollments'),
-                                                                      data.get('learning_unit_year'),
-                                                                      list(modified_offer_year_enrollments.values()))
+            sent_error_message = __send_messages_for_all_offer_years(data.get('enrollments'),
+                                                                     data.get('learning_unit_year'),
+                                                                     list(modified_offer_year_enrollments.values()))
             if sent_error_message:
                 messages.add_message(request, messages.ERROR, "%s" % sent_error_message)
         return layout.render(request, "assessments/online_encoding.html", data)
@@ -297,8 +302,8 @@ def online_double_encoding_validation(request, learning_unit_year_id=None, tutor
                     offer_year = exam_enrol.learning_unit_enrollment.offer_enrollment.offer_year
                     modified_offer_year_enrollments[offer_year.pk] = offer_year
         if is_program_manager:
-            sent_error_message = __send_message_if_all_encoded_in_pgm(exam_enrollments, learning_unit_year,
-                                                                      list(modified_offer_year_enrollments.values()))
+            sent_error_message = __send_messages_for_all_offer_years(exam_enrollments, learning_unit_year,
+                                                                     list(modified_offer_year_enrollments.values()))
             if sent_error_message:
                 messages.add_message(request, messages.ERROR, "%s" % sent_error_message)
         return HttpResponseRedirect(reverse('online_encoding', args=(learning_unit_year_id,)))
@@ -756,8 +761,8 @@ def specific_criteria_submission(request):
                 grouped_by_learning_unit_years_for_mails[learning_unit_year] = [enrollment]
 
     for learn_unit_year, exam_enrollments in grouped_by_learning_unit_years_for_mails.items():
-        sent_error_message = __send_message_if_all_encoded_in_pgm(exam_enrollments,
-                                                                  learn_unit_year)
+        sent_error_message = __send_messages_for_all_offer_years(exam_enrollments,
+                                                                 learn_unit_year)
         if sent_error_message:
             messages.add_message(request, messages.ERROR, "%s" % sent_error_message)
 
