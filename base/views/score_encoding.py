@@ -173,7 +173,6 @@ def online_encoding_form(request, learning_unit_year_id=None):
             score = request.POST.get('score_' + str(enrollment.id), None)
             justification = request.POST.get('justification_' + str(enrollment.id), None)
             score_changed = request.POST.get('score_changed_' + str(enrollment.id), 'false')
-
             # modification is possible for program managers OR score has changed but nothing is final
             if data['is_program_manager'] or \
                     score_changed == 'true' and \
@@ -182,6 +181,8 @@ def online_encoding_form(request, learning_unit_year_id=None):
                 new_score, new_justification = _truncate_decimals(score, justification, decimal_scores_authorized)
                 enrollment.score_reencoded = None
                 enrollment.justification_reencoded = None
+
+                score_has_been_modified = __has_modify_score(enrollment, new_score)
 
                 # draft score and justification are always set
                 enrollment.score_draft = new_score
@@ -194,7 +195,7 @@ def online_encoding_form(request, learning_unit_year_id=None):
                                                                         enrollment.score_final,
                                                                         enrollment.justification_final)
                 enrollment.save()
-                if score_changed == 'true':
+                if score_has_been_modified:
                     offer_year = enrollment.learning_unit_enrollment.offer_enrollment.offer_year
                     modified_offer_year_enrollments[offer_year.pk] = offer_year
 
@@ -207,6 +208,9 @@ def online_encoding_form(request, learning_unit_year_id=None):
                 messages.add_message(request, messages.ERROR, "%s" % sent_error_message)
         return layout.render(request, "assessments/online_encoding.html", data)
 
+
+def __has_modify_score(exam_enrollment, new_score):
+    return exam_enrollment.score_final != new_score
 
 @login_required
 @user_passes_test(_is_inside_scores_encodings_period, login_url=reverse_lazy('outside_scores_encodings_period'))
@@ -287,6 +291,8 @@ def online_double_encoding_validation(request, learning_unit_year_id=None, tutor
                 exam_enrol.score_reencoded = None
                 exam_enrol.justification_reencoded = None
 
+                score_has_been_modified = __has_modify_score(exam_enrol, new_score)
+
                 # A choice must be done between the first and the double encoding to save new changes.
                 if new_score is not None or new_justification:
                     exam_enrol.score_draft = new_score
@@ -299,8 +305,9 @@ def online_double_encoding_validation(request, learning_unit_year_id=None, tutor
                                                                             exam_enrol.score_final,
                                                                             exam_enrol.justification_final)
                     exam_enrol.save()
-                    offer_year = exam_enrol.learning_unit_enrollment.offer_enrollment.offer_year
-                    modified_offer_year_enrollments[offer_year.pk] = offer_year
+                    if score_has_been_modified:
+                        offer_year = exam_enrol.learning_unit_enrollment.offer_enrollment.offer_year
+                        modified_offer_year_enrollments[offer_year.pk] = offer_year
         if is_program_manager:
             sent_error_message = __send_messages_for_all_offer_years(exam_enrollments, learning_unit_year,
                                                                      list(modified_offer_year_enrollments.values()))

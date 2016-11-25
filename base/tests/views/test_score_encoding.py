@@ -115,7 +115,6 @@ class OnlineEncodingTest(TestCase):
     def test_email_is_sent_after_encoding_all_students_for_specific_offer_year(self, mock_send_email):
         self.client.force_login(self.program_manager_1.person.user)
         mock_send_email.return_value = None
-        data_for_tests.create_messages_templates_for_online_encoding()
         url = reverse('online_encoding_form', args=[self.learning_unit_year.id])
         response = self.client.post(url, data=self.get_form_with_all_students_filled())
 
