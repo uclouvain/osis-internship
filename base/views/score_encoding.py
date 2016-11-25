@@ -119,22 +119,30 @@ def online_encoding(request, learning_unit_year_id=None):
     return layout.render(request, "assessments/online_encoding.html", data_dict)
 
 
-def __send_messages_for_all_offer_years(all_enrollments, learning_unit_year, offer_years):
+def __send_messages_by_offer_year(all_enrollments, learning_unit_year, updated_enrollments):
     """
     Send a message for each offer year to all the tutors of a learning unit inside a program
     managed by the program manager if all the scores
-    of this learning unit, inside this program, are encoded.
+    of this learning unit, inside this program, are encoded and at most one score is newly encoded.
     Th encoder is a program manager, so all the encoded scores are final.
     :param enrollments: The enrollments to the learning unit year , inside the managed program.
     :param learning_unit_year: The learning unit year of the enrollments.
-    :param offer_years: offer_years for which a message must be sent
-    :return: An error messaged if the message cannot be sent.
+    :param updated_enrollments: list of exam enrollments objects which has been updated
+    :return: A list of error message if message cannot be sent
     """
-    sent_error_message = None
+    sent_error_messages = []
+    offer_years = get_different_offer_years_from_enrollments(updated_enrollments)
     for offer_year in offer_years:
         sent_error_message = __send_message_for_specific_offer_year(all_enrollments, learning_unit_year,
                                                                     offer_year)
-    return sent_error_message
+        if sent_error_message:
+            sent_error_messages.append(sent_error_message)
+    return sent_error_messages
+
+
+def get_different_offer_years_from_enrollments(enrollments):
+    list_offer_years = [enrollment.learning_unit_enrollment.offer_enrollment.offer_year for enrollment in enrollments]
+    return list(set(list_offer_years))
 
 
 def __send_message_for_specific_offer_year(all_enrollments, learning_unit_year, offer_year):
@@ -168,49 +176,76 @@ def online_encoding_form(request, learning_unit_year_id=None):
 
     elif request.method == 'POST':
         decimal_scores_authorized = data['learning_unit_year'].decimal_scores
-        modified_offer_year_enrollments = {}
-        for enrollment in data['enrollments']:
-            score = request.POST.get('score_' + str(enrollment.id), None)
-            justification = request.POST.get('justification_' + str(enrollment.id), None)
-            score_changed = request.POST.get('score_changed_' + str(enrollment.id), 'false')
-            # modification is possible for program managers OR score has changed but nothing is final
-            if data['is_program_manager'] or \
-                    score_changed == 'true' and \
-                    enrollment.score_final is None and not enrollment.justification_final:
-
-                new_score, new_justification = _truncate_decimals(score, justification, decimal_scores_authorized)
-                enrollment.score_reencoded = None
-                enrollment.justification_reencoded = None
-
-                score_has_been_modified = __has_modify_score(enrollment, new_score)
-
-                # draft score and justification are always set
-                enrollment.score_draft = new_score
-                enrollment.justification_draft = new_justification
-                # it is only the program manager who validates the double encoding
-                if data['is_program_manager']:
-                    enrollment.score_final = new_score
-                    enrollment.justification_final = new_justification
-                    mdl.exam_enrollment.create_exam_enrollment_historic(request.user, enrollment,
-                                                                        enrollment.score_final,
-                                                                        enrollment.justification_final)
-                enrollment.save()
-                if score_has_been_modified:
-                    offer_year = enrollment.learning_unit_enrollment.offer_enrollment.offer_year
-                    modified_offer_year_enrollments[offer_year.pk] = offer_year
-
+        is_program_manager = data['is_program_manager']
+        updated_enrollments = update_exam_enrollments(data["enrollments"], decimal_scores_authorized,
+                                                      is_program_manager,
+                                                      request)
         data = get_data_online(learning_unit_year_id, request)
-        if data['is_program_manager']:
-            sent_error_message = __send_messages_for_all_offer_years(data.get('enrollments'),
-                                                                     data.get('learning_unit_year'),
-                                                                     list(modified_offer_year_enrollments.values()))
-            if sent_error_message:
-                messages.add_message(request, messages.ERROR, "%s" % sent_error_message)
+
+        send_messages_to_notify_encoding_progress(data["enrollments"], data["learning_unit_year"], is_program_manager,
+                                                  updated_enrollments, request)
         return layout.render(request, "assessments/online_encoding.html", data)
 
 
-def __has_modify_score(exam_enrollment, new_score):
+def send_messages_to_notify_encoding_progress(all_enrollments, learning_unit_year, is_program_manager,
+                                              updated_enrollments, request):
+    if is_program_manager:
+        sent_error_messages = __send_messages_by_offer_year(all_enrollments,
+                                                           learning_unit_year,
+                                                           updated_enrollments)
+        for sent_error_message in sent_error_messages:
+            messages.add_message(request, messages.ERROR, "%s" % sent_error_message)
+
+
+def update_exam_enrollments(exam_enrollments, decimal_scores_authorized, is_program_manager, request):
+    updated_enrollments = []
+    for enrollment in exam_enrollments:
+        is_updated = update_exam_enrollment(is_program_manager, decimal_scores_authorized, enrollment, request)
+        if is_updated:
+            updated_enrollments.append(enrollment)
+    return updated_enrollments
+
+
+def update_exam_enrollment(is_pgm, decimal_scores_authorized, enrollment, request):
+    score = request.POST.get('score_' + str(enrollment.id), None)
+    justification = request.POST.get('justification_' + str(enrollment.id), None)
+    score_changed = request.POST.get('score_changed_' + str(enrollment.id), 'false')
+    # modification is possible for program managers OR score has changed but nothing is final
+    if is_pgm or is_legible_for_modifying_exam_enrollment(score_changed, enrollment):
+        new_score, new_justification = _truncate_decimals(score, justification, decimal_scores_authorized)
+        score_has_been_modified = has_modify_score(enrollment, new_score)
+        set_score_and_justification_for_exam_enrollment(is_pgm, enrollment, new_justification, new_score, request.user)
+
+        if score_has_been_modified:
+            return True
+
+    return False
+
+
+def set_score_and_justification_for_exam_enrollment(is_pgm, enrollment, new_justification, new_score, user):
+    enrollment.score_reencoded = None
+    enrollment.justification_reencoded = None
+
+    if new_score is not None or new_justification:
+        enrollment.score_draft = new_score
+        enrollment.justification_draft = new_justification
+
+    if is_pgm:
+        enrollment.score_final = new_score
+        enrollment.justification_final = new_justification
+        mdl.exam_enrollment.create_exam_enrollment_historic(user, enrollment,
+                                                            enrollment.score_final,
+                                                            enrollment.justification_final)
+    enrollment.save()
+
+
+def is_legible_for_modifying_exam_enrollment(score_changed, exam_enrollment):
+    return score_changed == "true" and not exam_enrollment.score_final and not exam_enrollment.justification_final
+
+
+def has_modify_score(exam_enrollment, new_score):
     return exam_enrollment.score_final != new_score
+
 
 @login_required
 @user_passes_test(_is_inside_scores_encodings_period, login_url=reverse_lazy('outside_scores_encodings_period'))
@@ -279,39 +314,11 @@ def online_double_encoding_validation(request, learning_unit_year_id=None, tutor
                                       if exam_enrol.score_reencoded is not None or exam_enrol.justification_reencoded]
 
         decimal_scores_authorized = learning_unit_year.decimal_scores
-        modified_offer_year_enrollments = {}
-        for exam_enrol in exam_enrollments_reencoded:
-            score_validated = request.POST.get('score_' + str(exam_enrol.id), None)
-            justification_validated = request.POST.get('justification_' + str(exam_enrol.id), None)
+        updated_enrollments = update_exam_enrollments(exam_enrollments_reencoded, decimal_scores_authorized,
+                                                      is_program_manager, request)
+        send_messages_to_notify_encoding_progress(exam_enrollments, learning_unit_year, is_program_manager,
+                                                  updated_enrollments, request)
 
-            if score_validated is not None or justification_validated is not None:
-                new_score, new_justification = _truncate_decimals(score_validated, justification_validated,
-                                                                  decimal_scores_authorized)
-                exam_enrol.score_reencoded = None
-                exam_enrol.justification_reencoded = None
-
-                score_has_been_modified = __has_modify_score(exam_enrol, new_score)
-
-                # A choice must be done between the first and the double encoding to save new changes.
-                if new_score is not None or new_justification:
-                    exam_enrol.score_draft = new_score
-                    exam_enrol.justification_draft = new_justification
-                    # Case it is the program manager who validates the double encoding
-                    if is_program_manager:
-                        exam_enrol.score_final = new_score
-                        exam_enrol.justification_final = new_justification
-                        mdl.exam_enrollment.create_exam_enrollment_historic(request.user, exam_enrol,
-                                                                            exam_enrol.score_final,
-                                                                            exam_enrol.justification_final)
-                    exam_enrol.save()
-                    if score_has_been_modified:
-                        offer_year = exam_enrol.learning_unit_enrollment.offer_enrollment.offer_year
-                        modified_offer_year_enrollments[offer_year.pk] = offer_year
-        if is_program_manager:
-            sent_error_message = __send_messages_for_all_offer_years(exam_enrollments, learning_unit_year,
-                                                                     list(modified_offer_year_enrollments.values()))
-            if sent_error_message:
-                messages.add_message(request, messages.ERROR, "%s" % sent_error_message)
         return HttpResponseRedirect(reverse('online_encoding', args=(learning_unit_year_id,)))
 
 
@@ -767,8 +774,8 @@ def specific_criteria_submission(request):
                 grouped_by_learning_unit_years_for_mails[learning_unit_year] = [enrollment]
 
     for learn_unit_year, exam_enrollments in grouped_by_learning_unit_years_for_mails.items():
-        sent_error_message = __send_messages_for_all_offer_years(exam_enrollments,
-                                                                 learn_unit_year)
+        sent_error_message = __send_messages_by_offer_year(exam_enrollments,
+                                                           learn_unit_year)
         if sent_error_message:
             messages.add_message(request, messages.ERROR, "%s" % sent_error_message)
 

@@ -75,6 +75,18 @@ class OnlineEncodingTest(TestCase):
         self.assert_exam_enrollments(self.exam_enrollment_1, 15, None, None, None)
         self.assert_exam_enrollments(self.exam_enrollment_2, None, None, None, None)
 
+    def test_online_encoding_with_one_student_filled_by_tutor_but_score_is_final(self):
+        self.client.force_login(self.tutor.person.user)
+        self.exam_enrollment_1.score_final = 16
+        self.exam_enrollment_1.score_draft = 16
+        self.exam_enrollment_1.save()
+        url = reverse('online_encoding_form', args=[self.learning_unit_year.id])
+        response = self.client.post(url, data=self.get_form_with_one_student_filled())
+
+        self.refresh_exam_enrollments_from_db()
+        self.assert_exam_enrollments(self.exam_enrollment_1, 16, 16, None, None)
+        self.assert_exam_enrollments(self.exam_enrollment_2, None, None, None, None)
+
     def test_online_encoding_with_one_student_filled_by_pgm(self):
         self.client.force_login(self.program_manager_1.person.user)
         url = reverse('online_encoding_form', args=[self.learning_unit_year.id])
@@ -102,6 +114,17 @@ class OnlineEncodingTest(TestCase):
         self.assert_exam_enrollments(self.exam_enrollment_1, 15, None, None, None)
         self.assert_exam_enrollments(self.exam_enrollment_2, 18, None, None, None)
 
+    def test_online_double_encoding_with_all_student_filled_by_tutor(self):
+        self.client.force_login(self.tutor.person.user)
+        self.prepare_exam_enrollment_for_double_encoding_validation(self.exam_enrollment_1)
+        self.prepare_exam_enrollment_for_double_encoding_validation(self.exam_enrollment_2)
+        url = reverse('online_encoding_form', args=[self.learning_unit_year.id])
+        response = self.client.post(url, data=self.get_form_with_all_students_filled())
+
+        self.refresh_exam_enrollments_from_db()
+        self.assert_exam_enrollments(self.exam_enrollment_1, 15, None, None, None)
+        self.assert_exam_enrollments(self.exam_enrollment_2, 18, None, None, None)
+
     def test_online_encoding_with_all_student_filled_by_tutor_and_one_justification(self):
         self.client.force_login(self.tutor.person.user)
         url = reverse('online_encoding_form', args=[self.learning_unit_year.id])
@@ -114,9 +137,7 @@ class OnlineEncodingTest(TestCase):
     def test_online_double_encoding_with_one_student_filled_by_pgm(self):
         self.client.force_login(self.program_manager_1.person.user)
         url = reverse('online_double_encoding_validation', args=[self.learning_unit_year.id])
-        self.exam_enrollment_1.score_reencoded = 15
-        self.exam_enrollment_1.score_draft = 15
-        self.exam_enrollment_1.save()
+        self.prepare_exam_enrollment_for_double_encoding_validation(self.exam_enrollment_1)
         response = self.client.post(url, data=self.get_form_with_all_students_filled())
 
         self.refresh_exam_enrollments_from_db()
@@ -143,6 +164,13 @@ class OnlineEncodingTest(TestCase):
         self.assertEqual(exam_enrollment.score_final, score_final)
         self.assertEqual(exam_enrollment.justification_draft, justification_draft)
         self.assertEqual(exam_enrollment.justification_final, justification_final)
+
+
+    @staticmethod
+    def prepare_exam_enrollment_for_double_encoding_validation(exam_enrollment):
+        exam_enrollment.score_reencoded = 14
+        exam_enrollment.score_draft = 14
+        exam_enrollment.save()
 
     def get_form_with_one_student_filled(self):
         return {"score_" + str(self.exam_enrollment_1.id): "15",
