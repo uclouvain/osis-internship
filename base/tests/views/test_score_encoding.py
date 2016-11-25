@@ -25,7 +25,9 @@
 ##############################################################################
 from django.core.urlresolvers import reverse
 from django.test import TestCase, Client
-from base.tests import data_for_tests
+from base.tests import data_for_tests, models
+from base.tests.models import test_academic_year, test_offer_year, test_learning_unit_year, test_offer_enrollment, \
+    test_learning_unit_enrollment, test_offer_year_calendar, test_session_exam, test_exam_enrollment
 from base.views import score_encoding
 from unittest.mock import patch
 from django.contrib.auth.models import Permission
@@ -33,13 +35,15 @@ from django.contrib.auth.models import Permission
 
 class OnlineEncodingTest(TestCase):
     def setUp(self):
-        academic_year = data_for_tests.create_academic_year()
+        academic_year = test_academic_year.create_academic_year()
 
-        self.offer_year_1 = data_for_tests.create_offer_year("SINF2MA", "Master en Sciences Informatique", academic_year)
-        self.offer_year_2 = data_for_tests.create_offer_year("DROI1BA", "Bachelier en droit", academic_year)
+        self.offer_year_1 = test_offer_year.create_offer_year("SINF2MA", "Master en Sciences Informatique",
+                                                              academic_year)
+        self.offer_year_2 = test_offer_year.create_offer_year("DROI1BA", "Bachelier en droit", academic_year)
 
-        self.learning_unit_year = data_for_tests.create_learning_unit_year("LMEM2110", "Recent Continental Philosophy",
-                                                                           academic_year)
+        self.learning_unit_year = test_learning_unit_year.create_learning_unit_year("LMEM2110",
+                                                                                    "Recent Continental Philosophy",
+                                                                                    academic_year)
 
         self.exam_enrollment_1 = self.create_exam_enrollment(1, "64641200", self.offer_year_1, self.learning_unit_year,
                                                              academic_year)
@@ -228,21 +232,16 @@ class OnlineEncodingTest(TestCase):
     @staticmethod
     def create_exam_enrollment(num_id, registration_id, offer_year, learning_unit_year, academic_year):
         student = data_for_tests.create_student("Student" + str(num_id), "Etudiant" + str(num_id), registration_id)
-        offer_enrollment = data_for_tests.create_offer_enrollment(student, offer_year)
-        learning_unit_enrollment = data_for_tests.create_learning_unit_enrollment(learning_unit_year,
+        offer_enrollment = test_offer_enrollment.create_offer_enrollment(student, offer_year)
+        learning_unit_enrollment = test_learning_unit_enrollment.create_learning_unit_enrollment(learning_unit_year,
                                                                                   offer_enrollment)
-        offer_year_calendar = data_for_tests.create_offer_year_calendar(offer_year, academic_year)
-        session_exam = data_for_tests.create_session_exam(1, learning_unit_year, offer_year_calendar)
-        return data_for_tests.create_exam_enrollment(session_exam, learning_unit_enrollment)
+        offer_year_calendar = test_offer_year_calendar.create_offer_year_calendar(offer_year, academic_year)
+        session_exam = test_session_exam.create_session_exam(1, learning_unit_year, offer_year_calendar)
+        return test_exam_enrollment.create_exam_enrollment(session_exam, learning_unit_enrollment)
 
     @staticmethod
     def get_permission(codename):
         return Permission.objects.get(codename=codename)
-
-
-
-
-
 
 
 

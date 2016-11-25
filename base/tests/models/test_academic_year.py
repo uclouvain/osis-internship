@@ -31,6 +31,13 @@ from base.models import academic_year
 now = datetime.datetime.now()
 
 
+def create_academic_year(year=2016):
+    an_academic_year = academic_year.AcademicYear()
+    an_academic_year.year = year
+    an_academic_year.save()
+    return an_academic_year
+
+
 class MultipleAcademicYearTest(TestCase):
     def setUp(self):
         academic_yr = academic_year.AcademicYear(year=(now.year - 1),
