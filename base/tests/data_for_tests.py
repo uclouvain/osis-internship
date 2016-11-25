@@ -24,12 +24,13 @@
 #
 ##############################################################################
 from base import models as mdl_base
+from osis_common.models import message_template
 import datetime
 from django.contrib.auth.models import User
 
 
 def create_user(username="foo", password="test"):
-    user = User.objects.create_user(username=username, password=password)
+    user = User.objects.create_user(username=username, password=password, email="test@test.com")
     return user
 
 
@@ -157,5 +158,3 @@ def create_exam_enrollment(session_exam, learning_unit_enrollment):
                                                               learning_unit_enrollment=learning_unit_enrollment)
     exam_enrollment.save()
     return exam_enrollment
-
-
