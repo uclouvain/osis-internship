@@ -119,7 +119,7 @@ def online_encoding(request, learning_unit_year_id=None):
     return layout.render(request, "assessments/online_encoding.html", data_dict)
 
 
-def __send_messages_by_offer_year(all_enrollments, learning_unit_year, updated_enrollments):
+def __send_messages_for_each_offer_year(all_enrollments, learning_unit_year, updated_enrollments):
     """
     Send a message for each offer year to all the tutors of a learning unit inside a program
     managed by the program manager if all the scores
@@ -131,21 +131,21 @@ def __send_messages_by_offer_year(all_enrollments, learning_unit_year, updated_e
     :return: A list of error message if message cannot be sent
     """
     sent_error_messages = []
-    offer_years = get_different_offer_years_from_enrollments(updated_enrollments)
+    offer_years = get_offer_years_from_enrollments(updated_enrollments)
     for offer_year in offer_years:
-        sent_error_message = __send_message_for_specific_offer_year(all_enrollments, learning_unit_year,
-                                                                    offer_year)
+        sent_error_message = __send_message_for_offer_year(all_enrollments, learning_unit_year,
+                                                           offer_year)
         if sent_error_message:
             sent_error_messages.append(sent_error_message)
     return sent_error_messages
 
 
-def get_different_offer_years_from_enrollments(enrollments):
+def get_offer_years_from_enrollments(enrollments):
     list_offer_years = [enrollment.learning_unit_enrollment.offer_enrollment.offer_year for enrollment in enrollments]
     return list(set(list_offer_years))
 
 
-def __send_message_for_specific_offer_year(all_enrollments, learning_unit_year, offer_year):
+def __send_message_for_offer_year(all_enrollments, learning_unit_year, offer_year):
     enrollments = filter_enrollments_by_offer_year(all_enrollments, offer_year)
     progress = mdl.exam_enrollment.calculate_exam_enrollment_progress(enrollments)
     offer_acronym = offer_year.acronym
@@ -190,9 +190,9 @@ def online_encoding_form(request, learning_unit_year_id=None):
 def send_messages_to_notify_encoding_progress(all_enrollments, learning_unit_year, is_program_manager,
                                               updated_enrollments, request):
     if is_program_manager:
-        sent_error_messages = __send_messages_by_offer_year(all_enrollments,
-                                                           learning_unit_year,
-                                                           updated_enrollments)
+        sent_error_messages = __send_messages_for_each_offer_year(all_enrollments,
+                                                                  learning_unit_year,
+                                                                  updated_enrollments)
         for sent_error_message in sent_error_messages:
             messages.add_message(request, messages.ERROR, "%s" % sent_error_message)
 
@@ -774,8 +774,8 @@ def specific_criteria_submission(request):
                 grouped_by_learning_unit_years_for_mails[learning_unit_year] = [enrollment]
 
     for learn_unit_year, exam_enrollments in grouped_by_learning_unit_years_for_mails.items():
-        sent_error_message = __send_messages_by_offer_year(exam_enrollments,
-                                                           learn_unit_year)
+        sent_error_message = __send_messages_for_each_offer_year(exam_enrollments,
+                                                                 learn_unit_year)
         if sent_error_message:
             messages.add_message(request, messages.ERROR, "%s" % sent_error_message)
 
