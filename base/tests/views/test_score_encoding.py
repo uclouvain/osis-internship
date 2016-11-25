@@ -24,11 +24,11 @@
 #
 ##############################################################################
 from django.core.urlresolvers import reverse
+from django.contrib.auth.models import User
 from django.test import TestCase, Client
-from base.tests import data_for_tests
 from base.tests.models import test_academic_year, test_offer_year, test_learning_unit_year, test_offer_enrollment, \
     test_learning_unit_enrollment, test_offer_year_calendar, test_session_exam, test_exam_enrollment, \
-    test_program_manager, test_attribution
+    test_program_manager, test_attribution, test_student, test_tutor
 from base.views import score_encoding
 from unittest.mock import patch
 from django.contrib.auth.models import Permission
@@ -218,21 +218,21 @@ class OnlineEncodingTest(TestCase):
         program_manager = test_program_manager.create_program_manager(offer_year)
 
         perm = OnlineEncodingTest.get_permission("can_access_scoreencoding")
-        program_manager.person.user = data_for_tests.create_user("pgm" + str(num_id))
+        program_manager.person.user = create_user("pgm" + str(num_id))
         program_manager.person.user.user_permissions.add(perm)
         program_manager.person.save()
         return program_manager
 
     @staticmethod
     def create_tutor_with_user(num_id):
-        tutor = data_for_tests.create_tutor(first_name="tutor" + str(num_id), last_name="tutor" + str(num_id))
-        tutor.person.user = data_for_tests.create_user("tutor" + str(num_id))
+        tutor = test_tutor.create_tutor(first_name="tutor" + str(num_id), last_name="tutor" + str(num_id))
+        tutor.person.user = create_user("tutor" + str(num_id))
         tutor.person.save()
         return tutor
 
     @staticmethod
     def create_exam_enrollment(num_id, registration_id, offer_year, learning_unit_year, academic_year):
-        student = data_for_tests.create_student("Student" + str(num_id), "Etudiant" + str(num_id), registration_id)
+        student = test_student.create_student("Student" + str(num_id), "Etudiant" + str(num_id), registration_id)
         offer_enrollment = test_offer_enrollment.create_offer_enrollment(student, offer_year)
         learning_unit_enrollment = test_learning_unit_enrollment.create_learning_unit_enrollment(learning_unit_year,
                                                                                   offer_enrollment)
@@ -245,4 +245,6 @@ class OnlineEncodingTest(TestCase):
         return Permission.objects.get(codename=codename)
 
 
-
+def create_user(username="foo", password="test"):
+    user = User.objects.create_user(username=username, password=password, email="test@test.com")
+    return user

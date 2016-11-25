@@ -24,11 +24,11 @@
 #
 ##############################################################################
 from base.tests.models import test_person
-from base.models import program_manager
+from base.models import student
 
 
-def create_program_manager(offer_year):
-    person = test_person.create_person("program", "manager")
-    a_program_manager = program_manager.ProgramManager(person=person, offer_year=offer_year)
-    a_program_manager.save()
-    return a_program_manager
+def create_student(first_name, last_name, registration_id):
+    person = test_person.create_person(first_name, last_name)
+    a_student = student.Student(person=person, registration_id=registration_id)
+    a_student.save()
+    return a_student
