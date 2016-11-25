@@ -46,20 +46,20 @@ class OnlineEncodingTest(TestCase):
                                                                                     "Recent Continental Philosophy",
                                                                                     academic_year)
 
-        self.exam_enrollment_1 = self.create_exam_enrollment(1, "64641200", self.offer_year_1, self.learning_unit_year,
+        self.exam_enrollment_1 = create_exam_enrollment(1, "64641200", self.offer_year_1, self.learning_unit_year,
                                                              academic_year)
-        self.exam_enrollment_2 = self.create_exam_enrollment(2, "60601200", self.offer_year_2, self.learning_unit_year,
+        self.exam_enrollment_2 = create_exam_enrollment(2, "60601200", self.offer_year_2, self.learning_unit_year,
                                                              academic_year)
 
-        self.tutor = self.create_tutor_with_user(1)
+        self.tutor = create_tutor_with_user(1)
         test_attribution.create_attribution(tutor=self.tutor, learning_unit_year=self.learning_unit_year)
-        self.add_permission(self.tutor.person.user, "can_access_scoreencoding")
+        add_permission(self.tutor.person.user, "can_access_scoreencoding")
 
-        self.program_manager_1 = self.create_program_manager_with_user(1, self.offer_year_1)
-        self.add_permission(self.program_manager_1.person.user, "can_access_scoreencoding")
+        self.program_manager_1 = create_program_manager_with_user(1, self.offer_year_1)
+        add_permission(self.program_manager_1.person.user, "can_access_scoreencoding")
 
-        self.program_manager_2 = self.create_program_manager_with_user(2, self.offer_year_2)
-        self.add_permission(self.program_manager_2.person.user, "can_access_scoreencoding")
+        self.program_manager_2 = create_program_manager_with_user(2, self.offer_year_2)
+        add_permission(self.program_manager_2.person.user, "can_access_scoreencoding")
 
         self.Client = Client()
 
@@ -121,8 +121,8 @@ class OnlineEncodingTest(TestCase):
 
     def test_tutor_double_encoding_with_all_students(self):
         self.client.force_login(self.tutor.person.user)
-        self.prepare_exam_enrollment_for_double_encoding_validation(self.exam_enrollment_1)
-        self.prepare_exam_enrollment_for_double_encoding_validation(self.exam_enrollment_2)
+        prepare_exam_enrollment_for_double_encoding_validation(self.exam_enrollment_1)
+        prepare_exam_enrollment_for_double_encoding_validation(self.exam_enrollment_2)
         url = reverse('online_encoding_form', args=[self.learning_unit_year.id])
         response = self.client.post(url, data=self.get_form_with_all_students_filled())
 
@@ -142,7 +142,7 @@ class OnlineEncodingTest(TestCase):
     def test_pgm_double_encoding_for_a_student(self):
         self.client.force_login(self.program_manager_1.person.user)
         url = reverse('online_double_encoding_validation', args=[self.learning_unit_year.id])
-        self.prepare_exam_enrollment_for_double_encoding_validation(self.exam_enrollment_1)
+        prepare_exam_enrollment_for_double_encoding_validation(self.exam_enrollment_1)
         response = self.client.post(url, data=self.get_form_with_all_students_filled())
 
         self.refresh_exam_enrollments_from_db()
@@ -201,47 +201,47 @@ class OnlineEncodingTest(TestCase):
         self.exam_enrollment_1.refresh_from_db()
         self.exam_enrollment_2.refresh_from_db()
 
-    @staticmethod
-    def prepare_exam_enrollment_for_double_encoding_validation(exam_enrollment):
-        exam_enrollment.score_reencoded = 14
-        exam_enrollment.score_draft = 14
-        exam_enrollment.save()
 
-    @staticmethod
-    def add_permission(user, codename):
-        perm = OnlineEncodingTest.get_permission(codename)
-        user.user_permissions.add(perm)
+def prepare_exam_enrollment_for_double_encoding_validation(exam_enrollment):
+    exam_enrollment.score_reencoded = 14
+    exam_enrollment.score_draft = 14
+    exam_enrollment.save()
 
-    @staticmethod
-    def create_program_manager_with_user(num_id, offer_year):
-        program_manager = test_program_manager.create_program_manager(offer_year)
 
-        perm = OnlineEncodingTest.get_permission("can_access_scoreencoding")
-        program_manager.person.user = create_user("pgm" + str(num_id))
-        program_manager.person.user.user_permissions.add(perm)
-        program_manager.person.save()
-        return program_manager
+def add_permission(user, codename):
+    perm = get_permission(codename)
+    user.user_permissions.add(perm)
 
-    @staticmethod
-    def create_tutor_with_user(num_id):
-        tutor = test_tutor.create_tutor(first_name="tutor" + str(num_id), last_name="tutor" + str(num_id))
-        tutor.person.user = create_user("tutor" + str(num_id))
-        tutor.person.save()
-        return tutor
 
-    @staticmethod
-    def create_exam_enrollment(num_id, registration_id, offer_year, learning_unit_year, academic_year):
-        student = test_student.create_student("Student" + str(num_id), "Etudiant" + str(num_id), registration_id)
-        offer_enrollment = test_offer_enrollment.create_offer_enrollment(student, offer_year)
-        learning_unit_enrollment = test_learning_unit_enrollment.create_learning_unit_enrollment(learning_unit_year,
-                                                                                  offer_enrollment)
-        offer_year_calendar = test_offer_year_calendar.create_offer_year_calendar(offer_year, academic_year)
-        session_exam = test_session_exam.create_session_exam(1, learning_unit_year, offer_year_calendar)
-        return test_exam_enrollment.create_exam_enrollment(session_exam, learning_unit_enrollment)
+def create_program_manager_with_user(num_id, offer_year):
+    program_manager = test_program_manager.create_program_manager(offer_year)
 
-    @staticmethod
-    def get_permission(codename):
-        return Permission.objects.get(codename=codename)
+    perm = get_permission("can_access_scoreencoding")
+    program_manager.person.user = create_user("pgm" + str(num_id))
+    program_manager.person.user.user_permissions.add(perm)
+    program_manager.person.save()
+    return program_manager
+
+
+def create_tutor_with_user(num_id):
+    tutor = test_tutor.create_tutor(first_name="tutor" + str(num_id), last_name="tutor" + str(num_id))
+    tutor.person.user = create_user("tutor" + str(num_id))
+    tutor.person.save()
+    return tutor
+
+
+def create_exam_enrollment(num_id, registration_id, offer_year, learning_unit_year, academic_year):
+    student = test_student.create_student("Student" + str(num_id), "Etudiant" + str(num_id), registration_id)
+    offer_enrollment = test_offer_enrollment.create_offer_enrollment(student, offer_year)
+    learning_unit_enrollment = test_learning_unit_enrollment.create_learning_unit_enrollment(learning_unit_year,
+                                                                              offer_enrollment)
+    offer_year_calendar = test_offer_year_calendar.create_offer_year_calendar(offer_year, academic_year)
+    session_exam = test_session_exam.create_session_exam(1, learning_unit_year, offer_year_calendar)
+    return test_exam_enrollment.create_exam_enrollment(session_exam, learning_unit_enrollment)
+
+
+def get_permission(codename):
+    return Permission.objects.get(codename=codename)
 
 
 def create_user(username="foo", password="test"):
