@@ -53,6 +53,13 @@ def create_tutor(first_name="Tutor", last_name="tutor"):
     return tutor
 
 
+def create_program_manager(offer_year):
+    person = create_person("program", "manager")
+    program_manager = mdl_base.program_manager.ProgramManager(person=person, offer_year=offer_year)
+    program_manager.save()
+    return program_manager
+
+
 def create_attribution(tutor, learning_unit_year):
     attribution = mdl_base.attribution.Attribution(tutor=tutor, learning_unit_year=learning_unit_year)
     attribution.save()
