@@ -36,6 +36,7 @@ class ProgramManagerAdmin(admin.ModelAdmin):
     raw_id_fields = ('person', 'offer_year')
     fieldsets = ((None, {'fields': ('person', 'offer_year')}),)
     search_fields = ['person__first_name', 'person__last_name', 'offer_year__acronym']
+    list_filter = ('offer_year__academic_year',)
 
 
 class ProgramManager(models.Model):

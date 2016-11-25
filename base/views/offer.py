@@ -112,6 +112,7 @@ def score_encoding(request, offer_year_id):
         offer_yr.country = country
         offer_yr.phone = request.POST.get('phone')
         offer_yr.fax = request.POST.get('fax')
+        offer_yr.email = request.POST.get('email')
         offer_yr.save()
         data = "ok"
     else:
