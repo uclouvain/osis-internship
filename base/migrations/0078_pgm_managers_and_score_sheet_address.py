@@ -41,7 +41,7 @@ def _copy_address_fields_from_old_to_new_offer(old_offer, new_offer):
     new_offer.location = old_offer.get('location')
     new_offer.postal_code = old_offer.get('postal_code')
     new_offer.city = old_offer.get('city')
-    new_offer.country = old_offer.get('country')
+    new_offer.country_id = old_offer.get('country_id')
     new_offer.phone = old_offer.get('phone')
     new_offer.fax = old_offer.get('fax')
     new_offer.email = old_offer.get('email')
