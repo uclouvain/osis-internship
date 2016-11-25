@@ -92,7 +92,7 @@ class OfferYear(SerializableModel):
         if self.entity_management_fac:
             entities.append(self.entity_management_fac)
 
-        return entities
+        return set(entities)
 
     @property
     def offer_year_children(self):

@@ -178,11 +178,9 @@
                             <input class="form-control" value="{{ offer_year.city | default_if_none:'' }}"
                                    name="score_encoding_city" id="txt_score_encoding_city" maxlength="255">
                         </div>
-                        {{ offer_year.country.id }} -- {{ offer_year.country.name }}
                         <div class="col-md-4">
                             <label for="slt_score_encoding_country">{% trans 'country'%}</label>
                             <select class="form-control" id="slt_score_encoding_country" name="score_encoding_country">
-{#                                <option value="">{% trans 'select' %}...</option>#}
                                 {% for country in countries %}
                                     <option value="{{ country.id }}" {% if offer_year.country.id == country.id %}selected{% endif %}>{{ country.name }}</option>
                                 {% endfor %}
