@@ -111,6 +111,18 @@ class OnlineEncodingTest(TestCase):
         self.assert_exam_enrollments(self.exam_enrollment_1, 15, None, None, None)
         self.assert_exam_enrollments(self.exam_enrollment_2, None, None, "ABSENCE_JUSTIFIED", None)
 
+    def test_online_double_encoding_with_one_student_filled_by_pgm(self):
+        self.client.force_login(self.program_manager_1.person.user)
+        url = reverse('online_double_encoding_validation', args=[self.learning_unit_year.id])
+        self.exam_enrollment_1.score_reencoded = 15
+        self.exam_enrollment_1.score_draft = 15
+        self.exam_enrollment_1.save()
+        response = self.client.post(url, data=self.get_form_with_all_students_filled())
+
+        self.refresh_exam_enrollments_from_db()
+        self.assert_exam_enrollments(self.exam_enrollment_1, 15, 15, None, None)
+        self.assert_exam_enrollments(self.exam_enrollment_2, None, None, None, None)
+
     @patch("base.utils.send_mail.send_message_after_all_encoded_by_manager")
     def test_email_is_sent_after_encoding_all_students_for_specific_offer_year(self, mock_send_email):
         self.client.force_login(self.program_manager_1.person.user)

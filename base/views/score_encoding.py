@@ -272,7 +272,6 @@ def online_double_encoding_validation(request, learning_unit_year_id=None, tutor
                                              learning_unit_year_id=learning_unit_year_id,
                                              academic_year=academic_year,
                                              is_program_manager=is_program_manager)
-
     # Case the user validate his choice between the first and the double encoding
     if request.method == 'POST':
         # Needs to filter by examEnrollments where the score_reencoded and justification_reencoded are not None
