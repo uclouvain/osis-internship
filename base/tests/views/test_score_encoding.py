@@ -25,9 +25,10 @@
 ##############################################################################
 from django.core.urlresolvers import reverse
 from django.test import TestCase, Client
-from base.tests import data_for_tests, models
+from base.tests import data_for_tests
 from base.tests.models import test_academic_year, test_offer_year, test_learning_unit_year, test_offer_enrollment, \
-    test_learning_unit_enrollment, test_offer_year_calendar, test_session_exam, test_exam_enrollment
+    test_learning_unit_enrollment, test_offer_year_calendar, test_session_exam, test_exam_enrollment, \
+    test_program_manager, test_attribution
 from base.views import score_encoding
 from unittest.mock import patch
 from django.contrib.auth.models import Permission
@@ -51,7 +52,7 @@ class OnlineEncodingTest(TestCase):
                                                              academic_year)
 
         self.tutor = self.create_tutor_with_user(1)
-        data_for_tests.create_attribution(tutor=self.tutor, learning_unit_year=self.learning_unit_year)
+        test_attribution.create_attribution(tutor=self.tutor, learning_unit_year=self.learning_unit_year)
         self.add_permission(self.tutor.person.user, "can_access_scoreencoding")
 
         self.program_manager_1 = self.create_program_manager_with_user(1, self.offer_year_1)
@@ -214,7 +215,7 @@ class OnlineEncodingTest(TestCase):
 
     @staticmethod
     def create_program_manager_with_user(num_id, offer_year):
-        program_manager = data_for_tests.create_program_manager(offer_year)
+        program_manager = test_program_manager.create_program_manager(offer_year)
 
         perm = OnlineEncodingTest.get_permission("can_access_scoreencoding")
         program_manager.person.user = data_for_tests.create_user("pgm" + str(num_id))

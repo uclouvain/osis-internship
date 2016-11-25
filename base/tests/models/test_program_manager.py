@@ -23,35 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from base import models as mdl_base
-from osis_common.models import message_template
-import datetime
-from django.contrib.auth.models import User
+from base.tests import data_for_tests
+from base.models import program_manager
 
 
-def create_user(username="foo", password="test"):
-    user = User.objects.create_user(username=username, password=password, email="test@test.com")
-    return user
-
-
-def create_person(first_name, last_name):
-    person = mdl_base.person.Person(first_name=first_name, last_name=last_name)
-    person.save()
-    return person
-
-
-def create_student(first_name, last_name, registration_id):
-    person = create_person(first_name, last_name)
-    student = mdl_base.student.Student(person=person, registration_id=registration_id)
-    student.save()
-    return student
-
-
-def create_tutor(first_name="Tutor", last_name="tutor"):
-    person = create_person(first_name, last_name)
-    tutor = mdl_base.tutor.Tutor(person=person)
-    tutor.save()
-    return tutor
-
-
-
+def create_program_manager(offer_year):
+    person = data_for_tests.create_person("program", "manager")
+    a_program_manager = program_manager.ProgramManager(person=person, offer_year=offer_year)
+    a_program_manager.save()
+    return a_program_manager
