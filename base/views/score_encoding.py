@@ -177,18 +177,17 @@ def online_encoding_form(request, learning_unit_year_id=None):
     elif request.method == 'POST':
         decimal_scores_authorized = data['learning_unit_year'].decimal_scores
         is_program_manager = data['is_program_manager']
-        updated_enrollments = update_exam_enrollments(data["enrollments"], decimal_scores_authorized,
-                                                      is_program_manager,
-                                                      request)
+        updated_enrollments = update_exam_enrollments(request, data["enrollments"], decimal_scores_authorized,
+                                                      is_program_manager)
         data = get_data_online(learning_unit_year_id, request)
 
-        send_messages_to_notify_encoding_progress(data["enrollments"], data["learning_unit_year"], is_program_manager,
-                                                  updated_enrollments, request)
+        send_messages_to_notify_encoding_progress(request, data["enrollments"], data["learning_unit_year"],
+                                                  is_program_manager, updated_enrollments)
         return layout.render(request, "assessments/online_encoding.html", data)
 
 
-def send_messages_to_notify_encoding_progress(all_enrollments, learning_unit_year, is_program_manager,
-                                              updated_enrollments, request):
+def send_messages_to_notify_encoding_progress(request, all_enrollments, learning_unit_year, is_program_manager,
+                                              updated_enrollments):
     if is_program_manager:
         sent_error_messages = __send_messages_for_each_offer_year(all_enrollments,
                                                                   learning_unit_year,
@@ -197,16 +196,16 @@ def send_messages_to_notify_encoding_progress(all_enrollments, learning_unit_yea
             messages.add_message(request, messages.ERROR, "%s" % sent_error_message)
 
 
-def update_exam_enrollments(exam_enrollments, decimal_scores_authorized, is_program_manager, request):
+def update_exam_enrollments(request, exam_enrollments, decimal_scores_authorized, is_program_manager):
     updated_enrollments = []
     for enrollment in exam_enrollments:
-        is_updated = update_exam_enrollment(is_program_manager, decimal_scores_authorized, enrollment, request)
+        is_updated = update_exam_enrollment(request, is_program_manager, decimal_scores_authorized, enrollment)
         if is_updated:
             updated_enrollments.append(enrollment)
     return updated_enrollments
 
 
-def update_exam_enrollment(is_pgm, decimal_scores_authorized, enrollment, request):
+def update_exam_enrollment(request, is_pgm, decimal_scores_authorized, enrollment):
     score = request.POST.get('score_' + str(enrollment.id), None)
     justification = request.POST.get('justification_' + str(enrollment.id), None)
     score_changed = request.POST.get('score_changed_' + str(enrollment.id), 'false')
@@ -314,10 +313,10 @@ def online_double_encoding_validation(request, learning_unit_year_id=None, tutor
                                       if exam_enrol.score_reencoded is not None or exam_enrol.justification_reencoded]
 
         decimal_scores_authorized = learning_unit_year.decimal_scores
-        updated_enrollments = update_exam_enrollments(exam_enrollments_reencoded, decimal_scores_authorized,
-                                                      is_program_manager, request)
-        send_messages_to_notify_encoding_progress(exam_enrollments, learning_unit_year, is_program_manager,
-                                                  updated_enrollments, request)
+        updated_enrollments = update_exam_enrollments(request, exam_enrollments_reencoded, decimal_scores_authorized,
+                                                      is_program_manager)
+        send_messages_to_notify_encoding_progress(request, exam_enrollments, learning_unit_year, is_program_manager,
+                                                  updated_enrollments)
 
         return HttpResponseRedirect(reverse('online_encoding', args=(learning_unit_year_id,)))
 
