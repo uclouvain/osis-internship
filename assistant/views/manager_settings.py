@@ -46,17 +46,14 @@ def settings_edit(request):
     """Use to edit app settings."""
     global_settings = settings.get_settings()
     form = SettingsForm(initial={'starting_date': global_settings.starting_date,
-                                'ending_date': global_settings.ending_date
-                                }, prefix="set", instance=global_settings)
+                                 'ending_date': global_settings.ending_date}, prefix="set", instance=global_settings)
     year = academic_year.current_academic_year().year
     return layout.render(request, 'settings.html', {'year': year,
-                                                        'form': form,
-                                                        })
+                                                    'form': form})
 
 
 @user_passes_test(user_is_manager, login_url='assistants_home')
 def settings_save(request):
-    """Use to save app settings."""
     global_settings = settings.get_settings()
     form = SettingsForm(data=request.POST, instance=global_settings, prefix='set')
     if form.is_valid():
@@ -65,5 +62,4 @@ def settings_save(request):
     else:
         year = academic_year.current_academic_year().year
         return layout.render(request, 'settings.html', {'year': year,
-                                                        'form': form,
-                                                        })
+                                                        'form': form})

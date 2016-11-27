@@ -33,6 +33,7 @@ from assistant.forms import ReviewForm
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 
+
 @login_required
 def review_view(request, mandate_id, reviewer_id=None):
     """
@@ -57,7 +58,7 @@ def review_view(request, mandate_id, reviewer_id=None):
     reviews = review.find_by_mandate(mandate.id)
     links = [[None,False], [None,False], [None,False], [None,False]]
     for rev in reviews:
-        if rev.reviewer == None:
+        if rev.reviewer is None:
             if reviewer_id is None:
                 links[0] = [True, True]
             else:
@@ -86,6 +87,7 @@ def review_view(request, mandate_id, reviewer_id=None):
                                                 'assistant': assistant,
                                                 'year': mandate.academic_year.year +1})
 
+
 @login_required
 def review_edit(request, mandate_id):
     """
@@ -106,8 +108,8 @@ def review_edit(request, mandate_id):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     current_reviewer = None
     try:
-        current_reviewer = reviewer.canEditReview(reviewer.find_by_person(person.find_by_user(request.user)).
-                                                  id, mandate_id)
+        current_reviewer = reviewer.can_edit_review(reviewer.find_by_person(person.find_by_user(request.user)).
+                                                    id, mandate_id)
         delegate_role = current_reviewer.role + "_ASSISTANT"
         existing_review = review.find_review_for_mandate_by_role(mandate, delegate_role)
         if existing_review is None:
@@ -165,6 +167,7 @@ def review_edit(request, mandate_id):
                                                 'assistant': assistant,
                                                 'links': links,
                                                 'form': form})
+
 
 @login_required
 def review_save(request, review_id, mandate_id):

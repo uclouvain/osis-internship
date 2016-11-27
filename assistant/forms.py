@@ -58,7 +58,6 @@ class MandateForm(ModelForm):
 
 
 class MandateStructureForm(ModelForm):
-
     class Meta:
         model = mdl.mandate_structure.MandateStructure
         fields = ('structure', 'assistant_mandate')
@@ -70,6 +69,7 @@ def get_field_qs(field, **kwargs):
             Q(type='INSTITUTE') | Q(type='POLE') | Q(type='PROGRAM_COMMISSION') |
             Q(type='FACULTY')).order_by('acronym'))
     return field.formfield(**kwargs)
+
 
 structure_inline_formset = inlineformset_factory(mdl.assistant_mandate.AssistantMandate,
                                                  mdl.mandate_structure.MandateStructure,

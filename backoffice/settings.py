@@ -25,7 +25,6 @@
 ##############################################################################
 import os
 
-from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -44,7 +43,6 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 # Application definition
-
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
@@ -101,7 +99,6 @@ WSGI_APPLICATION = 'backoffice.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -168,7 +165,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
-
 STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "uploads")
 MEDIA_URL = '/media/'
@@ -178,7 +174,6 @@ CONTENT_TYPES = ['application/csv', 'application/doc', 'application/pdf', 'appli
 MAX_UPLOAD_SIZE = 5242880
 
 # Authentication settings
-
 LOGIN_REDIRECT_URL = 'home'
 LOGIN_URL = 'login'
 

@@ -31,6 +31,16 @@ from django.utils.translation import ugettext_lazy as _
 from assistant.models import mandate_structure, assistant_mandate
 
 
+ROLE_CHOICES = (
+    ('PHD_SUPERVISOR', _('phd_supervisor')),
+    ('SUPERVISION', _('supervision')),
+    ('SUPERVISION_ASSISTANT', _('supervision_assistant')),
+    ('RESEARCH', _('research')),
+    ('RESEARCH_ASSISTANT', _('research_assistant')),
+    ('SECTOR_VICE_RECTOR', _('sector_vice_rector')),
+    ('SECTOR_VICE_RECTOR_ASSISTANT', _('sector_vice_rector_assistant')))
+
+
 class ReviewerAdmin(admin.ModelAdmin):
     list_display = ('person', 'structure', 'role')
     fieldsets = (
@@ -44,15 +54,6 @@ class ReviewerAdmin(admin.ModelAdmin):
         form.base_fields['structure'].queryset = structure.Structure.objects.filter(
         Q(type='INSTITUTE') | Q(type='FACULTY') | Q(type='SECTOR') | Q(type='POLE') | Q(type='PROGRAM_COMMISSION'))
         return form
-
-ROLE_CHOICES = (
-    ('PHD_SUPERVISOR', _('phd_supervisor')),
-    ('SUPERVISION', _('supervision')),
-    ('SUPERVISION_ASSISTANT', _('supervision_assistant')),
-    ('RESEARCH', _('research')),
-    ('RESEARCH_ASSISTANT', _('research_assistant')),
-    ('SECTOR_VICE_RECTOR', _('sector_vice_rector')),
-    ('SECTOR_VICE_RECTOR_ASSISTANT', _('sector_vice_rector_assistant')))
 
 
 class Reviewer(models.Model):
@@ -76,11 +77,11 @@ def find_by_person(person):
     return Reviewer.objects.get(person=person)
 
 
-def canEditReview(reviewer_id, mandate_id):
+def can_edit_review(reviewer_id, mandate_id):
     if assistant_mandate.find_mandate_by_id(mandate_id).state not in find_by_id(reviewer_id).role:
         return None
     if not mandate_structure.find_by_mandate_and_structure(
-        assistant_mandate.find_mandate_by_id(mandate_id),find_by_id(reviewer_id).structure):
+                                assistant_mandate.find_mandate_by_id(mandate_id), find_by_id(reviewer_id).structure):
         if not mandate_structure.find_by_mandate_and_part_of_struct(
                 assistant_mandate.find_mandate_by_id(mandate_id), find_by_id(reviewer_id).structure):
             return None
