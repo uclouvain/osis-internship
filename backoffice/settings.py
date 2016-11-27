@@ -196,6 +196,8 @@ FIXTURE_DIRS = (
     '/base/fixtures/',
 )
 
+LOCALE_PATHS = ()
+
 MESSAGE_STORAGE = 'django.contrib.messages.storage.fallback.FallbackStorage'
 
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
@@ -268,6 +270,7 @@ try:
 
     try:
         INSTALLED_APPS = INSTALLED_APPS + SERVER_APPS
+        LOCALE_PATHS = LOCALE_PATHS + SERVER_LOCALE_PATHS
     except NameError:
         pass
 except ImportError:
