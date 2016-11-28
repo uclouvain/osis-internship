@@ -47,6 +47,7 @@ class ScoresEncoding(models.Model):
     learning_unit_year = models.ForeignKey('LearningUnitYear', on_delete=models.DO_NOTHING)
     total_exam_enrollments = models.IntegerField()
     exam_enrollments_encoded = models.IntegerField()
+    scores_not_yet_submitted = models.IntegerField()
     enrollment_state = models.CharField(max_length=20,
                                         default=exam_enrollment_state.ENROLLED,
                                         choices=exam_enrollment_state.STATES)

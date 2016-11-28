@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,15 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.conf import settings
-from django.shortcuts import redirect, render
+from base.models import learning_unit_year
+from base.tests.models import test_learning_unit
 
 
-def login(request):
-    return redirect(settings.CURRENT_URL)
-
-
-def log_out(request):
-    return redirect(settings.SERVER_LOGOUT_URL)
-
-
+def create_learning_unit_year(acronym, title, academic_year):
+    a_learning_unit_year = \
+        learning_unit_year.LearningUnitYear(acronym=acronym, title=title,
+                                            academic_year=academic_year,
+                                            learning_unit=test_learning_unit.create_learning_unit(acronym, title))
+    a_learning_unit_year.save()
+    return a_learning_unit_year

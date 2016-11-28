@@ -24,8 +24,12 @@
 #
 ##############################################################################
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
 from datetime import datetime
+from django.contrib import admin
+
+
+class SettingsAdmin(admin.ModelAdmin):
+    list_display = ('starting_date', 'ending_date')
 
 
 class Settings(models.Model):
@@ -36,8 +40,10 @@ class Settings(models.Model):
     def __str__(self):
         return u"%s - %s" % (self.starting_date, self.ending_date)
     
+
 def get_settings():
     return Settings.objects.first()
+
 
 def access_to_procedure_is_open():
     if not Settings.objects.filter(starting_date__lt=datetime.now(), ending_date__gt=datetime.now()):
