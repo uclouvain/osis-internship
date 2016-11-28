@@ -1,0 +1,97 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block breadcrumb %}
+<li><a href="{% url 'catalog' %}" id="lnk_catalog">{% trans 'catalogue' %}</a></li>
+<li><a href="{% url 'offers' %}" id="lnk_offers">{% trans 'offers' %}</a></li>
+<li class="active">{% trans 'admission_form' %}</li>
+{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h2>{% trans 'admission_form' %}</h2>
+    {% if offer_year.parent %}
+        <p>{{ offer_form.offer_year.parent.acronym }} - {{ offer_form.offer_year.parent.title }}</p>
+        <p>{{ offer_form.offer_year.acronym }} - {{ offer_form.offer_year.title }}</p>
+    {%else%}
+        <p>{{ offer_form.offer_year.acronym }} - {{ offer_form.offer_year.title }}</p>
+    {%endif%}
+</div>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-6">
+                <label>{% trans 'title'%}</label><br>
+                {{ offer_form.title }}
+            </div>
+            <div class="col-md-6">
+                <label>{% trans 'description'%}</label><br>
+                {{ offer_form.description }}
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <form method="get" action="{% url 'offer_read' offer_form.offer_year.id %}">
+            <input type="hidden" name="displaytab" value="tab_dynamic_form">
+            <div class="col-md-4">
+                <a href="{% url 'offer_form_edit' offer_form.id %}" title="{%trans 'edit'%}"
+                   class="btn btn-primary" role="button" id="lnk_offer_form_edit">
+                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> {% trans 'edit'%}
+                </a>
+                <button type="submit" id="bt_submit_offer_year_search" class="btn btn-default" role="button"
+                            title="{%trans 'back'%}">
+                           <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span> {% trans 'back'%}</button>
+            </div>
+            </form>
+        </div>
+        <br>
+        <h3>{% trans 'questions' %}</h3>
+        {% if perms.admission.add_question %}
+        <a href="{% url 'offer_question_create' offer_form.id %}" id="lnk_question_create_{{offer_form.id}}"
+           class="btn btn-default pull-right" role="button">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        </a>
+        {% endif %}
+        <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <td>{% trans 'label' %}</td>
+                <td>{% trans 'description' %}</td>
+            </tr>
+            </thead>
+            <tbody>
+            {% for question in questions %}
+            <tr>
+                <td><a href="{% url 'offer_question_read' question.id  %}" id="lnk_offer_form_read_{{question.id}}">{{ question.label| default_if_none:'' }}</a></td>
+                <td>{{ question.description| default_if_none:'' }}</td>
+            </tr>
+            {% endfor%}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -23,15 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.conf import settings
-from django.shortcuts import redirect, render
+from django.forms import ModelForm
+from admission.models import form
 
 
-def login(request):
-    return redirect(settings.CURRENT_URL)
-
-
-def log_out(request):
-    return redirect(settings.SERVER_LOGOUT_URL)
-
-
+class OfferFormForm(ModelForm):
+    class Meta:
+        model = form.Form
+        fields = ['offer_year', 'title', 'description']

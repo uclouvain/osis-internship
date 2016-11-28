@@ -1,9 +1,9 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
-# designed to manage the core business of higher education institutions,
-# such as universities, faculties, institutes and professional schools.
-# The core business involves the administration of students, teachers,
+#    OSIS stands for Open Student Information System. It's an application
+#    designed to manage the core business of higher education institutions,
+#    such as universities, faculties, institutes and professional schools.
+#    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
 #    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
@@ -23,3 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+
+
+class StartDateHigherThanEndDateException(Exception):
+    def __init__(self, message=None, errors=None):
+        super(StartDateHigherThanEndDateException, self).__init__(message)
+        self.errors = errors
+
+
+class FunctionAgrumentMissingException(Exception):
+    def __init__(self, message=None, errors=None):
+        super(FunctionAgrumentMissingException, self).__init__(message)
+        self.errors = errors

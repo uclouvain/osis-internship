@@ -23,6 +23,40 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from osis_common.models.serializable_model import SerializableModel
+from django.db import models
 
-from backoffice.queue import queue_actions
-from backoffice.queue import queue
+
+class PropositionDocumentFile(SerializableModel):
+    proposition = models.ForeignKey('PropositionDissertation')
+    document_file = models.ForeignKey('osis_common.documentFile')
+
+    def __str__(self):
+        return str(self.proposition)
+
+
+def search(proposition=None, description=None):
+    out = None
+    queryset = PropositionDocumentFile.objects.order_by('document_file__creation_date')
+    if proposition:
+        queryset = queryset.filter(proposition=proposition)
+    if description:
+        queryset = queryset.filter(document_file__description=description)
+    if proposition or description:
+        out = queryset
+    return out
+
+
+def find_first(proposition=None, description=None):
+    results = search(proposition, description)
+    if results.exists():
+        return results[0]
+    return None
+
+
+def find_by_document(document_file):
+    return PropositionDocumentFile.objects.filter(document_file=document_file)
+
+
+def find_by_proposition(proposition):
+    return PropositionDocumentFile.objects.filter(proposition=proposition)

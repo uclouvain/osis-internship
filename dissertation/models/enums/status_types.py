@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -23,20 +23,20 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
-from base.models.serializable_model import SerializableModel
+from django.utils.translation import ugettext_lazy as _
 
+PROMOTEUR = 'PROMOTEUR'
+CO_PROMOTEUR = 'CO_PROMOTEUR'
+READER = 'READER'
+ACCOMPANIST = 'ACCOMPANIST'
+INTERNSHIP = 'INTERNSHIP'
+PRESIDENT = 'PRESIDENT'
 
-class InstitutionalGradeTypeAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-    fieldsets = ((None, {'fields': ('name',)}),)
-
-
-# Customized parent's list of institutional GradeType (used & displayed in Admission - offer choice).
-class InstitutionalGradeType(SerializableModel):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    name = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.name
+STATUS_CHOICES = (
+    (PROMOTEUR, _(PROMOTEUR)),
+    (CO_PROMOTEUR, _(CO_PROMOTEUR)),
+    (READER, _(READER)),
+    (ACCOMPANIST, _(ACCOMPANIST)),
+    (INTERNSHIP, _(INTERNSHIP)),
+    (PRESIDENT, _(PRESIDENT)),
+)

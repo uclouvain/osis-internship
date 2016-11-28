@@ -28,6 +28,7 @@ from base.models import person
 from base.enums import person_source_type
 from django.conf import settings
 
+
 class PersonTest(TestCase):
 
     settings.INTERNAL_EMAIL_SUFIX = 'osis.org'

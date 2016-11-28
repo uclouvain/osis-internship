@@ -27,7 +27,7 @@ from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 from base.models import offer, program_manager, academic_year
-from base.models.serializable_model import SerializableModel
+from osis_common.models.serializable_model import SerializableModel
 
 
 class OfferYearAdmin(admin.ModelAdmin):
@@ -35,6 +35,7 @@ class OfferYearAdmin(admin.ModelAdmin):
     fieldsets = ((None, {'fields': ('offer', 'academic_year', 'entity_administration', 'entity_administration_fac',
                                     'entity_management', 'entity_management_fac', 'acronym', 'title', 'parent',
                                     'title_international', 'title_short', 'title_printable', 'grade', 'campus')}),)
+    list_filter = ('academic_year__year',)
     raw_id_fields = ('offer', 'parent')
     search_fields = ['acronym']
 
@@ -70,6 +71,7 @@ class OfferYear(SerializableModel):
     fax = models.CharField(max_length=30, blank=True, null=True)
     campus = models.ForeignKey('Campus', blank=True, null=True)
     grade_type = models.ForeignKey('reference.GradeType', blank=True, null=True)
+    enrollment_enabled = models.BooleanField(default=False)
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.acronym)
@@ -123,7 +125,7 @@ class OfferYear(SerializableModel):
 
 
 def find_by_academic_year(academic_yr):
-    return OfferYear.objects.filter(academic_year=int(academic_yr))
+    return OfferYear.objects.filter(academic_year=academic_yr)
 
 
 def find_by_structure(struct):
