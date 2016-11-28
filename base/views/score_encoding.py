@@ -517,6 +517,8 @@ def get_data_pgmer(request,
         group_by_learning_unit = {}
         for score_encoding in scores_encodings:
             try:
+                group_by_learning_unit[score_encoding.learning_unit_year_id].scores_not_yet_submitted \
+                    += score_encoding.scores_not_yet_submitted
                 group_by_learning_unit[score_encoding.learning_unit_year_id].exam_enrollments_encoded\
                     += score_encoding.exam_enrollments_encoded
                 group_by_learning_unit[score_encoding.learning_unit_year_id].total_exam_enrollments\
