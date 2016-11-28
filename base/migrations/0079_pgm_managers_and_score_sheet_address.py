@@ -77,7 +77,7 @@ def _program_manager_exists(new_offer_year, person):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('base', '0077_offeryear_mail'),
+        ('base', '0078_offeryear_mail'),
     ]
 
     operations = [
