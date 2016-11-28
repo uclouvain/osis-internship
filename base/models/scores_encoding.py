@@ -34,7 +34,8 @@ class ScoresEncodingAdmin(admin.ModelAdmin):
                     'offer_year',
                     'learning_unit_year',
                     'total_exam_enrollments',
-                    'exam_enrollments_encoded')
+                    'exam_enrollments_encoded',
+                    'scores_not_yet_submitted')
     search_fields = ['pgm_manager_person__last_name', 'pgm_manager_person__first_name']
 
 
