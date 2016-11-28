@@ -322,6 +322,9 @@ msgstr "informations liées à votre profile"
 msgid "description"
 msgstr "Description"
 
+msgid "display_scores_for_one_learning_unit"
+msgstr "Visualiser/charger les notes pour le cours"
+
 msgid "display_tutors"
 msgstr "Afficher tous les enseignants pour ce cours"
 
@@ -410,7 +413,7 @@ msgid "faculty"
 msgstr "Faculté"
 
 msgid "fax"
-msgstr ""
+msgstr "Fax"
 
 msgid "female"
 msgstr "Féminin"
@@ -835,7 +838,7 @@ msgid "ph_d"
 msgstr "Ph.D"
 
 msgid "phone"
-msgstr "téléphone"
+msgstr "Téléphone"
 
 msgid "plain"
 msgstr "Plain"
@@ -1149,6 +1152,10 @@ msgstr "Lire le message"
 
 msgid "tooltip_print_scores"
 msgstr "Imprimer les notes"
+
+msgid "tooltip_scores_encodings_progress_bar"
+msgstr "Représente la quantité de notes soumises à la faculté par le professeur. Le nombre entre parenthèses correspond "
+       "au nombre de notes encodées qui n'ont pas encore été soumises (en état 'brouillon')."
 
 msgid "tooltip_select_action"
 msgstr "Sélectionner l'action à exécuter"

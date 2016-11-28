@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -23,22 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib import admin
-from assistant.models import reviewer, manager, settings
-from assistant.models.assistant_mandate import AssistantMandate
-from assistant.models.academic_assistant import AcademicAssistant
-from assistant.models.assistant_document import AssistantDocument
-from assistant.models.mandate_structure import MandateStructure
-from assistant.models.review import Review
-from assistant.models.tutoring_learning_unit_year import TutoringLearningUnitYear
+import datetime
+from base.models import offer_enrollment
 
 
-admin.site.register(AssistantMandate)
-admin.site.register(AssistantDocument)
-admin.site.register(AcademicAssistant)
-admin.site.register(MandateStructure)
-admin.site.register(Review)
-admin.site.register(TutoringLearningUnitYear)
-admin.site.register(reviewer.Reviewer, reviewer.ReviewerAdmin)
-admin.site.register(manager.Manager, manager.ManagerAdmin)
-admin.site.register(settings.Settings, settings.SettingsAdmin)
+def create_date_enrollment():
+    return datetime.date.today()
+
+
+def create_offer_enrollment(student, offer_year):
+    an_offer_enrollment = offer_enrollment.OfferEnrollment(date_enrollment=create_date_enrollment(),
+                                                           student=student, offer_year=offer_year)
+    an_offer_enrollment.save()
+    return an_offer_enrollment

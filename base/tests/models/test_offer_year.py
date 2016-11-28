@@ -23,22 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib import admin
-from assistant.models import reviewer, manager, settings
-from assistant.models.assistant_mandate import AssistantMandate
-from assistant.models.academic_assistant import AcademicAssistant
-from assistant.models.assistant_document import AssistantDocument
-from assistant.models.mandate_structure import MandateStructure
-from assistant.models.review import Review
-from assistant.models.tutoring_learning_unit_year import TutoringLearningUnitYear
+from base.models import offer_year
+from base.tests.models import test_offer
 
 
-admin.site.register(AssistantMandate)
-admin.site.register(AssistantDocument)
-admin.site.register(AcademicAssistant)
-admin.site.register(MandateStructure)
-admin.site.register(Review)
-admin.site.register(TutoringLearningUnitYear)
-admin.site.register(reviewer.Reviewer, reviewer.ReviewerAdmin)
-admin.site.register(manager.Manager, manager.ManagerAdmin)
-admin.site.register(settings.Settings, settings.SettingsAdmin)
+def create_offer_year(acronym, title, academic_year):
+    an_offer_year = offer_year.OfferYear(offer=test_offer.create_offer(title), academic_year=academic_year,
+                                               acronym=acronym, title=title)
+    an_offer_year.save()
+    return an_offer_year

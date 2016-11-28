@@ -87,7 +87,8 @@ def structure_address(request, structure_id):
                            'postal_code': struct_address.postal_code,
                            'country': struct_address.country.id,
                            'phone': struct_address.phone,
-                           'fax': struct_address.fax})
+                           'fax': struct_address.fax,
+                           'email': struct_address.email})
     else:
         data = json.dumps({'entity': u'%s - %s' % (structure.acronym, structure.title)})
     return HttpResponse(data, content_type='application/json')

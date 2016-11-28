@@ -29,7 +29,7 @@ from django.contrib import admin
 
 class AttributionAdmin(admin.ModelAdmin):
     list_display = ('tutor', 'function', 'learning_unit_year', 'start_date', 'end_date', 'changed')
-    list_filter = ('function',)
+    list_filter = ('function', 'learning_unit_year__academic_year')
     fieldsets = ((None, {'fields': ('learning_unit_year', 'tutor', 'function', 'start_date', 'end_date')}),)
     raw_id_fields = ('learning_unit_year', 'tutor')
     search_fields = ['tutor__person__first_name', 'tutor__person__last_name', 'learning_unit_year__acronym']

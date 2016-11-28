@@ -304,8 +304,23 @@
         }
     });
 
-    $('#form_online_double_encoding').on('keyup keypress', function(e) {
-        disable_enter(e);
+
+    $('#form_online_double_encoding tbody tr td input').on('keypress', function(e) {
+        var keyCode = e.keyCode || e.which;
+        if (keycode_is_enter(keyCode)) {
+            var index = $('#form_online_double_encoding tbody tr td input').index(this) + 4;
+            $('#form_online_double_encoding tbody tr td input').eq(index).focus().select();
+            disable_enter(e);
+        }
     });
+
+
+    $(document).on('keypress', function(e) {
+        var keyCode = e.keyCode || e.which;
+        if (keycode_is_enter(keyCode)) {
+            disable_enter(e);
+        }
+    });
+
 </script>
 {% endblock %}
