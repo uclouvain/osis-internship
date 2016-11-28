@@ -163,6 +163,20 @@ class OnlineEncodingTest(TestCase):
         self.assertEqual(learning_unit_acronym, self.learning_unit_year.acronym)
         self.assertEqual(offer_acronym, self.offer_year_1.acronym)
 
+    @patch("base.utils.send_mail.send_message_after_all_encoded_by_manager")
+    def test_email_after_encoding_all_students_for_offer_year_with_justification(self, mock_send_email):
+        self.client.force_login(self.program_manager_2.person.user)
+        mock_send_email.return_value = None
+        url = reverse('online_encoding_form', args=[self.learning_unit_year.id])
+        response = self.client.post(url, data=self.get_form_with_all_students_filled_and_one_with_justification())
+
+        self.assertTrue(mock_send_email.called)
+        (persons, enrollments, learning_unit_acronym, offer_acronym), kwargs = mock_send_email.call_args
+        self.assertEqual(persons, [self.tutor.person])
+        self.assertEqual(enrollments, [self.exam_enrollment_2])
+        self.assertEqual(learning_unit_acronym, self.learning_unit_year.acronym)
+        self.assertEqual(offer_acronym, self.offer_year_2.acronym)
+
     def assert_exam_enrollments(self, exam_enrollment, score_draft, score_final, justification_draft,
                                 justification_final):
         self.assertEqual(exam_enrollment.score_draft, score_draft)
@@ -196,6 +210,7 @@ class OnlineEncodingTest(TestCase):
                 "justification_" + str(self.exam_enrollment_2.id): "ABSENCE_JUSTIFIED",
                 "score_changed_" + str(self.exam_enrollment_2.id): "true"
                 }
+
 
     def refresh_exam_enrollments_from_db(self):
         self.exam_enrollment_1.refresh_from_db()

@@ -212,10 +212,10 @@ def update_exam_enrollment(request, is_pgm, decimal_scores_authorized, enrollmen
     # modification is possible for program managers OR score has changed but nothing is final
     if is_pgm or is_legible_for_modifying_exam_enrollment(score_changed, enrollment):
         new_score, new_justification = _truncate_decimals(score, justification, decimal_scores_authorized)
-        score_has_been_modified = has_modify_score(enrollment, new_score)
+        exam_enrollment_has_been_modified = has_modify_exam_enrollment(enrollment, new_score, new_justification)
         set_score_and_justification_for_exam_enrollment(is_pgm, enrollment, new_justification, new_score, request.user)
 
-        if score_has_been_modified:
+        if exam_enrollment_has_been_modified:
             return True
 
     return False
@@ -242,8 +242,8 @@ def is_legible_for_modifying_exam_enrollment(score_changed, exam_enrollment):
     return score_changed == "true" and not exam_enrollment.score_final and not exam_enrollment.justification_final
 
 
-def has_modify_score(exam_enrollment, new_score):
-    return exam_enrollment.score_final != new_score
+def has_modify_exam_enrollment(exam_enrollment, new_score, new_justification):
+    return exam_enrollment.score_final != new_score or exam_enrollment.justification_final != new_justification
 
 
 @login_required
