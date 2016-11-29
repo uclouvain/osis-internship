@@ -553,8 +553,6 @@ def get_data_pgmer(request,
         group_by_learning_unit = {}
         for score_encoding in scores_encodings:
             try:
-                group_by_learning_unit[score_encoding.learning_unit_year_id].scores_not_yet_submitted \
-                    += score_encoding.scores_not_yet_submitted
                 group_by_learning_unit[score_encoding.learning_unit_year_id].exam_enrollments_encoded\
                     += score_encoding.exam_enrollments_encoded
                 group_by_learning_unit[score_encoding.learning_unit_year_id].total_exam_enrollments\
@@ -775,11 +773,11 @@ def specific_criteria_submission(request):
             else:
                 grouped_by_learning_unit_years_for_mails[learning_unit_year] = [enrollment]
 
-    for learn_unit_year, exam_enrollments in grouped_by_learning_unit_years_for_mails.items():
-        sent_error_message = __send_messages_for_each_offer_year(exam_enrollments,
-                                                                 learn_unit_year)
-        if sent_error_message:
-            messages.add_message(request, messages.ERROR, "%s" % sent_error_message)
+    # for learn_unit_year, exam_enrollments in grouped_by_learning_unit_years_for_mails.items():
+        # sent_error_message = __send_messages_for_each_offer_year(exam_enrollments,
+        #                                                          learn_unit_year)
+        # if sent_error_message:
+        #     messages.add_message(request, messages.ERROR, "%s" % sent_error_message)
 
     messages.add_message(request, messages.SUCCESS, "%s %s" % (scores_saved, _('scores_saved')))
     return specific_criteria(request)
