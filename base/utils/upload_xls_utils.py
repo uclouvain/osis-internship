@@ -42,7 +42,7 @@ col_registration_id = 4
 col_score = 7
 col_justification = 8
 
-REGISTRATION_ID_SIZE = 8 # Size of all registration ids (convention)
+REGISTRATION_ID_LENGTH = 8
 
 
 @login_required
@@ -128,7 +128,7 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
 
     data_xls = _get_all_data(worksheet)
     if len(data_xls['sessions']) > 1:
-        messages.add_message(request, messages.ERROR, '%s' % _('more_than_one_session_error'))
+        messages.add_0message(request, messages.ERROR, '%s' % _('more_than_one_session_error'))
         return False
     elif len(data_xls['sessions']) == 0:
         messages.add_message(request, messages.ERROR, '%s' % _('missing_column_session'))
@@ -193,7 +193,7 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
             # If there's no score/justification encoded for this line, not necessary to make all checks below
             continue
         xls_registration_id = str(row[col_registration_id].value)
-        xls_registration_id = xls_registration_id.zfill(REGISTRATION_ID_SIZE)
+        xls_registration_id = xls_registration_id.zfill(REGISTRATION_ID_LENGTH)
         xls_offer_year_acronym = row[col_offer].value
         xls_learning_unit_acronym = row[col_learning_unit].value
         info_line = "%s %d (NOMA %s):" % (_('Line'), count + 1, xls_registration_id)

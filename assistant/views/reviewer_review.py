@@ -35,6 +35,7 @@ from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 
 
+
 @login_required
 def review_view(request, mandate_id, reviewer_id=None):
     """
@@ -93,6 +94,7 @@ def review_view(request, mandate_id, reviewer_id=None):
                                                 })
 
 
+
 @login_required
 def review_edit(request, mandate_id):
     """
@@ -114,8 +116,8 @@ def review_edit(request, mandate_id):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     current_reviewer = None
     try:
-        current_reviewer = reviewer.canEditReview(reviewer.find_by_person(person.find_by_user(request.user)).
-                                                  id, mandate_id)
+        current_reviewer = reviewer.can_edit_review(reviewer.find_by_person(person.find_by_user(request.user)).
+                                                    id, mandate_id)
         delegate_role = current_reviewer.role + "_ASSISTANT"
         existing_review = review.find_review_for_mandate_by_role(mandate, delegate_role)
         if existing_review is None:

@@ -25,7 +25,6 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-from django.core.exceptions import ObjectDoesNotExist
 
 
 class StructureAdmin(admin.ModelAdmin):
