@@ -91,3 +91,7 @@ def search_manager(terms, offers):
         )
     queryset = queryset.distinct().order_by('proposition_dissertation')
     return queryset
+
+
+def list_all_for_teacher():
+    return PropositionOffer.objects.order_by('proposition_dissertation')

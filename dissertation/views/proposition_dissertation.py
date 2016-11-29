@@ -275,10 +275,7 @@ def manager_proposition_dissertations_search(request):
 @login_required
 @user_passes_test(is_teacher)
 def proposition_dissertations(request):
-    person = mdl.person.find_by_user(request.user)
-    adv = adviser.search_by_person(person)
-    propositions = proposition_dissertation.get_all_for_teacher(adv)
-    proposition_offers = proposition_offer.search_by_proposition_dissertations(propositions)
+    proposition_offers = proposition_offer.list_all_for_teacher()
     return layout.render(request, 'proposition_dissertations_list.html',
                          {'proposition_offers': proposition_offers})
 
