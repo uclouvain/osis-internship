@@ -33,6 +33,8 @@ from django.utils.translation import ugettext as _
 from osis_common.models import message_history as message_history_mdl
 from osis_common.messaging import message_config, send_message as message_service
 from base.models import person as person_mdl
+from base.models import exam_enrollment as exam_enrollment_mdl
+from base.utils import pdf_utils
 
 
 def send_mail_after_scores_submission(persons, learning_unit_name, submitted_enrollments, all_encoded):
@@ -139,9 +141,19 @@ def send_message_after_all_encoded_by_manager(persons, enrollments, learning_uni
         'documentation'
     )
     table = message_config.create_table('enrollments', enrollments_headers, enrollments_data)
+    attachment = build_scores_sheet_attachment(enrollments)
     message_content = message_config.create_message_content(html_template_ref, txt_template_ref,
-                                                            [table], receivers, template_base_data, suject_data)
+                                                            [table], receivers, template_base_data, suject_data,
+                                                            attachment)
     return message_service.send_messages(message_content)
+
+
+def build_scores_sheet_attachment(list_exam_enrollments):
+    name = "%s.pdf" % _('scores_sheet')
+    mimetype = "application/pdf"
+    content = pdf_utils.build_pdf(exam_enrollment_mdl.scores_sheet_data(list_exam_enrollments, tutor=None))
+    return (name, content, mimetype)
+
 
 
 def send_again(message_history_id):
