@@ -413,7 +413,7 @@ msgid "faculty"
 msgstr "Faculté"
 
 msgid "fax"
-msgstr ""
+msgstr "Fax"
 
 msgid "female"
 msgstr "Féminin"
@@ -838,7 +838,7 @@ msgid "ph_d"
 msgstr "Ph.D"
 
 msgid "phone"
-msgstr "téléphone"
+msgstr "Téléphone"
 
 msgid "plain"
 msgstr "Plain"
