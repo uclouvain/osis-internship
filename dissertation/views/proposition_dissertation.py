@@ -66,7 +66,7 @@ def manager_proposition_dissertations(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     offers = faculty_adviser.search_by_adviser(adv)
-    proposition_offers = proposition_offer.search_by_offers(offers)
+    proposition_offers = proposition_offer.search_by_offers_list(offers)
     return layout.render(request, 'manager_proposition_dissertations_list.html',
                          {'proposition_offers': proposition_offers})
 
@@ -245,7 +245,9 @@ def manager_proposition_dissertations_search(request):
         types_choices = dict(PropositionDissertation.TYPES_CHOICES)
         levels_choices = dict(PropositionDissertation.LEVELS_CHOICES)
         collaboration_choices = dict(PropositionDissertation.COLLABORATION_CHOICES)
-        for proposition in proposition_offers:
+        for prop_offer in proposition_offers:
+            proposition = prop_offer.proposition_dissertation
+            prop_offers = proposition_offer.search_by_proposition_dissertation(proposition)
             worksheet1.append([proposition.created_date,
                                str(proposition.author),
                                proposition.title,
@@ -255,7 +257,7 @@ def manager_proposition_dissertations_search(request):
                                proposition.max_number_student,
                                proposition.visibility,
                                proposition.active,
-                               ', '.join((str(conv.acronym) for conv in proposition.offer_proposition.all())),
+                               prop_offer.offer_proposition.acronym,
                                proposition.description
                                ])
         response = HttpResponse(save_virtual_workbook(workbook), content_type='application/vnd.ms-excel')

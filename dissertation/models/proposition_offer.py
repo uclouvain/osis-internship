@@ -45,6 +45,10 @@ def search_by_offers(offers):
         .distinct()
 
 
+def search_by_offers_list(offers):
+    return search_by_offers(offers).order_by('proposition_dissertation')
+
+
 def search_by_proposition_dissertation(proposition_dissertation):
     return PropositionOffer.objects.filter(proposition_dissertation=proposition_dissertation)
 
@@ -72,5 +76,5 @@ def search(terms, active=None, visibility=None, connected_adviser=None):
     elif visibility:
         queryset = queryset.filter(Q(proposition_dissertation__visibility=visibility) |
                                    Q(proposition_dissertation__author=connected_adviser))
-    queryset = queryset.distinct()
+    queryset = queryset.distinct().order_by('proposition_dissertation')
     return queryset
