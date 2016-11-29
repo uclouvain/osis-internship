@@ -230,7 +230,10 @@ def manager_proposition_dissertation_new(request):
 @login_required
 @user_passes_test(is_manager)
 def manager_proposition_dissertations_search(request):
-    proposition_offers = proposition_offer.search(terms=request.GET['search'], active=True)
+    person = mdl.person.find_by_user(request.user)
+    adv = adviser.search_by_person(person)
+    offers = faculty_adviser.search_by_adviser(adv)
+    proposition_offers = proposition_offer.search_manager(request.GET['search'], offers)
     if 'bt_xlsx' in request.GET:
         filename = "%s%s%s" % ('EXPORT_dissertation_', time.strftime("%Y-%m-%d %H:%M"), '.xlsx')
         workbook = Workbook(encoding='utf-8')

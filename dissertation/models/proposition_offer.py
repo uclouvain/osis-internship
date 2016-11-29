@@ -40,8 +40,7 @@ class PropositionOffer(SerializableModel):
 def search_by_offers(offers):
     return PropositionOffer.objects.filter(proposition_dissertation__active=True,
                                            proposition_dissertation__visibility=True,
-                                           offer_proposition__offer__in=offers,
-                                           offer_proposition__start_visibility_proposition__lte=timezone.now())\
+                                           offer_proposition__offer__in=offers)\
         .distinct()
 
 
@@ -59,8 +58,7 @@ def search_by_proposition_dissertations(proposition_dissertations):
 
 def search(terms, active=None, visibility=None, connected_adviser=None):
     queryset = PropositionOffer.objects.filter(proposition_dissertation__active=True,
-                                               proposition_dissertation__visibility=True,
-                                               offer_proposition__start_visibility_proposition__lte=timezone.now())\
+                                               proposition_dissertation__visibility=True)\
         .distinct()
     if terms:
         queryset = queryset.filter(
@@ -76,5 +74,20 @@ def search(terms, active=None, visibility=None, connected_adviser=None):
     elif visibility:
         queryset = queryset.filter(Q(proposition_dissertation__visibility=visibility) |
                                    Q(proposition_dissertation__author=connected_adviser))
+    queryset = queryset.distinct().order_by('proposition_dissertation')
+    return queryset
+
+
+def search_manager(terms, offers):
+    queryset = search_by_offers(offers)
+    if terms:
+        queryset = queryset.filter(
+            Q(proposition_dissertation__title__icontains=terms) |
+            Q(proposition_dissertation__description__icontains=terms) |
+            Q(proposition_dissertation__author__person__first_name__icontains=terms) |
+            Q(proposition_dissertation__author__person__middle_name__icontains=terms) |
+            Q(proposition_dissertation__author__person__last_name__icontains=terms) |
+            Q(offer_proposition__acronym__icontains=terms)
+        )
     queryset = queryset.distinct().order_by('proposition_dissertation')
     return queryset
