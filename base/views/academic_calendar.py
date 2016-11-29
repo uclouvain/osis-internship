@@ -66,7 +66,7 @@ def academic_calendars_search(request):
 @login_required
 @permission_required('base.can_access_academic_calendar', raise_exception=True)
 def academic_calendar_read(request, id):
-    academic_calendar = mdl.academic_calendar.find_academic_calendar_by_id(id)
+    academic_calendar = mdl.academic_calendar.find_by_id(id)
     return layout.render(request, "academic_calendar.html", {'academic_calendar': academic_calendar})
 
 
@@ -74,14 +74,11 @@ def academic_calendar_read(request, id):
 @permission_required('base.can_access_academic_calendar', raise_exception=True)
 def academic_calendar_form(request, academic_calendar_id):
     academic_years = mdl.academic_year.find_academic_years()
+    academic_calendar = mdl.academic_calendar.find_by_id(academic_calendar_id)
     if request.method == 'GET':
-        if academic_calendar_id:
-            academic_calendar = mdl.academic_calendar.find_academic_calendar_by_id(academic_calendar_id)
-            academic_cal_form = AcademicCalendarForm(instance=academic_calendar)
-        else:
-            academic_cal_form = AcademicCalendarForm()
+        academic_cal_form = AcademicCalendarForm(instance=academic_calendar)
     else:
-        academic_cal_form = AcademicCalendarForm(request.POST)
+        academic_cal_form = AcademicCalendarForm(request.POST, instance=academic_calendar)
         if academic_cal_form.is_valid():
             academic_cal_form.save()
             return academic_calendar_read(request, academic_cal_form.instance.id)

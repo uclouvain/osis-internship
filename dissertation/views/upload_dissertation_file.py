@@ -25,6 +25,8 @@
 ##############################################################################
 from django.contrib.auth.decorators import login_required
 from django.http import *
+from django.shortcuts import redirect
+
 from dissertation import models as mdl
 from osis_common import models as mdl_osis_common
 
@@ -32,12 +34,14 @@ from osis_common import models as mdl_osis_common
 @login_required
 def download(request, dissertation_pk):
     dissertation = mdl.dissertation.find_by_id(dissertation_pk)
-    dissertation_document = mdl.dissertation_document_file.find_by_dissertation(dissertation)
-    document = mdl_osis_common.document_file.find_by_id(dissertation_document.document_file.id)
-    filename = document.file_name
-    response = HttpResponse(document.file, content_type=document.content_type)
-    response['Content-Disposition'] = 'attachment; filename=%s' % filename
-    return response
+    dissertation_document = mdl.dissertation_document_file.find_by_dissertation(dissertation).first()
+    if dissertation_document:
+        filename = dissertation_document.document_file.file_name
+        response = HttpResponse(dissertation_document.document_file.file,
+                                content_type=dissertation_document.document_file.content_type)
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+        return response
+    return redirect('manager_dissertations_detail', pk=dissertation.pk)
 
 
 @login_required
@@ -65,7 +69,7 @@ def save_uploaded_file(request):
                                                                   application_name='dissertation',
                                                                   content_type=content_type,
                                                                   size=size,
-                                                                  user=request.user)
+                                                                  update_by=request.user)
         new_document.save()
         dissertation_file = mdl.dissertation_document_file.DissertationDocumentFile()
         dissertation_file.dissertation = dissertation

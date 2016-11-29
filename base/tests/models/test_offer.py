@@ -23,29 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from datetime import datetime
-from django.contrib import admin
+from base.models import offer
 
 
-class SettingsAdmin(admin.ModelAdmin):
-    list_display = ('starting_date', 'ending_date')
-
-
-class Settings(models.Model):
-    starting_date = models.DateField()
-    ending_date = models.DateField()
-
-    def __str__(self):
-        return u"%s - %s" % (self.starting_date, self.ending_date)
-
-
-def get_settings():
-    return Settings.objects.first()
-
-
-def access_to_procedure_is_open():
-    if not Settings.objects.filter(starting_date__lt=datetime.now(), ending_date__gt=datetime.now()):
-        return False
-    else:
-        return True
+def create_offer(title):
+    an_offer = offer.Offer(title=title)
+    an_offer.save()
+    return an_offer

@@ -74,7 +74,7 @@
                             <label>{% trans 'file' %}</label>
                         </div>
                         <div class="col-md-4">
-                            <a href="{% url 'dissertation_download' pk=dissertation.pk %}">{% trans 'link' %}</a>
+                            <a href="{% url 'dissertation_download' dissertation_pk=dissertation.pk %}">{% trans 'link' %}</a>
                         </div>
                     </div>
                 {% endif %}

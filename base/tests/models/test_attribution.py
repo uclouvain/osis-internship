@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,29 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from datetime import datetime
-from django.contrib import admin
+from base.models import attribution
 
 
-class SettingsAdmin(admin.ModelAdmin):
-    list_display = ('starting_date', 'ending_date')
-
-
-class Settings(models.Model):
-    starting_date = models.DateField()
-    ending_date = models.DateField()
-
-    def __str__(self):
-        return u"%s - %s" % (self.starting_date, self.ending_date)
-
-
-def get_settings():
-    return Settings.objects.first()
-
-
-def access_to_procedure_is_open():
-    if not Settings.objects.filter(starting_date__lt=datetime.now(), ending_date__gt=datetime.now()):
-        return False
-    else:
-        return True
+def create_attribution(tutor, learning_unit_year):
+    an_attribution = attribution.Attribution(tutor=tutor, learning_unit_year=learning_unit_year)
+    an_attribution.save()
+    return an_attribution

@@ -26,6 +26,7 @@
 import os
 
 from django.utils.translation import ugettext_lazy as _
+import sys
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -61,6 +62,15 @@ INSTALLED_APPS = (
     'internship',
     'admission',
 )
+
+# check if we are testing right now
+TESTING = 'test' in sys.argv
+
+if TESTING:
+    # add test packages that have specific models for tests
+    INSTALLED_APPS = INSTALLED_APPS + (
+        'osis_common.tests',
+    )
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -181,6 +191,8 @@ FIXTURE_DIRS = (
     '/base/fixtures/',
 )
 
+LOCALE_PATHS = ()
+
 MESSAGE_STORAGE = 'django.contrib.messages.storage.fallback.FallbackStorage'
 
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
@@ -253,6 +265,7 @@ try:
 
     try:
         INSTALLED_APPS = INSTALLED_APPS + SERVER_APPS
+        LOCALE_PATHS = LOCALE_PATHS + SERVER_LOCALE_PATHS
     except NameError:
         pass
 except ImportError:
