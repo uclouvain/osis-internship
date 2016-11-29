@@ -773,11 +773,11 @@ def specific_criteria_submission(request):
             else:
                 grouped_by_learning_unit_years_for_mails[learning_unit_year] = [enrollment]
 
-    # for learn_unit_year, exam_enrollments in grouped_by_learning_unit_years_for_mails.items():
-        # sent_error_message = __send_messages_for_each_offer_year(exam_enrollments,
-        #                                                          learn_unit_year)
-        # if sent_error_message:
-        #     messages.add_message(request, messages.ERROR, "%s" % sent_error_message)
+    for learn_unit_year, exam_enrollments in grouped_by_learning_unit_years_for_mails.items():
+        sent_error_message = __send_messages_for_each_offer_year(exam_enrollments,
+                                                                 learn_unit_year)
+        if sent_error_message:
+            messages.add_message(request, messages.ERROR, "%s" % sent_error_message)
 
     messages.add_message(request, messages.SUCCESS, "%s %s" % (scores_saved, _('scores_saved')))
     return specific_criteria(request)
