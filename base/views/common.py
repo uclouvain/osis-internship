@@ -56,8 +56,8 @@ def environnement_request_processor(request):
         env = settings.ENVIRONMENT
     else:
         env = 'DEV'
-    if hasattr(settings, 'RAVEN_CONFIG'):
-        sentry_dns = settings.RAVEN_CONFIG.get('dns')
+    if hasattr(settings, 'SENTRY_DNS'):
+        sentry_dns = settings.SENTRY_DNS
     else:
         sentry_dns = ''
     return {'environment': env, 'sentry_dns': sentry_dns}
