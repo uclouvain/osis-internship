@@ -210,9 +210,6 @@ def manager_proposition_dissertation_new(request):
             return redirect('manager_proposition_dissertation_detail', pk=proposition.pk)
         else:
             form = ManagerPropositionDissertationForm(initial={'active': True})
-            adv = adviser.search_by_person(person)
-            offers = faculty_adviser.search_by_adviser(adv)
-            form.fields["offer_proposition"].queryset = offer_proposition.search_by_offer(offers)
             return layout.render(request, 'manager_proposition_dissertation_new.html',
                                  {'form': form,
                                   'types_choices': PropositionDissertation.TYPES_CHOICES,
@@ -247,7 +244,6 @@ def manager_proposition_dissertations_search(request):
         collaboration_choices = dict(PropositionDissertation.COLLABORATION_CHOICES)
         for prop_offer in proposition_offers:
             proposition = prop_offer.proposition_dissertation
-            prop_offers = proposition_offer.search_by_proposition_dissertation(proposition)
             worksheet1.append([proposition.created_date,
                                str(proposition.author),
                                proposition.title,
