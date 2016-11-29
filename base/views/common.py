@@ -23,7 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from datetime import datetime
 import subprocess
 from django.conf import settings
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
@@ -32,8 +31,6 @@ from django.contrib.auth import authenticate, logout
 from django.shortcuts import redirect
 from django.utils import translation
 from . import layout
-from django.utils.translation import ugettext_lazy as _
-from osis_common.models import document_file as doc_file_mdl
 from base.models import person as person_mdl, academic_year as academic_year_mdl, \
     academic_calendar as academic_calendar_mdl, native as native_mdl
 
@@ -55,11 +52,15 @@ def noscript(request):
 
 
 def environnement_request_processor(request):
-    try:
+    if hasattr(settings, 'ENVIRONMENT'):
         env = settings.ENVIRONMENT
-    except AttributeError:
+    else:
         env = 'DEV'
-    return {'environment': env}
+    if hasattr(settings, 'SENTRY_DNS'):
+        sentry_dns = settings.SENTRY_DNS
+    else:
+        sentry_dns = ''
+    return {'environment': env, 'sentry_dns': sentry_dns}
 
 
 def login(request):
@@ -75,6 +76,7 @@ def login(request):
                 translation.activate(user_language)
                 request.session[translation.LANGUAGE_SESSION_KEY] = user_language
     return django_login(request)
+
 
 @login_required
 def home(request):
