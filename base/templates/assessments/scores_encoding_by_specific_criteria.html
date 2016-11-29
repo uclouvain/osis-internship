@@ -224,5 +224,30 @@
                                                                         $("#slt_justification_score_" + enrollmentId).val()));
     });
 
+
+    var target = '#form_justification tbody tr td input';
+    $(target).on('keypress', function(e) {
+        var keyCode = e.keyCode || e.which;
+        if (keycode_is_enter(keyCode)) {
+            var index = $(target).index(this);
+            var tableSize = $('#form_justification tbody tr').length;
+            if (this.tabIndex >= tableSize){
+                $(target).eq(index).blur();
+            }
+            else{
+                $(target).eq(index + 2).focus().select();
+            }
+            disable_enter(e);
+        }
+    });
+
+
+    $(document).on('keypress', function(e) {
+        var keyCode = e.keyCode || e.which;
+        if (keycode_is_enter(keyCode)) {
+            disable_enter(e);
+        }
+    });
+
 </script>
 {% endblock %}

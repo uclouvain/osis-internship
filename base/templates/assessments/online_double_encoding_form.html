@@ -304,12 +304,18 @@
         }
     });
 
-
-    $('#form_online_double_encoding tbody tr td input').on('keypress', function(e) {
+    var target = '#form_online_double_encoding tbody tr td input';
+    $(target).on('keypress', function(e) {
         var keyCode = e.keyCode || e.which;
         if (keycode_is_enter(keyCode)) {
-            var index = $('#form_online_double_encoding tbody tr td input').index(this) + 4;
-            $('#form_online_double_encoding tbody tr td input').eq(index).focus().select();
+            var index = $(target).index(this);
+            var tableSize = $('#form_online_double_encoding tbody tr').length;
+            if (this.tabIndex >= tableSize){
+                $(target).eq(index).blur();
+            }
+            else{
+                $(target).eq(index + 4).focus().select();
+            }
             disable_enter(e);
         }
     });
