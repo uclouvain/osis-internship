@@ -728,44 +728,22 @@ def specific_criteria_submission(request):
     scores_saved = 0
 
     learning_unit_years_changed = []
+    all_modified_exam_enrollments = []
+    is_program_manager = data['is_program_manager']
 
     for enrollment in data['exam_enrollments']:
         learning_unit_year = enrollment.learning_unit_enrollment.learning_unit_year
         decimal_scores_authorized = learning_unit_year.decimal_scores
-        score = request.POST.get('score_' + str(enrollment.id), None)
-        justification = request.POST.get('justification_' + str(enrollment.id), None)
-        score_changed = request.POST.get('score_changed_' + str(enrollment.id), 'false')
-        if score_changed == 'true':
-            changed = True
-        else:
-            changed = False
-
-        if changed:
-            scores_saved += 1
-
-            if learning_unit_year not in learning_unit_years_changed:
-                learning_unit_years_changed.append(learning_unit_year)
-
-            new_score, new_justification = _truncate_decimals(score, justification, decimal_scores_authorized)
-
-            enrollment.score_draft = new_score
-            enrollment.score_final = new_score
-            enrollment.justification_draft = new_justification
-            enrollment.justification_final = new_justification
-            mdl.exam_enrollment.create_exam_enrollment_historic(request.user, enrollment,
-                                                                enrollment.score_final,
-                                                                enrollment.justification_final)
-            enrollment.save()
-
-    academic_yr = mdl.academic_year.current_academic_year()
-    offers_year_managed = mdl.offer_year.find_by_user(request.user, academic_yr)
-    all_exam_enrollments = list(mdl.exam_enrollment.find_for_score_encodings(session_exam_number=mdl.session_exam.find_session_exam_number(),
-                                                                             offers_year=offers_year_managed,
-                                                                             learning_unit_year_ids=[learn_unit_year.id for learn_unit_year in learning_unit_years_changed]))
+        updated_enrollments = update_exam_enrollments(request, [enrollment], decimal_scores_authorized,
+                                                      is_program_manager)
+        all_modified_exam_enrollments.extend(updated_enrollments)
+        scores_saved += len(updated_enrollments)
+        if len(updated_enrollments) != 0 and learning_unit_year not in learning_unit_years_changed:
+            learning_unit_years_changed.append(learning_unit_year)
 
     # ExamEnrollments by learning_unit_year (only if examEnrollment of the learningUnitYear has changed)
     grouped_by_learning_unit_years_for_mails = {}
-    for enrollment in all_exam_enrollments:
+    for enrollment in all_modified_exam_enrollments:
         learning_unit_year = enrollment.learning_unit_enrollment.learning_unit_year
         if learning_unit_year in learning_unit_years_changed:
             if learning_unit_year in grouped_by_learning_unit_years_for_mails.keys():
@@ -773,11 +751,13 @@ def specific_criteria_submission(request):
             else:
                 grouped_by_learning_unit_years_for_mails[learning_unit_year] = [enrollment]
 
-    for learn_unit_year, exam_enrollments in grouped_by_learning_unit_years_for_mails.items():
-        sent_error_message = __send_messages_for_each_offer_year(exam_enrollments,
-                                                                 learn_unit_year)
-        if sent_error_message:
-            messages.add_message(request, messages.ERROR, "%s" % sent_error_message)
+    for learn_unit_year, updated_exam_enrollments in grouped_by_learning_unit_years_for_mails.items():
+        all_enrollments = list(mdl.exam_enrollment.find_for_score_encodings(
+            session_exam_number=mdl.session_exam.find_session_exam_number(),
+            learning_unit_year_id=learn_unit_year.id)
+        )
+        send_messages_to_notify_encoding_progress(request, all_enrollments, learn_unit_year, is_program_manager,
+                                                  updated_exam_enrollments)
 
     messages.add_message(request, messages.SUCCESS, "%s %s" % (scores_saved, _('scores_saved')))
     return specific_criteria(request)

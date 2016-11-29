@@ -149,6 +149,15 @@ class OnlineEncodingTest(TestCase):
         self.assert_exam_enrollments(self.exam_enrollment_1, 15, 15, None, None)
         self.assert_exam_enrollments(self.exam_enrollment_2, None, None, None, None)
 
+    def test_encoding_by_specific_criteria(self):
+        self.client.force_login(self.program_manager_1.person.user)
+        url = reverse('specific_criteria_submission')
+        response = self.client.post(url, data=self.get_form_for_specific_criteria())
+
+        self.refresh_exam_enrollments_from_db()
+        self.assert_exam_enrollments(self.exam_enrollment_1, 15, 15, None, None)
+        self.assert_exam_enrollments(self.exam_enrollment_2, None, None, None, None)
+
     @patch("base.utils.send_mail.send_message_after_all_encoded_by_manager")
     def test_email_after_encoding_all_students_for_offer_year(self, mock_send_email):
         self.client.force_login(self.program_manager_1.person.user)
@@ -211,6 +220,12 @@ class OnlineEncodingTest(TestCase):
                 "score_changed_" + str(self.exam_enrollment_2.id): "true"
                 }
 
+    def get_form_for_specific_criteria(self):
+        return {"score_" + str(self.exam_enrollment_1.id): "15",
+                "justification_" + str(self.exam_enrollment_1.id): "",
+                "score_changed_" + str(self.exam_enrollment_1.id): "true",
+                "program": str(self.offer_year_1.id)
+                }
 
     def refresh_exam_enrollments_from_db(self):
         self.exam_enrollment_1.refresh_from_db()
