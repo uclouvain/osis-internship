@@ -60,7 +60,7 @@ def offers_search(request):
     entity = request.GET['entity_acronym']
 
     academic_yr = None
-    if request.GET['academic_year']:
+    if request.GET.get('academic_year', None):
         academic_yr = int(request.GET['academic_year'])
     acronym = request.GET['code']
 
