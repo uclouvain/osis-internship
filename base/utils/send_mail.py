@@ -155,7 +155,6 @@ def build_scores_sheet_attachment(list_exam_enrollments):
     return (name, content, mimetype)
 
 
-
 def send_again(message_history_id):
     """
     send a message from message history again

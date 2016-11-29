@@ -23,15 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.core.urlresolvers import reverse
-from django.contrib.auth.models import User
-from django.test import TestCase, Client
-from base.tests.models import test_academic_year, test_offer_year, test_learning_unit_year, test_offer_enrollment, \
-    test_learning_unit_enrollment, test_offer_year_calendar, test_session_exam, test_exam_enrollment, \
-    test_program_manager, test_attribution, test_student, test_tutor
-from base.views import score_encoding
 from unittest.mock import patch
+
 from django.contrib.auth.models import Permission
+from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
+from django.test import TestCase, Client
+
+from base.tests.models import test_academic_year, test_offer_year, test_learning_unit_year, test_program_manager, test_attribution, \
+    test_tutor
+from base.tests.models.test_exam_enrollment import create_exam_enrollment_with_student
+from base.views import score_encoding
 
 
 class OnlineEncodingTest(TestCase):
@@ -46,10 +48,10 @@ class OnlineEncodingTest(TestCase):
                                                                                     "Recent Continental Philosophy",
                                                                                     academic_year)
 
-        self.exam_enrollment_1 = create_exam_enrollment(1, "64641200", self.offer_year_1, self.learning_unit_year,
-                                                             academic_year)
-        self.exam_enrollment_2 = create_exam_enrollment(2, "60601200", self.offer_year_2, self.learning_unit_year,
-                                                             academic_year)
+        self.exam_enrollment_1 = create_exam_enrollment_with_student(1, "64641200", self.offer_year_1, self.learning_unit_year,
+                                                                     academic_year)
+        self.exam_enrollment_2 = create_exam_enrollment_with_student(2, "60601200", self.offer_year_2, self.learning_unit_year,
+                                                                     academic_year)
 
         self.tutor = create_tutor_with_user(1)
         test_attribution.create_attribution(tutor=self.tutor, learning_unit_year=self.learning_unit_year)
@@ -228,16 +230,6 @@ def create_tutor_with_user(num_id):
     tutor.person.user = create_user("tutor" + str(num_id))
     tutor.person.save()
     return tutor
-
-
-def create_exam_enrollment(num_id, registration_id, offer_year, learning_unit_year, academic_year):
-    student = test_student.create_student("Student" + str(num_id), "Etudiant" + str(num_id), registration_id)
-    offer_enrollment = test_offer_enrollment.create_offer_enrollment(student, offer_year)
-    learning_unit_enrollment = test_learning_unit_enrollment.create_learning_unit_enrollment(learning_unit_year,
-                                                                              offer_enrollment)
-    offer_year_calendar = test_offer_year_calendar.create_offer_year_calendar(offer_year, academic_year)
-    session_exam = test_session_exam.create_session_exam(1, learning_unit_year, offer_year_calendar)
-    return test_exam_enrollment.create_exam_enrollment(session_exam, learning_unit_enrollment)
 
 
 def get_permission(codename):
