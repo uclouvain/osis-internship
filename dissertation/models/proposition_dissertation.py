@@ -37,7 +37,7 @@ class PropositionDissertationAdmin(admin.ModelAdmin):
     raw_id_fields = ('creator', 'author')
     search_fields = ('title',
                      'author__person__last_name',
-                     'author__person__first_name',
+                     'author__person__first_name'
                      )
 
 

@@ -34,7 +34,7 @@ class FacultyAdviserAdmin(admin.ModelAdmin):
     raw_id_fields = ('adviser', 'offer')
     search_fields = ('adviser__person__last_name',
                      'adviser__person__first_name',
-                     'offer__title',
+                     'offer__title'
                      )
 
 

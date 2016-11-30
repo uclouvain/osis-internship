@@ -35,7 +35,7 @@ class PropositionOfferAdmin(admin.ModelAdmin):
     search_fields = ('proposition_dissertation__title',
                      'offer_proposition__acronym',
                      'proposition_dissertation__author__person__last_name',
-                     'proposition_dissertation__author__person__first_name',
+                     'proposition_dissertation__author__person__first_name'
                      )
 
 
