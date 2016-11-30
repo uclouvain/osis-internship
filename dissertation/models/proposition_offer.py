@@ -47,18 +47,18 @@ class PropositionOffer(SerializableModel):
         return str(self.offer_proposition)
 
 
-def search_by_offers(offers):
+def find_by_offers(offers):
     return PropositionOffer.objects.filter(proposition_dissertation__active=True,
                                            proposition_dissertation__visibility=True,
                                            offer_proposition__offer__in=offers)\
         .distinct()
 
 
-def search_by_offers_list(offers):
-    return search_by_offers(offers).order_by('proposition_dissertation')
+def find_by_offers_ordered_by_proposition_dissertation(offers):
+    return find_by_offers(offers).order_by('proposition_dissertation')
 
 
-def search_by_proposition_dissertation(proposition_dissertation):
+def find_by_proposition_dissertation(proposition_dissertation):
     return PropositionOffer.objects.filter(proposition_dissertation=proposition_dissertation)
 
 
@@ -89,7 +89,7 @@ def search(terms, active=None, visibility=None, connected_adviser=None):
 
 
 def search_manager(terms, offers):
-    queryset = search_by_offers(offers)
+    queryset = find_by_offers(offers)
     if terms:
         queryset = queryset.filter(
             Q(proposition_dissertation__title__icontains=terms) |

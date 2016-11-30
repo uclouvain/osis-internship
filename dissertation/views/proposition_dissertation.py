@@ -66,7 +66,7 @@ def manager_proposition_dissertations(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     offers = faculty_adviser.search_by_adviser(adv)
-    proposition_offers = proposition_offer.search_by_offers_list(offers)
+    proposition_offers = proposition_offer.find_by_offers_ordered_by_proposition_dissertation(offers)
     return layout.render(request, 'manager_proposition_dissertations_list.html',
                          {'proposition_offers': proposition_offers})
 
@@ -83,7 +83,7 @@ def manager_proposition_dissertation_delete(request, pk):
 @user_passes_test(is_manager)
 def manager_proposition_dissertation_detail(request, pk):
     proposition = get_object_or_404(PropositionDissertation, pk=pk)
-    offer_propositions = proposition_offer.search_by_proposition_dissertation(proposition)
+    offer_propositions = proposition_offer.find_by_proposition_dissertation(proposition)
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     count_use = dissertation.count_by_proposition(proposition)
@@ -112,12 +112,12 @@ def manager_proposition_dissertation_detail(request, pk):
 def manage_proposition_dissertation_edit(request, pk):
     proposition = get_object_or_404(PropositionDissertation, pk=pk)
     offer_propositions = OfferProposition.objects.all()
-    proposition_offers = proposition_offer.search_by_proposition_dissertation(proposition)
+    proposition_offers = proposition_offer.find_by_proposition_dissertation(proposition)
     if request.method == "POST":
         form = ManagerPropositionDissertationEditForm(request.POST, instance=proposition)
         if form.is_valid():
             proposition = form.save()
-            proposition_offers = proposition_offer.search_by_proposition_dissertation(proposition)
+            proposition_offers = proposition_offer.find_by_proposition_dissertation(proposition)
             for old in proposition_offers:
                 old.delete()
             for key, value in request.POST.items():
@@ -196,7 +196,7 @@ def manager_proposition_dissertation_new(request):
         if form.is_valid():
             proposition = form.save()
             proposition.set_creator(person)
-            proposition_offers = proposition_offer.search_by_proposition_dissertation(proposition)
+            proposition_offers = proposition_offer.find_by_proposition_dissertation(proposition)
             for old in proposition_offers:
                 old.delete()
             for key, value in request.POST.items():
@@ -292,7 +292,7 @@ def proposition_dissertation_delete(request, pk):
 @user_passes_test(is_teacher)
 def proposition_dissertation_detail(request, pk):
     proposition = get_object_or_404(PropositionDissertation, pk=pk)
-    offer_propositions = proposition_offer.search_by_proposition_dissertation(proposition)
+    offer_propositions = proposition_offer.find_by_proposition_dissertation(proposition)
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     count_use = dissertation.count_by_proposition(proposition)
@@ -323,13 +323,13 @@ def proposition_dissertation_edit(request, pk):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     offer_propositions = OfferProposition.objects.all()
-    proposition_offers = proposition_offer.search_by_proposition_dissertation(proposition)
+    proposition_offers = proposition_offer.find_by_proposition_dissertation(proposition)
     if proposition.author == adv or proposition.creator == adv.person:
         if request.method == "POST":
             form = PropositionDissertationForm(request.POST, instance=proposition)
             if form.is_valid():
                 proposition = form.save()
-                proposition_offers = proposition_offer.search_by_proposition_dissertation(proposition)
+                proposition_offers = proposition_offer.find_by_proposition_dissertation(proposition)
                 for old in proposition_offers:
                     old.delete()
                 for key, value in request.POST.items():
@@ -388,7 +388,7 @@ def proposition_dissertation_new(request):
         if form.is_valid():
             proposition = form.save()
             proposition.set_creator(person)
-            proposition_offers = proposition_offer.search_by_proposition_dissertation(proposition)
+            proposition_offers = proposition_offer.find_by_proposition_dissertation(proposition)
             for old in proposition_offers:
                 old.delete()
             for key, value in request.POST.items():
