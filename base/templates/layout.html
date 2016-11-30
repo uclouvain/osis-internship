@@ -231,16 +231,6 @@
 
     <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'js/raven.min.js' %}"></script>
-    {% if environment == 'PROD' or environment == 'QA' and request.sentry.id %}
-    <script>
-    Raven.showReportDialog({
-        eventId: '{{ request.sentry.id }}',
-        dsn: '{{ sentry_dns }}',
-        environment: '{{ environment }}'
-    });
-    </script>
-    {% endif %}
     <script src="{% static 'js/osis.js' %}?version={{ js }}"></script>
     {% block script %}
     {% endblock %}
