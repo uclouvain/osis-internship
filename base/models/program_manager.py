@@ -96,7 +96,8 @@ def is_program_manager(user, offer_year=None, learning_unit_year=None):
 
 
 def find_by_offer_year(offer_yr):
-    return ProgramManager.objects.filter(offer_year=offer_yr)
+    return ProgramManager.objects.filter(offer_year=offer_yr)\
+                                 .order_by('person__last_name', 'person__first_name')
 
 
 def find_by_user(user, academic_year=None):

@@ -23,8 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.test import TestCase
 from base.models import learning_unit_year
-from base.tests.models import test_learning_unit
+from base.tests.models import test_learning_unit, test_tutor, test_academic_year, test_attribution
 
 
 def create_learning_unit_year(acronym, title, academic_year):
@@ -34,3 +35,20 @@ def create_learning_unit_year(acronym, title, academic_year):
                                             learning_unit=test_learning_unit.create_learning_unit(acronym, title))
     a_learning_unit_year.save()
     return a_learning_unit_year
+
+
+class LearningUnitYearTest(TestCase):
+
+    def setUp(self):
+        self.tutor = test_tutor.create_tutor(first_name="Laura", last_name="Dupont")
+        self.academic_year = test_academic_year.create_academic_year()
+        self.learning_unit_year = create_learning_unit_year("LDROI1004", "Juridic law courses", self.academic_year)
+        self.attribution = test_attribution.create_attribution(self.tutor, self.learning_unit_year)
+
+    def test_find_by_tutor_with_none_argument(self):
+        self.assertEquals(learning_unit_year.find_by_tutor(None), None)
+
+    def test_find_by_tutor(self):
+        learning_unit_years = learning_unit_year.find_by_tutor(self.tutor)
+        self.assertEquals(len(learning_unit_years), 1)
+        self.assertEquals(learning_unit_years[0].acronym, "LDROI1004")

@@ -74,6 +74,6 @@ def search(academic_year_id=None, acronym=None, learning_unit=None, title=None):
 
 def find_by_tutor(tutor):
     if tutor:
-        return attribution.Attribution.objects.filter(tutor=tutor).values('learning_unit_year')
+        return [att.learning_unit_year for att in list(attribution.search(tutor=tutor))]
     else:
         return None
