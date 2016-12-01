@@ -37,6 +37,8 @@ from . import layout
 import json
 import datetime
 
+NONE = None
+
 
 def _is_inside_scores_encodings_period(user):
     """
@@ -208,7 +210,7 @@ def update_exam_enrollments(request, exam_enrollments, decimal_scores_authorized
 def update_exam_enrollment(request, is_pgm, decimal_scores_authorized, enrollment):
     score = request.POST.get('score_' + str(enrollment.id), None)
     justification = request.POST.get('justification_' + str(enrollment.id), None)
-    score_changed = request.POST.get('score_changed_' + str(enrollment.id), 'not set')
+    score_changed = request.POST.get('score_changed_' + str(enrollment.id), NONE)
     # modification is possible for program managers OR score has changed but nothing is final
     if is_pgm or is_legible_for_modifying_exam_enrollment(score_changed, enrollment):
         new_score, new_justification = _truncate_decimals(score, justification, decimal_scores_authorized)
@@ -237,9 +239,8 @@ def set_score_and_justification_for_exam_enrollment(is_pgm, enrollment, new_just
                                                             enrollment.justification_final)
     enrollment.save()
 
-
 def is_legible_for_modifying_exam_enrollment(score_changed, exam_enrollment):
-    if score_changed == 'not set':
+    if score_changed == NONE:
         return not exam_enrollment.score_final and not exam_enrollment.justification_final
     return score_changed == "true" and not exam_enrollment.score_final and not exam_enrollment.justification_final
 
