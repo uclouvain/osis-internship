@@ -40,14 +40,30 @@ function invalidScoreMsg(input,decimal_allowed,message_decimal,message_max_score
 }
 
 function disable_enter(e) {
-    var keyCode = e.keyCode || e.which;
-    if (keycode_is_enter(keyCode)) {
+    if (keycode_is_enter(e)) {
         e.preventDefault();
     }
     return false;
 }
 
-function keycode_is_enter(keyCode){
+
+function select_next_input_value(e){
+    var target = e.data.target;
+    if (keycode_is_enter(e)) {
+        var index = $(target).index(this);
+        if (this.tabIndex >= e.data.table_size){
+            $(target).eq(index).blur();
+        }
+        else{
+            $(target).eq(index + e.data.index_increment_value).select().focus();
+        }
+        disable_enter(e);
+    }
+}
+
+
+function keycode_is_enter(event){
+    var keyCode = event.keyCode || event.which;
     return keyCode === 13;
 }
 
