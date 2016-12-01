@@ -60,7 +60,7 @@ def offers_search(request):
     entity = request.GET['entity_acronym']
 
     academic_yr = None
-    if request.GET['academic_year']:
+    if request.GET.get('academic_year', None):
         academic_yr = int(request.GET['academic_year'])
     acronym = request.GET['code']
 
@@ -112,6 +112,7 @@ def score_encoding(request, offer_year_id):
         offer_yr.country = country
         offer_yr.phone = request.POST.get('phone')
         offer_yr.fax = request.POST.get('fax')
+        offer_yr.email = request.POST.get('email')
         offer_yr.save()
         data = "ok"
     else:
