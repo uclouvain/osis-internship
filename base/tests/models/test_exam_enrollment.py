@@ -24,6 +24,8 @@
 #
 ##############################################################################
 from base.models import exam_enrollment
+from base.tests.models import test_student, test_offer_enrollment, test_learning_unit_enrollment, \
+    test_offer_year_calendar, test_session_exam
 
 
 def create_exam_enrollment(session_exam, learning_unit_enrollment):
@@ -31,3 +33,13 @@ def create_exam_enrollment(session_exam, learning_unit_enrollment):
                                                         learning_unit_enrollment=learning_unit_enrollment)
     an_exam_enrollment.save()
     return an_exam_enrollment
+
+
+def create_exam_enrollment_with_student(num_id, registration_id, offer_year, learning_unit_year, academic_year):
+    student = test_student.create_student("Student" + str(num_id), "Etudiant" + str(num_id), registration_id)
+    offer_enrollment = test_offer_enrollment.create_offer_enrollment(student, offer_year)
+    learning_unit_enrollment = test_learning_unit_enrollment.create_learning_unit_enrollment(learning_unit_year,
+                                                                              offer_enrollment)
+    offer_year_calendar = test_offer_year_calendar.create_offer_year_calendar(offer_year, academic_year)
+    session_exam = test_session_exam.create_session_exam(1, learning_unit_year, offer_year_calendar)
+    return create_exam_enrollment(session_exam, learning_unit_enrollment)
