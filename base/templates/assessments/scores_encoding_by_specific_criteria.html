@@ -109,7 +109,7 @@
                     <tr>
                         <td>{{ enrol.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
                         <td data-container="body" data-toggle="tooltip" title="{{ enrol.learning_unit_enrollment.learning_unit_year.title }}" >
-                            {{ enrol.learning_unit_enrollment.learning_unit_year.acronym }} - {{ enrol.learning_unit_enrollment.learning_unit_year.title | truncatechars:20}}
+                            {{ enrol.learning_unit_enrollment.learning_unit_year.acronym |add:" - " |add:enrol.learning_unit_enrollment.learning_unit_year.title | truncatechars:20}}
                         </td>
                         <td>{{ enrol.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
                         <td>{{ enrol.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
@@ -222,6 +222,31 @@
         $("#hdn_score_changed_"+ enrollmentId).val(originalValueChanged(values, enrollmentId,
                                                                         $("#num_score_"+ enrollmentId).val(),
                                                                         $("#slt_justification_score_" + enrollmentId).val()));
+    });
+
+
+    var target = '#form_justification tbody tr td input';
+    $(target).on('keypress', function(e) {
+        var keyCode = e.keyCode || e.which;
+        if (keycode_is_enter(keyCode)) {
+            var index = $(target).index(this);
+            var tableSize = $('#form_justification tbody tr').length;
+            if (this.tabIndex >= tableSize){
+                $(target).eq(index).blur();
+            }
+            else{
+                $(target).eq(index + 2).focus().select();
+            }
+            disable_enter(e);
+        }
+    });
+
+
+    $(document).on('keypress', function(e) {
+        var keyCode = e.keyCode || e.which;
+        if (keycode_is_enter(keyCode)) {
+            disable_enter(e);
+        }
     });
 
 </script>

@@ -255,11 +255,19 @@ def main_data(learning_unit_year, program, nb_students, styles, content):
         phone_fax_data += "%s : %s" % (_('fax'), struct_address.get('fax'))
     p_phone_fax_data = Paragraph('%s' % phone_fax_data,
                                  styles["Normal"])
-
-    data_structure = [[p_struct_name],
-                      [p_struct_location],
-                      [p_struct_address],
-                      [p_phone_fax_data]]
+    p_email_data = Paragraph('{0} : {1}'.format(_('email'), struct_address.get('email')),
+                                 styles["Normal"])
+    if struct_address.get('email'):
+        data_structure = [[p_struct_name],
+                          [p_struct_location],
+                          [p_struct_address],
+                          [p_phone_fax_data],
+                          [p_email_data]]
+    else:
+        data_structure = [[p_struct_name],
+                          [p_struct_location],
+                          [p_struct_address],
+                          [p_phone_fax_data]]
 
     header_coordinator_structure = [[get_data_coordinator(learning_unit_year, styles), data_structure]]
     table_header = Table(header_coordinator_structure, colWidths='*')
