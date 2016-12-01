@@ -25,7 +25,7 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-from base.models import  offer_year_calendar
+from base.models import offer_year_calendar, academic_calendar
 from django.utils import timezone
 
 
@@ -74,3 +74,9 @@ def find_session_exam_number():
     elif len(sess_exam_number) == 1:
         return sess_exam_number[0].get('number_session')
     return None
+
+
+def get_scores_encoding_calendars():
+    academic_calendars_id = SessionExam.objects.values_list('offer_year_calendar__academic_calendar', flat=True)\
+                                                            .distinct('offer_year_calendar__academic_calendar')
+    return academic_calendar.find_by_ids(academic_calendars_id)
