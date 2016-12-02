@@ -26,7 +26,6 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils import timezone
-from base.models import session_exam
 from base.models.exceptions import FunctionAgrumentMissingException, StartDateHigherThanEndDateException
 
 FUNCTIONS = 'functions'
