@@ -26,7 +26,7 @@
 from django.conf.urls import url
 
 from base.utils import upload_xls_utils
-from base.views import learning_unit, offer, common, score_encoding, institution, organization, academic_calendar,\
+from base.views import learning_unit, offer, common, score_encoding, institution, organization, academic_calendar, text_label,\
     my_osis
 
 urlpatterns = [
@@ -162,4 +162,13 @@ urlpatterns = [
         score_encoding.export_xls, name='scores_encoding_download'),
     url(r'^studies/assessments/scores_encoding/upload/(?P<learning_unit_year_id>[0-9]+)/$',
         upload_xls_utils.upload_scores_file, name='upload_encoding'),
+
+
+    url(r'^text_label/$', text_label.text_label, name='text_label'),
+    url(r'^text_label/search$', text_label.text_label_search, name='text_label_search'),
+    url(r'^text_label/(?P<entity_id>[0-9]+)/$', text_label.text_label_read_from_entity, name='text_label_read_from_entity'),
+    url(r'^text_label/(?P<entity_id>[0-9]+)(?:/(?P<reference_id>[0-9]+))/$', text_label.text_label_read, name='text_label_read'),
+    url(r'^text_label/(?P<entity_id>[0-9]+)/create/$', text_label.text_label_create, name='text_label_create'),
+    url(r'^text_label/save/(?P<entity_id>[0-9]+)/$', text_label.text_label_save, name='text_lbl_save'),
+    url(r'^text_label/save/$', text_label.text_label_new, name='text_lbl_save_new'),
 ]

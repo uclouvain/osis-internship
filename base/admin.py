@@ -53,6 +53,9 @@ admin.site.register(campus.Campus,
 # admin.site.register(learning_component_year.LearningComponentYear,
 #                     learning_component_year.LearningComponentYearAdmin)
 
+admin.site.register(learning_container.LearningContainer,
+                    learning_container.LearningContainerAdmin)
+
 admin.site.register(learning_container_year.LearningContainerYear,
                     learning_container_year.LearningContainerYearAdmin)
 
@@ -124,6 +127,15 @@ admin.site.register(structure.Structure,
 
 admin.site.register(student.Student,
                     student.StudentAdmin)
+
+admin.site.register(text_label.TextLabel,
+                    text_label.TextLabelAdmin)
+
+admin.site.register(translated_text.TranslatedText,
+                    translated_text.TranslatedTextAdmin)
+
+admin.site.register(translated_text_label.TranslatedTextLabel,
+                    translated_text_label.TranslatedTextLabelAdmin)
 
 admin.site.register(tutor.Tutor,
                     tutor.TutorAdmin)

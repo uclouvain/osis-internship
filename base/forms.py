@@ -104,3 +104,9 @@ class MyMessageForm(forms.Form):
 class MyMessageActionForm(forms.Form):
     ACTIONS = (('MARK_AS_READ', _('mark_selected_as_read')), ('DELETE', _('delete_selected')))
     action = forms.ChoiceField(required=False, choices=ACTIONS, initial=None)
+
+
+class TextLabelForm(ModelForm):
+    class Meta:
+        model = mdl.text_label.TextLabel
+        fields = ['label', 'order', 'published']

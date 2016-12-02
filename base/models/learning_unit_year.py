@@ -30,8 +30,8 @@ from base.models import attribution
 
 
 class LearningUnitYearAdmin(admin.ModelAdmin):
-    list_display = ('acronym', 'title', 'academic_year', 'credits', 'changed')
-    fieldsets = ((None, {'fields': ('academic_year', 'acronym', 'title', 'credits', 'decimal_scores')}),)
+    list_display = ('acronym', 'title', 'academic_year', 'credits', 'changed', 'learning_unit')
+    fieldsets = ((None, {'fields': ('academic_year', 'acronym', 'title', 'credits', 'decimal_scores', 'learning_unit')}),)
     search_fields = ['acronym']
 
 

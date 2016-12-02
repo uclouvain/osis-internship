@@ -25,38 +25,37 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
+from base.enums.entity_name import ENTITY_NAME
+from ckeditor.fields import RichTextField
 
 
-class LearningContainerYearAdmin(admin.ModelAdmin):
-    list_display = ('title', 'acronym', 'academic_year', 'learning_container')
-    fieldsets = ((None, {'fields': ('title', 'acronym', 'academic_year', 'learning_container',)}),)
+class TranslatedTextAdmin(admin.ModelAdmin):
+    list_display = ('entity_name', 'reference', 'language', 'text_label', 'text', )
+    fieldsets = ((None, {'fields': ('entity_name', 'reference', 'language', 'text_label', 'text')}),)
     search_fields = ['acronym']
 
 
-class LearningContainerYear(models.Model):
-    title = models.CharField(max_length=255)
-    acronym = models.CharField(max_length=10)
-    academic_year = models.ForeignKey('AcademicYear')
-    learning_container = models.ForeignKey('LearningContainer')
-
-    def save(self, *args, **kwargs):
-        if self.title != self.learning_container.title:
-            raise AttributeError("The title of the learning container year is different from the learning container.")
-
-        super(LearningContainerYear, self).save()
-
-    def __str__(self):
-        return u"%s - %s" % (self.acronym, self.title)
-
-    class Meta:
-        permissions = (
-            ("can_access_learningcontaineryear", "Can access learning container year"),
-        )
+class TranslatedText(models.Model):
+    entity_name = models.IntegerField(choices=ENTITY_NAME)
+    reference = models.IntegerField()
+    language = models.ForeignKey('reference.Language')
+    text_label = models.ForeignKey('TextLabel')
+    text = RichTextField()
 
 
-def find_by_academic_year(academic_year):
-    return LearningContainerYear.objects.get(pk=academic_year)
+def find_by_id(translated_text_id):
+    return TranslatedText.objects.get(pk=translated_text_id)
 
 
-def find_by_id(learning_container_year_id):
-    return LearningContainerYear.objects.get(pk=learning_container_year_id)
+def find_by_ids(translated_text_ids):
+    return TranslatedText.objects.filter(pk__in=translated_text_ids)
+
+
+def search(acronym=None):
+    queryset = TranslatedText.objects
+
+    if acronym:
+        queryset = queryset.filter(acronym=acronym)
+
+    return queryset
+

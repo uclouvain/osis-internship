@@ -23,18 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
 
 
-class LearningContainerAdmin(admin.ModelAdmin):
-    list_display = ('title',)
-    fieldsets = ((None, {'fields': ('title',)}),)
-
-
-class LearningContainer(models.Model):
-    title = models.CharField(max_length=255)
-
-
-def find_by_id(learning_container_id):
-    return LearningContainer.objects.get(pk=learning_container_id)
+ENTITY_NAME = (
+    (1, 'LEARNING_UNIT_YEAR'),
+    (2, 'LEARNING_COMPONENT_YEAR'),
+    (3, 'LEARNING_CLASS_YEAR'),
+)
