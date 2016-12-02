@@ -28,17 +28,12 @@ from base.models import program_manager
 from django.test import TestCase
 
 
-def create_program_manager(offer_year):
-    person = test_person.create_person("program", "manager")
+def create_program_manager(offer_year, person=None):
+    if not person:
+        person = test_person.create_person("program", "manager")
     a_program_manager = program_manager.ProgramManager(person=person, offer_year=offer_year)
     a_program_manager.save()
     return a_program_manager
-
-
-def _create_program_manager(offer_year, person):
-    pmg = program_manager.ProgramManager(offer_year=offer_year, person=person)
-    pmg.save()
-    return pmg
 
 
 class FindByOfferYearTest(TestCase):
@@ -59,11 +54,11 @@ class FindByOfferYearTest(TestCase):
         self.assertEquals(len(program_manager.find_by_offer_year(off_year)), 0)
 
     def test_return_sorted_managers(self):
-        _create_program_manager(self.off_year, test_person.create_person("Yannick", "Leblanc"))
-        _create_program_manager(self.off_year, test_person.create_person("Yannick", "Ferreira"))
-        _create_program_manager(self.off_year, test_person.create_person("Laura", "Ferreira"))
-        _create_program_manager(self.off_year, test_person.create_person("Bob", "Uncle"))
-        _create_program_manager(self.off_year, test_person.create_person("Laura", "Dupont"))
+        create_program_manager(self.off_year, person=test_person.create_person("Yannick", "Leblanc"))
+        create_program_manager(self.off_year, person=test_person.create_person("Yannick", "Ferreira"))
+        create_program_manager(self.off_year, person=test_person.create_person("Laura", "Ferreira"))
+        create_program_manager(self.off_year, person=test_person.create_person("Bob", "Uncle"))
+        create_program_manager(self.off_year, person=test_person.create_person("Laura", "Dupont"))
         managers = program_manager.find_by_offer_year(self.off_year)
         self.assertEquals(managers[0].person.last_name, "Dupont")
         self.assertEquals(managers[1].person.last_name, "Ferreira")
