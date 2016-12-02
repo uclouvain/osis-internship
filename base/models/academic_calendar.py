@@ -90,7 +90,5 @@ def find_by_id(academic_calendar_id):
         return None
 
 
-def get_scores_encoding_calendars():
-    academic_calendar_ids = session_exam.SessionExam.objects.values_list('offer_year_calendar__academic_calendar', flat=True)\
-                                                            .distinct('offer_year_calendar__academic_calendar')
-    return AcademicCalendar.objects.filter(pk__in=academic_calendar_ids)
+def find_by_ids(academic_calendars_id):
+    return AcademicCalendar.objects.filter(pk__in=academic_calendars_id)

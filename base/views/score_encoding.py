@@ -45,7 +45,7 @@ def _is_inside_scores_encodings_period(user):
     :return: True if the today date is inside a period of scores encodings (inside session 1,2 or 3). Else return False.
     """
     now = datetime.datetime.now().date()
-    academic_calendars = list(mdl.academic_calendar.get_scores_encoding_calendars())
+    academic_calendars = list(mdl.session_exam.get_scores_encoding_calendars())
     for ac_calendar in academic_calendars:
         if ac_calendar.start_date and ac_calendar.end_date:
             if ac_calendar.start_date <= now <= ac_calendar.end_date:
@@ -72,7 +72,7 @@ def find_closest_past_date(dates):
 @login_required
 @permission_required('base.can_access_scoreencoding', raise_exception=True)
 def outside_period(request):
-    academic_calendars = list(mdl.academic_calendar.get_scores_encoding_calendars())
+    academic_calendars = list(mdl.session_exam.get_scores_encoding_calendars())
     closest_date = None
     if academic_calendars:
         # Searching for the latest period of scores encodings
