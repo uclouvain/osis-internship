@@ -28,7 +28,6 @@ from django.contrib.auth.decorators import login_required
 from base import models as mdl
 from dissertation.models import adviser, dissertation, faculty_adviser, offer_proposition, proposition_dissertation,\
     proposition_document_file, proposition_offer, proposition_role
-from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models.proposition_dissertation import PropositionDissertation
 from dissertation.models.proposition_offer import PropositionOffer
 from dissertation.models.proposition_role import PropositionRole
@@ -111,7 +110,7 @@ def manager_proposition_dissertation_detail(request, pk):
 @user_passes_test(is_manager)
 def manage_proposition_dissertation_edit(request, pk):
     proposition = get_object_or_404(PropositionDissertation, pk=pk)
-    offer_propositions = OfferProposition.objects.all()
+    offer_propositions = offer_proposition.find_all_ordered_by_acronym()
     proposition_offers = proposition_offer.find_by_proposition_dissertation(proposition)
     if request.method == "POST":
         form = ManagerPropositionDissertationEditForm(request.POST, instance=proposition)
@@ -189,7 +188,7 @@ def manager_proposition_dissertations_role_delete(request, pk):
 @login_required
 @user_passes_test(is_manager)
 def manager_proposition_dissertation_new(request):
-    offer_propositions = OfferProposition.objects.all()
+    offer_propositions = offer_proposition.find_all_ordered_by_acronym()
     if request.method == "POST":
         person = mdl.person.find_by_user(request.user)
         form = ManagerPropositionDissertationForm(request.POST)
@@ -322,7 +321,7 @@ def proposition_dissertation_edit(request, pk):
     proposition = get_object_or_404(PropositionDissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-    offer_propositions = OfferProposition.objects.all()
+    offer_propositions = offer_proposition.find_all_ordered_by_acronym()
     proposition_offers = proposition_offer.find_by_proposition_dissertation(proposition)
     if proposition.author == adv or proposition.creator == adv.person:
         if request.method == "POST":
@@ -382,7 +381,7 @@ def proposition_dissertations_created(request):
 @user_passes_test(is_teacher)
 def proposition_dissertation_new(request):
     person = mdl.person.find_by_user(request.user)
-    offer_propositions = OfferProposition.objects.all()
+    offer_propositions = offer_proposition.find_all_ordered_by_acronym()
     if request.method == "POST":
         form = PropositionDissertationForm(request.POST)
         if form.is_valid():
