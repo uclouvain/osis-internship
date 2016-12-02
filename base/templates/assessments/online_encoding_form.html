@@ -255,12 +255,13 @@ $(target_score).on('keypress',
                      "index_increment_value": 2},
                    select_next_input_value);
 
+
 var target_justification = '#form_online_encoding tbody tr td select';
 $(target_justification).on('keypress',
-        { "target": target_justification,
-          "table_size": $('#form_online_encoding tbody tr').length * 2,
-          "index_increment_value": 1},
-        select_next_input_value);
+                           { "target": target_justification,
+                             "table_size": $('#form_online_encoding tbody tr').length * 2,
+                             "index_increment_value": 1},
+                           select_next_input_value);
 
 
 $(document).on('keypress', function(e) {
