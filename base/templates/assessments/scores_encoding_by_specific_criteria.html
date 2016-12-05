@@ -115,7 +115,7 @@
                         <td>{{ enrol.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
                         <td>{{ enrol.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
                         <td>
-                            <input type="number" min="0" max="20" name="score_{{ enrol.id }}"
+                            <input class="form-control col-sm" type="number" min="0" max="20" name="score_{{ enrol.id }}"
                                 id="num_score_{{ enrol.id }}" tabindex="{{ forloop.counter }}"
                                 class="form-control"
                                 value="{{ enrol.score_final | score_display:enrol.learning_unit_enrollment.learning_unit_year.decimal_scores}}"
