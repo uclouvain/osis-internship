@@ -33,7 +33,7 @@ class SessionExamAdmin(admin.ModelAdmin):
     list_display = ('learning_unit_year', 'offer_year_calendar', 'number_session', 'changed', 'deadline')
     list_filter = ('learning_unit_year__academic_year', 'number_session',)
     raw_id_fields = ('learning_unit_year', 'offer_year_calendar')
-    fieldsets = ((None, {'fields': ('learning_unit_year', 'number_session', 'offer_year_calendar')}),)
+    fieldsets = ((None, {'fields': ('learning_unit_year', 'number_session', 'offer_year_calendar', 'deadline')}),)
     search_fields = ['learning_unit_year__acronym', 'offer_year_calendar__offer_year__acronym']
 
 
