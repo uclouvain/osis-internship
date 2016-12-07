@@ -23,16 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-SECTOR = 'sector'
-FACULTY = 'faculty'
-INSTITUTE = 'institute'
-POLE = 'pole'
-DOCTORAL_COMMISSION = 'doctoral_commission'
-PROGRAM_COMMISSION = 'program_commission'
-LOGISTIC = 'logistic'
-RESEARCH_CENTER = 'research_center'
-TECHNOLOGIC_PLATFORM = 'technologic_platform'
-UNDEFINED = 'undefined'
+SECTOR = 'SECTOR'
+FACULTY = 'FACULTY'
+INSTITUTE = 'INSTITUTE'
+POLE = 'POLE'
+DOCTORAL_COMMISSION = 'DOCTORAL_COMMISSION'
+PROGRAM_COMMISSION = 'PROGRAM_COMMISSION'
+LOGISTIC = 'LOGISTIC'
+RESEARCH_CENTER = 'RESEARCH_CENTER'
+TECHNOLOGIC_PLATFORM = 'TECHNOLOGIC_PLATFORM'
+UNDEFINED = 'UNDEFINED'
 
 TYPES = ((SECTOR, SECTOR),
          (FACULTY, FACULTY),
