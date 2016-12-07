@@ -25,6 +25,7 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
+from base.enums import structure_type
 
 
 class StructureAdmin(admin.ModelAdmin):
@@ -34,18 +35,6 @@ class StructureAdmin(admin.ModelAdmin):
     search_fields = ['acronym']
 
 
-ENTITY_TYPE = (('SECTOR', 'sector'),
-               ('FACULTY', 'faculty'),
-               ('INSTITUTE', 'institute'),
-               ('POLE', 'pole'),
-               ('DOCTORAL_COMMISSION', 'doctoral_commission'),
-               ('PROGRAM_COMMISSION', 'program_commission'),
-               ('LOGISTIC', 'logistic'),
-               ('RESEARCH_CENTER', 'research_center'),
-               ('TECHNOLOGIC_PLATFORM', 'technologic_platform'),
-               ('UNDEFINED', 'undefined'))
-
-
 class Structure(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
@@ -53,16 +42,18 @@ class Structure(models.Model):
     title = models.CharField(max_length=255)
     organization = models.ForeignKey('Organization', null=True)
     part_of = models.ForeignKey('self', null=True, blank=True)
-    type = models.CharField(max_length=30, blank=True, null=True, choices=ENTITY_TYPE)
+    type = models.CharField(max_length=30, blank=True, null=True, choices=structure_type.TYPES)
 
+    @property
     def children(self):
-        return Structure.objects.filter(part_of=self.pk)
+        return Structure.objects.filter(part_of=self.pk).order_by('acronym')
 
     def serializable_object(self):
-        obj = {'id': self.id, 'name': self.acronym, 'children': []}
-        for child in self.children():
-            obj['children'].append(child.serializable_object())
-        return obj
+        return {
+            'id': self.id,
+            'acronym': self.acronym,
+            'children': [child.serializable_object() for child in self.children]
+        }
 
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)
@@ -96,10 +87,6 @@ def search(acronym=None, title=None, type=None):
     return queryset
 
 
-def find_children(self):
-    return Structure.objects.filter(part_of=self).order_by('acronym')
-
-
 def find_by_organization(organization):
     return Structure.objects.filter(organization=organization, part_of__isnull=True)
 
@@ -108,32 +95,13 @@ def find_by_type(type):
     return Structure.objects.filter(type__icontains=type)
 
 
-def find_tree_by_organization(organization):
-    structure = Structure.objects.filter(organization=organization)
-    tags = []
-    if structure:
-        for t in Structure.objects.filter(part_of=structure):
-            tags.append(t.serializable_object())
-    return tags
-
-
-def find_structure_hierarchy(struc):
-    structure = Structure.objects.get(pk=struc.id)
-    tags = []
-    if structure:
-        for t in Structure.objects.filter(part_of=structure):
-            tags.append(t.serializable_object())
-    return tags
-
-
 def find_faculty(a_structure):
-
-    if a_structure.type == 'FACULTY':
+    if a_structure.type == structure_type.FACULTY:
         return a_structure
     else:
         parent = a_structure.part_of
         if parent:
-            if parent.type != 'FACULTY':
+            if parent.type != structure_type.FACULTY:
                 find_faculty(parent)
             else:
                 return parent
