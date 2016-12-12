@@ -23,9 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import csv
 from django.core.urlresolvers import reverse, reverse_lazy
-from django.db import IntegrityError
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
 from django.contrib import messages
@@ -38,10 +36,8 @@ import json
 import datetime
 
 
-
-def _is_inside_scores_encodings_period(user):
+def _is_inside_scores_encodings_period():
     """
-    :param user: The request.User
     :return: True if the today date is inside a period of scores encodings (inside session 1,2 or 3). Else return False.
     """
     now = datetime.datetime.now().date()
@@ -812,36 +808,6 @@ def _get_exam_enrollments(user, learning_unit_year_id=None, tutor_id=None, offer
     # Ordering by offerear.acronym, then person.lastname & firstname
     exam_enrollments = mdl.exam_enrollment.sort_for_encodings(exam_enrollments)
     return exam_enrollments
-
-
-# To be removed once all program managers are imported.
-def load_program_managers():
-    with open('base/views/program-managers.csv') as csvfile:
-        row = csv.reader(csvfile)
-        imported_counter = 0
-        error_counter = 0
-        duplication_counter = 0
-        for columns in row:
-            if len(columns) > 0:
-                offer_year = mdl.offer_year.find_by_acronym(columns[0].strip())
-                person = mdl.person.find_by_global_id(columns[2].strip())
-
-                if offer_year and person:
-                    program_manager = mdl.program_manager.ProgramManager()
-                    program_manager.offer_year = offer_year
-                    program_manager.person = person
-                    try:
-                        program_manager.save()
-                    except IntegrityError:
-                        print('Duplicated : %s - %s' % (offer_year, person))
-                        duplication_counter += 1
-                    imported_counter += 1
-                else:
-                    error_counter += 1
-                    print(u'"%s", "%s", "%s", "%s", "%s"' % (columns[0], columns[1], columns[2], offer_year, person))
-        print(u'%d program managers imported.' % imported_counter)
-        print(u'%d program managers not imported.' % error_counter)
-        print(u'%d program managers duplicated.' % duplication_counter)
 
 
 def get_json_data_scores_sheets(tutor_global_id):
