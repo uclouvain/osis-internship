@@ -137,7 +137,7 @@ def find_by_id(offer_year_id):
 
 
 def find_by_acronym(acronym):
-    return OfferYear.objects.filter(acronym=acronym).first()
+    return OfferYear.objects.filter(acronym=acronym)
 
 
 def search(entity=None, academic_yr=None, acronym=None):
