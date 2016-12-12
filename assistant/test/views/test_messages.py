@@ -34,5 +34,6 @@ class MessagesViewTestCase(TestCase):
 
     def test_messages_view_basic(self):
         request = self.factory.get('/assistants/manager/messages')
-        response = show_history(request)
-        self.assertEqual(response.status_code, 200)
+        with self.assertTemplateUsed('messages.html'):
+            response = show_history(request)
+            self.assertEqual(response.status_code, 200)

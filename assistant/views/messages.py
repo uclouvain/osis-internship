@@ -23,7 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.http import HttpResponse
+from django.shortcuts import render_to_response
+
 
 def show_history(request):
-    return HttpResponse()
+    return render_to_response('messages.html')
