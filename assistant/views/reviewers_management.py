@@ -34,6 +34,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render, redirect
 from base.models import  academic_year
 
+
 class ReviewersListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMixin):
     context_object_name = 'reviewers_list'
     template_name = 'reviewers_list.html'
@@ -83,13 +84,7 @@ def reviewer_add(request):
             form.save()
             return redirect('reviewers_list')
         else:
-            return render(request, "manager_add_reviewer.html", {'form': form,
-                                                                  'year': year,
-                                                                  })
+            return render(request, "manager_add_reviewer.html", {'form': form, 'year': year})
     else:
         form = ReviewerForm(initial={'year': year})
-        return render(request, "manager_add_reviewer.html", {'form': form,
-                                                              'year': year})
-
-
-
+        return render(request, "manager_add_reviewer.html", {'form': form, 'year': year})

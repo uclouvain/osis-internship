@@ -23,19 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.shortcuts import render
-from django.http.response import HttpResponseRedirect
-from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required, user_passes_test
 from assistant.models import *
 from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 from assistant.forms import *
-from base.models import person_address, person
-from assistant.models.academic_assistant import find_by_id
-from assistant.models.assistant_mandate import find_mandate_by_id, find_mandate_by_academic_assistant
-from base.models.person import find_by_user
 from base.models import person_address, person
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -121,16 +114,13 @@ def tutoring_learning_unit_edit(request, tutoring_learning_unit_id=None):
                                              'exams_supervision_duration':
                                                  edited_learning_unit_year.exams_supervision_duration,
                                              'others_delivery': edited_learning_unit_year.others_delivery,
-                                             'academic_year': academic_year.id
-                                             })
+                                             'academic_year': academic_year.id})
     return render(request, "tutoring_learning_unit_year.html", {'form': form,
-                                                                'mandate_id': mandate_id
-                                                                })
+                                                                'mandate_id': mandate_id})
 
 
 @login_required
 def tutoring_learning_unit_save(request, mandate_id):
-
     form = TutoringLearningUnitForm(data=request.POST)
     if form.is_valid():
         form.save()

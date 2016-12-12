@@ -116,3 +116,7 @@ def get_by_dissertation(dissert):
 
 def find_by_id(offer_proposition_id):
     return OfferProposition.objects.get(pk=offer_proposition_id)
+
+
+def find_all_ordered_by_acronym():
+    return OfferProposition.objects.order_by('acronym')

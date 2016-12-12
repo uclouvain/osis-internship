@@ -33,13 +33,12 @@ class SettingsAdmin(admin.ModelAdmin):
 
 
 class Settings(models.Model):
-
     starting_date = models.DateField()
     ending_date = models.DateField()
 
     def __str__(self):
         return u"%s - %s" % (self.starting_date, self.ending_date)
-    
+
 
 def get_settings():
     return Settings.objects.first()

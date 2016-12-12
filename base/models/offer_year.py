@@ -34,8 +34,9 @@ class OfferYearAdmin(admin.ModelAdmin):
     list_display = ('acronym', 'offer', 'parent', 'title', 'academic_year', 'changed')
     fieldsets = ((None, {'fields': ('offer', 'academic_year', 'entity_administration', 'entity_administration_fac',
                                     'entity_management', 'entity_management_fac', 'acronym', 'title', 'parent',
-                                    'title_international', 'title_short', 'title_printable', 'grade', 'campus')}),)
-    list_filter = ('academic_year__year',)
+                                    'title_international', 'title_short', 'title_printable', 'grade', 'recipient',
+                                    'location', 'postal_code', 'city', 'country', 'phone', 'fax', 'email', 'campus')}),)
+    list_filter = ('academic_year',)
     raw_id_fields = ('offer', 'parent')
     search_fields = ['acronym']
 
@@ -69,6 +70,7 @@ class OfferYear(SerializableModel):
     country = models.ForeignKey('reference.Country', blank=True, null=True)
     phone = models.CharField(max_length=30, blank=True, null=True)
     fax = models.CharField(max_length=30, blank=True, null=True)
+    email = models.EmailField(null=True, blank=True)
     campus = models.ForeignKey('Campus', blank=True, null=True)
     grade_type = models.ForeignKey('reference.GradeType', blank=True, null=True)
     enrollment_enabled = models.BooleanField(default=False)
@@ -90,7 +92,7 @@ class OfferYear(SerializableModel):
         if self.entity_management_fac:
             entities.append(self.entity_management_fac)
 
-        return entities
+        return set(entities)
 
     @property
     def offer_year_children(self):

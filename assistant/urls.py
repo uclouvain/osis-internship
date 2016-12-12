@@ -70,7 +70,7 @@ urlpatterns = [
         name='pst_form_view'),
     url(r'^reviewer/pst_form/view/(?P<mandate_id>\d+)/$', reviewer_review.pst_form_view, name='pst_form_view'),
     url(r'^reviewer/structure/(?P<structure_id>\d+)/add_reviewer$',
-        reviewer_delegation.addReviewerForStructure, name='reviewer_delegation_add'),
+        reviewer_delegation.add_reviewer_for_structure, name='reviewer_delegation_add'),
     url(r'^reviewer/mandates/$', reviewer_mandates_list.MandatesListView.as_view(), name='reviewer_mandates_list'),
     url(r'^reviewer/review/edit/(?P<mandate_id>\d+)/$', reviewer_review.review_edit, name='review_edit'),
     url(r'^reviewer/review/save/(?P<review_id>\d+)/(?P<mandate_id>\d+)/$',
