@@ -36,7 +36,7 @@ import json
 import datetime
 
 
-def _is_inside_scores_encodings_period():
+def _is_inside_scores_encodings_period(user):
     """
     :return: True if the today date is inside a period of scores encodings (inside session 1,2 or 3). Else return False.
     """
