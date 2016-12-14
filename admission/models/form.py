@@ -49,7 +49,6 @@ def find_by_offer_year(offer_year):
 
 def find_by_id(form_id):
     try:
-        form = Form.objects.get(pk=form_id)
-        return form
+        return Form.objects.get(pk=form_id)
     except ObjectDoesNotExist:
         return None

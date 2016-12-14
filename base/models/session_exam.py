@@ -25,15 +25,15 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-from base.models import  offer_year_calendar
+from base.models import offer_year_calendar, academic_calendar
 from django.utils import timezone
 
 
 class SessionExamAdmin(admin.ModelAdmin):
     list_display = ('learning_unit_year', 'offer_year_calendar', 'number_session', 'changed', 'deadline')
-    list_filter = ('learning_unit_year__academic_year__year', 'number_session',)
+    list_filter = ('learning_unit_year__academic_year', 'number_session',)
     raw_id_fields = ('learning_unit_year', 'offer_year_calendar')
-    fieldsets = ((None, {'fields': ('learning_unit_year', 'number_session', 'offer_year_calendar')}),)
+    fieldsets = ((None, {'fields': ('learning_unit_year', 'number_session', 'offer_year_calendar', 'deadline')}),)
     search_fields = ['learning_unit_year__acronym', 'offer_year_calendar__offer_year__acronym']
 
 
@@ -74,3 +74,9 @@ def find_session_exam_number():
     elif len(sess_exam_number) == 1:
         return sess_exam_number[0].get('number_session')
     return None
+
+
+def get_scores_encoding_calendars():
+    academic_calendars_id = SessionExam.objects.values_list('offer_year_calendar__academic_calendar', flat=True)\
+                                                            .distinct('offer_year_calendar__academic_calendar')
+    return academic_calendar.find_by_ids(academic_calendars_id)

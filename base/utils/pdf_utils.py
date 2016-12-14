@@ -62,11 +62,17 @@ def add_header_footer(canvas, doc):
     canvas.restoreState()
 
 
-def build_pdf(document):
+def build_response(document):
     filename = "%s.pdf" % _('scores_sheet')
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="%s"' % filename
 
+    pdf = build_pdf(document)
+    response.write(pdf)
+    return response
+
+
+def build_pdf(document):
     buffer = BytesIO()
     doc = SimpleDocTemplate(buffer,
                             pagesize=PAGE_SIZE,
@@ -74,11 +80,9 @@ def build_pdf(document):
                             leftMargin=MARGIN_SIZE,
                             topMargin=85,
                             bottomMargin=18)
-
     styles = getSampleStyleSheet()
     styles.add(ParagraphStyle(name='Justify', alignment=TA_JUSTIFY))
     content = []
-
     for learn_unit_year in document['learning_unit_years']:
         for program in learn_unit_year['programs']:
             data = headers_table()
@@ -116,12 +120,10 @@ def build_pdf(document):
                     # 7. New headers_table in variable 'data' with headers ('noma', 'firstname', 'lastname'...)
                     #    in case there's one more page after this one
                     data = headers_table()
-
     doc.build(content, onFirstPage=add_header_footer, onLaterPages=add_header_footer)
     pdf = buffer.getvalue()
     buffer.close()
-    response.write(pdf)
-    return response
+    return pdf
 
 
 def print_notes(list_exam_enrollment, tutor=None):
@@ -130,7 +132,7 @@ def print_notes(list_exam_enrollment, tutor=None):
     :param list_exam_enrollment: List of examEnrollments to print on the PDF.
     :param tutor: If the user who's asking for the PDF is a Tutor, this var is assigned to the user linked to the tutor.
     """
-    return build_pdf(mdl.exam_enrollment.scores_sheet_data(list_exam_enrollment, tutor=tutor))
+    return build_response(mdl.exam_enrollment.scores_sheet_data(list_exam_enrollment, tutor=tutor))
 
 
 def header_building(canvas, doc, styles):
@@ -253,11 +255,19 @@ def main_data(learning_unit_year, program, nb_students, styles, content):
         phone_fax_data += "%s : %s" % (_('fax'), struct_address.get('fax'))
     p_phone_fax_data = Paragraph('%s' % phone_fax_data,
                                  styles["Normal"])
-
-    data_structure = [[p_struct_name],
-                      [p_struct_location],
-                      [p_struct_address],
-                      [p_phone_fax_data]]
+    p_email_data = Paragraph('{0} : {1}'.format(_('email'), struct_address.get('email')),
+                                 styles["Normal"])
+    if struct_address.get('email'):
+        data_structure = [[p_struct_name],
+                          [p_struct_location],
+                          [p_struct_address],
+                          [p_phone_fax_data],
+                          [p_email_data]]
+    else:
+        data_structure = [[p_struct_name],
+                          [p_struct_location],
+                          [p_struct_address],
+                          [p_phone_fax_data]]
 
     header_coordinator_structure = [[get_data_coordinator(learning_unit_year, styles), data_structure]]
     table_header = Table(header_coordinator_structure, colWidths='*')

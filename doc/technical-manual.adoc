@@ -208,7 +208,7 @@ installing git. At that point we executed the following commands:
 
 Install the Python virtual environment and other system dependencies:
 
-    $ sudo apt-get install build-essential, python-virtualenv libjpeg-dev libpng-dev
+    $ sudo apt-get install build-essential python-virtualenv libjpeg-dev libpng-dev
 
 In the new repository, create a virtual environment to isolate all dependencies
 of the project:
@@ -218,6 +218,11 @@ of the project:
 
 [[installing-application]]
 === Installing the Application
+
+Intitialize the submodule 'osis-common':
+
+    $ git submodule init
+    $ git submodule update
 
 Start the virtual environment and install the dependencies:
 
