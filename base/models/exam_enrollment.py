@@ -37,7 +37,7 @@ import unicodedata
 class ExamEnrollmentAdmin(admin.ModelAdmin):
     list_display = ('student', 'enrollment_state', 'session_exam', 'score_draft', 'justification_draft', 'score_final',
                     'justification_final', 'score_reencoded', 'justification_reencoded', 'changed')
-    list_filter = ('session_exam__number_session', 'session_exam__learning_unit_year__academic_year__year')
+    list_filter = ('session_exam__number_session', 'session_exam__learning_unit_year__academic_year')
     fieldsets = ((None, {'fields': ('session_exam', 'enrollment_state', 'learning_unit_enrollment', 'score_draft', 'justification_draft',
                                     'score_final', 'justification_final')}),)
     raw_id_fields = ('session_exam', 'learning_unit_enrollment')
@@ -219,8 +219,8 @@ def find_for_score_encodings(session_exam_number,
         # Filter by Tutor is like filter by a list of learningUnits
         # It's not necessary to add a filter if learningUnitYear or learningUnitYearIds are already defined
         if not learning_unit_year_id and not learning_unit_year_ids:
-            learning_unit_year_ids = learning_unit_year.find_by_tutor(tutor)
-            queryset = queryset.filter(learning_unit_enrollment__learning_unit_year_id__in=learning_unit_year_ids)
+            learning_unit_years = learning_unit_year.find_by_tutor(tutor)
+            queryset = queryset.filter(learning_unit_enrollment__learning_unit_year_id__in=learning_unit_years)
 
     if offer_year_id:
         queryset = queryset.filter(learning_unit_enrollment__offer_enrollment__offer_year_id=offer_year_id)
@@ -337,7 +337,8 @@ def scores_sheet_data(exam_enrollments, tutor=None):
                                    'postal_code': offer_year.postal_code,
                                    'city': offer_year.city,
                                    'phone': offer_year.phone,
-                                   'fax': offer_year.fax}}
+                                   'fax': offer_year.fax,
+                                   'email': offer_year.email}}
             enrollments = []
             for exam_enrol in list_enrollments:
                 student = exam_enrol.learning_unit_enrollment.student

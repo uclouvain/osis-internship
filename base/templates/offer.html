@@ -181,7 +181,6 @@
                         <div class="col-md-4">
                             <label for="slt_score_encoding_country">{% trans 'country'%}</label>
                             <select class="form-control" id="slt_score_encoding_country" name="score_encoding_country">
-                                <option value="">{% trans 'select' %}...</option>
                                 {% for country in countries %}
                                     <option value="{{ country.id }}" {% if offer_year.country.id == country.id %}selected{% endif %}>{{ country.name }}</option>
                                 {% endfor %}
@@ -202,7 +201,9 @@
                                    name="score_encoding_fax" id="txt_score_encoding_fax" maxlength="255">
                         </div>
                         <div class="col-md-6">
-
+                            <label for="txt_score_encoding_email">{% trans 'email' %}</label>
+                            <input class="form-control" value="{{ offer_year.email | default_if_none:'' }}"
+                                   name="score_encoding_email" id="txt_score_encoding_email" maxlength="255">
                         </div>
                     </div>
                     <br>
@@ -452,9 +453,9 @@
     selectTab();
 
     $('#slt_related_entities').change(function(e) {
-        var related_entity = $('#slt_related_entities').val()
+        var related_entity = $('#slt_related_entities').val();
         if(related_entity != "") {
-            var uri = "/structure/" + related_entity + "/address/"
+            var uri = "/structure/" + related_entity + "/address/";
             $.ajax({ url: uri }).then(function(data) {
                 $('#txt_score_encoding_recipient').val(data.entity);
                 $('#txt_score_encoding_location').val(data.location);
@@ -463,6 +464,7 @@
                 $('#slt_score_encoding_country').val(data.country);
                 $('#txt_score_encoding_phone').val(data.phone);
                 $('#txt_score_encoding_fax').val(data.fax);
+                $('#txt_score_encoding_email').val(data.email);
             });
         }
     });
@@ -478,7 +480,8 @@
                 city: $("#txt_score_encoding_city").val(),
                 country: $("#slt_score_encoding_country").val(),
                 phone: $("#txt_score_encoding_phone").val(),
-                fax: $("#txt_score_encoding_fax").val()
+                fax: $("#txt_score_encoding_fax").val(),
+                email: $("#txt_score_encoding_email").val()
             },
             function(data, status) {
                 console.log("Data: " + data + "\nStatus: " + status);

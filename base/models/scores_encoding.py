@@ -34,7 +34,8 @@ class ScoresEncodingAdmin(admin.ModelAdmin):
                     'offer_year',
                     'learning_unit_year',
                     'total_exam_enrollments',
-                    'exam_enrollments_encoded')
+                    'exam_enrollments_encoded',
+                    'scores_not_yet_submitted')
     search_fields = ['pgm_manager_person__last_name', 'pgm_manager_person__first_name']
 
 
@@ -47,6 +48,7 @@ class ScoresEncoding(models.Model):
     learning_unit_year = models.ForeignKey('LearningUnitYear', on_delete=models.DO_NOTHING)
     total_exam_enrollments = models.IntegerField()
     exam_enrollments_encoded = models.IntegerField()
+    scores_not_yet_submitted = models.IntegerField()
     enrollment_state = models.CharField(max_length=20,
                                         default=exam_enrollment_state.ENROLLED,
                                         choices=exam_enrollment_state.STATES)
