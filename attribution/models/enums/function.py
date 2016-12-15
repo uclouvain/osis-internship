@@ -23,11 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from attribution.models import *
-from django.contrib import admin
 
-admin.site.register(attribution.Attribution,
-                    attribution.AttributionAdmin)
+COORDINATOR = "COORDINATOR"
+HOLDER = "HOLDER"
+CO_HOLDER = "CO_HOLDER"
+DEPUTY = "DEPUTY"
+PROFESSOR = "PROFESSOR"  # To remove afterwards.
 
-admin.site.register(attribution_charge.AttributionCharge,
-                    attribution_charge.AttributionChargeAdmin)
+FUNCTIONS = ((COORDINATOR, COORDINATOR),
+             (HOLDER, HOLDER),
+             (CO_HOLDER, CO_HOLDER),
+             (DEPUTY, DEPUTY),
+             (PROFESSOR, PROFESSOR))
+

@@ -23,11 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from attribution.models import *
-from django.contrib import admin
 
-admin.site.register(attribution.Attribution,
-                    attribution.AttributionAdmin)
+LECTURING = "LECTURING"
+PRACTICAL_EXERCISES = "PRACTICAL_EXERCISES"
 
-admin.site.register(attribution_charge.AttributionCharge,
-                    attribution_charge.AttributionChargeAdmin)
+COMPONENT_TYPES = (
+    (LECTURING, LECTURING),
+    (PRACTICAL_EXERCISES, PRACTICAL_EXERCISES))
+
+

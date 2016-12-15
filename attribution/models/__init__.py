@@ -26,3 +26,4 @@
 
 # Statements in alphabetic order.
 from attribution.models import attribution
+from attribution.models import attribution_charge
