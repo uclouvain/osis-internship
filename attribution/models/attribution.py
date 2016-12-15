@@ -44,7 +44,7 @@ class Attribution(models.Model):
     changed = models.DateTimeField(null=True)
     start_date = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
     end_date = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
-    function = models.CharField(max_length=15, blank=True, null=True, , choices=function.FUNCTIONS, db_index=True)
+    function = models.CharField(max_length=15, blank=True, null=True, choices=function.FUNCTIONS, db_index=True)
     learning_unit_year = models.ForeignKey('base.LearningUnitYear', blank=True, null=True, default=None)
     tutor = models.ForeignKey('base.Tutor')
 
