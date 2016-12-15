@@ -23,17 +23,36 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from attribution.models import *
+from django.db import models
 from django.contrib import admin
+from osis_common.models.serializable_model import SerializableModel
 
-admin.site.register(application_charge.ApplicationCharge,
-                    application_charge.ApplicationChargeAdmin)
 
-admin.site.register(attribution.Attribution,
-                    attribution.AttributionAdmin)
+class ApplicationChargeAdmin(admin.ModelAdmin):
+    list_display = ('tutor_application', 'learning_unit_component', 'allocation_charge')
 
-admin.site.register(attribution_charge.AttributionCharge,
-                    attribution_charge.AttributionChargeAdmin)
 
-admin.site.register(tutor_application.TutorApplication,
-                    tutor_application.TutorApplicationAdmin)
+class ApplicationCharge(SerializableModel):
+    tutor_application = models.ForeignKey('TutorApplication')
+    learning_unit_component = models.ForeignKey('base.LearningUnitComponent')
+    allocation_charge = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+
+    def __str__(self):
+        return u"%s" % str(self.tutor_application)
+
+
+def find_by_id(an_id):
+    return ApplicationCharge.objects.get(pk=an_id)
+
+
+def search(a_tutor_application=None, a_learning_unit_component=None):
+
+    queryset = ApplicationCharge.objects
+
+    if a_tutor_application:
+        queryset = queryset.filter(tutor_application=a_tutor_application)
+
+    if a_learning_unit_component:
+        queryset = queryset.filter(learning_unit_component=a_learning_unit_component)
+
+    return queryset
