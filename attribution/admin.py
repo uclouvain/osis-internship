@@ -26,14 +26,8 @@
 from attribution.models import *
 from django.contrib import admin
 
-admin.site.register(application_charge.ApplicationCharge,
-                    application_charge.ApplicationChargeAdmin)
-
 admin.site.register(attribution.Attribution,
                     attribution.AttributionAdmin)
 
 admin.site.register(attribution_charge.AttributionCharge,
                     attribution_charge.AttributionChargeAdmin)
-
-admin.site.register(tutor_application.TutorApplication,
-                    tutor_application.TutorApplicationAdmin)
