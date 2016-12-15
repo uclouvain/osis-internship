@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from base.models import attribution
+from attribution.models import attribution
 
 
 def create_attribution(tutor, learning_unit_year):

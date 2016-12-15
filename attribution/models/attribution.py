@@ -45,8 +45,8 @@ class Attribution(models.Model):
     start_date = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
     end_date = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
     function = models.CharField(max_length=15, blank=True, null=True, choices=FUNCTION_CHOICES, db_index=True)
-    learning_unit_year = models.ForeignKey('LearningUnitYear', related_name='learning_unit_year_attribution', blank=True, null=True, default=None)
-    tutor = models.ForeignKey('Tutor', related_name='tutor_attribution')
+    learning_unit_year = models.ForeignKey('base.LearningUnitYear', blank=True, null=True, default=None)
+    tutor = models.ForeignKey('base.Tutor')
 
     def __str__(self):
         return u"%s - %s" % (self.tutor.person, self.function)
@@ -73,7 +73,7 @@ def search(tutor=None, learning_unit_year=None, function=None, list_learning_uni
 def find_responsible(a_learning_unit_year):
     # If there are more than 1 coordinator, we take the first in alphabetic order
     attribution_list = Attribution.objects.filter(learning_unit_year=a_learning_unit_year)\
-                                                      .filter(function='COORDINATOR')
+                                          .filter(function='COORDINATOR')
 
     if attribution_list and len(attribution_list) > 0:
         if len(attribution_list) == 1:
@@ -87,11 +87,6 @@ def find_responsible(a_learning_unit_year):
 
 
 def is_coordinator(user, learning_unit_year):
-    """
-    :param user:
-    :param learning_unit_year:
-    :return: True is the user is coordinator for the learningUnit passed in parameter.
-    """
     attributions = Attribution.objects.filter(learning_unit_year=learning_unit_year)\
                                       .filter(function='COORDINATOR')\
                                       .filter(tutor__person__user=user)\

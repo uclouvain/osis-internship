@@ -32,6 +32,7 @@ from django.utils.translation import ugettext as _
 
 from base.forms.score_file import ScoreFileForm
 from base import models as mdl
+from attribution import models as mdl_attr
 
 
 col_academic_year = 0
@@ -313,9 +314,9 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
         if not is_program_manager:
             tutor = mdl.tutor.find_by_user(user)
             if tutor and learning_unit_year.learning_unit_id:
-                coordinator = mdl.attribution.search(tutor=tutor,
-                                                     learning_unit_year=learning_unit_year,
-                                                     function='COORDINATOR')
+                coordinator = mdl_attr.attribution.search(tutor=tutor,
+                                                          learning_unit_year=learning_unit_year,
+                                                          function='COORDINATOR')
                 if not coordinator:
                     messages.add_message(request, messages.SUCCESS, '%s' % _('the_coordinator_must_still_submit_scores'))
         return True
