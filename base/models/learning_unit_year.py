@@ -26,7 +26,7 @@
 from django.db import models
 from django.contrib import admin
 
-from base.models import attribution
+from attribution.models import attribution
 
 
 class LearningUnitYearAdmin(admin.ModelAdmin):

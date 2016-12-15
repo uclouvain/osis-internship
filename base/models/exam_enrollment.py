@@ -27,7 +27,8 @@ from decimal import *
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
-from base.models import person, learning_unit_year, attribution, person_address, offer_year_calendar
+from base.models import person, learning_unit_year, person_address, offer_year_calendar
+from attribution.models import attribution
 from base.enums.exam_enrollment_justification_type import JUSTIFICATION_TYPES
 from base.enums import exam_enrollment_state as enrollment_states
 import datetime
