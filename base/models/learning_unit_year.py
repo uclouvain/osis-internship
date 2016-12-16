@@ -48,7 +48,6 @@ class LearningUnitYear(models.Model):
     learning_unit = models.ForeignKey('LearningUnit')
     team = models.BooleanField(default=False)
 
-
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.acronym)
 
