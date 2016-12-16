@@ -27,6 +27,7 @@ from django.db import models
 from django.contrib import admin
 from attribution.models.enums import function
 
+
 class AttributionAdmin(admin.ModelAdmin):
     list_display = ('tutor', 'function', 'learning_unit_year', 'start_date', 'end_date', 'changed')
     list_filter = ('function', 'learning_unit_year__academic_year')
@@ -36,10 +37,6 @@ class AttributionAdmin(admin.ModelAdmin):
 
 
 class Attribution(models.Model):
-    FUNCTION_CHOICES = (
-        ('COORDINATOR', 'Coordinator'),
-        ('PROFESSOR', 'Professor'))
-
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     start_date = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
@@ -47,6 +44,7 @@ class Attribution(models.Model):
     function = models.CharField(max_length=15, blank=True, null=True, choices=function.FUNCTIONS, db_index=True)
     learning_unit_year = models.ForeignKey('base.LearningUnitYear', blank=True, null=True, default=None)
     tutor = models.ForeignKey('base.Tutor')
+    score_responsible = models.BooleanField(default=False)
 
     def __str__(self):
         return u"%s - %s" % (self.tutor.person, self.function)
@@ -73,22 +71,22 @@ def search(tutor=None, learning_unit_year=None, function=None, list_learning_uni
 def find_responsible(a_learning_unit_year):
     # If there are more than 1 coordinator, we take the first in alphabetic order
     attribution_list = Attribution.objects.filter(learning_unit_year=a_learning_unit_year)\
-                                          .filter(function='COORDINATOR')
+                                          .filter(score_responsible=True)
 
     if attribution_list and len(attribution_list) > 0:
         if len(attribution_list) == 1:
             return attribution_list[0].tutor
         else:
             for lu_attribution in attribution_list:
-                if lu_attribution.function == 'COORDINATOR':
+                if lu_attribution.score_responsible:
                     return lu_attribution.tutor
             return attribution_list[0].tutor
     return None
 
 
-def is_coordinator(user, learning_unit_year):
+def is_score_responsible(user, learning_unit_year):
     attributions = Attribution.objects.filter(learning_unit_year=learning_unit_year)\
-                                      .filter(function='COORDINATOR')\
+                                      .filter(score_responsible=True)\
                                       .filter(tutor__person__user=user)\
                                       .count()
     return attributions > 0
