@@ -30,6 +30,7 @@ from osis_common.models.serializable_model import SerializableModel
 
 class AttributionChargeAdmin(admin.ModelAdmin):
     list_display = ('attribution', 'learning_unit_component', 'allocation_charge')
+    raw_id_fields = ('attribution', 'learning_unit_component')
 
 
 class AttributionCharge(SerializableModel):
