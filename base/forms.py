@@ -110,3 +110,9 @@ class TextLabelForm(ModelForm):
     class Meta:
         model = mdl.text_label.TextLabel
         fields = ['label', 'order', 'published']
+
+
+class TranslatedTextLabelForm(ModelForm):
+    class Meta:
+        model = mdl.translated_text_label.TranslatedTextLabel
+        fields = ['label']

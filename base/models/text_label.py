@@ -26,21 +26,24 @@
 from django.db import models
 from django.contrib import admin
 from base.enums.entity_name import ENTITY_NAME
-from django.db.models import Count
 
 
 class TextLabelAdmin(admin.ModelAdmin):
-    list_display = ('entity_name', 'text_label_parent', 'label', 'order', 'published',)
-    fieldsets = ((None, {'fields': ('entity_name', 'text_label_parent', 'label', 'order', 'published')}),)
+    list_display = ('entity_name', 'part_of', 'label', 'order', 'published', 'children')
+    fieldsets = ((None, {'fields': ('entity_name', 'part_of', 'label', 'order', 'published')}),)
     search_fields = ['acronym']
 
 
 class TextLabel(models.Model):
     entity_name = models.IntegerField(choices=ENTITY_NAME)
-    text_label_parent = models.ForeignKey('self', blank=True, null=True)
+    part_of = models.ForeignKey('self', blank=True, null=True)
     label = models.CharField(max_length=255)
     order = models.IntegerField(default=0)
-    published = models.BooleanField(default=True)
+    published = models.BooleanField()
+
+    @property
+    def children(self):
+        return TextLabel.objects.filter(part_of=self.pk).order_by('order')
 
     def __str__(self):
         return self.label
@@ -54,14 +57,11 @@ def find_by_ids(text_label_ids):
     return TextLabel.objects.filter(pk__in=text_label_ids)
 
 
-def find_by_entity_id(entity_id):
+def find_text_label_hierarchy(entity_id):
+    txtlabel = TextLabel.objects.filter(entity_name=entity_id)
     list_labels = []
-    parent_textlabels = TextLabel.objects.filter(text_label_parent__isnull=True).select_related('text_label_parent').order_by('order')
-    for e in parent_textlabels:
-        list_labels.append(e)
-        children_textlabels = TextLabel.objects.filter(text_label_parent=e.id).select_related('text_label_parent').order_by('order')
-        for f in children_textlabels:
-            list_labels.append(f)
+    for child_text_label in txtlabel:
+        list_labels.append(child_text_label)
     return list_labels
 
 
