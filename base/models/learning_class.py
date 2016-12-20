@@ -28,14 +28,18 @@ from django.contrib import admin
 
 
 class LearningClassAdmin(admin.ModelAdmin):
-    list_display = ('learning_component',)
-    fieldsets = ((None, {'fields': ('learning_component',)}),)
+    list_display = ('learning_component','title','end_year','periodicity')
+    fieldsets = ((None, {'fields': ('learning_component','title','end_year','periodicity')}),)
     search_fields = ['acronym']
 
 
 class LearningClass(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     learning_component = models.ForeignKey('LearningComponent')
+    title = models.CharField(max_length=255)
+    #start_year = models.IntegerField()
+    #end_year = models.IntegerField(blank=True, null=True)
+    periodicity = models.CharField(max_length=10, blank=True, null=True, choices=PERIODICITY_TYPES)
 
 
 def find_by_id(learning_class_id):

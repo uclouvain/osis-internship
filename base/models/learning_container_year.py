@@ -28,16 +28,28 @@ from django.contrib import admin
 
 
 class LearningContainerYearAdmin(admin.ModelAdmin):
-    list_display = ('title', 'acronym', 'academic_year', 'learning_container')
-    fieldsets = ((None, {'fields': ('title', 'acronym', 'academic_year', 'learning_container',)}),)
+    list_display = ('learning_container', 'academic_year', 'language', 'acronym', 'acronym_initials', 'acronym_number',
+
+                    'type', 'title', 'title_short', 'requirement_entity', 'allocation_entity')
+    fieldsets = ((None, {'fields': ('learning_container', 'academic_year', 'language','acronym', 'acronym_initials',
+                                    'acronym_number', 'type', 'title', 'title_short', 'requirement_entity',
+                                    'allocation_entity' )}),)
     search_fields = ['acronym']
 
 
 class LearningContainerYear(models.Model):
-    title = models.CharField(max_length=255)
-    acronym = models.CharField(max_length=10)
     academic_year = models.ForeignKey('AcademicYear')
     learning_container = models.ForeignKey('LearningContainer')
+    title = models.CharField(max_length=255)
+    acronym = models.CharField(max_length=10)
+    #Ajoutés pour la gestion des UE
+    language = models.ForeignKey('Language')
+    acronym_initials = models.CharField(max_length=5)
+    acronym_number = models.CharField(max_length=4)
+    type = models.CharField(max_length=10, blank=True, null=True, choices=YEAR_TYPE)
+    title_short = models.CharField(max_length=50)
+    requirement_entity = models.IntegerField(max_length=10)
+    allocation_entity = models.IntegerField(max_length=10)
 
     def save(self, *args, **kwargs):
         if self.title != self.learning_container.title:

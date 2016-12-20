@@ -43,11 +43,20 @@ class LearningContainerYearTest(TestCase):
                                      end_date=datetime.datetime(now.year + 1, now.month, 28))
         self.current_academic_year.save()
 
-    def test_creation_learning_container_year(self):
-        learning_container = LearningContainer(title="Biology")
+    #def test_creation_learning_container_year_title(self):
+    #    learning_container = LearningContainer(title="Biology")
+    #
+    #    learning_container_year = LearningContainerYear(title="Biology 1",
+    #                                                      acronym="LBIO1212",
+    #                                                     academic_year=self.current_academic_year,
+    #                                                    learning_container=learning_container)
+    #   self.assertRaises(AttributeError, learning_container_year.save)
 
-        learning_container_year = LearningContainerYear(title="Biology 1",
+    def test_creation_learning_container_year(self):
+        learning_container = LearningContainer()
+        learning_container_year = LearningContainerYear(title="Biology",
                                                         acronym="LBIO1212",
                                                         academic_year=self.current_academic_year,
                                                         learning_container=learning_container)
+
         self.assertRaises(AttributeError, learning_container_year.save)

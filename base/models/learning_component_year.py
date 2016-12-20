@@ -29,9 +29,9 @@ from django.contrib import admin
 
 
 class LearningComponentYearAdmin(admin.ModelAdmin):
-    list_display = ('learning_container_year', 'learning_component', 'title', 'acronym', 'type', 'comment')
+    list_display = ('learning_container_year', 'learning_component', 'title', 'acronym', 'credit_number', 'hour_volume','term')
     fieldsets = ((None, {'fields': ('learning_container_year', 'learning_component', 'title', 'acronym',
-                                    'type', 'comment')}),)
+                                    'credit_number', 'hour_volume','term')}),)
     search_fields = ['acronym']
 
 
@@ -40,8 +40,11 @@ class LearningComponentYear(models.Model):
     learning_component = models.ForeignKey('LearningComponent')
     title = models.CharField(max_length=255)
     acronym = models.CharField(max_length=3)
-    type = models.CharField(max_length=30, blank=True, null=True, choices=YEAR_TYPE)
-    comment = models.TextField(blank=True, null=True)
+    #type = models.CharField(max_length=30, blank=True, null=True, choices=YEAR_TYPE)
+    #comment = models.TextField(blank=True, null=True)
+    credit_number = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    hour_volume = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    term = models.CharField(max_length=1)
 
     def save(self, *args, **kwargs):
         if self.learning_container_year.learning_container != self.learning_component.learning_container:

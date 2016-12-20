@@ -27,13 +27,13 @@ from django.db import models
 from django.contrib import admin
 
 
-class LearningUnitComponentAdmin(admin.ModelAdmin):
+class LearningUnitComponentYearAdmin(admin.ModelAdmin):
     list_display = ()
     fieldsets = ((None, {'fields': ('learning_component_year', 'learning_unit_year')}),)
     search_fields = ['acronym']
 
 
-class LearningUnitComponent(models.Model):
+class LearningUnitComponentYear(models.Model):
     Learning_component_year = models.ForeignKey('LearningComponentYear')
     learning_unit_year = models.ForeignKey('LearningUnitYear')
 

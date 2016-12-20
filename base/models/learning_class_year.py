@@ -28,8 +28,8 @@ from django.contrib import admin
 
 
 class LearningClassYearAdmin(admin.ModelAdmin):
-    list_display = ('learning_component_year', 'learning_class', 'acronym')
-    fieldsets = ((None, {'fields': ('learning_component_year', 'learning_class', 'acronym')}),)
+    list_display = ('learning_component_year', 'learning_class', 'acronym_class_number', 'language', 'term')
+    fieldsets = ((None, {'fields': ('learning_component_year', 'learning_class', 'acronym', 'acronym_class_number', 'language', 'term')}),)
     search_fields = ['acronym']
 
 
@@ -37,7 +37,9 @@ class LearningClassYear(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     learning_component_year = models.ForeignKey('LearningComponentYear')
     learning_class = models.ForeignKey('LearningClass')
-    acronym = models.CharField(max_length=3)
+    acronym_class_number = models.CharField(max_length=3)
+    language = models.ForeignKey('Language')
+    term = models.CharField(max_length=1)
 
     class Meta:
         permissions = (
