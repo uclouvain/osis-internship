@@ -39,7 +39,9 @@ class LearningUnitYear(models.Model):
     learning_container_year = models.ForeignKey('LearningContainerYear', blank=True, null=True)
     academic_year = models.ForeignKey('AcademicYear')
     learning_unit = models.ForeignKey('LearningUnit')
-    language = models.ForeignKey('Language')
+
+    language = models.ForeignKey('reference.Language')
+
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     acronym = models.CharField(max_length=15, db_index=True)
@@ -50,16 +52,16 @@ class LearningUnitYear(models.Model):
     #specifications = models.TextField(blank=True, null=True)
     #summary = models.TextField(blank=True, null=True)
 
-
+    #Ajouté (en attente)
     acronym_unit_type = models.CharField(max_length=1)
     title_short = models.CharField(max_length=50)
-    requirement_entity = models.IntegerField(max_length=10)
-    allocation_entity = models.IntegerField(max_length=10)
+    requirement_entity = models.IntegerField()
+    allocation_entity = models.IntegerField()
     active = models.BooleanField(default=False)
     site = models.CharField(max_length=50)
     credit_number = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     term = models.CharField(max_length=1)
-    exam_session = models.IntegerField(max_length=1)
+    exam_session = models.IntegerField()
 
 
     def __str__(self):

@@ -25,6 +25,7 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
+from base.enums.learning_unit_year_type import YEAR_TYPES
 
 
 class LearningContainerYearAdmin(admin.ModelAdmin):
@@ -43,13 +44,13 @@ class LearningContainerYear(models.Model):
     title = models.CharField(max_length=255)
     acronym = models.CharField(max_length=10)
     #Ajoutés pour la gestion des UE
-    language = models.ForeignKey('Language')
+    language = models.ForeignKey('reference.Language')
     acronym_initials = models.CharField(max_length=5)
     acronym_number = models.CharField(max_length=4)
-    type = models.CharField(max_length=10, blank=True, null=True, choices=YEAR_TYPE)
+    type = models.CharField(max_length=10, blank=True, null=True, choices=YEAR_TYPES)
     title_short = models.CharField(max_length=50)
-    requirement_entity = models.IntegerField(max_length=10)
-    allocation_entity = models.IntegerField(max_length=10)
+    requirement_entity = models.IntegerField()
+    allocation_entity = models.IntegerField()
 
     def save(self, *args, **kwargs):
         if self.title != self.learning_container.title:
