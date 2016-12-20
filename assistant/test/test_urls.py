@@ -31,5 +31,5 @@ from assistant.views.messages import show_history
 class AssistantURLsTestCase(TestCase):
 
     def test_url_resolves_to_manager_messages_view(self):
-        found = resolve('/assistants/manager/messages/')
+        found = resolve('/assistants/manager/messages/history/')
         self.assertEqual(found.func, show_history)

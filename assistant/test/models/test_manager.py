@@ -23,23 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import TestCase, RequestFactory, Client
-from django.core.urlresolvers import reverse
-from assistant.views.messages import show_history
-from django.db.models.query import QuerySet
+from django.test import LiveServerTestCase
+from selenium import webdriver
 
-class MessagesViewTestCase(TestCase):
 
+class ManagerTestCase(LiveServerTestCase):
     def setUp(self):
-        self.factory = RequestFactory()
-        self.client = Client()
+        self.browser = webdriver.Firefox()
+        self.browser.implicitly_wait(2)
 
-    def test_messages_history_view_basic(self):
-        request = self.factory.get('/assistants/manager/messages/history')
-        with self.assertTemplateUsed('messages.html'):
-            response = show_history(request)
-            self.assertEqual(response.status_code, 200)
+    def tearDown(self):
+        self.browser.quit()
 
-    def test_messages_history_view_returns_messages(self):
-        response = self.client.get(reverse('messages_history'))
-        self.assertIs(type(response.context['sent_messages']), QuerySet)
+    def test_manager_see_history_messages(self):
+        messages_history_page = self.browser.get('http:/localhost:8000/assistants/manager/messages/history')

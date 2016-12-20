@@ -23,8 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.shortcuts import render_to_response
+from django.shortcuts import render
+from assistant.models.message import Message
 
 
 def show_history(request):
-    return render_to_response('messages.html')
+    return render(request,'messages.html', {'sent_messages': Message.objects.all(), })

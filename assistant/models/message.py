@@ -23,23 +23,23 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import TestCase, RequestFactory, Client
-from django.core.urlresolvers import reverse
-from assistant.views.messages import show_history
-from django.db.models.query import QuerySet
+from django.db import models
+from django.contrib import admin
+from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
 
-class MessagesViewTestCase(TestCase):
 
-    def setUp(self):
-        self.factory = RequestFactory()
-        self.client = Client()
-
-    def test_messages_history_view_basic(self):
-        request = self.factory.get('/assistants/manager/messages/history')
-        with self.assertTemplateUsed('messages.html'):
-            response = show_history(request)
-            self.assertEqual(response.status_code, 200)
-
-    def test_messages_history_view_returns_messages(self):
-        response = self.client.get(reverse('messages_history'))
-        self.assertIs(type(response.context['sent_messages']), QuerySet)
+class Message(models.Model):
+    TYPE = (
+        ('TO_ALL_ASSISTANTS', _('To_all_assistants')),
+        ('TO_ALL_DEANS', _('To_All_Deans')),
+        ('TO_PHD_SUPERVISOR', _('To_Phd_Supervisor')),
+        ('TO_ONE_DEAN', _('To_One_Dean'))
+    )
+    sender = models.ForeignKey('assistant.Manager')
+    academic_year = models.ForeignKey('base.AcademicYear')
+    date = models.DateTimeField(default=timezone.now, null=True)
+    type = models.CharField(max_length=20, choices=TYPE)
+    
+    def __str__(self):
+        return u"%s (%s : %s)" % self.sender.person, self.type, self.date

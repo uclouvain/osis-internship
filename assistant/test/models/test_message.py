@@ -23,17 +23,33 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import LiveServerTestCase
-from selenium import webdriver
+from django.test import TestCase
+from base.models.person import Person
+from django.contrib.auth.models import User
+from assistant.models.message import Message
+from assistant.models.manager import Manager
+from base.models.academic_year import AcademicYear
+from base.models import academic_year
+from datetime import datetime
 
 
-class AssistantTestCase(LiveServerTestCase):
+class MessageModelTestCase(TestCase):
     def setUp(self):
-        self.browser = webdriver.Firefox()
-        self.browser.implicitly_wait(2)
+        self.user = User.objects.create_user(
+            username='test', email='test@uclouvain.be', password='secret'
+        )
+        self.person = Person.objects.create(user=self.user, first_name='first_name', last_name='last_name')
+        self.manager = Manager.objects.create(person=self.person)
+        self.academic_year = AcademicYear.objects.create(year=2016)
+        self.academic_year.save()
+        self.current_academic_year = academic_year.current_academic_year()
+        self.message = Message.objects.create(
+            sender=self.manager,
+            type='all_assistants',
+            date=datetime.now(),
+            academic_year=self.current_academic_year
+        )
 
-    def tearDown(self):
-        self.browser.quit()
+    def test_message_basic(self):
+        self.assertEqual(self.message.sender, self.manager)
 
-    def test_manager_see_history_messages(self):
-        messages_history_page = self.browser.get('http:/localhost:8000/assistants/manager/messages')

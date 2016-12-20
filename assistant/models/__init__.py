@@ -30,6 +30,7 @@ from assistant.models import assistant_document
 from assistant.models import assistant_mandate
 from assistant.models import manager
 from assistant.models import mandate_structure
+from assistant.models import message
 from assistant.models import review
 from assistant.models import reviewer
 from assistant.models import settings
