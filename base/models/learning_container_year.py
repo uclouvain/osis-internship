@@ -49,8 +49,8 @@ class LearningContainerYear(models.Model):
     acronym_number = models.CharField(max_length=4)
     type = models.CharField(max_length=10, blank=True, null=True, choices=YEAR_TYPES)
     title_short = models.CharField(max_length=50)
-    requirement_entity = models.IntegerField()
-    allocation_entity = models.IntegerField()
+    requirement_entity = models.IntegerField(default=0)
+    allocation_entity = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
         if self.title != self.learning_container.title:

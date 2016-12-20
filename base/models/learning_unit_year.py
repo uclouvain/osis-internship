@@ -40,7 +40,7 @@ class LearningUnitYear(models.Model):
     academic_year = models.ForeignKey('AcademicYear')
     learning_unit = models.ForeignKey('LearningUnit')
 
-    language = models.ForeignKey('reference.Language')
+    language = models.ForeignKey('reference.Language', default=None)
 
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
@@ -53,15 +53,15 @@ class LearningUnitYear(models.Model):
     #summary = models.TextField(blank=True, null=True)
 
     #Ajouté (en attente)
-    acronym_unit_type = models.CharField(max_length=1)
-    title_short = models.CharField(max_length=50)
-    requirement_entity = models.IntegerField()
-    allocation_entity = models.IntegerField()
+    acronym_unit_type = models.CharField(max_length=1, null=True)
+    title_short = models.CharField(max_length=50, null=True)
+    requirement_entity = models.IntegerField(default=0)
+    allocation_entity = models.IntegerField(default=0)
     active = models.BooleanField(default=False)
-    site = models.CharField(max_length=50)
+    site = models.CharField(max_length=50, default=None)
     credit_number = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
-    term = models.CharField(max_length=1)
-    exam_session = models.IntegerField()
+    term = models.CharField(max_length=1, null=True)
+    exam_session = models.IntegerField(default=0)
 
 
     def __str__(self):

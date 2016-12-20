@@ -38,7 +38,7 @@ class LearningClassYear(models.Model):
     learning_component_year = models.ForeignKey('LearningComponentYear')
     learning_class = models.ForeignKey('LearningClass')
     acronym_class_number = models.CharField(max_length=3)
-    language = models.ForeignKey('Language')
+    language = models.ForeignKey('reference.Language')
     term = models.CharField(max_length=1)
 
     class Meta:
