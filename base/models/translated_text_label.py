@@ -38,6 +38,9 @@ class TranslatedTextLabel(models.Model):
     language = models.ForeignKey('reference.Language')
     text_label = models.ForeignKey('TextLabel')
 
+    def __str__(self):
+        return 'Label : ' + self.label + ' - Language ' + str(self.language.code) + ' - Text_Label (Parent) : ' + self.text_label.label
+
 
 def find_by_id(translated_text_label_id):
     return TranslatedTextLabel.objects.get(pk=translated_text_label_id)
@@ -45,6 +48,11 @@ def find_by_id(translated_text_label_id):
 
 def find_by_ids(translated_text_label_ids):
     return TranslatedTextLabel.objects.filter(pk__in=translated_text_label_ids)
+
+
+def find_by_language(language_input):
+    queryset = TranslatedTextLabel.objects.filter(language__code=language_input)
+    return queryset
 
 
 def search(acronym=None):

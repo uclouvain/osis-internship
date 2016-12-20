@@ -26,7 +26,8 @@
 from django.conf.urls import url
 
 from base.utils import upload_xls_utils
-from base.views import learning_unit, offer, common, score_encoding, institution, organization, academic_calendar, text_label,\
+from base.views import learning_unit, offer, common, score_encoding, institution, organization, academic_calendar, \
+                       translated_text_label, text_label,\
     my_osis
 
 urlpatterns = [
@@ -168,7 +169,23 @@ urlpatterns = [
     url(r'^text_label/search$', text_label.text_label_search, name='text_label_search'),
     url(r'^text_label/(?P<entity_id>[0-9]+)/$', text_label.text_label_read_from_entity, name='text_label_read_from_entity'),
     url(r'^text_label/(?P<entity_id>[0-9]+)(?:/(?P<reference_id>[0-9]+))/$', text_label.text_label_read, name='text_label_read'),
-    url(r'^text_label/(?P<entity_id>[0-9]+)/create/$', text_label.text_label_create, name='text_label_create'),
-    url(r'^text_label/save/(?P<entity_id>[0-9]+)/$', text_label.text_label_save, name='text_lbl_save'),
-    url(r'^text_label/save/$', text_label.text_label_new, name='text_lbl_save_new'),
+    url(r'^text_label/save/(?P<entity_id>[0-9]+)(?:/(?P<text_label_id>[0-9]+))/$', text_label.text_label_save, name='text_lbl_save'),
+    url(r'^text_label/saveparent/(?P<entity_id>[0-9]+)(?:/(?P<part_of_id>[0-9]+))/$', text_label.text_label_save_parent, name='text_lbl_save_parent'),
+    url(r'^text_label/save/(?P<entity_id>[0-9]+)/$', text_label.text_label_new, name='text_lbl_save_new'),
+
+
+    url(r'^translated_text_label/$', translated_text_label.translated_text_label, name='translated_text_label'),
+    url(r'^translated_text_label/search$', translated_text_label.translated_text_label_search, name='text_label_search'),
+    url(r'^translated_text_label/(?P<entity_id>[0-9]+)/$',
+        translated_text_label.translated_text_label_read_from_entity, name='translated_text_label_read_from_entity'),
+    url(r'^translated_text_label/(?P<entity_id>[0-9]+)(?:/(?P<reference_id>[0-9]+))/$',
+        translated_text_label.translated_text_label_read, name='translated_text_label_read'),
+    url(r'^translated_text_label/(?P<entity_id>[0-9]+)/create/$',
+        translated_text_label.translated_text_label_create, name='translated_text_label_create'),
+    url(r'^translated_text_label/save/(?P<entity_id>[0-9]+)/(?P<text_label_id>[0-9]+)(?:/(?P<code_language>\w+))'
+        r'(?:/(?P<translated_text_label_id>[0-9]+))/$',
+        translated_text_label.translated_text_label_save, name='translated_text_lbl_save'),
+    url(r'^translated_text_label/save/(?P<entity_id>[0-9]+)/(?P<text_label_id>[0-9]+)/(?P<code_language>\w+)/$', translated_text_label.translated_text_label_new,
+        name='translated_text_lbl_save_new'),
+
 ]
