@@ -37,3 +37,5 @@ class ManagerTestCase(LiveServerTestCase):
 
     def test_manager_see_history_messages(self):
         messages_history_page = self.browser.get('http:/localhost:8000/assistants/manager/messages/history')
+        import pdb;
+        pdb.set_trace()

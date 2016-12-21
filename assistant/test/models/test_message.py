@@ -30,7 +30,8 @@ from assistant.models.message import Message
 from assistant.models.manager import Manager
 from base.models.academic_year import AcademicYear
 from base.models import academic_year
-from datetime import datetime
+from django.utils import timezone
+from assistant.enums import message_type
 
 
 class MessageModelTestCase(TestCase):
@@ -43,13 +44,16 @@ class MessageModelTestCase(TestCase):
         self.academic_year = AcademicYear.objects.create(year=2016)
         self.academic_year.save()
         self.current_academic_year = academic_year.current_academic_year()
+        self.now = timezone.now()
         self.message = Message.objects.create(
             sender=self.manager,
-            type='all_assistants',
-            date=datetime.now(),
+            type=message_type.TO_ALL_ASSISTANTS,
+            date=self.now,
             academic_year=self.current_academic_year
         )
 
     def test_message_basic(self):
         self.assertEqual(self.message.sender, self.manager)
-
+        self.assertEqual(self.message.type, message_type.TO_ALL_ASSISTANTS)
+        self.assertEqual(self.message.date, self.now)
+        self.assertEqual(self.message.academic_year, self.academic_year)

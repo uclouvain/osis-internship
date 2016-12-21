@@ -27,19 +27,15 @@ from django.db import models
 from django.contrib import admin
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from assistant.enums import message_type
 
 
 class Message(models.Model):
-    TYPE = (
-        ('TO_ALL_ASSISTANTS', _('To_all_assistants')),
-        ('TO_ALL_DEANS', _('To_All_Deans')),
-        ('TO_PHD_SUPERVISOR', _('To_Phd_Supervisor')),
-        ('TO_ONE_DEAN', _('To_One_Dean'))
-    )
+
     sender = models.ForeignKey('assistant.Manager')
     academic_year = models.ForeignKey('base.AcademicYear')
     date = models.DateTimeField(default=timezone.now, null=True)
-    type = models.CharField(max_length=20, choices=TYPE)
+    type = models.CharField(max_length=20, choices=message_type.TYPES)
     
     def __str__(self):
         return u"%s (%s : %s)" % self.sender.person, self.type, self.date

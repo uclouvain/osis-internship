@@ -25,14 +25,41 @@
 ##############################################################################
 from django.test import TestCase, RequestFactory, Client
 from django.core.urlresolvers import reverse
+from django.utils import timezone
+from django.contrib.auth.models import User
 from assistant.views.messages import show_history
 from django.db.models.query import QuerySet
+from assistant.models.message import Message
+from assistant.models.manager import Manager
+from base.models.person import Person
+from base.models.academic_year import AcademicYear
+from base.models import academic_year
 
 class MessagesViewTestCase(TestCase):
 
     def setUp(self):
         self.factory = RequestFactory()
         self.client = Client()
+        self.user = User.objects.create_user(
+            username='test', email='test@uclouvain.be', password='secret'
+        )
+        self.person = Person.objects.create(user=self.user, first_name='first_name', last_name='last_name')
+        self.manager = Manager.objects.create(person=self.person)
+        self.academic_year = AcademicYear.objects.create(year=2016)
+        self.academic_year.save()
+        self.current_academic_year = academic_year.current_academic_year()
+        self.message = Message.objects.create(
+            sender=self.manager,
+            type='all_assistants',
+            date=timezone.now(),
+            academic_year=self.current_academic_year
+        )
+        self.message = Message.objects.create(
+            sender=self.manager,
+            type='all_deans',
+            date=timezone.now(),
+            academic_year=self.current_academic_year
+        )
 
     def test_messages_history_view_basic(self):
         request = self.factory.get('/assistants/manager/messages/history')
@@ -42,4 +69,8 @@ class MessagesViewTestCase(TestCase):
 
     def test_messages_history_view_returns_messages(self):
         response = self.client.get(reverse('messages_history'))
-        self.assertIs(type(response.context['sent_messages']), QuerySet)
+        messages = response.context['sent_messages']
+        self.assertIs(type(messages), QuerySet)
+        self.assertEqual(len(messages), 2)
+        self.assertEqual(messages[0].sender, self.manager)
+        self.assertEqual(messages[1].type, 'all_deans')
