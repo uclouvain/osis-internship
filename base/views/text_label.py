@@ -102,15 +102,8 @@ def text_label_save(request, entity_id, text_label_id):
     is_program_manager = mdl.program_manager.is_program_manager(request.user)
 
     # get the screen modifications
-    if request.POST['label']:
-        txtlabel.label = request.POST['label']
-    else:
-        txtlabel.label = None
-
-    if request.POST['order']:
-        txtlabel.order = request.POST['order']
-    else:
-        txtlabel.order = None
+    txtlabel.label = request.POST.get("label", None)
+    txtlabel.order = request.POST.get("order", None)
 
     txtlabel.entity_name = entity_id
 
@@ -131,15 +124,8 @@ def text_label_save_parent(request, entity_id, part_of_id):
     is_program_manager = mdl.program_manager.is_program_manager(request.user)
 
     # get the screen modifications
-    if request.POST['label']:
-        txtlabel.label = request.POST['label']
-    else:
-        txtlabel.label = None
-
-    if request.POST['order']:
-        txtlabel.order = request.POST['order']
-    else:
-        txtlabel.order = None
+    txtlabel.label = request.POST.get("label", None)
+    txtlabel.order = request.POST.get("order", None)
 
     txtlabel.entity_name = entity_id
     txtlabel.part_of = txtlabelparent

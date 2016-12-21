@@ -114,7 +114,6 @@
                    <form method="post" action="{% url 'translated_text_lbl_save' 1 text_label.id 'UK' translated_text_label_detail.id %}">
                     {% csrf_token %}
                     <td>
-                        <input type="hidden" name="selectedLanguage" value="English">
                         <input class="form-control" value="{{ translated_text_label_detail.label | default_if_none:'' }}"
                                name="label" id="txt_label"/><font class="error">{{ form.label.errors }}</font>
                     </td>

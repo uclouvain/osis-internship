@@ -76,12 +76,8 @@ def translated_text_label_read_from_entity(request, entity_id):
     text_labels = mdl.text_label.find_text_label_hierarchy(entity_id)
 
     is_program_manager = mdl.program_manager.is_program_manager(request.user)
-    try:
-        ui_language = request.POST['ui_language']
-    except KeyError:
-        ui_language = 'None'
 
-    #support_language manual object (Normally take from the object)
+    ui_language = request.POST.get("ui_language", None)
     support_languages = refmdl.language.Language.objects.all()
 
     translated_text_label_details = None
