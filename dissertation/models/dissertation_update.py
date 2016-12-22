@@ -34,9 +34,9 @@ JUSTIFICATION_LINK = "_set_to_"
 
 
 class DissertationUpdateAdmin(admin.ModelAdmin):
-    list_display = ('dissertation', 'get_dissertation_author', 'status_from', 'status_to', 'person', 'created')
+    list_display = ('dissertation', 'status_from', 'status_to', 'person', 'created')
     raw_id_fields = ('person', 'dissertation')
-    search_fields = ('uuid', 'dissertation', 'get_dissertation_author', 'person')
+    search_fields = ('uuid',)
 
 
 class DissertationUpdate(SerializableModel):
