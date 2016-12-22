@@ -47,8 +47,6 @@ class Attribution(SerializableModel):
     learning_unit_year = models.ForeignKey('base.LearningUnitYear', blank=True, null=True, default=None)
     tutor = models.ForeignKey('base.Tutor')
     score_responsible = models.BooleanField(default=False)
-    start_date = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
-    end_date = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
 
     def __str__(self):
         return u"%s - %s" % (self.tutor.person, self.function)
