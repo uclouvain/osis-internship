@@ -39,7 +39,7 @@ from . import dissertation_location
 
 
 class DissertationAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'status', 'active', 'proposition_dissertation', 'modification_date')
+    list_display = ('uuid', 'title', 'author', 'status', 'active', 'proposition_dissertation', 'modification_date')
     raw_id_fields = ('author', 'offer_year_start', 'proposition_dissertation', 'location')
     search_fields = ('title',
                      'author__person__last_name',
