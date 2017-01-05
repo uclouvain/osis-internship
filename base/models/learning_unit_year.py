@@ -47,6 +47,9 @@ class LearningUnitYear(SerializableModel):
     academic_year = models.ForeignKey('AcademicYear')
     learning_unit = models.ForeignKey('LearningUnit')
     team = models.BooleanField(default=False)
+    vacant = models.BooleanField(default=False)
+    in_charge = models.BooleanField(default=False)
+
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.acronym)
