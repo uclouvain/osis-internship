@@ -26,7 +26,8 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.contrib import admin
-from base.models import person, attribution
+from attribution.models import attribution
+from base.models import person
 from osis_common.models import serializable_model
 
 

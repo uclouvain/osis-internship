@@ -25,7 +25,8 @@
 ##############################################################################
 from django.test import TestCase
 from base.models import learning_unit_year
-from base.tests.models import test_learning_unit, test_tutor, test_academic_year, test_attribution
+from base.tests.models import test_learning_unit, test_tutor, test_academic_year
+from attribution.tests.models import test_attribution
 
 
 def create_learning_unit_year(acronym, title, academic_year):

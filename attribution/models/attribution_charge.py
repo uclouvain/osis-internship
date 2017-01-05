@@ -23,33 +23,36 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.db import models
+from django.contrib import admin
+from osis_common.models.serializable_model import SerializableModel
 
-# Statements in alphabetic order.
-from base.models import academic_calendar
-from base.models import academic_year
-from base.models import application_notice
-from base.models import campus
-from base.models import exam_enrollment
-from base.models import external_offer
-from base.models import learning_unit
-from base.models import learning_unit_component
-from base.models import learning_unit_enrollment
-from base.models import learning_unit_year
-from base.models import native
-from base.models import offer
-from base.models import offer_enrollment
-from base.models import offer_year
-from base.models import offer_year_calendar
-from base.models import offer_year_domain
-from base.models import organization
-from base.models import organization_address
-from base.models import person
-from base.models import person_address
-from base.models import program_manager
-from base.models import scores_encoding
-from base.models import session_exam
-from base.models import structure
-from base.models import structure_address
-from base.models import student
-from base.models import tutor
 
+class AttributionChargeAdmin(admin.ModelAdmin):
+    list_display = ('attribution', 'learning_unit_component', 'allocation_charge')
+    raw_id_fields = ('attribution', 'learning_unit_component')
+    search_fields = ['attribution__tutor__person__first_name', 'attribution__tutor__person__last_name', 'learning_unit_component__learning_unit_year__acronym']
+
+
+class AttributionCharge(SerializableModel):
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    attribution = models.ForeignKey('Attribution')
+    learning_unit_component = models.ForeignKey('base.LearningUnitComponent')
+    allocation_charge = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+
+    def __str__(self):
+        return u"%s" % str(self.attribution)
+
+
+def search(attribution=None, learning_unit_component=None):
+
+    queryset = AttributionCharge.objects
+
+    if attribution:
+        queryset = queryset.filter(attribution=attribution)
+
+    if learning_unit_component:
+        queryset = queryset.filter(learning_unit_component=learning_unit_component)
+
+
+    return queryset
