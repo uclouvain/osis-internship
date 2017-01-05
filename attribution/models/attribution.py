@@ -26,6 +26,7 @@
 from django.db import models
 from django.contrib import admin
 from attribution.models.enums import function
+from osis_common.models.serializable_model import SerializableModel
 
 
 class AttributionAdmin(admin.ModelAdmin):
@@ -37,7 +38,7 @@ class AttributionAdmin(admin.ModelAdmin):
     search_fields = ['tutor__person__first_name', 'tutor__person__last_name', 'learning_unit_year__acronym']
 
 
-class Attribution(models.Model):
+class Attribution(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     start_date = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
