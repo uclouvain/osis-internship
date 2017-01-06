@@ -9,7 +9,7 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('base', '0086_populate_uuid_values'),
+        ('base', '0089_populate_uuid_values'),
     ]
 
     operations = [
