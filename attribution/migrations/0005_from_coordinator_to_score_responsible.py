@@ -6,11 +6,8 @@ from attribution.models import attribution
 
 
 def set_coordinators_as_score_responsible(apps, schema_editor):
-    attributions = attribution.Attribution.objects.all()
-    for an_attribution in attributions:
-        if an_attribution.function == 'COORDINATOR':
-            an_attribution.score_responsible = True
-            an_attribution.save()
+    migrations.RunSQL("""UPDATE attribution_attribution SET score_responsible = TRUE
+                         WHERE function = 'COORDINATOR';""")
 
 
 class Migration(migrations.Migration):

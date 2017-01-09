@@ -3,20 +3,20 @@
 from __future__ import unicode_literals
 from django.db import migrations
 from base.models import attribution as base_attribution
-from attribution.models import attribution as local_attribution
 
 
 def move_data_from_base_attribution_to_attribution(apps, schema_editor):
-    base_attributions = base_attribution.Attribution.objects.all()
-    for b_attribution in base_attributions:
-        local_attrb = local_attribution.Attribution(external_id=b_attribution.external_id,
-                                                    changed=b_attribution.changed,
-                                                    start_date=b_attribution.start_date,
-                                                    end_date=b_attribution.end_date,
-                                                    function=b_attribution.function,
-                                                    learning_unit_year=b_attribution.learning_unit_year,
-                                                    tutor=b_attribution.tutor)
-        local_attrb.save()
+    for b_attribution in base_attribution.Attribution.objects.raw('SELECT * FROM base_attribution'):
+        migrations.RunSQL("""
+          INSERT INTO attribution_attribution
+              (external_id, changed, start_date, end_date, function, learning_unit_year_id, tutor)
+          VALUES ({}, {}, {}, {}, {}, {}, {});""".format(b_attribution.external_id,
+                                                         b_attribution.changed,
+                                                         b_attribution.start_date,
+                                                         b_attribution.end_date,
+                                                         b_attribution.function,
+                                                         b_attribution.learning_unit_year_id,
+                                                         b_attribution.tutor))
 
 
 class Migration(migrations.Migration):
