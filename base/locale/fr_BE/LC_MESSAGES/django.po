@@ -506,9 +506,10 @@ msgid "incomplete"
 msgstr "Incomplet"
 
 msgid "info_address_changed_for_papersheet"
-msgstr "Si vous choisissez de modifier un des champs de l'adresse ci-dessous, cela modifiera uniquement l'adresse "
-       "affichée sur la feuille de notes pour le programme %s. Vous ne modifierez jamais l'adresse d'une entité/structure "
-       "via ce formulaire. La liste des entités ci-dessous n'est proposée que pour vous aider à remplir les champs"
+msgstr "Ce formulaire de modification des coordonnées d’une entité administrative du programme d’étude %s "
+       "impacte uniquement l’affichage des coordonnées sur la feuille de notes. Cela ne modifie donc pas "
+       "les coordonnées officielles d’une entité/structure. Par ailleurs, la liste déroulante "
+       "« Réutiliser l’adresse de … » permet de faciliter l’encodage de l’adresse à partir de données préexistantes"
 
 msgid "inject"
 msgstr "Injecter"
