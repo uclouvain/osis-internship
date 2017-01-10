@@ -39,9 +39,6 @@ def create_attribution(tutor, learning_unit_year, score_responsible=False):
 class AttributionTest(TestCase):
 
     def test_find_responsible(self):
-        pass
-
-    def test_find_responsible(self):
         academic_year = test_academic_year.create_academic_year()
         learning_unit_year = test_learning_unit_year.create_learning_unit_year('LDROI', 'Droit', academic_year)
         first_coordinator = test_tutor.create_tutor(first_name="Jane", last_name="Phonda")
