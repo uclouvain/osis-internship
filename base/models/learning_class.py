@@ -25,47 +25,33 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-from osis_common.models.serializable_model import SerializableModel
-from base.enums.learning_unit_periodicity import PERIODICITY_TYPES
 
 
-class LearningUnitAdmin(admin.ModelAdmin):
-    list_display = ('acronym', 'title', 'start_year', 'end_year', 'changed')
-    fieldsets = ((None, {'fields': ('acronym','title','description','start_year','end_year')}),)
+class LearningClassAdmin(admin.ModelAdmin):
+    list_display = ('learning_component','title','end_year','periodicity')
+    fieldsets = ((None, {'fields': ('learning_component','title','end_year','periodicity')}),)
     search_fields = ['acronym']
 
 
-class LearningUnit(SerializableModel):
+class LearningClass(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed = models.DateTimeField(null=True)
-    acronym = models.CharField(max_length=15)
+    learning_component = models.ForeignKey('LearningComponent')
     title = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
-    start_year = models.IntegerField()
-    end_year = models.IntegerField(blank=True, null=True)
-    progress = None
-
+    #start_year = models.IntegerField()
+    #end_year = models.IntegerField(blank=True, null=True)
     periodicity = models.CharField(max_length=10, blank=True, null=True, choices=PERIODICITY_TYPES)
 
-    def __str__(self):
-        return u"%s - %s" % (self.acronym, self.title)
 
-    class Meta:
-        permissions = (
-            ("can_access_learningunit", "Can access learning unit"),
-        )
+def find_by_id(learning_class_id):
+    return LearningClass.objects.get(pk=learning_class_id)
 
 
-def find_by_id(learning_unit_id):
-    return LearningUnit.objects.get(pk=learning_unit_id)
-
-
-def find_by_ids(learning_unit_ids):
-    return LearningUnit.objects.filter(pk__in=learning_unit_ids)
+def find_by_ids(learning_class_ids):
+    return LearningClass.objects.filter(pk__in=learning_class_ids)
 
 
 def search(acronym=None):
-    queryset = LearningUnit.objects
+    queryset = LearningClass.objects
 
     if acronym:
         queryset = queryset.filter(acronym=acronym)

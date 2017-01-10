@@ -27,6 +27,7 @@ from django.db import models
 from django.contrib import admin
 from osis_common.models.serializable_model import SerializableModel
 from attribution.models import attribution
+from base.enums.learning_unit_year_type import YEAR_TYPES
 
 
 class LearningUnitYearAdmin(admin.ModelAdmin):
@@ -49,6 +50,17 @@ class LearningUnitYear(SerializableModel):
     team = models.BooleanField(default=False)
     vacant = models.BooleanField(default=False)
     in_charge = models.BooleanField(default=False)
+
+    language = models.ForeignKey('reference.Language', default=None)
+    acronym_unit_type = models.CharField(max_length=1, null=True)
+    title_short = models.CharField(max_length=50, null=True)
+    requirement_entity = models.IntegerField(default=0)
+    allocation_entity = models.IntegerField(default=0)
+    active = models.IntegerField(max_length=2)
+    site = models.CharField(max_length=50, default=None)
+    term = models.CharField(max_length=1, null=True)
+    exam_session = models.IntegerField(default=0)
+
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.acronym)

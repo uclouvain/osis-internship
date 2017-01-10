@@ -25,32 +25,21 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-from base.models.enums import component_type
-from osis_common.models.serializable_model import SerializableModel
+from django.utils import timezone
 
 
-class LearningUnitComponentAdmin(admin.ModelAdmin):
-    list_display = ('learning_unit_year', 'type', 'duration')
-    fieldsets = ((None, {'fields': ('learning_unit_year', 'type', 'duration')}),)
+class LearningComponentAdmin(admin.ModelAdmin):
+    list_display = ('learning_container', 'type','title','end_year')
+    fieldsets = ((None, {'fields': ('learning_container', 'type','title','end_year')}),)
+    search_fields = ['acronym']
 
 
-class LearningUnitComponent(SerializableModel):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    learning_unit_year = models.ForeignKey('LearningUnitYear')
-    type = models.CharField(max_length=25, blank=True, null=True, choices=component_type.COMPONENT_TYPES, db_index=True)
-    duration = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
-
-    def __str__(self):
-        return u"%s - %s" % (self.type, self.learning_unit_year)
-
-    class Meta:
-        permissions = (
-            ("can_access_learningunit", "Can access learning unit"),
-        )
-
-def find_by_learning_unit_year(learning_unit_year):
-    return LearningUnitComponent.objects.get(pk=learning_unit_year)
+class LearningComponent(models.Model):
+    learning_container = models.ForeignKey('LearningContainer')
+    type = models.CharField(max_length=12)
+    title = models.CharField(max_length=20)
+    end_date = models.DateField(default=timezone.now, blank=True, null=True)
 
 
-def find_by_id(learning_unit_component_id):
-    return LearningUnitComponent.objects.get(pk=learning_unit_component_id)
+def find_by_id(learning_component_id):
+    return LearningComponent.objects.get(pk=learning_component_id)

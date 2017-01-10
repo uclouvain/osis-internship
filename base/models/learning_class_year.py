@@ -25,47 +25,38 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-from osis_common.models.serializable_model import SerializableModel
-from base.enums.learning_unit_periodicity import PERIODICITY_TYPES
 
 
-class LearningUnitAdmin(admin.ModelAdmin):
-    list_display = ('acronym', 'title', 'start_year', 'end_year', 'changed')
-    fieldsets = ((None, {'fields': ('acronym','title','description','start_year','end_year')}),)
+class LearningClassYearAdmin(admin.ModelAdmin):
+    list_display = ('learning_component_year', 'learning_class', 'acronym_class_number', 'language', 'term')
+    fieldsets = ((None, {'fields': ('learning_component_year', 'learning_class', 'acronym', 'acronym_class_number', 'language', 'term')}),)
     search_fields = ['acronym']
 
 
-class LearningUnit(SerializableModel):
+class LearningClassYear(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed = models.DateTimeField(null=True)
-    acronym = models.CharField(max_length=15)
-    title = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
-    start_year = models.IntegerField()
-    end_year = models.IntegerField(blank=True, null=True)
-    progress = None
-
-    periodicity = models.CharField(max_length=10, blank=True, null=True, choices=PERIODICITY_TYPES)
-
-    def __str__(self):
-        return u"%s - %s" % (self.acronym, self.title)
+    learning_component_year = models.ForeignKey('LearningComponentYear')
+    learning_class = models.ForeignKey('LearningClass')
+    acronym_class_number = models.CharField(max_length=3)
+    language = models.ForeignKey('reference.Language')
+    term = models.CharField(max_length=1)
 
     class Meta:
         permissions = (
-            ("can_access_learningunit", "Can access learning unit"),
+            ("can_access_learningclassyear", "Can access learning class year"),
         )
 
 
-def find_by_id(learning_unit_id):
-    return LearningUnit.objects.get(pk=learning_unit_id)
+def find_by_id(learning_class_year_id):
+    return LearningClassYear.objects.get(pk=learning_class_year_id)
 
 
-def find_by_ids(learning_unit_ids):
-    return LearningUnit.objects.filter(pk__in=learning_unit_ids)
+def find_by_ids(learning_unit_year_ids):
+    return LearningClassYear.objects.filter(pk__in=learning_unit_year_ids)
 
 
 def search(acronym=None):
-    queryset = LearningUnit.objects
+    queryset = LearningClassYear.objects
 
     if acronym:
         queryset = queryset.filter(acronym=acronym)
