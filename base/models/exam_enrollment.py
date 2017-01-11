@@ -97,7 +97,7 @@ class ExamEnrollment(models.Model):
 
     @property
     def justification_draft_display(self):
-        if self.justification_draft in [justification_types.ABSENCE_UNJUSTIFIED, justification_types.ABSENCE_JUSTIFIED]:
+        if is_absence_justification(self.justification_draft):
             return _('absent')
         return _(self.justification_draft)
 
