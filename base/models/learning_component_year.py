@@ -40,8 +40,6 @@ class LearningComponentYear(models.Model):
     learning_component = models.ForeignKey('LearningComponent')
     title = models.CharField(max_length=255)
     acronym = models.CharField(max_length=3)
-    #type = models.CharField(max_length=30, blank=True, null=True, choices=YEAR_TYPE)
-    #comment = models.TextField(blank=True, null=True)
     credit_number = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     hour_volume = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     term = models.CharField(max_length=1)
