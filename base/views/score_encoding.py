@@ -30,6 +30,7 @@ from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext as trans
 from base import models as mdl
+from base.enums.exam_enrollment_justification_type import JUSTIFICATION_TYPES
 from attribution import models as mdl_attr
 from osis_common.document import paper_sheet
 from base.utils import send_mail, export_utils
@@ -526,7 +527,7 @@ def get_data_online_double(learning_unit_year_id, request):
             'enrollments': encoded_exam_enrollments,
             'num_encoded_scores': nb_final_scores,
             'learning_unit_year': learning_unit_year,
-            'justifications': mdl.exam_enrollment.JUSTIFICATION_TYPES,
+            'justifications': JUSTIFICATION_TYPES,
             'is_program_manager': mdl.program_manager.is_program_manager(request.user),
             'coordinator': coordinator,
             'count_total_enrollments': len(total_exam_enrollments),
