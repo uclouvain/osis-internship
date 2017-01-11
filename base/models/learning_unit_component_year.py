@@ -27,7 +27,6 @@ from django.db import models
 from base.enums.learning_component_year_type import YEAR_TYPE
 from django.contrib import admin
 
-
 class LearningComponentYearAdmin(admin.ModelAdmin):
     list_display = ('learning_container_year', 'learning_component', 'title', 'acronym', 'credit_number', 'hour_volume','term')
     fieldsets = ((None, {'fields': ('learning_container_year', 'learning_component', 'title', 'acronym',
@@ -55,7 +54,7 @@ class LearningComponentYear(models.Model):
 
     class Meta:
         permissions = (
-            ("can_access_learningcomponentyear", "Can access learning component year"),
+            ("can_access_learningunitcomponentyear", "Can access learning unit component year"),
         )
 
 

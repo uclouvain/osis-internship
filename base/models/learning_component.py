@@ -27,7 +27,7 @@ from django.db import models
 from django.contrib import admin
 from django.utils import timezone
 
-
+#Doit devenir Learning_unit_component
 class LearningComponentAdmin(admin.ModelAdmin):
     list_display = ('learning_container', 'type','title','end_year')
     fieldsets = ((None, {'fields': ('learning_container', 'type','title','end_year')}),)
