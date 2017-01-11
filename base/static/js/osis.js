@@ -60,12 +60,20 @@ function select_next_input_value(e){
         }
         disable_enter(e);
     }
+    else if (keycode_is_tab(e)) {
+        window.scrollBy(0, this.scrollHeight + 19);
+    }
 }
 
 
 function keycode_is_enter(event){
     var keyCode = event.keyCode || event.which;
     return keyCode === 13;
+}
+
+function keycode_is_tab(event){
+    var keyCode = event.keyCode || event.which;
+    return keyCode === 9;
 }
 
 function originalValueChanged(values, id, score, justification) {
