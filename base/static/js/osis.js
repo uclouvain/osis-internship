@@ -50,6 +50,7 @@ function disable_enter(e) {
 function select_next_input_value(e){
     var target = e.data.target;
     if (keycode_is_enter(e)) {
+        window.scrollBy(0, this.scrollHeight + 19);
         var index = $(target).index(this);
         if (this.tabIndex >= e.data.table_size){
             $(target).eq(index).blur();
