@@ -25,7 +25,7 @@
 ##############################################################################
 import datetime
 from django.test import TestCase
-from base.models.learning_unit_container import LearningContainer
+from base.models.learning_container import LearningContainer
 from base.models.learning_container_year import LearningContainerYear
 from base.models.learning_component import LearningComponent
 from base.models.learning_component_year import LearningComponentYear

@@ -29,17 +29,11 @@ from django.utils import timezone
 
 #Doit devenir Learning_unit_component
 class LearningComponentAdmin(admin.ModelAdmin):
-    list_display = ('learning_container', 'type','title','end_year')
-    fieldsets = ((None, {'fields': ('learning_container', 'type','title','end_year')}),)
-    search_fields = ['acronym']
-
+    list_display = ('learning_container')
+    fieldsets = ((None, {'fields': ('learning_container')}),)
 
 class LearningComponent(models.Model):
     learning_container = models.ForeignKey('LearningContainer')
-    type = models.CharField(max_length=12)
-    title = models.CharField(max_length=20)
-    end_date = models.DateField(default=timezone.now, blank=True, null=True)
-
 
 def find_by_id(learning_component_id):
     return LearningComponent.objects.get(pk=learning_component_id)

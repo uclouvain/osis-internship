@@ -28,9 +28,9 @@ from base.enums.learning_component_year_type import YEAR_TYPE
 from django.contrib import admin
 
 class LearningComponentYearAdmin(admin.ModelAdmin):
-    list_display = ('learning_container_year', 'learning_component', 'title', 'acronym', 'credit_number', 'hour_volume','term')
+    list_display = ('learning_container_year', 'learning_component', 'title', 'acronym', 'type', 'comment')
     fieldsets = ((None, {'fields': ('learning_container_year', 'learning_component', 'title', 'acronym',
-                                    'credit_number', 'hour_volume','term')}),)
+                                    'type', 'comment')}),)
     search_fields = ['acronym']
 
 
@@ -39,9 +39,8 @@ class LearningComponentYear(models.Model):
     learning_component = models.ForeignKey('LearningComponent')
     title = models.CharField(max_length=255)
     acronym = models.CharField(max_length=3)
-    credit_number = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
-    hour_volume = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
-    term = models.CharField(max_length=1)
+    type = models.CharField(max_length=20)
+    comment = models.CharField(max_length=255)
 
     def save(self, *args, **kwargs):
         if self.learning_container_year.learning_container != self.learning_component.learning_container:

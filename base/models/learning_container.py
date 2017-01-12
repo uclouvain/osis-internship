@@ -31,10 +31,8 @@ class LearningContainerAdmin(admin.ModelAdmin):
     list_display = ('title',)
     fieldsets = ((None, {'fields': ('title',)}),)
 
-
 class LearningContainer(models.Model):
     title = models.CharField(max_length=255)
-
 
 def find_by_id(learning_container_id):
     return LearningContainer.objects.get(pk=learning_container_id)

@@ -40,27 +40,18 @@ class LearningUnitYearAdmin(admin.ModelAdmin):
 
 class LearningUnitYear(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
+    academic_year = models.ForeignKey('AcademicYear')
+    learning_unit = models.ForeignKey('LearningUnit')
+    learning_container_year = models.ForeignKey('LearningContainerYear')
     changed = models.DateTimeField(null=True)
     acronym = models.CharField(max_length=15, db_index=True)
     title = models.CharField(max_length=255)
+    type = models.CharField(max_length=3, blank=True, null=True, db_index=True)
     credits = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     decimal_scores = models.BooleanField(default=False)
-    academic_year = models.ForeignKey('AcademicYear')
-    learning_unit = models.ForeignKey('LearningUnit')
     team = models.BooleanField(default=False)
     vacant = models.BooleanField(default=False)
     in_charge = models.BooleanField(default=False)
-
-    language = models.ForeignKey('reference.Language', default=None)
-    acronym_unit_type = models.CharField(max_length=1, null=True)
-    title_short = models.CharField(max_length=50, null=True)
-    requirement_entity = models.IntegerField(default=0)
-    allocation_entity = models.IntegerField(default=0)
-    active = models.IntegerField(max_length=2)
-    site = models.CharField(max_length=50, default=None)
-    term = models.CharField(max_length=1, null=True)
-    exam_session = models.IntegerField(default=0)
-
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.acronym)

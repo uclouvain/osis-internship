@@ -39,12 +39,12 @@ class LearningUnit(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     acronym = models.CharField(max_length=15)
+    periodicity = models.CharField(max_length=10)
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     start_year = models.IntegerField()
     end_year = models.IntegerField(blank=True, null=True)
     progress = None
-
     periodicity = models.CharField(max_length=10, blank=True, null=True, choices=PERIODICITY_TYPES)
 
     def __str__(self):
