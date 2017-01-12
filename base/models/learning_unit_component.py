@@ -30,13 +30,14 @@ from osis_common.models.serializable_model import SerializableModel
 
 
 class LearningUnitComponentAdmin(admin.ModelAdmin):
-    list_display = ('learning_unit_year', 'type', 'duration')
-    fieldsets = ((None, {'fields': ('learning_unit_year', 'type', 'duration')}),)
+    list_display = ('learning_unit_year', 'learning_component_year', 'type', 'duration')
+    fieldsets = ((None, {'fields': ('learning_unit_year', 'learning_component_year', 'type', 'duration')}),)
 
 
 class LearningUnitComponent(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     learning_unit_year = models.ForeignKey('LearningUnitYear')
+    learning_component_year = models.ForeignKey('LearningComponentYear')
     type = models.CharField(max_length=25, blank=True, null=True, choices=component_type.COMPONENT_TYPES, db_index=True)
     duration = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
 
