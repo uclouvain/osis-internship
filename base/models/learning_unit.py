@@ -39,7 +39,6 @@ class LearningUnit(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     acronym = models.CharField(max_length=15)
-    periodicity = models.CharField(max_length=10)
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     start_year = models.IntegerField()

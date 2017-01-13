@@ -28,9 +28,8 @@ from django.contrib import admin
 
 
 class LearningUnitComponentClassAdmin(admin.ModelAdmin):
-    list_display = ()
+    list_display = ('learning_unit_component', 'learning_class_year')
     fieldsets = ((None, {'fields': ('learning_unit_component', 'learning_class_year')}),)
-    search_fields = ['acronym']
 
 
 class LearningUnitComponentClass(models.Model):
