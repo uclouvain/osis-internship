@@ -50,6 +50,7 @@ function disable_enter(e) {
 function select_next_input_value(e){
     var target = e.data.target;
     if (keycode_is_enter(e)) {
+        window.scrollBy(0, this.scrollHeight + 19);
         var index = $(target).index(this);
         if (this.tabIndex >= e.data.table_size){
             $(target).eq(index).blur();
@@ -59,12 +60,20 @@ function select_next_input_value(e){
         }
         disable_enter(e);
     }
+    else if (keycode_is_tab(e)) {
+        window.scrollBy(0, this.scrollHeight + 19);
+    }
 }
 
 
 function keycode_is_enter(event){
     var keyCode = event.keyCode || event.which;
     return keyCode === 13;
+}
+
+function keycode_is_tab(event){
+    var keyCode = event.keyCode || event.which;
+    return keyCode === 9;
 }
 
 function originalValueChanged(values, id, score, justification) {

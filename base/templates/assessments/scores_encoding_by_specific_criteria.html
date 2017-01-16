@@ -62,8 +62,8 @@
                     <label>{% trans 'justification' %}</label>
                     <select class="form-control" name="justification" id="slt_justification">
                         <option value="">{% trans 'all' %}</option>
-                        <option {% if justification == "ABSENCE_JUSTIFIED" %} selected {% endif %} value="ABSENCE_JUSTIFIED">{% trans 'ABSENCE_JUSTIFIED' %}</option>
                         <option {% if justification == "ABSENCE_UNJUSTIFIED" %} selected {% endif %} value="ABSENCE_UNJUSTIFIED">{% trans 'ABSENCE_UNJUSTIFIED' %}</option>
+                        <option {% if justification == "ABSENCE_JUSTIFIED" %} selected {% endif %} value="ABSENCE_JUSTIFIED">{% trans 'ABSENCE_JUSTIFIED' %}</option>
                         <option {% if justification == "CHEATING" %} selected {% endif %} value="CHEATING">{% trans 'CHEATING' %}</option>
                         <option {% if justification == "SCORE_MISSING" %} selected {% endif %} value="SCORE_MISSING">{% trans 'SCORE_MISSING' %}</option>
                     </select>
@@ -131,8 +131,8 @@
                             <select class="form-control" name="justification_{{ enrol.id }}" id="slt_justification_score_{{ enrol.id }}"
                                    tabindex="{{ exam_enrollments|length|sum:forloop.counter }}">
                                 <option value=""></option>
-                                <option {% if enrol.justification_final == "ABSENCE_JUSTIFIED" %} selected {% endif %} value="ABSENCE_JUSTIFIED">{% trans 'ABSENCE_JUSTIFIED' %}</option>
                                 <option {% if enrol.justification_final == "ABSENCE_UNJUSTIFIED" %} selected {% endif %} value="ABSENCE_UNJUSTIFIED">{% trans 'ABSENCE_UNJUSTIFIED' %}</option>
+                                <option {% if enrol.justification_final == "ABSENCE_JUSTIFIED" %} selected {% endif %} value="ABSENCE_JUSTIFIED">{% trans 'ABSENCE_JUSTIFIED' %}</option>
                                 <option {% if enrol.justification_final == "CHEATING" %} selected {% endif %} value="CHEATING">{% trans 'CHEATING' %}</option>
                                 <option {% if enrol.justification_final == "SCORE_MISSING" %} selected {% endif %} value="SCORE_MISSING">{% trans 'SCORE_MISSING' %}</option>
                             </select>

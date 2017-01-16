@@ -30,8 +30,10 @@ from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext as trans
 from base import models as mdl
+from base.enums.exam_enrollment_justification_type import JUSTIFICATION_TYPES
 from attribution import models as mdl_attr
-from base.utils import send_mail, pdf_utils, export_utils
+from osis_common.document import paper_sheet
+from base.utils import send_mail, export_utils
 from . import layout
 import json
 import datetime
@@ -378,7 +380,7 @@ def notes_printing(request, learning_unit_year_id=None, tutor_id=None, offer_id=
                                              offer_year_id=offer_id,
                                              is_program_manager=is_program_manager)
     tutor = mdl.tutor.find_by_user(request.user) if not is_program_manager else None
-    return pdf_utils.print_notes(exam_enrollments, tutor=tutor)
+    return paper_sheet.build_response(mdl.exam_enrollment.scores_sheet_data(exam_enrollments, tutor=tutor))
 
 
 @login_required
@@ -525,7 +527,7 @@ def get_data_online_double(learning_unit_year_id, request):
             'enrollments': encoded_exam_enrollments,
             'num_encoded_scores': nb_final_scores,
             'learning_unit_year': learning_unit_year,
-            'justifications': mdl.exam_enrollment.JUSTIFICATION_TYPES,
+            'justifications': JUSTIFICATION_TYPES,
             'is_program_manager': mdl.program_manager.is_program_manager(request.user),
             'coordinator': coordinator,
             'count_total_enrollments': len(total_exam_enrollments),
