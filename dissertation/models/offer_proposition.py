@@ -34,6 +34,7 @@ from datetime import datetime
 class OfferPropositionAdmin(admin.ModelAdmin):
     list_display = ('acronym', 'offer')
     raw_id_fields = ('offer',)
+    search_fields = ('uuid',)
 
 
 class OfferProposition(SerializableModel):
@@ -116,3 +117,7 @@ def get_by_dissertation(dissert):
 
 def find_by_id(offer_proposition_id):
     return OfferProposition.objects.get(pk=offer_proposition_id)
+
+
+def find_all_ordered_by_acronym():
+    return OfferProposition.objects.order_by('acronym')

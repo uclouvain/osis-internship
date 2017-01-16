@@ -35,10 +35,7 @@ from django.utils.translation import ugettext_lazy as _
 class PropositionDissertationAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'visibility', 'active', 'creator')
     raw_id_fields = ('creator', 'author')
-    search_fields = ('title',
-                     'author__person__last_name',
-                     'author__person__first_name'
-                     )
+    search_fields = ('uuid', 'title', 'author__person__last_name', 'author__person__first_name')
 
 
 class PropositionDissertation(SerializableModel):
@@ -161,5 +158,5 @@ def find_by_id(proposition_id):
 
 
 def search_by_offers(offers):
-    proposition_ids = proposition_offer.search_by_offers(offers).values('proposition_dissertation_id')
+    proposition_ids = proposition_offer.find_by_offers(offers).values('proposition_dissertation_id')
     return PropositionDissertation.objects.filter(pk__in=proposition_ids, active=True, visibility=True)

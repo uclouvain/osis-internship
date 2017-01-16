@@ -31,7 +31,7 @@ from osis_common.models.serializable_model import SerializableModel
 
 
 class OfferYearAdmin(admin.ModelAdmin):
-    list_display = ('acronym', 'offer', 'parent', 'title', 'academic_year', 'changed')
+    list_display = ('acronym', 'title', 'academic_year', 'offer', 'parent', 'changed')
     fieldsets = ((None, {'fields': ('offer', 'academic_year', 'entity_administration', 'entity_administration_fac',
                                     'entity_management', 'entity_management_fac', 'acronym', 'title', 'parent',
                                     'title_international', 'title_short', 'title_printable', 'grade', 'recipient',
@@ -139,7 +139,7 @@ def find_by_id(offer_year_id):
 
 
 def find_by_acronym(acronym):
-    return OfferYear.objects.filter(acronym=acronym).first()
+    return OfferYear.objects.filter(acronym=acronym)
 
 
 def search(entity=None, academic_yr=None, acronym=None):

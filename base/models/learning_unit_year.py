@@ -25,18 +25,19 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-
-from base.models import attribution
+from osis_common.models.serializable_model import SerializableModel
+from attribution.models import attribution
 
 
 class LearningUnitYearAdmin(admin.ModelAdmin):
     list_display = ('acronym', 'title', 'academic_year', 'credits', 'changed')
-    fieldsets = ((None, {'fields': ('academic_year', 'acronym', 'title', 'credits', 'decimal_scores')}),)
+    fieldsets = ((None, {'fields': ('academic_year', 'learning_unit', 'acronym', 'title', 'credits', 'decimal_scores')}),)
     list_filter = ('academic_year',)
+    raw_id_fields = ('learning_unit',)
     search_fields = ['acronym']
 
 
-class LearningUnitYear(models.Model):
+class LearningUnitYear(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     acronym = models.CharField(max_length=15, db_index=True)
@@ -45,6 +46,9 @@ class LearningUnitYear(models.Model):
     decimal_scores = models.BooleanField(default=False)
     academic_year = models.ForeignKey('AcademicYear')
     learning_unit = models.ForeignKey('LearningUnit')
+    team = models.BooleanField(default=False)
+    vacant = models.BooleanField(default=False)
+    in_charge = models.BooleanField(default=False)
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.acronym)
