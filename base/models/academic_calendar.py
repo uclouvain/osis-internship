@@ -27,11 +27,12 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils import timezone
 from base.models.exceptions import FunctionAgrumentMissingException, StartDateHigherThanEndDateException
+from osis_common.models.serializable_model import SerializableModel
 
 FUNCTIONS = 'functions'
 
 
-class AcademicCalendar(models.Model):
+class AcademicCalendar(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     academic_year = models.ForeignKey('AcademicYear')
