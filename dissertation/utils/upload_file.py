@@ -23,5 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from osis_common.models.enum import storage_duration
 
-FILES_STORAGE_DURATION = 5 * 366
+
+FILES_STORAGE_DURATION = storage_duration.FIVE_YEARS
