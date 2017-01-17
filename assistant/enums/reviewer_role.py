@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,24 +23,18 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import TestCase
-from django.core.urlresolvers import reverse
-from django.core.urlresolvers import resolve
-from assistant.views.messages import show_history
-from assistant.utils.send_email import send_message_to_assistants, send_message_to_deans
-from assistant.enums import message_type
+PHD_SUPERVISOR = 'PHD_SUPERVISOR'
+SUPERVISION = 'SUPERVISION'
+SUPERVISION_ASSISTANT = 'SUPERVISION_ASSISTANT'
+RESEARCH = 'RESEARCH'
+RESEARCH_ASSISTANT = 'RESEARCH_ASSISTANT'
+SECTOR_VICE_RECTOR = 'SECTOR_VICE_RECTOR'
+SECTOR_VICE_RECTOR_ASSISTANT = 'SECTOR_VICE_RECTOR_ASSISTANT'
 
-
-class AssistantURLsTestCase(TestCase):
-
-    def test_url_resolves_to_manager_messages_view(self):
-        found = resolve('/assistants/manager/messages/history/')
-        self.assertEqual(found.func, show_history)
-
-    def test_url_resolves_to_manager_message_send_to_assistants(self):
-        found = resolve(reverse('send_message_to_assistants'))
-        self.assertEqual(found.func, send_message_to_assistants)
-
-    def test_url_resolves_to_manager_message_send_to_deans(self):
-        found = resolve(reverse('send_message_to_deans'))
-        self.assertEqual(found.func, send_message_to_deans)
+ROLE_CHOICES = ((PHD_SUPERVISOR, PHD_SUPERVISOR),
+           (SUPERVISION, SUPERVISION),
+           (SUPERVISION_ASSISTANT, SUPERVISION_ASSISTANT),
+           (RESEARCH, RESEARCH),
+           (RESEARCH_ASSISTANT, RESEARCH_ASSISTANT),
+           (SECTOR_VICE_RECTOR, SECTOR_VICE_RECTOR),
+           (SECTOR_VICE_RECTOR_ASSISTANT, SECTOR_VICE_RECTOR_ASSISTANT))

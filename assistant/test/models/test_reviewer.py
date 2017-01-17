@@ -23,19 +23,22 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import LiveServerTestCase
-from selenium import webdriver
+from django.test import TestCase
+from base.models.person import Person
+from django.contrib.auth.models import User
+from assistant.models.reviewer import Reviewer
+from assistant.enums import reviewer_role
 
 
-class ManagerTestCase(LiveServerTestCase):
+class MessageModelTestCase(TestCase):
     def setUp(self):
-        self.browser = webdriver.Firefox()
-        self.browser.implicitly_wait(2)
+        self.user = User.objects.create_user(
+            username='reviewer', email='reviewer@uclouvain.be', password='secret'
+        )
+        self.person = Person.objects.create(user=self.user, first_name='Laurent', last_name='last_name')
+        self.reviewer = Reviewer.objects.create(person=self.person, role=reviewer_role.RESEARCH_ASSISTANT)
+        self.reviewer.save()
 
-    def tearDown(self):
-        self.browser.quit()
-
-    def test_manager_see_history_messages(self):
-        messages_history_page = self.browser.get('http:/localhost:8000/assistants/manager/messages/history')
-        import pdb;
-        pdb.set_trace()
+    def test_reviewer_basic(self):
+        self.assertEqual(self.reviewer.role, reviewer_role.RESEARCH_ASSISTANT)
+        self.assertEqual(self.reviewer.person.first_name, 'Laurent')

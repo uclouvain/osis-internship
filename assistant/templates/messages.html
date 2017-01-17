@@ -46,17 +46,18 @@
             <div class="list-group-item">
                 <h4 class="list-group-item-heading">{% trans 'assistants' %}</h4>
                 <p class="list-group-item-text">{% trans 'startup_precedure' %}</p>
-                <p style="margin-top: 10px;"><a href="{% url 'send_message' type='TO_ALL_ASSISTANTS' %}" class="btn btn-info"
+                <p style="margin-top: 10px;"><a href="{% url 'send_message_to_assistants' %}" class="btn btn-info"
                                                 role="button"
                                                 onclick="return confirm('{% trans 'confirm_send_emails' %}')">
                     {% trans 'send_email_to_all_assistants' %}</a></p>
-                </p>
             </div>
             <div class="list-group-item">
-                <h4 class="list-group-item-heading">{% trans 'deans' %}</h4>
+                <h4 class="list-group-item-heading">{% trans 'assistants' %}</h4>
                 <p class="list-group-item-text">{% trans 'startup_precedure' %}</p>
-                <p style="margin-top: 10px;"><a href="#" class="btn btn-info" role="button">
-                {% trans 'send_email_to_all_deans' %}</a></p>
+                <p style="margin-top: 10px;"><a href="{% url 'send_message_to_deans' %}" class="btn btn-info"
+                                                role="button"
+                                                onclick="return confirm('{% trans 'confirm_send_emails' %}')">
+                    {% trans 'send_email_to_all_deans' %}</a></p>
             </div>
         </div>
         <div class="table-responsive">
@@ -72,7 +73,7 @@
             {% for message in sent_messages %}
                 <tr>
                     <td>{{ message.sender.person }}</td>
-                    <td>{{ message.type }}</td>
+                    <td>{% trans message.type %}</td>
                     <td>{{ message.date }}</td>
                 </tr>
             {% endfor %}
