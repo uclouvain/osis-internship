@@ -70,7 +70,7 @@ def save_uploaded_file(request, mandate_id):
                                                                   application_name='assistant',
                                                                   content_type=content_type,
                                                                   size=size,
-                                                                  user=request.user)
+                                                                  update_by=request.user)
         new_document.save()
         assistant_mandate_document_file = mdl.assistant_document_file.AssistantDocumentFile()
         assistant_mandate_document_file.assistant_mandate = assistant_mandate
