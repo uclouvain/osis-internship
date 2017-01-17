@@ -123,9 +123,9 @@
                     </thead>
                     {% for attribution in attributions %}
                         <tr>
-                            <td><a href="{% url 'learning_unit_read' attribution.learning_unit.id %}"
+                            <td><a href="{% url 'learning_unit_read' attribution.learning_unit_year.id %}"
                                    id="lnk_organization_read_{{ attribution.learning_unit.id }}">
-                                    {{ attribution.learning_unit }}</a></td>
+                                    {{ attribution.learning_unit_year }} - {{ attribution.learning_unit_year.title }}</a></td>
                         </tr>
                     {% endfor %}
                 </table>

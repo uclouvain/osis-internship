@@ -45,9 +45,7 @@ HEADER = [str(_('academic_year')),
           str(_('ID'))]
 
 
-def export_xls(academic_year_id, is_fac, exam_enrollments):
-    academic_year = mdl.academic_year.find_academic_year_by_id(academic_year_id)
-
+def export_xls(exam_enrollments):
     workbook = Workbook()
     worksheet = workbook.active
 
@@ -65,7 +63,7 @@ def export_xls(academic_year_id, is_fac, exam_enrollments):
     __columns_resizing(worksheet)
     worksheet.append(HEADER)
 
-    row_number = 7
+    row_number = 9
     for exam_enroll in exam_enrollments:
         student = exam_enroll.learning_unit_enrollment.student
         offer = exam_enroll.learning_unit_enrollment.offer
@@ -84,7 +82,7 @@ def export_xls(academic_year_id, is_fac, exam_enrollments):
         justification = ""
         if exam_enroll.justification_final:
             justification = _(exam_enroll.justification_final)
-        worksheet.append([str(academic_year),
+        worksheet.append([str(exam_enroll.learning_unit_enrollment.learning_unit_year.academic_year),
                           str(exam_enroll.session_exam.number_session),
                           exam_enroll.session_exam.learning_unit_year.acronym,
                           offer.acronym,
@@ -99,12 +97,12 @@ def export_xls(academic_year_id, is_fac, exam_enrollments):
         row_number += 1
         __coloring_non_editable(worksheet, row_number, score, exam_enroll.justification_final)
 
-    number_session = list(exam_enrollments)[0].session_exam.number_session
-    learn_unit_acronym = list(exam_enrollments)[0].session_exam.learning_unit_year.acronym
+    lst_exam_enrollments = list(exam_enrollments)
+    number_session = lst_exam_enrollments[0].session_exam.number_session
+    learn_unit_acronym = lst_exam_enrollments[0].session_exam.learning_unit_year.acronym
+    academic_year = lst_exam_enrollments[0].learning_unit_enrollment.learning_unit_year.academic_year
 
-    filename = "session_%s_%s_%s.xlsx" % (str(academic_year.year),
-                                         str(number_session),
-                                         learn_unit_acronym)
+    filename = "session_%s_%s_%s.xlsx" % (str(academic_year.year), str(number_session), learn_unit_acronym)
     response = HttpResponse(save_virtual_workbook(workbook), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = 'attachment; filename=%s' % filename
     return response

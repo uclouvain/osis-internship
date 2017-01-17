@@ -30,6 +30,7 @@ from django.core.urlresolvers import reverse
 from assistant.models import academic_assistant, manager, reviewer
 from assistant.models import settings
 
+
 @login_required
 def assistant_home(request):
     try:

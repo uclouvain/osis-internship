@@ -304,8 +304,26 @@
         }
     });
 
-    $('#form_online_double_encoding').on('keyup keypress', function(e) {
+
+    var target_score = '#form_online_double_encoding tbody tr td input';
+    $(target_score).on('keypress',
+                       { "target": target_score,
+                         "table_size": $('#form_online_double_encoding tbody tr').length,
+                         "index_increment_value": 4},
+                       select_next_input_value);
+
+
+    var target_justification = '#form_online_double_encoding tbody tr td select';
+    $(target_justification).on('keypress',
+                               { "target": target_justification,
+                                 "table_size": $('#form_online_double_encoding tbody tr').length * 2,
+                                 "index_increment_value": 1},
+                               select_next_input_value);
+
+
+    $(document).on('keypress', function(e) {
         disable_enter(e);
     });
+
 </script>
 {% endblock %}

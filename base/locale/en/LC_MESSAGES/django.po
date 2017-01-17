@@ -326,6 +326,9 @@ msgstr "The configuration of you user profile"
 msgid "description"
 msgstr "Description"
 
+msgid "display_scores_for_one_learning_unit"
+msgstr "Display scores for this learning unit"
+
 msgid "display_tutors"
 msgstr "Display all tutors for this learning unit"
 
@@ -339,7 +342,7 @@ msgid "done_at"
 msgstr "Done at"
 
 msgid "double_encoding"
-msgstr "Dubble encoding"
+msgstr "Double encoding"
 
 msgid "double_encoding_test"
 msgstr "Scores double encoding"
@@ -1160,6 +1163,10 @@ msgstr "Show message"
 msgid "tooltip_print_scores"
 msgstr "Print the scores"
 
+msgid "tooltip_scores_encodings_progress_bar"
+msgstr "Represents the quantity of scores submitted to the administration. The number surrounded by parenthesis is the "
+       "number of scores encoded by the tutor that aren't submitted yet ('draft' state)"
+
 msgid "tooltip_select_action"
 msgstr "Select action to execute"
 
@@ -1245,3 +1252,78 @@ msgstr "Your excel file isn't well structured. Please follow the structure of th
 
 msgid "you_manage"
 msgstr "You manage"
+
+msgid "admission_form"
+msgstr "Admission form"
+
+msgid "order"
+msgstr "Order"
+
+msgid "options"
+msgstr "Options"
+
+msgid "required"
+msgstr "Required"
+
+msgid "question"
+msgstr "Question"
+
+msgid "questions"
+msgstr "Questions"
+
+msgid "value"
+msgstr "Value"
+
+msgid "short_input_text"
+msgstr "Short input text"
+
+msgid "long_input_text"
+msgstr "Long input text"
+
+msgid "radio_button"
+msgstr "Radio button"
+
+msgid "checkbox"
+msgstr "Checkbox"
+
+msgid "upload_button"
+msgstr "Upload button"
+
+msgid "download_link"
+msgstr "Download link"
+
+msgid "dropdown_list"
+msgstr "Dropdown list"
+
+msgid "http_link"
+msgstr "HTTP link"
+
+msgid "BACHELOR"
+msgstr "Bachelor"
+
+msgid "MASTER_60"
+msgstr "Master 60"
+
+msgid "MASTER_120"
+msgstr "Master 120"
+
+msgid "MASTER_180_OR_240"
+msgstr "Master 180 or 240"
+
+msgid "ADVANCED_MASTER"
+msgstr "Advanced master"
+
+msgid "TRAINING_CERTIFICATE"
+msgstr "Training certificate"
+
+msgid "CERTIFICATE"
+msgstr "Certificate"
+
+msgid "DOCTORATE"
+msgstr "Doctorate"
+
+msgid "CAPAES"
+msgstr "CAPAES"
+
+msgid "start_date_must_be_lower_than_end_date"
+msgstr "Start date must be lower than end date"

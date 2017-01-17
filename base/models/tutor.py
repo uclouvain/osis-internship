@@ -26,8 +26,9 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.contrib import admin
-from base.models import person, attribution
-from base.models import serializable_model
+from attribution.models import attribution
+from base.models import person
+from osis_common.models import serializable_model
 
 
 class TutorAdmin(admin.ModelAdmin):
@@ -68,12 +69,12 @@ def find_by_id(tutor_id):
 
 
 # To refactor because it is not in the right place.
-def find_by_learning_unit(learning_unit_id):
+def find_by_learning_unit(learning_unit_year):
     """
-    :param learning_unit_id:
+    :param learning_unit_year:
     :return: All tutors of the learningUnit passed in parameter.
     """
-    tutor_ids = attribution.search(learning_unit_id=learning_unit_id).values_list('tutor').distinct('tutor')
+    tutor_ids = attribution.search(learning_unit_year=learning_unit_year).values_list('tutor').distinct('tutor')
     return Tutor.objects.filter(pk__in=tutor_ids).order_by('person__last_name', 'person__first_name')
 
 

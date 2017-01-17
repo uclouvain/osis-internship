@@ -39,8 +39,7 @@ from django.shortcuts import render
 from internship.models import *
 from internship.views.internship import calc_dist, set_tabs_name
 from internship.views.place import sort_organizations, set_speciality_unique
-import time
-import datetime
+from datetime import datetime
 # ****************** Global vars ******************
 errors = []  # List of all internship added to hospital error, as tuple (student, speciality, period)
 solution = {}  # Dict with the solution => solution[student][period] = SolutionLine
@@ -974,24 +973,25 @@ def swap_empty_internships():
                                     student_sol = solution[choice.student][period]
                                     # We can swap only non priority students
                                     if choice.priority is False and student_sol.speciality == speciality:
-                                        # Check if we can increase the number of the available students
-                                        if int(internship_table[student_sol.organization][student_sol.speciality][
-                                                   period]) + 1 < \
-                                                internship_table_original[student_sol.organization][
-                                                    student_sol.speciality][
-                                                    period]:
-                                            # Increase the number of places of old internship
-                                            increase_available_places(student_sol.organization, speciality, period)
-                                            # Replace the internship
-                                            solution[choice.student][period] = SolutionsLine(choice.student,
-                                                                                             organization,
-                                                                                             speciality,
-                                                                                             period,
-                                                                                             choice.choice,
-                                                                                             "N")
-                                            # Decrease new internship
-                                            decrease_available_places(organization, speciality, period)
-                                            break
+                                        if student_sol.type_of_internship == "N":
+                                            # Check if we can increase the number of the available students
+                                            if int(internship_table[student_sol.organization][student_sol.speciality][
+                                                       period]) + 1 < \
+                                                    internship_table_original[student_sol.organization][
+                                                        student_sol.speciality][
+                                                        period]:
+                                                # Increase the number of places of old internship
+                                                increase_available_places(student_sol.organization, speciality, period)
+                                                # Replace the internship
+                                                solution[choice.student][period] = SolutionsLine(choice.student,
+                                                                                                 organization,
+                                                                                                 speciality,
+                                                                                                 period,
+                                                                                                 choice.choice,
+                                                                                                 "N")
+                                                # Decrease new internship
+                                                decrease_available_places(organization, speciality, period)
+                                                break
 
 
 def swap_errors():
@@ -1015,7 +1015,8 @@ def swap_errors():
 
         specialities_to_swap = []
         for available_period in available_periods:
-            specialities_to_swap.append((solution[student][available_period].speciality, available_period))
+            if(solution[student][available_period].type_of_internship == "N"):
+                specialities_to_swap.append((solution[student][available_period].speciality, available_period))
 
         # Find if the specialities that take the available periods of the speciality
         internships_to_swap = []
@@ -1145,9 +1146,12 @@ def load_solution(data):
         # Update the number of available places for given organization, speciality, period
         temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['after'] -= 1
         # Update the % of takes places
-        temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['pc'] = \
-            temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['after'] / \
-            temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['before'] * 100
+        if temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['before'] > 0:
+            temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['pc'] = \
+                temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['after'] / \
+                temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['before'] * 100
+        else:
+            temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['pc'] = 0
     # Sort all student by the score (descending order)
     sorted_internship_table = []
     for organization, specialities in temp_internship_table.items():
@@ -1164,6 +1168,7 @@ def internship_affectation_statistics_generate(request):
     """ Generate new solution, save it in the database, redirect back to the page 'internship_affectation_statistics'"""
     if request.method == 'POST':
         if request.POST['executions'] != "":
+            start_date_time = datetime.now()
             cost = sys.maxsize
             for i in range(0, int(request.POST['executions'])):
                 generate_solution()
@@ -1171,6 +1176,12 @@ def internship_affectation_statistics_generate(request):
                 if new_cost < cost:
                     save_solution()
                     cost = new_cost
+            end_date_time = datetime.now()
+            affectation_generatioon_time = AffectationGenerationTime()
+            affectation_generatioon_time.start_date_time = start_date_time
+            affectation_generatioon_time.end_date_time = end_date_time
+            affectation_generatioon_time.generated_by = request.user.username
+            affectation_generatioon_time.save()
         return HttpResponseRedirect(reverse('internship_affectation_statistics'))
 
 
@@ -1190,12 +1201,15 @@ def internship_affectation_statistics(request):
         # Mange sort of the organizations
         table.sort(key=itemgetter(0))
         internship_errors = InternshipStudentAffectationStat.objects.filter(organization=organizations[hospital_error])
+
+    latest_generation = AffectationGenerationTime.get_latest()
     return render(request, "internship_affectation_statics.html",
                   {'section': 'internship',
                    'recap_sol': sol,
                    'stats': stats,
                    'organizations': table,
-                   'errors': internship_errors})
+                   'errors': internship_errors,
+                   'latest_generation': latest_generation })
 
 
 @login_required

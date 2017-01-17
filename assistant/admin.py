@@ -24,7 +24,7 @@
 #
 ##############################################################################
 from django.contrib import admin
-from assistant.models import reviewer, manager
+from assistant.models import reviewer, manager, settings
 from assistant.models.assistant_mandate import AssistantMandate
 from assistant.models.academic_assistant import AcademicAssistant
 from assistant.models.assistant_document_file import AssistantDocumentFile
@@ -41,3 +41,4 @@ admin.site.register(Review)
 admin.site.register(TutoringLearningUnitYear)
 admin.site.register(reviewer.Reviewer, reviewer.ReviewerAdmin)
 admin.site.register(manager.Manager, manager.ManagerAdmin)
+admin.site.register(settings.Settings, settings.SettingsAdmin)

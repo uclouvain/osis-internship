@@ -23,11 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from osis_common.models.serializable_model import SerializableModel
 from django.db import models
 from . import dissertation
+from django.contrib import admin
 
 
-class DissertationGroup(models.Model):
+class DissertationGroupAdmin(admin.ModelAdmin):
+    list_display = ('dissertation',)
+    raw_id_fields = ('dissertation',)
+    search_fields = ('uuid',)
+
+
+class DissertationGroup(SerializableModel):
     dissertation = models.ForeignKey(dissertation.Dissertation)
 
     def __str__(self):

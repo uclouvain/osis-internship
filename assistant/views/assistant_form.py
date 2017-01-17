@@ -112,13 +112,12 @@ def tutoring_learning_unit_edit(request, tutoring_learning_unit_id=None):
                                              'face_to_face_duration': edited_learning_unit_year.face_to_face_duration,
                                              'attendees': edited_learning_unit_year.attendees,
                                              'preparation_duration': edited_learning_unit_year.preparation_duration,
-                                             'exams_supervision_duration': edited_learning_unit_year.exams_supervision_duration,
+                                             'exams_supervision_duration':
+                                                 edited_learning_unit_year.exams_supervision_duration,
                                              'others_delivery': edited_learning_unit_year.others_delivery,
-                                             'academic_year': this_academic_year.id
-                                             })
+                                             'academic_year': academic_year.id})
     return render(request, "tutoring_learning_unit_year.html", {'form': form,
-                                                                'mandate_id': mandate_id
-                                                                })
+                                                                'mandate_id': mandate_id})
 
 
 @login_required
@@ -140,7 +139,6 @@ def tutoring_learning_unit_delete(request, tutoring_learning_unit_id):
     return HttpResponseRedirect(reverse('mandate_learning_units', kwargs={'mandate_id': mandate_id}))
 
 
-@user_passes_test(user_is_assistant_and_procedure_is_open, login_url='access_denied')
 def form_part3_edit(request, mandate_id):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     assistant = mandate.assistant
@@ -148,7 +146,6 @@ def form_part3_edit(request, mandate_id):
     if request.user.person != assistant.person:
         return HttpResponseRedirect(reverse('assistant_mandates'))
     form = AssistantFormPart3(initial={'phd_inscription_date': assistant.phd_inscription_date,
-                                       'confirmation_test_date': assistant.confirmation_test_date,
                                        'thesis_title': assistant.thesis_title,
                                        'remark': assistant.remark,
                                        }, prefix='mand')
@@ -176,6 +173,45 @@ def form_part3_save(request, mandate_id):
         else:
             return render(request, "assistant_form_part3.html", {'assistant': assistant, 'mandate': mandate,
                                                                  'files': files,'form': form})
+
+
+@user_passes_test(user_is_assistant_and_procedure_is_open, login_url='access_denied')
+def form_part4_edit(request, mandate_id):
+    mandate = assistant_mandate.find_mandate_by_id(mandate_id)
+    person = request.user.person
+    assistant = mandate.assistant
+    if person != assistant.person or mandate.state != 'TRTS':
+        return HttpResponseRedirect(reverse('assistant_mandates'))
+    form = AssistantFormPart4(initial={'internships': mandate.internships,
+                                       'conferences': mandate.conferences,
+                                       'publications': mandate.publications,
+                                       'awards': mandate.awards,
+                                       'framing': mandate.framing,
+                                       'remark': mandate.remark,
+                                       }, prefix='mand')
+    return render(request, "assistant_form_part4.html", {'assistant': assistant,
+                                                         'mandate': mandate,
+                                                         'form': form})
+
+
+@user_passes_test(user_is_assistant_and_procedure_is_open, login_url='access_denied')
+def form_part4_save(request, mandate_id):
+    """Use to save an assistant form part4."""
+    mandate = assistant_mandate.find_mandate_by_id(mandate_id)
+    assistant = mandate.assistant
+    person = request.user.person
+    if person != assistant.person or mandate.state != 'TRTS':
+        return HttpResponseRedirect(reverse('assistant_mandates'))
+    elif request.method == 'POST':
+        form = AssistantFormPart4(data=request.POST, instance=mandate, prefix='mand')
+        if form.is_valid():
+            form.save()
+            return form_part4_edit(request, mandate.id)
+        else:
+            return render(request, "assistant_form_part4.html", {'assistant': assistant,
+                                                                 'mandate': mandate,
+                                                                 'form': form})
+
 
 @user_passes_test(user_is_assistant_and_procedure_is_open, login_url='access_denied')
 def form_part6_edit(request, mandate_id):

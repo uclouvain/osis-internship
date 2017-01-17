@@ -28,6 +28,19 @@ from base.models import person
 from base.enums import person_source_type
 from django.conf import settings
 
+
+def create_person(first_name, last_name, email=None):
+    a_person = person.Person(first_name=first_name, last_name=last_name, email=email)
+    a_person.save()
+    return a_person
+
+
+def create_person_with_user(user):
+    a_person = person.Person(first_name=user.first_name, last_name=user.last_name, user=user)
+    a_person.save()
+    return a_person
+
+
 class PersonTest(TestCase):
 
     settings.INTERNAL_EMAIL_SUFIX = 'osis.org'

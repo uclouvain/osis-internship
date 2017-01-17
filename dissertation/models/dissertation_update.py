@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from osis_common.models.serializable_model import SerializableModel
 from django.contrib import admin
 from django.db import models
 from base import models as mdl
@@ -33,11 +34,12 @@ JUSTIFICATION_LINK = "_set_to_"
 
 
 class DissertationUpdateAdmin(admin.ModelAdmin):
-    list_display = ('dissertation', 'get_dissertation_author', 'status_from', 'status_to', 'person', 'created')
-    raw_id_fields = ('person',)
+    list_display = ('dissertation', 'status_from', 'status_to', 'person', 'created')
+    raw_id_fields = ('person', 'dissertation')
+    search_fields = ('uuid',)
 
 
-class DissertationUpdate(models.Model):
+class DissertationUpdate(SerializableModel):
 
     status_from = models.CharField(max_length=12, choices=dissertation.STATUS_CHOICES, default='DRAFT')
     status_to = models.CharField(max_length=12, choices=dissertation.STATUS_CHOICES, default='DRAFT')

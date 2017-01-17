@@ -24,9 +24,11 @@
 #
 ##############################################################################
 import json
+from django.core import serializers
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
+from base.enums import structure_type
 from . import layout
 
 
@@ -45,20 +47,20 @@ def mandates(request):
 @login_required
 def structures(request):
     return layout.render(request, "structures.html", {'init': "1",
-                                                      'types': mdl.structure.ENTITY_TYPE})
+                                                      'types': structure_type.TYPES})
 
 
 @login_required
 def structures_search(request):
-    structure_type = None
+    struct_type = None
     if request.GET['type_choices']:
-        structure_type = request.GET['type_choices']  #otherwise type is a blank
+        struct_type = request.GET['type_choices']  #otherwise type is a blank
     entities = mdl.structure.search(acronym=request.GET['acronym'],
                                     title=request.GET['title'],
-                                    type=structure_type)
+                                    type=struct_type)
 
     return layout.render(request, "structures.html", {'entities': entities,
-                                                      'types': mdl.structure.ENTITY_TYPE})
+                                                      'types': structure_type.TYPES})
 
 
 @login_required
@@ -71,10 +73,8 @@ def structure_read(request, structure_id):
 @login_required
 def structure_diagram(request, parent_id):
     structure = mdl.structure.find_by_id(parent_id)
-    tags = mdl.structure.find_structure_hierarchy(structure)
-    data = json.dumps(tags)
     return layout.render(request, "structure_organogram.html", {'structure': structure,
-                                                                'data': data})
+                                                                'structure_as_json': json.dumps(structure.serializable_object())})
 
 @login_required
 def structure_address(request, structure_id):
@@ -87,7 +87,8 @@ def structure_address(request, structure_id):
                            'postal_code': struct_address.postal_code,
                            'country': struct_address.country.id,
                            'phone': struct_address.phone,
-                           'fax': struct_address.fax})
+                           'fax': struct_address.fax,
+                           'email': struct_address.email})
     else:
         data = json.dumps({'entity': u'%s - %s' % (structure.acronym, structure.title)})
     return HttpResponse(data, content_type='application/json')
