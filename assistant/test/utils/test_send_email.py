@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import TestCase, RequestFactory
+from django.test import TestCase, RequestFactory, Client
 from django.contrib.auth.models import User
 from assistant.utils import send_email
 from assistant.models.manager import Manager
@@ -44,6 +44,7 @@ from assistant.models.settings import Settings
 class SendEmailTestCase(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
+        self.client = Client()
         self.user = User.objects.create_user(
             username='assistant', email='laurent.buset@uclouvain.be', password='assistant'
         )
@@ -57,6 +58,8 @@ class SendEmailTestCase(TestCase):
         self.person = Person.objects.create(user=self.user, first_name='Lodia', last_name='Perzyna')
         self.person.save()
         self.manager = Manager.objects.create(person=self.person)
+        self.manager.save()
+        self.client.login(username=self.manager.person.user.username, password=self.manager.person.user.password)
         self.academic_year = AcademicYear.objects.create(year=2016, start_date=date(2016, 9, 1),
                                                          end_date=date(2017, 8, 31))
         self.academic_year.save()

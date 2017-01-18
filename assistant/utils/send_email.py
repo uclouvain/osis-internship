@@ -81,24 +81,16 @@ def save_message_history(request, type):
     message.save()
 
 
-#@user_passes_test(user_is_manager, login_url='assistants_home')
 def send_message(person, html_template_ref, txt_template_ref):
     procedure_dates = settings.get_settings()
 
     receivers = [message_config.create_receiver(person.id, person.email,
                                                 person.language)]
-    title = None
-    if person.language == 'en':
-        title = 'Dear'
-    elif person.gender == 'M':
-        title = 'Cher'
-    elif person.gender == 'F':
-        title = 'Chère'
     first_ending_year = academic_year.current_academic_year().year + 1
     last_ending_year = first_ending_year + 1
     template_base_data = {'start_date': procedure_dates.starting_date, 'end_date': procedure_dates.ending_date,
                           'first_name': person.first_name, 'last_name': person.last_name,
-                          'title': title, 'first_ending_year': first_ending_year,
+                          'first_ending_year': first_ending_year,
                           'last_ending_year': last_ending_year}
     subject_data = None
     table = None
