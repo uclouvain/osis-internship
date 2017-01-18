@@ -35,10 +35,22 @@ msgid "address"
 msgstr "Adresse"
 
 msgid "assistant_form_part1"
-msgstr "Formulaire assistant - Partie 1"
+msgstr "Administratif"
 
 msgid "assistant_form_part2"
-msgstr "Formulaire assistant - Partie 2"
+msgstr "Cours"
+
+msgid "assistant_form_part3"
+msgstr "Doctorat"
+
+msgid "assistant_form_part4"
+msgstr "Recherche"
+
+msgid "assistant_form_part5"
+msgstr "Activités"
+
+msgid "assistant_form_part6"
+msgstr "Récapitulatif"
 
 msgid "assistant_mandates_renewal"
 msgstr "Renouvellement du mandat d'assistant"
