@@ -25,6 +25,7 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
+from django.utils import timezone
 
 
 class SynchronizationAdmin(admin.ModelAdmin):
@@ -35,7 +36,7 @@ class SynchronizationAdmin(admin.ModelAdmin):
 
 
 class Synchronization(models.Model):
-    date = models.DateTimeField(null=True)
+    date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return "{}".format(self.date)
