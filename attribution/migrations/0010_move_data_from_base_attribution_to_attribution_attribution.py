@@ -17,7 +17,7 @@ def move_data_from_base_attribution_to_attribution(apps, schema_editor):
             query = """
                 INSERT INTO attribution_attribution
                     (external_id, changed, start_date, end_date, function, learning_unit_year_id, tutor_id, score_responsible, uuid)
-                VALUES ({}, {}, {}, {}, {}, {}, {}, {}, {});""".format(b_attribution.external_id if b_attribution.external_id else 'null',
+                VALUES ({}, {}, {}, {}, {}, {}, {}, {}, {});""".format("'" + str(b_attribution.external_id) + "'" if b_attribution.external_id else 'null',
                                                                "'" + str(b_attribution.changed) + "'" if b_attribution.changed else 'null',
                                                                "'" + str(b_attribution.start_date) + "'" if b_attribution.start_date else 'null',
                                                                "'" + str(b_attribution.end_date) + "'" if b_attribution.end_date else 'null',
