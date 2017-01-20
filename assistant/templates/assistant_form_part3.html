@@ -35,7 +35,7 @@
 {% block content %}
 <ul class="nav nav-tabs ">
 <li><a href="{% url 'assistant_mandates' %}">{% trans 'my_mandates' %}</a></li>
-<li><a href="#">{% trans 'assistant_form_part1' %}</a></li>
+<li><a href="{% url 'form_part1_edit' mandate.id %}">{% trans 'assistant_form_part1' %}</a></li>
 <li><a href="{% url 'mandate_learning_units' mandate.id %}">{% trans 'assistant_form_part2' %}</a></li>
 <li class="active"><a href="{% url 'form_part3_edit' mandate.id %}">{% trans 'assistant_form_part3' %}</a></li>
 <li><a href="{% url 'form_part4_edit' mandate.id %}">{% trans 'assistant_form_part4' %}</a></li>
@@ -44,7 +44,7 @@
 </ul>
 <div class="panel panel-default">
 	<div class="panel-body">
- 		<form method="POST" enctype="multipart/form-data" action="{% url 'form_part3_save' mandate.id %}">
+ 		<form id="pst-form-part3" method="POST" enctype="multipart/form-data" action="{% url 'form_part3_save' mandate.id %}">
  		{% csrf_token %}
  		{{ form.non_field_errors }}
  		<div class="panel-danger">
@@ -103,4 +103,21 @@
 </div>
 {% endblock %}
 {% block script %}
+<script>
+$("#pst-form-part3 :input").change(function() {
+   $("#pst-form-part3").data("changed",true);
+});
+$('a').on('click', function(e) {
+	var hrefLoc = $(this).attr('href');
+	if ($("#pst-form-part3").data("changed")) {
+		var choice = confirm("{% trans 'save_before_link' %}");
+		if (choice == true) {
+			e.preventDefault();
+			$('form#pst-form-part3').submit();
+		} else {
+			window.location.href = hrefLoc;
+		}
+	}
+});
+</script>
 {% endblock %}

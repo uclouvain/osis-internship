@@ -44,7 +44,7 @@
 </ul>
 <div class="panel panel-default">
 	<div class="panel-body">
- 		<form method="POST" action="{% url 'form_part1_save' mandate.id %}">
+ 		<form id="pst-form-part1" method="POST" action="{% url 'form_part1_save' mandate.id %}">
  		{% csrf_token %}
  		{{ form.non_field_errors }}
  		<div class="panel-primary">
@@ -298,5 +298,22 @@ window.onload = function() {
     Hide();
     print_email();
 };
+
+$("#pst-form-part1 :input").change(function() {
+   $("#pst-form-part1").data("changed",true);
+});
+$('a').on('click', function(e) {
+	var hrefLoc = $(this).attr('href');
+	if ($("#pst-form-part1").data("changed")) {
+		var choice = confirm("{% trans 'save_before_link' %}");
+		if (choice == true) {
+			e.preventDefault();
+			$('form#pst-form-part1').submit();
+		} else {
+			window.location.href = hrefLoc;
+		}
+	}
+});
+
 </script>
 {% endblock %}
