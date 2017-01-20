@@ -24,7 +24,7 @@
 #
 ##############################################################################
 from django.db import models
-from base.enums.learning_component_year_type import YEAR_TYPE
+from base.enums.learning_unit_year_type import YEAR_TYPES
 from django.contrib import admin
 
 class LearningComponentYearAdmin(admin.ModelAdmin):
