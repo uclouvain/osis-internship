@@ -23,4 +23,33 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-default_app_config = 'base.apps.BaseConfig'
+
+# Statements in alphabetic order.
+from base.models import academic_calendar
+from base.models import academic_year
+from base.models import application_notice
+from base.models import campus
+from base.models import exam_enrollment
+from base.models import external_offer
+from base.models import learning_unit
+from base.models import learning_unit_component
+from base.models import learning_unit_enrollment
+from base.models import learning_unit_year
+from base.models import native
+from base.models import offer
+from base.models import offer_enrollment
+from base.models import offer_year
+from base.models import offer_year_calendar
+from base.models import offer_year_domain
+from base.models import organization
+from base.models import organization_address
+from base.models import person
+from base.models import person_address
+from base.models import program_manager
+from base.models import scores_encoding
+from base.models import session_exam
+from base.models import structure
+from base.models import structure_address
+from base.models import student
+from base.models import tutor
+
