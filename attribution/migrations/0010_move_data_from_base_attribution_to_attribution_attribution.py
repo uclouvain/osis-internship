@@ -34,6 +34,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('attribution', '0009_uuid_not_null'),
+        ('base', '0088_auto_20170106_1728')
     ]
 
     operations = [
