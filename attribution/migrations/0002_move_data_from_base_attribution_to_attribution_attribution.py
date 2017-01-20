@@ -3,20 +3,28 @@
 from __future__ import unicode_literals
 from django.db import migrations
 from base.models import attribution as base_attribution
+from django.db import connection
+from django.db import transaction
 
 
+@transaction.atomic
 def move_data_from_base_attribution_to_attribution(apps, schema_editor):
-    for b_attribution in base_attribution.Attribution.objects.raw('SELECT * FROM base_attribution'):
-        migrations.RunSQL("""
-          INSERT INTO attribution_attribution
-              (external_id, changed, start_date, end_date, function, learning_unit_year_id, tutor)
-          VALUES ({}, {}, {}, {}, {}, {}, {});""".format(b_attribution.external_id,
-                                                         b_attribution.changed,
-                                                         b_attribution.start_date,
-                                                         b_attribution.end_date,
-                                                         b_attribution.function,
-                                                         b_attribution.learning_unit_year_id,
-                                                         b_attribution.tutor))
+    base_attributions = base_attribution.Attribution.objects.raw('SELECT * FROM base_attribution')
+    with connection.cursor() as cursor:
+        for b_attribution in base_attributions:
+            print(b_attribution)
+            query = """
+                INSERT INTO attribution_attribution
+                    (external_id, changed, start_date, end_date, function, learning_unit_year_id, tutor_id)
+                VALUES ({}, {}, {}, {}, {}, {}, {});""".format(b_attribution.external_id if b_attribution.external_id else 'null',
+                                                               "'" + str(b_attribution.changed) + "'" if b_attribution.changed else 'null',
+                                                               "'" + str(b_attribution.start_date) + "'" if b_attribution.start_date else 'null',
+                                                               "'" + str(b_attribution.end_date) + "'" if b_attribution.end_date else 'null',
+                                                               "'" + str(b_attribution.function) + "'" if b_attribution.function else 'null',
+                                                               b_attribution.learning_unit_year.pk if b_attribution.learning_unit_year.pk else 'null',
+                                                               b_attribution.tutor.pk if b_attribution.tutor.pk else 'null')
+            print(query)
+            cursor.execute(query)
 
 
 class Migration(migrations.Migration):
