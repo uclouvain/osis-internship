@@ -52,7 +52,7 @@ class Attribution(SerializableModel):
         return u"%s - %s" % (self.tutor.person, self.function)
 
 
-def search(tutor=None, learning_unit_year=None, function=None, list_learning_unit_year=None):
+def search(tutor=None, learning_unit_year=None, score_responsible=None, list_learning_unit_year=None):
     queryset = Attribution.objects
 
     if tutor:
@@ -61,8 +61,8 @@ def search(tutor=None, learning_unit_year=None, function=None, list_learning_uni
     if learning_unit_year:
         queryset = queryset.filter(learning_unit_year=learning_unit_year)
 
-    if function:
-        queryset = queryset.filter(function=function)
+    if score_responsible is not None:
+        queryset = queryset.filter(score_responsible=score_responsible)
 
     if list_learning_unit_year:
         queryset = queryset.filter(learning_unit_year__in=list_learning_unit_year)
