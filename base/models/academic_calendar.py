@@ -43,7 +43,7 @@ class AcademicCalendar(SerializableModel):
     highlight_title = models.CharField(max_length=255, blank=True, null=True)
     highlight_description = models.CharField(max_length=255, blank=True, null=True)
     highlight_shortcut = models.CharField(max_length=255, blank=True, null=True)
-    reference = models.CharField(max_length=25, blank=True, null=True)
+    reference = models.CharField(max_length=50, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if FUNCTIONS not in kwargs.keys():
