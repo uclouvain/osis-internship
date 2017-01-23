@@ -9,7 +9,7 @@ import django.utils.timezone
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('base', '0093_academiccalendar_uuid'),
+        ('base', '0094_academiccalendar_reference'),
     ]
 
     operations = [
