@@ -99,19 +99,28 @@ class ExamEnrollment(models.Model):
     def justification_draft_display(self):
         if is_absence_justification(self.justification_draft):
             return _('absent')
-        return _(self.justification_draft)
+        elif self.justification_draft:
+            return _(self.justification_draft)
+        else:
+            return None
 
     @property
     def justification_final_display_as_tutor(self):
         if is_absence_justification(self.justification_final):
             return _('absent')
-        return _(self.justification_final)
+        elif self.justification_final:
+            return _(self.justification_final)
+        else:
+            return None
 
     @property
     def justification_reencoded_display_as_tutor(self):
         if is_absence_justification(self.justification_reencoded):
             return _('absent')
-        return _(self.justification_reencoded)
+        elif self.justification_reencoded:
+            return _(self.justification_reencoded)
+        else:
+            return None
 
 
 def is_absence_justification(justification):
