@@ -52,7 +52,7 @@ class LearningComponentYearTest(TestCase):
                                      end_date=datetime.datetime(now.year + 2, now.month, 28))
         self.current_academic_year_different.save()
 
-    def test_creation_learning_unit_component_with_different_year(self):
+    def test_creation_learning_unit_component_class_with_different_year(self):
 
         learning_container = LearningContainer()
         learning_component = LearningComponent(learning_container=learning_container)
