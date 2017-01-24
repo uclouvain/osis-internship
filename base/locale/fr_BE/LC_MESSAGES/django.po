@@ -559,6 +559,9 @@ msgstr "Langue"
 msgid "lastname"
 msgstr "Nom"
 
+msgid "last_synchronization"
+msgstr "Dernière synchronisation"
+
 msgid "learning_unit"
 msgstr "Unité d'enseignement"
 
