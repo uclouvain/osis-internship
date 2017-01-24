@@ -56,4 +56,3 @@ from base.models import text_label
 from base.models import translated_text
 from base.models import translated_text_label
 from base.models import tutor
-
