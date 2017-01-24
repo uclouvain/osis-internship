@@ -27,24 +27,26 @@ from django.test import TestCase
 from base.models import translated_text
 from base.models import text_label
 from reference.models.language import Language
-from base.models.exceptions import FunctionAgrumentMissingException
+from base.models.exceptions import FunctionTxtLabelExitsException
 
 
-def create_translated_text(entity_name, reference, language, text_label, text):
+def create_translated_text(entity_name, reference, language, txtlabel, text):
     a_translated_text = translated_text.TranslatedText(entity_name=entity_name, reference=reference, language=language,
-                                                       text_label=text_label, text=text)
-    a_translated_text.save()
+                                                       text_label=txtlabel, text=text)
+    a_translated_text.save(functions=[])
     return a_translated_text
 
 
 class TranslatedTextTest(TestCase):
 
     def setUp(self):
-        self.parent = text_label.TextLabel.objects.create(entity_name="1", part_of=None, label="WINDOW", order=30,
-                                                          published=1)
+        self.parent = text_label.TextLabel(entity_name="1", part_of=None, label="WINDOW", order=30,
+                                           published=1)
         self.languagefr = Language.objects.create(code="FR", name="Francais")
 
-    def test_insert_new_translated_text_label_wiithout_text_label(self):
-        self.translatedtxt1 = translated_text.TranslatedText(entity_name=1,  reference=self.parent,
-                                                             language=self.languagefr, text_label=None, text="1545454")
-        self.assertRaises(FunctionAgrumentMissingException, self.translatedtxt1.save)
+    def test_insert_new_translated_text(self):
+        txtlabel1 = text_label.TextLabel(entity_name=1, part_of=None, label="KEYBOARD", order=80, published=1)
+        wrong_translatedtxt = translated_text.TranslatedText(entity_name=1,  reference=self.parent,
+                                                             language=self.languagefr, text_label=txtlabel1,
+                                                             text="1545454")
+        self.assertRaises(FunctionTxtLabelExitsException, wrong_translatedtxt.save, functions=[])

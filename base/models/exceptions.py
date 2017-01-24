@@ -42,7 +42,14 @@ class FunctionTxtLabelOrderExitsException(Exception):
         super(FunctionTxtLabelOrderExitsException, self).__init__(message)
         self.errors = errors
 
+
 class FunctionTxtLabelParentMustExitsException(Exception):
     def __init__(self, message=None, errors=None):
         super(FunctionTxtLabelParentMustExitsException, self).__init__(message)
+        self.errors = errors
+
+
+class FunctionTxtLabelExitsException(Exception):
+    def __init__(self, message=None, errors=None):
+        super(FunctionTxtLabelExitsException, self).__init__(message)
         self.errors = errors

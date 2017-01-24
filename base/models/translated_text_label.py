@@ -25,6 +25,10 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
+from base.models import text_label
+from base.models.exceptions import FunctionAgrumentMissingException, FunctionTxtLabelExitsException
+
+FUNCTIONS = 'functions'
 
 
 class TranslatedTextLabelAdmin(admin.ModelAdmin):
@@ -37,6 +41,22 @@ class TranslatedTextLabel(models.Model):
     label = models.CharField(max_length=255)
     language = models.ForeignKey('reference.Language')
     text_label = models.ForeignKey('TextLabel')
+
+    def save(self, *args, **kwargs):
+        if FUNCTIONS not in kwargs.keys():
+            raise FunctionAgrumentMissingException('The kwarg "{0}" must be set.'.format(FUNCTIONS))
+        functions = kwargs.pop(FUNCTIONS)
+
+        if self.text_label:
+            foundtxtlabel = text_label.TextLabel.objects.filter(entity_name=self.text_label.entity_name,
+                                                                label=self.text_label.label,
+                                                                order=self.text_label.order)
+            if foundtxtlabel.count() == 0:
+                raise FunctionTxtLabelExitsException('A text label is required')
+
+        super(TranslatedTextLabel, self).save(*args, **kwargs)
+        for function in functions:
+            function(self)
 
     def __str__(self):
         return 'Label : ' + self.label + ' - Language ' + str(self.language.code) + ' - Text_Label (Parent) : ' + self.text_label.label
