@@ -641,7 +641,8 @@ def get_data_pgmer(request,
                           'academic_year': academic_yr,
                           'number_session': mdl.session_exam.find_session_exam_number(),
                           'learning_unit_year_acronym': learning_unit_year_acronym,
-                          'incomplete_encodings_only': incomplete_encodings_only})
+                          'incomplete_encodings_only': incomplete_encodings_only,
+                          'last_synchronization': mdl.synchronization.find_last_synchronization_date()})
 
 
 @login_required

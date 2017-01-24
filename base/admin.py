@@ -102,6 +102,9 @@ admin.site.register(structure.Structure,
 admin.site.register(student.Student,
                     student.StudentAdmin)
 
+admin.site.register(synchronization.Synchronization,
+                    synchronization.SynchronizationAdmin)
+
 admin.site.register(text_label.TextLabel,
                     text_label.TextLabelAdmin)
 
