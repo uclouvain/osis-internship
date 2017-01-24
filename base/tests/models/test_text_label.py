@@ -25,12 +25,13 @@
 ##############################################################################
 from django.test import TestCase
 from base.models import text_label
+from base.models.exceptions import FunctionTxtLabelOrderExitsException, FunctionTxtLabelParentMustExitsException
 
 
 def create_text_label(entity_name, part_of, label, order, published):
     a_text_label = text_label.TextLabel(entity_name=entity_name, part_of=part_of, label=label, order=order,
                                         published=published)
-    a_text_label.save()
+    a_text_label.save(functions=[])
     return a_text_label
 
 
@@ -45,14 +46,14 @@ class TextLabelTest(TestCase):
                                            published=1)
 
     def test_insert_new_text_label_same_order(self):
-        self.order = 5
-        self.part_of = self.txtlabel1
-        foundtextlabel = text_label.TextLabel.objects.filter(part_of=self.part_of, order=self.order)
-        self.assertEqual(foundtextlabel.count(), 1)
+        wrong_txtlabel = text_label.TextLabel(entity_name=1, part_of=self.txtlabel1, label="SUBWINDOW_LIGHT",
+                                              order=5, published=1)
+        self.assertRaises(FunctionTxtLabelOrderExitsException, wrong_txtlabel.save, functions=[])
 
     def test_insert_new_text_label_children(self):
-        foundparent = text_label.TextLabel.objects.filter(entity_name=self.txtlabel2.entity_name,
-                                                          label=self.txtlabel2.label, order=self.txtlabel2.order)
-        self.assertEqual(foundparent.count(), 1)
+        new_parent = text_label.TextLabel(entity_name=1, part_of=None, label="KEYBOARD", order=80, published=1)
+        wrong_children = text_label.TextLabel(entity_name=1, part_of=new_parent,  label="SUB_KEYBOARD", order=1,
+                                              published=1)
+        self.assertRaises(FunctionTxtLabelParentMustExitsException, wrong_children.save, functions=[])
 
 

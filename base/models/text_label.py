@@ -26,7 +26,11 @@
 from django.db import models
 from django.contrib import admin
 from base.enums.entity_name import ENTITY_NAME
-from base.models.exceptions import FunctionAgrumentMissingException
+from base.models.exceptions import FunctionAgrumentMissingException, FunctionTxtLabelParentMustExitsException, FunctionTxtLabelOrderExitsException
+
+FUNCTIONS = 'functions'
+
+
 
 class TextLabelAdmin(admin.ModelAdmin):
     list_display = ('entity_name', 'part_of', 'label', 'order', 'published', 'children')
@@ -42,9 +46,22 @@ class TextLabel(models.Model):
     published = models.BooleanField()
 
     def save(self, *args, **kwargs):
-        if self.order is None:
-            raise AttributeError("Order must be defined.")
+        if FUNCTIONS not in kwargs.keys():
+            raise FunctionAgrumentMissingException('The kwarg "{0}" must be set.'.format(FUNCTIONS))
+        functions = kwargs.pop(FUNCTIONS)
+        if self.order and self.entity_name and self.label and self.part_of:
+            foundparent = TextLabel.objects.filter(entity_name=self.part_of.entity_name,
+                                                   label=self.part_of.label, order=self.part_of.order)
+            if foundparent.count() == 0:
+                raise FunctionTxtLabelParentMustExitsException('A parent must be defined for a child')
+
+        if self.order and self.part_of:
+            foundtextlabel = TextLabel.objects.filter(part_of=self.part_of, order=self.order)
+            if foundtextlabel.count() > 0:
+                raise FunctionTxtLabelOrderExitsException('A textlabel with the same parent and same order already exists')
         super(TextLabel, self).save(*args, **kwargs)
+        for function in functions:
+            function(self)
 
     @property
     def children(self):

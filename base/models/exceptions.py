@@ -35,3 +35,14 @@ class FunctionAgrumentMissingException(Exception):
     def __init__(self, message=None, errors=None):
         super(FunctionAgrumentMissingException, self).__init__(message)
         self.errors = errors
+
+
+class FunctionTxtLabelOrderExitsException(Exception):
+    def __init__(self, message=None, errors=None):
+        super(FunctionTxtLabelOrderExitsException, self).__init__(message)
+        self.errors = errors
+
+class FunctionTxtLabelParentMustExitsException(Exception):
+    def __init__(self, message=None, errors=None):
+        super(FunctionTxtLabelParentMustExitsException, self).__init__(message)
+        self.errors = errors
