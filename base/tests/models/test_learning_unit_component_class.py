@@ -55,7 +55,7 @@ class LearningComponentYearTest(TestCase):
                                      end_date=datetime.datetime(now.year + 2, now.month, 28))
         self.current_academic_year_different.save()
 
-    def test_creation_learning_unit_component_with_different_year(self):
+    def test_creation_learning_unit_component_class_with_different_year(self):
 
         learning_container = LearningContainer()
         learning_component = LearningComponent(learning_container=learning_container)
@@ -86,10 +86,5 @@ class LearningComponentYearTest(TestCase):
         #Association du conteneur et de son composant dont les années académiques diffèrent l'une de l'autre
         learning_unit_component = LearningUnitComponent(learning_component_year=learning_component_year,
                                                         learning_unit_year=learning_unit_year)
-
-
-        #Association entre 'learning_class_year' et 'learning_unit_component' dont les années académqiques diffèrent
-        learning_unit_component_class = LearningUnitComponentClass(learning_unit_component=learning_unit_component,
-                                                        learning_class_year=learning_class_year)
 
         self.assertEqual(learning_unit_component.learning_component_year, learning_class_year.learning_component_year)
