@@ -102,5 +102,14 @@ admin.site.register(structure.Structure,
 admin.site.register(student.Student,
                     student.StudentAdmin)
 
+admin.site.register(text_label.TextLabel,
+                    text_label.TextLabelAdmin)
+
+admin.site.register(translated_text.TranslatedText,
+                    translated_text.TranslatedTextAdmin)
+
+admin.site.register(translated_text_label.TranslatedTextLabel,
+                    translated_text_label.TranslatedTextLabelAdmin)
+
 admin.site.register(tutor.Tutor,
                     tutor.TutorAdmin)

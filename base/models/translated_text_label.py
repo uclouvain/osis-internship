@@ -23,36 +23,43 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.db import models
+from django.contrib import admin
 
-# Statements in alphabetic order.
-from base.models import academic_calendar
-from base.models import academic_year
-from base.models import application_notice
-from base.models import campus
-from base.models import exam_enrollment
-from base.models import external_offer
-from base.models import learning_unit
-from base.models import learning_unit_component
-from base.models import learning_unit_enrollment
-from base.models import learning_unit_year
-from base.models import native
-from base.models import offer
-from base.models import offer_enrollment
-from base.models import offer_year
-from base.models import offer_year_calendar
-from base.models import offer_year_domain
-from base.models import organization
-from base.models import organization_address
-from base.models import person
-from base.models import person_address
-from base.models import program_manager
-from base.models import scores_encoding
-from base.models import session_exam
-from base.models import structure
-from base.models import structure_address
-from base.models import student
-from base.models import text_label
-from base.models import translated_text
-from base.models import translated_text_label
-from base.models import tutor
+
+class TranslatedTextLabelAdmin(admin.ModelAdmin):
+    list_display = ('label', 'language', 'text_label',)
+    fieldsets = ((None, {'fields': ('label', 'language', 'text_label')}),)
+    search_fields = ['acronym']
+
+
+class TranslatedTextLabel(models.Model):
+    label = models.CharField(max_length=255)
+    language = models.ForeignKey('reference.Language')
+    text_label = models.ForeignKey('TextLabel')
+
+    def __str__(self):
+        return 'Label : ' + self.label + ' - Language ' + str(self.language.code) + ' - Text_Label (Parent) : ' + self.text_label.label
+
+
+def find_by_id(translated_text_label_id):
+    return TranslatedTextLabel.objects.get(pk=translated_text_label_id)
+
+
+def find_by_ids(translated_text_label_ids):
+    return TranslatedTextLabel.objects.filter(pk__in=translated_text_label_ids)
+
+
+def find_by_language(language_input):
+    queryset = TranslatedTextLabel.objects.filter(language__code=language_input)
+    return queryset
+
+
+def search(acronym=None):
+    queryset = TranslatedTextLabel.objects
+
+    if acronym:
+        queryset = queryset.filter(acronym=acronym)
+
+    return queryset
 
