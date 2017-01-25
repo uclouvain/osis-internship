@@ -37,7 +37,3 @@ class LearningClass(models.Model):
 def find_by_id(learning_class_id):
     return LearningClass.objects.get(pk=learning_class_id)
 
-
-def find_by_ids(learning_class_ids):
-    return LearningClass.objects.filter(pk__in=learning_class_ids)
-

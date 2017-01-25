@@ -25,7 +25,8 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-from base.enums.learning_unit_year_type import YEAR_TYPES
+from base.models import academic_year
+
 
 
 class LearningContainerYearAdmin(admin.ModelAdmin):
@@ -41,9 +42,8 @@ class LearningContainerYear(models.Model):
     acronym = models.CharField(max_length=10)
 
     def save(self, *args, **kwargs):
-        if self.title != self.learning_container.title:
+        if self.title != self.learning_container.title and self.academic_year != academic_year.current_academic_year :
             raise AttributeError("The title of the learning container year is different from the learning container.")
-
         super(LearningContainerYear, self).save()
 
     def __str__(self):
@@ -53,11 +53,6 @@ class LearningContainerYear(models.Model):
         permissions = (
             ("can_access_learningcontaineryear", "Can access learning container year"),
         )
-
-
-def find_by_academic_year(academic_year):
-    return LearningContainerYear.objects.get(pk=academic_year)
-
 
 def find_by_id(learning_container_year_id):
     return LearningContainerYear.objects.get(pk=learning_container_year_id)

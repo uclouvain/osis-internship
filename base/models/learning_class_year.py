@@ -45,6 +45,3 @@ class LearningClassYear(models.Model):
 
 def find_by_id(learning_class_year_id):
     return LearningClassYear.objects.get(pk=learning_class_year_id)
-
-def find_by_ids(learning_class_year_ids):
-    return LearningClassYear.objects.filter(pk__in=learning_class_year_ids)
