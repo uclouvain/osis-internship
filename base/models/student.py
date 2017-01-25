@@ -33,7 +33,7 @@ class StudentAdmin(admin.ModelAdmin):
     list_display = ('person', 'registration_id', 'changed')
     fieldsets = ((None, {'fields': ('registration_id', 'person')}),)
     raw_id_fields = ('person', )
-    search_fields = ['person__first_name', 'person__last_name']
+    search_fields = ['person__first_name', 'person__last_name', 'registration_id']
 
 
 class Student(SerializableModel):
