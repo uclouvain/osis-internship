@@ -129,7 +129,7 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
 
     data_xls = _get_all_data(worksheet)
     if len(data_xls['sessions']) > 1:
-        messages.add_0message(request, messages.ERROR, '%s' % _('more_than_one_session_error'))
+        messages.add_message(request, messages.ERROR, '%s' % _('more_than_one_session_error'))
         return False
     elif len(data_xls['sessions']) == 0:
         messages.add_message(request, messages.ERROR, '%s' % _('missing_column_session'))
