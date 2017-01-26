@@ -25,35 +25,36 @@
 ##############################################################################
 from django.test import TestCase
 from base.models import text_label
-from base.models.exceptions import FunctionTxtLabelOrderExitsException, FunctionTxtLabelParentMustExitsException
+from base.enums import entity_name
+from base.models.exceptions import FunctionTxtLabelOrderMustExitsException
 
 
 def create_text_label(entity_name, part_of, label, order, published):
     a_text_label = text_label.TextLabel(entity_name=entity_name, part_of=part_of, label=label, order=order,
                                         published=published)
-    a_text_label.save(functions=[])
+    a_text_label.save()
     return a_text_label
 
 
 class TextLabelTest(TestCase):
 
     def setUp(self):
-        self.txtlabel1 = create_text_label(entity_name=1, part_of=None, label="WINDOW", order=30, published=1)
-        self.txtlabel2 = create_text_label(entity_name=1, part_of=None, label="DOOR", order=5, published=1)
-        self.txtlabel3 = create_text_label(entity_name=1, part_of=self.txtlabel1, label="SUBWINDOW01", order=10,
-                                           published=1)
-        self.txtlabel4 = create_text_label(entity_name=1, part_of=self.txtlabel1, label="SUBWINDOW01_A", order=5,
-                                           published=1)
+        self.txtlabel10 = create_text_label(entity_name=entity_name.LEARNING_UNIT_YEAR,
+                                            part_of=None, label="WINDOW", order=10, published=True)
+        self.txtlabel11 = create_text_label(entity_name=entity_name.LEARNING_UNIT_YEAR,
+                                            part_of=self.txtlabel10, label="SUBWINDOW_A", order=1, published=True)
+        self.txtlabel12 = create_text_label(entity_name=entity_name.LEARNING_UNIT_YEAR,
+                                            part_of=self.txtlabel10, label="SUBWINDOW_B", order=2,
+                                            published=True)
+        self.txtlabel13 = create_text_label(entity_name=entity_name.LEARNING_UNIT_YEAR,
+                                            part_of=self.txtlabel10, label="SUBWINDOW_C", order=3, published=True)
 
     def test_insert_new_text_label_same_order(self):
-        wrong_txtlabel = text_label.TextLabel(entity_name=1, part_of=self.txtlabel1, label="SUBWINDOW_LIGHT",
-                                              order=5, published=1)
-        self.assertRaises(FunctionTxtLabelOrderExitsException, wrong_txtlabel.save, functions=[])
+        txtlabel14 = text_label.TextLabel(entity_name=entity_name.LEARNING_UNIT_YEAR,
+                                          part_of=self.txtlabel10, label="SUBWINDOW_CC", order=3, published=True)
+        self.assertEqual(txtlabel14.save(), None)
 
-    def test_insert_new_text_label_children(self):
-        new_parent = text_label.TextLabel(entity_name=1, part_of=None, label="KEYBOARD", order=80, published=1)
-        wrong_children = text_label.TextLabel(entity_name=1, part_of=new_parent,  label="SUB_KEYBOARD", order=1,
-                                              published=1)
-        self.assertRaises(FunctionTxtLabelParentMustExitsException, wrong_children.save, functions=[])
-
-
+    def test_insert_new_text_label_without_order(self):
+        txtlabel15 = text_label.TextLabel(entity_name=entity_name.LEARNING_UNIT_YEAR,
+                                          part_of=self.txtlabel10, label="SUBWINDOW_CC", published=True)
+        self.assertRaises(FunctionTxtLabelOrderMustExitsException, txtlabel15.save)

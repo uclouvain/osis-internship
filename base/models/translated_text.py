@@ -27,10 +27,6 @@ from django.db import models
 from django.contrib import admin
 from base.enums.entity_name import ENTITY_NAME
 from ckeditor.fields import RichTextField
-from base.models import text_label
-from base.models.exceptions import FunctionAgrumentMissingException, FunctionTxtLabelExitsException
-
-FUNCTIONS = 'functions'
 
 
 class TranslatedTextAdmin(admin.ModelAdmin):
@@ -46,36 +42,6 @@ class TranslatedText(models.Model):
     text_label = models.ForeignKey('TextLabel')
     text = RichTextField()
 
-    def save(self, *args, **kwargs):
-        if FUNCTIONS not in kwargs.keys():
-            raise FunctionAgrumentMissingException('The kwarg "{0}" must be set.'.format(FUNCTIONS))
-        functions = kwargs.pop(FUNCTIONS)
-
-        if self.text_label:
-            foundtxtlabel = text_label.TextLabel.objects.filter(entity_name=self.text_label.entity_name,
-                                                                label=self.text_label.label,
-                                                                order=self.text_label.order)
-            if foundtxtlabel.count() == 0:
-                raise FunctionTxtLabelExitsException('A text label is required')
-
-        super(TranslatedText, self).save(*args, **kwargs)
-        for function in functions:
-            function(self)
-
 
 def find_by_id(translated_text_id):
     return TranslatedText.objects.get(pk=translated_text_id)
-
-
-def find_by_ids(translated_text_ids):
-    return TranslatedText.objects.filter(pk__in=translated_text_ids)
-
-
-def search(acronym=None):
-    queryset = TranslatedText.objects
-
-    if acronym:
-        queryset = queryset.filter(acronym=acronym)
-
-    return queryset
-

@@ -27,5 +27,5 @@ LEARNING_UNIT_YEAR = "learning_unit_year"
 OFFER_YEAR = "offer_year"
 
 
-ENTITY_NAME = ((1, LEARNING_UNIT_YEAR),
-               (2, OFFER_YEAR))
+ENTITY_NAME = ((LEARNING_UNIT_YEAR, LEARNING_UNIT_YEAR),
+               (OFFER_YEAR, OFFER_YEAR))

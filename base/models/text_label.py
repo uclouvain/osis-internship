@@ -26,10 +26,7 @@
 from django.db import models
 from django.contrib import admin
 from base.enums.entity_name import ENTITY_NAME
-from base.models.exceptions import FunctionAgrumentMissingException, FunctionTxtLabelParentMustExitsException, FunctionTxtLabelOrderExitsException
-
-FUNCTIONS = 'functions'
-
+from base.models.exceptions import FunctionTxtLabelOrderMustExitsException
 
 
 class TextLabelAdmin(admin.ModelAdmin):
@@ -39,29 +36,27 @@ class TextLabelAdmin(admin.ModelAdmin):
 
 
 class TextLabel(models.Model):
-    entity_name = models.IntegerField(choices=ENTITY_NAME)
+    entity_name = models.CharField(max_length=25, choices=ENTITY_NAME)
     part_of = models.ForeignKey('self', blank=True, null=True)
     label = models.CharField(max_length=255)
     order = models.IntegerField(default=0)
     published = models.BooleanField()
 
     def save(self, *args, **kwargs):
-        if FUNCTIONS not in kwargs.keys():
-            raise FunctionAgrumentMissingException('The kwarg "{0}" must be set.'.format(FUNCTIONS))
-        functions = kwargs.pop(FUNCTIONS)
-        if self.order and self.entity_name and self.label and self.part_of:
-            foundparent = TextLabel.objects.filter(entity_name=self.part_of.entity_name,
-                                                   label=self.part_of.label, order=self.part_of.order)
-            if foundparent.count() == 0:
-                raise FunctionTxtLabelParentMustExitsException('A parent must be defined for a child')
-
-        if self.order and self.part_of:
-            foundtextlabel = TextLabel.objects.filter(part_of=self.part_of, order=self.order)
-            if foundtextlabel.count() > 0:
-                raise FunctionTxtLabelOrderExitsException('A textlabel with the same parent and same order already exists')
+        if self.order:
+            if self.part_of:
+                txtlabelsamechildren = TextLabel.objects.filter(part_of=self.part_of).order_by('order')
+                for txtlabelsamechild in txtlabelsamechildren:
+                    if txtlabelsamechild.order >= self.order:
+                        TextLabel.objects.filter(id=txtlabelsamechild.id).update(order=txtlabelsamechild.order+1)
+            else:
+                txtlabelsameparents = TextLabel.objects.filter(part_of=None).order_by('order')
+                for txtlabelsameparent in txtlabelsameparents:
+                    if txtlabelsameparent.order >= self.order:
+                        TextLabel.objects.filter(id=txtlabelsameparent.id).update(order=txtlabelsameparent.order+1)
+        else:
+            raise FunctionTxtLabelOrderMustExitsException('A textlabel must have an order defined')
         super(TextLabel, self).save(*args, **kwargs)
-        for function in functions:
-            function(self)
 
     @property
     def children(self):
@@ -73,24 +68,3 @@ class TextLabel(models.Model):
 
 def find_by_id(text_label_id):
     return TextLabel.objects.get(pk=text_label_id)
-
-
-def find_by_ids(text_label_ids):
-    return TextLabel.objects.filter(pk__in=text_label_ids)
-
-
-def find_text_label_hierarchy(entity_id):
-    txtlabel = TextLabel.objects.filter(entity_name=entity_id)
-    list_labels = []
-    for child_text_label in txtlabel:
-        list_labels.append(child_text_label)
-    return list_labels
-
-
-def search(acronym=None):
-    queryset = TextLabel.objects
-
-    if acronym:
-        queryset = queryset.filter(acronym=acronym)
-
-    return queryset
