@@ -30,8 +30,8 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import TestCase, Client
 
-from base.tests.models import test_academic_year, test_offer_year, test_learning_unit_year, test_program_manager, test_attribution, \
-    test_tutor
+from base.tests.models import test_academic_year, test_offer_year, test_learning_unit_year, test_program_manager, test_tutor
+from attribution.tests.models import test_attribution
 from base.tests.models.test_exam_enrollment import create_exam_enrollment_with_student
 from base.views import score_encoding
 
