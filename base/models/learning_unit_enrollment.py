@@ -25,7 +25,6 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-from osis_common.models.serializable_model import SerializableModel
 
 
 class LearningUnitEnrollmentAdmin(admin.ModelAdmin):
@@ -36,7 +35,7 @@ class LearningUnitEnrollmentAdmin(admin.ModelAdmin):
     search_fields = ['learning_unit_year__acronym']
 
 
-class LearningUnitEnrollment(SerializableModel):
+class LearningUnitEnrollment(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     date_enrollment = models.DateField()

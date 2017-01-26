@@ -31,7 +31,7 @@ from base.models import academic_year
 now = datetime.datetime.now()
 
 
-def create_academic_year(year=now.year):
+def create_academic_year(year=2016):
     an_academic_year = academic_year.AcademicYear()
     an_academic_year.year = year
     an_academic_year.save()

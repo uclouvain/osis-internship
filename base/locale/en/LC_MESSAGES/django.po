@@ -561,9 +561,6 @@ msgstr "Language"
 msgid "lastname"
 msgstr "Lastname"
 
-msgid "last_synchronization"
-msgstr "Last synchronization"
-
 msgid "learning_unit"
 msgstr "Learning unit"
 

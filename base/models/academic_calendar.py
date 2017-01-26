@@ -27,12 +27,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils import timezone
 from base.models.exceptions import FunctionAgrumentMissingException, StartDateHigherThanEndDateException
-from osis_common.models.serializable_model import SerializableModel
 
 FUNCTIONS = 'functions'
 
 
-class AcademicCalendar(SerializableModel):
+class AcademicCalendar(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     academic_year = models.ForeignKey('AcademicYear')
@@ -43,7 +42,6 @@ class AcademicCalendar(SerializableModel):
     highlight_title = models.CharField(max_length=255, blank=True, null=True)
     highlight_description = models.CharField(max_length=255, blank=True, null=True)
     highlight_shortcut = models.CharField(max_length=255, blank=True, null=True)
-    reference = models.CharField(max_length=50, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if FUNCTIONS not in kwargs.keys():

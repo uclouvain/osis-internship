@@ -57,7 +57,6 @@ INSTALLED_APPS = (
     'ckeditor',
     'reference',
     'base',
-    'attribution',
     'assistant',
     'dissertation',
     'internship',

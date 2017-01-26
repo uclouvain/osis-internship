@@ -35,12 +35,6 @@ def create_person(first_name, last_name, email=None):
     return a_person
 
 
-def create_person_with_user(user):
-    a_person = person.Person(first_name=user.first_name, last_name=user.last_name, user=user)
-    a_person.save()
-    return a_person
-
-
 class PersonTest(TestCase):
 
     settings.INTERNAL_EMAIL_SUFIX = 'osis.org'

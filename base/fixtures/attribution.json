@@ -1,6 +1,6 @@
 [
   {
-    "model": "attribution.attribution",
+    "model": "base.attribution",
     "pk": 1,
     "fields": {
       "external_id": null,
@@ -13,7 +13,7 @@
     }
   },
   {
-    "model": "attribution.attribution",
+    "model": "base.attribution",
     "pk": 2,
     "fields": {
       "external_id": null,
@@ -26,7 +26,7 @@
     }
   },
   {
-    "model": "attribution.attribution",
+    "model": "base.attribution",
     "pk": 3,
     "fields": {
       "external_id": null,
@@ -39,7 +39,7 @@
     }
   },
   {
-    "model": "attribution.attribution",
+    "model": "base.attribution",
     "pk": 4,
     "fields": {
       "external_id": null,
@@ -52,7 +52,7 @@
     }
   },
   {
-    "model": "attribution.attribution",
+    "model": "base.attribution",
     "pk": 5,
     "fields": {
       "external_id": null,
@@ -65,7 +65,7 @@
     }
   },
   {
-    "model": "attribution.attribution",
+    "model": "base.attribution",
     "pk": 6,
     "fields": {
       "external_id": null,
@@ -78,7 +78,7 @@
     }
   },
   {
-    "model": "attribution.attribution",
+    "model": "base.attribution",
     "pk": 7,
     "fields": {
       "external_id": null,
@@ -91,7 +91,7 @@
     }
   },
   {
-    "model": "attribution.attribution",
+    "model": "base.attribution",
     "pk": 8,
     "fields": {
       "external_id": null,
@@ -104,7 +104,7 @@
     }
   },
   {
-    "model": "attribution.attribution",
+    "model": "base.attribution",
     "pk": 9,
     "fields": {
       "external_id": null,
@@ -117,7 +117,7 @@
     }
   },
   {
-    "model": "attribution.attribution",
+    "model": "base.attribution",
     "pk": 10,
     "fields": {
       "external_id": null,
@@ -130,7 +130,7 @@
     }
   },
   {
-    "model": "attribution.attribution",
+    "model": "base.attribution",
     "pk": 11,
     "fields": {
       "external_id": null,
@@ -143,7 +143,7 @@
     }
   },
   {
-    "model": "attribution.attribution",
+    "model": "base.attribution",
     "pk": 12,
     "fields": {
       "external_id": null,
@@ -156,7 +156,7 @@
     }
   },
   {
-    "model": "attribution.attribution",
+    "model": "base.attribution",
     "pk": 13,
     "fields": {
       "external_id": null,
