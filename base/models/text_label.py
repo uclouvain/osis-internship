@@ -40,7 +40,7 @@ class TextLabel(models.Model):
     part_of = models.ForeignKey('self', blank=True, null=True)
     label = models.CharField(max_length=255)
     order = models.IntegerField(default=0)
-    published = models.BooleanField()
+    published = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):
         if self.order:

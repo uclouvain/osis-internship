@@ -36,8 +36,8 @@ class TranslatedTextAdmin(admin.ModelAdmin):
 
 
 class TranslatedText(models.Model):
-    entity_name = models.IntegerField(choices=ENTITY_NAME)
-    reference = models.IntegerField()
+    entity_name = models.CharField(max_length=25, choices=ENTITY_NAME)
+    reference = models.CharField(max_length=50, db_index=True)
     language = models.ForeignKey('reference.Language')
     text_label = models.ForeignKey('TextLabel')
     text = RichTextField()
