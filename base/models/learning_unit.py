@@ -25,7 +25,6 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-from osis_common.models.serializable_model import SerializableModel
 
 
 class LearningUnitAdmin(admin.ModelAdmin):
@@ -34,7 +33,7 @@ class LearningUnitAdmin(admin.ModelAdmin):
     search_fields = ['acronym']
 
 
-class LearningUnit(SerializableModel):
+class LearningUnit(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     acronym = models.CharField(max_length=15)

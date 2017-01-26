@@ -57,7 +57,14 @@ class ProgramManager(models.Model):
 
 
 def find_by_person(a_person):
-    return ProgramManager.objects.filter(person=a_person)
+    """
+    Args:
+        a_person: an instance of models.person.Person
+
+    Returns: the managed programs by the person.
+    """
+    programs_managed = ProgramManager.objects.filter(person=a_person)
+    return programs_managed
 
 
 def is_program_manager(user, offer_year=None, learning_unit_year=None):

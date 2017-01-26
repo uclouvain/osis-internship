@@ -13,10 +13,10 @@ def remove_year_from_external_id(external_id):
 
 
 def update_external_id_field(apps, schema_editor):
-    for learn_unit in LearningUnit.objects.raw('SELECT * FROM base_learningunit'):
+    for learn_unit in LearningUnit.objects.all():
         new_ext_id = remove_year_from_external_id(learn_unit.external_id)
-        migrations.RunSQL("UPDATE base_learningunit set external_id = {} where external_id = {}"
-                          .format(new_ext_id, learn_unit.external_id))
+        learn_unit.external_id = new_ext_id
+        learn_unit.save()
 
 
 class Migration(migrations.Migration):

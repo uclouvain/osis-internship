@@ -34,7 +34,7 @@ end_date = start_date.replace(year=start_date.year + 1)
 
 
 def create_academic_year():
-    academic_yr = academic_year.AcademicYear(year=start_date.year, start_date=start_date, end_date=end_date)
+    academic_yr = academic_year.AcademicYear(year=2016, start_date=start_date, end_date=end_date)
     academic_yr.save()
     return academic_yr
 

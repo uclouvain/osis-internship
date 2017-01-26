@@ -27,9 +27,8 @@ from decimal import *
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
-from base.models import person, learning_unit_year, person_address, offer_year_calendar
-from attribution.models import attribution
-from base.enums import exam_enrollment_justification_type as justification_types
+from base.models import person, learning_unit_year, attribution, person_address, offer_year_calendar
+from base.enums.exam_enrollment_justification_type import JUSTIFICATION_TYPES
 from base.enums import exam_enrollment_state as enrollment_states
 import datetime
 import unicodedata
@@ -55,9 +54,9 @@ class ExamEnrollment(models.Model):
     score_draft = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
     score_reencoded = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
     score_final = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
-    justification_draft = models.CharField(max_length=20, blank=True, null=True, choices=justification_types.JUSTIFICATION_TYPES)
-    justification_reencoded = models.CharField(max_length=20, blank=True, null=True, choices=justification_types.JUSTIFICATION_TYPES)
-    justification_final = models.CharField(max_length=20, blank=True, null=True, choices=justification_types.JUSTIFICATION_TYPES)
+    justification_draft = models.CharField(max_length=20, blank=True, null=True, choices=JUSTIFICATION_TYPES)
+    justification_reencoded = models.CharField(max_length=20, blank=True, null=True, choices=JUSTIFICATION_TYPES)
+    justification_final = models.CharField(max_length=20, blank=True, null=True, choices=JUSTIFICATION_TYPES)
     session_exam = models.ForeignKey('SessionExam')
     learning_unit_enrollment = models.ForeignKey('LearningUnitEnrollment')
     enrollment_state = models.CharField(max_length=20,
@@ -97,34 +96,11 @@ class ExamEnrollment(models.Model):
 
     @property
     def justification_draft_display(self):
-        if is_absence_justification(self.justification_draft):
-            return _('absent')
-        elif self.justification_draft:
-            return _(self.justification_draft)
-        else:
-            return None
+        return _(self.justification_draft)
 
     @property
-    def justification_final_display_as_tutor(self):
-        if is_absence_justification(self.justification_final):
-            return _('absent')
-        elif self.justification_final:
-            return _(self.justification_final)
-        else:
-            return None
-
-    @property
-    def justification_reencoded_display_as_tutor(self):
-        if is_absence_justification(self.justification_reencoded):
-            return _('absent')
-        elif self.justification_reencoded:
-            return _(self.justification_reencoded)
-        else:
-            return None
-
-
-def is_absence_justification(justification):
-    return justification in [justification_types.ABSENCE_UNJUSTIFIED, justification_types.ABSENCE_JUSTIFIED]
+    def justification_final_display(self):
+        return _(self.justification_final)
 
 
 def calculate_exam_enrollment_progress(enrollments):
@@ -168,7 +144,7 @@ class ExamEnrollmentHistory(models.Model):
     exam_enrollment = models.ForeignKey(ExamEnrollment)
     person = models.ForeignKey(person.Person)
     score_final = models.DecimalField(max_digits=4, decimal_places=2, null=True)
-    justification_final = models.CharField(max_length=20, null=True, choices=justification_types.JUSTIFICATION_TYPES)
+    justification_final = models.CharField(max_length=20, null=True, choices=JUSTIFICATION_TYPES)
     modification_date = models.DateTimeField(auto_now=True)
 
 
@@ -298,7 +274,6 @@ def scores_sheet_data(exam_enrollments, tutor=None):
     data['publication_date'] = '%s/%s/%s' % (now.day, now.month, now.year)
     data['institution'] = str(_('ucl_denom_location'))
     data['link_to_regulation'] = str(_('link_to_RGEE'))
-    data['justification_legend'] = _('justification_legend') % justification_label_authorized()
 
     # Will contain lists of examEnrollments splitted by learningUnitYear
     enrollments_by_learn_unit = group_by_learning_unit_year_id(exam_enrollments)  # {<learning_unit_year_id> : [<ExamEnrollment>]}
