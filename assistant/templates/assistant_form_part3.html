@@ -53,34 +53,25 @@
     		</div>
     	</div>
     	<div class="form-group">
-      		<div class="row" style="padding-top: 5px; padding-left: 15px;">
-				<label for="phd_inscription_date">{% trans 'phd_inscription_date' %}</label>
+      			<label style="padding-top: 5px" for="phd_inscription_date">{% trans 'phd_inscription_date' %}</label>
 				<div class="controls" id="phd_inscription_date">{{ form.phd_inscription_date }}</div>
 				<font class="error">{{ form.phd_inscription_date.errors }}</font>
-      		</div>
-      		<div class="row" style="padding-top: 15px; padding-left: 15px;">
-				<label for="thesis_title">{% trans 'thesis_title' %}</label>
+				<label for="thesis_title" style="padding-top: 5px">{% trans 'thesis_title' %}</label>
 				<div class="controls" id="thesis_title">{{ form.thesis_title }}</div>
 				<font class="error">{{ form.thesis_title.errors }}</font>
-      		</div>
-      		<div class="row" style="padding-top: 15px; padding-left: 15px;">
-				<label for="confirmatory_test_date">{% trans 'confirmatory_test_date' %}
+				<label for="confirmatory_test_date" style="padding-top: 5px">{% trans 'confirmatory_test_date' %}
 					{% trans '2nd_renewal' %}</label>
 				<div class="controls" id="confirmatory_test_date">{{ form.confirmation_test_date }}</div>
 				<font class="error">{{ form.confirmation_test_date.errors }}</font>
-          	</div>
-          	<div class="row" style="padding-top: 15px; padding-left: 15px;">
-                <label for="remark">{% trans 'doctorate_remark' %}</label>
+                <label for="remark" style="padding-top: 5px">{% trans 'doctorate_remark' %}</label>
                  <div class="controls" id="remark">{{ form.remark }}</div>
                 <font class="error">{{ form.remark.errors }}</font>
-      		</div>
         </div>
         <div class="panel-default">
   			<div class="panel-heading">
   				<h4>{% trans 'support_committee_reports' %}</h4>
     		</div>
     	</div>
-
         {% for file in files %}
             <div class="row" style="padding-top: 15px;">
                 <div class="col-md-2" style="text-align: left">
@@ -95,23 +86,21 @@
                 </div>
             </div>
         {% endfor %}
-        <div class="row" style="padding-top: 15px; padding-left: 15px;">
-            <a class="btn btn-default" data-toggle="modal" data-target="#pnl_upload_documents"
+		<div class="form-group" style="padding-top: 15px;">
+			<a class="btn btn-default" data-toggle="modal" data-target="#pnl_upload_documents"
                id="btn_add_file" style="margin-right: 5px;" title="{% trans 'add_file'%}">
                 <span class="glyphicon glyphicon-upload" aria-hidden="true" id="spn_add_file"></span>
                 {% trans 'upload_pdf_file' %}</a>
-        </div>
+		</div>
         <hr>
 	    <input type="hidden" value="{{mandate.id | default_if_none:''}}" id="hdn_current_mandate_id"
 		   name="mandate_id" title="mandate_id" >
         <input type="hidden" value="{{ document_type }}" id="hdn_description" name="description"
                title="description">
-		<div class="form-group"> 
-    		<div class="row" style="padding-left: 15px; padding-right: 15px;">
+		<div class="form-group">
      			<button type="submit" class="btn btn-primary btn-block" title="{% trans 'save'%}"
                         id="bt_pstform_part3_save">
      			<span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}</button>
-    		</div>
 		</div>
     	</form>
 	</div>
