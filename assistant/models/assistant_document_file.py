@@ -27,7 +27,6 @@ from django.db import models
 
 
 class AssistantDocumentFile(models.Model):
-
     document_file = models.ForeignKey('osis_common.documentFile')
     assistant_mandate = models.ForeignKey('AssistantMandate')
 

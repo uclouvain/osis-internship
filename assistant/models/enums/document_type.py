@@ -27,13 +27,3 @@
 PHD_DOCUMENT = 'PHD_DOCUMENT'
 TUTORING_DOCUMENT = 'TUTORING_DOCUMENT'
 RESEARCH_DOCUMENT = 'RESEARCH_DOCUMENT'
-
-DOCUMENT_TYPE_CHOICES = ((PHD_DOCUMENT, 'phd_document', '', ''),
-                         (TUTORING_DOCUMENT, 'tutoring_document', '', ''),
-                         (RESEARCH_DOCUMENT, 'research_document', '', ''))
-
-
-def find(desired_document_type):
-    for document_type in DOCUMENT_TYPE_CHOICES:
-        if desired_document_type in document_type:
-            return document_type
