@@ -24,15 +24,35 @@
 #
 ##############################################################################
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
 
 
-class AssistantDocument(models.Model):
-    DOC_TYPE_CHOICES = (
-        ('PHD', _('PhD')),
-        ('TUTORING', _('Tutoring')),
-        ('RESEARCH', _('Research')))
+class AssistantDocumentFile(models.Model):
+    document_file = models.ForeignKey('osis_common.documentFile')
+    assistant_mandate = models.ForeignKey('AssistantMandate')
 
-    assistant = models.ForeignKey('AcademicAssistant')
-    mandate = models.ForeignKey('AssistantMandate')
-    doc_type = models.CharField(max_length=20, choices=DOC_TYPE_CHOICES)
+
+def search(assistant_mandate=None, description=None):
+    out = None
+    queryset = AssistantDocumentFile.objects.order_by('document_file__creation_date')
+    if assistant_mandate:
+        queryset = queryset.filter(assistant_mandate=assistant_mandate)
+    if description:
+        queryset = queryset.filter(document_file__description=description)
+    if assistant_mandate or description:
+        out = queryset
+    return out
+
+
+def find_first(assistant_mandate=None, description=None):
+    results = search(assistant_mandate, description)
+    if results.exists():
+        return results[0]
+    return None
+
+
+def find_by_document(document_file):
+    return AssistantDocumentFile.objects.get(document_file=document_file)
+
+
+def find_by_assistant_mandate(assistant_mandate):
+    return AssistantDocumentFile.objects.filter(assistant_mandate=assistant_mandate)
