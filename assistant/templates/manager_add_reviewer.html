@@ -39,7 +39,9 @@
 <div class="page-header">
     <h3>{% trans 'assistantship_mandate_renewal' %} {{ year|add:1 }}</h3>
 </div>
+
 <div class="panel panel-default">
+
     <div class="panel-body">
         <form method="POST" action="{% url 'reviewer_add' %}">
         {{ form.non_field_errors }}
@@ -47,18 +49,21 @@
  		    {% for hidden in form.hidden_fields %}
 			    {{ hidden }}
 		    {% endfor %}
+
 	    <div class="form-group">
 		    <div class="row">
 			    <div class="col-md-3">
 				    <div class="controls"  onChange="print_email();">
 				        <label for="txt_person">{% trans 'person' %}</label>
-				        {{ form.person }}<font class="error">{{ form.person.errors }}</font>
-				    </div>
-				    <div class="col-md-3">
+                    </div>
+				    <div class="col-md-3">{% trans 'search_by_email' %}
+                        <div class="ui-widget"><input id="persons" size="50"></div>
+                        {{ form.person }}<font class="error">{{ form.person.errors }}</font>
 					    <div id="email_person"></div>
 				    </div>
                 </div>
-			</div><p></p>
+			</div>
+			<p></p>
 		    <div class="row">
 			    <div class="col-md-4">
 				    <div class="controls">
@@ -86,15 +91,43 @@
 </div>
 {% endblock %}
 {% block script %}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
+
 function print_email()
 {
 	var email = document.getElementById("id_person").value;
 	document.getElementById('email_person').innerHTML = email;
 }
 window.onload = function() {
+    $('#id_person').empty();
     Hide();
     print_email();
 };
+
+$(function() {
+
+
+  $("#persons").autocomplete({
+	source: "api/get_persons/",
+    minLength: 3,
+    select: function(event, ui) {
+        var person = $('#persons').val();
+        var uri = "api/get_person_from_email/" + person;
+        $.ajax({ url: uri }).then(function(data)
+            {
+            var person = data.person_json[0]
+            content = "<option value="+person.id+">" + person.last_name
+            +", "+person.first_name+" ("+person.email+")</option>";
+            $('#id_person').empty();
+             $('#id_person').append(content);
+            });
+
+    }
+  });
+});
 </script>
 {% endblock %}
