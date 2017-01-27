@@ -25,16 +25,18 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
+from osis_common.models.serializable_model import SerializableModel
 
 
 class LearningUnitEnrollmentAdmin(admin.ModelAdmin):
     list_display = ('student', 'learning_unit_year', 'date_enrollment', 'changed')
     fieldsets = ((None, {'fields': ('offer_enrollment','learning_unit_year','date_enrollment')}),)
+    list_filter = ('learning_unit_year__academic_year',)
     raw_id_fields = ('offer_enrollment', 'learning_unit_year')
     search_fields = ['learning_unit_year__acronym']
 
 
-class LearningUnitEnrollment(models.Model):
+class LearningUnitEnrollment(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     date_enrollment = models.DateField()
@@ -52,10 +54,6 @@ class LearningUnitEnrollment(models.Model):
     def __str__(self):
         return u"%s - %s" % (self.learning_unit_year, self.offer_enrollment.student)
 
-
-def find_by_learningunit_enrollment(learning_unit_year, offer_enrollment):
-    return LearningUnitEnrollment.objects.filter(learning_unit_year=learning_unit_year,
-                                                 offer_enrollment=offer_enrollment)
 
 def find_by_learningunit_enrollment(learning_unit_year):
     return LearningUnitEnrollment.objects.filter(learning_unit_year=learning_unit_year).order_by('offer_enrollment__student__person__last_name',

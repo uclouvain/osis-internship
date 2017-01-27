@@ -70,7 +70,7 @@
         </div>
         <br>
         <h3>{% trans 'questions' %}</h3>
-        {% if request.user.is_superuser %}
+        {% if perms.admission.add_question %}
         <a href="{% url 'offer_question_create' offer_form.id %}" id="lnk_question_create_{{offer_form.id}}"
            class="btn btn-default pull-right" role="button">
             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>

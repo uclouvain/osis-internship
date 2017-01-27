@@ -36,6 +36,7 @@ class ProgramManagerAdmin(admin.ModelAdmin):
     raw_id_fields = ('person', 'offer_year')
     fieldsets = ((None, {'fields': ('person', 'offer_year')}),)
     search_fields = ['person__first_name', 'person__last_name', 'offer_year__acronym']
+    list_filter = ('offer_year__academic_year',)
 
 
 class ProgramManager(models.Model):
@@ -56,14 +57,7 @@ class ProgramManager(models.Model):
 
 
 def find_by_person(a_person):
-    """
-    Args:
-        a_person: an instance of models.person.Person
-
-    Returns: the managed programs by the person.
-    """
-    programs_managed = ProgramManager.objects.filter(person=a_person)
-    return programs_managed
+    return ProgramManager.objects.filter(person=a_person)
 
 
 def is_program_manager(user, offer_year=None, learning_unit_year=None):
@@ -95,7 +89,8 @@ def is_program_manager(user, offer_year=None, learning_unit_year=None):
 
 
 def find_by_offer_year(offer_yr):
-    return ProgramManager.objects.filter(offer_year=offer_yr)
+    return ProgramManager.objects.filter(offer_year=offer_yr)\
+                                 .order_by('person__last_name', 'person__first_name')
 
 
 def find_by_user(user, academic_year=None):

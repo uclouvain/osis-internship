@@ -23,8 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
-from backoffice.settings import PERSON_PHOTO_PATH
 from django.db import models
 from django.contrib import admin
 from django.contrib.auth.models import User
@@ -32,8 +30,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from osis_common.models.serializable_model import SerializableModel
 from base.enums import person_source_type
-import base64
-import urllib
 
 
 class PersonAdmin(admin.ModelAdmin):
@@ -97,36 +93,6 @@ class Person(SerializableModel):
             last_name = self.last_name + ","
 
         return u"%s %s %s" % (last_name.upper(), first_name, middle_name)
-
-    @property
-    def photo(self):
-        # Return JPG in Base64 format
-        # return None if no valid data: global_id or no picture
-        # for template use <img src="data:image/jpeg;base64,{{person.get_photo}}" class="avatar img-responsive"/>
-        # timeout 1 sec with URLLIB request
-
-        if self.photo_path:
-
-            try:
-                photo = urllib.request.urlopen(self.photo_path, None, 1.0)
-                photo_base64 = base64.b64encode(photo.read())
-                return photo_base64
-            except IOError:
-                return None
-        else:
-            return None
-
-    @property
-    def photo_path(self):
-        if self.global_id and PERSON_PHOTO_PATH != '':
-            try:
-                glob_id_str = str(self.global_id)
-                photo_path = PERSON_PHOTO_PATH + 'image' + glob_id_str[-4:-2] + "/" + glob_id_str + '.jpg'
-                return photo_path
-            except IOError:
-                return None
-        else:
-            return None
 
     class Meta:
         permissions = (

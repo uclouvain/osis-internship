@@ -23,7 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from datetime import datetime
 import subprocess
 from django.conf import settings
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
@@ -32,8 +31,6 @@ from django.contrib.auth import authenticate, logout
 from django.shortcuts import redirect
 from django.utils import translation
 from . import layout
-from django.utils.translation import ugettext_lazy as _
-from osis_common.models import document_file as doc_file_mdl
 from base.models import person as person_mdl, academic_year as academic_year_mdl, \
     academic_calendar as academic_calendar_mdl, native as native_mdl
 
@@ -55,11 +52,15 @@ def noscript(request):
 
 
 def environnement_request_processor(request):
-    try:
+    if hasattr(settings, 'ENVIRONMENT'):
         env = settings.ENVIRONMENT
-    except AttributeError:
+    else:
         env = 'DEV'
-    return {'environment': env}
+    if hasattr(settings, 'SENTRY_PUBLIC_DNS'):
+        sentry_dns = settings.SENTRY_PUBLIC_DNS
+    else:
+        sentry_dns = ''
+    return {'environment': env, 'sentry_dns': sentry_dns}
 
 
 def login(request):
@@ -75,6 +76,7 @@ def login(request):
                 translation.activate(user_language)
                 request.session[translation.LANGUAGE_SESSION_KEY] = user_language
     return django_login(request)
+
 
 @login_required
 def home(request):
@@ -160,34 +162,3 @@ def storage(request):
             row.append('')
 
     return layout.render(request, "admin/storage.html", {'table': table})
-
-
-@login_required
-@permission_required('base.is_administrator', raise_exception=True)
-def files(request):
-    return layout.render(request, "admin/files.html", {})
-
-
-@login_required
-@permission_required('base.is_administrator', raise_exception=True)
-def files_search(request):
-    registration_date = request.GET['registration_date']
-    username = request.GET['user']
-    message = None
-    files = None
-    if registration_date or username :
-        if registration_date :
-            registration_date = datetime.strptime(request.GET['registration_date'], '%Y-%m-%d')
-        files = doc_file_mdl.search(username=username, creation_date=registration_date)
-    else :
-        message = "%s" % _('minimum_one_criteria')
-
-    return layout.render(request, "admin/files.html", {'files': files,
-                                                       'message': message})
-
-
-@login_required
-@permission_required('base.is_administrator', raise_exception=True)
-def document_file_read(request, document_file_id):
-    document_file = doc_file_mdl.find_by_id(document_file_id)
-    return layout.render(request, "admin/file.html", {'file': document_file})

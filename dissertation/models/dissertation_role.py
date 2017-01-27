@@ -23,27 +23,22 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from osis_common.models.serializable_model import SerializableModel
 from django.contrib import admin
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
 from django.db.models import Q
+from .enums import status_types
 
 
 class DissertationRoleAdmin(admin.ModelAdmin):
     list_display = ('adviser', 'status', 'dissertation', 'author', 'dissertation_status')
     raw_id_fields = ('adviser', 'dissertation')
+    search_fields = ('uuid', 'dissertation__author__person__last_name', 'dissertation__author__person__first_name',
+                     'dissertation__title', 'adviser__person__last_name', 'adviser__person__first_name')
 
 
-class DissertationRole(models.Model):
-    STATUS_CHOICES = (
-        ('PROMOTEUR', _('promotor')),
-        ('CO_PROMOTEUR', _('copromotor')),
-        ('READER', _('reader')),
-        ('ACCOMPANIST', _('accompanist')),
-        ('INTERNSHIP', _('internship_master')),
-    )
-
-    status = models.CharField(max_length=12, choices=STATUS_CHOICES)
+class DissertationRole(SerializableModel):
+    status = models.CharField(max_length=12, choices=status_types.STATUS_CHOICES)
     adviser = models.ForeignKey('Adviser')
     dissertation = models.ForeignKey('Dissertation')
 

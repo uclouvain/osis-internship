@@ -32,11 +32,13 @@ class ManagerAdmin(admin.ModelAdmin):
     search_fields = ['person__first_name', 'person__last_name',
                      'person__global_id', 'structure__acronym']
 
+
 class Manager(models.Model):
     person = models.ForeignKey('base.Person')
     
     def __str__(self):
-        return u"%s" % (self.person)
+        return u"%s" % self.person
+
 
 def find_by_person(person):
     return Manager.objects.get(person=person)
