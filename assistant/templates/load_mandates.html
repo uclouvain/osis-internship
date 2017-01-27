@@ -48,27 +48,28 @@
 <div class="panel panel-default">
     <div class="panel-body">
     {% if imported_mandates or updated_mandates %}
-        <div class="row"><ul>
-            <li>{{ imported_assistants }} assistants importés.</li>
-            <li>{{ updated_assistants }} assistants mis à jour.</li>
-            <li>{{ imported_mandates }} mandats importés.</li>
-            <li>{{ updated_mandates }} mandats mis à jour.</li>
-            <li>{{ persons_not_found }} enregistrements ignorés.</li>
-        </ul>
+        <div class="form-group" style="padding-top: 5px;">
+            <ul>
+                <li>{{ imported_assistants }} assistants importés.</li>
+                <li>{{ updated_assistants }} assistants mis à jour.</li>
+                <li>{{ imported_mandates }} mandats importés.</li>
+                <li>{{ updated_mandates }} mandats mis à jour.</li>
+                <li>{{ persons_not_found }} enregistrements ignorés.</li>
+            </ul>
         </div>
     {% endif %}
     {% if messages %}
         <ul class="messages">
         {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            <li>{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
         {% endfor %}
         </ul>
     {% endif %}
-
             <button type="button" class="btn btn-default" data-toggle="modal" data-target="#pnl_upload_mandates_modal"
                     id="btn_upload_mandates_modal"
                     title="{% trans 'tooltip_select_excel_file_to_inject_mandates' %}">
-                <span class="glyphicon glyphicon-upload" aria-hidden="true"></span> {% trans 'inject_xls_file' %}</button>
+                <span class="glyphicon glyphicon-upload" aria-hidden="true"></span> {% trans 'inject_xls_file' %}
+            </button>
 
 	</div>
 </div>
@@ -79,7 +80,8 @@
             <form method="post" enctype="multipart/form-data" action="{% url 'upload_mandates_file' %}">
                 {% csrf_token %}
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="bt_close_upload_mandates_modal"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                            id="bt_close_upload_mandates_modal"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="uploadMandatesLabel">{% trans 'mandates_injection' %}</h4>
                 </div>
                 <div class="modal-body">
@@ -89,8 +91,11 @@
                     <p class="help-block">{% trans 'help_mandates_selectedfiles' %}</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" id="bt_cancel_upload_mandates_modal">{% trans 'cancel' %}</button>
-                    <input type="submit" class="btn btn-primary" value="{% trans 'inject'%}" onclick="document.getElementById('files').style.visibility='visible'" id="bt_submit_upload_mandates_modal"/>
+                    <button type="button" class="btn btn-default" data-dismiss="modal"
+                            id="bt_cancel_upload_mandates_modal">{% trans 'cancel' %}</button>
+                    <input type="submit" class="btn btn-primary" value="{% trans 'inject'%}"
+                           onclick="document.getElementById('files').style.visibility='visible'"
+                           id="bt_submit_upload_mandates_modal"/>
                 </div>
             </form>
         </div>
