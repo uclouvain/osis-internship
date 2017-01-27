@@ -23,8 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from base.utils.send_mail import *
+from osis_common.messaging import message_config, send_message as message_service
 from dissertation.models.dissertation_role import get_promoteur_by_dissertation
+
 
 def get_template_de_base(dissert):
     template_base_data = {'author': dissert.author.person.last_name +' '+dissert.author.person.first_name
@@ -35,6 +36,7 @@ def get_template_de_base(dissert):
                           'description': dissert.description,
                           'dissertation_proposition_titre': dissert.proposition_dissertation.title}
     return template_base_data
+
 
 def send_mail_to_teacher_new_dissert(dissert):
 
@@ -71,7 +73,6 @@ def send_mail_dissert_refused_by_teacher(dissert):
     """
     Notify (for the student) dissertation accepted by teacher
     """
-
     html_template_ref = 'dissertation_refused_by_teacher_html'
     txt_template_ref = 'dissertation_refused_by_teacher_txt'
     receivers = [message_config.create_receiver(dissert.author.person.id,
@@ -118,6 +119,7 @@ def send_mail_dissert_refused_by_com_to_student(dissert):
                                                             template_base_data, suject_data)
     return message_service.send_messages(message_content)
 
+
 def send_mail_dissert_refused_by_com_to_teacher(dissert):
 
     html_template_ref = 'dissertation_refused_by_com_to_teacher_html'
@@ -149,4 +151,3 @@ def send_mail_dissert_accepted_by_com(dissert):
     message_content = message_config.create_message_content(html_template_ref, txt_template_ref, tables, receivers,
                                                             template_base_data, suject_data)
     return message_service.send_messages(message_content)
-
