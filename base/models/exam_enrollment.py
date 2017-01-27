@@ -27,8 +27,9 @@ from decimal import *
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
-from base.models import person, learning_unit_year, attribution, person_address, offer_year_calendar
-from base.enums.exam_enrollment_justification_type import JUSTIFICATION_TYPES
+from base.models import person, learning_unit_year, person_address, offer_year_calendar
+from attribution.models import attribution
+from base.enums import exam_enrollment_justification_type as justification_types
 from base.enums import exam_enrollment_state as enrollment_states
 import datetime
 import unicodedata
@@ -37,14 +38,15 @@ import unicodedata
 class ExamEnrollmentAdmin(admin.ModelAdmin):
     list_display = ('student', 'enrollment_state', 'session_exam', 'score_draft', 'justification_draft', 'score_final',
                     'justification_final', 'score_reencoded', 'justification_reencoded', 'changed')
-    list_filter = ('session_exam__number_session',)
+    list_filter = ('session_exam__number_session', 'session_exam__learning_unit_year__academic_year')
     fieldsets = ((None, {'fields': ('session_exam', 'enrollment_state', 'learning_unit_enrollment', 'score_draft', 'justification_draft',
                                     'score_final', 'justification_final')}),)
     raw_id_fields = ('session_exam', 'learning_unit_enrollment')
     search_fields = ['learning_unit_enrollment__offer_enrollment__student__person__first_name',
                      'learning_unit_enrollment__offer_enrollment__student__person__last_name',
                      'learning_unit_enrollment__offer_enrollment__student__registration_id',
-                     'learning_unit_enrollment__learning_unit_year__acronym']
+                     'learning_unit_enrollment__learning_unit_year__acronym',
+                     'session_exam__offer_year_calendar__offer_year__acronym']
 
 
 class ExamEnrollment(models.Model):
@@ -53,14 +55,15 @@ class ExamEnrollment(models.Model):
     score_draft = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
     score_reencoded = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
     score_final = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
-    justification_draft = models.CharField(max_length=20, blank=True, null=True, choices=JUSTIFICATION_TYPES)
-    justification_reencoded = models.CharField(max_length=20, blank=True, null=True, choices=JUSTIFICATION_TYPES)
-    justification_final = models.CharField(max_length=20, blank=True, null=True, choices=JUSTIFICATION_TYPES)
+    justification_draft = models.CharField(max_length=20, blank=True, null=True, choices=justification_types.JUSTIFICATION_TYPES)
+    justification_reencoded = models.CharField(max_length=20, blank=True, null=True, choices=justification_types.JUSTIFICATION_TYPES)
+    justification_final = models.CharField(max_length=20, blank=True, null=True, choices=justification_types.JUSTIFICATION_TYPES)
     session_exam = models.ForeignKey('SessionExam')
     learning_unit_enrollment = models.ForeignKey('LearningUnitEnrollment')
     enrollment_state = models.CharField(max_length=20,
                                         default=enrollment_states.ENROLLED,
-                                        choices=enrollment_states.STATES)
+                                        choices=enrollment_states.STATES,
+                                        db_index=True)
 
     def student(self):
         return self.learning_unit_enrollment.student
@@ -94,11 +97,34 @@ class ExamEnrollment(models.Model):
 
     @property
     def justification_draft_display(self):
-        return _(self.justification_draft)
+        if is_absence_justification(self.justification_draft):
+            return _('absent')
+        elif self.justification_draft:
+            return _(self.justification_draft)
+        else:
+            return None
 
     @property
-    def justification_final_display(self):
-        return _(self.justification_final)
+    def justification_final_display_as_tutor(self):
+        if is_absence_justification(self.justification_final):
+            return _('absent')
+        elif self.justification_final:
+            return _(self.justification_final)
+        else:
+            return None
+
+    @property
+    def justification_reencoded_display_as_tutor(self):
+        if is_absence_justification(self.justification_reencoded):
+            return _('absent')
+        elif self.justification_reencoded:
+            return _(self.justification_reencoded)
+        else:
+            return None
+
+
+def is_absence_justification(justification):
+    return justification in [justification_types.ABSENCE_UNJUSTIFIED, justification_types.ABSENCE_JUSTIFIED]
 
 
 def calculate_exam_enrollment_progress(enrollments):
@@ -142,7 +168,7 @@ class ExamEnrollmentHistory(models.Model):
     exam_enrollment = models.ForeignKey(ExamEnrollment)
     person = models.ForeignKey(person.Person)
     score_final = models.DecimalField(max_digits=4, decimal_places=2, null=True)
-    justification_final = models.CharField(max_length=20, null=True, choices=JUSTIFICATION_TYPES)
+    justification_final = models.CharField(max_length=20, null=True, choices=justification_types.JUSTIFICATION_TYPES)
     modification_date = models.DateTimeField(auto_now=True)
 
 
@@ -170,10 +196,10 @@ def get_progress(session_exm_list, learning_unt):
     return str(tot_progress)+"/"+str(tot_enrollments)
 
 
-def find_exam_enrollments_by_session_learningunit(session_exm, learning_unt):
+def find_exam_enrollments_by_session_learningunit(session_exm, a_learning_unit_year):
     enrollments = ExamEnrollment.objects.filter(session_exam=session_exm) \
                                         .filter(enrollment_state=enrollment_states.ENROLLED) \
-                                        .filter(learning_unit_enrollment__learning_unit_year__learning_unit=learning_unt)
+                                        .filter(learning_unit_enrollment__learning_unit_year=a_learning_unit_year)
     return enrollments
 
 
@@ -217,8 +243,8 @@ def find_for_score_encodings(session_exam_number,
         # Filter by Tutor is like filter by a list of learningUnits
         # It's not necessary to add a filter if learningUnitYear or learningUnitYearIds are already defined
         if not learning_unit_year_id and not learning_unit_year_ids:
-            learning_unit_year_ids = learning_unit_year.find_by_tutor(tutor).values_list('id')
-            queryset = queryset.filter(learning_unit_enrollment__learning_unit_year_id__in=learning_unit_year_ids)
+            learning_unit_years = learning_unit_year.find_by_tutor(tutor)
+            queryset = queryset.filter(learning_unit_enrollment__learning_unit_year_id__in=learning_unit_years)
 
     if offer_year_id:
         queryset = queryset.filter(learning_unit_enrollment__offer_enrollment__offer_year_id=offer_year_id)
@@ -272,6 +298,7 @@ def scores_sheet_data(exam_enrollments, tutor=None):
     data['publication_date'] = '%s/%s/%s' % (now.day, now.month, now.year)
     data['institution'] = str(_('ucl_denom_location'))
     data['link_to_regulation'] = str(_('link_to_RGEE'))
+    data['justification_legend'] = _('justification_legend') % justification_label_authorized()
 
     # Will contain lists of examEnrollments splitted by learningUnitYear
     enrollments_by_learn_unit = group_by_learning_unit_year_id(exam_enrollments)  # {<learning_unit_year_id> : [<ExamEnrollment>]}
@@ -283,7 +310,7 @@ def scores_sheet_data(exam_enrollments, tutor=None):
         # We can take the first element of the list 'exam_enrollments' to get the learning_unit_yr
         # because all exam_enrollments have the same learningUnitYear
         learning_unit_yr = exam_enrollments[0].session_exam.learning_unit_year
-        coordinator = attribution.find_responsible(learning_unit_yr.learning_unit.id)
+        coordinator = attribution.find_responsible(learning_unit_yr.id)
         coordinator_address = None
         if coordinator:
             coordinator_address = person_address.find_by_person_label(coordinator.person, 'PROFESSIONAL')
@@ -335,7 +362,8 @@ def scores_sheet_data(exam_enrollments, tutor=None):
                                    'postal_code': offer_year.postal_code,
                                    'city': offer_year.city,
                                    'phone': offer_year.phone,
-                                   'fax': offer_year.fax}}
+                                   'fax': offer_year.fax,
+                                   'email': offer_year.email}}
             enrollments = []
             for exam_enrol in list_enrollments:
                 student = exam_enrol.learning_unit_enrollment.student

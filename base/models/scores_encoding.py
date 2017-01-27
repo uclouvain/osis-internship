@@ -26,6 +26,7 @@
 from django.db import models
 from django.contrib import admin
 from base.enums import exam_enrollment_state
+from base.models import academic_year
 
 
 class ScoresEncodingAdmin(admin.ModelAdmin):
@@ -33,7 +34,8 @@ class ScoresEncodingAdmin(admin.ModelAdmin):
                     'offer_year',
                     'learning_unit_year',
                     'total_exam_enrollments',
-                    'exam_enrollments_encoded')
+                    'exam_enrollments_encoded',
+                    'scores_not_yet_submitted')
     search_fields = ['pgm_manager_person__last_name', 'pgm_manager_person__first_name']
 
 
@@ -46,6 +48,7 @@ class ScoresEncoding(models.Model):
     learning_unit_year = models.ForeignKey('LearningUnitYear', on_delete=models.DO_NOTHING)
     total_exam_enrollments = models.IntegerField()
     exam_enrollments_encoded = models.IntegerField()
+    scores_not_yet_submitted = models.IntegerField()
     enrollment_state = models.CharField(max_length=20,
                                         default=exam_enrollment_state.ENROLLED,
                                         choices=exam_enrollment_state.STATES)
@@ -60,7 +63,9 @@ class ScoresEncoding(models.Model):
 
 
 def search(user, learning_unit_year_id=None, offer_year_id=None, learning_unit_year_ids=None):
-    queryset = ScoresEncoding.objects.filter(enrollment_state=exam_enrollment_state.ENROLLED)
+    queryset = ScoresEncoding.objects.filter(enrollment_state=exam_enrollment_state.ENROLLED) \
+                                     .filter(offer_year__academic_year=academic_year.current_academic_year()) \
+                                     .filter(learning_unit_year__academic_year=academic_year.current_academic_year())
 
     if offer_year_id:
         queryset = queryset.filter(offer_year_id=offer_year_id)

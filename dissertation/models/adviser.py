@@ -23,19 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.core import serializers
 from django.db import models
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
-from base.models.serializable_model import SerializableModel
+from osis_common.models.serializable_model import SerializableModel
 from .dissertation_role import DissertationRole
 
 
 class AdviserAdmin(admin.ModelAdmin):
     list_display = ('person', 'type')
     raw_id_fields = ('person', )
+    search_fields = ('uuid', 'person__last_name', 'person__first_name')
 
 
 class Adviser(SerializableModel):
@@ -118,12 +118,12 @@ class Adviser(SerializableModel):
 
         list_stat[3] = advisers_reader.count()
         tab_offer_count_read = {}
-        for dissertaion_role_read in advisers_reader:
-            if dissertaion_role_read.dissertation.offer_year_start.offer.title in tab_offer_count_read:
-                tab_offer_count_read[dissertaion_role_read.dissertation.offer_year_start.offer.title] = \
-                    tab_offer_count_read[str(dissertaion_role_read.dissertation.offer_year_start.offer.title)] + 1
+        for dissertation_role_read in advisers_reader:
+            if dissertation_role_read.dissertation.offer_year_start.offer.title in tab_offer_count_read:
+                tab_offer_count_read[dissertation_role_read.dissertation.offer_year_start.offer.title] = \
+                    tab_offer_count_read[str(dissertation_role_read.dissertation.offer_year_start.offer.title)] + 1
             else:
-                tab_offer_count_read[dissertaion_role_read.dissertation.offer_year_start.offer.title] = 1
+                tab_offer_count_read[dissertation_role_read.dissertation.offer_year_start.offer.title] = 1
 
         advisers_pro = queryset.filter(status='PROMOTEUR')\
                                .filter(Q(dissertation__active=True)) \
@@ -132,12 +132,12 @@ class Adviser(SerializableModel):
                                         Q(dissertation__status='DEFENDED'))
 
         tab_offer_count_pro = {}
-        for dissertaion_role_pro in advisers_pro:
-            if dissertaion_role_pro.dissertation.offer_year_start.offer.title in tab_offer_count_pro:
-                tab_offer_count_pro[dissertaion_role_pro.dissertation.offer_year_start.offer.title] = \
-                    tab_offer_count_pro[str(dissertaion_role_pro.dissertation.offer_year_start.offer.title)] + 1
+        for dissertation_role_read in advisers_pro:
+            if dissertation_role_read.dissertation.offer_year_start.offer.title in tab_offer_count_pro:
+                tab_offer_count_pro[dissertation_role_read.dissertation.offer_year_start.offer.title] = \
+                    tab_offer_count_pro[str(dissertation_role_read.dissertation.offer_year_start.offer.title)] + 1
             else:
-                tab_offer_count_pro[dissertaion_role_pro.dissertation.offer_year_start.offer.title] = 1
+                tab_offer_count_pro[dissertation_role_read.dissertation.offer_year_start.offer.title] = 1
         return list_stat, tab_offer_count_read, tab_offer_count_copro, tab_offer_count_pro
 
     class Meta:

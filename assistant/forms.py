@@ -70,7 +70,6 @@ class MandateForm(ModelForm):
 
 
 class MandateStructureForm(ModelForm):
-
     class Meta:
         model = mdl.mandate_structure.MandateStructure
         fields = ('structure', 'assistant_mandate')
@@ -83,10 +82,11 @@ def get_field_qs(field, **kwargs):
             Q(type='FACULTY')).order_by('acronym'))
     return field.formfield(**kwargs)
 
+
 structure_inline_formset = inlineformset_factory(mdl.assistant_mandate.AssistantMandate,
                                                  mdl.mandate_structure.MandateStructure,
                                                  formfield_callback=get_field_qs,
-                                                 fields=('structure','assistant_mandate'),
+                                                 fields=('structure', 'assistant_mandate'),
                                                  extra=2, can_delete=True, min_num=1, max_num=4)
 
 
@@ -170,6 +170,26 @@ class AssistantFormPart3(ModelForm):
     class Meta:
         model = mdl.academic_assistant.AcademicAssistant
         fields = ('phd_inscription_date', 'thesis_title', 'confirmation_test_date','remark')
+
+
+class AssistantFormPart4(ModelForm):
+    internships = forms.CharField(
+        required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '2'}))
+    conferences = forms.CharField(
+        required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '2'}))
+    publications = forms.CharField(
+        required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '2'}))
+    awards = forms.CharField(
+        required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '2'}))
+    framing = forms.CharField(
+        required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '2'}))
+    remark = forms.CharField(
+        required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '4'}))
+
+    class Meta:
+        model = mdl.assistant_mandate.AssistantMandate
+        fields = ('internships', 'conferences', 'publications',
+                  'awards', 'framing', 'remark')
 
 
 class TutoringLearningUnitForm(forms.Form):

@@ -30,8 +30,9 @@ from openpyxl import load_workbook
 from django.contrib import messages
 from django.utils.translation import ugettext as _
 
-from base.forms import ScoreFileForm
+from base.forms.score_file import ScoreFileForm
 from base import models as mdl
+from attribution import models as mdl_attr
 
 
 col_academic_year = 0
@@ -42,7 +43,7 @@ col_registration_id = 4
 col_score = 7
 col_justification = 8
 
-REGISTRATION_ID_SIZE = 8 # Size of all registration ids (convention)
+REGISTRATION_ID_LENGTH = 8
 
 
 @login_required
@@ -193,7 +194,7 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
             # If there's no score/justification encoded for this line, not necessary to make all checks below
             continue
         xls_registration_id = str(row[col_registration_id].value)
-        xls_registration_id = xls_registration_id.zfill(REGISTRATION_ID_SIZE)
+        xls_registration_id = xls_registration_id.zfill(REGISTRATION_ID_LENGTH)
         xls_offer_year_acronym = row[col_offer].value
         xls_learning_unit_acronym = row[col_learning_unit].value
         info_line = "%s %d (NOMA %s):" % (_('Line'), count + 1, xls_registration_id)
@@ -313,9 +314,9 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
         if not is_program_manager:
             tutor = mdl.tutor.find_by_user(user)
             if tutor and learning_unit_year.learning_unit_id:
-                coordinator = mdl.attribution.search(tutor=tutor,
-                                                     learning_unit_id=learning_unit_year.learning_unit_id,
-                                                     function='COORDINATOR')
+                coordinator = mdl_attr.attribution.search(tutor=tutor,
+                                                          learning_unit_year=learning_unit_year,
+                                                          score_responsible=True)
                 if not coordinator:
                     messages.add_message(request, messages.SUCCESS, '%s' % _('the_coordinator_must_still_submit_scores'))
         return True

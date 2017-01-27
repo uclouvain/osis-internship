@@ -24,8 +24,8 @@
 #
 ##############################################################################
 from django.http import HttpResponseRedirect
+from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseForbidden
 from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
@@ -119,7 +119,7 @@ def internships_student_read(request, registration_id):
         person_who_read = mdl.person.find_by_user(request.user)
         student_who_read = mdl.student.find_by_person(person_who_read)
         if not student_who_read or not student_to_read or student_who_read.pk != student_to_read.pk:
-            return render(request, 'access_denied.html')
+            raise PermissionDenied(request)
     if not student_to_read:
         return render(request, "student_resume.html", {'errors': ['student_not_exists']})
     information = InternshipStudentInformation.search(person = student_to_read.person)
@@ -200,11 +200,13 @@ def student_save_information_modification(request, registration_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_student_affectation_modification(request, student_id):
     informations = InternshipStudentAffectationStat.search(student__pk = student_id)
-    information = InternshipChoice.search(student__pk = student_id)
-    if not information:
-        information.student=mdl.student.find_by_id(student_id)
+    internship_choice = InternshipChoice.search(student__pk = student_id)
+    if not internship_choice:
+        student = mdl.student.find_by_id(student_id)
+        information = InternshipChoice()
+        information.student = student
     else:
-        information = information[0]
+        information = internship_choice.first()
     organizations = Organization.search()
     organizations = sort_organizations(organizations)
 

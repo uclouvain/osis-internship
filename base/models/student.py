@@ -25,17 +25,15 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
-from base.models import person
-from base.models.serializable_model import SerializableModel
+from osis_common.models.serializable_model import SerializableModel
 
 
 class StudentAdmin(admin.ModelAdmin):
     list_display = ('person', 'registration_id', 'changed')
     fieldsets = ((None, {'fields': ('registration_id', 'person')}),)
     raw_id_fields = ('person', )
-    search_fields = ['person__first_name', 'person__last_name']
+    search_fields = ['person__first_name', 'person__last_name', 'registration_id']
 
 
 class Student(SerializableModel):
@@ -99,5 +97,9 @@ def find_by_offer(offers):
 def find_by_offer_year(offer_y):
     return Student.objects.filter(offerenrollment__offer_year=offer_y)
 
+
 def find_by_id(student_id):
-    return Student.objects.get(pk=student_id)
+    try:
+        return Student.objects.get(pk=student_id)
+    except ObjectDoesNotExist:
+        return None

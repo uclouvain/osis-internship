@@ -88,7 +88,7 @@ class InternshipEnrollment(models.Model):
     period = models.ForeignKey('internship.Period')
 
     def __str__(self):
-        return u"%s" % self.learning_unit_enrollment.student
+        return u"%s - %s" % (self.student, self.internship_offer.title)
 
     @staticmethod
     def search(**kwargs):
@@ -384,7 +384,7 @@ class InternshipStudentInformation(models.Model):
     @staticmethod
     def find_by_person(person):
         try:
-            return InternshipStudentInformation.objects.get(person=person).select_related("person")
+            return InternshipStudentInformation.objects.get(person=person)
         except ObjectDoesNotExist:
             return None
 
@@ -423,3 +423,38 @@ class AffectationGenerationTime(models.Model):
             return AffectationGenerationTime.objects.latest('start_date_time')
         except ObjectDoesNotExist:
             return None
+
+
+class InternshipSpecialityGroup(models.Model):
+    name = models.CharField(unique=True, max_length=255)
+
+    def __str__(self):
+        return u"%s" % (self.name)
+
+    @staticmethod
+    def find_by_name(name):
+        try:
+            return InternshipSpecialityGroup.objects.get(name=name)
+        except ObjectDoesNotExist:
+            return None
+
+
+class InternshipSpecialityGroupMember(models.Model):
+    speciality = models.ForeignKey('internship.InternshipSpeciality')
+    group = models.ForeignKey('internship.InternshipSpecialityGroup')
+
+    def __str__(self):
+        return u"%s - %s" % (self.speciality.name, self.group.name)
+
+    @staticmethod
+    def search_by_group_name(group_name):
+        return InternshipSpecialityGroupMember.objects.filter(group__name=group_name)
+
+    @staticmethod
+    def find_by_speciality(speciality):
+        return InternshipSpecialityGroupMember.objects.filter(speciality=speciality)\
+            .order_by('speciality__order_postion')
+
+    @staticmethod
+    def find_distinct_specialities_by_groups(groups):
+        return InternshipSpecialityGroupMember.objects.filter(group__in=groups).distinct('speciality')

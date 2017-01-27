@@ -76,7 +76,7 @@ def user_is_reviewer_and_can_delegate(user):
 
 
 @user_passes_test(user_is_reviewer_and_can_delegate, login_url='assistants_home')
-def addReviewerForStructure(request, structure_id):
+def add_reviewer_for_structure(request, structure_id):
     """
     Crée un reviewer pour une structure donnée.
     structure_id est l'identifiant de la structure pour laquelle on ajoute un reviewer.

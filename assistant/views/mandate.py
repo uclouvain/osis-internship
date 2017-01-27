@@ -24,8 +24,6 @@
 #
 ##############################################################################
 from django.contrib.auth.decorators import user_passes_test
-from django.http import HttpResponseRedirect
-from django.core.urlresolvers import reverse
 from openpyxl import load_workbook
 from assistant.forms import MandateForm, structure_inline_formset, MandateFileForm
 from assistant import models as assistant_mdl
@@ -41,9 +39,10 @@ MANDATES_IMPORTED = 0
 ASSISTANTS_UPDATED = 0
 MANDATES_UPDATED = 0
 PERSONS_NOT_FOUND = 0
-COLS_TITLES = ['SECTOR','FACULTY','PROGRAM_COMMISSION','INSTITUTE','POLE','SAP_ID','GLOBAL_ID','LAST_NAME','FIRST_NAME',
-               'FULLTIME_EQUIVALENT','ENTRY_DATE','END_DATE','ASSISTANT_TYPE_CODE','GRADE','SCALE','CONTRACT_DURATION',
-               'CONTRACT_DURATION_FTE','RENEWAL_TYPE','ABSENCES','COMMENT','OTHER_STATUS','EMAIL','FGS']
+COLS_TITLES = ['SECTOR', 'FACULTY', 'PROGRAM_COMMISSION', 'INSTITUTE', 'POLE', 'SAP_ID', 'GLOBAL_ID', 'LAST_NAME',
+               'FIRST_NAME', 'FULLTIME_EQUIVALENT', 'ENTRY_DATE', 'END_DATE', 'ASSISTANT_TYPE_CODE', 'GRADE', 'SCALE',
+               'CONTRACT_DURATION', 'CONTRACT_DURATION_FTE', 'RENEWAL_TYPE', 'ABSENCES', 'COMMENT', 'OTHER_STATUS',
+               'EMAIL', 'FGS']
 
 
 def user_is_manager(user):
@@ -135,7 +134,7 @@ def read_xls_mandates(request, file_name):
     for row in worksheet.iter_rows():
         if current_row == 1:
             titles_row = save_xls_rows_titles(row)
-            if check_file_format(request, titles_row) == False:
+            if check_file_format(request, titles_row) is False:
                 return False
         else:
             current_record = xls_row_to_dict(row, titles_row)
@@ -163,7 +162,7 @@ def search_structure_by_acronym_and_type(acronym, type):
         return None
     results = mdl.structure.search(acronym=acronym, type=type)
     if len(results) > 0:
-        return  results[0]
+        return results[0]
     else:
         return None
 
@@ -264,6 +263,3 @@ def check_file_format(request, titles_rows):
         messages.add_message(request, messages.ERROR, _('columns_title_error'))
         messages.add_message(request, messages.ERROR, COLS_TITLES)
         return False
-
-
-

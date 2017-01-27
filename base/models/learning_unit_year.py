@@ -25,18 +25,19 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-
-from base.models import attribution
+from osis_common.models.serializable_model import SerializableModel
+from attribution.models import attribution
 
 
 class LearningUnitYearAdmin(admin.ModelAdmin):
     list_display = ('acronym', 'title', 'academic_year', 'credits', 'changed')
-    fieldsets = ((None, {'fields': ('learning_unit', 'academic_year', 'acronym', 'title', 'credits', 'decimal_scores')}),)
+    fieldsets = ((None, {'fields': ('academic_year', 'learning_unit', 'acronym', 'title', 'credits', 'decimal_scores')}),)
+    list_filter = ('academic_year',)
     raw_id_fields = ('learning_unit',)
     search_fields = ['acronym']
 
 
-class LearningUnitYear(models.Model):
+class LearningUnitYear(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     acronym = models.CharField(max_length=15, db_index=True)
@@ -45,9 +46,12 @@ class LearningUnitYear(models.Model):
     decimal_scores = models.BooleanField(default=False)
     academic_year = models.ForeignKey('AcademicYear')
     learning_unit = models.ForeignKey('LearningUnit')
+    team = models.BooleanField(default=False)
+    vacant = models.BooleanField(default=False)
+    in_charge = models.BooleanField(default=False)
 
     def __str__(self):
-        return u"%s - %s" % (self.academic_year,self.learning_unit)
+        return u"%s - %s" % (self.academic_year, self.acronym)
 
 
 def find_by_id(learning_unit_year_id):
@@ -72,9 +76,8 @@ def search(academic_year_id=None, acronym=None, learning_unit=None, title=None):
     return queryset
 
 
-def find_by_tutor(tutor_id):
-    if tutor_id:
-        learning_unit_ids = attribution.Attribution.objects.filter(tutor_id=tutor_id).values('learning_unit_id')
-        return LearningUnitYear.objects.filter(learning_unit_id__in=learning_unit_ids)
+def find_by_tutor(tutor):
+    if tutor:
+        return [att.learning_unit_year for att in list(attribution.search(tutor=tutor))]
     else:
         return None

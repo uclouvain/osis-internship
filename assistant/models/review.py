@@ -27,6 +27,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 
+
 class Review(models.Model):
     ADVICE_CHOICES = (
         ('FAVORABLE', _('Favorable')),
