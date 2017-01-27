@@ -25,12 +25,13 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-from base.models.serializable_model import SerializableModel
+from osis_common.models.serializable_model import SerializableModel
 
 
 class OfferEnrollmentAdmin(admin.ModelAdmin):
     list_display = ('offer_year', 'student', 'date_enrollment', 'changed')
     fieldsets = ((None, {'fields': ('offer_year','student','date_enrollment')}),)
+    list_filter = ('offer_year__academic_year',)
     raw_id_fields = ('offer_year', 'student')
     search_fields = ['offer_year__acronym', 'student__person__first_name', 'student__person__last_name']
 

@@ -164,17 +164,18 @@
                                         {% endif %}
                                     {% endif %}>
                                 <option value=""></option>
+                                {% if is_program_manager %}
+                                    <option value="ABSENCE_UNJUSTIFIED" {% if enrollment.justification_final == 'ABSENCE_UNJUSTIFIED' %}selected{% endif %}>{% trans 'ABSENCE_UNJUSTIFIED' %}</option>
+                                {% else %}
+                                    <option value="ABSENCE_UNJUSTIFIED" {% if enrollment.justification_draft == 'ABSENCE_UNJUSTIFIED' %}selected{% endif %}>{% trans 'absent' %}</option>
+                                {% endif %}
                                 {% if is_program_manager or enrollment.score_final != None or enrollment.justification_final%}
                                     <option value="ABSENCE_JUSTIFIED" {% if enrollment.justification_final == 'ABSENCE_JUSTIFIED' %}selected{% endif %}>{% trans 'ABSENCE_JUSTIFIED' %}</option>
                                 {% endif %}
                                 {% if is_program_manager %}
-                                    <option value="ABSENCE_UNJUSTIFIED" {% if enrollment.justification_final == 'ABSENCE_UNJUSTIFIED' %}selected{% endif %}>
-                                    {% trans 'ABSENCE_UNJUSTIFIED' %}</option>
                                     <option value="CHEATING" {% if enrollment.justification_final == 'CHEATING' %}selected{% endif %}>{% trans 'CHEATING' %}</option>
                                     <option value="SCORE_MISSING" {% if enrollment.justification_final == 'SCORE_MISSING' %}selected{% endif %}>{% trans 'SCORE_MISSING' %}</option>
                                 {% else %}
-                                    <option value="ABSENCE_UNJUSTIFIED" {% if enrollment.justification_draft == 'ABSENCE_UNJUSTIFIED' %}selected{% endif %}>
-                                    {% trans 'absent' %}</option>
                                     <option value="CHEATING" {% if enrollment.justification_draft == 'CHEATING' %}selected{% endif %}>{% trans 'CHEATING' %}</option>
                                     <option value="SCORE_MISSING" {% if enrollment.justification_draft == 'SCORE_MISSING' %}selected{% endif %}>{% trans 'SCORE_MISSING' %}</option>
                                 {% endif %}
@@ -209,6 +210,7 @@ var values = [
         ['', '', '']];
 
 $("input[id^='num_score_']" ).change(function(event) {
+    console.log("coucou");
     // Get the object that received the event.
     var target = $(event.target);
     var id = target.attr("id");
@@ -245,8 +247,27 @@ $("select[id^='slt_justification_score_']" ).change(function(event) {
                                                                     $("#slt_justification_score_" + enrollmentId).val()));
 });
 
-$('#form_online_encoding').on('keyup keypress', function(e) {
+
+
+var target_score = '#form_online_encoding tbody tr td input';
+$(target_score).on('keypress',
+                   { "target": target_score,
+                     "table_size": $('#form_online_encoding tbody tr').length,
+                     "index_increment_value": 2},
+                   select_next_input_value);
+
+
+var target_justification = '#form_online_encoding tbody tr td select';
+$(target_justification).on('keypress',
+                           { "target": target_justification,
+                             "table_size": $('#form_online_encoding tbody tr').length * 2,
+                             "index_increment_value": 1},
+                           select_next_input_value);
+
+
+$(document).on('keypress', function(e) {
     disable_enter(e);
 });
+
 </script>
 {% endblock %}

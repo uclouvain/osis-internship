@@ -26,8 +26,9 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.contrib import admin
-from base.models import person, attribution
-from base.models import serializable_model
+from attribution.models import attribution
+from base.models import person
+from osis_common.models import serializable_model
 
 
 class TutorAdmin(admin.ModelAdmin):
@@ -41,7 +42,6 @@ class Tutor(serializable_model.SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     person = models.OneToOneField('Person')
-
 
     def __str__(self):
         return u"%s" % self.person

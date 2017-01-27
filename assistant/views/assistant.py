@@ -27,7 +27,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.urlresolvers import reverse
 from django.forms import forms
-from base.models import person, academic_year
+from base.models import person
 from django.core.exceptions import ObjectDoesNotExist
 from assistant.models import academic_assistant, assistant_mandate
 from django.views.generic.list import ListView
@@ -55,16 +55,12 @@ class AssistantMandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListVie
         return reverse('access_denied')
 
     def get_queryset(self):
-        assistant = academic_assistant.find_by_person(
-            person.find_by_user(self.request.user))
-        this_academic_year = academic_year.current_academic_year()
-        return assistant_mandate.find_mandate_by_assistant_for_academic_year(assistant, this_academic_year)
+        assistant = academic_assistant.find_by_person(person.find_by_user(self.request.user))
+        return assistant_mandate.find_mandate_by_academic_assistant(assistant)
 
     def get_context_data(self, **kwargs):
-        context = super(AssistantMandatesListView,
-                        self).get_context_data(**kwargs)
-        context['assistant'] = academic_assistant.find_by_person(
-            person.find_by_user(self.request.user))
+        context = super(AssistantMandatesListView, self).get_context_data(**kwargs)
+        context['assistant'] = academic_assistant.find_by_person(person.find_by_user(self.request.user))
         return context
 
 
@@ -111,11 +107,9 @@ class AssistantLearningUnitsListView(LoginRequiredMixin, UserPassesTestMixin, Li
         mandate_id = self.kwargs['mandate_id']
         queryset = tutoring_learning_unit_year.find_by_mandate(
             assistant_mandate.find_mandate_by_id(mandate_id))
-
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super(AssistantLearningUnitsListView, self).get_context_data(**kwargs)
         context['mandate_id'] = self.kwargs['mandate_id']
         return context
-

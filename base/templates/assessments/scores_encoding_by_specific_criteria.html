@@ -62,8 +62,8 @@
                     <label>{% trans 'justification' %}</label>
                     <select class="form-control" name="justification" id="slt_justification">
                         <option value="">{% trans 'all' %}</option>
-                        <option {% if justification == "ABSENCE_JUSTIFIED" %} selected {% endif %} value="ABSENCE_JUSTIFIED">{% trans 'ABSENCE_JUSTIFIED' %}</option>
                         <option {% if justification == "ABSENCE_UNJUSTIFIED" %} selected {% endif %} value="ABSENCE_UNJUSTIFIED">{% trans 'ABSENCE_UNJUSTIFIED' %}</option>
+                        <option {% if justification == "ABSENCE_JUSTIFIED" %} selected {% endif %} value="ABSENCE_JUSTIFIED">{% trans 'ABSENCE_JUSTIFIED' %}</option>
                         <option {% if justification == "CHEATING" %} selected {% endif %} value="CHEATING">{% trans 'CHEATING' %}</option>
                         <option {% if justification == "SCORE_MISSING" %} selected {% endif %} value="SCORE_MISSING">{% trans 'SCORE_MISSING' %}</option>
                     </select>
@@ -108,12 +108,14 @@
                 {% for enrol in exam_enrollments %}
                     <tr>
                         <td>{{ enrol.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
-                        <td>{{ enrol.learning_unit_enrollment.learning_unit_year.acronym }}</td>
+                        <td data-container="body" data-toggle="tooltip" title="{{ enrol.learning_unit_enrollment.learning_unit_year.title }}" >
+                            {{ enrol.learning_unit_enrollment.learning_unit_year.acronym |add:" - " |add:enrol.learning_unit_enrollment.learning_unit_year.title | truncatechars:22}}
+                        </td>
                         <td>{{ enrol.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
                         <td>{{ enrol.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
                         <td>{{ enrol.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
                         <td>
-                            <input type="number" min="0" max="20" name="score_{{ enrol.id }}"
+                            <input class="form-control col-sm" type="number" min="0" max="20" name="score_{{ enrol.id }}"
                                 id="num_score_{{ enrol.id }}" tabindex="{{ forloop.counter }}"
                                 class="form-control"
                                 value="{{ enrol.score_final | score_display:enrol.learning_unit_enrollment.learning_unit_year.decimal_scores}}"
@@ -129,8 +131,8 @@
                             <select class="form-control" name="justification_{{ enrol.id }}" id="slt_justification_score_{{ enrol.id }}"
                                    tabindex="{{ exam_enrollments|length|sum:forloop.counter }}">
                                 <option value=""></option>
-                                <option {% if enrol.justification_final == "ABSENCE_JUSTIFIED" %} selected {% endif %} value="ABSENCE_JUSTIFIED">{% trans 'ABSENCE_JUSTIFIED' %}</option>
                                 <option {% if enrol.justification_final == "ABSENCE_UNJUSTIFIED" %} selected {% endif %} value="ABSENCE_UNJUSTIFIED">{% trans 'ABSENCE_UNJUSTIFIED' %}</option>
+                                <option {% if enrol.justification_final == "ABSENCE_JUSTIFIED" %} selected {% endif %} value="ABSENCE_JUSTIFIED">{% trans 'ABSENCE_JUSTIFIED' %}</option>
                                 <option {% if enrol.justification_final == "CHEATING" %} selected {% endif %} value="CHEATING">{% trans 'CHEATING' %}</option>
                                 <option {% if enrol.justification_final == "SCORE_MISSING" %} selected {% endif %} value="SCORE_MISSING">{% trans 'SCORE_MISSING' %}</option>
                             </select>
@@ -220,6 +222,27 @@
         $("#hdn_score_changed_"+ enrollmentId).val(originalValueChanged(values, enrollmentId,
                                                                         $("#num_score_"+ enrollmentId).val(),
                                                                         $("#slt_justification_score_" + enrollmentId).val()));
+    });
+
+
+    var target_score = '#form_justification tbody tr td input';
+    $(target_score).on('keypress',
+                       { "target": target_score,
+                         "table_size": $('#form_justification tbody tr').length,
+                         "index_increment_value": 2},
+                       select_next_input_value);
+
+
+    var target_justification = '#form_justification tbody tr td select';
+    $(target_justification).on('keypress',
+                               { "target": target_justification,
+                                 "table_size": $('#form_justification tbody tr').length * 2,
+                                 "index_increment_value": 1},
+                               select_next_input_value);
+
+
+    $(document).on('keypress', function(e) {
+        disable_enter(e);
     });
 
 </script>

@@ -201,15 +201,15 @@
                             {% endif%}</td>
                         <td>{%if is_program_manager %}
                                 {% if enrollment.justification_final%}
-                                    {{ enrollment.get_justification_final_display }}
+                                    {% trans enrollment.justification_final %}
                                 {% else %}
                                     -
                                 {% endif %}
                             {% else %}
                                 {% if enrollment.justification_final %}
-                                    {{ enrollment.get_justification_final_display }}
+                                    {{ enrollment.justification_final_display_as_tutor }}
                                 {% elif enrollment.justification_draft and enrollment.score_final == None %}
-                                    {{ enrollment.get_justification_draft_display }}
+                                    {{ enrollment.justification_draft_display }}
                                 {% else %}
                                     -
                                 {% endif %}

@@ -27,13 +27,13 @@ from django.contrib.auth.decorators import login_required, permission_required
 
 from django.http import HttpResponse
 from base import models as mdl
-from base.forms import OfferFormForm
-from base.forms import OfferQuestionForm
+from base.forms.offer_form import OfferFormForm
+from base.forms.offer_question import OfferQuestionForm
 from admission import models as admission
 from reference import models as mdl_ref
 from . import layout
 from datetime import datetime
-from base.forms import OfferYearCalendarForm
+from base.forms.offer_year_calendar import OfferYearCalendarForm
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
@@ -60,7 +60,7 @@ def offers_search(request):
     entity = request.GET['entity_acronym']
 
     academic_yr = None
-    if request.GET['academic_year']:
+    if request.GET.get('academic_year', None):
         academic_yr = int(request.GET['academic_year'])
     acronym = request.GET['code']
 
@@ -80,7 +80,7 @@ def offers_search(request):
 @permission_required('base.can_access_offer', raise_exception=True)
 def offer_read(request, offer_year_id):
     offer_yr = mdl.offer_year.find_by_id(offer_year_id)
-    offer_yr_events = mdl.offer_year_calendar.find_offer_year_calendar(offer_yr)
+    offer_yr_events = mdl.offer_year_calendar.find_by_offer_year(offer_yr)
     admission_form = admission.form.find_by_offer_year(offer_yr)
     program_managers = mdl.program_manager.find_by_offer_year(offer_yr)
     is_program_manager = mdl.program_manager.is_program_manager(request.user, offer_year=offer_yr)
@@ -112,6 +112,7 @@ def score_encoding(request, offer_year_id):
         offer_yr.country = country
         offer_yr.phone = request.POST.get('phone')
         offer_yr.fax = request.POST.get('fax')
+        offer_yr.email = request.POST.get('email')
         offer_yr.save()
         data = "ok"
     else:
@@ -120,6 +121,7 @@ def score_encoding(request, offer_year_id):
     return HttpResponse(data, content_type='text/plain')
 
 
+@login_required
 def offer_question_read(request, question_id):
     question = admission.question.find_by_id(question_id)
     options = admission.option.find_by_question_id(question)
@@ -130,6 +132,8 @@ def offer_question_read(request, question_id):
                                                           'is_programme_manager': is_programme_manager})
 
 
+@login_required
+@permission_required('admission.add_question', raise_exception=True)
 def offer_question_create(request, form_id):
     question = admission.question.Question()
     question.form = admission.form.find_by_id(form_id)
@@ -138,6 +142,8 @@ def offer_question_create(request, form_id):
                                                                'form_id': form_id})
 
 
+@login_required
+@permission_required('admission.change_question', raise_exception=True)
 def offer_question_edit(request, question_id):
     question = admission.question.find_by_id(question_id)
     options = admission.option.find_by_question_id(question)
@@ -147,10 +153,12 @@ def offer_question_edit(request, question_id):
                                                                'form_id': question.form.id})
 
 
+@login_required
 def offer_question_new(request):
     return offer_question_save(request, None)
 
 
+@login_required
 def offer_question_save(request, question_id=None):
 
     question = admission.question.find_by_id(question_id)
@@ -210,6 +218,7 @@ def offer_question_save(request, question_id=None):
                                                                    'questions_types': admission.question.QUESTION_TYPES})
 
 
+@login_required
 def offer_form_read(request, id):
     offer_form = admission.form.find_by_id(id)
     questions = admission.question.find_by_offer_form(offer_form)
@@ -219,6 +228,8 @@ def offer_form_read(request, id):
                                                       'is_programme_manager': is_programme_manager})
 
 
+@login_required
+@permission_required('admission.add_form', raise_exception=True)
 def offer_form_create(request, offer_year_id):
     offer_form = admission.form.Form()
     offer_year = get_object_or_404(mdl.offer_year.OfferYear, pk=offer_year_id)
@@ -227,10 +238,12 @@ def offer_form_create(request, offer_year_id):
                                                            'offer_year_id': offer_year_id})
 
 
+@login_required
 def offer_form_new(request):
     return offer_form_save(request, None)
 
 
+@login_required
 def offer_form_save(request, form_id):
 
     offer = admission.form.find_by_id(form_id)
@@ -245,6 +258,8 @@ def offer_form_save(request, form_id):
                                                                'form': offer_form})
 
 
+@login_required
+@permission_required('admission.change_form', raise_exception=True)
 def offer_form_edit(request, id):
     offer_form = admission.form.find_by_id(id)
     offer_year = offer_form.offer_year
@@ -274,7 +289,7 @@ def offer_year_calendar_save(request, id):
     # validate
     validation = True
     if form.is_valid():
-        academic_calendar = mdl.academic_calendar.find_academic_calendar_by_id(request.POST['academic_calendar'])
+        academic_calendar = mdl.academic_calendar.find_by_id(request.POST['academic_calendar'])
         offer_year_calendar.academic_calendar = academic_calendar
         if request.POST['start_date']:
             offer_year_calendar.start_date = datetime.strptime(request.POST['start_date'], '%d/%m/%Y')
@@ -311,6 +326,7 @@ def offer_year_calendar_save(request, id):
     else:
         return layout.render(request, "offer_year_calendar_form.html", {'offer_year_calendar': offer_year_calendar,
                                                                         'form': form})
+
 
 @login_required
 @permission_required('base.can_access_offer', raise_exception=True)

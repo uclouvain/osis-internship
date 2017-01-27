@@ -36,6 +36,7 @@ LABELS = (
 
 class PersonAddressAdmin(admin.ModelAdmin):
     list_display = ('person', 'label', 'location', 'postal_code', 'city', 'country')
+    search_fields = ['person__first_name', 'person__last_name', 'person__global_id']
     fieldsets = ((None, {'fields': ('person', 'label', 'location', 'postal_code', 'city', 'country')}),)
     raw_id_fields = ('person',)
 

@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from django import template
+from django.template.defaultfilters import date
 
 register = template.Library()
 
@@ -39,3 +40,10 @@ def str_format(value, args):
         return value
     args_list = args.split('|')
     return value.format(*args_list)
+
+@register.filter
+def date_in_form_format(value, pattern):
+    if type(value).__name__ == 'str':
+        return value
+    else:
+        return date(value, pattern)

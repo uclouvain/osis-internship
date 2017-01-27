@@ -33,6 +33,7 @@ from base import models as mdl
 from assistant.models.mandate_structure import MandateStructure
 from django.core.exceptions import ObjectDoesNotExist
 
+
 def user_is_manager(user):
     """Use with a ``user_passes_test`` decorator to restrict access to 
     authenticated users who are manager."""
@@ -57,13 +58,11 @@ def mandate_edit(request, mandate_id):
                                 }, prefix="mand",instance=mandate)
     formset = structure_inline_formset(instance=mandate, prefix="struct")
     
-    return layout.render(request, 'mandate_form.html', {'mandate': mandate,
-                                                'form': form,
-                                                'formset': formset})
+    return layout.render(request, 'mandate_form.html', {'mandate': mandate, 'form': form, 'formset': formset})
+
 
 @user_passes_test(user_is_manager, login_url='assistants_home')
 def mandate_save(request, mandate_id):
-    """Use to save an assistant mandate."""
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     form = MandateForm(data=request.POST, instance=mandate, prefix='mand')
     formset = structure_inline_formset(request.POST, request.FILES, instance=mandate, prefix='struct')
@@ -74,12 +73,12 @@ def mandate_save(request, mandate_id):
             return mandate_edit(request, mandate.id)
         else:
             return layout.render(request, "mandate_form.html", {'mandate': mandate,
-                                                                 'form': form,
-                                                                 'formset': formset})    
+                                                                'form': form,
+                                                                'formset': formset})
     else:
         return layout.render(request, "mandate_form.html", {'mandate': mandate,
-                                                                 'form': form,
-                                                                 'formset': formset})    
+                                                            'form': form,
+                                                            'formset': formset})
 
 
 @user_passes_test(user_is_manager, login_url='assistants_home')
@@ -93,7 +92,7 @@ def load_mandates(request):
     imported_mandates_counter = 0
     updated_mandates_counter = 0
     error_counter = 0
-    if(request.POST):
+    if request.POST:
         with codecs.open('osis/assistant/views/data_assistant.csv', encoding='utf-8') as csvfile:
             row = csv.reader(csvfile, delimiter=';')
             for columns in row:
@@ -164,23 +163,23 @@ def load_mandates(request):
                                                                                                  assistant = mandate.assistant,
                                                                                                  sap_id = sap_id,
                                                                                                  position_id = position_id)
-                            if existing_mandate.count() >0:
+                            if existing_mandate.count() > 0:
                                 MandateStructure.objects.filter(assistant_mandate=existing_mandate).delete()
                                 existing_mandate.update(fulltime_equivalent=fte,
-                                               entry_date = entry_date,
-                                               end_date = end_date,
-                                               contract_duration = contract_duration,
-                                               contract_duration_fte = contract_duration_fte,
-                                               renewal_type = renewal_type,
-                                               assistant_type = assistant_type,
-                                               grade = grade,
-                                               scale = scale,
-                                               absences = absences,
-                                               comment = comment,
-                                               other_status = other_status)
+                                                        entry_date=entry_date,
+                                                        end_date=end_date,
+                                                        contract_duration=contract_duration,
+                                                        contract_duration_fte=contract_duration_fte,
+                                                        renewal_type=renewal_type,
+                                                        assistant_type=assistant_type,
+                                                        grade=grade,
+                                                        scale=scale,
+                                                        absences=absences,
+                                                        comment=comment,
+                                                        other_status=other_status)
                                 if institute:
                                     existing_institute = mdl.structure.Structure.objects.get(acronym=institute,
-                                                                                         type='INSTITUTE')
+                                                                                             type='INSTITUTE')
                                     if existing_institute:
                                         mandate_struc_institute = mandate_structure.MandateStructure()
                                         mandate_struc_institute.assistant_mandate = existing_mandate[0]
@@ -188,7 +187,7 @@ def load_mandates(request):
                                         mandate_struc_institute.save()
                                 if faculty:
                                     existing_faculty = mdl.structure.Structure.objects.get(acronym=faculty,
-                                                                                       type='FACULTY')
+                                                                                           type='FACULTY')
                                     if existing_faculty:
                                         mandate_struc_faculty = mandate_structure.MandateStructure()
                                         mandate_struc_faculty.assistant_mandate = existing_mandate[0]
@@ -199,7 +198,7 @@ def load_mandates(request):
                                 mandate.save()
                                 if institute:
                                     existing_institute = mdl.structure.Structure.objects.get(acronym=institute,
-                                                                                         type='INSTITUTE')
+                                                                                             type='INSTITUTE')
                                     if existing_institute:
                                         mandate_struc_institute = mandate_structure.MandateStructure()
                                         mandate_struc_institute.assistant_mandate = mandate
@@ -207,7 +206,7 @@ def load_mandates(request):
                                         mandate_struc_institute.save()
                                 if faculty:
                                     existing_faculty = mdl.structure.Structure.objects.get(acronym=faculty,
-                                                                                       type='FACULTY')
+                                                                                           type='FACULTY')
                                     if existing_faculty:
                                         mandate_struc_faculty = mandate_structure.MandateStructure()
                                         mandate_struc_faculty.assistant_mandate = mandate
@@ -215,7 +214,7 @@ def load_mandates(request):
                                         mandate_struc_faculty.save()
                                 imported_mandates_counter += 1
                         except IntegrityError:
-                            print('Duplicated : %s' % (assistant))
+                            print('Duplicated : %s' % assistant)
                     else:
                         error_counter += 1
     return layout.render(request, "load_mandates.html", {'imported_assistants': imported_assistants_counter,

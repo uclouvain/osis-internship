@@ -26,8 +26,6 @@
 from base.models import *
 from django.contrib import admin
 
-admin.site.register(academic_calendar.AcademicCalendar,
-                    academic_calendar.AcademicCalendarAdmin)
 
 admin.site.register(academic_year.AcademicYear,
                     academic_year.AcademicYearAdmin)
@@ -35,12 +33,8 @@ admin.site.register(academic_year.AcademicYear,
 admin.site.register(application_notice.ApplicationNotice,
                     application_notice.ApplicationNoticeAdmin)
 
-admin.site.register(attribution.Attribution,
-                    attribution.AttributionAdmin)
-
 admin.site.register(campus.Campus,
                     campus.CampusAdmin)
-
 
 admin.site.register(exam_enrollment.ExamEnrollment,
                     exam_enrollment.ExamEnrollmentAdmin)
@@ -53,6 +47,9 @@ admin.site.register(external_offer.ExternalOffer,
 
 admin.site.register(learning_unit.LearningUnit,
                     learning_unit.LearningUnitAdmin)
+
+admin.site.register(learning_unit_component.LearningUnitComponent,
+                    learning_unit_component.LearningUnitComponentAdmin)
 
 admin.site.register(learning_unit_enrollment.LearningUnitEnrollment,
                     learning_unit_enrollment.LearningUnitEnrollmentAdmin)
@@ -104,6 +101,9 @@ admin.site.register(structure.Structure,
 
 admin.site.register(student.Student,
                     student.StudentAdmin)
+
+admin.site.register(synchronization.Synchronization,
+                    synchronization.SynchronizationAdmin)
 
 admin.site.register(tutor.Tutor,
                     tutor.TutorAdmin)

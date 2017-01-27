@@ -25,8 +25,8 @@
 ##############################################################################
 import os
 
-from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
+import sys
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -44,7 +44,6 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 # Application definition
-
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
@@ -58,11 +57,21 @@ INSTALLED_APPS = (
     'ckeditor',
     'reference',
     'base',
+    'attribution',
     'assistant',
     'dissertation',
     'internship',
     'admission',
 )
+
+# check if we are testing right now
+TESTING = 'test' in sys.argv
+
+if TESTING:
+    # add test packages that have specific models for tests
+    INSTALLED_APPS = INSTALLED_APPS + (
+        'osis_common.tests',
+    )
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -101,7 +110,6 @@ WSGI_APPLICATION = 'backoffice.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -168,17 +176,23 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
-
 STATIC_URL = '/static/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "uploads")
+MEDIA_URL = '/media/'
+
+CONTENT_TYPES = ['application/csv', 'application/doc', 'application/pdf', 'application/xls', 'application/xml',
+                 'application/zip', 'image/jpeg', 'image/gif', 'image/png', 'text/html', 'text/plain']
+MAX_UPLOAD_SIZE = 5242880
 
 # Authentication settings
-
 LOGIN_REDIRECT_URL = 'home'
 LOGIN_URL = 'login'
 
 FIXTURE_DIRS = (
     '/base/fixtures/',
 )
+
+LOCALE_PATHS = ()
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.fallback.FallbackStorage'
 
@@ -216,11 +230,23 @@ CKEDITOR_CONFIGS = {
     },
 }
 
-QUEUE_URL = 'localhost'
-QUEUE_USER = 'guest'
-QUEUE_PASSWORD = 'guest'
-QUEUE_PORT = 5672
-QUEUE_CONTEXT_ROOT = '/'
+
+# Queues Definition
+# Uncomment the configuration if you want to use the queue system
+# The queue system uses RabbitMq queues to communicate with other application (ex : osis)
+QUEUES = {
+     'QUEUE_URL': 'localhost',
+     'QUEUE_USER': 'guest',
+     'QUEUE_PASSWORD': 'guest',
+     'QUEUE_PORT': 5672,
+     'QUEUE_CONTEXT_ROOT': '/',
+     'QUEUES_NAME': {
+         'MIGRATIONS_TO_PRODUCE': 'osis_portal',
+         'MIGRATIONS_TO_CONSUME': 'osis',
+         'PAPER_SHEET': 'paper_sheet',
+         'PERFORMANCE': 'performance'
+     }
+}
 
 ENVIRONMENT = 'LOCAL'
 
@@ -240,6 +266,7 @@ try:
 
     try:
         INSTALLED_APPS = INSTALLED_APPS + SERVER_APPS
+        LOCALE_PATHS = LOCALE_PATHS + SERVER_LOCALE_PATHS
     except NameError:
         pass
 except ImportError:

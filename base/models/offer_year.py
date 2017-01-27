@@ -27,14 +27,16 @@ from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 from base.models import offer, program_manager, academic_year
-from base.models.serializable_model import SerializableModel
+from osis_common.models.serializable_model import SerializableModel
 
 
 class OfferYearAdmin(admin.ModelAdmin):
-    list_display = ('acronym', 'offer', 'parent', 'title', 'academic_year', 'changed')
+    list_display = ('acronym', 'title', 'academic_year', 'offer', 'parent', 'changed')
     fieldsets = ((None, {'fields': ('offer', 'academic_year', 'entity_administration', 'entity_administration_fac',
                                     'entity_management', 'entity_management_fac', 'acronym', 'title', 'parent',
-                                    'title_international', 'title_short', 'title_printable', 'grade', 'campus')}),)
+                                    'title_international', 'title_short', 'title_printable', 'grade', 'recipient',
+                                    'location', 'postal_code', 'city', 'country', 'phone', 'fax', 'email', 'campus')}),)
+    list_filter = ('academic_year',)
     raw_id_fields = ('offer', 'parent')
     search_fields = ['acronym']
 
@@ -68,8 +70,10 @@ class OfferYear(SerializableModel):
     country = models.ForeignKey('reference.Country', blank=True, null=True)
     phone = models.CharField(max_length=30, blank=True, null=True)
     fax = models.CharField(max_length=30, blank=True, null=True)
+    email = models.EmailField(null=True, blank=True)
     campus = models.ForeignKey('Campus', blank=True, null=True)
     grade_type = models.ForeignKey('reference.GradeType', blank=True, null=True)
+    enrollment_enabled = models.BooleanField(default=False)
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.acronym)
@@ -88,7 +92,7 @@ class OfferYear(SerializableModel):
         if self.entity_management_fac:
             entities.append(self.entity_management_fac)
 
-        return entities
+        return set(entities)
 
     @property
     def offer_year_children(self):
@@ -123,7 +127,7 @@ class OfferYear(SerializableModel):
 
 
 def find_by_academic_year(academic_yr):
-    return OfferYear.objects.filter(academic_year=int(academic_yr))
+    return OfferYear.objects.filter(academic_year=academic_yr)
 
 
 def find_by_structure(struct):
@@ -135,7 +139,7 @@ def find_by_id(offer_year_id):
 
 
 def find_by_acronym(acronym):
-    return OfferYear.objects.filter(acronym=acronym).first()
+    return OfferYear.objects.filter(acronym=acronym)
 
 
 def search(entity=None, academic_yr=None, acronym=None):

@@ -23,10 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from osis_common.models.serializable_model import SerializableModel
 from django.db import models
+from django.contrib import admin
 
 
-class DissertationLocation(models.Model):
+class DissertationLocationAdmin(admin.ModelAdmin):
+    list_display = ('name', )
+    search_fields = ('uuid', 'name')
+
+
+class DissertationLocation(SerializableModel):
     name = models.CharField(max_length=200)
 
     def __str__(self):
