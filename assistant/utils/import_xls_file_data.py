@@ -25,13 +25,13 @@
 ##############################################################################
 from django.contrib.auth.decorators import user_passes_test
 from openpyxl import load_workbook
-from assistant.forms import MandateFileForm
 from assistant import models as assistant_mdl
 from base.views import layout
 from base import models as mdl
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
 from django.utils.translation import ugettext as _
+from assistant.forms import MandateFileForm
 
 COLS_NUMBER = 23
 ASSISTANTS_IMPORTED = 0
@@ -171,6 +171,7 @@ def create_assistant_mandate_if_not_exists(record, assistant):
     mandates = assistant_mdl.assistant_mandate.find_mandate(assistant, current_academic_year, record.get('SAP_ID'))
     if len(mandates) == 0:
         mandate = assistant_mdl.assistant_mandate.AssistantMandate()
+        mandate.state = 'TO_DO'
         MANDATES_IMPORTED += 1
     else:
         mandate = mandates[0]
@@ -190,7 +191,6 @@ def create_assistant_mandate_if_not_exists(record, assistant):
     mandate.assistant_type = record.get('ASSISTANT_TYPE_CODE')
     mandate.grade = record.get('GRADE')
     mandate.scale = record.get('SCALE')
-    mandate.state = 'TO_DO'
     mandate.save()
     return mandate
 

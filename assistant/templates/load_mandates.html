@@ -59,12 +59,12 @@
         </div>
     {% endif %}
     {% if messages %}
-        <ul class="messages">
-        {% for message in messages %}
-            <li>{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-        </ul>
-    {% endif %}
+         <ul class="messages">
+         {% for message in messages %}
+             <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+         {% endfor %}
+         </ul>
+     {% endif %}
             <button type="button" class="btn btn-default" data-toggle="modal" data-target="#pnl_upload_mandates_modal"
                     id="btn_upload_mandates_modal"
                     title="{% trans 'tooltip_select_excel_file_to_inject_mandates' %}">

@@ -24,25 +24,10 @@
 #
 ##############################################################################
 from django.contrib.auth.decorators import user_passes_test
-from openpyxl import load_workbook
-from assistant.forms import MandateForm, structure_inline_formset, MandateFileForm
+from assistant.forms import MandateForm, structure_inline_formset
 from assistant import models as assistant_mdl
 from base.views import layout
-from base import models as mdl
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib import messages
-from django.utils.translation import ugettext as _
-
-COLS_NUMBER = 23
-ASSISTANTS_IMPORTED = 0
-MANDATES_IMPORTED = 0
-ASSISTANTS_UPDATED = 0
-MANDATES_UPDATED = 0
-PERSONS_NOT_FOUND = 0
-COLS_TITLES = ['SECTOR', 'FACULTY', 'PROGRAM_COMMISSION', 'INSTITUTE', 'POLE', 'SAP_ID', 'GLOBAL_ID', 'LAST_NAME',
-               'FIRST_NAME', 'FULLTIME_EQUIVALENT', 'ENTRY_DATE', 'END_DATE', 'ASSISTANT_TYPE_CODE', 'GRADE', 'SCALE',
-               'CONTRACT_DURATION', 'CONTRACT_DURATION_FTE', 'RENEWAL_TYPE', 'ABSENCES', 'COMMENT', 'OTHER_STATUS',
-               'EMAIL', 'FGS']
 
 
 def user_is_manager(user):
@@ -90,5 +75,3 @@ def mandate_save(request, mandate_id):
 @user_passes_test(user_is_manager, login_url='assistants_home')
 def load_mandates(request):
     return layout.render(request, "load_mandates.html", {})
-
-
