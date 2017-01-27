@@ -30,10 +30,10 @@ from osis_common.models.serializable_model import SerializableModel
 
 
 class AttributionAdmin(admin.ModelAdmin):
-    list_display = ('tutor', 'function', 'score_responsible', 'learning_unit_year', 'start_date', 'end_date', 'changed')
+    list_display = ('tutor', 'function', 'score_responsible', 'learning_unit_year', 'start_year', 'end_year', 'changed')
     list_filter = ('function', 'learning_unit_year__academic_year')
-    fieldsets = ((None, {'fields': ('learning_unit_year', 'tutor', 'function', 'score_responsible', 'start_date',
-                                    'end_date')}),)
+    fieldsets = ((None, {'fields': ('learning_unit_year', 'tutor', 'function', 'score_responsible', 'start_year',
+                                    'end_year')}),)
     raw_id_fields = ('learning_unit_year', 'tutor')
     search_fields = ['tutor__person__first_name', 'tutor__person__last_name', 'learning_unit_year__acronym']
 
@@ -43,6 +43,8 @@ class Attribution(SerializableModel):
     changed = models.DateTimeField(null=True)
     start_date = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
     end_date = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
+    start_year = models.IntegerField(blank=True, null=True)
+    end_year = models.IntegerField(blank=True, null=True)
     function = models.CharField(max_length=15, blank=True, null=True, choices=function.FUNCTIONS, db_index=True)
     learning_unit_year = models.ForeignKey('base.LearningUnitYear', blank=True, null=True, default=None)
     tutor = models.ForeignKey('base.Tutor')
@@ -52,7 +54,7 @@ class Attribution(SerializableModel):
         return u"%s - %s" % (self.tutor.person, self.function)
 
 
-def search(tutor=None, learning_unit_year=None, function=None, list_learning_unit_year=None):
+def search(tutor=None, learning_unit_year=None, score_responsible=None, list_learning_unit_year=None):
     queryset = Attribution.objects
 
     if tutor:
@@ -61,8 +63,8 @@ def search(tutor=None, learning_unit_year=None, function=None, list_learning_uni
     if learning_unit_year:
         queryset = queryset.filter(learning_unit_year=learning_unit_year)
 
-    if function:
-        queryset = queryset.filter(function=function)
+    if score_responsible is not None:
+        queryset = queryset.filter(score_responsible=score_responsible)
 
     if list_learning_unit_year:
         queryset = queryset.filter(learning_unit_year__in=list_learning_unit_year)
@@ -72,8 +74,8 @@ def search(tutor=None, learning_unit_year=None, function=None, list_learning_uni
 
 def find_responsible(a_learning_unit_year):
     # If there are more than 1 coordinator, we take the first in alphabetic order
-    attribution_list = Attribution.objects.filter(learning_unit_year=a_learning_unit_year)\
-                                          .filter(score_responsible=True)
+    attribution_list = Attribution.objects.filter(learning_unit_year=a_learning_unit_year) \
+        .filter(score_responsible=True)
 
     if attribution_list and len(attribution_list) > 0:
         if len(attribution_list) == 1:
@@ -87,8 +89,8 @@ def find_responsible(a_learning_unit_year):
 
 
 def is_score_responsible(user, learning_unit_year):
-    attributions = Attribution.objects.filter(learning_unit_year=learning_unit_year)\
-                                      .filter(score_responsible=True)\
-                                      .filter(tutor__person__user=user)\
-                                      .count()
+    attributions = Attribution.objects.filter(learning_unit_year=learning_unit_year) \
+        .filter(score_responsible=True) \
+        .filter(tutor__person__user=user) \
+        .count()
     return attributions > 0

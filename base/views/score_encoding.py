@@ -594,7 +594,7 @@ def get_data_pgmer(request,
         learning_units = [score_encoding.learning_unit_year for score_encoding in scores_encodings]
         all_attributions = list(mdl_attr.attribution.search(list_learning_unit_year=learning_units))
         coord_grouped_by_learning_unit = {attrib.learning_unit_year.id: attrib.tutor for attrib in all_attributions
-                                          if attrib.function == 'COORDINATOR'}
+                                          if attrib.score_responsible}
         for score_encoding in scores_encodings:
             progress = (score_encoding.exam_enrollments_encoded / score_encoding.total_exam_enrollments) * 100
             line = {'learning_unit_year': score_encoding.learning_unit_year,
@@ -641,7 +641,8 @@ def get_data_pgmer(request,
                           'academic_year': academic_yr,
                           'number_session': mdl.session_exam.find_session_exam_number(),
                           'learning_unit_year_acronym': learning_unit_year_acronym,
-                          'incomplete_encodings_only': incomplete_encodings_only})
+                          'incomplete_encodings_only': incomplete_encodings_only,
+                          'last_synchronization': mdl.synchronization.find_last_synchronization_date()})
 
 
 @login_required
