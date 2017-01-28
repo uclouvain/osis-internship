@@ -27,6 +27,7 @@ from django.conf.urls import url
 from assistant.views import mandate, home, assistant_form, assistant
 from assistant.views import manager_settings, reviewers_management, upload_assistant_file
 from assistant.views import mandates_list, reviewer_mandates_list, reviewer_review, reviewer_delegation
+from assistant.utils import import_xls_file_data
 
 urlpatterns = [
     # S'il vous plaît, organiser les urls par ordre alphabétique.
@@ -35,6 +36,7 @@ urlpatterns = [
     url(r'^manager/mandates/(?P<mandate_id>\d+)/edit/$', mandate.mandate_edit, name='mandate_read'),
     url(r'^manager/mandates/(?P<mandate_id>\d+)/save/$', mandate.mandate_save, name='mandate_save'),
     url(r'^manager/mandates/load/$', mandate.load_mandates, name='load_mandates'),
+    url(r'^manager/mandates/upload/$', import_xls_file_data.upload_mandates_file, name='upload_mandates_file'),
     url(r'^manager/mandates/$', mandates_list.MandatesListView.as_view(), name='mandates_list'),
     url(r'^manager/reviewers/add/$', reviewers_management.reviewer_add, name='reviewer_add'),
     url(r'^manager/reviewers/(?P<reviewer_id>\d+)/delete/$', reviewers_management.reviewer_delete,
