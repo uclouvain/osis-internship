@@ -62,7 +62,7 @@ class AssistantMandate(models.Model):
     end_date = models.DateField()
     position_id = models.CharField(max_length=12)
     sap_id = models.CharField(max_length=12)
-    grade = models.CharField(max_length=3)
+    grade = models.CharField(max_length=40)
     assistant_type = models.CharField(max_length=20, choices=ASSISTANT_TYPE_CHOICES, default='ASSISTANT')
     scale = models.CharField(max_length=3)
     absences = models.TextField(null=True, blank=True)
@@ -128,3 +128,8 @@ def find_before_year_for_assistant(year, assistant):
 
 def find_for_supervisor_for_academic_year(supervisor, academic_year):
     return AssistantMandate.objects.filter(assistant__supervisor=supervisor).filter(academic_year=academic_year)
+
+
+def find_mandate(assistant, academic_year, contract_number):
+    return AssistantMandate.objects.filter(academic_year=academic_year).filter(assistant = assistant).\
+        filter(sap_id = contract_number)
