@@ -215,7 +215,7 @@
                         {% endif %}
                         {% if is_program_manager %}
                             <td>
-                                <input type="hidden"
+                                <input type="text"
                                        name="justification_{{ enrollment.id }}" id="hdn_justification_final_{{ enrollment.id }}"
                                        value="{% if not enrollment.to_validate_by_program_manager %}{{enrollment.justification_final | default_if_none:''}}{%endif%}"/>
                                 <div id="pnl_justification_final_show_{{ enrollment.id }}" style="font-weight: bold; color: blue;">
@@ -228,9 +228,9 @@
                             </td>
                         {% else %}
                             <td>
-                                <input type="hidden"
+                                <input type="text"
                                        name="justification_{{ enrollment.id }}" id="hdn_justification_final_{{ enrollment.id }}"
-                                       value="{% if not enrollment.to_validate_by_tutor %}{{ enrollment.justification_draft_display | default_if_none:''}}{%endif%}"/>
+                                       value="{% if not enrollment.to_validate_by_tutor %}{{ enrollment.justification_draft | default_if_none:''}}{%endif%}"/>
                                 <div id="pnl_justification_final_show_{{ enrollment.id }}" style="font-weight: bold; color: blue;">
                                 {% if enrollment.score_draft == enrollment.score_reencoded and enrollment.justification_draft == enrollment.justification_reencoded%}
                                     {{enrollment.justification_draft_display}}
@@ -264,9 +264,17 @@ function validation_finished() {
 
 function translate_justification(justification) {
     if(justification == "ABSENCE_UNJUSTIFIED") {
-        return "{% trans 'ABSENCE_UNJUSTIFIED' %}";
+        {% if not is_program_manager %}
+            return "{% trans 'absent' %}";
+        {% else %}
+            return "{% trans 'ABSENCE_UNJUSTIFIED' %}";
+        {% endif %}
     } else if (justification == "ABSENCE_JUSTIFIED") {
-        return "{% trans 'ABSENCE_JUSTIFIED' %}";
+        {% if not is_program_manager %}
+            return "{% trans 'absent' %}";
+        {% else %}
+            return "{% trans 'ABSENCE_JUSTIFIED' %}";
+        {% endif %}
     } else if (justification == "CHEATING") {
         return "{% trans 'CHEATING' %}";
     } else if (justification == "SCORE_MISSING") {
