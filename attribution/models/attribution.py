@@ -35,7 +35,8 @@ class AttributionAdmin(admin.ModelAdmin):
     fieldsets = ((None, {'fields': ('learning_unit_year', 'tutor', 'function', 'score_responsible', 'start_year',
                                     'end_year')}),)
     raw_id_fields = ('learning_unit_year', 'tutor')
-    search_fields = ['tutor__person__first_name', 'tutor__person__last_name', 'learning_unit_year__acronym']
+    search_fields = ['tutor__person__first_name', 'tutor__person__last_name', 'learning_unit_year__acronym',
+                     'tutor__person__global_id']
 
 
 class Attribution(SerializableModel):
