@@ -215,7 +215,7 @@
                         {% endif %}
                         {% if is_program_manager %}
                             <td>
-                                <input type="text"
+                                <input type="hidden"
                                        name="justification_{{ enrollment.id }}" id="hdn_justification_final_{{ enrollment.id }}"
                                        value="{% if not enrollment.to_validate_by_program_manager %}{{enrollment.justification_final | default_if_none:''}}{%endif%}"/>
                                 <div id="pnl_justification_final_show_{{ enrollment.id }}" style="font-weight: bold; color: blue;">
@@ -228,7 +228,7 @@
                             </td>
                         {% else %}
                             <td>
-                                <input type="text"
+                                <input type="hidden"
                                        name="justification_{{ enrollment.id }}" id="hdn_justification_final_{{ enrollment.id }}"
                                        value="{% if not enrollment.to_validate_by_tutor %}{{ enrollment.justification_draft | default_if_none:''}}{%endif%}"/>
                                 <div id="pnl_justification_final_show_{{ enrollment.id }}" style="font-weight: bold; color: blue;">
