@@ -23,9 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from base.models import exam_enrollment
+from base.models import exam_enrollment, exceptions
 from base.tests.models import test_student, test_offer_enrollment, test_learning_unit_enrollment, \
-    test_offer_year_calendar, test_session_exam
+    test_offer_year_calendar, test_session_exam, test_academic_year, test_offer_year, test_learning_unit_year
+from django.test import TestCase
 
 
 def create_exam_enrollment(session_exam, learning_unit_enrollment):
@@ -43,3 +44,35 @@ def create_exam_enrollment_with_student(num_id, registration_id, offer_year, lea
     offer_year_calendar = test_offer_year_calendar.create_offer_year_calendar(offer_year, academic_year)
     session_exam = test_session_exam.create_session_exam(1, learning_unit_year, offer_year_calendar)
     return create_exam_enrollment(session_exam, learning_unit_enrollment)
+
+
+class ExamEnrollmentTest(TestCase):
+    def setUp(self):
+        self.academic_year = test_academic_year.create_academic_year()
+        self.offer_year = test_offer_year.create_offer_year('SINF1BA', 'Bachelor in informatica', self.academic_year)
+        self.learn_unit_year = test_learning_unit_year.create_learning_unit_year('LSINF1010',
+                                                                                 'Introduction to algorithmic',
+                                                                                 self.academic_year)
+        self.off_year_cal = test_offer_year_calendar.create_offer_year_calendar(self.offer_year, self.academic_year)
+        self.session_exam = test_session_exam.create_session_exam(1, self.learn_unit_year, self.off_year_cal)
+        self.student = test_student.create_student('Pierre', 'Lacazette', '12345678')
+        self.offer_enrollment = test_offer_enrollment.create_offer_enrollment(self.student, self.offer_year)
+        self.learn_unit_enrol = test_learning_unit_enrollment.create_learning_unit_enrollment(self.learn_unit_year,
+                                                                                              self.offer_enrollment)
+        self.exam_enrollment = exam_enrollment.ExamEnrollment(session_exam=self.session_exam,
+                                                              learning_unit_enrollment=self.learn_unit_enrol)
+
+    def test_save_with_invalid_justification_draft(self):
+        ex_enrol = self.exam_enrollment
+        ex_enrol.justification_draft = 'invalid_justification'
+        self.assertRaises(exceptions.JustificationValueException, ex_enrol.save)
+
+    def test_save_with_invalid_justification_final(self):
+        ex_enrol = self.exam_enrollment
+        ex_enrol.justification_final = 'invalid_justification'
+        self.assertRaises(exceptions.JustificationValueException, ex_enrol.save)
+
+    def test_save_with_invalid_justification_reencoded(self):
+        ex_enrol = self.exam_enrollment
+        ex_enrol.justification_reencoded = 'invalid_justification'
+        self.assertRaises(exceptions.JustificationValueException, ex_enrol.save)
