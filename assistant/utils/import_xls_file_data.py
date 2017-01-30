@@ -77,11 +77,7 @@ def upload_mandates_file(request):
         else:
             for error_msg in [error_msg for error_msgs in form.errors.values() for error_msg in error_msgs]:
                 messages.add_message(request, messages.ERROR, "{}".format(error_msg))
-        return layout.render(request, "load_mandates.html", {'imported_assistants': ASSISTANTS_IMPORTED,
-                                                             'imported_mandates': MANDATES_IMPORTED,
-                                                             'updated_mandates': MANDATES_UPDATED,
-                                                             'updated_assistants': ASSISTANTS_UPDATED,
-                                                             'persons_not_found': PERSONS_NOT_FOUND})
+        return show_import_result(request)
 
 
 @user_passes_test(user_is_manager, login_url='assistants_home')
@@ -142,7 +138,10 @@ def xls_row_to_dict(row, titles):
     record_to_import = {}
     current_col = 0
     for cell in row:
-        record_to_import[titles[current_col]] = cell.value
+        if titles[current_col] == 'FGS' and len(cell.value) != 8:
+            record_to_import[titles[current_col]] = cell.value.zfill(8)
+        else:
+            record_to_import[titles[current_col]] = cell.value
         current_col += 1
     return record_to_import
 
