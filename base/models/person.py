@@ -23,7 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
 from django.db import models
 from django.contrib import admin
 from django.contrib.auth.models import User
@@ -44,7 +43,6 @@ class PersonAdmin(admin.ModelAdmin):
 
 
 class Person(SerializableModel):
-
     GENDER_CHOICES = (
         ('F', _('female')),
         ('M', _('male')),

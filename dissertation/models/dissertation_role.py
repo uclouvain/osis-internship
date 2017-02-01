@@ -31,7 +31,7 @@ from .enums import status_types
 
 
 class DissertationRoleAdmin(admin.ModelAdmin):
-    list_display = ('adviser', 'status', 'dissertation', 'get_dissertation_author', 'get_dissertation_status')
+    list_display = ('adviser', 'status', 'dissertation', 'author', 'dissertation_status')
     raw_id_fields = ('adviser', 'dissertation')
     search_fields = ('uuid', 'dissertation__author__person__last_name', 'dissertation__author__person__first_name',
                      'dissertation__title', 'adviser__person__last_name', 'adviser__person__first_name')
@@ -46,10 +46,12 @@ class DissertationRole(SerializableModel):
         return u"%s %s" % (self.status if self.status else "",
                            self.adviser if self.adviser else "")
 
-    def get_dissertation_author(self):
+    @property
+    def author(self):
         return self.dissertation.author
 
-    def get_dissertation_status(self):
+    @property
+    def dissertation_status(self):
         return self.dissertation.status
 
 
@@ -160,12 +162,14 @@ def get_promoteur_by_dissertation_str(dissert):
     else:
         return 'none'
 
+
 def get_promoteur_by_dissertation(dissert):
     promoteur = search_by_dissertation_and_role(dissert, 'PROMOTEUR')
     if promoteur:
         return promoteur[0].adviser
     else:
         return 'none'
+
 
 def get_copromoteur_by_dissertation(dissert):
     copromoteur = search_by_dissertation_and_role(dissert, 'CO_PROMOTEUR')

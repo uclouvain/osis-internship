@@ -75,6 +75,7 @@
         {% else %}
           <table class="table table-hover">
             <tr>
+              <th  width="150px">{% trans 'photo'%}</th>
               <th>{% trans 'title'%}</th>
               <th>{% trans 'author'%}</th>
               <th>{% trans 'status'%}</th>
@@ -84,6 +85,31 @@
             </tr>
             {% for dissertation in dissertations %}
               <tr>
+                <td rowspan="1" width="150px">
+                 {% with author_photo=dissertation.author.person.photo %}
+                     {% if author_photo %}
+                      <img src="data:image/jpeg;base64,{{author_photo}}" class="avatar img-responsive"
+                           height="50%" width="50%"/>
+
+                     {% else %}
+                         {% if dissertation.author.person.gender == "U" %}
+                          <!-- no photo Unknow -->
+                          <img   height="50%" width="50%" class="avatar img-responsive"
+                                 src="{% static 'img/OSIS_UNKNOWN_BETA_MINI.png' %}" />
+                         {% endif %}
+                         {% if dissertation.author.person.gender == "M" %}
+                         <!-- no photo Homme -->
+                         <img   height="50%" width="50%" class="avatar img-responsive"
+                                src="{% static 'img/OSIS_HOMME_UNKNOWN_MINI.png' %}" />
+                         {% endif %}
+                         {% if dissertation.author.person.gender == "F" %}
+                          <!-- no photo FEMME -->
+                          <img   height="50%" width="50%" class="avatar img-responsive"
+                                 src="{% static 'img/OSIS_FEMME_UNKNOWN_MINI.png' %}" />
+                         {% endif %}
+                      {% endif %}
+                  {% endwith %}
+                </td>
                 <td><a href="{% url 'manager_dissertations_detail' pk=dissertation.pk %}">{{ dissertation.title }}</a></td>
                 <td>{{ dissertation.author }}</td>
                 <td>

@@ -167,7 +167,37 @@
                   </div>
                 </div>
             </div>
-        </div>
+            <div class="col-md-3">
+                <div class="panel panel-default">
+                          <div class="panel-heading">
+                            <h3 class="panel-title">{% trans 'student_photo' %}</h3>
+                          </div>
+                          <div class="panel-body" style="text-align: center">
+                                 {% with author_photo=dissertation.author.person.photo %}
+                                     {% if author_photo %}
+                                      <img src="data:image/jpeg;base64,{{author_photo}}" class="avatar img-responsive"
+                                           height="50%" width="50%"/>
+
+                                     {% else %}
+                                         {% if dissertation.author.person.gender == "U" %}
+                                          <!-- no photo Unknow -->
+                                          <img   height="50%" width="50%" class="avatar img-responsive"
+                                                 src="{% static 'img/OSIS_UNKNOWN_BETA.png' %}" />
+                                         {% endif %}
+                                         {% if dissertation.author.person.gender == "M" %}
+                                         <!-- no photo Homme -->
+                                         <img   height="50%" width="50%" class="avatar img-responsive"                                                                      src="{% static 'img/OSIS_HOMME_UNKNOWN.png' %}" />
+                                         {% endif %}
+                                         {% if dissertation.author.person.gender == "F" %}
+                                          <!-- no photo FEMME -->
+                                          <img   height="50%" width="50%" class="avatar img-responsive"                                                                     src="{% static 'img/OSIS_FEMME_UNKNOWN.png' %}" />
+                                         {% endif %}
+                                      {% endif %}
+                                  {% endwith %}
+                    </div>
+                </div>
+                </div>
+              </div>
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">{% trans 'dissertation_jury' %}</h3>
@@ -394,6 +424,7 @@
                           class="glyphicon glyphicon-remove-circle"
                           aria-hidden="true"></span> {% trans 'manager_dissertations_reported'%}</a>
                 {% endif %}
+            </div>
         </div>
     </div>
 </div>
