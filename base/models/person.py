@@ -25,6 +25,7 @@
 ##############################################################################
 
 from django.db import models
+from django.db.models import Q
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
@@ -121,6 +122,10 @@ def change_language(user, new_language):
 
 def find_by_global_id(global_id):
     return Person.objects.filter(global_id=global_id).first() if global_id else None
+
+
+def find_by_last_name_or_email(query):
+    return Person.objects.filter(Q(email__icontains=query) | Q(last_name__icontains=query))[:50]
 
 
 def search_by_email(email):

@@ -70,3 +70,27 @@ class PersonTest(TestCase):
             p.save()
         except AttributeError:
             self.fail("Exception not expected")
+
+    def test_find_persons_by_name_or_email(self):
+        p1 = person.Person(email='matheus@osis.org',
+                          last_name='Nashtergeith',
+                          first_name='Matheus',
+                          source=None)
+        try:
+            p1.save()
+        except AttributeError:
+            self.fail("Exception not expected")
+        p2 = person.Person(email='mathius@osis.org',
+                          last_name='Mergeith',
+                          first_name='Mathius',
+                          source=None)
+        try:
+            p2.save()
+        except AttributeError:
+            self.fail("Exception not expected")
+        results = person.find_by_last_name_or_email('math')
+        self.assertEqual([p1, p2],list(results))
+        self.assertEqual(len(results), 2)
+        results = person.find_by_last_name_or_email('mathi')
+        self.assertEqual([p2], list(results))
+        self.assertEqual(len(results), 1)
