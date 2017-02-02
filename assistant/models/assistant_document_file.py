@@ -23,21 +23,40 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.db import models
 
 
-class StartDateHigherThanEndDateException(Exception):
-    def __init__(self, message=None, errors=None):
-        super(StartDateHigherThanEndDateException, self).__init__(message)
-        self.errors = errors
+class AssistantDocumentFile(models.Model):
+    document_file = models.ForeignKey('osis_common.documentFile')
+    assistant_mandate = models.ForeignKey('AssistantMandate')
 
 
-class FunctionAgrumentMissingException(Exception):
-    def __init__(self, message=None, errors=None):
-        super(FunctionAgrumentMissingException, self).__init__(message)
-        self.errors = errors
+def search(assistant_mandate=None, description=None):
+    out = None
+    queryset = AssistantDocumentFile.objects.order_by('document_file__creation_date')
+    if assistant_mandate:
+        queryset = queryset.filter(assistant_mandate=assistant_mandate)
+    if description:
+        queryset = queryset.filter(document_file__description=description)
+    if assistant_mandate or description:
+        out = queryset
+    return out
 
 
-class JustificationValueException(Exception):
-    def __init__(self, message=None, errors=None):
-        super(JustificationValueException, self).__init__(message)
-        self.errors = errors
+def find_first(assistant_mandate=None, description=None):
+    results = search(assistant_mandate, description)
+    if results.exists():
+        return results[0]
+    return None
+
+
+def find_by_document(document_file):
+    return AssistantDocumentFile.objects.get(document_file=document_file)
+
+
+def find_by_id(id_document_file):
+    return AssistantDocumentFile.objects.get(id=id_document_file)
+
+
+def find_by_assistant_mandate(assistant_mandate):
+    return AssistantDocumentFile.objects.filter(assistant_mandate=assistant_mandate)
