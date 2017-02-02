@@ -25,30 +25,28 @@
 ##############################################################################
 from django.http.response import HttpResponse
 from django.http import JsonResponse
-
-from base.models.person import *
+from base.models.person import find_by_last_name_or_email, find_by_id
 import json
 
 def get_persons(request):
     if request.is_ajax():
         q = request.GET.get('term', '')
-        persons = Person.objects.filter(email__icontains = q )[:20]
-        results = []
+        persons = find_by_last_name_or_email(q)
+        emails = []
+        ids = []
         for person in persons:
-            person_json = person.email
-            results.append(person_json)
-        data = json.dumps(results)
+            emails.append(person.email)
+            ids.append(person.id)
     else:
-        data = 'fail'
-    mimetype = 'application/json'
-    return HttpResponse(data, mimetype)
+        response_data = 'fail'
+    return JsonResponse({"emails": emails,})
 
-def get_person_from_email(request, email):
-    persons = search_by_email(email)
-    person_json = []
-    person_json.append({'id': persons[0].id,
-                             'first_name': persons[0].first_name,
-                             'last_name': persons[0].last_name,
-                                  'email': persons[0].email
-                                  })
+
+def get_person_from_id(request, person_id):
+    person = find_by_id(person_id)
+    person_json = ({'id': person.id,
+                    'first_name': person.first_name,
+                    'last_name': person.last_name,
+                    'email': person.email
+                    })
     return JsonResponse({'person_json': person_json})

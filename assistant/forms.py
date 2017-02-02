@@ -342,7 +342,6 @@ class ReviewerDelegationForm(ModelForm):
 
 
 class ReviewerForm(ModelForm):
-    person = forms.ModelChoiceField(required=True, queryset=person.Person.objects.all())
     role = forms.ChoiceField(required=True, choices=mdl.reviewer.ROLE_CHOICES)
     structure = forms.ModelChoiceField(required=True, queryset=(
         structure.find_by_type('INSTITUTE') | structure.find_by_type('FACULTY') |
@@ -350,7 +349,8 @@ class ReviewerForm(ModelForm):
 
     class Meta:
         model = mdl.reviewer.Reviewer
-        fields = ('person', 'structure', 'role')
+        fields = ('structure', 'role')
+        exclude = ['person']
 
     def clean(self):
         super(ReviewerForm, self).clean()

@@ -32,7 +32,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render, redirect
-from base.models import  academic_year
+from base.models import  academic_year, person
 
 
 class ReviewersListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMixin):
@@ -81,7 +81,10 @@ def reviewer_add(request):
     if request.POST:
         form = ReviewerForm(data=request.POST)
         if form.is_valid():
-            form.save()
+            new_reviewer = form.save(commit=False)
+            this_person = person.find_by_id(request.POST.get('person_id'))
+            new_reviewer.person = this_person
+            new_reviewer.save()
             return redirect('reviewers_list')
         else:
             return render(request, "manager_add_reviewer.html", {'form': form, 'year': year})
