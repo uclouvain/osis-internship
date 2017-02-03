@@ -58,50 +58,62 @@ class OrganizationAddress(models.Model):
         self.label = "Addr"+self.organization.name[:14]
         super(OrganizationAddress, self).save(*args, **kwargs)
 
-    def geocode(addr):
-        lat_long = [None]*2
-        # Transform the address for a good url and delete all accents
-        addr = addr.replace('\n','')
-        addr = addr.replace(" ", "+")
-        addr = addr.replace("'", "\'")
-        addr = addr.replace("n°", "")
-        addr = addr.replace("n °", "")
-        addr = addr.replace("Œ", "Oe")
-        addr = addr.encode('utf8','replace').decode('utf8')
-        addr = OrganizationAddress.strip_accents(addr)
-        # get the complete url
-        url = ''.join(['https://maps.googleapis.com/maps/api/geocode/xml?address=', addr, '&key=AIzaSyCWeZdraxzqRTMxXxbXY3bncaD6Ijq_EvE'])
-        logging.info(url)
 
-        # using urllib get the xml
-        req = urllib.request.Request(url)
-        with urllib.request.urlopen(req) as response:
-            data = response.read().decode('utf-8')
+def geocode(addr):
+    lat_long = [None]*2
+    # Transform the address for a good url and delete all accents
+    addr = addr.replace('\n','')
+    addr = addr.replace(" ", "+")
+    addr = addr.replace("'", "\'")
+    addr = addr.replace("n°", "")
+    addr = addr.replace("n °", "")
+    addr = addr.replace("Œ", "Oe")
+    addr = addr.encode('utf8','replace').decode('utf8')
+    addr = OrganizationAddress.strip_accents(addr)
+    # get the complete url
+    url = ''.join(['https://maps.googleapis.com/maps/api/geocode/xml?address=', addr, '&key=AIzaSyCWeZdraxzqRTMxXxbXY3bncaD6Ijq_EvE'])
+    logging.info(url)
 
-        # Parse the xml to have the latitude and longitude of the address
-        xmldoc = minidom.parseString(data)
-        status = xmldoc.getElementsByTagName('status')[0].firstChild.data
-        if status == "OK":
-            lat = xmldoc.getElementsByTagName('location')
-            for l in lat:
-                c = l.getElementsByTagName('lat')[0].firstChild.data
-                d = l.getElementsByTagName('lng')[0].firstChild.data
-                lat_long[0] = c
-                lat_long[1] = d
-        # return the value
-        return lat_long
+    # using urllib get the xml
+    req = urllib.request.Request(url)
+    with urllib.request.urlopen(req) as response:
+        data = response.read().decode('utf-8')
 
-    def strip_accents(s):
-        return ''.join(c for c in unicodedata.normalize('NFD', s)
-                       if unicodedata.category(c) != 'Mn')
+    # Parse the xml to have the latitude and longitude of the address
+    xmldoc = minidom.parseString(data)
+    status = xmldoc.getElementsByTagName('status')[0].firstChild.data
+    if status == "OK":
+        lat = xmldoc.getElementsByTagName('location')
+        for l in lat:
+            c = l.getElementsByTagName('lat')[0].firstChild.data
+            d = l.getElementsByTagName('lng')[0].firstChild.data
+            lat_long[0] = c
+            lat_long[1] = d
+    # return the value
+    return lat_long
 
-    def find_latitude_longitude(infos):
-        #for each data in the infos, check if the lat exist
-        for data in infos:
-            if data.latitude is None :
-                #if it exist, compile the address with the location / postal / city / country
+
+def strip_accents(s):
+    return ''.join(c for c in unicodedata.normalize('NFD', s)
+                   if unicodedata.category(c) != 'Mn')
+
+
+def find_latitude_longitude(infos):
+    #for each data in the infos, check if the lat exist
+    for data in infos:
+        if data.latitude is None :
+            #if it exist, compile the address with the location / postal / city / country
+            address = data.location + " " + data.postal_code + " " \
+                      + data.city + " " + data.country
+            #Compute the geolocalisation
+            address_lat_long = OrganizationAddress.geocode(address)
+            #if the geolac is fing put the data, if not put fake data
+            if address_lat_long[0]:
+                data.latitude = address_lat_long[0]
+                data.longitude = address_lat_long[1]
+            else :
                 address = data.location + " " + data.postal_code + " " \
-                          + data.city + " " + data.country
+                          + data.country
                 #Compute the geolocalisation
                 address_lat_long = OrganizationAddress.geocode(address)
                 #if the geolac is fing put the data, if not put fake data
@@ -109,19 +121,10 @@ class OrganizationAddress(models.Model):
                     data.latitude = address_lat_long[0]
                     data.longitude = address_lat_long[1]
                 else :
-                    address = data.location + " " + data.postal_code + " " \
-                              + data.country
-                    #Compute the geolocalisation
-                    address_lat_long = OrganizationAddress.geocode(address)
-                    #if the geolac is fing put the data, if not put fake data
-                    if address_lat_long[0]:
-                        data.latitude = address_lat_long[0]
-                        data.longitude = address_lat_long[1]
-                    else :
-                        data.latitude = 999
-                        data.longitude = 999
-                #save the data
-                data.save()
+                    data.latitude = 999
+                    data.longitude = 999
+            #save the data
+            data.save()
 
 
 def search(**kwargs):
