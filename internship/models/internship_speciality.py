@@ -46,14 +46,12 @@ class InternshipSpeciality(models.Model):
 
 def search(**kwargs):
     kwargs = {k: v for k, v in kwargs.items() if v}
-    queryset = InternshipSpeciality.objects.filter(**kwargs).select_related("learning_unit").order_by('acronym', 'name')
-    return queryset
+    return InternshipSpeciality.objects.filter(**kwargs).select_related("learning_unit").order_by('acronym', 'name')
 
 
 def search_order_by_position(**kwargs):
     kwargs = {k: v for k, v in kwargs.items() if v}
-    queryset = InternshipSpeciality.objects.filter(**kwargs).select_related("learning_unit").order_by('order_postion')
-    return queryset
+    return InternshipSpeciality.objects.filter(**kwargs).select_related("learning_unit").order_by('order_postion')
 
 
 def find_all():
@@ -65,4 +63,6 @@ def find_by_id(speciality_id):
 
 
 def find_non_mandatory():
-    return InternshipSpeciality.objects.filter(mandatory=False).select_related("learning_unit").order_by('acronym', 'name')
+    return InternshipSpeciality.objects.filter(mandatory=False)\
+                                       .select_related("learning_unit")\
+                                       .order_by('acronym', 'name')

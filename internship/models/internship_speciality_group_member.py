@@ -29,7 +29,7 @@ from django.db import models
 
 class InternshipSpecialityGroupMemberAdmin(admin.ModelAdmin):
     list_display = ('group', 'speciality')
-    fieldsets = ((None, {'fields' : ('group', 'speciality')}),)
+    fieldsets = ((None, {'fields': ('group', 'speciality')}),)
     raw_id_fields = ('group', 'speciality')
 
 

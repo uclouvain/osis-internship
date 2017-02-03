@@ -29,8 +29,10 @@ from django.db import models
 
 
 class InternshipStudentInformationAdmin(admin.ModelAdmin):
-    list_display = ('person', 'location', 'postal_code', 'city', 'country', 'latitude', 'longitude', 'email', 'phone_mobile')
-    fieldsets = ((None, {'fields': ('person', 'location', 'postal_code', 'city', 'latitude', 'longitude', 'country', 'email', 'phone_mobile')}),)
+    list_display = ('person', 'location', 'postal_code', 'city', 'country', 'latitude', 'longitude', 'email',
+                    'phone_mobile')
+    fieldsets = ((None, {'fields': ('person', 'location', 'postal_code', 'city', 'latitude', 'longitude', 'country',
+                                    'email', 'phone_mobile')}),)
     raw_id_fields = ('person',)
     search_fields = ['person__user__username', 'person__last_name', 'person__first_name']
 
@@ -54,7 +56,9 @@ def search(**kwargs):
 
 
 def find_all():
-    return InternshipStudentInformation.objects.all().select_related("person").order_by('person__last_name', 'person__first_name')
+    return InternshipStudentInformation.objects.all()\
+        .select_related("person")\
+        .order_by('person__last_name', 'person__first_name')
 
 
 def find_by_person(person):

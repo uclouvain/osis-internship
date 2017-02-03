@@ -41,8 +41,7 @@ class PeriodInternshipPlaces(models.Model):
 
 def search(**kwargs):
     kwargs = {k: v for k, v in kwargs.items() if v}
-    queryset = PeriodInternshipPlaces.objects.filter(**kwargs).select_related("period", "internship")
-    return queryset
+    return PeriodInternshipPlaces.objects.filter(**kwargs).select_related("period", "internship")
 
 
 def find_by_id(id):

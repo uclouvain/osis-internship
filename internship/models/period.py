@@ -38,13 +38,12 @@ class Period(models.Model):
     date_end = models.DateField(blank=False)
 
     def __str__(self):
-        return u"%s" % (self.name)
+        return u"%s" % self.name
 
 
 def search(**kwargs):
     kwargs = {k: v for k, v in kwargs.items() if v}
-    queryset = Period.objects.filter(**kwargs).select_related().order_by("date_start")
-    return queryset
+    return Period.objects.filter(**kwargs).select_related().order_by("date_start")
 
 
 def find_by_id(period_id):

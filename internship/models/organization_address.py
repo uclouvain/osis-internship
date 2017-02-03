@@ -33,8 +33,9 @@ from internship.models.organization import Organization
 
 
 class OrganizationAddressAdmin(admin.ModelAdmin):
-    list_display = ('organization', 'label', 'location', 'postal_code', 'city', 'country','latitude', 'longitude')
-    fieldsets = ((None, {'fields': ('organization', 'label', 'location', 'postal_code', 'city', 'country', 'latitude', 'longitude')}),)
+    list_display = ('organization', 'label', 'location', 'postal_code', 'city', 'country', 'latitude', 'longitude')
+    fieldsets = ((None, {'fields': ('organization', 'label', 'location', 'postal_code', 'city', 'country', 'latitude',
+                                    'longitude')}),)
     raw_id_fields = ('organization',)
 
 
@@ -71,7 +72,8 @@ def geocode(addr):
     addr = addr.encode('utf8','replace').decode('utf8')
     addr = OrganizationAddress.strip_accents(addr)
     # get the complete url
-    url = ''.join(['https://maps.googleapis.com/maps/api/geocode/xml?address=', addr, '&key=AIzaSyCWeZdraxzqRTMxXxbXY3bncaD6Ijq_EvE'])
+    url = ''.join(['https://maps.googleapis.com/maps/api/geocode/xml?address=', addr,
+                   '&key=AIzaSyCWeZdraxzqRTMxXxbXY3bncaD6Ijq_EvE'])
     logging.info(url)
 
     # using urllib get the xml
@@ -129,8 +131,7 @@ def find_latitude_longitude(infos):
 
 def search(**kwargs):
     kwargs = {k: v for k, v in kwargs.items() if v}
-    queryset = OrganizationAddress.objects.filter(**kwargs).select_related("organization")
-    return queryset
+    return OrganizationAddress.objects.filter(**kwargs).select_related("organization")
 
 
 def find_by_id(organization_address_id):
