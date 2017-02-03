@@ -1338,3 +1338,19 @@ msgstr "Directeur de stage"
 
 msgid "INTERNSHIP_CO_SUPERVISOR"
 msgstr "Co-directeur de stage"
+
+
+msgid "PROFESSOR"
+msgstr "Professeur"
+
+msgid "COORDINATOR"
+msgstr "Coordinateur"
+
+msgid "HOLDER"
+msgstr "Titulaire"
+
+msgid "CO_HOLDER"
+msgstr "Co-titulaire"
+
+msgid "DEPUTY"
+msgstr "Suppléant"
