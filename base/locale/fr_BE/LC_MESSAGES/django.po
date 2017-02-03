@@ -1323,3 +1323,18 @@ msgstr "CAPAES"
 
 msgid "start_date_must_be_lower_than_end_date"
 msgstr "La date de début doit être inférieure à la date de fin"
+
+msgid "DEPUTY_AUTHORITY"
+msgstr "Suppléant d'autorité"
+
+msgid "DEPUTY_SABBATICAL"
+msgstr "Suppléant sabbatique"
+
+msgid "DEPUTY_TEMPORARY"
+msgstr "Suppléant temporaire"
+
+msgid "INTERNSHIP_SUPERVISOR"
+msgstr "Directeur de stage"
+
+msgid "INTERNSHIP_CO_SUPERVISOR"
+msgstr "Co-directeur de stage"
