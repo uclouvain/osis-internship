@@ -26,15 +26,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 
-from internship.models import internship_choice as mdl_internship_choice
-from internship.models import internship_offer as mdl_internship_offer
-from internship.models import internship_speciality as mdl_internship_speciality
-from internship.models import internship_speciality_group_member as mdl_internship_speciality_group_member
-from internship.models import internship_student_affectation_stat as mdl_internship_student_affectation_stat
-from internship.models import internship_student_information as mdl_internship_student_information
-from internship.models import organization as mdl_organization
-from internship.models import organization_address as mdl_organization_address
-from internship.models import period as mdl_period
+from internship import models as mdl_internship
 from internship.forms.organization_form import OrganizationForm
 from internship.forms.organization_address_form import OrganizationAddressForm
 from internship.views.internship import set_tabs_name, get_all_specialities
@@ -57,7 +49,7 @@ def sort_organizations(sort_organizations):
             number_ref.append(sort_organization.reference)
     number_ref=sorted(number_ref, key=int)
     for i in number_ref:
-        organization = mdl_organization.search(reference=i)
+        organization = mdl_internship.organization.search(reference=i)
         tab.append(organization[0])
     return tab
 
@@ -74,10 +66,10 @@ def set_organization_address(organizations):
         for organization in organizations:
             organization.address = ""
             organization.student_choice = 0
-            address = mdl_organization_address.search(organization = organization)
+            address = mdl_internship.organization_address.search(organization = organization)
             if address:
                 organization.address = address
-            organization.student_choice = len(mdl_internship_choice.search(organization=organization))
+            organization.student_choice = len(mdl_internship.internship_choice.search(organization=organization))
 
 
 def sorted_organization(sort_organizations, sort_city):
@@ -151,7 +143,7 @@ def internships_places(request):
         city_sort_get = request.GET.get('city_sort')
 
     # Import all the organizations order by their reference and set their address
-    organizations = mdl_organization.search(type="service partner")
+    organizations = mdl_internship.organization.search(type="service partner")
     organizations = sort_organizations(organizations)
     set_organization_address(organizations)
 
@@ -181,7 +173,7 @@ def internships_places_stud(request):
         city_sort_get = request.GET.get('city_sort')
 
     # Import all the organizations order by their reference and set their address
-    organizations = mdl_organization.search(type="service partner")
+    organizations = mdl_internship.organization.search(type="service partner")
     organizations = sort_organizations(organizations)
     set_organization_address(organizations)
 
@@ -206,20 +198,20 @@ def internships_places_stud(request):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def place_save(request, organization_id, organization_address_id):
     if organization_id:
-        organization = mdl_organization.find_by_id(organization_id)
+        organization = mdl_internship.organization.find_by_id(organization_id)
     else :
-        mdl_organization.Organization.objects.filter(reference=request.POST.get('reference')).delete()
-        mdl_organization_address.OrganizationAddress.objects.filter(organization__reference=request.POST.get('reference')).delete()
-        organization = mdl_organization.Organization()
+        mdl_internship.organization.Organization.objects.filter(reference=request.POST.get('reference')).delete()
+        mdl_internship.organization_address.OrganizationAddress.objects.filter(organization__reference=request.POST.get('reference')).delete()
+        organization = mdl_internship.organization.Organization()
 
     form = OrganizationForm(data=request.POST, instance=organization)
     if form.is_valid():
         form.save()
 
     if organization_address_id:
-        organization_address = mdl_organization_address.find_by_id(organization_address_id)
+        organization_address = mdl_internship.organization_address.find_by_id(organization_address_id)
     else:
-        organization_address = mdl_organization_address.OrganizationAddress()
+        organization_address = mdl_internship.organization_address.OrganizationAddress()
 
     form_address = OrganizationAddressForm(data=request.POST, instance=organization_address)
     if form_address.is_valid():
@@ -240,8 +232,8 @@ def organization_new(request):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def organization_edit(request, organization_id):
-    organization = mdl_organization.find_by_id(organization_id)
-    organization_address = mdl_organization_address.search(organization = organization)
+    organization = mdl_internship.organization.find_by_id(organization_id)
+    organization_address = mdl_internship.organization_address.search(organization = organization)
     return render(request, "place_form.html", {'organization': organization,
                                                'organization_address': organization_address[0], })
 
@@ -249,24 +241,24 @@ def organization_edit(request, organization_id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def organization_create(request):
-    organization = mdl_organization.Organization()
+    organization = mdl_internship.organization.Organization()
     return render(request, "place_form.html", {'organization': organization})
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def student_choice(request, organization_id):
-    organization = mdl_organization.find_by_id(organization_id)
-    organization_choice = mdl_internship_choice.search(organization__reference=organization.reference)
+    organization = mdl_internship.organization.find_by_id(organization_id)
+    organization_choice = mdl_internship.internship_choice.search(organization__reference=organization.reference)
 
-    all_offers = mdl_internship_offer.search(organization=organization)
-    all_speciality = mdl_internship_speciality.find_all()
+    all_offers = mdl_internship.internship_offer.search(organization=organization)
+    all_speciality = mdl_internship.internship_speciality.find_all()
     set_tabs_name(all_speciality)
     for al in all_offers:
-        number_first_choice = len(mdl_internship_choice.search(organization=al.organization,
+        number_first_choice = len(mdl_internship.internship_choice.search(organization=al.organization,
                                                           speciality=al.speciality,
                                                           choice=1))
-        number_all_choice = len(mdl_internship_choice.search(organization=al.organization,
+        number_all_choice = len(mdl_internship.internship_choice.search(organization=al.organization,
                                                            speciality=al.speciality))
         al.number_first_choice = number_first_choice
         al.number_all_choice = number_all_choice
@@ -281,22 +273,22 @@ def student_choice(request, organization_id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def student_affectation(request, organization_id):
-    organization = mdl_organization.find_by_id(organization_id)
-    affectations = mdl_internship_student_affectation_stat.search(organization=organization).order_by("student__person__last_name","student__person__first_name")
+    organization = mdl_internship.organization.find_by_id(organization_id)
+    affectations = mdl_internship.internship_student_affectation_stat.search(organization=organization).order_by("student__person__last_name","student__person__first_name")
 
     for a in affectations:
         a.email = ""
         a.adress = ""
         a.phone_mobile = ""
-        internship_student_information= mdl_internship_student_information.search(person=a.student.person)
+        internship_student_information= mdl_internship.internship_student_information.search(person=a.student.person)
         if internship_student_information:
             informations = internship_student_information.first()
             a.email = informations.email
             a.adress = informations.location + " " + informations.postal_code + " " + informations.city
             a.phone_mobile = informations.phone_mobile
-    periods = mdl_period.search()
+    periods = mdl_internship.period.search()
 
-    internships = mdl_internship_offer.search(organization = organization)
+    internships = mdl_internship.internship_offer.search(organization = organization)
     all_speciality = get_all_specialities(internships)
     all_speciality = set_speciality_unique(all_speciality)
     set_tabs_name(all_speciality)
@@ -310,16 +302,16 @@ def student_affectation(request, organization_id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def export_xls(request, organization_id, speciality_id):
-    organization = mdl_organization.find_by_id(organization_id)
-    speciality = mdl_internship_speciality.find_by_id(speciality_id)
+    organization = mdl_internship.organization.find_by_id(organization_id)
+    speciality = mdl_internship.internship_speciality.find_by_id(speciality_id)
     if speciality:
         speciality_groups = [group_member.group for group_member
-                             in mdl_internship_speciality_group_member.find_by_speciality(speciality)]
+                             in mdl_internship.internship_speciality_group_member.find_by_speciality(speciality)]
         specialities = [group_member.speciality for group_member in
-                        mdl_internship_speciality_group_member.find_distinct_specialities_by_groups(speciality_groups)]
+                        mdl_internship.internship_speciality_group_member.find_distinct_specialities_by_groups(speciality_groups)]
         specialities = sorted(specialities, key=lambda spec: spec.order_postion)
         affection_by_specialities = [(internship_speciality,
-                                      mdl_internship_student_affectation_stat.search(organization=organization,
+                                      mdl_internship.internship_student_affectation_stat.search(organization=organization,
                                                                               speciality=internship_speciality))
                                      for internship_speciality in specialities]
     else:
@@ -331,8 +323,8 @@ def export_xls(request, organization_id, speciality_id):
             affectation.adress = ""
             affectation.phone_mobile = ""
             affectation.master = ""
-            internship_student_information = mdl_internship_student_information.search(person=affectation.student.person)
-            internship_offer = mdl_internship_offer.search(organization=affectation.organization, speciality=affectation.speciality)
+            internship_student_information = mdl_internship.internship_student_information.search(person=affectation.student.person)
+            internship_offer = mdl_internship.internship_offer.search(organization=affectation.organization, speciality=affectation.speciality)
             if internship_student_information:
                 informations = internship_student_information.first()
                 affectation.email = informations.email
@@ -348,12 +340,12 @@ def export_xls(request, organization_id, speciality_id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def export_organisation_affectation_as_xls(request, organization_id):
-    organization = mdl_organization.find_by_id(organization_id)
-    internships = mdl_internship_offer.search(organization = organization)
+    organization = mdl_internship.organization.find_by_id(organization_id)
+    internships = mdl_internship.internship_offer.search(organization = organization)
     specialities = list({offer.speciality for offer in internships})
     specialities = sorted(specialities, key=lambda spec: spec.order_postion)
     affection_by_specialities = [(internship_speciality,
-                                  list(mdl_internship_student_affectation_stat.search(organization=organization,
+                                  list(mdl_internship.internship_student_affectation_stat.search(organization=organization,
                                                                           speciality=internship_speciality)))
                                  for internship_speciality in specialities]
     for speciality, affectations in affection_by_specialities:
@@ -362,8 +354,8 @@ def export_organisation_affectation_as_xls(request, organization_id):
             affectation.adress = ""
             affectation.phone_mobile = ""
             affectation.master = ""
-            internship_student_information = mdl_internship_student_information.search(person=affectation.student.person)
-            internship_offer = mdl_internship_offer.search(organization=affectation.organization, speciality = affectation.speciality)
+            internship_student_information = mdl_internship.internship_student_information.search(person=affectation.student.person)
+            internship_offer = mdl_internship.internship_offer.search(organization=affectation.organization, speciality = affectation.speciality)
             if internship_student_information:
                 informations = internship_student_information.first()
                 affectation.email = informations.email
@@ -379,14 +371,14 @@ def export_organisation_affectation_as_xls(request, organization_id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def export_pdf(request, organization_id, speciality_id):
-    organization = mdl_organization.find_by_id(organization_id)
-    speciality = mdl_internship_speciality.find_by_id(speciality_id)
-    affectations = mdl_internship_student_affectation_stat.search(organization=organization, speciality=speciality)
+    organization = mdl_internship.organization.find_by_id(organization_id)
+    speciality = mdl_internship.internship_speciality.find_by_id(speciality_id)
+    affectations = mdl_internship.internship_student_affectation_stat.search(organization=organization, speciality=speciality)
     for a in affectations:
         a.email = ""
         a.adress = ""
         a.phone_mobile = ""
-        internship_student_information = mdl_internship_student_information.search(person=a.student.person)
+        internship_student_information = mdl_internship.internship_student_information.search(person=a.student.person)
         if internship_student_information:
             informations = internship_student_information.first()
             a.email = informations.email
