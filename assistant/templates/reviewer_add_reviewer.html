@@ -28,6 +28,7 @@
 {% block style %}
 <link rel="stylesheet" href="{% static 'css/custom.css' %}">
 <link rel="stylesheet" href="{% static 'css/dataTables.bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}">
 {% endblock %}
 {% block breadcrumb %}
 <li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'institution' %}</a></li>
@@ -50,17 +51,12 @@
 			{{ hidden }}
 		{% endfor %}
 	<div class="form-group">
-		<div class="row">
-			<div class="col-md-4">
-				<div class="controls"  onChange="print_email();">
-				<label for="txt_person">{% trans 'person' %}</label>
-				{{ form.person }}<font class="error">{{ form.person.errors }}</font></div>
-				</div>
-				<div class="col-md-3">
-					<div id="email_person"></div>
-				</div>
-			</div>
+		<label for="search_persons">{% trans 'person' %}</label>
+		<div class="ui-widget"><input id="search_persons" name="search_persons" size="100"
+										  placeholder="{% trans 'search_by_email_or_last_name' %}">
 		</div>
+		<input type="hidden" name="person_id" id="person_id">
+	</div>
     <button type="submit" class="btn btn-primary" title="{% trans 'save'%}" id="bt_add_reviewer_save"
     onclick="return confirm('{% trans 'confirm_reviewer_addition' %}')">
     <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}</button>
@@ -71,17 +67,25 @@
 </div>
 {% endblock %}
 {% block script %}
+<script type="text/javascript" src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery-ui.js' %}"></script>
 <script>
-function print_email()
-{
-	var email = document.getElementById("id_person").value;
-	document.getElementById('email_person').innerHTML = email;
-}
-
 window.onload = function() {
-    Hide();
-    print_email();
+    $('#person_id').empty();
 };
-
+$(function() {
+  $("#search_persons").autocomplete({
+	source: "/assistants/api/get_persons/",
+    minLength: 3,
+    delay: 100,
+    select: function(event, ui) {
+    	var person_id = ui.item.id;
+    	$( "#person_id" ).val(person_id);
+    	$( "#search_persons" ).val( ui.item.first_name + ', ' + ui.item.last_name + ' (' + ui.item.value + ')' );
+    	$('#bt_add_reviewer_save').focus();
+    	return False;
+    	}
+  });
+});
 </script>
 {% endblock %}

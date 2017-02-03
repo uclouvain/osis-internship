@@ -158,7 +158,7 @@ class AssistantFormPart3(ModelForm):
 
     class Meta:
         model = mdl.academic_assistant.AcademicAssistant
-        fields = ('phd_inscription_date', 'thesis_title', 'confirmation_test_date','remark')
+        fields = ('phd_inscription_date', 'thesis_title', 'confirmation_test_date', 'remark')
 
 
 class AssistantFormPart4(ModelForm):
@@ -318,28 +318,17 @@ class AssistantFormPart6(ModelForm):
 
 
 class ReviewerDelegationForm(ModelForm):
-    person = forms.ModelChoiceField(required=True, queryset=person.Person.objects.all().order_by('last_name'),
-                                    to_field_name="email")
     role = forms.CharField(widget=forms.HiddenInput(), required=True)
     structure = forms.ModelChoiceField(widget=forms.HiddenInput(), required=True,
                                        queryset=structure.Structure.objects.all())
 
     class Meta:
         model = mdl.reviewer.Reviewer
-        fields = ('person', 'structure', 'role')
+        fields = ('structure', 'role')
+        exclude = ['person']
         widgets = {
             'structure': forms.HiddenInput()
         }
-
-    def clean(self):
-        super(ReviewerDelegationForm, self).clean()
-        selected_person = self.cleaned_data.get('person')
-        try:
-            mdl.reviewer.find_by_person(selected_person)
-            msg = _("person_already_reviewer_msg")
-            self.add_error('person', msg)
-        except:
-            pass
 
 
 class ReviewerForm(ModelForm):
