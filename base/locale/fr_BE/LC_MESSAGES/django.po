@@ -1339,7 +1339,6 @@ msgstr "Directeur de stage"
 msgid "INTERNSHIP_CO_SUPERVISOR"
 msgstr "Co-directeur de stage"
 
-
 msgid "PROFESSOR"
 msgstr "Professeur"
 
