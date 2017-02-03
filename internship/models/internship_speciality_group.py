@@ -23,8 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.contrib import admin
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
+
+
+class InternshipSpecialityGroupAdmin(admin.ModelAdmin):
+    list_display = ('name', )
+    fieldsets = ((None, {'fields': ('name',)}),)
 
 
 class InternshipSpecialityGroup(models.Model):

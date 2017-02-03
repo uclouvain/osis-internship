@@ -23,7 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.contrib import admin
 from django.db import models
+
+
+class PeriodAdmin(admin.ModelAdmin):
+    list_display = ('name', 'date_start', 'date_end')
+    fieldsets = ((None, {'fields': ('name', 'date_start', 'date_end')}),)
 
 
 class Period(models.Model):

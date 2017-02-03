@@ -23,7 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.contrib import admin
 from django.db import models
+
+
+class OrganizationAdmin(admin.ModelAdmin):
+    list_display = ('name', 'acronym', 'reference', 'type')
+    fieldsets = ((None, {'fields': ('name', 'acronym', 'reference', 'website', 'type')}),)
+    search_fields = ['acronym']
 
 
 class Organization(models.Model):

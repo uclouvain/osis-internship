@@ -23,7 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.contrib import admin
 from django.db import models
+
+
+class PeriodInternshipPlacesAdmin(admin.ModelAdmin):
+    list_display = ('period', 'internship', 'number_places')
+    fieldsets = ((None, {'fields': ('period', 'internship', 'number_places')}),)
+    raw_id_fields = ('period', 'internship')
 
 
 class PeriodInternshipPlaces(models.Model):

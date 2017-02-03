@@ -24,7 +24,14 @@
 #
 ##############################################################################
 from django.db import models
+from django.contrib import admin
 from internship.models.internship_choice import InternshipChoice
+
+
+class InternshipOfferAdmin(admin.ModelAdmin):
+    list_display = ('organization','speciality', 'title', 'maximum_enrollments', 'master', 'selectable')
+    fieldsets = ((None, {'fields': ('organization','speciality', 'title', 'maximum_enrollments', 'master', 'selectable')}),)
+    raw_id_fields = ('organization','speciality')
 
 
 class InternshipOffer(models.Model):

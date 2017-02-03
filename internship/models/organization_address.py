@@ -23,12 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.contrib import admin
 from django.db import models
 import urllib.request
 import unicodedata
 from xml.dom import minidom
 import logging
 from internship.models.organization import Organization
+
+
+class OrganizationAddressAdmin(admin.ModelAdmin):
+    list_display = ('organization', 'label', 'location', 'postal_code', 'city', 'country','latitude', 'longitude')
+    fieldsets = ((None, {'fields': ('organization', 'label', 'location', 'postal_code', 'city', 'country', 'latitude', 'longitude')}),)
+    raw_id_fields = ('organization',)
 
 
 class OrganizationAddress(models.Model):

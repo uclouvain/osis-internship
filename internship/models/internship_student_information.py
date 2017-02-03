@@ -23,8 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.contrib import admin
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
+
+
+class InternshipStudentInformationAdmin(admin.ModelAdmin):
+    list_display = ('person', 'location', 'postal_code', 'city', 'country', 'latitude', 'longitude', 'email', 'phone_mobile')
+    fieldsets = ((None, {'fields': ('person', 'location', 'postal_code', 'city', 'latitude', 'longitude', 'country', 'email', 'phone_mobile')}),)
+    raw_id_fields = ('person',)
+    search_fields = ['person__user__username', 'person__last_name', 'person__first_name']
 
 
 class InternshipStudentInformation(models.Model):

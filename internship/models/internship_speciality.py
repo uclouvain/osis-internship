@@ -23,7 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.contrib import admin
 from django.db import models
+
+
+class InternshipSpecialityAdmin(admin.ModelAdmin):
+    list_display = ('learning_unit', 'name', 'acronym', 'mandatory', 'order_postion')
+    fieldsets = ((None, {'fields': ('learning_unit', 'name', 'acronym', 'mandatory', 'order_postion')}),)
+    raw_id_fields = ('learning_unit',)
 
 
 class InternshipSpeciality(models.Model):

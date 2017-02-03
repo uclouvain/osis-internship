@@ -23,8 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.contrib import admin
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
+
+
+class AffectationGenerationTimeAdmin(admin.ModelAdmin):
+    list_display = ('start_date_time', 'end_date_time', 'generated_by')
+    fieldsets = ((None, {'fields': ('start_date_time', 'end_date_time', 'generated_by')}),)
 
 
 class AffectationGenerationTime(models.Model):

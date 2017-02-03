@@ -23,7 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.contrib import admin
 from django.db import models
+
+
+class InternshipSpecialityGroupMemberAdmin(admin.ModelAdmin):
+    list_display = ('group', 'speciality')
+    fieldsets = ((None, {'fields' : ('group', 'speciality')}),)
+    raw_id_fields = ('group', 'speciality')
 
 
 class InternshipSpecialityGroupMember(models.Model):

@@ -26,7 +26,9 @@
 
 from django import forms
 from django.forms import ModelForm
-from internship.models import Organization, OrganizationAddress, Period
+from internship.models.organization import Organization
+from internship.models.organization_address import OrganizationAddress
+from internship.models.period import Period
 from functools import partial
 DateInput = partial(forms.DateInput, {'class': 'datepicker'})
 

@@ -25,6 +25,13 @@
 ##############################################################################
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.contrib import admin
+
+
+class InternshipMasterAdmin(admin.ModelAdmin):
+    list_display = ('reference', 'organization', 'first_name', 'last_name', 'civility', 'type_mastery', 'speciality')
+    fieldsets = ((None, {'fields': ('reference', 'organization', 'first_name', 'last_name', 'civility', 'type_mastery', 'speciality')}),)
+    raw_id_fields = ('organization',)
 
 
 class InternshipMaster(models.Model):

@@ -24,6 +24,13 @@
 #
 ##############################################################################
 from django.db import models
+from django.contrib import admin
+
+
+class InternshipEnrollmentAdmin(admin.ModelAdmin):
+    list_display = ('student', 'internship_offer', 'place', 'period')
+    fieldsets = ((None, {'fields': ('student', 'internship_offer', 'place', 'period')}),)
+    raw_id_fields = ('student', 'internship_offer','place', 'period')
 
 
 class InternshipEnrollment(models.Model):
