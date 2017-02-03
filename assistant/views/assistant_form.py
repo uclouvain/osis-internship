@@ -57,8 +57,8 @@ def form_part1_edit(request, mandate_id):
                                        'phd_inscription_date': assistant.phd_inscription_date,
                                        'confirmation_test_date': assistant.confirmation_test_date,
                                        'thesis_date': assistant.thesis_date,
-                                       'addresses': addresses,
-                                       'supervisor': assistant.supervisor})
+                                       'addresses': addresses
+                                       })
     form2 = AssistantFormPart1b(initial={'external_functions': mandate.external_functions,
                                          'external_contract': mandate.external_contract,
                                          'justification': mandate.justification})
@@ -67,7 +67,8 @@ def form_part1_edit(request, mandate_id):
                                                          'mandate': mandate,
                                                          'addresses': addresses,
                                                          'form': form,
-                                                         'form2': form2}) 
+                                                         'form2': form2,
+                                                         'supervisor': assistant.supervisor})
 
 
 @user_passes_test(user_is_assistant_and_procedure_is_open, login_url='access_denied')
@@ -79,7 +80,13 @@ def form_part1_save(request, mandate_id):
     form = AssistantFormPart1(data=request.POST, instance=assistant)
     form2 = AssistantFormPart1b(data=request.POST, instance=mandate)
     if form.is_valid() and form2.is_valid():
-        form.save()
+        if request.POST.get('person_id'):
+            this_assistant = form.save(commit=False)
+            supervisor = person.find_by_id(request.POST.get('person_id'))
+            this_assistant.supervisor = supervisor
+            this_assistant.save()
+        else:
+            form.save()
         form2.save()
         return form_part1_edit(request, mandate.id)
     else:

@@ -108,7 +108,8 @@ class AssistantFormPart1(ModelForm):
     class Meta:
         model = mdl.assistant_mandate.AssistantMandate
         fields = ('inscription', 'expected_phd_date', 'phd_inscription_date', 'confirmation_test_date',
-                  'thesis_date', 'supervisor')
+                  'thesis_date')
+        exclude = ['supervisor']
 
     def clean(self):
         super(AssistantFormPart1, self).clean()
