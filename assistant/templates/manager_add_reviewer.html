@@ -28,6 +28,7 @@
 {% block style %}
 <link rel="stylesheet" href="{% static 'css/custom.css' %}">
 <link rel="stylesheet" href="{% static 'css/dataTables.bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}">
 {% endblock %}
 {% block breadcrumb %}
 <li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'institution' %}</a></li>
@@ -39,9 +40,7 @@
 <div class="page-header">
     <h3>{% trans 'assistantship_mandate_renewal' %} {{ year|add:1 }}</h3>
 </div>
-
 <div class="panel panel-default">
-
     <div class="panel-body">
         <form method="POST" action="{% url 'reviewer_add' %}">
         {{ form.non_field_errors }}
@@ -49,78 +48,49 @@
  		    {% for hidden in form.hidden_fields %}
 			    {{ hidden }}
 		    {% endfor %}
-
 	    <div class="form-group">
-		    <div class="row">
-			    <div class="col-md-3">
-				    <div class="controls"  onChange="print_email();">
-				        <label for="txt_person">{% trans 'person' %}</label>
-                    </div>
-				    <div class="col-md-3">{% trans 'search_by_email' %}
-                        <div class="ui-widget"><input id="search_persons" name="search_persons" size="100"></div>
-                        <input type="hidden" name="person_id" id="person_id">
-				    </div>
-                </div>
+		    <label for="search_persons">{% trans 'person' %}</label>
+			<div class="ui-widget"><input id="search_persons" name="search_persons" size="100"
+										  placeholder="{% trans 'search_by_email_or_last_name' %}">
 			</div>
-			<p></p>
-		    <div class="row">
-			    <div class="col-md-4">
-				    <div class="controls">
-				        <label for="txt_structure">{% trans 'structure' %}</label>
-				        {{ form.structure }}<font class="error">{{ form.structure.errors }}</font>
-				    </div>
-			    </div>
-		    </div><p></p>
-		    <div class="row">
-			    <div class="col-md-2">
-				    <div class="controls">
-				        <label for="txt_role">{% trans 'role' %}</label>
-				        {{ form.role }}<font class="error">{{ form.role.errors }}</font>
-				    </div>
-			    </div>
-		    </div><p></p>
-            <button type="submit" class="btn btn-primary" title="{% trans 'save'%}" id="bt_add_reviewer_save"
-            onclick="return confirm('{% trans 'confirm_reviewer_addition' %}')">
-            <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}</button>
-            <a class="btn btn-default" id="lnk_upload_cancel" href="{% url 'reviewers_list' %}">
-            <span class="glyphicon glyphicon-cancel" aria-hidden="true"></span> {% trans 'cancel'%}</a>
-        </div>
-    </form>
+			<input type="hidden" name="person_id" id="person_id">
+		</div>
+		<div class="form-group">
+			<label for="{{ form.structure.auto_id }}">{% trans 'structure' %}</label>
+			<div class="controls">{{ form.structure }}<font class="error">{{ form.structure.errors }}</font></div>
+		</div>
+		<div class="form-group">
+			<label for="{{ form.role.auto_id }}">{% trans 'role' %}</label>
+			<div class="controls">{{ form.role }}<font class="error">{{ form.role.errors }}</font></div>
+		</div>
+		<button type="submit" class="btn btn-primary" title="{% trans 'save'%}" id="bt_add_reviewer_save"
+				onclick="return confirm('{% trans 'confirm_reviewer_addition' %}')">
+			<span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}</button>
+			<a class="btn btn-default" id="lnk_upload_cancel" href="{% url 'reviewers_list' %}">
+				<span class="glyphicon glyphicon-cancel" aria-hidden="true"></span> {% trans 'cancel'%}</a>
+    	</form>
     </div>
 </div>
 {% endblock %}
 {% block script %}
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-  <link rel="stylesheet" href="/resources/demos/style.css">
-  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script type="text/javascript" src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery-ui.js' %}"></script>
 <script>
-
-function print_email()
-{
-	var email = document.getElementById("id_person").value;
-	document.getElementById('email_person').innerHTML = email;
-}
 window.onload = function() {
-    $('#id_person').empty();
+    $('#person_id').empty();
 };
-
 $(function() {
   $("#search_persons").autocomplete({
-	source: "api/get_persons/",
+	source: "/assistants/api/get_persons/",
     minLength: 3,
+    delay: 100,
     select: function(event, ui) {
-        var person = $('#search_persons').val();
-		var uri = "api/get_person_from_id/" + person;
-        $.ajax({ url: uri }).then(function(data)
-            {
-            var person = data;
-            var person_id = data.emails;
-            alert(person_id);
-			$('#person_id').val(person.id);
-            $('#search_persons').val(person.first_name+', '+person.last_name+' ('+person.email+')');
-            });
-    }
+    	var person_id = ui.item.id;
+    	$( "#person_id" ).val(person_id);
+    	$( "#search_persons" ).val( ui.item.first_name + ', ' + ui.item.last_name + ' (' + ui.item.value + ')' );
+    	$('#id_structure').focus();
+    	return False;
+    	}
   });
 });
 </script>
