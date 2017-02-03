@@ -34,7 +34,8 @@ from internship.models.internship_student_affectation_stat import InternshipStud
 from internship.models.internship_student_information import InternshipStudentInformation
 from internship.models.organization import Organization
 from internship.models.organization_address import OrganizationAddress
-from internship.forms import OrganizationForm, OrganizationAddressForm
+from internship.forms.organization_form import OrganizationForm
+from internship.forms.organization_address_form import OrganizationAddressForm
 from internship.models.period import Period
 from internship.views.internship import set_tabs_name, get_all_specialities
 from internship.utils import export_utils, export_utils_pdf

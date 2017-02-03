@@ -28,7 +28,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from internship.models.period import Period
-from internship.forms import PeriodForm
+from internship.forms.period_form import PeriodForm
 
 
 @login_required
