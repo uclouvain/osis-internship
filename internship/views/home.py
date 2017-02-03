@@ -26,9 +26,9 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
-from internship.models.internship_offer import InternshipOffer
-from internship.models.internship_student_information import InternshipStudentInformation
-from internship.models.organization_address import OrganizationAddress
+from internship.models import internship_offer as mdl_internship_offer
+from internship.models import internship_student_information as mdl_internship_student_information
+from internship.models import organization_address as mdl_organization_address
 
 @login_required
 @permission_required('internship.can_access_internship', raise_exception=True)
@@ -47,7 +47,7 @@ def internships_home(request):
     else:
         noma = 0
 
-    internships = InternshipOffer.find_internships()
+    internships = mdl_internship_offer.find_internships()
     #Check if there is a internship offers in data base. If not, the internships
     #can be block, but there is no effect
     if len(internships) > 0:
@@ -59,10 +59,10 @@ def internships_home(request):
         blockable = True
 
     #Find all informations about students and organisation and fin the latitude and longitude of the address
-    student_informations = InternshipStudentInformation.search()
-    organization_informations = OrganizationAddress.search()
-    OrganizationAddress.find_latitude_longitude(student_informations)
-    OrganizationAddress.find_latitude_longitude(organization_informations)
+    student_informations = mdl_internship_student_information.search()
+    organization_informations = mdl_organization_address.search()
+    mdl_organization_address.find_latitude_longitude(student_informations)
+    mdl_organization_address.find_latitude_longitude(organization_informations)
 
     return render(request, "internships_home.html", {'section': 'internship',
                                                      'noma': noma,

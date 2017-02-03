@@ -36,6 +36,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
+from internship.models import affectation_generation_time
 from internship.models.affectation_generation_time import AffectationGenerationTime
 from internship.models.internship_choice import InternshipChoice
 from internship.models.internship_enrollment import InternshipEnrollment
@@ -1212,7 +1213,7 @@ def internship_affectation_statistics(request):
         table.sort(key=itemgetter(0))
         internship_errors = InternshipStudentAffectationStat.objects.filter(organization=organizations[hospital_error])
 
-    latest_generation = AffectationGenerationTime.get_latest()
+    latest_generation = affectation_generation_time.get_latest()
     return render(request, "internship_affectation_statics.html",
                   {'section': 'internship',
                    'recap_sol': sol,
