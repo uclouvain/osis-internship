@@ -78,7 +78,7 @@
                         {% for attribution in attributions %}
                             <tr>
                                 <td>{{ attribution.tutor.person }}</td>
-                                <td>{{ attribution.function | title }}</td>
+                                <td>{% trans attribution.function %}</td>
                             </tr>
                         {% endfor %}
                     </table>

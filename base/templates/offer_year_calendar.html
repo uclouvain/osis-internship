@@ -52,16 +52,6 @@
             </div>
         </div>
         <br>
-        {% if is_programme_manager and offer_year_calendar.academic_calendar.end_date and offer_year_calendar.academic_calendar.start_date %}
-            <a href="{% url 'offer_year_calendar_edit' offer_year_calendar.id %}" title="{%trans 'edit'%}"
-               class="btn btn-primary" role="button" id="bt_offer_year_calendar_edit">
-                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> {% trans 'edit'%}
-            </a>
-            <a href="{% url 'offer_read' offer_year_calendar.offer_year.id %}" title="{%trans 'cancel'%}"
-               class="btn btn-default" role="button" id="bt_cancel">
-                <span class="glyphicon glyphicon-cancel" aria-hidden="true"></span> {% trans 'cancel'%}
-            </a>
-         {% endif %}
     </div>
 </div>
 {% endblock %}

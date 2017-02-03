@@ -23,16 +23,18 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.utils.translation import ugettext_lazy as _
 
-
-class AssistantDocument(models.Model):
-    DOC_TYPE_CHOICES = (
-        ('PHD', _('PhD')),
-        ('TUTORING', _('Tutoring')),
-        ('RESEARCH', _('Research')))
-
-    assistant = models.ForeignKey('AcademicAssistant')
-    mandate = models.ForeignKey('AssistantMandate')
-    doc_type = models.CharField(max_length=20, choices=DOC_TYPE_CHOICES)
+from internship.models import affectation_generation_time
+from internship.models import internship_choice
+from internship.models import internship_enrollment
+from internship.models import internship_master
+from internship.models import internship_offer
+from internship.models import internship_speciality
+from internship.models import internship_speciality_group
+from internship.models import internship_speciality_group_member
+from internship.models import internship_student_affectation_stat
+from internship.models import internship_student_information
+from internship.models import organization
+from internship.models import organization_address
+from internship.models import period
+from internship.models import period_internship_places

@@ -35,7 +35,8 @@ class AttributionAdmin(admin.ModelAdmin):
     fieldsets = ((None, {'fields': ('learning_unit_year', 'tutor', 'function', 'score_responsible', 'start_year',
                                     'end_year')}),)
     raw_id_fields = ('learning_unit_year', 'tutor')
-    search_fields = ['tutor__person__first_name', 'tutor__person__last_name', 'learning_unit_year__acronym']
+    search_fields = ['tutor__person__first_name', 'tutor__person__last_name', 'learning_unit_year__acronym',
+                     'tutor__person__global_id']
 
 
 class Attribution(SerializableModel):
@@ -45,7 +46,7 @@ class Attribution(SerializableModel):
     end_date = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
     start_year = models.IntegerField(blank=True, null=True)
     end_year = models.IntegerField(blank=True, null=True)
-    function = models.CharField(max_length=15, blank=True, null=True, choices=function.FUNCTIONS, db_index=True)
+    function = models.CharField(max_length=35, blank=True, null=True, choices=function.FUNCTIONS, db_index=True)
     learning_unit_year = models.ForeignKey('base.LearningUnitYear', blank=True, null=True, default=None)
     tutor = models.ForeignKey('base.Tutor')
     score_responsible = models.BooleanField(default=False)

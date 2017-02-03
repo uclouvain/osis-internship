@@ -33,14 +33,19 @@ from base.enums import exam_enrollment_justification_type as justification_types
 from base.enums import exam_enrollment_state as enrollment_states
 import datetime
 import unicodedata
+from base.models.exceptions import JustificationValueException
+
+
+JUSTIFICATION_ABSENT_FOR_TUTOR = _('absent')
 
 
 class ExamEnrollmentAdmin(admin.ModelAdmin):
     list_display = ('student', 'enrollment_state', 'session_exam', 'score_draft', 'justification_draft', 'score_final',
                     'justification_final', 'score_reencoded', 'justification_reencoded', 'changed')
     list_filter = ('session_exam__number_session', 'session_exam__learning_unit_year__academic_year')
-    fieldsets = ((None, {'fields': ('session_exam', 'enrollment_state', 'learning_unit_enrollment', 'score_draft', 'justification_draft',
-                                    'score_final', 'justification_final')}),)
+    fieldsets = ((None, {'fields': ('session_exam', 'enrollment_state', 'learning_unit_enrollment', 'score_draft',
+                                    'justification_draft', 'score_final', 'justification_final', 'score_reencoded',
+                                    'justification_reencoded')}),)
     raw_id_fields = ('session_exam', 'learning_unit_enrollment')
     search_fields = ['learning_unit_enrollment__offer_enrollment__student__person__first_name',
                      'learning_unit_enrollment__offer_enrollment__student__person__last_name',
@@ -67,6 +72,24 @@ class ExamEnrollment(models.Model):
 
     def student(self):
         return self.learning_unit_enrollment.student
+
+    def justification_valid(self):
+        valid_justifs = [j[0] for j in justification_types.JUSTIFICATION_TYPES]
+        if self.justification_draft:
+            if self.justification_draft not in valid_justifs:
+                return False
+        if self.justification_reencoded:
+            if self.justification_reencoded not in valid_justifs:
+                return False
+        if self.justification_final:
+            if self.justification_final not in valid_justifs:
+                return False
+        return True
+
+    def save(self, *args, **kwargs):
+        if not self.justification_valid():
+            raise JustificationValueException
+        super(ExamEnrollment, self).save(*args, **kwargs)
 
     def __str__(self):
         return u"%s - %s" % (self.session_exam, self.learning_unit_enrollment)
@@ -98,7 +121,7 @@ class ExamEnrollment(models.Model):
     @property
     def justification_draft_display(self):
         if is_absence_justification(self.justification_draft):
-            return _('absent')
+            return JUSTIFICATION_ABSENT_FOR_TUTOR
         elif self.justification_draft:
             return _(self.justification_draft)
         else:
@@ -107,7 +130,7 @@ class ExamEnrollment(models.Model):
     @property
     def justification_final_display_as_tutor(self):
         if is_absence_justification(self.justification_final):
-            return _('absent')
+            return JUSTIFICATION_ABSENT_FOR_TUTOR
         elif self.justification_final:
             return _(self.justification_final)
         else:
@@ -116,7 +139,7 @@ class ExamEnrollment(models.Model):
     @property
     def justification_reencoded_display_as_tutor(self):
         if is_absence_justification(self.justification_reencoded):
-            return _('absent')
+            return JUSTIFICATION_ABSENT_FOR_TUTOR
         elif self.justification_reencoded:
             return _(self.justification_reencoded)
         else:
