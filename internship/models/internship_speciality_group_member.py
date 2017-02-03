@@ -29,7 +29,7 @@ from django.db import models
 
 class InternshipSpecialityGroupMemberAdmin(admin.ModelAdmin):
     list_display = ('group', 'speciality')
-    fieldsets = ((None, {'fields' : ('group', 'speciality')}),)
+    fieldsets = ((None, {'fields': ('group', 'speciality')}),)
     raw_id_fields = ('group', 'speciality')
 
 
@@ -40,15 +40,15 @@ class InternshipSpecialityGroupMember(models.Model):
     def __str__(self):
         return u"%s - %s" % (self.speciality.name, self.group.name)
 
-    @staticmethod
-    def search_by_group_name(group_name):
-        return InternshipSpecialityGroupMember.objects.filter(group__name=group_name)
 
-    @staticmethod
-    def find_by_speciality(speciality):
-        return InternshipSpecialityGroupMember.objects.filter(speciality=speciality)\
-            .order_by('speciality__order_postion')
+def search_by_group_name(group_name):
+    return InternshipSpecialityGroupMember.objects.filter(group__name=group_name)
 
-    @staticmethod
-    def find_distinct_specialities_by_groups(groups):
-        return InternshipSpecialityGroupMember.objects.filter(group__in=groups).distinct('speciality')
+
+def find_by_speciality(speciality):
+    return InternshipSpecialityGroupMember.objects.filter(speciality=speciality)\
+        .order_by('speciality__order_postion')
+
+
+def find_distinct_specialities_by_groups(groups):
+    return InternshipSpecialityGroupMember.objects.filter(group__in=groups).distinct('speciality')

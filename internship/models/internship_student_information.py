@@ -29,8 +29,10 @@ from django.db import models
 
 
 class InternshipStudentInformationAdmin(admin.ModelAdmin):
-    list_display = ('person', 'location', 'postal_code', 'city', 'country', 'latitude', 'longitude', 'email', 'phone_mobile')
-    fieldsets = ((None, {'fields': ('person', 'location', 'postal_code', 'city', 'latitude', 'longitude', 'country', 'email', 'phone_mobile')}),)
+    list_display = ('person', 'location', 'postal_code', 'city', 'country', 'latitude', 'longitude', 'email',
+                    'phone_mobile')
+    fieldsets = ((None, {'fields': ('person', 'location', 'postal_code', 'city', 'latitude', 'longitude', 'country',
+                                    'email', 'phone_mobile')}),)
     raw_id_fields = ('person',)
     search_fields = ['person__user__username', 'person__last_name', 'person__first_name']
 
@@ -46,19 +48,21 @@ class InternshipStudentInformation(models.Model):
     email = models.EmailField(max_length=255, blank=True, null=True)
     phone_mobile = models.CharField(max_length=100, blank=True, null=True)
 
-    @staticmethod
-    def search(**kwargs):
-        kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = InternshipStudentInformation.objects.filter(**kwargs).select_related("person")
-        return queryset
 
-    @staticmethod
-    def find_all():
-        return InternshipStudentInformation.objects.all().select_related("person").order_by('person__last_name', 'person__first_name')
+def search(**kwargs):
+    kwargs = {k: v for k, v in kwargs.items() if v}
+    queryset = InternshipStudentInformation.objects.filter(**kwargs).select_related("person")
+    return queryset
 
-    @staticmethod
-    def find_by_person(person):
-        try:
-            return InternshipStudentInformation.objects.get(person=person)
-        except ObjectDoesNotExist:
-            return None
+
+def find_all():
+    return InternshipStudentInformation.objects.all()\
+        .select_related("person")\
+        .order_by('person__last_name', 'person__first_name')
+
+
+def find_by_person(person):
+    try:
+        return InternshipStudentInformation.objects.get(person=person)
+    except ObjectDoesNotExist:
+        return None

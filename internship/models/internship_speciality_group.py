@@ -37,11 +37,11 @@ class InternshipSpecialityGroup(models.Model):
     name = models.CharField(unique=True, max_length=255)
 
     def __str__(self):
-        return u"%s" % (self.name)
+        return u"%s" % self.name
 
-    @staticmethod
-    def find_by_name(name):
-        try:
-            return InternshipSpecialityGroup.objects.get(name=name)
-        except ObjectDoesNotExist:
-            return None
+
+def find_by_name(name):
+    try:
+        return InternshipSpecialityGroup.objects.get(name=name)
+    except ObjectDoesNotExist:
+        return None

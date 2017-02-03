@@ -43,16 +43,16 @@ class Organization(models.Model):
     def __str__(self):
         return self.name
 
-    @staticmethod
-    def search(**kwargs):
-        kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = Organization.objects.filter(**kwargs).select_related()
-        return queryset
-
-    @staticmethod
-    def find_by_id(organization_id):
-        return Organization.objects.get(pk=organization_id)
-
     def save(self, *args, **kwargs):
         self.acronym = self.name[:14]
         super(Organization, self).save(*args, **kwargs)
+
+
+def search(**kwargs):
+    kwargs = {k: v for k, v in kwargs.items() if v}
+    queryset = Organization.objects.filter(**kwargs).select_related()
+    return queryset
+
+
+def find_by_id(organization_id):
+    return Organization.objects.get(pk=organization_id)

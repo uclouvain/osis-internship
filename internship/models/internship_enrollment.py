@@ -30,7 +30,7 @@ from django.contrib import admin
 class InternshipEnrollmentAdmin(admin.ModelAdmin):
     list_display = ('student', 'internship_offer', 'place', 'period')
     fieldsets = ((None, {'fields': ('student', 'internship_offer', 'place', 'period')}),)
-    raw_id_fields = ('student', 'internship_offer','place', 'period')
+    raw_id_fields = ('student', 'internship_offer', 'place', 'period')
 
 
 class InternshipEnrollment(models.Model):
@@ -42,8 +42,8 @@ class InternshipEnrollment(models.Model):
     def __str__(self):
         return u"%s - %s" % (self.student, self.internship_offer.title)
 
-    @staticmethod
-    def search(**kwargs):
-        kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = InternshipEnrollment.objects.filter(**kwargs).select_related("student","internship_offer", "place", "period")
-        return queryset
+
+def search(**kwargs):
+    kwargs = {k: v for k, v in kwargs.items() if v}
+    return InternshipEnrollment.objects.filter(**kwargs)\
+                                       .select_related("student", "internship_offer", "place", "period")

@@ -30,24 +30,24 @@ from django.contrib import admin
 
 class InternshipMasterAdmin(admin.ModelAdmin):
     list_display = ('reference', 'organization', 'first_name', 'last_name', 'civility', 'type_mastery', 'speciality')
-    fieldsets = ((None, {'fields': ('reference', 'organization', 'first_name', 'last_name', 'civility', 'type_mastery', 'speciality')}),)
+    fieldsets = ((None, {'fields': ('reference', 'organization', 'first_name', 'last_name', 'civility', 'type_mastery',
+                                    'speciality')}),)
     raw_id_fields = ('organization',)
 
 
 class InternshipMaster(models.Model):
-    CIVILITY_CHOICE = (('PROFESSOR',_('Professor')),
-                       ('DOCTOR',_('Doctor')))
-    TYPE_CHOICE = (('SPECIALIST',_('Specialist')),
-                   ('GENERALIST',_('Generalist')))
-    SPECIALITY_CHOICE = (('INTERNAL_MEDICINE',_('Internal Medicine')),
-                         ('SURGERY',_('Surgery')),
-                         ('GYNEC_OBSTETRICS',_('Gynec-Obstetrics')),
-                         ('PEDIATRICS',_('Pediatrics')),
-                         ('EMERGENCY',_('Emergency')),
-                         ('GERIATRICS',_('Geriatrics')))
+    CIVILITY_CHOICE = (('PROFESSOR', _('Professor')),
+                       ('DOCTOR', _('Doctor')))
+    TYPE_CHOICE = (('SPECIALIST', _('Specialist')),
+                   ('GENERALIST', _('Generalist')))
+    SPECIALITY_CHOICE = (('INTERNAL_MEDICINE', _('Internal Medicine')),
+                         ('SURGERY', _('Surgery')),
+                         ('GYNEC_OBSTETRICS', _('Gynec-Obstetrics')),
+                         ('PEDIATRICS', _('Pediatrics')),
+                         ('EMERGENCY', _('Emergency')),
+                         ('GERIATRICS', _('Geriatrics')))
 
-    organization     = models.ForeignKey('internship.Organization', null=True)
-    #internship_offer = models.ForeignKey(InternshipOffer)
+    organization = models.ForeignKey('internship.Organization', null=True)
     first_name = models.CharField(max_length=50, blank=True, null=True, db_index=True)
     last_name = models.CharField(max_length=50, blank=True, null=True, db_index=True)
     reference = models.CharField(max_length=50, blank=True, null=True)
@@ -55,15 +55,14 @@ class InternshipMaster(models.Model):
     type_mastery = models.CharField(max_length=50, blank=True, null=True)
     speciality = models.CharField(max_length=50, blank=True, null=True)
 
-    @staticmethod
-    def find_masters():
-        return InternshipMaster.objects.all().select_related("organization")
-
     def __str__(self):
-        return u"%s" % (self.reference)
+        return u"%s" % self.reference
 
-    @staticmethod
-    def search(**kwargs):
-        kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = InternshipMaster.objects.filter(**kwargs).select_related("organization")
-        return queryset
+
+def find_masters():
+    return InternshipMaster.objects.all().select_related("organization")
+
+
+def search(**kwargs):
+    kwargs = {k: v for k, v in kwargs.items() if v}
+    return InternshipMaster.objects.filter(**kwargs).select_related("organization")

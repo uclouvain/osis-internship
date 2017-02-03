@@ -28,8 +28,10 @@ from django.db import models
 
 
 class InternshipStudentAffectationStatAdmin(admin.ModelAdmin):
-    list_display = ('student', 'organization', 'speciality', 'period', 'choice', 'cost', 'consecutive_month', 'type_of_internship')
-    fieldsets = ((None, {'fields': ('student', 'organization', 'speciality', 'period', 'choice', 'cost', 'consecutive_month', 'type_of_internship')}),)
+    list_display = ('student', 'organization', 'speciality', 'period', 'choice', 'cost', 'consecutive_month',
+                    'type_of_internship')
+    fieldsets = ((None, {'fields': ('student', 'organization', 'speciality', 'period', 'choice', 'cost',
+                                    'consecutive_month', 'type_of_internship')}),)
     raw_id_fields = ('student', 'organization', 'speciality', 'period')
 
 
@@ -43,14 +45,13 @@ class InternshipStudentAffectationStat(models.Model):
     consecutive_month = models.BooleanField(default=False, null=False)
     type_of_internship = models.CharField(max_length=1, blank=False, null=False, default='N')
 
-    @staticmethod
-    def search(**kwargs):
-        kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = InternshipStudentAffectationStat.objects.filter(**kwargs)\
-            .select_related("student__person", "organization", "speciality", "period")\
-            .order_by("student__person__last_name","student__person__first_name", "period__date_start")
-        return queryset
 
-    @staticmethod
-    def find_by_id(affectation_id):
-        return InternshipStudentAffectationStat.objects.get(pk=affectation_id)
+def search(**kwargs):
+    kwargs = {k: v for k, v in kwargs.items() if v}
+    return InternshipStudentAffectationStat.objects.filter(**kwargs)\
+        .select_related("student__person", "organization", "speciality", "period")\
+        .order_by("student__person__last_name", "student__person__first_name", "period__date_start")
+
+
+def find_by_id(affectation_id):
+    return InternshipStudentAffectationStat.objects.get(pk=affectation_id)

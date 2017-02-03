@@ -29,42 +29,46 @@ from django.contrib import admin
 
 class InternshipChoiceAdmin(admin.ModelAdmin):
     list_display = ('student', 'organization', 'speciality', 'choice', 'internship_choice', 'priority')
-    fieldsets = ((None, {'fields': ('student', 'organization', 'speciality', 'choice', 'internship_choice', 'priority')}),)
+    fieldsets = ((None, {'fields': ('student', 'organization', 'speciality', 'choice', 'internship_choice',
+                                    'priority')}),)
     raw_id_fields = ('student', 'organization', 'speciality')
 
 
 class InternshipChoice(models.Model):
-    student             = models.ForeignKey('base.Student')
-    organization        = models.ForeignKey('internship.Organization')
-    speciality          = models.ForeignKey('internship.InternshipSpeciality',null=True)
-    choice              = models.IntegerField()
-    internship_choice   = models.IntegerField(default=0)
-    priority            = models.BooleanField()
+    student = models.ForeignKey('base.Student')
+    organization = models.ForeignKey('internship.Organization')
+    speciality = models.ForeignKey('internship.InternshipSpeciality', null=True)
+    choice = models.IntegerField()
+    internship_choice = models.IntegerField(default=0)
+    priority = models.BooleanField()
 
-    @staticmethod
-    def find_by_all_student():
-        all = InternshipChoice.objects.all().distinct('student').select_related("student","organization","speciality")
-        return all
 
-    @staticmethod
-    def find_by_student(s_student):
-        internships = InternshipChoice.objects.filter(student = s_student).select_related("student","organization","speciality").order_by('choice')
-        return internships
+def find_by_all_student():
+    return InternshipChoice.objects.all().distinct('student').select_related("student", "organization", "speciality")
 
-    @staticmethod
-    def find_by_student_desc(s_student):
-        internships = InternshipChoice.objects.filter(student = s_student).select_related("student","organization","speciality").order_by('-choice')
-        return internships
 
-    @staticmethod
-    def search(**kwargs):
-        kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = InternshipChoice.objects.filter(**kwargs).select_related("student","organization","speciality").order_by('choice')
-        return queryset
+def find_by_student(s_student):
+    return InternshipChoice.objects.filter(student=s_student)\
+                                   .select_related("student", "organization", "speciality")\
+                                   .order_by('choice')
 
-    @staticmethod
-    def search_other_choices(**kwargs):
-        kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = InternshipChoice.objects.filter(**kwargs).select_related("student","organization","speciality").order_by('choice')
-        queryset = queryset.exclude(choice=1)
-        return queryset
+
+def find_by_student_desc(s_student):
+    return InternshipChoice.objects.filter(student=s_student)\
+                                   .select_related("student", "organization", "speciality")\
+                                   .order_by('-choice')
+
+
+def search(**kwargs):
+    kwargs = {k: v for k, v in kwargs.items() if v}
+    return InternshipChoice.objects.filter(**kwargs)\
+                                   .select_related("student", "organization", "speciality")\
+                                   .order_by('choice')
+
+
+def search_other_choices(**kwargs):
+    kwargs = {k: v for k, v in kwargs.items() if v}
+    queryset = InternshipChoice.objects.filter(**kwargs)\
+                                       .select_related("student", "organization", "speciality")\
+                                       .order_by('choice')
+    return queryset.exclude(choice=1)
