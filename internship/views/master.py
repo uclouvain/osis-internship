@@ -28,7 +28,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 
-from internship.models import internship_master
+from internship.models import internship_master as mdl_internship_master
 from internship.models import organization as mdl_organization
 
 
@@ -44,17 +44,17 @@ def interships_masters(request):
     # If both exist / if just speciality exist / if just organization exist / if none exist
     if speciality_sort_value and speciality_sort_value != "0":
         if organization_sort_value and organization_sort_value != "0":
-            query = internship_master.search(speciality = speciality_sort_value, organization__name = organization_sort_value)
+            query = mdl_internship_master.search(speciality = speciality_sort_value, organization__name = organization_sort_value)
         else:
-            query = internship_master.search(speciality = speciality_sort_value)
+            query = mdl_internship_master.search(speciality = speciality_sort_value)
     else:
         if organization_sort_value and organization_sort_value != "0":
-            query = internship_master.search(organization__name = organization_sort_value)
+            query = mdl_internship_master.search(organization__name = organization_sort_value)
         else:
-            query = internship_master.find_masters()
+            query = mdl_internship_master.find_masters()
 
     # Create the options for the selected list, delete dubblons
-    query_master = internship_master.find_masters()
+    query_master = mdl_internship_master.find_masters()
     master_specs = []
     master_organizations = []
     for master in query_master:
@@ -88,5 +88,5 @@ def delete_interships_masters(request):
     name = request.POST.get("name").replace(" ", "")
     # Get the first and last name of the master send by the button of deletion
     # Get the master in the DB and delete it
-    internship_master.search(first_name=first_name, last_name=name).delete()
+    mdl_internship_master.search(first_name=first_name, last_name=name).delete()
     return HttpResponseRedirect(reverse('interships_masters'))
