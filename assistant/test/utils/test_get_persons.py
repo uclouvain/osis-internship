@@ -1,3 +1,4 @@
+
 ##############################################################################
 #
 #    OSIS stands for Open Student Information System. It's an application
@@ -23,21 +24,28 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.http import JsonResponse
-from base.models.person import find_by_last_name_or_email
+from django.test import TestCase, Client
+from base.models.person import Person
+import json
 
 
-def get_persons(request):
-    if request.is_ajax() and 'term' in request.GET:
-        q = request.GET.get('term')
-        persons = find_by_last_name_or_email(q)
-        response_data = []
-        for person in persons:
-            response_data.append({'value': person.email,
-                                  'first_name': person.first_name,
-                                  'last_name': person.last_name,
-                                  'id': person.id
-                                  })
-    else:
-        response_data = []
-    return JsonResponse(response_data, safe=False)
+class GetPersonsTestCase(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.person = Person.objects.create(first_name='Ayrton', last_name='Senna', email='ayrton.senna@uclouvain.be')
+        self.person.save()
+        self.person = Person.objects.create(first_name='Donald', last_name='Trump', email='donald.trump@uclouvain.be')
+        self.person.save()
+
+
+    def test_get_persons(self):
+        response = self.client.generic(method='get', path='/assistants/api/get_persons/?term=tru',
+                                       HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        data = json.loads(response.content.decode("utf-8"))
+        self.assertEqual(data[0]['value'], 'donald.trump@uclouvain.be')
+        self.assertEqual(len(data), 1)
+
+        response = self.client.generic(method='get', path='/assistants/api/get_persons/?term=uclou',
+                                       HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        data = json.loads(response.content.decode("utf-8"))
+        self.assertEqual(len(data), 2)

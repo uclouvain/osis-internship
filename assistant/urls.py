@@ -31,8 +31,7 @@ from assistant.utils import get_persons
 
 urlpatterns = [
     # S'il vous plaît, organiser les urls par ordre alphabétique.
-    url(r'api/get_persons/', get_persons.get_persons, name='get_persons'),
-    url(r'api/get_person_from_id/(?P<person_id>\d+)/$', get_persons.get_person_from_id, name='get_person_from_email'),
+    url(r'^api/get_persons/', get_persons.get_persons, name='get_persons'),
     url(r'^home$', home.assistant_home, name='assistants_home'),
     url(r'^manager$', home.manager_home, name='manager_home'),
     url(r'^manager/mandates/(?P<mandate_id>\d+)/edit/$', mandate.mandate_edit, name='mandate_read'),
