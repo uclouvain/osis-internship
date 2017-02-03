@@ -1345,3 +1345,18 @@ msgstr "Internship supervisor"
 
 msgid "INTERNSHIP_CO_SUPERVISOR"
 msgstr "Internship co-supervisor"
+
+msgid "PROFESSOR"
+msgstr "Professor"
+
+msgid "COORDINATOR"
+msgstr "Coordinator"
+
+msgid "HOLDER"
+msgstr "Holder"
+
+msgid "CO_HOLDER"
+msgstr "Co-holder"
+
+msgid "DEPUTY"
+msgstr "Deputy"
