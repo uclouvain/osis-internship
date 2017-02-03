@@ -36,7 +36,17 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
-from internship.models import *
+from internship.models.affectation_generation_time import AffectationGenerationTime
+from internship.models.internship_choice import InternshipChoice
+from internship.models.internship_enrollment import InternshipEnrollment
+from internship.models.internship_offer import InternshipOffer
+from internship.models.internship_speciality import InternshipSpeciality
+from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
+from internship.models.internship_student_information import InternshipStudentInformation
+from internship.models.period import Period
+from internship.models.period_internship_places import PeriodInternshipPlaces
+from internship.models.organization import Organization
+from internship.models.organization_address import OrganizationAddress
 from internship.views.internship import calc_dist, set_tabs_name
 from internship.views.place import sort_organizations, set_speciality_unique
 from datetime import datetime

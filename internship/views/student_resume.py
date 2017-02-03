@@ -30,12 +30,16 @@ from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
-from internship.models import InternshipChoice, InternshipStudentInformation, \
-		InternshipOffer, InternshipStudentAffectationStat, \
-		Organization, InternshipSpeciality, Period
+from internship.models.internship_choice import InternshipChoice
+from internship.models.internship_offer import InternshipOffer
+from internship.models.internship_speciality import InternshipSpeciality
+from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
+from internship.models.internship_student_information import InternshipStudentInformation
+from internship.models.organization import Organization
 
 from django.utils.translation import ugettext_lazy as _
 
+from internship.models.period import Period
 from internship.views.place import set_organization_address, sort_organizations
 
 def set_number_choices(student_informations):

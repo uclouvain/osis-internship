@@ -27,7 +27,9 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
-from internship.models import InternshipMaster, Organization
+
+from internship.models.internship_master import InternshipMaster
+from internship.models.organization import  Organization
 
 
 @login_required

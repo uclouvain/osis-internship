@@ -26,7 +26,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
-from internship.models import InternshipSpeciality
+from internship.models.internship_speciality import InternshipSpeciality
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
