@@ -41,30 +41,30 @@ class InternshipChoice(models.Model):
     internship_choice   = models.IntegerField(default=0)
     priority            = models.BooleanField()
 
-    @staticmethod
-    def find_by_all_student():
-        all = InternshipChoice.objects.all().distinct('student').select_related("student","organization","speciality")
-        return all
 
-    @staticmethod
-    def find_by_student(s_student):
-        internships = InternshipChoice.objects.filter(student = s_student).select_related("student","organization","speciality").order_by('choice')
-        return internships
+def find_by_all_student():
+    all = InternshipChoice.objects.all().distinct('student').select_related("student","organization","speciality")
+    return all
 
-    @staticmethod
-    def find_by_student_desc(s_student):
-        internships = InternshipChoice.objects.filter(student = s_student).select_related("student","organization","speciality").order_by('-choice')
-        return internships
 
-    @staticmethod
-    def search(**kwargs):
-        kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = InternshipChoice.objects.filter(**kwargs).select_related("student","organization","speciality").order_by('choice')
-        return queryset
+def find_by_student(s_student):
+    internships = InternshipChoice.objects.filter(student = s_student).select_related("student","organization","speciality").order_by('choice')
+    return internships
 
-    @staticmethod
-    def search_other_choices(**kwargs):
-        kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = InternshipChoice.objects.filter(**kwargs).select_related("student","organization","speciality").order_by('choice')
-        queryset = queryset.exclude(choice=1)
-        return queryset
+
+def find_by_student_desc(s_student):
+    internships = InternshipChoice.objects.filter(student = s_student).select_related("student","organization","speciality").order_by('-choice')
+    return internships
+
+
+def search(**kwargs):
+    kwargs = {k: v for k, v in kwargs.items() if v}
+    queryset = InternshipChoice.objects.filter(**kwargs).select_related("student","organization","speciality").order_by('choice')
+    return queryset
+
+
+def search_other_choices(**kwargs):
+    kwargs = {k: v for k, v in kwargs.items() if v}
+    queryset = InternshipChoice.objects.filter(**kwargs).select_related("student","organization","speciality").order_by('choice')
+    queryset = queryset.exclude(choice=1)
+    return queryset

@@ -38,9 +38,9 @@ class AffectationGenerationTime(models.Model):
     end_date_time = models.DateTimeField()
     generated_by = models.CharField(max_length=255, default='None')
 
-    @staticmethod
-    def get_latest():
-        try:
-            return AffectationGenerationTime.objects.latest('start_date_time')
-        except ObjectDoesNotExist:
-            return None
+
+def get_latest():
+    try:
+        return AffectationGenerationTime.objects.latest('start_date_time')
+    except ObjectDoesNotExist:
+        return None

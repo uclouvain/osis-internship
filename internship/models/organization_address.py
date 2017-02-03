@@ -48,16 +48,6 @@ class OrganizationAddress(models.Model):
     longitude = models.FloatField(blank=True, null=True)
     country = models.CharField(max_length=255)
 
-    @staticmethod
-    def search(**kwargs):
-        kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = OrganizationAddress.objects.filter(**kwargs).select_related("organization")
-        return queryset
-
-    @staticmethod
-    def find_by_id(organization_address_id):
-        return OrganizationAddress.objects.get(pk=organization_address_id)
-
     def save(self, *args, **kwargs):
         has_organization = False
         try:
@@ -132,3 +122,13 @@ class OrganizationAddress(models.Model):
                         data.longitude = 999
                 #save the data
                 data.save()
+
+
+def search(**kwargs):
+    kwargs = {k: v for k, v in kwargs.items() if v}
+    queryset = OrganizationAddress.objects.filter(**kwargs).select_related("organization")
+    return queryset
+
+
+def find_by_id(organization_address_id):
+    return OrganizationAddress.objects.get(pk=organization_address_id)

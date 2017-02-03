@@ -40,12 +40,12 @@ class Period(models.Model):
     def __str__(self):
         return u"%s" % (self.name)
 
-    @staticmethod
-    def search(**kwargs):
-        kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = Period.objects.filter(**kwargs).select_related().order_by("date_start")
-        return queryset
 
-    @staticmethod
-    def find_by_id(period_id):
-        return Period.objects.get(pk=period_id)
+def search(**kwargs):
+    kwargs = {k: v for k, v in kwargs.items() if v}
+    queryset = Period.objects.filter(**kwargs).select_related().order_by("date_start")
+    return queryset
+
+
+def find_by_id(period_id):
+    return Period.objects.get(pk=period_id)

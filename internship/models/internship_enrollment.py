@@ -42,8 +42,8 @@ class InternshipEnrollment(models.Model):
     def __str__(self):
         return u"%s - %s" % (self.student, self.internship_offer.title)
 
-    @staticmethod
-    def search(**kwargs):
-        kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = InternshipEnrollment.objects.filter(**kwargs).select_related("student","internship_offer", "place", "period")
-        return queryset
+
+def search(**kwargs):
+    kwargs = {k: v for k, v in kwargs.items() if v}
+    queryset = InternshipEnrollment.objects.filter(**kwargs).select_related("student","internship_offer", "place", "period")
+    return queryset

@@ -45,39 +45,41 @@ class InternshipOffer(models.Model):
     def __str__(self):
         return self.title
 
-    @staticmethod
-    def find_internships():
-        return InternshipOffer.objects.filter(speciality__mandatory=1)\
-            .select_related("organization", "speciality").order_by('speciality__acronym', 'speciality__name', 'organization__reference')
-
-    @staticmethod
-    def find_non_mandatory_internships(**kwargs):
-        kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = InternshipOffer.objects.filter(**kwargs).filter(speciality__mandatory=0) \
-            .select_related("organization", "speciality").order_by('speciality__acronym', 'speciality__name', 'organization__reference')
-        return queryset
-
-    @staticmethod
-    def search(**kwargs):
-        kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = InternshipOffer.objects.filter(**kwargs) \
-            .select_related("organization", "speciality").order_by('speciality__acronym', 'speciality__name', 'organization__reference')
-        return queryset
-
-    @staticmethod
-    def find_intership_by_id(id):
-        internship = InternshipOffer.objects.all()
-        for i in internship:
-            if int(i.id) == int(id):
-                return i
-
-        internship = InternshipChoice.objects.all()
-        for i in internship:
-            if int(i.id) == int(id):
-                return i
-
     class Meta:
         permissions = (
             ("is_internship_manager", "Is Internship Manager"),
             ("can_access_internship","Can access internships"),
         )
+
+
+def find_internships():
+    return InternshipOffer.objects.filter(speciality__mandatory=1)\
+        .select_related("organization", "speciality").order_by('speciality__acronym', 'speciality__name', 'organization__reference')
+
+
+def find_non_mandatory_internships(**kwargs):
+    kwargs = {k: v for k, v in kwargs.items() if v}
+    queryset = InternshipOffer.objects.filter(**kwargs).filter(speciality__mandatory=0) \
+        .select_related("organization", "speciality").order_by('speciality__acronym', 'speciality__name', 'organization__reference')
+    return queryset
+
+
+def search(**kwargs):
+    kwargs = {k: v for k, v in kwargs.items() if v}
+    queryset = InternshipOffer.objects.filter(**kwargs) \
+        .select_related("organization", "speciality").order_by('speciality__acronym', 'speciality__name', 'organization__reference')
+    return queryset
+
+
+def find_intership_by_id(id):
+    internship = InternshipOffer.objects.all()
+    for i in internship:
+        if int(i.id) == int(id):
+            return i
+
+    internship = InternshipChoice.objects.all()
+    for i in internship:
+        if int(i.id) == int(id):
+            return i
+
+

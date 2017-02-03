@@ -38,12 +38,12 @@ class PeriodInternshipPlaces(models.Model):
     internship = models.ForeignKey('internship.InternshipOffer')
     number_places = models.IntegerField(blank=None, null=False)
 
-    @staticmethod
-    def search(**kwargs):
-        kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = PeriodInternshipPlaces.objects.filter(**kwargs).select_related("period", "internship")
-        return queryset
 
-    @staticmethod
-    def find_by_id(id):
-        return PeriodInternshipPlaces.objects.get(pk=id)
+def search(**kwargs):
+    kwargs = {k: v for k, v in kwargs.items() if v}
+    queryset = PeriodInternshipPlaces.objects.filter(**kwargs).select_related("period", "internship")
+    return queryset
+
+
+def find_by_id(id):
+    return PeriodInternshipPlaces.objects.get(pk=id)

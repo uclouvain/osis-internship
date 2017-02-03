@@ -55,15 +55,15 @@ class InternshipMaster(models.Model):
     type_mastery = models.CharField(max_length=50, blank=True, null=True)
     speciality = models.CharField(max_length=50, blank=True, null=True)
 
-    @staticmethod
-    def find_masters():
-        return InternshipMaster.objects.all().select_related("organization")
-
     def __str__(self):
         return u"%s" % (self.reference)
 
-    @staticmethod
-    def search(**kwargs):
-        kwargs = {k: v for k, v in kwargs.items() if v}
-        queryset = InternshipMaster.objects.filter(**kwargs).select_related("organization")
-        return queryset
+
+def find_masters():
+    return InternshipMaster.objects.all().select_related("organization")
+
+
+def search(**kwargs):
+    kwargs = {k: v for k, v in kwargs.items() if v}
+    queryset = InternshipMaster.objects.filter(**kwargs).select_related("organization")
+    return queryset
