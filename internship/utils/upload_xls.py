@@ -30,7 +30,13 @@ from openpyxl import load_workbook
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 
-from internship.models import Organization, OrganizationAddress, InternshipOffer, InternshipMaster, Period, PeriodInternshipPlaces, InternshipSpeciality
+from internship.models.organization import Organization
+from internship.models.organization_address import OrganizationAddress
+from internship.models.internship_offer import InternshipOffer
+from internship.models.internship_master import InternshipMaster
+from internship.models.internship_speciality import InternshipSpeciality
+from internship.models.period import Period
+from internship.models.period_internship_places import PeriodInternshipPlaces
 
 @login_required
 def upload_places_file(request):

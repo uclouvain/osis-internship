@@ -27,13 +27,19 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
-from internship.models import InternshipEnrollment, InternshipOffer, InternshipChoice, \
-    Organization, OrganizationAddress, Period, \
-    InternshipSpeciality, InternshipStudentInformation
 from base import models as mdl
 from collections import OrderedDict
 from math import sin, cos, radians, degrees, acos
 from operator import itemgetter
+
+from internship.models.internship_choice import InternshipChoice
+from internship.models.internship_enrollment import InternshipEnrollment
+from internship.models.internship_offer import InternshipOffer
+from internship.models.internship_speciality import InternshipSpeciality
+from internship.models.internship_student_information import InternshipStudentInformation
+from internship.models.period import Period
+from internship.models.organization import Organization
+from internship.models.organization_address import OrganizationAddress
 
 
 def calc_dist(lat_a, long_a, lat_b, long_b):

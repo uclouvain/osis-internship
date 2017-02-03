@@ -25,10 +25,18 @@
 ##############################################################################
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
-from internship.models import Organization, OrganizationAddress, InternshipChoice, \
-    InternshipOffer, InternshipSpeciality, InternshipStudentAffectationStat, \
-    Period, InternshipStudentInformation, InternshipSpecialityGroupMember
-from internship.forms import OrganizationForm, OrganizationAddressForm
+
+from internship.models.internship_choice import InternshipChoice
+from internship.models.internship_offer import InternshipOffer
+from internship.models.internship_speciality import InternshipSpeciality
+from internship.models.internship_speciality_group_member import InternshipSpecialityGroupMember
+from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
+from internship.models.internship_student_information import InternshipStudentInformation
+from internship.models.organization import Organization
+from internship.models.organization_address import OrganizationAddress
+from internship.forms.organization_form import OrganizationForm
+from internship.forms.organization_address_form import OrganizationAddressForm
+from internship.models.period import Period
 from internship.views.internship import set_tabs_name, get_all_specialities
 from internship.utils import export_utils, export_utils_pdf
 

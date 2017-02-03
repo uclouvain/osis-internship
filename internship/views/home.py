@@ -26,7 +26,9 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
-from internship.models import InternshipOffer, InternshipStudentInformation, OrganizationAddress
+from internship.models.internship_offer import InternshipOffer
+from internship.models.internship_student_information import InternshipStudentInformation
+from internship.models.organization_address import OrganizationAddress
 
 @login_required
 @permission_required('internship.can_access_internship', raise_exception=True)

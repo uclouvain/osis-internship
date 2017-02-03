@@ -23,30 +23,25 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
-from django import forms
-from django.forms import ModelForm
-from internship.models import Organization, OrganizationAddress, Period
-from functools import partial
-DateInput = partial(forms.DateInput, {'class': 'datepicker'})
+from django.contrib import admin
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import models
 
 
-class OrganizationForm(ModelForm):
-    class Meta:
-        model = Organization
-        fields = ['name', 'website', 'reference']
+class InternshipSpecialityGroupAdmin(admin.ModelAdmin):
+    list_display = ('name', )
+    fieldsets = ((None, {'fields': ('name',)}),)
 
 
-class OrganizationAddressForm(ModelForm):
-    class Meta:
-        model = OrganizationAddress
-        fields = ['location', 'postal_code', 'city', 'country', 'latitude', 'longitude']
+class InternshipSpecialityGroup(models.Model):
+    name = models.CharField(unique=True, max_length=255)
 
+    def __str__(self):
+        return u"%s" % (self.name)
 
-class PeriodForm(ModelForm):
-    class Meta:
-        model = Period
-        fields = ['name', 'date_start', 'date_end']
-        widgets = {'date_start': forms.DateInput(format='%d/%m/%Y'),
-                   'date_end': forms.DateInput(format='%d/%m/%Y'),
-                   }
+    @staticmethod
+    def find_by_name(name):
+        try:
+            return InternshipSpecialityGroup.objects.get(name=name)
+        except ObjectDoesNotExist:
+            return None
