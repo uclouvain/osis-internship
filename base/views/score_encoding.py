@@ -30,8 +30,8 @@ from django.contrib.auth.decorators import login_required, user_passes_test, per
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext as trans
-from psycopg2._psycopg import OperationalError
-from psycopg2._psycopg import InterfaceError
+from psycopg2._psycopg import OperationalError as PsycopOperationalError, InterfaceError as  PsycopInterfaceError
+from django.db.utils import OperationalError as DjangoOperationalError, InterfaceError as DjangoInterfaceError
 from base import models as mdl
 from base.enums.exam_enrollment_justification_type import JUSTIFICATION_TYPES
 from attribution import models as mdl_attr
@@ -835,7 +835,7 @@ def get_json_data_scores_sheets(tutor_global_id):
             return json.dumps(data)
         else:
             return json.dumps({})
-    except (OperationalError, InterfaceError) as ep:
+    except (PsycopOperationalError, PsycopInterfaceError, DjangoOperationalError, DjangoInterfaceError) as ep:
         trace = traceback.format_exc()
         try:
             data = json.dumps({'tutor_global_id': tutor_global_id})
@@ -846,6 +846,8 @@ def get_json_data_scores_sheets(tutor_global_id):
             queue_exception_logger.error(queue_exception.to_exception_log())
         except Exception:
             logger.error(trace)
+            log_trace = traceback.format_exc()
+            logger.warning('Error during queue logging :\n {}'.format(log_trace))
         connection.close()
         get_json_data_scores_sheets(tutor_global_id)
     except Exception as e:
@@ -859,4 +861,6 @@ def get_json_data_scores_sheets(tutor_global_id):
             queue_exception_logger.error(queue_exception.to_exception_log())
         except Exception:
             logger.error(trace)
+            log_trace = traceback.format_exc()
+            logger.warning('Error during queue logging :\n {}'.format(log_trace))
         return None
