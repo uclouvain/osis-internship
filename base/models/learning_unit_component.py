@@ -48,5 +48,3 @@ class LearningUnitComponent(SerializableModel):
         permissions = (
             ("can_access_learningunit", "Can access learning unit"),
         )
-
-
