@@ -32,20 +32,20 @@ import json
 class GetPersonsTestCase(TestCase):
     def setUp(self):
         self.client = Client()
-        self.person = Person.objects.create(first_name='Ayrton', last_name='Senna', email='ayrton.senna@uclouvain.be')
+        self.person = Person.objects.create(first_name='person1', last_name='test', email='person1@test.com')
         self.person.save()
-        self.person = Person.objects.create(first_name='Donald', last_name='Trump', email='donald.trump@uclouvain.be')
+        self.person = Person.objects.create(first_name='person2', last_name='test', email='person2@test.com')
         self.person.save()
 
 
     def test_get_persons(self):
-        response = self.client.generic(method='get', path='/assistants/api/get_persons/?term=tru',
+        response = self.client.generic(method='get', path='/assistants/api/get_persons/?term=on2',
                                        HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         data = json.loads(response.content.decode("utf-8"))
-        self.assertEqual(data[0]['value'], 'donald.trump@uclouvain.be')
+        self.assertEqual(data[0]['value'], 'person2@test.com')
         self.assertEqual(len(data), 1)
 
-        response = self.client.generic(method='get', path='/assistants/api/get_persons/?term=uclou',
+        response = self.client.generic(method='get', path='/assistants/api/get_persons/?term=test',
                                        HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         data = json.loads(response.content.decode("utf-8"))
         self.assertEqual(len(data), 2)
