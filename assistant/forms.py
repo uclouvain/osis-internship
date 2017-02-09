@@ -32,6 +32,7 @@ from base.models import structure, academic_year, person, learning_unit_year
 from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
 from django.forms import widgets
+from assistant.enums import reviewer_role
 
 
 class MandateFileForm(forms.Form):
@@ -344,7 +345,9 @@ class ReviewerDelegationForm(ModelForm):
 
 
 class ReviewerForm(ModelForm):
-    role = forms.ChoiceField(required=True, choices=mdl.reviewer.ROLE_CHOICES)
+    person = forms.ModelChoiceField(required=True, queryset=person.Person.objects.all().order_by('last_name'),
+                                    to_field_name="email")
+    role = forms.ChoiceField(required=True, choices=reviewer_role.ROLE_CHOICES)
     structure = forms.ModelChoiceField(required=True, queryset=(
         structure.find_by_type('INSTITUTE') | structure.find_by_type('FACULTY') |
         structure.find_by_type('SECTOR')).order_by('type', 'acronym'))

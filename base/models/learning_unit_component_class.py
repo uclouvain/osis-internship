@@ -25,26 +25,25 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-from base.models.enums import component_type
-from osis_common.models.serializable_model import SerializableModel
 
 
-class LearningUnitComponentAdmin(admin.ModelAdmin):
-    list_display = ('learning_unit_year', 'learning_component_year', 'type', 'duration')
-    fieldsets = ((None, {'fields': ('learning_unit_year', 'learning_component_year', 'type', 'duration')}),)
+class LearningUnitComponentClassAdmin(admin.ModelAdmin):
+    list_display = ('learning_unit_component', 'learning_class_year')
+    fieldsets = ((None, {'fields': ('learning_unit_component', 'learning_class_year')}),)
 
 
-class LearningUnitComponent(SerializableModel):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    learning_unit_year = models.ForeignKey('LearningUnitYear')
-    learning_component_year = models.ForeignKey('LearningComponentYear', blank=True, null=True)
-    type = models.CharField(max_length=25, blank=True, null=True, choices=component_type.COMPONENT_TYPES, db_index=True)
-    duration = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
-
-    def __str__(self):
-        return u"%s - %s" % (self.type, self.learning_unit_year)
+class LearningUnitComponentClass(models.Model):
+    learning_unit_component = models.ForeignKey('LearningUnitComponent')
+    learning_unit_year = models.ForeignKey('LearningClassYear')
 
     class Meta:
         permissions = (
-            ("can_access_learningunit", "Can access learning unit"),
+            ("can_access_learningunitcomponentclass", "Can access learning unit component class"),
         )
+
+
+def find_by_id(learning_unit_component_class_id):
+    return LearningUnitComponentClass.objects.get(pk=learning_unit_component_class_id)
+
+def find_by_learning_unit_year(learning_unit_year):
+    return LearningUnitComponentClass.objects.filter(learning_unit_year=learning_unit_year)
