@@ -444,5 +444,41 @@
       "maximum_enrollments": 40,
       "master": "Dr. Marc Hoselaus"
     }
+  },
+
+
+
+  {
+    "model": "internship.internshipstudentinformation",
+    "pk": 1,
+    "fields": {
+      "person": 16,
+      "location": "rue student 45",
+      "postal_code": "1254",
+      "city": "city test",
+      "country": "country test"
+    }
+  },
+  {
+    "model": "internship.internshipstudentinformation",
+    "pk": 2,
+    "fields": {
+      "person": 17,
+      "location": "rue student 85",
+      "postal_code": "1254",
+      "city": "city test",
+      "country": "country test"
+    }
+  },
+  {
+    "model": "internship.internshipstudentinformation",
+    "pk": 3,
+    "fields": {
+      "person": 18,
+      "location": "rue student 90",
+      "postal_code": "1254",
+      "city": "city test",
+      "country": "country test"
+    }
   }
 ]
