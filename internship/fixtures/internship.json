@@ -35,7 +35,7 @@
     "pk": 4,
     "fields": {
       "name": "Centre Hospitalier de Tubize-Nivelles",
-      "acronym": "Cliniques Hospita",
+      "acronym": "Cliniques Hospi",
       "reference": "32",
       "type": "service partner"
     }
@@ -45,7 +45,7 @@
     "pk": 5,
     "fields": {
       "name": "Centre Hospitalier du Luxembourg",
-      "acronym": "Centre Hospita",
+      "acronym": "Centre Hospi",
       "reference": "67",
       "type": "service partner"
     }
