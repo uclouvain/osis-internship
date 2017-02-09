@@ -27,14 +27,14 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
-from internship.models import Period
-from internship.forms import PeriodForm
+from internship import models as mdl_internship
+from internship.forms.period_form import PeriodForm
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_periods(request):
-    periods = Period.search()
+    periods = mdl_internship.period.search()
     return render(request, "periods.html", {'section': 'internship',
                                             'periods': periods})
 
@@ -52,9 +52,9 @@ def period_create(request):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def period_save(request, period_id):
     if period_id:
-        period = Period.find_by_id(period_id)
+        period = mdl_internship.period.find_by_id(period_id)
     else:
-        period = Period()
+        period = mdl_internship.period.Period()
     form = PeriodForm(data=request.POST, instance=period)
     form.save()
 
@@ -70,7 +70,7 @@ def period_new(request):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def period_delete(request, period_id):
-    period = Period.find_by_id(period_id)
+    period = mdl_internship.period.find_by_id(period_id)
     period.delete()
     return HttpResponseRedirect(reverse('internships_periods'))
 
@@ -78,7 +78,7 @@ def period_delete(request, period_id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def period_modification(request, period_id):
-    period = Period.find_by_id(period_id)
+    period = mdl_internship.period.find_by_id(period_id)
     period.date_start = period.date_start.strftime("%Y-%m-%d")
     period.date_end = period.date_end.strftime("%Y-%m-%d")
 

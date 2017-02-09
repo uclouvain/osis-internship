@@ -24,15 +24,24 @@
 #
 ##############################################################################
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.contrib import admin
 
 
-class AssistantDocument(models.Model):
-    DOC_TYPE_CHOICES = (
-        ('PHD', _('PhD')),
-        ('TUTORING', _('Tutoring')),
-        ('RESEARCH', _('Research')))
+class LearningClassYearAdmin(admin.ModelAdmin):
+    list_display = ('learning_component_year', 'learning_class', 'acronym')
+    fieldsets = ((None, {'fields': ('learning_component_year', 'learning_class', 'acronym')}),)
+    search_fields = ['acronym']
 
-    assistant = models.ForeignKey('AcademicAssistant')
-    mandate = models.ForeignKey('AssistantMandate')
-    doc_type = models.CharField(max_length=20, choices=DOC_TYPE_CHOICES)
+
+class LearningClassYear(models.Model):
+    learning_component_year = models.ForeignKey('LearningComponentYear')
+    learning_class = models.ForeignKey('LearningClass')
+    acronym = models.CharField(max_length=3)
+
+    class Meta:
+        permissions = (
+            ("can_access_learningclassyear", "Can access learning class year"),
+        )
+
+def find_by_id(learning_class_year_id):
+    return LearningClassYear.objects.get(pk=learning_class_year_id)

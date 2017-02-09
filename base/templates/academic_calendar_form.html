@@ -53,6 +53,11 @@
                                         {% url 'academic_calendar_form' %}
                                     {% endif %}">
             {% csrf_token %}
+
+            <input type="hidden"
+                   class="form-control"
+                   value="{{ form.reference.value | default_if_none:'' }}"
+                   name="reference" id="txt_reference">
             <div class="row">
                 <div class="col-md-3">
                     <label for="slt_academic_year">{% trans 'academic_year'%}</label>

@@ -71,8 +71,6 @@ urlpatterns = [
     url(r'^offers/([0-9]+)/score_encoding$', offer.score_encoding, name='offer_score_encoding'),
 
     url(r'^offer_year_calendars/([0-9]+)/$', offer.offer_year_calendar_read, name='offer_year_calendar_read'),
-    url(r'^offer_year_calendars/edit/([0-9]+)/$', offer.offer_year_calendar_edit, name='offer_year_calendar_edit'),
-    url(r'^offer_year_calendars/save/([0-9]+)/$', offer.offer_year_calendar_save, name='offer_year_calendar_save'),
 
     url(r'^organizations/$', organization.organizations, name='organizations'),
     url(r'^organizations/search$', organization.organizations_search, name='organizations_search'),
@@ -88,8 +86,6 @@ urlpatterns = [
     url(r'^academic_calendars/([0-9]+)/$', academic_calendar.academic_calendar_read, name='academic_calendar_read'),
     url(r'^academic_calendars/form(?:/(?P<academic_calendar_id>[0-9]+))?/$', academic_calendar.academic_calendar_form, name='academic_calendar_form'),
     url(r'^offer_year_calendars/([0-9]+)/$', offer.offer_year_calendar_read, name='offer_year_calendar_read'),
-    url(r'^offer_year_calendars/edit/([0-9]+)/$', offer.offer_year_calendar_edit, name='offer_year_calendar_edit'),
-    url(r'^offer_year_calendars/save/([0-9]+)/$', offer.offer_year_calendar_save, name='offer_year_calendar_save'),
 
     url(r'^offer_form/([0-9]+)/$', offer.offer_form_read, name='offer_form_read'),
     url(r'^offer_form/(?P<offer_year_id>[0-9]+)/create/$', offer.offer_form_create, name='offer_form_create'),
