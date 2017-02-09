@@ -87,34 +87,128 @@
   				<h4>{% trans 'dial_publications' %}</h4>
     		</div>
     	</div>
-        <br>
-        <div class="form-group">
-    		<div style="text-align: center">
+        {% for file in files %}
+            <div class="row" style="padding-top: 15px;">
+                <div class="col-md-2" style="text-align: left">
+                    <a class="btn btn-default btn-danger btn-sm" id="btn_delete_file" style="margin-right: 5px;"
+                       title="{% trans 'delete_file'%}"
+                       onclick="location.href='{% url 'assistant_file_delete' mandate.id file.id %}';">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true" id="spn_delete_file"></span>
+                        {% trans 'delete_file' %}</a>
+                </div>
+                <div class="col-md-10" id="hdn_filename" style="text-align: left">
+                   <a href="{% url 'assistant_file_download' document_file_id=file.id %}">{{ file.document_file }}</a>
+                </div>
+            </div>
+        {% endfor %}
+        <div class="row" style="padding-top: 15px; padding-left: 15px;">
+            <a class="btn btn-default" data-toggle="modal" data-target="#pnl_upload_documents"
+               id="btn_add_file" style="margin-right: 5px;" title="{% trans 'add_file'%}">
+                <span class="glyphicon glyphicon-upload" aria-hidden="true" id="spn_add_file"></span>
+                {% trans 'upload_pdf_file' %}</a>
+        </div>
+        <hr>
+	    <input type="hidden" value="{{mandate.id | default_if_none:''}}" id="hdn_current_mandate_id"
+		   name="mandate_id" title="mandate_id" >
+        <input type="hidden" value="{{ document_type }}" id="hdn_description" name="description"
+               title="description">
+		<div class="form-group">
+    		<div class="row" style="padding-left: 15px; padding-right: 15px;">
      			<button type="submit" class="btn btn-primary btn-block" title="{% trans 'save'%}"
-                        id="bt_pstform_part4_save">
+                        id="bt_pstform_part3_save">
      			<span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}</button>
     		</div>
 		</div>
     	</form>
 	</div>
 </div>
+<!-- UploadFile modal -->
+{% include "new_document.html" %}
 {% endblock %}
 {% block script %}
-<script>
-$("#pst-form-part4 :input").change(function() {
-   $("#pst-form-part4").data("changed",true);
-});
-$('a').on('click', function(e) {
-	var hrefLoc = $(this).attr('href');
-	if ($("#pst-form-part4").data("changed")) {
-		var choice = confirm("{% trans 'save_before_link' %}");
-		if (choice == true) {
-			e.preventDefault();
-			$('form#pst-form-part4').submit();
-		} else {
-			window.location.href = hrefLoc;
-		}
-	}
-});
+    <script>
+    //***************************
+    //File upload
+    //***************************
+    $("#txt_file").on("change", function(){
+       var file = this.files[0];
+       fileName = file.name;
+       $("#hdn_filename").val(fileName);
+    });
+    $('[id^="bt_load_doc_"]').click(function(event) {
+        var target = $(event.target);
+        var id = target.attr("id");
+        var pos = id.indexOf('bt_load_doc_');
+        var description = id.substring(pos+12);
+    });
+    $("#bt_upload_document").click(function(event) {
+        var target = $(event.target);
+        var id = target.attr("id");
+        var form = target.form;
+        var description = $("#hdn_description").val();
+        //Clear existing fields
+        $('#hdn_file_'+$("#txt_file").val()).remove();
+        $('#hdn_file_name_'+description).remove();
+        $('#hdn_file_description_'+description).remove();
+        var fileSelect = document.getElementById('txt_file');
+        var files = fileSelect.files;
+        var file = files[0];
+        var data = new FormData();
+        data.append('description', description);
+        data.append('storage_duration', 0);
+        data.append('content_type',file.type);
+        data.append('filename', $("#txt_file").val());
+        data.append('mandate_id', $("#hdn_current_mandate_id").val());
+        var accepted_types = ['application/pdf'];
+        if(file){
+            if ($.inArray(file.type,accepted_types) >= 0){
+                data.append('file', file);
+                $.ajax({
+                    url: "{% url 'assistant_file_upload' mandate.id %}",
+                    enctype: 'multipart/form-data',
+                    type: 'POST',
+                    data : data,
+                    processData: false,
+                    contentType: false,
+                    complete: function(xhr, statusText){
+                        if(xhr.status=='0'){
+                            //problem occured
+                            $('#pnl_assistant_error').remove();
+                            var msg_error = jQuery('<div class="alert alert-danger" id="pnl_assistant_error">'+
+                            gettext('error_occured')+'</span>');
+                            $('#pnl_assistant_errors').append(msg_error);
+                            return false;
+                        }
+                        window.location.reload(true);
+                    }
+                });
+                return true;
+            }else{
+                document.getElementById("error_modal_upload").innerHTML = "{% trans 'only_pdf_file'%}";
+                $("#txt_file").val('')
+                $('#pnl_upload_error').remove();
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                return false;
+            }
+        }
+    });
+    </script>
+    <script>
+    $("#pst-form-part4 :input").change(function() {
+        $("#pst-form-part4").data("changed",true);
+    });
+    $('a').on('click', function(e) {
+	    var hrefLoc = $(this).attr('href');
+	    if ($("#pst-form-part4").data("changed")) {
+		    var choice = confirm("{% trans 'save_before_link' %}");
+		    if (choice == true) {
+			    e.preventDefault();
+			    $('form#pst-form-part4').submit();
+		    } else {
+			    window.location.href = hrefLoc;
+		    }
+	    }
+    });
 </script>
 {% endblock %}
