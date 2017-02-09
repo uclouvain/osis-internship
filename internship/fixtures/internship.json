@@ -73,6 +73,7 @@
   },
 
 
+
   {
     "model": "internship.organizationaddress",
     "pk": 1,
@@ -155,6 +156,117 @@
       "postal_code": "59019",
       "city": "LILLE",
       "country": "France"
+    }
+  },
+
+
+
+  {
+    "model": "internship.period",
+    "pk": 1,
+    "fields": {
+      "name": "P1",
+      "date_start": "2016-01-01",
+      "date_end": "2016-01-31"
+    }
+  },
+  {
+    "model": "internship.period",
+    "pk": 2,
+    "fields": {
+      "name": "P2",
+      "date_start": "2016-02-01",
+      "date_end": "2016-02-28"
+    }
+  },
+  {
+    "model": "internship.period",
+    "pk": 3,
+    "fields": {
+      "name": "P3",
+      "date_start": "2016-03-01",
+      "date_end": "2016-03-31"
+    }
+  },
+  {
+    "model": "internship.period",
+    "pk": 4,
+    "fields": {
+      "name": "P4",
+      "date_start": "2016-04-01",
+      "date_end": "2016-04-30"
+    }
+  },
+  {
+    "model": "internship.period",
+    "pk": 5,
+    "fields": {
+      "name": "P5",
+      "date_start": "2016-05-01",
+      "date_end": "2016-05-31"
+    }
+  },
+  {
+    "model": "internship.period",
+    "pk": 6,
+    "fields": {
+      "name": "P6",
+      "date_start": "2016-06-01",
+      "date_end": "2016-06-30"
+    }
+  },
+  {
+    "model": "internship.period",
+    "pk": 7,
+    "fields": {
+      "name": "P7",
+      "date_start": "2016-07-01",
+      "date_end": "2016-07-31"
+    }
+  },
+  {
+    "model": "internship.period",
+    "pk": 8,
+    "fields": {
+      "name": "P8",
+      "date_start": "2016-08-01",
+      "date_end": "2016-08-31"
+    }
+  },
+  {
+    "model": "internship.period",
+    "pk": 9,
+    "fields": {
+      "name": "P9",
+      "date_start": "2016-09-01",
+      "date_end": "2016-09-30"
+    }
+  },
+  {
+    "model": "internship.period",
+    "pk": 10,
+    "fields": {
+      "name": "P10",
+      "date_start": "2016-10-01",
+      "date_end": "2016-10-31"
+    }
+  },
+  {
+    "model": "internship.period",
+    "pk": 11,
+    "fields": {
+      "name": "P11",
+      "date_start": "2016-11-01",
+      "date_end": "2016-11-30"
+    }
+  },
+  {
+    "model": "internship.period",
+    "pk": 12,
+    "fields": {
+      "name": "P12",
+      "date_start": "2016-12-01",
+      "date_end": "2016-12-31"
     }
   }
 ]
