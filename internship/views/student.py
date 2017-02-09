@@ -28,7 +28,7 @@ from django.contrib.auth.models import Group
 from django.db import IntegrityError, DataError
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
-from internship import models
+from internship import models as mdl_internship
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
@@ -43,7 +43,7 @@ def load_internship_students():
             if len(columns) > 0:
                 person = mdl.person.find_by_global_id(columns[1].strip())
                 if person:
-                    internships_student = models.InternshipStudentInformation()
+                    internships_student = mdl_internship.InternshipStudentInformation()
                     internships_student.person = person
                     internships_student.location = columns[2].strip()
                     internships_student.postal_code = columns[3].strip()

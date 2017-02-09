@@ -32,6 +32,19 @@ from base.models import structure, academic_year, person, learning_unit_year
 from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
 from django.forms import widgets
+from assistant.enums import reviewer_role
+
+
+class MandateFileForm(forms.Form):
+    file = forms.FileField(error_messages={'required': _('no_file_submitted')})
+
+    def clean_file(self):
+        file = self.cleaned_data['file']
+        content_type = file.content_type.split('/')[1]
+        valid_content_type = 'vnd.openxmlformats-officedocument.spreadsheetml.sheet' in content_type
+        if ".xlsx" not in file.name or not valid_content_type:
+            self.add_error('file', forms.ValidationError(_('file_must_be_xlsx'), code='invalid'))
+        return file
 
 
 class MandateForm(ModelForm):
@@ -344,7 +357,7 @@ class ReviewerDelegationForm(ModelForm):
 class ReviewerForm(ModelForm):
     person = forms.ModelChoiceField(required=True, queryset=person.Person.objects.all().order_by('last_name'),
                                     to_field_name="email")
-    role = forms.ChoiceField(required=True, choices=mdl.reviewer.ROLE_CHOICES)
+    role = forms.ChoiceField(required=True, choices=reviewer_role.ROLE_CHOICES)
     structure = forms.ModelChoiceField(required=True, queryset=(
         structure.find_by_type('INSTITUTE') | structure.find_by_type('FACULTY') |
         structure.find_by_type('SECTOR')).order_by('type', 'acronym'))

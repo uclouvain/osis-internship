@@ -23,30 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.db import models
+from django.contrib import admin
+from django.utils import timezone
 
-from django import forms
-from django.forms import ModelForm
-from internship.models import Organization, OrganizationAddress, Period
-from functools import partial
-DateInput = partial(forms.DateInput, {'class': 'datepicker'})
+#Doit devenir Learning_unit_component
+class LearningComponentAdmin(admin.ModelAdmin):
+    list_display = ('learning_container')
+    fieldsets = ((None, {'fields': ('learning_container')}),)
 
+class LearningComponent(models.Model):
+    learning_container = models.ForeignKey('LearningContainer')
 
-class OrganizationForm(ModelForm):
-    class Meta:
-        model = Organization
-        fields = ['name', 'website', 'reference']
-
-
-class OrganizationAddressForm(ModelForm):
-    class Meta:
-        model = OrganizationAddress
-        fields = ['location', 'postal_code', 'city', 'country', 'latitude', 'longitude']
-
-
-class PeriodForm(ModelForm):
-    class Meta:
-        model = Period
-        fields = ['name', 'date_start', 'date_end']
-        widgets = {'date_start': forms.DateInput(format='%d/%m/%Y'),
-                   'date_end': forms.DateInput(format='%d/%m/%Y'),
-                   }
+def find_by_id(learning_component_id):
+    return LearningComponent.objects.get(pk=learning_component_id)

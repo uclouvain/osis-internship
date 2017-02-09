@@ -26,7 +26,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
-from internship.models import InternshipSpeciality
+from internship import models as mdl_internship
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
@@ -34,7 +34,7 @@ from django.core.urlresolvers import reverse
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def specialities(request):
-    specialities = InternshipSpeciality.find_all()
+    specialities = mdl_internship.internship_speciality.find_all()
     return render(request, "specialities.html", {'section': 'internship',
                                                  'specialities': specialities
                                                  })
@@ -53,13 +53,13 @@ def speciality_create(request):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def speciality_save(request, speciality_id):
     if speciality_id:
-        check_speciality = InternshipSpeciality.find_by_id(speciality_id)
+        check_speciality = mdl_internship.internship_speciality.find_by_id(speciality_id)
         if check_speciality :
             speciality = check_speciality
         else :
-            speciality = InternshipSpeciality()
+            speciality = mdl_internship.internship_speciality.InternshipSpeciality()
     else :
-        speciality = InternshipSpeciality()
+        speciality = mdl_internship.internship_speciality.InternshipSpeciality()
 
     mandatory = False
     if request.POST.get('mandatory') :
@@ -86,7 +86,7 @@ def speciality_new(request):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def speciality_modification(request, speciality_id):
 
-    speciality = InternshipSpeciality.find_by_id(speciality_id)
+    speciality = mdl_internship.internship_speciality.find_by_id(speciality_id)
     learning_unit = mdl.learning_unit.search(acronym='WMDS2333')
     return render(request, "speciality_create.html", {'section': 'internship',
                                                       'learning_unit': learning_unit[0],
@@ -97,5 +97,5 @@ def speciality_modification(request, speciality_id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def speciality_delete(request, speciality_id):
-    InternshipSpeciality.objects.filter(pk=speciality_id).delete()
+    mdl_internship.internship_speciality.InternshipSpeciality.objects.filter(pk=speciality_id).delete()
     return HttpResponseRedirect(reverse('internships_specialities'))

@@ -32,7 +32,7 @@ from django.core.urlresolvers import reverse
 
 @login_required
 def download(request, document_file_id):
-    assistant_mandate_document = mdl.assistant_document_file.find_by_document(document_file_id)
+    assistant_mandate_document = mdl.assistant_document_file.find_by_id(document_file_id)
     document = mdl_osis_common.document_file.find_by_id(assistant_mandate_document.document_file.id)
     filename = document.file_name
     response = HttpResponse(document.file, content_type=document.content_type)
@@ -42,7 +42,7 @@ def download(request, document_file_id):
 
 @login_required
 def delete(request, mandate_id, document_file_id):
-    assistant_mandate_document = mdl.assistant_document_file.find_by_document(document_file_id)
+    assistant_mandate_document = mdl.assistant_document_file.find_by_id(document_file_id)
     document = mdl_osis_common.document_file.find_by_id(assistant_mandate_document.document_file.id)
     assistant_mandate_document.delete()
     document.delete()

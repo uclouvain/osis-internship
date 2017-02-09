@@ -23,12 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import traceback
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext as trans
+from psycopg2._psycopg import OperationalError as PsycopOperationalError, InterfaceError as  PsycopInterfaceError
+from django.db.utils import OperationalError as DjangoOperationalError, InterfaceError as DjangoInterfaceError
 from base import models as mdl
 from base.enums.exam_enrollment_justification_type import JUSTIFICATION_TYPES
 from attribution import models as mdl_attr
@@ -37,6 +40,13 @@ from base.utils import send_mail, export_utils
 from . import layout
 import json
 import datetime
+from osis_common.models.queue_exception import QueueException
+import logging
+from django.conf import settings
+from django.db import connection
+
+logger = logging.getLogger(settings.DEFAULT_LOGGER)
+queue_exception_logger = logging.getLogger(settings.QUEUE_EXCEPTION_LOGGER)
 
 
 def _is_inside_scores_encodings_period(user):
@@ -594,7 +604,7 @@ def get_data_pgmer(request,
         learning_units = [score_encoding.learning_unit_year for score_encoding in scores_encodings]
         all_attributions = list(mdl_attr.attribution.search(list_learning_unit_year=learning_units))
         coord_grouped_by_learning_unit = {attrib.learning_unit_year.id: attrib.tutor for attrib in all_attributions
-                                          if attrib.function == 'COORDINATOR'}
+                                          if attrib.score_responsible}
         for score_encoding in scores_encodings:
             progress = (score_encoding.exam_enrollments_encoded / score_encoding.total_exam_enrollments) * 100
             line = {'learning_unit_year': score_encoding.learning_unit_year,
@@ -641,7 +651,8 @@ def get_data_pgmer(request,
                           'academic_year': academic_yr,
                           'number_session': mdl.session_exam.find_session_exam_number(),
                           'learning_unit_year_acronym': learning_unit_year_acronym,
-                          'incomplete_encodings_only': incomplete_encodings_only})
+                          'incomplete_encodings_only': incomplete_encodings_only,
+                          'last_synchronization': mdl.synchronization.find_last_synchronization_date()})
 
 
 @login_required
@@ -814,12 +825,42 @@ def _get_exam_enrollments(user, learning_unit_year_id=None, tutor_id=None, offer
 
 
 def get_json_data_scores_sheets(tutor_global_id):
-    person = mdl.person.find_by_global_id(tutor_global_id)
-    tutor = mdl.tutor.find_by_person(person)
-    if tutor:
-        exam_enrollments = list(mdl.exam_enrollment.find_for_score_encodings(mdl.session_exam.find_session_exam_number(),
-                                                                             tutor=tutor))
-        data = mdl.exam_enrollment.scores_sheet_data(exam_enrollments, tutor=tutor)
-        return json.dumps(data)
-    else:
-        return json.dumps({})
+    try:
+        person = mdl.person.find_by_global_id(tutor_global_id)
+        tutor = mdl.tutor.find_by_person(person)
+        if tutor:
+            exam_enrollments = list(mdl.exam_enrollment.find_for_score_encodings(mdl.session_exam.find_session_exam_number(),
+                                                                                 tutor=tutor))
+            data = mdl.exam_enrollment.scores_sheet_data(exam_enrollments, tutor=tutor)
+            return json.dumps(data)
+        else:
+            return json.dumps({})
+    except (PsycopOperationalError, PsycopInterfaceError, DjangoOperationalError, DjangoInterfaceError) as ep:
+        trace = traceback.format_exc()
+        try:
+            data = json.dumps({'tutor_global_id': tutor_global_id})
+            queue_exception = QueueException(queue_name=settings.QUEUES.get('QUEUES_NAME').get('PAPER_SHEET'),
+                                             message=data,
+                                             exception_title='[Catched and retried] - {}'.format(type(ep).__name__),
+                                             exception=trace)
+            queue_exception_logger.error(queue_exception.to_exception_log())
+        except Exception:
+            logger.error(trace)
+            log_trace = traceback.format_exc()
+            logger.warning('Error during queue logging :\n {}'.format(log_trace))
+        connection.close()
+        get_json_data_scores_sheets(tutor_global_id)
+    except Exception as e:
+        trace = traceback.format_exc()
+        try:
+            data = json.dumps({'tutor_global_id': tutor_global_id})
+            queue_exception = QueueException(queue_name=settings.QUEUES.get('QUEUES_NAME').get('PAPER_SHEET'),
+                                             message=data,
+                                             exception_title=type(e).__name__,
+                                             exception=trace)
+            queue_exception_logger.error(queue_exception.to_exception_log())
+        except Exception:
+            logger.error(trace)
+            log_trace = traceback.format_exc()
+            logger.warning('Error during queue logging :\n {}'.format(log_trace))
+        return None

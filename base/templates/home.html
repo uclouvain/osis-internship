@@ -31,15 +31,12 @@
 {% endblock %}
 
 {% block content %}
-{% if highlights|length > 0 %}
-    {% for highlight in highlights %}
-        <div class="jumbotron">
-            <h1>{{ highlight.highlight_title }}</h1>
-            <p>{{ highlight.highlight_description }}</p>
-            <p><a class="btn btn-primary btn-lg" href="/{{ highlight.highlight_shortcut }}" role="button"
-                  id="lnk_highlight_{{ highlight.highlight_shortcut }}">{% trans 'go' %}</a></p>
-        </div>
-    {% endfor %}
+{% if highlight %}
+    <div class="jumbotron">
+        <h1>{{ highlight.highlight_title }}</h1>
+        <p>{{ highlight.highlight_description }}</p>
+        <p><a class="btn btn-primary btn-lg" href="/{{ highlight.highlight_shortcut }}" role="button">{% trans 'go' %}</a></p>
+    </div>
 {% endif %}
 <div class="panel panel-default">
     <div class="panel-body">

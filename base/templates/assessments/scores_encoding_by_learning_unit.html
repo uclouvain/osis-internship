@@ -45,10 +45,16 @@
                         {{ academic_year }}
                     </div>
                 </div>
-                <div class="col-md-9">
+                <div class="col-md-3">
                     <div class="form-group">
                         <label>{% trans 'number_session' %}</label><br>
                         {{ number_session }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>{% trans 'last_synchronization' %}</label><br>
+                        {{ last_synchronization | default_if_none:'-' }}
                     </div>
                 </div>
             </div>

@@ -36,15 +36,15 @@
 <ul class="nav nav-tabs ">
 <li><a href="{% url 'assistant_mandates' %}">{% trans 'my_mandates' %}</a></li>
 <li><a href="{% url 'form_part1_edit' mandate.id %}">{% trans 'assistant_form_part1' %}</a></li>
-<li><a href="#">{% trans 'assistant_form_part2' %}</a></li>
-<li class="active"><a href="#">{% trans 'assistant_form_part3' %}</a></li>
-<li><a href="#">{% trans 'assistant_form_part4' %}</a></li>
+<li><a href="{% url 'mandate_learning_units' mandate.id %}">{% trans 'assistant_form_part2' %}</a></li>
+<li class="active"><a href="{% url 'form_part3_edit' mandate.id %}">{% trans 'assistant_form_part3' %}</a></li>
+<li><a href="{% url 'form_part4_edit' mandate.id %}">{% trans 'assistant_form_part4' %}</a></li>
 <li><a href="{% url 'form_part5_edit' mandate.id %}">{% trans 'assistant_form_part5' %}</a></li>
 <li><a href="{% url 'form_part6_edit' mandate.id %}">{% trans 'assistant_form_part6' %}</a></li>
 </ul>
 <div class="panel panel-default">
 	<div class="panel-body">
- 		<form method="POST" enctype="multipart/form-data" action="{% url 'form_part3_save' mandate.id %}">
+ 		<form id="pst-form-part3" method="POST" enctype="multipart/form-data" action="{% url 'form_part3_save' mandate.id %}">
  		{% csrf_token %}
  		{{ form.non_field_errors }}
  		<div class="panel-default">
@@ -53,34 +53,25 @@
     		</div>
     	</div>
     	<div class="form-group">
-      		<div class="row" style="padding-top: 5px; padding-left: 15px;">
-				<label for="phd_inscription_date">{% trans 'phd_inscription_date' %}</label>
+      			<label style="padding-top: 5px" for="phd_inscription_date">{% trans 'phd_inscription_date' %}</label>
 				<div class="controls" id="phd_inscription_date">{{ form.phd_inscription_date }}</div>
 				<font class="error">{{ form.phd_inscription_date.errors }}</font>
-      		</div>
-      		<div class="row" style="padding-top: 15px; padding-left: 15px;">
-				<label for="thesis_title">{% trans 'thesis_title' %}</label>
+				<label for="thesis_title" style="padding-top: 5px">{% trans 'thesis_title' %}</label>
 				<div class="controls" id="thesis_title">{{ form.thesis_title }}</div>
 				<font class="error">{{ form.thesis_title.errors }}</font>
-      		</div>
-      		<div class="row" style="padding-top: 15px; padding-left: 15px;">
-				<label for="confirmatory_test_date">{% trans 'confirmatory_test_date' %}
+				<label for="confirmatory_test_date" style="padding-top: 5px">{% trans 'confirmatory_test_date' %}
 					{% trans '2nd_renewal' %}</label>
 				<div class="controls" id="confirmatory_test_date">{{ form.confirmation_test_date }}</div>
 				<font class="error">{{ form.confirmation_test_date.errors }}</font>
-          	</div>
-          	<div class="row" style="padding-top: 15px; padding-left: 15px;">
-                <label for="remark">{% trans 'doctorate_remark' %}</label>
+                <label for="remark" style="padding-top: 5px">{% trans 'doctorate_remark' %}</label>
                  <div class="controls" id="remark">{{ form.remark }}</div>
                 <font class="error">{{ form.remark.errors }}</font>
-      		</div>
         </div>
         <div class="panel-default">
   			<div class="panel-heading">
   				<h4>{% trans 'support_committee_reports' %}</h4>
     		</div>
     	</div>
-
         {% for file in files %}
             <div class="row" style="padding-top: 15px;">
                 <div class="col-md-2" style="text-align: left">
@@ -95,31 +86,45 @@
                 </div>
             </div>
         {% endfor %}
-        <div class="row" style="padding-top: 15px; padding-left: 15px;">
-            <a class="btn btn-default" data-toggle="modal" data-target="#pnl_upload_documents"
+		<div class="form-group" style="padding-top: 15px;">
+			<a class="btn btn-default" data-toggle="modal" data-target="#pnl_upload_documents"
                id="btn_add_file" style="margin-right: 5px;" title="{% trans 'add_file'%}">
                 <span class="glyphicon glyphicon-upload" aria-hidden="true" id="spn_add_file"></span>
                 {% trans 'upload_pdf_file' %}</a>
-        </div>
+		</div>
         <hr>
 	    <input type="hidden" value="{{mandate.id | default_if_none:''}}" id="hdn_current_mandate_id"
 		   name="mandate_id" title="mandate_id" >
         <input type="hidden" value="{{ document_type }}" id="hdn_description" name="description"
                title="description">
-		<div class="form-group"> 
-    		<div class="row" style="padding-left: 15px; padding-right: 15px;">
+		<div class="form-group">
      			<button type="submit" class="btn btn-primary btn-block" title="{% trans 'save'%}"
                         id="bt_pstform_part3_save">
      			<span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}</button>
-    		</div>
 		</div>
     	</form>
 	</div>
 </div>
-<!-- UploadFile modal -->
 {% include "new_document.html" %}
 {% endblock %}
 {% block script %}
+	<script>
+	$("#pst-form-part3 :input").change(function() {
+   		$("#pst-form-part3").data("changed",true);
+	});
+	$('a').on('click', function(e) {
+		var hrefLoc = $(this).attr('href');
+		if ($("#pst-form-part3").data("changed")) {
+			var choice = confirm("{% trans 'save_before_link' %}");
+			if (choice == true) {
+				e.preventDefault();
+				$('form#pst-form-part3').submit();
+			} else {
+				window.location.href = hrefLoc;
+			}
+		}
+	});
+</script>
     <script>
     //***************************
     //File upload
