@@ -1,4 +1,4 @@
-    ##############################################################################
+##############################################################################
 #
 #    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
@@ -33,6 +33,18 @@ from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
 from django.forms import widgets
 from assistant.enums import reviewer_role
+
+
+class MandateFileForm(forms.Form):
+    file = forms.FileField(error_messages={'required': _('no_file_submitted')})
+
+    def clean_file(self):
+        file = self.cleaned_data['file']
+        content_type = file.content_type.split('/')[1]
+        valid_content_type = 'vnd.openxmlformats-officedocument.spreadsheetml.sheet' in content_type
+        if ".xlsx" not in file.name or not valid_content_type:
+            self.add_error('file', forms.ValidationError(_('file_must_be_xlsx'), code='invalid'))
+        return file
 
 
 class MandateForm(ModelForm):

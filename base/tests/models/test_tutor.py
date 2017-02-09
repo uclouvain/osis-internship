@@ -29,6 +29,10 @@ from base.models import tutor
 
 def create_tutor(first_name="Tutor", last_name="tutor"):
     person = test_person.create_person(first_name, last_name)
+    return create_tutor_with_person(person)
+
+
+def create_tutor_with_person(person):
     a_tutor = tutor.Tutor(person=person)
     a_tutor.save()
     return a_tutor

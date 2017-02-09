@@ -23,25 +23,34 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import csv
+import traceback
 from django.core.urlresolvers import reverse, reverse_lazy
-from django.db import IntegrityError
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext as trans
+from psycopg2._psycopg import OperationalError as PsycopOperationalError, InterfaceError as  PsycopInterfaceError
+from django.db.utils import OperationalError as DjangoOperationalError, InterfaceError as DjangoInterfaceError
 from base import models as mdl
-from base.utils import send_mail, pdf_utils, export_utils
+from base.enums.exam_enrollment_justification_type import JUSTIFICATION_TYPES
+from attribution import models as mdl_attr
+from osis_common.document import paper_sheet
+from base.utils import send_mail, export_utils
 from . import layout
 import json
 import datetime
+from osis_common.models.queue_exception import QueueException
+import logging
+from django.conf import settings
+from django.db import connection
 
+logger = logging.getLogger(settings.DEFAULT_LOGGER)
+queue_exception_logger = logging.getLogger(settings.QUEUE_EXCEPTION_LOGGER)
 
 
 def _is_inside_scores_encodings_period(user):
     """
-    :param user: The request.User
     :return: True if the today date is inside a period of scores encodings (inside session 1,2 or 3). Else return False.
     """
     now = datetime.datetime.now().date()
@@ -354,7 +363,7 @@ def online_encoding_submission(request, learning_unit_year_id):
     # Send mail to all the teachers of the submitted learning unit on any submission
     all_encoded = len(not_submitted_enrollments) == 0
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
-    attributions = mdl.attribution.Attribution.objects.filter(learning_unit_year=learning_unit_year)
+    attributions = mdl_attr.attribution.Attribution.objects.filter(learning_unit_year=learning_unit_year)
     persons = list(set([attribution.tutor.person for attribution in attributions]))
     sent_error_message = send_mail.send_mail_after_scores_submission(persons, learning_unit_year.acronym,
                                                                      submitted_enrollments, all_encoded)
@@ -381,7 +390,7 @@ def notes_printing(request, learning_unit_year_id=None, tutor_id=None, offer_id=
                                              offer_year_id=offer_id,
                                              is_program_manager=is_program_manager)
     tutor = mdl.tutor.find_by_user(request.user) if not is_program_manager else None
-    return pdf_utils.print_notes(exam_enrollments, tutor=tutor)
+    return paper_sheet.build_response(mdl.exam_enrollment.scores_sheet_data(exam_enrollments, tutor=tutor))
 
 
 @login_required
@@ -477,7 +486,7 @@ def get_data_online(learning_unit_year_id, request):
 
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
 
-    coordinator = mdl.attribution.find_responsible(learning_unit_year)
+    coordinator = mdl_attr.attribution.find_responsible(learning_unit_year)
     progress = mdl.exam_enrollment.calculate_exam_enrollment_progress(exam_enrollments)
 
     draft_scores_not_submitted = len([exam_enrol for exam_enrol in exam_enrollments
@@ -490,7 +499,7 @@ def get_data_online(learning_unit_year_id, request):
             'learning_unit_year': learning_unit_year,
             'coordinator': coordinator,
             'is_program_manager': is_program_manager,
-            'is_coordinator': mdl.attribution.is_coordinator(request.user, learning_unit_year),
+            'is_coordinator': mdl_attr.attribution.is_score_responsible(request.user, learning_unit_year),
             'draft_scores_not_submitted': draft_scores_not_submitted,
             'number_session': exam_enrollments[0].session_exam.number_session if len(exam_enrollments) > 0 else _('none'),
             'tutors': mdl.tutor.find_by_learning_unit(learning_unit_year),
@@ -519,7 +528,7 @@ def get_data_online_double(learning_unit_year_id, request):
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
 
     nb_final_scores = get_score_encoded(encoded_exam_enrollments)
-    coordinator = mdl.attribution.find_responsible(learning_unit_year)
+    coordinator = mdl_attr.attribution.find_responsible(learning_unit_year)
 
     encoded_exam_enrollments = mdl.exam_enrollment.sort_for_encodings(encoded_exam_enrollments)
 
@@ -528,7 +537,7 @@ def get_data_online_double(learning_unit_year_id, request):
             'enrollments': encoded_exam_enrollments,
             'num_encoded_scores': nb_final_scores,
             'learning_unit_year': learning_unit_year,
-            'justifications': mdl.exam_enrollment.JUSTIFICATION_TYPES,
+            'justifications': JUSTIFICATION_TYPES,
             'is_program_manager': mdl.program_manager.is_program_manager(request.user),
             'coordinator': coordinator,
             'count_total_enrollments': len(total_exam_enrollments),
@@ -583,7 +592,7 @@ def get_data_pgmer(request,
         # all data and tutors below
         if tutor_id != NOBODY:
             tutor = mdl.tutor.find_by_id(tutor_id)
-            learning_unit_ids_by_tutor = set(mdl.attribution.search(tutor=tutor).values_list('learning_unit_year', flat=True))
+            learning_unit_ids_by_tutor = set(mdl_attr.attribution.search(tutor=tutor).values_list('learning_unit_year', flat=True))
             # learning_unit_ids_attrib = [attr.learning_unit.id for attr in attributions_by_tutor]
             scores_encodings = [score_encoding for score_encoding in scores_encodings
                                 if score_encoding.learning_unit_year.id in learning_unit_ids_by_tutor]
@@ -593,9 +602,9 @@ def get_data_pgmer(request,
     if scores_encodings:  # Empty in case there isn't any score to encode (not inside the period of scores' encoding)
         # Adding coordinator for each learningUnit
         learning_units = [score_encoding.learning_unit_year for score_encoding in scores_encodings]
-        all_attributions = list(mdl.attribution.search(list_learning_unit_year=learning_units))
+        all_attributions = list(mdl_attr.attribution.search(list_learning_unit_year=learning_units))
         coord_grouped_by_learning_unit = {attrib.learning_unit_year.id: attrib.tutor for attrib in all_attributions
-                                          if attrib.function == 'COORDINATOR'}
+                                          if attrib.score_responsible}
         for score_encoding in scores_encodings:
             progress = (score_encoding.exam_enrollments_encoded / score_encoding.total_exam_enrollments) * 100
             line = {'learning_unit_year': score_encoding.learning_unit_year,
@@ -642,7 +651,8 @@ def get_data_pgmer(request,
                           'academic_year': academic_yr,
                           'number_session': mdl.session_exam.find_session_exam_number(),
                           'learning_unit_year_acronym': learning_unit_year_acronym,
-                          'incomplete_encodings_only': incomplete_encodings_only})
+                          'incomplete_encodings_only': incomplete_encodings_only,
+                          'last_synchronization': mdl.synchronization.find_last_synchronization_date()})
 
 
 @login_required
@@ -814,43 +824,43 @@ def _get_exam_enrollments(user, learning_unit_year_id=None, tutor_id=None, offer
     return exam_enrollments
 
 
-# To be removed once all program managers are imported.
-def load_program_managers():
-    with open('base/views/program-managers.csv') as csvfile:
-        row = csv.reader(csvfile)
-        imported_counter = 0
-        error_counter = 0
-        duplication_counter = 0
-        for columns in row:
-            if len(columns) > 0:
-                offer_year = mdl.offer_year.find_by_acronym(columns[0].strip())
-                person = mdl.person.find_by_global_id(columns[2].strip())
-
-                if offer_year and person:
-                    program_manager = mdl.program_manager.ProgramManager()
-                    program_manager.offer_year = offer_year
-                    program_manager.person = person
-                    try:
-                        program_manager.save()
-                    except IntegrityError:
-                        print('Duplicated : %s - %s' % (offer_year, person))
-                        duplication_counter += 1
-                    imported_counter += 1
-                else:
-                    error_counter += 1
-                    print(u'"%s", "%s", "%s", "%s", "%s"' % (columns[0], columns[1], columns[2], offer_year, person))
-        print(u'%d program managers imported.' % imported_counter)
-        print(u'%d program managers not imported.' % error_counter)
-        print(u'%d program managers duplicated.' % duplication_counter)
-
-
 def get_json_data_scores_sheets(tutor_global_id):
-    person = mdl.person.find_by_global_id(tutor_global_id)
-    tutor = mdl.tutor.find_by_person(person)
-    if tutor:
-        exam_enrollments = list(mdl.exam_enrollment.find_for_score_encodings(mdl.session_exam.find_session_exam_number(),
-                                                                             tutor=tutor))
-        data = mdl.exam_enrollment.scores_sheet_data(exam_enrollments, tutor=tutor)
-        return json.dumps(data)
-    else:
-        return json.dumps({})
+    try:
+        person = mdl.person.find_by_global_id(tutor_global_id)
+        tutor = mdl.tutor.find_by_person(person)
+        if tutor:
+            exam_enrollments = list(mdl.exam_enrollment.find_for_score_encodings(mdl.session_exam.find_session_exam_number(),
+                                                                                 tutor=tutor))
+            data = mdl.exam_enrollment.scores_sheet_data(exam_enrollments, tutor=tutor)
+            return json.dumps(data)
+        else:
+            return json.dumps({})
+    except (PsycopOperationalError, PsycopInterfaceError, DjangoOperationalError, DjangoInterfaceError) as ep:
+        trace = traceback.format_exc()
+        try:
+            data = json.dumps({'tutor_global_id': tutor_global_id})
+            queue_exception = QueueException(queue_name=settings.QUEUES.get('QUEUES_NAME').get('PAPER_SHEET'),
+                                             message=data,
+                                             exception_title='[Catched and retried] - {}'.format(type(ep).__name__),
+                                             exception=trace)
+            queue_exception_logger.error(queue_exception.to_exception_log())
+        except Exception:
+            logger.error(trace)
+            log_trace = traceback.format_exc()
+            logger.warning('Error during queue logging :\n {}'.format(log_trace))
+        connection.close()
+        get_json_data_scores_sheets(tutor_global_id)
+    except Exception as e:
+        trace = traceback.format_exc()
+        try:
+            data = json.dumps({'tutor_global_id': tutor_global_id})
+            queue_exception = QueueException(queue_name=settings.QUEUES.get('QUEUES_NAME').get('PAPER_SHEET'),
+                                             message=data,
+                                             exception_title=type(e).__name__,
+                                             exception=trace)
+            queue_exception_logger.error(queue_exception.to_exception_log())
+        except Exception:
+            logger.error(trace)
+            log_trace = traceback.format_exc()
+            logger.warning('Error during queue logging :\n {}'.format(log_trace))
+        return None

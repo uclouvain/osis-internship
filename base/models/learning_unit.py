@@ -25,6 +25,8 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
+from osis_common.models.serializable_model import SerializableModel
+from base.enums.learning_unit_periodicity import PERIODICITY_TYPES
 
 
 class LearningUnitAdmin(admin.ModelAdmin):
@@ -33,7 +35,7 @@ class LearningUnitAdmin(admin.ModelAdmin):
     search_fields = ['acronym']
 
 
-class LearningUnit(models.Model):
+class LearningUnit(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     acronym = models.CharField(max_length=15)
@@ -42,6 +44,7 @@ class LearningUnit(models.Model):
     start_year = models.IntegerField()
     end_year = models.IntegerField(blank=True, null=True)
     progress = None
+    periodicity = models.CharField(max_length=10, blank=True, null=True, choices=PERIODICITY_TYPES)
 
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)
