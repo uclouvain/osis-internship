@@ -115,7 +115,7 @@ def tutoring_learning_unit_edit(request, tutoring_learning_unit_id=None):
                                              'exams_supervision_duration':
                                                  edited_learning_unit_year.exams_supervision_duration,
                                              'others_delivery': edited_learning_unit_year.others_delivery,
-                                             'academic_year': academic_year.id})
+                                             'academic_year': this_academic_year.id})
     return render(request, "tutoring_learning_unit_year.html", {'form': form,
                                                                 'mandate_id': mandate_id})
 
@@ -142,7 +142,7 @@ def tutoring_learning_unit_delete(request, tutoring_learning_unit_id):
 def form_part3_edit(request, mandate_id):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     assistant = mandate.assistant
-    files = assistant_document_file.find_by_assistant_mandate(mandate)
+    files = assistant_document_file.find_by_assistant_mandate_and_description(mandate, document_type.PHD_DOCUMENT)
     if request.user.person != assistant.person:
         return HttpResponseRedirect(reverse('assistant_mandates'))
     form = AssistantFormPart3(initial={'phd_inscription_date': assistant.phd_inscription_date,
@@ -162,7 +162,7 @@ def form_part3_save(request, mandate_id):
     """Use to save an assistant form part3."""
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     assistant = mandate.assistant
-    files = assistant_document_file.find_by_assistant_mandate(mandate)
+    files = assistant_document_file.find_by_assistant_mandate_and_description(mandate, document_type.PHD_DOCUMENT)
     if request.user.person != assistant.person:
         return HttpResponseRedirect(reverse('assistant_mandates'))
     elif request.method == 'POST':
@@ -180,7 +180,7 @@ def form_part4_edit(request, mandate_id):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     person = request.user.person
     assistant = mandate.assistant
-    files = assistant_document_file.find_by_assistant_mandate(mandate)
+    files = assistant_document_file.find_by_assistant_mandate_and_description(mandate, document_type.RESEARCH_DOCUMENT)
     if person != assistant.person or mandate.state != 'TRTS':
         return HttpResponseRedirect(reverse('assistant_mandates'))
     form = AssistantFormPart4(initial={'internships': mandate.internships,
@@ -203,7 +203,7 @@ def form_part4_save(request, mandate_id):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     assistant = mandate.assistant
     person = request.user.person
-    files = assistant_document_file.find_by_assistant_mandate(mandate)
+    files = assistant_document_file.find_by_assistant_mandate_and_description(mandate, document_type.RESEARCH_DOCUMENT)
     if person != assistant.person or mandate.state != 'TRTS':
         return HttpResponseRedirect(reverse('assistant_mandates'))
     elif request.method == 'POST':

@@ -45,9 +45,9 @@ def search(assistant_mandate=None, description=None):
 
 
 def find_first(assistant_mandate=None, description=None):
-    results = search(assistant_mandate, description)
-    if results.exists():
-        return results[0]
+    result = search(assistant_mandate, description).first()
+    if result.exists():
+        return result
     return None
 
 
@@ -55,5 +55,6 @@ def find_by_document(document_file):
     return AssistantDocumentFile.objects.get(document_file=document_file)
 
 
-def find_by_assistant_mandate(assistant_mandate):
-    return AssistantDocumentFile.objects.filter(assistant_mandate=assistant_mandate)
+def find_by_assistant_mandate_and_description(assistant_mandate, description):
+    return AssistantDocumentFile.objects.filter(assistant_mandate=assistant_mandate).filter(document_file__description=
+    description)
