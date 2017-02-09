@@ -32,8 +32,6 @@ from osis_common.models.serializable_model import SerializableModel
 FUNCTIONS = 'functions'
 
 
-
-
 class AcademicCalendar(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
