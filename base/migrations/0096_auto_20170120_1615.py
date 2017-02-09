@@ -115,13 +115,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='learningunitcomponent',
             name='learning_component_year',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='base.LearningComponentYear', blank=True, null=True),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='base.LearningComponentYear', blank=True, null=True),
             preserve_default=False,
         ),
         migrations.AddField(
             model_name='learningunityear',
             name='learning_container_year',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='base.LearningContainerYear'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='base.LearningContainerYear', blank=True, null=True),
             preserve_default=False,
         ),
     ]
