@@ -397,5 +397,52 @@
       "acronym": "CH2",
       "mandatory": false
     }
+  },
+
+
+
+  {
+    "model": "internship.internshipoffer",
+    "pk": 1,
+    "fields": {
+      "organization": 1,
+      "speciality": 1,
+      "title": "Stage en Pédiatrie",
+      "maximum_enrollments": 40,
+      "master": "Dr. Marc Hoselaus"
+    }
+  },
+  {
+    "model": "internship.internshipoffer",
+    "pk": 2,
+    "fields": {
+      "organization": 1,
+      "speciality": 2,
+      "title": "Stage en Chirurgie",
+      "maximum_enrollments": 40,
+      "master": "Dr. Marc Hoselaus"
+    }
+  },
+  {
+    "model": "internship.internshipoffer",
+    "pk": 3,
+    "fields": {
+      "organization": 2,
+      "speciality": 1,
+      "title": "Stage en Pédiatrie",
+      "maximum_enrollments": 40,
+      "master": "Dr. Marc Hoselaus"
+    }
+  },
+  {
+    "model": "internship.internshipoffer",
+    "pk": 4,
+    "fields": {
+      "organization": 3,
+      "speciality": 2,
+      "title": "Stage en Chirurgie",
+      "maximum_enrollments": 40,
+      "master": "Dr. Marc Hoselaus"
+    }
   }
 ]
