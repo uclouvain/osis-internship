@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from base.utils.send_mail import *
+from osis_common.messaging import message_config, send_message as message_service
 from base.models import academic_year
 from assistant.models import assistant_mandate, settings, manager, reviewer
 from django.shortcuts import redirect
