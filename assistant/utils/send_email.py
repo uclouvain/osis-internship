@@ -40,7 +40,7 @@ def user_is_manager(user):
 
     try:
         if user.is_authenticated():
-            return manager.Manager.objects.get(person=user.person)
+            return manager.find_by_person(user.person)
     except ObjectDoesNotExist:
         return False
 
