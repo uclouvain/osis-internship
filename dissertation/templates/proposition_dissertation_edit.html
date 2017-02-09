@@ -46,7 +46,7 @@
               {{  form.author }}
             </div>
         </div>
-        <div class="form-group">
+        <div class="panel-group">
             <label for="txt_title" {% if form.title.errors %} style="color:red;" {% endif %}>{% trans 'title' %}</label>
             <input class="form-control" id="txt_title"  name="title"
                 style="margin:-6px;" value="{{ form.title.value }}">
@@ -56,11 +56,11 @@
             <input id="txt_visibility"  name="visibility"
                    style="margin-left:6px;" type="checkbox" {% if form.visibility.value %} checked {% endif %}>
         </div>
-        <div class="form-group {% if field.errors %}error{% endif %}">
+        <div class="panel-group {% if field.errors %}error{% endif %}">
             <label for="txt_description">{% trans 'description' %}</label>
             <textarea class="form-control" id="txt_description"  name="description" rows="10" style="margin:-6px;">{{ form.description.value }}</textarea>
         </div>
-        <div class="form-group">
+        <div class="panel-group">
             <label for="txt_type">{% trans 'subject_type' %}</label>
             <select class="form-control" id="txt_type"  name="type" style="margin:-6px;">
                 {% for type in types_choices %}
@@ -68,7 +68,7 @@
                 {% endfor %}
             </select>
         </div>
-        <div class="form-group">
+        <div class="panel-group">
             <label for="txt_level">{% trans 'level' %}</label>
             <select class="form-control" id="txt_level"  name="level" style="margin:-6px;">
                 {% for level in levels_choices %}
@@ -76,7 +76,7 @@
                 {% endfor %}
             </select>
         </div>
-        <div class="form-group">
+        <div class="panel-group">
             <label for="txt_collaboration">{% trans 'collaboration' %}</label>
             <select class="form-control" id="txt_collaboration"  name="collaboration" style="margin:-6px;">
                 {% for collaboration in collaborations_choices %}
@@ -84,12 +84,12 @@
                 {% endfor %}
             </select>
         </div>
-        <div class="form-group">
+        <div class="panel-group">
             <label for="txt_max_students_number" {% if form.max_number_student.errors %} style="color:red;" {% endif %}>{% trans 'max_students_number' %}</label>
             <input class="form-control" id="txt_max_students_number"  name="max_number_student"
                    style="margin:-6px;" value="{{ form.max_number_student.value }}">
         </div>
-        <div class="form-group">
+        <div class="panel-group">
             <label for="txt_level">{% trans 'offer_propositions' %}</label>
             <br>
             {% for offer_proposition in offer_propositions %}
@@ -100,7 +100,7 @@
             {% endfor %}
         </div>
         <div style="text-align: right;">
-            <button type="submit" class="save btn btn-primary" onclick="return confirm('{% trans 'proposition_dissertation_confirmation_message' %}')">
+            <button type="submit" class="save btn btn-primary">
                 {% trans 'save' %}
             </button>
         </div>
