@@ -25,26 +25,15 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-from base.models.enums import component_type
-from osis_common.models.serializable_model import SerializableModel
+from django.utils import timezone
 
+#Doit devenir Learning_unit_component
+class LearningComponentAdmin(admin.ModelAdmin):
+    list_display = ('learning_container')
+    fieldsets = ((None, {'fields': ('learning_container')}),)
 
-class LearningUnitComponentAdmin(admin.ModelAdmin):
-    list_display = ('learning_unit_year', 'learning_component_year', 'type', 'duration')
-    fieldsets = ((None, {'fields': ('learning_unit_year', 'learning_component_year', 'type', 'duration')}),)
+class LearningComponent(models.Model):
+    learning_container = models.ForeignKey('LearningContainer')
 
-
-class LearningUnitComponent(SerializableModel):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    learning_unit_year = models.ForeignKey('LearningUnitYear')
-    learning_component_year = models.ForeignKey('LearningComponentYear', blank=True, null=True)
-    type = models.CharField(max_length=25, blank=True, null=True, choices=component_type.COMPONENT_TYPES, db_index=True)
-    duration = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
-
-    def __str__(self):
-        return u"%s - %s" % (self.type, self.learning_unit_year)
-
-    class Meta:
-        permissions = (
-            ("can_access_learningunit", "Can access learning unit"),
-        )
+def find_by_id(learning_component_id):
+    return LearningComponent.objects.get(pk=learning_component_id)
