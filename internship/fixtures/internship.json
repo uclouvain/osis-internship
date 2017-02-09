@@ -480,5 +480,89 @@
       "city": "city test",
       "country": "country test"
     }
+  },
+
+
+
+  {
+    "model": "internship.periodinternshipplaces",
+    "pk": 1,
+    "fields": {
+      "period": 1,
+      "internship": 1,
+      "number_places": 10
+    }
+  },
+  {
+    "model": "internship.periodinternshipplaces",
+    "pk": 2,
+    "fields": {
+      "period": 4,
+      "internship": 1,
+      "number_places": 10
+    }
+  },
+  {
+    "model": "internship.periodinternshipplaces",
+    "pk": 3,
+    "fields": {
+      "period": 10,
+      "internship": 1,
+      "number_places": 20
+    }
+  },
+  {
+    "model": "internship.periodinternshipplaces",
+    "pk": 4,
+    "fields": {
+      "period": 2,
+      "internship": 2,
+      "number_places": 10
+    }
+  },
+  {
+    "model": "internship.periodinternshipplaces",
+    "pk": 5,
+    "fields": {
+      "period": 7,
+      "internship": 2,
+      "number_places": 30
+    }
+  },
+  {
+    "model": "internship.periodinternshipplaces",
+    "pk": 6,
+    "fields": {
+      "period": 3,
+      "internship": 3,
+      "number_places": 20
+    }
+  },
+  {
+    "model": "internship.periodinternshipplaces",
+    "pk": 7,
+    "fields": {
+      "period": 9,
+      "internship": 3,
+      "number_places": 20
+    }
+  },
+  {
+    "model": "internship.periodinternshipplaces",
+    "pk": 8,
+    "fields": {
+      "period": 5,
+      "internship": 4,
+      "number_places": 20
+    }
+  },
+  {
+    "model": "internship.periodinternshipplaces",
+    "pk": 9,
+    "fields": {
+      "period": 12,
+      "internship": 4,
+      "number_places": 20
+    }
   }
 ]
