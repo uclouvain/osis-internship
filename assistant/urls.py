@@ -27,12 +27,13 @@ from django.conf.urls import url
 from assistant.views import mandate, home, assistant_form, assistant
 from assistant.views import manager_settings, reviewers_management, upload_assistant_file
 from assistant.views import mandates_list, reviewer_mandates_list, reviewer_review, reviewer_delegation
+from assistant.utils import get_persons
 from assistant.views import messages
-from assistant.utils import send_email
-from assistant.utils import import_xls_file_data
+from assistant.utils import send_email, import_xls_file_data
 
 urlpatterns = [
     # S'il vous plaît, organiser les urls par ordre alphabétique.
+    url(r'^api/get_persons/', get_persons.get_persons, name='get_persons'),
     url(r'^home$', home.assistant_home, name='assistants_home'),
     url(r'^manager$', home.manager_home, name='manager_home'),
     url(r'^manager/mandates/(?P<mandate_id>\d+)/edit/$', mandate.mandate_edit, name='mandate_read'),
