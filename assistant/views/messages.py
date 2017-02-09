@@ -24,9 +24,9 @@
 #
 ##############################################################################
 from django.shortcuts import render
-from assistant.models.message import Message
+from assistant.models.message import find_all
 from assistant.enums import message_type
 
 
 def show_history(request):
-    return render(request,'messages.html', {'sent_messages': Message.objects.all(), 'message_type': message_type})
+    return render(request,'messages.html', {'sent_messages': find_all(), 'message_type': message_type})

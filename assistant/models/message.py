@@ -39,3 +39,7 @@ class Message(models.Model):
     
     def __str__(self):
         return u"%s (%s : %s)" % self.sender.person, self.type, self.date
+
+
+def find_all():
+    return Message.objects.all()
