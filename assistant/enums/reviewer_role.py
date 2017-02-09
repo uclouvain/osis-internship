@@ -23,18 +23,18 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+PHD_SUPERVISOR = 'PHD_SUPERVISOR'
+SUPERVISION = 'SUPERVISION'
+SUPERVISION_ASSISTANT = 'SUPERVISION_ASSISTANT'
+RESEARCH = 'RESEARCH'
+RESEARCH_ASSISTANT = 'RESEARCH_ASSISTANT'
+SECTOR_VICE_RECTOR = 'SECTOR_VICE_RECTOR'
+SECTOR_VICE_RECTOR_ASSISTANT = 'SECTOR_VICE_RECTOR_ASSISTANT'
 
-# Statements in alphabetic order.
-from assistant.models import academic_assistant
-from assistant.models import assistant_document_file
-from assistant.models import assistant_mandate
-from assistant.models import manager
-from assistant.models import mandate_structure
-from assistant.models import message
-from assistant.models import review
-from assistant.models import reviewer
-from assistant.models import settings
-from assistant.models import tutoring_learning_unit_year
-
-
-
+ROLE_CHOICES = ((PHD_SUPERVISOR, PHD_SUPERVISOR),
+           (SUPERVISION, SUPERVISION),
+           (SUPERVISION_ASSISTANT, SUPERVISION_ASSISTANT),
+           (RESEARCH, RESEARCH),
+           (RESEARCH_ASSISTANT, RESEARCH_ASSISTANT),
+           (SECTOR_VICE_RECTOR, SECTOR_VICE_RECTOR),
+           (SECTOR_VICE_RECTOR_ASSISTANT, SECTOR_VICE_RECTOR_ASSISTANT))

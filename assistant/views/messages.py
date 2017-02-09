@@ -23,18 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
-# Statements in alphabetic order.
-from assistant.models import academic_assistant
-from assistant.models import assistant_document_file
-from assistant.models import assistant_mandate
-from assistant.models import manager
-from assistant.models import mandate_structure
-from assistant.models import message
-from assistant.models import review
-from assistant.models import reviewer
-from assistant.models import settings
-from assistant.models import tutoring_learning_unit_year
+from django.shortcuts import render
+from assistant.models.message import find_all
+from assistant.enums import message_type
 
 
-
+def show_history(request):
+    return render(request,'messages.html', {'sent_messages': find_all(), 'message_type': message_type})

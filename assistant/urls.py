@@ -27,6 +27,8 @@ from django.conf.urls import url
 from assistant.views import mandate, home, assistant_form, assistant
 from assistant.views import manager_settings, reviewers_management, upload_assistant_file
 from assistant.views import mandates_list, reviewer_mandates_list, reviewer_review, reviewer_delegation
+from assistant.views import messages
+from assistant.utils import send_email
 from assistant.utils import import_xls_file_data
 
 urlpatterns = [
@@ -38,6 +40,10 @@ urlpatterns = [
     url(r'^manager/mandates/load/$', mandate.load_mandates, name='load_mandates'),
     url(r'^manager/mandates/upload/$', import_xls_file_data.upload_mandates_file, name='upload_mandates_file'),
     url(r'^manager/mandates/$', mandates_list.MandatesListView.as_view(), name='mandates_list'),
+    url(r'^manager/messages/history/$', messages.show_history, name='messages_history'),
+    url(r'^manager/messages/send/to_all_assistants/$', send_email.send_message_to_assistants,
+        name='send_message_to_assistants'),
+    url(r'^manager/messages/send/to_all_deans/$', send_email.send_message_to_deans, name='send_message_to_deans'),
     url(r'^manager/reviewers/add/$', reviewers_management.reviewer_add, name='reviewer_add'),
     url(r'^manager/reviewers/(?P<reviewer_id>\d+)/delete/$', reviewers_management.reviewer_delete,
         name='reviewer_delete'),

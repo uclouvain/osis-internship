@@ -23,18 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+TO_ALL_ASSISTANTS = 'TO_ALL_ASSISTANTS'
+TO_ALL_DEANS = 'TO_ALL_DEANS'
+TO_PHD_SUPERVISOR = 'TO_PHD_SUPERVISOR'
+TO_ONE_DEAN = 'TO_ONE_DEAN'
 
-# Statements in alphabetic order.
-from assistant.models import academic_assistant
-from assistant.models import assistant_document_file
-from assistant.models import assistant_mandate
-from assistant.models import manager
-from assistant.models import mandate_structure
-from assistant.models import message
-from assistant.models import review
-from assistant.models import reviewer
-from assistant.models import settings
-from assistant.models import tutoring_learning_unit_year
-
-
-
+TYPES = ((TO_ALL_ASSISTANTS, TO_ALL_ASSISTANTS),
+         (TO_ALL_DEANS, TO_ALL_DEANS),
+         (TO_PHD_SUPERVISOR, TO_PHD_SUPERVISOR),
+         (TO_ONE_DEAN, TO_ONE_DEAN))

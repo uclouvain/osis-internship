@@ -23,18 +23,23 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
-# Statements in alphabetic order.
-from assistant.models import academic_assistant
-from assistant.models import assistant_document_file
-from assistant.models import assistant_mandate
-from assistant.models import manager
-from assistant.models import mandate_structure
-from assistant.models import message
-from assistant.models import review
-from assistant.models import reviewer
-from assistant.models import settings
-from assistant.models import tutoring_learning_unit_year
+from django.db import models
+from django.contrib import admin
+from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
+from assistant.enums import message_type
 
 
+class Message(models.Model):
 
+    sender = models.ForeignKey('assistant.Manager')
+    academic_year = models.ForeignKey('base.AcademicYear')
+    date = models.DateTimeField(default=timezone.now, null=True)
+    type = models.CharField(max_length=20, choices=message_type.TYPES)
+    
+    def __str__(self):
+        return u"%s (%s : %s)" % self.sender.person, self.type, self.date
+
+
+def find_all():
+    return Message.objects.all()
