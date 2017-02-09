@@ -32,7 +32,8 @@ from openpyxl.styles import Color, Style, PatternFill
 from django.utils.translation import ugettext_lazy as _
 import re
 
-from internship.models import Organization, Period, InternshipMaster
+from internship.models.organization import Organization
+from internship.models.period import Period
 
 HEADER = [str(_('lastname')),
           str(_('firstname')),

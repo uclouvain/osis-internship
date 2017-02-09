@@ -54,5 +54,9 @@ def find_by_document(document_file):
     return AssistantDocumentFile.objects.get(document_file=document_file)
 
 
+def find_by_id(id_document_file):
+    return AssistantDocumentFile.objects.get(id=id_document_file)
+
+
 def find_by_assistant_mandate(assistant_mandate):
     return AssistantDocumentFile.objects.filter(assistant_mandate=assistant_mandate)
