@@ -1,0 +1,89 @@
+[
+  {
+    "model": "internship.organization",
+    "pk": 1,
+    "fields": {
+      "name": "Cliniques Universitaires Saint Luc - Bruxelles",
+      "acronym": "Cliniques Univ",
+      "website": "http://www.saintluc.be",
+      "reference": "02",
+      "type": "service partner"
+    }
+  },
+  {
+    "model": "internship.organization",
+    "pk": 2,
+    "fields": {
+      "name": "Clinique Saint  Jean - Bruxelles",
+      "acronym": "Cliniques Saint",
+      "reference": "03",
+      "type": "service partner"
+    }
+  },
+  {
+    "model": "internship.organization",
+    "pk": 3,
+    "fields": {
+      "name": "Clinique Saint  Pierre - Ottignies",
+      "acronym": "Cliniques Saint",
+      "reference": "15",
+      "type": "service partner"
+    }
+  },
+  {
+    "model": "internship.organization",
+    "pk": 4,
+    "fields": {
+      "name": "Centre Hospitalier de Tubize-Nivelles",
+      "acronym": "Cliniques Hospita",
+      "reference": "32",
+      "type": "service partner"
+    }
+  },
+  {
+    "model": "internship.organization",
+    "pk": 5,
+    "fields": {
+      "name": "Centre Hospitalier du Luxembourg",
+      "acronym": "Centre Hospita",
+      "reference": "67",
+      "type": "service partner"
+    }
+  },
+  {
+    "model": "internship.organization",
+    "pk": 6,
+    "fields": {
+      "name": "Hôpital Enfants de la Timone - Marseille",
+      "acronym": "Hôpital Enfant",
+      "website": "http://www.saintluc.be",
+      "reference": "71",
+      "type": "service partner"
+    }
+  },
+  {
+    "model": "internship.organization",
+    "pk": 7,
+    "fields": {
+      "name": "Hôpital Saint Antoine - Lille",
+      "acronym": "Hôpital Saint ",
+      "reference": "75",
+      "type": "service partner"
+    }
+  },
+  {
+    "model": "internship.organization",
+    "pk": 8,
+    "fields": {
+      "name": "Clinique Saint  Pierre - Ottignies",
+      "acronym": "Cliniques Saint",
+      "reference": "15",
+      "type": "service partner"
+    }
+  }
+
+
+
+
+
+]
