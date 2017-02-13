@@ -205,7 +205,8 @@ def compute_stats(sol):
     for speciality, students in get_student_mandatory_choices(True).items():
         for choices in students:
             students_socio.add(choices[0].student.id)
-    socio = len(mdl_internship.internship_choice.objects.filter(priority=True).distinct('student').values('student'))
+    socio = len(mdl_internship.internship_choice.InternshipChoice.
+                objects.filter(priority=True).distinct('student').values('student'))
 
     total_n_internships = first_n + second_n + third_n + fourth_n + imposed_choices
     total_s_internships = first_s + second_s + third_s + fourth_s
@@ -214,7 +215,8 @@ def compute_stats(sol):
     stats['tot_stud'] = len(sol)
     stats['erasmus'] = erasmus
     stats['erasmus_pc'] = round(erasmus / total_internships * 100, 2)
-    stats['erasmus_students'] = len(mdl_internship.internship_enrollment.objects.distinct('student').values('student'))
+    stats['erasmus_students'] = len(mdl_internship.internship_enrollment.InternshipEnrollment.
+                                    objects.distinct('student').values('student'))
     stats['erasmus_students_pc'] = round(stats['erasmus_students'] / stats['tot_stud'] * 100, 2)
     stats['socio'] = socio
     stats['socio_pc'] = round(socio / total_internships * 100, 2)
@@ -355,7 +357,8 @@ def init_organizations():
     # Save data directly in global variables
     global organizations, organization_addresses_dic
     organizations[hospital_error] = mdl_internship.organization.Organization.objects.filter(reference=hospital_error)[0]
-    organizations[hospital_to_edit] = mdl_internship.organization.Organization.objects.filter(reference=hospital_to_edit)[0]
+    organizations[hospital_to_edit] = \
+        mdl_internship.organization.Organization.objects.filter(reference=hospital_to_edit)[0]
 
     for organization_address in mdl_internship.organization_address.OrganizationAddress.objects.all():
         organization_addresses_dic[organization_address.organization] = organization_address
@@ -600,7 +603,8 @@ def get_student_mandatory_choices(priority):
     :return: A dict of dict : <speciality, <student, [choices]>>.
     """
     specialities = {}
-    choices = mdl_internship.nternship_choice.InternshipChoice.objects.filter(priority=priority).select_related("speciality", "student")
+    choices = mdl_internship.internship_choice.InternshipChoice.objects.filter(priority=priority).\
+        select_related("speciality", "student")
 
     if len(choices) == 0:
         return {}
@@ -622,7 +626,8 @@ def get_student_mandatory_choices(priority):
                 if enrollment.student in specialities[enrollment.internship_offer.speciality.id]:
                     del specialities[enrollment.internship_offer.speciality.id][enrollment.student]
     else:
-        for choice in mdl_internship.nternship_choice.InternshipChoice.objects.filter(priority=True).select_related("speciality", "student"):
+        for choice in mdl_internship.internship_choice.InternshipChoice.objects.filter(priority=True).\
+                select_related("speciality", "student"):
             if choice.student in specialities[choice.speciality.id]:
                 del specialities[choice.speciality.id][choice.student]
 
@@ -869,7 +874,8 @@ def fill_erasmus_choices():
     :return:
     """
     # Retrieve all students
-    erasmus_enrollments = mdl_internship.nternship_enrollment.InternshipEnrollment.objects.all().select_related("student", "period", "internship_offer")
+    erasmus_enrollments = mdl_internship.internship_enrollment.InternshipEnrollment.objects.all().\
+        select_related("student", "period", "internship_offer")
     for enrol in erasmus_enrollments:
         # Check if the internship is available
         if is_internship_available(enrol.place, enrol.internship_offer.speciality, enrol.period.name):
@@ -966,7 +972,8 @@ def swap_empty_internships():
                             # Add the internship to list of empty internships
                             empty_internships.append((organization, speciality, period, places))
                             # Find all choices of student in the "Organization" and "speciality"
-                            choices = mdl_internship.internship_choice.search(organization=organization, speciality=speciality)
+                            choices = mdl_internship.internship_choice.search(organization=organization,
+                                                                              speciality=speciality)
                             # Iterate over all choices of students
                             for choice in choices:
                                 if period in solution[choice.student]:
@@ -1116,7 +1123,8 @@ def save_solution():
 def load_solution(data):
     """ Create the solution and internship_table from db data """
     # Initialise the table of internships.
-    period_internship_places = mdl_internship.period_internship_places.PeriodInternshipPlaces.objects.order_by("period_id").select_related()
+    period_internship_places = mdl_internship.period_internship_places.PeriodInternshipPlaces.objects.\
+        order_by("period_id").select_related()
     # This object store the number of available places for given organization, speciality, period
     temp_internship_table = defaultdict(dict)
     for pid in period_internship_places:
@@ -1191,8 +1199,8 @@ def internship_affectation_statistics(request):
     init_organizations()
     init_specialities()
     sol, table, stats, internship_errors = None, None, None, None
-    data = mdl_internship.internship_student_affectation_stat.InternshipStudentAffectationStat.objects.all().select_related("student", "organization", "speciality",
-                                                                         "period")
+    data = mdl_internship.internship_student_affectation_stat.InternshipStudentAffectationStat.objects.all().\
+        select_related("student", "organization", "speciality", "period")
     if len(data) > 0:
         sol, table = load_solution(data)
         stats = compute_stats(sol)
@@ -1200,7 +1208,8 @@ def internship_affectation_statistics(request):
         sol = OrderedDict(sorted(sol.items(), key=lambda t: t[0].person.last_name))
         # Mange sort of the organizations
         table.sort(key=itemgetter(0))
-        internship_errors = mdl_internship.nternship_student_affectation_stat.InternshipStudentAffectationStat.objects.filter(organization=organizations[hospital_error])
+        internship_errors = mdl_internship.internship_student_affectation_stat.InternshipStudentAffectationStat.\
+            objects.filter(organization=organizations[hospital_error])
 
     latest_generation = mdl_internship.affectation_generation_time.get_latest()
     return render(request, "internship_affectation_statics.html",
@@ -1243,7 +1252,7 @@ def internship_affectation_sumup(request):
         for period in periods:
             temp_temp_affectations = []
             for aff in all_affectations:
-                if aff.speciality.acronym==speciality.acronym and aff.period==period:
+                if aff.speciality.acronym == speciality.acronym and aff.period == period:
                     temp_temp_affectations.append(aff)
             temp_affectations[period.name] = temp_temp_affectations
         affectations[speciality.name] = temp_affectations
