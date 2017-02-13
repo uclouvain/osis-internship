@@ -59,16 +59,17 @@
 <input type="hidden" value="{{dissertation.pk | default_if_none:''}}" id="hdn_current_dissertation_id" name="dissertation_id" title="dissertation_id" >
 <div class="panel panel-default">
     <div class="panel-body">
+        <div class="col-md-9">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">{% trans 'dissertation_informations' %}</h3>
             </div>
-            <div class="panel-body">
+
                 <div class="row">
                     <div class="col-md-3" style="text-align: right">
                         <label>{% trans 'author' %}</label>
                     </div>
-                    <div class="col-md-9">
+                    <div class="col-md-6">
                         {{ dissertation.author }}
                     </div>
                 </div>
@@ -76,7 +77,7 @@
                     <div class="col-md-3" style="text-align: right">
                         <label>{% trans 'title' %}</label>
                     </div>
-                    <div class="col-md-9">
+                    <div class="col-md-6">
                         {{ dissertation.title }}
                     </div>
                 </div>
@@ -94,7 +95,7 @@
                     <div class="col-md-3" style="text-align: right">
                         <label>{% trans 'status' %}</label>
                     </div>
-                    <div class="col-md-9">
+                    <div class="col-md-6">
                         {% if dissertation.status == 'DRAFT' %}
                         <span class="label label-default">
                         {% elif dissertation.status == 'DIR_SUBMIT' %}
@@ -138,7 +139,7 @@
                     <div class="col-md-3" style="text-align: right">
                         <label>{% trans 'description' %}</label>
                     </div>
-                    <div class="col-md-9" style="text-align: justify">
+                    <div class="col-md-6" style="text-align: justify">
                         {{ dissertation.description|linebreaks }}
                     </div>
                 </div>
@@ -146,7 +147,7 @@
                   <div class="col-md-3" style="text-align: right">
                       <label>{% trans 'defend_periode' %}</label>
                   </div>
-                  <div class="col-md-9">
+                  <div class="col-md-6">
                       {{ dissertation.defend_periode|default_if_none:_("undefined") }}
                   </div>
                 </div>
@@ -154,7 +155,7 @@
                   <div class="col-md-3" style="text-align: right">
                       <label>{% trans 'defend_year' %}</label>
                   </div>
-                  <div class="col-md-9">
+                  <div class="col-md-6">
                       {{ dissertation.defend_year|default_if_none:_("undefined") }}
                   </div>
                 </div>
@@ -162,10 +163,11 @@
                   <div class="col-md-3" style="text-align: right">
                       <label>{% trans 'dissertation_location' %}</label>
                   </div>
-                  <div class="col-md-9">
+                  <div class="col-md-6">
                       {{ dissertation.location|default_if_none:_("undefined") }}
                   </div>
                 </div>
+            </div>
             </div>
             <div class="col-md-3">
                 <div class="panel panel-default">
@@ -173,36 +175,40 @@
                             <h3 class="panel-title">{% trans 'student_photo' %}</h3>
                           </div>
                           <div class="panel-body" style="text-align: center">
-                                 {% with author_photo=dissertation.author.person.photo %}
-                                     {% if author_photo %}
-                                      <img src="data:image/jpeg;base64,{{author_photo}}" class="avatar img-responsive"
-                                           height="50%" width="50%"/>
 
-                                     {% else %}
-                                         {% if dissertation.author.person.gender == "U" %}
-                                          <!-- no photo Unknow -->
-                                          <img   height="50%" width="50%" class="avatar img-responsive"
-                                                 src="{% static 'img/OSIS_UNKNOWN_BETA.png' %}" />
-                                         {% endif %}
-                                         {% if dissertation.author.person.gender == "M" %}
-                                         <!-- no photo Homme -->
-                                         <img   height="50%" width="50%" class="avatar img-responsive"                                                                      src="{% static 'img/OSIS_HOMME_UNKNOWN.png' %}" />
-                                         {% endif %}
-                                         {% if dissertation.author.person.gender == "F" %}
-                                          <!-- no photo FEMME -->
-                                          <img   height="50%" width="50%" class="avatar img-responsive"                                                                     src="{% static 'img/OSIS_FEMME_UNKNOWN.png' %}" />
-                                         {% endif %}
-                                      {% endif %}
-                                  {% endwith %}
+                                 {% if dissertation.author.person.global_id %}
+                                  <img src="/my_osis/profile/{{ dissertation.author.person.id }}" class="avatar img-responsive"
+                                       height="50%" width="50%"/>
+
+                                 {% else %}
+                                     {% if dissertation.author.person.gender == "U" %}
+                                      <!-- no photo Unknow -->
+                                      <img   height="50%" width="50%" class="avatar img-responsive"
+                                             src="{% static 'img/OSIS_UNKNOWN.png' %}" />
+                                     {% endif %}
+                                     {% if dissertation.author.person.gender == "M" %}
+                                     <!-- no photo Homme -->
+                                     <img   height="50%" width="50%" class="avatar img-responsive"
+                                            src="{% static 'img/OSIS_HOMME_UNKNOWN.png' %}" />
+                                     {% endif %}
+                                     {% if dissertation.author.person.gender == "F" %}
+                                      <!-- no photo FEMME -->
+                                      <img   height="50%" width="50%" class="avatar img-responsive"
+                                             src="{% static 'img/OSIS_FEMME_UNKNOWN.png' %}" />
+                                     {% endif %}
+                                  {% endif %}
+
                     </div>
                 </div>
-                </div>
-              </div>
-        <div class="panel panel-default">
+            </div>
+        <div class="panel-body">
+            <div class="panel panel-default">
+                <br>
             <div class="panel-heading">
+
                 <h3 class="panel-title">{% trans 'dissertation_jury' %}</h3>
             </div>
-            <div class="panel-body">
+
                 {% for dissertation_role in dissertation_roles %}
                 <div class="row" style="margin: 10px;">
                   <div class="col-md-3" style="text-align: right">
@@ -239,7 +245,7 @@
                         <div class="well well-sm">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <label>{% trans 'jury_status' %}</label>
+                                    <label >{% trans 'jury_status' %}</label>
                                 </div>
                             </div>
                             <div class="row">
@@ -302,7 +308,9 @@
 
             </div>
         </div>
+
         <div class="panel panel-default">
+
             <div class="panel-heading">
                 <h3 class="panel-title">{% trans 'proposition_dissertation_informations' %}</h3>
             </div>

@@ -58,7 +58,7 @@
                         <div class="col-md-3" style="text-align: right">
                             <label>{% trans 'author' %}</label>
                         </div>
-                        <div class="col-md-9">
+                        <div class="col-md-6">
                             {{ dissertation.author }}
                         </div>
                     </div>
@@ -66,7 +66,7 @@
                         <div class="col-md-3" style="text-align: right">
                             <label>{% trans 'title' %}</label>
                         </div>
-                        <div class="col-md-9">
+                        <div class="col-md-6">
                             {{ dissertation.title }}
                         </div>
                     </div>
@@ -76,7 +76,8 @@
                                 <label>{% trans 'file' %}</label>
                             </div>
                             <div class="col-md-4">
-                                <a href="{% url 'dissertation_download' dissertation_pk=dissertation.pk %}">{% trans 'link' %}</a>
+                                <a href="{% url 'dissertation_download' dissertation_pk=dissertation.pk %}">
+                                    {% trans 'link' %}</a>
                             </div>
                         </div>
                     {% endif %}
@@ -84,7 +85,7 @@
                         <div class="col-md-3" style="text-align: right">
                             <label>{% trans 'status' %}</label>
                         </div>
-                        <div class="col-md-9">
+                        <div class="col-md-6">
                             {% if dissertation.status == 'DRAFT' %}
                             <span class="label label-default">
                             {% elif dissertation.status == 'DIR_SUBMIT' %}
@@ -128,7 +129,7 @@
                         <div class="col-md-3" style="text-align: right">
                             <label>{% trans 'description' %}</label>
                         </div>
-                        <div class="col-md-9" style="text-align: justify">
+                        <div class="col-md-6" style="text-align: justify">
                             {{ dissertation.description|linebreaks }}
                         </div>
                     </div>
@@ -136,7 +137,7 @@
                       <div class="col-md-3" style="text-align: right">
                           <label>{% trans 'defend_periode' %}</label>
                       </div>
-                      <div class="col-md-9">
+                      <div class="col-md-6">
                           {{ dissertation.defend_periode|default_if_none:_("undefined") }}
                       </div>
                     </div>
@@ -144,7 +145,7 @@
                       <div class="col-md-3" style="text-align: right">
                           <label>{% trans 'defend_year' %}</label>
                       </div>
-                      <div class="col-md-9">
+                      <div class="col-md-6">
                           {{ dissertation.defend_year|default_if_none:_("undefined") }}
                       </div>
                     </div>
@@ -152,82 +153,83 @@
                       <div class="col-md-3" style="text-align: right">
                           <label>{% trans 'dissertation_location' %}</label>
                       </div>
-                      <div class="col-md-9">
+                      <div class="col-md-6">
                           {{ dissertation.location|default_if_none:_("undefined") }}
                       </div>
                     </div>
                 </div>
+            </div>
             </div>
             <div class="col-md-3">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">{% trans 'student_photo' %}</h3>
                     </div>
-                    <div class="panel-body" style="text-align: center;">
-                     {% with author_photo=dissertation.author.person.photo %}
-                         {% if author_photo %}
-                          <img src="{% url 'avatar' dissertation.author.person.id %}" class="avatar img-responsive"
-                               height="50%" width="50%"/>
+                    <div class="panel-body" style="text-align: center">
+                     {% if dissertation.author.person.global_id %}
+                      <img src="/my_osis/profile/{{ dissertation.author.person.id }}" class="avatar img-responsive"
+                           height="50%" width="50%"/>
+                     {% else %}
+                         {% if dissertation.author.person.gender == "U" %}
+                          <!-- no photo Unknow -->
+                          <img   height="50%" width="50%" class="avatar img-responsive"
+                                 src="{% static 'img/OSIS_UNKNOWN.png' %}" />
+                         {% endif %}
+                         {% if dissertation.author.person.gender == "M" %}
+                         <!-- no photo Homme -->
+                         <img   height="50%" width="50%" class="avatar img-responsive"
+                                src="{% static 'img/OSIS_HOMME_UNKNOWN.png' %}" />
+                         {% endif %}
+                         {% if dissertation.author.person.gender == "F" %}
+                          <!-- no photo FEMME -->
+                          <img   height="50%" width="50%" class="avatar img-responsive"
+                                 src="{% static 'img/OSIS_FEMME_UNKNOWN.png' %}" />
+                         {% endif %}
+                      {% endif %}
+                    </div>
+                </div>
+            </div>
 
-                         {% else %}
-                             {% if dissertation.author.person.gender == "U" %}
-                              <!-- no photo Unknow -->
-                              <img   height="50%" width="50%" class="avatar img-responsive"
-                                     src="{% static 'img/OSIS_UNKNOWN_BETA.png' %}" />
-                             {% endif %}
-                             {% if dissertation.author.person.gender == "M" %}
-                             <!-- no photo Homme -->
-                             <img   height="50%" width="50%" class="avatar img-responsive"
-                                    src="{% static 'img/OSIS_HOMME_UNKNOWN.png' %}" />
-                             {% endif %}
-                             {% if dissertation.author.person.gender == "F" %}
-                              <!-- no photo FEMME -->
-                              <img   height="50%" width="50%" class="avatar img-responsive"
-                                     src="{% static 'img/OSIS_FEMME_UNKNOWN.png' %}" />
-                             {% endif %}
-                          {% endif %}
-                      {% endwith %}
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{% trans 'dissertation_jury' %}</h3>
+                </div>
+                <div class="panel-body">
+                    {% for dissertation_role in dissertation_roles %}
+                    <div class="row" style="margin: 10px;">
+                      <div class="col-md-3" style="text-align: right">
+                          <label>{{ dissertation_role.get_status_display }}</label>
+                      </div>
+                      <div class="col-md-2">
+                          {{ dissertation_role.adviser }}
+                      </div>
+                      {% if offer_prop.adviser_can_suggest_reader %}
+                        <div class="col-md-1">
+                          <a class="btn btn-warning"
+                             href="{% url 'dissertations_role_delete' pk=dissertation_role.pk %}"
+                             onclick="return confirm('{% trans 'delete_adviser_role_confirmation_message' %}')">
+                              <span class="glyphicon glyphicon-remove span2"></span></a>
+                        </div>
+                       {% endif %}
                     </div>
+                    {% endfor %}
+                    {% if count_dissertation_role < 4 and offer_prop.adviser_can_suggest_reader %}
+                    <br>
+                    <div class="row">
+                        <div class="col-md-3 pull-right" style="text-align: right">
+                            <a href="{% url 'dissertations_jury_new' pk=dissertation.pk %}"
+                                 id="lnk_add_dissertation_jury_member" class="btn btn-default btn-sm"
+                                 role="button" title="{% trans 'add_dissertation_jury_member'%}"><span
+                                      class="glyphicon glyphicon-plus"
+                                      aria-hidden="true"></span> {% trans 'add_dissertation_jury_member'%}</a>
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">{% trans 'dissertation_jury' %}</h3>
-            </div>
-            <div class="panel-body">
-                {% for dissertation_role in dissertation_roles %}
-                <div class="row" style="margin: 10px;">
-                  <div class="col-md-3" style="text-align: right">
-                      <label>{{ dissertation_role.get_status_display }}</label>
-                  </div>
-                  <div class="col-md-2">
-                      {{ dissertation_role.adviser }}
-                  </div>
-                  {% if offer_prop.adviser_can_suggest_reader %}
-                    <div class="col-md-1">
-                      <a class="btn btn-warning"
-                         href="{% url 'dissertations_role_delete' pk=dissertation_role.pk %}"
-                         onclick="return confirm('{% trans 'delete_adviser_role_confirmation_message' %}')">
-                          <span class="glyphicon glyphicon-remove span2"></span></a>
-                    </div>
-                   {% endif %}
-                </div>
-                {% endfor %}
-                {% if count_dissertation_role < 4 and offer_prop.adviser_can_suggest_reader %}
-                <br>
-                <div class="row">
-                    <div class="col-md-3 pull-right" style="text-align: right">
-                        <a href="{% url 'dissertations_jury_new' pk=dissertation.pk %}"
-                             id="lnk_add_dissertation_jury_member" class="btn btn-default btn-sm"
-                             role="button" title="{% trans 'add_dissertation_jury_member'%}"><span
-                                  class="glyphicon glyphicon-plus"
-                                  aria-hidden="true"></span> {% trans 'add_dissertation_jury_member'%}</a>
-                    </div>
-                </div>
-                {% endif %}
-            </div>
-        </div>
+        <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">{% trans 'proposition_dissertation_informations' %}</h3>
@@ -250,6 +252,7 @@
                     </div>
                 </div>
             </div>
+        </div>
         </div>
         <div style="text-align: right;">
                 {% if dissertation.status == 'DIR_SUBMIT' %}
