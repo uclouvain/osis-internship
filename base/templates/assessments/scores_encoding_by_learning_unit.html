@@ -54,7 +54,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>{% trans 'last_synchronization' %}</label><br>
-                        {{ last_synchronization }}
+                        {{ last_synchronization | default_if_none:'-' }}
                     </div>
                 </div>
             </div>

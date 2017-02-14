@@ -128,5 +128,18 @@
       "start_year": 2010,
       "end_year": 2099
     }
+  },
+  {
+    "model": "base.learningunit",
+    "pk": 11,
+    "fields": {
+      "external_id": "",
+      "changed": "2016-04-27T12:01:02.796Z",
+      "acronym": "WMDS2333",
+      "title": "Stages en médecine",
+      "description": null,
+      "start_year": 2010,
+      "end_year": 2099
+    }
   }
 ]

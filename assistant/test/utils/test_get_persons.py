@@ -1,3 +1,4 @@
+
 ##############################################################################
 #
 #    OSIS stands for Open Student Information System. It's an application
@@ -23,16 +24,28 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.test import TestCase, Client
+from base.models.person import Person
+import json
 
 
-class AssistantDocument(models.Model):
-    DOC_TYPE_CHOICES = (
-        ('PHD', _('PhD')),
-        ('TUTORING', _('Tutoring')),
-        ('RESEARCH', _('Research')))
+class GetPersonsTestCase(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.person = Person.objects.create(first_name='person1', last_name='test', email='person1@test.com')
+        self.person.save()
+        self.person = Person.objects.create(first_name='person2', last_name='test', email='person2@test.com')
+        self.person.save()
 
-    assistant = models.ForeignKey('AcademicAssistant')
-    mandate = models.ForeignKey('AssistantMandate')
-    doc_type = models.CharField(max_length=20, choices=DOC_TYPE_CHOICES)
+
+    def test_get_persons(self):
+        response = self.client.generic(method='get', path='/assistants/api/get_persons/?term=on2',
+                                       HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        data = json.loads(response.content.decode("utf-8"))
+        self.assertEqual(data[0]['value'], 'person2@test.com')
+        self.assertEqual(len(data), 1)
+
+        response = self.client.generic(method='get', path='/assistants/api/get_persons/?term=test',
+                                       HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        data = json.loads(response.content.decode("utf-8"))
+        self.assertEqual(len(data), 2)

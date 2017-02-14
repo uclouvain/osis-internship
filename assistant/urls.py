@@ -25,17 +25,26 @@
 ##############################################################################
 from django.conf.urls import url
 from assistant.views import mandate, home, assistant_form, assistant
-from assistant.views import manager_settings, reviewers_management
+from assistant.views import manager_settings, reviewers_management, upload_assistant_file
 from assistant.views import mandates_list, reviewer_mandates_list, reviewer_review, reviewer_delegation
+from assistant.utils import get_persons
+from assistant.views import messages
+from assistant.utils import send_email, import_xls_file_data
 
 urlpatterns = [
     # S'il vous plaît, organiser les urls par ordre alphabétique.
+    url(r'^api/get_persons/', get_persons.get_persons, name='get_persons'),
     url(r'^home$', home.assistant_home, name='assistants_home'),
     url(r'^manager$', home.manager_home, name='manager_home'),
     url(r'^manager/mandates/(?P<mandate_id>\d+)/edit/$', mandate.mandate_edit, name='mandate_read'),
     url(r'^manager/mandates/(?P<mandate_id>\d+)/save/$', mandate.mandate_save, name='mandate_save'),
     url(r'^manager/mandates/load/$', mandate.load_mandates, name='load_mandates'),
+    url(r'^manager/mandates/upload/$', import_xls_file_data.upload_mandates_file, name='upload_mandates_file'),
     url(r'^manager/mandates/$', mandates_list.MandatesListView.as_view(), name='mandates_list'),
+    url(r'^manager/messages/history/$', messages.show_history, name='messages_history'),
+    url(r'^manager/messages/send/to_all_assistants/$', send_email.send_message_to_assistants,
+        name='send_message_to_assistants'),
+    url(r'^manager/messages/send/to_all_deans/$', send_email.send_message_to_deans, name='send_message_to_deans'),
     url(r'^manager/reviewers/add/$', reviewers_management.reviewer_add, name='reviewer_add'),
     url(r'^manager/reviewers/(?P<reviewer_id>\d+)/delete/$', reviewers_management.reviewer_delete,
         name='reviewer_delete'),
@@ -43,6 +52,12 @@ urlpatterns = [
     url(r'^manager/settings/edit/$', manager_settings.settings_edit, name='settings_edit'),
     url(r'^manager/settings/save/$', manager_settings.settings_save, name='settings_save'),
     url(r'^pst/access_denied$', home.access_denied, name='access_denied'),
+    url(r'^pst/document_file/delete/(?P<mandate_id>\d+)/(?P<document_file_id>\d+)/$', upload_assistant_file.delete,
+        name='assistant_file_delete'),
+    url(r'^pst/document_file/download/(?P<document_file_id>\d+)/$', upload_assistant_file.download,
+        name='assistant_file_download'),
+    url(r'^pst/document_file/upload/(?P<mandate_id>\d+)/$', upload_assistant_file.save_uploaded_file,
+        name='assistant_file_upload'),
     url(r'^pst/form_part1/edit/(?P<mandate_id>\d+)/$', assistant_form.form_part1_edit, name='form_part1_edit'),
     url(r'^pst/form_part1/save/(?P<mandate_id>\d+)/$', assistant_form.form_part1_save, name='form_part1_save'),
     url(r'^pst/form_part3/edit/(?P<mandate_id>\d+)/$', assistant_form.form_part3_edit, name='form_part3_edit'),
