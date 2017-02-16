@@ -24,11 +24,10 @@
 #
 ##############################################################################
 from django.db import models
-from django.contrib import admin
-from osis_common.models.serializable_model import SerializableModel
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
-class OfferYearDomainAdmin(admin.ModelAdmin):
+class OfferYearDomainAdmin(SerializableModelAdmin):
     list_display = ('domain', 'offer_year', 'changed')
     fieldsets = ((None, {'fields': ('domain', 'offer_year')}),)
     list_filter = ('offer_year__academic_year',)

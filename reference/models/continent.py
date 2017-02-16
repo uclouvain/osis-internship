@@ -26,7 +26,6 @@
 from django.db import models
 from django.contrib import admin
 from django.core import serializers
-from osis_common.models.serializable_model import SerializableModel
 
 
 class ContinentAdmin(admin.ModelAdmin):
@@ -34,7 +33,7 @@ class ContinentAdmin(admin.ModelAdmin):
     ordering = ('name',)
 
 
-class Continent(SerializableModel):
+class Continent(models.Model):
     code = models.CharField(max_length=2, unique=True)
     name = models.CharField(max_length=30)
 

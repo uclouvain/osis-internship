@@ -34,7 +34,6 @@ from internship import models as mdl_internship
 
 from django.utils.translation import ugettext_lazy as _
 
-from internship.models.period import Period
 from internship.views.place import set_organization_address, sort_organizations
 
 def set_number_choices(student_informations):
@@ -126,7 +125,7 @@ def internships_student_read(request, registration_id):
     all_speciality = mdl_internship.internship_speciality.search(mandatory=True)
 
     affectations = mdl_internship.internship_student_affectation_stat.search(student=student_to_read).order_by("period__date_start")
-    periods = Period.search().order_by("date_start")
+    periods = mdl_internship.period.search().order_by("date_start")
     organizations = mdl_internship.organization.search()
     set_organization_address(organizations)
 
@@ -214,7 +213,7 @@ def internship_student_affectation_modification(request, student_id):
         number=[int(s) for s in speciality.name.split() if s.isdigit()]
         if number:
             speciality.acronym =speciality.acronym + " " +str(number[0])
-    periods = Period.search()
+    periods = mdl_internship.period.search()
     return render(request, "student_affectation_modification.html",
                   {'information':         information,
                    'informations':         informations,
@@ -242,7 +241,7 @@ def student_save_affectation_modification(request, registration_id):
         if organization_list[x] != "0":
             organization = mdl_internship.organization.search(reference=organization_list[x])[0]
             speciality = mdl_internship.internship_speciality.search(name=speciality_list[x])[0]
-            period = Period.search(name=period_list[x])[0]
+            period = mdl_internship.period.search(name=period_list[x])[0]
             check_internship_present = mdl_internship.internship_offer.search(organization=organization, speciality=speciality)
             if len(check_internship_present) == 0:
                 check_error_present = True
@@ -255,7 +254,7 @@ def student_save_affectation_modification(request, registration_id):
             if organization_list[x] != "0":
                 organization = mdl_internship.organization.search(reference=organization_list[x])[0]
                 speciality = mdl_internship.internship_speciality.search(name=speciality_list[x])[0]
-                period = Period.search(name=period_list[x])[0]
+                period = mdl_internship.period.search(name=period_list[x])[0]
                 student_choices = mdl_internship.internship_choice.search(student=student, speciality=speciality)
                 affectation_modif = mdl_internship.internship_student_affectation_stat.InternshipStudentAffectationStat()
 

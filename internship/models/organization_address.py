@@ -70,7 +70,7 @@ def geocode(addr):
     addr = addr.replace("n °", "")
     addr = addr.replace("Œ", "Oe")
     addr = addr.encode('utf8','replace').decode('utf8')
-    addr = OrganizationAddress.strip_accents(addr)
+    addr = strip_accents(addr)
     # get the complete url
     url = ''.join(['https://maps.googleapis.com/maps/api/geocode/xml?address=', addr,
                    '&key=AIzaSyCWeZdraxzqRTMxXxbXY3bncaD6Ijq_EvE'])
@@ -108,7 +108,7 @@ def find_latitude_longitude(infos):
             address = data.location + " " + data.postal_code + " " \
                       + data.city + " " + data.country
             #Compute the geolocalisation
-            address_lat_long = OrganizationAddress.geocode(address)
+            address_lat_long = geocode(address)
             #if the geolac is fing put the data, if not put fake data
             if address_lat_long[0]:
                 data.latitude = address_lat_long[0]
@@ -117,7 +117,7 @@ def find_latitude_longitude(infos):
                 address = data.location + " " + data.postal_code + " " \
                           + data.country
                 #Compute the geolocalisation
-                address_lat_long = OrganizationAddress.geocode(address)
+                address_lat_long = geocode(address)
                 #if the geolac is fing put the data, if not put fake data
                 if address_lat_long[0]:
                     data.latitude = address_lat_long[0]

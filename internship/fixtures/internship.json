@@ -1,0 +1,568 @@
+[
+  {
+    "model": "internship.organization",
+    "pk": 1,
+    "fields": {
+      "name": "Cliniques Universitaires Saint Luc - Bruxelles",
+      "acronym": "Cliniques Univ",
+      "website": "http://www.saintluc.be",
+      "reference": "02",
+      "type": "service partner"
+    }
+  },
+  {
+    "model": "internship.organization",
+    "pk": 2,
+    "fields": {
+      "name": "Clinique Saint  Jean - Bruxelles",
+      "acronym": "Cliniques Saint",
+      "reference": "03",
+      "type": "service partner"
+    }
+  },
+  {
+    "model": "internship.organization",
+    "pk": 3,
+    "fields": {
+      "name": "Clinique Saint  Pierre - Ottignies",
+      "acronym": "Cliniques Saint",
+      "reference": "15",
+      "type": "service partner"
+    }
+  },
+  {
+    "model": "internship.organization",
+    "pk": 4,
+    "fields": {
+      "name": "Centre Hospitalier de Tubize-Nivelles",
+      "acronym": "Cliniques Hospi",
+      "reference": "32",
+      "type": "service partner"
+    }
+  },
+  {
+    "model": "internship.organization",
+    "pk": 5,
+    "fields": {
+      "name": "Centre Hospitalier du Luxembourg",
+      "acronym": "Centre Hospi",
+      "reference": "67",
+      "type": "service partner"
+    }
+  },
+  {
+    "model": "internship.organization",
+    "pk": 6,
+    "fields": {
+      "name": "Hôpital Enfants de la Timone - Marseille",
+      "acronym": "Hôpital Enfant",
+      "website": "http://www.saintluc.be",
+      "reference": "71",
+      "type": "service partner"
+    }
+  },
+  {
+    "model": "internship.organization",
+    "pk": 7,
+    "fields": {
+      "name": "Hôpital Saint Antoine - Lille",
+      "acronym": "Hôpital Saint ",
+      "reference": "75",
+      "type": "service partner"
+    }
+  },
+
+
+
+  {
+    "model": "internship.organizationaddress",
+    "pk": 1,
+    "fields": {
+      "organization": 1,
+      "label": "AddrCliniques Univ",
+      "location": "avenue Hippocrate 10",
+      "postal_code": "1200",
+      "city": "BRUXELLES",
+      "country": "Belgique"
+    }
+  },
+  {
+    "model": "internship.organizationaddress",
+    "pk": 2,
+    "fields": {
+      "organization": 2,
+      "label": "AddrClinique Saint",
+      "location": "rue du Marais 104",
+      "postal_code": "1000",
+      "city": "BRUXELLES",
+      "country": "Belgique"
+    }
+  },
+  {
+    "model": "internship.organizationaddress",
+    "pk": 3,
+    "fields": {
+      "organization": 3,
+      "label": "AddrClinique Saint",
+      "location": "avenue Reine Fabiola 9",
+      "postal_code": "1340",
+      "city": "OTTIGNIES",
+      "country": "Belgique"
+    }
+  },
+  {
+    "model": "internship.organizationaddress",
+    "pk": 4,
+    "fields": {
+      "organization": 4,
+      "label": "AddrCentre Hospita",
+      "location": "rue Samiette 1",
+      "postal_code": "1400",
+      "city": "NIVELLES",
+      "country": "Belgique"
+    }
+  },
+  {
+    "model": "internship.organizationaddress",
+    "pk": 5,
+    "fields": {
+      "organization": 5,
+      "label": "AddrCentre Hospita",
+      "location": "rue Barblé 4",
+      "postal_code": "1210",
+      "city": "LUXEMBOURG - G.D.L",
+      "country": "Luxembourg"
+    }
+  },
+  {
+    "model": "internship.organizationaddress",
+    "pk": 6,
+    "fields": {
+      "organization": 6,
+      "label": "AddrHôpital Enfant",
+      "location": "boulevard Jean Moulin",
+      "postal_code": "13385",
+      "city": "MARSEILLE",
+      "country": "France"
+    }
+  },
+  {
+    "model": "internship.organizationaddress",
+    "pk": 7,
+    "fields": {
+      "organization": 7,
+      "label": "AddrHôpital Saint ",
+      "location": "boulevard Victor Hugo 329 B 255",
+      "postal_code": "59019",
+      "city": "LILLE",
+      "country": "France"
+    }
+  },
+
+
+
+  {
+    "model": "internship.period",
+    "pk": 1,
+    "fields": {
+      "name": "P1",
+      "date_start": "2016-01-01",
+      "date_end": "2016-01-31"
+    }
+  },
+  {
+    "model": "internship.period",
+    "pk": 2,
+    "fields": {
+      "name": "P2",
+      "date_start": "2016-02-01",
+      "date_end": "2016-02-28"
+    }
+  },
+  {
+    "model": "internship.period",
+    "pk": 3,
+    "fields": {
+      "name": "P3",
+      "date_start": "2016-03-01",
+      "date_end": "2016-03-31"
+    }
+  },
+  {
+    "model": "internship.period",
+    "pk": 4,
+    "fields": {
+      "name": "P4",
+      "date_start": "2016-04-01",
+      "date_end": "2016-04-30"
+    }
+  },
+  {
+    "model": "internship.period",
+    "pk": 5,
+    "fields": {
+      "name": "P5",
+      "date_start": "2016-05-01",
+      "date_end": "2016-05-31"
+    }
+  },
+  {
+    "model": "internship.period",
+    "pk": 6,
+    "fields": {
+      "name": "P6",
+      "date_start": "2016-06-01",
+      "date_end": "2016-06-30"
+    }
+  },
+  {
+    "model": "internship.period",
+    "pk": 7,
+    "fields": {
+      "name": "P7",
+      "date_start": "2016-07-01",
+      "date_end": "2016-07-31"
+    }
+  },
+  {
+    "model": "internship.period",
+    "pk": 8,
+    "fields": {
+      "name": "P8",
+      "date_start": "2016-08-01",
+      "date_end": "2016-08-31"
+    }
+  },
+  {
+    "model": "internship.period",
+    "pk": 9,
+    "fields": {
+      "name": "P9",
+      "date_start": "2016-09-01",
+      "date_end": "2016-09-30"
+    }
+  },
+  {
+    "model": "internship.period",
+    "pk": 10,
+    "fields": {
+      "name": "P10",
+      "date_start": "2016-10-01",
+      "date_end": "2016-10-31"
+    }
+  },
+  {
+    "model": "internship.period",
+    "pk": 11,
+    "fields": {
+      "name": "P11",
+      "date_start": "2016-11-01",
+      "date_end": "2016-11-30"
+    }
+  },
+  {
+    "model": "internship.period",
+    "pk": 12,
+    "fields": {
+      "name": "P12",
+      "date_start": "2016-12-01",
+      "date_end": "2016-12-31"
+    }
+  },
+
+
+
+  {
+    "model": "internship.internshipmaster",
+    "pk": 1,
+    "fields": {
+      "organization": 1,
+      "first_name": "Henry",
+      "last_name": "Gaillaird",
+      "civility": "Dr",
+      "type_mastery": "généraliste",
+      "speciality": "MEDECINE GENERALE"
+    }
+  },
+  {
+    "model": "internship.internshipmaster",
+    "pk": 2,
+    "fields": {
+      "organization": 2,
+      "first_name": "Harry",
+      "last_name": "Potter",
+      "civility": "Pr",
+      "type_mastery": "spécialiste",
+      "speciality": "RADIOTHERAPIE"
+    }
+  },{
+    "model": "internship.internshipmaster",
+    "pk": 3,
+    "fields": {
+      "organization": 2,
+      "first_name": "Jean",
+      "last_name": "Dujardin",
+      "civility": "Pr",
+      "type_mastery": "spécialiste",
+      "speciality": "PEDIATRIE"
+    }
+  },
+  {
+    "model": "internship.internshipmaster",
+    "pk": 4,
+    "fields": {
+      "organization": 4,
+      "first_name": "Elise",
+      "last_name": "Descamp",
+      "civility": "Dr",
+      "type_mastery": "spécialiste",
+      "speciality": "PSYCHIATRIE"
+    }
+  },
+  {
+    "model": "internship.internshipmaster",
+    "pk": 5,
+    "fields": {
+      "organization": 5,
+      "first_name": "Ornelia",
+      "last_name": "Fleurette",
+      "civility": "Dr",
+      "type_mastery": "généraliste",
+      "speciality": "MEDECINE GENERALE"
+    }
+  },
+  {
+    "model": "internship.internshipmaster",
+    "pk": 6,
+    "fields": {
+      "organization": 6,
+      "first_name": "Mark",
+      "last_name": "Champs",
+      "civility": "Dr",
+      "type_mastery": "généraliste",
+      "speciality": "MEDECINE GENERALE"
+    }
+  },
+  {
+    "model": "internship.internshipmaster",
+    "pk": 7,
+    "fields": {
+      "organization": 6,
+      "first_name": "Laure",
+      "last_name": "De Potter",
+      "civility": "Dr",
+      "type_mastery": "spécialiste",
+      "speciality": "URGENCES"
+    }
+  },
+
+
+
+  {
+    "model": "internship.internshipspeciality",
+    "pk": 1,
+    "fields": {
+      "learning_unit": 1,
+      "name": "State en Pédiatrie",
+      "acronym": "PE",
+      "mandatory": true
+    }
+  },
+  {
+    "model": "internship.internshipspeciality",
+    "pk": 2,
+    "fields": {
+      "learning_unit": 1,
+      "name": "State en en Chirurgie",
+      "acronym": "CH",
+      "mandatory": true
+    }
+  },
+  {
+    "model": "internship.internshipspeciality",
+    "pk": 3,
+    "fields": {
+      "learning_unit": 1,
+      "name": "State aux Choix 1",
+      "acronym": "CH1",
+      "mandatory": false
+    }
+  },
+  {
+    "model": "internship.internshipspeciality",
+    "pk": 4,
+    "fields": {
+      "learning_unit": 1,
+      "name": "State aux Choix 2",
+      "acronym": "CH2",
+      "mandatory": false
+    }
+  },
+
+
+
+  {
+    "model": "internship.internshipoffer",
+    "pk": 1,
+    "fields": {
+      "organization": 1,
+      "speciality": 1,
+      "title": "Stage en Pédiatrie",
+      "maximum_enrollments": 40,
+      "master": "Dr. Marc Hoselaus"
+    }
+  },
+  {
+    "model": "internship.internshipoffer",
+    "pk": 2,
+    "fields": {
+      "organization": 1,
+      "speciality": 2,
+      "title": "Stage en Chirurgie",
+      "maximum_enrollments": 40,
+      "master": "Dr. Marc Hoselaus"
+    }
+  },
+  {
+    "model": "internship.internshipoffer",
+    "pk": 3,
+    "fields": {
+      "organization": 2,
+      "speciality": 1,
+      "title": "Stage en Pédiatrie",
+      "maximum_enrollments": 40,
+      "master": "Dr. Marc Hoselaus"
+    }
+  },
+  {
+    "model": "internship.internshipoffer",
+    "pk": 4,
+    "fields": {
+      "organization": 3,
+      "speciality": 2,
+      "title": "Stage en Chirurgie",
+      "maximum_enrollments": 40,
+      "master": "Dr. Marc Hoselaus"
+    }
+  },
+
+
+
+  {
+    "model": "internship.internshipstudentinformation",
+    "pk": 1,
+    "fields": {
+      "person": 16,
+      "location": "rue student 45",
+      "postal_code": "1254",
+      "city": "city test",
+      "country": "country test"
+    }
+  },
+  {
+    "model": "internship.internshipstudentinformation",
+    "pk": 2,
+    "fields": {
+      "person": 17,
+      "location": "rue student 85",
+      "postal_code": "1254",
+      "city": "city test",
+      "country": "country test"
+    }
+  },
+  {
+    "model": "internship.internshipstudentinformation",
+    "pk": 3,
+    "fields": {
+      "person": 18,
+      "location": "rue student 90",
+      "postal_code": "1254",
+      "city": "city test",
+      "country": "country test"
+    }
+  },
+
+
+
+  {
+    "model": "internship.periodinternshipplaces",
+    "pk": 1,
+    "fields": {
+      "period": 1,
+      "internship": 1,
+      "number_places": 10
+    }
+  },
+  {
+    "model": "internship.periodinternshipplaces",
+    "pk": 2,
+    "fields": {
+      "period": 4,
+      "internship": 1,
+      "number_places": 10
+    }
+  },
+  {
+    "model": "internship.periodinternshipplaces",
+    "pk": 3,
+    "fields": {
+      "period": 10,
+      "internship": 1,
+      "number_places": 20
+    }
+  },
+  {
+    "model": "internship.periodinternshipplaces",
+    "pk": 4,
+    "fields": {
+      "period": 2,
+      "internship": 2,
+      "number_places": 10
+    }
+  },
+  {
+    "model": "internship.periodinternshipplaces",
+    "pk": 5,
+    "fields": {
+      "period": 7,
+      "internship": 2,
+      "number_places": 30
+    }
+  },
+  {
+    "model": "internship.periodinternshipplaces",
+    "pk": 6,
+    "fields": {
+      "period": 3,
+      "internship": 3,
+      "number_places": 20
+    }
+  },
+  {
+    "model": "internship.periodinternshipplaces",
+    "pk": 7,
+    "fields": {
+      "period": 9,
+      "internship": 3,
+      "number_places": 20
+    }
+  },
+  {
+    "model": "internship.periodinternshipplaces",
+    "pk": 8,
+    "fields": {
+      "period": 5,
+      "internship": 4,
+      "number_places": 20
+    }
+  },
+  {
+    "model": "internship.periodinternshipplaces",
+    "pk": 9,
+    "fields": {
+      "period": 12,
+      "internship": 4,
+      "number_places": 20
+    }
+  }
+]
