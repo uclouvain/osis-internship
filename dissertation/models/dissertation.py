@@ -108,7 +108,7 @@ class Dissertation(SerializableModel):
         next_status = get_next_status(self, "accept")
         if self.status == 'DIR_SUBMIT':
             emails_dissert.send_mail_dissert_accepted_by_teacher(self)
-        if self.status == 'COM_SUBMIT':
+        if self.status == 'COM_SUBMIT' or self.status == 'COM_KO':
             emails_dissert.send_mail_dissert_accepted_by_com(self)
         self.set_status(next_status)
 
