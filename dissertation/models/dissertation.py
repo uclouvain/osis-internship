@@ -42,6 +42,7 @@ class DissertationAdmin(admin.ModelAdmin):
                      'proposition_dissertation__title', 'proposition_dissertation__author__person__last_name',
                      'proposition_dissertation__author__person__first_name')
 
+
 STATUS_CHOICES = (
     ('DRAFT', _('draft')),
     ('DIR_SUBMIT', _('submitted_to_director')),
@@ -98,9 +99,9 @@ class Dissertation(SerializableModel):
 
         next_status = get_next_status(self, "go_forward")
         if self.status == 'TO_RECEIVE' and next_status == 'TO_DEFEND':
-            emails_dissert.send_mail_dissert_acknowledgement(self.author.person)
-        if (self.status == 'DRAFT' or self.status == 'DIR_KO')and next_status == 'DIR_SUBMIT':
-            emails_dissert.send_mail_to_teacher_new_dissert(emails_dissert.get_promoteur_by_dissertation(self))
+            emails_dissert.send_mail_dissert_acknowledgement(self)
+        if (self.status == 'DRAFT' or self.status == 'DIR_KO') and next_status == 'DIR_SUBMIT':
+            emails_dissert.send_mail_to_teacher_new_dissert(self)
         self.set_status(next_status)
 
     def accept(self):
@@ -183,8 +184,8 @@ def get_next_status(dissert, operation):
             return 'COM_SUBMIT'
 
         elif offer_prop.evaluation_first_year and (dissert.status == 'DIR_SUBMIT' or
-                                                   dissert.status == 'COM_SUBMIT' or
-                                                   dissert.status == 'COM_KO'):
+                                                           dissert.status == 'COM_SUBMIT' or
+                                                           dissert.status == 'COM_KO'):
             return 'EVA_SUBMIT'
 
         elif dissert.status == 'EVA_SUBMIT' or dissert.status == 'EVA_KO':

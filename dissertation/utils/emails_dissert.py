@@ -70,9 +70,7 @@ def send_mail_dissert_accepted_by_teacher(dissert):
 
 
 def send_mail_dissert_refused_by_teacher(dissert):
-    """
-    Notify (for the student) dissertation accepted by teacher
-    """
+
     html_template_ref = 'dissertation_refused_by_teacher_html'
     txt_template_ref = 'dissertation_refused_by_teacher_txt'
     receivers = [message_config.create_receiver(dissert.author.person.id,
@@ -87,9 +85,6 @@ def send_mail_dissert_refused_by_teacher(dissert):
 
 
 def send_mail_dissert_acknowledgement(dissert):
-    """
-    Notify (for the student) dissertation accepted by teacher
-    """
 
     html_template_ref = 'dissertation_acknowledgement_html'
     txt_template_ref = 'dissertation_acknowledgement_txt'
