@@ -27,18 +27,8 @@ from django.db import models
 from django.contrib import admin
 from base.models import structure
 from django.db.models import Q
-from django.utils.translation import ugettext_lazy as _
 from assistant.models import mandate_structure, assistant_mandate
-
-
-ROLE_CHOICES = (
-    ('PHD_SUPERVISOR', _('phd_supervisor')),
-    ('SUPERVISION', _('supervision')),
-    ('SUPERVISION_ASSISTANT', _('supervision_assistant')),
-    ('RESEARCH', _('research')),
-    ('RESEARCH_ASSISTANT', _('research_assistant')),
-    ('SECTOR_VICE_RECTOR', _('sector_vice_rector')),
-    ('SECTOR_VICE_RECTOR_ASSISTANT', _('sector_vice_rector_assistant')))
+from assistant.enums import reviewer_role
 
 
 class ReviewerAdmin(admin.ModelAdmin):
@@ -52,13 +42,13 @@ class ReviewerAdmin(admin.ModelAdmin):
     def get_form(self, request, obj=None, **kwargs):
         form = super(ReviewerAdmin, self).get_form(request, obj, **kwargs)
         form.base_fields['structure'].queryset = structure.Structure.objects.filter(
-        Q(type='INSTITUTE') | Q(type='FACULTY') | Q(type='SECTOR') | Q(type='POLE') | Q(type='PROGRAM_COMMISSION'))
+            Q(type='INSTITUTE') | Q(type='FACULTY') | Q(type='SECTOR') | Q(type='POLE') | Q(type='PROGRAM_COMMISSION'))
         return form
 
 
 class Reviewer(models.Model):
     person = models.ForeignKey('base.Person')
-    role = models.CharField(max_length=30, choices=ROLE_CHOICES)
+    role = models.CharField(max_length=30, choices=reviewer_role.ROLE_CHOICES)
     structure = models.ForeignKey('base.Structure', blank=True, null=True)
 
     def __str__(self):
@@ -89,6 +79,10 @@ def can_edit_review(reviewer_id, mandate_id):
             return find_by_id(reviewer_id)
     else:
         return find_by_id(reviewer_id)
+
+
+def find_by_role(role):
+    return Reviewer.objects.filter(role=role)
 
 
 def can_delegate_to_structure(reviewer, structure):

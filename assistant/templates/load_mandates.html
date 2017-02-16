@@ -47,7 +47,7 @@
 
 <div class="panel panel-default">
     <div class="panel-body">
-    {% if imported_mandates or updated_mandates %}
+    {% if imported_mandates >= 0 or updated_mandates >= 0 %}
         <div class="form-group" style="padding-top: 5px;">
             <ul>
                 <li>{{ imported_assistants }} assistants importés.</li>

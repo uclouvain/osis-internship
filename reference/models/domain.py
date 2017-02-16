@@ -24,13 +24,12 @@
 #
 ##############################################################################
 from django.db import models
-from django.contrib import admin
 from django.core import serializers
 from reference.enums import domain_type
-from osis_common.models.serializable_model import SerializableModel
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
-class DomainAdmin(admin.ModelAdmin):
+class DomainAdmin(SerializableModelAdmin):
     list_display = ('name', 'parent', 'decree', 'type')
     fieldsets = ((None, {'fields': ('name', 'parent', 'decree', 'type')}),)
     search_fields = ['name']

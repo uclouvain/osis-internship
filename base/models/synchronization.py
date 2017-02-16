@@ -43,6 +43,9 @@ class Synchronization(models.Model):
 
 
 def find_last_synchronization_date():
-    sync = Synchronization.objects.filter(date__isnull=False).latest(field_name='date')
-    return sync.date if sync else None
+    sync = Synchronization.objects.filter(date__isnull=False)
+    if sync:
+        return sync.order_by('-date').first().date
+    else:
+        return None
 

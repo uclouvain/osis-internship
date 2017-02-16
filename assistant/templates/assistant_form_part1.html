@@ -26,6 +26,9 @@
 * at the root of the source code of this program.  If not,
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}">
+{% endblock %}
 {% block breadcrumb %}
 	<li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'institution' %}</a></li>
 	<li><a href="{% url 'mandates' %}" id="lnk_mandates">{% trans 'mandates' %}</a></li>
@@ -37,39 +40,30 @@
 	<li><a href="{% url 'assistant_mandates' %}">{% trans 'my_mandates' %}</a></li>
 	<li class="active"><a href="#">{% trans 'assistant_form_part1' %}</a></li>
 	<li><a href="{% url 'mandate_learning_units' mandate.id %}">{% trans 'assistant_form_part2' %}</a></li>
+	<li><a href="{% url 'form_part3_edit' mandate.id %}">{% trans 'assistant_form_part3' %}</a></li>
+	<li><a href="{% url 'form_part4_edit' mandate.id %}">{% trans 'assistant_form_part4' %}</a></li>
 	<li><a href="{% url 'form_part5_edit' mandate.id %}">{% trans 'assistant_form_part5' %}</a></li>
 	<li><a href="{% url 'form_part6_edit' mandate.id %}">{% trans 'assistant_form_part6' %}</a></li>
 </ul>
 <div class="panel panel-default">
 	<div class="panel-body">
- 		<form method="POST" action="{% url 'form_part1_save' mandate.id %}">
+ 		<form id="pst-form-part1" method="POST" action="{% url 'form_part1_save' mandate.id %}">
  		{% csrf_token %}
  		{{ form.non_field_errors }}
  		<div class="panel-primary">
   			<div class="panel-heading">
   				<font size="4">{% trans 'contact_details' %}</font>
   			</div>
-  		</div><p>
- 		<div class="form-group">
-    		<div class="row">
-      			<div class="col-md-3">
-      				<label for="txt_name" id="txt_name">{% trans 'name' %}</label>
-      			</div>
-      			<div class="col-md-3">
-    				<div class="controls">{{assistant.person}}</div>
-    			</div>
-    		</div>
-    		<div class="row">
-      			<div class="col-md-3">
-      				<label for="txt_address" id="txt_address">{% trans 'address' %}</label>
-      			</div>
-      			<div class="col-md-3">
-    				<div class="controls">{% for address in addresses  %}
-      				{{address.location}} - {{address.postal_code}} {{address.city}}<br>{{address.country}}
-      				{% endfor %}
-      				</div>
-    			</div>
-    		</div>
+  		</div>
+		<div class="form-group" style="padding-top: 15px;">
+    		<label style="padding-top: 5px" for="person">{% trans 'name' %}</label>
+			<div class="controls" id="person">{{assistant.person}}</div>
+    		<label  style="padding-top: 5px" for="adresses">{% trans 'address' %}</label>
+			<div class="controls" id="adresses">
+				{% for address in addresses  %}
+					{{address.location}} - {{address.postal_code}} {{address.city}}<br>{{address.country}}
+				{% endfor %}
+			</div>
     	</div>
 		<hr>
   		<div class="panel-info">
@@ -77,60 +71,35 @@
   				<font size="4">{% trans 'contract' %}</font>
   			</div>
   		</div>
-  		<p>
-  		<div class="form-group">
-      		<div class="row">
-      			<div class="col-md-3">
-      			<label for="txt_renewal_type" id="txt_renewal_type">{% trans 'renewal_type' %}</label>
-      			</div>
-      			<div class="controls">
-      				{% if mandate.renewal_type == 'EXCEPTIONAL' %}
-      					{% trans 'exceptional' %}
-      				{% else %}
-      					{% trans 'normal' %}
-      				{% endif %}
-      			</div>
-      		</div>
-    		{% for structure in mandate.mandatestructure_set.all|dictsort:"structure.type" %}
-      			<div class="row">
-      				<div class="col-md-3">
-      				<label for="txt_structure" id="txt_structure">{% trans structure.structure.type|lower %}</label>
-      				</div>
-      				<div class="controls">
-      					{{structure.structure.acronym}}
-      				</div>
-      			</div>
+  		<div class="form-group" style="padding-top: 15px;">
+			<label style="padding-top: 5px" for="renewal_type">{% trans 'renewal_type' %}
+			</label>
+			<div class="controls" id="renewal_type">
+				{% if mandate.renewal_type == 'EXCEPTIONAL' %}
+					{% trans 'exceptional' %}
+				{% else %}
+					{% trans 'normal' %}
+				{% endif %}
+			</div>
+			{% for structure in mandate.mandatestructure_set.all|dictsort:"structure.type" %}
+				<label style="padding-top: 5px" for="structures">
+					{% trans structure.structure.type|lower %}</label>
+				<div class="controls" id="structures">{{structure.structure.acronym}}</div>
       		{% endfor %}
-    		<div class="row">
-      			<div class="col-md-3">
-      			<label for="txt_full_time_equivalent" id="txt_full_time_equivalent">
-                    {% trans 'full_time_equivalent' %}</label>
-      			</div>
-      			<div class="controls">
-      				{{mandate.fulltime_equivalent}}
-      			</div>
-      		</div>
-      		<div class="row">
-      			<div class="col-md-3">
-      				<label for="txt_date_of_first_nomination" id="txt_date_of_first_nomination">
-                        {% trans 'date_of_first_nomination' %}</label>
-      			</div>
-      			<div class="controls">
-      				{{mandate.entry_date}}
-      			</div>
-      		</div>
-      		<div class="row">
-      			<div class="col-md-3">
-      				<label for="txt_field" id="txt_field">{% trans 'field' %}</label>
-      			</div>
-      			<div class="controls">
-      				{% if mandate.assistant_type == 'ASSISTANT' %}
-      					{% trans 'assistant' %}
-      				{% else %}
-      					{% trans 'teaching_assistant' %}
+			<label style="padding-top: 5px" for="full_time_equivalent">
+				{% trans 'full_time_equivalent' %}</label>
+			<div class="controls" id="full_time_equivalent">{{mandate.fulltime_equivalent}}</div>
+      		<label style="padding-top: 5px" for="date_of_first_nomination">
+				{% trans 'date_of_first_nomination' %}</label>
+      		<div class="controls" id="date_of_first_nomination">{{mandate.entry_date}}</div>
+      		<label  style="padding-top: 5px" for="field">{% trans 'field' %}</label>
+			<div class="controls" id="field">
+				{% if mandate.assistant_type == 'ASSISTANT' %}
+					{% trans 'assistant' %}
+				{% else %}
+				{% trans 'teaching_assistant' %}
       				{% endif %}
-      			</div>
-      		</div>
+			</div>
       	</div>
   		<hr>
   		<div class="panel-danger">
@@ -138,75 +107,45 @@
   				<font size="4">{% trans 'doctorate' %}</font>
     		</div>
     	</div>
-    	<div class="form-group">
-      		<div class="row">
-      			<div class="col-md-3">
-      				<label for="txt_registered_phd" id="txt_registered_phd">{% trans 'registered_phd' %}</label>
-      			</div>
-      			<div class="col-md-3">
-    				<div class="controls">{{ form.inscription }}
-    				<font class="error">{{ form.inscription.errors }}</font></div>
-    			</div>
-      			<div class="col-md-3" align="right">
-          		<label for="txt_expected_phd_date" id="txt_expected_phd_date">
-                    {% trans 'expected_registering_date' %}</label>
-        		</div>
-        		<div class="col-md-3" align="left">
-          			<div class="controls">{{ form.expected_phd_date }}
-          				<font class="error">{{ form.expected_phd_date.errors }}</font>
-          			</div>
-        		</div>
-      		</div><p>
-			<div class="row"> 
-        		<div class="col-md-3">
-        			<label for="txt_supervisor" id="txt_supervisor">{% trans 'supervisor' %}</label>
-        		</div>
-        		<div class="col-md-3">
-     				<div class="controls" onChange="disablefield();">{{ form.supervisor }}</div>
-     					<font class="error">{{ form.supervisor.errors }}</font>
-        			</div>
-        			<div class="col-md-3">
-          				<label class="checkbox-inline">
-            			<input type="checkbox" value="nosupervisor" id="id_no_supervisor" onChange="disablefield();">
-            			{% trans 'no_supervisor' %}
-          				</label>
-        			</div>  
-        			<div class="col-md-3">
-          				<div id="email_supervisor"></div>
-        			</div>        
-      			</div>
-      		
-      		<div class="row">  
-        		<div class="col-md-3">
-          			<label for="txt_phd_inscription_date" id="txt_phd_inscription_date">
-                        {% trans 'phd_inscription_date' %}</label>
-        		</div>
-        		<div class="col-md-3">
-          			<div class="controls">{{ form.phd_inscription_date }}</div>
-          			<font class="error">{{ form.phd_inscription_date.errors }}</font>
-        		</div>  
-      		</div>
-      		<div class="row">  
-        		<div class="col-md-3">
-          			<label for="txt_confirmatory_test_date" id="txt_confirmatory_test_date">
-                        {% trans 'confirmatory_test_date' %}<br>
-          			<font size="1">{% trans '2nd_renewal' %}</font></label>      
-        		</div>     
-        		<div class="col-md-3">     
-          			<div class="controls">{{ form.confirmation_test_date }}</div>
-          			<font class="error">{{ form.confirmation_test_date.errors }}</font>
-        		</div>
-          	</div>
-      		<div class="row">      
-        		<div class="col-md-3">
-          			<label for="txt_thesis_defence_date" id="txt_thesis_defence_date">
-                        {% trans 'thesis_defence_date' %}</label>
-        		</div>
-        		<div class="col-md-3">
-          			<div class="controls">{{ form.thesis_date }}</div>
-          			<font class="error">{{ form.thesis_date.errors }}</font>
-        		</div>
-      		</div>  
+    	<div class="form-group" style="padding-top: 15px;">
+			<label style="padding-top: 5px" for="registered_phd">{% trans 'registered_phd' %}</label>
+			<div class="controls" id="registered_phd">{{ form.inscription }}
+				<font class="error">{{ form.inscription.errors }}</font>
+			</div>
+    		<label style="padding-top: 5px" for="expected_phd_date">
+				{% trans 'expected_registering_date' %}
+			</label>
+        	<div class="controls" id="expected_phd_date">{{ form.expected_phd_date }}
+				<font class="error">{{ form.expected_phd_date.errors }}</font>
+			</div>
+			{% if not supervisor %}
+			<label style="padding-top: 5px" for="search_persons">{% trans 'supervisor' %}</label>
+			<div class="ui-widget"><input id="search_persons" name="search_persons" size="100"
+										  placeholder="{% trans 'search_by_email_or_last_name' %}">
+			</div>
+			<input type="hidden" name="person_id" id="person_id">
+			{% else %}
+			<label style="padding-top: 5px">{% trans 'supervisor' %}</label>
+			<div class="form-group">
+				{{ supervisor }}
+			</div>
+			{% endif %}
+			<label style="padding-top: 5px" for="phd_inscription_date">{% trans 'phd_inscription_date' %}</label>
+			<div class="controls" id="phd_inscription_date">{{ form.phd_inscription_date }}
+				<font class="error">{{ form.phd_inscription_date.errors }}</font>
+			</div>
+			<label style="padding-top: 5px" for="confirmatory_test_date">
+				{% trans 'confirmatory_test_date' %}<br>
+				<font size="1">{% trans '2nd_renewal' %}</font>
+			</label>
+        	<div class="controls" id="confirmatory_test_date">{{ form.confirmation_test_date }}
+				<font class="error">{{ form.confirmation_test_date.errors }}</font>
+			</div>
+ 			<label style="padding-top: 5px" for="thesis_defence_date">
+				{% trans 'thesis_defence_date' %}</label>
+			<div class="controls" id="thesis_defence_date">{{ form.thesis_date }}
+				<font class="error">{{ form.thesis_date.errors }}</font>
+			</div>
     	</div>
     	<hr>
     	<div class="panel-warning">
@@ -215,54 +154,58 @@
     		</div>
     	</div>
     	<div class="form-group">
-    		<div class="row">      
-        		<div class="col-md-5">
-   					<label for="txt_function_outside_university" id="txt_function_outside_university">
-                        <font size="2">{% trans 'function_outside_university' %}</font></label>
-   				</div>
-   				<div class="col-md-7">
-    				<div class="controls">{{ form2.external_functions }}</div>
-    				<font class="error">{{ form.errors.external_functions }}</font>
-    			</div>
-    		</div>
-    		<div class="row">  
-    			<div class="col-md-5">
-    				<label for="txt_external_post" id="txt_external_post">
-                        <font size="2">{% trans 'external_post' %}</font></label>
-  				</div>  
-  				<div class="col-md-7">
-    				<div class="controls">{{ form2.external_contract }}</div>
-    				<font class="error">{{ form.errors.external_contract }}</font>
-    			</div>
-    		</div>
+			<label style="padding-top: 5px" for="function_outside_university">
+				<font size="2">{% trans 'function_outside_university' %}</font>
+			</label>
+			<div class="controls" id="function_outside_university">{{ form2.external_functions }}
+				<font class="error">{{ form.errors.external_functions }}</font>
+			</div>
+			<label style="padding-top: 5px" for="external_post">
+				<font size="2">{% trans 'external_post' %}</font>
+			</label>
+			<div class="controls" id="external_post">{{ form2.external_contract }}
+				<font class="error">{{ form.errors.external_contract }}</font>
+			</div>
     		{% if mandate.renewal_type == 'EXCEPTIONAL' %}
-    		<div class="row"> 
-    			<div class="col-md-5">
-      				<label for="txt_exceptional_justification" id="txt_exceptional_justification">
-      				<font size="1">{% trans 'exceptional_justification' %}</font></label>
-    			</div>
-    			<div class="col-md-7">
-    				<div class="controls">{{ form2.justification }}</div>
+				<label for="exceptional_justification">
+      				<font size="1">{% trans 'exceptional_justification' %}</font>
+				</label>
+				<div class="controls" id="exceptional_justification">{{ form2.justification }}
       				<font class="error">{{ form.errors.justification }}</font>
     			</div>  
-   			</div>
    			{% endif %}
-     		<div class="col-md-12" align="left">
-     			<button type="submit" class="btn btn-primary" title="{% trans 'save'%}" id="bt_pstform_part1_save">
-     			<span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}</button>
-    		</div>
+			<hr>
+			<div class="form-group">
+     			<button type="submit" class="btn btn-primary btn-block" title="{% trans 'save'%}"
+						id="bt_pstform_part1_save">
+     				<span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}
+				</button>
+			</div>
 		</div>
     	</form>
 	</div>
 </div>
 {% endblock %}
 {% block script %}
+<script type="text/javascript" src="{% static 'js/jquery-ui.js' %}"></script>
 <script>
-function print_email()
-{
-	var email = document.getElementById("id_supervisor").value;
-	document.getElementById('email_supervisor').innerHTML = email;
-}
+window.onload = function() {
+    $('#person_id').empty();
+};
+$(function() {
+  $("#search_persons").autocomplete({
+	source: "/assistants/api/get_persons/",
+    minLength: 3,
+    delay: 100,
+    select: function(event, ui) {
+    	var person_id = ui.item.id;
+    	$( "#person_id" ).val(person_id);
+    	$( "#search_persons" ).val( ui.item.first_name + ', ' + ui.item.last_name + ' (' + ui.item.value + ')' );
+    	$('#id_phd_inscription_date').focus();
+    	return False;
+    	}
+  });
+});
 
 function Hide() {
 	if(document.getElementById('id_inscription_0').checked == true)
@@ -294,7 +237,23 @@ function disablefield(){
 
 window.onload = function() {
     Hide();
-    print_email();
 };
+
+$("#pst-form-part1 :input").change(function() {
+   $("#pst-form-part1").data("changed",true);
+});
+$('a').on('click', function(e) {
+	var hrefLoc = $(this).attr('href');
+	if ($("#pst-form-part1").data("changed")) {
+		var choice = confirm("{% trans 'save_before_link' %}");
+		if (choice == true) {
+			e.preventDefault();
+			$('form#pst-form-part1').submit();
+		} else {
+			window.location.href = hrefLoc;
+		}
+	}
+});
+
 </script>
 {% endblock %}
