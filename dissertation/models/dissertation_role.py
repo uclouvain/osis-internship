@@ -23,14 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from osis_common.models.serializable_model import SerializableModel
-from django.contrib import admin
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from django.db import models
 from django.db.models import Q
 from .enums import status_types
 
 
-class DissertationRoleAdmin(admin.ModelAdmin):
+class DissertationRoleAdmin(SerializableModelAdmin):
     list_display = ('adviser', 'status', 'dissertation', 'get_dissertation_author', 'get_dissertation_status')
     raw_id_fields = ('adviser', 'dissertation')
     search_fields = ('uuid', 'dissertation__author__person__last_name', 'dissertation__author__person__first_name',
