@@ -24,15 +24,16 @@
 #
 ##############################################################################
 from django.db import models
-from django.contrib import admin
 from base.models.enums import component_type
-from osis_common.models.serializable_model import SerializableModel
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
-class LearningUnitComponentAdmin(admin.ModelAdmin):
+class LearningUnitComponentAdmin(SerializableModelAdmin):
     list_display = ('learning_unit_year', 'learning_component_year', 'type', 'duration')
     fieldsets = ((None, {'fields': ('learning_unit_year', 'learning_component_year', 'type', 'duration',
                                     'coefficient_repetition')}),)
+    raw_id_fields = ('learning_unit_year', )
+    search_fields = ['learning_unit_year__acronym']
 
 
 class LearningUnitComponent(SerializableModel):

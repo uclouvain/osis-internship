@@ -23,9 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from osis_common.models.serializable_model import SerializableModel
 from dissertation.utils import emails_dissert
 from django.contrib import admin
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
@@ -35,7 +35,7 @@ from . import offer_proposition
 from . import dissertation_location
 
 
-class DissertationAdmin(admin.ModelAdmin):
+class DissertationAdmin(SerializableModelAdmin):
     list_display = ('uuid', 'title', 'author', 'status', 'active', 'proposition_dissertation', 'modification_date')
     raw_id_fields = ('author', 'offer_year_start', 'proposition_dissertation', 'location')
     search_fields = ('uuid', 'title', 'author__person__last_name', 'author__person__first_name',
