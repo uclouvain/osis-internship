@@ -86,11 +86,9 @@
             {% for dissertation in dissertations %}
               <tr>
                 <td rowspan="1" width="150px">
-
                   {% if dissertation.author.person.global_id %}
                       <img src="/my_osis/profile/{{ dissertation.author.person.id }}" class="avatar img-responsive"
                            height="50%" width="50%"/>
-
                      {% else %}
                          {% if dissertation.author.person.gender == "U" %}
                           <!-- no photo Unknow -->
