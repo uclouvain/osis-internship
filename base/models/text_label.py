@@ -26,7 +26,7 @@
 from django.db import models
 from django.contrib import admin
 from base.enums.entity_name import ENTITY_NAME
-from base.models.exceptions import FunctionTxtLabelOrderMustExitsException
+from base.models.exceptions import TxtLabelOrderMustExitsException
 
 
 class TextLabelAdmin(admin.ModelAdmin):
@@ -55,7 +55,7 @@ class TextLabel(models.Model):
                     if txtlabelsameparent.order >= self.order:
                         TextLabel.objects.filter(id=txtlabelsameparent.id).update(order=txtlabelsameparent.order+1)
         else:
-            raise FunctionTxtLabelOrderMustExitsException('A textlabel must have an order defined')
+            raise TxtLabelOrderMustExitsException('A textlabel must have an order defined')
         super(TextLabel, self).save(*args, **kwargs)
 
     @property

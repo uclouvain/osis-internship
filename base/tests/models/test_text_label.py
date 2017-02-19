@@ -26,7 +26,7 @@
 from django.test import TestCase
 from base.models import text_label
 from base.enums import entity_name
-from base.models.exceptions import FunctionTxtLabelOrderMustExitsException
+from base.models.exceptions import TxtLabelOrderMustExitsException
 
 
 def create_text_label(entity_name, part_of, label, order, published):
@@ -57,4 +57,4 @@ class TextLabelTest(TestCase):
     def test_insert_new_text_label_without_order(self):
         txtlabel15 = text_label.TextLabel(entity_name=entity_name.LEARNING_UNIT_YEAR,
                                           part_of=self.txtlabel10, label="SUBWINDOW_CC", published=True)
-        self.assertRaises(FunctionTxtLabelOrderMustExitsException, txtlabel15.save)
+        self.assertRaises(TxtLabelOrderMustExitsException, txtlabel15.save)
