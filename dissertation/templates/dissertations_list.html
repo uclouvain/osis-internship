@@ -217,13 +217,10 @@
                 </tr>
                 {% for adviser_list_dissertation in adviser_list_dissertations_reader %}
                   <tr>
-
                       <td rowspan="1" width="150px">
-
                             {% if adviser_list_dissertation.dissertation.author.person.global_id %}
                               <img src="/my_osis/profile/{{ adviser_list_dissertation.dissertation.author.person.id }}" class="avatar img-responsive"
                                    height="50%" width="50%"/>
-
                              {% else %}
                                  {% if adviser_list_dissertation.dissertation.author.person.gender == "U" %}
                                   <!-- no photo Unknow -->
@@ -296,13 +293,10 @@
                 </tr>
                 {% for adviser_list_dissertation in adviser_list_dissertations_accompanist %}
                   <tr>
-
                     <td rowspan="1" width="150px">
-
                     {% if adviser_list_dissertation.dissertation.author.person.global_id %}
                       <img src="/my_osis/profile/{{ adviser_list_dissertation.dissertation.author.person.id }}" class="avatar img-responsive"
                            height="50%" width="50%"/>
-
                      {% else %}
                          {% if adviser_list_dissertation.dissertation.author.person.gender == "U" %}
                           <!-- no photo Unknow -->
@@ -375,13 +369,10 @@
                 </tr>
                 {% for adviser_list_dissertation in adviser_list_dissertations_internship %}
                   <tr>
-
                       <td rowspan="1" width="150px">
-
                         {% if adviser_list_dissertation.dissertation.author.person.global_id %}
                           <img src="/my_osis/profile/{{ adviser_list_dissertation.dissertation.author.person.id }}" class="avatar img-responsive"
                                height="50%" width="50%"/>
-
                          {% else %}
                              {% if adviser_list_dissertation.dissertation.author.person.gender == "U" %}
                               <!-- no photo Unknow -->
