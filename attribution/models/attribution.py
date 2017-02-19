@@ -24,12 +24,11 @@
 #
 ##############################################################################
 from django.db import models
-from django.contrib import admin
 from attribution.models.enums import function
-from osis_common.models.serializable_model import SerializableModel
+from osis_common.models.serializable_model import SerializableModel,SerializableModelAdmin
 
 
-class AttributionAdmin(admin.ModelAdmin):
+class AttributionAdmin(SerializableModelAdmin):
     list_display = ('tutor', 'function', 'score_responsible', 'learning_unit_year', 'start_year', 'end_year', 'changed')
     list_filter = ('function', 'learning_unit_year__academic_year')
     fieldsets = ((None, {'fields': ('learning_unit_year', 'tutor', 'function', 'score_responsible', 'start_year',
@@ -46,7 +45,7 @@ class Attribution(SerializableModel):
     end_date = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
     start_year = models.IntegerField(blank=True, null=True)
     end_year = models.IntegerField(blank=True, null=True)
-    function = models.CharField(max_length=15, blank=True, null=True, choices=function.FUNCTIONS, db_index=True)
+    function = models.CharField(max_length=35, blank=True, null=True, choices=function.FUNCTIONS, db_index=True)
     learning_unit_year = models.ForeignKey('base.LearningUnitYear', blank=True, null=True, default=None)
     tutor = models.ForeignKey('base.Tutor')
     score_responsible = models.BooleanField(default=False)

@@ -25,12 +25,11 @@
 ##############################################################################
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
-from django.contrib import admin
 from reference.enums import grade_type_coverage, institutional_grade_type as enum_institutional_grade_type
-from osis_common.models.serializable_model import SerializableModel
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
-class GradeTypeAdmin(admin.ModelAdmin):
+class GradeTypeAdmin(SerializableModelAdmin):
     list_display = ('name', 'readable_institutional_grade_type', 'coverage', 'adhoc', 'institutional')
     fieldsets = ((None, {'fields': ('name', 'institutional_grade_type', 'coverage', 'adhoc', 'institutional')}),)
 

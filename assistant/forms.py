@@ -32,6 +32,7 @@ from base.models import structure, academic_year, person, learning_unit_year
 from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
 from django.forms import widgets
+from assistant.enums import reviewer_role
 
 
 class MandateFileForm(forms.Form):
@@ -120,7 +121,8 @@ class AssistantFormPart1(ModelForm):
     class Meta:
         model = mdl.assistant_mandate.AssistantMandate
         fields = ('inscription', 'expected_phd_date', 'phd_inscription_date', 'confirmation_test_date',
-                  'thesis_date', 'supervisor')
+                  'thesis_date')
+        exclude = ['supervisor']
 
     def clean(self):
         super(AssistantFormPart1, self).clean()
@@ -169,7 +171,7 @@ class AssistantFormPart3(ModelForm):
 
     class Meta:
         model = mdl.academic_assistant.AcademicAssistant
-        fields = ('phd_inscription_date', 'thesis_title', 'confirmation_test_date','remark')
+        fields = ('phd_inscription_date', 'thesis_title', 'confirmation_test_date', 'remark')
 
 
 class AssistantFormPart4(ModelForm):
@@ -329,51 +331,29 @@ class AssistantFormPart6(ModelForm):
 
 
 class ReviewerDelegationForm(ModelForm):
-    person = forms.ModelChoiceField(required=True, queryset=person.Person.objects.all().order_by('last_name'),
-                                    to_field_name="email")
     role = forms.CharField(widget=forms.HiddenInput(), required=True)
     structure = forms.ModelChoiceField(widget=forms.HiddenInput(), required=True,
                                        queryset=structure.Structure.objects.all())
 
     class Meta:
         model = mdl.reviewer.Reviewer
-        fields = ('person', 'structure', 'role')
+        fields = ('structure', 'role')
+        exclude = ['person']
         widgets = {
             'structure': forms.HiddenInput()
         }
 
-    def clean(self):
-        super(ReviewerDelegationForm, self).clean()
-        selected_person = self.cleaned_data.get('person')
-        try:
-            mdl.reviewer.find_by_person(selected_person)
-            msg = _("person_already_reviewer_msg")
-            self.add_error('person', msg)
-        except:
-            pass
-
 
 class ReviewerForm(ModelForm):
-    person = forms.ModelChoiceField(required=True, queryset=person.Person.objects.all().order_by('last_name'),
-                                    to_field_name="email")
-    role = forms.ChoiceField(required=True, choices=mdl.reviewer.ROLE_CHOICES)
+    role = forms.ChoiceField(required=True, choices=reviewer_role.ROLE_CHOICES)
     structure = forms.ModelChoiceField(required=True, queryset=(
         structure.find_by_type('INSTITUTE') | structure.find_by_type('FACULTY') |
         structure.find_by_type('SECTOR')).order_by('type', 'acronym'))
 
     class Meta:
         model = mdl.reviewer.Reviewer
-        fields = ('person', 'structure', 'role')
-
-    def clean(self):
-        super(ReviewerForm, self).clean()
-        selected_person = self.cleaned_data.get('person')
-        try:
-            mdl.reviewer.Reviewer.objects.get(person=selected_person)
-            msg = _("person_already_reviewer_msg")
-            self.add_error('person', msg)
-        except:
-            pass
+        fields = ('structure', 'role')
+        exclude = ['person']
 
 
 class SettingsForm(ModelForm):
