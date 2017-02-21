@@ -23,19 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from admission.models import admission_exam_type
-from admission.models import answer
-from admission.models import applicant
-from admission.models import applicant_document_file
-from admission.models import application
-from admission.models import application_assimilation_criteria
-from admission.models import application_document_file
-from admission.models import curriculum
-from admission.models import form
-from admission.models import option
-from admission.models import person_address
-from admission.models import profession
-from admission.models import question
-from admission.models import secondary_education
-from admission.models import secondary_education_exam
-from admission.models import sociological_survey
+from django.db import models
+from django.contrib import admin
+from reference.enums import assimilation_criteria as assimilation_criteria_enum
+from osis_common.models.serializable_model import SerializableModel
+
+
+class ApplicationAssimilationCriteriaAdmin(admin.ModelAdmin):
+    list_display = ('application', 'criteria', 'selected')
+
+
+class ApplicationAssimilationCriteria(SerializableModel):
+    application = models.ForeignKey('Application')
+    criteria = models.CharField(max_length=50, choices=assimilation_criteria_enum.ASSIMILATION_CRITERIA_CHOICES)
+    additional_criteria = models.CharField(max_length=50, blank=True, null=True,
+                                           choices=assimilation_criteria_enum.ASSIMILATION_CRITERIA_CHOICES)
+    selected = models.NullBooleanField(null=True, blank=True)
