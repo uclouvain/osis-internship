@@ -30,6 +30,7 @@ from django.core.urlresolvers import reverse
 from assistant.models import academic_assistant, manager, reviewer
 from assistant.models import settings
 
+
 @login_required
 def assistant_home(request):
     try:
@@ -41,7 +42,7 @@ def assistant_home(request):
     except academic_assistant.AcademicAssistant.DoesNotExist:
         try:
             manager.find_by_person(person=request.user.person)
-            return HttpResponseRedirect(reverse('mandates_list'))
+            return HttpResponseRedirect(reverse('manager_home'))
         except manager.Manager.DoesNotExist:
             try:
                 reviewer.find_by_person(person=request.user.person)

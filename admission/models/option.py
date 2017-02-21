@@ -47,7 +47,6 @@ class Option(SerializableModel):
 
 def find_by_question_id(question):
     try:
-        option = Option.objects.filter(question=question).order_by('label', 'description')
-        return option
+        return Option.objects.filter(question=question).order_by('label', 'description')
     except ObjectDoesNotExist:
         return None

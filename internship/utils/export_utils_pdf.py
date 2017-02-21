@@ -29,16 +29,15 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.enums import TA_JUSTIFY, TA_RIGHT, TA_CENTER, TA_LEFT
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, PageBreak, Table, TableStyle
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Image, PageBreak, Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import mm
 from reportlab.lib import colors
 from django.utils.translation import ugettext_lazy as _
 import datetime
-import json
 
 from base import models as mdl
-from internship.models import Organization, Period
+from internship.models.organization import Organization
 
 PAGE_SIZE = A4
 MARGIN_SIZE = 15 * mm

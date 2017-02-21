@@ -24,13 +24,12 @@
 #
 ##############################################################################
 from django.db import models
-from django.contrib import admin
 from reference.enums import education_institution_type, education_institution_national_comunity as nat_community
 from django.core import serializers
-from osis_common.models.serializable_model import SerializableModel
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
-class EducationInstitutionAdmin(admin.ModelAdmin):
+class EducationInstitutionAdmin(SerializableModelAdmin):
     list_display = ('name', 'institution_type', 'country', 'adhoc')
     search_fields = ['name']
     list_filter = ('institution_type',)

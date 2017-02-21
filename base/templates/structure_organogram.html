@@ -49,31 +49,32 @@
         <br><br>
         <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
         <script>
-            function show_nodes(super_node, vec) {
+            function show_nodes(super_node, structure) {
                 var sub_nodes =$("<ul></ul>");
-                for(var i = 0, len = vec.length ;i < len; i++) {
-                    var children = vec[i].children;
-                    var url="/structures/" + vec[i].id;
+                var children = structure.children;
+                for(var i = 0, len = children.length ;i < len; i++) {
+                    var child = children[i];
+                    var url="/structures/" + child.id;
                     if(Array.isArray(children) && children.length > 0) {
                        var sub_nodes = $("<ul class='vertical'></ul>");
 
                        super_node.append($("<li></li>").append($("<a></a>").attr("href",url)
                                                                            .attr("target","_parent")
-                                                                           .text(vec[i].name))
+                                                                           .text(child.acronym))
                                                        .append(sub_nodes));
-                       show_nodes(sub_nodes, children);
+                       show_nodes(sub_nodes, child);
                     } else {
                         sub_nodes="";
                         super_node.append($("<li></li>").append($("<a></a>").attr("href",url)
                                                                             .attr("target","_parent")
-                                                                            .text(vec[i].name)));
+                                                                            .text(child.acronym)));
                     }
                 }
             }
 
-            function show_organogram(data) {
+            function show_organogram(structure_as_json) {
                 var sub_nodes = $("<ul></ul>");
-                var json_data = JSON.parse(data);
+                var json_data = JSON.parse(structure_as_json);
                 show_nodes(sub_nodes, json_data);
                 var escaped_structure = "{{ structure }}".replace(/&#39;/g, "'");
                 $('#organogram').append($("<ul></ul>")
@@ -85,7 +86,7 @@
             }
 
             $(document).ready(function() {
-                show_organogram('{{data | safe}}');
+                show_organogram('{{structure_as_json | safe}}');
             });
         </script>
     {% endif %}

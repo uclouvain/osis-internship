@@ -66,7 +66,6 @@ def find_by_offer_form(offer_form):
 
 def find_by_id(question_id):
     try:
-        question = Question.objects.get(pk=question_id)
-        return question
+        return Question.objects.get(pk=question_id)
     except ObjectDoesNotExist:
         return None

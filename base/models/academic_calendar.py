@@ -23,15 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils import timezone
-from base.models import session_exam
 from base.models.exceptions import FunctionAgrumentMissingException, StartDateHigherThanEndDateException
+from osis_common.models.serializable_model import SerializableModel
 
 FUNCTIONS = 'functions'
 
 
-class AcademicCalendar(models.Model):
+class AcademicCalendar(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     academic_year = models.ForeignKey('AcademicYear')
@@ -42,6 +43,7 @@ class AcademicCalendar(models.Model):
     highlight_title = models.CharField(max_length=255, blank=True, null=True)
     highlight_description = models.CharField(max_length=255, blank=True, null=True)
     highlight_shortcut = models.CharField(max_length=255, blank=True, null=True)
+    reference = models.CharField(max_length=50, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if FUNCTIONS not in kwargs.keys():
@@ -62,10 +64,10 @@ class AcademicCalendar(models.Model):
         )
 
 
-def find_highlight_academic_calendars():
+def find_highlight_academic_calendar():
     return AcademicCalendar.objects.filter(start_date__lte=timezone.now(), end_date__gte=timezone.now(),
                                            highlight_title__isnull=False, highlight_description__isnull=False,
-                                           highlight_shortcut__isnull=False)
+                                           highlight_shortcut__isnull=False).order_by('end_date').first()
 
 
 def find_academic_calendar_by_academic_year(academic_year_id):
@@ -82,11 +84,12 @@ def find_academic_calendar_by_academic_year_with_dates(academic_year_id):
                                    .order_by('start_date')
 
 
-def find_academic_calendar_by_id(academic_calendar_id):
-    return AcademicCalendar.objects.get(pk=academic_calendar_id)
+def find_by_id(academic_calendar_id):
+    try:
+        return AcademicCalendar.objects.get(pk=academic_calendar_id)
+    except ObjectDoesNotExist:
+        return None
 
 
-def get_scores_encoding_calendars():
-    academic_calendar_ids = session_exam.SessionExam.objects.values_list('offer_year_calendar__academic_calendar', flat=True)\
-                                                            .distinct('offer_year_calendar__academic_calendar')
-    return AcademicCalendar.objects.filter(pk__in=academic_calendar_ids)
+def find_by_ids(academic_calendars_id):
+    return AcademicCalendar.objects.filter(pk__in=academic_calendars_id)

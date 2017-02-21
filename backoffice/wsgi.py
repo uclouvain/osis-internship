@@ -23,14 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import os,sys
+import os, sys
 from django.core.wsgi import get_wsgi_application
 from osis_common.queue import queue_listener, callbacks
 from base.views.score_encoding import get_json_data_scores_sheets
 import logging
 from pika.exceptions import ConnectionClosed, AMQPConnectionError, ChannelClosed
 
-#The two following lines are mandatory for working with mod_wsgi on the servers
+# The two following lines are mandatory for working with mod_wsgi on the servers
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/..' )
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../backoffice')
 
@@ -51,9 +51,7 @@ if hasattr(settings, 'QUEUES'):
 
     # Thread in which is running the listening of the queue used to migrate data (from Osis-portal to Osis)
     try:
-        queue_listener.SynchronousConsumerThread(settings.QUEUES.get('QUEUES_NAME').get('MIGRATIONS_TO_CONSUME')
-                                                 , callbacks.insert_or_update).start()
+        queue_listener.SynchronousConsumerThread(settings.QUEUES.get('QUEUES_NAME').get('MIGRATIONS_TO_CONSUME'),
+                                                 callbacks.process_message).start()
     except (ConnectionClosed, ChannelClosed, AMQPConnectionError, ConnectionError) as e:
         LOGGER.exception("Couldn't connect to the QueueServer")
-
-

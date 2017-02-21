@@ -32,7 +32,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render, redirect
-from base.models import  academic_year
+from base.models import academic_year, person
+from django.utils.translation import ugettext as _
+
 
 class ReviewersListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMixin):
     context_object_name = 'reviewers_list'
@@ -41,7 +43,7 @@ class ReviewersListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormM
 
     def test_func(self):
         try:
-            return manager.Manager.objects.get(person=self.request.user.person)
+            return user_is_manager(self.request.user)
         except ObjectDoesNotExist:
             return False
     
@@ -80,16 +82,21 @@ def reviewer_add(request):
     if request.POST:
         form = ReviewerForm(data=request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('reviewers_list')
+            new_reviewer = form.save(commit=False)
+            if request.POST.get('person_id'):
+                this_person = person.find_by_id(request.POST.get('person_id'))
+                try:
+                    reviewer.find_by_person(this_person)
+                    msg = _("person_already_reviewer_msg")
+                    form.add_error(None, msg)
+                    return render(request, "manager_add_reviewer.html", {'form': form, 'year': year})
+                except reviewer.Reviewer.DoesNotExist:
+                    pass
+                new_reviewer.person = this_person
+                new_reviewer.save()
+                return redirect('reviewers_list')
         else:
-            return render(request, "manager_add_reviewer.html", {'form': form,
-                                                                  'year': year,
-                                                                  })
+            return render(request, "manager_add_reviewer.html", {'form': form, 'year': year})
     else:
         form = ReviewerForm(initial={'year': year})
-        return render(request, "manager_add_reviewer.html", {'form': form,
-                                                              'year': year})
-
-
-
+        return render(request, "manager_add_reviewer.html", {'form': form, 'year': year})

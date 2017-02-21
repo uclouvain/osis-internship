@@ -24,22 +24,23 @@
 #
 ##############################################################################
 from django.db import models
-from django.contrib import admin
 from django.core import serializers
-from osis_common.models.serializable_model import SerializableModel
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
-class LanguageAdmin(admin.ModelAdmin):
-    list_display = ('code', 'name')
+class LanguageAdmin(SerializableModelAdmin):
+    list_display = ('code', 'name', 'recognized')
+    list_filter = ('recognized',)
     ordering = ('code',)
     search_fields = ['code', 'name']
-    fieldsets = ((None, {'fields': ('code', 'name')}),)
+    fieldsets = ((None, {'fields': ('code', 'name', 'recognized')}),)
 
 
 class Language(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     code = models.CharField(max_length=4, unique=True)
     name = models.CharField(max_length=80, unique=True)
+    recognized = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name

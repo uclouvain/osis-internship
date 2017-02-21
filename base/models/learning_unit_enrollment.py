@@ -24,18 +24,18 @@
 #
 ##############################################################################
 from django.db import models
-from django.contrib import admin
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
-class LearningUnitEnrollmentAdmin(admin.ModelAdmin):
+class LearningUnitEnrollmentAdmin(SerializableModelAdmin):
     list_display = ('student', 'learning_unit_year', 'date_enrollment', 'changed')
     fieldsets = ((None, {'fields': ('offer_enrollment','learning_unit_year','date_enrollment')}),)
-    list_filter = ('learning_unit_year__academic_year__year',)
+    list_filter = ('learning_unit_year__academic_year',)
     raw_id_fields = ('offer_enrollment', 'learning_unit_year')
     search_fields = ['learning_unit_year__acronym']
 
 
-class LearningUnitEnrollment(models.Model):
+class LearningUnitEnrollment(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     date_enrollment = models.DateField()

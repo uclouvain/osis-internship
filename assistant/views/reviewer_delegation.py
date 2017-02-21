@@ -25,7 +25,7 @@
 ##############################################################################
 from django.shortcuts import render, redirect
 from assistant.models import reviewer
-from base.models import academic_year, structure
+from base.models import academic_year, structure, person
 from assistant.forms import ReviewerDelegationForm
 from django.views.generic import ListView
 from django.db.models import Q
@@ -34,6 +34,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import user_passes_test
 from assistant.models import settings
+from django.utils.translation import ugettext as _
 
 
 class StructuresListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
@@ -76,7 +77,7 @@ def user_is_reviewer_and_can_delegate(user):
 
 
 @user_passes_test(user_is_reviewer_and_can_delegate, login_url='assistants_home')
-def addReviewerForStructure(request, structure_id):
+def add_reviewer_for_structure(request, structure_id):
     """
     Crée un reviewer pour une structure donnée.
     structure_id est l'identifiant de la structure pour laquelle on ajoute un reviewer.
@@ -91,8 +92,20 @@ def addReviewerForStructure(request, structure_id):
     if request.POST:
         form = ReviewerDelegationForm(data=request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('reviewer_delegation')
+            new_reviewer = form.save(commit=False)
+            if request.POST.get('person_id'):
+                this_person = person.find_by_id(request.POST.get('person_id'))
+                try:
+                    reviewer.find_by_person(this_person)
+                    msg = _("person_already_reviewer_msg")
+                    form.add_error(None, msg)
+                    return render(request, "reviewer_add_reviewer.html", {'form': form, 'year': year,
+                                                                          'related_structure': related_structure})
+                except reviewer.Reviewer.DoesNotExist:
+                    pass
+                new_reviewer.person = this_person
+                new_reviewer.save()
+                return redirect('reviewer_delegation')
         else:
             return render(request, "reviewer_add_reviewer.html", {'form': form, 'year': year,
                                                                   'related_structure': related_structure})

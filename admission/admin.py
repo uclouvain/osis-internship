@@ -54,8 +54,7 @@ admin.site.register(curriculum.Curriculum,
 admin.site.register(form.Form,
                     form.FormAdmin)
 
-admin.site.register(option.Option,
-                    option.OptionAdmin)
+admin.site.register(option.Option, option.OptionAdmin)
 
 admin.site.register(person_address.PersonAddress,
                     person_address.PersonAddressAdmin)

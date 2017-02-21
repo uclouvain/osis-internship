@@ -35,7 +35,22 @@ msgid "address"
 msgstr "Address"
 
 msgid "assistant_form_part1"
-msgstr "Assistantship form - Part 1"
+msgstr "Administrative"
+
+msgid "assistant_form_part2"
+msgstr "Learning Units"
+
+msgid "assistant_form_part3"
+msgstr "Doctorate"
+
+msgid "assistant_form_part4"
+msgstr "Research"
+
+msgid "assistant_form_part5"
+msgstr "Activities"
+
+msgid "assistant_form_part6"
+msgstr "Summary"
 
 msgid "assistant_mandates_renewal"
 msgstr "Assistantship mandate renewal"

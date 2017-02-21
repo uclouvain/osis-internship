@@ -60,7 +60,7 @@ def offers_search(request):
     entity = request.GET['entity_acronym']
 
     academic_yr = None
-    if request.GET['academic_year']:
+    if request.GET.get('academic_year', None):
         academic_yr = int(request.GET['academic_year'])
     acronym = request.GET['code']
 
@@ -112,6 +112,7 @@ def score_encoding(request, offer_year_id):
         offer_yr.country = country
         offer_yr.phone = request.POST.get('phone')
         offer_yr.fax = request.POST.get('fax')
+        offer_yr.email = request.POST.get('email')
         offer_yr.save()
         data = "ok"
     else:
@@ -273,62 +274,3 @@ def offer_year_calendar_read(request, id):
     is_programme_manager = mdl.program_manager.is_program_manager(request.user, offer_year=offer_year_calendar.offer_year)
     return layout.render(request, "offer_year_calendar.html", {'offer_year_calendar':   offer_year_calendar,
                                                                'is_programme_manager': is_programme_manager})
-
-
-@login_required
-@permission_required('base.can_access_offer', raise_exception=True)
-def offer_year_calendar_save(request, id):
-    form = OfferYearCalendarForm(data=request.POST)
-
-    if id:
-        offer_year_calendar = mdl.offer_year_calendar.find_by_id(id)
-    else:
-        offer_year_calendar = mdl.offer_year_calendar.OfferYearCalendar()
-
-    # validate
-    validation = True
-    if form.is_valid():
-        academic_calendar = mdl.academic_calendar.find_academic_calendar_by_id(request.POST['academic_calendar'])
-        offer_year_calendar.academic_calendar = academic_calendar
-        if request.POST['start_date']:
-            offer_year_calendar.start_date = datetime.strptime(request.POST['start_date'], '%d/%m/%Y')
-        else:
-            offer_year_calendar.start_date = None
-
-        if request.POST['end_date']:
-            offer_year_calendar.end_date = datetime.strptime(request.POST['end_date'], '%d/%m/%Y')
-        else:
-            offer_year_calendar.end_date = None
-
-        if offer_year_calendar.start_date and offer_year_calendar.end_date:
-            if academic_calendar.start_date > offer_year_calendar.start_date.date():
-                validation = False
-                messages.add_message(request,
-                                     messages.ERROR,
-                                     "%s (%s)." % (_('offer_year_calendar_academic_calendar_start_date_error'),
-                                                   academic_calendar.start_date.strftime('%d/%m/%Y')))
-            if academic_calendar.end_date < offer_year_calendar.end_date.date():
-                validation = False
-                messages.add_message(request, messages.ERROR,
-                                     "%s (%s)." % (_('offer_year_calendar_academic_calendar_end_date_error'),
-                                                   academic_calendar.end_date.strftime('%d/%m/%Y')))
-            if offer_year_calendar.start_date > offer_year_calendar.end_date:
-                form.errors['start_date'] = _('begin_date_lt_end_date')
-                validation = False
-    else:
-        validation = False
-
-    if validation:
-        offer_year_calendar.customized=True
-        offer_year_calendar.save()
-        return offer_read(request, offer_year_calendar.offer_year.id)
-    else:
-        return layout.render(request, "offer_year_calendar_form.html", {'offer_year_calendar': offer_year_calendar,
-                                                                        'form': form})
-
-
-@login_required
-@permission_required('base.can_access_offer', raise_exception=True)
-def offer_year_calendar_edit(request, id):
-    offer_year_calendar = mdl.offer_year_calendar.find_by_id(id)
-    return layout.render(request, "offer_year_calendar_form.html", {'offer_year_calendar': offer_year_calendar})

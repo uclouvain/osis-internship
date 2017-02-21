@@ -47,7 +47,6 @@ class MandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMi
             except ObjectDoesNotExist:
                 return False
 
-
     def get_login_url(self):
         return reverse('access_denied')
 
