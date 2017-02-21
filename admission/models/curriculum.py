@@ -35,7 +35,6 @@ class CurriculumAdmin(admin.ModelAdmin):
 
 
 class Curriculum(SerializableModel):
-
     PATH_TYPES = (
             ('LOCAL_UNIVERSITY', _('national_university')),
             ('FOREIGN_UNIVERSITY', _('foreign_university')),

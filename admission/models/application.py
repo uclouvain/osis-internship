@@ -38,7 +38,6 @@ class ApplicationAdmin(admin.ModelAdmin):
 
 
 class Application(SerializableModel):
-
     applicant = models.ForeignKey('Applicant')
     offer_year = models.ForeignKey('base.OfferYear')
     creation_date = models.DateTimeField(auto_now=True)

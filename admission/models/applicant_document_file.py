@@ -30,6 +30,12 @@ from osis_common.models.document_file import DocumentFile
 from osis_common.models.serializable_model import SerializableModel
 
 
+class ApplicantDocumentFileAdmin(admin.ModelAdmin):
+    list_display = ('applicant_name', 'document_filename')
+    fieldsets = ((None, {'fields': ('applicant', 'document_file')}),)
+    raw_id_fields = ('applicant', 'document_file')
+
+
 class ApplicantDocumentFile(SerializableModel):
     applicant = models.ForeignKey(Applicant, db_index=True)
     document_file = models.ForeignKey(DocumentFile)
@@ -44,8 +50,5 @@ class ApplicantDocumentFile(SerializableModel):
         unique_together = (('applicant', 'document_file'),)
 
 
-class ApplicantDocumentFileAdmin(admin.ModelAdmin):
-    list_display = ('applicant_name', 'document_filename')
-    fieldsets = ((None, {'fields': ('applicant', 'document_file')}),)
-    raw_id_fields = ('applicant', 'document_file')
+
 
