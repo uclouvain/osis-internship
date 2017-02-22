@@ -123,7 +123,7 @@ def _add_person_to_group(person):
     if mdl_pgm_manager.find_by_person(person):
         _assign_group(person, 'program_managers')
     # Check if student is internship student
-    if mdl_internship.InternshipStudentInformation.find_by_person(person):
+    if mdl_internship.find_by_person(person):
         _assign_group(person, 'internship_students')
 
 
