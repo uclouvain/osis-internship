@@ -115,7 +115,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'osis_backend_dev',
-        'USER': os.environ.get("DATABASE_USER", 'osis_usr'),
+        'USER': "postgres" if os.environ.get("ENV") == "test" else  'osis_usr',
         'PASSWORD': "" if os.environ.get("ENV") == "test" else 'osis',
         'HOST': '127.0.0.1',
         'PORT': '5432',
