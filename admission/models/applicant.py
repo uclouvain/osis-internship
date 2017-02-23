@@ -53,7 +53,6 @@ class Applicant(SerializableModel):
         ('UNKNOWN', _('unknown')))
 
     activation_code = models.UUIDField(default=uuid.uuid4, editable=False, blank=True, null=True)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
     middle_name = models.CharField(max_length=50, blank=True, null=True)
     birth_date = models.DateField(blank=True, null=True)
     birth_place = models.CharField(max_length=255, blank=True, null=True)
@@ -73,8 +72,11 @@ class Applicant(SerializableModel):
     registration_id = models.CharField(max_length=20, blank=True, null=True)
     last_academic_year = models.IntegerField(blank=True, null=True)
     language = models.CharField(max_length=30, null=True, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE)
+    first_name = models.CharField(max_length=30, blank=True, null=True)
+    last_name = models.CharField(max_length=30, blank=True, null=True)
+    email = models.EmailField(max_length=255, blank=True, null=True)
 
 
     def __str__(self):
-        return u"%s" % self.user
+        return "{0} {1}".format(self.first_name, self.last_name)
 
