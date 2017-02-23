@@ -55,7 +55,7 @@ class Applicant(SerializableModel):
     activation_code = models.UUIDField(default=uuid.uuid4, editable=False, blank=True, null=True)
     middle_name = models.CharField(max_length=50, blank=True, null=True)
     birth_date = models.DateField(blank=True, null=True)
-    birth_place = models.CharField(max_length=255, blank=True, null=True)
+    birth_place = models.CharField(max_length=255, blank =True, null=True)
     birth_country = models.ForeignKey('reference.Country', blank=True, null=True)
     gender = models.CharField(max_length=20, choices=GENDER_CHOICES, blank=True, null=True)
     civil_status = models.CharField(max_length=20, choices=CIVIL_STATUS_CHOICES, default='UNKNOWN', blank=True,
