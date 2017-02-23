@@ -7,3 +7,5 @@ notifications:
   slack: osisteam:2M3DtIOGE4clU1DF8r6k8NQD
 services:
   - postgresql
+addons:
+    postgresql: "9.4"
