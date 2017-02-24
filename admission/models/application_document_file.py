@@ -23,19 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from admission.models import admission_exam_type
-from admission.models import answer
-from admission.models import applicant
-from admission.models import applicant_document_file
-from admission.models import application
-from admission.models import application_assimilation_criteria
-from admission.models import application_document_file
-from admission.models import curriculum
-from admission.models import form
-from admission.models import option
-from admission.models import person_address
-from admission.models import profession
-from admission.models import question
-from admission.models import secondary_education
-from admission.models import secondary_education_exam
-from admission.models import sociological_survey
+from django.contrib import admin
+from django.db import models
+from osis_common.models.serializable_model import SerializableModel
+
+
+class ApplicationDocumentFileAdmin(admin.ModelAdmin):
+    list_display = ('application', 'document_file')
+
+
+class ApplicationDocumentFile(SerializableModel):
+    application = models.ForeignKey('Application')
+    document_file = models.ForeignKey('osis_common.documentFile')

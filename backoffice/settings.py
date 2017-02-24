@@ -62,6 +62,7 @@ INSTALLED_APPS = (
     'dissertation',
     'internship',
     'admission',
+    'localflavor',
 )
 
 # check if we are testing right now
@@ -114,8 +115,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'osis_backend_dev',
-        'USER': 'osis_usr',
-        'PASSWORD': 'osis',
+        'USER': "postgres" if os.environ.get("ENV") == "test" else  'osis_usr',
+        'PASSWORD': "" if os.environ.get("ENV") == "test" else 'osis',
         'HOST': '127.0.0.1',
         'PORT': '5432',
     },
