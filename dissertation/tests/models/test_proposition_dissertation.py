@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,6 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-# from django.test import TestCase
+from dissertation.models.proposition_dissertation import PropositionDissertation
 
-# Create your tests here.
+def create_proposition_dissertation(title, advisor, person, collaboration="FORBIDDEN", type="OTH", level="SPECIFIC",
+                                    max_number_student=1 ):
+    proposition = PropositionDissertation.objects.create(title=title, author= advisor,
+                                                         collaboration=collaboration, type=type,
+                                                         level=level, max_number_student=max_number_student,
+                                                         creator=person)
+    proposition.save()
+    return proposition
