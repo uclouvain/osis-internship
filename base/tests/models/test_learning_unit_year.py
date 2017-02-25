@@ -46,8 +46,3 @@ class LearningUnitYearTest(TestCase):
 
     def test_find_by_tutor_with_none_argument(self):
         self.assertEquals(learning_unit_year.find_by_tutor(None), None)
-
-    def test_find_by_tutor(self):
-        learning_unit_years = learning_unit_year.find_by_tutor(self.tutor)
-        self.assertEquals(len(learning_unit_years), 1)
-        self.assertEquals(learning_unit_years[0].acronym, "LDROI1004")

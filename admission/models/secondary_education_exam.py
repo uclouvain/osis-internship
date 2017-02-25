@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -26,46 +26,31 @@
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
-from django.core.exceptions import ObjectDoesNotExist
 from osis_common.models.serializable_model import SerializableModel
 
 
-class QuestionAdmin(admin.ModelAdmin):
-    list_display = ('form', 'label', 'description', 'order')
-    fieldsets = ((None, {'fields': ('label', 'description', 'type', 'order', 'required', 'form')}),)
+class SecondaryEducationExamAdmin(admin.ModelAdmin):
+    list_display = ('type', 'result', 'exam_date', 'institution')
 
 
-QUESTION_TYPES = (
-    ('SHORT_INPUT_TEXT', _('short_input_text')),
-    ('LONG_INPUT_TEXT', _('long_input_text')),
-    ('RADIO_BUTTON', _('radio_button')),
-    ('CHECKBOX', _('checkbox')),
-    ('DROPDOWN_LIST', _('dropdown_list')),
-    ('UPLOAD_BUTTON', _('upload_button')),
-    ('DOWNLOAD_LINK', _('download_link')),
-    ('HTTP_LINK', _('http_link'))
-)
+class SecondaryEducationExam(SerializableModel):
+    RESULT_TYPE = (('LOW', 'Moins de 65%'),
+                   ('MIDDLE', 'entre 65% et 75%'),
+                   ('HIGH', 'plus de 75%'))
+
+    LOCAL_LANGUAGE_EXAM_RESULT_TYPE = (('SUCCEED', _('succeeded')),
+                                       ('FAILED', _('failed')),
+                                       ('ENROLLMENT_IN_PROGRESS', _('demanded_result')))
+
+    EXAM_TYPES = (('ADMISSION', _('admission')),
+                  ('LANGUAGE', _('language')),
+                  ('PROFESSIONAL', _('professional')))
+
+    secondary_education = models.ForeignKey('SecondaryEducation')
+    admission_exam_type = models.ForeignKey('AdmissionExamType', blank=True, null=True)
+    type = models.CharField(max_length=20, choices=EXAM_TYPES)
+    exam_date = models.DateField(blank=True, null=True)
+    institution = models.CharField(max_length=100, blank=True, null=True)
+    result = models.CharField(max_length=30, choices=RESULT_TYPE+LOCAL_LANGUAGE_EXAM_RESULT_TYPE, blank=True, null=True)
 
 
-class Question(SerializableModel):
-    form = models.ForeignKey('Form')
-    label = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
-    type = models.CharField(max_length=20, choices=QUESTION_TYPES)
-    order = models.IntegerField(blank=True, null=True)
-    required = models.BooleanField(default=False)
-
-    def __str__(self):
-        return u"%s" % self.label
-
-
-def find_by_offer_form(offer_form):
-    return Question.objects.filter(form=offer_form) \
-                           .order_by('label', 'description')
-
-
-def find_by_id(question_id):
-    try:
-        return Question.objects.get(pk=question_id)
-    except ObjectDoesNotExist:
-        return None

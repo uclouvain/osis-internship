@@ -27,12 +27,11 @@
 {% endcomment %}
 {% block style %}
 <link rel="stylesheet" href="{% static 'css/custom.css' %}">
-<link rel="stylesheet" href="https://cdn.datatables.net/1.10.11/css/dataTables.bootstrap.min.css">
 {% endblock %}
 {% block breadcrumb %}
 <li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'institution' %}</a></li>
 <li><a href="{% url 'mandates' %}" id="lnk_mandates">{% trans 'mandates' %}</a></li>
-<li class="active">{% trans 'manager' %}</li>
+<li class="active">{% trans 'assistants' %}</li>
 {% endblock %}
 {% block content %}
 <div class="page-header">
@@ -40,18 +39,34 @@
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
-        <div class="row">
-            <div class="col-md-1"><i class="fa fa-gears" style="font-size: 400%; color: #6699FF;"></i></div>
-            <div class="col-md-11">
-                <h4 class="media-heading"><a href="{% url 'settings_edit' %}" id="lnk_settings">{% trans 'settings' %}</a></h4>
-                <p>{% trans 'desc_lnk_settings' %}</p>
-            </div>
-        </div><HR>
+
         <div class="row">
             <div class="col-md-1"><i class="fa fa-dashboard" style="font-size: 400%; color: #6699FF;"></i></div>
             <div class="col-md-11">
                 <h4 class="media-heading"><a href="{% url 'mandates_list' %}" id="lnk_dashboard">{% trans 'dashboard' %}</a></h4>
                 <p>{% trans 'desc_lnk_dashboard' %}</p>
+            </div>
+        </div><HR>
+        <div class="row">
+            <div class="col-md-1"><i class="fa fa-envelope-o" style="font-size: 400%; color: #6699FF;"></i></div>
+            <div class="col-md-11">
+                <h4 class="media-heading"><a href="{% url 'messages_history' %}" id="lnk_emails">{% trans 'emails' %}</a></h4>
+                <p>{% trans 'desc_lnk_emails' %}</p>
+            </div>
+        </div><HR>
+        <div class="row">
+            <div class="col-md-1"><i class="fa fa-users" style="font-size: 400%; color: #6699FF;"></i></div>
+            <div class="col-md-11">
+                <h4 class="media-heading"><a href="{% url 'reviewers_list' %}" id="lnk_reviewers">
+                    {% trans 'reviewers' %}</a></h4>
+                <p>{% trans 'desc_lnk_reviewers' %}</p>
+            </div>
+        </div><HR>
+        <div class="row">
+            <div class="col-md-1"><i class="fa fa-gears" style="font-size: 400%; color: #6699FF;"></i></div>
+            <div class="col-md-11">
+                <h4 class="media-heading"><a href="{% url 'settings_edit' %}" id="lnk_settings">{% trans 'settings' %}</a></h4>
+                <p>{% trans 'desc_lnk_settings' %}</p>
             </div>
         </div>
 

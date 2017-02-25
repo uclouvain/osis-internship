@@ -66,7 +66,7 @@ class LearningComponentYearTest(TestCase):
                                                         learning_component=learning_component,
                                                         title="Cours magistral",
                                                         acronym="/C",
-                                                        type=learning_unit_year_type.COURS,
+                                                        type=learning_unit_year_type.COURSE,
                                                         comment="TEST")
 
         #UE associée à un conteneur d'une année différente du composant
