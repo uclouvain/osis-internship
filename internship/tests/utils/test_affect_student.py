@@ -44,3 +44,5 @@ class TestAffectStudent(SimpleTestCase):
                             (4, 2, 3): [[4, 4, 3, 2, 1, 1]]}
         self.assertDictEqual(actual_offers, expected_offers)
         self.assertDictEqual(actual_choices, expected_choices)
+
+    def test_

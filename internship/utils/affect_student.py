@@ -27,7 +27,7 @@
 
 def input_file(filename):
     with open(filename) as file:
-        number_offers, number_choices = [int(x) for x in file.readline().split()]
+        number_offers, number_choices = convert_line_to_ints(file.readline())
         file.readline()
         offers = extract_offers(file, number_offers)
         file.readline()
@@ -38,7 +38,7 @@ def input_file(filename):
 def extract_offers(file, number_offers):
     offers = dict()
     for x in range(0, number_offers):
-        offer = [int(x) for x in file.readline().split()]
+        offer = convert_line_to_ints(file.readline())
         offers[(offer[1], offer[2])] = offer
     return offers
 
@@ -46,7 +46,7 @@ def extract_offers(file, number_offers):
 def extract_choices(file, number_choices):
     choices = dict()
     for x in range(0, number_choices):
-        choice = [int(x) for x in file.readline().split()]
+        choice = convert_line_to_ints(file.readline())
         key = (choice[0], choice[3], choice[2])
         if key in choices:
             choices[key].append(choice)
@@ -54,3 +54,6 @@ def extract_choices(file, number_choices):
             choices[key] = [choice]
     return choices
 
+
+def convert_line_to_ints(line):
+    return [int(x) for x in line.split()]
