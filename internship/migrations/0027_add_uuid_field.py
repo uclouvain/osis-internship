@@ -14,32 +14,32 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name='internship_choice',
+            model_name='internshipchoice',
             name='uuid',
             field=models.UUIDField(db_index=True, default=uuid.uuid4, null=True),
         ),
         migrations.AddField(
-            model_name='internship_master',
+            model_name='internshipmaster',
             name='uuid',
             field=models.UUIDField(db_index=True, default=uuid.uuid4, null=True),
         ),
         migrations.AddField(
-            model_name='internship_offer',
+            model_name='internshipoffer',
             name='uuid',
             field=models.UUIDField(db_index=True, default=uuid.uuid4, null=True),
         ),
         migrations.AddField(
-            model_name='internship_speciality',
+            model_name='internshipspeciality',
             name='uuid',
             field=models.UUIDField(db_index=True, default=uuid.uuid4, null=True),
         ),
         migrations.AddField(
-            model_name='internship_student_affectation_stat',
+            model_name='internshipstudentaffectationstat',
             name='uuid',
             field=models.UUIDField(db_index=True, default=uuid.uuid4, null=True),
         ),
         migrations.AddField(
-            model_name='internship_student_information',
+            model_name='internship_studentinformation',
             name='uuid',
             field=models.UUIDField(db_index=True, default=uuid.uuid4, null=True),
         ),
@@ -49,7 +49,7 @@ class Migration(migrations.Migration):
             field=models.UUIDField(db_index=True, default=uuid.uuid4, null=True),
         ),
         migrations.AddField(
-            model_name='organization_address',
+            model_name='organizationaddress',
             name='uuid',
             field=models.UUIDField(db_index=True, default=uuid.uuid4, null=True),
         ),
