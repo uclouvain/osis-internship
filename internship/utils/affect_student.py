@@ -25,14 +25,19 @@
 ##############################################################################
 
 
+class Solver:
+    def __init__(self, filename):
+        self.offers, self.choices, self.priority_choices = input_file(filename)
+
+
 def input_file(filename):
     with open(filename) as file:
         number_offers, number_choices = convert_line_to_ints(file.readline())
         file.readline()
         offers = extract_offers(file, number_offers)
         file.readline()
-        choices = extract_choices(file, number_choices)
-        return offers, choices
+        choices, priority_choices = extract_choices(file, number_choices)
+        return offers, choices, priority_choices
 
 
 def extract_offers(file, number_offers):
@@ -45,14 +50,26 @@ def extract_offers(file, number_offers):
 
 def extract_choices(file, number_choices):
     choices = dict()
+    priority_choices = dict()
     for x in range(0, number_choices):
         choice = convert_line_to_ints(file.readline())
         key = (choice[0], choice[3], choice[2])
-        if key in choices:
-            choices[key].append(choice)
+        if is_a_priority(choice):
+            add_choice(choice, priority_choices, key)
         else:
-            choices[key] = [choice]
-    return choices
+            add_choice(choice, choices, key)
+    return choices, priority_choices
+
+
+def add_choice(choice, choices, key):
+    if key in choices:
+        choices[key].append(choice)
+    else:
+        choices[key] = [choice]
+
+
+def is_a_priority(choice):
+    return bool(choice[5])
 
 
 def convert_line_to_ints(line):

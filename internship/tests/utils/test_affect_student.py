@@ -29,20 +29,20 @@ from internship.utils import affect_student
 
 class TestAffectStudent(SimpleTestCase):
     def test_input_file(self):
-        actual_offers, actual_choices = affect_student.input_file("./internship/tests/utils/ressources/sample1.txt")
+        actual_offers, actual_choices, actual_priority_choices = affect_student.input_file("./internship/tests/utils/ressources/sample1.txt")
         expected_offers = {(1, 1): [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 2],
                            (2, 1): [2, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 2],
                            (2, 2): [3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2],
                            (3, 3): [4, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2],
                            (4, 3): [5, 4, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 2]}
-        expected_choices = {(1, 1, 1): [[1, 1, 1, 1, 1, 1], [1, 2, 1, 1, 2, 1]],
-                            (1, 2, 3): [[1, 4, 3, 2, 1, 1]],
-                            (2, 1, 1): [[2, 2, 1, 1, 1, 0], [2, 1, 1, 1, 2, 0]],
+        expected_choices = {(2, 1, 1): [[2, 2, 1, 1, 1, 0], [2, 1, 1, 1, 2, 0]],
                             (3, 1, 2): [[3, 2, 2, 1, 1, 0]],
-                            (3, 2, 3): [[3, 3, 3, 2, 1, 0], [3, 4, 3, 2, 2, 0]],
-                            (4, 1, 1): [[4, 1, 1, 1, 1, 1]],
-                            (4, 2, 3): [[4, 4, 3, 2, 1, 1]]}
+                            (3, 2, 3): [[3, 3, 3, 2, 1, 0], [3, 4, 3, 2, 2, 0]]}
+        expected_priority_choices = {(1, 1, 1): [[1, 1, 1, 1, 1, 1], [1, 2, 1, 1, 2, 1]],
+                                     (1, 2, 3): [[1, 4, 3, 2, 1, 1]],
+                                     (4, 1, 1): [[4, 1, 1, 1, 1, 1]],
+                                     (4, 2, 3): [[4, 4, 3, 2, 1, 1]]}
         self.assertDictEqual(actual_offers, expected_offers)
         self.assertDictEqual(actual_choices, expected_choices)
+        self.assertDictEqual(actual_priority_choices, expected_priority_choices)
 
-    def test_
