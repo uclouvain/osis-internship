@@ -39,7 +39,7 @@ class Migration(migrations.Migration):
             field=models.UUIDField(db_index=True, default=uuid.uuid4, null=True),
         ),
         migrations.AddField(
-            model_name='internship_studentinformation',
+            model_name='internshipstudentinformation',
             name='uuid',
             field=models.UUIDField(db_index=True, default=uuid.uuid4, null=True),
         ),

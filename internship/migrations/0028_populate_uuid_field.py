@@ -33,7 +33,7 @@ def set_uuid_field(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('base', '0085_auto_20170105_1315'),
+        ('internship', '0027_add_uuid_field'),
     ]
 
     operations = [
