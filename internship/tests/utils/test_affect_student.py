@@ -26,10 +26,12 @@
 from django.test import SimpleTestCase
 from internship.utils import affect_student
 
+SAMPLE1 = "./internship/tests/utils/ressources/sample1.txt"
+
 
 class TestAffectStudent(SimpleTestCase):
     def test_input_file(self):
-        actual_offers, actual_choices, actual_priority_choices = affect_student.input_file("./internship/tests/utils/ressources/sample1.txt")
+        actual_offers, actual_choices, actual_priority_choices = affect_student.input_file(SAMPLE1)
         expected_offers = {(1, 1): [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 2],
                            (2, 1): [2, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 2],
                            (2, 2): [3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2],
@@ -45,4 +47,8 @@ class TestAffectStudent(SimpleTestCase):
         self.assertDictEqual(actual_offers, expected_offers)
         self.assertDictEqual(actual_choices, expected_choices)
         self.assertDictEqual(actual_priority_choices, expected_priority_choices)
+
+    def test_assign_internship(self):
+        affect_student.Solver(SAMPLE1)
+
 

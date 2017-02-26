@@ -25,9 +25,8 @@
 ##############################################################################
 
 
-class Solver:
-    def __init__(self, filename):
-        self.offers, self.choices, self.priority_choices = input_file(filename)
+def assign_internships(offers, choices, priority_choices):
+    pass
 
 
 def input_file(filename):
