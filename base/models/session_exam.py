@@ -83,7 +83,6 @@ def get_scores_encoding_calendars():
     return academic_calendar.find_by_ids(academic_calendars_id)
 
 def is_inside_score_encoding(date=datetime.datetime.now().date()):
-    all = SessionExam.objects.all()
     is_inside = SessionExam.objects.exclude(offer_year_calendar__isnull=True,
                                             offer_year_calendar__academic_calendar__isnull=True,
                                             offer_year_calendar__academic_calendar__start_date__isnull=True,
