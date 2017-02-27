@@ -50,17 +50,7 @@ queue_exception_logger = logging.getLogger(settings.QUEUE_EXCEPTION_LOGGER)
 
 
 def _is_inside_scores_encodings_period(user):
-    """
-    :return: True if the today date is inside a period of scores encodings (inside session 1,2 or 3). Else return False.
-    """
-    now = datetime.datetime.now().date()
-    academic_calendars = list(mdl.session_exam.get_scores_encoding_calendars())
-    for ac_calendar in academic_calendars:
-        if ac_calendar.start_date and ac_calendar.end_date:
-            if ac_calendar.start_date <= now <= ac_calendar.end_date:
-                return True
-    return False
-
+    return mdl.session_exam.is_inside_score_encoding()
 
 def find_closest_past_date(dates):
     """

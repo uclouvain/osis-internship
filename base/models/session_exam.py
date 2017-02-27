@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from django.db import models
+import datetime
 from django.contrib import admin
 from base.models import offer_year_calendar, academic_calendar
 from django.utils import timezone
@@ -80,3 +81,15 @@ def get_scores_encoding_calendars():
     academic_calendars_id = SessionExam.objects.values_list('offer_year_calendar__academic_calendar', flat=True)\
                                                             .distinct('offer_year_calendar__academic_calendar')
     return academic_calendar.find_by_ids(academic_calendars_id)
+
+def is_inside_score_encoding(date=datetime.datetime.now().date()):
+    all = SessionExam.objects.all()
+    is_inside = SessionExam.objects.exclude(offer_year_calendar__isnull=True,
+                                            offer_year_calendar__academic_calendar__isnull=True,
+                                            offer_year_calendar__academic_calendar__start_date__isnull=True,
+                                            offer_year_calendar__academic_calendar__end_date__isnull=True)\
+                                    .filter(offer_year_calendar__academic_calendar__start_date__lte=date,
+                                            offer_year_calendar__academic_calendar__end_date__gte=date) \
+                                    .distinct('offer_year_calendar__academic_calendar')\
+                                    .count()
+    return bool(is_inside)
