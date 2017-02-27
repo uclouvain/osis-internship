@@ -23,22 +23,18 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from dissertation.models.proposition_dissertation import PropositionDissertation
-from dissertation.models.proposition_offer import PropositionOffer
-from dissertation.tests.models import test_proposition_role
+from django.contrib.auth.models import User
+from base.models.person import Person
+from dissertation.models.adviser import Adviser
 
-def create_proposition_dissertation(title, adviser, person, offer_proposition = None, collaboration="FORBIDDEN", type="OTH",
-                                    level="SPECIFIC", max_number_student=1 ):
-    proposition = PropositionDissertation.objects.create(title=title, author= adviser,
-                                                         collaboration=collaboration, type=type,
-                                                         level=level, max_number_student=max_number_student,
-                                                         creator=person)
-    #Assign adviser as "PROMOTEUR"
-    test_proposition_role.create_proposition_role(proposition=proposition, adviser=adviser)
+def create_adviser(person, type="PRF"):
+    adv = Adviser.objects.create(person=person, type=type)
+    return adv
 
-    #Make link in many-to-many table
-    if offer_proposition is not None:
-        PropositionOffer.objects.create(proposition_dissertation=proposition, offer_proposition=offer_proposition)
+def create_adviser_from_user(user, type="PRF"):
+    person = Person.objects.create(user=user, first_name=user.username, last_name=user.username)
+    return create_adviser(person, type)
 
-    return proposition
-
+def create_adviser_from_scratch(username, email, password, type="PRF"):
+    user = User.objects.create_user(username=username, email=email, password=password)
+    return create_adviser_from_user(user, type)
