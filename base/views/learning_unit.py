@@ -55,11 +55,14 @@ def learning_units_search(request):
     """
     # criteria
     academic_year = request.GET['academic_year']
-    code = request.GET['code']
     if academic_year is None:
         academic_year_calendar = mdl.academic_year.current_academic_year()
         if academic_year_calendar:
             academic_year = academic_year_calendar.id
+
+    code = request.GET['code']
+
+
 
     learning_unts = mdl.learning_unit_year.search(academic_year_id=academic_year,acronym=code)
     academic_years = mdl.academic_year.find_academic_years()
