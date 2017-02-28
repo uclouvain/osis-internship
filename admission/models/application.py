@@ -62,6 +62,7 @@ class Application(SerializableModel):
     bank_account_bic = BICField(blank=True, null=True)
     bank_account_name = models.CharField(max_length=255, blank=True, null=True)
     state = models.CharField(max_length=35, choices=application_state.APPLICATION_STATE_CHOICES, blank=True, null=True)
+    reference = models.CharField(max_length=20, blank=True, null=True, unique=True)
 
     def __str__(self):
         return u"%s %s" % (self.applicant, self.offer_year)
