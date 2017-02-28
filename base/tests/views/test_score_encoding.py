@@ -28,12 +28,14 @@ from unittest.mock import patch
 from django.contrib.auth.models import Permission
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from django.test import TestCase, Client
+from django.test import TestCase, Client, RequestFactory
 
-from base.tests.models import test_academic_year, test_offer_year, test_learning_unit_year, test_program_manager, test_tutor
+from base.tests.models import test_person, test_exam_enrollment, test_academic_year, test_offer_year_calendar, \
+                              test_offer_year, test_learning_unit_year, test_program_manager, test_tutor
 from attribution.tests.models import test_attribution
-from base.tests.models.test_exam_enrollment import create_exam_enrollment_with_student
+from base.tests.models.test_session_exam import create_session_exam
 from base.views import score_encoding
+from base.models.session_exam import SessionExam
 
 
 class OnlineEncodingTest(TestCase):
@@ -48,9 +50,9 @@ class OnlineEncodingTest(TestCase):
                                                                                     "Recent Continental Philosophy",
                                                                                     academic_year)
 
-        self.exam_enrollment_1 = create_exam_enrollment_with_student(1, "64641200", self.offer_year_1, self.learning_unit_year,
+        self.exam_enrollment_1 = test_exam_enrollment.create_exam_enrollment_with_student(1, "64641200", self.offer_year_1, self.learning_unit_year,
                                                                      academic_year)
-        self.exam_enrollment_2 = create_exam_enrollment_with_student(2, "60601200", self.offer_year_2, self.learning_unit_year,
+        self.exam_enrollment_2 = test_exam_enrollment.create_exam_enrollment_with_student(2, "60601200", self.offer_year_2, self.learning_unit_year,
                                                                      academic_year)
 
         self.tutor = create_tutor_with_user(1)
@@ -232,6 +234,33 @@ class OnlineEncodingTest(TestCase):
     def refresh_exam_enrollments_from_db(self):
         self.exam_enrollment_1.refresh_from_db()
         self.exam_enrollment_2.refresh_from_db()
+
+class OutsideEncodingPeriodTest(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.client = Client()
+        self.user = create_user(username='score_encoding', password='score_encoding')
+        add_permission(self.user, "can_access_scoreencoding")
+        self.client.login(username='score_encoding', password='score_encoding')
+        self.person = test_person.create_person_with_user(user=self.user)
+        academic_year = test_academic_year.create_academic_year()
+        offer_year = test_offer_year.create_offer_year("SINF2MA", "Master en Sciences Informatique",academic_year)
+        self.offer_year_calendar = test_offer_year_calendar.create_offer_year_calendar(offer_year, academic_year)
+        self.learning_unit_year = test_learning_unit_year.create_learning_unit_year("LINGI2359",
+                                                                                    "Software engineering seminar",
+                                                                                    academic_year)
+        self.first_session_exam = create_session_exam(1, self.learning_unit_year, self.offer_year_calendar)
+
+    def test_redirection_to_current_exam_session(self):
+        url = reverse('outside_scores_encodings_period')
+        response = self.client.get(url)
+        self.assertRedirects(response, "%s?next=%s" % (reverse('scores_encoding'), reverse('outside_scores_encodings_period')))  # Redirection
+
+    def test_redirection_to_outside_encoding_period(self):
+        self.first_session_exam.delete()
+        url = reverse('scores_encoding')
+        response = self.client.get(url)
+        self.assertRedirects(response, "%s?next=%s" % (reverse('outside_scores_encodings_period'), reverse('scores_encoding')))  # Redirection
 
 
 def prepare_exam_enrollment_for_double_encoding_validation(exam_enrollment):
