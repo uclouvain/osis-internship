@@ -31,11 +31,12 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase, Client, RequestFactory
 
 from base.tests.models import test_person, test_exam_enrollment, test_academic_year, test_offer_year_calendar, \
-                              test_offer_year, test_learning_unit_year, test_program_manager, test_tutor
+                              test_offer_year, test_learning_unit_year, test_program_manager, test_tutor, test_student,\
+                              test_offer_enrollment, test_learning_unit_enrollment
 from attribution.tests.models import test_attribution
 from base.tests.models.test_session_exam import create_session_exam
 from base.views import score_encoding
-from base.models.session_exam import SessionExam
+from base.models.exam_enrollment import ExamEnrollment
 
 
 class OnlineEncodingTest(TestCase):
@@ -262,6 +263,74 @@ class OutsideEncodingPeriodTest(TestCase):
         response = self.client.get(url)
         self.assertRedirects(response, "%s?next=%s" % (reverse('outside_scores_encodings_period'), reverse('scores_encoding')))  # Redirection
 
+class GetScoreEncodingViewProgramManagerTest(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.client = Client()
+        #Creation user/person and assign it as a "program manager"
+        self.user = create_user(username='score_encoding_pgrm', password='score_encoding_pgrm')
+        add_permission(self.user, "can_access_scoreencoding")
+        self.client.login(username='score_encoding_pgrm', password='score_encoding_pgrm')
+        self.person = test_person.create_person_with_user(user=self.user)
+        academic_year = test_academic_year.create_academic_year()
+        self.offer_year_bio2ma = test_offer_year.create_offer_year("BIO2MA", "Master en Biologie", academic_year)
+        self.offer_year_bio2bac = test_offer_year.create_offer_year("BIO2BAC", "Bachelier en Biologie", academic_year)
+        self.program_manager = test_program_manager.create_program_manager(offer_year=self.offer_year_bio2ma, person=self.person)
+        self.program_manager = test_program_manager.create_program_manager(offer_year=self.offer_year_bio2bac, person=self.person)
+
+        # Offer : BIO2MA - 2 Learning unit with exam
+        self.offer_year_calendar_bio2ma = test_offer_year_calendar.create_offer_year_calendar(self.offer_year_bio2ma, academic_year)
+        self.learning_unit_year = test_learning_unit_year.create_learning_unit_year("NTAR2359", "Biology methodology",
+                                                                                    academic_year)
+        self.learning_unit_year_2 = test_learning_unit_year.create_learning_unit_year("MIOA898", "Microsom seminar",
+                                                                                    academic_year)
+        self.first_session_exam = create_session_exam(1, self.learning_unit_year, self.offer_year_calendar_bio2ma)
+        self.first_session_exam_2 = create_session_exam(1, self.learning_unit_year_2, self.offer_year_calendar_bio2ma)
+
+        # Offer: BIO2BAC - 1 learning unit with exam
+        self.offer_year_calendar_bio2bac = test_offer_year_calendar.create_offer_year_calendar(self.offer_year_bio2bac,
+                                                                                       academic_year)
+        self.learning_unit_year_3 = test_learning_unit_year.create_learning_unit_year("ECTH056", "Ecosystem theory",
+                                                                                      academic_year)
+        self.first_session_exam_3 = create_session_exam(1, self.learning_unit_year_3, self.offer_year_calendar_bio2bac)
+
+
+        self.students=[]
+        for index in range(0,20):
+            # Creation of 20 students
+            self.students.append(test_student.create_student("Student" + str(index), "Etudiant" + str(index), index))
+            if index < 5:
+                # For the 5 first students register to the BIO2MA
+                offer_enrollment = test_offer_enrollment.create_offer_enrollment(self.students[index], self.offer_year_bio2ma)
+                learning_unit_enrollment = test_learning_unit_enrollment.create_learning_unit_enrollment(
+                                                                              offer_enrollment=offer_enrollment,
+                                                                              learning_unit_year=self.learning_unit_year)
+                learning_unit_enrollment_2 = test_learning_unit_enrollment.create_learning_unit_enrollment(
+                                                                            offer_enrollment=offer_enrollment,
+                                                                            learning_unit_year=self.learning_unit_year_2)
+                test_exam_enrollment.create_exam_enrollment(self.first_session_exam, learning_unit_enrollment)
+                test_exam_enrollment.create_exam_enrollment(self.first_session_exam_2, learning_unit_enrollment_2)
+            else:
+                # For the other register to the BIO2BAC
+                offer_enrollment = test_offer_enrollment.create_offer_enrollment(self.students[index],  self.offer_year_bio2bac)
+                learning_unit_enrollment = test_learning_unit_enrollment.create_learning_unit_enrollment(offer_enrollment=offer_enrollment,
+                                                                                                         learning_unit_year=self.learning_unit_year_3)
+                test_exam_enrollment.create_exam_enrollment(self.first_session_exam_3, learning_unit_enrollment)
+
+    def test_get_score_encoding_list_empty(self):
+        ExamEnrollment.objects.all().delete() #remove all exam enrolment [No subscription to exam]
+        url = reverse('scores_encoding')
+        response = self.client.get(url)
+        context = response.context[-1]
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(context['notes_list'])
+
+    def test_get_score_encoding(self):
+         url = reverse('scores_encoding')
+         response = self.client.get(url)
+         context = response.context[-1]
+         self.assertEqual(response.status_code, 200)
+         self.assertEqual(len(context['notes_list']),3)
 
 def prepare_exam_enrollment_for_double_encoding_validation(exam_enrollment):
     exam_enrollment.score_reencoded = 14
