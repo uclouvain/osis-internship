@@ -520,8 +520,8 @@ def internships_modification_student(request, registration_id, internship_id="1"
     for current_choice in current_choices:
         dict_current_choices[(current_choice.organization.id, current_choice.speciality.id)] = current_choice.choice
 
-    if speciality_id == "-1":
-        speciality_id = list(dict_current_choices.keys())[0][1]
+    # if speciality_id == "-1":
+    #     speciality_id = list(dict_current_choices.keys())[0][1]
     zipped_data = None
     if internships_offers:
         zipped_data = zip(internships_offers, formset)
@@ -566,6 +566,7 @@ def save_student_choices(formset, student, internship_id, speciality):
         if form.cleaned_data:
             offer_pk = form.cleaned_data["offer"]
             preference_value = form.cleaned_data["preference"]
+            priority = form.cleaned_data["priority"]
             if has_been_selected(preference_value):
                 offer = mdl_internship.internship_offer.find_by_pk(offer_pk)
                 internship_choice = mdl_internship.internship_choice.InternshipChoice(student=student,
@@ -573,7 +574,7 @@ def save_student_choices(formset, student, internship_id, speciality):
                                                                                       speciality=speciality,
                                                                                       choice=preference_value,
                                                                                       internship_choice=internship_id,
-                                                                                      priority=False)
+                                                                                      priority=priority)
                 internship_choice.save()
 
 
