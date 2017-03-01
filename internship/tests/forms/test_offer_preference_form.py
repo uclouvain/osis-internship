@@ -40,10 +40,10 @@ class TestOfferPreferenceFormset(TestCase):
             'form-MAX_NUM_FORMS': '',
             'form-0-offer': '4',
             'form-0-preference': '1',
-            'form-0-priority': 'true',
+            'form-0-priority': 'on',
             'form-1-offer': '5',
             'form-1-preference': '1',
-            'form+1-priority': 'true'
+            'form+1-priority': 'on'
         }
 
         formset = self.FormsetOfferPreference(data)
@@ -56,10 +56,10 @@ class TestOfferPreferenceFormset(TestCase):
             'form-MAX_NUM_FORMS': '',
             'form-0-offer': '4',
             'form-0-preference': '1',
-            'form-0-priority': 'false',
+            'form-0-priority': 'on',
             'form-1-offer': '4',
             'form-1-preference': '2',
-            'form-1-priority': 'false',
+            'form-1-priority': 'on',
         }
 
         formset = self.FormsetOfferPreference(data)
@@ -72,10 +72,10 @@ class TestOfferPreferenceFormset(TestCase):
             'form-MAX_NUM_FORMS': '',
             'form-0-offer': '4',
             'form-0-preference': '1',
-            'form-0-priority': 'False',
+            'form-0-priority': 'on',
             'form-1-offer': '5',
             'form-1-preference': '2',
-            'form-1-priority': 'False',
+            'form-1-priority': 'on',
         }
 
         formset = self.FormsetOfferPreference(data)
