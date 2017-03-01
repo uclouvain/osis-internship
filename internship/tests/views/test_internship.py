@@ -105,7 +105,8 @@ class TestModifyStudentChoices(TestCase):
                                          'form-0-preference': '1',
                                          'form-0-priority': 'on',
                                          'form-1-offer': str(self.offer_6.id),
-                                         'form-1-preference': '0'})
+                                         'form-1-preference': '0',
+                                         'form-1-priority': 'off'})
         choices = list(mdl_internship_choice.search_by_student_or_choice(student=self.student))
 
         self.assertEqual(len(choices), 1)
@@ -126,12 +127,16 @@ class TestModifyStudentChoices(TestCase):
                                          'form-MAX_NUM_FORMS': '4',
                                          'form-0-offer': str(self.offer_1.id),
                                          'form-0-preference': '1',
+                                         'form-0-priority': 'off',
                                          'form-1-offer': str(self.offer_2.id),
                                          'form-1-preference': '2',
+                                         'form-1-priority': 'off',
                                          'form-2-offer': str(self.offer_3.id),
                                          'form-2-preference': '3',
+                                         'form-2-priority': 'off',
                                          'form-3-offer': str(self.offer_4.id),
-                                         'form-3-preference': '4'
+                                         'form-3-preference': '4',
+                                         'form-3-priority': 'off',
                                          })
         choices = list(mdl_internship_choice.search_by_student_or_choice(student=self.student))
         self.assertEqual(len(choices), 4)
@@ -142,12 +147,16 @@ class TestModifyStudentChoices(TestCase):
                                          'form-MAX_NUM_FORMS': '4',
                                          'form-0-offer': str(self.offer_1.id),
                                          'form-0-preference': '1',
+                                         'form-0-priority': 'off',
                                          'form-1-offer': str(self.offer_2.id),
                                          'form-1-preference': '0',
+                                         'form-1-priority': 'off',
                                          'form-2-offer': str(self.offer_3.id),
                                          'form-2-preference': '2',
+                                         'form-2-priority': 'off',
                                          'form-3-offer': str(self.offer_4.id),
-                                         'form-3-preference': '0'
+                                         'form-3-preference': '0',
+                                         'form-3-priority': 'off',
                                          })
         choices = list(mdl_internship_choice.search_by_student_or_choice(student=self.student))
         self.assertEqual(len(choices), 2)
@@ -163,12 +172,16 @@ class TestModifyStudentChoices(TestCase):
                                          'form-MAX_NUM_FORMS': '4',
                                          'form-0-offer': str(self.offer_1.id),
                                          'form-0-preference': '1',
+                                         'form-0-priority': 'off',
                                          'form-1-offer': str(self.offer_5.id),
                                          'form-1-preference': '2',
+                                         'form-1-priority': 'off',
                                          'form-2-offer': str(self.offer_3.id),
                                          'form-2-preference': '0',
+                                         'form-2-priority': 'off',
                                          'form-3-offer': str(self.offer_4.id),
-                                         'form-3-preference': '0'
+                                         'form-3-preference': '0',
+                                         'form-3-priority': 'off',
                                          })
         choices = list(mdl_internship_choice.search_by_student_or_choice(student=self.student))
         self.assertEqual(len(choices), 1)
@@ -186,8 +199,10 @@ class TestModifyStudentChoices(TestCase):
                                          'form-MAX_NUM_FORMS': '2',
                                          'form-0-offer': str(self.offer_5.id),
                                          'form-0-preference': '1',
+                                         'form-0-priority': 'on',
                                          'form-1-offer': str(self.offer_6.id),
-                                         'form-1-preference': '0'})
+                                         'form-1-preference': '0',
+                                         'form-1-priority': 'off'})
         choices = list(mdl_internship_choice.search_by_student_or_choice(student=self.student))
         self.assertEqual(len(choices), 1)
         self.assertNotEqual(previous_choice, choices[0])

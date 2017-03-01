@@ -517,8 +517,6 @@ def internships_modification_student(request, registration_id, internship_id="1"
     current_choices = mdl_internship.internship_choice.search_by_student_or_choice(student=student,
                                                                                    internship_choice=internship_id)
     dict_current_choices = get_dict_current_choices(current_choices)
-    # if speciality_id == "-1":
-    #     speciality_id = list(dict_current_choices.keys())[0][1]
     zipped_data = zip_data(dict_current_choices, formset, internships_offers)
 
     return render(request, "internship_modification_student.html",
@@ -572,10 +570,10 @@ def save_student_choices(formset, student, internship_id, speciality):
     for form in formset:
         if form.cleaned_data:
             offer_pk = form.cleaned_data["offer"]
-            preference_value = form.cleaned_data["preference"]
-            priority = form.cleaned_data["priority"]
-            if has_been_selected(preference_value):
-                offer = mdl_internship.internship_offer.find_by_pk(offer_pk)
+            preference_value = int(form.cleaned_data["preference"])
+            priority = form.cleaned_data['priority']
+            offer = mdl_internship.internship_offer.find_by_pk(offer_pk)
+            if has_been_selected(preference_value) and is_correct_speciality(offer, speciality):
                 internship_choice = mdl_internship.internship_choice.InternshipChoice(student=student,
                                                                                       organization=offer.organization,
                                                                                       speciality=speciality,
@@ -586,7 +584,11 @@ def save_student_choices(formset, student, internship_id, speciality):
 
 
 def has_been_selected(preference_value):
-    return preference_value != 0
+    return bool(preference_value)
+
+
+def is_correct_speciality(offer, speciality):
+    return offer.speciality == speciality
 
 
 @login_required
