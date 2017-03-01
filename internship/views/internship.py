@@ -524,7 +524,7 @@ def internships_modification_student(request, registration_id, internship_id="1"
                           "formset": formset,
                           "offers_forms": zipped_data,
                           "intern_id": int(internship_id),
-                          "registration_id": student.registration_id})
+                          "student": student})
 
 
 @login_required
@@ -536,7 +536,7 @@ def assign_speciality_for_internship(request, registration_id, internship_id):
         if speciality_form.is_valid():
             speciality_selected = speciality_form.cleaned_data["speciality"]
             speciality_id = speciality_selected.id
-    return redirect("internships_modification_student", registration_id, internship_id=internship_id,
+    return redirect("specific_internship_student_modification", registration_id=registration_id, internship_id=internship_id,
                     speciality_id=speciality_id)
 
 

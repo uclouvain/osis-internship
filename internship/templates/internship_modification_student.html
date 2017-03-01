@@ -44,7 +44,7 @@
 
                 <ul class="nav nav-tabs">
                     {% for non_mandatory_id in number_non_mandatory_internships %}
-                        <li role="presentation" {% if non_mandatory_id == intern_id %} class="active" {% endif %}><a href="{% url 'switch_internship'  registration_id=registration_id internship_id=non_mandatory_id  %}">{% trans 'internship_choice'%} {{ non_mandatory_id }}</a></li>
+                        <li role="presentation" {% if non_mandatory_id == intern_id %} class="active" {% endif %}><a href="{% url 'switch_internship'  registration_id=student.registration_id internship_id=non_mandatory_id  %}">{% trans 'internship_choice'%} {{ non_mandatory_id }}</a></li>
                     {% endfor %}
                 </ul>
 
@@ -53,7 +53,7 @@
             <br>
 
             <div class="row">
-                <form action="{% url 'switch_speciality' registration_id=registration_id internship_id=intern_id %}"  method="post">
+                <form action="{% url 'switch_speciality' registration_id=student.registration_id internship_id=intern_id %}"  method="post">
                     {% csrf_token %}
                     {{ speciality_form.non_field_errors }}
                     <div class="fieldWrapper col-md-4 form-group">
