@@ -51,6 +51,18 @@ class TestUrlAccess(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
+class TestModifyStudentChoices(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user("username", "test@test.com", "passtest")
+        self.user.first_name = "first_name"
+        self.user.last_name = "last_name"
+        self.user.save()
+        add_permission(self.user, "is_internship_manager")
+        self.person = test_person.create_person_with_user(self.user)
+        self.c = Client()
+
+
+
 def add_permission(user, codename):
     perm = get_permission(codename)
     user.user_permissions.add(perm)
