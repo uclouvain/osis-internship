@@ -33,6 +33,9 @@ from math import sin, cos, radians, degrees, acos
 from operator import itemgetter
 
 from internship import models as mdl_internship
+from internship.forms.form_select_speciality import SpecialityForm
+from internship.forms.form_offer_preference import OfferPreferenceForm, OfferPreferenceFormSet
+from django.forms.formsets import formset_factory
 
 
 def calc_dist(lat_a, long_a, lat_b, long_b):
@@ -497,7 +500,7 @@ def internships_modification_student(request, registration_id, internship_id="1"
     NUMBER_NON_MANDATORY_INTERNSHIPS = 6
     student = mdl.student.find_by_registration_id(registration_id)
 
-    speciality = mdl_internship.internship_speciality.find_by_id(speciality_id)
+    speciality = mdl_internship.internship_speciality.get_by_id(speciality_id)
     internships_offers = mdl_internship.internship_offer.find_by_speciality(speciality)
 
     speciality_form = SpecialityForm()
@@ -520,11 +523,12 @@ def internships_modification_student(request, registration_id, internship_id="1"
                           "speciality_form": speciality_form,
                           "formset": formset,
                           "offers_forms": zipped_data,
-                          "intern_id": int(internship_id)})
+                          "intern_id": int(internship_id),
+                          "registration_id": student.registration_id})
 
 
 @login_required
-@permission_required('base.is_student', raise_exception=True)
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def assign_speciality_for_internship(request, registration_id, internship_id):
     speciality_id = None
     if request.method == "POST":
@@ -532,11 +536,12 @@ def assign_speciality_for_internship(request, registration_id, internship_id):
         if speciality_form.is_valid():
             speciality_selected = speciality_form.cleaned_data["speciality"]
             speciality_id = speciality_selected.id
-    return redirect("internships_modification_student", internship_id=internship_id, speciality_id=speciality_id)
+    return redirect("internships_modification_student", registration_id, internship_id=internship_id,
+                    speciality_id=speciality_id)
 
 
 def remove_previous_choices(student, internship_id):
-    previous_choices = mdl_internship.internship_choice.search(student, internship_id)
+    previous_choices = mdl_internship.internship_choice.search_by_student_or_choice(student, internship_id)
     if previous_choices:
         previous_choices.delete()
 

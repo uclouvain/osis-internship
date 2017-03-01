@@ -72,3 +72,21 @@ def search_other_choices(**kwargs):
                                        .select_related("student", "organization", "speciality")\
                                        .order_by('choice')
     return queryset.exclude(choice=1)
+
+
+def search_by_student_or_choice(student=None, internship_choice=None):
+    has_criteria = False
+    queryset = InternshipChoice.objects
+
+    if student:
+        queryset = queryset.filter(student=student)
+        has_criteria = True
+
+    if internship_choice is not None:
+        queryset = queryset.filter(internship_choice=internship_choice)
+        has_criteria = True
+
+    if has_criteria:
+        return queryset
+    else:
+        return None

@@ -25,6 +25,7 @@
 ##############################################################################
 from django.db import models
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class InternshipSpecialityAdmin(SerializableModelAdmin):
@@ -66,3 +67,10 @@ def find_non_mandatory():
     return InternshipSpeciality.objects.filter(mandatory=False)\
                                        .select_related("learning_unit")\
                                        .order_by('acronym', 'name')
+
+
+def get_by_id(speciality_id):
+    try:
+        return InternshipSpeciality.objects.get(pk=speciality_id)
+    except ObjectDoesNotExist:
+        return None
