@@ -27,6 +27,8 @@ from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
 from attribution import models as mdl_attr
 from . import layout
+from base.enums import learning_unit_year_type
+from base.enums import learning_unit_year_status
 
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
@@ -36,12 +38,16 @@ def learning_units(request):
 
     academic_years = mdl.academic_year.find_academic_years()
     academic_yr_calendar = mdl.academic_year.current_academic_year()
+    types = learning_unit_year_type.YEAR_TYPES
+    status_choices = learning_unit_year_status.LEARNING_UNIT_STATUS
 
     if academic_yr_calendar:
         academic_yr = academic_yr_calendar.id
     return layout.render(request, "learning_units.html", {'academic_year': academic_yr,
                                                           'code': code,
                                                           'academic_years': academic_years,
+                                                          'types' : types,
+                                                          'status_choices' : status_choices,
                                                           'learning_units': [],
                                                           'init': "1"})
 
@@ -59,7 +65,6 @@ def learning_units_search(request):
         if academic_year_calendar:
             academic_year = academic_year_calendar.id
 
-
     code = request.GET['code']
     type = request.GET['type']
     status = request.GET['status']
@@ -67,10 +72,15 @@ def learning_units_search(request):
 
     learning_unts = mdl.learning_unit_year.search(academic_year_id=academic_year,acronym=code,title=keyword,type=type,status=status)
     academic_years = mdl.academic_year.find_academic_years()
+    types = learning_unit_year_type.YEAR_TYPES
+    status_choices = learning_unit_year_status.LEARNING_UNIT_STATUS
 
     return layout.render(request, "learning_units.html", {'academic_year': int(academic_year),
                                                           'code': code,
+                                                          'type': type,
                                                           'academic_years': academic_years,
+                                                          'types' : types,
+                                                          'status_choices':status_choices,
                                                           'learning_units': learning_unts,
                                                           'init': "0"})
 

@@ -26,18 +26,16 @@
 from django.db import models
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from attribution.models import attribution
+from base.enums import learning_unit_year_type
+from base.enums import learning_unit_year_status
 
 
 class LearningUnitYearAdmin(SerializableModelAdmin):
     list_display = ('acronym', 'title', 'academic_year', 'credits', 'changed')
-    fieldsets = ((None, {'fields': ('academic_year', 'learning_unit', 'acronym', 'title', 'credits', 'decimal_scores','status')}),)
+    fieldsets = ((None, {'fields': ('academic_year', 'learning_unit', 'acronym', 'title', 'credits', 'decimal_scores','status', 'type')}),)
     list_filter = ('academic_year',)
     raw_id_fields = ('learning_unit',)
     search_fields = ['acronym']
-
-LEARNING_UNIT_STATUS = (
-    ('ACTIVE', _('active')),
-    ('INACTIVE', _('inactive')))
 
 class LearningUnitYear(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
@@ -47,13 +45,13 @@ class LearningUnitYear(SerializableModel):
     changed = models.DateTimeField(null=True)
     acronym = models.CharField(max_length=15, db_index=True)
     title = models.CharField(max_length=255)
-    type = models.CharField(max_length=3, blank=True, null=True, db_index=True)
+    type = models.CharField(max_length=20, blank=True, null=True, choices=learning_unit_year_type.YEAR_TYPES)
     credits = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     decimal_scores = models.BooleanField(default=False)
     team = models.BooleanField(default=False)
     vacant = models.BooleanField(default=False)
     in_charge = models.BooleanField(default=False)
-    status=models.CharField(max_length=20, blank=True, null=True, choices=LEARNING_UNIT_STATUS)
+    status=models.CharField(max_length=20, blank=True, null=True, choices=learning_unit_year_status.LEARNING_UNIT_STATUS)
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.acronym)

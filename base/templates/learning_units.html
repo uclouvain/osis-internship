@@ -57,17 +57,31 @@
                      value="{{ code }}" style="text-transform:uppercase" maxlength="15">
           </div>
           <div class="col-md-2">
-              <label for="code">{% trans 'type'%}</label>
-              <input class="form-control" id="txt_type" placeholder="{% trans 'type' %}" name="type"
-                     value="{{ type }}" style="text-transform:uppercase" maxlength="15">
+              <label for="type">{% trans 'type'%}</label>
+              <select class="form-control" id="slt_type" name="type" value="{{ type }}">
+                {% for t in types %}
+                  {% if t.1 == type %}
+                    <option selected value="{{ t.0 }}">{{ t.1 }}</option>
+                  {% else %}
+                    <option value="{{ t.0 }}">{{ t.1 }}</option>
+                  {% endif %}
+                {% endfor %}
+              </select>
           </div>
           <div class="col-md-2">
-              <label for="code">{% trans 'status'%}</label>
-              <input class="form-control" id="txt_status" placeholder="{% trans 'status' %}" name="status"
-                     value="{{ status }}" style="text-transform:uppercase" maxlength="15">
+              <label for="status">{% trans 'status'%}</label>
+              <select class="form-control" id="slt_status" name="status" value="{{ status }}">
+                {% for s in status_choices %}
+                  {% if s.1 == status %}
+                    <option selected value="{{ s.0 }}">{{ s.1 }}</option>
+                  {% else %}
+                    <option value="{{ s.0 }}">{{ s.1 }}</option>
+                  {% endif %}
+                {% endfor %}
+              </select>
           </div>
           <div class="col-md-2">
-              <label for="code">{% trans 'keyword'%}</label>
+              <label for="keyword">{% trans 'keyword'%}</label>
               <input class="form-control" id="txt_keyword" placeholder="{% trans 'keyword' %}" name="keyword"
                      value="{{ keyword }}" style="text-transform:uppercase" maxlength="15">
           </div>
