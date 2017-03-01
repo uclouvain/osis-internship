@@ -500,12 +500,12 @@ def internships_modification_student(request, registration_id, internship_id="1"
     NUMBER_NON_MANDATORY_INTERNSHIPS = 6
     student = mdl.student.find_by_registration_id(registration_id)
 
-    speciality = mdl_internship.internship_speciality.get_by_id(speciality_id)
+    speciality = mdl_internship.internship_speciality.find_by_id(speciality_id)
     internships_offers = mdl_internship.internship_offer.find_by_speciality(speciality)
 
-    speciality_form = SpecialityForm()
     offer_preference_formset = formset_factory(OfferPreferenceForm, formset=OfferPreferenceFormSet,
-                                               extra=internships_offers.count())
+                                               extra=internships_offers.count(), min_num=internships_offers.count(),
+                                               max_num=internships_offers.count(), validate_min=True, validate_max=True)
     formset = offer_preference_formset()
 
     if request.method == 'POST':
@@ -516,30 +516,37 @@ def internships_modification_student(request, registration_id, internship_id="1"
 
     current_choices = mdl_internship.internship_choice.search_by_student_or_choice(student=student,
                                                                                    internship_choice=internship_id)
-    dict_current_choices = dict()
-    for current_choice in current_choices:
-        dict_current_choices[(current_choice.organization.id, current_choice.speciality.id)] = current_choice.choice
-
+    dict_current_choices = get_dict_current_choices(current_choices)
     # if speciality_id == "-1":
     #     speciality_id = list(dict_current_choices.keys())[0][1]
-    zipped_data = None
-    if internships_offers:
-        zipped_data = zip(internships_offers, formset)
-        temp = []
-        for data in zipped_data:
-            value = dict_current_choices.get((data[0].organization.id, data[0].speciality.id), 0)
-            temp.append((data[0], data[1], str(value)))
-        zipped_data = temp
+    zipped_data = zip_data(dict_current_choices, formset, internships_offers)
 
     return render(request, "internship_modification_student.html",
                          {"number_non_mandatory_internships": range(1, NUMBER_NON_MANDATORY_INTERNSHIPS + 1),
-                          "speciality_form": speciality_form,
+                          "speciality_form": SpecialityForm(),
                           "formset": formset,
                           "offers_forms": zipped_data,
                           "intern_id": int(internship_id),
                           "speciality_id": int(speciality_id),
                           "student": student,
                           "current_choices": current_choices})
+
+
+def get_dict_current_choices(current_choices):
+    dict_current_choices = dict()
+    for current_choice in current_choices:
+        dict_current_choices[(current_choice.organization.id, current_choice.speciality.id)] = current_choice.choice
+    return dict_current_choices
+
+
+def zip_data(dict_current_choices, formset, internships_offers):
+    if not internships_offers:
+        return None
+    zipped_data = []
+    for offer, form in zip(internships_offers, formset):
+        value = dict_current_choices.get((offer.organization.id, offer.speciality.id), 0)
+        zipped_data.append((offer, form, str(value)))
+    return zipped_data
 
 
 @login_required
