@@ -30,11 +30,14 @@ from attribution.models import attribution
 
 class LearningUnitYearAdmin(SerializableModelAdmin):
     list_display = ('acronym', 'title', 'academic_year', 'credits', 'changed')
-    fieldsets = ((None, {'fields': ('academic_year', 'learning_unit', 'acronym', 'title', 'credits', 'decimal_scores')}),)
+    fieldsets = ((None, {'fields': ('academic_year', 'learning_unit', 'acronym', 'title', 'credits', 'decimal_scores','status')}),)
     list_filter = ('academic_year',)
     raw_id_fields = ('learning_unit',)
     search_fields = ['acronym']
 
+LEARNING_UNIT_STATUS = (
+    ('ACTIVE', _('active')),
+    ('INACTIVE', _('inactive')))
 
 class LearningUnitYear(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
@@ -50,6 +53,7 @@ class LearningUnitYear(SerializableModel):
     team = models.BooleanField(default=False)
     vacant = models.BooleanField(default=False)
     in_charge = models.BooleanField(default=False)
+    status=models.CharField(max_length=20, blank=True, null=True, choices=LEARNING_UNIT_STATUS)
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.acronym)
