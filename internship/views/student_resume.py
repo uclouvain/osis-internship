@@ -112,6 +112,7 @@ def internships_student_resume(request):
 @login_required
 @permission_required('internship.can_access_internship', raise_exception=True)
 def internships_student_read(request, registration_id):
+    NUMBER_NON_MANDATORY_INTERNSHIPS = 6
     student_to_read = mdl.student.find_by_registration_id(registration_id)
     if not request.user.has_perm('internship.is_internship_manager'):
         person_who_read = mdl.person.find_by_user(request.user)
@@ -158,7 +159,7 @@ def internships_student_read(request, registration_id):
                             'selectable': selectable,
                             'affectations': affectations,
                             'periods': periods,
-                            'internships': range(1, 7)
+                            'number_internships': range(1, NUMBER_NON_MANDATORY_INTERNSHIPS+1)
                             })
 
 
