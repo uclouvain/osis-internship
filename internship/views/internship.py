@@ -25,7 +25,7 @@
 ##############################################################################
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
 from collections import OrderedDict
@@ -493,59 +493,77 @@ def internships_block(request):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def internships_modification_student(request, registration_id):
-    # Get the student base on the user
-    student = mdl.student.find_by(registration_id=registration_id, full_registration = True)
-    # Get in descending order the student's choices in first lines
-    student_choice = mdl_internship.internship_choice.find_by_student_desc(student)
-    student_enrollment = mdl_internship.internship_enrollment.search(student = student)
+def internships_modification_student(request, registration_id, internship_id="1", speciality_id="-1"):
+    NUMBER_NON_MANDATORY_INTERNSHIPS = 6
+    student = mdl.student.find_by_registration_id(registration_id)
 
-    # Select all Internship Offer
-    query = mdl_internship.internship_offer.find_internships()
-    # Change the query into a list
-    query = list(query)
+    speciality = mdl_internship.internship_speciality.find_by_id(speciality_id)
+    internships_offers = mdl_internship.internship_offer.find_by_speciality(speciality)
 
-    # Delete the internships in query when they are in the student's selection then rebuild the query
-    # Put datas wich need to be save in the student's choice list
-    index = 0
-    for choice in student_choice:
-        for internship in query:
-            if internship.organization == choice.organization and \
-                            internship.speciality == choice.speciality:
-                choice.maximum_enrollments = internship.maximum_enrollments
-                choice.selectable = internship.selectable
-                query[index] = 0
-            index += 1
-        query = [x for x in query if x != 0]
-        index = 0
-    query = [x for x in query if x != 0]
+    speciality_form = SpecialityForm()
+    offer_preference_formset = formset_factory(OfferPreferenceForm, formset=OfferPreferenceFormSet,
+                                               extra=internships_offers.count())
+    formset = offer_preference_formset()
 
-    # Insert the student choice into the global query, at first position
-    for choice in student_choice :
-        query.insert(0,choice)
+    if request.method == 'POST':
+        formset = offer_preference_formset(request.POST)
+        if formset.is_valid():
+            remove_previous_choices(student, internship_id)
+            save_student_choices(formset, student, int(internship_id), speciality)
 
-    # Get The number of differents choices for the internships
-    get_number_choices(query)
+    zipped_data = None
+    if internships_offers:
+        zipped_data = zip(internships_offers, formset)
 
-    all_internships = mdl_internship.internship_offer.find_internships()
-    all_speciality = get_all_specialities(all_internships)
-    set_tabs_name(all_speciality, student)
+    return render(request, "internship_modification_student.html",
+                         {"number_non_mandatory_internships": range(1, NUMBER_NON_MANDATORY_INTERNSHIPS + 1),
+                          "speciality_form": speciality_form,
+                          "formset": formset,
+                          "offers_forms": zipped_data,
+                          "intern_id": int(internship_id)})
 
-    periods = mdl_internship.period.search()
 
-    return render(request, "internship_modification_student.html", {'section': 'internship',
-                                                                    'all_internships': query,
-                                                                    'all_speciality': all_speciality,
-                                                                    'periods': periods,
-                                                                    'registration_id': registration_id,
-                                                                    'student': student[0],
-                                                                    'student_enrollment': student_enrollment,
-                                                                    })
+@login_required
+@permission_required('base.is_student', raise_exception=True)
+def assign_speciality_for_internship(request, registration_id, internship_id):
+    speciality_id = None
+    if request.method == "POST":
+        speciality_form = SpecialityForm(request.POST)
+        if speciality_form.is_valid():
+            speciality_selected = speciality_form.cleaned_data["speciality"]
+            speciality_id = speciality_selected.id
+    return redirect("internships_modification_student", internship_id=internship_id, speciality_id=speciality_id)
+
+
+def remove_previous_choices(student, internship_id):
+    previous_choices = mdl_internship.internship_choice.search(student, internship_id)
+    if previous_choices:
+        previous_choices.delete()
+
+
+def save_student_choices(formset, student, internship_id, speciality):
+    for form in formset:
+        if form.cleaned_data:
+            offer_pk = form.cleaned_data["offer"]
+            preference_value = form.cleaned_data["preference"]
+            if has_been_selected(preference_value):
+                offer = mdl_internship.internship_offer.find_by_pk(offer_pk)
+                internship_choice = mdl_internship.internship_choice.InternshipChoice(student=student,
+                                                                                      organization=offer.organization,
+                                                                                      speciality=speciality,
+                                                                                      choice=preference_value,
+                                                                                      internship_choice=internship_id,
+                                                                                      priority=False)
+                internship_choice.save()
+
+
+def has_been_selected(preference_value):
+    return preference_value != 0
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def internship_save_modification_student(request) :
+def internship_save_modification_student(request):
     # Get the student
     registration_id = request.POST.getlist('registration_id')
     student = mdl.student.find_by(registration_id=registration_id[0], full_registration = True)
