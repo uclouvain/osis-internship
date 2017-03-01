@@ -121,10 +121,12 @@ def internships_student_read(request, registration_id):
     if not student_to_read:
         return render(request, "student_resume.html", {'errors': ['student_not_exists']})
     information = mdl_internship.internship_student_information.search(person = student_to_read.person)
-    internship_choice = mdl_internship.internship_choice.find_by_student(student_to_read)
+    internship_choice = mdl_internship.internship_choice.find_by_student(student_to_read).\
+        order_by('internship_choice', 'choice')
     all_speciality = mdl_internship.internship_speciality.search(mandatory=True)
 
-    affectations = mdl_internship.internship_student_affectation_stat.search(student=student_to_read).order_by("period__date_start")
+    affectations = mdl_internship.internship_student_affectation_stat.search(student=student_to_read).\
+        order_by("period__date_start")
     periods = mdl_internship.period.search().order_by("date_start")
     organizations = mdl_internship.organization.search()
     set_organization_address(organizations)
@@ -156,6 +158,7 @@ def internships_student_read(request, registration_id):
                             'selectable': selectable,
                             'affectations': affectations,
                             'periods': periods,
+                            'internships': range(1, 7)
                             })
 
 
