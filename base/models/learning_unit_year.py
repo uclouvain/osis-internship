@@ -59,7 +59,7 @@ def find_by_id(learning_unit_year_id):
     return LearningUnitYear.objects.get(pk=learning_unit_year_id)
 
 
-def search(academic_year_id=None, acronym=None, learning_unit=None, title=None):
+def search(academic_year_id=None, acronym=None, learning_unit=None, title=None, type=None, status=None):
     queryset = LearningUnitYear.objects
 
     if academic_year_id:
@@ -73,6 +73,12 @@ def search(academic_year_id=None, acronym=None, learning_unit=None, title=None):
 
     if title:
         queryset = queryset.filter(title__icontains=title)
+
+    if type:
+        queryset = queryset.filter(type=type)
+
+    if status:
+        queryset = queryset.filter(status=status)
 
     return queryset
 

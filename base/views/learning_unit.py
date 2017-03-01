@@ -28,7 +28,6 @@ from base import models as mdl
 from attribution import models as mdl_attr
 from . import layout
 
-
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_units(request):
@@ -60,11 +59,13 @@ def learning_units_search(request):
         if academic_year_calendar:
             academic_year = academic_year_calendar.id
 
+
     code = request.GET['code']
+    type = request.GET['type']
+    status = request.GET['status']
+    keyword = request.GET['keyword']
 
-
-
-    learning_unts = mdl.learning_unit_year.search(academic_year_id=academic_year,acronym=code)
+    learning_unts = mdl.learning_unit_year.search(academic_year_id=academic_year,acronym=code,title=keyword,type=type,status=status)
     academic_years = mdl.academic_year.find_academic_years()
 
     return layout.render(request, "learning_units.html", {'academic_year': int(academic_year),
