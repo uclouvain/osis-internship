@@ -40,6 +40,8 @@
     <div class="panel panel-default">
         <div class="panel-body">
 
+
+
             <div class="row">
 
                 <ul class="nav nav-tabs">
@@ -64,7 +66,7 @@
                                 class="form-control">
                             {% for x,y in speciality_form.fields.speciality.choices %}
                                 <option value="{{ x }}"
-                                        {% if speciality_form.speciality.value == x|stringformat:"i" %} selected {% endif %}>
+                                        {% if speciality_id == x %} selected {% endif %}>
                                     {{ y }}
                                 </option>
                             {% endfor %}
@@ -95,28 +97,27 @@
                            <th>preference</th>
                        </thead>
 
-                        {% for offer_form in  offers_forms %}
-                            {% with offer=offer_form.0 %}
-                                {% with form=offer_form.1 %}
+                        {% for offer, form, value in  offers_forms %}
+
                        <tr>
                             <td>{{ offer.organization }}</td>
                             <td>{{ offer.maximum_enrollments }}</td>
-                            <td> {{ formset.counter.preference }} </td>
+                            <td> {{ formset.counter.preference }} {{ value }}</td>
                             <td hidden>
                                 <input type="number" id="{{ form.offer.id_for_label }}" name="{{ form.offer.html_name }}" class="form-control" value="{{ offer.organization.pk }}">
                             </td>
                             <td>
                                 <select id="{{ form.preference.id_for_label }}" name="{{ form.preference.html_name }}" class="form-control">
                                     {% for x,y in form.fields.preference.choices %}
-                                        <option value="{{ x }}">
+                                        <option value="{{ x }}"
+                                                {% if x == value %} selected {% endif %}>
                                             {{ y }}
                                         </option>
                                      {% endfor %}
                                 </select>
                             </td>
                        </tr>
-                                    {% endwith %}
-                            {% endwith %}
+
                         {% endfor %}
                    </table>
 

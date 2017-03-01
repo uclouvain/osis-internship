@@ -514,9 +514,19 @@ def internships_modification_student(request, registration_id, internship_id="1"
             remove_previous_choices(student, internship_id)
             save_student_choices(formset, student, int(internship_id), speciality)
 
+    current_choices = mdl_internship.internship_choice.search_by_student_or_choice(student=student,
+                                                                                   internship_choice=internship_id)
+    dict_current_choices = dict()
+    for current_choice in current_choices:
+        dict_current_choices[(current_choice.organization.id, current_choice.speciality.id)] = current_choice.choice
     zipped_data = None
     if internships_offers:
         zipped_data = zip(internships_offers, formset)
+        temp = []
+        for data in zipped_data:
+            value = dict_current_choices.get((data[0].organization.id, data[0].speciality.id), 0)
+            temp.append((data[0], data[1], str(value)))
+        zipped_data = temp
 
     return render(request, "internship_modification_student.html",
                          {"number_non_mandatory_internships": range(1, NUMBER_NON_MANDATORY_INTERNSHIPS + 1),
@@ -524,7 +534,9 @@ def internships_modification_student(request, registration_id, internship_id="1"
                           "formset": formset,
                           "offers_forms": zipped_data,
                           "intern_id": int(internship_id),
-                          "student": student})
+                          "speciality_id": int(speciality_id),
+                          "student": student,
+                          "current_choices": current_choices})
 
 
 @login_required
