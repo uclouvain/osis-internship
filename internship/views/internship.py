@@ -519,6 +519,9 @@ def internships_modification_student(request, registration_id, internship_id="1"
     dict_current_choices = dict()
     for current_choice in current_choices:
         dict_current_choices[(current_choice.organization.id, current_choice.speciality.id)] = current_choice.choice
+
+    if speciality_id == "-1":
+        speciality_id = list(dict_current_choices.keys())[0][1]
     zipped_data = None
     if internships_offers:
         zipped_data = zip(internships_offers, formset)
