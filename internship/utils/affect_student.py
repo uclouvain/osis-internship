@@ -51,6 +51,10 @@ class Solver:
     def get_number_students(self):
         return len(self.students)
 
+    def solve(self):
+        for student in self.students:
+            pass
+
 
 class Offer:
     def __init__(self, offer_id, organization_id, speciality_id, places):
@@ -79,6 +83,7 @@ class Student:
     def __init__(self, student_id):
         self.student_id = student_id
         self.choices = []
+        self.assignments = dict()
 
     def add_choice(self, choice):
         self.choices.append(choice)
@@ -88,6 +93,18 @@ class Student:
         line_in_ints = [int(x) for x in line.split()]
         student_id = line_in_ints[0]
         return Student(student_id)
+
+    def assign(self, period, offer_id):
+        self.assignments[period] = offer_id
+
+    def has_all_period_assigned(self):
+        START_PERIOD = 9
+        END_PERIOD = 12
+        periods = [x for x in range(START_PERIOD, END_PERIOD+1)]
+        for period in periods:
+            if period not in self.assignments:
+                return False
+        return True
 
 
 class Choice:
@@ -107,5 +124,6 @@ class Choice:
         priority = bool(line_in_ints[5])
         offer_id = 0 #TODO should fetch correct offer
         return Choice(internship_id, offer_id, preference, priority)
+
 
 

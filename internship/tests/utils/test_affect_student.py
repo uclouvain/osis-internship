@@ -83,6 +83,23 @@ class TestStudent(SimpleTestCase):
         self.assertTrue(student)
         self.assertEqual(student.student_id, 1)
 
+    def test_assign(self):
+        self.student.assign(9, 5)
+        self.student.assign(10, 8)
+        self.assertEqual(len(self.student.assignments), 2)
+        self.assertEqual(self.student.assignments[9], 5)
+        self.assertEqual(self.student.assignments[10], 8)
+
+    def test_has_all_period_assigned(self):
+        self.student.assignments = {8: 4,
+                                     9: 5}
+        self.assertFalse(self.student.has_all_period_assigned())
+        self.student.assignments = {9: 4,
+                                     10: 5,
+                                     11: 6,
+                                     12: 8}
+        self.assertTrue(self.student.has_all_period_assigned())
+
 
 class TestChoice(SimpleTestCase):
     def setUp(self):
@@ -101,4 +118,5 @@ class TestChoice(SimpleTestCase):
         self.assertEqual(choice.offer_id, 0)
         self.assertEqual(choice.preference, 1)
         self.assertEqual(choice.priority, True)
+
 
