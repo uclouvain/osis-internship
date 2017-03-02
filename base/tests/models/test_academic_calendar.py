@@ -39,9 +39,7 @@ def create_academic_year():
     return academic_yr
 
 
-def create_academic_calendar(an_academic_year):
-    start_date = datetime.date(2000, 1, 1)
-    end_date = datetime.date(2099, 1, 1)
+def create_academic_calendar(an_academic_year, start_date=datetime.date(2000, 1, 1), end_date= datetime.date(2099, 1, 1)):
     an_academic_calendar = academic_calendar.AcademicCalendar(academic_year=an_academic_year, start_date=start_date,
                                                               end_date=end_date)
     an_academic_calendar.save(functions=[])
