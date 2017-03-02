@@ -63,11 +63,13 @@ class Offer:
         self.speciality_id = speciality_id
         self.places = places
 
+        self.places_left = places[:]
+
     def get_period_places(self, period):
         index = period - 1
-        if index > len(self.places) or index < 0:
+        if index > len(self.places_left) or index < 0:
             return 0
-        return self.places[index]
+        return self.places_left[index]
 
     @staticmethod
     def create_offer(line):
@@ -78,25 +80,37 @@ class Offer:
         places = line_in_ints[3:]
         return Offer(offer_id, organization_id, speciality_id, places)
 
+    def has_place(self, period):
+        return self.get_period_places(period) > 0
+
+    def occupy_place(self, period):
+        index = period - 1
+        self.places_left[index] -= 1
+
 
 class Student:
     def __init__(self, student_id):
         self.student_id = student_id
         self.choices = []
         self.assignments = dict()
+        self.is_a_priority = False
 
         self.choices_by_preference = dict()
-        self.cost = 0 #TODO compute cost
+        self.cost = 0  # TODO compute cost
 
     def add_choice(self, choice):
         self.choices.append(choice)
         self.__add_by_preference(choice)
+        self.__update_priority(choice)
 
     def __add_by_preference(self, choice):
         current_choices_for_preference = self.choices_by_preference.get(choice.preference, [])
         current_choices_for_preference.append(choice)
         self.choices_by_preference[choice.preference] = current_choices_for_preference
 
+    def __update_priority(self, choice):
+        if choice.priority:
+            self.is_a_priority = True
 
     @staticmethod
     def create_student(line):

@@ -63,6 +63,14 @@ class TestOffer(SimpleTestCase):
         self.assertEqual(offer_created.speciality_id, 1)
         self.assertEqual(offer_created.places, [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 2])
 
+    def test_occupy_place(self):
+        self.offer.occupy_place(1)
+        self.assertEqual(self.offer.places_left[0], 3)
+
+    def test_has_place(self):
+        self.assertTrue(self.offer.has_place(1))
+        self.assertFalse(self.offer.has_place(3))
+
 
 class TestStudent(SimpleTestCase):
     def setUp(self):
@@ -121,6 +129,12 @@ class TestStudent(SimpleTestCase):
                                      11: 6,
                                      12: 8}
         self.assertTrue(self.student.has_all_period_assigned())
+
+    def test_priority(self):
+        self.assertFalse(self.student.is_a_priority)
+        choice = affect_student.Choice(2, 4, 5, 2, True)
+        self.student.add_choice(choice)
+        self.assertTrue(self.student.is_a_priority)
 
 
 class TestChoice(SimpleTestCase):
