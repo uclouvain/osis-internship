@@ -17,9 +17,22 @@ engines:
 ratings:
   paths:
   - "**.css"
-  - "**.inc"
   - "**.js"
-  - "**.jsx"
-  - "**.module"
   - "**.py"
-exclude_paths: []
+exclude_paths:
+  - "base/migrations/**/*"
+  - "attribution/migrations/**/*"
+  - "admission/migrations/**/*"
+  - "internship/migrations/**/*"
+  - "dissertation/migrations/**/*"
+  - "reference/migrations/**/*"
+  - "assistant/migrations/**/*"
+  - "base/static/js/**/*"
+  - "base/static/css/**/*"
+  - "!base/static/js/osis.js"
+  - "!base/static/css/osis.css"
+  - "base/tests/**/*"
+  - "admission/tests/**/*"
+  - "attribution/tests/**/*"
+  - "dissertation/tests/**/*"
+  - "internship/tests/**/*"
