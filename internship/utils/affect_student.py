@@ -170,7 +170,7 @@ class Student:
     def assign(self, period, offer_id):
         self.assignments[period] = offer_id
 
-    def has_all_period_assigned(self):
+    def has_all_periods_assigned(self):
         periods = [x for x in range(START_PERIOD, END_PERIOD+1)]
         for period in periods:
             if period not in self.assignments:

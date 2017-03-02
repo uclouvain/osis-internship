@@ -30,12 +30,19 @@ SAMPLE1 = "./internship/tests/utils/ressources/sample1.txt"
 
 
 class TestAffectStudent(SimpleTestCase):
-    def test_initialize_problem(self):
-        solver = affect_student.Solver()
-        solver.initialize_f(SAMPLE1)
+    def setUp(self):
+        self.solver = affect_student.Solver()
+        self.solver.initialize_f(SAMPLE1)
 
-        self.assertEqual(solver.get_number_offers(),  5)
-        self.assertEqual(solver.get_number_students(), 10)
+    def test_initialize_problem(self):
+        self.assertEqual(self.solver.get_number_offers(),  5)
+        self.assertEqual(self.solver.get_number_students(), 10)
+
+    def test_solve(self):
+        try:
+            self.solver.solve()
+        except Exception:
+            self.fail()
 
 
 class TestOffer(SimpleTestCase):
@@ -131,12 +138,12 @@ class TestStudent(SimpleTestCase):
     def test_has_all_period_assigned(self):
         self.student.assignments = {8: 4,
                                      9: 5}
-        self.assertFalse(self.student.has_all_period_assigned())
+        self.assertFalse(self.student.has_all_periods_assigned())
         self.student.assignments = {9: 4,
                                      10: 5,
                                      11: 6,
                                      12: 8}
-        self.assertTrue(self.student.has_all_period_assigned())
+        self.assertTrue(self.student.has_all_periods_assigned())
 
     def test_priority(self):
         self.assertFalse(self.student.is_a_priority)
