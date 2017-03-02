@@ -80,3 +80,23 @@ class TestOfferPreferenceFormset(TestCase):
 
         formset = self.FormsetOfferPreference(data)
         self.assertTrue(formset.is_valid())
+
+        data = {'form-TOTAL_FORMS': '4',
+                'form-INITIAL_FORMS': '0',
+                'form-MIN_NUM_FORMS': '4',
+                'form-MAX_NUM_FORMS': '4',
+                'form-0-offer': '10',
+                'form-0-preference': '1',
+                'form-0-priority': 'off',
+                'form-1-offer': '25',
+                'form-1-preference': '2',
+                'form-1-priority': 'off',
+                'form-2-offer': '3',
+                'form-2-preference': '3',
+                'form-2-priority': 'off',
+                'form-3-offer': '89',
+                'form-3-preference': '4',
+                'form-3-priority': 'off',
+                }
+        formset = self.FormsetOfferPreference(data)
+        self.assertTrue(formset.is_valid())

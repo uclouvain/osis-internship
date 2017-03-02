@@ -34,27 +34,6 @@ from internship.models import internship_choice as mdl_internship_choice
 from django.core.exceptions import ValidationError
 
 
-class TestUrlAccess(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user("username", "test@test.com", "passtest")
-        self.user.first_name = "first_name"
-        self.user.last_name = "last_name"
-        self.user.save()
-        add_permission(self.user, "is_internship_manager")
-        self.person = test_person.create_person_with_user(self.user)
-        self.c = Client()
-
-    def test_can_access_internship_modfication_student(self):
-        url = reverse("internships_modification_student")
-
-        response = self.c.get(url)
-        self.assertEqual(response.status_code, 302)
-
-        self.c.force_login(self.user)
-        response = self.c.get(url)
-        self.assertEqual(response.status_code, 200)
-
-
 class TestModifyStudentChoices(TestCase):
     def setUp(self):
         self.user = User.objects.create_user("username", "test@test.com", "passtest")
@@ -118,7 +97,7 @@ class TestModifyStudentChoices(TestCase):
 
     def test_with_multiple_choice(self):
         selection_url = reverse("specific_internship_student_modification", kwargs={'internship_id': 1,
-                                                                        'speciality_id': self.speciality_2.id,
+                                                                        'speciality_id': self.speciality_1.id,
                                                                         'registration_id': self.student.registration_id}
                                 )
         self.c.post(selection_url, data={'form-TOTAL_FORMS': '4',
@@ -163,7 +142,7 @@ class TestModifyStudentChoices(TestCase):
 
     def test_with_incorrect_speciality(self):
         selection_url = reverse("specific_internship_student_modification", kwargs={'internship_id': 1,
-                                                                        'speciality_id': self.speciality_2.id,
+                                                                        'speciality_id': self.speciality_1.id,
                                                                         'registration_id': self.student.registration_id}
                                 )
         self.c.post(selection_url, data={'form-TOTAL_FORMS': '4',
@@ -172,16 +151,16 @@ class TestModifyStudentChoices(TestCase):
                                          'form-MAX_NUM_FORMS': '4',
                                          'form-0-offer': str(self.offer_1.id),
                                          'form-0-preference': '1',
-                                         'form-0-priority': 'off',
+                                         'form-0-priority': 'on',
                                          'form-1-offer': str(self.offer_5.id),
                                          'form-1-preference': '2',
-                                         'form-1-priority': 'off',
+                                         'form-1-priority': 'on',
                                          'form-2-offer': str(self.offer_3.id),
                                          'form-2-preference': '0',
-                                         'form-2-priority': 'off',
+                                         'form-2-priority': 'on',
                                          'form-3-offer': str(self.offer_4.id),
                                          'form-3-preference': '0',
-                                         'form-3-priority': 'off',
+                                         'form-3-priority': 'on',
                                          })
         choices = list(mdl_internship_choice.search_by_student_or_choice(student=self.student))
         self.assertEqual(len(choices), 1)
@@ -189,7 +168,7 @@ class TestModifyStudentChoices(TestCase):
     def test_replace_previous_choices(self):
         previous_choice = test_internship_choice.create_internship_choice(test_organization.create_organization(),
                                                                           self.student, self.speciality_1, 2)
-        selection_url = reverse("specific_internship_student_modification", kwargs={'internship_id': 1,
+        selection_url = reverse("specific_internship_student_modification", kwargs={'internship_id': 2,
                                                                         'speciality_id': self.speciality_2.id,
                                                                         'registration_id': self.student.registration_id}
                                 )

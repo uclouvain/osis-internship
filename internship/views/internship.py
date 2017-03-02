@@ -500,7 +500,7 @@ def internships_modification_student(request, registration_id, internship_id="1"
     NUMBER_NON_MANDATORY_INTERNSHIPS = 6
     student = mdl.student.find_by_registration_id(registration_id)
 
-    speciality = mdl_internship.internship_speciality.find_by_id(speciality_id)
+    speciality = mdl_internship.internship_speciality.get_by_id(speciality_id)
     internships_offers = mdl_internship.internship_offer.find_by_speciality(speciality)
 
     offer_preference_formset = formset_factory(OfferPreferenceForm, formset=OfferPreferenceFormSet,
