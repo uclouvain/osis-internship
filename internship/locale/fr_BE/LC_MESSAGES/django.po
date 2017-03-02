@@ -133,6 +133,9 @@ msgstr	 "Les sélections de stage sont bloquées actuellement."
 msgid	 "internship_choice"
 msgstr	 "Choix de stage"
 
+msgid	 "internship"
+msgstr	 "Stage"
+
 msgid	 "internship_modification"
 msgstr	 "Modification du stage"
 
