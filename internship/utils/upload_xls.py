@@ -202,13 +202,13 @@ def __save_xls_internships(request, file_name, user):
                 speciality = mdl_internship_speciality.search(acronym__icontains=spec_value)
 
                 number_place = 0
-                for x in range (3,15):
+                for x in range(3, 7):
                     if row[x].value is None:
                         number_place += 0
                     else :
                         number_place += int(row[x].value)
 
-                for x in range(0,len(speciality)) :
+                for x in range(0, len(speciality)) :
                     check_internship = mdl_internship_offer.search(speciality__name = speciality[x], organization__reference = organization[0].reference)
                     if len(check_internship) != 0:
                         internship = mdl_internship_offer.find_intership_by_id(check_internship[0].id)
@@ -223,8 +223,8 @@ def __save_xls_internships(request, file_name, user):
                     internship.selectable = True
                     internship.save()
 
-                    number_period = 1
-                    for x in range (3,15):
+                    number_period = 9
+                    for x in range (3,7):
                         period_search = "P"+str(number_period)
                         number_period += 1
                         period = mdl_period.search(name=period_search)
