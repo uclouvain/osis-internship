@@ -76,3 +76,12 @@ class ExamEnrollmentTest(TestCase):
         ex_enrol = self.exam_enrollment
         ex_enrol.justification_reencoded = 'invalid_justification'
         self.assertRaises(exceptions.JustificationValueException, ex_enrol.save)
+
+    def test_calculate_exam_enrollment_without_progress(self):
+        self.assertEqual(exam_enrollment.calculate_exam_enrollment_progress(None), 0)
+
+    def test_calculate_exam_enrollment_with_progress(self):
+        ex_enrol = self.exam_enrollment
+        progress = exam_enrollment.calculate_exam_enrollment_progress(ex_enrol)
+        self.assertTrue(0 <= progress.content <= 100)
+
