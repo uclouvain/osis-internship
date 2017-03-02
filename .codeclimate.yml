@@ -36,3 +36,4 @@ exclude_paths:
   - "attribution/tests/**/*"
   - "dissertation/tests/**/*"
   - "internship/tests/**/*"
+  - "assistant/tests/**/*"
