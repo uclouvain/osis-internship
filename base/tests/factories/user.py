@@ -23,24 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import TestCase
-from base.tests.models import test_person
-from base.models import student
+import factory
 
 
-def create_student(first_name, last_name, registration_id):
-    person = test_person.create_person(first_name, last_name)
-    a_student = student.Student(person=person, registration_id=registration_id)
-    a_student.save()
-    return a_student
-
-
-class StudentTest(TestCase):
-    def setUp(self):
-        self.student_1 = create_student("Arno", "Dupont", 66666)
-        self.student_2 = create_student("Thomas", "Durant", 565656)
-
-    def test_find_by_person_name_case_insensitive(self):
-        found = list(student.find_by(person_name="dupont"))
-        self.assertEqual(len(found), 1)
-        self.assertEqual(found[0].id, self.student_1.id)
+class UserFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = 'auth.User'

@@ -23,24 +23,38 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import TestCase
-from base.tests.models import test_person
-from base.models import student
+import operator
+import datetime
+import factory
+import factory.fuzzy
+from django.conf import settings
+from django.utils import timezone
+from base import models as mdl
+from base.tests.factories.user import UserFactory
 
 
-def create_student(first_name, last_name, registration_id):
-    person = test_person.create_person(first_name, last_name)
-    a_student = student.Student(person=person, registration_id=registration_id)
-    a_student.save()
-    return a_student
+def _get_tzinfo():
+    if settings.USE_TZ:
+        return timezone.get_current_timezone()
+    else:
+        return None
 
 
-class StudentTest(TestCase):
-    def setUp(self):
-        self.student_1 = create_student("Arno", "Dupont", 66666)
-        self.student_2 = create_student("Thomas", "Durant", 565656)
+def generate_person_email(person, domain=None):
+    if domain is None:
+        domain = factory.Faker('domain_name').generate({})
+    return '{0.first_name}.{0.last_name}@{1}'.format(person, domain).lower()
 
-    def test_find_by_person_name_case_insensitive(self):
-        found = list(student.find_by(person_name="dupont"))
-        self.assertEqual(len(found), 1)
-        self.assertEqual(found[0].id, self.student_1.id)
+
+class PersonFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = 'base.Person'
+
+    first_name = factory.Faker('first_name')
+    last_name = factory.Faker('last_name')
+    changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=_get_tzinfo()))
+    email = factory.LazyAttribute(generate_person_email)
+    phone = factory.Faker('phone_number')
+    language = factory.Iterator(settings.LANGUAGES, getter=operator.itemgetter(0))
+    gender = factory.Iterator(mdl.person.Person.GENDER_CHOICES, getter=operator.itemgetter(0))
+    user = factory.SubFactory(UserFactory)

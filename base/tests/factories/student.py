@@ -23,24 +23,28 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import TestCase
-from base.tests.models import test_person
-from base.models import student
+import datetime
+import factory
+import factory.fuzzy
+import string
+from base.tests.factories.person import PersonFactory
+from django.conf import settings
+from django.utils import timezone
 
 
-def create_student(first_name, last_name, registration_id):
-    person = test_person.create_person(first_name, last_name)
-    a_student = student.Student(person=person, registration_id=registration_id)
-    a_student.save()
-    return a_student
+def _get_tzinfo():
+    if settings.USE_TZ:
+        return timezone.get_current_timezone()
+    else:
+        return None
 
 
-class StudentTest(TestCase):
-    def setUp(self):
-        self.student_1 = create_student("Arno", "Dupont", 66666)
-        self.student_2 = create_student("Thomas", "Durant", 565656)
+class StudentFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = 'base.Student'
 
-    def test_find_by_person_name_case_insensitive(self):
-        found = list(student.find_by(person_name="dupont"))
-        self.assertEqual(len(found), 1)
-        self.assertEqual(found[0].id, self.student_1.id)
+    external_id = factory.fuzzy.FuzzyText(length=10, chars=string.digits)
+    changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=_get_tzinfo()),
+                                          datetime.datetime(2017, 3, 1, tzinfo=_get_tzinfo()))
+    registration_id = factory.fuzzy.FuzzyText(length=10, chars=string.digits)
+    person = factory.SubFactory(PersonFactory)
