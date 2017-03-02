@@ -94,9 +94,9 @@ class TestStudent(SimpleTestCase):
         self.student.add_choice(choice_2)
         self.student.add_choice(choice_3)
 
-        self.assertEqual(len(self.student.choices_by_preference), 2)
-        self.assertEqual(len(self.student.choices_by_preference[1]), 1)
-        self.assertEqual(len(self.student.choices_by_preference[2]), 2)
+        self.assertEqual(len(self.student._choices_by_preference), 2)
+        self.assertEqual(len(self.student.get_choices_for_preference(1)), 1)
+        self.assertEqual(len(self.student.get_choices_for_preference(2)), 2)
 
     def test_specialities_chosen(self):
         choice_1 = affect_student.Choice(2, 4, 5, 2, False)

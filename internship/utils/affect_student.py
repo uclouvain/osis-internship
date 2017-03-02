@@ -30,20 +30,36 @@ class Solver:
         self.offers = []
         self.students = []
 
+        self.offers_dict = dict()
+        self.students_left_to_assign = []
+
     def initialize_f(self, filename):
         with open(filename) as file:
             number_offers, number_students = [int(x) for x in file.readline().split()]
             file.readline()
+
             for x in range(0, number_offers):
-                line = file.readline()
-                self.offers.append(Offer.create_offer(line))
+                self.__add_offer_from_line(file.readline())
+
             file.readline()
+
             for x in range(0, number_students):
                 line = file.readline()
-                student = Student.create_student(line)
-                choice = Choice.create_choice(line)
-                student.add_choice(choice)
-                self.students.append(student)
+                self.__add_student_from_line(line)
+
+            self.students_left_to_assign = self.students[:]
+
+    def __add_student_from_line(self, line):
+        student = Student.create_student(line)
+        choice = Choice.create_choice(line)
+        student.add_choice(choice)
+        self.students.append(student)
+
+    def __add_offer_from_line(self, line):
+        offer = Offer.create_offer(line)
+        key = (offer.organization_id, offer.speciality_id)
+        self.offers_dict[key] = offer
+        self.offers.append(offer)
 
     def get_number_offers(self):
         return len(self.offers)
@@ -95,7 +111,7 @@ class Student:
         self.assignments = dict()
         self.is_a_priority = False
 
-        self.choices_by_preference = dict()
+        self._choices_by_preference = dict()
         self.cost = 0  # TODO compute cost
 
     def add_choice(self, choice):
@@ -104,9 +120,9 @@ class Student:
         self.__update_priority(choice)
 
     def __add_by_preference(self, choice):
-        current_choices_for_preference = self.choices_by_preference.get(choice.preference, [])
+        current_choices_for_preference = self._choices_by_preference.get(choice.preference, [])
         current_choices_for_preference.append(choice)
-        self.choices_by_preference[choice.preference] = current_choices_for_preference
+        self._choices_by_preference[choice.preference] = current_choices_for_preference
 
     def __update_priority(self, choice):
         if choice.priority:
@@ -138,6 +154,9 @@ class Student:
 
     def get_cost(self):
         return self.cost
+
+    def get_choices_for_preference(self, preference):
+        return self._choices_by_preference.get(preference, [])
 
 
 class Choice:
