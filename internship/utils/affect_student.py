@@ -85,8 +85,18 @@ class Student:
         self.choices = []
         self.assignments = dict()
 
+        self.choices_by_preference = dict()
+        self.cost = 0 #TODO compute cost
+
     def add_choice(self, choice):
         self.choices.append(choice)
+        self.__add_by_preference(choice)
+
+    def __add_by_preference(self, choice):
+        current_choices_for_preference = self.choices_by_preference.get(choice.preference, [])
+        current_choices_for_preference.append(choice)
+        self.choices_by_preference[choice.preference] = current_choices_for_preference
+
 
     @staticmethod
     def create_student(line):
@@ -106,13 +116,24 @@ class Student:
                 return False
         return True
 
+    def get_specialities_chosen(self):
+        specialities = set()
+        for choice in self.choices:
+            specialities.add(choice.speciality_id)
+        return list(specialities)
+
+    def get_cost(self):
+        return self.cost
+
 
 class Choice:
-    def __init__(self, internship_id, offer_id, preference, priority):
+    def __init__(self, internship_id, organization_id, speciality_id, preference, priority):
         self.internship_id = internship_id
+        self.organization_id = organization_id
+        self.speciality_id = speciality_id
         self.preference = preference
-        self.offer_id = offer_id
         self.priority = priority
+        self.offer_id = -1
 
     @staticmethod
     def create_choice(line):
@@ -122,8 +143,7 @@ class Choice:
         internship_id = line_in_ints[3]
         preference = line_in_ints[4]
         priority = bool(line_in_ints[5])
-        offer_id = 0 #TODO should fetch correct offer
-        return Choice(internship_id, offer_id, preference, priority)
+        return Choice(internship_id, organization_id, speciality_id, preference, priority)
 
 
 

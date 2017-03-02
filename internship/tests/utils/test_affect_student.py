@@ -72,11 +72,33 @@ class TestStudent(SimpleTestCase):
         self.assertEqual(self.student.student_id, 2)
 
     def test_add_choice(self):
-        choice_1 = affect_student.Choice(1, 2, 1, False)
-        choice_2 = affect_student.Choice(1, 3, 2, False)
+        choice_1 = affect_student.Choice(1, 2, 1, 1, False)
+        choice_2 = affect_student.Choice(1, 3, 1, 2, False)
         self.student.add_choice(choice_1)
         self.student.add_choice(choice_2)
         self.assertEqual(len(self.student.choices), 2)
+
+    def test_add_choice_by_preference(self):
+        choice_1 = affect_student.Choice(2, 4, 1, 2, False)
+        choice_2 = affect_student.Choice(1, 3, 1, 1, False)
+        choice_3 = affect_student.Choice(1, 5, 1, 2, False)
+        self.student.add_choice(choice_1)
+        self.student.add_choice(choice_2)
+        self.student.add_choice(choice_3)
+
+        self.assertEqual(len(self.student.choices_by_preference), 2)
+        self.assertEqual(len(self.student.choices_by_preference[1]), 1)
+        self.assertEqual(len(self.student.choices_by_preference[2]), 2)
+
+    def test_specialities_chosen(self):
+        choice_1 = affect_student.Choice(2, 4, 5, 2, False)
+        choice_2 = affect_student.Choice(1, 3, 4, 1, False)
+        choice_3 = affect_student.Choice(1, 5, 5, 2, False)
+        self.student.add_choice(choice_1)
+        self.student.add_choice(choice_2)
+        self.student.add_choice(choice_3)
+        self.assertIn(5, self.student.get_specialities_chosen())
+        self.assertIn(4, self.student.get_specialities_chosen())
 
     def test_create_student(self):
         student = affect_student.Student.create_student("1 1 1 1 1 1")
@@ -103,11 +125,12 @@ class TestStudent(SimpleTestCase):
 
 class TestChoice(SimpleTestCase):
     def setUp(self):
-        self.choice = affect_student.Choice(1, 5, 1, True)
+        self.choice = affect_student.Choice(1, 5, 4, 1, True)
 
     def test_init(self):
         self.assertEqual(self.choice.internship_id, 1)
-        self.assertEqual(self.choice.offer_id, 5)
+        self.assertEqual(self.choice.organization_id, 5)
+        self.assertEqual(self.choice.speciality_id, 4)
         self.assertEqual(self.choice.preference, 1)
         self.assertEqual(self.choice.priority, True)
 
@@ -115,7 +138,8 @@ class TestChoice(SimpleTestCase):
         choice = affect_student.Choice.create_choice("1 1 1 1 1 1")
         self.assertTrue(choice)
         self.assertEqual(choice.internship_id, 1)
-        self.assertEqual(choice.offer_id, 0)
+        self.assertEqual(choice.organization_id, 1)
+        self.assertEqual(choice.speciality_id, 1)
         self.assertEqual(choice.preference, 1)
         self.assertEqual(choice.priority, True)
 
