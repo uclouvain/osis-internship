@@ -30,25 +30,75 @@ SAMPLE1 = "./internship/tests/utils/ressources/sample1.txt"
 
 
 class TestAffectStudent(SimpleTestCase):
-    def test_input_file(self):
-        actual_offers, actual_choices, actual_priority_choices = affect_student.input_file(SAMPLE1)
-        expected_offers = {(1, 1): [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 2],
-                           (2, 1): [2, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 2],
-                           (2, 2): [3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2],
-                           (3, 3): [4, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2],
-                           (4, 3): [5, 4, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 2]}
-        expected_choices = {(2, 1, 1): [[2, 2, 1, 1, 1, 0], [2, 1, 1, 1, 2, 0]],
-                            (3, 1, 2): [[3, 2, 2, 1, 1, 0]],
-                            (3, 2, 3): [[3, 3, 3, 2, 1, 0], [3, 4, 3, 2, 2, 0]]}
-        expected_priority_choices = {(1, 1, 1): [[1, 1, 1, 1, 1, 1], [1, 2, 1, 1, 2, 1]],
-                                     (1, 2, 3): [[1, 4, 3, 2, 1, 1]],
-                                     (4, 1, 1): [[4, 1, 1, 1, 1, 1]],
-                                     (4, 2, 3): [[4, 4, 3, 2, 1, 1]]}
-        self.assertDictEqual(actual_offers, expected_offers)
-        self.assertDictEqual(actual_choices, expected_choices)
-        self.assertDictEqual(actual_priority_choices, expected_priority_choices)
+    def test_initialize_problem(self):
+        solver = affect_student.Solver()
+        solver.initialize_f(SAMPLE1)
 
-    def test_assign_internship(self):
-        affect_student.Solver(SAMPLE1)
+        self.assertEqual(solver.get_number_offers(),  5)
+        self.assertEqual(solver.get_number_students(), 10)
 
+
+class TestOffer(SimpleTestCase):
+    def setUp(self):
+        self.offer = affect_student.Offer(1, 10, 15, [4, 5, 0, 0])
+
+    def test_init(self):
+        self.assertEqual(self.offer.offer_id, 1)
+        self.assertEqual(self.offer.organization_id, 10)
+        self.assertEqual(self.offer.speciality_id, 15)
+        self.assertEqual(self.offer.places, [4, 5, 0, 0])
+
+    def test_get_number_place_for_period(self):
+        self.assertEqual(self.offer.get_period_places(0), 0)
+        self.assertEqual(self.offer.get_period_places(1), 4)
+        self.assertEqual(self.offer.get_period_places(2), 5)
+        self.assertEqual(self.offer.get_period_places(4), 0)
+        self.assertEqual(self.offer.get_period_places(10), 0)
+
+    def test_create_offer(self):
+        offer_created = affect_student.Offer.create_offer("1 1 1 0 0 0 0 0 0 0 0 0 2 0 2")
+        self.assertTrue(offer_created)
+        self.assertEqual(offer_created.offer_id, 1)
+        self.assertEqual(offer_created.organization_id, 1)
+        self.assertEqual(offer_created.speciality_id, 1)
+        self.assertEqual(offer_created.places, [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 2])
+
+
+class TestStudent(SimpleTestCase):
+    def setUp(self):
+        self.student = affect_student.Student(2)
+
+    def test_init(self):
+        self.assertEqual(self.student.student_id, 2)
+
+    def test_add_choice(self):
+        choice_1 = affect_student.Choice(1, 2, 1, False)
+        choice_2 = affect_student.Choice(1, 3, 2, False)
+        self.student.add_choice(choice_1)
+        self.student.add_choice(choice_2)
+        self.assertEqual(len(self.student.choices), 2)
+
+    def test_create_student(self):
+        student = affect_student.Student.create_student("1 1 1 1 1 1")
+        self.assertTrue(student)
+        self.assertEqual(student.student_id, 1)
+
+
+class TestChoice(SimpleTestCase):
+    def setUp(self):
+        self.choice = affect_student.Choice(1, 5, 1, True)
+
+    def test_init(self):
+        self.assertEqual(self.choice.internship_id, 1)
+        self.assertEqual(self.choice.offer_id, 5)
+        self.assertEqual(self.choice.preference, 1)
+        self.assertEqual(self.choice.priority, True)
+
+    def test_create_choice(self):
+        choice = affect_student.Choice.create_choice("1 1 1 1 1 1")
+        self.assertTrue(choice)
+        self.assertEqual(choice.internship_id, 1)
+        self.assertEqual(choice.offer_id, 0)
+        self.assertEqual(choice.preference, 1)
+        self.assertEqual(choice.priority, True)
 

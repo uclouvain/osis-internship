@@ -25,51 +25,87 @@
 ##############################################################################
 
 
-def assign_internships(offers, choices, priority_choices):
-    pass
+class Solver:
+    def __init__(self):
+        self.offers = []
+        self.students = []
+
+    def initialize_f(self, filename):
+        with open(filename) as file:
+            number_offers, number_students = [int(x) for x in file.readline().split()]
+            file.readline()
+            for x in range(0, number_offers):
+                line = file.readline()
+                self.offers.append(Offer.create_offer(line))
+            file.readline()
+            for x in range(0, number_students):
+                line = file.readline()
+                student = Student.create_student(line)
+                choice = Choice.create_choice(line)
+                student.add_choice(choice)
+                self.students.append(student)
+
+    def get_number_offers(self):
+        return len(self.offers)
+
+    def get_number_students(self):
+        return len(self.students)
 
 
-def input_file(filename):
-    with open(filename) as file:
-        number_offers, number_choices = convert_line_to_ints(file.readline())
-        file.readline()
-        offers = extract_offers(file, number_offers)
-        file.readline()
-        choices, priority_choices = extract_choices(file, number_choices)
-        return offers, choices, priority_choices
+class Offer:
+    def __init__(self, offer_id, organization_id, speciality_id, places):
+        self.offer_id = offer_id
+        self.organization_id = organization_id
+        self.speciality_id = speciality_id
+        self.places = places
+
+    def get_period_places(self, period):
+        index = period - 1
+        if index > len(self.places) or index < 0:
+            return 0
+        return self.places[index]
+
+    @staticmethod
+    def create_offer(line):
+        line_in_ints = [int(x) for x in line.split()]
+        offer_id = line_in_ints[0]
+        organization_id = line_in_ints[1]
+        speciality_id = line_in_ints[2]
+        places = line_in_ints[3:]
+        return Offer(offer_id, organization_id, speciality_id, places)
 
 
-def extract_offers(file, number_offers):
-    offers = dict()
-    for x in range(0, number_offers):
-        offer = convert_line_to_ints(file.readline())
-        offers[(offer[1], offer[2])] = offer
-    return offers
+class Student:
+    def __init__(self, student_id):
+        self.student_id = student_id
+        self.choices = []
+
+    def add_choice(self, choice):
+        self.choices.append(choice)
+
+    @staticmethod
+    def create_student(line):
+        line_in_ints = [int(x) for x in line.split()]
+        student_id = line_in_ints[0]
+        return Student(student_id)
 
 
-def extract_choices(file, number_choices):
-    choices = dict()
-    priority_choices = dict()
-    for x in range(0, number_choices):
-        choice = convert_line_to_ints(file.readline())
-        key = (choice[0], choice[3], choice[2])
-        if is_a_priority(choice):
-            add_choice(choice, priority_choices, key)
-        else:
-            add_choice(choice, choices, key)
-    return choices, priority_choices
+class Choice:
+    def __init__(self, internship_id, offer_id, preference, priority):
+        self.internship_id = internship_id
+        self.preference = preference
+        self.offer_id = offer_id
+        self.priority = priority
+
+    @staticmethod
+    def create_choice(line):
+        line_in_ints = [int(x) for x in line.split()]
+        organization_id = line_in_ints[1]
+        speciality_id = line_in_ints[2]
+        internship_id = line_in_ints[3]
+        preference = line_in_ints[4]
+        priority = bool(line_in_ints[5])
+        offer_id = 0 #TODO should fetch correct offer
+        return Choice(internship_id, offer_id, preference, priority)
 
 
-def add_choice(choice, choices, key):
-    if key in choices:
-        choices[key].append(choice)
-    else:
-        choices[key] = [choice]
-
-
-def is_a_priority(choice):
-    return bool(choice[5])
-
-
-def convert_line_to_ints(line):
-    return [int(x) for x in line.split()]
