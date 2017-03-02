@@ -24,6 +24,11 @@
 #
 ##############################################################################
 
+START_PERIOD = 9
+END_PERIOD = 12
+MAX_PREFERENCE = 4
+NUMBER_INTERNSHIPS = 4
+
 
 class Solver:
     def __init__(self):
@@ -68,8 +73,29 @@ class Solver:
         return len(self.students)
 
     def solve(self):
-        for student in self.students:
-            pass
+        for preference in range(1, MAX_PREFERENCE + 1):
+            for internship in range(1, NUMBER_INTERNSHIPS + 1):
+                student_temp = []
+                for student in self.students_left_to_assign:
+                    if student.has_all_periods_assigned():
+                        continue
+                    choices = student.get_choices_for_preference(preference)
+                    for choice in choices:
+                        offer_key = (choice.organization_id, choice.speciality_id)
+                        if offer_key not in self.offers_dict and not self.offers_dict[offer_key].has_place():
+                            continue
+                        offer = self.offers_dict[offer_key]
+                        assigned = False
+                        for period in offer.get_free_periods():
+                            if student.has_period_unassigned(period):
+                                student.assign(period, offer.offer_id)
+                                assigned = True
+                                break
+                        if assigned:
+                            break
+                    student_temp.append(student)
+
+                self.students_left_to_assign = student_temp
 
 
 class Offer:
@@ -102,6 +128,13 @@ class Offer:
     def occupy_place(self, period):
         index = period - 1
         self.places_left[index] -= 1
+
+    def get_free_periods(self):
+        periods = []
+        for period in range(1, len(self.places)):
+            if self.has_place(period):
+                periods.append(period)
+        return periods
 
 
 class Student:
@@ -138,8 +171,6 @@ class Student:
         self.assignments[period] = offer_id
 
     def has_all_period_assigned(self):
-        START_PERIOD = 9
-        END_PERIOD = 12
         periods = [x for x in range(START_PERIOD, END_PERIOD+1)]
         for period in periods:
             if period not in self.assignments:
@@ -157,6 +188,9 @@ class Student:
 
     def get_choices_for_preference(self, preference):
         return self._choices_by_preference.get(preference, [])
+
+    def has_period_unassigned(self, period):
+        return False if period in self.assignments else True
 
 
 class Choice:

@@ -71,6 +71,14 @@ class TestOffer(SimpleTestCase):
         self.assertTrue(self.offer.has_place(1))
         self.assertFalse(self.offer.has_place(3))
 
+    def test_get_free_periods(self):
+        self.assertEqual(self.offer.get_free_periods(), [1, 2])
+
+        offer = affect_student.Offer(1, 10, 15, [0, 1, 0, 0])
+        self.assertEqual(offer.get_free_periods(), [2])
+        offer.occupy_place(2)
+        self.assertFalse(offer.get_free_periods())
+
 
 class TestStudent(SimpleTestCase):
     def setUp(self):
@@ -135,6 +143,12 @@ class TestStudent(SimpleTestCase):
         choice = affect_student.Choice(2, 4, 5, 2, True)
         self.student.add_choice(choice)
         self.assertTrue(self.student.is_a_priority)
+
+    def test_has_period_unassigned(self):
+        self.student.assignments = {1 : 5,
+                                    3 : 4}
+        self.assertTrue(self.student.has_period_unassigned(2))
+        self.assertFalse(self.student.has_period_unassigned(3))
 
 
 class TestChoice(SimpleTestCase):
