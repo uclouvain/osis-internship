@@ -30,13 +30,13 @@ from openpyxl import load_workbook
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 
-from internship.models.organization import Organization
-from internship.models.organization_address import OrganizationAddress
-from internship.models.internship_offer import InternshipOffer
+from internship.models import organization as mdl_organization
+from internship.models import organization_address as mdl_organization_address
+from internship.models import internship_offer as mdl_internship_offer
 from internship.models.internship_master import InternshipMaster
-from internship.models.internship_speciality import InternshipSpeciality
-from internship.models.period import Period
-from internship.models.period_internship_places import PeriodInternshipPlaces
+from internship.models import internship_speciality as mdl_internship_speciality
+from internship.models import period as mdl_period
+from internship.models import period_internship_places as mdl_period_places
 
 @login_required
 def upload_places_file(request):
@@ -75,11 +75,11 @@ def __save_xls_place(request, file_name, user):
         else :
             reference = str(row[col_reference].value)
 
-        place = Organization.search(reference=reference)
+        place = mdl_organization.search(reference=reference)
         if place :
-            organization = Organization.find_by_id(place[0].id)
+            organization = mdl_organization.find_by_id(place[0].id)
         else:
-            organization = Organization()
+            organization = mdl_organization.Organization()
 
         if row[col_reference].value:
             reference = ""
@@ -108,13 +108,13 @@ def __save_xls_place(request, file_name, user):
         organization.save()
 
         if place :
-            organization_address = OrganizationAddress.search(organization = organization)
+            organization_address = mdl_organization_address.search(organization = organization)
             if not organization_address:
-                organization_address = OrganizationAddress()
+                organization_address = mdl_organization_address.OrganizationAddress()
             else :
                 organization_address = organization_address[0]
         else :
-            organization_address = OrganizationAddress()
+            organization_address = mdl_organization_address.OrganizationAddress()
 
 
         if organization:
@@ -188,7 +188,7 @@ def __save_xls_internships(request, file_name, user):
                     reference = "0"+str(row[col_reference].value)
                 else :
                     reference = str(row[col_reference].value)
-                organization = Organization.search(reference=reference)
+                organization = mdl_organization.search(reference=reference)
                 #internship.organization = organization[0]
 
             if len (organization) > 0 :
@@ -199,7 +199,7 @@ def __save_xls_internships(request, file_name, user):
 
                 master_value = row[col_master].value
 
-                speciality = InternshipSpeciality.search(acronym__icontains=spec_value)
+                speciality = mdl_internship_speciality.search(acronym__icontains=spec_value)
 
                 number_place = 0
                 for x in range (3,15):
@@ -209,11 +209,11 @@ def __save_xls_internships(request, file_name, user):
                         number_place += int(row[x].value)
 
                 for x in range(0,len(speciality)) :
-                    check_internship = InternshipOffer.search(speciality__name = speciality[x], organization__reference = organization[0].reference)
+                    check_internship = mdl_internship_offer.search(speciality__name = speciality[x], organization__reference = organization[0].reference)
                     if len(check_internship) != 0:
-                        internship = InternshipOffer.find_intership_by_id(check_internship[0].id)
+                        internship = mdl_internship_offer.find_intership_by_id(check_internship[0].id)
                     else :
-                        internship = InternshipOffer()
+                        internship = mdl_internship_offer.InternshipOffer()
 
                     internship.organization = organization[0]
                     internship.speciality = speciality[x]
@@ -227,13 +227,13 @@ def __save_xls_internships(request, file_name, user):
                     for x in range (3,15):
                         period_search = "P"+str(number_period)
                         number_period += 1
-                        period = Period.search(name=period_search)
-                        check_relation = PeriodInternshipPlaces.search(period = period, internship = internship)
+                        period = mdl_period.search(name=period_search)
+                        check_relation = mdl_period_places.search(period = period, internship = internship)
 
                         if len(check_relation) != 0:
-                            relation = PeriodInternshipPlaces.find_by_id(check_relation[0].id)
+                            relation = mdl_period_places.find_by_id(check_relation[0].id)
                         else :
-                            relation = PeriodInternshipPlaces()
+                            relation = mdl_period_places.PeriodInternshipPlaces()
 
                         relation.period = period[0]
                         relation.internship = internship
@@ -299,7 +299,7 @@ def __save_xls_masters(request, file_name, user):
                     else :
                         reference = str(check_reference)
 
-                    organization = Organization.search(reference=reference)
+                    organization = mdl_organization.search(reference=reference)
                     master.organization = organization[0]
                 else :
                     master.organization = None
