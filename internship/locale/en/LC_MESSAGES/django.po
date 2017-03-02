@@ -373,6 +373,9 @@ msgstr "First choice"
 msgid "fourth_choice"
 msgstr "Fourth choice"
 
+msgid "generalist"
+msgstr "generalist"
+
 msgid	 "number_first_choice"
 msgstr	 "Number of first choice"
 
@@ -387,6 +390,9 @@ msgstr "Priority"
 
 msgid "second_choice"
 msgstr "Second choice"
+
+msgid "specialist"
+msgstr "Specialist"
 
 msgid "student_max"
 msgstr "Maximum number of students"
