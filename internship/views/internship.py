@@ -535,7 +535,7 @@ def internships_modification_student(request, registration_id, internship_id="1"
 def get_dict_current_choices(current_choices):
     dict_current_choices = dict()
     for current_choice in current_choices:
-        dict_current_choices[(current_choice.organization.id, current_choice.speciality.id)] = current_choice.choice
+        dict_current_choices[(current_choice.organization.id, current_choice.speciality.id)] = current_choice
     return dict_current_choices
 
 
@@ -544,8 +544,10 @@ def zip_data(dict_current_choices, formset, internships_offers):
         return None
     zipped_data = []
     for offer, form in zip(internships_offers, formset):
-        value = dict_current_choices.get((offer.organization.id, offer.speciality.id), 0)
-        zipped_data.append((offer, form, str(value)))
+        offer_choice = dict_current_choices.get((offer.organization.id, offer.speciality.id), None)
+        offer_value = 0 if not offer_choice else offer_choice.choice
+        offer_priority = False if not offer_choice else offer_choice.priority
+        zipped_data.append((offer, form, str(offer_value), offer_priority))
     return zipped_data
 
 
