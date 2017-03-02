@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,28 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+
+from internship.models import organization as mdl_organization
 
 
-class PeriodAdmin(SerializableModelAdmin):
-    list_display = ('name', 'date_start', 'date_end')
-    fieldsets = ((None, {'fields': ('name', 'date_start', 'date_end')}),)
+def create_organization(name="OSIS", acronym="OSIS", reference="01"):
+    organization = mdl_organization.Organization(name=name, acronym=acronym, reference=reference)
+    organization.save()
+    return organization
 
 
-class Period(SerializableModel):
-    name = models.CharField(max_length=255)
-    date_start = models.DateField(blank=False)
-    date_end = models.DateField(blank=False)
-
-    def __str__(self):
-        return u"%s" % self.name
-
-
-def search(**kwargs):
-    kwargs = {k: v for k, v in kwargs.items() if v}
-    return Period.objects.filter(**kwargs).select_related().order_by("date_start")
-
-
-def find_by_id(period_id):
-    return Period.objects.get(pk=period_id)
