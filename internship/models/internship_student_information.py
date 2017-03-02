@@ -39,8 +39,8 @@ class InternshipStudentInformationAdmin(SerializableModelAdmin):
 
 
 class InternshipStudentInformation(SerializableModel):
-    TYPE_CHOICE = (('SPECIALIST', _('Specialist')),
-                   ('GENERALIST', _('Generalist')))
+    TYPE_CHOICE = (('SP', 'SP'),
+                   ('SS', 'SS'))
     person = models.ForeignKey('base.Person')
     location = models.CharField(max_length=255)
     postal_code = models.CharField(max_length=20)
