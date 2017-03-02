@@ -127,6 +127,9 @@ msgstr	 "Import internships"
 msgid	 "import_masters"
 msgstr	 "Import internship's masters"
 
+msgid	 "internship"
+msgstr	 "Internship"
+
 msgid	 "internship_block_moment"
 msgstr	 "internships' selection are currently blocked."
 

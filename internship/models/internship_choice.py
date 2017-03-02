@@ -42,6 +42,8 @@ class InternshipChoice(SerializableModel):
     internship_choice = models.IntegerField(default=0)
     priority = models.BooleanField()
 
+    def __str__(self):
+        return u"%s - %s : %s" % (self.organization.acronym, self.speciality.acronym, self.choice)
 
 def find_by_all_student():
     return InternshipChoice.objects.all().distinct('student').select_related("student", "organization", "speciality")
