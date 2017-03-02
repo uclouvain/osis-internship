@@ -518,6 +518,7 @@ def internships_modification_student(request, registration_id, internship_id="1"
                                                                                    internship_choice=internship_id)
     dict_current_choices = get_dict_current_choices(current_choices)
     zipped_data = zip_data(dict_current_choices, formset, internships_offers)
+    information = mdl_internship.internship_student_information.find_by_person(student.person)
 
     return render(request, "internship_modification_student.html",
                          {"number_non_mandatory_internships": range(1, NUMBER_NON_MANDATORY_INTERNSHIPS + 1),
@@ -527,7 +528,8 @@ def internships_modification_student(request, registration_id, internship_id="1"
                           "intern_id": int(internship_id),
                           "speciality_id": int(speciality_id),
                           "student": student,
-                          "current_choices": current_choices})
+                          "current_choices": current_choices,
+                          "information": information})
 
 
 def get_dict_current_choices(current_choices):
