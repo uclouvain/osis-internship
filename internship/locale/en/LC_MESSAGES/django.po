@@ -366,3 +366,30 @@ msgstr "Student does not exists"
 
 msgid "export_organisation_affectation_xls"
 msgstr "Export Excel file for the organisation"
+
+msgid "first_choice"
+msgstr "First choice"
+
+msgid "fourth_choice"
+msgstr "Fourth choice"
+
+msgid	 "number_first_choice"
+msgstr	 "Number of first choice"
+
+msgid	 "organization"
+msgstr	 "Hospital"
+
+msgid "preference"
+msgstr "Preference"
+
+msgid "priority"
+msgstr "Priority"
+
+msgid "second_choice"
+msgstr "Second choice"
+
+msgid "student_max"
+msgstr "Maximum number of students"
+
+msgid "third_choice"
+msgstr "Third choice"

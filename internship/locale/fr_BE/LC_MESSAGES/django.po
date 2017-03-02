@@ -366,3 +366,30 @@ msgstr "L'étudiant n'existe pas"
 
 msgid "export_organisation_affectation_xls"
 msgstr "Fichier Excel de toutes les spécialités"
+
+msgid "priority"
+msgstr "Prioritaire"
+
+msgid "first_choice"
+msgstr "Premier choix"
+
+msgid "fourth_choice"
+msgstr "Quatrième choix"
+
+msgid	 "number_first_choice"
+msgstr	 "Nombre de premier choix"
+
+msgid	 "organization"
+msgstr	 "Hôpital"
+
+msgid "preference"
+msgstr "Préférence"
+
+msgid "second_choice"
+msgstr "Second choix"
+
+msgid "student_max"
+msgstr "Nombre maximum d'étudiants"
+
+msgid "Third choix"
+msgstr "Troisième choix"

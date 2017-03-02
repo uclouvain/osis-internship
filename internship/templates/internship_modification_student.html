@@ -91,11 +91,11 @@
                     {{ formset.management_form }}
                    <table class="table table-striped">
                        <thead>
-                           <th>organization</th>
-                           <th>student_max</th>
-                           <th>number_first_choice</th>
-                           <th>preference</th>
-                           <th>priority</th>
+                           <th>{% trans 'organization' %}</th>
+                           <th>{% trans 'student_max' %}</th>
+                           <th>{% trans 'number_first_choice' %}</th>
+                           <th>{% trans 'preference' %}</th>
+                           <th>{% trans 'priority' %}</th>
                        </thead>
 
                         {% for offer, form, value in  offers_forms %}
