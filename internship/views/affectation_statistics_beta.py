@@ -49,6 +49,7 @@ from internship.utils import affect_student
 
 def init_solver():
     solver = affect_student.Solver()
+
     student_choices = mdl_internship.internship_choice.get_non_mandatory_internship_choices()
 
     for student_choice in student_choices:
@@ -64,5 +65,14 @@ def init_solver():
 
     internship_period_places = mdl_internship.period_internship_places.PeriodInternshipPlaces.objects.all()  # TODO limit period to P9 - P12
 
+    for period_place in internship_period_places:
+        organization_id = period_place.organization.id
+        speciality_id = period_place.speciality.id
+        offer_id = period_place.internship.id
+        offer_obj = solver.get_offer(organization_id, speciality_id)
 
     return solver
+
+
+def convert_period_to_int(period):
+    pass
