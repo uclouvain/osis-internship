@@ -167,11 +167,11 @@ def internships_student_read(request, registration_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_student_information_modification(request, registration_id):
     student = mdl.student.find_by(registration_id=registration_id)
-    information = mdl_internship.internship_student_information.search(person = student[0].person)
+    information = mdl_internship.internship_student_information.find_by_person(person=student[0].person)
     student = student[0]
     return render(request, "student_information_modification.html",
                            {'student': student,
-                            'information': information[0], })
+                            'information': information})
 
 
 @login_required
