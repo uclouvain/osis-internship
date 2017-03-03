@@ -28,7 +28,7 @@ from internship.models import period_internship_places as mdl_period_places
 
 
 def create_period_places(offer, period, places=10):
-    period_places = mdl_period_places.PeriodInternshipPlaces(period=period, internship_offfer=offer,
-                                                             number_placces=places)
+    period_places = mdl_period_places.PeriodInternshipPlaces(period=period, internship_offer=offer,
+                                                             number_places=places)
     period_places.save()
     return period_places
