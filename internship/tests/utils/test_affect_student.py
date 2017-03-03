@@ -81,7 +81,7 @@ class TestOffer(SimpleTestCase):
         self.assertEqual(self.offer.offer_id, 1)
         self.assertEqual(self.offer.organization_id, 10)
         self.assertEqual(self.offer.speciality_id, 15)
-        self.assertEqual(self.offer.places, [4, 5, 0, 0])
+        self.assertEqual(self.offer.places, {1: 4, 2: 5, 3: 0, 4: 0})
 
     def test_get_number_place_for_period(self):
         self.assertEqual(self.offer.get_period_places(0), 0)
@@ -96,11 +96,11 @@ class TestOffer(SimpleTestCase):
         self.assertEqual(offer_created.offer_id, 1)
         self.assertEqual(offer_created.organization_id, 1)
         self.assertEqual(offer_created.speciality_id, 1)
-        self.assertEqual(offer_created.places, [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 2])
+        self.assertEqual(len(offer_created.places), 12)
 
     def test_occupy_place(self):
         self.offer.occupy_place(1)
-        self.assertEqual(self.offer.places_left[0], 3)
+        self.assertEqual(self.offer.places_left[1], 3)
 
     def test_has_place(self):
         self.assertTrue(self.offer.has_place(1))
@@ -113,6 +113,11 @@ class TestOffer(SimpleTestCase):
         self.assertEqual(offer.get_free_periods(), [2])
         offer.occupy_place(2)
         self.assertFalse(offer.get_free_periods())
+
+    def test_add_places(self):
+        self.assertEqual(self.offer.get_period_places(5), 0)
+        self.offer.add_places(5, 7)
+        self.assertEqual(self.offer.get_period_places(5), 7)
 
 
 class TestStudent(SimpleTestCase):

@@ -114,15 +114,17 @@ class Offer:
         self.offer_id = offer_id
         self.organization_id = organization_id
         self.speciality_id = speciality_id
-        self.places = places
+        self.places = dict()
+        self.places_left = dict()
+        self.__places_to_dict(places)
 
-        self.places_left = places[:]
+    def __places_to_dict(self, places):
+        for index, value in enumerate(places):
+            period = index + 1
+            self.add_places(period, value)
 
     def get_period_places(self, period):
-        index = period - 1
-        if index > len(self.places_left) or index < 0:
-            return 0
-        return self.places_left[index]
+        return self.places_left.get(period, 0)
 
     @staticmethod
     def create_offer(line):
@@ -137,15 +139,18 @@ class Offer:
         return self.get_period_places(period) > 0
 
     def occupy_place(self, period):
-        index = period - 1
-        self.places_left[index] -= 1
+        self.places_left[period] -= 1
 
     def get_free_periods(self):
         periods = []
-        for period in range(1, len(self.places)):
+        for period in self.places_left.keys():
             if self.has_place(period):
                 periods.append(period)
         return periods
+
+    def add_places(self, period, places):
+        self.places[period] = places
+        self.places_left[period] = places
 
 
 class Student:
