@@ -98,26 +98,26 @@
                            <th>{% trans 'priority' %}</th>
                        </thead>
 
-                        {% for offer, form, value in  offers_forms %}
+                        {% for offer, form, offer_value, offer_priority in  offers_forms %}
 
                        <tr>
                             <td>{{ offer.organization }}</td>
                             <td>{{ offer.maximum_enrollments }}</td>
-                            <td> {{ formset.counter.preference }} {{ value }}</td>
+                            <td> {{ formset.counter.preference }} {{ offer_value }}</td>
                             <td hidden>
-                                <input type="number" id="{{ form.offer.id_for_label }}" name="{{ form.offer.html_name }}" class="form-control" value="{{ offer.organization.pk }}">
+                                <input type="number" id="{{ form.offer.id_for_label }}" name="{{ form.offer.html_name }}" class="form-control" value="{{ offer.pk }}">
                             </td>
                             <td>
                                 <select id="{{ form.preference.id_for_label }}" name="{{ form.preference.html_name }}" class="form-control">
                                     {% for x,y in form.fields.preference.choices %}
                                         <option value="{{ x }}"
-                                                {% if x == value %} selected {% endif %}>
+                                                {% if x == offer_value %} selected {% endif %}>
                                             {{ y }}
                                         </option>
                                      {% endfor %}
                                 </select>
                             </td>
-                            <td><input type="checkbox" id="{{ form.priority.id_for_label }}" name="{{ form.priority.html_name }}" class="form-control"></td>
+                            <td><input type="checkbox" id="{{ form.priority.id_for_label }}" name="{{ form.priority.html_name }}" {% if offer_priority %}checked{% endif %} class="form-control"></td>
                        </tr>
 
                         {% endfor %}

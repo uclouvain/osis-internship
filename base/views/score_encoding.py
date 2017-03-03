@@ -367,8 +367,7 @@ def notes_printing(request, learning_unit_year_id=None, tutor_id=None, offer_id=
                                              offer_year_id=offer_id,
                                              is_program_manager=is_program_manager)
     tutor = mdl.tutor.find_by_user(request.user) if not is_program_manager else None
-    return paper_sheet.build_response(mdl.exam_enrollment.scores_sheet_data(exam_enrollments, tutor=tutor))
-
+    return paper_sheet.print_notes(exam_enrollments, tutor=tutor)
 
 @login_required
 @permission_required('base.can_access_scoreencoding', raise_exception=True)
