@@ -63,4 +63,4 @@ class TestAffectationGeneration(TestCase):
 
     def test_init_solver(self):
         solver = affectation_statistics_beta.init_solver()
-        self.assertEqual(len(solver.students), 4)
+        self.assertEqual(solver.get_number_students(), 4)

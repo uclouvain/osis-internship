@@ -43,7 +43,7 @@ class TestAffectStudent(SimpleTestCase):
         student_bis = affect_student.Student(41)
         other_solver = affect_student.Solver()
 
-        self.assertFalse(other_solver.students)
+        self.assertFalse(other_solver.students_dict)
 
         other_solver.add_student(student)
         other_solver.add_student(student_bis)
@@ -51,6 +51,20 @@ class TestAffectStudent(SimpleTestCase):
         self.assertEqual(student, other_solver.get_student(45))
         self.assertEqual(student_bis, other_solver.get_student(41))
         self.assertFalse(other_solver.get_student(40))
+
+    def test_add_solver(self):
+        offer_1 = affect_student.Offer(1, 4, 5, [])
+        offer_2 = affect_student.Offer(2, 6, 5, [])
+        other_solver = affect_student.Solver()
+
+        self.assertFalse(other_solver.offers_dict)
+
+        other_solver.add_offer(offer_1)
+        other_solver.add_offer(offer_2)
+
+        self.assertEqual(offer_1, other_solver.get_offer(4, 5))
+        self.assertEqual(offer_2, other_solver.get_offer(6, 5))
+        self.assertFalse(other_solver.get_offer(9, 1))
 
     def test_solve(self):
         try:
