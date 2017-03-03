@@ -287,7 +287,7 @@ def internships(request):
 
 
 @login_required
-@permission_required('internship.can_access_internship', raise_exception=True)
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_stud(request):
     # Set the number of non mandatory internship and the sort array depending
     size_non_mandatory = 5
@@ -355,7 +355,7 @@ def internships_stud(request):
 
 
 @login_required
-@permission_required('internship.can_access_internship', raise_exception=True)
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_save(request):
     # Check if the internships are selectable, if yes students can save their choices
     all_internships = mdl_internship.internship_offer.search()

@@ -165,7 +165,7 @@ def internships_places(request):
 
 
 @login_required
-@permission_required('internship.can_access_internship', raise_exception=True)
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_places_stud(request):
     # First get the value of the option for the sort
     city_sort_get = "0"
