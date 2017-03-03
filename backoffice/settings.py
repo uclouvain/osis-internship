@@ -56,13 +56,13 @@ INSTALLED_APPS = (
     'osis_common',
     'ckeditor',
     'reference',
-    'assessments',
     'base',
     'attribution',
     'assistant',
     'dissertation',
     'internship',
     'admission',
+    'assessments',
     'localflavor',
 )
 

@@ -1,12 +1,12 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ from django.test import TestCase, Client
 from base.tests.models import test_academic_year, test_offer_year, test_learning_unit_year, test_program_manager, test_tutor
 from attribution.tests.models import test_attribution
 from base.tests.models.test_exam_enrollment import create_exam_enrollment_with_student
-from base.views import score_encoding
+from assessments.views import score_encoding
 
 
 class OnlineEncodingTest(TestCase):
