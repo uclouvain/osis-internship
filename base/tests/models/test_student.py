@@ -28,6 +28,9 @@ from base.models import student
 from base.tests.models import test_person
 from base.tests.factories.person import PersonFactory
 from base.tests.factories.student import StudentFactory
+from base.tests.factories.offer import OfferFactory
+from base.tests.factories.offer_year import OfferYearFactory
+from base.tests.factories.offer_enrollment import OfferEnrollmentFactory
 
 
 def create_student(first_name, last_name, registration_id):
@@ -55,48 +58,42 @@ class StudentTest(TestCase):
     def test_find_by_with_registration_id(self):
         tmp_student = StudentFactory()
         db_student = list(student.find_by(registration_id=tmp_student.registration_id, full_registration=False))[0]
-        self.assertIsNotNone(tmp_student)
         self.assertIsNotNone(db_student)
         self.assertEqual(db_student.registration_id, tmp_student.registration_id)
 
     def test_find_by_with_full_registration_id(self):
         tmp_student = StudentFactory()
         db_student = list(student.find_by(registration_id=tmp_student.registration_id, full_registration=True))[0]
-        self.assertIsNotNone(tmp_student)
         self.assertIsNotNone(db_student)
         self.assertEqual(db_student.registration_id, tmp_student.registration_id)
 
     def test_find_by_with_username(self):
         tmp_student = StudentFactory()
         db_student = list(student.find_by(person_username=tmp_student.person.user))[0]
-        self.assertIsNotNone(tmp_student)
         self.assertIsNotNone(db_student)
         self.assertEqual(db_student, tmp_student)
 
     def test_find_by_id(self):
         tmp_student = StudentFactory()
         db_student = student.find_by_id(tmp_student.id)
-        self.assertIsNotNone(tmp_student)
         self.assertIsNotNone(db_student)
         self.assertEqual(db_student, tmp_student)
 
     def test_find_by_offer(self):
         tmp_student = StudentFactory()
-        db_student = student.find_by_offer(tmp_student.person)
-        self.assertIsNotNone(tmp_student)
-        self.assertIsNotNone(db_student)
-        self.assertEqual(db_student, tmp_student)
+        tmp_offer_year = OfferYearFactory()
+        tmp_offer_enrollment = OfferEnrollmentFactory.create(offer_year=tmp_offer_year, student=tmp_student)
+        db_student = student.find_by_offer([tmp_offer_year.offer.id])
+        self.assertQuerysetEqual(db_student, [tmp_student], transform=lambda x: x)
 
     def test_find_by_person(self):
         tmp_student = StudentFactory()
         db_student = student.find_by_person(tmp_student.person)
-        self.assertIsNotNone(tmp_student)
         self.assertIsNotNone(db_student)
         self.assertEqual(db_student, tmp_student)
 
     def test_find_by_registration_id(self):
         tmp_student = StudentFactory()
         db_student = student.find_by_registration_id(tmp_student.registration_id)
-        self.assertIsNotNone(tmp_student)
         self.assertIsNotNone(db_student)
         self.assertEqual(db_student, tmp_student)
