@@ -23,16 +23,25 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.apps import AppConfig
+from django import template
+
+register = template.Library()
 
 
-class BaseConfig(AppConfig):
-    name = 'base'
+@register.filter
+def score_display(value, decimal_option):
+    if value is None or str(value) == '-':
+        return ""
+    else:
+        if decimal_option:
+            return "{0:.2f}".format(value)
+        else:
+            return "{0:.0f}".format(value)
 
-    def ready(self):
-        from base.models.models_signals import add_to_tutors_group, remove_from_tutor_group, \
-            add_to_pgm_managers_group, remove_from_pgm_managers_group, \
-            add_to_students_group, remove_from_student_group
-        from assessments.views.score_encoding import get_json_data_scores_sheets
-        # if django.core.exceptions.AppRegistryNotReady: Apps aren't loaded yet.
-        # ===> This exception says that there is an error in the implementation of method ready(self) !!
+
+@register.filter
+def disabled(value):
+    if value is None:
+        return ""
+    else:
+        return "disabled"

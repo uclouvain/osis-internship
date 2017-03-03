@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -36,8 +36,9 @@ from base import models as mdl
 from base.enums.exam_enrollment_justification_type import JUSTIFICATION_TYPES
 from attribution import models as mdl_attr
 from osis_common.document import paper_sheet
-from base.utils import send_mail, export_utils
-from . import layout
+from base.utils import send_mail
+from assessments.views import export_utils
+from base.views import layout
 import json
 import datetime
 from osis_common.models.queue_exception import QueueException
@@ -62,7 +63,7 @@ def outside_period(request):
     str_date = closest_date.strftime('%d/%m/%Y') if closest_date else ''
     text = trans('outside_scores_encodings_period') % str_date
     messages.add_message(request, messages.WARNING, "%s" % text)
-    return layout.render(request, "assessments/outside_scores_encodings_period.html", {})
+    return layout.render(request, "outside_scores_encodings_period.html", {})
 
 
 def _truncate_decimals(new_score, new_justification, decimal_scores_authorized):
@@ -91,7 +92,7 @@ def scores_encoding(request):
     elif mdl.tutor.is_tutor(request.user):
         return get_data(request)
     else:
-        return layout.render(request, "assessments/scores_encoding.html", {})
+        return layout.render(request, "scores_encoding.html", {})
 
 
 @login_required
@@ -99,7 +100,7 @@ def scores_encoding(request):
 @permission_required('base.can_access_scoreencoding', raise_exception=True)
 def online_encoding(request, learning_unit_year_id=None):
     data_dict = get_data_online(learning_unit_year_id, request)
-    return layout.render(request, "assessments/online_encoding.html", data_dict)
+    return layout.render(request, "online_encoding.html", data_dict)
 
 
 def __send_messages_for_each_offer_year(all_enrollments, learning_unit_year, updated_enrollments):
@@ -155,7 +156,7 @@ def filter_enrollments_by_offer_year(enrollments, offer_year):
 def online_encoding_form(request, learning_unit_year_id=None):
     data = get_data_online(learning_unit_year_id, request)
     if request.method == 'GET':
-        return layout.render(request, "assessments/online_encoding_form.html", data)
+        return layout.render(request, "online_encoding_form.html", data)
 
     elif request.method == 'POST':
         decimal_scores_authorized = data['learning_unit_year'].decimal_scores
@@ -166,7 +167,7 @@ def online_encoding_form(request, learning_unit_year_id=None):
 
         send_messages_to_notify_encoding_progress(request, data["enrollments"], data["learning_unit_year"],
                                                   is_program_manager, updated_enrollments)
-        return layout.render(request, "assessments/online_encoding.html", data)
+        return layout.render(request, "online_encoding.html", data)
 
 
 def send_messages_to_notify_encoding_progress(request, all_enrollments, learning_unit_year, is_program_manager,
@@ -241,7 +242,7 @@ def online_double_encoding_form(request, learning_unit_year_id=None):
     # Case asking for a double encoding
     if request.method == 'GET':
         if len(encoded_exam_enrollments) > 0:
-            return layout.render(request, "assessments/online_double_encoding_form.html", data)
+            return layout.render(request, "Online_double_encoding_form.html", data)
         else:
             messages.add_message(request, messages.WARNING, "%s" % _('no_score_encoded_double_encoding_impossible'))
             return online_encoding(request, learning_unit_year_id=learning_unit_year_id)
@@ -277,7 +278,7 @@ def online_double_encoding_form(request, learning_unit_year_id=None):
         if not reencoded_exam_enrollments:
             messages.add_message(request, messages.WARNING, "%s" % _('no_dubble_score_encoded_comparison_impossible'))
             return online_encoding(request, learning_unit_year_id=learning_unit_year_id)
-        return layout.render(request, "assessments/online_double_encoding_validation.html", data)
+        return layout.render(request, "online_double_encoding_validation.html", data)
 
 
 @login_required
@@ -347,7 +348,7 @@ def online_encoding_submission(request, learning_unit_year_id):
 
 @login_required
 def upload_score_error(request):
-    return layout.render(request, "assessments/upload_score_error.html", {})
+    return layout.render(request, "upload_score_error.html", {})
 
 
 @login_required
@@ -396,6 +397,7 @@ def get_data(request, offer_year_id=None):
                                                                          tutor=tutor))
 
     all_offers = []
+
     for exam_enrol in exam_enrollments:
         off_year = exam_enrol.learning_unit_enrollment.offer_enrollment.offer_year
         if off_year not in all_offers:
@@ -432,7 +434,7 @@ def get_data(request, offer_year_id=None):
     # Filtering by learningUnitYear.acronym
     scores_list = sorted(scores_list, key=lambda k: k['learning_unit_year'].acronym)
 
-    return layout.render(request, "assessments/scores_encoding.html",
+    return layout.render(request, "scores_encoding.html",
                          {'tutor': tutor,
                           'academic_year': academic_yr,
                           'notes_list': scores_list,
@@ -614,7 +616,7 @@ def get_data_pgmer(request,
     if len(data) == 0:
         messages.add_message(request, messages.WARNING, "%s" % _('no_result'))
 
-    return layout.render(request, "assessments/scores_encoding_by_learning_unit.html",
+    return layout.render(request, "scores_encoding_by_learning_unit.html",
                          {'notes_list': data,
                           'offer_list': all_offers,
                           'tutor_list': all_tutors,
@@ -698,7 +700,7 @@ def get_data_specific_criteria(request):
 @permission_required('base.can_access_scoreencoding', raise_exception=True)
 def specific_criteria(request):
     data = get_data_specific_criteria(request)
-    return layout.render(request, "assessments/scores_encoding_by_specific_criteria.html", data)
+    return layout.render(request, "scores_encoding_by_specific_criteria.html", data)
 
 
 @login_required

@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,27 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django import template
-
-register = template.Library()
-
-
-@register.filter
-def lookup(d, key):
-    try:
-        return d[key].acronym
-    except:
-        return '?'
+from django import forms
+from django.utils.translation import ugettext_lazy as _
 
 
-@register.filter
-def lookup_session(d, key):
-    return d[key].id
+class ScoreFileForm(forms.Form):
+    file = forms.FileField(error_messages={'required': _('no_file_submitted')})
 
-
-@register.filter
-def lookup_id(d, key):
-    try:
-        return d[key].id
-    except:
-        return '?'
+    def clean_file(self):
+        file = self.cleaned_data['file']
+        content_type = file.content_type.split('/')[1]
+        valid_content_type = 'vnd.openxmlformats-officedocument.spreadsheetml.sheet' in content_type
+        if ".xlsx" not in file.name or not valid_content_type:
+            self.add_error('file', forms.ValidationError(_('file_must_be_xlsx'), code='invalid'))
+        return file

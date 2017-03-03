@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -29,5 +29,21 @@ register = template.Library()
 
 
 @register.filter
-def get_at_index(list, index):
-    return list[index]
+def lookup(d, key):
+    try:
+        return d[key].acronym
+    except:
+        return '?'
+
+
+@register.filter
+def lookup_session(d, key):
+    return d[key].id
+
+
+@register.filter
+def lookup_id(d, key):
+    try:
+        return d[key].id
+    except:
+        return '?'
