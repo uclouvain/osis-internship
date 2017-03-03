@@ -38,18 +38,65 @@ def create_student(first_name, last_name, registration_id):
 
 
 class StudentTest(TestCase):
-    def test_find_by_person_name_case_insensitive(self):
-        a_person = PersonFactory.build(last_name="Smith", user=None)
-        a_person.save()
-        a_student = StudentFactory.build(person=a_person)
-        a_student.save()
+    def test_find_by_with_person_first_name_case_insensitive(self):
+        a_person = PersonFactory.create(first_name="John", user=None)
+        a_student = StudentFactory.create(person=a_person)
+        found = list(student.find_by(person_first_name="john"))
+        self.assertEqual(len(found), 1)
+        self.assertEqual(found[0].id, a_student.id)
+
+    def test_find_by_with_person_last_name_case_insensitive(self):
+        a_person = PersonFactory.create(last_name="Smith", user=None)
+        a_student = StudentFactory.create(person=a_person)
         found = list(student.find_by(person_name="smith"))
         self.assertEqual(len(found), 1)
         self.assertEqual(found[0].id, a_student.id)
 
+    def test_find_by_with_registration_id(self):
+        tmp_student = StudentFactory()
+        db_student = list(student.find_by(registration_id=tmp_student.registration_id, full_registration=False))[0]
+        self.assertIsNotNone(tmp_student)
+        self.assertIsNotNone(db_student)
+        self.assertEqual(db_student.registration_id, tmp_student.registration_id)
+
+    def test_find_by_with_full_registration_id(self):
+        tmp_student = StudentFactory()
+        db_student = list(student.find_by(registration_id=tmp_student.registration_id, full_registration=True))[0]
+        self.assertIsNotNone(tmp_student)
+        self.assertIsNotNone(db_student)
+        self.assertEqual(db_student.registration_id, tmp_student.registration_id)
+
+    def test_find_by_with_username(self):
+        tmp_student = StudentFactory()
+        db_student = list(student.find_by(person_username=tmp_student.person.user))[0]
+        self.assertIsNotNone(tmp_student)
+        self.assertIsNotNone(db_student)
+        self.assertEqual(db_student, tmp_student)
+
     def test_find_by_id(self):
         tmp_student = StudentFactory()
         db_student = student.find_by_id(tmp_student.id)
-        self.assertIsNotNone(tmp_student.person.user)
-        self.assertEqual(db_student.person.id, tmp_student.person.id)
-        self.assertEqual(db_student.person.email, tmp_student.person.email)
+        self.assertIsNotNone(tmp_student)
+        self.assertIsNotNone(db_student)
+        self.assertEqual(db_student, tmp_student)
+
+    def test_find_by_offer(self):
+        tmp_student = StudentFactory()
+        db_student = student.find_by_offer(tmp_student.person)
+        self.assertIsNotNone(tmp_student)
+        self.assertIsNotNone(db_student)
+        self.assertEqual(db_student, tmp_student)
+
+    def test_find_by_person(self):
+        tmp_student = StudentFactory()
+        db_student = student.find_by_person(tmp_student.person)
+        self.assertIsNotNone(tmp_student)
+        self.assertIsNotNone(db_student)
+        self.assertEqual(db_student, tmp_student)
+
+    def test_find_by_registration_id(self):
+        tmp_student = StudentFactory()
+        db_student = student.find_by_registration_id(tmp_student.registration_id)
+        self.assertIsNotNone(tmp_student)
+        self.assertIsNotNone(db_student)
+        self.assertEqual(db_student, tmp_student)

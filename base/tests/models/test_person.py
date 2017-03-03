@@ -74,10 +74,7 @@ class PersonTest(PersonTestCase):
     @override_settings(INTERNAL_EMAIL_SUFIX='osis.org')
     def test_person_from_internal_source(self):
         person_email = functools.partial(generate_person_email, domain='osis.org')
-
-        p = PersonFactory.build(email=factory.LazyAttribute(person_email),
-                                user=None)
-
+        p = PersonFactory.build(email=factory.LazyAttribute(person_email), user=None)
         with self.assertDontRaise():
             p.save()
 
@@ -87,6 +84,5 @@ class PersonTest(PersonTestCase):
         p = PersonFactory.build(email=factory.LazyAttribute(person_email),
                                 user=None,
                                 source=None)
-
         with self.assertDontRaise():
             p.save()
