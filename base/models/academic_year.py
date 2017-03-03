@@ -81,14 +81,17 @@ def current_academic_years():
 
 
 def current_academic_year():
-    academic_yr = current_academic_years().first()
-    return academic_yr
+    current_academic_year = current_academic_years()
+    if current_academic_year.count():
+        return current_academic_years().first()
+    raise ObjectDoesNotExist
 
 
 def starting_academic_year():
-    academic_yr = current_academic_years().last()
-    return academic_yr
-
+    current_academic_year = current_academic_years()
+    if current_academic_year.count():
+        return current_academic_year.last()
+    raise ObjectDoesNotExist
 
 def find_academic_year_by_year(year):
     try:
