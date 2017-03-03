@@ -50,7 +50,7 @@ def create_person_with_user(user):
 
 class PersonTestCase(TestCase):
     @contextlib.contextmanager
-    def assertDontRaises(self):
+    def assertDontRaise(self):
         try:
             yield
         except AttributeError:
@@ -81,7 +81,7 @@ class PersonTest(PersonTestCase):
         p = PersonFactory.build(email=factory.LazyAttribute(person_email),
                                 user=None)
 
-        with self.assertDontRaises():
+        with self.assertDontRaise():
             p.save()
 
     @override_settings(INTERNAL_EMAIL_SUFIX='osis.org')
@@ -91,5 +91,5 @@ class PersonTest(PersonTestCase):
                                 user=None,
                                 source=None)
 
-        with self.assertDontRaises():
+        with self.assertDontRaise():
             p.save()
