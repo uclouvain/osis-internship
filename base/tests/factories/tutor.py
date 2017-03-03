@@ -23,11 +23,27 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import datetime
 import factory
+import factory.fuzzy
+import string
+from base.tests.factories.person import PersonFactory
+from django.conf import settings
+from django.utils import timezone
 
 
-class UserFactory(factory.DjangoModelFactory):
+def _get_tzinfo():
+    if settings.USE_TZ:
+        return timezone.get_current_timezone()
+    else:
+        return None
+
+
+class TutorFactory(factory.DjangoModelFactory):
     class Meta:
-        model = 'auth.User'
+        model = 'base.Tutor'
 
-    username = factory.Faker('user_name')
+    external_id = factory.fuzzy.FuzzyText(length=10, chars=string.digits)
+    changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=_get_tzinfo()),
+                                          datetime.datetime(2017, 3, 1, tzinfo=_get_tzinfo()))
+    person = factory.SubFactory(PersonFactory)
