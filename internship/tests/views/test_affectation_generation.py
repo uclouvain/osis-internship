@@ -25,7 +25,8 @@
 ##############################################################################
 from django.test import TestCase
 from base.tests.models import test_student
-from internship.tests.models import test_organization, test_internship_speciality, test_internship_choice
+from internship.tests.models import test_organization, test_internship_speciality, test_internship_choice, \
+    test_internship_offer, test_period, test_period_internship_places
 from internship.views import affectation_statistics_beta
 
 
@@ -60,6 +61,27 @@ class TestAffectationGeneration(TestCase):
                                                                    internship_choice=2)
         choice_8 = test_internship_choice.create_internship_choice(organization_3, self.student_4, speciality_2,
                                                                    internship_choice=3)
+
+        offer_1 = test_internship_offer.create_specific_internship_offer(organization_1, speciality_1)
+        offer_2 = test_internship_offer.create_specific_internship_offer(organization_1, speciality_2)
+        offer_3 = test_internship_offer.create_specific_internship_offer(organization_2, speciality_1)
+        offer_4 = test_internship_offer.create_specific_internship_offer(organization_2, speciality_3)
+        offer_5 = test_internship_offer.create_specific_internship_offer(organization_3, speciality_2)
+
+        period_9 = test_period.create_period("P9")
+        period_10 = test_period.create_period("P10")
+        period_11 = test_period.create_period("P11")
+        period_12 = test_period.create_period("P12")
+
+        test_period_internship_places.create_period_places(offer_1, period_9)
+        test_period_internship_places.create_period_places(offer_1, period_11)
+        test_period_internship_places.create_period_places(offer_2, period_10)
+        test_period_internship_places.create_period_places(offer_3, period_12)
+        test_period_internship_places.create_period_places(offer_4, period_9)
+        test_period_internship_places.create_period_places(offer_4, period_10)
+        test_period_internship_places.create_period_places(offer_5, period_11)
+        test_period_internship_places.create_period_places(offer_5, period_12)
+
 
     def test_init_solver(self):
         solver = affectation_statistics_beta.init_solver()
