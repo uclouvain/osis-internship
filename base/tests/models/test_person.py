@@ -25,12 +25,9 @@
 ##############################################################################
 import functools
 import contextlib
-
 import factory
-
 from django.test import TestCase
 from django.test import override_settings
-
 from base.models import person
 from base.enums import person_source_type
 from base.tests.factories.person import PersonFactory, generate_person_email
