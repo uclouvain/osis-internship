@@ -190,6 +190,15 @@ class TestStudent(SimpleTestCase):
         self.assertTrue(self.student.has_period_unassigned(2))
         self.assertFalse(self.student.has_period_unassigned(3))
 
+    def test_get_assignments(self):
+        self.student.assignments = {1: 4, 3: 5, 8: 9}
+        assignments = self.student.get_assignments()
+
+        self.assertEqual(len(self.student.get_assignments()), 3)
+        self.assertIn((1, 4), assignments)
+        self.assertIn((3, 5), assignments)
+        self.assertIn((8, 9), assignments)
+
 
 class TestChoice(SimpleTestCase):
     def setUp(self):

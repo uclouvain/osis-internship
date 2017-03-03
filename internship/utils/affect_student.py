@@ -108,6 +108,12 @@ class Solver:
 
                 self.students_left_to_assign = student_temp
 
+    def get_affectations(self):
+        affectations = dict()
+        for student_id, student_obj in self.students_dict.items():
+            assignments = student_obj.get_assignments()
+            affectations[student_id] = assignments
+
 
 class Offer:
     def __init__(self, offer_id, organization_id, speciality_id, places):
@@ -207,6 +213,9 @@ class Student:
 
     def has_period_unassigned(self, period):
         return False if period in self.assignments else True
+
+    def get_assignments(self):
+        return [(k,v) for (k, v) in self.assignments.items()]
 
 
 class Choice:

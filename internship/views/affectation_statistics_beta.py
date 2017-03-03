@@ -59,7 +59,8 @@ def init_solver():
 def launch_solver(solver, times=1):
     for _ in range(0, times):
         solver.solve()
-    return solver
+
+
 
 
 def __init_students(solver):
