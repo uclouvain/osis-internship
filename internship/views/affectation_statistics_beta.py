@@ -29,6 +29,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from internship import models as mdl_internship
 from datetime import datetime
+from base import models as mdl_base
 
 
 @login_required
@@ -57,10 +58,29 @@ def init_solver():
 
 
 def launch_solver(solver, times=1):
+    best_assignments = None
     for _ in range(0, times):
-        solver.solve()
+        best_assignments = solver.solve()
+
+    if best_assignments:
+        __save_to_db(best_assignments)
 
 
+def __save_to_db(assignments):
+    for student_registration_id, assignment in assignments.items():
+        period, offer_id = assignment
+        student = mdl_base.student.find_by_registration_id(student_registration_id)
+        offer = mdl_internship.internship_offer.find_intership_by_id(offer_id)
+
+        period_obj = __convert_int_to_period(period)
+        if not period_obj or not student or not offer:
+            continue
+
+        affectation = mdl_internship.internship_student_affectation_stat.\
+            InternshipStudentAffectationStat(student=student, organization=offer.organization,
+                                             speciality=offer.speciality, period=period_obj,
+                                             choice=str(1), cost=1)
+        affectation.save()
 
 
 def __init_students(solver):
@@ -69,7 +89,7 @@ def __init_students(solver):
         student_registration_id = student_choice.student.registration_id
         student_obj = solver.get_student(student_registration_id)
         if not student_obj:
-            student_obj = affect_student.Student(student_registration_id)
+            student_obj = affect_student.StudentWrapper(student_registration_id)
             solver.add_student(student_obj)
 
         choice_obj = affect_student.Choice(student_choice.internship_choice, student_choice.organization.id,
@@ -104,3 +124,7 @@ def __is_internval_period(period):
 def __convert_period_to_int(period):
     period_name = period.name
     return int(period_name.lstrip("P"))
+
+def __convert_int_to_period(period_int):
+    period_name = "P" + str(period_int)
+    return mdl_internship.period.find_by_name(period_name)

@@ -28,6 +28,7 @@ from base.tests.models import test_student
 from internship.tests.models import test_organization, test_internship_speciality, test_internship_choice, \
     test_internship_offer, test_period, test_period_internship_places
 from internship.views import affectation_statistics_beta
+from internship.models import internship_student_affectation_stat as mdl_student_affectation
 
 
 class TestAffectationGeneration(TestCase):
@@ -91,3 +92,5 @@ class TestAffectationGeneration(TestCase):
             affectation_statistics_beta.launch_solver(solver)
         except Exception:
             self.fail()
+
+        affectations = mdl_student_affectation

@@ -23,6 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from internship import models as mdl_internship
+
 
 START_PERIOD = 9
 END_PERIOD = 12
@@ -53,7 +55,7 @@ class Solver:
                 self.__add_student_from_line(line)
 
     def __add_student_from_line(self, line):
-        student = Student.create_student(line)
+        student = StudentWrapper.create_student(line)
         choice = Choice.create_choice(line)
         student.add_choice(choice)
         self.students_dict[student.student_id] = student
@@ -159,23 +161,23 @@ class Offer:
         self.places_left[period] = places
 
 
-class Student:
-    def __init__(self, student_id):
-        self.student_id = student_id
-        self.choices = []
+class StudentWrapper:
+    def __init__(self, student):
+        self.student = student
         self.assignments = dict()
         self.is_a_priority = False
+        self.choices = []
 
         self._choices_by_preference = dict()
         self.cost = 0  # TODO compute cost
 
     def add_choice(self, choice):
-        self.choices.append(choice)
         self.__add_by_preference(choice)
         self.__update_priority(choice)
 
     def __add_by_preference(self, choice):
-        current_choices_for_preference = self._choices_by_preference.get(choice.preference, [])
+        self.choices.append(choice)
+        current_choices_for_preference = self._choices_by_preference.get(choice.choice, [])
         current_choices_for_preference.append(choice)
         self._choices_by_preference[choice.preference] = current_choices_for_preference
 
@@ -183,14 +185,8 @@ class Student:
         if choice.priority:
             self.is_a_priority = True
 
-    @staticmethod
-    def create_student(line):
-        line_in_ints = [int(x) for x in line.split()]
-        student_id = line_in_ints[0]
-        return Student(student_id)
-
-    def assign(self, period, offer_id):
-        self.assignments[period] = offer_id
+    def assign(self, period, offer):
+        self.assignments[period] = offer
 
     def has_all_periods_assigned(self):
         periods = [x for x in range(START_PERIOD, END_PERIOD+1)]
@@ -202,7 +198,7 @@ class Student:
     def get_specialities_chosen(self):
         specialities = set()
         for choice in self.choices:
-            specialities.add(choice.speciality_id)
+            specialities.add(choice.speciality)
         return list(specialities)
 
     def get_cost(self):
@@ -215,27 +211,8 @@ class Student:
         return False if period in self.assignments else True
 
     def get_assignments(self):
-        return [(k,v) for (k, v) in self.assignments.items()]
+        return [(k, v) for (k, v) in self.assignments.items()]
 
-
-class Choice:
-    def __init__(self, internship_id, organization_id, speciality_id, preference, priority):
-        self.internship_id = internship_id
-        self.organization_id = organization_id
-        self.speciality_id = speciality_id
-        self.preference = preference
-        self.priority = priority
-        self.offer_id = -1
-
-    @staticmethod
-    def create_choice(line):
-        line_in_ints = [int(x) for x in line.split()]
-        organization_id = line_in_ints[1]
-        speciality_id = line_in_ints[2]
-        internship_id = line_in_ints[3]
-        preference = line_in_ints[4]
-        priority = bool(line_in_ints[5])
-        return Choice(internship_id, organization_id, speciality_id, preference, priority)
 
 
 

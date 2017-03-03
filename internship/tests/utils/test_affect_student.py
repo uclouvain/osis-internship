@@ -25,6 +25,9 @@
 ##############################################################################
 from django.test import SimpleTestCase
 from internship.utils import affect_student
+from internship.tests.models import test_internship_choice, test_organization, test_internship_speciality, \
+    test_internship_offer, test_period
+from base.tests.models import test_student
 
 SAMPLE1 = "./internship/tests/utils/ressources/sample1.txt"
 
@@ -39,8 +42,8 @@ class TestAffectStudent(SimpleTestCase):
         self.assertEqual(self.solver.get_number_students(), 4)
 
     def test_add_student(self):
-        student = affect_student.Student(45)
-        student_bis = affect_student.Student(41)
+        student = affect_student.StudentWrapper(45)
+        student_bis = affect_student.StudentWrapper(41)
         other_solver = affect_student.Solver()
 
         self.assertFalse(other_solver.students_dict)
@@ -122,67 +125,48 @@ class TestOffer(SimpleTestCase):
 
 class TestStudent(SimpleTestCase):
     def setUp(self):
-        self.student = affect_student.Student(2)
+        self.student = test_student.create_student("first", "last", "64641200")
+        organization_1 = test_organization.create_organization(name="organization1", reference="01")
+
+        self.speciality_1 = test_internship_speciality.create_speciality(name="spec1")
+        self.speciality_2 = test_internship_speciality.create_speciality(name="spec2")
+
+        self.choice_1 = test_internship_choice.create_internship_choice(organization_1, self.student, self.speciality_1,
+                                                                        internship_choice=1)
+        self.choice_2 = test_internship_choice.create_internship_choice(organization_1, self.student, self.speciality_2,
+                                                                        internship_choice=2)
+        self.offer = test_internship_offer.create_specific_internship_offer(organization_1, self.speciality_1)
+        self.period = test_period.create_period("P9")
+        self.student_wrapper = affect_student.StudentWrapper(self.student)
 
     def test_init(self):
-        self.assertEqual(self.student.student_id, 2)
+        self.assertEqual(self.student_wrapper.student, self.student)
 
     def test_add_choice(self):
-        choice_1 = affect_student.Choice(1, 2, 1, 1, False)
-        choice_2 = affect_student.Choice(1, 3, 1, 2, False)
-        self.student.add_choice(choice_1)
-        self.student.add_choice(choice_2)
+        self.assertEqual(len(self.student.choices), 0)
+        self.student.add_choice(self.choice_1)
+        self.assertEqual(len(self.student.choices), 1)
+        self.student.add_choice(self.choice_2)
         self.assertEqual(len(self.student.choices), 2)
-
-    def test_add_choice_by_preference(self):
-        choice_1 = affect_student.Choice(2, 4, 1, 2, False)
-        choice_2 = affect_student.Choice(1, 3, 1, 1, False)
-        choice_3 = affect_student.Choice(1, 5, 1, 2, False)
-        self.student.add_choice(choice_1)
-        self.student.add_choice(choice_2)
-        self.student.add_choice(choice_3)
-
-        self.assertEqual(len(self.student._choices_by_preference), 2)
-        self.assertEqual(len(self.student.get_choices_for_preference(1)), 1)
-        self.assertEqual(len(self.student.get_choices_for_preference(2)), 2)
+        self.assertEqual(len(self.student.get_choices_for_preference(1)), 2)
+        self.assertEqual(len(self.student.get_choices_for_preference(2)), 0)
 
     def test_specialities_chosen(self):
-        choice_1 = affect_student.Choice(2, 4, 5, 2, False)
-        choice_2 = affect_student.Choice(1, 3, 4, 1, False)
-        choice_3 = affect_student.Choice(1, 5, 5, 2, False)
-        self.student.add_choice(choice_1)
-        self.student.add_choice(choice_2)
-        self.student.add_choice(choice_3)
-        self.assertIn(5, self.student.get_specialities_chosen())
-        self.assertIn(4, self.student.get_specialities_chosen())
+        self.student.add_choice(self.choice_1)
 
-    def test_create_student(self):
-        student = affect_student.Student.create_student("1 1 1 1 1 1")
-        self.assertTrue(student)
-        self.assertEqual(student.student_id, 1)
+        self.assertIn(self.speciality_1, self.student.get_specialities_chosen())
+        self.assertNotIn(self.speciality_2, self.student.get_specialities_chosen())
+
+        self.student.add_choice(self.choice_2)
+
+        self.assertIn(self.speciality_1, self.student.get_specialities_chosen())
+        self.assertIn(self.speciality_2, self.student.get_specialities_chosen())
 
     def test_assign(self):
-        self.student.assign(9, 5)
-        self.student.assign(10, 8)
-        self.assertEqual(len(self.student.assignments), 2)
-        self.assertEqual(self.student.assignments[9], 5)
-        self.assertEqual(self.student.assignments[10], 8)
-
-    def test_has_all_period_assigned(self):
-        self.student.assignments = {8: 4,
-                                     9: 5}
-        self.assertFalse(self.student.has_all_periods_assigned())
-        self.student.assignments = {9: 4,
-                                     10: 5,
-                                     11: 6,
-                                     12: 8}
-        self.assertTrue(self.student.has_all_periods_assigned())
-
-    def test_priority(self):
-        self.assertFalse(self.student.is_a_priority)
-        choice = affect_student.Choice(2, 4, 5, 2, True)
-        self.student.add_choice(choice)
-        self.assertTrue(self.student.is_a_priority)
+        self.student.assign(self.period, self.offer)
+        self.assertEqual(len(self.student.assignments), 1)
+        self.assertEqual(self.student.assignments[self.period], self.offer)
+        self.assertFalse(self.student.assignments["P4"])
 
     def test_has_period_unassigned(self):
         self.student.assignments = {1 : 5,
@@ -198,26 +182,5 @@ class TestStudent(SimpleTestCase):
         self.assertIn((1, 4), assignments)
         self.assertIn((3, 5), assignments)
         self.assertIn((8, 9), assignments)
-
-
-class TestChoice(SimpleTestCase):
-    def setUp(self):
-        self.choice = affect_student.Choice(1, 5, 4, 1, True)
-
-    def test_init(self):
-        self.assertEqual(self.choice.internship_id, 1)
-        self.assertEqual(self.choice.organization_id, 5)
-        self.assertEqual(self.choice.speciality_id, 4)
-        self.assertEqual(self.choice.preference, 1)
-        self.assertEqual(self.choice.priority, True)
-
-    def test_create_choice(self):
-        choice = affect_student.Choice.create_choice("1 1 1 1 1 1")
-        self.assertTrue(choice)
-        self.assertEqual(choice.internship_id, 1)
-        self.assertEqual(choice.organization_id, 1)
-        self.assertEqual(choice.speciality_id, 1)
-        self.assertEqual(choice.preference, 1)
-        self.assertEqual(choice.priority, True)
 
 
