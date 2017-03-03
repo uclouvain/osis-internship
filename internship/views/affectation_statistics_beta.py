@@ -50,8 +50,14 @@ from internship.utils import affect_student
 def init_solver():
     solver = affect_student.Solver()
 
-    student_choices = mdl_internship.internship_choice.get_non_mandatory_internship_choices()
+    __init_students(solver)
+    __init_offers(solver)
 
+    return solver
+
+
+def __init_students(solver):
+    student_choices = mdl_internship.internship_choice.get_non_mandatory_internship_choices()
     for student_choice in student_choices:
         student_registration_id = student_choice.student.registration_id
         student_obj = solver.get_student(student_registration_id)
@@ -63,16 +69,31 @@ def init_solver():
                                            student_choice.speciality.id, student_choice.choice, student_choice.priority)
         student_obj.add_choice(choice_obj)
 
-    internship_period_places = mdl_internship.period_internship_places.PeriodInternshipPlaces.objects.all()  # TODO limit period to P9 - P12
 
+def __init_offers(solver):
+    internship_period_places = mdl_internship.period_internship_places.PeriodInternshipPlaces.objects.all()
     for period_place in internship_period_places:
-        organization_id = period_place.organization.id
-        speciality_id = period_place.speciality.id
+        period = __convert_period_to_int(period_place.period)
+        if not __is_internval_period(period):
+            continue
+        places = period_place.number_places
+        organization_id = period_place.internship.organization.id
+        speciality_id = period_place.internship.speciality.id
         offer_id = period_place.internship.id
         offer_obj = solver.get_offer(organization_id, speciality_id)
+        if not offer_obj:
+            offer_obj = affect_student.Offer(offer_id, organization_id, speciality_id, [])
+            solver.add_offer(offer_obj)
 
-    return solver
+        offer_obj.add_places(period, places)
 
 
-def convert_period_to_int(period):
-    pass
+def __is_internval_period(period):
+    MIN_PERIOD = 9
+    MAX_PERIOD = 12
+    return period > MIN_PERIOD or period < MAX_PERIOD
+
+
+def __convert_period_to_int(period):
+    period_name = period.name
+    return int(period_name.lstrip("P"))
