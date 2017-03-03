@@ -24,8 +24,10 @@
 #
 ##############################################################################
 from django.test import TestCase
-from base.tests.models import test_person
 from base.models import student
+from base.tests.models import test_person
+from base.tests.factories.person import PersonFactory
+from base.tests.factories.student import StudentFactory
 
 
 def create_student(first_name, last_name, registration_id):
@@ -36,11 +38,18 @@ def create_student(first_name, last_name, registration_id):
 
 
 class StudentTest(TestCase):
-    def setUp(self):
-        self.student_1 = create_student("Arno", "Dupont", 66666)
-        self.student_2 = create_student("Thomas", "Durant", 565656)
-
     def test_find_by_person_name_case_insensitive(self):
-        found = list(student.find_by(person_name="dupont"))
+        a_person = PersonFactory.build(last_name="Smith", user=None)
+        a_person.save()
+        a_student = StudentFactory.build(person=a_person)
+        a_student.save()
+        found = list(student.find_by(person_name="smith"))
         self.assertEqual(len(found), 1)
-        self.assertEqual(found[0].id, self.student_1.id)
+        self.assertEqual(found[0].id, a_student.id)
+
+    def test_find_by_id(self):
+        tmp_student = StudentFactory()
+        db_student = student.find_by_id(tmp_student.id)
+        self.assertIsNotNone(tmp_student.person.user)
+        self.assertEqual(db_student.person.id, tmp_student.person.id)
+        self.assertEqual(db_student.person.email, tmp_student.person.email)
