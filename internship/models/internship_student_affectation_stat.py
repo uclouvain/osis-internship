@@ -45,6 +45,9 @@ class InternshipStudentAffectationStat(SerializableModel):
     consecutive_month = models.BooleanField(default=False, null=False)
     type_of_internship = models.CharField(max_length=1, blank=False, null=False, default='N')
 
+    def __str__(self):
+        return u"%s : %s - %s (%s)" % (self.student, self.organization, self.speciality, self.period)
+
 
 def search(**kwargs):
     kwargs = {k: v for k, v in kwargs.items() if v}

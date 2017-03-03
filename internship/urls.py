@@ -26,14 +26,18 @@
 from django.conf.urls import url
 
 from internship.views import home, internship, master, period, \
-                            place, speciality, student_resume, affectation_statistics
+                            place, speciality, student_resume, affectation_statistics, affectation_statistics_beta
 from internship.utils import upload_xls
 
 urlpatterns = [
     # S'il vous plaît, organiser les urls par ordre alphabétique.
 
-	url(r'^affectation_result/$', affectation_statistics.internship_affectation_statistics, name='internship_affectation_statistics'),
-    url(r'^affectation_result/generate/$', affectation_statistics.internship_affectation_statistics_generate, name='internship_affectation_statistics_generate'),
+	url(r'^affectation_result/$', affectation_statistics.internship_affectation_statistics,
+        name='internship_affectation_statistics'),
+    url(r'^affectation_result/generate/$', affectation_statistics.internship_affectation_statistics_generate,
+        name='internship_affectation_statistics_generate'),
+    url(r'^affectation_result/generate_beta/$', affectation_statistics_beta.internship_affectation_statistics_generate,
+        name='internship_affectation_statistics_generate_beta'),
     url(r'^affectation_result/sumup/$', affectation_statistics.internship_affectation_sumup, name='internship_affectation_sumup'),
 
     url(r'^$', home.internships_home, name='internships_home'),

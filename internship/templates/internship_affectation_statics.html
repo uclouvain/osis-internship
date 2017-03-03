@@ -73,7 +73,7 @@
                     <h4 class="modal-title">{% trans 'generate_solution' %}</h4>
                 </div>
                 <div class="modal-body">
-                    <form  method="post" action="{% url 'internship_affectation_statistics_generate' %}" id="generate_solution">
+                    <form  method="post" action="{% url 'internship_affectation_statistics_generate_beta' %}" id="generate_solution">
                         <label for="executions">{% trans 'executions' %}</label>
                         <input type="number" name="executions" value=1 min=1>
                         {% csrf_token %}
@@ -89,9 +89,9 @@
     <div class="panel panel-default">
         <div class="panel-header">
             <div class="row">
-                <div class="col-md-4" style="display: none">
+                <div class="col-md-4">
                     <button type="submit" class="btn btn-primary" title="{% trans 'Send'%}" id="bt_interships_save" onclick="$('#generate').modal('show');">
-                        <span class="glyphicon glyphicon-random" aria-hidden="true"></span>{% trans 'generate_solution' %}
+                        <span class="glyphicon glyphicon-random" aria-hidden="true"></span> {% trans 'generate_solution' %}
                     </button>
                 </div>
                 <div class="col-md-8">

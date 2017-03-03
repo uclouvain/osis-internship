@@ -23,3 +23,21 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import sys
+from django.contrib.auth.decorators import login_required, permission_required
+from django.core.urlresolvers import reverse
+from django.shortcuts import redirect
+from internship import models as mdl_internship
+from datetime import datetime
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def internship_affectation_statistics_generate(request):
+    """ Generate new solution, save it in the database, redirect back to the page 'internship_affectation_statistics'"""
+    if request.method == 'POST':
+        if request.POST['executions'] != "":
+            start_date_time = datetime.now()
+            cost = sys.maxsize
+            for i in range(0, int(request.POST['executions'])):
+                pass
+        return redirect(reverse('internship_affectation_statistics'))
