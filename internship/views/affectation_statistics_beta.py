@@ -56,6 +56,12 @@ def init_solver():
     return solver
 
 
+def launch_solver(solver, times=1):
+    for _ in range(0, times):
+        solver.solve()
+    return solver
+
+
 def __init_students(solver):
     student_choices = mdl_internship.internship_choice.get_non_mandatory_internship_choices()
     for student_choice in student_choices:
