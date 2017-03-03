@@ -30,6 +30,7 @@ from django.shortcuts import redirect
 from internship import models as mdl_internship
 from datetime import datetime
 
+
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_affectation_statistics_generate(request):
@@ -41,3 +42,27 @@ def internship_affectation_statistics_generate(request):
             for i in range(0, int(request.POST['executions'])):
                 pass
         return redirect(reverse('internship_affectation_statistics'))
+
+
+from internship.utils import affect_student
+
+
+def init_solver():
+    solver = affect_student.Solver()
+    student_choices = mdl_internship.internship_choice.get_non_mandatory_internship_choices()
+
+    for student_choice in student_choices:
+        student_registration_id = student_choice.student.registration_id
+        student_obj = solver.get_student(student_registration_id)
+        if not student_obj:
+            student_obj = affect_student.Student(student_registration_id)
+            solver.add_student(student_obj)
+
+        choice_obj = affect_student.Choice(student_choice.internship_choice, student_choice.organization.id,
+                                           student_choice.speciality.id, student_choice.choice, student_choice.priority)
+        student_obj.add_choice(choice_obj)
+
+    internship_period_places = mdl_internship.period_internship_places.PeriodInternshipPlaces.objects.all()  # TODO limit period to P9 - P12
+
+
+    return solver

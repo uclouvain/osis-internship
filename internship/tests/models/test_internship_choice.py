@@ -63,6 +63,16 @@ class TestSearchByStudentOrChoice(TestCase):
         choices = list(mdl_internship_choice.search_by_student_or_choice(student=self.student, internship_choice=1))
         self.assertListEqual([self.choice_2], choices)
 
+    def test_get_choices_for_non_mandatory_internship(self):
+        choices = list(mdl_internship_choice.get_non_mandatory_internship_choices())
+        self.assertEqual(len(choices), 1)
+
+        self.choice_1.internship_choice = 2
+        self.choice_1.save()
+
+        choices = list(mdl_internship_choice.get_non_mandatory_internship_choices())
+        self.assertEqual(len(choices), 2)
+
 
 
 

@@ -33,7 +33,7 @@ NUMBER_INTERNSHIPS = 4
 class Solver:
     def __init__(self):
         self.offers = []
-        self.students = []
+        self.students = dict()
 
         self.offers_dict = dict()
         self.students_left_to_assign = []
@@ -52,13 +52,12 @@ class Solver:
                 line = file.readline()
                 self.__add_student_from_line(line)
 
-            self.students_left_to_assign = self.students[:]
-
     def __add_student_from_line(self, line):
         student = Student.create_student(line)
         choice = Choice.create_choice(line)
         student.add_choice(choice)
-        self.students.append(student)
+        self.students[student.student_id] = student
+        self.students_left_to_assign.append(student)
 
     def __add_offer_from_line(self, line):
         offer = Offer.create_offer(line)
@@ -71,6 +70,12 @@ class Solver:
 
     def get_number_students(self):
         return len(self.students)
+
+    def add_student(self, student_obj):
+        self.students[student_obj.student_id] = student_obj
+
+    def get_student(self, student_id):
+        return self.students.get(student_id, None)
 
     def solve(self):
         for preference in range(1, MAX_PREFERENCE + 1):

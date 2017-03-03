@@ -36,7 +36,21 @@ class TestAffectStudent(SimpleTestCase):
 
     def test_initialize_problem(self):
         self.assertEqual(self.solver.get_number_offers(),  5)
-        self.assertEqual(self.solver.get_number_students(), 10)
+        self.assertEqual(self.solver.get_number_students(), 4)
+
+    def test_add_student(self):
+        student = affect_student.Student(45)
+        student_bis = affect_student.Student(41)
+        other_solver = affect_student.Solver()
+
+        self.assertFalse(other_solver.students)
+
+        other_solver.add_student(student)
+        other_solver.add_student(student_bis)
+
+        self.assertEqual(student, other_solver.get_student(45))
+        self.assertEqual(student_bis, other_solver.get_student(41))
+        self.assertFalse(other_solver.get_student(40))
 
     def test_solve(self):
         try:
