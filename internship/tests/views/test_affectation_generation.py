@@ -82,15 +82,3 @@ class TestAffectationGeneration(TestCase):
         test_period_internship_places.create_period_places(offer_4, period_10)
         test_period_internship_places.create_period_places(offer_5, period_11)
         test_period_internship_places.create_period_places(offer_5, period_12)
-
-    def test_init_solver(self):
-        solver = affectation_statistics_beta.init_solver()
-        self.assertEqual(solver.get_number_students(), 4)
-        self.assertEqual(solver.get_number_offers(), 5)
-
-        try:
-            affectation_statistics_beta.launch_solver(solver)
-        except Exception:
-            self.fail()
-
-        affectations = mdl_student_affectation
