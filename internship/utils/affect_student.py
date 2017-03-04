@@ -106,7 +106,7 @@ class Solver:
 
     def __init_offers_by_speciality(self, offers):
         for offer in offers.values():
-            speciality = offer.speciality
+            speciality = offer.internship.speciality
             current_offers_for_speciality = self.offers_by_speciality.get(speciality.id, [])
             current_offers_for_speciality.append(offer)
             self.offers_by_speciality[speciality.id] = current_offers_for_speciality
@@ -126,7 +126,7 @@ class Solver:
 
     def solve(self):
         self.__assign_choices()
-        self.__assign_unfulfilled_students()
+        # self.__assign_unfulfilled_students()
         # TODO hospital error
 
     def __assign_choices(self):
@@ -134,15 +134,37 @@ class Solver:
             for internship in range(0, NUMBER_INTERNSHIPS):
                 students_to_assign = []
                 for student_wrapper in self.students_lefts_to_assign:
-                    student_preference_choices = student_wrapper.get_choices_for_preference(preference)
-                    for choice in student_preference_choices:
-                        success = self.__assign_choice_to_student(choice, student_wrapper)
-                        if success:
-                            break
+                    self.__assign_student_choices(preference, student_wrapper)
                     if not student_wrapper.has_all_internships_assigned():
                         students_to_assign.append(student_wrapper)
 
                 self.students_lefts_to_assign = students_to_assign
+
+    def __assign_student_choices(self, preference, student_wrapper):
+        student_preference_choices = student_wrapper.get_choices_for_preference(preference)
+        for choice in student_preference_choices:
+            if self.__assign_choice_to_student(choice, student_wrapper):
+                break
+
+    def __assign_choice_to_student(self, choice, student_wrapper):
+        if student_wrapper.has_internship_assigned(choice.internship_choice):
+            return False
+        internship_wrapper = self.get_offer(choice.organization.id, choice.speciality.id)
+        if not internship_wrapper:
+            return False
+        free_period_name = self.__get_valid_period(internship_wrapper, student_wrapper)
+        if not free_period_name:
+            return False
+        self.__occupy_offer(free_period_name, internship_wrapper, student_wrapper, choice)
+        return True
+
+    @staticmethod
+    def __get_valid_period(internship_wrapper, student_wrapper):
+        free_periods_name = internship_wrapper.get_free_periods()
+        student_periods_possible = filter(lambda period: student_wrapper.has_period_assigned(period) is False,
+                                          free_periods_name)
+        free_period_name = next(student_periods_possible, None)
+        return free_period_name
 
     def __assign_unfulfilled_students(self):
         for internship in range(0, NUMBER_INTERNSHIPS):
@@ -160,19 +182,6 @@ class Solver:
                                 student_wrapper.assign(period_places, 0, 0)
                     if not student_wrapper.has_all_internships_assigned():
                         students_to_assign.append(student_wrapper)
-
-    def __assign_choice_to_student(self, choice, student_wrapper):
-        if student_wrapper.has_internship_assigned(choice.internship_choice):
-            return False
-        internship_wrapper = self.get_offer(choice.organization.id, choice.speciality.id)
-        if not internship_wrapper:
-            return False
-        free_periods_name = internship_wrapper.get_free_periods()
-        for free_period_name in free_periods_name:
-            if not student_wrapper.has_period_assigned(free_period_name):
-                self.__occupy_offer(free_period_name, internship_wrapper, student_wrapper, choice)
-                return True
-        return False
 
     @staticmethod
     def __occupy_offer(free_period_name, internship_wrapper, student_wrapper, choice):
