@@ -30,7 +30,7 @@ MAX_PREFERENCE = 4
 AUTHORIZED_PERIODS = ["P9", "P10", "P11", "P12"]
 NUMBER_INTERNSHIPS = len(AUTHORIZED_PERIODS)
 
-
+# TODO remove places already occupied
 def affect_student():
     solver = init_solver()
     assignments = launch_solver(solver)
@@ -56,15 +56,8 @@ def launch_solver(solver):
 
 
 def save_assignments_to_db(assignments):
-    for student, period_places, preference, cost in assignments:
-        student_affectation = \
-            mdl_internship.internship_student_affectation_stat.InternshipStudentAffectationStat(student=student,
-                                                               organization=period_places.internship.organization,
-                                                               speciality=period_places.internship.speciality,
-                                                               period=period_places.period, choice=preference,
-                                                               cost=cost)
-        # TODO correct choice and cost
-        student_affectation.save()
+    for affectation in assignments:
+        affectation.save()
 
 
 def _load_students_and_choices():
@@ -127,8 +120,8 @@ class Solver:
     def get_solution(self):
         assignments = []
         for student_wrapper in self.students_by_registration_id.values():
-            for period_places, preference, cost in student_wrapper.get_assignments():
-                assignments.append((student_wrapper.student, period_places, preference, cost))
+            for affectation in student_wrapper.get_assignments():
+                assignments.append(affectation)
         return assignments
 
     def solve(self):
@@ -241,10 +234,16 @@ class StudentWrapper:
     def get_number_choices(self):
         return len(self.choices)
 
-    def assign(self, period_places, internship_choice, preference):
-        cost = 0
+    def assign(self, period_places, internship_choice, preference, cost=0):
         period_name = period_places.period.name
-        self.assignments[period_name] = (period_places, preference, cost)
+        self.assignments[period_name] = \
+            mdl_internship.internship_student_affectation_stat.InternshipStudentAffectationStat(period=period_places.period,
+                                                                                                organization=period_places.internship.organization,
+                                                                                                speciality=period_places.internship.speciality,
+                                                                                                student=self.student,
+                                                                                                choice=preference,
+                                                                                                cost=cost)
+
         self.internship_assigned.append(internship_choice)
 
     def has_internship_assigned(self, internship):
