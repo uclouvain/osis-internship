@@ -29,6 +29,7 @@ from internship import models as mdl_internship
 MAX_PREFERENCE = 4
 AUTHORIZED_PERIODS = ["P9", "P10", "P11", "P12"]
 NUMBER_INTERNSHIPS = len(AUTHORIZED_PERIODS)
+REFERENCE_DEFAULT_ORGANIZATION = 999
 
 # TODO remove places already occupied
 def affect_student():
@@ -39,6 +40,11 @@ def affect_student():
 
 def init_solver():
     solver = Solver()
+
+    periods = _load_periods()
+    solver.set_periods(periods)
+
+    solver.default_organization = _load_default_organization()
 
     students_by_registration_id = _load_students_and_choices()
     solver.set_students(students_by_registration_id)
@@ -89,12 +95,23 @@ def _load_internship_and_places():
     return offers_by_organization_speciality
 
 
+def _load_periods():
+    periods = mdl_internship.period.Period.objects.all()
+    return list(filter(lambda period: period.name.strip() in AUTHORIZED_PERIODS, periods))
+
+
+def _load_default_organization():
+    return mdl_internship.organization.Organization.objects.get(reference=REFERENCE_DEFAULT_ORGANIZATION)
+
+
 class Solver:
     def __init__(self):
         self.students_by_registration_id = dict()
         self.students_lefts_to_assign = []
         self.offers_by_organization_speciality = dict()
         self.offers_by_speciality = dict()
+        self.periods = []
+        self.default_organization = None
 
     def set_students(self, students):
         self.students_by_registration_id = students
@@ -103,6 +120,9 @@ class Solver:
     def set_offers(self, offers):
         self.offers_by_organization_speciality = offers
         self.__init_offers_by_speciality(offers)
+
+    def set_periods(self, periods):
+        self.periods = periods
 
     def __init_offers_by_speciality(self, offers):
         for offer in offers.values():
@@ -127,7 +147,7 @@ class Solver:
     def solve(self):
         self.__assign_choices()
         # self.__assign_unfulfilled_students()
-        # TODO hospital error
+        # self.__assign_to_default_offer()
 
     def __assign_choices(self):
         for preference in range(1, MAX_PREFERENCE + 1):
@@ -170,7 +190,7 @@ class Solver:
         for internship in range(0, NUMBER_INTERNSHIPS):
             students_to_assign = []
             for student_wrapper in self.students_lefts_to_assign:
-                self.__assign_first_possible_offer_to_student(student_wrapper, students_to_assign)
+                self.__assign_first_possible_offer_to_student(student_wrapper)
                 if not student_wrapper.has_all_internships_assigned():
                     students_to_assign.append(student_wrapper)
             self.students_lefts_to_assign = students_to_assign
@@ -184,6 +204,10 @@ class Solver:
                     student_wrapper.assign(period_places, 0, 0)
                     return True
         return False
+
+    def __assign_to_default_offer(self):
+        for student_wrapper in self.students_lefts_to_assign:
+            student_wrapper.fill_assignments(self.periods, self.default_organization)
 
     @staticmethod
     def __occupy_offer(free_period_name, internship_wrapper, student_wrapper, choice):
@@ -230,6 +254,7 @@ class StudentWrapper:
         self.choices_by_preference = dict()
         self.assignments = dict()
         self.internship_assigned = []
+        self.specialities_by_internship = dict()
 
     def set_student(self, student):
         self.student = student
@@ -241,6 +266,8 @@ class StudentWrapper:
         current_choices = self.choices_by_preference.get(preference, [])
         current_choices.append(choice)
         self.choices_by_preference[preference] = current_choices
+
+        self.specialities_by_internship[choice.internship_choice] = choice.speciality
 
     def get_number_choices(self):
         return len(self.choices)
@@ -274,6 +301,26 @@ class StudentWrapper:
 
     def selected_specialities(self):
         return list(set([choice.speciality for choice in self.choices]))
+
+    def fill_assignments(self, periods, default_organization, cost=0):
+        if not self.choices:
+            return
+        for period in filter(lambda p: p.name not in self.assignments, periods):
+            speciality = self.choices[0].speciality
+            for internship, spec in self.specialities_by_internship.items():
+                if not self.has_internship_assigned(internship):
+                    speciality = spec
+                    break
+            self.assignments[period.name] = \
+                mdl_internship.internship_student_affectation_stat. \
+                InternshipStudentAffectationStat(period=period,
+                                                 organization=default_organization,
+                                                 speciality=speciality,
+                                                 student=self.student,
+                                                 choice=0,
+                                                 cost=cost)
+            self.internship_assigned.append(-1)
+    # TODO fill empty assignments
 
 
 
