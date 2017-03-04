@@ -130,3 +130,8 @@ class TestAffectStudent(TestCase):
         except Exception:
             self.fail()
         self.assertEqual(len(assignments), 8)
+
+        affect_student.save_assignments_to_db(assignments)
+
+        self.assertEqual(mdl_student_affectation.InternshipStudentAffectationStat.objects.all().count(), 8)
+

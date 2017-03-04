@@ -49,6 +49,18 @@ def launch_solver(solver):
     return assignments
 
 
+def save_assignments_to_db(assignments):
+    for student, period_places in assignments:
+        student_affectation = \
+            mdl_internship.internship_student_affectation_stat.InternshipStudentAffectationStat(student=student,
+                                                               organization=period_places.internship.organization,
+                                                               speciality=period_places.internship.speciality,
+                                                               period=period_places.period, choice=0,
+                                                               cost=4)
+        # TODO correct choice and cost
+        student_affectation.save()
+
+
 def _load_students_and_choices():
     students_by_registration_id = dict()
     student_choices = mdl_internship.internship_choice.get_non_mandatory_internship_choices()
