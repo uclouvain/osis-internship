@@ -237,13 +237,13 @@ class StudentWrapper:
     def assign(self, period_places, internship_choice, preference, cost=0):
         period_name = period_places.period.name
         self.assignments[period_name] = \
-            mdl_internship.internship_student_affectation_stat.InternshipStudentAffectationStat(period=period_places.period,
-                                                                                                organization=period_places.internship.organization,
-                                                                                                speciality=period_places.internship.speciality,
-                                                                                                student=self.student,
-                                                                                                choice=preference,
-                                                                                                cost=cost)
-
+            mdl_internship.internship_student_affectation_stat.\
+            InternshipStudentAffectationStat(period=period_places.period,
+                                             organization=period_places.internship.organization,
+                                             speciality=period_places.internship.speciality,
+                                             student=self.student,
+                                             choice=preference,
+                                             cost=cost)
         self.internship_assigned.append(internship_choice)
 
     def has_internship_assigned(self, internship):
