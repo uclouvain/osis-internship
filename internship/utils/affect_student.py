@@ -170,18 +170,20 @@ class Solver:
         for internship in range(0, NUMBER_INTERNSHIPS):
             students_to_assign = []
             for student_wrapper in self.students_lefts_to_assign:
-                student_selected_specialities = student_wrapper.selected_specialities()
-                for speciality in student_selected_specialities:
-                    offers = self.offers_by_speciality.get(speciality.id, [])
-                    for offer in offers:
-                        if not offer.is_not_full():
-                            continue
-                        for free_period_name in offer.get_free_periods():
-                            if not student_wrapper.has_period_assigned(free_period_name):
-                                period_places = offer.occupy(free_period_name)
-                                student_wrapper.assign(period_places, 0, 0)
-                    if not student_wrapper.has_all_internships_assigned():
-                        students_to_assign.append(student_wrapper)
+                self.__assign_first_possible_offer_to_student(student_wrapper, students_to_assign)
+                if not student_wrapper.has_all_internships_assigned():
+                    students_to_assign.append(student_wrapper)
+            self.students_lefts_to_assign = students_to_assign
+
+    def __assign_first_possible_offer_to_student(self, student_wrapper):
+        for speciality_id, offers in self.offers_by_speciality.items():
+            for offer in filter(lambda possible_offer: possible_offer.is_not_full() is False, offers):
+                free_period_name = self.__get_valid_period(offer, student_wrapper)
+                if free_period_name:
+                    period_places = offer.occupy(free_period_name)
+                    student_wrapper.assign(period_places, 0, 0)
+                    return True
+        return False
 
     @staticmethod
     def __occupy_offer(free_period_name, internship_wrapper, student_wrapper, choice):
