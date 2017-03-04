@@ -28,6 +28,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from datetime import datetime
+from internship.utils import affect_student
 
 
 @login_required
@@ -38,8 +39,7 @@ def internship_affectation_statistics_generate(request):
         if request.POST['executions'] != "":
             start_date_time = datetime.now()
             cost = sys.maxsize
-            for i in range(0, int(request.POST['executions'])):
-                pass
+            affect_student.affect_student()
         return redirect(reverse('internship_affectation_statistics'))
 
 

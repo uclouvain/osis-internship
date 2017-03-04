@@ -31,6 +31,12 @@ AUTHORIZED_PERIODS = ["P9", "P10", "P11", "P12"]
 NUMBER_INTERNSHIPS = len(AUTHORIZED_PERIODS)
 
 
+def affect_student():
+    solver = init_solver()
+    assignments = launch_solver(solver)
+    save_assignments_to_db(assignments)
+
+
 def init_solver():
     solver = Solver()
 
@@ -50,13 +56,13 @@ def launch_solver(solver):
 
 
 def save_assignments_to_db(assignments):
-    for student, period_places in assignments:
+    for student, period_places, preference, cost in assignments:
         student_affectation = \
             mdl_internship.internship_student_affectation_stat.InternshipStudentAffectationStat(student=student,
                                                                organization=period_places.internship.organization,
                                                                speciality=period_places.internship.speciality,
-                                                               period=period_places.period, choice=0,
-                                                               cost=4)
+                                                               period=period_places.period, choice=preference,
+                                                               cost=cost)
         # TODO correct choice and cost
         student_affectation.save()
 
@@ -95,6 +101,7 @@ class Solver:
         self.students_by_registration_id = dict()
         self.students_lefts_to_assign = []
         self.offers_by_organization_speciality = dict()
+        self.offers_by_speciality = dict()
 
     def set_students(self, students):
         self.students_by_registration_id = students
@@ -102,6 +109,14 @@ class Solver:
 
     def set_offers(self, offers):
         self.offers_by_organization_speciality = offers
+        self.__init_offers_by_speciality(offers)
+
+    def __init_offers_by_speciality(self, offers):
+        for offer in offers.values():
+            speciality = offer.speciality
+            current_offers_for_speciality = self.offers_by_speciality.get(speciality.id, [])
+            current_offers_for_speciality.append(offer)
+            self.offers_by_speciality[speciality.id] = current_offers_for_speciality
 
     def get_student(self, registration_id):
         return self.students_by_registration_id.get(registration_id, None)
@@ -112,11 +127,16 @@ class Solver:
     def get_solution(self):
         assignments = []
         for student_wrapper in self.students_by_registration_id.values():
-            for period_places in student_wrapper.get_assignments():
-                assignments.append((student_wrapper.student, period_places))
+            for period_places, preference, cost in student_wrapper.get_assignments():
+                assignments.append((student_wrapper.student, period_places, preference, cost))
         return assignments
 
     def solve(self):
+        self.__assign_choices()
+        self.__assign_unfulfilled_students()
+        # TODO hospital error
+
+    def __assign_choices(self):
         for preference in range(1, MAX_PREFERENCE + 1):
             for internship in range(0, NUMBER_INTERNSHIPS):
                 students_to_assign = []
@@ -130,6 +150,23 @@ class Solver:
                         students_to_assign.append(student_wrapper)
 
                 self.students_lefts_to_assign = students_to_assign
+
+    def __assign_unfulfilled_students(self):
+        for internship in range(0, NUMBER_INTERNSHIPS):
+            students_to_assign = []
+            for student_wrapper in self.students_lefts_to_assign:
+                student_selected_specialities = student_wrapper.selected_specialities()
+                for speciality in student_selected_specialities:
+                    offers = self.offers_by_speciality.get(speciality.id, [])
+                    for offer in offers:
+                        if not offer.is_not_full():
+                            continue
+                        for free_period_name in offer.get_free_periods():
+                            if not student_wrapper.has_period_assigned(free_period_name):
+                                period_places = offer.occupy(free_period_name)
+                                student_wrapper.assign(period_places, 0, 0)
+                    if not student_wrapper.has_all_internships_assigned():
+                        students_to_assign.append(student_wrapper)
 
     def __assign_choice_to_student(self, choice, student_wrapper):
         if student_wrapper.has_internship_assigned(choice.internship_choice):
@@ -147,7 +184,7 @@ class Solver:
     @staticmethod
     def __occupy_offer(free_period_name, internship_wrapper, student_wrapper, choice):
         period_places = internship_wrapper.occupy(free_period_name)
-        student_wrapper.assign(period_places, choice)
+        student_wrapper.assign(period_places, choice.internship_choice, choice.choice)
 
 
 class InternshipWrapper:
@@ -188,7 +225,7 @@ class StudentWrapper:
         self.choices = []
         self.choices_by_preference = dict()
         self.assignments = dict()
-        self.internship_assigned = set()
+        self.internship_assigned = []
 
     def set_student(self, student):
         self.student = student
@@ -204,11 +241,11 @@ class StudentWrapper:
     def get_number_choices(self):
         return len(self.choices)
 
-    def assign(self, period_places, choice):
+    def assign(self, period_places, internship_choice, preference):
+        cost = 0
         period_name = period_places.period.name
-        internship = choice.internship_choice
-        self.assignments[period_name] = period_places
-        self.internship_assigned.add(internship)
+        self.assignments[period_name] = (period_places, preference, cost)
+        self.internship_assigned.append(internship_choice)
 
     def has_internship_assigned(self, internship):
         return internship in self.internship_assigned
@@ -224,6 +261,9 @@ class StudentWrapper:
 
     def get_assignments(self):
         return self.assignments.values()
+
+    def selected_specialities(self):
+        return list(set([choice.speciality for choice in self.choices]))
 
 
 
