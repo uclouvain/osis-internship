@@ -122,3 +122,11 @@ class TestAffectStudent(TestCase):
             offer.occupy(self.period_places_1.period.name)
 
         self.assertFalse(offer.is_not_full())
+
+    def test_solve(self):
+        solver = affect_student.init_solver()
+        try:
+            assignments = affect_student.launch_solver(solver)
+        except Exception:
+            self.fail()
+        self.assertEqual(len(assignments), 8)

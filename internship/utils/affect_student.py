@@ -26,6 +26,11 @@
 from internship import models as mdl_internship
 
 
+MAX_PREFERENCE = 4
+AUTHORIZED_PERIODS = ["P9", "P10", "P11", "P12"]
+NUMBER_INTERNSHIPS = len(AUTHORIZED_PERIODS)
+
+
 def init_solver():
     solver = Solver()
 
@@ -36,6 +41,12 @@ def init_solver():
     solver.set_offers(offers_by_organization_speciality)
 
     return solver
+
+
+def launch_solver(solver):
+    solver.solve()
+    assignments = solver.get_solution()
+    return assignments
 
 
 def _load_students_and_choices():
@@ -70,10 +81,12 @@ def _load_internship_and_places():
 class Solver:
     def __init__(self):
         self.students_by_registration_id = dict()
+        self.students_lefts_to_assign = []
         self.offers_by_organization_speciality = dict()
 
     def set_students(self, students):
         self.students_by_registration_id = students
+        self.students_lefts_to_assign = list(students.values())
 
     def set_offers(self, offers):
         self.offers_by_organization_speciality = offers
@@ -83,6 +96,46 @@ class Solver:
 
     def get_offer(self, organization_id, speciality_id):
         return self.offers_by_organization_speciality.get((organization_id, speciality_id), None)
+
+    def get_solution(self):
+        assignments = []
+        for student_wrapper in self.students_by_registration_id.values():
+            for period_places in student_wrapper.get_assignments():
+                assignments.append((student_wrapper.student, period_places))
+        return assignments
+
+    def solve(self):
+        for preference in range(1, MAX_PREFERENCE + 1):
+            for internship in range(0, NUMBER_INTERNSHIPS):
+                students_to_assign = []
+                for student_wrapper in self.students_lefts_to_assign:
+                    student_preference_choices = student_wrapper.get_choices_for_preference(preference)
+                    for choice in student_preference_choices:
+                        success = self.__assign_choice_to_student(choice, student_wrapper)
+                        if success:
+                            break
+                    if not student_wrapper.has_all_internships_assigned():
+                        students_to_assign.append(student_wrapper)
+
+                self.students_lefts_to_assign = students_to_assign
+
+    def __assign_choice_to_student(self, choice, student_wrapper):
+        if student_wrapper.has_internship_assigned(choice.internship_choice):
+            return False
+        internship_wrapper = self.get_offer(choice.organization.id, choice.speciality.id)
+        if not internship_wrapper:
+            return False
+        free_periods_name = internship_wrapper.get_free_periods()
+        for free_period_name in free_periods_name:
+            if not student_wrapper.has_period_assigned(free_period_name):
+                self.__occupy_offer(free_period_name, internship_wrapper, student_wrapper, choice)
+                return True
+        return False
+
+    @staticmethod
+    def __occupy_offer(free_period_name, internship_wrapper, student_wrapper, choice):
+        period_places = internship_wrapper.occupy(free_period_name)
+        student_wrapper.assign(period_places, choice)
 
 
 class InternshipWrapper:
@@ -114,6 +167,7 @@ class InternshipWrapper:
 
     def occupy(self, period_name):
         self.periods_places_left[period_name] -= 1
+        return self.periods_places[period_name]
 
 
 class StudentWrapper:
@@ -122,6 +176,7 @@ class StudentWrapper:
         self.choices = []
         self.choices_by_preference = dict()
         self.assignments = dict()
+        self.internship_assigned = set()
 
     def set_student(self, student):
         self.student = student
@@ -136,6 +191,27 @@ class StudentWrapper:
 
     def get_number_choices(self):
         return len(self.choices)
+
+    def assign(self, period_places, choice):
+        period_name = period_places.period.name
+        internship = choice.internship_choice
+        self.assignments[period_name] = period_places
+        self.internship_assigned.add(internship)
+
+    def has_internship_assigned(self, internship):
+        return internship in self.internship_assigned
+
+    def has_all_internships_assigned(self):
+        return len(self.internship_assigned) == NUMBER_INTERNSHIPS
+
+    def get_choices_for_preference(self, preference):
+        return self.choices_by_preference.get(preference, [])
+
+    def has_period_assigned(self, period_name):
+        return period_name in self.assignments
+
+    def get_assignments(self):
+        return self.assignments.values()
 
 
 
