@@ -74,7 +74,7 @@ class TestAffectStudent(TestCase):
         period_11 = test_period.create_period("P11")
         period_12 = test_period.create_period("P12")
 
-        test_period_internship_places.create_period_places(self.offer_1, period_9)
+        self.period_places_1 = test_period_internship_places.create_period_places(self.offer_1, period_9)
         test_period_internship_places.create_period_places(self.offer_1, period_11)
         test_period_internship_places.create_period_places(self.offer_2, period_10)
         test_period_internship_places.create_period_places(self.offer_3, period_12)
@@ -111,3 +111,14 @@ class TestAffectStudent(TestCase):
         self.assertEqual(len(free_periods), len(actual_free_periods))
         for free_period in free_periods:
             self.assertIn(free_period, actual_free_periods)
+
+    def test_offer_places_left(self):
+        offer = affect_student.InternshipWrapper()
+        offer.set_internship(self.offer_1)
+        offer.set_period_places(self.period_places_1)
+
+        for x in range(0, self.period_places_1.number_places):
+            self.assertTrue(offer.is_not_full())
+            offer.occupy(self.period_places_1.period.name)
+
+        self.assertFalse(offer.is_not_full())

@@ -82,13 +82,14 @@ class Solver:
         return self.students_by_registration_id.get(registration_id, None)
 
     def get_offer(self, organization_id, speciality_id):
-        return self.offers_by_organization_speciality.get((organization_id , speciality_id), None)
+        return self.offers_by_organization_speciality.get((organization_id, speciality_id), None)
 
 
 class InternshipWrapper:
     def __init__(self):
         self.internship = None
         self.periods_places = dict()
+        self.periods_places_left = dict()
 
     def set_internship(self, internship):
         self.internship = internship
@@ -96,13 +97,23 @@ class InternshipWrapper:
     def set_period_places(self, period_places):
         period_name = period_places.period.name
         self.periods_places[period_name] = period_places
+        self.periods_places_left[period_name] = period_places.number_places
+
+    def period_is_not_full(self, period_name):
+        return self.periods_places_left.get(period_name, 0) > 0
 
     def get_free_periods(self):
         free_periods = []
-        for period_name, period_places in self.periods_places.items():
-            if period_places.number_places > 0:
+        for period_name in self.periods_places_left.keys():
+            if self.period_is_not_full(period_name):
                 free_periods.append(period_name)
         return free_periods
+
+    def is_not_full(self):
+        return len(self.get_free_periods()) > 0
+
+    def occupy(self, period_name):
+        self.periods_places_left[period_name] -= 1
 
 
 class StudentWrapper:
