@@ -31,7 +31,8 @@ AUTHORIZED_PERIODS = ["P9", "P10", "P11", "P12"]
 NUMBER_INTERNSHIPS = len(AUTHORIZED_PERIODS)
 REFERENCE_DEFAULT_ORGANIZATION = 999
 
-# TODO remove places already occupied
+# TODO priority students
+# TODO limit MEGE
 def affect_student():
     solver = init_solver()
     assignments = launch_solver(solver)
@@ -51,6 +52,9 @@ def init_solver():
 
     offers_by_organization_speciality = _load_internship_and_places()
     solver.set_offers(offers_by_organization_speciality)
+
+    current_affecations = _load_current_students_affectations()
+    solver.update_places(current_affecations)
 
     return solver
 
@@ -83,7 +87,7 @@ def _load_students_and_choices():
 def _load_internship_and_places():
     offers_by_organization_speciality = dict()
     internships_periods_places = mdl_internship.period_internship_places.PeriodInternshipPlaces.objects.all()
-    for period_places in internships_periods_places:
+    for period_places in filter_internships_period_places(internships_periods_places):
         internship = period_places.internship
         key = (internship.organization.id, internship.speciality.id)
         internship_wrapper = offers_by_organization_speciality.get(key, None)
@@ -93,6 +97,17 @@ def _load_internship_and_places():
             offers_by_organization_speciality[key] = internship_wrapper
         internship_wrapper.set_period_places(period_places)
     return offers_by_organization_speciality
+
+
+def filter_internships_period_places(internships_periods_places):
+    return filter(lambda int_per_places: int_per_places.period.name.strip() in AUTHORIZED_PERIODS,
+                  internships_periods_places)
+
+
+def _load_current_students_affectations():
+    student_affectations = \
+        mdl_internship.internship_student_affectation_stat.InternshipStudentAffectationStat.objects.all()
+    return filter(lambda stud_affectation: stud_affectation.period.name in AUTHORIZED_PERIODS, student_affectations)
 
 
 def _load_periods():
@@ -123,6 +138,15 @@ class Solver:
 
     def set_periods(self, periods):
         self.periods = periods
+
+    def update_places(self, affectations):
+        for affectation in affectations:
+            organization = affectation.organization
+            speciality = affectation.speciality
+            offer = self.get_offer(organization.id, speciality.id)
+            if not offer:
+                continue
+            offer.occupy(affectation.period.name)
 
     def __init_offers_by_speciality(self, offers):
         for offer in offers.values():
@@ -320,7 +344,6 @@ class StudentWrapper:
                                                  choice=0,
                                                  cost=cost)
             self.internship_assigned.append(-1)
-    # TODO fill empty assignments
 
 
 
