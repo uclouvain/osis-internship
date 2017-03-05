@@ -1152,6 +1152,9 @@ def load_solution(data):
         # store the cost of each student
         sol[item.student]['score'] += item.cost
         # Update the number of available places for given organization, speciality, period
+        if item.organization not in temp_internship_table or \
+                        item.speciality.acronym not in temp_internship_table[item.organization]:
+            continue
         temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['after'] -= 1
         # Update the % of takes places
         if temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['before'] > 0:

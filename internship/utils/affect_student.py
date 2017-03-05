@@ -394,7 +394,7 @@ class StudentWrapper:
         internships_with_speciality_not_assigned = \
             filter(lambda intern_spec: self.has_internship_assigned(intern_spec[0]) is False,
                    self.specialities_by_internship.items())
-        return next(internships_with_speciality_not_assigned, (self.choices[0].speciality, 0))
+        return next(internships_with_speciality_not_assigned, (0, self.choices[0].speciality))
 
     @staticmethod
     def __get_cost(internship_choice, preference):
