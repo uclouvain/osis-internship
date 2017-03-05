@@ -41,6 +41,7 @@ class TestAffectStudent(TestCase):
         organization_1 = test_organization.create_organization(name="organization1", reference="01")
         organization_2 = test_organization.create_organization(name="organization2", reference="02")
         organization_3 = test_organization.create_organization(name="organization3", reference="03")
+        default_organization = test_organization.create_organization(name="Hôpital Erreur", reference="999")
 
         speciality_1 = test_internship_speciality.create_speciality(name="spec1")
         speciality_2 = test_internship_speciality.create_speciality(name="spec2")
@@ -134,4 +135,15 @@ class TestAffectStudent(TestCase):
         affect_student.save_assignments_to_db(assignments)
 
         self.assertEqual(mdl_student_affectation.InternshipStudentAffectationStat.objects.all().count(), 8)
+
+    def test_places_occupied(self):
+        affectation = mdl_student_affectation.InternshipStudentAffectationStat(student=self.student_1,
+                                                                               period=self.period_places_1.period,
+                                                                               organization=self.offer_1.organization,
+                                                                               speciality=self.offer_1.speciality,
+                                                                               choice=1, cost=0)
+        affectation.save()
+        solver = affect_student.init_solver()
+        internship_wrapper = solver.get_offer(self.offer_1.organization.id, self.offer_1.speciality.id)
+        self.assertEqual(internship_wrapper.periods_places_left[self.period_places_1.period.name], 9)
 

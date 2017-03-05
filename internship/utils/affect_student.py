@@ -33,6 +33,7 @@ REFERENCE_DEFAULT_ORGANIZATION = 999
 
 # TODO priority students
 # TODO limit MEGE
+# TODO add costs
 def affect_student():
     solver = init_solver()
     assignments = launch_solver(solver)
@@ -143,10 +144,13 @@ class Solver:
         for affectation in affectations:
             organization = affectation.organization
             speciality = affectation.speciality
+            student = affectation.student
             offer = self.get_offer(organization.id, speciality.id)
-            if not offer:
+            student_wrapper = self.get_student(student.registration_id)
+            if not offer or not student_wrapper:
                 continue
             offer.occupy(affectation.period.name)
+            student_wrapper.assign_specific(affectation)
 
     def __init_offers_by_speciality(self, offers):
         for offer in offers.values():
@@ -307,6 +311,10 @@ class StudentWrapper:
                                              choice=preference,
                                              cost=cost)
         self.internship_assigned.append(internship_choice)
+
+    def assign_specific(self, assignment):
+        period_name = assignment.period.name
+        self.assignments[period_name] = assignment
 
     def has_internship_assigned(self, internship):
         return internship in self.internship_assigned
