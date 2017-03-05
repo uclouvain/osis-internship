@@ -46,7 +46,7 @@ def internships_home(request):
     else:
         noma = 0
 
-    internships = mdl_internship.internship_offer.find_internships()
+    internships = mdl_internship.internship_offer.InternshipOffer.objects.all()
     #Check if there is a internship offers in data base. If not, the internships
     #can be block, but there is no effect
     if len(internships) > 0:
