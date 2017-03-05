@@ -193,24 +193,28 @@ class Solver:
 
     def solve(self):
         self.__assign_choices(self.students_priority_lefts_to_assign)
+        self.__assign_choices(self.students_priority_lefts_to_assign, NUMBER_INTERNSHIPS+1, NUMBER_INTERNSHIPS+2)
         self.__assign_choices(self.students_lefts_to_assign)
+        self.__assign_choices(self.students_lefts_to_assign, NUMBER_INTERNSHIPS+1, NUMBER_INTERNSHIPS+2)
         # self.__assign_unfulfilled_students()
         # self.__assign_to_default_offer()
 
-    def __assign_choices(self, students_lists):
+    def __assign_choices(self, students_lists, min_internship=1, max_internship=NUMBER_INTERNSHIPS+1):
         for preference in range(1, MAX_PREFERENCE + 1):
-            for internship in range(0, NUMBER_INTERNSHIPS):
+            for internship in range(min_internship, max_internship):
                 students_to_assign = []
                 random.shuffle(students_lists)
                 for student_wrapper in students_lists:
-                    self.__assign_student_choices(preference, student_wrapper)
+                    self.__assign_student_choices(preference, student_wrapper, internship)
                     if not student_wrapper.has_all_internships_assigned():
                         students_to_assign.append(student_wrapper)
 
                 students_lists = students_to_assign
 
-    def __assign_student_choices(self, preference, student_wrapper):
+    def __assign_student_choices(self, preference, student_wrapper, internship):
         for choice in student_wrapper.get_choices_for_preference(preference):
+            if choice.internship_choice != internship:
+                continue
             if self.__assign_choice_to_student(choice, student_wrapper):
                 break
 
