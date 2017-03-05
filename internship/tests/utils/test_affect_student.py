@@ -148,7 +148,7 @@ class TestAffectStudent(TestCase):
                                                                                speciality=self.offer_1.speciality,
                                                                                choice=1, cost=0)
         affectation.save()
-        solver = affect_student.init_solver(self.current_student_affectations)
+        solver = affect_student.init_solver(affect_student._load_current_students_affectations())
         internship_wrapper = solver.get_offer(self.offer_1.organization.id, self.offer_1.speciality.id)
         self.assertEqual(internship_wrapper.periods_places_left[self.period_places_1.period.name], 1)
 
