@@ -266,7 +266,8 @@ class Solver:
                     return True
         return False
 
-    def permitted_speciality(self, student_wrapper, offer):
+    @staticmethod
+    def permitted_speciality(student_wrapper, offer):
         if student_wrapper.contest != "SS":
             return True
         if offer.internship.speciality.acronym not in AUTHORIZED_PERIODS:
@@ -298,11 +299,7 @@ class InternshipWrapper:
         return self.periods_places_left.get(period_name, 0) > 0
 
     def get_free_periods(self):
-        free_periods = []
-        for period_name in self.periods_places_left.keys():
-            if self.period_is_not_full(period_name):
-                free_periods.append(period_name)
-        return free_periods
+        return [period_name for period_name in self.periods_places_left.keys() if self.period_is_not_full(period_name)]
 
     def is_not_full(self):
         return len(self.get_free_periods()) > 0
@@ -343,9 +340,6 @@ class StudentWrapper:
         current_choices.append(choice)
         self.choices_by_preference[preference] = current_choices
 
-    def get_number_choices(self):
-        return len(self.choices)
-
     def assign(self, period, organization, speciality, internship_choice, preference, cost=0):
         period_name = period.name
         self.assignments[period_name] = \
@@ -381,12 +375,15 @@ class StudentWrapper:
         if not self.choices:
             return
         for period in filter(lambda p: p.name not in self.assignments, periods):
-            speciality = self.choices[0].speciality
-            for internship, spec in self.specialities_by_internship.items():
-                if not self.has_internship_assigned(internship):
-                    speciality = spec
-                    break
-            self.assign(period, default_organization, speciality, 0, cost)
+            internship, speciality = self.get_internship_with_speciality_not_assigned()
+            self.assign(period, default_organization, speciality, internship, cost)
+
+    def get_internship_with_speciality_not_assigned(self):
+        internships_with_speciality_not_assigned = \
+            filter(lambda intern, spec: self.has_internship_assigned(intern) is False,
+                   self.specialities_by_internship.items())
+        return next(internships_with_speciality_not_assigned, (self.choices[0].speciality, 0))
+
 
 
 

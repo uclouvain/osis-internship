@@ -107,7 +107,7 @@ class TestAffectStudent(TestCase):
     def assert_number_choices(self, student, solver, number_choices):
         student_wrapper = solver.get_student(student.registration_id)
         self.assertTrue(student_wrapper)
-        self.assertEqual(student_wrapper.get_number_choices(), number_choices)
+        self.assertEqual(len(student_wrapper.choices), number_choices)
 
     def assert_free_periods(self, offer, solver, free_periods):
         internship_wrapper = solver.get_offer(offer.organization.id, offer.speciality.id)
