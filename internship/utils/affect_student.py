@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from internship import models as mdl_internship
+import random
 
 
 MAX_PREFERENCE = 4
@@ -32,8 +33,6 @@ NUMBER_INTERNSHIPS = len(AUTHORIZED_PERIODS)
 REFERENCE_DEFAULT_ORGANIZATION = 999
 AUTHORIZED_SS_SPECIALITIES = ["CH", "DE", "GE", "GO", "MI", "MP", "NA", "OP", "OR", "CO", "PE", "PS", "PA", "UR", "CU"]
 
-# TODO add costs
-# TODO randomize
 # TODO iteration
 def affect_student():
     solver = init_solver()
@@ -55,8 +54,7 @@ def init_solver():
 
 def launch_solver(solver):
     solver.solve()
-    assignments = solver.get_solution()
-    return assignments
+    return solver.get_solution()
 
 
 def save_assignments_to_db(assignments):
@@ -184,36 +182,25 @@ class Solver:
         return assignments
 
     def solve(self):
-        self.__assign_priority_choices()
-        self.__assign_choices()
+        self.__assign_choices(self.students_priority_lefts_to_assign)
+        self.__assign_choices(self.students_lefts_to_assign)
         # self.__assign_unfulfilled_students()
         # self.__assign_to_default_offer()
 
-    def __assign_choices(self):
+    def __assign_choices(self, students_lists):
         for preference in range(1, MAX_PREFERENCE + 1):
             for internship in range(0, NUMBER_INTERNSHIPS):
                 students_to_assign = []
-                for student_wrapper in self.students_lefts_to_assign:
+                random.shuffle(students_lists)
+                for student_wrapper in students_lists:
                     self.__assign_student_choices(preference, student_wrapper)
                     if not student_wrapper.has_all_internships_assigned():
                         students_to_assign.append(student_wrapper)
 
-                self.students_lefts_to_assign = students_to_assign
-
-    def __assign_priority_choices(self):
-        for preference in range(1, MAX_PREFERENCE + 1):
-            for internship in range(0, NUMBER_INTERNSHIPS):
-                students_to_assign = []
-                for student_wrapper in self.students_priority_lefts_to_assign:
-                    self.__assign_student_choices(preference, student_wrapper)
-                    if not student_wrapper.has_all_internships_assigned():
-                        students_to_assign.append(student_wrapper)
-
-                self.students_priority_lefts_to_assign = students_to_assign
+                students_lists = students_to_assign
 
     def __assign_student_choices(self, preference, student_wrapper):
-        student_preference_choices = student_wrapper.get_choices_for_preference(preference)
-        for choice in student_preference_choices:
+        for choice in student_wrapper.get_choices_for_preference(preference):
             if self.__assign_choice_to_student(choice, student_wrapper):
                 break
 
@@ -226,12 +213,14 @@ class Solver:
         free_period_name = self.__get_valid_period(internship_wrapper, student_wrapper)
         if not free_period_name:
             return False
-        self.__occupy_offer(free_period_name, internship_wrapper, student_wrapper, choice)
+        self.__occupy_offer(free_period_name, internship_wrapper, student_wrapper, choice.internship_choice,
+                            choice.choice)
         return True
 
     def __assign_unfulfilled_students(self):
         for internship in range(0, NUMBER_INTERNSHIPS):
             students_to_assign = []
+            random.shuffle(self.students_lefts_to_assign)
             for student_wrapper in self.students_lefts_to_assign:
                 self.__assign_first_possible_offer_to_student(student_wrapper)
                 if not student_wrapper.has_all_internships_assigned():
@@ -245,8 +234,7 @@ class Solver:
                     continue
                 free_period_name = self.__get_valid_period(offer, student_wrapper)
                 if free_period_name:
-                    period_places = offer.occupy(free_period_name)
-                    student_wrapper.assign(period_places.period, period_places.internship.organization, period_places.internship.speciality, 0, 0)
+                    self.__occupy_offer(free_period_name, offer, student_wrapper, 0, 0)
                     return True
         return False
 
@@ -270,9 +258,20 @@ class Solver:
             student_wrapper.fill_assignments(self.periods, self.default_organization)
 
     @staticmethod
-    def __occupy_offer(free_period_name, internship_wrapper, student_wrapper, choice):
+    def __occupy_offer(free_period_name, internship_wrapper, student_wrapper, internship_choice, choice):
         period_places = internship_wrapper.occupy(free_period_name)
-        student_wrapper.assign(period_places.period, period_places.internship.organization, period_places.internship.speciality, choice.internship_choice, choice.choice)
+        student_wrapper.assign(period_places.period, period_places.internship.organization,
+                               period_places.internship.speciality, internship_choice, choice)
+
+    def reinitialize(self):
+        self.students_lefts_to_assign = self.normal_students[:]
+        self.students_priority_lefts_to_assign = self.priority_students[:]
+        for student_wrapper in self.normal_students:
+            student_wrapper.reinitialize()
+        for student_wrapper in self.priority_students:
+            student_wrapper.reinitialize()
+        for internship_wrapper in self.offers_by_organization_speciality.values():
+            internship_wrapper.reinitialize()
 
 
 class InternshipWrapper:
@@ -298,6 +297,11 @@ class InternshipWrapper:
     def occupy(self, period_name):
         self.periods_places_left[period_name] -= 1
         return self.periods_places[period_name]
+
+    def reinitialize(self):
+        self.periods_places_left = dict()
+        for period_name, period_places in self.periods_places:
+            self.periods_places_left[period_name] = period_places.number_places
 
 
 class StudentWrapper:
@@ -331,8 +335,10 @@ class StudentWrapper:
         current_choices.append(choice)
         self.choices_by_preference[preference] = current_choices
 
-    def assign(self, period, organization, speciality, internship_choice, preference, cost=0):
+    def assign(self, period, organization, speciality, internship_choice, preference):
         period_name = period.name
+        cost = self.__get_cost(internship_choice, preference)
+        self.cost += cost
         self.assignments[period_name] = \
             mdl_internship.internship_student_affectation_stat.\
             InternshipStudentAffectationStat(period=period, organization=organization, speciality=speciality,
@@ -340,6 +346,7 @@ class StudentWrapper:
         self.internship_assigned.append(internship_choice)
 
     def assign_specific(self, assignment):
+        self.cost += assignment.cost
         period_name = assignment.period.name
         self.assignments[period_name] = assignment
         self.internship_assigned.append(0)
@@ -375,6 +382,21 @@ class StudentWrapper:
                    self.specialities_by_internship.items())
         return next(internships_with_speciality_not_assigned, (self.choices[0].speciality, 0))
 
+    @staticmethod
+    def __get_cost(internship_choice, preference):
+        if internship_choice == 0:
+            return 10
+        elif internship_choice == 5:
+            return 5
+        elif internship_choice == 6:
+            return 10
+        else:
+            return preference - 1
+
+    def reinitialize(self):
+        self.assignments = dict()
+        self.internship_assigned = []
+        self.cost = 0
 
 
 
