@@ -25,7 +25,7 @@
 ##############################################################################
 from internship import models as mdl_internship
 import random
-
+import sys
 
 MAX_PREFERENCE = 4
 AUTHORIZED_PERIODS = ["P9", "P10", "P11", "P12"]
@@ -33,21 +33,29 @@ NUMBER_INTERNSHIPS = len(AUTHORIZED_PERIODS)
 REFERENCE_DEFAULT_ORGANIZATION = 999
 AUTHORIZED_SS_SPECIALITIES = ["CH", "DE", "GE", "GO", "MI", "MP", "NA", "OP", "OR", "CO", "PE", "PS", "PA", "UR", "CU"]
 
-# TODO iteration
-def affect_student():
-    solver = init_solver()
-    assignments = launch_solver(solver)
-    save_assignments_to_db(assignments)
+
+def affect_student(times=1):
+    current_student_affectations = _load_current_students_affectations()
+    solver = init_solver(current_student_affectations)
+    best_cost = sys.maxsize
+    best_assignments = []
+    for x in range(0, times):
+        assignments, cost = launch_solver(solver)
+        if cost < best_cost:
+            best_assignments = assignments
+        solver.update_places(current_student_affectations)
+        solver.reinitialize()
+    save_assignments_to_db(best_assignments)
 
 
-def init_solver():
+def init_solver(current_students_affectations):
     solver = Solver()
 
     solver.set_periods(_load_periods())
     solver.default_organization = _load_default_organization()
     solver.set_students(_load_students_and_choices())
     solver.set_offers(_load_internship_and_places())
-    solver.update_places(_load_current_students_affectations())
+    solver.update_places(current_students_affectations)
 
     return solver
 
@@ -176,10 +184,12 @@ class Solver:
 
     def get_solution(self):
         assignments = []
+        cost = 0
         for student_wrapper in self.students_by_registration_id.values():
             for affectation in student_wrapper.get_assignments():
                 assignments.append(affectation)
-        return assignments
+                cost += affectation.cost
+        return assignments, cost
 
     def solve(self):
         self.__assign_choices(self.students_priority_lefts_to_assign)

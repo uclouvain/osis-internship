@@ -92,8 +92,10 @@ class TestAffectStudent(TestCase):
         test_period_internship_places.create_period_places(self.offer_3, period_9, 2)
         test_period_internship_places.create_period_places(self.offer_3, period_11, 2)
 
+        self.current_student_affectations = affect_student._load_current_students_affectations()
+
     def test_init_solver(self):
-        solver = affect_student.init_solver()
+        solver = affect_student.init_solver(self.current_student_affectations)
         self.assertEqual(len(solver.students_by_registration_id), 2)
         self.assertEqual(len(solver.offers_by_organization_speciality), 3)
 
@@ -128,9 +130,9 @@ class TestAffectStudent(TestCase):
         self.assertFalse(offer.is_not_full())
 
     def test_solve(self):
-        solver = affect_student.init_solver()
+        solver = affect_student.init_solver(self.current_student_affectations)
         try:
-            assignments = affect_student.launch_solver(solver)
+            assignments, cost = affect_student.launch_solver(solver)
         except Exception:
             self.fail()
         self.assertEqual(len(assignments), 8)
@@ -146,7 +148,7 @@ class TestAffectStudent(TestCase):
                                                                                speciality=self.offer_1.speciality,
                                                                                choice=1, cost=0)
         affectation.save()
-        solver = affect_student.init_solver()
+        solver = affect_student.init_solver(self.current_student_affectations)
         internship_wrapper = solver.get_offer(self.offer_1.organization.id, self.offer_1.speciality.id)
         self.assertEqual(internship_wrapper.periods_places_left[self.period_places_1.period.name], 1)
 
