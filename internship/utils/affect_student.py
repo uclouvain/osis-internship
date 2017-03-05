@@ -196,8 +196,8 @@ class Solver:
         self.__assign_choices(self.students_priority_lefts_to_assign, NUMBER_INTERNSHIPS+1, NUMBER_INTERNSHIPS+2)
         self.__assign_choices(self.students_lefts_to_assign)
         self.__assign_choices(self.students_lefts_to_assign, NUMBER_INTERNSHIPS+1, NUMBER_INTERNSHIPS+2)
-        # self.__assign_unfulfilled_students()
-        # self.__assign_to_default_offer()
+        self.__assign_unfulfilled_students()
+        self.__assign_to_default_offer()
 
     def __assign_choices(self, students_lists, min_internship=1, max_internship=NUMBER_INTERNSHIPS+1):
         for preference in range(1, MAX_PREFERENCE + 1):
@@ -222,7 +222,7 @@ class Solver:
         if student_wrapper.has_internship_assigned(choice.internship_choice):
             return False
         internship_wrapper = self.get_offer(choice.organization.id, choice.speciality.id)
-        if not internship_wrapper:
+        if not internship_wrapper and self.permitted_speciality(student_wrapper, internship_wrapper):
             return False
         free_period_name = self.__get_valid_period(internship_wrapper, student_wrapper)
         if not free_period_name:
@@ -243,7 +243,7 @@ class Solver:
 
     def __assign_first_possible_offer_to_student(self, student_wrapper):
         for speciality_id, offers in self.offers_by_speciality.items():
-            for offer in filter(lambda possible_offer: possible_offer.is_not_full() is False, offers):
+            for offer in filter(lambda possible_offer: possible_offer.is_not_full(), offers):
                 if not self.permitted_speciality(student_wrapper, offer):
                     continue
                 free_period_name = self.__get_valid_period(offer, student_wrapper)
@@ -263,7 +263,7 @@ class Solver:
     def permitted_speciality(student_wrapper, offer):
         if student_wrapper.contest != "SS":
             return True
-        if offer.internship.speciality.acronym not in AUTHORIZED_PERIODS:
+        if offer.internship.speciality.acronym not in AUTHORIZED_SS_SPECIALITIES:
             return False
         return True
 
@@ -314,7 +314,7 @@ class InternshipWrapper:
 
     def reinitialize(self):
         self.periods_places_left = dict()
-        for period_name, period_places in self.periods_places:
+        for period_name, period_places in self.periods_places.items():
             self.periods_places_left[period_name] = period_places.number_places
 
 
@@ -392,7 +392,7 @@ class StudentWrapper:
 
     def get_internship_with_speciality_not_assigned(self):
         internships_with_speciality_not_assigned = \
-            filter(lambda intern, spec: self.has_internship_assigned(intern) is False,
+            filter(lambda intern_spec: self.has_internship_assigned(intern_spec[0]) is False,
                    self.specialities_by_internship.items())
         return next(internships_with_speciality_not_assigned, (self.choices[0].speciality, 0))
 
