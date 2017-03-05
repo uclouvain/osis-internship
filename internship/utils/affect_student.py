@@ -80,8 +80,7 @@ def _load_students_and_choices():
         student = choice.student
         student_wrapper = students_by_registration_id.get(student.registration_id, None)
         if not student_wrapper:
-            student_wrapper = StudentWrapper()
-            student_wrapper.set_student(student)
+            student_wrapper = StudentWrapper(student)
             students_by_registration_id[student.registration_id] = student_wrapper
             student_information = students_information_by_person_id.get(student.person.id, None)
             if student_information:
@@ -105,8 +104,7 @@ def _load_internship_and_places():
         key = (internship.organization.id, internship.speciality.id)
         internship_wrapper = offers_by_organization_speciality.get(key, None)
         if not internship_wrapper:
-            internship_wrapper = InternshipWrapper()
-            internship_wrapper.set_internship(internship)
+            internship_wrapper = InternshipWrapper(internship)
             offers_by_organization_speciality[key] = internship_wrapper
         internship_wrapper.set_period_places(period_places)
     return offers_by_organization_speciality
@@ -264,7 +262,7 @@ class Solver:
                 free_period_name = self.__get_valid_period(offer, student_wrapper)
                 if free_period_name:
                     period_places = offer.occupy(free_period_name)
-                    student_wrapper.assign(period_places, 0, 0)
+                    student_wrapper.assign(period_places.period, period_places.internship.organization, period_places.internship.speciality, 0, 0)
                     return True
         return False
 
@@ -282,17 +280,14 @@ class Solver:
     @staticmethod
     def __occupy_offer(free_period_name, internship_wrapper, student_wrapper, choice):
         period_places = internship_wrapper.occupy(free_period_name)
-        student_wrapper.assign(period_places, choice.internship_choice, choice.choice)
+        student_wrapper.assign(period_places.period, period_places.internship.organization, period_places.internship.speciality, choice.internship_choice, choice.choice)
 
 
 class InternshipWrapper:
-    def __init__(self):
-        self.internship = None
+    def __init__(self, internship):
+        self.internship = internship
         self.periods_places = dict()
         self.periods_places_left = dict()
-
-    def set_internship(self, internship):
-        self.internship = internship
 
     def set_period_places(self, period_places):
         period_name = period_places.period.name
@@ -318,8 +313,8 @@ class InternshipWrapper:
 
 
 class StudentWrapper:
-    def __init__(self):
-        self.student = None
+    def __init__(self, student):
+        self.student = student
         self.choices = []
         self.choices_by_preference = dict()
         self.assignments = dict()
@@ -327,36 +322,36 @@ class StudentWrapper:
         self.specialities_by_internship = dict()
         self.priority = False
         self.contest = "SS"
-
-    def set_student(self, student):
-        self.student = student
+        self.cost = 0
 
     def add_choice(self, choice):
         self.choices.append(choice)
+        self.__update_choices_by_preference(choice)
+        self.__update_specialities_by_internship(choice)
+        self.__update_priority(choice)
 
+    def __update_priority(self, choice):
+        if choice.priority:
+            self.priority = True
+
+    def __update_specialities_by_internship(self, choice):
+        self.specialities_by_internship[choice.internship_choice] = choice.speciality
+
+    def __update_choices_by_preference(self, choice):
         preference = choice.choice
         current_choices = self.choices_by_preference.get(preference, [])
         current_choices.append(choice)
         self.choices_by_preference[preference] = current_choices
 
-        self.specialities_by_internship[choice.internship_choice] = choice.speciality
-
-        if choice.priority:
-            self.priority = True
-
     def get_number_choices(self):
         return len(self.choices)
 
-    def assign(self, period_places, internship_choice, preference, cost=0):
-        period_name = period_places.period.name
+    def assign(self, period, organization, speciality, internship_choice, preference, cost=0):
+        period_name = period.name
         self.assignments[period_name] = \
             mdl_internship.internship_student_affectation_stat.\
-            InternshipStudentAffectationStat(period=period_places.period,
-                                             organization=period_places.internship.organization,
-                                             speciality=period_places.internship.speciality,
-                                             student=self.student,
-                                             choice=preference,
-                                             cost=cost)
+            InternshipStudentAffectationStat(period=period, organization=organization, speciality=speciality,
+                                             student=self.student, choice=preference, cost=cost)
         self.internship_assigned.append(internship_choice)
 
     def assign_specific(self, assignment):
@@ -391,15 +386,7 @@ class StudentWrapper:
                 if not self.has_internship_assigned(internship):
                     speciality = spec
                     break
-            self.assignments[period.name] = \
-                mdl_internship.internship_student_affectation_stat. \
-                InternshipStudentAffectationStat(period=period,
-                                                 organization=default_organization,
-                                                 speciality=speciality,
-                                                 student=self.student,
-                                                 choice=0,
-                                                 cost=cost)
-            self.internship_assigned.append(-1)
+            self.assign(period, default_organization, speciality, 0, cost)
 
 
 

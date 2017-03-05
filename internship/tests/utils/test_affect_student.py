@@ -118,8 +118,7 @@ class TestAffectStudent(TestCase):
             self.assertIn(free_period, actual_free_periods)
 
     def test_offer_places_left(self):
-        offer = affect_student.InternshipWrapper()
-        offer.set_internship(self.offer_1)
+        offer = affect_student.InternshipWrapper(self.offer_1)
         offer.set_period_places(self.period_places_1)
 
         for x in range(0, self.period_places_1.number_places):
