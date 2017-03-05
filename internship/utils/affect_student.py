@@ -35,16 +35,16 @@ AUTHORIZED_SS_SPECIALITIES = ["CH", "DE", "GE", "GO", "MI", "MP", "NA", "OP", "O
 
 
 def affect_student(times=1):
-    current_student_affectations = _load_current_students_affectations()
+    current_student_affectations = list(_load_current_students_affectations())
     solver = init_solver(current_student_affectations)
-    best_cost = sys.maxsize
-    best_assignments = []
-    for x in range(0, times):
+
+    best_assignments, best_cost = launch_solver(solver)
+    for x in range(1, times):
+        solver.reinitialize()
+        solver.update_places(current_student_affectations)
         assignments, cost = launch_solver(solver)
         if cost < best_cost:
             best_assignments = assignments
-        solver.update_places(current_student_affectations)
-        solver.reinitialize()
     save_assignments_to_db(best_assignments)
 
 
@@ -192,10 +192,12 @@ class Solver:
         return assignments, cost
 
     def solve(self):
-        self.__assign_choices(self.students_priority_lefts_to_assign)
-        self.__assign_choices(self.students_priority_lefts_to_assign, NUMBER_INTERNSHIPS+1, NUMBER_INTERNSHIPS+2)
-        self.__assign_choices(self.students_lefts_to_assign)
-        self.__assign_choices(self.students_lefts_to_assign, NUMBER_INTERNSHIPS+1, NUMBER_INTERNSHIPS+2)
+        self.students_priority_lefts_to_assign = self.__assign_choices(self.students_priority_lefts_to_assign)
+        self.students_priority_lefts_to_assign = self.__assign_choices(self.students_priority_lefts_to_assign,
+                                                                       NUMBER_INTERNSHIPS+1, NUMBER_INTERNSHIPS+2)
+        self.students_lefts_to_assign = self.__assign_choices(self.students_lefts_to_assign)
+        self.students_lefts_to_assign = self.__assign_choices(self.students_lefts_to_assign, NUMBER_INTERNSHIPS+1,
+                                                              NUMBER_INTERNSHIPS+2)
         self.__assign_unfulfilled_students()
         self.__assign_to_default_offer()
 
@@ -205,11 +207,12 @@ class Solver:
                 students_to_assign = []
                 random.shuffle(students_lists)
                 for student_wrapper in students_lists:
-                    self.__assign_student_choices(preference, student_wrapper, internship)
                     if not student_wrapper.has_all_internships_assigned():
+                        self.__assign_student_choices(preference, student_wrapper, internship)
                         students_to_assign.append(student_wrapper)
 
                 students_lists = students_to_assign
+        return students_lists
 
     def __assign_student_choices(self, preference, student_wrapper, internship):
         for choice in student_wrapper.get_choices_for_preference(preference):
@@ -236,8 +239,8 @@ class Solver:
             students_to_assign = []
             random.shuffle(self.students_lefts_to_assign)
             for student_wrapper in self.students_lefts_to_assign:
-                self.__assign_first_possible_offer_to_student(student_wrapper)
                 if not student_wrapper.has_all_internships_assigned():
+                    self.__assign_first_possible_offer_to_student(student_wrapper)
                     students_to_assign.append(student_wrapper)
             self.students_lefts_to_assign = students_to_assign
 
@@ -261,7 +264,7 @@ class Solver:
 
     @staticmethod
     def permitted_speciality(student_wrapper, offer):
-        if student_wrapper.contest != "SS":
+        if student_wrapper.contest != "SS" or student_wrapper.contest != "GENERALIST":
             return True
         if offer.internship.speciality.acronym not in AUTHORIZED_SS_SPECIALITIES:
             return False
