@@ -31,7 +31,6 @@ AUTHORIZED_PERIODS = ["P9", "P10", "P11", "P12"]
 NUMBER_INTERNSHIPS = len(AUTHORIZED_PERIODS)
 REFERENCE_DEFAULT_ORGANIZATION = 999
 
-# TODO priority students
 # TODO limit MEGE
 # TODO add costs
 def affect_student():
@@ -128,10 +127,19 @@ class Solver:
         self.offers_by_speciality = dict()
         self.periods = []
         self.default_organization = None
+        self.priority_students = []
+        self.normal_students = []
+        self.students_priority_lefts_to_assign = []
 
     def set_students(self, students):
         self.students_by_registration_id = students
-        self.students_lefts_to_assign = list(students.values())
+        for student_wrapper in students:
+            if student_wrapper.priority:
+                self.priority_students.append(student_wrapper)
+                self.students_priority_lefts_to_assign.append(student_wrapper)
+            else:
+                self.normal_students.append(student_wrapper)
+                self.students_lefts_to_assign.append(student_wrapper)
 
     def set_offers(self, offers):
         self.offers_by_organization_speciality = offers
@@ -173,6 +181,7 @@ class Solver:
         return assignments
 
     def solve(self):
+        self.__assign_priority_choices()
         self.__assign_choices()
         # self.__assign_unfulfilled_students()
         # self.__assign_to_default_offer()
@@ -187,6 +196,17 @@ class Solver:
                         students_to_assign.append(student_wrapper)
 
                 self.students_lefts_to_assign = students_to_assign
+
+    def __assign_priority_choices(self):
+        for preference in range(1, MAX_PREFERENCE + 1):
+            for internship in range(0, NUMBER_INTERNSHIPS):
+                students_to_assign = []
+                for student_wrapper in self.students_priority_lefts_to_assign:
+                    self.__assign_student_choices(preference, student_wrapper)
+                    if not student_wrapper.has_all_internships_assigned():
+                        students_to_assign.append(student_wrapper)
+
+                self.students_priority_lefts_to_assign = students_to_assign
 
     def __assign_student_choices(self, preference, student_wrapper):
         student_preference_choices = student_wrapper.get_choices_for_preference(preference)
@@ -283,6 +303,7 @@ class StudentWrapper:
         self.assignments = dict()
         self.internship_assigned = []
         self.specialities_by_internship = dict()
+        self.priority = False
 
     def set_student(self, student):
         self.student = student
@@ -296,6 +317,9 @@ class StudentWrapper:
         self.choices_by_preference[preference] = current_choices
 
         self.specialities_by_internship[choice.internship_choice] = choice.speciality
+
+        if choice.priority:
+            self.priority = True
 
     def get_number_choices(self):
         return len(self.choices)
@@ -315,6 +339,7 @@ class StudentWrapper:
     def assign_specific(self, assignment):
         period_name = assignment.period.name
         self.assignments[period_name] = assignment
+        self.internship_assigned.append(0)
 
     def has_internship_assigned(self, internship):
         return internship in self.internship_assigned
