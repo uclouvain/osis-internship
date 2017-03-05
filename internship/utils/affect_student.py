@@ -44,19 +44,11 @@ def affect_student():
 def init_solver():
     solver = Solver()
 
-    periods = _load_periods()
-    solver.set_periods(periods)
-
+    solver.set_periods(_load_periods())
     solver.default_organization = _load_default_organization()
-
-    students_by_registration_id = _load_students_and_choices()
-    solver.set_students(students_by_registration_id)
-
-    offers_by_organization_speciality = _load_internship_and_places()
-    solver.set_offers(offers_by_organization_speciality)
-
-    current_affecations = _load_current_students_affectations()
-    solver.update_places(current_affecations)
+    solver.set_students(_load_students_and_choices())
+    solver.set_offers(_load_internship_and_places())
+    solver.update_places(_load_current_students_affectations())
 
     return solver
 
@@ -142,9 +134,12 @@ class Solver:
         self.normal_students = []
         self.students_priority_lefts_to_assign = []
 
-    def set_students(self, students):
-        self.students_by_registration_id = students
-        for student_wrapper in students.values():
+    def set_students(self, student_wrappers):
+        self.students_by_registration_id = student_wrappers
+        self.__classify_students(student_wrappers)
+
+    def __classify_students(self, student_wrappers):
+        for student_wrapper in student_wrappers.values():
             if student_wrapper.priority:
                 self.priority_students.append(student_wrapper)
                 self.students_priority_lefts_to_assign.append(student_wrapper)
@@ -152,24 +147,9 @@ class Solver:
                 self.normal_students.append(student_wrapper)
                 self.students_lefts_to_assign.append(student_wrapper)
 
-    def set_offers(self, offers):
-        self.offers_by_organization_speciality = offers
-        self.__init_offers_by_speciality(offers)
-
-    def set_periods(self, periods):
-        self.periods = periods
-
-    def update_places(self, affectations):
-        for affectation in affectations:
-            organization = affectation.organization
-            speciality = affectation.speciality
-            student = affectation.student
-            offer = self.get_offer(organization.id, speciality.id)
-            student_wrapper = self.get_student(student.registration_id)
-            if not offer or not student_wrapper:
-                continue
-            offer.occupy(affectation.period.name)
-            student_wrapper.assign_specific(affectation)
+    def set_offers(self, internship_wrappers):
+        self.offers_by_organization_speciality = internship_wrappers
+        self.__init_offers_by_speciality(internship_wrappers)
 
     def __init_offers_by_speciality(self, offers):
         for offer in offers.values():
@@ -177,6 +157,18 @@ class Solver:
             current_offers_for_speciality = self.offers_by_speciality.get(speciality.id, [])
             current_offers_for_speciality.append(offer)
             self.offers_by_speciality[speciality.id] = current_offers_for_speciality
+
+    def set_periods(self, periods):
+        self.periods = periods
+
+    def update_places(self, student_affectations):
+        for affectation in student_affectations:
+            offer = self.get_offer(affectation.organization.id, affectation.speciality.id)
+            student_wrapper = self.get_student(affectation.student.registration_id)
+            if not offer or not student_wrapper:
+                continue
+            offer.occupy(affectation.period.name)
+            student_wrapper.assign_specific(affectation)
 
     def get_student(self, registration_id):
         return self.students_by_registration_id.get(registration_id, None)
@@ -237,14 +229,6 @@ class Solver:
         self.__occupy_offer(free_period_name, internship_wrapper, student_wrapper, choice)
         return True
 
-    @staticmethod
-    def __get_valid_period(internship_wrapper, student_wrapper):
-        free_periods_name = internship_wrapper.get_free_periods()
-        student_periods_possible = filter(lambda period: student_wrapper.has_period_assigned(period) is False,
-                                          free_periods_name)
-        free_period_name = next(student_periods_possible, None)
-        return free_period_name
-
     def __assign_unfulfilled_students(self):
         for internship in range(0, NUMBER_INTERNSHIPS):
             students_to_assign = []
@@ -265,6 +249,13 @@ class Solver:
                     student_wrapper.assign(period_places.period, period_places.internship.organization, period_places.internship.speciality, 0, 0)
                     return True
         return False
+
+    @staticmethod
+    def __get_valid_period(internship_wrapper, student_wrapper):
+        free_periods_name = internship_wrapper.get_free_periods()
+        student_periods_possible = filter(lambda period: student_wrapper.has_period_assigned(period) is False,
+                                          free_periods_name)
+        return next(student_periods_possible, None)
 
     @staticmethod
     def permitted_speciality(student_wrapper, offer):
