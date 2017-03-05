@@ -30,10 +30,11 @@ MAX_PREFERENCE = 4
 AUTHORIZED_PERIODS = ["P9", "P10", "P11", "P12"]
 NUMBER_INTERNSHIPS = len(AUTHORIZED_PERIODS)
 REFERENCE_DEFAULT_ORGANIZATION = 999
+AUTHORIZED_SS_SPECIALITIES = ["CH", "DE", "GE", "GO", "MI", "MP", "NA", "OP", "OR", "CO", "PE", "PS", "PA", "UR", "CU"]
 
-# TODO limit MEGE
 # TODO add costs
 # TODO randomize
+# TODO iteration
 def affect_student():
     solver = init_solver()
     assignments = launch_solver(solver)
@@ -72,6 +73,7 @@ def save_assignments_to_db(assignments):
 
 
 def _load_students_and_choices():
+    students_information_by_person_id = _load_student_information()
     students_by_registration_id = dict()
     student_choices = mdl_internship.internship_choice.get_non_mandatory_internship_choices()
     for choice in student_choices:
@@ -81,8 +83,18 @@ def _load_students_and_choices():
             student_wrapper = StudentWrapper()
             student_wrapper.set_student(student)
             students_by_registration_id[student.registration_id] = student_wrapper
+            student_information = students_information_by_person_id.get(student.person.id, None)
+            if student_information:
+                student_wrapper.contest = student_information.contest
         student_wrapper.add_choice(choice)
     return students_by_registration_id
+
+
+def _load_student_information():
+    students_information_by_person_id = dict()
+    for student_information in mdl_internship.internship_student_information.InternshipStudentInformation.objects.all():
+        students_information_by_person_id[student_information.person.id] = student_information
+    return students_information_by_person_id
 
 
 def _load_internship_and_places():
@@ -134,7 +146,7 @@ class Solver:
 
     def set_students(self, students):
         self.students_by_registration_id = students
-        for student_wrapper in students:
+        for student_wrapper in students.values():
             if student_wrapper.priority:
                 self.priority_students.append(student_wrapper)
                 self.students_priority_lefts_to_assign.append(student_wrapper)
@@ -247,12 +259,21 @@ class Solver:
     def __assign_first_possible_offer_to_student(self, student_wrapper):
         for speciality_id, offers in self.offers_by_speciality.items():
             for offer in filter(lambda possible_offer: possible_offer.is_not_full() is False, offers):
+                if not self.permitted_speciality(student_wrapper, offer):
+                    continue
                 free_period_name = self.__get_valid_period(offer, student_wrapper)
                 if free_period_name:
                     period_places = offer.occupy(free_period_name)
                     student_wrapper.assign(period_places, 0, 0)
                     return True
         return False
+
+    def permitted_speciality(self, student_wrapper, offer):
+        if student_wrapper.contest != "SS":
+            return True
+        if offer.internship.speciality.acronym not in AUTHORIZED_PERIODS:
+            return False
+        return True
 
     def __assign_to_default_offer(self):
         for student_wrapper in self.students_lefts_to_assign:
@@ -305,6 +326,7 @@ class StudentWrapper:
         self.internship_assigned = []
         self.specialities_by_internship = dict()
         self.priority = False
+        self.contest = "SS"
 
     def set_student(self, student):
         self.student = student

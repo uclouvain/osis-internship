@@ -149,8 +149,8 @@ class TestAffectStudent(TestCase):
         affectation.save()
         solver = affect_student.init_solver()
         internship_wrapper = solver.get_offer(self.offer_1.organization.id, self.offer_1.speciality.id)
-        self.assertEqual(internship_wrapper.periods_places_left[self.period_places_1.period.name], 9)
+        self.assertEqual(internship_wrapper.periods_places_left[self.period_places_1.period.name], 1)
 
         student_wrapper = solver.get_student(self.student_1.registration_id)
-        self.assertEqual(len(student_wrapper.internship_assigned()), 1)
+        self.assertEqual(len(student_wrapper.internship_assigned), 1)
 
