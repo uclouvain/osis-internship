@@ -33,6 +33,7 @@ REFERENCE_DEFAULT_ORGANIZATION = 999
 
 # TODO limit MEGE
 # TODO add costs
+# TODO randomize
 def affect_student():
     solver = init_solver()
     assignments = launch_solver(solver)

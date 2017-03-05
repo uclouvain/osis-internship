@@ -29,9 +29,9 @@ from internship.tests.models import test_organization, test_internship_specialit
 from base.tests.models import test_student
 
 
-def create_internship_choice(organization, student, speciality, internship_choice=0):
+def create_internship_choice(organization, student, speciality, internship_choice=0, choice=1):
     choice = mdl_internship_choice.InternshipChoice(organization=organization, student=student, speciality=speciality,
-                                                    choice=1, internship_choice=internship_choice, priority=False)
+                                                    choice=choice, internship_choice=internship_choice, priority=False)
     choice.save()
     return choice
 

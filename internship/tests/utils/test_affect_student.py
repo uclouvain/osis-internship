@@ -35,8 +35,6 @@ class TestAffectStudent(TestCase):
     def setUp(self):
         self.student_1 = test_student.create_student("Student1", "Last", "1")
         self.student_2 = test_student.create_student("Student2", "Last", "2")
-        self.student_3 = test_student.create_student("Student3", "Last", "3")
-        self.student_4 = test_student.create_student("Student4", "Last", "4")
 
         organization_1 = test_organization.create_organization(name="organization1", reference="01")
         organization_2 = test_organization.create_organization(name="organization2", reference="02")
@@ -47,28 +45,39 @@ class TestAffectStudent(TestCase):
         speciality_2 = test_internship_speciality.create_speciality(name="spec2")
         speciality_3 = test_internship_speciality.create_speciality(name="spec3")
 
-        choice_1 = test_internship_choice.create_internship_choice(organization_1, self.student_1, speciality_1,
-                                                                   internship_choice=1)
-        choice_2 = test_internship_choice.create_internship_choice(organization_1, self.student_1, speciality_2,
-                                                                   internship_choice=2)
-        choice_3 = test_internship_choice.create_internship_choice(organization_2, self.student_2, speciality_3,
-                                                                   internship_choice=1)
-        choice_4 = test_internship_choice.create_internship_choice(organization_3, self.student_2, speciality_2,
-                                                                   internship_choice=2)
-        choice_5 = test_internship_choice.create_internship_choice(organization_1, self.student_3, speciality_1,
-                                                                   internship_choice=1)
-        choice_6 = test_internship_choice.create_internship_choice(organization_2, self.student_4, speciality_1,
-                                                                   internship_choice=1)
-        choice_7 = test_internship_choice.create_internship_choice(organization_2, self.student_4, speciality_3,
-                                                                   internship_choice=2)
-        choice_8 = test_internship_choice.create_internship_choice(organization_3, self.student_4, speciality_2,
-                                                                   internship_choice=3)
+        test_internship_choice.create_internship_choice(organization_1, self.student_1, speciality_1,
+                                                        internship_choice=1)
+        test_internship_choice.create_internship_choice(organization_2, self.student_1, speciality_1,
+                                                        internship_choice=1, choice=2)
+        test_internship_choice.create_internship_choice(organization_1, self.student_1, speciality_2,
+                                                        internship_choice=2)
+        test_internship_choice.create_internship_choice(organization_2, self.student_1, speciality_1,
+                                                        internship_choice=3)
+        test_internship_choice.create_internship_choice(organization_1, self.student_1, speciality_1,
+                                                        internship_choice=4)
+        test_internship_choice.create_internship_choice(organization_1, self.student_1, speciality_2,
+                                                        internship_choice=5)
+        test_internship_choice.create_internship_choice(organization_1, self.student_1, speciality_2,
+                                                        internship_choice=6)
+
+        test_internship_choice.create_internship_choice(organization_1, self.student_2, speciality_1,
+                                                        internship_choice=1)
+        test_internship_choice.create_internship_choice(organization_2, self.student_2, speciality_1,
+                                                        internship_choice=1, choice=2)
+        test_internship_choice.create_internship_choice(organization_1, self.student_2, speciality_2,
+                                                        internship_choice=2)
+        test_internship_choice.create_internship_choice(organization_2, self.student_2, speciality_1,
+                                                        internship_choice=3)
+        test_internship_choice.create_internship_choice(organization_1, self.student_2, speciality_1,
+                                                        internship_choice=4)
+        test_internship_choice.create_internship_choice(organization_1, self.student_2, speciality_2,
+                                                        internship_choice=5)
+        test_internship_choice.create_internship_choice(organization_1, self.student_2, speciality_2,
+                                                        internship_choice=6)
 
         self.offer_1 = test_internship_offer.create_specific_internship_offer(organization_1, speciality_1)
         self.offer_2 = test_internship_offer.create_specific_internship_offer(organization_1, speciality_2)
         self.offer_3 = test_internship_offer.create_specific_internship_offer(organization_2, speciality_1)
-        self.offer_4 = test_internship_offer.create_specific_internship_offer(organization_2, speciality_3)
-        self.offer_5 = test_internship_offer.create_specific_internship_offer(organization_3, speciality_2)
 
         period_9 = test_period.create_period("P9")
         period_10 = test_period.create_period("P10")
@@ -76,29 +85,24 @@ class TestAffectStudent(TestCase):
         period_12 = test_period.create_period("P12")
 
         self.period_places_1 = test_period_internship_places.create_period_places(self.offer_1, period_9)
-        test_period_internship_places.create_period_places(self.offer_1, period_11)
-        test_period_internship_places.create_period_places(self.offer_2, period_10)
-        test_period_internship_places.create_period_places(self.offer_3, period_12)
-        test_period_internship_places.create_period_places(self.offer_4, period_9)
-        test_period_internship_places.create_period_places(self.offer_4, period_10)
-        test_period_internship_places.create_period_places(self.offer_5, period_11)
-        test_period_internship_places.create_period_places(self.offer_5, period_12)
+        test_period_internship_places.create_period_places(self.offer_1, period_9, 2)
+        test_period_internship_places.create_period_places(self.offer_1, period_11, 2)
+        test_period_internship_places.create_period_places(self.offer_2, period_10, 2)
+        test_period_internship_places.create_period_places(self.offer_2, period_12, 2)
+        test_period_internship_places.create_period_places(self.offer_3, period_9, 2)
+        test_period_internship_places.create_period_places(self.offer_3, period_11, 2)
 
     def test_init_solver(self):
         solver = affect_student.init_solver()
-        self.assertEqual(len(solver.students_by_registration_id), 4)
-        self.assertEqual(len(solver.offers_by_organization_speciality), 5)
+        self.assertEqual(len(solver.students_by_registration_id), 2)
+        self.assertEqual(len(solver.offers_by_organization_speciality), 3)
 
-        self.assert_number_choices(self.student_1, solver, 2)
-        self.assert_number_choices(self.student_2, solver, 2)
-        self.assert_number_choices(self.student_3, solver, 1)
-        self.assert_number_choices(self.student_4, solver, 3)
+        self.assert_number_choices(self.student_1, solver, 7)
+        self.assert_number_choices(self.student_2, solver, 7)
 
         self.assert_free_periods(self.offer_1, solver, ["P9", "P11"])
-        self.assert_free_periods(self.offer_2, solver, ["P10"])
-        self.assert_free_periods(self.offer_3, solver, ["P12"])
-        self.assert_free_periods(self.offer_4, solver, ["P9", "P10"])
-        self.assert_free_periods(self.offer_5, solver, ["P11", "P12"])
+        self.assert_free_periods(self.offer_2, solver, ["P10", "P12"])
+        self.assert_free_periods(self.offer_3, solver, ["P9", "P11"])
 
     def assert_number_choices(self, student, solver, number_choices):
         student_wrapper = solver.get_student(student.registration_id)
@@ -146,4 +150,7 @@ class TestAffectStudent(TestCase):
         solver = affect_student.init_solver()
         internship_wrapper = solver.get_offer(self.offer_1.organization.id, self.offer_1.speciality.id)
         self.assertEqual(internship_wrapper.periods_places_left[self.period_places_1.period.name], 9)
+
+        student_wrapper = solver.get_student(self.student_1.registration_id)
+        self.assertEqual(len(student_wrapper.internship_assigned()), 1)
 
