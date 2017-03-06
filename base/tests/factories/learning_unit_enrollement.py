@@ -27,10 +27,11 @@ import factory
 import factory.fuzzy
 import string
 import datetime
-import operator
-from base.enums import learning_unit_periodicity
 from django.conf import settings
 from django.utils import timezone
+from base.tests.factories.learning_unit_year import LearningUnitYearFactory
+from base.tests.factories.offer_enrollment import OfferEnrollmentFactory
+
 
 def _get_tzinfo():
     if settings.USE_TZ:
@@ -38,17 +39,13 @@ def _get_tzinfo():
     else:
         return None
 
-class LearningUnitFactory(factory.django.DjangoModelFactory):
+class LearningUnitEnrollement(factory.django.DjangoModelFactory):
     class Meta:
-        model = "base.LearningUnit"
+        model = "base.LearningUnitEnrollment"
 
     external_id = factory.fuzzy.FuzzyText(length=10, chars=string.digits)
     changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=_get_tzinfo()),
                                           datetime.datetime(2017, 3, 1, tzinfo=_get_tzinfo()))
-    acronym = factory.Sequence(lambda n: 'LU-%d' % n)
-    title = factory.Sequence(lambda n: 'Learning unit - %d' % n)
-    description =factory.LazyAttribute(lambda obj : 'Fake description of learning unit %s' % obj.acronym )
-    start_year = factory.fuzzy.FuzzyInteger(2000, timezone.now().year)
-    end_year = factory.LazyAttribute(lambda obj: factory.fuzzy.FuzzyInteger(obj.start_year + 1, obj.start_year + 9).fuzz())
-    periodicity = factory.Iterator(learning_unit_periodicity.PERIODICITY_TYPES, getter=operator.itemgetter(0))
-
+    date_enrollment = datetime.datetime.now()
+    learning_unit_year = factory.SubFactory(LearningUnitYearFactory)
+    offer_enrollment = factory.SubFactory(OfferEnrollmentFactory)
