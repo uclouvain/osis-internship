@@ -24,7 +24,9 @@
 #
 ##############################################################################
 from django.db import models
+import datetime
 from django.contrib import admin
+from django.db.models import Max
 from base.models import offer_year_calendar, academic_calendar
 from django.utils import timezone
 
@@ -80,3 +82,24 @@ def get_scores_encoding_calendars():
     academic_calendars_id = SessionExam.objects.values_list('offer_year_calendar__academic_calendar', flat=True)\
                                                             .distinct('offer_year_calendar__academic_calendar')
     return academic_calendar.find_by_ids(academic_calendars_id)
+
+def is_inside_score_encoding(date=datetime.datetime.now().date()):
+    is_inside = SessionExam.objects.exclude(offer_year_calendar__isnull=True,
+                                            offer_year_calendar__academic_calendar__isnull=True,
+                                            offer_year_calendar__academic_calendar__start_date__isnull=True,
+                                            offer_year_calendar__academic_calendar__end_date__isnull=True)\
+                                    .filter(offer_year_calendar__academic_calendar__start_date__lte=date,
+                                            offer_year_calendar__academic_calendar__end_date__gte=date) \
+                                    .distinct('offer_year_calendar__academic_calendar')\
+                                    .count()
+    return bool(is_inside)
+
+# Return the latest session exam finised [end_date <= ARGS] according to the date passed in args.
+def get_latest_session_exam(date=datetime.datetime.now().date()):
+    latest_session_exam = SessionExam.objects.exclude(offer_year_calendar__isnull=True,
+                                                     offer_year_calendar__academic_calendar__isnull=True,
+                                                     offer_year_calendar__academic_calendar__end_date__isnull=True)\
+                                              .filter(offer_year_calendar__academic_calendar__end_date__lte=date) \
+                                              .order_by('-offer_year_calendar__academic_calendar__end_date')\
+                                              .first()
+    return latest_session_exam

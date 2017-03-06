@@ -30,7 +30,7 @@ from internship import models as mdl_internship
 
 
 @login_required
-@permission_required('internship.can_access_internship', raise_exception=True)
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_home(request):
     """
         The function of the home page :

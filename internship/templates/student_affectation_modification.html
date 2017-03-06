@@ -37,7 +37,7 @@
 {% endblock %}
 {% block content %}
     <div class="page-header">
-        <h2>{{ information.student.person.last_name }} {{ information.student.person.first_name }}</h2>
+        <h2>{{ information.student.person.last_name }} {{ information.student.person.first_name }} ({{ information.contest }})</h2>
     </div>
 
     {% include "template_messages.html" %}
