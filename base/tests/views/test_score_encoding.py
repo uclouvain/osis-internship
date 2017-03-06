@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from datetime import datetime
 from unittest.mock import patch
 
 from django.contrib.auth.models import Permission
@@ -38,18 +39,20 @@ from base.tests.models.test_session_exam import create_session_exam
 from base.views import score_encoding
 from base.models.exam_enrollment import ExamEnrollment
 
+from base.tests.factories.academic_year import AcademicYearFactory
+from base.tests.factories.program_manager import ProgramManagerFactory
+from base.tests.factories.learning_unit_year import LearningUnitYearFactory
 
 class OnlineEncodingTest(TestCase):
     def setUp(self):
-        academic_year = test_academic_year.create_academic_year()
+        academic_year = AcademicYearFactory(year=datetime.now().year)
+        self.learning_unit_year = LearningUnitYearFactory(acronym="LMEM2110",
+                                                          title="Recent Continental Philosophy",
+                                                          academic_year=academic_year)
 
         self.offer_year_1 = test_offer_year.create_offer_year("SINF2MA", "Master en Sciences Informatique",
                                                               academic_year)
         self.offer_year_2 = test_offer_year.create_offer_year("DROI1BA", "Bachelier en droit", academic_year)
-
-        self.learning_unit_year = test_learning_unit_year.create_learning_unit_year("LMEM2110",
-                                                                                    "Recent Continental Philosophy",
-                                                                                    academic_year)
 
         self.exam_enrollment_1 = test_exam_enrollment.create_exam_enrollment_with_student(1, "64641200", self.offer_year_1, self.learning_unit_year,
                                                                      academic_year)
@@ -60,10 +63,10 @@ class OnlineEncodingTest(TestCase):
         test_attribution.create_attribution(tutor=self.tutor, learning_unit_year=self.learning_unit_year)
         add_permission(self.tutor.person.user, "can_access_scoreencoding")
 
-        self.program_manager_1 = create_program_manager_with_user(1, self.offer_year_1)
+        self.program_manager_1 = ProgramManagerFactory(offer_year=self.offer_year_1)
         add_permission(self.program_manager_1.person.user, "can_access_scoreencoding")
 
-        self.program_manager_2 = create_program_manager_with_user(2, self.offer_year_2)
+        self.program_manager_2 = ProgramManagerFactory(offer_year=self.offer_year_2)
         add_permission(self.program_manager_2.person.user, "can_access_scoreencoding")
 
         self.Client = Client()
