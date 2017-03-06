@@ -56,7 +56,6 @@ class AcademicCalendarTest(TestCase):
                                                              title="A calendar event",
                                                              start_date=start_date,
                                                              end_date=end_date)
-        an_academic_calendar.save()
         self.assertRaises(FunctionAgrumentMissingException, an_academic_calendar.save)
 
     def test_start_date_higher_than_end_date(self):
@@ -67,7 +66,6 @@ class AcademicCalendarTest(TestCase):
                                                              title="A calendar event",
                                                              start_date=wrong_start_date,
                                                              end_date=wrong_end_date)
-        an_academic_calendar.save()
         self.assertRaises(StartDateHigherThanEndDateException, an_academic_calendar.save, functions=[])
 
     def test_start_date_equal_to_end_date(self):
@@ -78,11 +76,12 @@ class AcademicCalendarTest(TestCase):
                                                              title="A calendar event",
                                                              start_date=wrong_start_date,
                                                              end_date=wrong_end_date)
-        an_academic_calendar.save()
         self.assertRaises(StartDateHigherThanEndDateException, an_academic_calendar.save, functions=[])
 
     def test_find_by_id(self):
-        tmp_academic_calendar = AcademicCalendarFactory()
+        an_academic_year = AcademicYearFactory()
+        tmp_academic_calendar = AcademicCalendarFactory.build(academic_year=an_academic_year)
+        tmp_academic_calendar.save(functions=[])
         db_academic_calendar = academic_calendar.find_by_id(tmp_academic_calendar.id)
         self.assertIsNotNone(db_academic_calendar)
         self.assertEqual(db_academic_calendar, tmp_academic_calendar)
