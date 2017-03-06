@@ -83,8 +83,17 @@ class StudentTest(TestCase):
         tmp_student = StudentFactory()
         tmp_offer_year = OfferYearFactory()
         tmp_offer_enrollment = OfferEnrollmentFactory.create(offer_year=tmp_offer_year, student=tmp_student)
-        db_student = student.find_by_offer([tmp_offer_year.offer.id])
-        self.assertQuerysetEqual(db_student, [tmp_student], transform=lambda x: x)
+        db_student = list(student.find_by_offer([tmp_offer_year.offer]))[0]
+        self.assertIsNotNone(db_student)
+        self.assertEqual(db_student, tmp_student)
+
+    def test_find_by_offer_year(self):
+        tmp_student = StudentFactory()
+        tmp_offer_year = OfferYearFactory()
+        tmp_offer_enrollment = OfferEnrollmentFactory.create(offer_year=tmp_offer_year, student=tmp_student)
+        db_student = list(student.find_by_offer_year([tmp_offer_year][0]))[0]
+        self.assertIsNotNone(db_student)
+        self.assertEqual(db_student, tmp_student)
 
     def test_find_by_person(self):
         tmp_student = StudentFactory()
