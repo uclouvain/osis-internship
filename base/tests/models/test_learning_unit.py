@@ -23,11 +23,35 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.test import TestCase
 from base.models import learning_unit
-
+from base.tests.factories.learning_unit import LearningUnitFactory
 
 def create_learning_unit(acronym, title):
-    a_learning_unit = learning_unit.LearningUnit(acronym=acronym, title=title,
-                                                 start_year=2010)
-    a_learning_unit.save()
-    return a_learning_unit
+    return LearningUnitFactory(acronym=acronym, title=title, start_year=2010)
+
+class LearningUnitTest(TestCase):
+
+    def test_create_learning_unit_with_start_year_higher_than_end_year(self):
+        l_unit = LearningUnitFactory.build(start_year=2000, end_year=1999)
+        with self.assertRaises(AttributeError):
+            l_unit.save()
+
+    def test_find_by_id(self):
+        l_unit_1 = LearningUnitFactory()
+        LearningUnitFactory()
+        LearningUnitFactory()
+        self.assertEqual(l_unit_1, learning_unit.find_by_id(l_unit_1.id))
+
+    def test_find_by_ids(self):
+        l_unit_1 = LearningUnitFactory()
+        l_unit_2 = LearningUnitFactory()
+        LearningUnitFactory()
+        LearningUnitFactory()
+        self.assertEqual(2, len( learning_unit.find_by_ids( (l_unit_1.id, l_unit_2.id) )))
+
+    def test_search_by_acronym(self):
+        LearningUnitFactory(acronym="LT49786")
+        LearningUnitFactory()
+        LearningUnitFactory()
+        self.assertEqual(1, len(learning_unit.search(acronym="LT49786")))
