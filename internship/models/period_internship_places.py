@@ -39,6 +39,9 @@ class PeriodInternshipPlaces(SerializableModel):
     internship = models.ForeignKey('internship.InternshipOffer')
     number_places = models.IntegerField(blank=None, null=False)
 
+    def __str__(self):
+        return u"%s" % self.period
+
 
 def search(**kwargs):
     kwargs = {k: v for k, v in kwargs.items() if v}
