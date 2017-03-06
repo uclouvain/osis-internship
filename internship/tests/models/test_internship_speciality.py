@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,30 +23,32 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib import admin
-from django.db import models
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+from internship.models import internship_speciality as mdl_internship_speciality
+from base.tests.models import test_learning_unit
+from django.test.testcases import TestCase
 
 
-class PeriodInternshipPlacesAdmin(SerializableModelAdmin):
-    list_display = ('period', 'internship', 'number_places')
-    fieldsets = ((None, {'fields': ('period', 'internship', 'number_places')}),)
-    raw_id_fields = ('period', 'internship')
+def create_speciality(name="chirurgie"):
+    learning_unit = test_learning_unit.create_learning_unit(title="stage medecine", acronym= "WSD")
+    speciality = mdl_internship_speciality.InternshipSpeciality(learning_unit=learning_unit, name=name)
+    speciality.save()
+    return speciality
 
 
-class PeriodInternshipPlaces(SerializableModel):
-    period = models.ForeignKey('internship.Period')
-    internship = models.ForeignKey('internship.InternshipOffer')
-    number_places = models.IntegerField(blank=None, null=False)
+class TestGetById(TestCase):
+    def setUp(self):
+        self.speciality_1 = create_speciality(name="spe1")
+        self.speciality_2 = create_speciality(name="spe2")
 
-    def __str__(self):
-        return u"%s" % self.period
-
-
-def search(**kwargs):
-    kwargs = {k: v for k, v in kwargs.items() if v}
-    return PeriodInternshipPlaces.objects.filter(**kwargs).select_related("period", "internship")
+    def test_correct_id(self):
+        self.assertEqual(self.speciality_1,
+                         mdl_internship_speciality.find_by_id(self.speciality_1.id))
+        self.assertEqual(self.speciality_2,
+                         mdl_internship_speciality.find_by_id(self.speciality_2.id))
 
 
-def find_by_id(id):
-    return PeriodInternshipPlaces.objects.get(pk=id)
+
+
+
+
+

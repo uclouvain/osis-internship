@@ -4,7 +4,7 @@ OSIS stands for **Open Student Information System**. It's an application
 designed to manage the core business of higher education institutions, such as universities, faculties, institutes and professional schools. The core business
 involves the administration of students, teachers, courses, programs and so on.
 
-[![Join the chat at https://gitter.im/uclouvain/OSIS-Louvain](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/uclouvain/OSIS-Louvain?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/uclouvain/OSIS-Louvain](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/uclouvain/OSIS-Louvain?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Build Status](https://travis-ci.org/uclouvain/osis.svg?branch=dev)](https://travis-ci.org/uclouvain/osis)
 
 ## Documentation
 

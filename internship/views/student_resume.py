@@ -110,8 +110,9 @@ def internships_student_resume(request):
 
 
 @login_required
-@permission_required('internship.can_access_internship', raise_exception=True)
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_read(request, registration_id):
+    NUMBER_NON_MANDATORY_INTERNSHIPS = 6
     student_to_read = mdl.student.find_by_registration_id(registration_id)
     if not request.user.has_perm('internship.is_internship_manager'):
         person_who_read = mdl.person.find_by_user(request.user)
@@ -121,10 +122,12 @@ def internships_student_read(request, registration_id):
     if not student_to_read:
         return render(request, "student_resume.html", {'errors': ['student_not_exists']})
     information = mdl_internship.internship_student_information.search(person = student_to_read.person)
-    internship_choice = mdl_internship.internship_choice.find_by_student(student_to_read)
+    internship_choice = mdl_internship.internship_choice.find_by_student(student_to_read).\
+        order_by('internship_choice', 'choice')
     all_speciality = mdl_internship.internship_speciality.search(mandatory=True)
 
-    affectations = mdl_internship.internship_student_affectation_stat.search(student=student_to_read).order_by("period__date_start")
+    affectations = mdl_internship.internship_student_affectation_stat.search(student=student_to_read).\
+        order_by("period__date_start")
     periods = mdl_internship.period.search().order_by("date_start")
     organizations = mdl_internship.organization.search()
     set_organization_address(organizations)
@@ -156,6 +159,7 @@ def internships_student_read(request, registration_id):
                             'selectable': selectable,
                             'affectations': affectations,
                             'periods': periods,
+                            'number_internships': range(1, NUMBER_NON_MANDATORY_INTERNSHIPS+1)
                             })
 
 
@@ -163,11 +167,11 @@ def internships_student_read(request, registration_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_student_information_modification(request, registration_id):
     student = mdl.student.find_by(registration_id=registration_id)
-    information = mdl_internship.internship_student_information.search(person = student[0].person)
+    information = mdl_internship.internship_student_information.find_by_person(person=student[0].person)
     student = student[0]
     return render(request, "student_information_modification.html",
                            {'student': student,
-                            'information': information[0], })
+                            'information': information})
 
 
 @login_required

@@ -24,17 +24,17 @@
 #
 ##############################################################################
 from django.db import models
-from django.contrib import admin
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
-class InternshipChoiceAdmin(admin.ModelAdmin):
+class InternshipChoiceAdmin(SerializableModelAdmin):
     list_display = ('student', 'organization', 'speciality', 'choice', 'internship_choice', 'priority')
     fieldsets = ((None, {'fields': ('student', 'organization', 'speciality', 'choice', 'internship_choice',
                                     'priority')}),)
     raw_id_fields = ('student', 'organization', 'speciality')
 
 
-class InternshipChoice(models.Model):
+class InternshipChoice(SerializableModel):
     student = models.ForeignKey('base.Student')
     organization = models.ForeignKey('internship.Organization')
     speciality = models.ForeignKey('internship.InternshipSpeciality', null=True)
@@ -42,6 +42,8 @@ class InternshipChoice(models.Model):
     internship_choice = models.IntegerField(default=0)
     priority = models.BooleanField()
 
+    def __str__(self):
+        return u"%s - %s : %s" % (self.organization.acronym, self.speciality.acronym, self.choice)
 
 def find_by_all_student():
     return InternshipChoice.objects.all().distinct('student').select_related("student", "organization", "speciality")
@@ -72,3 +74,21 @@ def search_other_choices(**kwargs):
                                        .select_related("student", "organization", "speciality")\
                                        .order_by('choice')
     return queryset.exclude(choice=1)
+
+
+def search_by_student_or_choice(student=None, internship_choice=None):
+    has_criteria = False
+    queryset = InternshipChoice.objects
+
+    if student:
+        queryset = queryset.filter(student=student)
+        has_criteria = True
+
+    if internship_choice is not None:
+        queryset = queryset.filter(internship_choice=internship_choice)
+        has_criteria = True
+
+    if has_criteria:
+        return queryset
+    else:
+        return None

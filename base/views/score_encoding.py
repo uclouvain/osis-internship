@@ -50,42 +50,15 @@ queue_exception_logger = logging.getLogger(settings.QUEUE_EXCEPTION_LOGGER)
 
 
 def _is_inside_scores_encodings_period(user):
-    """
-    :return: True if the today date is inside a period of scores encodings (inside session 1,2 or 3). Else return False.
-    """
-    now = datetime.datetime.now().date()
-    academic_calendars = list(mdl.session_exam.get_scores_encoding_calendars())
-    for ac_calendar in academic_calendars:
-        if ac_calendar.start_date and ac_calendar.end_date:
-            if ac_calendar.start_date <= now <= ac_calendar.end_date:
-                return True
-    return False
-
-
-def find_closest_past_date(dates):
-    """
-    Find and return the closest date to the date now in the 'dates' list.
-    :param dates: List of dates in which we'll find the closest date to now.
-    """
-    now = datetime.datetime.now().date()
-    past_dates = [date for date in dates if date and date < now]
-    smallest_delta = None  # delta = Number of days between a past date and now
-    closest_date = None
-    for date in past_dates:
-        delta = now - date
-        if smallest_delta is None or delta.days < smallest_delta.days:
-            closest_date = date
-    return closest_date
-
+    return mdl.session_exam.is_inside_score_encoding()
 
 @login_required
 @permission_required('base.can_access_scoreencoding', raise_exception=True)
 def outside_period(request):
-    academic_calendars = list(mdl.session_exam.get_scores_encoding_calendars())
+    latest_session_exam = mdl.session_exam.get_latest_session_exam()
     closest_date = None
-    if academic_calendars:
-        # Searching for the latest period of scores encodings
-        closest_date = find_closest_past_date([ac_calendar.end_date for ac_calendar in academic_calendars])
+    if latest_session_exam:
+        closest_date = latest_session_exam.offer_year_calendar.academic_calendar.end_date
     str_date = closest_date.strftime('%d/%m/%Y') if closest_date else ''
     text = trans('outside_scores_encodings_period') % str_date
     messages.add_message(request, messages.WARNING, "%s" % text)
@@ -390,8 +363,7 @@ def notes_printing(request, learning_unit_year_id=None, tutor_id=None, offer_id=
                                              offer_year_id=offer_id,
                                              is_program_manager=is_program_manager)
     tutor = mdl.tutor.find_by_user(request.user) if not is_program_manager else None
-    return paper_sheet.build_response(mdl.exam_enrollment.scores_sheet_data(exam_enrollments, tutor=tutor))
-
+    return paper_sheet.print_notes(exam_enrollments, tutor=tutor)
 
 @login_required
 @permission_required('base.can_access_scoreencoding', raise_exception=True)

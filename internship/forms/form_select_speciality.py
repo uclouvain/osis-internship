@@ -23,30 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib import admin
-from django.db import models
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+
+from django import forms
+from internship.models.internship_speciality import InternshipSpeciality
 
 
-class PeriodInternshipPlacesAdmin(SerializableModelAdmin):
-    list_display = ('period', 'internship', 'number_places')
-    fieldsets = ((None, {'fields': ('period', 'internship', 'number_places')}),)
-    raw_id_fields = ('period', 'internship')
-
-
-class PeriodInternshipPlaces(SerializableModel):
-    period = models.ForeignKey('internship.Period')
-    internship = models.ForeignKey('internship.InternshipOffer')
-    number_places = models.IntegerField(blank=None, null=False)
-
-    def __str__(self):
-        return u"%s" % self.period
-
-
-def search(**kwargs):
-    kwargs = {k: v for k, v in kwargs.items() if v}
-    return PeriodInternshipPlaces.objects.filter(**kwargs).select_related("period", "internship")
-
-
-def find_by_id(id):
-    return PeriodInternshipPlaces.objects.get(pk=id)
+class SpecialityForm(forms.Form):
+    speciality = forms.ModelChoiceField(queryset=InternshipSpeciality.objects.all(), empty_label=None)
