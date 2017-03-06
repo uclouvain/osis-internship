@@ -22,7 +22,6 @@ ratings:
 exclude_paths:
   - "base/migrations/**/*"
   - "attribution/migrations/**/*"
-  - "admission/migrations/**/*"
   - "internship/migrations/**/*"
   - "dissertation/migrations/**/*"
   - "reference/migrations/**/*"
@@ -32,7 +31,6 @@ exclude_paths:
   - "!base/static/js/osis.js"
   - "!base/static/css/osis.css"
   - "base/tests/**/*"
-  - "admission/tests/**/*"
   - "attribution/tests/**/*"
   - "dissertation/tests/**/*"
   - "internship/tests/**/*"

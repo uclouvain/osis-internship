@@ -1247,9 +1247,6 @@ msgid "xls_columns_structure_error"
 msgstr "Votre fichier excel n'est pas bien structuré. Veuillez respecter l'ordre des colonnes fournie lors du "
        "téléchargement de votre fichier (bouton '{}')."
 
-msgid "admission_form"
-msgstr "Formulaire d'admission"
-
 msgid "order"
 msgstr "Ordonner"
 

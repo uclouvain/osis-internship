@@ -1256,9 +1256,6 @@ msgstr "Your excel file isn't well structured. Please follow the structure of th
 msgid "you_manage"
 msgstr "You manage"
 
-msgid "admission_form"
-msgstr "Admission form"
-
 msgid "order"
 msgstr "Order"
 
