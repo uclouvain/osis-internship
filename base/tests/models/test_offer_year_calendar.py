@@ -28,30 +28,20 @@ from django.test import TestCase
 from base.models import academic_year, offer_year_calendar, academic_calendar, offer_year
 from base.tests.models import test_academic_calendar
 
+from base.tests.factories.offer_year_calendar import OfferYearCalendarFactory
 
 start_date = datetime.datetime.now()
 end_date = start_date.replace(year=start_date.year + 1)
 
 
 def create_offer_year_calendar(offer_year, academic_year):
-    start_date = datetime.date(2000, 1, 1)
-    end_date = datetime.date(2099, 1, 1)
-    an_offer_year_calendar = \
-        offer_year_calendar.OfferYearCalendar(offer_year=offer_year,
-                                              academic_calendar=test_academic_calendar.create_academic_calendar(
-                                                  academic_year),
-                                              start_date=start_date,
-                                              end_date=end_date
-                                              )
-    an_offer_year_calendar.save()
-    return an_offer_year_calendar
-
+    academic_calendar = test_academic_calendar.create_academic_calendar(academic_year)
+    return OfferYearCalendarFactory(offer_year=offer_year, academic_calendar=academic_calendar)
 
 def _create_current_academic_year():
     academic_yr = academic_year.AcademicYear(year=start_date.year, start_date=start_date, end_date=end_date)
     academic_yr.save()
     return academic_yr
-
 
 def _create_academic_calendar_with_offer_year_calendars():
     academic_yr = _create_current_academic_year()
