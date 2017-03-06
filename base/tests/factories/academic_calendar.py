@@ -50,4 +50,7 @@ class AcademicCalendarFactory(factory.DjangoModelFactory):
     title = factory.Sequence(lambda n: 'Academic Calendar - %d' % n)
     start_date = factory.LazyAttribute(lambda obj: datetime.date(timezone.now().year, 1, 1))
     end_date = factory.LazyAttribute(lambda obj: datetime.date(timezone.now().year+1, 12, 30))
+    highlight_title = factory.Sequence(lambda n: 'Highlight - %d' % n)
+    highlight_description = factory.Sequence(lambda n: 'Description - %d' % n)
+    highlight_shortcut = factory.Sequence(lambda n: 'Shortcut Highlight - %d' % n)
 

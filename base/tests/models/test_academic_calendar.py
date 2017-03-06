@@ -25,7 +25,6 @@
 ##############################################################################
 import datetime
 from django.test import TestCase
-from base.models import academic_year
 from base.models import academic_calendar
 from base.models.exceptions import FunctionAgrumentMissingException, StartDateHigherThanEndDateException
 from base.tests.factories.academic_calendar import AcademicCalendarFactory
@@ -35,13 +34,7 @@ start_date = datetime.datetime.now()
 end_date = start_date.replace(year=start_date.year + 1)
 
 
-def create_academic_year():
-    academic_yr = academic_year.AcademicYear(year=start_date.year, start_date=start_date, end_date=end_date)
-    academic_yr.save()
-    return academic_yr
-
-
-def create_academic_calendar(an_academic_year, start_date=datetime.date(2000, 1, 1), end_date= datetime.date(2099, 1, 1)):
+def create_academic_calendar(an_academic_year, start_date=datetime.date(2000, 1, 1), end_date=datetime.date(2099, 1, 1)):
     an_academic_calendar = academic_calendar.AcademicCalendar(academic_year=an_academic_year, start_date=start_date,
                                                               end_date=end_date)
     an_academic_calendar.save(functions=[])
@@ -83,5 +76,36 @@ class AcademicCalendarTest(TestCase):
         tmp_academic_calendar = AcademicCalendarFactory.build(academic_year=an_academic_year)
         tmp_academic_calendar.save(functions=[])
         db_academic_calendar = academic_calendar.find_by_id(tmp_academic_calendar.id)
+        self.assertIsNotNone(db_academic_calendar)
+        self.assertEqual(db_academic_calendar, tmp_academic_calendar)
+
+    def test_find_highlight_academic_calendar(self):
+        an_academic_year = AcademicYearFactory()
+        wrong_end_date = datetime.datetime.now()
+        wrong_start_date = wrong_end_date.replace(year=datetime.datetime.now().year + 1)
+        tmp_academic_calendar = AcademicCalendarFactory.build(academic_year=an_academic_year,
+                                                              title="A calendar event",
+                                                              start_date=wrong_end_date,
+                                                              end_date=wrong_start_date)
+        tmp_academic_calendar.save(functions=[])
+        db_academic_calendar = academic_calendar.find_highlight_academic_calendar()
+        self.assertIsNotNone(db_academic_calendar)
+        self.assertEqual(db_academic_calendar, tmp_academic_calendar)
+
+    def test_find_academic_calendar_by_academic_year(self):
+        tmp_academic_year = AcademicYearFactory()
+        tmp_academic_calendar = AcademicCalendarFactory.build(academic_year=tmp_academic_year)
+        tmp_academic_calendar.save(functions=[])
+        db_academic_calendar = list(academic_calendar.find_academic_calendar_by_academic_year
+                                    ([tmp_academic_year][0]))[0]
+        self.assertIsNotNone(db_academic_calendar)
+        self.assertEqual(db_academic_calendar, tmp_academic_calendar)
+
+    def test_find_academic_calendar_by_academic_year_with_dates(self):
+        tmp_academic_year = AcademicYearFactory()
+        tmp_academic_calendar = AcademicCalendarFactory.build(academic_year=tmp_academic_year)
+        tmp_academic_calendar.save(functions=[])
+        db_academic_calendar = list(academic_calendar.find_academic_calendar_by_academic_year_with_dates
+                                    ([tmp_academic_year][0]))[0]
         self.assertIsNotNone(db_academic_calendar)
         self.assertEqual(db_academic_calendar, tmp_academic_calendar)
