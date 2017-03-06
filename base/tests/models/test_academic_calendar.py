@@ -28,6 +28,8 @@ from django.test import TestCase
 from base.models import academic_year
 from base.models import academic_calendar
 from base.models.exceptions import FunctionAgrumentMissingException, StartDateHigherThanEndDateException
+from base.tests.factories.academic_calendar import AcademicCalendarFactory
+from base.tests.factories.academic_year import AcademicYearFactory
 
 start_date = datetime.datetime.now()
 end_date = start_date.replace(year=start_date.year + 1)
@@ -48,33 +50,39 @@ def create_academic_calendar(an_academic_year, start_date=datetime.date(2000, 1,
 
 class AcademicCalendarTest(TestCase):
 
-    def setUp(self):
-        self.academic_year = create_academic_year()
-
     def test_save_without_functions_args(self):
-        academic_cal = academic_calendar.AcademicCalendar(academic_year=self.academic_year,
-                                                          title="A calendar event",
-                                                          start_date=start_date,
-                                                          end_date=end_date)
-        self.assertRaises(FunctionAgrumentMissingException, academic_cal.save)
+        an_academic_year = AcademicYearFactory()
+        an_academic_calendar = AcademicCalendarFactory.build(academic_year=an_academic_year,
+                                                             title="A calendar event",
+                                                             start_date=start_date,
+                                                             end_date=end_date)
+        an_academic_calendar.save()
+        self.assertRaises(FunctionAgrumentMissingException, an_academic_calendar.save)
 
     def test_start_date_higher_than_end_date(self):
+        an_academic_year = AcademicYearFactory()
         wrong_end_date = datetime.datetime.now()
-        wrong_start_date = wrong_end_date.replace(year=start_date.year + 1)
-        academic_cal = academic_calendar.AcademicCalendar(academic_year=self.academic_year,
-                                                          title="A calendar event",
-                                                          start_date=wrong_start_date,
-                                                          end_date=wrong_end_date)
-        self.assertRaises(StartDateHigherThanEndDateException, academic_cal.save, functions=[])
+        wrong_start_date = wrong_end_date.replace(year=datetime.datetime.now().year + 1)
+        an_academic_calendar = AcademicCalendarFactory.build(academic_year=an_academic_year,
+                                                             title="A calendar event",
+                                                             start_date=wrong_start_date,
+                                                             end_date=wrong_end_date)
+        an_academic_calendar.save()
+        self.assertRaises(StartDateHigherThanEndDateException, an_academic_calendar.save, functions=[])
 
     def test_start_date_equal_to_end_date(self):
+        an_academic_year = AcademicYearFactory()
         wrong_end_date = datetime.datetime.now()
         wrong_start_date = wrong_end_date
-        academic_cal = academic_calendar.AcademicCalendar(academic_year=self.academic_year,
-                                                          title="A calendar event",
-                                                          start_date=wrong_start_date,
-                                                          end_date=wrong_end_date)
-        self.assertRaises(StartDateHigherThanEndDateException, academic_cal.save, functions=[])
+        an_academic_calendar = AcademicCalendarFactory.build(academic_year=an_academic_year,
+                                                             title="A calendar event",
+                                                             start_date=wrong_start_date,
+                                                             end_date=wrong_end_date)
+        an_academic_calendar.save()
+        self.assertRaises(StartDateHigherThanEndDateException, an_academic_calendar.save, functions=[])
 
     def test_find_by_id(self):
-        self.assertEqual(academic_calendar.find_by_id(333), None)
+        tmp_academic_calendar = AcademicCalendarFactory()
+        db_academic_calendar = academic_calendar.find_by_id(tmp_academic_calendar.id)
+        self.assertIsNotNone(db_academic_calendar)
+        self.assertEqual(db_academic_calendar, tmp_academic_calendar)
