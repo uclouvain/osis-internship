@@ -26,6 +26,7 @@
 from django.db import models
 from internship.models.internship_choice import InternshipChoice
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class InternshipOfferAdmin(SerializableModelAdmin):
@@ -83,3 +84,15 @@ def find_intership_by_id(id):
     for i in internship:
         if int(i.id) == int(id):
             return i
+
+
+def find_by_speciality(speciality):
+    return InternshipOffer.objects.filter(speciality=speciality)
+
+
+def find_by_pk(a_pk):
+    try:
+        return InternshipOffer.objects.get(pk=a_pk)
+    except ObjectDoesNotExist:
+        return None
+
