@@ -28,7 +28,6 @@ from base.models import student
 from base.tests.models import test_person
 from base.tests.factories.person import PersonFactory
 from base.tests.factories.student import StudentFactory
-from base.tests.factories.offer import OfferFactory
 from base.tests.factories.offer_year import OfferYearFactory
 from base.tests.factories.offer_enrollment import OfferEnrollmentFactory
 
@@ -82,7 +81,7 @@ class StudentTest(TestCase):
     def test_find_by_offer(self):
         tmp_student = StudentFactory()
         tmp_offer_year = OfferYearFactory()
-        tmp_offer_enrollment = OfferEnrollmentFactory.create(offer_year=tmp_offer_year, student=tmp_student)
+        OfferEnrollmentFactory.create(offer_year=tmp_offer_year, student=tmp_student)
         db_student = list(student.find_by_offer([tmp_offer_year.offer]))[0]
         self.assertIsNotNone(db_student)
         self.assertEqual(db_student, tmp_student)
@@ -90,7 +89,7 @@ class StudentTest(TestCase):
     def test_find_by_offer_year(self):
         tmp_student = StudentFactory()
         tmp_offer_year = OfferYearFactory()
-        tmp_offer_enrollment = OfferEnrollmentFactory.create(offer_year=tmp_offer_year, student=tmp_student)
+        OfferEnrollmentFactory.create(offer_year=tmp_offer_year, student=tmp_student)
         db_student = list(student.find_by_offer_year([tmp_offer_year][0]))[0]
         self.assertIsNotNone(db_student)
         self.assertEqual(db_student, tmp_student)
