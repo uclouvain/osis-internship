@@ -31,17 +31,19 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import TestCase, Client, RequestFactory
 
-from base.tests.models import test_person, test_exam_enrollment, test_academic_year, test_offer_year_calendar, \
-                              test_offer_year, test_learning_unit_year, test_program_manager, test_tutor, test_student,\
-                              test_offer_enrollment, test_learning_unit_enrollment
+from base.tests.models import test_exam_enrollment, test_offer_year_calendar, test_offer_enrollment,\
+                              test_learning_unit_enrollment, test_session_exam
 from attribution.tests.models import test_attribution
-from base.tests.models.test_session_exam import create_session_exam
 from base.views import score_encoding
 from base.models.exam_enrollment import ExamEnrollment
 
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.program_manager import ProgramManagerFactory
 from base.tests.factories.learning_unit_year import LearningUnitYearFactory
+from base.tests.factories.tutor import TutorFactory
+from base.tests.factories.person import PersonFactory
+from base.tests.factories.offer_year import OfferYearFactory
+from base.tests.factories.student import StudentFactory
 
 class OnlineEncodingTest(TestCase):
     def setUp(self):
@@ -49,17 +51,16 @@ class OnlineEncodingTest(TestCase):
         self.learning_unit_year = LearningUnitYearFactory(acronym="LMEM2110",
                                                           title="Recent Continental Philosophy",
                                                           academic_year=academic_year)
-
-        self.offer_year_1 = test_offer_year.create_offer_year("SINF2MA", "Master en Sciences Informatique",
-                                                              academic_year)
-        self.offer_year_2 = test_offer_year.create_offer_year("DROI1BA", "Bachelier en droit", academic_year)
-
+        self.offer_year_1 = OfferYearFactory(acronym="SINF2MA", title="Master en Sciences Informatique",
+                                             academic_year=academic_year)
+        self.offer_year_2 = OfferYearFactory(acronym="DROI1BA", title="Bachelier en droit",
+                                             academic_year=academic_year)
         self.exam_enrollment_1 = test_exam_enrollment.create_exam_enrollment_with_student(1, "64641200", self.offer_year_1, self.learning_unit_year,
                                                                      academic_year)
         self.exam_enrollment_2 = test_exam_enrollment.create_exam_enrollment_with_student(2, "60601200", self.offer_year_2, self.learning_unit_year,
                                                                      academic_year)
 
-        self.tutor = create_tutor_with_user(1)
+        self.tutor = TutorFactory()
         test_attribution.create_attribution(tutor=self.tutor, learning_unit_year=self.learning_unit_year)
         add_permission(self.tutor.person.user, "can_access_scoreencoding")
 
@@ -243,17 +244,17 @@ class OutsideEncodingPeriodTest(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
         self.client = Client()
-        self.user = create_user(username='score_encoding', password='score_encoding')
+        self.user = User.objects.create_user(username='score_encoding', password='score_encoding')
         add_permission(self.user, "can_access_scoreencoding")
         self.client.login(username='score_encoding', password='score_encoding')
-        self.person = test_person.create_person_with_user(user=self.user)
-        academic_year = test_academic_year.create_academic_year()
-        offer_year = test_offer_year.create_offer_year("SINF2MA", "Master en Sciences Informatique",academic_year)
+        self.person = PersonFactory(user=self.user)
+        academic_year = AcademicYearFactory(year=datetime.now().year)
+        offer_year = OfferYearFactory(acronym="SINF2MA", title="Master en Sciences Informatique",
+                                      academic_year=academic_year)
         self.offer_year_calendar = test_offer_year_calendar.create_offer_year_calendar(offer_year, academic_year)
-        self.learning_unit_year = test_learning_unit_year.create_learning_unit_year("LINGI2359",
-                                                                                    "Software engineering seminar",
-                                                                                    academic_year)
-        self.first_session_exam = create_session_exam(1, self.learning_unit_year, self.offer_year_calendar)
+        self.learning_unit_year = LearningUnitYearFactory(acronym="LINGI2359", title="Software engineering seminar",
+                                                          academic_year=academic_year)
+        self.first_session_exam = test_session_exam.create_session_exam(1, self.learning_unit_year, self.offer_year_calendar)
 
     def test_redirection_to_current_exam_session(self):
         url = reverse('outside_scores_encodings_period')
@@ -270,38 +271,40 @@ class GetScoreEncodingViewProgramManagerTest(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
         self.client = Client()
+        academic_year = AcademicYearFactory(year=datetime.now().year)
+
         #Creation user/person and assign it as a "program manager"
-        self.user = create_user(username='score_encoding_pgrm', password='score_encoding_pgrm')
+        self.user = User.objects.create_user(username='score_encoding_pgrm', password='score_encoding_pgrm')
         add_permission(self.user, "can_access_scoreencoding")
         self.client.login(username='score_encoding_pgrm', password='score_encoding_pgrm')
-        self.person = test_person.create_person_with_user(user=self.user)
-        academic_year = test_academic_year.create_academic_year()
-        self.offer_year_bio2ma = test_offer_year.create_offer_year("BIO2MA", "Master en Biologie", academic_year)
-        self.offer_year_bio2bac = test_offer_year.create_offer_year("BIO2BAC", "Bachelier en Biologie", academic_year)
-        self.program_manager = test_program_manager.create_program_manager(offer_year=self.offer_year_bio2ma, person=self.person)
-        self.program_manager = test_program_manager.create_program_manager(offer_year=self.offer_year_bio2bac, person=self.person)
+        self.person = PersonFactory(user=self.user)
+        self.offer_year_bio2ma = OfferYearFactory(acronym="BIO2MA", title="Master en Biologie",
+                                                  academic_year=academic_year)
+        self.offer_year_bio2bac = OfferYearFactory(acronym="BIO2BAC", title="Bachelier en Biologie",
+                                                  academic_year=academic_year)
+        ProgramManagerFactory(offer_year=self.offer_year_bio2ma, person=self.person)
+        ProgramManagerFactory(offer_year=self.offer_year_bio2bac, person=self.person)
 
         # Offer : BIO2MA - 2 Learning unit with exam
         self.offer_year_calendar_bio2ma = test_offer_year_calendar.create_offer_year_calendar(self.offer_year_bio2ma, academic_year)
-        self.learning_unit_year = test_learning_unit_year.create_learning_unit_year("NTAR2359", "Biology methodology",
-                                                                                    academic_year)
-        self.learning_unit_year_2 = test_learning_unit_year.create_learning_unit_year("MIOA898", "Microsom seminar",
-                                                                                    academic_year)
-        self.first_session_exam = create_session_exam(1, self.learning_unit_year, self.offer_year_calendar_bio2ma)
-        self.first_session_exam_2 = create_session_exam(1, self.learning_unit_year_2, self.offer_year_calendar_bio2ma)
+        self.learning_unit_year = LearningUnitYearFactory(acronym="NTAR2359", title="Biology methodology",
+                                                          academic_year=academic_year)
+        self.learning_unit_year_2 = LearningUnitYearFactory(acronym="MIOA898", title="Microsom seminar",
+                                                          academic_year=academic_year)
+        self.first_session_exam = test_session_exam.create_session_exam(1, self.learning_unit_year, self.offer_year_calendar_bio2ma)
+        self.first_session_exam_2 = test_session_exam.create_session_exam(1, self.learning_unit_year_2, self.offer_year_calendar_bio2ma)
 
         # Offer: BIO2BAC - 1 learning unit with exam
         self.offer_year_calendar_bio2bac = test_offer_year_calendar.create_offer_year_calendar(self.offer_year_bio2bac,
                                                                                        academic_year)
-        self.learning_unit_year_3 = test_learning_unit_year.create_learning_unit_year("ECTH056", "Ecosystem theory",
-                                                                                      academic_year)
-        self.first_session_exam_3 = create_session_exam(1, self.learning_unit_year_3, self.offer_year_calendar_bio2bac)
-
+        self.learning_unit_year_3 = LearningUnitYearFactory(acronym="ECTH056", title="Ecosystem theory",
+                                                          academic_year=academic_year)
+        self.first_session_exam_3 = test_session_exam.create_session_exam(1, self.learning_unit_year_3, self.offer_year_calendar_bio2bac)
 
         self.students=[]
         for index in range(0,20):
             # Creation of 20 students
-            self.students.append(test_student.create_student("Student" + str(index), "Etudiant" + str(index), index))
+            self.students.append(StudentFactory())
             if index < 5:
                 # For the 5 first students register to the BIO2MA
                 offer_enrollment = test_offer_enrollment.create_offer_enrollment(self.students[index], self.offer_year_bio2ma)
@@ -340,33 +343,9 @@ def prepare_exam_enrollment_for_double_encoding_validation(exam_enrollment):
     exam_enrollment.score_draft = 14
     exam_enrollment.save()
 
-
 def add_permission(user, codename):
     perm = get_permission(codename)
     user.user_permissions.add(perm)
 
-
-def create_program_manager_with_user(num_id, offer_year):
-    program_manager = test_program_manager.create_program_manager(offer_year)
-
-    perm = get_permission("can_access_scoreencoding")
-    program_manager.person.user = create_user("pgm" + str(num_id))
-    program_manager.person.user.user_permissions.add(perm)
-    program_manager.person.save()
-    return program_manager
-
-
-def create_tutor_with_user(num_id):
-    tutor = test_tutor.create_tutor(first_name="tutor" + str(num_id), last_name="tutor" + str(num_id))
-    tutor.person.user = create_user("tutor" + str(num_id))
-    tutor.person.save()
-    return tutor
-
-
 def get_permission(codename):
     return Permission.objects.get(codename=codename)
-
-
-def create_user(username="foo", password="test"):
-    user = User.objects.create_user(username=username, password=password, email="test@test.com")
-    return user
