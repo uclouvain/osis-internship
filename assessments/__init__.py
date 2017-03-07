@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,14 +23,4 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django import template
-from base.models.program_manager import is_program_manager
-
-register = template.Library()
-
-
-@register.assignment_tag(takes_context=True)
-def programme_manager(context):
-    request = context['request']
-    enrollment = context['enrollment']
-    return is_program_manager(request.user, offer_year=enrollment.learning_unit_enrollment.offer_enrollment.offer_year)
+default_app_config = 'assessments.apps.AssessmentsConfig'

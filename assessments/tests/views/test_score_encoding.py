@@ -1,12 +1,12 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ from django.test import TestCase, Client, RequestFactory
 from base.tests.models import test_exam_enrollment, test_offer_year_calendar, test_offer_enrollment,\
                               test_learning_unit_enrollment, test_session_exam
 from attribution.tests.models import test_attribution
-from base.views import score_encoding
+from assessments.views import score_encoding
 from base.models.exam_enrollment import ExamEnrollment
 
 from base.tests.factories.academic_year import AcademicYearFactory
@@ -44,6 +44,7 @@ from base.tests.factories.tutor import TutorFactory
 from base.tests.factories.person import PersonFactory
 from base.tests.factories.offer_year import OfferYearFactory
 from base.tests.factories.student import StudentFactory
+
 
 class OnlineEncodingTest(TestCase):
     def setUp(self):
@@ -240,6 +241,7 @@ class OnlineEncodingTest(TestCase):
         self.exam_enrollment_1.refresh_from_db()
         self.exam_enrollment_2.refresh_from_db()
 
+
 class OutsideEncodingPeriodTest(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
@@ -266,6 +268,7 @@ class OutsideEncodingPeriodTest(TestCase):
         url = reverse('scores_encoding')
         response = self.client.get(url)
         self.assertRedirects(response, "%s?next=%s" % (reverse('outside_scores_encodings_period'), reverse('scores_encoding')))  # Redirection
+
 
 class GetScoreEncodingViewProgramManagerTest(TestCase):
     def setUp(self):
@@ -338,14 +341,17 @@ class GetScoreEncodingViewProgramManagerTest(TestCase):
          self.assertEqual(response.status_code, 200)
          self.assertEqual(len(context['notes_list']),3)
 
+
 def prepare_exam_enrollment_for_double_encoding_validation(exam_enrollment):
     exam_enrollment.score_reencoded = 14
     exam_enrollment.score_draft = 14
     exam_enrollment.save()
 
+
 def add_permission(user, codename):
     perm = get_permission(codename)
     user.user_permissions.add(perm)
+
 
 def get_permission(codename):
     return Permission.objects.get(codename=codename)
