@@ -72,23 +72,32 @@ def find_academic_years():
     return AcademicYear.objects.all().order_by('year')
 
 
-def current_academic_years():
-    now = timezone.now()
-    academic_yrs = AcademicYear.objects.filter(start_date__lte=now) \
-                                       .filter(end_date__gte=now) \
-                                       .order_by('year')
-    return academic_yrs
-
+# def current_academic_years():
+#     now = timezone.now()
+#     academic_yrs = AcademicYear.objects.filter(start_date__lte=now) \
+#                                        .filter(end_date__gte=now) \
+#                                        .order_by('year')
+#     return academic_yrs
+#
+#
+# def current_academic_year():
+#     academic_yr = current_academic_years().first()
+#     return academic_yr
+#
+#
+# def starting_academic_year():
+#     academic_yr = current_academic_years().last()
+#     return academic_yr
 
 def current_academic_year():
-    academic_yr = current_academic_years().first()
-    return academic_yr
-
+    """ If we have two academic year [2015-2016] [2016-2017]. It will return [2015-2016] """
+    now = timezone.now()
+    return AcademicYear.objects.get(start_date__lte=now, end_date__gte=now)
 
 def starting_academic_year():
-    academic_yr = current_academic_years().last()
-    return academic_yr
-
+    """ If we have two academic year [2015-2016] [2016-2017]. It will return [2016-2017] """
+    now = timezone.now()
+    return AcademicYear.objects.get(start_date__lte=now, end_date__gte=now)
 
 def find_academic_year_by_year(year):
     try:
