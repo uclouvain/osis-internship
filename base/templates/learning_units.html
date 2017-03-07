@@ -63,6 +63,7 @@
               <label for="acronym">{% trans 'acronym'%}</label>
               <input class="form-control" id="txt_acronym" placeholder="{% trans 'acronym' %}" name="acronym"
                      value="{{ acronym }}" style="text-transform:uppercase" maxlength="15">
+              <span class="error">{{ form.acronym.errors }}</span>
           </div>
           <div class="col-md-2">
               <label for="type">{% trans 'type'%}</label>
@@ -99,7 +100,7 @@
                     title="{% trans 'learning_unit_search' %}">
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
           </div>
-        </form>
+      </form>
     </div>
   </div>
 

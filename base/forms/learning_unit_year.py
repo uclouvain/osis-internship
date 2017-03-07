@@ -34,10 +34,14 @@ class LearningUnitYearForm(forms.ModelForm):
         exclude = ['external_id', 'changed']
 
     def clean_acronym(self):
+        print ("hello")
         acronym = self.cleaned_data.get('acronym')
-        academic_year = self.clean_data.get('academic_year')
+        academic_year = self.cleaned_data.get('academic_year')
+        print (academic_year)
 
         if (academic_year == -1):
             learning_unts=mdl.learning_unit_year.find_by_acronym(acronym)
             if learning_unts is None:
                 raise forms.ValidationError("If you dont specify an academic year, please enter a valid acronym.")
+            print (learning_unts)
+            return learning_unts

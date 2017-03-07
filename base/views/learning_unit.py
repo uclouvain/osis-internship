@@ -40,7 +40,7 @@ def learning_units(request):
     academic_years = mdl.academic_year.find_academic_years()
     academic_yr_calendar = mdl.academic_year.current_academic_year()
     types = learning_unit_year_type.YEAR_TYPES
-    status_choices = learning_unit_year_status.LEARNING_UNIT_STATUS
+    status_choices = learning_unit_year_status.LEARNING_UNIT_YEAR_STATUS
     academic_years_all = "1"
 
     if academic_yr_calendar:
@@ -67,18 +67,24 @@ def learning_units_search(request):
     status = request.GET['status']
     keyword = request.GET['keyword']
     types = learning_unit_year_type.YEAR_TYPES
-    status_choices = learning_unit_year_status.LEARNING_UNIT_STATUS
+    status_choices = learning_unit_year_status.LEARNING_UNIT_YEAR_STATUS
     academic_years = mdl.academic_year.find_academic_years()
 
-    form = LearningUnitYearForm(request.GET)
+    form = LearningUnitYearForm(request.GET, request)
+
     if form.is_valid():
-        if academic_year==-1:
-            academic_years_all='1'
-        else:
-            academic_years_all='0'
-            learning_unts = mdl.learning_unit_year.search(academic_year_id=academic_year,acronym=acronym,title=keyword,type=type,status=status)
+        print("form valid!")
+        print(form.cleaned_data)
+        learning_unts = mdl.learning_unit_year.search(academic_year_id=academic_year,acronym=acronym,title=keyword,type=type,status=status)
+    else:
+        print("form NOT valid!")
+        print(form.cleaned_data)
+        learning_unts = None
 
-
+    if academic_year==-1:
+        academic_years_all='1'
+    else:
+        academic_years_all='0'
 
 
     return layout.render(request, "learning_units.html", {'academic_year': int(academic_year),
