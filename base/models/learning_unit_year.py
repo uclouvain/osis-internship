@@ -29,7 +29,6 @@ from attribution.models import attribution
 from base.enums import learning_unit_year_type
 from base.enums import learning_unit_year_status
 
-
 class LearningUnitYearAdmin(SerializableModelAdmin):
     list_display = ('acronym', 'title', 'academic_year', 'credits', 'changed')
     fieldsets = ((None, {'fields': ('academic_year', 'learning_unit', 'acronym', 'title', 'credits', 'decimal_scores','status', 'type')}),)
@@ -60,6 +59,12 @@ class LearningUnitYear(SerializableModel):
 def find_by_id(learning_unit_year_id):
     return LearningUnitYear.objects.get(pk=learning_unit_year_id)
 
+def find_by_acronym(acronym):
+    try:
+        queryset = LearningUnitYear.objects.get(acronym=acronym)
+    except LearningUnitYear.DoesNotExist:
+        queryset = None
+    return
 
 def search(academic_year_id=None, acronym=None, learning_unit=None, title=None, type=None, status=None):
     queryset = LearningUnitYear.objects

@@ -29,28 +29,30 @@ from attribution import models as mdl_attr
 from . import layout
 from base.enums import learning_unit_year_type
 from base.enums import learning_unit_year_status
+from base.forms.learning_unit_year import LearningUnitYearForm
 
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_units(request):
     academic_yr = None
-    code = ""
+    acronym = ""
 
     academic_years = mdl.academic_year.find_academic_years()
     academic_yr_calendar = mdl.academic_year.current_academic_year()
     types = learning_unit_year_type.YEAR_TYPES
     status_choices = learning_unit_year_status.LEARNING_UNIT_STATUS
+    academic_years_all = "1"
 
     if academic_yr_calendar:
         academic_yr = academic_yr_calendar.id
     return layout.render(request, "learning_units.html", {'academic_year': academic_yr,
-                                                          'code': code,
+                                                          'acronym': acronym,
                                                           'academic_years': academic_years,
                                                           'types' : types,
                                                           'status_choices' : status_choices,
+                                                          'academic_year_all' : academic_years_all,
                                                           'learning_units': [],
                                                           'init': "1"})
-
 
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
@@ -60,27 +62,32 @@ def learning_units_search(request):
     """
     # criteria
     academic_year = request.GET['academic_year']
-    if academic_year is None:
-        academic_year_calendar = mdl.academic_year.current_academic_year()
-        if academic_year_calendar:
-            academic_year = academic_year_calendar.id
-
-    code = request.GET['code']
+    acronym = request.GET['acronym']
     type = request.GET['type']
     status = request.GET['status']
     keyword = request.GET['keyword']
-
-    learning_unts = mdl.learning_unit_year.search(academic_year_id=academic_year,acronym=code,title=keyword,type=type,status=status)
-    academic_years = mdl.academic_year.find_academic_years()
     types = learning_unit_year_type.YEAR_TYPES
     status_choices = learning_unit_year_status.LEARNING_UNIT_STATUS
+    academic_years = mdl.academic_year.find_academic_years()
+
+    form = LearningUnitYearForm(request.GET)
+    if form.is_valid():
+        if academic_year==-1:
+            academic_years_all='1'
+        else:
+            academic_years_all='0'
+            learning_unts = mdl.learning_unit_year.search(academic_year_id=academic_year,acronym=acronym,title=keyword,type=type,status=status)
+
+
+
 
     return layout.render(request, "learning_units.html", {'academic_year': int(academic_year),
-                                                          'code': code,
+                                                          'acronym': acronym,
                                                           'type': type,
                                                           'academic_years': academic_years,
                                                           'types' : types,
                                                           'status_choices':status_choices,
+                                                          'academic_year_all' : academic_years_all,
                                                           'learning_units': learning_unts,
                                                           'init': "0"})
 
