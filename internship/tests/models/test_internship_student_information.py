@@ -61,6 +61,11 @@ class TestStudentInformation(TestCase):
         actual = internship_student_information.get_number_of_generalists()
         self.assertEqual(expected, actual)
 
+    def test_get_number_students(self):
+        expected = 4
+        actual = internship_student_information.get_number_students()
+        self.assertEqual(expected, actual)
+
 
 
 

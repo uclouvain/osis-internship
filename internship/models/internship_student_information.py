@@ -80,3 +80,7 @@ def get_number_of_specialists():
 def get_number_of_generalists():
     contest_generalist = "GENERALIST"
     return InternshipStudentInformation.objects.filter(contest=contest_generalist).count()
+
+
+def get_number_students():
+    return InternshipStudentInformation.objects.count()
