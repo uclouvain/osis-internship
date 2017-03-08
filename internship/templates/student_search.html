@@ -47,6 +47,14 @@
   </div>
   <div class="panel panel-default">
     <div class="row">
+        <div class="col-md-3">
+            {% trans 'generalist' %}: {{ number_generalists }}
+        </div>
+        <div class="col-md-3">
+            {% trans 'specialist' %}: {{ number_specialists }}
+        </div>
+    </div>
+    <div class="row">
       <div class="col-md-3">
         <br>
         <button class="btn btn-info" title="{% trans 'number_of_enrollments' %}">
@@ -74,7 +82,7 @@
       <div class="col-md-3">
       </div>
     </div>
-      <br/>
+    <br>
       <div>
           {% if students|length == 0 %}
               <label class="alert alert-info" style="margin:5px">{% trans 'no_result' %}</label>
@@ -88,7 +96,7 @@
                   <th class="no-sort">{% trans 'choice_modification'%}</th>
                   <th>{% trans 'statut'%}</th>
                   </thead>
-                  {% for student in students %}
+                  {% for student, status in students %}
                   <tr>
                       <td>{{ student.registration_id }}</td>
                       <td>{{ student.person.last_name }}</td>
@@ -112,21 +120,21 @@
                         {% endif %}
                       </td>
                       <td>
-                        {% if student.number_choices == 0 %}
-                          <button type="button">
-                            <span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>
-                            <span style="color: red; display: none;" id="notok">0</span>
+                        {% if status %}
+                          <button type="button" class="btn btn-success">
+                            <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                            <span style="color: red; display: none;" id="notok">1</span>
                           </button>
                         {% else %}
-                          {% if student.number_choices == number_selection %}
-                            <button type="button" class="btn btn-success">
-                              <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-                              <span style="color: red; display: none;" id="notok">1</span>
-                            </button>
-                          {% else %}
+                          {% if status == False %}
                             <button type="button" class="btn btn-danger">
                               <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                               <span style="color: red; display: none;" id="notok">2</span>
+                            </button>
+                          {% else %}
+                            <button type="button">
+                              <span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>
+                              <span style="color: red; display: none;" id="notok">0</span>
                             </button>
                           {% endif %}
                         {% endif %}
