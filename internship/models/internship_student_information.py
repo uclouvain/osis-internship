@@ -52,6 +52,9 @@ class InternshipStudentInformation(SerializableModel):
     phone_mobile = models.CharField(max_length=100, blank=True, null=True)
     contest = models.CharField(max_length=124, choices=TYPE_CHOICE, default="GENERALIST")
 
+    def __str__(self):
+        return '{}'.format(self.person)
+
 
 def search(**kwargs):
     kwargs = {k: v for k, v in kwargs.items() if v}

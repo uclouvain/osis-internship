@@ -47,6 +47,14 @@
   </div>
   <div class="panel panel-default">
     <div class="row">
+        <div class="col-md-3">
+            {% trans 'generalist' %}: {{ number_generalists }}
+        </div>
+        <div class="col-md-3">
+            {% trans 'specialist' %}: {{ number_specialists }}
+        </div>
+    </div>
+    <div class="row">
       <div class="col-md-3">
         <br>
         <button class="btn btn-info" title="{% trans 'number_of_enrollments' %}">
@@ -74,7 +82,7 @@
       <div class="col-md-3">
       </div>
     </div>
-      <br/>
+    <br>
       <div>
           {% if students|length == 0 %}
               <label class="alert alert-info" style="margin:5px">{% trans 'no_result' %}</label>

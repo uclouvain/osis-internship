@@ -374,7 +374,7 @@ msgid "priority"
 msgstr "Prioritaire"
 
 msgid "generalist"
-msgstr "généraliste"
+msgstr "Généraliste"
 
 msgid "preference"
 msgstr "Préférence"
