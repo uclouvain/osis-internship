@@ -107,20 +107,20 @@
 				{% trans 'function_outside_university' %}
 			</label>
 			<div class="controls" id="function_outside_university">{{ form.external_functions }}
-				<font class="error">{{ form.errors.external_functions }}</font>
+				<span class="error">{{ form.errors.external_functions }}</span>
 			</div>
 			<label style="padding-top: 5px" for="external_post">
 				{% trans 'external_post' %}
 			</label>
 			<div class="controls" id="external_post">{{ form.external_contract }}
-				<font class="error">{{ form.errors.external_contract }}</font>
+				<span class="error">{{ form.errors.external_contract }}</span>
 			</div>
     		{% if mandate.renewal_type == 'EXCEPTIONAL' %}
 				<label for="exceptional_justification">
       				{% trans 'exceptional_justification' %}
 				</label>
 				<div class="controls" id="exceptional_justification">{{ form.justification }}
-                    <font class="error">{{ form.errors.justification }}</font>
+                    <span class="error">{{ form.errors.justification }}</span>
     			</div>  
    			{% endif %}
 			<hr>
