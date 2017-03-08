@@ -522,7 +522,7 @@ def internships_modification_student(request, registration_id, internship_id="1"
     current_enrollments = mdl_internship.internship_enrollment.find_by_student(student)
     dict_current_choices = get_dict_current_choices(current_choices)
     dict_current_enrollments = get_dict_current_enrollments(current_enrollments)
-    zipped_data = zip_data(dict_current_choices, formset, internships_offers)
+    zipped_data = zip_data(dict_current_choices, formset, internships_offers, dict_current_enrollments)
     information = mdl_internship.internship_student_information.find_by_person(student.person)
 
     return render(request, "internship_modification_student.html",
@@ -564,10 +564,11 @@ def get_dict_current_enrollments(current_enrollments):
         key = enrollment.internship_offer.id
         if key not in dict_current_enrollments:
             dict_current_enrollments[key] = []
-        dict_current_enrollments[key].append(enrollment)
+        dict_current_enrollments[key].append(enrollment.period.name)
+    return dict_current_enrollments
 
 
-def zip_data(dict_current_choices, formset, internships_offers):
+def zip_data(dict_current_choices, formset, internships_offers, dict_current_enrollments):
     if not internships_offers:
         return None
     zipped_data = []
@@ -575,7 +576,8 @@ def zip_data(dict_current_choices, formset, internships_offers):
         offer_choice = dict_current_choices.get((offer.organization.id, offer.speciality.id), None)
         offer_value = 0 if not offer_choice else offer_choice.choice
         offer_priority = False if not offer_choice else offer_choice.priority
-        zipped_data.append((offer, form, str(offer_value), offer_priority))
+        offer_enrollments = dict_current_enrollments.get(offer.id, [])
+        zipped_data.append((offer, form, str(offer_value), offer_priority, offer_enrollments))
     return zipped_data
 
 
