@@ -589,16 +589,19 @@ def save_student_choices(formset, student, internship_id, speciality):
                                                                                       internship_choice=internship_id,
                                                                                       priority=priority)
                 internship_choice.save()
+                save_enrollments(form, offer, student)
 
-                periods_name = form.cleaned_data.get("periods", [])
-                for period_name in periods_name:
-                    period = mdl_internship.period.get_by_name(period_name)
-                    if not period:
-                        continue
-                    enrollment = mdl_internship.internship_enrollment.\
-                        InternshipEnrollment(student=student, internship_offer=offer, place=offer.organization,
-                                             period=period)
-                    enrollment.save()
+
+def save_enrollments(form, offer, student):
+    periods_name = form.cleaned_data.get("periods", [])
+    for period_name in periods_name:
+        period = mdl_internship.period.get_by_name(period_name)
+        if not period:
+            continue
+        enrollment = mdl_internship.internship_enrollment. \
+            InternshipEnrollment(student=student, internship_offer=offer, place=offer.organization,
+                                 period=period)
+        enrollment.save()
 
 
 def has_been_selected(preference_value):
