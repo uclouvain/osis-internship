@@ -151,25 +151,8 @@
                 <h3 class="panel-title">{% trans 'photo' %}</h3>
               </div>
               <div class="panel-body" style="text-align: center">
-                     {% with Adv_photo=adviser.person.photo %}
-                         {% if Adv_photo %}
-                          <img height="50%" width="50%" src="data:image/jpeg;base64,{{Adv_photo}}"
-                               class="avatar img-responsive"/>
-                         {% else %}
-                             {% if adviser.person.gender == "U" %}
-                              <!-- no photo Unknow -->
-                              <img  height="50%" width="50%" class="avatar img-responsive"                                                                  src="{% static 'img/OSIS_UNKNOWN_BETA.png' %}" />
-                             {% endif %}
-                             {% if adviser.person.gender == "M" %}
-                             <!-- no photo Homme -->
-                             <img  height="50%" width="50%" class="avatar img-responsive"                                                                    src="{% static 'img/OSIS_HOMME_UNKNOWN.png' %}" />
-                             {% endif %}
-                             {% if adviser.person.gender == "F" %}
-                              <!-- no photo FEMME -->
-                              <img  height="50%" width="50%" class="avatar img-responsive"                                                                   src="{% static 'img/OSIS_FEMME_UNKNOWN.png' %}" />
-                             {% endif %}
-                          {% endif %}
-                      {% endwith %}
+                  <img src="/my_osis/profile/{{ adviser.person.id }}" class="avatar img-responsive"
+                           height="50%" width="50%"/>
               </div>
           </div>
         </div>
