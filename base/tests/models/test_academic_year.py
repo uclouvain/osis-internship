@@ -49,8 +49,8 @@ class MultipleAcademicYearTest(TestCase):
                                                  end_date=datetime.datetime(now.year + 1, now.month, 28))
         academic_yr.save()
 
-    def test_current_academic_years(self):
-        academic_yrs = academic_year.current_academic_years()
+    def test_find_academic_years(self):
+        academic_yrs = academic_year.find_academic_years(start_date=now, end_date=now)
         current_academic_yr = academic_year.current_academic_year()
         starting_academic_yr = academic_year.starting_academic_year()
         if starting_academic_yr != current_academic_yr:
@@ -107,3 +107,15 @@ class PeriodAcademicYearTest(TestCase):
                                                  start_date=datetime.datetime(now.year + 1, now.month, 15),
                                                  end_date=datetime.datetime(now.year + 1, now.month, 15))
         self.assertRaises(AttributeError, academic_yr.save)
+
+    def test_more_than_two_academic_year_in_same_period(self):
+        academic_year.AcademicYear.objects.create(year=2015,
+                                                  start_date=datetime.datetime(2015, 9, 15),
+                                                  end_date=datetime.datetime(2016, 9, 30))
+        academic_year.AcademicYear.objects.create(year=2016,
+                                                 start_date=datetime.datetime(2016, 9, 15),
+                                                 end_date=datetime.datetime(2017, 9, 30))
+        with self.assertRaises(AttributeError):
+            academic_year.AcademicYear.objects.create(year=2017,
+                                                      start_date=datetime.datetime(2017, 9, 14),
+                                                      end_date=datetime.datetime(2019, 9, 30))
