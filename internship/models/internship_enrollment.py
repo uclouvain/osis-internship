@@ -47,3 +47,7 @@ def search(**kwargs):
     kwargs = {k: v for k, v in kwargs.items() if v}
     return InternshipEnrollment.objects.filter(**kwargs)\
                                        .select_related("student", "internship_offer", "place", "period")
+
+
+def search_by_student_and_internship_id(student, internship_id):
+    return InternshipEnrollment.objects.filter(student=student, internship_offer_id=internship_id)

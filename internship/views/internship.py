@@ -568,6 +568,10 @@ def remove_previous_choices(student, internship_id):
     previous_choices = mdl_internship.internship_choice.search_by_student_or_choice(student, internship_id)
     if previous_choices:
         previous_choices.delete()
+    previous_enrollments = mdl_internship.internship_enrollment.search_by_student_and_internship_id(student,
+                                                                                                    internship_id)
+    if previous_enrollments:
+        previous_enrollments.delete()
 
 
 def save_student_choices(formset, student, internship_id, speciality):
@@ -585,6 +589,16 @@ def save_student_choices(formset, student, internship_id, speciality):
                                                                                       internship_choice=internship_id,
                                                                                       priority=priority)
                 internship_choice.save()
+
+                periods_name = form.cleaned_data.get("periods", [])
+                for period_name in periods_name:
+                    period = mdl_internship.period.get_by_name(period_name)
+                    if not period:
+                        continue
+                    enrollment = mdl_internship.internship_enrollment.\
+                        InternshipEnrollment(student=student, internship_offer=offer, place=offer.organization,
+                                             period=period)
+                    enrollment.save()
 
 
 def has_been_selected(preference_value):

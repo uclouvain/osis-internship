@@ -53,7 +53,7 @@ class OfferPreferenceForm(forms.Form):
     )
     offer = forms.IntegerField()
     preference = forms.ChoiceField(choices=PREFERENCE_CHOICES, required=True)
-    periods = forms.MultipleChoiceField(choices=PERIODS, required=True)
+    periods = forms.MultipleChoiceField(choices=PERIODS, required=False)
     priority = forms.BooleanField(required=False)
 
 
