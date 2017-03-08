@@ -484,12 +484,11 @@ def student_choice(request, id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_block(request):
-    internships = mdl_internship.internship_offer.search()
-    # For each internship in the DB invert the selectable flag
-    for internship in internships:
-        edit_internship = mdl_internship.internship_offer.find_intership_by_id(internship.id)
-        edit_internship.selectable = not edit_internship.selectable
-        edit_internship.save()
+    number_offers_selectable = mdl_internship.internship_offer.get_number_selectable()
+    if number_offers_selectable > 0:
+        mdl_internship.internship_offer.find_all().update(selectable=False)
+    else:
+        mdl_internship.internship_offer.find_all().update(selectable=True)
 
     return HttpResponseRedirect(reverse('internships_home'))
 
