@@ -32,11 +32,13 @@ from django.utils import timezone
 from base.tests.factories.academic_calendar import AcademicCalendarFactory
 from base.tests.factories.offer_year import OfferYearFactory
 
+
 def _get_tzinfo():
     if settings.USE_TZ:
         return timezone.get_current_timezone()
     else:
         return None
+
 
 class OfferYearCalendarFactory(factory.django.DjangoModelFactory):
     class Meta:

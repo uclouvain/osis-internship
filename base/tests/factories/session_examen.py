@@ -23,12 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import datetime
 import factory
 import factory.fuzzy
 import string
-import datetime
 from django.conf import settings
 from django.utils import timezone
+from base.models.learning_unit_year import LearningUnitYear
+from base.models.offer_year_calendar import OfferYearCalendar
 
 
 def _get_tzinfo():
@@ -38,13 +40,14 @@ def _get_tzinfo():
         return None
 
 
-class AcademicYearFactory(factory.django.DjangoModelFactory):
+class SessionExamFactory(factory.DjangoModelFactory):
     class Meta:
-        model = "base.AcademicYear"
+        model = 'base.SessionExam'
 
     external_id = factory.fuzzy.FuzzyText(length=10, chars=string.digits)
     changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=_get_tzinfo()),
                                           datetime.datetime(2017, 3, 1, tzinfo=_get_tzinfo()))
-    year = factory.fuzzy.FuzzyInteger(2000, timezone.now().year)
-    start_date = factory.LazyAttribute(lambda obj: datetime.date(obj.year, 1, 1))
-    end_date = factory.LazyAttribute(lambda obj: datetime.date(obj.year+1, 12, 30))
+    number_session = factory.fuzzy.FuzzyInteger(1000)
+    learning_unit_year = factory.SubFactory(LearningUnitYear)
+    offer_year_calendar = factory.SubFactory(OfferYearCalendar)
+    deadline = factory.LazyAttribute(lambda obj: datetime.date(timezone.now().year+1, 12, 30))
