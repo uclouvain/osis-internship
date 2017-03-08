@@ -273,6 +273,8 @@ class Solver:
     def __assign_to_default_offer(self):
         for student_wrapper in self.students_lefts_to_assign:
             student_wrapper.fill_assignments(self.periods, self.default_organization)
+        for student_wrapper in self.students_priority_lefts_to_assign:
+            student_wrapper.fill_assignments(self.periods, self.default_organization)
 
     @staticmethod
     def __occupy_offer(free_period_name, internship_wrapper, student_wrapper, internship_choice, choice):
