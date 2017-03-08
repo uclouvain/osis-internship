@@ -74,19 +74,15 @@ def learning_units_search(request):
 
     if form.is_valid():
         print("form valid!")
-        print(form.cleaned_data)
         learning_unts = mdl.learning_unit_year.search(academic_year_id=academic_year,acronym=acronym,title=keyword,type=type,status=status)
     else:
         print("form NOT valid!")
-        print(academic_year)
-        #print( form.errors.as_data())
         learning_unts = None
 
     if academic_year==-1:
         academic_years_all='1'
     else:
         academic_years_all='0'
-
 
     return layout.render(request, "learning_units.html", {'academic_year': int(academic_year),
                                                           'acronym': acronym,

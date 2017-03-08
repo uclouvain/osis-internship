@@ -60,11 +60,7 @@ def find_by_id(learning_unit_year_id):
     return LearningUnitYear.objects.get(pk=learning_unit_year_id)
 
 def find_by_acronym(acronym):
-    try:
-        queryset = LearningUnitYear.objects.get(acronym=acronym)
-    except LearningUnitYear.DoesNotExist:
-        queryset = None
-    return
+    return LearningUnitYear.objects.filter(acronym=acronym)
 
 def search(academic_year_id=None, acronym=None, learning_unit=None, title=None, type=None, status=None):
     queryset = LearningUnitYear.objects

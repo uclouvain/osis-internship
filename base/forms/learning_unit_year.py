@@ -32,22 +32,23 @@ class LearningUnitYearForm(forms.ModelForm):
 
     class Meta:
         model = learning_unit_year.LearningUnitYear
-        exclude = ['external_id', 'changed']
-
-    def clean(self):
-        cleaned_data = super(LearningUnitYearForm, self).clean()
-        print (cleaned_data)
+        exclude = ['external_id', 'changed', 'learning_unit', 'title']
 
     def clean_acronym(self):
-        print ("hello")
-        acronym = self.cleaned_data.get('acronym')
+        acronym = self.cleaned_data.get('acronym').upper()
+        academic_year = self['academic_year'].value()
 
         print ("acronym: "+str(acronym))
+        print ("academic_year: "+str(academic_year))
 
-        learning_unts=mdl.learning_unit_year.find_by_acronym(acronym)
-        if learning_unts is None:
-            #self._errors['acronym'] = trans("If you dont specify an academic year, please enter a valid acronym.")
-            #self.add_error('acronym', forms.ValidationError(_('file_must_be_xlsx'), code='invalid'))
-            self.add_error('acronym', "If you dont specify an academic year, please enter a valid acronym.")
-            print (self.errors.as_data())
-            return False
+        if (str(academic_year) == "-1"):
+            learning_unts=mdl.learning_unit_year.find_by_acronym(acronym)
+            print(learning_unts)
+            if not learning_unts:
+                self.add_error('acronym', "If you dont specify an academic year, please enter a valid acronym.")
+                return False
+            else:
+                #self.errors['academic_year'] = self.error_class()
+                print (self.errors.as_data())
+                print (self.is_valid())
+                return True
