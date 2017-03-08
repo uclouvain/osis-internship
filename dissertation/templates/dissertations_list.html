@@ -218,26 +218,8 @@
                 {% for adviser_list_dissertation in adviser_list_dissertations_reader %}
                   <tr>
                       <td rowspan="1" width="150px">
-                            {% if adviser_list_dissertation.dissertation.author.person.global_id %}
                               <img src="/my_osis/profile/{{ adviser_list_dissertation.dissertation.author.person.id }}" class="avatar img-responsive"
                                    height="50%" width="50%"/>
-                             {% else %}
-                                 {% if adviser_list_dissertation.dissertation.author.person.gender == "U" %}
-                                  <!-- no photo Unknow -->
-                                  <img   height="50%" width="50%" class="avatar img-responsive"
-                                         src="{% static 'img/OSIS_UNKNOWN.png' %}" />
-                                 {% endif %}
-                                 {% if adviser_list_dissertation.dissertation.author.person.gender == "M" %}
-                                 <!-- no photo Homme -->
-                                 <img   height="50%" width="50%" class="avatar img-responsive"
-                                        src="{% static 'img/OSIS_HOMME_UNKNOWN.png' %}" />
-                                 {% endif %}
-                                 {% if adviser_list_dissertation.dissertation.author.person.gender == "F" %}
-                                  <!-- no photo FEMME -->
-                                  <img   height="50%" width="50%" class="avatar img-responsive"
-                                         src="{% static 'img/OSIS_FEMME_UNKNOWN.png' %}" />
-                                 {% endif %}
-                              {% endif %}
                       </td>
                     <td><a href="{% url 'dissertations_detail' pk=adviser_list_dissertation.dissertation.pk %}">{{ adviser_list_dissertation.dissertation.title }}</a></td>
                     <td>{{ adviser_list_dissertation.dissertation.author }}</td>
@@ -294,26 +276,8 @@
                 {% for adviser_list_dissertation in adviser_list_dissertations_accompanist %}
                   <tr>
                     <td rowspan="1" width="150px">
-                    {% if adviser_list_dissertation.dissertation.author.person.global_id %}
                       <img src="/my_osis/profile/{{ adviser_list_dissertation.dissertation.author.person.id }}" class="avatar img-responsive"
                            height="50%" width="50%"/>
-                     {% else %}
-                         {% if adviser_list_dissertation.dissertation.author.person.gender == "U" %}
-                          <!-- no photo Unknow -->
-                          <img   height="50%" width="50%" class="avatar img-responsive"
-                                 src="{% static 'img/OSIS_UNKNOWN.png' %}" />
-                         {% endif %}
-                         {% if adviser_list_dissertation.dissertation.author.person.gender == "M" %}
-                         <!-- no photo Homme -->
-                         <img   height="50%" width="50%" class="avatar img-responsive"
-                                src="{% static 'img/OSIS_HOMME_UNKNOWN.png' %}" />
-                         {% endif %}
-                         {% if adviser_list_dissertation.dissertation.author.person.gender == "F" %}
-                          <!-- no photo FEMME -->
-                          <img   height="50%" width="50%" class="avatar img-responsive"
-                                 src="{% static 'img/OSIS_FEMME_UNKNOWN.png' %}" />
-                         {% endif %}
-                      {% endif %}
                     </td>
                     <td><a href="{% url 'dissertations_detail' pk=adviser_list_dissertation.dissertation.pk %}">{{ adviser_list_dissertation.dissertation.title }}</a></td>
                     <td>{{ adviser_list_dissertation.dissertation.author }}</td>
@@ -370,26 +334,8 @@
                 {% for adviser_list_dissertation in adviser_list_dissertations_internship %}
                   <tr>
                       <td rowspan="1" width="150px">
-                        {% if adviser_list_dissertation.dissertation.author.person.global_id %}
                           <img src="/my_osis/profile/{{ adviser_list_dissertation.dissertation.author.person.id }}" class="avatar img-responsive"
                                height="50%" width="50%"/>
-                         {% else %}
-                             {% if adviser_list_dissertation.dissertation.author.person.gender == "U" %}
-                              <!-- no photo Unknow -->
-                              <img   height="50%" width="50%" class="avatar img-responsive"
-                                     src="{% static 'img/OSIS_UNKNOWN.png' %}" />
-                             {% endif %}
-                             {% if adviser_list_dissertation.dissertation.author.person.gender == "M" %}
-                             <!-- no photo Homme -->
-                             <img   height="50%" width="50%" class="avatar img-responsive"
-                                    src="{% static 'img/OSIS_HOMME_UNKNOWN.png' %}" />
-                             {% endif %}
-                             {% if adviser_list_dissertation.dissertation.author.person.gender == "F" %}
-                              <!-- no photo FEMME -->
-                              <img   height="50%" width="50%" class="avatar img-responsive"
-                                     src="{% static 'img/OSIS_FEMME_UNKNOWN.png' %}" />
-                             {% endif %}
-                          {% endif %}
                       </td>
                     <td><a href="{% url 'dissertations_detail' pk=adviser_list_dissertation.dissertation.pk %}">{{ adviser_list_dissertation.dissertation.title }}</a></td>
                     <td>{{ adviser_list_dissertation.dissertation.author }}</td>

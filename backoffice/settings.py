@@ -266,6 +266,9 @@ LOGO_INSTITUTION_URL = os.path.join(BASE_DIR, "base/static/img/logo_institution.
 LOGO_EMAIL_SIGNATURE_URL = ''
 LOGO_OSIS_URL = ''
 
+PERSON_PHOTO_PATH_DEFAULT='file:///'+ os.path.join(BASE_DIR, "base/static/img/OSIS_UNKNOW_UNKNOWN.png")
+PERSON_PHOTO_PATH_DEFAULT_F='file:///'+ os.path.join(BASE_DIR, "base/static/img/OSIS_HOMME_UNKNOWN.png")
+PERSON_PHOTO_PATH_DEFAULT_M='file:///'+ os.path.join(BASE_DIR, "base/static/img/OSIS_FEMME_UNKNOWN.png")
 
 try:
     from backoffice.server_settings import *
