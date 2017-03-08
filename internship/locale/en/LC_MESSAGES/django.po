@@ -368,7 +368,7 @@ msgid "export_organisation_affectation_xls"
 msgstr "Export Excel file for the organisation"
 
 msgid "generalist"
-msgstr "generalist"
+msgstr "Generalist"
 
 msgid	 "number_first_choice"
 msgstr	 "Number of first choice"
