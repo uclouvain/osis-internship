@@ -71,7 +71,7 @@ class TestSearchByStudentOrChoice(TestCase):
             self.assertIn(item_expected, list(actual))
 
     def test_get_number_students(self):
-        expected = 2
+        expected = 1
         actual = mdl_internship_choice.get_number_students()
         self.assertEqual(expected, actual)
 
