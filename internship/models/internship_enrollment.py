@@ -51,3 +51,7 @@ def search(**kwargs):
 
 def search_by_student_and_internship_id(student, internship_id):
     return InternshipEnrollment.objects.filter(student=student, internship_offer_id=internship_id)
+
+
+def find_by_student(student):
+    return InternshipEnrollment.objects.filter(student=student)
