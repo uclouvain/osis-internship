@@ -39,8 +39,8 @@ class InternshipStudentInformationAdmin(SerializableModelAdmin):
 
 
 class InternshipStudentInformation(SerializableModel):
-    TYPE_CHOICE = (('SP', 'SP'),
-                   ('SS', 'SS'))
+    TYPE_CHOICE = (('SPECIALIST', _('specialist')),
+                   ('GENERALIST', _('generalist')))
     person = models.ForeignKey('base.Person')
     location = models.CharField(max_length=255)
     postal_code = models.CharField(max_length=20)
@@ -70,3 +70,13 @@ def find_by_person(person):
         return InternshipStudentInformation.objects.get(person=person)
     except ObjectDoesNotExist:
         return None
+
+
+def get_number_of_specialists():
+    contest_specialist = "SPECIALIST"
+    return InternshipStudentInformation.objects.filter(contest=contest_specialist).count()
+
+
+def get_number_of_generalists():
+    contest_generalist = "GENERALIST"
+    return InternshipStudentInformation.objects.filter(contest=contest_generalist).count()
