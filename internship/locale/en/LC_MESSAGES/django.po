@@ -194,7 +194,7 @@ msgid	 "period_creation"
 msgstr	 "Create a period"
 
 msgid	 "periods"
-msgstr	 "Périods"
+msgstr	 "Periods"
 
 msgid	 "periods_list"
 msgstr	 "Periods list"

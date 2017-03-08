@@ -95,10 +95,11 @@
                            <th>{% trans 'student_max' %}</th>
                            <th>{% trans 'number_first_choice' %}</th>
                            <th>{% trans 'preference' %}</th>
+                           <th>{% trans 'periods' %}</th>
                            <th>{% trans 'priority' %}</th>
                        </thead>
 
-                        {% for offer, form, offer_value, offer_priority in  offers_forms %}
+                        {% for offer, form, offer_value, offer_priority, enrollments in  offers_forms %}
 
                        <tr>
                             <td>{{ offer.organization }}</td>
@@ -115,6 +116,15 @@
                                             {{ y }}
                                         </option>
                                      {% endfor %}
+                                </select>
+                            </td>
+                            <td>
+                                <select multiple id="{{ form.periods.id_for_label }}" name="{{ form.periods.html_name }}" class="form-control">
+                                    {% for x, y in form.fields.periods.choices %}
+                                        <option value="{{ x }}" {% if x in enrollments %}selected{% endif %}>
+                                        {{ y }}
+                                        </option>
+                                    {% endfor %}
                                 </select>
                             </td>
                             <td><input type="checkbox" id="{{ form.priority.id_for_label }}" name="{{ form.priority.html_name }}" {% if offer_priority %}checked{% endif %} class="form-control"></td>

@@ -500,7 +500,10 @@ def internships_modification_student(request, registration_id, internship_id="1"
     NUMBER_NON_MANDATORY_INTERNSHIPS = 6
     student = mdl.student.find_by_registration_id(registration_id)
 
-    speciality = mdl_internship.internship_speciality.get_by_id(speciality_id)
+    speciality = get_speciality(internship_id, speciality_id, student)
+    if speciality:
+        speciality_id = speciality.id
+
     internships_offers = mdl_internship.internship_offer.find_by_speciality(speciality)
 
     offer_preference_formset = formset_factory(OfferPreferenceForm, formset=OfferPreferenceFormSet,
@@ -516,20 +519,36 @@ def internships_modification_student(request, registration_id, internship_id="1"
 
     current_choices = mdl_internship.internship_choice.search_by_student_or_choice(student=student,
                                                                                    internship_choice=internship_id)
+    current_enrollments = mdl_internship.internship_enrollment.find_by_student(student)
     dict_current_choices = get_dict_current_choices(current_choices)
-    zipped_data = zip_data(dict_current_choices, formset, internships_offers)
+    dict_current_enrollments = get_dict_current_enrollments(current_enrollments)
+    zipped_data = zip_data(dict_current_choices, formset, internships_offers, dict_current_enrollments)
     information = mdl_internship.internship_student_information.find_by_person(student.person)
 
     return render(request, "internship_modification_student.html",
-                         {"number_non_mandatory_internships": range(1, NUMBER_NON_MANDATORY_INTERNSHIPS + 1),
-                          "speciality_form": SpecialityForm(),
-                          "formset": formset,
-                          "offers_forms": zipped_data,
-                          "intern_id": int(internship_id),
-                          "speciality_id": int(speciality_id),
-                          "student": student,
-                          "current_choices": current_choices,
-                          "information": information})
+                  {"number_non_mandatory_internships": range(1, NUMBER_NON_MANDATORY_INTERNSHIPS + 1),
+                   "speciality_form": SpecialityForm(),
+                   "formset": formset,
+                   "offers_forms": zipped_data,
+                   "intern_id": int(internship_id),
+                   "speciality_id": int(speciality_id),
+                   "student": student,
+                   "current_choices": current_choices,
+                   "information": information})
+
+
+def get_speciality(internship_id, speciality_id, student):
+    if speciality_id == "-1":
+        return find_speciality_of_choices_for_internship(internship_id, student)
+
+    return mdl_internship.internship_speciality.get_by_id(speciality_id)
+
+
+def find_speciality_of_choices_for_internship(internship_id, student):
+    choices = list(mdl_internship.internship_choice.search_by_student_or_choice(student, internship_id))
+    if choices:
+        return choices[0].speciality
+    return None
 
 
 def get_dict_current_choices(current_choices):
@@ -539,7 +558,17 @@ def get_dict_current_choices(current_choices):
     return dict_current_choices
 
 
-def zip_data(dict_current_choices, formset, internships_offers):
+def get_dict_current_enrollments(current_enrollments):
+    dict_current_enrollments= dict()
+    for enrollment in current_enrollments:
+        key = enrollment.internship_offer.id
+        if key not in dict_current_enrollments:
+            dict_current_enrollments[key] = []
+        dict_current_enrollments[key].append(enrollment.period.name)
+    return dict_current_enrollments
+
+
+def zip_data(dict_current_choices, formset, internships_offers, dict_current_enrollments):
     if not internships_offers:
         return None
     zipped_data = []
@@ -547,7 +576,8 @@ def zip_data(dict_current_choices, formset, internships_offers):
         offer_choice = dict_current_choices.get((offer.organization.id, offer.speciality.id), None)
         offer_value = 0 if not offer_choice else offer_choice.choice
         offer_priority = False if not offer_choice else offer_choice.priority
-        zipped_data.append((offer, form, str(offer_value), offer_priority))
+        offer_enrollments = dict_current_enrollments.get(offer.id, [])
+        zipped_data.append((offer, form, str(offer_value), offer_priority, offer_enrollments))
     return zipped_data
 
 
@@ -568,6 +598,10 @@ def remove_previous_choices(student, internship_id):
     previous_choices = mdl_internship.internship_choice.search_by_student_or_choice(student, internship_id)
     if previous_choices:
         previous_choices.delete()
+    previous_enrollments = mdl_internship.internship_enrollment.search_by_student_and_internship_id(student,
+                                                                                                    internship_id)
+    if previous_enrollments:
+        previous_enrollments.delete()
 
 
 def save_student_choices(formset, student, internship_id, speciality):
@@ -585,6 +619,19 @@ def save_student_choices(formset, student, internship_id, speciality):
                                                                                       internship_choice=internship_id,
                                                                                       priority=priority)
                 internship_choice.save()
+                save_enrollments(form, offer, student)
+
+
+def save_enrollments(form, offer, student):
+    periods_name = form.cleaned_data.get("periods", [])
+    for period_name in periods_name:
+        period = mdl_internship.period.get_by_name(period_name)
+        if not period:
+            continue
+        enrollment = mdl_internship.internship_enrollment. \
+            InternshipEnrollment(student=student, internship_offer=offer, place=offer.organization,
+                                 period=period)
+        enrollment.save()
 
 
 def has_been_selected(preference_value):
