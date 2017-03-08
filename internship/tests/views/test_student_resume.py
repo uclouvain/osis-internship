@@ -24,7 +24,8 @@
 #
 ##############################################################################
 from django.test import TestCase
-from internship.tests.models import test_organization, test_internship_speciality, test_internship_choice
+from internship.tests.models import test_organization, test_internship_speciality, test_internship_choice, \
+    test_internship_student_information
 from base.tests.models import test_student
 from internship.views import student_resume
 
@@ -53,9 +54,17 @@ class TestStudentResume(TestCase):
                                                                         internship_choice=3)
 
     def test_get_students_status(self):
+        expected = []
+        actual = student_resume.get_students_with_status()
+        self.assertCountEqual(expected, actual)
+
+        test_internship_student_information.create_student_information(self.student_1.person, "GENERALIST")
+        test_internship_student_information.create_student_information(self.student_2.person, "GENERALIST")
         expected = [(self.student_1, True), (self.student_2, False)]
         actual = student_resume.get_students_with_status()
         self.assertCountEqual(expected, actual)
+        for item_expected in expected:
+            self.assertIn(item_expected, actual)
 
 
 
