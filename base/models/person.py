@@ -124,7 +124,7 @@ def find_by_global_id(global_id):
 
 
 def find_by_last_name_or_email(query):
-    return Person.objects.filter(Q(email__icontains=query) | Q(last_name__icontains=query))[:50]
+    return Person.objects.filter(Q(email__icontains=query) | Q(last_name__icontains=query))
 
 
 def search_by_email(email):
