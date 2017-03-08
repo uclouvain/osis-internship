@@ -486,9 +486,13 @@ def student_choice(request, id):
 def internships_block(request):
     number_offers_selectable = mdl_internship.internship_offer.get_number_selectable()
     if number_offers_selectable > 0:
-        mdl_internship.internship_offer.find_all().update(selectable=False)
+        for internship_offer in mdl_internship.internship_offer.find_all():
+            internship_offer.selectable = False
+            internship_offer.save()
     else:
-        mdl_internship.internship_offer.find_all().update(selectable=True)
+        for internship_offer in mdl_internship.internship_offer.find_all():
+            internship_offer.selectable = True
+            internship_offer.save()
 
     return HttpResponseRedirect(reverse('internships_home'))
 
