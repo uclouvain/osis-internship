@@ -70,7 +70,7 @@ def learning_units_search(request):
     status_choices = learning_unit_year_status.LEARNING_UNIT_YEAR_STATUS
     academic_years = mdl.academic_year.find_academic_years()
 
-    form = LearningUnitYearForm(request.GET, request)
+    form = LearningUnitYearForm(request.GET)
 
     if form.is_valid():
         print("form valid!")
@@ -78,7 +78,8 @@ def learning_units_search(request):
         learning_unts = mdl.learning_unit_year.search(academic_year_id=academic_year,acronym=acronym,title=keyword,type=type,status=status)
     else:
         print("form NOT valid!")
-        print(form.cleaned_data)
+        print(academic_year)
+        #print( form.errors.as_data())
         learning_unts = None
 
     if academic_year==-1:
@@ -94,7 +95,8 @@ def learning_units_search(request):
                                                           'types' : types,
                                                           'status_choices':status_choices,
                                                           'academic_year_all' : academic_years_all,
-                                                          'learning_units': learning_unts,
+                                                          '0': learning_unts,
+                                                          'form':form,
                                                           'init': "0"})
 
 
