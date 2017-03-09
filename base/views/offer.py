@@ -99,7 +99,7 @@ def offer_read(request, offer_year_id):
 
 @login_required
 @permission_required('base.can_access_offer', raise_exception=True)
-@permission_required('assessemtns.can_access_scoreencoding', raise_exception=True)
+@permission_required('assessments.can_access_scoreencoding', raise_exception=True)
 def score_encoding(request, offer_year_id):
     if request.method == 'POST':
         offer_yr = mdl.offer_year.find_by_id(offer_year_id)
