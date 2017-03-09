@@ -85,7 +85,7 @@ def internships_student_resume(request):
     students_can_have_internships = mdl_internship.internship_student_information.get_number_students()
     student_without_internship = students_can_have_internships - student_with_internships
     number_students_ok = len([x for x in students_with_status if x[1]])
-    number_students_not_ok = len(students_with_status) - number_students_ok
+    number_students_not_ok = len([x for x in students_with_status if x[1] is False])
     number_generalists = mdl_internship.internship_student_information.get_number_of_generalists()
     number_specialists = students_can_have_internships - number_generalists
     return render(request, "student_search.html", {'search_name': None,

@@ -102,4 +102,4 @@ def get_internship_choices_made(student):
 
 
 def get_number_students():
-    return InternshipChoice.objects.distinct("student").count()
+    return InternshipChoice.objects.filter(internship_choice__gt=0).distinct("student").count()
