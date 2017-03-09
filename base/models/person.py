@@ -71,7 +71,7 @@ class Person(SerializableModel):
         # When person is created by another application this rule can be applied.
         if hasattr(settings, 'INTERNAL_EMAIL_SUFIX'):
             if settings.INTERNAL_EMAIL_SUFIX.strip():
-                # It limits the creation of person to external emails. The domain name is case insensitive.
+                # It limits the creation of person with external emails. The domain name is case insensitive.
                 if self.source and self.source != person_source_type.BASE \
                                and settings.INTERNAL_EMAIL_SUFIX in str(self.email).lower():
                     raise AttributeError('Invalid email for external person.')
