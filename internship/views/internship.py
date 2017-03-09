@@ -523,7 +523,9 @@ def internships_modification_student(request, registration_id, internship_id="1"
     current_enrollments = mdl_internship.internship_enrollment.find_by_student(student)
     dict_current_choices = get_dict_current_choices(current_choices)
     dict_current_enrollments = get_dict_current_enrollments(current_enrollments)
-    zipped_data = zip_data(dict_current_choices, formset, internships_offers, dict_current_enrollments)
+    dict_offers_choices = get_first_choices_by_organization(speciality)
+    zipped_data = zip_data(dict_current_choices, formset, internships_offers, dict_current_enrollments,
+                           dict_offers_choices)
     information = mdl_internship.internship_student_information.find_by_person(student.person)
 
     return render(request, "internship_modification_student.html",
@@ -569,7 +571,16 @@ def get_dict_current_enrollments(current_enrollments):
     return dict_current_enrollments
 
 
-def zip_data(dict_current_choices, formset, internships_offers, dict_current_enrollments):
+def get_first_choices_by_organization(speciality):
+    list_number_choices = mdl_internship.internship_choice.get_number_first_choice_by_organization(speciality)
+    dict_number_choices_by_organization = dict()
+    for number_first_choices in list_number_choices:
+        dict_number_choices_by_organization[number_first_choices["organization"]] = \
+            number_first_choices["organization__count"]
+    return dict_number_choices_by_organization
+
+
+def zip_data(dict_current_choices, formset, internships_offers, dict_current_enrollments, dict_offers_choices):
     if not internships_offers:
         return None
     zipped_data = []
@@ -578,7 +589,8 @@ def zip_data(dict_current_choices, formset, internships_offers, dict_current_enr
         offer_value = 0 if not offer_choice else offer_choice.choice
         offer_priority = False if not offer_choice else offer_choice.priority
         offer_enrollments = dict_current_enrollments.get(offer.id, [])
-        zipped_data.append((offer, form, str(offer_value), offer_priority, offer_enrollments))
+        number_first_choices = dict_offers_choices.get(offer.organization.id, 0)
+        zipped_data.append((offer, form, str(offer_value), offer_priority, offer_enrollments, number_first_choices))
     return zipped_data
 
 

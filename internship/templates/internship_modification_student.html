@@ -99,12 +99,12 @@
                            <th>{% trans 'priority' %}</th>
                        </thead>
 
-                        {% for offer, form, offer_value, offer_priority, enrollments in  offers_forms %}
+                        {% for offer, form, offer_value, offer_priority, enrollments, number_choices in  offers_forms %}
 
                        <tr>
-                            <td>{{ offer.organization }}</td>
+                            <td>{{ offer.organization.reference }}- {{ offer.organization }}</td>
                             <td>{{ offer.maximum_enrollments }}</td>
-                            <td> {{ formset.counter.preference }} {{ offer_value }}</td>
+                            <td> {{ number_choices }} </td>
                             <td hidden>
                                 <input type="number" id="{{ form.offer.id_for_label }}" name="{{ form.offer.html_name }}" class="form-control" value="{{ offer.pk }}">
                             </td>
