@@ -26,20 +26,21 @@
 import datetime
 from django.test import TestCase
 from base.models import learning_unit_enrollment
-from base.tests.factories.learning_unit_enrollement import LearningUnitEnrollement
+from base.tests.factories.learning_unit_enrollment import LearningUnitEnrollment
 from base.tests.factories.person import PersonFactory
 from base.tests.factories.student import StudentFactory
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.offer_year import OfferYearFactory
 from base.tests.factories.offer_enrollment import OfferEnrollmentFactory
-from base.tests.factories.learning_unit import LearningUnitFactory
 from base.tests.factories.learning_unit_year import LearningUnitYearFactory
 
+
 def create_learning_unit_enrollment(learning_unit_year, offer_enrollment):
-    return LearningUnitEnrollement(learning_unit_year=learning_unit_year,
+    return LearningUnitEnrollment(learning_unit_year=learning_unit_year,
                                    offer_enrollment=offer_enrollment)
 
-class LearningUnitEnrollementTest(TestCase):
+
+class LearningUnitEnrollmentTest(TestCase):
     def setUp(self):
         academic_year = AcademicYearFactory(year=datetime.datetime.now().year)
         offer_year = OfferYearFactory(academic_year=academic_year)
@@ -50,9 +51,9 @@ class LearningUnitEnrollementTest(TestCase):
         offer_enrollement_2 = OfferEnrollmentFactory(offer_year=offer_year, student=student_2)
         offer_enrollement_3 = OfferEnrollmentFactory(offer_year=offer_year,student=student_3)
         self.l_unit_year = LearningUnitYearFactory(academic_year=academic_year)
-        LearningUnitEnrollement(learning_unit_year=self.l_unit_year, offer_enrollment=offer_enrollement_1)
-        LearningUnitEnrollement(learning_unit_year=self.l_unit_year, offer_enrollment=offer_enrollement_2)
-        LearningUnitEnrollement(learning_unit_year=self.l_unit_year, offer_enrollment=offer_enrollement_3)
+        LearningUnitEnrollment(learning_unit_year=self.l_unit_year, offer_enrollment=offer_enrollement_1)
+        LearningUnitEnrollment(learning_unit_year=self.l_unit_year, offer_enrollment=offer_enrollement_2)
+        LearningUnitEnrollment(learning_unit_year=self.l_unit_year, offer_enrollment=offer_enrollement_3)
 
     def test_find_by_learningunit_enrollment_order_by_last_name_first_name(self):
         request = learning_unit_enrollment.find_by_learningunit_enrollment(self.l_unit_year)

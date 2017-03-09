@@ -39,7 +39,7 @@ def _get_tzinfo():
     else:
         return None
 
-class LearningUnitEnrollement(factory.django.DjangoModelFactory):
+class LearningUnitEnrollment(factory.django.DjangoModelFactory):
     class Meta:
         model = "base.LearningUnitEnrollment"
 
