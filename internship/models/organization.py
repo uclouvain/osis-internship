@@ -30,7 +30,7 @@ from osis_common.models.serializable_model import SerializableModel, Serializabl
 class OrganizationAdmin(SerializableModelAdmin):
     list_display = ('name', 'acronym', 'reference', 'type')
     fieldsets = ((None, {'fields': ('name', 'acronym', 'reference', 'website', 'type')}),)
-    search_fields = ['acronym']
+    search_fields = ['acronym', 'name']
 
 
 class Organization(SerializableModel):
