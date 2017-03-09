@@ -23,16 +23,27 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.apps import AppConfig
+from django import template
+
+register = template.Library()
 
 
-class BaseConfig(AppConfig):
-    name = 'base'
+@register.filter
+def lookup(d, key):
+    try:
+        return d[key].acronym
+    except:
+        return '?'
 
-    def ready(self):
-        from base.models.models_signals import add_to_tutors_group, remove_from_tutor_group, \
-            add_to_pgm_managers_group, remove_from_pgm_managers_group, \
-            add_to_students_group, remove_from_student_group
-        from assessments.views.score_encoding import get_json_data_scores_sheets
-        # if django.core.exceptions.AppRegistryNotReady: Apps aren't loaded yet.
-        # ===> This exception says that there is an error in the implementation of method ready(self) !!
+
+@register.filter
+def lookup_session(d, key):
+    return d[key].id
+
+
+@register.filter
+def lookup_id(d, key):
+    try:
+        return d[key].id
+    except:
+        return '?'

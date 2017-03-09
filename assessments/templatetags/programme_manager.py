@@ -23,16 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.apps import AppConfig
+from django import template
+from base.models.program_manager import is_program_manager
+
+register = template.Library()
 
 
-class BaseConfig(AppConfig):
-    name = 'base'
-
-    def ready(self):
-        from base.models.models_signals import add_to_tutors_group, remove_from_tutor_group, \
-            add_to_pgm_managers_group, remove_from_pgm_managers_group, \
-            add_to_students_group, remove_from_student_group
-        from assessments.views.score_encoding import get_json_data_scores_sheets
-        # if django.core.exceptions.AppRegistryNotReady: Apps aren't loaded yet.
-        # ===> This exception says that there is an error in the implementation of method ready(self) !!
+@register.assignment_tag(takes_context=True)
+def programme_manager(context):
+    request = context['request']
+    enrollment = context['enrollment']
+    return is_program_manager(request.user, offer_year=enrollment.learning_unit_enrollment.offer_enrollment.offer_year)

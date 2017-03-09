@@ -23,16 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.apps import AppConfig
+from django import forms
+from django.utils.translation import ugettext_lazy as _
 
 
-class BaseConfig(AppConfig):
-    name = 'base'
+class ScoreFileForm(forms.Form):
+    file = forms.FileField(error_messages={'required': _('no_file_submitted')})
 
-    def ready(self):
-        from base.models.models_signals import add_to_tutors_group, remove_from_tutor_group, \
-            add_to_pgm_managers_group, remove_from_pgm_managers_group, \
-            add_to_students_group, remove_from_student_group
-        from assessments.views.score_encoding import get_json_data_scores_sheets
-        # if django.core.exceptions.AppRegistryNotReady: Apps aren't loaded yet.
-        # ===> This exception says that there is an error in the implementation of method ready(self) !!
+    def clean_file(self):
+        file = self.cleaned_data['file']
+        content_type = file.content_type.split('/')[1]
+        valid_content_type = 'vnd.openxmlformats-officedocument.spreadsheetml.sheet' in content_type
+        if ".xlsx" not in file.name or not valid_content_type:
+            self.add_error('file', forms.ValidationError(_('file_must_be_xlsx'), code='invalid'))
+        return file

@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2017-2016 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,16 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.apps import AppConfig
+from django import template
 
+register = template.Library()
 
-class BaseConfig(AppConfig):
-    name = 'base'
-
-    def ready(self):
-        from base.models.models_signals import add_to_tutors_group, remove_from_tutor_group, \
-            add_to_pgm_managers_group, remove_from_pgm_managers_group, \
-            add_to_students_group, remove_from_student_group
-        from assessments.views.score_encoding import get_json_data_scores_sheets
-        # if django.core.exceptions.AppRegistryNotReady: Apps aren't loaded yet.
-        # ===> This exception says that there is an error in the implementation of method ready(self) !!
+@register.filter
+def percentage(value):
+    return "{0:.0f}%".format(value)
