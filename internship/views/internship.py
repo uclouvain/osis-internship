@@ -485,14 +485,12 @@ def student_choice(request, id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_block(request):
     number_offers_selectable = mdl_internship.internship_offer.get_number_selectable()
-    if number_offers_selectable > 0:
-        for internship_offer in mdl_internship.internship_offer.find_all():
-            internship_offer.selectable = False
-            internship_offer.save()
-    else:
-        for internship_offer in mdl_internship.internship_offer.find_all():
-            internship_offer.selectable = True
-            internship_offer.save()
+
+    all_internship_offers = mdl_internship.internship_offer.find_all()
+    new_selectable_state = number_offers_selectable == 0
+    for internship_offer in all_internship_offers:
+        internship_offer.selectable = new_selectable_state
+        internship_offer.save()
 
     return HttpResponseRedirect(reverse('internships_home'))
 

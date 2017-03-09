@@ -46,7 +46,7 @@ def internships_home(request):
     else:
         noma = 0
 
-    blockable = False if mdl_internship.internship_offer.get_number_selectable() == 0 else True
+    blockable = mdl_internship.internship_offer.get_number_selectable() > 0
 
 
     #Find all informations about students and organisation and fin the latitude and longitude of the address
