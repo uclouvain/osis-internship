@@ -516,7 +516,9 @@ def internships_modification_student(request, registration_id, internship_id="1"
             remove_previous_choices(student, internship_id)
             save_student_choices(formset, student, int(internship_id), speciality)
 
-    zipped_data = prepare_template_data(formset, internship_id, internships_offers, speciality, student)
+    current_choices = mdl_internship.internship_choice.search_by_student_or_choice(student=student,
+                                                                                   internship_choice=internship_id)
+    zipped_data = prepare_template_data(formset, current_choices, internships_offers, speciality, student)
     information = mdl_internship.internship_student_information.find_by_person(student.person)
 
     return render(request, "internship_modification_student.html",
@@ -527,12 +529,12 @@ def internships_modification_student(request, registration_id, internship_id="1"
                    "intern_id": int(internship_id),
                    "speciality_id": int(speciality_id),
                    "student": student,
+                   "student_choices": current_choices,
                    "information": information})
 
 
-def prepare_template_data(formset, internship_id, internships_offers, speciality, student):
-    current_choices = mdl_internship.internship_choice.search_by_student_or_choice(student=student,
-                                                                                   internship_choice=internship_id)
+def prepare_template_data(formset, current_choices, internships_offers, speciality, student):
+
     current_enrollments = mdl_internship.internship_enrollment.find_by_student(student)
     dict_current_choices = get_dict_current_choices(current_choices)
     dict_current_enrollments = get_dict_current_enrollments(current_enrollments)
@@ -593,14 +595,21 @@ def zip_data(dict_current_choices, formset, internships_offers, dict_current_enr
     if not internships_offers:
         return None
     zipped_data = []
+    zipped_data_for_offer_selected = []
     for offer, form in zip(internships_offers, formset):
         offer_choice = dict_current_choices.get((offer.organization.id, offer.speciality.id), None)
         offer_value = 0 if not offer_choice else offer_choice.choice
         offer_priority = False if not offer_choice else offer_choice.priority
         offer_enrollments = dict_current_enrollments.get(offer.id, [])
         number_first_choices = dict_offers_choices.get(offer.organization.id, 0)
-        zipped_data.append((offer, form, str(offer_value), offer_priority, offer_enrollments, number_first_choices))
-    return zipped_data
+        element = (offer, form, str(offer_value), offer_priority, offer_enrollments, number_first_choices)
+        if offer_value:
+            zipped_data_for_offer_selected.append(element)
+        else:
+            zipped_data.append(element)
+    zipped_data_for_offer_selected.sort(key=lambda x: x[2])
+    zipped_data_for_offer_selected.extend(zipped_data)
+    return zipped_data_for_offer_selected
 
 
 @login_required
@@ -612,8 +621,8 @@ def assign_speciality_for_internship(request, registration_id, internship_id):
         if speciality_form.is_valid():
             speciality_selected = speciality_form.cleaned_data["speciality"]
             speciality_id = speciality_selected.id
-    return redirect("specific_internship_student_modification", registration_id=registration_id, internship_id=internship_id,
-                    speciality_id=speciality_id)
+    return redirect("specific_internship_student_modification", registration_id=registration_id,
+                    internship_id=internship_id, speciality_id=speciality_id)
 
 
 def remove_previous_choices(student, internship_id):
