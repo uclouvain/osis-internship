@@ -27,12 +27,11 @@ from django.db import models
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
-from django.contrib import admin
-from osis_common.models.serializable_model import SerializableModel
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from .dissertation_role import DissertationRole
 
 
-class AdviserAdmin(admin.ModelAdmin):
+class AdviserAdmin(SerializableModelAdmin):
     list_display = ('person', 'type')
     raw_id_fields = ('person', )
     search_fields = ('uuid', 'person__last_name', 'person__first_name')

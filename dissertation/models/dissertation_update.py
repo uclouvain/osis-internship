@@ -23,8 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from osis_common.models.serializable_model import SerializableModel
-from django.contrib import admin
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from django.db import models
 from base import models as mdl
 from . import adviser
@@ -33,10 +32,11 @@ from . import dissertation
 JUSTIFICATION_LINK = "_set_to_"
 
 
-class DissertationUpdateAdmin(admin.ModelAdmin):
+class DissertationUpdateAdmin(SerializableModelAdmin):
     list_display = ('dissertation', 'status_from', 'status_to', 'person', 'created')
     raw_id_fields = ('person', 'dissertation')
-    search_fields = ('uuid',)
+    search_fields = ('uuid', 'dissertation__title', 'person__last_name', 'person__first_name',
+                     'dissertation__author__person__last_name', 'dissertation__author__person__first_name')
 
 
 class DissertationUpdate(SerializableModel):

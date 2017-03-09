@@ -24,12 +24,11 @@
 #
 ##############################################################################
 from django.db import models
-from django.contrib import admin
 from django.core import serializers
-from osis_common.models.serializable_model import SerializableModel
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
-class DecreeAdmin(admin.ModelAdmin):
+class DecreeAdmin(SerializableModelAdmin):
     list_display = ('name', 'start_date', 'end_date')
     fieldsets = ((None, {'fields': ('name', 'start_date', 'end_date')}),)
     ordering = ('name',)

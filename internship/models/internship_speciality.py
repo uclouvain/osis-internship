@@ -23,17 +23,18 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib import admin
 from django.db import models
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+from django.core.exceptions import ObjectDoesNotExist
 
 
-class InternshipSpecialityAdmin(admin.ModelAdmin):
+class InternshipSpecialityAdmin(SerializableModelAdmin):
     list_display = ('learning_unit', 'name', 'acronym', 'mandatory', 'order_postion')
     fieldsets = ((None, {'fields': ('learning_unit', 'name', 'acronym', 'mandatory', 'order_postion')}),)
     raw_id_fields = ('learning_unit',)
 
 
-class InternshipSpeciality(models.Model):
+class InternshipSpeciality(SerializableModel):
     learning_unit = models.ForeignKey('base.LearningUnit')
     name = models.CharField(max_length=125, blank=False, null=False)
     acronym = models.CharField(max_length=125, blank=False, null=False)
@@ -66,3 +67,10 @@ def find_non_mandatory():
     return InternshipSpeciality.objects.filter(mandatory=False)\
                                        .select_related("learning_unit")\
                                        .order_by('acronym', 'name')
+
+
+def get_by_id(speciality_id):
+    try:
+        return InternshipSpeciality.objects.get(pk=speciality_id)
+    except ObjectDoesNotExist:
+        return None

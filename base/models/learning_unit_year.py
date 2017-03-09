@@ -24,13 +24,11 @@
 #
 ##############################################################################
 from django.db import models
-from django.contrib import admin
-from osis_common.models.serializable_model import SerializableModel
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from attribution.models import attribution
-from base.enums.learning_unit_year_type import YEAR_TYPES
 
 
-class LearningUnitYearAdmin(admin.ModelAdmin):
+class LearningUnitYearAdmin(SerializableModelAdmin):
     list_display = ('acronym', 'title', 'academic_year', 'credits', 'changed')
     fieldsets = ((None, {'fields': ('academic_year', 'learning_unit', 'acronym', 'title', 'credits', 'decimal_scores')}),)
     list_filter = ('academic_year',)
@@ -79,6 +77,7 @@ def search(academic_year_id=None, acronym=None, learning_unit=None, title=None):
     return queryset
 
 
+# Cette function ne doit pas être là parce que elle depende de l'attribution.
 def find_by_tutor(tutor):
     if tutor:
         return [att.learning_unit_year for att in list(attribution.search(tutor=tutor))]
