@@ -54,6 +54,28 @@
 
             <br>
 
+            <div class="alert alert-info alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>{% trans 'current_choices' %}:</strong><br>
+                    <table class="table table-condensed">
+                        {% for choice in student_choices %}
+                        {% ifchanged choice.internship_choice %}
+                        <thead>
+                            <th>{% trans 'internship' %} {{ choice.internship_choice }}</th>
+                        </thead>
+                        {% endifchanged %}
+                            <tr>
+                                <td>{{ choice.organization.reference }}-{{ choice.organization.name }}</td>
+                                <td>{{ choice.speciality.name }}</td>
+                                <td>{{ choice.choice }}</td>
+                            </tr>
+                    {% endfor %}
+                    </table>
+
+            </div>
+
+            <br>
+
             <div class="row">
                 <form action="{% url 'switch_speciality' registration_id=student.registration_id internship_id=intern_id %}"  method="post">
                     {% csrf_token %}

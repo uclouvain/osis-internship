@@ -516,9 +516,10 @@ def internships_modification_student(request, registration_id, internship_id="1"
             remove_previous_choices(student, internship_id)
             save_student_choices(formset, student, int(internship_id), speciality)
 
-    current_choices = mdl_internship.internship_choice.search_by_student_or_choice(student=student,
-                                                                                   internship_choice=internship_id)
-    zipped_data = prepare_template_data(formset, current_choices, internships_offers, speciality, student)
+    student_choices = mdl_internship.internship_choice.search_by_student_or_choice(student=student)
+    choices_for_internship = filter(lambda choice: choice.internship_choice == internship_id, student_choices)
+
+    zipped_data = prepare_template_data(formset, choices_for_internship, internships_offers, speciality, student)
     information = mdl_internship.internship_student_information.find_by_person(student.person)
 
     return render(request, "internship_modification_student.html",
@@ -529,7 +530,7 @@ def internships_modification_student(request, registration_id, internship_id="1"
                    "intern_id": int(internship_id),
                    "speciality_id": int(speciality_id),
                    "student": student,
-                   "student_choices": current_choices,
+                   "student_choices": student_choices,
                    "information": information})
 
 
