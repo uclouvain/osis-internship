@@ -23,27 +23,22 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import datetime
-from django.test import TestCase
-from base.models import learning_unit_year
-from base.tests.factories.tutor import TutorFactory
+import factory
+import factory.fuzzy
 from base.tests.factories.academic_year import AcademicYearFactory
-from base.tests.factories.learning_unit import LearningUnitFactory
-from base.tests.factories.learning_unit_year import LearningUnitYearFactory
+from base.tests.factories.offer import OfferFactory
 
-def create_learning_unit_year(acronym, title, academic_year):
-    learning_unit = LearningUnitFactory(acronym=acronym, title=title, start_year=2010)
-    return LearningUnitYearFactory(acronym=acronym,
-                                   title=title,
-                                   academic_year=academic_year,
-                                   learning_unit=learning_unit)
 
-class LearningUnitYearTest(TestCase):
-    def setUp(self):
-        self.tutor = TutorFactory()
-        self.academic_year = AcademicYearFactory(year=datetime.datetime.now().year)
-        self.learning_unit_year = LearningUnitYearFactory(acronym="LDROI1004", title="Juridic law courses",
-                                                          academic_year=self.academic_year)
+def generate_title(offer_year):
+    return '{obj.academic_year} {obj.acronym}'.format(obj=offer_year).lower()
 
-    def test_find_by_tutor_with_none_argument(self):
-        self.assertEquals(learning_unit_year.find_by_tutor(None), None)
+
+class OfferYearFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = "base.OfferYear"
+
+    offer = factory.SubFactory(OfferFactory)
+    academic_year = factory.SubFactory(AcademicYearFactory)
+    acronym = factory.Sequence(lambda n: 'Offer %d' % n)
+    title = factory.LazyAttribute(generate_title)
+

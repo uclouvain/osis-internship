@@ -25,107 +25,76 @@
 ##############################################################################
 import datetime
 from django.test import TestCase
-from base.models import academic_year, offer_year_calendar, academic_calendar, offer_year
+from base.models import offer_year_calendar, academic_calendar, offer_year
 from base.tests.models import test_academic_calendar
 
+from base.tests.factories.academic_year import AcademicYearFactory
+from base.tests.factories.academic_calendar import AcademicCalendarFactory
+from base.tests.factories.offer_year_calendar import OfferYearCalendarFactory
 
 start_date = datetime.datetime.now()
 end_date = start_date.replace(year=start_date.year + 1)
 
 
 def create_offer_year_calendar(offer_year, academic_year):
-    start_date = datetime.date(2000, 1, 1)
-    end_date = datetime.date(2099, 1, 1)
-    an_offer_year_calendar = \
-        offer_year_calendar.OfferYearCalendar(offer_year=offer_year,
-                                              academic_calendar=test_academic_calendar.create_academic_calendar(
-                                                  academic_year),
-                                              start_date=start_date,
-                                              end_date=end_date
-                                              )
-    an_offer_year_calendar.save()
-    return an_offer_year_calendar
-
-
-def _create_current_academic_year():
-    academic_yr = academic_year.AcademicYear(year=start_date.year, start_date=start_date, end_date=end_date)
-    academic_yr.save()
-    return academic_yr
-
+    academic_calendar = test_academic_calendar.create_academic_calendar(academic_year)
+    return OfferYearCalendarFactory(offer_year=offer_year, academic_calendar=academic_calendar)
 
 def _create_academic_calendar_with_offer_year_calendars():
-    academic_yr = _create_current_academic_year()
-    academic_cal = academic_calendar.AcademicCalendar(academic_year=academic_yr,
-                                                      title="Academic year {0} - {1}".format(start_date.year,
-                                                                                             start_date.year + 1),
-                                                      description="My offerYearCalendars are not customized (default value)",
-                                                      start_date=start_date,
-                                                      end_date=end_date)
-    academic_cal.save(functions=[offer_year_calendar.save_from_academic_calendar])
-    return academic_cal
-
+    an_academic_calendar = AcademicCalendarFactory.build(
+                                      academic_year=AcademicYearFactory(year=datetime.datetime.now().year),
+                                      title="Academic year {0} - {1}".format(start_date.year,start_date.year + 1),
+                                      description = "My offerYearCalendars are not customized (default value)",
+                                      start_date=start_date,
+                                      end_date=end_date
+                                 )
+    an_academic_calendar.save(functions=[offer_year_calendar.save_from_academic_calendar])
+    return an_academic_calendar
 
 class SaveFromAcademicCalendarTest(TestCase):
-
     def setUp(self):
-        _create_current_academic_year()
+        self.academic_year = AcademicYearFactory() #Current academic year
 
     def test_case_none_parameter(self):
-        self.assertRaises(AttributeError, offer_year_calendar.save_from_academic_calendar, *[None])
+        with self.assertRaises(AttributeError):
+            offer_year_calendar.save_from_academic_calendar(None)
 
     def test_case_not_yet_persistent_parameter(self):
-        academic_yr = academic_year.AcademicYear.objects.all().first()
-        academic_cal = academic_calendar.AcademicCalendar(academic_year=academic_yr,
-                                                          title='Scores encodings session 1',
-                                                          start_date=start_date,
-                                                          end_date=end_date)
-        self.assertRaises(ValueError, offer_year_calendar.save_from_academic_calendar, *[academic_cal])
+        academic_calendar = AcademicCalendarFactory.build(academic_year=self.academic_year)
+        with self.assertRaises(ValueError):
+            offer_year_calendar.save_from_academic_calendar(academic_calendar)
 
 
 class AcademicCalendarWithoutOfferYearCalendar(TestCase):
-
-    academic_cal = None
-
     def setUp(self):
-        academic_yr = _create_current_academic_year()
-        academic_cal = academic_calendar.AcademicCalendar(academic_year=academic_yr,
-                                                          title="Deliberations session 3",
-                                                          start_date=start_date,
-                                                          end_date=end_date)
-        academic_cal.save(functions=[])
-        self.academic_cal = academic_cal
+        self.academic_year = AcademicYearFactory() #Current academic year
+        self.academic_calendar = AcademicCalendarFactory.build(academic_year=self.academic_year)
+        self.academic_calendar.save(functions=[])
 
     def test_save_from_academic_calendar(self):
-        self.assertEqual(len(offer_year_calendar.find_by_academic_calendar(self.academic_cal)), 0)
-        offer_year_calendar.save_from_academic_calendar(self.academic_cal)
-        self.assertEqual(len(offer_year_calendar.find_by_academic_calendar(self.academic_cal)),
-                         len(offer_year.find_by_academic_year(self.academic_cal.academic_year)))
-
+        self.assertEqual(len(offer_year_calendar.find_by_academic_calendar(self.academic_calendar)), 0)
+        offer_year_calendar.save_from_academic_calendar(self.academic_calendar)
+        self.assertEqual(len(offer_year_calendar.find_by_academic_calendar(self.academic_calendar)),
+                         len(offer_year.find_by_academic_year(self.academic_calendar.academic_year)))
+#
 
 class AcademicCalendarWithOfferYearCalendarsCustomized(TestCase):
-
-    academic_calendar = None
-
     def setUp(self):
         self.academic_calendar = _create_academic_calendar_with_offer_year_calendars()
-        self.set_offer_year_calendars_customized()
-
-    def set_offer_year_calendars_customized(self):
-        fixed_start_date = datetime.datetime(2010, 4, 1, 16, 8, 18)
-        fixed_end_date = fixed_start_date.replace(year=fixed_start_date.year + 1)
+        #Set offer year calendars customized
         offer_year_calendars = offer_year_calendar.OfferYearCalendar.objects.filter(academic_calendar=self.academic_calendar)
         for off_cal in offer_year_calendars:
             off_cal.customized = True
-            off_cal.start_date = fixed_start_date
-            off_cal.end_date = fixed_end_date
+            off_cal.start_date = datetime.datetime(2010, 4, 1, 16, 8, 18)
+            off_cal.end_date = datetime.datetime(2011, 4, 1, 16, 8, 18)
             off_cal.save()
 
     def test_save_from_academic_calendar(self):
         offer_year_calendars = offer_year_calendar.OfferYearCalendar.objects.filter(academic_calendar=self.academic_calendar,
                                                                                     customized=True)
         for off_y_cal in offer_year_calendars:
-            self.assertEquals(off_y_cal.start_date, start_date)
-            self.assertNotEquals(off_y_cal.end_date, end_date)
+            self.assertEquals(off_y_cal.start_date, datetime.datetime(2010, 4, 1, 16, 8, 18))
+            self.assertNotEquals(off_y_cal.end_date, datetime.datetime(2011, 4, 1, 16, 8, 18))
 
 
 class AcademicCalendarWithOfferYearCalendarsNotCustomized(TestCase):

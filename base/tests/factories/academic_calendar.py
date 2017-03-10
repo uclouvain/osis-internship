@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -24,26 +24,33 @@
 #
 ##############################################################################
 import datetime
-from django.test import TestCase
-from base.models import learning_unit_year
-from base.tests.factories.tutor import TutorFactory
+import factory
+import factory.fuzzy
+import string
+from django.conf import settings
+from django.utils import timezone
 from base.tests.factories.academic_year import AcademicYearFactory
-from base.tests.factories.learning_unit import LearningUnitFactory
-from base.tests.factories.learning_unit_year import LearningUnitYearFactory
 
-def create_learning_unit_year(acronym, title, academic_year):
-    learning_unit = LearningUnitFactory(acronym=acronym, title=title, start_year=2010)
-    return LearningUnitYearFactory(acronym=acronym,
-                                   title=title,
-                                   academic_year=academic_year,
-                                   learning_unit=learning_unit)
 
-class LearningUnitYearTest(TestCase):
-    def setUp(self):
-        self.tutor = TutorFactory()
-        self.academic_year = AcademicYearFactory(year=datetime.datetime.now().year)
-        self.learning_unit_year = LearningUnitYearFactory(acronym="LDROI1004", title="Juridic law courses",
-                                                          academic_year=self.academic_year)
+def _get_tzinfo():
+    if settings.USE_TZ:
+        return timezone.get_current_timezone()
+    else:
+        return None
 
-    def test_find_by_tutor_with_none_argument(self):
-        self.assertEquals(learning_unit_year.find_by_tutor(None), None)
+
+class AcademicCalendarFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = 'base.AcademicCalendar'
+
+    external_id = factory.fuzzy.FuzzyText(length=10, chars=string.digits)
+    changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=_get_tzinfo()),
+                                          datetime.datetime(2017, 3, 1, tzinfo=_get_tzinfo()))
+    academic_year = factory.SubFactory(AcademicYearFactory)
+    title = factory.Sequence(lambda n: 'Academic Calendar - %d' % n)
+    start_date = factory.LazyAttribute(lambda obj: datetime.date(timezone.now().year, 1, 1))
+    end_date = factory.LazyAttribute(lambda obj: datetime.date(timezone.now().year+1, 12, 30))
+    highlight_title = factory.Sequence(lambda n: 'Highlight - %d' % n)
+    highlight_description = factory.Sequence(lambda n: 'Description - %d' % n)
+    highlight_shortcut = factory.Sequence(lambda n: 'Shortcut Highlight - %d' % n)
+
