@@ -86,3 +86,11 @@ class PersonTest(PersonTestCase):
                                 source=None)
         with self.assertDontRaise():
             p.save()
+
+    def test_find_by_global_id(self):
+        a_person = person.Person(global_id="123")
+        a_person.save()
+        dupplicated_person = person.Person(global_id="123")
+        dupplicated_person.save()
+        found_person = person.find_by_global_id("1234")
+        return self.assertEqual(found_person, None, "find_by_global_id should return None if a record is not found.")

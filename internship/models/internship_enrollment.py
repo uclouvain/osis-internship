@@ -28,8 +28,8 @@ from django.contrib import admin
 
 
 class InternshipEnrollmentAdmin(admin.ModelAdmin):
-    list_display = ('student', 'internship_offer', 'place', 'period')
-    fieldsets = ((None, {'fields': ('student', 'internship_offer', 'place', 'period')}),)
+    list_display = ('student', 'internship_offer', 'place', 'period', 'internship_choice')
+    fieldsets = ((None, {'fields': ('student', 'internship_offer', 'place', 'period', 'internship_choice')}),)
     raw_id_fields = ('student', 'internship_offer', 'place', 'period')
 
 
@@ -38,6 +38,7 @@ class InternshipEnrollment(models.Model):
     internship_offer = models.ForeignKey('internship.InternshipOffer')
     place = models.ForeignKey('internship.Organization')
     period = models.ForeignKey('internship.Period')
+    internship_choice = models.IntegerField(default=1)
 
     def __str__(self):
         return u"%s - %s" % (self.student, self.internship_offer.title)
@@ -47,3 +48,11 @@ def search(**kwargs):
     kwargs = {k: v for k, v in kwargs.items() if v}
     return InternshipEnrollment.objects.filter(**kwargs)\
                                        .select_related("student", "internship_offer", "place", "period")
+
+
+def search_by_student_and_internship(student, internship_choice):
+    return InternshipEnrollment.objects.filter(student=student, internship_choice=internship_choice)
+
+
+def find_by_student(student):
+    return InternshipEnrollment.objects.filter(student=student)

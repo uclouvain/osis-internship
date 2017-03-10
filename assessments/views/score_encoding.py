@@ -33,6 +33,7 @@ from django.utils.translation import ugettext as trans
 from psycopg2._psycopg import OperationalError as PsycopOperationalError, InterfaceError as  PsycopInterfaceError
 from django.db.utils import OperationalError as DjangoOperationalError, InterfaceError as DjangoInterfaceError
 from base import models as mdl
+from assessments import models as mdl_assess
 from base.enums.exam_enrollment_justification_type import JUSTIFICATION_TYPES
 from attribution import models as mdl_attr
 from osis_common.document import paper_sheet
@@ -40,7 +41,6 @@ from base.utils import send_mail
 from assessments.views import export_utils
 from base.views import layout
 import json
-import datetime
 from osis_common.models.queue_exception import QueueException
 import logging
 from django.conf import settings
@@ -53,11 +53,13 @@ queue_exception_logger = logging.getLogger(settings.QUEUE_EXCEPTION_LOGGER)
 def _is_inside_scores_encodings_period(user):
     return mdl.session_exam.is_inside_score_encoding()
 
+
 def _is_not_inside_scores_encodings_period(user):
     return not _is_inside_scores_encodings_period(user)
 
+
 @login_required
-@permission_required('base.can_access_scoreencoding', raise_exception=True)
+@permission_required('assessments.can_access_scoreencoding', raise_exception=True)
 @user_passes_test(_is_not_inside_scores_encodings_period, login_url=reverse_lazy('scores_encoding'))
 def outside_period(request):
     latest_session_exam = mdl.session_exam.get_latest_session_exam()
@@ -86,7 +88,7 @@ def _truncate_decimals(new_score, new_justification, decimal_scores_authorized):
 
 @login_required
 @user_passes_test(_is_inside_scores_encodings_period, login_url=reverse_lazy('outside_scores_encodings_period'))
-@permission_required('base.can_access_scoreencoding', raise_exception=True)
+@permission_required('assessments.can_access_scoreencoding', raise_exception=True)
 def scores_encoding(request):
     # In case the user is a program manager
     if mdl.program_manager.is_program_manager(request.user):
@@ -101,7 +103,7 @@ def scores_encoding(request):
 
 @login_required
 @user_passes_test(_is_inside_scores_encodings_period, login_url=reverse_lazy('outside_scores_encodings_period'))
-@permission_required('base.can_access_scoreencoding', raise_exception=True)
+@permission_required('assessments.can_access_scoreencoding', raise_exception=True)
 def online_encoding(request, learning_unit_year_id=None):
     data_dict = get_data_online(learning_unit_year_id, request)
     return layout.render(request, "online_encoding.html", data_dict)
@@ -156,7 +158,7 @@ def filter_enrollments_by_offer_year(enrollments, offer_year):
 
 @login_required
 @user_passes_test(_is_inside_scores_encodings_period, login_url=reverse_lazy('outside_scores_encodings_period'))
-@permission_required('base.can_access_scoreencoding', raise_exception=True)
+@permission_required('assessments.can_access_scoreencoding', raise_exception=True)
 def online_encoding_form(request, learning_unit_year_id=None):
     data = get_data_online(learning_unit_year_id, request)
     if request.method == 'GET':
@@ -238,7 +240,7 @@ def has_modify_exam_enrollment(exam_enrollment, new_score, new_justification):
 
 @login_required
 @user_passes_test(_is_inside_scores_encodings_period, login_url=reverse_lazy('outside_scores_encodings_period'))
-@permission_required('base.can_access_scoreencoding', raise_exception=True)
+@permission_required('assessments.can_access_scoreencoding', raise_exception=True)
 def online_double_encoding_form(request, learning_unit_year_id=None):
     data = get_data_online_double(learning_unit_year_id, request)
     encoded_exam_enrollments = data['enrollments']
@@ -287,7 +289,7 @@ def online_double_encoding_form(request, learning_unit_year_id=None):
 
 @login_required
 @user_passes_test(_is_inside_scores_encodings_period, login_url=reverse_lazy('outside_scores_encodings_period'))
-@permission_required('base.can_access_scoreencoding', raise_exception=True)
+@permission_required('assessments.can_access_scoreencoding', raise_exception=True)
 def online_double_encoding_validation(request, learning_unit_year_id=None, tutor_id=None):
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
     academic_year = mdl.academic_year.current_academic_year()
@@ -313,7 +315,7 @@ def online_double_encoding_validation(request, learning_unit_year_id=None, tutor
 
 @login_required
 @user_passes_test(_is_inside_scores_encodings_period, login_url=reverse_lazy('outside_scores_encodings_period'))
-@permission_required('base.can_access_scoreencoding', raise_exception=True)
+@permission_required('assessments.can_access_scoreencoding', raise_exception=True)
 def online_encoding_submission(request, learning_unit_year_id):
     is_program_manager = mdl.program_manager.is_program_manager(request.user)
     exam_enrollments = _get_exam_enrollments(request.user,
@@ -357,7 +359,7 @@ def upload_score_error(request):
 
 @login_required
 @user_passes_test(_is_inside_scores_encodings_period, login_url=reverse_lazy('outside_scores_encodings_period'))
-@permission_required('base.can_access_scoreencoding', raise_exception=True)
+@permission_required('assessments.can_access_scoreencoding', raise_exception=True)
 def notes_printing(request, learning_unit_year_id=None, tutor_id=None, offer_id=None):
     academic_year = mdl.academic_year.current_academic_year()
     is_program_manager = mdl.program_manager.is_program_manager(request.user)
@@ -368,17 +370,19 @@ def notes_printing(request, learning_unit_year_id=None, tutor_id=None, offer_id=
                                              offer_year_id=offer_id,
                                              is_program_manager=is_program_manager)
     tutor = mdl.tutor.find_by_user(request.user) if not is_program_manager else None
-    return paper_sheet.print_notes(exam_enrollments, tutor=tutor)
+    sheet_data = mdl.exam_enrollment.scores_sheet_data(exam_enrollments, tutor=tutor)
+    return paper_sheet.print_notes(sheet_data)
+
 
 @login_required
-@permission_required('base.can_access_scoreencoding', raise_exception=True)
+@permission_required('assessments.can_access_scoreencoding', raise_exception=True)
 def notes_printing_all(request, tutor_id=None, offer_id=None):
     return notes_printing(request, tutor_id=tutor_id, offer_id=offer_id)
 
 
 @login_required
 @user_passes_test(_is_inside_scores_encodings_period, login_url=reverse_lazy('outside_scores_encodings_period'))
-@permission_required('base.can_access_scoreencoding', raise_exception=True)
+@permission_required('assessments.can_access_scoreencoding', raise_exception=True)
 def export_xls(request, learning_unit_year_id):
     academic_year = mdl.academic_year.current_academic_year()
     is_program_manager = mdl.program_manager.is_program_manager(request.user)
@@ -537,7 +541,7 @@ def get_data_pgmer(request,
             .values_list('id', flat=True)
 
     if not offer_year_id:
-        scores_encodings = list(mdl.scores_encoding.search(request.user, learning_unit_year_ids=learning_unit_year_ids))
+        scores_encodings = list(mdl_assess.scores_encoding.search(request.user, learning_unit_year_ids=learning_unit_year_ids))
         # Adding exam_enrollments_encoded & total_exam_enrollments
         # from each offers year for a matching learning_unit_year
         group_by_learning_unit = {}
@@ -555,7 +559,7 @@ def get_data_pgmer(request,
     else:
         # Filter list by offer_year
         offer_year_id = int(offer_year_id)  # The offer_year_id received in session is a String, not an Int
-        scores_encodings = list(mdl.scores_encoding.search(request.user,
+        scores_encodings = list(mdl_assess.scores_encoding.search(request.user,
                                                            offer_year_id=offer_year_id,
                                                            learning_unit_year_ids=learning_unit_year_ids))
         scores_encodings = [score_encoding for score_encoding in scores_encodings
@@ -635,7 +639,7 @@ def get_data_pgmer(request,
 
 @login_required
 @user_passes_test(_is_inside_scores_encodings_period, login_url=reverse_lazy('outside_scores_encodings_period'))
-@permission_required('base.can_access_scoreencoding', raise_exception=True)
+@permission_required('assessments.can_access_scoreencoding', raise_exception=True)
 def refresh_list(request):
     # In case the user is a program manager
     if mdl.program_manager.is_program_manager(user=request.user):
@@ -652,7 +656,7 @@ def refresh_list(request):
 
 @login_required
 @user_passes_test(_is_inside_scores_encodings_period, login_url=reverse_lazy('outside_scores_encodings_period'))
-@permission_required('base.can_access_scoreencoding', raise_exception=True)
+@permission_required('assessments.can_access_scoreencoding', raise_exception=True)
 def get_data_specific_criteria(request):
     registration_id = request.POST.get('registration_id', None)
     last_name = request.POST.get('last_name', None)
@@ -701,20 +705,20 @@ def get_data_specific_criteria(request):
 
 
 @login_required
-@permission_required('base.can_access_scoreencoding', raise_exception=True)
+@permission_required('assessments.can_access_scoreencoding', raise_exception=True)
 def specific_criteria(request):
     data = get_data_specific_criteria(request)
     return layout.render(request, "scores_encoding_by_specific_criteria.html", data)
 
 
 @login_required
-@permission_required('base.can_access_scoreencoding', raise_exception=True)
+@permission_required('assessments.can_access_scoreencoding', raise_exception=True)
 def search_by_specific_criteria(request):
     return specific_criteria(request)
 
 
 @login_required
-@permission_required('base.can_access_scoreencoding', raise_exception=True)
+@permission_required('assessments.can_access_scoreencoding', raise_exception=True)
 def specific_criteria_submission(request):
     data = get_data_specific_criteria(request)
 

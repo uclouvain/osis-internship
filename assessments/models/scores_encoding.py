@@ -42,10 +42,10 @@ class ScoresEncodingAdmin(admin.ModelAdmin):
 # Mapping of a view.
 class ScoresEncoding(models.Model):
     id = models.BigIntegerField(primary_key=True)
-    program_manager = models.ForeignKey('ProgramManager', on_delete=models.DO_NOTHING)
-    pgm_manager_person = models.ForeignKey('Person', related_name='pgm_manager_person', on_delete=models.DO_NOTHING)
-    offer_year = models.ForeignKey('OfferYear', on_delete=models.DO_NOTHING)
-    learning_unit_year = models.ForeignKey('LearningUnitYear', on_delete=models.DO_NOTHING)
+    program_manager = models.ForeignKey('base.ProgramManager', on_delete=models.DO_NOTHING)
+    pgm_manager_person = models.ForeignKey('base.Person', related_name='pgm_manager_person', on_delete=models.DO_NOTHING)
+    offer_year = models.ForeignKey('base.OfferYear', on_delete=models.DO_NOTHING)
+    learning_unit_year = models.ForeignKey('base.LearningUnitYear', on_delete=models.DO_NOTHING)
     total_exam_enrollments = models.IntegerField()
     exam_enrollments_encoded = models.IntegerField()
     scores_not_yet_submitted = models.IntegerField()
@@ -76,4 +76,3 @@ def search(user, learning_unit_year_id=None, offer_year_id=None, learning_unit_y
         queryset = queryset.filter(learning_unit_year_id__in=learning_unit_year_ids)
 
     return queryset.filter(pgm_manager_person__user=user)
-

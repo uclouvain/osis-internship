@@ -79,6 +79,9 @@ msgstr	 "Civilité"
 msgid	 "create_a_speciality"
 msgstr	 "Créer une spécialité"
 
+msgid	 "current_choices"
+msgstr	 "Choix actuels"
+
 msgid	 "date_end"
 msgstr	 "Date de fin"
 
@@ -374,7 +377,7 @@ msgid "priority"
 msgstr "Prioritaire"
 
 msgid "generalist"
-msgstr "généraliste"
+msgstr "Généraliste"
 
 msgid "preference"
 msgstr "Préférence"
