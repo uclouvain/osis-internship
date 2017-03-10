@@ -24,11 +24,13 @@
 #
 ##############################################################################
 from django.test import TestCase
+
+import internship.utils.student_assignment.internship_wrapper
 from base.tests.models import test_student
+from internship.models import internship_student_affectation_stat as mdl_student_affectation
 from internship.tests.models import test_organization, test_internship_speciality, test_internship_choice, \
     test_internship_offer, test_period, test_period_internship_places
-from internship.utils import affect_student
-from internship.models import internship_student_affectation_stat as mdl_student_affectation
+from internship.utils.student_assignment import solver
 
 
 class TestAffectStudent(TestCase):
@@ -92,10 +94,10 @@ class TestAffectStudent(TestCase):
         test_period_internship_places.create_period_places(self.offer_3, period_9, 2)
         test_period_internship_places.create_period_places(self.offer_3, period_11, 2)
 
-        self.current_student_affectations = affect_student._load_current_students_affectations()
+        self.current_student_affectations = solver._load_current_students_affectations()
 
     def test_init_solver(self):
-        solver = affect_student.init_solver(self.current_student_affectations)
+        solver = solver.init_solver(self.current_student_affectations)
         self.assertEqual(len(solver.students_by_registration_id), 2)
         self.assertEqual(len(solver.offers_by_organization_speciality), 3)
 
@@ -120,7 +122,7 @@ class TestAffectStudent(TestCase):
             self.assertIn(free_period, actual_free_periods)
 
     def test_offer_places_left(self):
-        offer = affect_student.InternshipWrapper(self.offer_1)
+        offer = internship.utils.student_assignment.internship_wrapper.InternshipWrapper(self.offer_1)
         offer.set_period_places(self.period_places_1)
 
         for x in range(0, self.period_places_1.number_places):
@@ -130,14 +132,14 @@ class TestAffectStudent(TestCase):
         self.assertFalse(offer.is_not_full())
 
     def test_solve(self):
-        solver = affect_student.init_solver(self.current_student_affectations)
+        solver = solver.init_solver(self.current_student_affectations)
         try:
-            assignments, cost = affect_student.launch_solver(solver)
+            assignments, cost = solver.launch_solver(solver)
         except Exception:
             self.fail()
         self.assertEqual(len(assignments), 8)
 
-        affect_student.save_assignments_to_db(assignments)
+        solver.save_assignments_to_db(assignments)
 
         self.assertEqual(mdl_student_affectation.InternshipStudentAffectationStat.objects.all().count(), 8)
 
@@ -148,7 +150,7 @@ class TestAffectStudent(TestCase):
                                                                                speciality=self.offer_1.speciality,
                                                                                choice=1, cost=0)
         affectation.save()
-        solver = affect_student.init_solver(affect_student._load_current_students_affectations())
+        solver = solver.init_solver(solver._load_current_students_affectations())
         internship_wrapper = solver.get_offer(self.offer_1.organization.id, self.offer_1.speciality.id)
         self.assertEqual(internship_wrapper.periods_places_left[self.period_places_1.period.name], 1)
 
