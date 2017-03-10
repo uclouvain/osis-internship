@@ -127,52 +127,27 @@
                             <li><a data-toggle="tab" href="#tab_rep">{% trans 'student_affectation' %}</a></li>
                         </ul>
                         <div class="tab-content">
-                            {% if selectable %}
-                                <div id="tab_choice" class="tab-pane fade in active">
-                                    <div class="panel panel-default">
-                                        <div class="tab-content">
-                                            <div role="tabpanel" class="tab-pane fade in active" id="profile">
-                                                {% for internship in internships %}
-                                                        <label>{% trans 'internship' %} {{ internship }}</label><br/>
-                                                        <ul>
-                                                            {% for choice in internship_choice %}
-                                                                {% if choice.internship_choice == internship %}
-                                                                    <li> {% trans 'organization' %} :
-                                                                    {{ choice.organization.reference }} - {{ choice.organization.name }} |
-                                                                    {% trans 'choice' %} : {{ choice.choice }}
-                                                                {% endif %}
-                                                            {% endfor %}
-                                                        </ul>
+                            <div id="tab_choice" class="tab-pane fade in active">
+                                <div class="panel panel-default">
+                                    <div class="tab-content">
+                                        <div role="tabpanel" class="tab-pane fade in active" id="profile">
+                                            {% for internship in number_internships %}
+                                                <label>{% trans 'internship' %} {{ internship }}</label><br/>
+                                                <ul>
+                                                    {% for choice in internship_choice %}
+                                                        {% if choice.internship_choice == internship %}
+                                                            <li> {% trans 'organization' %} :
+                                                            {{ choice.organization.reference }} - {{ choice.organization.name }} |
+                                                            {% trans 'speciality' %} - {{ choice.speciality.name }} |
+                                                            {% trans 'choice' %} : {{ choice.choice }}
+                                                        {% endif %}
                                                     {% endfor %}
-
-                                            </div>
+                                                </ul>
+                                            {% endfor %}
                                         </div>
                                     </div>
                                 </div>
-                            {% else %}
-                                {% if  perms.internship.is_internship_manager %}
-                                    <div id="tab_choice" class="tab-pane fade in active">
-                                        <div class="panel panel-default">
-                                            <div class="tab-content">
-                                                <div role="tabpanel" class="tab-pane fade in active" id="profile">
-                                                    {% for internship in number_internships %}
-                                                        <label>{% trans 'internship' %} {{ internship }}</label><br/>
-                                                        <ul>
-                                                            {% for choice in internship_choice %}
-                                                                {% if choice.internship_choice == internship %}
-                                                                    <li> {% trans 'organization' %} :
-                                                                    {{ choice.organization.reference }} - {{ choice.organization.name }} |
-                                                                    {% trans 'choice' %} : {{ choice.choice }}
-                                                                {% endif %}
-                                                            {% endfor %}
-                                                        </ul>
-                                                    {% endfor %}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endif %}
-                            {% endif %}
+                            </div>
                             <div id="tab_rep" class="tab-pane fade">
                                 <div class="panel panel-default">
                                     <div class="tab-content">
@@ -190,7 +165,7 @@
                                                 {% for affectation in affectations %}
                                                     {% if affectation.period == period %}
                                                         <p>{{affectation.speciality.name}} |
-                                                            {{affectation.organization.reference}} {{affectation.organization.name}}<br/>
+                                                            {{affectation.organization.reference}} {{affectation.organization.name}} ({{ affectation.speciality.name }})<br/>
                                                             {% trans 'address' %} :
                                                             {{affectation.organization.address.location}} {{affectation.organization.address.postal_code}}
                                                             {{affectation.organization.address.city}}

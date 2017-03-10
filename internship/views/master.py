@@ -32,7 +32,7 @@ from internship import models as mdl_internship
 
 
 @login_required
-@permission_required('internship.can_access_internship', raise_exception=True)
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def interships_masters(request):
     # First get the value of the 2 options for the sort
     if request.method == 'GET':
