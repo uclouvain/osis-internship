@@ -23,27 +23,22 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import datetime
+from base.models import learning_container_year
+from base.tests.factories.learning_container import LearningContainerFactory
+from base.tests.factories.learning_container_year import LearningContainerYearFactory
 from django.test import TestCase
-from base.models import learning_unit_year
-from base.tests.factories.tutor import TutorFactory
-from base.tests.factories.academic_year import AcademicYearFactory
-from base.tests.factories.learning_unit import LearningUnitFactory
-from base.tests.factories.learning_unit_year import LearningUnitYearFactory
 
-def create_learning_unit_year(acronym, title, academic_year):
-    learning_unit = LearningUnitFactory(acronym=acronym, title=title, start_year=2010)
-    return LearningUnitYearFactory(acronym=acronym,
-                                   title=title,
-                                   academic_year=academic_year,
-                                   learning_unit=learning_unit)
+class LearningContainerYearTest(TestCase):
+    def test_title_learning_container_different_from_title_learning_container_year(self):
+        l_container = LearningContainerFactory(title="LC-98998")
+        l_container_year = LearningContainerYearFactory.build(title="LC-DIFFERENT", learning_container=l_container)
+        with self.assertRaises(AttributeError):
+            l_container_year.save()
 
-class LearningUnitYearTest(TestCase):
-    def setUp(self):
-        self.tutor = TutorFactory()
-        self.academic_year = AcademicYearFactory(year=datetime.datetime.now().year)
-        self.learning_unit_year = LearningUnitYearFactory(acronym="LDROI1004", title="Juridic law courses",
-                                                          academic_year=self.academic_year)
+    def test_find_by_id_with_id(self):
+        l_container_year = LearningContainerYearFactory()
+        self.assertEqual(l_container_year, learning_container_year.find_by_id(l_container_year.id))
 
-    def test_find_by_tutor_with_none_argument(self):
-        self.assertEquals(learning_unit_year.find_by_tutor(None), None)
+    def test_find_by_id_with_wrong_value(self):
+        with self.assertRaises(ValueError):
+            learning_container_year.find_by_id("BAD VALUE")

@@ -54,16 +54,21 @@ def _is_inside_scores_encodings_period(user):
     return mdl.session_exam.is_inside_score_encoding()
 
 
+def _is_not_inside_scores_encodings_period(user):
+    return not _is_inside_scores_encodings_period(user)
+
+
 @login_required
 @permission_required('assessments.can_access_scoreencoding', raise_exception=True)
+@user_passes_test(_is_not_inside_scores_encodings_period, login_url=reverse_lazy('scores_encoding'))
 def outside_period(request):
     latest_session_exam = mdl.session_exam.get_latest_session_exam()
-    closest_date = None
     if latest_session_exam:
-        closest_date = latest_session_exam.offer_year_calendar.academic_calendar.end_date
-    str_date = closest_date.strftime('%d/%m/%Y') if closest_date else ''
+        str_date = latest_session_exam.offer_year_calendar.academic_calendar.end_date.strftime('%d/%m/%Y')
+    else:
+        str_date = ""
     text = trans('outside_scores_encodings_period') % str_date
-    messages.add_message(request, messages.WARNING, "%s" % text)
+    messages.add_message(request, messages.WARNING, text)
     return layout.render(request, "outside_scores_encodings_period.html", {})
 
 

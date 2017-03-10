@@ -40,7 +40,7 @@ def create_exam_enrollment_with_student(num_id, registration_id, offer_year, lea
     student = test_student.create_student("Student" + str(num_id), "Etudiant" + str(num_id), registration_id)
     offer_enrollment = test_offer_enrollment.create_offer_enrollment(student, offer_year)
     learning_unit_enrollment = test_learning_unit_enrollment.create_learning_unit_enrollment(learning_unit_year,
-                                                                              offer_enrollment)
+                                                                                             offer_enrollment)
     offer_year_calendar = test_offer_year_calendar.create_offer_year_calendar(offer_year, academic_year)
     session_exam = test_session_exam.create_session_exam(1, learning_unit_year, offer_year_calendar)
     return create_exam_enrollment(session_exam, learning_unit_enrollment)
@@ -60,7 +60,8 @@ class ExamEnrollmentTest(TestCase):
         self.learn_unit_enrol = test_learning_unit_enrollment.create_learning_unit_enrollment(self.learn_unit_year,
                                                                                               self.offer_enrollment)
         self.exam_enrollment = exam_enrollment.ExamEnrollment(session_exam=self.session_exam,
-                                                              learning_unit_enrollment=self.learn_unit_enrol)
+                                                              learning_unit_enrollment=self.learn_unit_enrol,
+                                                              score_final=12.6)
 
     def test_save_with_invalid_justification_draft(self):
         ex_enrol = self.exam_enrollment
@@ -76,3 +77,11 @@ class ExamEnrollmentTest(TestCase):
         ex_enrol = self.exam_enrollment
         ex_enrol.justification_reencoded = 'invalid_justification'
         self.assertRaises(exceptions.JustificationValueException, ex_enrol.save)
+
+    def test_calculate_exam_enrollment_without_progress(self):
+        self.assertEqual(exam_enrollment.calculate_exam_enrollment_progress(None), 0)
+
+    def test_calculate_exam_enrollment_with_progress(self):
+        ex_enrol = [self.exam_enrollment]
+        progress = exam_enrollment.calculate_exam_enrollment_progress(ex_enrol)
+        self.assertTrue(0 <= progress <= 100)

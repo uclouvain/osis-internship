@@ -55,17 +55,17 @@
     	<div class="form-group">
       			<label style="padding-top: 5px" for="phd_inscription_date">{% trans 'phd_inscription_date' %}</label>
 				<div class="controls" id="phd_inscription_date">{{ form.phd_inscription_date }}</div>
-				<font class="error">{{ form.phd_inscription_date.errors }}</font>
+				<span class="error">{{ form.phd_inscription_date.errors }}</span>
 				<label for="thesis_title" style="padding-top: 5px">{% trans 'thesis_title' %}</label>
 				<div class="controls" id="thesis_title">{{ form.thesis_title }}</div>
-				<font class="error">{{ form.thesis_title.errors }}</font>
+				<span class="error">{{ form.thesis_title.errors }}</span>
 				<label for="confirmatory_test_date" style="padding-top: 5px">{% trans 'confirmatory_test_date' %}
 					{% trans '2nd_renewal' %}</label>
 				<div class="controls" id="confirmatory_test_date">{{ form.confirmation_test_date }}</div>
-				<font class="error">{{ form.confirmation_test_date.errors }}</font>
+				<span class="error">{{ form.confirmation_test_date.errors }}</span>
                 <label for="remark" style="padding-top: 5px">{% trans 'doctorate_remark' %}</label>
                  <div class="controls" id="remark">{{ form.remark }}</div>
-                <font class="error">{{ form.remark.errors }}</font>
+                <span class="error">{{ form.remark.errors }}</span>
         </div>
         <div class="panel-default">
   			<div class="panel-heading">

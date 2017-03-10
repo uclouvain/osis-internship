@@ -23,27 +23,25 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import datetime
-from django.test import TestCase
-from base.models import learning_unit_year
-from base.tests.factories.tutor import TutorFactory
+import factory
+import factory.fuzzy
+from django.conf import settings
+from django.utils import timezone
+
 from base.tests.factories.academic_year import AcademicYearFactory
-from base.tests.factories.learning_unit import LearningUnitFactory
-from base.tests.factories.learning_unit_year import LearningUnitYearFactory
+from base.tests.factories.learning_container import LearningContainerFactory
 
-def create_learning_unit_year(acronym, title, academic_year):
-    learning_unit = LearningUnitFactory(acronym=acronym, title=title, start_year=2010)
-    return LearningUnitYearFactory(acronym=acronym,
-                                   title=title,
-                                   academic_year=academic_year,
-                                   learning_unit=learning_unit)
+def _get_tzinfo():
+    if settings.USE_TZ:
+        return timezone.get_current_timezone()
+    else:
+        return None
 
-class LearningUnitYearTest(TestCase):
-    def setUp(self):
-        self.tutor = TutorFactory()
-        self.academic_year = AcademicYearFactory(year=datetime.datetime.now().year)
-        self.learning_unit_year = LearningUnitYearFactory(acronym="LDROI1004", title="Juridic law courses",
-                                                          academic_year=self.academic_year)
+class LearningContainerYearFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = "base.LearningContainerYear"
 
-    def test_find_by_tutor_with_none_argument(self):
-        self.assertEquals(learning_unit_year.find_by_tutor(None), None)
+    academic_year = factory.SubFactory(AcademicYearFactory)
+    learning_container = factory.SubFactory(LearningContainerFactory)
+    title = factory.LazyAttribute(lambda obj: obj.learning_container.title)
+    acronym = factory.Sequence(lambda n: 'LCY-%d' % n)
