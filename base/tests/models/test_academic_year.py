@@ -27,14 +27,15 @@ import datetime
 from django.utils import timezone
 from django.test import TestCase
 from base.models import academic_year
-
 from base.tests.factories.academic_year import AcademicYearFactory
 from django.core.exceptions import ObjectDoesNotExist
 
 now = datetime.datetime.now()
 
+
 def create_academic_year(year=now.year):
     return AcademicYearFactory(year=year)
+
 
 class MultipleAcademicYearTest(TestCase):
     def setUp(self):
@@ -66,11 +67,13 @@ class MultipleAcademicYearTest(TestCase):
         academic_yr = academic_year.starting_academic_year()
         self.assertEqual(academic_yr.year, now.year)
 
+
 class SingleAcademicYearTest(TestCase):
     def test_starting_equalto_current(self):
         academic_yr = AcademicYearFactory(year=timezone.now().year)
         starting_academic_year = academic_year.starting_academic_year()
         self.assertEqual(starting_academic_year.year, academic_yr.year)
+
 
 class InexistingAcademicYearTest(TestCase):
     def test_no_starting_academic_year(self):
@@ -81,35 +84,37 @@ class InexistingAcademicYearTest(TestCase):
         with self.assertRaises(ObjectDoesNotExist):
             academic_year.starting_academic_year()
 
+
 class PeriodAcademicYearTest(TestCase):
     def test_future_academic_year(self):
-        academic_year = AcademicYearFactory.build(year=(now.year + 1),
-                                                  start_date=datetime.datetime(now.year + 1, now.month, 15),
-                                                  end_date=datetime.datetime(now.year + 2, now.month, 28))
+        acyr = AcademicYearFactory.build(year=(now.year + 1),
+                                         start_date=datetime.datetime(now.year + 1, now.month, 15),
+                                         end_date=datetime.datetime(now.year + 2, now.month, 28))
         with self.assertRaises(AttributeError):
-            academic_year.save()
+            acyr.save()
 
     def test_start_date_year_same_of_year(self):
-        academic_year = AcademicYearFactory.build(year=now.year,
-                                                  start_date=datetime.datetime(now.year+1, now.month, 15),
-                                                  end_date=datetime.datetime(now.year+1, now.month, 28))
+        acyr = AcademicYearFactory.build(year=now.year,
+                                         start_date=datetime.datetime(now.year+1, now.month, 15),
+                                         end_date=datetime.datetime(now.year+1, now.month, 28))
         with self.assertRaises(AttributeError):
-            academic_year.save()
+            acyr.save()
 
     def test_more_than_two_academic_year_in_same_period(self):
         academic_year.AcademicYear.objects.create(year=2015,
                                                   start_date=datetime.datetime(2015, 9, 15),
                                                   end_date=datetime.datetime(2016, 9, 30))
         academic_year.AcademicYear.objects.create(year=2016,
-                                                 start_date=datetime.datetime(2016, 9, 15),
-                                                 end_date=datetime.datetime(2017, 9, 30))
+                                                  start_date=datetime.datetime(2016, 9, 15),
+                                                  end_date=datetime.datetime(2017, 9, 30))
         with self.assertRaises(AttributeError):
             academic_year.AcademicYear.objects.create(year=2017,
                                                       start_date=datetime.datetime(2017, 9, 14),
                                                       end_date=datetime.datetime(2019, 9, 30))
+
     def test_start_date_before_end_date(self):
-        academic_year = AcademicYearFactory.build(year=now.year,
-                                                 start_date=datetime.datetime(now.year, now.month, 15),
-                                                 end_date=datetime.datetime(now.year, now.month, 15))
+        acyr = AcademicYearFactory.build(year=now.year,
+                                         start_date=datetime.datetime(now.year, now.month, 15),
+                                         end_date=datetime.datetime(now.year, now.month, 15))
         with self.assertRaises(AttributeError):
-            academic_year.save()
+            acyr.save()
