@@ -45,7 +45,7 @@ class Student(SerializableModel):
         return u"%s (%s)" % (self.person, self.registration_id)
 
 
-def find_by(registration_id=None, person_name=None, person_username=None, person_first_name=None, full_registration = None):
+def find_by(registration_id=None, person_name=None, person_username=None, person_first_name=None, full_registration=None):
     """
     Find students by optional arguments. At least one argument should be informed
     otherwise it returns empty.
@@ -54,23 +54,18 @@ def find_by(registration_id=None, person_name=None, person_username=None, person
     queryset = Student.objects
 
     if registration_id:
-        if (full_registration):
+        if full_registration:
             queryset = queryset.filter(registration_id=registration_id)
-        else :
+        else:
             queryset = queryset.filter(registration_id__icontains=registration_id)
-
     if person_name:
         queryset = queryset.filter(person__last_name__icontains=person_name)
-
     if person_username:
         queryset = queryset.filter(person__user=person_username)
-
     if person_first_name:
         queryset = queryset.filter(person__first_name__icontains=person_first_name)
-
     if registration_id or person_name or person_username or person_first_name:
         out = queryset
-
     return out
 
 

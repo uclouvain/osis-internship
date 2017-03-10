@@ -106,7 +106,7 @@ def studies(request):
 @login_required
 @permission_required('base.can_access_evaluation', raise_exception=True)
 def assessments(request):
-    return layout.render(request, "assessments/assessments.html", {'section': 'assessments'})
+    return layout.render(request, "assessments.html", {'section': 'assessments'})
 
 
 @login_required

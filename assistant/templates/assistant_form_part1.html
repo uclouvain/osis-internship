@@ -52,7 +52,7 @@
  		{{ form.non_field_errors }}
  		<div class="panel-primary">
   			<div class="panel-heading">
-  				<font size="4">{% trans 'contact_details' %}</font>
+				<h4>{% trans 'contact_details' %}</h4>
   			</div>
   		</div>
 		<div class="form-group" style="padding-top: 15px;">
@@ -68,7 +68,7 @@
 		<hr>
   		<div class="panel-info">
   			<div class="panel-heading">
-  				<font size="4">{% trans 'contract' %}</font>
+				<h4>{% trans 'contract' %}</h4>
   			</div>
   		</div>
   		<div class="form-group" style="padding-top: 15px;">
@@ -104,19 +104,19 @@
   		<hr>
   		<div class="panel-danger">
   			<div class="panel-heading">
-  				<font size="4">{% trans 'doctorate' %}</font>
+				<h4>{% trans 'doctorate' %}</h4>
     		</div>
     	</div>
     	<div class="form-group" style="padding-top: 15px;">
 			<label style="padding-top: 5px" for="registered_phd">{% trans 'registered_phd' %}</label>
 			<div class="controls" id="registered_phd">{{ form.inscription }}
-				<font class="error">{{ form.inscription.errors }}</font>
+				<span class="error">{{ form.inscription.errors }}</span>
 			</div>
     		<label style="padding-top: 5px" for="expected_phd_date">
 				{% trans 'expected_registering_date' %}
 			</label>
         	<div class="controls" id="expected_phd_date">{{ form.expected_phd_date }}
-				<font class="error">{{ form.expected_phd_date.errors }}</font>
+				<span class="error">{{ form.expected_phd_date.errors }}</span>
 			</div>
 			{% if not supervisor %}
 			<label style="padding-top: 5px" for="search_persons">{% trans 'supervisor' %}</label>
@@ -132,46 +132,46 @@
 			{% endif %}
 			<label style="padding-top: 5px" for="phd_inscription_date">{% trans 'phd_inscription_date' %}</label>
 			<div class="controls" id="phd_inscription_date">{{ form.phd_inscription_date }}
-				<font class="error">{{ form.phd_inscription_date.errors }}</font>
+				<span class="error">{{ form.phd_inscription_date.errors }}</span>
 			</div>
 			<label style="padding-top: 5px" for="confirmatory_test_date">
 				{% trans 'confirmatory_test_date' %}<br>
-				<font size="1">{% trans '2nd_renewal' %}</font>
+				<h6>{% trans '2nd_renewal' %}</h6>
 			</label>
         	<div class="controls" id="confirmatory_test_date">{{ form.confirmation_test_date }}
-				<font class="error">{{ form.confirmation_test_date.errors }}</font>
+				<span class="error">{{ form.confirmation_test_date.errors }}</span>
 			</div>
  			<label style="padding-top: 5px" for="thesis_defence_date">
 				{% trans 'thesis_defence_date' %}</label>
 			<div class="controls" id="thesis_defence_date">{{ form.thesis_date }}
-				<font class="error">{{ form.thesis_date.errors }}</font>
+				<span class="error">{{ form.thesis_date.errors }}</span>
 			</div>
     	</div>
     	<hr>
     	<div class="panel-warning">
   			<div class="panel-heading">
-  				<font size="4">{% trans 'various' %}</font>
+				<h4>{% trans 'various' %}</h4>
     		</div>
     	</div>
     	<div class="form-group">
 			<label style="padding-top: 5px" for="function_outside_university">
-				<font size="2">{% trans 'function_outside_university' %}</font>
+				<h4>{% trans 'function_outside_university' %}</h4>
 			</label>
 			<div class="controls" id="function_outside_university">{{ form2.external_functions }}
-				<font class="error">{{ form.errors.external_functions }}</font>
+				<span class="error">{{ form.errors.external_functions }}</span>
 			</div>
 			<label style="padding-top: 5px" for="external_post">
-				<font size="2">{% trans 'external_post' %}</font>
+				<h4>{% trans 'external_post' %}</h4>
 			</label>
 			<div class="controls" id="external_post">{{ form2.external_contract }}
-				<font class="error">{{ form.errors.external_contract }}</font>
+				<span class="error">{{ form.errors.external_contract }}</span>
 			</div>
     		{% if mandate.renewal_type == 'EXCEPTIONAL' %}
 				<label for="exceptional_justification">
-      				<font size="1">{% trans 'exceptional_justification' %}</font>
+					<h6>{% trans 'exceptional_justification' %}</h6>
 				</label>
 				<div class="controls" id="exceptional_justification">{{ form2.justification }}
-      				<font class="error">{{ form.errors.justification }}</font>
+      				<span class="error">{{ form.errors.justification }}</span>
     			</div>  
    			{% endif %}
 			<hr>
