@@ -97,3 +97,11 @@ def find_by_pk(a_pk):
     except ObjectDoesNotExist:
         return None
 
+
+def get_number_selectable():
+    return InternshipOffer.objects.filter(selectable=True).count()
+
+
+def find_all():
+    return InternshipOffer.objects.all()
+
