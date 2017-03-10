@@ -28,7 +28,7 @@ from base.models import learning_unit_year
 from base import models as mdl
 from django.utils.translation import ugettext as trans
 
-class LearningUnitYearForm(forms.ModelForm):
+class LearningUnitYearForm(forms.Form):
 
     class Meta:
         model = learning_unit_year.LearningUnitYear
