@@ -32,6 +32,7 @@ from internship.utils.student_assignment.student_wrapper import StudentWrapper
 MAX_PREFERENCE = 4
 AUTHORIZED_PERIODS = ["P9", "P10", "P11", "P12"]
 NUMBER_INTERNSHIPS = len(AUTHORIZED_PERIODS)
+MAX_NUMBER_INTERNSHIPS = 6
 REFERENCE_DEFAULT_ORGANIZATION = 999
 AUTHORIZED_SS_SPECIALITIES = ["CHC", "DE", "GE", "GOC", "MI", "MP", "NA", "OP", "OR", "CO", "PEC", "PS", "PA", "URC",
                               "CU"]
@@ -73,49 +74,6 @@ def save_assignments_to_db(assignments):
         affectation.save()
 
 
-def _load_students_and_choices():
-    students_information_by_person_id = _load_student_information()
-    students_by_registration_id = dict()
-    student_choices = mdl_internship.internship_choice.get_non_mandatory_internship_choices()
-    for choice in student_choices:
-        student = choice.student
-        student_wrapper = students_by_registration_id.get(student.registration_id, None)
-        if not student_wrapper:
-            student_wrapper = StudentWrapper(student)
-            students_by_registration_id[student.registration_id] = student_wrapper
-            student_information = students_information_by_person_id.get(student.person.id, None)
-            if student_information:
-                student_wrapper.contest = student_information.contest
-        student_wrapper.add_choice(choice)
-    return students_by_registration_id
-
-
-def _load_student_information():
-    students_information_by_person_id = dict()
-    for student_information in mdl_internship.internship_student_information.InternshipStudentInformation.objects.all():
-        students_information_by_person_id[student_information.person.id] = student_information
-    return students_information_by_person_id
-
-
-def _load_internship_and_places():
-    offers_by_organization_speciality = dict()
-    internships_periods_places = mdl_internship.period_internship_places.PeriodInternshipPlaces.objects.all()
-    for period_places in filter_internships_period_places(internships_periods_places):
-        internship = period_places.internship
-        key = (internship.organization.id, internship.speciality.id)
-        internship_wrapper = offers_by_organization_speciality.get(key, None)
-        if not internship_wrapper:
-            internship_wrapper = InternshipWrapper(internship)
-            offers_by_organization_speciality[key] = internship_wrapper
-        internship_wrapper.set_period_places(period_places)
-    return offers_by_organization_speciality
-
-
-def filter_internships_period_places(internships_periods_places):
-    return filter(lambda int_per_places: int_per_places.period.name.strip() in AUTHORIZED_PERIODS,
-                  internships_periods_places)
-
-
 def _load_current_students_affectations():
     student_affectations = \
         mdl_internship.internship_student_affectation_stat.InternshipStudentAffectationStat.objects.all()
@@ -149,7 +107,7 @@ class Solver:
 
     def __classify_students(self, student_wrappers):
         for student_wrapper in student_wrappers.values():
-            if student_wrapper.priority:
+            if student_wrapper.has_priority:
                 self.priority_students.append(student_wrapper)
                 self.students_priority_lefts_to_assign.append(student_wrapper)
             else:
@@ -196,92 +154,63 @@ class Solver:
 
     def solve(self):
         self.students_priority_lefts_to_assign = self.__assign_choices(self.students_priority_lefts_to_assign)
-        self.students_priority_lefts_to_assign = self.__assign_choices(self.students_priority_lefts_to_assign,
-                                                                       NUMBER_INTERNSHIPS+1, NUMBER_INTERNSHIPS+2)
         self.students_lefts_to_assign = self.__assign_choices(self.students_lefts_to_assign)
-        self.students_lefts_to_assign = self.__assign_choices(self.students_lefts_to_assign, NUMBER_INTERNSHIPS+1,
-                                                              NUMBER_INTERNSHIPS+2)
-        self.__assign_unfulfilled_students()
         self.__assign_to_default_offer()
 
-    def __assign_choices(self, students_lists, min_internship=1, max_internship=NUMBER_INTERNSHIPS+1):
-        for preference in range(1, MAX_PREFERENCE + 1):
-            for internship in range(min_internship, max_internship):
-                students_to_assign = []
-                random.shuffle(students_lists)
-                for student_wrapper in students_lists:
-                    if not student_wrapper.has_all_internships_assigned():
-                        self.__assign_student_choices(preference, student_wrapper, internship)
-                        students_to_assign.append(student_wrapper)
-
-                students_lists = students_to_assign
+    def __assign_choices(self, students_list):
+        min_internship = 1
+        max_internship = NUMBER_INTERNSHIPS
+        for internship in range(min_internship, max_internship+1):
+            students_to_assign = []
+            random.shuffle(students_lists)
+            for student_wrapper in students_lists:
+                if student_wrapper.has_all_internships_assigned():
+                    continue
+                self.__assign_first_possible_offer(student_wrapper)
+                students_to_assign.append(student_wrapper)
+            students_lists = students_to_assign
         return students_lists
 
-    def __assign_student_choices(self, preference, student_wrapper, internship):
-        for choice in student_wrapper.get_choices_for_preference(preference):
-            if choice.internship_choice != internship:
-                continue
-            if self.__assign_choice_to_student(choice, student_wrapper):
+    def __assign_first_possible_offer(self, student_wrapper):
+        last_internship_assigned = student_wrapper.get_last_internship_assigned()
+        for internship in range(last_internship_assigned, MAX_NUMBER_INTERNSHIPS+1):
+            if self.__assign_student_choices_for_internship(student_wrapper, internship):
                 break
+            speciality = student_wrapper.get_speciality_of_internship(internship)
+            # TODO check if student have priority for this internship
+            if speciality:
+                if self.__assign_first_possible_offer_from_speciality_to_student(student_wrapper, speciality, internship):
+                    break
 
-    def __assign_choice_to_student(self, choice, student_wrapper):
-        if student_wrapper.has_internship_assigned(choice.internship_choice):
-            return False
-        internship_wrapper = self.get_offer(choice.organization.id, choice.speciality.id)
-        if not internship_wrapper and self.permitted_speciality(student_wrapper, internship_wrapper):
-            return False
-        free_period_name = self.__get_valid_period(internship_wrapper, student_wrapper)
-        if not free_period_name:
-            return False
-        self.__occupy_offer(free_period_name, internship_wrapper, student_wrapper, choice.internship_choice,
-                            choice.choice)
-        return True
-
-    def __assign_unfulfilled_students(self):
-        for internship in range(0, NUMBER_INTERNSHIPS):
-            students_to_assign = []
-            random.shuffle(self.students_lefts_to_assign)
-            for student_wrapper in self.students_lefts_to_assign:
-                if not student_wrapper.has_all_internships_assigned():
-                    self.__assign_first_possible_offer_to_student(student_wrapper)
-                    students_to_assign.append(student_wrapper)
-            self.students_lefts_to_assign = students_to_assign
-
-    def __assign_first_possible_offer_to_student(self, student_wrapper):
-        for speciality_id, offers in self.offers_by_speciality.items():
-            for offer in filter(lambda possible_offer: possible_offer.is_not_full(), offers):
-                if not self.permitted_speciality(student_wrapper, offer):
-                    continue
-                free_period_name = self.__get_valid_period(offer, student_wrapper)
-                if free_period_name:
-                    self.__occupy_offer(free_period_name, offer, student_wrapper, 0, 0)
-                    return True
+    def __assign_student_choices_for_internship(self, student_wrapper, internship):
+        internship_choices = student_wrapper.get_choices_for_internship(internship)
+        for choice in internship_choices:
+            preference = choice.choice
+            internship_wrapper = self.get_offer(choice.organization.id, choice.specialty.id)
+            if not internship_wrapper:
+                continue
+            if _assign_offer_to_student(internship_wrapper, internship, preference, student_wrapper):
+                return True
         return False
 
-    @staticmethod
-    def __get_valid_period(internship_wrapper, student_wrapper):
-        free_periods_name = internship_wrapper.get_free_periods()
-        student_periods_possible = filter(lambda period: student_wrapper.has_period_assigned(period) is False,
-                                          free_periods_name)
-        return next(student_periods_possible, None)
+    def __assign_first_possible_offer_to_student(self, student_wrapper):
+        specialities = self.offers_by_speciality.keys()
+        for speciality in specialities:
+            if self.__assign_first_possible_offer_from_speciality_to_student(student_wrapper, speciality):
+                return True
+        return False
 
-    @staticmethod
-    def permitted_speciality(student_wrapper, offer):
-        if student_wrapper.contest != "SS" or student_wrapper.contest != "GENERALIST":
-            return True
-        if offer.internship.speciality.acronym not in AUTHORIZED_SS_SPECIALITIES:
-            return False
-        return True
+    def __assign_first_possible_offer_from_speciality_to_student(self, student_wrapper, speciality, internship=0):
+        offers = self.offers_by_speciality.get(speciality, [])
+        offers_not_full = filter(lambda possible_offer: possible_offer.is_not_full(), offers)
+        offers_permitted = filter(lambda o: is_permitted_offer(student_wrapper, o), offers_not_full)
+        for offer in offers_permitted:
+            _assign_offer_to_student(offer, internship, 0, student_wrapper)
+        return False
 
     def __assign_to_default_offer(self):
         for student_wrapper in self.students_lefts_to_assign:
             student_wrapper.fill_assignments(self.periods, self.default_organization)
-
-    @staticmethod
-    def __occupy_offer(free_period_name, internship_wrapper, student_wrapper, internship_choice, choice):
-        period_places = internship_wrapper.occupy(free_period_name)
-        student_wrapper.assign(period_places.period, period_places.internship.organization,
-                               period_places.internship.speciality, internship_choice, choice)
 
     def reinitialize(self):
         self.students_lefts_to_assign = self.normal_students[:]
@@ -294,4 +223,73 @@ class Solver:
             internship_wrapper.reinitialize()
 
 
+def _get_valid_period(internship_wrapper, student_wrapper):
+    free_periods_name = internship_wrapper.get_free_periods()
+    student_periods_possible = filter(lambda period: student_wrapper.has_period_assigned(period) is False,
+                                      free_periods_name)
+    return next(student_periods_possible, None)
 
+
+def is_permitted_offer(student_wrapper, internship_wrapper):
+    if student_wrapper.contest != "SS" or student_wrapper.contest != "GENERALIST":
+        return True
+    if internship_wrapper.internship.speciality.acronym not in AUTHORIZED_SS_SPECIALITIES:
+        return False
+    return True
+
+
+def _occupy_offer(free_period_name, internship_wrapper, student_wrapper, internship_choice, choice):
+    period_places = internship_wrapper.occupy(free_period_name)
+    student_wrapper.assign(period_places.period, period_places.internship.organization,
+                           period_places.internship.speciality, internship_choice, choice)
+
+
+def _assign_offer_to_student(internship_wrapper, internship, preference, student_wrapper):
+    free_period_name = _get_valid_period(internship_wrapper, student_wrapper)
+    if not free_period_name:
+        return False
+    _occupy_offer(free_period_name, internship_wrapper, student_wrapper, internship, preference)
+    return True
+
+
+def _load_internship_and_places():
+    offers_by_organization_speciality = dict()
+    internships_periods_places = mdl_internship.period_internship_places.PeriodInternshipPlaces.objects.all()
+    for period_places in filter_internships_period_places(internships_periods_places):
+        internship = period_places.internship
+        key = (internship.organization.id, internship.speciality.id)
+        internship_wrapper = offers_by_organization_speciality.get(key, None)
+        if not internship_wrapper:
+            internship_wrapper = InternshipWrapper(internship)
+            offers_by_organization_speciality[key] = internship_wrapper
+        internship_wrapper.set_period_places(period_places)
+    return offers_by_organization_speciality
+
+
+def filter_internships_period_places(internships_periods_places):
+    return filter(lambda int_per_places: int_per_places.period.name.strip() in AUTHORIZED_PERIODS,
+                  internships_periods_places)
+
+
+def _load_students_and_choices():
+    students_information_by_person_id = _load_student_information()
+    students_by_registration_id = dict()
+    student_choices = mdl_internship.internship_choice.get_non_mandatory_internship_choices()
+    for choice in student_choices:
+        student = choice.student
+        student_wrapper = students_by_registration_id.get(student.registration_id, None)
+        if not student_wrapper:
+            student_wrapper = StudentWrapper(student)
+            students_by_registration_id[student.registration_id] = student_wrapper
+            student_information = students_information_by_person_id.get(student.person.id, None)
+            if student_information:
+                student_wrapper.contest = student_information.contest
+        student_wrapper.add_choice(choice)
+    return students_by_registration_id
+
+
+def _load_student_information():
+    students_information_by_person_id = dict()
+    for student_information in mdl_internship.internship_student_information.InternshipStudentInformation.objects.all():
+        students_information_by_person_id[student_information.person.id] = student_information
+    return students_information_by_person_id

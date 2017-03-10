@@ -97,16 +97,16 @@ class TestAffectStudent(TestCase):
         self.current_student_affectations = solver._load_current_students_affectations()
 
     def test_init_solver(self):
-        solver = solver.init_solver(self.current_student_affectations)
-        self.assertEqual(len(solver.students_by_registration_id), 2)
-        self.assertEqual(len(solver.offers_by_organization_speciality), 3)
+        a_solver = solver.init_solver(self.current_student_affectations)
+        self.assertEqual(len(a_solver.students_by_registration_id), 2)
+        self.assertEqual(len(a_solver.offers_by_organization_speciality), 3)
 
-        self.assert_number_choices(self.student_1, solver, 7)
-        self.assert_number_choices(self.student_2, solver, 7)
+        self.assert_number_choices(self.student_1, a_solver, 7)
+        self.assert_number_choices(self.student_2, a_solver, 7)
 
-        self.assert_free_periods(self.offer_1, solver, ["P9", "P11"])
-        self.assert_free_periods(self.offer_2, solver, ["P10", "P12"])
-        self.assert_free_periods(self.offer_3, solver, ["P9", "P11"])
+        self.assert_free_periods(self.offer_1, a_solver, ["P9", "P11"])
+        self.assert_free_periods(self.offer_2, a_solver, ["P10", "P12"])
+        self.assert_free_periods(self.offer_3, a_solver, ["P9", "P11"])
 
     def assert_number_choices(self, student, solver, number_choices):
         student_wrapper = solver.get_student(student.registration_id)
@@ -131,17 +131,6 @@ class TestAffectStudent(TestCase):
 
         self.assertFalse(offer.is_not_full())
 
-    def test_solve(self):
-        solver = solver.init_solver(self.current_student_affectations)
-        try:
-            assignments, cost = solver.launch_solver(solver)
-        except Exception:
-            self.fail()
-        self.assertEqual(len(assignments), 8)
-
-        solver.save_assignments_to_db(assignments)
-
-        self.assertEqual(mdl_student_affectation.InternshipStudentAffectationStat.objects.all().count(), 8)
 
     def test_places_occupied(self):
         affectation = mdl_student_affectation.InternshipStudentAffectationStat(student=self.student_1,
@@ -150,10 +139,10 @@ class TestAffectStudent(TestCase):
                                                                                speciality=self.offer_1.speciality,
                                                                                choice=1, cost=0)
         affectation.save()
-        solver = solver.init_solver(solver._load_current_students_affectations())
-        internship_wrapper = solver.get_offer(self.offer_1.organization.id, self.offer_1.speciality.id)
+        a_solver = solver.init_solver(solver._load_current_students_affectations())
+        internship_wrapper = a_solver.get_offer(self.offer_1.organization.id, self.offer_1.speciality.id)
         self.assertEqual(internship_wrapper.periods_places_left[self.period_places_1.period.name], 1)
 
-        student_wrapper = solver.get_student(self.student_1.registration_id)
+        student_wrapper = a_solver.get_student(self.student_1.registration_id)
         self.assertEqual(len(student_wrapper.internship_assigned), 1)
 

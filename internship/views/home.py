@@ -46,21 +46,7 @@ def internships_home(request):
     else:
         noma = 0
 
-<<<<<<< HEAD
     blockable = mdl_internship.internship_offer.get_number_selectable() > 0
-
-=======
-    internships = mdl_internship.internship_offer.InternshipOffer.objects.all()
-    #Check if there is a internship offers in data base. If not, the internships
-    #can be block, but there is no effect
-    if len(internships) > 0:
-        if internships[0].selectable:
-            blockable = True
-        else:
-            blockable = False
-    else:
-        blockable = True
->>>>>>> 181891b5b87d45ada9877b3a1a516c37f2075ac3
 
     #Find all informations about students and organisation and fin the latitude and longitude of the address
     student_informations = mdl_internship.internship_student_information.search()

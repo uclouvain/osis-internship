@@ -53,3 +53,5 @@ class InternshipWrapper:
         self.periods_places_left = dict()
         for period_name, period_places in self.periods_places.items():
             self.periods_places_left[period_name] = period_places.number_places
+
+
