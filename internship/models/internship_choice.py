@@ -92,7 +92,7 @@ def search_by_student_or_choice(student=None, internship_choice=None):
         has_criteria = True
 
     if has_criteria:
-        return queryset
+        return queryset.order_by("internship_choice", "choice")
     else:
         return None
 

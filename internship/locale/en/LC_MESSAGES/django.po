@@ -79,6 +79,9 @@ msgstr	 "Civility"
 msgid	 "create_a_speciality"
 msgstr	 "Create a speciality"
 
+msgid	 "current_choices"
+msgstr	 "Current choices"
+
 msgid	 "date_end"
 msgstr	 "Date end"
 
