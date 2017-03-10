@@ -507,9 +507,7 @@ def internships_modification_student(request, registration_id, internship_id="1"
 
     internships_offers = mdl_internship.internship_offer.find_by_speciality(speciality)
 
-    offer_preference_formset = formset_factory(OfferPreferenceForm, formset=OfferPreferenceFormSet,
-                                               extra=internships_offers.count(), min_num=internships_offers.count(),
-                                               max_num=internships_offers.count(), validate_min=True, validate_max=True)
+    offer_preference_formset = initialize_offer_preference_formset(internships_offers)
     formset = offer_preference_formset()
 
     if request.method == 'POST':
@@ -518,12 +516,7 @@ def internships_modification_student(request, registration_id, internship_id="1"
             remove_previous_choices(student, internship_id)
             save_student_choices(formset, student, int(internship_id), speciality)
 
-    current_choices = mdl_internship.internship_choice.search_by_student_or_choice(student=student,
-                                                                                   internship_choice=internship_id)
-    current_enrollments = mdl_internship.internship_enrollment.find_by_student(student)
-    dict_current_choices = get_dict_current_choices(current_choices)
-    dict_current_enrollments = get_dict_current_enrollments(current_enrollments)
-    zipped_data = zip_data(dict_current_choices, formset, internships_offers, dict_current_enrollments)
+    zipped_data = prepare_template_data(formset, internship_id, internships_offers, speciality, student)
     information = mdl_internship.internship_student_information.find_by_person(student.person)
 
     return render(request, "internship_modification_student.html",
@@ -534,8 +527,26 @@ def internships_modification_student(request, registration_id, internship_id="1"
                    "intern_id": int(internship_id),
                    "speciality_id": int(speciality_id),
                    "student": student,
-                   "current_choices": current_choices,
                    "information": information})
+
+
+def prepare_template_data(formset, internship_id, internships_offers, speciality, student):
+    current_choices = mdl_internship.internship_choice.search_by_student_or_choice(student=student,
+                                                                                   internship_choice=internship_id)
+    current_enrollments = mdl_internship.internship_enrollment.find_by_student(student)
+    dict_current_choices = get_dict_current_choices(current_choices)
+    dict_current_enrollments = get_dict_current_enrollments(current_enrollments)
+    dict_offers_choices = get_first_choices_by_organization(speciality)
+    zipped_data = zip_data(dict_current_choices, formset, internships_offers, dict_current_enrollments,
+                           dict_offers_choices)
+    return zipped_data
+
+
+def initialize_offer_preference_formset(internships_offers):
+    offer_preference_formset = formset_factory(OfferPreferenceForm, formset=OfferPreferenceFormSet,
+                                               extra=internships_offers.count(), min_num=internships_offers.count(),
+                                               max_num=internships_offers.count(), validate_min=True, validate_max=True)
+    return offer_preference_formset
 
 
 def get_speciality(internship_id, speciality_id, student):
@@ -569,7 +580,16 @@ def get_dict_current_enrollments(current_enrollments):
     return dict_current_enrollments
 
 
-def zip_data(dict_current_choices, formset, internships_offers, dict_current_enrollments):
+def get_first_choices_by_organization(speciality):
+    list_number_choices = mdl_internship.internship_choice.get_number_first_choice_by_organization(speciality)
+    dict_number_choices_by_organization = dict()
+    for number_first_choices in list_number_choices:
+        dict_number_choices_by_organization[number_first_choices["organization"]] = \
+            number_first_choices["organization__count"]
+    return dict_number_choices_by_organization
+
+
+def zip_data(dict_current_choices, formset, internships_offers, dict_current_enrollments, dict_offers_choices):
     if not internships_offers:
         return None
     zipped_data = []
@@ -578,7 +598,8 @@ def zip_data(dict_current_choices, formset, internships_offers, dict_current_enr
         offer_value = 0 if not offer_choice else offer_choice.choice
         offer_priority = False if not offer_choice else offer_choice.priority
         offer_enrollments = dict_current_enrollments.get(offer.id, [])
-        zipped_data.append((offer, form, str(offer_value), offer_priority, offer_enrollments))
+        number_first_choices = dict_offers_choices.get(offer.organization.id, 0)
+        zipped_data.append((offer, form, str(offer_value), offer_priority, offer_enrollments, number_first_choices))
     return zipped_data
 
 
