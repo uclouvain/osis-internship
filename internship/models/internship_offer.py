@@ -88,7 +88,7 @@ def find_intership_by_id(id):
 
 
 def find_by_speciality(speciality):
-    return InternshipOffer.objects.filter(speciality=speciality)
+    return InternshipOffer.objects.filter(speciality=speciality).order_by("organization__reference")
 
 
 def find_by_pk(a_pk):
