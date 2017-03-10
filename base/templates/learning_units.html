@@ -39,11 +39,9 @@
   <div class="panel-body">
     <div class="row">
       <form  method="get" action="{% url 'learning_units_search'%}" id="form_learning_units">
-          <span class="error">{{ form.errors }}</span>
-          <span class="error">{{ form.non_field_errors }}</span>
           <div class="col-md-2">
               <label for="academic_year" >{% trans 'academic_year'%}</label>
-              <select class="form-control" id="slt_academic_year"  name="academic_year" value="{{ academic_year }}">
+              <select class="forms" id="slt_academic_year"  name="academic_year" value="{{ academic_year }}">
                   {% if academic_years_all == 1 %}
                     <option selected value="-1">{% trans 'all years'%}</option>
                   {% else %}
@@ -58,41 +56,33 @@
                   {% endif %}
                 {% endfor %}
               </select>
+              <font class="error">{{ form.academic_year.errors }}</font>
           </div>
-          <div class="col-md-2">
+
+          <div class="col-md-3">
               <label for="acronym">{% trans 'acronym'%}</label>
-              <input class="form-control" id="txt_acronym" placeholder="{% trans 'acronym' %}" name="acronym"
-                     value="{{ acronym }}" style="text-transform:uppercase" maxlength="15">
+              <div class="forms"> {{ form.acronym }}</div>
+              <font class="error">{{ form.acronym.errors }}</font>
           </div>
+
+          <div class="col-md-3">
+              <label for="keyword">{% trans 'keyword' %}</label>
+              <div class="forms"> {{ form.keyword }}</div>
+              <font class="error">{{ form.keyword.errors }}</font>
+          </div>
+
           <div class="col-md-2">
-              <label for="type">{% trans 'type'%}</label>
-              <select class="form-control" id="slt_type" name="type" value="{{ type }}">
-                {% for t in types %}
-                  {% if t.1 == type %}
-                    <option selected value="{{ t.0 }}">{{ t.1 }}</option>
-                  {% else %}
-                    <option value="{{ t.0 }}">{{ t.1 }}</option>
-                  {% endif %}
-                {% endfor %}
-              </select>
+              <label for="type">{% trans 'type' %}</label>
+              <div class="forms"> {{ form.type }}</div>
+              <font class="error">{{ form.type.errors }}</font>
           </div>
+
           <div class="col-md-2">
-              <label for="status">{% trans 'status'%}</label>
-              <select class="form-control" id="slt_status" name="status" value="{{ status }}">
-                {% for s in status_choices %}
-                  {% if s.1 == status %}
-                    <option selected value="{{ s.0 }}">{{ s.1 }}</option>
-                  {% else %}
-                    <option value="{{ s.0 }}">{{ s.1 }}</option>
-                  {% endif %}
-                {% endfor %}
-              </select>
+              <label for="status">{% trans 'status' %}</label>
+              <div class="forms"> {{ form.status }}</div>
+              <font class="error">{{ form.status.errors }}</font>
           </div>
-          <div class="col-md-2">
-              <label for="keyword">{% trans 'keyword'%}</label>
-              <input class="form-control" id="txt_keyword" placeholder="{% trans 'keyword' %}" name="keyword"
-                     value="{{ keyword }}" style="text-transform:uppercase" maxlength="15">
-          </div>
+
           <div class="col-md-6">
             <br>
             <button type="submit" id="bt_submit_learning_unit_search" class="btn btn-primary" role="button"

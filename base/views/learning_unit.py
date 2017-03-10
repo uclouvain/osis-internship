@@ -27,71 +27,49 @@ from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
 from attribution import models as mdl_attr
 from . import layout
-from base.enums import learning_unit_year_type
-from base.enums import learning_unit_year_status
 from base.forms.learning_unit_year import LearningUnitYearForm
 
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_units(request):
-    academic_yr = None
-    acronym = ""
 
+    form = LearningUnitYearForm()
     academic_years = mdl.academic_year.find_academic_years()
-    academic_yr_calendar = mdl.academic_year.current_academic_year()
-    types = learning_unit_year_type.YEAR_TYPES
-    status_choices = learning_unit_year_status.LEARNING_UNIT_YEAR_STATUS
-    academic_years_all = "1"
-
-    if academic_yr_calendar:
-        academic_yr = academic_yr_calendar.id
-    return layout.render(request, "learning_units.html", {'academic_year': academic_yr,
-                                                          'acronym': acronym,
-                                                          'academic_years': academic_years,
-                                                          'types' : types,
-                                                          'status_choices' : status_choices,
-                                                          'academic_year_all' : academic_years_all,
+    return layout.render(request, "learning_units.html", {
+                                                          'form':form,
                                                           'learning_units': [],
-                                                          'init': "1"})
-
+                                                          'academic_years': academic_years,
+                                                          'init': 1})
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_units_search(request):
-    """
-    Learning units search
-    """
-    # criteria
     academic_year = request.GET['academic_year']
-    acronym = request.GET['acronym']
+    acronym = request.GET['acronym'].upper()
     type = request.GET['type']
     status = request.GET['status']
-    keyword = request.GET['keyword']
-    types = learning_unit_year_type.YEAR_TYPES
-    status_choices = learning_unit_year_status.LEARNING_UNIT_YEAR_STATUS
+    keyword = request.GET['keyword'].upper()
     academic_years = mdl.academic_year.find_academic_years()
 
     form = LearningUnitYearForm(request.GET)
 
-    if form.is_valid():
-        print("form valid!")
-        learning_unts = mdl.learning_unit_year.search(academic_year_id=academic_year,acronym=acronym,title=keyword,type=type,status=status)
-    else:
-        print("form NOT valid!")
-        learning_unts = None
-
     if academic_year==-1:
-        academic_years_all='1'
+        academic_years_all=1
     else:
-        academic_years_all='0'
+        academic_years_all=0
+
+    if form.is_valid():
+        if (str(academic_year)=="-1"):
+            learning_units=mdl.learning_unit_year.find_by_acronym(acronym)
+        else:
+            learning_units = mdl.learning_unit_year.search(academic_year_id=academic_year,acronym=acronym,title=keyword,type=type,status=status)
+            print(learning_units)
+    else:
+        learning_units = None
 
     return layout.render(request, "learning_units.html", {'academic_year': int(academic_year),
-                                                          'acronym': acronym,
-                                                          'type': type,
                                                           'academic_years': academic_years,
-                                                          'types' : types,
-                                                          'status_choices':status_choices,
                                                           'academic_year_all' : academic_years_all,
-                                                          '0': learning_unts,
+                                                          'learning_units': learning_units,
                                                           'form':form,
                                                           'init': "0"})
 

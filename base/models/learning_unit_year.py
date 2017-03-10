@@ -44,7 +44,7 @@ class LearningUnitYear(SerializableModel):
     changed = models.DateTimeField(null=True)
     acronym = models.CharField(max_length=15, db_index=True)
     title = models.CharField(max_length=255)
-    type = models.CharField(max_length=20, blank=True, null=True, choices=learning_unit_year_type.YEAR_TYPES)
+    type = models.CharField(max_length=20, blank=True, null=True, choices=learning_unit_year_type.LEARNING_UNIT_YEAR_TYPES)
     credits = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     decimal_scores = models.BooleanField(default=False)
     team = models.BooleanField(default=False)
