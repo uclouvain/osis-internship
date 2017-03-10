@@ -38,7 +38,7 @@ class InternshipEnrollment(models.Model):
     internship_offer = models.ForeignKey('internship.InternshipOffer')
     place = models.ForeignKey('internship.Organization')
     period = models.ForeignKey('internship.Period')
-    internship_choice = models.IntegerField(default=0)
+    internship_choice = models.IntegerField(default=1)
 
     def __str__(self):
         return u"%s - %s" % (self.student, self.internship_offer.title)
