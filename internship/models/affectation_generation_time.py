@@ -38,6 +38,9 @@ class AffectationGenerationTime(models.Model):
     end_date_time = models.DateTimeField()
     generated_by = models.CharField(max_length=255, default='None')
 
+    def __str__(self):
+        return u"%s - %s" % (self.start_date_time, self.end_date_time)
+
 
 def get_latest():
     try:

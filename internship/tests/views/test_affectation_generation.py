@@ -28,6 +28,7 @@ from base.tests.models import test_student
 from internship.tests.models import test_organization, test_internship_speciality, test_internship_choice, \
     test_internship_offer, test_period, test_period_internship_places
 from internship.views import affectation_statistics_beta
+from internship.models import internship_student_affectation_stat as mdl_student_affectation
 
 
 class TestAffectationGeneration(TestCase):
@@ -81,7 +82,3 @@ class TestAffectationGeneration(TestCase):
         test_period_internship_places.create_period_places(offer_4, period_10)
         test_period_internship_places.create_period_places(offer_5, period_11)
         test_period_internship_places.create_period_places(offer_5, period_12)
-
-    def test_init_solver(self):
-        solver = affectation_statistics_beta.init_solver()
-        self.assertEqual(solver.get_number_students(), 4)

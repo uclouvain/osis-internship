@@ -23,12 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import sys
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
-from internship import models as mdl_internship
 from datetime import datetime
+from internship.utils import affect_student
+from internship import models as mdl_internship
 
 
 @login_required
@@ -37,32 +37,15 @@ def internship_affectation_statistics_generate(request):
     """ Generate new solution, save it in the database, redirect back to the page 'internship_affectation_statistics'"""
     if request.method == 'POST':
         if request.POST['executions'] != "":
+            times = int(request.POST['executions'])
             start_date_time = datetime.now()
-            cost = sys.maxsize
-            for i in range(0, int(request.POST['executions'])):
-                pass
+            affect_student.affect_student(times)
+            end_date_time = datetime.now()
+            affectation_generatioon_time = mdl_internship.affectation_generation_time.AffectationGenerationTime()
+            affectation_generatioon_time.start_date_time = start_date_time
+            affectation_generatioon_time.end_date_time = end_date_time
+            affectation_generatioon_time.generated_by = request.user.username
+            affectation_generatioon_time.save()
         return redirect(reverse('internship_affectation_statistics'))
 
 
-from internship.utils import affect_student
-
-
-def init_solver():
-    solver = affect_student.Solver()
-    student_choices = mdl_internship.internship_choice.get_non_mandatory_internship_choices()
-
-    for student_choice in student_choices:
-        student_registration_id = student_choice.student.registration_id
-        student_obj = solver.get_student(student_registration_id)
-        if not student_obj:
-            student_obj = affect_student.Student(student_registration_id)
-            solver.add_student(student_obj)
-
-        choice_obj = affect_student.Choice(student_choice.internship_choice, student_choice.organization.id,
-                                           student_choice.speciality.id, student_choice.choice, student_choice.priority)
-        student_obj.add_choice(choice_obj)
-
-    internship_period_places = mdl_internship.period_internship_places.PeriodInternshipPlaces.objects.all()  # TODO limit period to P9 - P12
-
-
-    return solver

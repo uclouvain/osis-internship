@@ -211,12 +211,10 @@
                                                 {% else %}
                                                     <td class="internship-{{enrollment.type_of_internship}} period-{{period}} {{enrollment.speciality.acronym}}"/>
                                                 {% endif %}
-                                                {% if forloop.counter <= 8 %}
+                                                {% if forloop.counter <= 12 %}
                                                     {{ enrollment.speciality.acronym }} <br>
                                                     {{ enrollment.organization.reference }}<br>
                                                     {{ enrollment.cost }}({{ enrollment.choice.lower }})<br>
-                                                {% elif forloop.counter > 8 and forloop.counter <= 12 %}
-                                                    X
                                                 {% else %}
                                                     {{ periods.score }}
                                                 {% endif %}

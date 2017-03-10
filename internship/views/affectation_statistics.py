@@ -1152,6 +1152,9 @@ def load_solution(data):
         # store the cost of each student
         sol[item.student]['score'] += item.cost
         # Update the number of available places for given organization, speciality, period
+        if item.organization not in temp_internship_table or \
+                        item.speciality.acronym not in temp_internship_table[item.organization]:
+            continue
         temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['after'] -= 1
         # Update the % of takes places
         if temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['before'] > 0:
@@ -1224,7 +1227,7 @@ def internship_affectation_statistics(request):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_affectation_sumup(request):
-    all_speciality = list(mdl_internship.internship_speciality.search(mandatory=True))
+    all_speciality = list(mdl_internship.internship_speciality.find_all())
     all_speciality=set_speciality_unique(all_speciality)
     set_tabs_name(all_speciality)
     periods = mdl_internship.period.search()

@@ -23,192 +23,135 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import SimpleTestCase
+from django.test import TestCase
+from base.tests.models import test_student
+from internship.tests.models import test_organization, test_internship_speciality, test_internship_choice, \
+    test_internship_offer, test_period, test_period_internship_places
 from internship.utils import affect_student
+from internship.models import internship_student_affectation_stat as mdl_student_affectation
 
-SAMPLE1 = "./internship/tests/utils/ressources/sample1.txt"
 
-
-class TestAffectStudent(SimpleTestCase):
+class TestAffectStudent(TestCase):
     def setUp(self):
-        self.solver = affect_student.Solver()
-        self.solver.initialize_f(SAMPLE1)
+        self.student_1 = test_student.create_student("Student1", "Last", "1")
+        self.student_2 = test_student.create_student("Student2", "Last", "2")
 
-    def test_initialize_problem(self):
-        self.assertEqual(self.solver.get_number_offers(),  5)
-        self.assertEqual(self.solver.get_number_students(), 4)
+        organization_1 = test_organization.create_organization(name="organization1", reference="01")
+        organization_2 = test_organization.create_organization(name="organization2", reference="02")
+        organization_3 = test_organization.create_organization(name="organization3", reference="03")
+        default_organization = test_organization.create_organization(name="Hôpital Erreur", reference="999")
 
-    def test_add_student(self):
-        student = affect_student.Student(45)
-        student_bis = affect_student.Student(41)
-        other_solver = affect_student.Solver()
+        speciality_1 = test_internship_speciality.create_speciality(name="spec1")
+        speciality_2 = test_internship_speciality.create_speciality(name="spec2")
+        speciality_3 = test_internship_speciality.create_speciality(name="spec3")
 
-        self.assertFalse(other_solver.students_dict)
+        test_internship_choice.create_internship_choice(organization_1, self.student_1, speciality_1,
+                                                        internship_choice=1)
+        test_internship_choice.create_internship_choice(organization_2, self.student_1, speciality_1,
+                                                        internship_choice=1, choice=2)
+        test_internship_choice.create_internship_choice(organization_1, self.student_1, speciality_2,
+                                                        internship_choice=2)
+        test_internship_choice.create_internship_choice(organization_2, self.student_1, speciality_1,
+                                                        internship_choice=3)
+        test_internship_choice.create_internship_choice(organization_1, self.student_1, speciality_1,
+                                                        internship_choice=4)
+        test_internship_choice.create_internship_choice(organization_1, self.student_1, speciality_2,
+                                                        internship_choice=5)
+        test_internship_choice.create_internship_choice(organization_1, self.student_1, speciality_2,
+                                                        internship_choice=6)
 
-        other_solver.add_student(student)
-        other_solver.add_student(student_bis)
+        test_internship_choice.create_internship_choice(organization_1, self.student_2, speciality_1,
+                                                        internship_choice=1)
+        test_internship_choice.create_internship_choice(organization_2, self.student_2, speciality_1,
+                                                        internship_choice=1, choice=2)
+        test_internship_choice.create_internship_choice(organization_1, self.student_2, speciality_2,
+                                                        internship_choice=2)
+        test_internship_choice.create_internship_choice(organization_2, self.student_2, speciality_1,
+                                                        internship_choice=3)
+        test_internship_choice.create_internship_choice(organization_1, self.student_2, speciality_1,
+                                                        internship_choice=4)
+        test_internship_choice.create_internship_choice(organization_1, self.student_2, speciality_2,
+                                                        internship_choice=5)
+        test_internship_choice.create_internship_choice(organization_1, self.student_2, speciality_2,
+                                                        internship_choice=6)
 
-        self.assertEqual(student, other_solver.get_student(45))
-        self.assertEqual(student_bis, other_solver.get_student(41))
-        self.assertFalse(other_solver.get_student(40))
+        self.offer_1 = test_internship_offer.create_specific_internship_offer(organization_1, speciality_1)
+        self.offer_2 = test_internship_offer.create_specific_internship_offer(organization_1, speciality_2)
+        self.offer_3 = test_internship_offer.create_specific_internship_offer(organization_2, speciality_1)
 
-    def test_add_solver(self):
-        offer_1 = affect_student.Offer(1, 4, 5, [])
-        offer_2 = affect_student.Offer(2, 6, 5, [])
-        other_solver = affect_student.Solver()
+        period_9 = test_period.create_period("P9")
+        period_10 = test_period.create_period("P10")
+        period_11 = test_period.create_period("P11")
+        period_12 = test_period.create_period("P12")
 
-        self.assertFalse(other_solver.offers_dict)
+        self.period_places_1 = test_period_internship_places.create_period_places(self.offer_1, period_9)
+        test_period_internship_places.create_period_places(self.offer_1, period_9, 2)
+        test_period_internship_places.create_period_places(self.offer_1, period_11, 2)
+        test_period_internship_places.create_period_places(self.offer_2, period_10, 2)
+        test_period_internship_places.create_period_places(self.offer_2, period_12, 2)
+        test_period_internship_places.create_period_places(self.offer_3, period_9, 2)
+        test_period_internship_places.create_period_places(self.offer_3, period_11, 2)
 
-        other_solver.add_offer(offer_1)
-        other_solver.add_offer(offer_2)
+        self.current_student_affectations = affect_student._load_current_students_affectations()
 
-        self.assertEqual(offer_1, other_solver.get_offer(4, 5))
-        self.assertEqual(offer_2, other_solver.get_offer(6, 5))
-        self.assertFalse(other_solver.get_offer(9, 1))
+    def test_init_solver(self):
+        solver = affect_student.init_solver(self.current_student_affectations)
+        self.assertEqual(len(solver.students_by_registration_id), 2)
+        self.assertEqual(len(solver.offers_by_organization_speciality), 3)
+
+        self.assert_number_choices(self.student_1, solver, 7)
+        self.assert_number_choices(self.student_2, solver, 7)
+
+        self.assert_free_periods(self.offer_1, solver, ["P9", "P11"])
+        self.assert_free_periods(self.offer_2, solver, ["P10", "P12"])
+        self.assert_free_periods(self.offer_3, solver, ["P9", "P11"])
+
+    def assert_number_choices(self, student, solver, number_choices):
+        student_wrapper = solver.get_student(student.registration_id)
+        self.assertTrue(student_wrapper)
+        self.assertEqual(len(student_wrapper.choices), number_choices)
+
+    def assert_free_periods(self, offer, solver, free_periods):
+        internship_wrapper = solver.get_offer(offer.organization.id, offer.speciality.id)
+        self.assertTrue(internship_wrapper)
+        actual_free_periods = internship_wrapper.get_free_periods()
+        self.assertEqual(len(free_periods), len(actual_free_periods))
+        for free_period in free_periods:
+            self.assertIn(free_period, actual_free_periods)
+
+    def test_offer_places_left(self):
+        offer = affect_student.InternshipWrapper(self.offer_1)
+        offer.set_period_places(self.period_places_1)
+
+        for x in range(0, self.period_places_1.number_places):
+            self.assertTrue(offer.is_not_full())
+            offer.occupy(self.period_places_1.period.name)
+
+        self.assertFalse(offer.is_not_full())
 
     def test_solve(self):
+        solver = affect_student.init_solver(self.current_student_affectations)
         try:
-            self.solver.solve()
+            assignments, cost = affect_student.launch_solver(solver)
         except Exception:
             self.fail()
+        self.assertEqual(len(assignments), 8)
 
+        affect_student.save_assignments_to_db(assignments)
 
-class TestOffer(SimpleTestCase):
-    def setUp(self):
-        self.offer = affect_student.Offer(1, 10, 15, [4, 5, 0, 0])
+        self.assertEqual(mdl_student_affectation.InternshipStudentAffectationStat.objects.all().count(), 8)
 
-    def test_init(self):
-        self.assertEqual(self.offer.offer_id, 1)
-        self.assertEqual(self.offer.organization_id, 10)
-        self.assertEqual(self.offer.speciality_id, 15)
-        self.assertEqual(self.offer.places, {1: 4, 2: 5, 3: 0, 4: 0})
+    def test_places_occupied(self):
+        affectation = mdl_student_affectation.InternshipStudentAffectationStat(student=self.student_1,
+                                                                               period=self.period_places_1.period,
+                                                                               organization=self.offer_1.organization,
+                                                                               speciality=self.offer_1.speciality,
+                                                                               choice=1, cost=0)
+        affectation.save()
+        solver = affect_student.init_solver(affect_student._load_current_students_affectations())
+        internship_wrapper = solver.get_offer(self.offer_1.organization.id, self.offer_1.speciality.id)
+        self.assertEqual(internship_wrapper.periods_places_left[self.period_places_1.period.name], 1)
 
-    def test_get_number_place_for_period(self):
-        self.assertEqual(self.offer.get_period_places(0), 0)
-        self.assertEqual(self.offer.get_period_places(1), 4)
-        self.assertEqual(self.offer.get_period_places(2), 5)
-        self.assertEqual(self.offer.get_period_places(4), 0)
-        self.assertEqual(self.offer.get_period_places(10), 0)
-
-    def test_create_offer(self):
-        offer_created = affect_student.Offer.create_offer("1 1 1 0 0 0 0 0 0 0 0 0 2 0 2")
-        self.assertTrue(offer_created)
-        self.assertEqual(offer_created.offer_id, 1)
-        self.assertEqual(offer_created.organization_id, 1)
-        self.assertEqual(offer_created.speciality_id, 1)
-        self.assertEqual(len(offer_created.places), 12)
-
-    def test_occupy_place(self):
-        self.offer.occupy_place(1)
-        self.assertEqual(self.offer.places_left[1], 3)
-
-    def test_has_place(self):
-        self.assertTrue(self.offer.has_place(1))
-        self.assertFalse(self.offer.has_place(3))
-
-    def test_get_free_periods(self):
-        self.assertEqual(self.offer.get_free_periods(), [1, 2])
-
-        offer = affect_student.Offer(1, 10, 15, [0, 1, 0, 0])
-        self.assertEqual(offer.get_free_periods(), [2])
-        offer.occupy_place(2)
-        self.assertFalse(offer.get_free_periods())
-
-    def test_add_places(self):
-        self.assertEqual(self.offer.get_period_places(5), 0)
-        self.offer.add_places(5, 7)
-        self.assertEqual(self.offer.get_period_places(5), 7)
-
-
-class TestStudent(SimpleTestCase):
-    def setUp(self):
-        self.student = affect_student.Student(2)
-
-    def test_init(self):
-        self.assertEqual(self.student.student_id, 2)
-
-    def test_add_choice(self):
-        choice_1 = affect_student.Choice(1, 2, 1, 1, False)
-        choice_2 = affect_student.Choice(1, 3, 1, 2, False)
-        self.student.add_choice(choice_1)
-        self.student.add_choice(choice_2)
-        self.assertEqual(len(self.student.choices), 2)
-
-    def test_add_choice_by_preference(self):
-        choice_1 = affect_student.Choice(2, 4, 1, 2, False)
-        choice_2 = affect_student.Choice(1, 3, 1, 1, False)
-        choice_3 = affect_student.Choice(1, 5, 1, 2, False)
-        self.student.add_choice(choice_1)
-        self.student.add_choice(choice_2)
-        self.student.add_choice(choice_3)
-
-        self.assertEqual(len(self.student._choices_by_preference), 2)
-        self.assertEqual(len(self.student.get_choices_for_preference(1)), 1)
-        self.assertEqual(len(self.student.get_choices_for_preference(2)), 2)
-
-    def test_specialities_chosen(self):
-        choice_1 = affect_student.Choice(2, 4, 5, 2, False)
-        choice_2 = affect_student.Choice(1, 3, 4, 1, False)
-        choice_3 = affect_student.Choice(1, 5, 5, 2, False)
-        self.student.add_choice(choice_1)
-        self.student.add_choice(choice_2)
-        self.student.add_choice(choice_3)
-        self.assertIn(5, self.student.get_specialities_chosen())
-        self.assertIn(4, self.student.get_specialities_chosen())
-
-    def test_create_student(self):
-        student = affect_student.Student.create_student("1 1 1 1 1 1")
-        self.assertTrue(student)
-        self.assertEqual(student.student_id, 1)
-
-    def test_assign(self):
-        self.student.assign(9, 5)
-        self.student.assign(10, 8)
-        self.assertEqual(len(self.student.assignments), 2)
-        self.assertEqual(self.student.assignments[9], 5)
-        self.assertEqual(self.student.assignments[10], 8)
-
-    def test_has_all_period_assigned(self):
-        self.student.assignments = {8: 4,
-                                     9: 5}
-        self.assertFalse(self.student.has_all_periods_assigned())
-        self.student.assignments = {9: 4,
-                                     10: 5,
-                                     11: 6,
-                                     12: 8}
-        self.assertTrue(self.student.has_all_periods_assigned())
-
-    def test_priority(self):
-        self.assertFalse(self.student.is_a_priority)
-        choice = affect_student.Choice(2, 4, 5, 2, True)
-        self.student.add_choice(choice)
-        self.assertTrue(self.student.is_a_priority)
-
-    def test_has_period_unassigned(self):
-        self.student.assignments = {1 : 5,
-                                    3 : 4}
-        self.assertTrue(self.student.has_period_unassigned(2))
-        self.assertFalse(self.student.has_period_unassigned(3))
-
-
-class TestChoice(SimpleTestCase):
-    def setUp(self):
-        self.choice = affect_student.Choice(1, 5, 4, 1, True)
-
-    def test_init(self):
-        self.assertEqual(self.choice.internship_id, 1)
-        self.assertEqual(self.choice.organization_id, 5)
-        self.assertEqual(self.choice.speciality_id, 4)
-        self.assertEqual(self.choice.preference, 1)
-        self.assertEqual(self.choice.priority, True)
-
-    def test_create_choice(self):
-        choice = affect_student.Choice.create_choice("1 1 1 1 1 1")
-        self.assertTrue(choice)
-        self.assertEqual(choice.internship_id, 1)
-        self.assertEqual(choice.organization_id, 1)
-        self.assertEqual(choice.speciality_id, 1)
-        self.assertEqual(choice.preference, 1)
-        self.assertEqual(choice.priority, True)
-
+        student_wrapper = solver.get_student(self.student_1.registration_id)
+        self.assertEqual(len(student_wrapper.internship_assigned), 1)
 

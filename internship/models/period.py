@@ -26,6 +26,8 @@
 from django.db import models
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.exceptions import ObjectDoesNotExist
+
 
 class PeriodAdmin(SerializableModelAdmin):
     list_display = ('name', 'date_start', 'date_end')
@@ -48,6 +50,15 @@ def search(**kwargs):
 
 def find_by_id(period_id):
     return Period.objects.get(pk=period_id)
+
+
+def find_by_name(period_name):
+    try:
+        return Period.objects.get(name=period_name)
+    except ObjectDoesNotExist:
+        return None
+    except MultipleObjectsReturned:
+        return None
 
 
 def get_by_name(period_name):
