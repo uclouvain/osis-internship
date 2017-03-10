@@ -516,10 +516,10 @@ def internships_modification_student(request, registration_id, internship_id="1"
             remove_previous_choices(student, internship_id)
             save_student_choices(formset, student, int(internship_id), speciality)
 
-    student_choices = mdl_internship.internship_choice.search_by_student_or_choice(student=student)
-    choices_for_internship = filter(lambda choice: choice.internship_choice == internship_id, student_choices)
+    student_choices = mdl_internship.internship_choice.search_by_student_or_choice(student=student,
+                                                                                   internship_choice=internship_id)
 
-    zipped_data = prepare_template_data(formset, choices_for_internship, internships_offers, speciality, student)
+    zipped_data = prepare_template_data(formset, student_choices, internships_offers, speciality, student)
     information = mdl_internship.internship_student_information.find_by_person(student.person)
 
     return render(request, "internship_modification_student.html",
@@ -530,7 +530,6 @@ def internships_modification_student(request, registration_id, internship_id="1"
                    "intern_id": int(internship_id),
                    "speciality_id": int(speciality_id),
                    "student": student,
-                   "student_choices": student_choices,
                    "information": information})
 
 
@@ -597,6 +596,19 @@ def zip_data(dict_current_choices, formset, internships_offers, dict_current_enr
         return None
     zipped_data = []
     zipped_data_for_offer_selected = []
+    elements = generate_elements(dict_current_choices, dict_current_enrollments, dict_offers_choices, formset,
+                                 internships_offers)
+    for element in elements:
+        if int(element[2]):
+            zipped_data_for_offer_selected.append(element)
+        else:
+            zipped_data.append(element)
+    zipped_data_for_offer_selected.sort(key=lambda x: x[2])
+    zipped_data_for_offer_selected.extend(zipped_data)
+    return zipped_data_for_offer_selected
+
+
+def generate_elements(dict_current_choices, dict_current_enrollments, dict_offers_choices, formset, internships_offers):
     for offer, form in zip(internships_offers, formset):
         offer_choice = dict_current_choices.get((offer.organization.id, offer.speciality.id), None)
         offer_value = 0 if not offer_choice else offer_choice.choice
@@ -604,13 +616,7 @@ def zip_data(dict_current_choices, formset, internships_offers, dict_current_enr
         offer_enrollments = dict_current_enrollments.get(offer.id, [])
         number_first_choices = dict_offers_choices.get(offer.organization.id, 0)
         element = (offer, form, str(offer_value), offer_priority, offer_enrollments, number_first_choices)
-        if offer_value:
-            zipped_data_for_offer_selected.append(element)
-        else:
-            zipped_data.append(element)
-    zipped_data_for_offer_selected.sort(key=lambda x: x[2])
-    zipped_data_for_offer_selected.extend(zipped_data)
-    return zipped_data_for_offer_selected
+        yield element
 
 
 @login_required
