@@ -177,10 +177,10 @@ class Solver:
             if self.__assign_student_choices_for_internship(student_wrapper, internship):
                 break
             speciality = student_wrapper.get_speciality_of_internship(internship)
-            # TODO check if student have priority for this internship
-            if speciality:
-                if self.__assign_first_possible_offer_from_speciality_to_student(student_wrapper, speciality, internship):
-                    break
+            if not speciality or student_wrapper.has_priority():
+                continue
+            if self.__assign_first_possible_offer_from_speciality_to_student(student_wrapper, speciality, internship):
+                break
 
     def __assign_student_choices_for_internship(self, student_wrapper, internship):
         internship_choices = student_wrapper.get_choices_for_internship(internship)

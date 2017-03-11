@@ -28,7 +28,7 @@ from internship import models as mdl_internship
 
 NUMBER_INTERNSHIP = 4
 
-
+# TODO add enforced periods
 class StudentWrapper:
     def __init__(self, student):
         self.student = student
