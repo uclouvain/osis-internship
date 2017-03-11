@@ -80,32 +80,24 @@ def get_number_ok_student(students_list, number_selection):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_resume(request):
-    # Get all stundents and the mandatory specialities
-    students_list = mdl_internship.internship_choice.find_by_all_student()
-    specialities = mdl_internship.internship_speciality.search(mandatory=True)
-    student_informations = mdl_internship.internship_student_information.find_all()
-
-    set_number_choices(student_informations)
-
-    # Get the required number selection (4 for each speciality)
-    # Get the number of student who have al least 4 corrects choice of internship
-    # Get the number of student who can choose their internships
-    number_selection = 4 * len (specialities)
-    student_with_internships = len(students_list)
-    students_can_have_internships = len(mdl_internship.internship_student_information.find_all())
-
-    students_ok = get_number_ok_student(students_list, number_selection)
-
+    students_with_status = get_students_with_status()
+    student_with_internships = mdl_internship.internship_choice.get_number_students()
+    students_can_have_internships = mdl_internship.internship_student_information.get_number_students()
     student_without_internship = students_can_have_internships - student_with_internships
+    number_students_ok = len([x for x in students_with_status if x[1]])
+    number_students_not_ok = len([x for x in students_with_status if x[1] is False])
+    number_generalists = mdl_internship.internship_student_information.get_number_of_generalists()
+    number_specialists = students_can_have_internships - number_generalists
     return render(request, "student_search.html", {'search_name': None,
-                                                    'search_firstname': None,
-                                                   'students': student_informations,
-                                                   'number_selection': number_selection,
-                                                   'students_ok': students_ok[0],
-                                                   'students_not_ok': students_ok[1],
+                                                   'search_firstname': None,
+                                                   'students': students_with_status,
+                                                   'students_ok': number_students_ok,
+                                                   'students_not_ok': number_students_not_ok,
                                                    'student_with_internships': student_with_internships,
                                                    'students_can_have_internships': students_can_have_internships,
                                                    'student_without_internship': student_without_internship,
+                                                   "number_generalists": number_generalists,
+                                                   "number_specialists": number_specialists
                                                    })
 
 
@@ -288,3 +280,25 @@ def student_save_affectation_modification(request, registration_id):
     else:
         redirect_url = reverse('internship_student_affectation_modification', args=[student.id])
     return HttpResponseRedirect(redirect_url)
+
+
+def get_students_with_status():
+    students_status = []
+    students_informations = mdl_internship.internship_student_information.find_all()
+    for student_info in students_informations:
+        person = student_info.person
+        student = mdl.student.find_by_person(person)
+        student_status = get_student_status(student)
+        students_status.append((student, student_status))
+    return students_status
+
+
+def get_student_status(student):
+    internships_to_make_choice = [1, 2, 3, 4]
+    internship_choices_values = mdl_internship.internship_choice.get_internship_choices_made(student)
+    if len(internship_choices_values) == 0:
+        return None
+    for internship_value in internships_to_make_choice:
+        if internship_value not in internship_choices_values:
+            return False
+    return True

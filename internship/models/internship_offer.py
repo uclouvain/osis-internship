@@ -34,6 +34,7 @@ class InternshipOfferAdmin(SerializableModelAdmin):
     fieldsets = ((None, {'fields': ('organization', 'speciality', 'title', 'maximum_enrollments', 'master',
                                     'selectable')}),)
     raw_id_fields = ('organization', 'speciality')
+    search_fields = ['organization__name', 'speciality__name']
 
 
 class InternshipOffer(SerializableModel):
@@ -87,7 +88,7 @@ def find_intership_by_id(id):
 
 
 def find_by_speciality(speciality):
-    return InternshipOffer.objects.filter(speciality=speciality)
+    return InternshipOffer.objects.filter(speciality=speciality).order_by("organization__reference")
 
 
 def find_by_pk(a_pk):
@@ -95,4 +96,12 @@ def find_by_pk(a_pk):
         return InternshipOffer.objects.get(pk=a_pk)
     except ObjectDoesNotExist:
         return None
+
+
+def get_number_selectable():
+    return InternshipOffer.objects.filter(selectable=True).count()
+
+
+def find_all():
+    return InternshipOffer.objects.all()
 

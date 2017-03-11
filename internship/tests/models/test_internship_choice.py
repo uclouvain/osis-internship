@@ -73,6 +73,18 @@ class TestSearchByStudentOrChoice(TestCase):
         choices = list(mdl_internship_choice.get_non_mandatory_internship_choices())
         self.assertEqual(len(choices), 2)
 
+    def test_get_internship_choices_made(self):
+        expected = [1]
+        actual = mdl_internship_choice.get_internship_choices_made(self.student)
+        self.assertCountEqual(expected, actual)
+        for item_expected in expected:
+            self.assertIn(item_expected, list(actual))
+
+    def test_get_number_students(self):
+        expected = 1
+        actual = mdl_internship_choice.get_number_students()
+        self.assertEqual(expected, actual)
+
 
 
 

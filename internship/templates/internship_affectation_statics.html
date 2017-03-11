@@ -397,7 +397,7 @@
     <script type="text/javascript" src="{% static 'js/dataTables.bootstrap.min.js' %}"></script>
     <script>
         $(document).ready(function() {
-            $('#organizations').DataTable({
+            $('#students').DataTable({
                 paging: false,
                 "columnDefs": [ {
                     "targets": 'no-sort',
@@ -406,7 +406,7 @@
                 bInfo: false
             });
 
-            $('#students').DataTable({
+            $('#organizations').DataTable({
                 paging: false,
                 "columnDefs": [ {
                     "targets": 'no-sort',

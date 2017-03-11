@@ -38,6 +38,7 @@ urlpatterns = [
     url(r'^assistants/', include('assistant.urls')),
     url(r'^internships/', include('internship.urls')),
     url(r'^dissertation/', include('dissertation.urls')),
+    url(r'^assessments/', include('assessments.urls')),
 ]
 
 handler404 = 'base.views.common.page_not_found'
