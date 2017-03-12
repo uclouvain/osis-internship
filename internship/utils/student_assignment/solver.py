@@ -38,8 +38,6 @@ AUTHORIZED_SS_SPECIALITIES = ["CHC", "DE", "GE", "GOC", "MI", "MP", "NA", "OP", 
                               "CU"]
 
 
-# TODO affect priority students first
-# TODO afect generalists then specialists
 def affect_student(times=1):
     current_student_affectations = list(_load_current_students_affectations())
     solver = init_solver(current_student_affectations)
@@ -79,14 +77,16 @@ def save_assignments_to_db(assignments):
 class Solver:
     def __init__(self):
         self.students_by_registration_id = dict()
-        self.students_lefts_to_assign = []
         self.offers_by_organization_speciality = dict()
         self.offers_by_speciality = dict()
         self.periods = []
         self.default_organization = None
         self.priority_students = []
-        self.normal_students = []
+        self.generalists_students = []
+        self.specialists_students = []
         self.students_priority_lefts_to_assign = []
+        self.generalists_students_lefts_to_assign = []
+        self.specialists_students_lefts_to_assign = []
 
     def set_students(self, student_wrappers):
         self.students_by_registration_id = student_wrappers
@@ -97,9 +97,12 @@ class Solver:
             if student_wrapper.has_priority:
                 self.priority_students.append(student_wrapper)
                 self.students_priority_lefts_to_assign.append(student_wrapper)
+            elif student_wrapper.get_contest() in ["SP", "SPECIALIST"]:
+                self.specialists_students.append(student_wrapper)
+                self.specialists_students_lefts_to_assign.append(student_wrapper)
             else:
-                self.normal_students.append(student_wrapper)
-                self.students_lefts_to_assign.append(student_wrapper)
+                self.generalists_students.append(student_wrapper)
+                self.generalists_students_lefts_to_assign.append(student_wrapper)
 
     def set_offers(self, internship_wrappers):
         self.offers_by_organization_speciality = internship_wrappers
@@ -140,8 +143,9 @@ class Solver:
         return assignments, cost
 
     def solve(self):
-        self.students_priority_lefts_to_assign = self.__assign_choices(self.students_priority_lefts_to_assign)
-        self.students_lefts_to_assign = self.__assign_choices(self.students_lefts_to_assign)
+        self.__assign_choices(self.students_priority_lefts_to_assign)
+        self.__assign_choices(self.generalists_students_lefts_to_assign)
+        self.__assign_choices(self.specialists_students_lefts_to_assign)
 
     def __assign_choices(self, students_list):
         min_internship = 1
