@@ -26,9 +26,9 @@
 from internship import models as mdl_internship
 
 
-NUMBER_INTERNSHIP = 4
+NUMBER_INTERNSHIPS = 4
 
-# TODO add enforced periods
+
 class StudentWrapper:
     def __init__(self, student):
         self.student = student
@@ -37,14 +37,26 @@ class StudentWrapper:
         self.internship_assigned = []
         self.specialities_by_internship = dict()
         self.internship_priorities = set()
-        self.contest = "SS"
+        self.enrollments = dict()
         self.cost = 0
+        self.information = None
 
     def add_choice(self, choice):
         self.choices.append(choice)
         self.choices.sort(key=lambda a_choice: a_choice.choice, reverse=True)
         self.__update_specialities_by_internship(choice)
         self.__update_priority(choice)
+
+    def student_information(self, information):
+        self.information = information
+
+    def get_contest(self):
+        return self.information.contest
+
+    def add_enrollment(self, enrollment):
+        key = enrollment.internship_choice
+        self.enrollments[key] = self.enrollments.get(key, [])
+        self.enrollments[key].append(enrollment)
 
     def has_priority(self):
         return len(self.internship_priorities) > 0
@@ -83,6 +95,12 @@ class StudentWrapper:
 
     def get_assignments(self):
         return self.assignments.values()
+
+    def get_internships_periods(self, internship, internship_choice):
+        enrollments = self.enrollments.get(internship_choice, [])
+        periods = filter(lambda enrollment: enrollment.internship == internship, enrollments)
+        periods = map(lambda enrollment: enrollment.period.name, periods)
+        return list(periods)
 
     def selected_specialities(self):
         return list(set([choice.speciality for choice in self.choices]))
