@@ -148,18 +148,18 @@ class Solver:
         max_internship = NUMBER_INTERNSHIPS
         for internship in range(min_internship, max_internship+1):
             students_to_assign = []
-            random.shuffle(students_lists)
-            for student_wrapper in students_lists:
+            random.shuffle(students_list)
+            for student_wrapper in students_list:
                 if student_wrapper.has_all_internships_assigned():
                     continue
                 self.__assign_first_possible_offer(student_wrapper)
                 students_to_assign.append(student_wrapper)
-            students_lists = students_to_assign
-        return students_lists
+            students_list = students_to_assign
+        return students_list
 
     def __assign_first_possible_offer(self, student_wrapper):
         last_internship_assigned = student_wrapper.get_last_internship_assigned()
-        for internship in range(last_internship_assigned, MAX_NUMBER_INTERNSHIPS+1):
+        for internship in range(last_internship_assigned + 1, MAX_NUMBER_INTERNSHIPS+1):
             if self.__assign_student_choices_for_internship(student_wrapper, internship):
                 return
             speciality = student_wrapper.get_speciality_of_internship(internship)
@@ -175,7 +175,7 @@ class Solver:
         internship_choices = student_wrapper.get_choices_for_internship(internship)
         for choice in internship_choices:
             preference = choice.choice
-            internship_wrapper = self.get_offer(choice.organization.id, choice.specialty.id)
+            internship_wrapper = self.get_offer(choice.organization.id, choice.speciality.id)
             if not internship_wrapper:
                 continue
             if _assign_offer_to_student(internship_wrapper, internship, preference, student_wrapper):
@@ -214,9 +214,9 @@ class Solver:
 def _get_valid_period(internship_wrapper, student_wrapper, internship):
     free_periods_name = internship_wrapper.get_free_periods()
     student_periods_possible = \
-        filter(lambda period: student_wrapper.has_period_assigned(period, internship_wrapper.internship, internship) is False,
+        filter(lambda period: student_wrapper.has_period_assigned(period) is False,
                free_periods_name)
-    enrollments_periods = student_wrapper.get_internships_period(internship_wrapper.internship, internship)
+    enrollments_periods = student_wrapper.get_internships_periods(internship_wrapper.internship, internship)
     if enrollments_periods:
         student_periods_possible = filter(lambda x: x in enrollments_periods, student_periods_possible)
     return next(student_periods_possible, None)

@@ -43,11 +43,11 @@ class StudentWrapper:
 
     def add_choice(self, choice):
         self.choices.append(choice)
-        self.choices.sort(key=lambda a_choice: a_choice.choice, reverse=True)
+        self.choices.sort(key=lambda a_choice: a_choice.choice, reverse=False)
         self.__update_specialities_by_internship(choice)
         self.__update_priority(choice)
 
-    def student_information(self, information):
+    def set_information(self, information):
         self.information = information
 
     def get_contest(self):
@@ -98,7 +98,7 @@ class StudentWrapper:
 
     def get_internships_periods(self, internship, internship_choice):
         enrollments = self.enrollments.get(internship_choice, [])
-        periods = filter(lambda enrollment: enrollment.internship == internship, enrollments)
+        periods = filter(lambda enrollment: enrollment.internship_offer == internship, enrollments)
         periods = map(lambda enrollment: enrollment.period.name, periods)
         return list(periods)
 
@@ -126,6 +126,8 @@ class StudentWrapper:
         return self.specialities_by_internship.get(internship, None)
 
     def get_last_internship_assigned(self):
+        if not self.internship_assigned:
+            return 0
         return max(self.internship_assigned)
 
     @staticmethod
