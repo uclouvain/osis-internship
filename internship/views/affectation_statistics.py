@@ -1127,18 +1127,23 @@ def load_solution(data):
         order_by("period_id").select_related()
     # This object store the number of available places for given organization, speciality, period
     temp_internship_table = defaultdict(dict)
+
+    keys = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8', 'P9', 'P10', 'P11', 'P12']
+
     for pid in period_internship_places:
         organization = pid.internship.organization
         acronym = pid.internship.speciality.acronym
         period_name = pid.period.name
         if acronym not in temp_internship_table[organization]:
             temp_internship_table[organization][acronym] = OrderedDict()
-        temp_internship_table[organization][acronym][period_name] = {}
+            fill_periods_default_values(acronym, keys, organization, temp_internship_table)
+
         temp_internship_table[organization][acronym][period_name]['before'] = pid.number_places
         temp_internship_table[organization][acronym][period_name]['after'] = pid.number_places
 
+
+
     sol = {}
-    keys = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8', 'P9', 'P10', 'P11', 'P12']
     for item in data:
         # Initialize 12 empty period of each student
         if item.student not in sol:
@@ -1171,6 +1176,13 @@ def load_solution(data):
     sorted_internship_table.sort(key=itemgetter(0))
 
     return sol, sorted_internship_table
+
+
+def fill_periods_default_values(acronym, keys, organization, temp_internship_table):
+    for key in keys:
+        temp_internship_table[organization][acronym][key] = {}
+        temp_internship_table[organization][acronym][key]['before'] = 0
+        temp_internship_table[organization][acronym][key]['after'] = 0
 
 
 @login_required
