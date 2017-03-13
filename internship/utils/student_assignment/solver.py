@@ -225,6 +225,7 @@ class Solver:
 
 def _get_valid_period(internship_wrapper, student_wrapper, internship):
     free_periods_name = internship_wrapper.get_free_periods()
+    random.shuffle(free_periods_name)
     student_periods_possible = \
         filter(lambda period: student_wrapper.has_period_assigned(period) is False,
                free_periods_name)

@@ -26,7 +26,7 @@
 from django.conf.urls import url
 
 from internship.views import home, internship, master, period, \
-                            place, speciality, student_resume, affectation_statistics, affectation_statistics_beta
+                            place, speciality, student_resume, affectation_statistics
 from internship.utils import upload_xls
 
 urlpatterns = [
@@ -36,7 +36,7 @@ urlpatterns = [
         name='internship_affectation_statistics'),
     url(r'^affectation_result/generate/$', affectation_statistics.internship_affectation_statistics_generate,
         name='internship_affectation_statistics_generate'),
-    url(r'^affectation_result/generate_beta/$', affectation_statistics_beta.internship_affectation_statistics_generate,
+    url(r'^affectation_result/generate_beta/$', affectation_statistics.assign_automatically_internships,
         name='internship_affectation_statistics_generate_beta'),
     url(r'^affectation_result/sumup/$', affectation_statistics.internship_affectation_sumup, name='internship_affectation_sumup'),
 

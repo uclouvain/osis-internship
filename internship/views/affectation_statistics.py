@@ -30,16 +30,18 @@ from operator import itemgetter
 from random import randint, choice
 from statistics import mean, stdev
 from collections import defaultdict
+from datetime import datetime
 
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from internship import models as mdl_internship
 from internship.views.internship import calc_dist, set_tabs_name
 from internship.views.place import sort_organizations, set_speciality_unique
-from datetime import datetime
+from internship.utils.student_assignment import solver
+
 # ****************** Global vars ******************
 errors = []  # List of all internship added to hospital error, as tuple (student, speciality, period)
 solution = {}  # Dict with the solution => solution[student][period] = SolutionLine
@@ -1279,3 +1281,22 @@ def internship_affectation_sumup(request):
                    'organizations': informations,
                    'affectations': affectations,
                    })
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def assign_automatically_internships(request):
+    """ Generate new solution, save it in the database, redirect back to the page 'internship_affectation_statistics'"""
+    if request.method == 'POST':
+        if request.POST['executions'] != "":
+            times = int(request.POST['executions'])
+            start_date_time = datetime.now()
+            mdl_internship.internship_student_affectation_stat.find_non_mandatory_affectations().delete()
+            solver.affect_student(times)
+            end_date_time = datetime.now()
+            affectation_generatioon_time = mdl_internship.affectation_generation_time.AffectationGenerationTime()
+            affectation_generatioon_time.start_date_time = start_date_time
+            affectation_generatioon_time.end_date_time = end_date_time
+            affectation_generatioon_time.generated_by = request.user.username
+            affectation_generatioon_time.save()
+        return redirect(reverse('internship_affectation_statistics'))
