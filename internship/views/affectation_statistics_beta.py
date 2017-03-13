@@ -41,6 +41,7 @@ def internship_affectation_statistics_generate(request):
         if request.POST['executions'] != "":
             times = int(request.POST['executions'])
             start_date_time = datetime.now()
+            mdl_internship.internship_student_affectation_stat.find_non_mandatory_affectations().delete()
             solver.affect_student(times)
             end_date_time = datetime.now()
             affectation_generatioon_time = mdl_internship.affectation_generation_time.AffectationGenerationTime()
