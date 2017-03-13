@@ -248,7 +248,7 @@ def online_double_encoding_form(request, learning_unit_year_id=None):
     # Case asking for a double encoding
     if request.method == 'GET':
         if len(encoded_exam_enrollments) > 0:
-            return layout.render(request, "Online_double_encoding_form.html", data)
+            return layout.render(request, "online_double_encoding_form.html", data)
         else:
             messages.add_message(request, messages.WARNING, "%s" % _('no_score_encoded_double_encoding_impossible'))
             return online_encoding(request, learning_unit_year_id=learning_unit_year_id)
