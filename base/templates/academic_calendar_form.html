@@ -37,6 +37,7 @@
 <li class="active">{% trans 'academic_calendar' %}</li>
 {% endblock %}
 {% block content %}
+{% get_current_language as LANGUAGE_CODE %}
 <div class="page-header">
     {% if academic_calendar.id%}
     <h2>{{ academic_calendar.title }}</h2>
@@ -53,7 +54,9 @@
                                         {% url 'academic_calendar_form' %}
                                     {% endif %}">
             {% csrf_token %}
-
+            <input type="hidden"
+                   value="{{LANGUAGE_CODE}}"
+                   id="hdn_language_code" >
             <input type="hidden"
                    class="form-control"
                    value="{{ form.reference.value | default_if_none:'' }}"
@@ -77,15 +80,17 @@
                 <div class="col-md-2">
                     <label for="txt_start_date">{% trans 'start_date'%}</label>
                     <input type="text" class="form-control"
-                           value="{{ form.start_date.value| default_if_none:''| date_in_form_format:"d/m/Y" }}"
+                           value="{{ form.start_date.value| default_if_none:''| date_in_form_format }}"
                     name="start_date" id="txt_start_date"/>
+                    <span class="help-block">({% trans 'format_date'%})</span>
                     <span class="error">{{ form.start_date.errors }}</span>
                 </div>
                 <div class="col-md-2">
                     <label for="txt_end_date">{% trans 'end_date' %}</label>
                     <input type="text" class="form-control"
-                           value="{{ form.end_date.value| default_if_none:''| date_in_form_format:"d/m/Y" }}"
+                           value="{{ form.end_date.value| default_if_none:''| date_in_form_format }}"
                            name="end_date" id="txt_end_date"/>
+                    <span class="help-block">({% trans 'format_date'%})</span>
                     <span class="error">{{ form.end_date.errors }}</span>
                 </div>
             </div>
@@ -136,17 +141,19 @@
 {% endblock %}
 {% block script %}
 <script src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>
+<script src="{% static 'js/locales/bootstrap-datepicker.fr.js' %}"></script>
 <script>
     $("#txt_start_date").datepicker({
-        format: "dd/mm/yyyy",
         autoclose: true,
-        orientation: "bottom auto"
+        orientation: "bottom auto",
+        language: $("#hdn_language_code").val()
     });
+    //$.extend($.datepicker.regional["fr"], { dateFormat: "d MM, y"});
 
     $("#txt_end_date").datepicker({
-        format: "dd/mm/yyyy",
         autoclose: true,
-        orientation: "bottom auto"
+        orientation: "bottom auto",
+        language: $("#hdn_language_code").val()
     });
 
     $("#txt_highlight_title").on('input', function() {

@@ -1353,3 +1353,6 @@ msgstr "Co-titulaire"
 
 msgid "DEPUTY"
 msgstr "Suppléant"
+
+msgid "format_date"
+msgstr "jj/mm/aaaa"

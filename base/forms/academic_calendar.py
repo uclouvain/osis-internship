@@ -27,6 +27,7 @@ from django.forms import ModelForm
 from base.models import academic_calendar, offer_year_calendar
 from django.utils.translation import ugettext as trans
 from base.models.offer_year_calendar import save_from_academic_calendar
+from django.utils import translation
 
 
 class AcademicCalendarForm(ModelForm):
@@ -42,9 +43,14 @@ class AcademicCalendarForm(ModelForm):
 
     def end_date_gt_last_offer_year_calendar_end_date(self):
         off_year_calendar_max = offer_year_calendar.find_latest_end_date_by_academic_calendar(self.instance.id)
-        if off_year_calendar_max and self.cleaned_data['end_date'] < off_year_calendar_max.end_date:
+        date_format = '%d/%m/%Y'
+        if translation.get_language()=='en':
+            date_format = '%m/%d/%Y'
+
+        if off_year_calendar_max and self.cleaned_data['end_date'] and \
+                        self.cleaned_data['end_date'] < off_year_calendar_max.end_date:
             error_msg = "%s." % (trans('academic_calendar_offer_year_calendar_end_date_error')
-                                 % (off_year_calendar_max.end_date.strftime('%d/%m/%Y'),
+                                 % (off_year_calendar_max.end_date.strftime(date_format),
                                     off_year_calendar_max.offer_year.acronym))
             self._errors['end_date'] = error_msg
             return False

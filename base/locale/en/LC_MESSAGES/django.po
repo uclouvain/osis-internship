@@ -1360,3 +1360,6 @@ msgstr "Co-holder"
 
 msgid "DEPUTY"
 msgstr "Deputy"
+
+msgid "format_date"
+msgstr "mm/dd/yyyy"
