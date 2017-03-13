@@ -23,20 +23,35 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib import admin
-from assistant.models import reviewer, manager, settings, academic_assistant, assistant_mandate
-from assistant.models.assistant_document_file import AssistantDocumentFile
-from assistant.models.mandate_structure import MandateStructure
-from assistant.models.review import Review
-from assistant.models.tutoring_learning_unit_year import TutoringLearningUnitYear
 
 
-admin.site.register(assistant_mandate.AssistantMandate, assistant_mandate.AssistantMandateAdmin)
-admin.site.register(AssistantDocumentFile)
-admin.site.register(academic_assistant.AcademicAssistant, academic_assistant.AcademicAssistantAdmin)
-admin.site.register(MandateStructure)
-admin.site.register(Review)
-admin.site.register(TutoringLearningUnitYear)
-admin.site.register(reviewer.Reviewer, reviewer.ReviewerAdmin)
-admin.site.register(manager.Manager, manager.ManagerAdmin)
-admin.site.register(settings.Settings, settings.SettingsAdmin)
+class InternshipWrapper:
+    def __init__(self, internship):
+        self.internship = internship
+        self.periods_places = dict()
+        self.periods_places_left = dict()
+
+    def set_period_places(self, period_places):
+        period_name = period_places.period.name
+        self.periods_places[period_name] = period_places
+        self.periods_places_left[period_name] = period_places.number_places
+
+    def period_is_not_full(self, period_name):
+        return self.periods_places_left.get(period_name, 0) > 0
+
+    def get_free_periods(self):
+        return [period_name for period_name in self.periods_places_left.keys() if self.period_is_not_full(period_name)]
+
+    def is_not_full(self):
+        return len(self.get_free_periods()) > 0
+
+    def occupy(self, period_name):
+        self.periods_places_left[period_name] -= 1
+        return self.periods_places[period_name]
+
+    def reinitialize(self):
+        self.periods_places_left = dict()
+        for period_name, period_places in self.periods_places.items():
+            self.periods_places_left[period_name] = period_places.number_places
+
+

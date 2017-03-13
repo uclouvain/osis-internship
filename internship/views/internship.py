@@ -36,6 +36,7 @@ from internship import models as mdl_internship
 from internship.forms.form_select_speciality import SpecialityForm
 from internship.forms.form_offer_preference import OfferPreferenceForm, OfferPreferenceFormSet
 from django.forms.formsets import formset_factory
+from django.views.decorators.http import require_POST
 
 
 def calc_dist(lat_a, long_a, lat_b, long_b):
@@ -782,3 +783,69 @@ def internship_save_modification_student(request):
 
     redirect_url = reverse('internships_modification_student', args=[registration_id[0]])
     return HttpResponseRedirect(redirect_url)
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def edit_period_places(request, internship_id):
+    internship_offer = mdl_internship.internship_offer.get_by_id(internship_id)
+    period_places_values = get_current_period_places(internship_offer)
+    return render(request, "period_places_edit.html", {"internship": internship_offer,
+                                                       "period_places": period_places_values})
+
+
+@login_required
+@require_POST
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def save_period_places(request, internship_id):
+    periods_dict = get_dict_of_periods()
+    internship_offer = mdl_internship.internship_offer.get_by_id(internship_id)
+    if not internship_offer:
+        return redirect('edit_period_places', internship_id=internship_id)
+    delete_previous_period_places(internship_offer)
+    for period_name in periods_dict.keys():
+        period_number_places = int(request.POST.get(period_name, 0))
+        save_period_places_to_db(internship_offer, periods_dict[period_name], period_number_places)
+    return redirect('edit_period_places', internship_id=internship_id)
+
+
+def get_dict_of_periods():
+    periods = mdl_internship.period.find_all()
+    periods_dict = dict()
+    for period in periods:
+        periods_dict[period.name] = period
+    return periods_dict
+
+
+def get_dict_period_places(internship_offer):
+    periods_places = mdl_internship.period_internship_places.find_by_internship(internship_offer)
+    periods_places_dict = dict()
+    for period_place in periods_places:
+        periods_places_dict[period_place.period.name] = period_place
+    return periods_places_dict
+
+
+def save_period_places_to_db(internship_offer, period, number_places):
+    if number_places <= 0:
+        return
+    period_places = mdl_internship.period_internship_places.PeriodInternshipPlaces(period=period,
+                                                                                   internship=internship_offer,
+                                                                                   number_places=number_places)
+    period_places.save()
+
+
+def delete_previous_period_places(internship_offer):
+    mdl_internship.period_internship_places.find_by_internship(internship_offer).delete()
+
+
+def get_current_period_places(internship_offer):
+    keys = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8', 'P9', 'P10', 'P11', 'P12']
+    periods_places = get_dict_period_places(internship_offer)
+    periods = []
+    for key in keys:
+        period_place = periods_places.get(key, None)
+        number_places = 0
+        if period_place:
+            number_places = period_place.number_places
+        periods.append((key, number_places))
+    return periods

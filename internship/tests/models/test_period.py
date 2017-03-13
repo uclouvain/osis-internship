@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,20 +23,24 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib import admin
-from assistant.models import reviewer, manager, settings, academic_assistant, assistant_mandate
-from assistant.models.assistant_document_file import AssistantDocumentFile
-from assistant.models.mandate_structure import MandateStructure
-from assistant.models.review import Review
-from assistant.models.tutoring_learning_unit_year import TutoringLearningUnitYear
+
+from internship.models import period as mdl_period
+import datetime
+from django.test import TestCase
 
 
-admin.site.register(assistant_mandate.AssistantMandate, assistant_mandate.AssistantMandateAdmin)
-admin.site.register(AssistantDocumentFile)
-admin.site.register(academic_assistant.AcademicAssistant, academic_assistant.AcademicAssistantAdmin)
-admin.site.register(MandateStructure)
-admin.site.register(Review)
-admin.site.register(TutoringLearningUnitYear)
-admin.site.register(reviewer.Reviewer, reviewer.ReviewerAdmin)
-admin.site.register(manager.Manager, manager.ManagerAdmin)
-admin.site.register(settings.Settings, settings.SettingsAdmin)
+def create_period(name="P1"):
+    period = mdl_period.Period(name=name, date_start=datetime.date.today(), date_end=datetime.date.today())
+    period.save()
+    return period
+
+
+class TestGetByName(TestCase):
+    def test_find(self):
+        period_1 = create_period(name="P1")
+        period_2 = create_period(name="P5")
+
+        self.assertEqual(period_1, mdl_period.get_by_name("P1"))
+        self.assertEqual(period_2, mdl_period.get_by_name("P5"))
+
+        self.assertFalse(mdl_period.get_by_name("P4"))

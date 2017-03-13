@@ -48,7 +48,6 @@ def internships_home(request):
 
     blockable = mdl_internship.internship_offer.get_number_selectable() > 0
 
-
     #Find all informations about students and organisation and fin the latitude and longitude of the address
     student_informations = mdl_internship.internship_student_information.search()
     organization_informations = mdl_internship.organization_address.search()
