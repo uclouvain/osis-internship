@@ -41,7 +41,6 @@ AUTHORIZED_SS_SPECIALITIES = ["CHC", "DE", "GE", "GOC", "MI", "MP", "NA", "OP", 
 def affect_student(times=1):
     current_student_affectations = list(_load_current_students_affectations())
     solver = init_solver(current_student_affectations)
-
     best_assignments, best_cost = launch_solver(solver)
     for x in range(1, times):
         solver.reinitialize()
@@ -292,7 +291,8 @@ def _load_students_and_choices():
 
 def _load_student_information():
     students_information_by_person_id = dict()
-    for student_information in mdl_internship.internship_student_information.InternshipStudentInformation.objects.all():
+    all_student_information = mdl_internship.internship_student_information.InternshipStudentInformation.objects.all()
+    for student_information in all_student_information:
         students_information_by_person_id[student_information.person.id] = student_information
     return students_information_by_person_id
 
@@ -307,7 +307,7 @@ def _load_student_enrollment(students_by_registration_id):
 
 def _load_current_students_affectations():
     student_affectations = \
-        mdl_internship.internship_student_affectation_stat.InternshipStudentAffectationStat.objects.all()
+        mdl_internship.internship_student_affectation_stat.find_non_mandatory_affectations()
     return filter(lambda stud_affectation: stud_affectation.period.name in AUTHORIZED_PERIODS,
                   student_affectations)
 
