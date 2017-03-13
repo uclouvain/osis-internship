@@ -213,15 +213,20 @@ $("input[id^='num_score_']" ).change(function(event) {
     // Get the object that received the event.
     var target = $(event.target);
     var id = target.attr("id");
+    var is_decimal = '{{enrollment.session_exam.learning_unit_year.decimal_scores}}'
     if (typeof id == 'undefined') {
         target = target.parent();
         id = target.attr("id");
     }
     var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
-    if (target.val() > 20 || (target.val() < 0)) {
+    if (!is_decimal && target.val() % 1 != 0){
         target.css("border", "1px solid #ff0000");
-    } else {
-        target.css("border", "1px solid lightgrey");
+    }else{
+        if (target.val() > 20 || (target.val() < 0)) {
+            target.css("border", "1px solid #ff0000");
+        } else {
+            target.css("border", "1px solid lightgrey");
+        }
     }
     if(target.val() != "") {
         $("#slt_justification_score_" + enrollmentId).val('');
