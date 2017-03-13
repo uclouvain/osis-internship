@@ -49,6 +49,7 @@ def affect_student(times=1):
         assignments, cost = launch_solver(solver)
         if cost < best_cost:
             best_assignments = assignments
+            best_cost = cost
     save_assignments_to_db(best_assignments)
 
 
