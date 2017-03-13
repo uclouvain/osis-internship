@@ -29,8 +29,9 @@ from django.contrib.auth.models import User, Permission
 from django.core.urlresolvers import reverse
 from base.tests.models import test_person, test_student
 from internship.tests.models import test_internship_offer, test_internship_speciality, test_organization, \
-    test_internship_choice
+    test_internship_choice, test_period
 from internship.models import internship_choice as mdl_internship_choice
+from internship.models import period_internship_places as mdl_period_places
 from django.core.exceptions import ValidationError
 
 
@@ -185,6 +186,51 @@ class TestModifyStudentChoices(TestCase):
         choices = list(mdl_internship_choice.search_by_student_or_choice(student=self.student))
         self.assertEqual(len(choices), 1)
         self.assertNotEqual(previous_choice, choices[0])
+
+
+class TestModifyPeriods(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user("username", "test@test.com", "passtest")
+        self.user.first_name = "first_name"
+        self.user.last_name = "last_name"
+        self.user.save()
+        add_permission(self.user, "is_internship_manager")
+        self.person = test_person.create_person_with_user(self.user)
+
+        self.client.force_login(self.user)
+
+        self.speciality = test_internship_speciality.create_speciality(name="urgence")
+        self.organization = test_organization.create_organization(reference="01")
+        self.offer = test_internship_offer.create_specific_internship_offer(self.organization, self.speciality)
+
+        test_period.create_period("P1")
+        test_period.create_period("P2")
+        test_period.create_period("P3")
+        test_period.create_period("P4")
+        test_period.create_period("P5")
+        test_period.create_period("P6")
+        test_period.create_period("P7")
+        test_period.create_period("P8")
+        test_period.create_period("P9")
+        test_period.create_period("P10")
+        test_period.create_period("P11")
+        test_period.create_period("P12")
+
+    def testAccessUrl(self):
+        url = reverse("edit_period_places", kwargs={"internship_id": self.offer.id})
+        response = self.client.get(url)
+
+        self.assertEqual(200, response.status_code)
+
+    def test_save_period_places(self):
+        url = reverse("save_period_places",  kwargs={"internship_id": self.offer.id})
+        response = self.client.post(url, data={
+            "P1": 2,
+            "P5": 8,
+        })
+
+        period_places = list(mdl_period_places.PeriodInternshipPlaces.objects.all())
+        self.assertEqual(len(period_places), 2)
 
 
 def add_permission(user, codename):

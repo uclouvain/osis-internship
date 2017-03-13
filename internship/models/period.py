@@ -59,3 +59,7 @@ def get_by_name(period_name):
         return None
     except MultipleObjectsReturned:
         return None
+
+
+def find_all():
+    return Period.objects.all()
