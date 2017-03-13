@@ -468,7 +468,10 @@ def get_data_online(learning_unit_year_id, request):
 
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
 
-    coordinator = mdl_attr.attribution.find_responsible(learning_unit_year)
+    coordinators = mdl_attr.attribution.find_all_responsibles(learning_unit_year)
+    tutors = mdl.tutor.find_by_learning_unit(learning_unit_year)\
+                      .exclude(id__in=[coordinator.id for coordinator in coordinators])
+
     progress = mdl.exam_enrollment.calculate_exam_enrollment_progress(exam_enrollments)
 
     draft_scores_not_submitted = len([exam_enrol for exam_enrol in exam_enrollments
@@ -479,12 +482,12 @@ def get_data_online(learning_unit_year_id, request):
             'progress_int': progress,
             'enrollments': exam_enrollments,
             'learning_unit_year': learning_unit_year,
-            'coordinator': coordinator,
+            'coordinators': coordinators,
             'is_program_manager': is_program_manager,
             'is_coordinator': mdl_attr.attribution.is_score_responsible(request.user, learning_unit_year),
             'draft_scores_not_submitted': draft_scores_not_submitted,
             'number_session': exam_enrollments[0].session_exam.number_session if len(exam_enrollments) > 0 else _('none'),
-            'tutors': mdl.tutor.find_by_learning_unit(learning_unit_year),
+            'tutors': tutors,
             'exam_enrollments_encoded': get_score_encoded(exam_enrollments),
             'total_exam_enrollments': len(exam_enrollments)}
 
@@ -510,8 +513,9 @@ def get_data_online_double(learning_unit_year_id, request):
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
 
     nb_final_scores = get_score_encoded(encoded_exam_enrollments)
-    coordinator = mdl_attr.attribution.find_responsible(learning_unit_year)
-
+    coordinators = mdl_attr.attribution.find_all_responsibles(learning_unit_year)
+    tutors = mdl.tutor.find_by_learning_unit(learning_unit_year)\
+                      .exclude(id__in=[coordinator.id for coordinator in coordinators])
     encoded_exam_enrollments = mdl.exam_enrollment.sort_for_encodings(encoded_exam_enrollments)
 
     return {'section': 'scores_encoding',
@@ -521,11 +525,11 @@ def get_data_online_double(learning_unit_year_id, request):
             'learning_unit_year': learning_unit_year,
             'justifications': JUSTIFICATION_TYPES,
             'is_program_manager': mdl.program_manager.is_program_manager(request.user),
-            'coordinator': coordinator,
+            'coordinators': coordinators,
             'count_total_enrollments': len(total_exam_enrollments),
             'number_session': encoded_exam_enrollments[0].session_exam.number_session
                               if len(encoded_exam_enrollments) > 0 else _('none'),
-            'tutors': mdl.tutor.find_by_learning_unit(learning_unit_year)}
+            'tutors': tutors}
 
 
 def get_data_pgmer(request,
