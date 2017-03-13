@@ -106,7 +106,7 @@
                     &nbsp;&nbsp;
                 </div>
             </div>
-            <input type="hidden" id="hdn_active_tab" name="active_tab" value="{{ active_tab }}"/>
+            <input type="hidden" id="hdn_active_tab" name="active_tab" value="{{ active_tab | default_if_none:'tab_online' }}"/>
         </form>
         <br>
         {% include "template_messages.html" %}
@@ -127,21 +127,21 @@
         <br>
         <div>
             <ul class="nav nav-tabs" id="tabs_encoding_type" role="tablist">
-                <li role="presentation" class="{% if not active_tab or active_tab == 'tab_online' %} active{% endif %}">
+                <li role="presentation">
                     <a href="#tab_online" aria-controls="online" role="tab" data-toggle="tab"
                        id="lnk_online">{% trans 'online' %}</a>
                 </li>
-                <li role="presentation" class="{% if active_tab == 'tab_via_excel' %} active{% endif %}">
+                <li role="presentation">
                     <a href="#tab_via_excel" aria-controls="via_excel" role="tab"
                        data-toggle="tab" id="lnk_via_excel">{% trans 'via_excel' %}</a>
                 </li>
-                <li role="presentation" class="{% if active_tab == 'tab_via_paper' %} active{% endif %}">
+                <li role="presentation">
                     <a href="#tab_via_paper" aria-controls="via_paper" role="tab"
                        data-toggle="tab" id="lnk_via_paper">{% trans 'via_paper' %}</a>
                 </li>
             </ul>
             <div class="tab-content" id="pnl_learning_units">
-                <div role="tabpanel" class="tab-pane fade {% if not active_tab or active_tab == 'tab_online' %} active in{% endif %}" id="tab_online">
+                <div role="tabpanel" class="tab-pane fade" id="tab_online">
                     <br>
                     <table class="table table-hover">
                         <thead>
@@ -205,7 +205,7 @@
                 </tbody>
             </table>
         </div>
-                <div role="tabpanel" class="tab-pane fade {% if active_tab == 'tab_via_excel' %} active in{% endif %}" id="tab_via_excel">
+                <div role="tabpanel" class="tab-pane fade" id="tab_via_excel">
             <br>
             <table class="table table-hover">
                 <thead>
@@ -272,7 +272,7 @@
                 </tbody>
             </table>
         </div>
-                <div role="tabpanel" class="tab-pane fade {% if active_tab == 'tab_via_paper' %} active in{% endif %}" id="tab_via_paper">
+                <div role="tabpanel" class="tab-pane fade" id="tab_via_paper">
             <br>
             <a class="btn btn-default {% if not tutor_id or tutor_id == -1 %}disabled{%endif%}"
                href="{%if tutor_id and tutor_id != -1 and offer_year_id %}
@@ -368,16 +368,20 @@
 {% endblock %}
 {% block script %}
 <script type="text/javascript">
+$( document ).ready(function() {
+    var idTab = $("input[name=active_tab]");
+    if(idTab != null) {
+        $('#tabs_encoding_type a[href="#' + idTab.val() + '"]').tab('show');
+    }
+
     $('#tabs_encoding_type a').click(function (e) {
         e.preventDefault();
         var active_tab = $(this).prop('href').split('#');
-        if(active_tab.length > 1) {
-            var idTab = $("input[name=active_tab]");
-            if(idTab != null) {
-                idTab.val(active_tab[1]);
-                $(this).tab('show');
-            }
+        if(idTab != null && active_tab.length > 1 ) {
+            idTab.val(active_tab[1]);
+            $(this).tab('show');
         }
     });
+});
 </script>
 {% endblock %}
