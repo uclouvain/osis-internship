@@ -28,6 +28,7 @@ from assistant.models import *
 from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
+from assistant.utils.send_email import send_message
 from assistant.forms import *
 from assistant.models.enums import document_type
 from base.models import person_address, person
@@ -250,6 +251,10 @@ def form_part6_save(request, mandate_id):
             if 'validate_and_submit' in request.POST:
                 if assistant.supervisor:
                     mandate.state = 'PHD_SUPERVISOR'
+                    html_template_ref = 'assistant_phd_supervisor_html'
+                    txt_template_ref = 'assistant_phd_supervisor_txt'
+                    send_message(person=assistant.supervisor, html_template_ref=html_template_ref,
+                                 txt_template_ref=txt_template_ref, assistant=assistant)
                 elif mandate.assistant_type == "TEACHING_ASSISTANT":
                     mandate.state = 'SUPERVISION'
                 else:
