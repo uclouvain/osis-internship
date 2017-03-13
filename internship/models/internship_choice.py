@@ -32,6 +32,7 @@ class InternshipChoiceAdmin(SerializableModelAdmin):
     fieldsets = ((None, {'fields': ('student', 'organization', 'speciality', 'choice', 'internship_choice',
                                     'priority')}),)
     raw_id_fields = ('student', 'organization', 'speciality')
+    list_filter = ('speciality', 'choice', 'internship_choice')
     search_fields = ['student__person__first_name', 'student__person__last_name']
 
 
@@ -91,7 +92,7 @@ def search_by_student_or_choice(student=None, internship_choice=None):
         has_criteria = True
 
     if has_criteria:
-        return queryset
+        return queryset.order_by("internship_choice", "choice")
     else:
         return None
 
@@ -103,3 +104,8 @@ def get_internship_choices_made(student):
 
 def get_number_students():
     return InternshipChoice.objects.filter(internship_choice__gt=0).distinct("student").count()
+
+
+def get_number_first_choice_by_organization(speciality):
+    return InternshipChoice.objects.filter(choice=1, speciality=speciality).values("organization")\
+        .annotate(models.Count("organization"))

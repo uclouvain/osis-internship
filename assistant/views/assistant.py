@@ -29,12 +29,13 @@ from django.core.urlresolvers import reverse
 from django.forms import forms
 from base.models import person
 from django.core.exceptions import ObjectDoesNotExist
-from assistant.models import academic_assistant, assistant_mandate
+from assistant.models import academic_assistant, assistant_mandate, assistant_document_file
 from django.views.generic.list import ListView
 from django.views.generic.edit import FormMixin
 from django.http.response import HttpResponseRedirect
 from assistant.models import tutoring_learning_unit_year
 from assistant.models import settings
+from assistant.models.enums import document_type
 
 
 class AssistantMandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMixin):
@@ -44,10 +45,7 @@ class AssistantMandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListVie
 
     def test_func(self):
         try:
-            if settings.access_to_procedure_is_open():
-                return academic_assistant.AcademicAssistant.objects.get(person=self.request.user.person)
-            else:
-                return False
+            return user_is_assistant_and_procedure_is_open
         except ObjectDoesNotExist:
             return False
 
@@ -96,7 +94,7 @@ class AssistantLearningUnitsListView(LoginRequiredMixin, UserPassesTestMixin, Li
 
     def test_func(self):
         try:
-            return academic_assistant.find_by_person(person=self.request.user.person)
+            return user_is_assistant_and_procedure_is_open
         except ObjectDoesNotExist:
             return False
 
@@ -112,4 +110,9 @@ class AssistantLearningUnitsListView(LoginRequiredMixin, UserPassesTestMixin, Li
     def get_context_data(self, **kwargs):
         context = super(AssistantLearningUnitsListView, self).get_context_data(**kwargs)
         context['mandate_id'] = self.kwargs['mandate_id']
+        mandate = assistant_mandate.find_mandate_by_id(context['mandate_id'])
+        files = assistant_document_file.find_by_assistant_mandate_and_description(mandate,
+                                                                                  document_type.TUTORING_DOCUMENT)
+        context['files'] = files
+        context['document_type'] = document_type.TUTORING_DOCUMENT
         return context

@@ -26,7 +26,7 @@
 import os, sys
 from django.core.wsgi import get_wsgi_application
 from osis_common.queue import queue_listener, callbacks
-from base.views.score_encoding import get_json_data_scores_sheets
+from assessments.views.score_encoding import get_json_data_scores_sheets
 import logging
 from pika.exceptions import ConnectionClosed, AMQPConnectionError, ChannelClosed
 
