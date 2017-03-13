@@ -26,14 +26,14 @@
 from django.contrib.auth.decorators import login_required
 from django.http import *
 from assistant import models as mdl
-from osis_common import models as mdl_osis_common
+from osis_common.models import document_file as document_file
 from django.core.urlresolvers import reverse
 
 
 @login_required
 def download(request, document_file_id):
     assistant_mandate_document = mdl.assistant_document_file.find_by_id(document_file_id)
-    document = mdl_osis_common.document_file.find_by_id(assistant_mandate_document.document_file.id)
+    document = document_file.find_by_id(assistant_mandate_document.document_file.id)
     filename = document.file_name
     response = HttpResponse(document.file, content_type=document.content_type)
     response['Content-Disposition'] = 'attachment; filename=%s' % filename
@@ -41,16 +41,16 @@ def download(request, document_file_id):
 
 
 @login_required
-def delete(request, mandate_id, document_file_id):
+def delete(request, mandate_id, document_file_id, url):
     assistant_mandate_document = mdl.assistant_document_file.find_by_id(document_file_id)
-    document = mdl_osis_common.document_file.find_by_id(assistant_mandate_document.document_file.id)
+    document = document_file.find_by_id(assistant_mandate_document.document_file.id)
     assistant_mandate_document.delete()
     document.delete()
-    return HttpResponseRedirect(reverse('form_part3_edit', kwargs={'mandate_id': mandate_id}))
+    return HttpResponseRedirect(reverse(url, kwargs={'mandate_id': mandate_id}))
 
 
 @login_required
-def save_uploaded_file(request, mandate_id):
+def save_uploaded_file(request):
     if request.method == 'POST':
         data = request.POST
         assistant_mandate = None
@@ -60,20 +60,18 @@ def save_uploaded_file(request, mandate_id):
         file = file_selected
         file_name = file_selected.name
         content_type = file_selected.content_type
-        size = file_selected.size
         description = data['description']
         storage_duration = 0
-        new_document = mdl_osis_common.document_file.DocumentFile(file_name=file_name,
-                                                                  file=file,
-                                                                  description=description,
-                                                                  storage_duration=storage_duration,
-                                                                  application_name='assistant',
-                                                                  content_type=content_type,
-                                                                  size=size,
-                                                                  update_by=request.user)
+        new_document = document_file.DocumentFile(file_name=file_name,
+                                                  file=file,
+                                                  description=description,
+                                                  storage_duration=storage_duration,
+                                                  application_name='assistant',
+                                                  content_type=content_type,
+                                                  update_by=request.user)
         new_document.save()
         assistant_mandate_document_file = mdl.assistant_document_file.AssistantDocumentFile()
         assistant_mandate_document_file.assistant_mandate = assistant_mandate
         assistant_mandate_document_file.document_file = new_document
         assistant_mandate_document_file.save()
-    return HttpResponseRedirect(reverse('form_part3_edit', kwargs={'mandate_id': mandate_id}))
+    return

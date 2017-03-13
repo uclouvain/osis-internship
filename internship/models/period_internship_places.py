@@ -41,7 +41,7 @@ class PeriodInternshipPlaces(SerializableModel):
     number_places = models.IntegerField(blank=None, null=False)
 
     def __str__(self):
-        return u"%s" % self.period
+        return u"%s (%s)" % (self.internship, self.period)
 
 
 def search(**kwargs):
@@ -51,3 +51,7 @@ def search(**kwargs):
 
 def find_by_id(id):
     return PeriodInternshipPlaces.objects.get(pk=id)
+
+
+def find_by_internship(internship):
+    return PeriodInternshipPlaces.objects.filter(internship=internship)

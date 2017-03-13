@@ -34,6 +34,7 @@ class InternshipStudentAffectationStatAdmin(SerializableModelAdmin):
                                     'consecutive_month', 'type_of_internship')}),)
     raw_id_fields = ('student', 'organization', 'speciality', 'period')
     search_fields = ['student__first_name', 'student__last_name']
+    list_filter = ('period', 'choice')
 
 
 class InternshipStudentAffectationStat(SerializableModel):
@@ -46,6 +47,9 @@ class InternshipStudentAffectationStat(SerializableModel):
     consecutive_month = models.BooleanField(default=False, null=False)
     type_of_internship = models.CharField(max_length=1, blank=False, null=False, default='N')
 
+    def __str__(self):
+        return u"%s : %s - %s (%s)" % (self.student, self.organization, self.speciality, self.period)
+
 
 def search(**kwargs):
     kwargs = {k: v for k, v in kwargs.items() if v}
@@ -56,3 +60,8 @@ def search(**kwargs):
 
 def find_by_id(affectation_id):
     return InternshipStudentAffectationStat.objects.get(pk=affectation_id)
+
+
+def find_non_mandatory_affectations():
+    periods = ["P9", "P10", "P11", "P12"]
+    return InternshipStudentAffectationStat.objects.filter(period__name__in=periods)
