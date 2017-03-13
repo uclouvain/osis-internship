@@ -29,7 +29,7 @@
 {% block breadcrumb %}
     <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
     <li><a href="{% url 'internships_home' %}">{% trans 'internships_managment' %}</a></li>
-    <li class="active">{% trans 'periods' %}</li>
+    <li class="active">{% trans 'edit_places' %}</li>
 {% endblock %}
 {% block content %}
     <div class="page-header">
@@ -38,14 +38,15 @@
 
     <div class="panel panel-default">
         <div class="panel-body">
-            <form method="post">
+            <form method="post" action="{% url 'save_period_places' internship.id %}">
+            {% csrf_token %}
                 {% for period_name, number_places in period_places%}
                 <div class="col-md-3 form-group">
-                    <label for="{{ period_name }}">{{ period_name }}</label>:
-                    <input type="number" class="form-control" id="{{ period_name }}" value="{{ number_places }}">
+                    <label for="id_{{ period_name }}">{{ period_name }}</label>:
+                    <input type="number" class="form-control" id="id_{{ period_name }}" name="{{ period_name }}" value="{{ number_places }}">
                 </div>
                 {% endfor %}
-                <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}">
+                <button type="submit" class="btn btn-primary">
                     <span class="glyphicon glyphicon-save" aria-hidden="true"/> {% trans 'save'%}
                 </button>
             </form>
