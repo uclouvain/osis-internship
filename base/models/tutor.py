@@ -49,23 +49,23 @@ class Tutor(serializable_model.SerializableModel):
 def find_by_user(user):
     try:
         pers = person.find_by_user(user)
-        tutor = Tutor.objects.get(person=pers)
-        return tutor
-    except ObjectDoesNotExist:
+        return Tutor.objects.get(person=pers)
+    except Tutor.DoesNotExist:
         return None
 
 
 def find_by_person(a_person):
     try:
-        tutor = Tutor.objects.get(person=a_person)
-        return tutor
-    except ObjectDoesNotExist:
+        return Tutor.objects.get(person=a_person)
+    except Tutor.DoesNotExist:
         return None
 
 
 def find_by_id(tutor_id):
-    return Tutor.objects.get(id=tutor_id)
-
+    try:
+        return Tutor.objects.get(id=tutor_id)
+    except Tutor.DoesNotExist:
+        return None
 
 # To refactor because it is not in the right place.
 def find_by_learning_unit(learning_unit_year):

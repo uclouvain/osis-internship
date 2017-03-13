@@ -62,7 +62,7 @@
                     <div class="col-md-12">
                         <label for="txt_title">{% trans 'label' %}</label>
                         <input class="form-control" value="{{ question.label | default_if_none:'' }}"
-                               name="label" id="txt_title"><font class="error">{{ form.label.errors }}</font>
+                               name="label" id="txt_title"><span class="error">{{ form.label.errors }}</span>
                     </div>
                 </div>
                 <br>
@@ -70,7 +70,7 @@
                     <div class="col-md-12">
                         <label for="txt_description">{% trans 'description'%}</label>
                         <textarea name="description" id="txt_description" class="form-control">{{ question.description | default_if_none:'' }}</textarea>
-                        <font class="error">{{ form.description.errors }}</font>
+                        <span class="error">{{ form.description.errors }}</span>
                     </div>
                 </div>
                 <br>
@@ -92,8 +92,8 @@
                         <label for="txt_order">{% trans 'order'%}</label>
                         <input class="form-control" type="number" min="0"
                                value="{{ question.order | default_if_none:'' }}"
-                               name="order" id="txt_order"><font class="error">{{ question.order.errors }}</font>
-                        <font class="error">{{ form.order.errors }}</font>
+                               name="order" id="txt_order"><span class="error">{{ question.order.errors }}</span>
+                        <span class="error">{{ form.order.errors }}</span>
                     </div>
                 </div>
                 <div class="row checkbox" style="margin-top:25px">

@@ -97,6 +97,9 @@ msgstr	 "Détails"
 msgid	 "email"
 msgstr	 "Email"
 
+msgid	 "edit_places"
+msgstr	 "Modifier nombres de places"
+
 msgid	 "first_choice"
 msgstr	 "Choix préféré"
 
