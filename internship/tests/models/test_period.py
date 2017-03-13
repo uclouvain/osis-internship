@@ -35,12 +35,12 @@ def create_period(name="P1"):
     return period
 
 
-class TestFindByName(TestCase):
+class TestGetByName(TestCase):
     def test_find(self):
         period_1 = create_period(name="P1")
         period_2 = create_period(name="P5")
 
-        self.assertEqual(period_1, mdl_period.find_by_name("P1"))
-        self.assertEqual(period_2, mdl_period.find_by_name("P5"))
+        self.assertEqual(period_1, mdl_period.get_by_name("P1"))
+        self.assertEqual(period_2, mdl_period.get_by_name("P5"))
 
-        self.assertFalse(mdl_period.find_by_name("P4"))
+        self.assertFalse(mdl_period.get_by_name("P4"))

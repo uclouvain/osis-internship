@@ -164,16 +164,20 @@ class Solver:
     def __assign_first_possible_offer(self, student_wrapper):
         last_internship_assigned = student_wrapper.get_last_internship_assigned()
         for internship in range(last_internship_assigned + 1, MAX_NUMBER_INTERNSHIPS+1):
-            if self.__assign_student_choices_for_internship(student_wrapper, internship):
-                return
-            speciality = student_wrapper.get_speciality_of_internship(internship)
-            if not speciality or student_wrapper.has_priority():
-                continue
-            if self.__assign_first_possible_offer_from_speciality_to_student(student_wrapper, speciality, internship):
+            if self.__assign_choices_or_speciality_of_choices(student_wrapper, internship):
                 return
         if not student_wrapper.has_priority() and self.__assign_first_possible_offer_to_student(student_wrapper):
             return
         self.__fill_student_assignment(student_wrapper)
+
+    def __assign_choices_or_speciality_of_choices(self, student_wrapper, internship):
+        if self.__assign_student_choices_for_internship(student_wrapper, internship):
+            return True
+        speciality = student_wrapper.get_speciality_of_internship(internship)
+        if not speciality or student_wrapper.has_priority():
+            return False
+        if self.__assign_first_possible_offer_from_speciality_to_student(student_wrapper, speciality, internship):
+            return True
 
     def __assign_student_choices_for_internship(self, student_wrapper, internship):
         internship_choices = student_wrapper.get_choices_for_internship(internship)
@@ -205,9 +209,12 @@ class Solver:
         student_wrapper.fill_assignments(self.periods, self.default_organization)
 
     def reinitialize(self):
-        self.students_lefts_to_assign = self.normal_students[:]
+        self.generalists_students_lefts_to_assign = self.generalists_students[:]
+        self.specialists_students_lefts_to_assign =  self.specialists_students[:]
         self.students_priority_lefts_to_assign = self.priority_students[:]
-        for student_wrapper in self.normal_students:
+        for student_wrapper in self.specialists_students:
+            student_wrapper.reinitialize()
+        for student_wrapper in self.generalists_students:
             student_wrapper.reinitialize()
         for student_wrapper in self.priority_students:
             student_wrapper.reinitialize()

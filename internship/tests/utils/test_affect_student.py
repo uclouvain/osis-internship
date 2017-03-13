@@ -131,7 +131,6 @@ class TestAffectStudent(TestCase):
 
         self.assertFalse(offer.is_not_full())
 
-
     def test_places_occupied(self):
         affectation = mdl_student_affectation.InternshipStudentAffectationStat(student=self.student_1,
                                                                                period=self.period_places_1.period,
