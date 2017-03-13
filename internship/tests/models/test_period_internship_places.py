@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,27 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib import admin
-from django.core.exceptions import ObjectDoesNotExist
-from django.db import models
+
+from internship.models import period_internship_places as mdl_period_places
 
 
-class AffectationGenerationTimeAdmin(admin.ModelAdmin):
-    list_display = ('start_date_time', 'end_date_time', 'generated_by')
-    fieldsets = ((None, {'fields': ('start_date_time', 'end_date_time', 'generated_by')}),)
-
-
-class AffectationGenerationTime(models.Model):
-    start_date_time = models.DateTimeField()
-    end_date_time = models.DateTimeField()
-    generated_by = models.CharField(max_length=255, default='None')
-
-    def __str__(self):
-        return u"%s - %s" % (self.start_date_time, self.end_date_time)
-
-
-def get_latest():
-    try:
-        return AffectationGenerationTime.objects.latest('start_date_time')
-    except ObjectDoesNotExist:
-        return None
+def create_period_places(offer, period, places=10):
+    period_places = mdl_period_places.PeriodInternshipPlaces(period=period, internship=offer,
+                                                             number_places=places)
+    period_places.save()
+    return period_places

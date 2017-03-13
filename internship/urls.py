@@ -32,8 +32,12 @@ from internship.utils import upload_xls
 urlpatterns = [
     # S'il vous plaît, organiser les urls par ordre alphabétique.
 
-	url(r'^affectation_result/$', affectation_statistics.internship_affectation_statistics, name='internship_affectation_statistics'),
-    url(r'^affectation_result/generate/$', affectation_statistics.internship_affectation_statistics_generate, name='internship_affectation_statistics_generate'),
+	url(r'^affectation_result/$', affectation_statistics.internship_affectation_statistics,
+        name='internship_affectation_statistics'),
+    url(r'^affectation_result/generate/$', affectation_statistics.internship_affectation_statistics_generate,
+        name='internship_affectation_statistics_generate'),
+    url(r'^affectation_result/generate_beta/$', affectation_statistics.assign_automatically_internships,
+        name='internship_affectation_statistics_generate_beta'),
     url(r'^affectation_result/sumup/$', affectation_statistics.internship_affectation_sumup, name='internship_affectation_sumup'),
 
     url(r'^$', home.internships_home, name='internships_home'),
@@ -75,7 +79,10 @@ urlpatterns = [
     url(r'^places/save/([0-9]+)/([0-9]+)/$', place.place_save, name='place_save'),
     url(r'^places/save/$', place.organization_new, name='place_save_new'),
     url(r'^places/std/$', place.internships_places_stud, name='internships_places_stud'),
-    url(r'^places/upload/$', upload_xls.upload_places_file,name='upload_places'),
+    url(r'^places/upload/$', upload_xls.upload_places_file, name='upload_places'),
+
+    url(r'^period_places/edit/(?P<internship_id>[0-9]+)/$', internship.edit_period_places, name='edit_period_places'),
+    url(r'^period_places/save/(?P<internship_id>[0-9]+)/$', internship.save_period_places, name='save_period_places'),
 
     url(r'^specialities/$', speciality.specialities, name='internships_specialities'),
     url(r'^specialities/create/$', speciality.speciality_create, name='speciality_create'),

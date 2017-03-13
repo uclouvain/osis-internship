@@ -23,43 +23,35 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
-from django.core.exceptions import ObjectDoesNotExist
 
 
-class PeriodAdmin(SerializableModelAdmin):
-    list_display = ('name', 'date_start', 'date_end')
-    fieldsets = ((None, {'fields': ('name', 'date_start', 'date_end')}),)
+class InternshipWrapper:
+    def __init__(self, internship):
+        self.internship = internship
+        self.periods_places = dict()
+        self.periods_places_left = dict()
+
+    def set_period_places(self, period_places):
+        period_name = period_places.period.name
+        self.periods_places[period_name] = period_places
+        self.periods_places_left[period_name] = period_places.number_places
+
+    def period_is_not_full(self, period_name):
+        return self.periods_places_left.get(period_name, 0) > 0
+
+    def get_free_periods(self):
+        return [period_name for period_name in self.periods_places_left.keys() if self.period_is_not_full(period_name)]
+
+    def is_not_full(self):
+        return len(self.get_free_periods()) > 0
+
+    def occupy(self, period_name):
+        self.periods_places_left[period_name] -= 1
+        return self.periods_places[period_name]
+
+    def reinitialize(self):
+        self.periods_places_left = dict()
+        for period_name, period_places in self.periods_places.items():
+            self.periods_places_left[period_name] = period_places.number_places
 
 
-class Period(SerializableModel):
-    name = models.CharField(max_length=255)
-    date_start = models.DateField(blank=False)
-    date_end = models.DateField(blank=False)
-
-    def __str__(self):
-        return u"%s" % self.name
-
-
-def search(**kwargs):
-    kwargs = {k: v for k, v in kwargs.items() if v}
-    return Period.objects.filter(**kwargs).select_related().order_by("date_start")
-
-
-def find_by_id(period_id):
-    return Period.objects.get(pk=period_id)
-
-
-def get_by_name(period_name):
-    try:
-        return Period.objects.get(name=period_name)
-    except ObjectDoesNotExist:
-        return None
-    except MultipleObjectsReturned:
-        return None
-
-
-def find_all():
-    return Period.objects.all()

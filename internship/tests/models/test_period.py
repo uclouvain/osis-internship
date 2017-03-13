@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,27 +23,24 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib import admin
-from django.core.exceptions import ObjectDoesNotExist
-from django.db import models
+
+from internship.models import period as mdl_period
+import datetime
+from django.test import TestCase
 
 
-class AffectationGenerationTimeAdmin(admin.ModelAdmin):
-    list_display = ('start_date_time', 'end_date_time', 'generated_by')
-    fieldsets = ((None, {'fields': ('start_date_time', 'end_date_time', 'generated_by')}),)
+def create_period(name="P1"):
+    period = mdl_period.Period(name=name, date_start=datetime.date.today(), date_end=datetime.date.today())
+    period.save()
+    return period
 
 
-class AffectationGenerationTime(models.Model):
-    start_date_time = models.DateTimeField()
-    end_date_time = models.DateTimeField()
-    generated_by = models.CharField(max_length=255, default='None')
+class TestGetByName(TestCase):
+    def test_find(self):
+        period_1 = create_period(name="P1")
+        period_2 = create_period(name="P5")
 
-    def __str__(self):
-        return u"%s - %s" % (self.start_date_time, self.end_date_time)
+        self.assertEqual(period_1, mdl_period.get_by_name("P1"))
+        self.assertEqual(period_2, mdl_period.get_by_name("P5"))
 
-
-def get_latest():
-    try:
-        return AffectationGenerationTime.objects.latest('start_date_time')
-    except ObjectDoesNotExist:
-        return None
+        self.assertFalse(mdl_period.get_by_name("P4"))

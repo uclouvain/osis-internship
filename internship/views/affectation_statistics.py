@@ -30,16 +30,18 @@ from operator import itemgetter
 from random import randint, choice
 from statistics import mean, stdev
 from collections import defaultdict
+from datetime import datetime
 
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from internship import models as mdl_internship
 from internship.views.internship import calc_dist, set_tabs_name
 from internship.views.place import sort_organizations, set_speciality_unique
-from datetime import datetime
+from internship.utils.student_assignment import solver
+
 # ****************** Global vars ******************
 errors = []  # List of all internship added to hospital error, as tuple (student, speciality, period)
 solution = {}  # Dict with the solution => solution[student][period] = SolutionLine
@@ -1127,18 +1129,23 @@ def load_solution(data):
         order_by("period_id").select_related()
     # This object store the number of available places for given organization, speciality, period
     temp_internship_table = defaultdict(dict)
+
+    keys = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8', 'P9', 'P10', 'P11', 'P12']
+
     for pid in period_internship_places:
         organization = pid.internship.organization
         acronym = pid.internship.speciality.acronym
         period_name = pid.period.name
         if acronym not in temp_internship_table[organization]:
             temp_internship_table[organization][acronym] = OrderedDict()
-        temp_internship_table[organization][acronym][period_name] = {}
+            fill_periods_default_values(acronym, keys, organization, temp_internship_table)
+
         temp_internship_table[organization][acronym][period_name]['before'] = pid.number_places
         temp_internship_table[organization][acronym][period_name]['after'] = pid.number_places
 
+
+
     sol = {}
-    keys = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8', 'P9', 'P10', 'P11', 'P12']
     for item in data:
         # Initialize 12 empty period of each student
         if item.student not in sol:
@@ -1152,6 +1159,9 @@ def load_solution(data):
         # store the cost of each student
         sol[item.student]['score'] += item.cost
         # Update the number of available places for given organization, speciality, period
+        if item.organization not in temp_internship_table or \
+                        item.speciality.acronym not in temp_internship_table[item.organization]:
+            continue
         temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['after'] -= 1
         # Update the % of takes places
         if temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['before'] > 0:
@@ -1168,6 +1178,13 @@ def load_solution(data):
     sorted_internship_table.sort(key=itemgetter(0))
 
     return sol, sorted_internship_table
+
+
+def fill_periods_default_values(acronym, keys, organization, temp_internship_table):
+    for key in keys:
+        temp_internship_table[organization][acronym][key] = {}
+        temp_internship_table[organization][acronym][key]['before'] = 0
+        temp_internship_table[organization][acronym][key]['after'] = 0
 
 
 @login_required
@@ -1224,7 +1241,7 @@ def internship_affectation_statistics(request):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_affectation_sumup(request):
-    all_speciality = list(mdl_internship.internship_speciality.search(mandatory=True))
+    all_speciality = list(mdl_internship.internship_speciality.find_all())
     all_speciality=set_speciality_unique(all_speciality)
     set_tabs_name(all_speciality)
     periods = mdl_internship.period.search()
@@ -1264,3 +1281,22 @@ def internship_affectation_sumup(request):
                    'organizations': informations,
                    'affectations': affectations,
                    })
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def assign_automatically_internships(request):
+    """ Generate new solution, save it in the database, redirect back to the page 'internship_affectation_statistics'"""
+    if request.method == 'POST':
+        if request.POST['executions'] != "":
+            times = int(request.POST['executions'])
+            start_date_time = datetime.now()
+            mdl_internship.internship_student_affectation_stat.find_non_mandatory_affectations().delete()
+            solver.affect_student(times)
+            end_date_time = datetime.now()
+            affectation_generatioon_time = mdl_internship.affectation_generation_time.AffectationGenerationTime()
+            affectation_generatioon_time.start_date_time = start_date_time
+            affectation_generatioon_time.end_date_time = end_date_time
+            affectation_generatioon_time.generated_by = request.user.username
+            affectation_generatioon_time.save()
+        return redirect(reverse('internship_affectation_statistics'))
