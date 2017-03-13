@@ -79,6 +79,9 @@ msgstr	 "Civility"
 msgid	 "create_a_speciality"
 msgstr	 "Create a speciality"
 
+msgid	 "current_choices"
+msgstr	 "Current choices"
+
 msgid	 "date_end"
 msgstr	 "Date end"
 
@@ -194,7 +197,7 @@ msgid	 "period_creation"
 msgstr	 "Create a period"
 
 msgid	 "periods"
-msgstr	 "Périods"
+msgstr	 "Periods"
 
 msgid	 "periods_list"
 msgstr	 "Periods list"
@@ -368,7 +371,7 @@ msgid "export_organisation_affectation_xls"
 msgstr "Export Excel file for the organisation"
 
 msgid "generalist"
-msgstr "generalist"
+msgstr "Generalist"
 
 msgid	 "number_first_choice"
 msgstr	 "Number of first choice"

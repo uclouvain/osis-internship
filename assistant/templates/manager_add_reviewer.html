@@ -58,11 +58,11 @@
 		</div>
 		<div class="form-group">
 			<label for="{{ form.structure.auto_id }}">{% trans 'structure' %}</label>
-			<div class="controls">{{ form.structure }}<font class="error">{{ form.structure.errors }}</font></div>
+			<div class="controls">{{ form.structure }}<span class="error">{{ form.structure.errors }}</span></div>
 		</div>
 		<div class="form-group">
 			<label for="{{ form.role.auto_id }}">{% trans 'role' %}</label>
-			<div class="controls">{{ form.role }}<font class="error">{{ form.role.errors }}</font></div>
+			<div class="controls">{{ form.role }}<span class="error">{{ form.role.errors }}</span></div>
 		</div>
 		<button type="submit" class="btn btn-primary" title="{% trans 'save'%}" id="bt_add_reviewer_save"
 				onclick="return confirm('{% trans 'confirm_reviewer_addition' %}')">

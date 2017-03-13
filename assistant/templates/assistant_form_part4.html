@@ -55,32 +55,32 @@
     	<div class="form-group" style="padding-top: 5px;">
       		<label for="internships">{% trans 'scientific_internships' %}</label>
             <div class="controls" id="internships">{{ form.internships }}</div>
-            <font class="error">{{ form.internships.errors }}</font>
+            <span class="error">{{ form.internships.errors }}</span>
       	</div>
       	<div class="form-group" style="padding-top: 5px;">
             <label for="conferences">{% trans 'conferences_contributor' %}</label>
             <div class="controls" id="conferences">{{ form.conferences }}</div>
-            <font class="error">{{ form.conferences.errors }}</font>
+            <span class="error">{{ form.conferences.errors }}</span>
       	</div>
       	<div class="form-group" style="padding-top: 5px;">
             <label for="publications">{% trans 'publications_in_progress' %}</label>
             <div class="controls" id="publications">{{ form.publications }}</div>
-            <font class="error">{{ form.publications.errors }}</font>
+            <span class="error">{{ form.publications.errors }}</span>
       	</div>
       	<div class="form-group" style="padding-top: 5px;">
             <label for="awards">{% trans 'awards' %}</label>
             <div class="controls" id="awards">{{ form.awards }}</div>
-            <font class="error">{{ form.awards.errors }}</font>
+            <span class="error">{{ form.awards.errors }}</span>
       	</div>
       	<div class="form-group" style="padding-top: 5px;">
             <label for="framing">{% trans 'framing_participation' %}</label>
             <div class="controls" id="framing">{{ form.framing }}</div>
-            <font class="error">{{ form.framing.errors }}</font>
+            <span class="error">{{ form.framing.errors }}</span>
       	</div>
       	<div class="form-group" style="padding-top: 5px;">
             <label for="remark">{% trans 'research_remark' %}</label>
             <div class="controls" id="remark">{{ form.remark }}</div>
-            <font class="error">{{ form.remark.errors }}</font>
+            <span class="error">{{ form.remark.errors }}</span>
       	</div>
     	<div class="panel-default">
   			<div class="panel-heading">
@@ -92,7 +92,7 @@
                 <div class="col-md-2" style="text-align: left">
                     <a class="btn btn-default btn-danger btn-sm" id="btn_delete_file" style="margin-right: 5px;"
                        title="{% trans 'delete_file'%}"
-                       onclick="location.href='{% url 'assistant_file_delete' mandate.id file.id %}';">
+                       onclick="location.href='{% url 'assistant_file_delete' mandate.id file.id 'form_part4_edit' %}';">
                     <span class="glyphicon glyphicon-remove" aria-hidden="true" id="spn_delete_file"></span>
                         {% trans 'delete_file' %}</a>
                 </div>
@@ -164,7 +164,7 @@
             if ($.inArray(file.type,accepted_types) >= 0){
                 data.append('file', file);
                 $.ajax({
-                    url: "{% url 'assistant_file_upload' mandate.id %}",
+                    url: "{% url 'assistant_file_upload' %}",
                     enctype: 'multipart/form-data',
                     type: 'POST',
                     data : data,

@@ -96,10 +96,18 @@ def find_academic_years(start_date=None, end_date=None):
 def current_academic_year():
     """ If we have two academic year [2015-2016] [2016-2017]. It will return [2015-2016] """
     now = timezone.now()
-    return find_academic_years(start_date=now, end_date=now).first()
+    academic_year = find_academic_years(start_date=now, end_date=now).first()
+    if academic_year:
+        return academic_year
+    else:
+        raise AcademicYear.DoesNotExist
 
 
 def starting_academic_year():
     """ If we have two academic year [2015-2016] [2016-2017]. It will return [2016-2017] """
     now = timezone.now()
-    return find_academic_years(start_date=now, end_date=now).last()
+    academic_year = find_academic_years(start_date=now, end_date=now).last()
+    if academic_year:
+        return academic_year
+    else:
+        raise AcademicYear.DoesNotExist
