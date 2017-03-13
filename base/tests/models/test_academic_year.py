@@ -76,16 +76,6 @@ class SingleAcademicYearTest(TestCase):
         self.assertEqual(starting_academic_year.year, academic_yr.year)
 
 
-class InexistingAcademicYearTest(TestCase):
-    def test_no_starting_academic_year(self):
-        with self.assertRaises(ObjectDoesNotExist):
-            academic_year.starting_academic_year()
-
-    def test_no_current_academic_year(self):
-        with self.assertRaises(ObjectDoesNotExist):
-            academic_year.current_academic_year()
-
-
 class PeriodAcademicYearTest(TestCase):
     def test_future_academic_year(self):
         academic_year = AcademicYearFactory.build(year=(now.year + 1),
