@@ -210,7 +210,6 @@ var values = [
         ['', '', '']];
 
 $("input[id^='num_score_']" ).change(function(event) {
-    console.log("coucou");
     // Get the object that received the event.
     var target = $(event.target);
     var id = target.attr("id");
@@ -219,7 +218,11 @@ $("input[id^='num_score_']" ).change(function(event) {
         id = target.attr("id");
     }
     var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
-
+    if (target.val() > 20 || (target.val() < 0)) {
+        target.css("border", "1px solid #ff0000");
+    } else {
+        target.css("border", "1px solid lightgrey");
+    }
     if(target.val() != "") {
         $("#slt_justification_score_" + enrollmentId).val('');
     }
