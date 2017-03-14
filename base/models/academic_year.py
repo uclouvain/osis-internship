@@ -86,9 +86,9 @@ def find_academic_years(start_date=None, end_date=None):
     """
     queryset = AcademicYear.objects.all()
     if start_date is not None:
-        queryset.filter(start_date__lte=start_date)
+        queryset = queryset.filter(start_date__lte=start_date)
     if end_date is not None:
-        queryset.filter(end_date__gte=end_date)
+        queryset = queryset.filter(end_date__gte=end_date)
 
     return queryset.order_by('year')
 

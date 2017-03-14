@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from django.http import HttpResponseRedirect
+from django.views.decorators.http import require_POST
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
@@ -31,6 +32,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
 from internship import models as mdl_internship
+from internship.forms.form_student_information import StudentInformationForm
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -160,31 +162,36 @@ def internships_student_read(request, registration_id):
 def internship_student_information_modification(request, registration_id):
     student = mdl.student.find_by(registration_id=registration_id)
     information = mdl_internship.internship_student_information.find_by_person(person=student[0].person)
+    form = StudentInformationForm()
     student = student[0]
     return render(request, "student_information_modification.html",
                            {'student': student,
-                            'information': information})
+                            'information': information,
+                            "form": form})
 
 
 @login_required
+@require_POST
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def student_save_information_modification(request, registration_id):
-    student = mdl.student.find_by(registration_id=registration_id)
-    information = mdl_internship.internship_student_information.search(person = student[0].person)
+    student = mdl.student.find_by_registration_id(registration_id)
+    information = mdl_internship.internship_student_information.find_by_person(student.person)
     if not information:
         information = mdl_internship.internship_student_information.InternshipStudentInformation()
         information.person = student[0].person
-    else:
-        information = information[0]
-    information.email = request.POST.get('student_email')
-    information.phone_mobile = request.POST.get('student_phone')
-    information.location = request.POST.get('student_location')
-    information.postal_code = request.POST.get('student_postal_code')
-    information.city = request.POST.get('student_city')
-    information.country = request.POST.get('student_country')
-    information.latitude = None
-    information.longitude = None
-    information.save()
+
+    form = StudentInformationForm(request.POST)
+    if form.is_valid():
+        information.email = form.cleaned_data.get('email')
+        information.phone_mobile = form.cleaned_data.get('phone_mobile')
+        information.location = form.cleaned_data.get('location')
+        information.postal_code = form.cleaned_data.get('postal_code')
+        information.city = form.cleaned_data.get('city')
+        information.country = form.cleaned_data.get('country')
+        information.contest = form.cleaned_data.get('contest')
+        information.latitude = None
+        information.longitude = None
+        information.save()
 
     redirect_url = reverse('internships_student_read', args=[registration_id])
     return HttpResponseRedirect(redirect_url)

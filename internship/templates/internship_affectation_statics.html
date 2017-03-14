@@ -369,24 +369,32 @@
                     </div>
                 </div>
                 <div id="tab_errors" class="tab-pane fade in">
-                    <table class="table">
-                        <tr>
-                            <th>{% trans 'student' %}</th>
-                            <th>{% trans 'speciality' %}</th>
-                            <th>{% trans 'period' %}</th>
-                            <th>{% trans 'organization' %}</th>
-                            <th>{% trans 'type_internship' %}</th>
-                        </tr>
-                        {% for internship in errors %}
-                            <tr>
-                                <td><a href="{% url 'internships_student_read' internship.student.registration_id %}" target="_blank">{{internship.student}}</a></td>
-                                <td>{{internship.speciality}}</td>
-                                <td>{{internship.period}}</td>
-                                <td>{{internship.organization}}</td>
-                                <td>{{internship.type_of_internship}}</td>
-                            </tr>
-                        {% endfor %}
-                    </table>
+                     <div class="panel panel-default">
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane fade in active" id="profile">
+                                <table class="table" id="errors" cellspacing="0" width="100%">
+                                    <thead>
+                                    <tr>
+                                        <th>{% trans 'student' %}</th>
+                                        <th>{% trans 'speciality' %}</th>
+                                        <th class="no-sort">{% trans 'period' %}</th>
+                                        <th class="no-sort">{% trans 'organization' %}</th>
+                                        <th class="no-sort">{% trans 'type_internship' %}</th>
+                                    </tr>
+                                    </thead>
+                                    {% for internship in errors %}
+                                        <tr>
+                                            <td><a href="{% url 'internships_student_read' internship.student.registration_id %}" target="_blank">{{internship.student}}</a></td>
+                                            <td>{{internship.speciality}}</td>
+                                            <td>{{internship.period}}</td>
+                                            <td>{{internship.organization}}</td>
+                                            <td>{{internship.type_of_internship}}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                     </div>
                 </div>
             </div>
         </div>
@@ -407,6 +415,15 @@
             });
 
             $('#organizations').DataTable({
+                paging: false,
+                "columnDefs": [ {
+                    "targets": 'no-sort',
+                    "orderable": false
+                } ],
+                bInfo: false
+            });
+
+            $('#errors').DataTable({
                 paging: false,
                 "columnDefs": [ {
                     "targets": 'no-sort',

@@ -76,6 +76,9 @@ msgstr	 "Choisissez une spécialité pour voir vos choix déjà effectués."
 msgid	 "civility"
 msgstr	 "Civilité"
 
+msgid	 "contest"
+msgstr	 "Concours"
+
 msgid	 "create_a_speciality"
 msgstr	 "Créer une spécialité"
 

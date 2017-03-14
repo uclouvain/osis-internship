@@ -87,3 +87,4 @@ def get_number_of_generalists():
 
 def get_number_students():
     return InternshipStudentInformation.objects.count()
+

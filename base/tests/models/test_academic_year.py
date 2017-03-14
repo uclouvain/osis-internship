@@ -101,11 +101,11 @@ class PeriodAcademicYearTest(TestCase):
     def test_more_than_two_academic_year_in_same_period(self):
         academic_year.AcademicYear.objects.create(year=2015,
                                                   start_date=datetime.datetime(2015, 9, 15),
-                                                  end_date=datetime.datetime(2016, 9, 30))
+                                                  end_date=datetime.datetime(2017, 12, 30))
         academic_year.AcademicYear.objects.create(year=2016,
                                                   start_date=datetime.datetime(2016, 9, 15),
-                                                  end_date=datetime.datetime(2017, 9, 30))
+                                                  end_date=datetime.datetime(2017, 12, 30))
         with self.assertRaises(AttributeError):
             academic_year.AcademicYear.objects.create(year=2017,
                                                       start_date=datetime.datetime(2017, 9, 14),
-                                                      end_date=datetime.datetime(2019, 9, 30))
+                                                      end_date=datetime.datetime(2017, 9, 30))
