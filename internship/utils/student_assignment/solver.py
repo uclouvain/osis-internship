@@ -207,14 +207,17 @@ class Solver:
     def __assign_first_possible_offer_to_student(self, student_wrapper):
         if self.__assign_personal_offer(student_wrapper, 0):
             return True
+        elif self.__assign_speciality(student_wrapper):
+            return True
+        elif not is_generalist(student_wrapper) and self.__assign_personal_offer(student_wrapper, 1):
+            return True
+        return False
 
+    def __assign_speciality(self, student_wrapper):
         specialities = self.offers_by_speciality.keys()
         for speciality in specialities:
             if self.__assign_first_possible_offer_from_speciality_to_student(student_wrapper, speciality):
                 return True
-
-        if not is_generalist(student_wrapper) and self.__assign_personal_offer(student_wrapper, 1):
-            return True
         return False
 
     def __assign_personal_offer(self, student_wrapper, limit_personal_offer):
