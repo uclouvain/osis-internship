@@ -36,15 +36,20 @@ from base.models import person as person_mdl, academic_year as academic_year_mdl
 
 
 def page_not_found(request):
-    return layout.render(request, 'page_not_found.html', {})
-
+    response = layout.render(request, 'page_not_found.html', {})
+    response.status_code = 404
+    return response
 
 def access_denied(request):
-    return layout.render(request, 'access_denied.html', {})
+    response = layout.render(request, 'access_denied.html', {})
+    response.status_code = 401
+    return response
 
 
 def server_error(request):
-    return layout.render(request, 'server_error.html', {})
+    response = layout.render(request, 'server_error.html', {})
+    response.status_code = 500
+    return response
 
 
 def noscript(request):
