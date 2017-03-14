@@ -96,6 +96,13 @@
                     </div>
                 </div>
                 <br>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label>{% trans 'contest' %}</label><br>
+                        {{ information.contest | default_if_none:'-' }}
+                    </div>
+                </div>
+                <br>
 
                 <div class="row">
                     <div class="col-md-9">

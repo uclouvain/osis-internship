@@ -112,3 +112,7 @@ def get_number_selectable():
 def find_all():
     return InternshipOffer.objects.all()
 
+
+def find_by_organization(organization):
+    return InternshipOffer.objects.filter(organization=organization)
+

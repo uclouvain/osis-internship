@@ -34,14 +34,16 @@ AUTHORIZED_PERIODS = ["P9", "P10", "P11", "P12"]
 NUMBER_INTERNSHIPS = len(AUTHORIZED_PERIODS)
 MAX_NUMBER_INTERNSHIPS = 6
 REFERENCE_DEFAULT_ORGANIZATION = 999
+REFERENCE_PERSONAL_ORGANIZATION = 601
 AUTHORIZED_SS_SPECIALITIES = ["CHC", "DE", "GE", "GOC", "MI", "MP", "NA", "OP", "OR", "CO", "PEC", "PS", "PA", "URC",
                               "CU"]
+
+UNAUTHORIZED_SPECIALITIES = ["SP", "SE"]
 
 
 def affect_student(times=1):
     current_student_affectations = list(_load_current_students_affectations())
     solver = init_solver(current_student_affectations)
-
     best_assignments, best_cost = launch_solver(solver)
     for x in range(1, times):
         solver.reinitialize()
@@ -82,6 +84,7 @@ class Solver:
         self.offers_by_speciality = dict()
         self.periods = []
         self.default_organization = None
+        self.personal_offer = None
         self.priority_students = []
         self.generalists_students = []
         self.specialists_students = []
@@ -98,7 +101,7 @@ class Solver:
             if student_wrapper.has_priority:
                 self.priority_students.append(student_wrapper)
                 self.students_priority_lefts_to_assign.append(student_wrapper)
-            elif student_wrapper.get_contest() in ["SP", "SPECIALIST"]:
+            elif is_generalist(student_wrapper):
                 self.specialists_students.append(student_wrapper)
                 self.specialists_students_lefts_to_assign.append(student_wrapper)
             else:
@@ -111,6 +114,8 @@ class Solver:
 
     def __init_offers_by_speciality(self, offers):
         for offer in offers.values():
+            if offer.internship.organization.reference == str(REFERENCE_PERSONAL_ORGANIZATION):
+                self.personal_offer = offer
             speciality = offer.internship.speciality
             current_offers_for_speciality = self.offers_by_speciality.get(speciality.id, [])
             current_offers_for_speciality.append(offer)
@@ -200,10 +205,25 @@ class Solver:
         return False
 
     def __assign_first_possible_offer_to_student(self, student_wrapper):
+        if self.__assign_personal_offer(student_wrapper, 0):
+            return True
+        elif self.__assign_speciality(student_wrapper):
+            return True
+        elif not is_generalist(student_wrapper) and self.__assign_personal_offer(student_wrapper, 1):
+            return True
+        return False
+
+    def __assign_speciality(self, student_wrapper):
         specialities = self.offers_by_speciality.keys()
         for speciality in specialities:
             if self.__assign_first_possible_offer_from_speciality_to_student(student_wrapper, speciality):
                 return True
+        return False
+
+    def __assign_personal_offer(self, student_wrapper, limit_personal_offer):
+        if get_number_personal_offers(student_wrapper) <= limit_personal_offer:
+            _assign_offer_to_student(self.personal_offer, 0, 0, student_wrapper)
+            return True
         return False
 
     def __fill_student_assignment(self, student_wrapper):
@@ -236,11 +256,26 @@ def _get_valid_period(internship_wrapper, student_wrapper, internship):
 
 
 def is_permitted_offer(student_wrapper, internship_wrapper):
-    if student_wrapper.get_contest() not in ["SS", "GENERALIST"]:
+    if internship_wrapper.internship.speciality.acronym in UNAUTHORIZED_SPECIALITIES:
+        return False
+    if not is_generalist(student_wrapper):
         return True
     if internship_wrapper.internship.speciality.acronym not in AUTHORIZED_SS_SPECIALITIES:
         return False
     return True
+
+
+def get_number_personal_offers(student_wrapper):
+    assignments = student_wrapper.assignments
+    number_personal_offers = 0
+    for student_affectation in assignments.values():
+        if student_affectation.organization.reference == str(REFERENCE_PERSONAL_ORGANIZATION):
+            number_personal_offers += 1
+    return number_personal_offers
+
+
+def is_generalist(student_wrapper):
+    return student_wrapper.get_contest() in ["SS", "GENERALIST"]
 
 
 def _occupy_offer(free_period_name, internship_wrapper, student_wrapper, internship_choice, choice):
@@ -292,7 +327,8 @@ def _load_students_and_choices():
 
 def _load_student_information():
     students_information_by_person_id = dict()
-    for student_information in mdl_internship.internship_student_information.InternshipStudentInformation.objects.all():
+    all_student_information = mdl_internship.internship_student_information.find_all()
+    for student_information in all_student_information:
         students_information_by_person_id[student_information.person.id] = student_information
     return students_information_by_person_id
 
@@ -307,7 +343,7 @@ def _load_student_enrollment(students_by_registration_id):
 
 def _load_current_students_affectations():
     student_affectations = \
-        mdl_internship.internship_student_affectation_stat.InternshipStudentAffectationStat.objects.all()
+        mdl_internship.internship_student_affectation_stat.find_non_mandatory_affectations()
     return filter(lambda stud_affectation: stud_affectation.period.name in AUTHORIZED_PERIODS,
                   student_affectations)
 
