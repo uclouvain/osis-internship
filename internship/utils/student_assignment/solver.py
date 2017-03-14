@@ -205,21 +205,23 @@ class Solver:
         return False
 
     def __assign_first_possible_offer_to_student(self, student_wrapper):
-        if get_number_personal_offers(student_wrapper) == 0:
-            self.__assign_personal_offer(student_wrapper)
+        if self.__assign_personal_offer(student_wrapper, 0):
             return True
+
         specialities = self.offers_by_speciality.keys()
         for speciality in specialities:
             if self.__assign_first_possible_offer_from_speciality_to_student(student_wrapper, speciality):
                 return True
-        if not is_generalist(student_wrapper) and get_number_personal_offers(student_wrapper) < 2:
-            self.__assign_personal_offer(student_wrapper)
+
+        if not is_generalist(student_wrapper) and self.__assign_personal_offer(student_wrapper, 1):
             return True
         return False
 
-    def __assign_personal_offer(self, student_wrapper):
-        if self.personal_offer:
+    def __assign_personal_offer(self, student_wrapper, limit_personal_offer):
+        if get_number_personal_offers(student_wrapper) <= limit_personal_offer:
             _assign_offer_to_student(self.personal_offer, 0, 0, student_wrapper)
+            return True
+        return False
 
     def __fill_student_assignment(self, student_wrapper):
         student_wrapper.fill_assignments(self.periods, self.default_organization)
