@@ -322,7 +322,7 @@ def _load_students_and_choices():
 
 def _load_student_information():
     students_information_by_person_id = dict()
-    all_student_information = mdl_internship.internship_student_information.InternshipStudentInformation.objects.all()
+    all_student_information = mdl_internship.internship_student_information.find_all()
     for student_information in all_student_information:
         students_information_by_person_id[student_information.person.id] = student_information
     return students_information_by_person_id

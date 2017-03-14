@@ -59,4 +59,5 @@ def find_by_student(student):
 
 
 def find_for_non_mandatory_internship():
-    return InternshipEnrollment.objects.filter(internship_choice__gte=1)
+    return InternshipEnrollment.objects.filter(internship_choice__gte=1).\
+        select_related("student", "internship_offer", "place", "period")
