@@ -40,7 +40,6 @@ urlpatterns = [
         score_encoding.online_double_encoding_form, name='online_double_encoding_form'),
     url(r'^studies/assessments/scores_encoding/online/(?P<learning_unit_year_id>[0-9]+)(?:/(?P<tutor_id>[0-9]+))?/double_validation$',
         score_encoding.online_double_encoding_validation, name='online_double_encoding_validation'),
-    url(r'^studies/assessments/scores_encoding/search/$', score_encoding.refresh_list, name='refresh_list'),
     url(r'^studies/assessments/scores_encoding/specific_criteria/$',
         score_encoding.specific_criteria, name='specific_criteria'),
     url(r'^studies/assessments/scores_encoding/specific_criteria/submission/$',
