@@ -58,10 +58,10 @@
                           <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
                         </a>
                     {% endif %}
-                    {% if coordinators %}
+                    {% if score_responsibles %}
                         <ul class="list-unstyled">
-                            {% for coordinator in coordinators %}
-                                <li>{{ coordinator }}</li>
+                            {% for score_responsible in score_responsibles %}
+                                <li>{{ score_responsible }}</li>
                             {% endfor %}
                         </ul>
                     {% else %}

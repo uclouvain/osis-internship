@@ -468,9 +468,9 @@ def get_data_online(learning_unit_year_id, request):
 
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
 
-    coordinators = mdl_attr.attribution.find_all_responsibles(learning_unit_year)
+    score_responsibles = mdl_attr.attribution.find_all_responsibles(learning_unit_year)
     tutors = mdl.tutor.find_by_learning_unit(learning_unit_year)\
-                      .exclude(id__in=[coordinator.id for coordinator in coordinators])
+                      .exclude(id__in=[score_responsible.id for score_responsible in score_responsibles])
 
     progress = mdl.exam_enrollment.calculate_exam_enrollment_progress(exam_enrollments)
 
@@ -482,7 +482,7 @@ def get_data_online(learning_unit_year_id, request):
             'progress_int': progress,
             'enrollments': exam_enrollments,
             'learning_unit_year': learning_unit_year,
-            'coordinators': coordinators,
+            'score_responsibles': score_responsibles,
             'is_program_manager': is_program_manager,
             'is_coordinator': mdl_attr.attribution.is_score_responsible(request.user, learning_unit_year),
             'draft_scores_not_submitted': draft_scores_not_submitted,
@@ -513,9 +513,9 @@ def get_data_online_double(learning_unit_year_id, request):
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
 
     nb_final_scores = get_score_encoded(encoded_exam_enrollments)
-    coordinators = mdl_attr.attribution.find_all_responsibles(learning_unit_year)
+    score_responsibles = mdl_attr.attribution.find_all_responsibles(learning_unit_year)
     tutors = mdl.tutor.find_by_learning_unit(learning_unit_year)\
-                      .exclude(id__in=[coordinator.id for coordinator in coordinators])
+                      .exclude(id__in=[score_responsible.id for score_responsible in score_responsibles])
     encoded_exam_enrollments = mdl.exam_enrollment.sort_for_encodings(encoded_exam_enrollments)
 
     return {'section': 'scores_encoding',
@@ -525,7 +525,7 @@ def get_data_online_double(learning_unit_year_id, request):
             'learning_unit_year': learning_unit_year,
             'justifications': JUSTIFICATION_TYPES,
             'is_program_manager': mdl.program_manager.is_program_manager(request.user),
-            'coordinators': coordinators,
+            'score_responsibles': score_responsibles,
             'count_total_enrollments': len(total_exam_enrollments),
             'number_session': encoded_exam_enrollments[0].session_exam.number_session
                               if len(encoded_exam_enrollments) > 0 else _('none'),
@@ -586,7 +586,7 @@ def get_data_pgmer(request,
     data = []
     all_attributions = []
     if scores_encodings:  # Empty in case there isn't any score to encode (not inside the period of scores' encoding)
-        # Adding coordinator for each learningUnit
+        # Adding score_responsible for each learningUnit
         learning_units = [score_encoding.learning_unit_year for score_encoding in scores_encodings]
         all_attributions = list(mdl_attr.attribution.search(list_learning_unit_year=learning_units))
         coord_grouped_by_learning_unit = {attrib.learning_unit_year.id: attrib.tutor for attrib in all_attributions
