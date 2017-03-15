@@ -49,4 +49,7 @@ class Offer(SerializableModel):
 
 
 def find_by_id(offer_id):
-    return Offer.objects.get(pk=offer_id)
+    try:
+        return Offer.objects.get(pk=offer_id)
+    except Offer.DoesNotExist:
+        return None

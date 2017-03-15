@@ -76,8 +76,14 @@ msgstr	 "Choose a speciality to see your choices already done."
 msgid	 "civility"
 msgstr	 "Civility"
 
+msgid	 "contest"
+msgstr	 "Contest"
+
 msgid	 "create_a_speciality"
 msgstr	 "Create a speciality"
+
+msgid	 "current_choices"
+msgstr	 "Current choices"
 
 msgid	 "date_end"
 msgstr	 "Date end"
@@ -93,6 +99,9 @@ msgstr	 "Details"
 
 msgid	 "email"
 msgstr	 "Email"
+
+msgid	 "edit_places"
+msgstr	 "Edit number of places"
 
 msgid	 "first_choice"
 msgstr	 "First choice"
@@ -126,6 +135,9 @@ msgstr	 "Import internships"
 
 msgid	 "import_masters"
 msgstr	 "Import internship's masters"
+
+msgid	 "internship"
+msgstr	 "Internship"
 
 msgid	 "internship_block_moment"
 msgstr	 "internships' selection are currently blocked."
@@ -191,7 +203,7 @@ msgid	 "period_creation"
 msgstr	 "Create a period"
 
 msgid	 "periods"
-msgstr	 "Périods"
+msgstr	 "Periods"
 
 msgid	 "periods_list"
 msgstr	 "Periods list"
@@ -252,9 +264,6 @@ msgstr	 "Hospital not found"
 
 msgid	 "capacity"
 msgstr	 "capacity"
-
-msgid	 "number_first_choice"
-msgstr	 "Number of first choice"
 
 msgid	 "number_total_student"
 msgstr	 "Number of student who choose this organization"
@@ -366,3 +375,22 @@ msgstr "Student does not exists"
 
 msgid "export_organisation_affectation_xls"
 msgstr "Export Excel file for the organisation"
+
+msgid "generalist"
+msgstr "Generalist"
+
+msgid	 "number_first_choice"
+msgstr	 "Number of first choice"
+
+msgid "preference"
+msgstr "Preference"
+
+msgid "priority"
+msgstr "Priority"
+
+msgid "specialist"
+msgstr "Specialist"
+
+msgid "student_max"
+msgstr "Maximum number of students"
+

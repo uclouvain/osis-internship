@@ -34,7 +34,7 @@ from osis_common.models.serializable_model import SerializableModel
 class ApplicationAdmin(admin.ModelAdmin):
     list_display = ('applicant', 'offer_year', 'creation_date', 'application_type')
     fieldsets = ((None, {'fields': ('applicant', 'offer_year', 'application_type', 'applied_to_sameprogram',
-                                    'national_degree', 'valuation_possible')}),)
+                                    'coverage_access_degree', 'valuation_possible', 'state', 'reference')}),)
 
 
 class Application(SerializableModel):
@@ -62,6 +62,7 @@ class Application(SerializableModel):
     bank_account_bic = BICField(blank=True, null=True)
     bank_account_name = models.CharField(max_length=255, blank=True, null=True)
     state = models.CharField(max_length=35, choices=application_state.APPLICATION_STATE_CHOICES, blank=True, null=True)
+    reference = models.CharField(max_length=20, blank=True, null=True, unique=True)
 
     def __str__(self):
         return u"%s %s" % (self.applicant, self.offer_year)

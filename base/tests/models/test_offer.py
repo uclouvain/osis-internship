@@ -23,10 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.test import TestCase
 from base.models import offer
-
+from base.tests.factories.offer import OfferFactory
 
 def create_offer(title):
-    an_offer = offer.Offer(title=title)
-    an_offer.save()
-    return an_offer
+    return OfferFactory(title=title)
+
+class OfferTest(TestCase):
+    def test_find_by_id_with_instance(self):
+        of = OfferFactory()
+        self.assertEqual(of,  offer.find_by_id(of.pk))
+
+    def test_find_by_id_none(self):
+        self.assertIsNone(offer.find_by_id(-1))

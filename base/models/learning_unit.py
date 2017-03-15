@@ -43,10 +43,15 @@ class LearningUnit(SerializableModel):
     start_year = models.IntegerField()
     end_year = models.IntegerField(blank=True, null=True)
     progress = None
-    periodicity = models.CharField(max_length=10, blank=True, null=True, choices=PERIODICITY_TYPES)
+    periodicity = models.CharField(max_length=20, blank=True, null=True, choices=PERIODICITY_TYPES)
 
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)
+
+    def save(self, *args, **kwargs):
+        if self.end_year and self.end_year < self.start_year:
+            raise AttributeError("Start date should be before the end date")
+        super(LearningUnit, self).save(*args, **kwargs)
 
     class Meta:
         permissions = (

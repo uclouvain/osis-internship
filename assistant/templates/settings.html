@@ -49,7 +49,7 @@
 		    {% endfor %}
 	    <div class="panel-danger">
 		    <div class="panel-heading">
-			    <font size="4">{% trans 'dates' %}</font>
+                <h4>{% trans 'dates' %}</h4>
 		    </div>
 	    </div><p>
 	    <div class="form-group">
@@ -59,7 +59,7 @@
                 </div>
                 <div class="col-md-3">
                     <div class="controls">{{ form.starting_date }}
-                        <font class="error">{{ form.starting_date.errors }}</font>
+                        <span class="error">{{ form.starting_date.errors }}</span>
                     </div>
                 </div>
             </div><p>
@@ -69,7 +69,7 @@
                 </div>
                 <div class="col-md-3">
                     <div class="controls">{{ form.ending_date }}
-                        <font class="error">{{ form.ending_date.errors }}</font>
+                        <span class="error">{{ form.ending_date.errors }}</span>
                     </div>
                 </div>
             </div><p>
