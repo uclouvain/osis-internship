@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('base', '0098_learningunitcomponent_coefficient_repetition'),
+        ('base', '0098_auto_20170306_0953.py'),
     ]
 
     operations = [
