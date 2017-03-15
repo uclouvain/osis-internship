@@ -159,7 +159,7 @@
                             <tr>
                                 <td>{{ note_detail.learning_unit_year.acronym }}</td>
                                 <td><a
-                                        href="{% url 'online_encoding' note_detail.learning_unit_year.id %}"
+                                        href="{% url 'online_encoding' note_detail.learning_unit_year.id %}?{{ request.GET.urlencode }}"
                                         title="Visualiser/charger les notes pour le cours"
                                         id="lnk_paper_encoding_messages_{{note_detail.learning_unit_year.id}}">{{ note_detail.learning_unit_year.title }}</a>
                                 </td>
@@ -198,7 +198,7 @@
                             <tr>
                                 <td>{{ note_detail.learning_unit_year.acronym }}</td>
                                 <td><a
-                                        href="{% url 'online_encoding' note_detail.learning_unit_year.id %}"
+                                        href="{% url 'online_encoding' note_detail.learning_unit_year.id %}?{{ request.GET.urlencode }}"
                                         title="Visualiser/charger les notes pour le cours"
                                         id="lnk_online_encoding_messages_{{note_detail.learning_unit_year.id}}">{{ note_detail.learning_unit_year.title }}</a>
                                 </td>
