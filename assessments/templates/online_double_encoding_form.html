@@ -49,7 +49,7 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="form-group" id="pnl_responsable_name" >
-                    <label>{% trans 'coordinator' %}</label><br>
+                    <label>{% trans 'scores_responsible' %}</label><br>
                     {% if tutors %}
                         <a role="button" data-toggle="collapse" data-target="#tutors_by_course"
                            aria-expanded="false" class="pull-right"
@@ -145,7 +145,7 @@
                             <input type="hidden" id="hdn_score_draft_{{ enrollment.id }}"
                                    value="{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}"/>
                             {% endif %}
-                            <input type="number" min="0" max="20" name="score_{{ enrollment.id }}" id="num_double_score_{{ enrollment.id }}"
+                            <input type="text" min="0" max="20" name="score_{{ enrollment.id }}" id="num_double_score_{{ enrollment.id }}"
                                    tabindex="{{ forloop.counter }}" class="form-control"
                                    {% if not is_program_manager %}
                                      {% if enrollment.score_final != None or enrollment.justification_final %}

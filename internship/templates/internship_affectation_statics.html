@@ -73,7 +73,7 @@
                     <h4 class="modal-title">{% trans 'generate_solution' %}</h4>
                 </div>
                 <div class="modal-body">
-                    <form  method="post" action="{% url 'internship_affectation_statistics_generate' %}" id="generate_solution">
+                    <form  method="post" action="{% url 'internship_affectation_statistics_generate_beta' %}" id="generate_solution">
                         <label for="executions">{% trans 'executions' %}</label>
                         <input type="number" name="executions" value=1 min=1>
                         {% csrf_token %}
@@ -89,9 +89,9 @@
     <div class="panel panel-default">
         <div class="panel-header">
             <div class="row">
-                <div class="col-md-4" style="display: none">
+                <div class="col-md-4">
                     <button type="submit" class="btn btn-primary" title="{% trans 'Send'%}" id="bt_interships_save" onclick="$('#generate').modal('show');">
-                        <span class="glyphicon glyphicon-random" aria-hidden="true"></span>{% trans 'generate_solution' %}
+                        <span class="glyphicon glyphicon-random" aria-hidden="true"></span> {% trans 'generate_solution' %}
                     </button>
                 </div>
                 <div class="col-md-8">
@@ -211,12 +211,10 @@
                                                 {% else %}
                                                     <td class="internship-{{enrollment.type_of_internship}} period-{{period}} {{enrollment.speciality.acronym}}"/>
                                                 {% endif %}
-                                                {% if forloop.counter <= 8 %}
+                                                {% if forloop.counter <= 12 %}
                                                     {{ enrollment.speciality.acronym }} <br>
                                                     {{ enrollment.organization.reference }}<br>
                                                     {{ enrollment.cost }}({{ enrollment.choice.lower }})<br>
-                                                {% elif forloop.counter > 8 and forloop.counter <= 12 %}
-                                                    X
                                                 {% else %}
                                                     {{ periods.score }}
                                                 {% endif %}
@@ -371,24 +369,32 @@
                     </div>
                 </div>
                 <div id="tab_errors" class="tab-pane fade in">
-                    <table class="table">
-                        <tr>
-                            <th>{% trans 'student' %}</th>
-                            <th>{% trans 'speciality' %}</th>
-                            <th>{% trans 'period' %}</th>
-                            <th>{% trans 'organization' %}</th>
-                            <th>{% trans 'type_internship' %}</th>
-                        </tr>
-                        {% for internship in errors %}
-                            <tr>
-                                <td><a href="{% url 'internships_student_read' internship.student.registration_id %}" target="_blank">{{internship.student}}</a></td>
-                                <td>{{internship.speciality}}</td>
-                                <td>{{internship.period}}</td>
-                                <td>{{internship.organization}}</td>
-                                <td>{{internship.type_of_internship}}</td>
-                            </tr>
-                        {% endfor %}
-                    </table>
+                     <div class="panel panel-default">
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane fade in active" id="profile">
+                                <table class="table" id="errors" cellspacing="0" width="100%">
+                                    <thead>
+                                    <tr>
+                                        <th>{% trans 'student' %}</th>
+                                        <th>{% trans 'speciality' %}</th>
+                                        <th class="no-sort">{% trans 'period' %}</th>
+                                        <th class="no-sort">{% trans 'organization' %}</th>
+                                        <th class="no-sort">{% trans 'type_internship' %}</th>
+                                    </tr>
+                                    </thead>
+                                    {% for internship in errors %}
+                                        <tr>
+                                            <td><a href="{% url 'internships_student_read' internship.student.registration_id %}" target="_blank">{{internship.student}}</a></td>
+                                            <td>{{internship.speciality}}</td>
+                                            <td>{{internship.period}}</td>
+                                            <td>{{internship.organization}}</td>
+                                            <td>{{internship.type_of_internship}}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                     </div>
                 </div>
             </div>
         </div>
@@ -409,6 +415,15 @@
             });
 
             $('#organizations').DataTable({
+                paging: false,
+                "columnDefs": [ {
+                    "targets": 'no-sort',
+                    "orderable": false
+                } ],
+                bInfo: false
+            });
+
+            $('#errors').DataTable({
                 paging: false,
                 "columnDefs": [ {
                     "targets": 'no-sort',

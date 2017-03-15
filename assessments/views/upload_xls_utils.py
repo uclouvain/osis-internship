@@ -318,7 +318,7 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                                                           learning_unit_year=learning_unit_year,
                                                           score_responsible=True)
                 if not coordinator:
-                    messages.add_message(request, messages.SUCCESS, '%s' % _('the_coordinator_must_still_submit_scores'))
+                    messages.add_message(request, messages.SUCCESS, '%s' % _('scores_responsible_must_still_submit_scores'))
         return True
     else:
         messages.add_message(request, messages.ERROR, '%s' % _('no_score_injected'))
