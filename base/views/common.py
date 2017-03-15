@@ -40,6 +40,7 @@ def page_not_found(request):
     response.status_code = 404
     return response
 
+
 def access_denied(request):
     response = layout.render(request, 'access_denied.html', {})
     response.status_code = 401
@@ -99,19 +100,13 @@ def log_out(request):
 
 
 def logged_out(request):
-    return layout.render(request,'logged_out.html', {})
+    return layout.render(request, 'logged_out.html', {})
 
 
 @login_required
 @permission_required('base.can_access_student_path', raise_exception=True)
 def studies(request):
     return layout.render(request, "studies.html", {'section': 'studies'})
-
-
-@login_required
-@permission_required('base.can_access_evaluation', raise_exception=True)
-def assessments(request):
-    return layout.render(request, "assessments.html", {'section': 'assessments'})
 
 
 @login_required

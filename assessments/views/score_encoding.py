@@ -57,6 +57,11 @@ def _is_inside_scores_encodings_period(user):
 def _is_not_inside_scores_encodings_period(user):
     return not _is_inside_scores_encodings_period(user)
 
+@login_required
+@permission_required('base.can_access_evaluation', raise_exception=True)
+def assessments(request):
+    return layout.render(request, "assessments.html", {'section': 'assessments'})
+
 
 @login_required
 @permission_required('assessments.can_access_scoreencoding', raise_exception=True)
