@@ -36,7 +36,7 @@ class LearningUnitAdmin(SerializableModelAdmin):
 
 class LearningUnit(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
-    learning_container = models.ForeignKey('LearningContainer')
+    learning_container = models.ForeignKey('LearningContainer', default=None)
     changed = models.DateTimeField(null=True)
     acronym = models.CharField(max_length=15)
     title = models.CharField(max_length=255)
