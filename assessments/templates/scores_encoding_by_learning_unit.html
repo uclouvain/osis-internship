@@ -37,7 +37,7 @@
 <div class="tab-content">
     <div id="tab_scores_encoding" class="tab-pane fade in active">
         <br>
-        <form method="get" action="{% url 'refresh_list' %}" id="form_search_learning_units">
+        <form method="get" action="{% url 'scores_encoding' %}" id="form_search_learning_units">
             <div class="row">
                 <div class="col-md-3">
                     <div class="form-group">
@@ -166,7 +166,7 @@
                         {% endif %}
                     </td>
                     <td>{{ note_detail.learning_unit_year.acronym }}</td>
-                    <td><a href="{% url 'online_encoding' note_detail.learning_unit_year.id %}"
+                    <td><a href="{% url 'online_encoding' note_detail.learning_unit_year.id %}?{{ request.GET.urlencode }}"
                            id="lnk_{{ note_detail.learning_unit_year.acronym }}">{{ note_detail.learning_unit_year.title }}</a></td>
                     <td>
                         {% if note_detail.tutor %}
@@ -195,7 +195,7 @@
                         </div>
                     </td>
                     <td><a class="btn btn-default"
-                           href="{% url 'online_encoding_form' note_detail.learning_unit_year.id %}"
+                           href="{% url 'online_encoding_form' note_detail.learning_unit_year.id %}?{{ request.GET.urlencode }}"
                            role="button" id="lnk_encode"
                            data-toggle="tooltip" data-placement="right"
                            title="{% trans 'tooltip_encode_for' %}"

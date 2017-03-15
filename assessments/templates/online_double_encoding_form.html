@@ -33,8 +33,8 @@
 {% block breadcrumb %}
 <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'studies' %}</a></li>
 <li><a href="{% url 'assessments' %}" id="lnk_assesments">{% trans 'evaluations' %}</a></li>
-<li><a href="{% url 'scores_encoding' %}" id="lnk_scores_encoding">{% trans 'scores_encoding' %}</a></li>
-<li><a href="{% url 'online_encoding' learning_unit_year.id %}" id="lnk_online_encoding">{% trans 'online_scores_encoding' %}</a></li>
+<li><a href="{% url 'scores_encoding' %}?{{ request.GET.urlencode }}" id="lnk_scores_encoding">{% trans 'scores_encoding' %}</a></li>
+<li><a href="{% url 'online_encoding' learning_unit_year.id %}?{{ request.GET.urlencode }}" id="lnk_online_encoding">{% trans 'online_scores_encoding' %}</a></li>
 <li class="active">{% trans 'dubble_online_scores_encoding' %}</li>
 {% endblock %}
 {% block content %}
@@ -106,12 +106,12 @@
             {% endif %}
         </div>
         <form class="form-inline" method="POST"
-              action="{% url 'online_double_encoding_form' learning_unit_year.id %}"
+              action="{% url 'online_double_encoding_form' learning_unit_year.id %}?{{ request.GET.urlencode }}"
               id="form_online_double_encoding">
             {% csrf_token %}
             <button type="submit" class="btn btn-primary" id="bt_compare_up">
                 <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> {% trans 'compare' %}</button>
-            <a class="btn btn-default" href="{% url 'online_encoding' learning_unit_year.id %}" role="button" id="bt_cancel_online_double_encoding_up">
+            <a class="btn btn-default" href="{% url 'online_encoding' learning_unit_year.id %}?{{ request.GET.urlencode }}" role="button" id="bt_cancel_online_double_encoding_up">
                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
             <table class="table table-hover">
                 <thead>
@@ -192,7 +192,7 @@
             </table>
             <button type="submit" class="btn btn-primary" id="bt_compare_down">
                 <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> {% trans 'compare' %}</button>
-            <a class="btn btn-default" href="{% url 'online_encoding' learning_unit_year.id %}" role="button" id="bt_cancel_online_double_encoding_down">
+            <a class="btn btn-default" href="{% url 'online_encoding' learning_unit_year.id %}?{{ request.GET.urlencode }}" role="button" id="bt_cancel_online_double_encoding_down">
                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
         </form>
     </div>
